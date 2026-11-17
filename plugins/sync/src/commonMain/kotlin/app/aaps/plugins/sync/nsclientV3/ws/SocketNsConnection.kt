@@ -26,18 +26,24 @@ import kotlinx.serialization.json.JsonObject
  * ## What happens when the socket drops
  *
  * Nothing here closes the socket on backgrounding: [stop] is called only on app exit, on a
- * connection setting changing, and when connectivity becomes disallowed. `IosForegroundWatcher` was
- * written to drive that and is wired to nothing, so a dropped connection is left to the transport's
- * own reconnect. When it does come back, `onConnectStorage` clears `initialLoadFinished` and asks
- * for a catch-up round, and that round refetches the missed window from the persisted high-water
- * mark.
+ * connection setting changing, and when connectivity becomes disallowed. A dropped connection is
+ * otherwise left to the transport's own reconnect. When it does come back, `onConnectStorage`
+ * clears `initialLoadFinished` and asks for a catch-up round, and that round refetches the missed
+ * window from the persisted high-water mark.
+ *
+ * On iOS that reconnect used to be the only recovery, and it is far too slow: a suspended process
+ * leaves a socket that reports itself connected and delivers nothing, so nothing notices until the
+ * transport's own ping gives up, minutes later. `IosForegroundWatcher` now closes that gap from the
+ * other end - the iOS shell replaces the connection when the app comes back after being away long
+ * enough, and the connect that follows starts the catch-up (nightscout/AndroidAPS#5495). It only
+ * watches and reports; it never closes the socket itself, for the reason below.
  *
  * **There is no REST polling fallback behind that**, which this comment used to claim there was. The
  * five-minute tick in `NSClientV3Plugin` runs a load only when websockets are switched off or the
  * platform has none; while they are on it logs and does nothing. `wsDisconnectGraceMs` debounces the
- * `masterReachable` flow and starts no load. So the catch-up is the only recovery, a socket that
- * never reconnects is a real hole, and on a platform that suspends the whole process there is
- * nothing else to close it.
+ * `masterReachable` flow and starts no load. So the catch-up is the only recovery and a socket that
+ * never reconnects is a real hole. On iOS the foreground watcher above now forces that reconnect;
+ * everywhere else this still rests on the transport noticing by itself.
  *
  * ## What is deliberately different from Android
  *

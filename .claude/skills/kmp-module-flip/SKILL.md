@@ -311,7 +311,7 @@ Worker tests construct the worker directly, so each needs its argument list wrap
 
 Registering a plugin needs `dev.zacsweers.metro.IntKey`, and any class that also reads preferences
 imports **`app.aaps.core.keys.IntKey`**. Kotlin then refuses both: `Conflicting import: imported name
-'IntKey' is ambiguous`. The fix is an alias, which `LoopPlugin` and `AutotunePlugin` have always used:
+'IntKey' is ambiguous`. The fix is an alias, which `LoopPlugin` uses:
 
 ```kotlin
 import dev.zacsweers.metro.IntKey as MetroIntKey
@@ -342,6 +342,61 @@ Neither is a blocker, but both look like the obvious idiom and both fail:
 `javax.inject` (swap to `dev.zacsweers.metro.Inject` only for a class Metro already builds),
 `@Synchronized`, `org.json`, `java.util.Calendar`, and `System.currentTimeMillis()` - the last is
 just `Clock.System.now().toEpochMilliseconds()`.
+
+Smaller ones: `Throwable.localizedMessage` is JVM only (use `message`); `@Synchronized` becomes
+`AapsLock` + `withLock` from `:core:interfaces`; `@Volatile` needs `kotlin.concurrent.Volatile`;
+`Dispatchers.IO` needs `import kotlinx.coroutines.IO`.
+
+### Pin what the code writes and shows before you move it
+
+The safe order is: tests that pin the current output first, green on the old code, then the move,
+then the same tests unchanged. Autotune was moved that way (`AutotuneGolden` in `:plugins:aps`
+host tests: a missing golden file is written from the run and the test fails, so nothing is
+accepted unseen). What those tests found is worth knowing before the next move:
+
+- **The `org.json` of the JVM tests is not the phone's.** `com.vaadin.external.google:android-json`
+  is Android's code, but it keeps object keys in a hash map, while Android keeps insertion order.
+  A golden of `JSONObject.toString()` therefore pins a key order no phone writes. Compare JSON with
+  the keys sorted and every value's text kept (`AutotuneGolden.json` does that, and checks the
+  layout first).
+- **`org.json` text is not kotlinx text.** A whole double is `8` there and `8.0` in kotlinx, `/` is
+  escaped, a null value removes the key, and NaN throws at `put`. Where the text leaves the app (a
+  file, an upload), write it with a renderer that copies `org.json` - `OrgJsonText` in
+  `:plugins:aps` - and keep the old `try`/`catch` shape where a NaN used to cut an object short.
+- **`String.format("%.2f")` does not round like `NumberFormat`.** The JVM formatter rounds the
+  shortest decimal text (1.005 shows 1.01, 0.15 at one decimal shows 0.2); `DecimalFormat` HALF_UP
+  rounds the double (1.00 and 0.1). `roundHalfUpAsText` in the Autotune view model keeps the old
+  text and is checked against `String.format` over thousands of values.
+- **A test that changes the default time zone must call `SystemTimeZone.invalidate()`.** Code moved
+  off `Calendar`/`TimeZone.getDefault()` reads the zone through `SystemTimeZone`, which keeps a read
+  for 10 s, so the test would otherwise run in the zone of the test before it.
+- **Moving `rh.gs(R.string.x)` to `TextRef` makes missing stubs fail.** The shared `TextRefStubs`
+  throw for a string no test stubbed, where the mock used to answer null. Expect to add stubs.
+
+A golden file of the old output can show a bug in the old code. The move keeps it, because a move
+must not change results: report it, and fix it as its own change with its own test.
+
+### A port every shell implements: where the code goes
+
+Autotune is the worked example. The plugin registers itself from commonMain, so the iOS and desktop
+graphs get it too, and each shell must bind its port (`AutotuneFileStore`) or the graph does not
+compile - delete the shell's placeholder for the interface (`IosAutotune`, `DesktopAutotune`) in the
+same change, or Metro reports a duplicate binding.
+
+- **The interface goes to `:core:interfaces`**, so `:implementation` can implement it without
+  depending on the plugin's module.
+- **Android and the desktop share one `java.*` implementation** in `:implementation`'s
+  `jvmSharedMain`, an abstract class each platform extends only to say where (`JvmAutotuneFileStore`,
+  with `AndroidAutotuneFileStore` and `DesktopAutotuneFileStore`). Bind each with
+  `binding = binding<Port>()`: the direct supertype is the abstract class, not the port.
+- **Reuse the folders import/export already defined**: `DesktopFolders` on the desktop, the
+  `Documents` subfolders of `IosPrefsFileAccess` on iOS, so the user finds files where the others are.
+- **iOS has no zip API.** `StoredZip` in `:implementation` commonMain writes a stored (uncompressed)
+  zip, checked by `java.util.zip` in jvmTest.
+- **Run it on the desktop for real** without the window: a throwaway test that sets `user.home` to a
+  *copy* of `~/.aaps` (and clears `aaps.desktop.keyVault`, so the copied DPAPI keys open), calls
+  `GeneratedStringOwners.registerAll()` and drives the plugin from `contributedPlugins`. Delete the
+  test and the copy afterwards; the copy holds the user's keys.
 
 `Provider<T>` is deprecated: the compiler says *"Using the desugared `Provider<T>` type is
 discouraged. Prefer the function syntax form `() -> T`."* Write `() -> T` in new code. Call sites are

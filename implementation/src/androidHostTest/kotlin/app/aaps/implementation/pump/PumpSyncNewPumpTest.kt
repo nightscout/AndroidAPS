@@ -206,6 +206,28 @@ class PumpSyncNewPumpTest : TestBase() {
         assertThat(stored).isEmpty()
     }
 
+    /** A pump clock some seconds behind the phone: the temp basal set right after the first profile was dropped. */
+    @Test
+    fun `a record just before the first profile takes that profile`() = runBlocking<Unit> {
+        registerPump()
+        val stored = storedTemporaryBasals()
+        whenever(profileFunction.getProfile(now - 2000)).thenReturn(null)
+
+        assertThat(sut.syncTemporaryBasalWithPumpId(now - 2000, PumpRate(0.0), 30 * minute, true, null, 7L, pumpType, pumpSerial)).isTrue()
+        assertThat(stored.single().timestamp).isEqualTo(now - 2000)
+    }
+
+    @Test
+    fun `a record with no profile in the minute after it is still dropped`() = runBlocking<Unit> {
+        registerPump()
+        val stored = storedTemporaryBasals()
+        whenever(profileFunction.getProfile(now - 30_000)).thenReturn(null)
+        whenever(profileFunction.getProfile(now + 30_000)).thenReturn(null)
+
+        assertThat(sut.syncTemporaryBasalWithPumpId(now - 30_000, PumpRate(0.0), 30 * minute, true, null, 7L, pumpType, pumpSerial)).isFalse()
+        assertThat(stored).isEmpty()
+    }
+
     @Test
     fun `a running temp basal of another pump is not taken`() = runBlocking<Unit> {
         registerPump()

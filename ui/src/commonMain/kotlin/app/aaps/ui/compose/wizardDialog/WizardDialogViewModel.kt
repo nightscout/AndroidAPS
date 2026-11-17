@@ -100,9 +100,8 @@ class WizardDialogViewModel(
     private val _uiState = MutableStateFlow(WizardDialogUiState())
     val uiState: StateFlow<WizardDialogUiState> = _uiState.asStateFlow()
 
+    // A failed delivery is not reported here: the master's executor raises the BOLUS_DELIVERY_FAILED alarm itself
     sealed class SideEffect {
-        data class ShowDeliveryError(val comment: String) : SideEffect()
-        data class ShowTempBasalError(val comment: String) : SideEffect()
 
         /** Close the wizard after the user confirmed the delivery (like the insulin dialog); Cancel keeps it open. */
         data object NavigateBack : SideEffect()
@@ -555,24 +554,16 @@ class WizardDialogViewModel(
     /**
      * Record-only path (MASTER only — a client always delivers via the master). Used when the master can't deliver
      * (pump not initialized / mode forbids a bolus): log the wizard-calculated treatment + its BolusCalculatorResult
-     * locally via [BolusWizard.executeNormal] with forcedRecordOnly. The DELIVERY path is [deliverManualWizard].
+     * locally via [BolusWizard.executeRecordOnly]. The DELIVERY path is [deliverManualWizard].
      * appScope: the screen pops on confirm, which would cancel viewModelScope before the write runs.
      */
     fun recordOnly() {
         val state = uiState.value
         appScope.launch {
-            wizard?.executeNormal(
-                // ShowDeliveryError is the full screen BOLUS_ERROR alarm, so a command dropped on purpose takes the
-                // plain dialog instead. The record-only path should never see one (it writes straight to the
-                // database and never queues a pump command), but the guard is one line and the alarm is not.
-                onError = { failure ->
-                    if (failure.cancelled) rxBus.send(EventShowDialog.Ok(title = rh.gs(CoreUiStrings.command_cancelled_title), message = failure.comment))
-                    else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(failure.comment))
-                },
+            wizard?.executeRecordOnly(
                 eCarbsGrams = state.eCarbs,
                 eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime,
-                eCarbsDurationHours = state.eCarbsDurationHours,
-                forcedRecordOnly = true
+                eCarbsDurationHours = state.eCarbsDurationHours
             )
         }
     }

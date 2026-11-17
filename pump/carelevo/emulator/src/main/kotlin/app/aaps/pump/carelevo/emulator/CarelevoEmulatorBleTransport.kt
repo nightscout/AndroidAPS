@@ -214,6 +214,16 @@ class CarelevoEmulatorBleTransport(
 
     override fun loseAnswer(command: EmulatedCommand): Boolean = addFault(lostAnswers, command)
 
+    /** A new patch, in range. Only between connections: the old patch is out of range or its link is closed. */
+    override fun replaceWithNewPump(): Boolean {
+        gatt.disconnect()
+        emulator.replaceWithNewPatch()
+        synchronized(lostCommands) { lostCommands.clear() }
+        synchronized(lostAnswers) { lostAnswers.clear() }
+        reportConnected = true
+        return true
+    }
+
     /**
      * UNVERIFIED which tier a real patch uses for each. The driver reads them from the 0x43 active-alarm snapshot. A low
      * reservoir and a long stop are no snapshot flags: the driver works them out from the reported values.
@@ -245,7 +255,11 @@ class CarelevoEmulatorBleTransport(
             reservoir = emulator.reservoir,
             linkUp = connected,
             commands = emulator.commands,
-            extendedBolus = if (state.extendedBolusRunning) EmulatedExtendedBolus(state.extendedBolusUnits, state.extendedBolusMinutes) else null
+            extendedBolus = if (state.extendedBolusRunning) EmulatedExtendedBolus(state.extendedBolusUnits, state.extendedBolusMinutes) else null,
+            // A patch tells no battery level, only that it runs low.
+            battery = null,
+            // 24 hourly segments in three parts; only a whole program is one.
+            basal = state.basalProgram.takeIf { it.size == HOURS_PER_DAY }
         )
     }
 
@@ -257,6 +271,8 @@ class CarelevoEmulatorBleTransport(
         EmulatedCommand.BOLUS_STOP       -> setOf(CarelevoPumpEmulator.OP_BOLUS_CANCEL)
         EmulatedCommand.TEMP_BASAL_START -> setOf(CarelevoPumpEmulator.OP_TEMP_BASAL)
         EmulatedCommand.TEMP_BASAL_STOP  -> setOf(CarelevoPumpEmulator.OP_TEMP_BASAL_CANCEL)
+        EmulatedCommand.EXTENDED_BOLUS_START -> setOf(CarelevoPumpEmulator.OP_EXTEND_BOLUS)
+        EmulatedCommand.EXTENDED_BOLUS_STOP  -> setOf(CarelevoPumpEmulator.OP_EXTEND_BOLUS_CANCEL)
         EmulatedCommand.BASAL_PROFILE    -> BASAL_PROGRAM_OPCODES
         EmulatedCommand.STATUS           -> setOf(CarelevoPumpEmulator.OP_INFUSION_INFO)
     }
@@ -269,6 +285,7 @@ class CarelevoEmulatorBleTransport(
     private companion object {
 
         const val DEVICE_NAME_PREFIX = "CareLevo-"
+        const val HOURS_PER_DAY = 24
 
         /** Well above CarelevoPatchConnectViewModel.MIN_SCAN_RSSI (-45) — "right next to the phone". */
         const val EMULATED_RSSI = -30

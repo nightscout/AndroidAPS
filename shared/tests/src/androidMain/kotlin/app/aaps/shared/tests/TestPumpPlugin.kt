@@ -93,7 +93,12 @@ class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
         }
     private val _batteryLevel = MutableStateFlow<Int?>(null)
     override val batteryLevel: StateFlow<Int?> = _batteryLevel
-    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult = PumpEnactResultObject(rh).success(true)
+    /** Runs while a bolus is given, for a test that needs a bolus to take some time or to lose the link. */
+    var duringBolus: suspend () -> Unit = {}
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+        duringBolus()
+        return PumpEnactResultObject(rh).success(true)
+    }
     override fun stopBolusDelivering() { /* not needed */
     }
 

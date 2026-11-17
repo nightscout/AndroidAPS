@@ -47,7 +47,22 @@ import kotlin.math.roundToInt
  * - Time set (0x01,0x00 — shares type with model set, distinguished by port)
  * - Pair (0x0D,0x0D port — special key exchange)
  */
-class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private val aapsLogger: AAPSLogger? = null) {
+class EquilPumpEmulator(state: EquilPumpState = EquilPumpState(), private val aapsLogger: AAPSLogger? = null) {
+
+    /** All the pod holds. A new pod takes its place in [replaceWithNewPod]. */
+    var state: EquilPumpState = state
+        private set
+
+    /**
+     * A new pod takes the place of this one, as after the user removed a pod: not paired, nothing running, a full
+     * reservoir. Its serial comes with the next discovery scan, as on the real pump.
+     */
+    fun replaceWithNewPod() {
+        state = EquilPumpState()
+        lostCommands.clear()
+        lostAnswers.clear()
+        reset()
+    }
 
     private var phase = Phase.AWAITING_INITIAL
     private var reqIndex = 10
@@ -423,6 +438,7 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
     private fun processTempBasalSet(data: ByteArray): ByteArray {
         if (data.size >= 14) synchronized(state) {
             val step = getInt(data, 6)
+            val seconds = getInt(data, 10)
             if (step > 0 && refusesTempBasal(step)) return refusedResponse()
             settle()
             // Seen on a real pump (2026-11-08): a start logs (4,10,0) and an end (4,11,0), each with the rate before it,
@@ -430,19 +446,24 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
             // the driver ends the old one first.
             // Seen too: step 47 (0.5875 U/h) ran at 0.6 U/h, step 40 at 0.5 U/h. The pump rounds a temp basal to a grid
             // that is not known; the emulator runs the step as sent.
+            // Seen on a real pump (2026-11-10): step 0 for 1800 s runs a zero temp (the temp basal read then gave 0 and
+            // 1800), and step 0 for 0 s ends it. So only a time of 0 ends a temp basal. Neither logged an entry. Taken
+            // for a cancel before, AAPS had a zero temp the emulated pump did not run.
             val before = basalSpeed()
+            val zeroEnds = state.isTempBasalRunning && state.tempBasalStep == 0
+            val zeroStarts = seconds > 0 && step == 0
             if (state.isTempBasalRunning) {
-                log(TYPE_TEMP_BASAL_END)
+                if (!zeroEnds) log(TYPE_TEMP_BASAL_END)
                 clearTempBasal()
             }
-            if (step > 0) {
-                log(TYPE_TEMP_BASAL_START)
+            if (seconds > 0) {
+                if (!zeroStarts) log(TYPE_TEMP_BASAL_START)
                 state.tempBasalStep = step
-                state.tempBasalDuration = getInt(data, 10)
+                state.tempBasalDuration = seconds
                 state.isTempBasalRunning = true
                 state.tempBasalStartTime = System.currentTimeMillis()
             }
-            logRateChange(before)
+            if (!zeroEnds && !zeroStarts) logRateChange(before)
         }
         return indexedResponse()
     }
@@ -470,17 +491,26 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
                 state.lastBolusTime = System.currentTimeMillis()
                 startBolus(steps = field1, seconds = field2)
             } else if (field3 != 0 || field4 != 0) {
-                // CmdExtendedBolusSet
-                state.extendedBolusStep = field3
-                state.extendedBolusDuration = field4
-                state.isExtendedBolusRunning = field3 > 0
+                // CmdExtendedBolusSet. Seen on a real pump (2026-11-10): a status entry with the speed of the extended bolus
+                // as largeRate (160 for 0.5 U in 30 min).
+                synchronized(state) {
+                    state.extendedBolusStep = field3
+                    state.extendedBolusDuration = field4
+                    state.isExtendedBolusRunning = field3 > 0
+                    log(TYPE_STATUS)
+                }
             } else {
-                // CmdLargeBasalSet(0), the stop of a bolus, and CmdExtendedBolusSet(0) look the same.
-                // UNVERIFIED: that the real pump ends both.
+                // CmdLargeBasalSet(0), the stop of a bolus, and CmdExtendedBolusSet(0) look the same. UNVERIFIED: that the
+                // real pump ends both. Seen on a real pump (2026-11-10): the cancel of an extended bolus logs a status entry
+                // with largeRate 0.
                 stopBolus()
-                state.extendedBolusStep = 0
-                state.extendedBolusDuration = 0
-                state.isExtendedBolusRunning = false
+                synchronized(state) {
+                    val wasExtended = state.isExtendedBolusRunning
+                    state.extendedBolusStep = 0
+                    state.extendedBolusDuration = 0
+                    state.isExtendedBolusRunning = false
+                    if (wasExtended) log(TYPE_STATUS)
+                }
             }
         }
         return indexedResponse()
@@ -663,7 +693,9 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
             type1 == 0x01 && type2 == 0x03 && data.size >= 22 ->
                 when {
                     getInt(data, 6) != 0 || getInt(data, 10) != 0  -> EmulatedCommand.BOLUS_START
-                    getInt(data, 14) != 0 || getInt(data, 18) != 0 -> null // an extended bolus
+                    getInt(data, 14) != 0 || getInt(data, 18) != 0 -> EmulatedCommand.EXTENDED_BOLUS_START
+                    // The same zeros stop a bolus and an extended bolus: the pump stops what runs.
+                    state.runningBolus == null && state.isExtendedBolusRunning -> EmulatedCommand.EXTENDED_BOLUS_STOP
                     else                                            -> EmulatedCommand.BOLUS_STOP
                 }
 
@@ -692,7 +724,10 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
             commands = state.commands,
             // UNVERIFIED: that the pump gives an extended bolus while it is suspended; the emulator reports it only while it runs.
             extendedBolus = if (state.isExtendedBolusRunning && state.runningMode == RUNNING_MODE_RUNNING)
-                EmulatedExtendedBolus(units = state.extendedBolusStep / BOLUS_STEPS_PER_UNIT, minutes = state.extendedBolusDuration / SECONDS_PER_MINUTE) else null
+                EmulatedExtendedBolus(units = state.extendedBolusStep / BOLUS_STEPS_PER_UNIT, minutes = state.extendedBolusDuration / SECONDS_PER_MINUTE) else null,
+            battery = state.battery,
+            // Each hour holds what the pump gives in half an hour, in 0.00625 U steps: 96 is 1.2 U/h, as on a real pump.
+            basal = state.basalRates.map { it * BASAL_UNITS_PER_HOUR_PER_VALUE }
         )
     }
 
@@ -749,12 +784,14 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
             if (elapsed >= bolus.durationMs) finishBolus(at = bolus.startedAt + bolus.durationMs)
         }
         if (state.isTempBasalRunning && now >= tempBasalEnd()) {
-            // UNVERIFIED: that a temp basal whose time is over logs as a cancel does, see processTempBasalSet.
+            // UNVERIFIED: that a temp basal whose time is over logs as a cancel does, see processTempBasalSet, and so a
+            // zero temp logs nothing.
             val end = tempBasalEnd()
             val before = basalSpeed(end - 1)
-            log(TYPE_TEMP_BASAL_END, at = end, rate = before)
+            val zero = state.tempBasalStep == 0
+            if (!zero) log(TYPE_TEMP_BASAL_END, at = end, rate = before)
             clearTempBasal()
-            logRateChange(before, at = end)
+            if (!zero) logRateChange(before, at = end)
         }
     }
 
@@ -885,7 +922,9 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         else                                                -> state.basalRates[Calendar.getInstance().apply { timeInMillis = at }.get(Calendar.HOUR_OF_DAY)]
     }
 
-    private fun runningBolusSpeed(): Int = state.runningBolus?.let { bolusSpeed(it.steps, (it.durationMs / 1000).toInt()) } ?: 0
+    /** UNVERIFIED: that a status entry during an extended bolus, for a basal change, has its speed too. */
+    private fun runningBolusSpeed(): Int = state.runningBolus?.let { bolusSpeed(it.steps, (it.durationMs / 1000).toInt()) }
+        ?: if (state.isExtendedBolusRunning) bolusSpeed(state.extendedBolusStep, state.extendedBolusDuration) else 0
 
     /**
      * The bolus speed in steps of 0.00625 U/h, as the log shows it. Seen on a real pump (2026-11-08): the log has two bytes
@@ -932,6 +971,9 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
 
         /** The rates in the log and the advertisement count in these. */
         private const val SPEED_UNITS_PER_STEP = 0.00625
+
+        /** A basal value is half an hour of insulin in 0.00625 U steps, so one step of it is 0.0125 U/h. */
+        private const val BASAL_UNITS_PER_HOUR_PER_VALUE = 0.0125
 
         /** The run mode after an empty reservoir, as the driver reads it: STOP. */
         private const val RUNNING_MODE_STOP = 2

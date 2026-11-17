@@ -1,10 +1,9 @@
 package app.aaps.pump.diaconn.compose
 
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.ble.BleAdapter
+import app.aaps.core.interfaces.pump.ble.BleScanner
+import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
@@ -13,7 +12,9 @@ import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
@@ -22,17 +23,12 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 /**
- * Unit test for the synchronous state logic of [DiaconnPairWizardViewModel]. The VM has no init{}
- * launch and no viewModelScope work, so the default [DiaconnPairWizardUiState] and the pure
- * [DiaconnPairWizardViewModel.selectDevice] transition can be asserted directly. BLE scanning is
- * skipped because the mocked [Context] returns a null BluetoothManager, so the scanner / adapter
- * branches are all null-safe no-ops.
+ * The pairing wizard of the Diaconn G8. It scans and bonds through the transport, so the emulated pump is found the
+ * same way as a real one. The transport itself is tested by the shared transport contract.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class DiaconnPairWizardViewModelTest {
@@ -40,15 +36,24 @@ internal class DiaconnPairWizardViewModelTest {
     @Mock private lateinit var aapsLogger: AAPSLogger
     @Mock private lateinit var preferences: Preferences
     @Mock private lateinit var rxBus: RxBus
-    @Mock private lateinit var context: Context
+    @Mock private lateinit var bleTransport: BleTransport
+    @Mock private lateinit var adapter: BleAdapter
+    @Mock private lateinit var scanner: BleScanner
 
+    private val scanned = MutableSharedFlow<ScannedDevice>(extraBufferCapacity = 10)
+    private lateinit var dispatcher: TestDispatcher
     private lateinit var sut: DiaconnPairWizardViewModel
 
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        Dispatchers.setMain(StandardTestDispatcher())
-        sut = DiaconnPairWizardViewModel(aapsLogger, preferences, rxBus, context)
+        dispatcher = StandardTestDispatcher()
+        Dispatchers.setMain(dispatcher)
+        whenever(bleTransport.adapter).thenReturn(adapter)
+        whenever(bleTransport.scanner).thenReturn(scanner)
+        whenever(scanner.scannedDevices).thenReturn(scanned)
+        sut = DiaconnPairWizardViewModel(aapsLogger, preferences, rxBus, bleTransport)
+        dispatcher.scheduler.runCurrent()
     }
 
     @AfterEach
@@ -65,7 +70,7 @@ internal class DiaconnPairWizardViewModelTest {
     }
 
     @Test
-    fun selectDevice_movesToComplete_persistsAddressAndName_andBroadcasts() {
+    fun selectDevice_movesToComplete_persistsAddressAndName_bondsAndBroadcasts() {
         val device = ScannedDevice(name = "Diaconn G8", address = "AA:BB:CC:DD:EE:FF")
 
         sut.selectDevice(device)
@@ -73,27 +78,27 @@ internal class DiaconnPairWizardViewModelTest {
         assertThat(sut.uiState.value.step).isEqualTo(DiaconnPairStep.COMPLETE)
         verify(preferences).put(DiaconnStringNonKey.Address, "AA:BB:CC:DD:EE:FF")
         verify(preferences).put(DiaconnStringNonKey.Name, "Diaconn G8")
+        verify(adapter).createBond("AA:BB:CC:DD:EE:FF")
+        verify(scanner).stopScan()
         verify(rxBus).send(any<EventDiaconnG8DeviceChange>())
     }
 
-    // Without BLUETOOTH_SCAN, startScan throws a SecurityException and the app ends
     @Test
-    fun startScan_withoutScanPermission_doesNotTouchBluetooth() {
-        whenever(context.checkPermission(eq(Manifest.permission.BLUETOOTH_SCAN), any(), any())).thenReturn(PackageManager.PERMISSION_DENIED)
-
+    fun startScan_scansThroughTheTransport() {
         sut.startScan()
 
-        verify(context, never()).getSystemService(Context.BLUETOOTH_SERVICE)
+        verify(scanner).startScan()
     }
 
+    // A pump seen twice in one scan is listed once.
     @Test
-    fun startScan_withScanPermission_goesOnToTheScan() {
-        whenever(context.checkPermission(eq(Manifest.permission.BLUETOOTH_SCAN), any(), any())).thenReturn(PackageManager.PERMISSION_GRANTED)
+    fun aDeviceTheScanFindsIsListedOnce() {
+        val device = ScannedDevice(name = "DIACONN-64004", address = "DB:B0:8B:D9:48:97")
 
-        // The Android stubs of a JVM test return null from ScanFilter.Builder, so the call ends
-        // there with a NullPointerException. It got past the permission check if nothing was logged.
-        runCatching { sut.startScan() }
+        scanned.tryEmit(device)
+        scanned.tryEmit(device)
+        dispatcher.scheduler.runCurrent()
 
-        verify(aapsLogger, never()).error(any<LTag>(), any<String>())
+        assertThat(sut.uiState.value.devices).containsExactly(device)
     }
 }

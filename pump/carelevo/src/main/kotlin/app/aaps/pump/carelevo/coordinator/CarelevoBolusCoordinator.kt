@@ -238,12 +238,15 @@ class CarelevoBolusCoordinator @Inject constructor(
         val min = durationInMinutes % 60
         val speed = insulin / (durationInMinutes.toDouble() / 60)
         return try {
-            val response = runBlocking { bleSession.runSingle(address, ExtendBolusCommand(immediateDose = 0.0, extendedSpeed = speed, hour = hour, min = min)) }
-            val success = response.resultCode == RESULT_SUCCESS
+            val success = extendedSentOrAsked(address, "setExtendedBolus", doneWhenExtendedRuns = true) {
+                val response = bleSession.runSingle(address, ExtendBolusCommand(immediateDose = 0.0, extendedSpeed = speed, hour = hour, min = min))
+                aapsLogger.info(LTag.PUMPCOMM, "newBle.setExtendedBolus insulin=$insulin result=${response.resultCode}")
+                response.resultCode == RESULT_SUCCESS
+            }
             // Once the pump ACKs, the extended bolus IS running — pumpSync must record it even if the
             // local persist fails (otherwise IOB silently diverges from what the patch delivers).
             val persisted = success && startExtendBolusInfusionUseCase.persistExtendBolusStarted(volume = insulin, speed = speed, minutes = durationInMinutes)
-            aapsLogger.info(LTag.PUMPCOMM, "newBle.setExtendedBolus insulin=$insulin result=${response.resultCode} persisted=$persisted")
+            aapsLogger.info(LTag.PUMPCOMM, "newBle.setExtendedBolus insulin=$insulin success=$success persisted=$persisted")
             if (success && !persisted) aapsLogger.error(LTag.PUMPCOMM, "newBle.setExtendedBolus persist failed — pump enacted, recording in pumpSync anyway")
             if (success) {
                 runBlocking {
@@ -274,6 +277,64 @@ class CarelevoBolusCoordinator @Inject constructor(
     }
 
     /**
+     * Sends an extended bolus command and tells whether it took effect, as `CarelevoTempBasalCoordinator` does for a
+     * temp basal. A patch that answers "no" did nothing. Without an answer the patch may still have done it, so then
+     * what it runs now decides. Found by the pump scenario tests: the patch ran an extended bolus that AAPS did not know
+     * of, or AAPS kept one the patch had ended.
+     * @param doneWhenExtendedRuns a start is done when an extended bolus runs, a cancel when none runs
+     * @throws Exception the one of the command, when the patch does not show that it was done
+     */
+    private fun extendedSentOrAsked(address: String, what: String, doneWhenExtendedRuns: Boolean, send: suspend () -> Boolean): Boolean =
+        try {
+            runBlocking { send() }
+        } catch (e: Exception) {
+            val runs = extendedBolusRunsOnPatch(address)
+            aapsLogger.warn(LTag.PUMPCOMM, "newBle.$what got no answer ($e). The patch runs an extended bolus: $runs")
+            if (runs == doneWhenExtendedRuns) true else throw e
+        }
+
+    /**
+     * Whether the patch runs an extended bolus now, or null when it does not answer or its mode does not tell (during an
+     * immediate bolus the mode shows the bolus).
+     */
+    private fun extendedBolusRunsOnPatch(address: String): Boolean? =
+        try {
+            when (runBlocking { bleSession.readInfusionInfo(address) }.modeRaw.codeToInfusionModeCommand()) {
+                InfusionModeResult.EXTEND_BOLUS, InfusionModeResult.EXTEND_IMME_BOLUS -> true
+                InfusionModeResult.BASAL, InfusionModeResult.TEMP_BASAL               -> false
+                InfusionModeResult.IMME_BOLUS, InfusionModeResult.ERROR               -> null
+            }
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.PUMPCOMM, "newBle.readInfusionInfo after an extended bolus command failed error=$e")
+            null
+        }
+
+    /**
+     * Ends the extended bolus that AAPS keeps when the patch runs none, as `CarelevoTempBasalCoordinator` does for a temp
+     * basal: a cancel whose answer is lost, and then a lost read of what the patch runs, leave AAPS with an extended bolus
+     * the patch has ended. Only plain basal mode surely means none. The patch gives no end time, so it ends at this read.
+     * @param info a status read of the patch
+     */
+    suspend fun endExtendedBolusThePatchDoesNotRun(info: InfusionInfoResponse, serialNumber: String) {
+        if (info.modeRaw.codeToInfusionModeCommand() != InfusionModeResult.BASAL) return
+        val extendedBolus = pumpSync.expectedPumpState().extendedBolus ?: return
+        val now = dateUtil.now()
+        val ended = pumpSync.syncStopExtendedBolusWithPumpId(
+            timestamp = now,
+            endPumpId = now,
+            pumpType = PumpType.CAREMEDI_CARELEVO,
+            pumpSerial = serialNumber
+        )
+        if (!ended) return
+        val persisted = cancelExtendBolusInfusionUseCase.persistExtendBolusCancelled()
+        aapsLogger.warn(
+            LTag.PUMPCOMM,
+            "newBle.status: the patch runs no extended bolus, but AAPS had one since ${dateUtil.dateAndTimeString(extendedBolus.timestamp)}. " +
+                "Ended it now. persisted=$persisted"
+        )
+    }
+
+    /**
      * Cancel-extended-bolus core. Discrete `ExtendBolusCancelCommand` (0x29→0x89, response carries
      * `infusedAmount`) on the session → delete + recompute-mode persist →
      * `pumpSync.syncStopExtendedBolusWithPumpId`. `infusedAmount` is logged only (not reconciled into the DB).
@@ -286,12 +347,15 @@ class CarelevoBolusCoordinator @Inject constructor(
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         return try {
-            val response = runBlocking { bleSession.runSingle(address, ExtendBolusCancelCommand()) }
-            val success = response.resultCode == RESULT_SUCCESS
+            val success = extendedSentOrAsked(address, "cancelExtendedBolus", doneWhenExtendedRuns = false) {
+                val response = bleSession.runSingle(address, ExtendBolusCancelCommand())
+                aapsLogger.info(LTag.PUMPCOMM, "newBle.cancelExtendedBolus result=${response.resultCode} infused=${response.infusedAmount}")
+                response.resultCode == RESULT_SUCCESS
+            }
             // Same pump-is-authoritative rule as the start path: on ACK the extended bolus IS stopped
             // on the patch, so the stop must reach pumpSync even if the local persist fails.
             val persisted = success && cancelExtendBolusInfusionUseCase.persistExtendBolusCancelled()
-            aapsLogger.info(LTag.PUMPCOMM, "newBle.cancelExtendedBolus result=${response.resultCode} infused=${response.infusedAmount} persisted=$persisted")
+            aapsLogger.info(LTag.PUMPCOMM, "newBle.cancelExtendedBolus success=$success persisted=$persisted")
             if (success && !persisted) aapsLogger.error(LTag.PUMPCOMM, "newBle.cancelExtendedBolus persist failed — pump stopped, recording stop in pumpSync anyway")
             if (success) {
                 onLastDataUpdated()

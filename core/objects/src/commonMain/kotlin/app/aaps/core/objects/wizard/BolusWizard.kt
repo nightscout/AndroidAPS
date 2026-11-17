@@ -3,7 +3,6 @@ package app.aaps.core.objects.wizard
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BolusWizardData
-import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
@@ -16,9 +15,7 @@ import app.aaps.core.data.ui.confirmationLines
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.aps.GlucoseStatus
-import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
-import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -33,8 +30,6 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
@@ -43,10 +38,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.aps.IsfForCarbs
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.round
-import app.aaps.core.objects.runningMode.PumpCommandGate
-import app.aaps.core.objects.runningMode.RunningModeGuard
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -55,12 +46,10 @@ import kotlin.time.Clock
 class BolusWizard(
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
-    private val rxBus: RxBus,
     private val preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val constraintChecker: ConstraintsChecker,
-    private val loop: Loop,
     private val iobCobCalculator: IobCobCalculator,
     private val dateUtil: DateUtil,
     private val config: Config,
@@ -69,10 +58,7 @@ class BolusWizard(
     private val eatReminder: EatReminder,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val persistenceLayer: PersistenceLayer,
-    private val runningModeGuard: RunningModeGuard,
-    private val ch: ConcentrationHelper,
-    private val masterActionExecutor: MasterActionExecutor,
-    private val appScope: CoroutineScope
+    private val ch: ConcentrationHelper
 ) {
 
     var timeStamp = dateUtil.now()
@@ -502,22 +488,16 @@ class BolusWizard(
             carbTime >= 0
 
     /**
-     * Execute normal bolus wizard flow (bolus + carbs + superbolus + BCR save).
-     * No UI dependency — errors reported via [onError] callback.
+     * Records the wizard entry without a pump: bolus, carbs, eCarbs and the bolus calculator result go
+     * straight to the database. For a master that cannot deliver (pump not initialized, or the running mode
+     * forbids a bolus); the caller has already shown that the entry is only recorded. A delivered wizard
+     * bolus does not come here: it goes to the master's [app.aaps.core.interfaces.bolus.MasterActionExecutor.confirm].
      */
-    suspend fun executeNormal(onError: (MasterActionExecutor.Failure) -> Unit, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0, forcedRecordOnly: Boolean = false) {
+    suspend fun executeRecordOnly(eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0) {
         if (accepted) {
             aapsLogger.debug(LTag.UI, "guarding: already accepted")
             return
         }
-        // Pre-check: if the mode forbids a new bolus, show a snackbar and skip without ever
-        // reaching the delivery path (avoids the alarm-on-failure callback path).
-        // When forcedRecordOnly is true the caller has already shown a banner and confirmation
-        // line stating the entry will be recorded only — we bypass the snackbar guard and route
-        // to the record-only path below.
-        if (!forcedRecordOnly && calculatedTotalInsulin > 0.0 &&
-            runningModeGuard.checkWithSnackbar(PumpCommandGate.CommandKind.BOLUS)
-        ) return
         accepted = true
         if (calculatedTotalInsulin > 0.0)
             automation.removeAutomationEventBolusReminder()
@@ -530,128 +510,87 @@ class BolusWizard(
         val now = dateUtil.now()
 
         if (insulinAfterConstraints > 0 || carbs > 0) {
-            if (useSuperBolus && !forcedRecordOnly) {
-                // Writing the SUPER_BOLUS row is enough — RunningModeReconciler observes the
-                // change and issues the zero-TBR.
-                if (loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS)) {
-                    loop.handleRunningModeChange(
-                        durationInMinutes = 2 * 60,
-                        profile = runningProfile,
-                        newRM = RM.Mode.SUPER_BOLUS,
-                        action = Action.SUPERBOLUS_TBR,
-                        source = source
-                    )
-                    rxBus.send(EventRefreshOverview("WizardDialog"))
-                }
-            }
             val action = when {
                 insulinAfterConstraints == 0.0 -> Action.CARBS
                 carbs == 0                     -> Action.BOLUS
                 else                           -> Action.TREATMENT
             }
             val bolusCalculatorResult = createBolusCalculatorResult()
-            // A record-only entry has no pump delivery to wait for, so its "time to eat" timer starts now.
-            // A delivered wizard bolus does not come here: it goes through WizardExecutor to the master's
-            // confirm(), which starts the timer once the pump finished the bolus.
-            if (forcedRecordOnly && useAlarm && carbs > 0 && carbTime > 0) {
+            // No pump delivery to wait for, so the "time to eat" timer starts now. A delivered wizard bolus
+            // starts it in confirm(), once the pump finished the bolus.
+            if (useAlarm && carbs > 0 && carbTime > 0) {
                 eatReminder.start(T.mins(carbTime.toLong()).msecs())
             }
-            if (forcedRecordOnly) {
-                uel.log(
-                    action = action,
-                    source = source,
-                    note = notes,
-                    listValues = listOfNotNull(
-                        ValueWithUnit.TEType(TE.Type.BOLUS_WIZARD),
-                        ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
-                        ValueWithUnit.Gram(carbs).takeIf { carbs != 0 },
-                        ValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 }
-                    )
-                )
-                // The profile the dose was computed against owns the iCfg to record. It is null only for
-                // a ProfileSealed.Pure caller, in which case the running profile — already resolved and
-                // non-null above — is the insulin this bolus is actually being delivered with.
-                val recordIcfg = profile.iCfg ?: runningProfile.iCfg
-                val detailedBolusInfo = DetailedBolusInfo().apply {
-                    insulin = insulinAfterConstraints
-                    carbs = this@BolusWizard.carbs.toDouble()
-                    carbsTimestamp = now + T.mins(this@BolusWizard.carbTime.toLong()).msecs()
-                    notes = this@BolusWizard.notes
-                }
-                if (insulinAfterConstraints > 0) {
-                    persistenceLayer.insertOrUpdateBolus(
-                        bolus = detailedBolusInfo.createBolus(recordIcfg),
-                        action = action,
-                        source = source,
-                        note = if (notes.isNotEmpty()) rh.gs(InterfacesStrings.confirmation_line, rh.gs(InterfacesStrings.record), notes) else rh.gs(InterfacesStrings.record)
-                    )
-                }
-                if (carbs > 0) {
-                    persistenceLayer.insertOrUpdateCarbs(
-                        carbs = detailedBolusInfo.createCarbs(),
-                        action = action,
-                        source = source,
-                        note = notes.ifEmpty { rh.gs(InterfacesStrings.record) }
-                    )
-                }
-                persistenceLayer.insertOrUpdateBolusCalculatorResult(bolusCalculatorResult)
-            } else {
-                // Phone wizard bolus now rides the shared executor's canonical BOLUS_WIZARD entry point —
-                // identical end state to the watch, differing only in [source]. The executor logs the UEL,
-                // delivers via the one audited pump path, and persists the BCR.
-                masterActionExecutor.deliverWizardBolus(
-                    insulin = insulinAfterConstraints,
-                    carbs = carbs,
-                    carbTimeMinutes = carbTime,
-                    mgdlGlucose = profileUtil.convertToMgdl(bg, profile.units),
-                    bolusCalculatorResult = bolusCalculatorResult,
-                    notes = notes,
-                    source = source,
-                    onError = onError
-                )
-            }
-        }
-        if (eCarbsGrams > 0) {
-            scheduleECarbs(eCarbsGrams, eCarbsDelayMinutes, eCarbsDurationHours, onError, forcedRecordOnly)
-        }
-    }
-
-    private fun scheduleECarbs(eCarbsGrams: Int, delayMinutes: Int, durationHours: Int, onError: (MasterActionExecutor.Failure) -> Unit, forcedRecordOnly: Boolean = false) {
-        // delayMinutes is already the total delay from now — the caller folds the meal carbTime into it.
-        // Do NOT add carbTime again here or the eCarbs record lands carbTime minutes too late.
-        val totalDelayMinutes = delayMinutes
-        val eventTime = Clock.System.now().toEpochMilliseconds() + (totalDelayMinutes * 60000L)
-        if (forcedRecordOnly) {
             uel.log(
-                action = Action.EXTENDED_CARBS,
-                source = Sources.WizardDialog,
+                action = action,
+                source = source,
                 note = notes,
                 listValues = listOfNotNull(
-                    ValueWithUnit.Timestamp(eventTime),
-                    ValueWithUnit.Gram(eCarbsGrams),
-                    ValueWithUnit.Minute(totalDelayMinutes).takeIf { totalDelayMinutes != 0 },
-                    ValueWithUnit.Hour(durationHours).takeIf { durationHours != 0 }
+                    ValueWithUnit.TEType(TE.Type.BOLUS_WIZARD),
+                    ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
+                    ValueWithUnit.Gram(carbs).takeIf { carbs != 0 },
+                    ValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 }
                 )
             )
+            // The profile the dose was computed against owns the iCfg to record. It is null only for
+            // a ProfileSealed.Pure caller, in which case the running profile — already resolved and
+            // non-null above — is the insulin this bolus is actually being delivered with.
+            val recordIcfg = profile.iCfg ?: runningProfile.iCfg
             val detailedBolusInfo = DetailedBolusInfo().apply {
-                carbs = eCarbsGrams.toDouble()
-                carbsDuration = T.hours(durationHours.toLong()).msecs()
-                carbsTimestamp = eventTime
+                insulin = insulinAfterConstraints
+                carbs = this@BolusWizard.carbs.toDouble()
+                carbsTimestamp = now + T.mins(this@BolusWizard.carbTime.toLong()).msecs()
                 notes = this@BolusWizard.notes
             }
-            appScope.launch {
+            if (insulinAfterConstraints > 0) {
+                persistenceLayer.insertOrUpdateBolus(
+                    bolus = detailedBolusInfo.createBolus(recordIcfg),
+                    action = action,
+                    source = source,
+                    note = if (notes.isNotEmpty()) rh.gs(InterfacesStrings.confirmation_line, rh.gs(InterfacesStrings.record), notes) else rh.gs(InterfacesStrings.record)
+                )
+            }
+            if (carbs > 0) {
                 persistenceLayer.insertOrUpdateCarbs(
                     carbs = detailedBolusInfo.createCarbs(),
-                    action = Action.EXTENDED_CARBS,
-                    source = Sources.WizardDialog,
+                    action = action,
+                    source = source,
                     note = notes.ifEmpty { rh.gs(InterfacesStrings.record) }
                 )
             }
-        } else {
-            // eCarbs delivery now rides the shared executor (one audited path).
-            appScope.launch {
-                masterActionExecutor.deliverECarbs(eCarbsGrams, eventTime, durationHours, totalDelayMinutes, notes, Sources.WizardDialog, onError)
-            }
+            persistenceLayer.insertOrUpdateBolusCalculatorResult(bolusCalculatorResult)
         }
+        if (eCarbsGrams > 0) {
+            recordECarbs(eCarbsGrams, eCarbsDelayMinutes, eCarbsDurationHours)
+        }
+    }
+
+    private suspend fun recordECarbs(eCarbsGrams: Int, delayMinutes: Int, durationHours: Int) {
+        // delayMinutes is already the total delay from now — the caller folds the meal carbTime into it.
+        // Do NOT add carbTime again here or the eCarbs record lands carbTime minutes too late.
+        val eventTime = dateUtil.now() + T.mins(delayMinutes.toLong()).msecs()
+        uel.log(
+            action = Action.EXTENDED_CARBS,
+            source = Sources.WizardDialog,
+            note = notes,
+            listValues = listOfNotNull(
+                ValueWithUnit.Timestamp(eventTime),
+                ValueWithUnit.Gram(eCarbsGrams),
+                ValueWithUnit.Minute(delayMinutes).takeIf { delayMinutes != 0 },
+                ValueWithUnit.Hour(durationHours).takeIf { durationHours != 0 }
+            )
+        )
+        val detailedBolusInfo = DetailedBolusInfo().apply {
+            carbs = eCarbsGrams.toDouble()
+            carbsDuration = T.hours(durationHours.toLong()).msecs()
+            carbsTimestamp = eventTime
+            notes = this@BolusWizard.notes
+        }
+        persistenceLayer.insertOrUpdateCarbs(
+            carbs = detailedBolusInfo.createCarbs(),
+            action = Action.EXTENDED_CARBS,
+            source = Sources.WizardDialog,
+            note = notes.ifEmpty { rh.gs(InterfacesStrings.record) }
+        )
     }
 }

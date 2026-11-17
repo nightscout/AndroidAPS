@@ -97,8 +97,8 @@ class AGPStatsTest {
         val dataBounds = compose.onNodeWithText("Average").fetchSemanticsNode().boundsInRoot
         assertThat(chartBounds.left).isAtLeast(dataBounds.right)
         assertThat(chartBounds.top).isLessThan(dataBounds.bottom)
-        compose.onNodeWithText("5.7").performScrollTo().assertIsDisplayed()
-        compose.onNodeWithText("6.2").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("5.7%").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("6.2%").performScrollTo().assertIsDisplayed()
         compose.onNodeWithText("25").performScrollTo().assertIsDisplayed()
         compose.onNodeWithText("Days").performScrollTo().assertIsDisplayed()
         val metricBounds = listOf("eA1c", "GMI", "SD", "CV", "Days").map {
@@ -111,12 +111,29 @@ class AGPStatsTest {
         }
     }
 
+    /**
+     * eA1c and GMI show percent and mmol/mol, whatever the glucose units: a doctor uses one or the other by
+     * country. A mmol/L user used to get only "38.8", with no unit, and could not get the percent (#5475).
+     */
     @Test
-    fun mmolMetricsKeepTheirConversionWithoutUnits() {
+    fun eA1cAndGmiShowPercentAndMmolPerMol_mgdl() = assertPercentAndMmolPerMol(GlucoseUnit.MGDL)
+
+    @Test
+    fun eA1cAndGmiShowPercentAndMmolPerMol_mmol() = assertPercentAndMmolPerMol(GlucoseUnit.MMOL)
+
+    private fun assertPercentAndMmolPerMol(units: GlucoseUnit) {
+        showLoadedData(units)
+
+        compose.onNodeWithText("5.7%").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("39 mmol/mol").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("6.2%").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("44 mmol/mol").performScrollTo().assertIsDisplayed()
+    }
+
+    @Test
+    fun mmolStandardDeviationIsInMmol() {
         showLoadedData(GlucoseUnit.MMOL)
 
-        compose.onNodeWithText("38.8").performScrollTo().assertIsDisplayed()
-        compose.onNodeWithText("44.3").performScrollTo().assertIsDisplayed()
         compose.onNodeWithText("1.4").performScrollTo().assertIsDisplayed()
     }
 

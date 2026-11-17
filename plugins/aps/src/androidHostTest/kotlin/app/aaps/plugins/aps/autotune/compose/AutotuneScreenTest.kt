@@ -4,10 +4,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import app.aaps.core.interfaces.InterfacesStringIds
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.CoreUiStringIds
+import app.aaps.plugins.aps.ApsStringIds
 import app.aaps.plugins.aps.R
 import org.junit.Before
 import org.junit.Rule
@@ -43,6 +47,11 @@ class AutotuneScreenTest {
 
     @Before
     fun setUp() {
+        // What MainApp does at startup: a TextRef.Named is resolved through this registry, so
+        // without it every label renders as its raw name.
+        TextRefIdRegistry.register("aps") { name -> ApsStringIds.idOf(name) }
+        TextRefIdRegistry.register("coreUi") { name -> CoreUiStringIds.idOf(name) }
+        TextRefIdRegistry.register("interfaces") { name -> InterfacesStringIds.idOf(name) }
         lastRunLabel = RuntimeEnvironment.getApplication().getString(R.string.autotune_last_run)
     }
 

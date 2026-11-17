@@ -75,6 +75,7 @@ enum class ExternalOptions(val filename: String) {
     EMULATE_DANA_R_KOREAN("emulate_dana_r_korean"),
     EMULATE_DANA_R_V2("emulate_dana_r_v2"),
     EMULATE_CARELEVO("emulate_carelevo"),
+    EMULATE_DIACONN("emulate_diaconn"),
     // Critical tier — the driver resolves these to a WARNING-severity cause and auto-discards the patch.
     EMULATE_CARELEVO_LOW_BATTERY("emulate_carelevo_low_battery"),
     EMULATE_CARELEVO_OCCLUSION("emulate_carelevo_occlusion"),

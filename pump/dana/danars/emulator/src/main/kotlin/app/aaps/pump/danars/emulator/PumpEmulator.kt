@@ -16,6 +16,7 @@ import java.io.ByteArrayOutputStream
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.math.roundToInt
 import kotlin.time.Instant
 
 /**
@@ -189,14 +190,14 @@ class PumpEmulator(val state: PumpState = PumpState()) {
         if (state.isExtendedBolusRunning) status = status or 0x04
         if (state.isDualBolusRunning) status = status or 0x08
         result[0] = status.toByte()
-        putIntToArray(result, 1, (state.dailyTotalUnits * 100).toInt())
-        putIntToArray(result, 3, (state.maxDailyTotalUnits * 100).toInt())
-        putIntToArray(result, 5, (state.reservoirRemainingUnits * 100).toInt())
-        putIntToArray(result, 7, (state.currentBasal * 100).toInt())
+        putIntToArray(result, 1, (state.dailyTotalUnits * 100).roundToInt())
+        putIntToArray(result, 3, (state.maxDailyTotalUnits * 100).roundToInt())
+        putIntToArray(result, 5, (state.reservoirRemainingUnits * 100).roundToInt())
+        putIntToArray(result, 7, (state.currentBasal * 100).roundToInt())
         result[9] = state.tempBasalPercent.toByte()
         result[10] = state.batteryRemaining.toByte()
-        putIntToArray(result, 11, (state.extendedBolusAmount * 100).toInt())
-        putIntToArray(result, 13, (state.iob * 100).toInt())
+        putIntToArray(result, 11, (state.extendedBolusAmount * 100).roundToInt())
+        putIntToArray(result, 13, (state.iob * 100).roundToInt())
         result[15] = state.errorState.toByte()
         return result
     }
@@ -210,11 +211,11 @@ class PumpEmulator(val state: PumpState = PumpState()) {
 
     private fun processGetBasalRate(): ByteArray {
         val result = ByteArray(51)
-        putIntToArray(result, 0, (state.maxBasal * 100).toInt())
-        result[2] = (state.basalStep * 100).toInt().toByte()
+        putIntToArray(result, 0, (state.maxBasal * 100).roundToInt())
+        result[2] = (state.basalStep * 100).roundToInt().toByte()
         val profile = state.basalProfiles[state.activeProfileNumber]
         for (i in 0 until 24) {
-            putIntToArray(result, 3 + i * 2, (profile[i] * 100).toInt())
+            putIntToArray(result, 3 + i * 2, (profile[i] * 100).roundToInt())
         }
         return result
     }
@@ -302,9 +303,9 @@ class PumpEmulator(val state: PumpState = PumpState()) {
         val ldt = Instant.fromEpochMilliseconds(state.lastBolusTime).toLocalDateTime(tz)
         result[4] = ldt.hour.toByte()
         result[5] = ldt.minute.toByte()
-        putIntToArray(result, 6, (state.lastBolusAmount * 100).toInt())
-        putIntToArray(result, 8, (state.maxBolus * 100).toInt())
-        result[10] = (state.bolusStep * 100).toInt().toByte()
+        putIntToArray(result, 6, (state.lastBolusAmount * 100).roundToInt())
+        putIntToArray(result, 8, (state.maxBolus * 100).roundToInt())
+        result[10] = (state.bolusStep * 100).roundToInt().toByte()
         return result
     }
 
@@ -323,7 +324,7 @@ class PumpEmulator(val state: PumpState = PumpState()) {
         putIntToArray(result, 5, state.currentTarget)
         putIntToArray(result, 7, state.currentCIR)
         putIntToArray(result, 9, state.currentCF)
-        putIntToArray(result, 11, (state.iob * 100).toInt())
+        putIntToArray(result, 11, (state.iob * 100).roundToInt())
         result[13] = state.units.toByte()
         return result
     }
@@ -440,6 +441,34 @@ class PumpEmulator(val state: PumpState = PumpState()) {
     }
 
     private fun hundredthsBytes(value: Int): ByteArray = byteArrayOf((value and 0xFF).toByte(), ((value shr 8) and 0xFF).toByte())
+
+    /**
+     * A bolus the user gives on the pump itself: given at once, logged as the end of any bolus is (BOLUS with the amount).
+     * UNVERIFIED: that a real Dana-i logs a bolus from its own buttons with only that entry, without the STEP_BOLUS_COMMAND
+     * it logs for one from the app. False while a bolus runs.
+     */
+    fun bolusOnPump(units: Double): Boolean = synchronized(state) {
+        if (state.runningBolus != null) return false
+        val given = (units * 100).roundToInt()
+        state.reservoirRemainingUnits -= given / 100.0
+        addHistoryEvent(DanaPump.HistoryEntry.BOLUS.value, state.pumpTimeMillis, given, 0)
+        state.givenBoluses += given / 100.0
+        state.lastBolusAmount = given / 100.0
+        state.lastBolusTime = state.pumpTimeMillis
+        state.dailyTotalUnits += given / 100.0
+        true
+    }
+
+    /**
+     * The user stops or starts again the insulin on the pump itself: the status says so, and the history logs SUSPEND_ON
+     * or SUSPEND_OFF. UNVERIFIED: what a real Dana-i does with a temp basal that runs at that time; the emulator keeps it.
+     */
+    fun suspendOnPump(suspended: Boolean): Boolean = synchronized(state) {
+        state.isSuspended = suspended
+        val code = if (suspended) DanaPump.HistoryEntry.SUSPEND_ON else DanaPump.HistoryEntry.SUSPEND_OFF
+        addHistoryEvent(code.value, state.pumpTimeMillis, 0, 0)
+        true
+    }
 
     private fun processSetExtendedBolus(params: ByteArray): ByteArray {
         if (params.size >= 3) {

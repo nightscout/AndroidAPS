@@ -649,15 +649,15 @@ class CommandQueueImplementation(
 
     override suspend fun bolus(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         val originalCarbs = detailedBolusInfo.carbs
+        // The eCarbs of the same meal follow the carbs in both paths below, so they are never stored
+        // without the carbs they belong to (#5491).
+        val originalECarbs = detailedBolusInfo.eCarbs
+        val hasCarbs = originalCarbs != 0.0 || originalECarbs != null
         // Carbs-only path: store and return without queuing a pump command.
-        if (originalCarbs != 0.0 && detailedBolusInfo.insulin == 0.0) {
+        if (hasCarbs && detailedBolusInfo.insulin == 0.0) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Going to store carbs")
             return try {
-                persistenceLayer.insertOrUpdateCarbs(
-                    carbs = detailedBolusInfo.createCarbs(),
-                    action = Action.CARBS,
-                    source = Sources.Database
-                )
+                storeCarbs(detailedBolusInfo)
                 pumpEnactResultProvider().enacted(false).success(true)
             } catch (e: Exception) {
                 aapsLogger.error(LTag.PUMPQUEUE, "Failed to store carbs", e)
@@ -665,11 +665,14 @@ class CommandQueueImplementation(
             }
         }
         // Bolus + carbs path: drop carbs from the queued command and persist them after the bolus succeeds.
-        val hasCarbs = originalCarbs != 0.0
-        if (hasCarbs) detailedBolusInfo.carbs = 0.0
+        if (hasCarbs) {
+            detailedBolusInfo.carbs = 0.0
+            detailedBolusInfo.eCarbs = null
+        }
 
-        // Running-mode gate: reject bolus if current mode forbids new delivery.
-        rejectedByRunningModeGate(PumpCommandGate.CommandKind.BOLUS)?.let { return it }
+        // Running-mode gate: reject bolus if current mode forbids new delivery. A prime is allowed while
+        // the pump is disconnected (#5469).
+        rejectedByRunningModeGate(PumpCommandGate.bolusKind(detailedBolusInfo.bolusType))?.let { return it }
 
         val type = if (detailedBolusInfo.bolusType == BS.Type.SMB) CommandType.SMB_BOLUS else CommandType.BOLUS
         // Suspend DB read must stay outside enqueueLock; CommandSMBBolus.execute() re-checks freshness at execution time.
@@ -731,12 +734,9 @@ class CommandQueueImplementation(
         if (hasCarbs && result.success) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Going to store carbs")
             detailedBolusInfo.carbs = originalCarbs
+            detailedBolusInfo.eCarbs = originalECarbs
             try {
-                persistenceLayer.insertOrUpdateCarbs(
-                    carbs = detailedBolusInfo.createCarbs(),
-                    action = Action.CARBS,
-                    source = Sources.Database
-                )
+                storeCarbs(detailedBolusInfo)
             } catch (e: Exception) {
                 aapsLogger.error(LTag.PUMPQUEUE, "Failed to store carbs after bolus", e)
                 // The bolus succeeded but the carbs weren't persisted, so COB/IOB would be wrong and the
@@ -745,6 +745,14 @@ class CommandQueueImplementation(
             }
         }
         return result
+    }
+
+    /** The carbs of [detailedBolusInfo] and the eCarbs of the same meal, whichever it has. */
+    private suspend fun storeCarbs(detailedBolusInfo: DetailedBolusInfo) {
+        if (detailedBolusInfo.carbs != 0.0)
+            persistenceLayer.insertOrUpdateCarbs(carbs = detailedBolusInfo.createCarbs(), action = Action.CARBS, source = Sources.Database)
+        if (detailedBolusInfo.eCarbs != null)
+            persistenceLayer.insertOrUpdateCarbs(carbs = detailedBolusInfo.createECarbs(), action = Action.CARBS, source = Sources.Database)
     }
 
     override suspend fun stopPump(): PumpEnactResult =

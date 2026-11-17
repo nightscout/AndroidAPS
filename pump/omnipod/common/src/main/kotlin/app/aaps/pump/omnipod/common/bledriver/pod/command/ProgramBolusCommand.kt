@@ -7,6 +7,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.command.insulin.program.BolusS
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ProgramReminder
 import app.aaps.pump.omnipod.common.bledriver.pod.util.MessageUtil
 import java.nio.ByteBuffer
+import kotlin.math.roundToInt
 
 // NOT SUPPORTED: extended bolus
 class ProgramBolusCommand private constructor(
@@ -67,8 +68,9 @@ class ProgramBolusCommand private constructor(
 
         fun setNumberOfUnits(numberOfUnits: Double): Builder {
             require(numberOfUnits > 0.0) { "Number of units should be greater than zero" }
-            require((numberOfUnits * 1000).toInt() % 50 == 0) { "Number of units must be dividable by 0.05" }
-            this.numberOfUnits = (numberOfUnits * 100).toInt() / 100.0
+            // Round, not cut: 16.15 * 1000 is 16149.99..., which a cut made 16149, so a bolus of 16.15 U was refused.
+            require((numberOfUnits * 1000).roundToInt() % 50 == 0) { "Number of units must be dividable by 0.05" }
+            this.numberOfUnits = (numberOfUnits * 100).roundToInt() / 100.0
             return this
         }
 

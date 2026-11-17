@@ -4,12 +4,11 @@ object MessageOriginalNames {
 
     private var messageNames: HashMap<Int, String> = HashMap()
 
-    fun getName(command: Int): String? {
-        return if (messageNames.containsKey(command))
-            messageNames[command]
-        else
-            throw IllegalStateException("Unknown command: " + String.format("%04X", command))
-    }
+    /**
+     * A name for the log. A command with no name gets one made of its code: the pump can send one, and the throw here
+     * ended the reader of the link (a real Korean DanaR, about 100 s after a history read, 2026-11-10).
+     */
+    fun getName(command: Int): String = messageNames[command] ?: "UNKNOWN_" + String.format("%04X", command)
 
     init {
         messageNames[0x3001] = "CMD_CONNECT"

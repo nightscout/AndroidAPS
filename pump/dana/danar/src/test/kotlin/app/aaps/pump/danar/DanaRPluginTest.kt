@@ -31,6 +31,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -58,7 +59,8 @@ class DanaRPluginTest : TestBaseWithProfile() {
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
         danaRPlugin = DanaRPlugin(
             aapsLogger, rh, preferences, config, commandQueue, rxBus, context, activePlugin, danaPump, dateUtil, pumpSync,
-            notificationManager, danaHistoryDatabase, decimalFormatter, bolusProgressData, pumpEnactResultProvider
+            notificationManager, danaHistoryDatabase, decimalFormatter, bolusProgressData, BolusInProgress(preferences, pumpSync, dateUtil, aapsLogger),
+            pumpEnactResultProvider
         )
     }
 
@@ -96,6 +98,19 @@ class DanaRPluginTest : TestBaseWithProfile() {
         assertThat(result.enacted).isTrue()
     }
 
+    /** Saved before the start, for an app killed during the bolus, and removed only after the record is written. */
+    @Test
+    fun theBolusIsSavedUntilItIsRecorded() {
+        bindBolusService(connectionOk = true, delivered = 1.0)
+        runBlocking<Unit> {
+            danaRPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 })
+            val order = inOrder(preferences, pumpSync)
+            order.verify(preferences).put(eq(DanaStringNonKey.BolusInProgress), any<String>())
+            order.verify(pumpSync).syncBolusWithPumpId(any(), any(), anyOrNull(), any(), eq(PumpType.DANA_R), any())
+            order.verify(preferences).remove(DanaStringNonKey.BolusInProgress)
+        }
+    }
+
     /** A stopped bolus counts as a success, but if nothing was given nothing changed on the pump. */
     @Test
     fun stoppedBolusWithNothingGivenIsNotEnacted() {
@@ -104,6 +119,23 @@ class DanaRPluginTest : TestBaseWithProfile() {
         val result = runBlocking { danaRPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 }) }
         assertThat(result.success).isTrue()
         assertThat(result.enacted).isFalse()
+    }
+
+    /**
+     * A bolus the pump stopped itself (an occlusion, a shutdown, a battery error: MsgError) is not given. It was counted
+     * as given, as a stop by the user is, and the user was not told.
+     */
+    @Test
+    fun aBolusThePumpStoppedIsNotGiven() {
+        whenever(rh.gs(eq(app.aaps.core.interfaces.R.string.format_insulin_units), anyOrNull())).thenReturn("0.40 U")
+        whenever(rh.gs(eq(app.aaps.core.ui.R.string.pump_stopped_bolus), anyOrNull())).thenReturn("stopped by the pump")
+        danaPump.bolusStopped = true
+        danaPump.bolusStoppedByPump = true
+        bindBolusService(connectionOk = true, delivered = 0.4)
+        val result = runBlocking { danaRPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 }) }
+        assertThat(result.success).isFalse()
+        assertThat(result.bolusDelivered).isWithin(0.001).of(0.4)
+        assertThat(result.comment).isEqualTo("stopped by the pump")
     }
 
     // ---- #946: the description has the steps the pump is set to, once they were read ----

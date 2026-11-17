@@ -218,6 +218,22 @@ class EquilPumpEmulatorTest {
         assertEquals(state.serialNumber, restored.state.serialNumber)
     }
 
+    /** Seen on a real pump (2026-11-10): step 0 for 1800 s runs a zero temp, step 0 for 0 s ends it, and neither is logged. */
+    @Test
+    fun `a zero temp runs until a cancel and is not logged`() {
+        sendInitial()
+        val logged = state.historyEvents.size
+        sendCommand(byteArrayOf(0x01, 0x04), Utils.concat(Utils.intToBytes(0), Utils.intToBytes(1800)))
+        assertTrue(state.isTempBasalRunning)
+        assertEquals(0.0, emulator.snapshot(linkUp = true).tempBasal!!.absolute!!, 0.0001)
+        val read = decryptResponse(sendCommand(byteArrayOf(0x02, 0x04))!!, state.sessionPassword)
+        assertEquals(listOf(0, 1800), listOf(getInt(read, 6), getInt(read, 10)))
+
+        sendCommand(byteArrayOf(0x01, 0x04), Utils.concat(Utils.intToBytes(0), Utils.intToBytes(0)))
+        assertFalse(state.isTempBasalRunning)
+        assertEquals(logged, state.historyEvents.size)
+    }
+
     @Test
     fun `a temp basal is reported as its rate`() {
         sendInitial()

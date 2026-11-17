@@ -34,7 +34,6 @@ class MsgInitConnStatusBolusK(
         } else {
             notificationManager.dismiss(NotificationId.EXTENDED_BOLUS_DISABLED)
         }
-        // This is last message of initial sequence
-        activePlugin.activePump.finishHandshaking()
+        // Not the last message of the start of a link: see MsgInitConnStatusBasicK.
     }
 }

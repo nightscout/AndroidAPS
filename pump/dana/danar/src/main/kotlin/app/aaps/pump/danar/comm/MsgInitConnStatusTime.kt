@@ -21,12 +21,10 @@ class MsgInitConnStatusTime(
             notificationManager.post(NotificationId.WRONG_DRIVER, TextRef.AndroidRes(app.aaps.pump.dana.R.string.pumpdrivercorrected))
             danaRPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to Korean DanaR")
-            danaRKoreanPlugin.setPluginEnabled(PluginType.PUMP, true)
-            danaRPlugin.setPluginEnabled(PluginType.PUMP, false)
+            // The same switch as in Configuration. Turning the plugins on and off here left the screens on the old driver.
+            configBuilder.performPluginSwitch(danaRKoreanPlugin, true, PluginType.PUMP)
             danaPump.reset() // mark not initialized
             pumpSync.connectNewPump()
-            //If profile coming from pump, switch it as well
-            configBuilder.storeSettings("ChangingDanaDriver")
             // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
             appScope.launch { commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.pump_driver_change)) } // force new connection
             failed = false

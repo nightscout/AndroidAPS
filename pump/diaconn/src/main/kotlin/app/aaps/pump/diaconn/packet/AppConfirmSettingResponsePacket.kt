@@ -30,15 +30,12 @@ class AppConfirmSettingResponsePacket(
         val bufferData = prefixDecode(data)
         result = getByteToInt(bufferData)
         aapsLogger.debug(LTag.PUMPCOMM, "Result --> $result")
+        // For the confirm the service waits on: 0 = the pump took the setting.
+        diaconnG8Pump.confirmResult = result
 
         if (!isSuccSettingResponseResult(result)) {
             diaconnG8Pump.resultErrorCode = result
             failed = true
-            return
-        }
-        //  The bolus progress dialog opens only when the confirm result is successful
-        if (diaconnG8Pump.bolusConfirmMessage == 0x07.toByte()) {
-            diaconnG8Pump.isReadyToBolus = true
         }
     }
 

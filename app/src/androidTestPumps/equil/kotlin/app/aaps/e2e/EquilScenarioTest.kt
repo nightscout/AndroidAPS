@@ -17,4 +17,14 @@ class EquilScenarioTest : AbstractPumpScenarioTest() {
     @Test
     override fun aBolusThePumpStopsCountsWhatItGave() {
     }
+
+    @Ignore("Not looked at whether an Equil can give a bolus without the app, so the emulator does not")
+    @Test
+    override fun aBolusGivenOnThePumpIsImported() {
+    }
+
+    @Ignore("Not looked at whether an Equil can stop the insulin without the app, so the emulator does not")
+    @Test
+    override fun aSuspendOnThePumpIsRecorded() {
+    }
 }

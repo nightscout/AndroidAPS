@@ -99,10 +99,14 @@ class BolusProgressData(
     /**
      * Called by pump drivers to report delivery progress.
      * Purely informational — does not control dialog lifecycle.
+     *
+     * @param delivered what the pump gave until now, or null to keep the amount shown. Several drivers record the
+     * bolus from this amount, so a new status text must not set it to 0 (a stopped Korean DanaR bolus was once
+     * recorded as 0 U that way).
      */
-    fun updateProgress(percent: Int, status: TextRef, delivered: PumpInsulin = PumpInsulin(0.0)) {
+    fun updateProgress(percent: Int, status: TextRef, delivered: PumpInsulin? = null) {
         // A fresh frame proves liveness → clear any prior stall flag (lets the client dialog recover).
-        _state.update { it?.copy(percent = percent, status = status, wearStatus = status, delivered = delivered, stalled = false) }
+        _state.update { it?.copy(percent = percent, status = status, wearStatus = status, delivered = delivered ?: it.delivered, stalled = false) }
     }
 
     /**

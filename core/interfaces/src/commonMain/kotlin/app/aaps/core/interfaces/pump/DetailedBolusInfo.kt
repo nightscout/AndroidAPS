@@ -7,7 +7,14 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
 import kotlin.time.Clock
+
+/**
+ * The extended part of a meal: [grams] spread over [durationHours] from [timestamp]. [delayMinutes] is how far
+ * [timestamp] lies after the entry, for the user entry log only. See [DetailedBolusInfo.eCarbs].
+ */
+data class ECarbs(val grams: Int, val timestamp: Long, val durationHours: Int, val delayMinutes: Int)
 
 class DetailedBolusInfo {
 
@@ -30,6 +37,13 @@ class DetailedBolusInfo {
     var glucoseType: TE.MeterType? = null // NS values: Manual, Finger, Sensor
     var bolusType = BS.Type.NORMAL
     var carbsDuration = 0L // in milliseconds
+
+    /**
+     * The extended part of the same meal (cake / pizza carbs type, or a QuickWizard with eCarbs). It is
+     * stored exactly when [carbs] are: by [app.aaps.core.interfaces.queue.CommandQueue.bolus] after the bolus succeeded, or at once when
+     * there is no insulin. So a failed bolus leaves no eCarbs without the carbs they belong to (#5491).
+     */
+    var eCarbs: ECarbs? = null
 
     // Collected info from driver
     var pumpType: PumpType? = null // if == USER
@@ -63,6 +77,16 @@ class DetailedBolusInfo {
             )
         else error("carbs == 0.0")
 
+    fun createECarbs(): CA =
+        eCarbs?.let {
+            CA(
+                timestamp = it.timestamp,
+                amount = it.grams.toDouble(),
+                duration = T.hours(it.durationHours.toLong()).msecs(),
+                notes = notes
+            )
+        } ?: error("eCarbs == null")
+
     fun copy(): DetailedBolusInfo {
         val n = DetailedBolusInfo()
         n.insulin = insulin
@@ -79,6 +103,7 @@ class DetailedBolusInfo {
         n.glucoseType = glucoseType
         n.bolusType = bolusType
         n.carbsDuration = carbsDuration
+        n.eCarbs = eCarbs
 
         n.pumpType = pumpType
         n.pumpSerial = pumpSerial

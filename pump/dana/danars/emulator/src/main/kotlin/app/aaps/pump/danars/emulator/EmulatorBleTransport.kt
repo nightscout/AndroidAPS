@@ -160,6 +160,7 @@ class EmulatorBleTransport(
 
         // Wire up spontaneous message callback for notifications and multi-response history
         emulator.onSpontaneousMessage = { link, type, opCode, data ->
+            awaitAnswersSent()
             val generation = link ?: connectionGeneration
             // Dropped before it is built: building advances the RSv3 encryption of the link that is up now.
             if (generation == connectionGeneration) {
@@ -196,6 +197,20 @@ class EmulatorBleTransport(
         listener?.onConnectionStateChanged(false)
     }
 
+    /**
+     * A replacement pump, in range: the next scan names it anew (see `deviceNameProvider`), so AAPS sees another pump, and
+     * it has no history and runs nothing. Keeping the old history under a new name gave a pump no real user has.
+     */
+    override fun replaceWithNewPump(): Boolean {
+        synchronized(pumpState) {
+            pumpState.isTempBasalRunning = false
+            pumpState.isExtendedBolusRunning = false
+            pumpState.historyStore.clear()
+            pumpState.reviewHistoryStore.clear()
+        }
+        return setOutOfRange(false)
+    }
+
     override fun setOutOfRange(outOfRange: Boolean): Boolean {
         this.outOfRange = outOfRange
         if (outOfRange) dropLink()
@@ -217,6 +232,10 @@ class EmulatorBleTransport(
         return true
     }
 
+    override fun bolusOnPump(units: Double): Boolean = emulator.bolusOnPump(units)
+
+    override fun suspendOnPump(suspended: Boolean): Boolean = emulator.suspendOnPump(suspended)
+
     override fun state(): EmulatedPumpState = synchronized(pumpState) {
         EmulatedPumpState(
             boluses = pumpState.givenBoluses.toList(),
@@ -228,7 +247,10 @@ class EmulatorBleTransport(
             linkUp = connected,
             commands = commands.get(),
             extendedBolus = if (pumpState.isExtendedBolusRunning)
-                EmulatedExtendedBolus(units = pumpState.extendedBolusAmount, minutes = pumpState.extendedBolusDurationHalfHours * 30) else null
+                EmulatedExtendedBolus(units = pumpState.extendedBolusAmount, minutes = pumpState.extendedBolusDurationHalfHours * 30) else null,
+            battery = pumpState.batteryRemaining,
+            // The pump gives the profile it has as active, one rate an hour.
+            basal = pumpState.basalProfiles.getOrNull(pumpState.activeProfileNumber)?.toList()
         )
     }
 
@@ -241,6 +263,8 @@ class EmulatorBleTransport(
         BleEncryption.DANAR_PACKET__OPCODE_BASAL__SET_TEMPORARY_BASAL,
         BleEncryption.DANAR_PACKET__OPCODE_BASAL__APS_SET_TEMPORARY_BASAL   -> EmulatedCommand.TEMP_BASAL_START
         BleEncryption.DANAR_PACKET__OPCODE_BASAL__CANCEL_TEMPORARY_BASAL    -> EmulatedCommand.TEMP_BASAL_STOP
+        BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_EXTENDED_BOLUS        -> EmulatedCommand.EXTENDED_BOLUS_START
+        BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_EXTENDED_BOLUS_CANCEL -> EmulatedCommand.EXTENDED_BOLUS_STOP
         BleEncryption.DANAR_PACKET__OPCODE_BASAL__SET_PROFILE_BASAL_RATE    -> EmulatedCommand.BASAL_PROFILE
         BleEncryption.DANAR_PACKET__OPCODE_REVIEW__INITIAL_SCREEN_INFORMATION -> EmulatedCommand.STATUS
         else                                                                -> null
@@ -388,6 +412,7 @@ class EmulatorBleTransport(
             }
 
             // Process the packet through pump-side encryption and emulator
+            synchronized(answering) { answersPending++ }
             try {
                 val response = processPumpSide(packet)
                 if (response != null) {
@@ -398,6 +423,11 @@ class EmulatorBleTransport(
                 }
             } catch (e: Exception) {
                 aapsLogger?.error(LTag.PUMPEMULATOR, "exception in processPumpSide", e)
+            } finally {
+                synchronized(answering) {
+                    answersPending--
+                    answering.notifyAll()
+                }
             }
         }
     }
@@ -752,6 +782,25 @@ class EmulatorBleTransport(
      * on the generation rather than on `connected`, so a test that drives `writeCharacteristic`
      * directly without connecting still gets its responses.
      */
+    /**
+     * Commands being answered now. A real pump sends its answer to a command before anything it sends after it. The
+     * emulator sends a history read's first event as the answer, and the rest and the "done" from its own thread, so
+     * under load the "done" could come first: the driver ended the read with nothing, and a bolus got no record
+     * (CircleCI 42448, RSv1). What the pump sends by itself therefore waits until the answers are out.
+     */
+    private val answering = Object()
+    private var answersPending = 0
+
+    /** Waits, holding no lock of the link, until no command is being answered; at most [ANSWER_WAIT_MS]. */
+    private fun awaitAnswersSent() = synchronized(answering) {
+        val end = System.currentTimeMillis() + ANSWER_WAIT_MS
+        while (answersPending > 0) {
+            val left = end - System.currentTimeMillis()
+            if (left <= 0) break
+            answering.wait(left)
+        }
+    }
+
     private fun sendResponse(responseBytes: ByteArray, generation: Int = connectionGeneration) {
         // Checked and delivered under the lock: a disconnect landing between the two would put the
         // packet into a BLEComm that has already torn down, and it would throw
@@ -763,5 +812,11 @@ class EmulatorBleTransport(
             }
             listener?.onCharacteristicChanged(responseBytes)
         }
+    }
+
+    private companion object {
+
+        /** An answer is out in milliseconds. Longer means it was lost, and the message goes anyway. */
+        const val ANSWER_WAIT_MS = 2_000L
     }
 }

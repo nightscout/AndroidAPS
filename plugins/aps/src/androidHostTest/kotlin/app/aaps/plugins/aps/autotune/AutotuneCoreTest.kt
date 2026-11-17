@@ -4,6 +4,7 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.model.data.TargetBlock
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil
@@ -38,6 +39,8 @@ class AutotuneCoreTest : TestBaseWithProfile() {
     fun initData() {
         autotuneCore = AutotuneCore(preferences, autotuneFS)
         TimeZone.setDefault(TimeZone.getTimeZone("GMT+2"))
+        // AutotuneCore reads the zone through SystemTimeZone, which keeps a read for a few seconds.
+        SystemTimeZone.invalidate()
     }
 
     @Suppress("SpellCheckingInspection")
@@ -46,7 +49,7 @@ class AutotuneCoreTest : TestBaseWithProfile() {
         val prepJson = File("src/androidHostTest/res/autotune/test1/autotune.2022-05-21.json").readText()
         val inputProfileJson = File("src/androidHostTest/res/autotune/test1/profile.pump.json").readText()
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
-        val prep = PreppedGlucose(JSONObject(prepJson), dateUtil)
+        val prep = PreppedGlucose(parseJsonObject(prepJson), dateUtil)
 
         whenever(preferences.get(DoubleKey.AutosensMax)).thenReturn(autotuneMax)
         whenever(preferences.get(DoubleKey.AutosensMin)).thenReturn(autotuneMin)
@@ -69,7 +72,7 @@ class AutotuneCoreTest : TestBaseWithProfile() {
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
         val pumpProfileJson = File("src/androidHostTest/res/autotune/test4/profile.pump.json").readText()
         val pumpProfile = atProfileFromOapsJson(JSONObject(pumpProfileJson), dateUtil)!!
-        val prep = PreppedGlucose(JSONObject(prepJson), dateUtil)
+        val prep = PreppedGlucose(parseJsonObject(prepJson), dateUtil)
         whenever(preferences.get(DoubleKey.AutosensMax)).thenReturn(autotuneMax)
         whenever(preferences.get(DoubleKey.AutosensMin)).thenReturn(autotuneMin)
         whenever(preferences.get(DoubleKey.ApsSmbMin5MinCarbsImpact)).thenReturn(min5mCarbImpact)

@@ -341,10 +341,43 @@ const val BASAL_HEIGHT_FRACTION = 0.5
 const val IOB_HEIGHT_FRACTION = 0.75
 
 /**
+ * Height of the profile icon of a 100% profile on the BG graph, as a fraction of the axis height.
+ *
+ * The icon is drawn at `percentage / 100 * EPS_HEIGHT_FRACTION` of the height, so a weaker profile
+ * sits lower and a stronger one higher. See [epsY].
+ */
+const val EPS_HEIGHT_FRACTION = 0.75
+
+/**
+ * Highest the profile icon may go, as a fraction of the axis height.
+ *
+ * A profile of more than about 127% would otherwise be drawn above the top edge of the graph and
+ * never be seen; it is pinned here instead. The room left above holds the upper half of the icon.
+ */
+const val EPS_MAX_HEIGHT_FRACTION = 0.95
+
+/**
+ * Y of the profile icon of a profile running at [percentage], in the units of the BG axis that runs
+ * from [axisMin] to [axisMax].
+ *
+ * Both bounds must be the ones of the axis that is drawn (the visible window), not of the whole
+ * loaded range. With the bounds of the whole range the icon moves away from its height, and out of
+ * the graph, as soon as the window is zoomed or scrolled to a different range of values.
+ */
+fun epsY(percentage: Int, axisMin: Double, axisMax: Double): Double {
+    val fraction = (percentage / 100.0 * EPS_HEIGHT_FRACTION).coerceIn(0.0, EPS_MAX_HEIGHT_FRACTION)
+    return axisMin + fraction * (axisMax - axisMin)
+}
+
+/**
  * Filters data points to only include those within the valid x-axis range.
  *
  * Use this when you have data that might extend beyond the visible time range
  * and you want to exclude out-of-range points from rendering.
+ *
+ * A point whose y is NaN or infinite is dropped too: Vico cannot draw it and crashes (#5525).
+ * [app.aaps.ui.compose.overview.OverviewDataCacheImpl] already removes and reports such values, so
+ * this is only the last check.
  *
  * @param dataPoints List of (x, y) coordinate pairs
  * @param minX Minimum X value for the graph range
@@ -357,7 +390,7 @@ fun filterToRange(
     maxX: Double
 ): List<Pair<Double, Double>> {
     return dataPoints
-        .filter { (x, _) -> x in minX..maxX }
+        .filter { (x, y) -> x in minX..maxX && y.isFinite() }
         .sortedBy { (x, _) -> x }  // CRITICAL: Sort by x-value for Vico
 }
 
