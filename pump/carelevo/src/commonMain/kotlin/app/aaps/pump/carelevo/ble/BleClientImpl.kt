@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package app.aaps.pump.carelevo.ble
 
 import app.aaps.pump.carelevo.ble.gatt.GattConnState
@@ -17,9 +19,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import java.util.UUID
 import kotlin.concurrent.atomics.AtomicReference
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * Production implementation of [BleClient].
@@ -46,9 +49,9 @@ import kotlin.concurrent.atomics.ExperimentalAtomicApi
 @OptIn(ExperimentalAtomicApi::class)
 class BleClientImpl(
     private val gatt: GattConnection,
-    private val writeUuid: UUID,
+    private val writeUuid: Uuid,
     @Suppress("unused")
-    private val notifyUuid: UUID,
+    private val notifyUuid: Uuid,
     scope: CoroutineScope
 ) : BleClient {
 

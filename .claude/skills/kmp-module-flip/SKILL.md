@@ -461,6 +461,26 @@ same change, or Metro reports a duplicate binding.
 discouraged. Prefer the function syntax form `() -> T`."* Write `() -> T` in new code. Call sites are
 identical - `provider()` either way - so only the type and the import change.
 
+### A pump driver: what moves now, and what stays until the platform can run a pump
+
+`:pump:carelevo` was the first driver to flip. Its logic (BLE session, commands, coordinators, use cases, storage)
+went to commonMain; the plugin class, its view models, its screens, the Android notifications and the broadcast
+receiver stayed in androidMain.
+
+- **Find what can move by its dependencies, not file by file.** A file stays when it imports a platform API, or when it
+  uses a file that stays. Compute that closure first; a handful of blocking calls usually hold back most of a module.
+  In Carelevo they were `java.util.UUID`, `SystemClock.sleep`, `TimeUnit`, `BigInteger`, `String.format`,
+  `synchronized`, `java.lang.Float.MIN_NORMAL` and `ResourceHelper` (use `TextResolver`, which is common).
+- **Keep the plugin and its view models in androidMain while the iOS app runs no pump.** A plugin registered from
+  commonMain joins the iOS graph, and its view models join the iOS view model map, so iOS would need every pump binding.
+  Left on Android, the driver is visibly absent on iOS rather than present and dead. Plain `@ContributesBinding`
+  classes (the driver's storage) can move: Metro accepts them in the iOS graph while nothing there injects them.
+  Compile `:ios:shell:compileKotlinIosArm64` to prove it, since that is where the graph is checked.
+- **A blocking sleep is platform code.** `SystemClock.sleep` keeps sleeping through an interrupt; `runBlocking { delay }`
+  throws on one. Use an `expect fun` with the platform call on each target, as `sleepBlocking` in `:pump:carelevo`.
+- **A commonTest also runs in `testAndroidHostTest`, where Android calls do nothing.** `isReturnDefaultValues` makes
+  `SystemClock.sleep` return at once, so a timing test of an Android `actual` cannot live in commonTest.
+
 ### Lift the platform call out, keep the rule
 
 When a class is blocked by one platform call, put that call behind an interface in commonMain and

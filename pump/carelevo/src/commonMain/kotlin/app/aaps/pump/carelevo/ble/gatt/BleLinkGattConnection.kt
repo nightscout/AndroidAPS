@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package app.aaps.pump.carelevo.ble.gatt
 
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -17,7 +19,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * [GattConnection] over a Bluetooth v2 [BleLink]: the seam `BleClientImpl` works on, now on the link every platform
@@ -57,7 +60,7 @@ class BleLinkGattConnection(
         }
     }
 
-    override suspend fun writeCharacteristic(uuid: UUID, payload: ByteArray, withResponse: Boolean) {
+    override suspend fun writeCharacteristic(uuid: Uuid, payload: ByteArray, withResponse: Boolean) {
         require(uuid == WRITE_UUID) { "unexpected write characteristic $uuid; the patch has a single write characteristic $WRITE_UUID" }
         val result = link.write(CarelevoGatt.WRITE, payload, writeType)
         if (result is BleResult.Failed) throw GattWriteException("write failed: ${result.failure}")
@@ -69,7 +72,7 @@ class BleLinkGattConnection(
             throw GattDiscoveryException("not a CareLevo patch: its service is missing")
     }
 
-    override suspend fun enableNotifications(uuid: UUID) {
+    override suspend fun enableNotifications(uuid: Uuid) {
         require(uuid == NOTIFY_UUID) { "unexpected notify characteristic $uuid; the patch has a single notify characteristic $NOTIFY_UUID" }
         val result = link.subscribe(CarelevoGatt.NOTIFY)
         if (result is BleResult.Failed) throw GattDiscoveryException("notifications not enabled: ${result.failure}")
@@ -88,8 +91,8 @@ class BleLinkGattConnection(
 
     companion object {
 
-        val WRITE_UUID: UUID = UUID.fromString(CarelevoGatt.WRITE.characteristic.value)
-        val NOTIFY_UUID: UUID = UUID.fromString(CarelevoGatt.NOTIFY.characteristic.value)
+        val WRITE_UUID: Uuid = Uuid.parse(CarelevoGatt.WRITE.characteristic.value)
+        val NOTIFY_UUID: Uuid = Uuid.parse(CarelevoGatt.NOTIFY.characteristic.value)
 
         private const val EVENT_BUFFER = 64
     }

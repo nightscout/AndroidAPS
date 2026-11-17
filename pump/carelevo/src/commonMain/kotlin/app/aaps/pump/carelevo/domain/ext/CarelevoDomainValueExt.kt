@@ -1,7 +1,10 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package app.aaps.pump.carelevo.domain.ext
 
 import app.aaps.pump.carelevo.domain.model.basal.CarelevoBasalSegmentDomainModel
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 internal fun List<CarelevoBasalSegmentDomainModel>.splitSegment(): List<CarelevoBasalSegmentDomainModel> {
     val normalized = this
@@ -31,5 +34,5 @@ internal fun List<CarelevoBasalSegmentDomainModel>.splitSegment(): List<Carelevo
 }
 
 internal fun generateUUID(): String {
-    return UUID.randomUUID().toString()
+    return Uuid.random().toString()
 }

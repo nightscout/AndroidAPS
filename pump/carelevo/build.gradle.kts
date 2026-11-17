@@ -44,6 +44,13 @@ kotlin {
             }
         }
 
+        // Runs on every target: the helpers that replaced JVM calls must give the same result on iOS.
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+
         androidMain {
             dependencies {
                 api(project.dependencies.platform(libs.androidx.compose.bom))

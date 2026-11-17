@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package app.aaps.pump.carelevo.ble.commands
 
 import app.aaps.pump.carelevo.ble.BleClientImpl
@@ -7,8 +9,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
-import java.util.UUID
 import kotlin.test.assertFailsWith
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * Unit tests for [MacAddressCommand] — pure encode/decode plus one end-to-end round-trip
@@ -67,8 +70,8 @@ internal class MacAddressCommandTest {
 
     @Test
     fun `end to end - BleClient sends request and decodes response from FakeGatt`() = runTest {
-        val writeUuid = UUID.fromString("00000001-0000-1000-8000-00805f9b34fb")
-        val notifyUuid = UUID.fromString("00000002-0000-1000-8000-00805f9b34fb")
+        val writeUuid = Uuid.parse("00000001-0000-1000-8000-00805f9b34fb")
+        val notifyUuid = Uuid.parse("00000002-0000-1000-8000-00805f9b34fb")
         val gatt = FakeGattConnection()
         val client = BleClientImpl(gatt, writeUuid, notifyUuid, backgroundScope)
         runCurrent() // ensure the event collector is attached

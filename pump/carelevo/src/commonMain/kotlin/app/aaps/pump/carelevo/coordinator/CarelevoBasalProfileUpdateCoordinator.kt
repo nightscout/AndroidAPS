@@ -1,11 +1,10 @@
 package app.aaps.pump.carelevo.coordinator
 
-import android.os.SystemClock
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.common.CarelevoPatch
@@ -16,6 +15,7 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainMo
 import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
 import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoSetBasalProgramUseCase
+import app.aaps.pump.carelevo.ext.sleepBlocking
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.Provider
@@ -25,13 +25,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @SingleIn(AppScope::class)
 class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val carelevoPatch: CarelevoPatch,
     private val bleSession: CarelevoBleSession,
@@ -56,8 +57,8 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
     private var lastProfileUpdateAttemptMs: Long = 0
 
     /** The clock and the wait of the spacing between updates, replaced in unit tests. */
-    internal var clock: () -> Long = { System.currentTimeMillis() }
-    internal var sleep: (Long) -> Unit = { SystemClock.sleep(it) }
+    internal var clock: () -> Long = { Clock.System.now().toEpochMilliseconds() }
+    internal var sleep: (Long) -> Unit = { sleepBlocking(it) }
 
     /** The hourly segments of the program the patch accepted, see [CarelevoSetBasalProgramUseCase.acceptedBasalSegments]. */
     fun acceptedBasalSegments(): List<CarelevoBasalSegmentInfusionInfoDomainModel>? = setBasalProgramUseCase.acceptedBasalSegments()

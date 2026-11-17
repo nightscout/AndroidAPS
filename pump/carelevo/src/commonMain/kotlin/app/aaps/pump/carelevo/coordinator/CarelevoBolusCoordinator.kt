@@ -1,6 +1,5 @@
 package app.aaps.pump.carelevo.coordinator
 
-import android.os.SystemClock
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
@@ -14,7 +13,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
@@ -43,6 +42,7 @@ import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoFinishImmeBolusInfusi
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartExtendBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartImmeBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.bolus.model.StartImmeBolusInfusionResponseModel
+import app.aaps.pump.carelevo.ext.sleepBlocking
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.Provider
@@ -56,16 +56,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeoutOrNull
-import java.util.concurrent.TimeoutException
+import kotlin.concurrent.Volatile
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.min
 import kotlin.math.roundToInt
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 
 @SingleIn(AppScope::class)
 class CarelevoBolusCoordinator @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val dateUtil: DateUtil,
     private val bolusProgressData: BolusProgressData,
     private val pumpSync: PumpSync,
@@ -438,7 +439,7 @@ class CarelevoBolusCoordinator @Inject constructor(
             } catch (e: Exception) {
                 return startNotAnswered(e, detailedBolusInfo, actionId, bolusTotalBefore, address, result, serialNumber, onStatusRefreshRequested)
             }
-            val bolusStartMs = System.currentTimeMillis()
+            val bolusStartMs = Clock.System.now().toEpochMilliseconds()
             if (response.resultCode != RESULT_SUCCESS) {
                 aapsLogger.error(LTag.PUMPCOMM, "newBle.deliverTreatment start failed result=${response.resultCode}")
                 result.success = false
@@ -547,21 +548,21 @@ class CarelevoBolusCoordinator @Inject constructor(
      */
     private fun awaitImmeBolusCancelIfStopped() {
         if (!bolusProgressData.isStopPressed || isImmeBolusStop) return
-        val deadline = System.currentTimeMillis() + CANCEL_WAIT_TIMEOUT_MS
+        val deadline = Clock.System.now().toEpochMilliseconds() + CANCEL_WAIT_TIMEOUT_MS
         // Block until the out-of-band cancel session has fully finished (its GATT closed) before freeing the
         // worker. Exit on: confirmed cancel (isImmeBolusStop); OR the cancel finished without confirming
         // (immeBolusCancelDone, so no GATT is open → safe); OR the backstop deadline.
-        while (System.currentTimeMillis() < deadline) {
+        while (Clock.System.now().toEpochMilliseconds() < deadline) {
             if (isImmeBolusStop || immeBolusCancelDone) break
-            SystemClock.sleep(PROGRESS_POLL_MS)
+            sleepBlocking(PROGRESS_POLL_MS)
         }
         aapsLogger.info(LTag.PUMPCOMM, "newBle.deliverTreatment stop settled isImmeBolusStop=$isImmeBolusStop inFlight=$immeBolusCancelInFlight")
     }
 
     /** Waits (bounded) until a running cancel session has closed, so the freed worker cannot open a second GATT. */
     private fun awaitCancelSessionClosed() {
-        val deadline = System.currentTimeMillis() + CANCEL_WAIT_TIMEOUT_MS
-        while (immeBolusCancelInFlight && System.currentTimeMillis() < deadline) SystemClock.sleep(PROGRESS_POLL_MS)
+        val deadline = Clock.System.now().toEpochMilliseconds() + CANCEL_WAIT_TIMEOUT_MS
+        while (immeBolusCancelInFlight && Clock.System.now().toEpochMilliseconds() < deadline) sleepBlocking(PROGRESS_POLL_MS)
     }
 
     /**
@@ -586,8 +587,8 @@ class CarelevoBolusCoordinator @Inject constructor(
             CarelevoStrings.carelevo_bolus_stop_not_confirmed,
             bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
         )
-        val waitMs = bolusStartMs + bolusExpectMs + BOLUS_END_MARGIN_MS - System.currentTimeMillis()
-        if (waitMs > 0) SystemClock.sleep(waitMs)
+        val waitMs = bolusStartMs + bolusExpectMs + BOLUS_END_MARGIN_MS - Clock.System.now().toEpochMilliseconds()
+        if (waitMs > 0) sleepBlocking(waitMs)
         val bolusTotalAfter = readBolusTotalAfterEnd(address)
 
         val requested = detailedInfo.insulin
@@ -732,7 +733,7 @@ class CarelevoBolusCoordinator @Inject constructor(
             val info = readInfusionInfoOrNull(address)
             if (info != null && !info.isImmeBolusRunning()) return info.infusedTotalBolusAmount
             aapsLogger.warn(LTag.PUMPCOMM, "newBle.deliverTreatment bolus end not seen attempt=$attempt answered=${info != null}")
-            if (attempt < BOLUS_END_MAX_READS - 1) SystemClock.sleep(BOLUS_END_READ_INTERVAL_MS)
+            if (attempt < BOLUS_END_MAX_READS - 1) sleepBlocking(BOLUS_END_READ_INTERVAL_MS)
         }
         return null
     }
@@ -855,7 +856,7 @@ class CarelevoBolusCoordinator @Inject constructor(
 
         val data = response.data as StartImmeBolusInfusionResponseModel
 
-        val now = System.currentTimeMillis()
+        val now = Clock.System.now().toEpochMilliseconds()
         onLastDataUpdated()
         _lastBolusTime.value = now
         _lastBolusAmount.value = PumpInsulin(detailedInfo.insulin)
@@ -899,12 +900,12 @@ class CarelevoBolusCoordinator @Inject constructor(
                 completed = true
             } else {
                 // Sleep the per-step delay in short slices so a mid-step stop is honored within
-                // PROGRESS_POLL_MS rather than after the full delayMs (SystemClock.sleep is blocking
+                // PROGRESS_POLL_MS rather than after the full delayMs (sleepBlocking is blocking
                 // and does not observe coroutine cancellation).
                 var slept = 0L
                 while (slept < delayMs && !isImmeBolusStop && !bolusProgressData.isStopPressed) {
                     val chunk = min(PROGRESS_POLL_MS, delayMs - slept)
-                    SystemClock.sleep(chunk)
+                    sleepBlocking(chunk)
                     slept += chunk
                 }
                 if (isImmeBolusStop || bolusProgressData.isStopPressed) break
@@ -958,8 +959,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         result.success = false
         result.enacted = false
         result.bolusDelivered = 0.0
-        // The session times out with the coroutine timeout, not the java one.
-        if (e is TimeoutException || e is TimeoutCancellationException) {
+        if (e is TimeoutCancellationException) {
             result.comment(rh.gs(CarelevoStrings.alarm_feat_msg_check_patch_connect))
         }
     }

@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package app.aaps.pump.carelevo.ble.commands
 
 import app.aaps.pump.carelevo.ble.BleClientImpl
@@ -9,8 +11,9 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.Test
-import java.util.UUID
 import kotlin.test.assertFailsWith
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * Tests for [ImmediateBolusCommand]. Safety-critical — wrong encoding = wrong dose.
@@ -141,8 +144,8 @@ internal class ImmediateBolusCommandTest {
 
     @Test
     fun `end to end - BleClient correlates response by actionId echo`() = runTest {
-        val writeUuid = UUID.fromString("00000001-0000-1000-8000-00805f9b34fb")
-        val notifyUuid = UUID.fromString("00000002-0000-1000-8000-00805f9b34fb")
+        val writeUuid = Uuid.parse("00000001-0000-1000-8000-00805f9b34fb")
+        val notifyUuid = Uuid.parse("00000002-0000-1000-8000-00805f9b34fb")
         val gatt = FakeGattConnection()
         val client = BleClientImpl(gatt, writeUuid, notifyUuid, backgroundScope)
         runCurrent()
@@ -165,8 +168,8 @@ internal class ImmediateBolusCommandTest {
 
     @Test
     fun `end to end - wrong actionId echo is rejected and request times out`() = runTest {
-        val writeUuid = UUID.fromString("00000001-0000-1000-8000-00805f9b34fb")
-        val notifyUuid = UUID.fromString("00000002-0000-1000-8000-00805f9b34fb")
+        val writeUuid = Uuid.parse("00000001-0000-1000-8000-00805f9b34fb")
+        val notifyUuid = Uuid.parse("00000002-0000-1000-8000-00805f9b34fb")
         val gatt = FakeGattConnection()
         val client = BleClientImpl(gatt, writeUuid, notifyUuid, backgroundScope)
         runCurrent()

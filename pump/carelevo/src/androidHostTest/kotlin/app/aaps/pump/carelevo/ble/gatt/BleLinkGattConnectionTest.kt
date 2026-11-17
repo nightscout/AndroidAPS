@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package app.aaps.pump.carelevo.ble.gatt
 
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -31,8 +33,9 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
-import java.util.UUID
 import kotlin.test.assertFailsWith
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * The seam the CareLevo client works on, over a Bluetooth v2 link. What it adds to the link: the write type the
@@ -78,7 +81,7 @@ internal class BleLinkGattConnectionTest {
         val patch = Patch()
         val gatt = connect(patch)
 
-        assertFailsWith<IllegalArgumentException> { gatt.writeCharacteristic(UUID.randomUUID(), byteArrayOf(1)) }
+        assertFailsWith<IllegalArgumentException> { gatt.writeCharacteristic(Uuid.random(), byteArrayOf(1)) }
         assertThat(patch.writeTypes).isEmpty()
     }
 

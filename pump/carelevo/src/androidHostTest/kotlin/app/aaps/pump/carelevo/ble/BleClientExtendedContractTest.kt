@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package app.aaps.pump.carelevo.ble
 
 import app.aaps.pump.carelevo.ble.gatt.FakeGattConnection
@@ -15,8 +17,9 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.util.UUID
 import kotlin.test.assertFailsWith
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * Executable specification for the extended [BleClient] surface:
@@ -29,8 +32,8 @@ import kotlin.test.assertFailsWith
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class BleClientExtendedContractTest {
 
-    private val writeUuid: UUID = UUID.fromString("00000001-0000-1000-8000-00805f9b34fb")
-    private val notifyUuid: UUID = UUID.fromString("00000002-0000-1000-8000-00805f9b34fb")
+    private val writeUuid: Uuid = Uuid.parse("00000001-0000-1000-8000-00805f9b34fb")
+    private val notifyUuid: Uuid = Uuid.parse("00000002-0000-1000-8000-00805f9b34fb")
 
     private lateinit var gatt: FakeGattConnection
 

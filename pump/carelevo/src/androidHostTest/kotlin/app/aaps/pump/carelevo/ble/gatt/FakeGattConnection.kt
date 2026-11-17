@@ -1,9 +1,12 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package app.aaps.pump.carelevo.ble.gatt
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * In-memory [GattConnection] for tests. No Android / Robolectric dependencies.
@@ -37,7 +40,7 @@ class FakeGattConnection : GattConnection {
 
     /** A single `writeCharacteristic` invocation, recorded for assertions. */
     data class Write(
-        val uuid: UUID,
+        val uuid: Uuid,
         val payload: ByteArray,
         val withResponse: Boolean
     )
@@ -55,7 +58,7 @@ class FakeGattConnection : GattConnection {
     // ===== GattConnection implementation =====
 
     override suspend fun writeCharacteristic(
-        uuid: UUID,
+        uuid: Uuid,
         payload: ByteArray,
         withResponse: Boolean
     ) {
@@ -84,7 +87,7 @@ class FakeGattConnection : GattConnection {
         if (!discoveryOutcome) throw GattDiscoveryException("scripted discovery failure")
     }
 
-    override suspend fun enableNotifications(uuid: UUID) {
+    override suspend fun enableNotifications(uuid: Uuid) {
         check(!closed) { "FakeGattConnection is closed" }
         // Intentionally a no-op for the fake. Tests deliver notifications via
         // [deliverNotification] regardless of which UUIDs are "enabled".
@@ -97,7 +100,7 @@ class FakeGattConnection : GattConnection {
     // ===== Test-side scripting API =====
 
     /** Emit a notification as if the peripheral sent it. */
-    suspend fun deliverNotification(uuid: UUID, payload: ByteArray) {
+    suspend fun deliverNotification(uuid: Uuid, payload: ByteArray) {
         _events.emit(GattEvent.Notification(uuid, payload))
     }
 

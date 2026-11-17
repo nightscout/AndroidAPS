@@ -10,7 +10,6 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoBasalSegmentInfusion
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import dev.zacsweers.metro.Inject
-import java.util.concurrent.TimeUnit
 import kotlin.time.Clock
 
 class CarelevoSetBasalProgramUseCase @Inject constructor(
@@ -28,8 +27,8 @@ class CarelevoSetBasalProgramUseCase @Inject constructor(
         val profileBasalSegment = profile.getBasalValues()
         val basalSegment = profileBasalSegment.mapIndexed { index, value ->
             val nextIndex = if (profileBasalSegment.size == index + 1) 0 else index + 1
-            val startTimeMinutes = TimeUnit.SECONDS.toMinutes(value.timeAsSeconds.toLong())
-            val endTimeMinutes = if (nextIndex == 0) MINUTES_PER_DAY else TimeUnit.SECONDS.toMinutes(profileBasalSegment[nextIndex].timeAsSeconds.toLong())
+            val startTimeMinutes = value.timeAsSeconds.toLong() / 60
+            val endTimeMinutes = if (nextIndex == 0) MINUTES_PER_DAY else profileBasalSegment[nextIndex].timeAsSeconds.toLong() / 60
             CarelevoBasalSegmentDomainModel(
                 startTime = startTimeMinutes.toInt(),
                 endTime = endTimeMinutes.toInt(),

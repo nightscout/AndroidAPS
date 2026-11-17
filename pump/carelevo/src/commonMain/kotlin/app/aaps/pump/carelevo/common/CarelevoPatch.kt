@@ -1,7 +1,11 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package app.aaps.pump.carelevo.common
 
 import app.aaps.core.data.model.TE
+import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
@@ -46,6 +50,7 @@ import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoCreateUserSetti
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoUserSettingInfoMonitorUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.model.CarelevoUserSettingInfoRequestModel
 import app.aaps.pump.carelevo.ext.localNowIsoText
+import app.aaps.pump.carelevo.ext.toHexText
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -63,8 +68,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeoutOrNull
-import java.util.UUID
-import java.util.concurrent.TimeUnit
+import kotlin.concurrent.Volatile
 import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.coroutines.cancellation.CancellationException
@@ -72,6 +76,8 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)
@@ -156,13 +162,14 @@ class CarelevoPatch @Inject constructor(
 
     /** One start shared by every caller that comes while it runs. It fails when it does not end in [INIT_TIMEOUT]. */
     @Volatile private var inFlightInit: Deferred<Unit>? = null
-    fun initPatchOnce(): Deferred<Unit> = synchronized(this) {
+    private val initLock = AapsLock()
+    fun initPatchOnce(): Deferred<Unit> = initLock.withLock {
         inFlightInit?.let { return it }
         val started = scope.async {
             withTimeoutOrNull(INIT_TIMEOUT) { initPatchAndAwait() } ?: throw IllegalStateException("patch init did not end in $INIT_TIMEOUT")
         }
         inFlightInit = started
-        started.invokeOnCompletion { synchronized(this) { if (inFlightInit === started) inFlightInit = null } }
+        started.invokeOnCompletion { initLock.withLock { if (inFlightInit === started) inFlightInit = null } }
         started
     }
 
@@ -241,9 +248,7 @@ class CarelevoPatch @Inject constructor(
         if (aVals.size != bVals.size) return false
 
         for (i in aVals.indices) {
-            if (TimeUnit.SECONDS.toMinutes(aVals[i].timeAsSeconds.toLong()) !=
-                TimeUnit.SECONDS.toMinutes(bVals[i].timeAsSeconds.toLong())
-            ) return false
+            if (aVals[i].timeAsSeconds / 60 != bVals[i].timeAsSeconds / 60) return false
 
             if (!nearlyEqual(aVals[i].value.toFloat(), bVals[i].value.toFloat())) return false
         }
@@ -256,8 +261,8 @@ class CarelevoPatch @Inject constructor(
         val diff = abs(a - b)
         return if (a == b) {
             true
-        } else if (a == 0f || b == 0f || absA + absB < java.lang.Float.MIN_NORMAL) {
-            diff < epsilon * java.lang.Float.MIN_NORMAL
+        } else if (a == 0f || b == 0f || absA + absB < FLOAT_MIN_NORMAL) {
+            diff < epsilon * FLOAT_MIN_NORMAL
         } else {
             diff / min(absA + absB, Float.MAX_VALUE) < epsilon
         }
@@ -372,7 +377,7 @@ class CarelevoPatch @Inject constructor(
         val info = CarelevoAlarmInfo(
             // UUID, not a millisecond timestamp — two alarms raised in the same millisecond (rapid
             // BLE flapping) would otherwise collide and one would silently overwrite the other.
-            alarmId = UUID.randomUUID().toString(),
+            alarmId = Uuid.random().toString(),
             alarmType = cause.alarmType,
             cause = cause,
             value = value,
@@ -698,6 +703,9 @@ class CarelevoPatch @Inject constructor(
         private const val RPT_ALERT: Byte = 0xA2.toByte()         // CMD_ALERT_MSG_RPT
         private const val RPT_NOTICE: Byte = 0xA3.toByte()        // CMD_NOTICE_MSG_RPT
 
-        private fun hex(b: Byte) = "0x%02X".format(b.toInt() and 0xFF)
+        private fun hex(b: Byte) = b.toHexText().uppercase()
+
+        /** The smallest normal float, as `java.lang.Float.MIN_NORMAL`. */
+        private val FLOAT_MIN_NORMAL: Float = Float.fromBits(0x00800000)
     }
 }

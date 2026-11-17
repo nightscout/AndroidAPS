@@ -1,7 +1,10 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package app.aaps.pump.carelevo.ble.gatt
 
 import kotlinx.coroutines.flow.SharedFlow
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * Thin abstraction over the Android `BluetoothGatt` lifecycle for a single peripheral.
@@ -36,7 +39,7 @@ interface GattConnection {
      *                     `false` selects fire-and-forget (`WRITE_TYPE_NO_RESPONSE`).
      */
     suspend fun writeCharacteristic(
-        uuid: UUID,
+        uuid: Uuid,
         payload: ByteArray,
         withResponse: Boolean = true
     )
@@ -51,7 +54,7 @@ interface GattConnection {
      * Subscribes to peripheral-initiated notifications/indications on [uuid].
      * Subsequent [GattEvent.Notification] events for [uuid] will appear in [events].
      */
-    suspend fun enableNotifications(uuid: UUID)
+    suspend fun enableNotifications(uuid: Uuid)
 
     /**
      * Releases the underlying `BluetoothGatt` and aborts any in-flight suspending
@@ -71,7 +74,7 @@ sealed interface GattEvent {
 
     /** A peripheral-initiated notification or indication. */
     data class Notification(
-        val uuid: UUID,
+        val uuid: Uuid,
         val payload: ByteArray
     ) : GattEvent
 
@@ -91,7 +94,7 @@ sealed interface GattEvent {
 
     /** Acknowledgement of a previously requested write. */
     data class WriteAck(
-        val uuid: UUID,
+        val uuid: Uuid,
         val ok: Boolean
     ) : GattEvent
 }

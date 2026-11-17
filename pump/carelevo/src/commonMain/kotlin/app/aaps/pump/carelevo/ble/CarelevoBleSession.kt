@@ -36,6 +36,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
@@ -52,6 +53,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.concurrent.Volatile
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -340,12 +342,12 @@ class CarelevoBleSession @Inject constructor(
         } catch (t: Throwable) {
             // open() closed a half-open link itself; release the scope so the next queue connect() starts clean.
             scope.cancel()
-            lastCloseAtMs = System.currentTimeMillis()
+            lastCloseAtMs = Clock.System.now().toEpochMilliseconds()
             throw t
         }
         heldLink = opened
         watchForDrop(opened)
-        _lastConnectedAt.value = System.currentTimeMillis()
+        _lastConnectedAt.value = Clock.System.now().toEpochMilliseconds()
         _connected.value = true
         aapsLogger.debug(LTag.PUMPCOMM, "bleSession: held link up reason=$reason")
     }
@@ -372,7 +374,7 @@ class CarelevoBleSession @Inject constructor(
         _connected.value = false
         link.gatt.closeNow()
         link.scope.cancel()
-        lastCloseAtMs = System.currentTimeMillis()
+        lastCloseAtMs = Clock.System.now().toEpochMilliseconds()
         aapsLogger.debug(LTag.PUMPCOMM, "bleSession: held link closed reason=$reason")
     }
 
@@ -442,19 +444,19 @@ class CarelevoBleSession @Inject constructor(
             opened = link
             // NB: a transient session does NOT touch _connected — that flag is the queue-owned held-link
             // signal (see [connected]). It updates lastConnectedAt only, since it is a real connection.
-            _lastConnectedAt.value = System.currentTimeMillis()
+            _lastConnectedAt.value = Clock.System.now().toEpochMilliseconds()
             aapsLogger.debug(LTag.PUMPCOMM, "bleSession: reading $label")
             withTimeout(timeoutMs.milliseconds) { block(link.client) }
         } finally {
             opened?.gatt?.closeNow()
             scope.cancel()
-            lastCloseAtMs = System.currentTimeMillis()
+            lastCloseAtMs = Clock.System.now().toEpochMilliseconds()
         }
     }
 
     /** Inter-session settle: let the patch fully release the previous link before the next dial (~1 s). */
     private suspend fun awaitInterSessionSettle() {
-        val sinceCloseMs = System.currentTimeMillis() - lastCloseAtMs
+        val sinceCloseMs = Clock.System.now().toEpochMilliseconds() - lastCloseAtMs
         if (sinceCloseMs in 0 until INTER_SESSION_SETTLE_MS) delay((INTER_SESSION_SETTLE_MS - sinceCloseMs).milliseconds)
     }
 

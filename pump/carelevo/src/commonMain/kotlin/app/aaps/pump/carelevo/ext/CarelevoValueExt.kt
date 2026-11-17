@@ -1,21 +1,16 @@
 package app.aaps.pump.carelevo.ext
 
-import java.math.BigInteger
 import kotlin.experimental.xor
 
-internal fun ByteArray.convertBytesToHex(): String {
-    return StringBuilder().let {
-        for (byte in this) {
-            it.append(String.format("0x%02x", byte))
-        }
-        it
-    }.toString()
-}
+internal fun ByteArray.convertBytesToHex(): String = joinToString(separator = "") { it.toHexText() }
+
+/** One byte as `0x` and two lower case hex digits, as `String.format("0x%02x", byte)` wrote it. */
+internal fun Byte.toHexText(): String = "0x" + (toInt() and 0xFF).toString(16).padStart(2, '0')
 
 internal fun String.convertHexToByteArray(): ByteArray {
     var returnData: List<Byte> = ArrayList()
 
-    val str = toString().replace(" ", "")
+    val str = replace(" ", "")
     var hex = str.replace("0x", "")
 
     hex = hex.uppercase()
@@ -27,7 +22,7 @@ internal fun String.convertHexToByteArray(): ByteArray {
             for (i in 0..hex.length step 2) {
                 if (i < hex.length) {
                     val subString = hex.substring(i until i + 2)
-                    returnData.add(BigInteger(subString, 16).toByte())
+                    returnData.add(subString.toInt(16).toByte())
                 }
             }
         } catch (e: Exception) {

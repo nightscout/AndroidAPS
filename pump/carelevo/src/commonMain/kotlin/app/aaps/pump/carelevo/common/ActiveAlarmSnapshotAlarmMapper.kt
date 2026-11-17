@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package app.aaps.pump.carelevo.common
 
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotFlags
@@ -9,7 +11,8 @@ import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.AlarmType
 import dev.zacsweers.metro.Inject
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class ActiveAlarmSnapshotAlarmMapper @Inject constructor() {
 
@@ -28,7 +31,7 @@ class ActiveAlarmSnapshotAlarmMapper @Inject constructor() {
 
         return byFlag.map { (flag, cause) ->
             CarelevoAlarmInfo(
-                alarmId = UUID.randomUUID().toString(),
+                alarmId = Uuid.random().toString(),
                 alarmType = cause.alarmType,
                 cause = cause,
                 value = snapshotValueFor(flag, currentPatch),
