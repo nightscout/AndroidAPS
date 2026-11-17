@@ -233,6 +233,32 @@ posting and routed back by instance key. `IosLoopNotifier` already does exactly 
 for N minutes" buttons and is the worked example. Android cannot be copied here - it suppresses such
 notifications from the tray instead, because its actions are `PendingIntent`s.
 
+## Ready for iOS: the keep-alive checks (2026-11, branch `ios-master-kmp`)
+
+Written by the Windows session. The goal is now a full iOS app, one that runs a pump and the loop, not
+only a follower. The Windows session moves the shared parts; the Apple parts are listed here.
+
+`KeepAliveRunner` (`implementation/src/commonMain/.../maintenance/`) has every check `KeepAliveWorker`
+made every 5 minutes: the pump status and profile check, the pump unreachable alarm, the zero temp
+basal retry, the status upload when the loop does not do it, the clock change check and
+`PeriodicMaintenance`. The Android worker keeps only the WorkManager schedule and its database checks.
+
+What the iOS side has to do:
+
+- **Call `keepAliveRunner.runOnce(minInterval = 4.minutes)` whenever the app is woken** - a Bluetooth
+  event, a reading, the app coming to the front. Calls that come too soon are skipped, and a second
+  call while a pass runs is skipped too, so calling it often is safe.
+- **Then stop calling `periodicMaintenance.start(...)`** in that app. The runner already runs
+  `PeriodicMaintenance`, and both would run the housekeeping twice. A follower that does not run the
+  runner keeps `start` as today.
+- **Find out what wakes the app every 5 minutes.** iOS gives a woken app about 10 s and keeps nothing
+  running. A connected pump wakes it only when the pump sends something. The Carelevo patch is known
+  to send only alarms (0xA1-0xA3), the stop report with auto-resume (0x8A) and the basal restart
+  report (0x88), nothing at a fixed interval. A CGM on Bluetooth sends a reading every 5 minutes, so it
+  is the likely heartbeat. Not decided yet.
+
+The tests are in `androidHostTest` (`KeepAliveRunnerTest`, 36 tests), so they do not run on iOS yet.
+
 ## Ready for iOS: the encrypted settings store (2026-10, not yet run on Apple)
 
 Written by the Windows session. `IosSp` and `NSUserDefaults` are gone as the settings store. iOS now

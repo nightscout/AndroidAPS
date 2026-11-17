@@ -20,6 +20,7 @@ import app.aaps.core.utils.extensions.copyString
 import app.aaps.core.utils.receivers.BundleLogger
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.core.utils.receivers.incomingDataWorkRequest
+import app.aaps.implementation.maintenance.KeepAliveRunner
 import app.aaps.implementation.receivers.KeepAliveWorker
 import app.aaps.plugins.source.AidexPlugin
 import app.aaps.plugins.source.DexcomInbox
@@ -45,6 +46,7 @@ open class DataReceiver : MetroBroadcastReceiver() {
     @Inject lateinit var dataInbox: DataInbox
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var workManager: WorkManager
+    @Inject lateinit var keepAliveRunner: KeepAliveRunner
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
@@ -160,7 +162,7 @@ open class DataReceiver : MetroBroadcastReceiver() {
 
         // Verify KeepAlive is running
         // Sometimes the schedule fail
-        KeepAliveWorker.scheduleIfNotRunning(context, aapsLogger, fabricPrivacy)
+        KeepAliveWorker.scheduleIfNotRunning(context, keepAliveRunner, aapsLogger, fabricPrivacy)
     }
 
     private fun enqueueInline(worker: Class<out ListenableWorker>, data: Data) {
