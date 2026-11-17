@@ -418,7 +418,10 @@ private fun EatenMealCard(meal: EatenMeal, link: TreatmentLink?, photo: ByteArra
             verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)
         ) {
             val type = if (meal.target == MealTarget.WIZARD) ElementType.BOLUS_WIZARD else ElementType.CARBS
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            // The lines go under the time (and the name), next to the total and its buttons. Put under
+            // the whole top line, they started lower than the name of a saved dish: that line is as
+            // high as its buttons, and the time alone sat in its middle.
+            Row(verticalAlignment = Alignment.Top) {
                 // The photo of the dish or meal sent, as on the other tabs. The photos of the foods are in the detail.
                 if (photo != null) {
                     FoodPhoto(bytes = photo, size = AapsSpacing.foodThumbnailSize)
@@ -427,40 +430,43 @@ private fun EatenMealCard(meal: EatenMeal, link: TreatmentLink?, photo: ByteArra
                 Column(modifier = Modifier.weight(1f)) {
                     Text(text = timeText(meal.timestamp), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     meal.name?.let { Text(text = it, style = MaterialTheme.typography.titleSmall) }
-                }
-                if (foldable) IconButton(onClick = { expanded = !expanded }, modifier = Modifier.size(AapsSpacing.compactIconButtonSize)) {
-                    Icon(
-                        imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                        contentDescription = stringResource(if (expanded) UiStrings.food_book_fold else UiStrings.food_book_unfold)
-                    )
-                }
-                Text(
-                    text = stringResource(InterfacesStrings.format_carbs, meal.wizardCarbs),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                // The same button as in the treatments history: it shows how the bolus was computed.
-                // A carbs entry has no detail: its icon only says what was entered, in the same place.
-                val bcr = link?.bcr
-                if (bcr != null)
-                    CardIcon(type.icon(), stringResource(CoreUiStrings.boluswizard), timeText(meal.timestamp), type.color()) { onShowCalculation(bcr) }
-                else
-                    Box(modifier = Modifier.size(AapsSpacing.compactIconButtonSize), contentAlignment = Alignment.Center) {
-                        Icon(type.icon(), contentDescription = null, modifier = Modifier.size(AapsSpacing.chipIconSize), tint = type.color())
+                    if (expanded) meal.items.forEach { item ->
+                        Text(
+                            text = stringResource(
+                                UiStrings.food_meal_note_item,
+                                item.name,
+                                if (item.estimated) stringResource(UiStrings.food_meal_estimated)
+                                else stringResource(CoreUiStrings.value_with_unit, MealMath.formatAmount(item.quantity), item.unit),
+                                stringResource(InterfacesStrings.format_carbs, item.carbs.roundToInt())
+                            ),
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(top = AapsSpacing.small)
+                        )
                     }
-            }
-            if (expanded) meal.items.forEach { item ->
-                Text(
-                    text = stringResource(
-                        UiStrings.food_meal_note_item,
-                        item.name,
-                        if (item.estimated) stringResource(UiStrings.food_meal_estimated)
-                        else stringResource(CoreUiStrings.value_with_unit, MealMath.formatAmount(item.quantity), item.unit),
-                        stringResource(InterfacesStrings.format_carbs, item.carbs.roundToInt())
-                    ),
-                    style = MaterialTheme.typography.bodySmall
-                )
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (foldable) IconButton(onClick = { expanded = !expanded }, modifier = Modifier.size(AapsSpacing.compactIconButtonSize)) {
+                        Icon(
+                            imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                            contentDescription = stringResource(if (expanded) UiStrings.food_book_fold else UiStrings.food_book_unfold)
+                        )
+                    }
+                    Text(
+                        text = stringResource(InterfacesStrings.format_carbs, meal.wizardCarbs),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    // The same button as in the treatments history: it shows how the bolus was computed.
+                    // A carbs entry has no detail: its icon only says what was entered, in the same place.
+                    val bcr = link?.bcr
+                    if (bcr != null)
+                        CardIcon(type.icon(), stringResource(CoreUiStrings.boluswizard), timeText(meal.timestamp), type.color()) { onShowCalculation(bcr) }
+                    else
+                        Box(modifier = Modifier.size(AapsSpacing.compactIconButtonSize), contentAlignment = Alignment.Center) {
+                            Icon(type.icon(), contentDescription = null, modifier = Modifier.size(AapsSpacing.chipIconSize), tint = type.color())
+                        }
+                }
             }
             when {
                 link == null        ->
