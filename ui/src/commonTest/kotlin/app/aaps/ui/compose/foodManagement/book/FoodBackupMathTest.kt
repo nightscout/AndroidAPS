@@ -1,17 +1,22 @@
 package app.aaps.ui.compose.foodManagement.book
 
 import app.aaps.core.data.model.FD
+import app.aaps.core.data.model.IDs
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-/** A restore only adds what is missing, and points dishes to the foods of this phone. */
+/**
+ * A backup is written in format 3, the archive the final version reads, and files of format 1 and 2
+ * are still read. A restore only adds what is missing, and points dishes to the foods of this phone.
+ */
 class FoodBackupMathTest {
 
-    // On the phone that made the backup: bread is food 3, yogurt food 4.
-    private val bread = FD(id = 3, name = "Bread", portion = 100.0, unit = "g", carbs = 50)
+    // On the phone that made the backup: bread is food 3 (from Nightscout), yogurt food 4.
+    private val bread = FD(id = 3, ids = IDs(nightscoutId = NS_BREAD), name = "Bread", portion = 100.0, unit = "g", carbs = 50)
     private val yogurt = FD(id = 4, name = "Yogurt", portion = 1.0, unit = "pot", carbs = 6)
     private val toast = Recipe("dish-1", "Toast", RecipeKind.DISH, listOf(RecipeItem("Bread", 40.0, "g", foodId = 3)))
     private val breakfast = Recipe(
@@ -20,25 +25,119 @@ class FoodBackupMathTest {
     )
     private val eaten = EatenMeal("eaten-1", timestamp = 1000, name = null, note = "n", wizardCarbs = 26, items = emptyList(), validatedAt = 1100, treatmentId = 9)
 
+    /** The meal as it is in a backup: the id of its treatment is left out. */
+    private val eatenInBackup = eaten.copy(treatmentId = null)
+
     private fun backup(): FoodBackup =
         assertNotNull(FoodBackupMath.decode(FoodBackupMath.encode(listOf(bread, yogurt), FoodBook(listOf(toast, breakfast), listOf(eaten)), now = 5000)))
 
     @Test
     fun `a backup is read back as written`() {
         val backup = backup()
+        assertEquals(3, backup.format)
         assertEquals(5000, backup.exportedAt)
         assertEquals(listOf("Bread", "Yogurt"), backup.foods.map { it.name })
+        assertEquals(listOf(NS_BREAD, null), backup.foods.map { it.nightscoutId })
         assertEquals(listOf(toast, breakfast), backup.recipes)
-        assertEquals(listOf(eaten), backup.eaten)
+        assertEquals(listOf(eatenInBackup), backup.eaten)
+    }
+
+    @Test
+    fun `each food carries its product and its photo, the treatment id is left out`() {
+        val book = FoodBook(
+            eaten = listOf(eaten),
+            offLinks = listOf(OffLink(foodId = 4, barcode = BARCODE, hasImage = true, imageUrl = "https://images.openfoodfacts.org/a.jpg"), OffLink(foodId = 3, barcode = "111", hasImage = false)),
+            photos = listOf(FoodPhoto(foodId = 4, key = "user_aaa")),
+        )
+
+        val text = FoodBackupMath.encode(listOf(bread, yogurt), book, now = 5000)
+        val backup = assertNotNull(FoodBackupMath.decode(text))
+
+        // No lists next to the foods, no address of a photo, no database id of a treatment.
+        assertFalse(text.contains("offLinks"))
+        assertFalse(text.contains("photos"))
+        assertFalse(text.contains("imageUrl"))
+        assertFalse(text.contains("treatmentId"))
+        assertEquals(listOf(OffLink(foodId = 3, barcode = "111", hasImage = false), OffLink(foodId = 4, barcode = BARCODE, hasImage = true)), backup.offLinks)
+        assertEquals(listOf(FoodPhoto(foodId = 4, key = "user_aaa")), backup.photos)
+    }
+
+    @Test
+    fun `a meal still waiting for its treatment is not in the backup`() {
+        val waiting = eaten.copy(id = "eaten-2", validatedAt = null, treatmentId = null)
+
+        val text = FoodBackupMath.encode(emptyList(), FoodBook(eaten = listOf(eaten, waiting)), now = 5000)
+
+        assertEquals(listOf(eatenInBackup), assertNotNull(FoodBackupMath.decode(text)).eaten)
     }
 
     @Test
     fun `a newer format or another file is refused`() {
-        val newer = FoodBackupMath.encode(emptyList(), FoodBook(), 0).replace("\"format\": 2", "\"format\": 3")
-        assertTrue(newer.contains("\"format\": 3"))
+        val newer = FoodBackupMath.encode(emptyList(), FoodBook(), 0).replace("\"format\": 3", "\"format\": 4")
+        assertTrue(newer.contains("\"format\": 4"))
         assertNull(FoodBackupMath.decode(newer))
         assertNull(FoodBackupMath.decode("{\"name\":\"not a backup\"}"))
         assertNull(FoodBackupMath.decode("not json"))
+    }
+
+    @Test
+    fun `a file of the final version is read, its decimals rounded for the POC`() {
+        val final = """
+            {
+              "format": 3,
+              "exportedAt": 7,
+              "foods": [
+                { "id": 12, "nightscoutId": "ns-1", "name": "Yogurt", "portion": 125.0, "unit": "g", "carbs": 14.8, "fat": 3.4,
+                  "fiber": 0.5, "barcode": "$BARCODE", "image": "user_aaa", "note": "plain", "fieldOfLater": 1 }
+              ],
+              "recipes": [],
+              "eaten": []
+            }
+        """.trimIndent()
+
+        val backup = assertNotNull(FoodBackupMath.decode(final))
+
+        val food = backup.foods.single()
+        assertEquals(15, food.carbs)
+        assertEquals(3, food.fat)
+        assertEquals("ns-1", food.nightscoutId)
+        assertEquals(listOf(OffLink(foodId = 12, barcode = BARCODE, hasImage = true)), backup.offLinks)
+        assertEquals(listOf(FoodPhoto(foodId = 12, key = "user_aaa")), backup.photos)
+    }
+
+    @Test
+    fun `a backup of format 2 is still read`() {
+        val old = """
+            {
+              "format": 2,
+              "exportedAt": 7,
+              "foods": [ { "id": 4, "name": "Yogurt", "portion": 1.0, "unit": "pot", "carbs": 6 } ],
+              "recipes": [],
+              "eaten": [],
+              "offLinks": [ { "foodId": 4, "barcode": "$BARCODE", "hasImage": true, "imageUrl": "https://images.openfoodfacts.org/a.jpg" } ],
+              "photos": [ { "foodId": 4, "key": "user_aaa" } ]
+            }
+        """.trimIndent()
+
+        val backup = assertNotNull(FoodBackupMath.decode(old))
+
+        assertEquals(2, backup.format)
+        assertEquals(listOf("Yogurt"), backup.foods.map { it.name })
+        assertEquals(listOf(OffLink(foodId = 4, barcode = BARCODE, hasImage = true, imageUrl = "https://images.openfoodfacts.org/a.jpg")), backup.offLinks)
+        assertEquals(listOf(FoodPhoto(foodId = 4, key = "user_aaa")), backup.photos)
+    }
+
+    @Test
+    fun `a backup of format 1, without products and photos, is still read`() {
+        val old = """
+            { "format": 1, "exportedAt": 1, "foods": [ { "id": 3, "name": "Bread", "portion": 100.0, "unit": "g", "carbs": 50 } ], "recipes": [], "eaten": [] }
+        """.trimIndent()
+
+        val backup = assertNotNull(FoodBackupMath.decode(old))
+
+        assertEquals(1, backup.format)
+        assertEquals(emptyList(), backup.offLinks)
+        assertEquals(emptyList(), backup.photos)
     }
 
     @Test
@@ -53,8 +152,24 @@ class FoodBackupMathTest {
     }
 
     @Test
+    fun `a food is found again by its Nightscout id, also when Nightscout renamed it`() {
+        val here = listOf(FD(id = 60, ids = IDs(nightscoutId = NS_BREAD), name = "Wholemeal bread", portion = 100.0, unit = "g", carbs = 48), yogurt)
+
+        assertTrue(FoodBackupMath.missingFoods(backup(), here).isEmpty())
+        assertEquals(60L, FoodBackupMath.merge(backup(), here, FoodBook()).recipes.single { it.id == "dish-1" }.items.single().foodId)
+    }
+
+    @Test
+    fun `a food added by a restore keeps its Nightscout id, so Nightscout does not add it again`() {
+        val missing = FoodBackupMath.missingFoods(backup(), emptyList())
+
+        assertEquals(NS_BREAD, missing.single { it.name == "Bread" }.ids.nightscoutId)
+        assertNull(missing.single { it.name == "Yogurt" }.ids.nightscoutId)
+    }
+
+    @Test
     fun `the product of an imported food follows the food found on this phone`() {
-        val yogurtLink = OffLink(foodId = 4, barcode = "3017620422003", hasImage = true, imageUrl = "https://images.openfoodfacts.org/a.jpg")
+        val yogurtLink = OffLink(foodId = 4, barcode = BARCODE, hasImage = true, imageUrl = "https://images.openfoodfacts.org/a.jpg")
         val text = FoodBackupMath.encode(listOf(bread, yogurt), FoodBook(offLinks = listOf(yogurtLink)), now = 5000)
         val backup = assertNotNull(FoodBackupMath.decode(text))
         // Here yogurt is food 51; bread is food 50 and already has a product of its own.
@@ -63,7 +178,8 @@ class FoodBackupMathTest {
 
         val merge = FoodBackupMath.merge(backup, here, FoodBook(offLinks = listOf(breadLink)))
 
-        assertEquals(listOf(yogurtLink.copy(foodId = 51)), merge.offLinks)
+        // The address of the photo is not in the backup: a missing photo reads the product again.
+        assertEquals(listOf(yogurtLink.copy(foodId = 51, imageUrl = null)), merge.offLinks)
     }
 
     @Test
@@ -82,31 +198,13 @@ class FoodBackupMathTest {
     }
 
     @Test
-    fun `a backup of format 1, without photos, is still read`() {
-        val old = FoodBackupMath.encode(listOf(bread), FoodBook(), now = 1)
-            .replace("\"format\": 2", "\"format\": 1")
-            .replace(Regex(",\\s*\"photos\": \\[\\s*]"), "")
-        assertTrue(!old.contains("photos"))
-        val backup = assertNotNull(FoodBackupMath.decode(old))
-        assertEquals(1, backup.format)
-        assertEquals(emptyList(), backup.photos)
-    }
-
-    @Test
     fun `photo entries of the archive are found by their key`() {
         assertEquals("images/user_aaa.jpg", FoodBackupMath.imageEntry("user_aaa"))
         assertEquals("user_aaa", FoodBackupMath.keyOfEntry("images/user_aaa.jpg"))
-        assertEquals("3017620422003", FoodBackupMath.keyOfEntry("images/3017620422003.jpg"))
+        assertEquals(BARCODE, FoodBackupMath.keyOfEntry("images/$BARCODE.jpg"))
         assertNull(FoodBackupMath.keyOfEntry(FoodBackupMath.FILE_NAME))
         assertNull(FoodBackupMath.keyOfEntry("images/../settings.jpg"))
         assertNull(FoodBackupMath.keyOfEntry("images/sub/a.jpg"))
-    }
-
-    @Test
-    fun `a backup made before the products were kept is still read`() {
-        val old = FoodBackupMath.encode(listOf(bread), FoodBook(), now = 1).replace(Regex(",\\s*\"offLinks\": \\[\\s*]"), "")
-        assertTrue(!old.contains("offLinks"))
-        assertEquals(emptyList(), assertNotNull(FoodBackupMath.decode(old)).offLinks)
     }
 
     @Test
@@ -119,7 +217,7 @@ class FoodBackupMathTest {
         val meal = merge.recipes.single { it.id == "meal-1" }
         assertEquals("dish-1", meal.items[0].recipeId)
         assertEquals(51L, meal.items[1].foodId)
-        assertEquals(listOf(eaten), merge.meals)
+        assertEquals(listOf(eatenInBackup), merge.meals)
     }
 
     @Test
@@ -150,5 +248,11 @@ class FoodBackupMathTest {
         val merge = FoodBackupMath.merge(backup(), listOf(bread, yogurt), book)
 
         assertEquals("dish-9", merge.recipes.single { it.id == "meal-1" }.items[0].recipeId)
+    }
+
+    private companion object {
+
+        const val NS_BREAD = "ns-bread"
+        const val BARCODE = "3017620422003"
     }
 }

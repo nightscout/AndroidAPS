@@ -737,34 +737,74 @@ internal class FoodManagementViewModelTest {
     // ---- Backup and restore (proof of concept, personal use) ----
 
     @Test
-    fun `restore adds the missing food, points the dish to it and checks the treatment ids`() {
+    fun `restore adds the missing food, points the dish to it and finds the treatments at their time`() {
         val yogurt = FD(id = 30, name = "Yogurt", portion = 1.0, unit = "pot", carbs = 6)
         val dish = Recipe("dish", "Sweet yogurt", RecipeKind.DISH, listOf(RecipeItem("Yogurt", 1.0, "pot", foodId = 30)))
+        // The file does not keep the treatment ids. "same" has a carbs entry at its time here;
+        // "other" has none (Nightscout has not sent it yet, for example).
         val text = FoodBackupMath.encode(
             listOf(bread, yogurt),
             FoodBook(
                 recipes = listOf(dish),
-                // "same" points to the same carbs entry here; "other" to a record of another meal.
-                eaten = listOf(eaten("same", MealTarget.CARBS, treatmentId = 7, validatedAt = 900_000), eaten("other", MealTarget.CARBS, treatmentId = 8, validatedAt = 950_000)),
+                eaten = listOf(eaten("same", MealTarget.CARBS, treatmentId = 70, validatedAt = 900_000), eaten("other", MealTarget.CARBS, treatmentId = 80, validatedAt = 950_000)),
             ),
             now = 0
         )
+        // Only bread is in this database. A new food gets the next id.
+        val inDb = mutableListOf(bread)
+
+        val book = restore(text, inDb)
+
+        assertThat(inDb.map { it.name }).containsExactly("Bread", "Yogurt")
+        assertThat(book.book.value.recipes.single().items.single().foodId).isEqualTo(100L)
+        val meals = book.book.value.eaten.associateBy { it.id }
+        assertThat(meals.getValue("same").treatmentId).isEqualTo(7L)
+        assertThat(meals.getValue("other").treatmentId).isNull()
+        assertThat(meals.getValue("other").validatedAt).isEqualTo(950_000L)
+    }
+
+    @Test
+    fun `restore of a format 2 file keeps a treatment id only when the record has the time of the meal`() {
+        // "same" points to the same carbs entry here; "other" to a record of another meal.
+        val text = """
+            {
+              "format": 2, "exportedAt": 0, "foods": [], "recipes": [],
+              "eaten": [
+                { "id": "same", "timestamp": 1000000, "name": null, "note": "n", "wizardCarbs": 40, "items": [], "target": "CARBS", "validatedAt": 900000, "treatmentId": 7 },
+                { "id": "other", "timestamp": 1000000, "name": null, "note": "n", "wizardCarbs": 10, "items": [], "target": "CARBS", "validatedAt": 950000, "treatmentId": 8 }
+              ]
+            }
+        """.trimIndent()
+
+        val book = restore(text, mutableListOf(bread))
+
+        val meals = book.book.value.eaten.associateBy { it.id }
+        assertThat(meals.getValue("same").treatmentId).isEqualTo(7L)
+        assertThat(meals.getValue("other").treatmentId).isNull()
+        assertThat(meals.getValue("other").validatedAt).isEqualTo(950_000L)
+    }
+
+    /**
+     * Restores the backup [text] on a phone whose foods are [inDb], with a carbs entry 7 at 900 000
+     * and an entry 8 at another time. A new food gets the id 100.
+     */
+    private fun restore(text: String, inDb: MutableList<FD>): FoodBookRepository {
         val files = object : NoFoodExportFiles() {
             override val available = true
             override fun read(file: ExportFile): String = text
         }
-        // Only bread is in this database. A new food gets the next id.
-        val inDb = mutableListOf(bread)
+        val carbs7 = CA(id = 7, timestamp = 900_000, duration = 0, amount = 40.0)
+        val carbs8 = CA(id = 8, timestamp = 123, duration = 0, amount = 10.0)
         runBlocking {
             whenever(persistenceLayer.getFoods()).thenAnswer { inDb.toList() }
             whenever(persistenceLayer.insertOrUpdateFood(any())).thenAnswer {
                 inDb += (it.arguments[0] as FD).copy(id = 100)
                 PersistenceLayer.TransactionResult<FD>()
             }
-            whenever(persistenceLayer.getCarbsById(7)).thenReturn(CA(id = 7, timestamp = 900_000, duration = 0, amount = 40.0))
-            whenever(persistenceLayer.getCarbsById(8)).thenReturn(CA(id = 8, timestamp = 123, duration = 0, amount = 10.0))
+            whenever(persistenceLayer.getCarbsById(7)).thenReturn(carbs7)
+            whenever(persistenceLayer.getCarbsById(8)).thenReturn(carbs8)
             whenever(persistenceLayer.getBolusCalculatorResultsFromTime(any(), eq(true))).thenReturn(emptyList())
-            whenever(persistenceLayer.getCarbsFromTime(any(), eq(true))).thenReturn(emptyList())
+            whenever(persistenceLayer.getCarbsFromTime(any(), eq(true))).thenReturn(listOf(carbs8, carbs7))
         }
         whenever(dateUtil.now()).thenReturn(1_000_000)
         val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
@@ -773,13 +813,7 @@ internal class FoodManagementViewModelTest {
 
         vm.restore(ExportFile("backup", "ref"))
         runUntil { book.book.value.eaten.size == 2 }
-
-        assertThat(inDb.map { it.name }).containsExactly("Bread", "Yogurt")
-        assertThat(book.book.value.recipes.single().items.single().foodId).isEqualTo(100L)
-        val meals = book.book.value.eaten.associateBy { it.id }
-        assertThat(meals.getValue("same").treatmentId).isEqualTo(7L)
-        assertThat(meals.getValue("other").treatmentId).isNull()
-        assertThat(meals.getValue("other").validatedAt).isEqualTo(950_000L)
+        return book
     }
 
     /** Photo files in memory, for the photo tests. */

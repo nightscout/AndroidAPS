@@ -184,7 +184,7 @@ class FoodManagementViewModel(
                 missing.forEach { persistenceLayer.insertOrUpdateFood(it) }
                 foodBook.load()
                 val merge = FoodBackupMath.merge(backup, persistenceLayer.getFoods(), foodBook.book.value)
-                val meals = merge.meals.map { checkedTreatment(it) }
+                val meals = withTreatmentAtItsTime(merge.meals.map { checkedTreatment(it) }, foodBook.book.value.eaten)
                 foodBook.addRestored(merge.copy(meals = meals))
                 // OFF photos are named by barcode and shared: all are kept. A photo of the user only
                 // when its food took it, so a food that kept its own photo leaves no unused file.
@@ -217,6 +217,31 @@ class FoodManagementViewModel(
             MealTarget.CARBS  -> persistenceLayer.getCarbsById(id)?.timestamp
         }
         return if (time != null && time == meal.validatedAt) meal else meal.copy(treatmentId = null)
+    }
+
+    /**
+     * A file of format 3 does not keep the id of the treatment of a meal: its treatment is the record
+     * of the same kind at the time of [EatenMeal.validatedAt]. A record already tied to another meal
+     * is not used again. A meal whose treatment is not on this phone (yet) stays without id: it is
+     * found later by time and note, and it is never removed for that.
+     */
+    private suspend fun withTreatmentAtItsTime(meals: List<EatenMeal>, others: List<EatenMeal>): List<EatenMeal> {
+        val times = meals.filter { it.treatmentId == null }.mapNotNull { it.validatedAt }
+        if (times.isEmpty()) return meals
+        val tied = others + meals
+        val usedResults = tied.filter { it.target == MealTarget.WIZARD }.mapNotNull { it.treatmentId }.toMutableSet()
+        val usedCarbs = tied.filter { it.target == MealTarget.CARBS }.mapNotNull { it.treatmentId }.toMutableSet()
+        val results = persistenceLayer.getBolusCalculatorResultsFromTime(times.min(), true)
+        val carbs = persistenceLayer.getCarbsFromTime(times.min(), true)
+        return meals.map { meal ->
+            val time = meal.validatedAt
+            if (meal.treatmentId != null || time == null) return@map meal
+            val id = when (meal.target) {
+                MealTarget.WIZARD -> results.firstOrNull { it.timestamp == time && it.id !in usedResults }?.id?.also { usedResults += it }
+                MealTarget.CARBS  -> carbs.firstOrNull { it.timestamp == time && it.id !in usedCarbs }?.id?.also { usedCarbs += it }
+            }
+            meal.copy(treatmentId = id)
+        }
     }
 
     private fun showResult(result: FileResult, saved: TextRef) = when (result) {
