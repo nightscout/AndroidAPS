@@ -236,6 +236,27 @@ class FoodBackupMathTest {
     }
 
     @Test
+    fun `the lines of a restored meal point to the foods and dishes of this phone`() {
+        val meal = eaten.copy(
+            id = "eaten-7",
+            items = listOf(
+                EatenItem("Bread", 40.0, "g", 20.0, fat = null, protein = null, energyKj = null, foodId = 3),
+                EatenItem("Toast", 1.0, "servings", 20.0, fat = null, protein = null, energyKj = null, recipeId = "dish-1"),
+                EatenItem("Ham", 50.0, "g", 1.0, fat = null, protein = null, energyKj = null, foodId = 77),
+            )
+        )
+        val backup = assertNotNull(FoodBackupMath.decode(FoodBackupMath.encode(listOf(bread), FoodBook(listOf(toast), listOf(meal)), now = 5000)))
+        val here = listOf(FD(id = 50, ids = IDs(nightscoutId = NS_BREAD), name = "Bread", portion = 100.0, unit = "g", carbs = 50))
+        val book = FoodBook(recipes = listOf(Recipe("dish-9", "Toast", RecipeKind.DISH, emptyList())))
+
+        val items = FoodBackupMath.merge(backup, here, book).meals.single().items
+
+        // Bread is food 50 here, toast is dish 9 here, and food 77 was not in the backup: no food.
+        assertEquals(listOf(50L, null, null), items.map { it.foodId })
+        assertEquals(listOf(null, "dish-9", null), items.map { it.recipeId })
+    }
+
+    @Test
     fun `a food not found leaves the line without food, so the total is shown as not known`() {
         val merge = FoodBackupMath.merge(backup(), emptyList(), FoodBook())
 

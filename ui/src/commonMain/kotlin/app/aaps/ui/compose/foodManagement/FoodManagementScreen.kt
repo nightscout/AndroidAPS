@@ -237,6 +237,7 @@ fun FoodManagementScreen(
                         onShowCalculation = { shownCalculation = it },
                         images = state.foodImages,
                         photos = state.recipePhotos,
+                        onSaveMeal = viewModel::openSaveEaten,
                     )
                     return@Column
                 }

@@ -858,11 +858,25 @@ class FoodManagementViewModel(
     private fun nameUsed(name: String, kind: RecipeKind, except: String? = null): Boolean =
         uiState.value.recipes.any { it.kind == kind && it.id != except && it.name.equals(name, ignoreCase = true) }
 
-    fun openSave() = _uiState.update { it.copy(showSave = true, saveName = "", saveKind = it.mealSource?.kind ?: RecipeKind.MEAL) }
+    fun openSave() = _uiState.update { it.copy(showSave = true, saveName = "", saveKind = it.mealSource?.kind ?: RecipeKind.MEAL, saveEaten = null) }
+
+    /**
+     * Opens the save dialog for [meal] of the history, so a meal put together on the spot can be used
+     * again without typing it again. The dialog says when the total of today differs from what was
+     * eaten, and when a line is kept as typed by hand.
+     */
+    fun openSaveEaten(meal: EatenMeal) {
+        val items = FoodBookMath.recipeItemsOf(meal, foodsById(), uiState.value.recipes, rh.gs(UiStrings.food_book_servings))
+        val carbsNow = nutritionOf(Recipe(id = "", name = "", kind = RecipeKind.MEAL, items = items))?.carbs?.roundToInt()
+        val typed = items.count { it.estimatedCarbs != null } > meal.items.count { it.estimated }
+        _uiState.update {
+            it.copy(showSave = true, saveName = meal.name.orEmpty(), saveKind = RecipeKind.MEAL, saveEaten = EatenSave(meal, items, carbsNow, typed))
+        }
+    }
 
     fun updateSaveName(v: String) = _uiState.update { it.copy(saveName = v) }
     fun updateSaveKind(kind: RecipeKind) = _uiState.update { it.copy(saveKind = kind) }
-    fun dismissSave() = _uiState.update { it.copy(showSave = false) }
+    fun dismissSave() = _uiState.update { it.copy(showSave = false, saveEaten = null) }
 
     /**
      * Saves the meal being put together as a new dish or standard meal. A name already used is
@@ -872,12 +886,30 @@ class FoodManagementViewModel(
     fun confirmSave() {
         val state = uiState.value
         val name = state.saveName.trim()
+        state.saveEaten?.let { return saveEatenMeal(it, name, state.saveKind) }
         if (name.isEmpty() || state.mealItems.isEmpty()) return
         if (state.mealItems.any { it.problem != null }) return showMessage(UiStrings.food_book_remove_missing)
         if (nameUsed(name, state.saveKind)) return showMessage(UiStrings.food_book_name_used, name)
         val recipe = Recipe(id = Uuid.random().toString(), name = name, kind = state.saveKind, items = recipeItemsOf(state.mealItems))
         viewModelScope.launch { foodBook.saveRecipe(recipe) }
         _uiState.update { it.copy(showSave = false, mealSource = recipe) }
+        showMessage(UiStrings.food_book_saved, name)
+    }
+
+    /**
+     * Saves a meal of the history as a new dish or standard meal, and gives the meal that name. A name
+     * already used is refused, as for any new dish. The note of the meal does not change.
+     */
+    @OptIn(ExperimentalUuidApi::class)
+    private fun saveEatenMeal(save: EatenSave, name: String, kind: RecipeKind) {
+        if (name.isEmpty() || save.items.isEmpty()) return
+        if (nameUsed(name, kind)) return showMessage(UiStrings.food_book_name_used, name)
+        val recipe = Recipe(id = Uuid.random().toString(), name = name, kind = kind, items = save.items, photo = save.meal.photo)
+        viewModelScope.launch {
+            foodBook.saveRecipe(recipe)
+            foodBook.nameEatenMeal(save.meal.id, name)
+        }
+        _uiState.update { it.copy(showSave = false, saveEaten = null) }
         showMessage(UiStrings.food_book_saved, name)
     }
 
@@ -930,7 +962,7 @@ class FoodManagementViewModel(
             wizardCarbs = carbs,
             items = items.map {
                 EatenItem(
-                    it.name, it.quantity, it.unit, it.carbs, it.fat, it.protein, it.energyKj, estimated = it.estimated, foodId = it.foodId,
+                    it.name, it.quantity, it.unit, it.carbs, it.fat, it.protein, it.energyKj, estimated = it.estimated, foodId = it.foodId, recipeId = it.recipeId,
                     photo = it.recipeId?.let { id -> recipes[id]?.photo }, partial = it.partial
                 )
             },
@@ -1361,6 +1393,8 @@ data class FoodManagementUiState(
     val showSave: Boolean = false,
     val saveName: String = "",
     val saveKind: RecipeKind = RecipeKind.MEAL,
+    /** The meal of the history the save dialog is open for, or null when it saves the meal being put together. */
+    val saveEaten: EatenSave? = null,
     /** Eaten meal id to the treatment found for it. */
     val treatmentLinks: Map<String, TreatmentLink> = emptyMap(),
     /** The line of the meal the quantity dialog changes, or null when the dialog adds a new line. */
@@ -1410,6 +1444,17 @@ data class FoodManagementUiState(
         return foods.filter { food -> foodBarcodes[food.id]?.trimStart('0') == code }
     }
 }
+
+/**
+ * A meal of the history about to be saved as a dish or a standard meal.
+ *
+ * @param items the lines of the new dish or meal
+ * @param carbsNow its carbs with the foods of today, or null when one line cannot be computed
+ * @param keptAsTyped true when a line becomes a line typed by hand with the carbs eaten, because its
+ *   food or dish is not in the list any more, or its food is counted in another unit now
+ */
+@Immutable
+data class EatenSave(val meal: EatenMeal, val items: List<RecipeItem>, val carbsNow: Int?, val keptAsTyped: Boolean)
 
 enum class FoodTab { FOODS, DISHES, MEALS, HISTORY }
 

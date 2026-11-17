@@ -141,6 +141,11 @@ data class EatenMeal(
     /** True when a saved meal was changed before it was sent: the history then shows its lines. */
     val changed: Boolean = false,
     /**
+     * True when the meal was saved as a dish or a standard meal after it was eaten, under its [name].
+     * It was put together on the spot, so the history still shows its lines.
+     */
+    val savedLater: Boolean = false,
+    /**
      * Key of the photo of the dish or meal sent, as it was then. The file is kept while a meal of the
      * history uses it, also when the dish is deleted or gets another photo.
      */
@@ -160,6 +165,8 @@ data class EatenItem(
     val estimated: Boolean = false,
     /** The food of the line, to show its photo. Null for older meals, dishes and lines typed by hand. */
     val foodId: Long? = null,
+    /** The dish of a dish line, so the meal can be saved again as a dish or meal. Null for older meals. */
+    val recipeId: String? = null,
     /** For a dish line: key of the photo of the dish, as it was then. */
     val photo: String? = null,
     /** The values of [fat], [protein] and [energyKj] that are only the part known, see [Nutrition]. */
@@ -308,6 +315,36 @@ internal object FoodBookMath {
         }
         return found
     }
+
+    /**
+     * The lines of a new dish or meal made from [meal] of the history. A food line keeps its food,
+     * and a dish line its dish, while they are still here and the food is counted in the same unit.
+     * An older line without them is found by its name, when only one food (in the same unit) or one
+     * dish has it. [servings] is the unit of a dish line: such a line is never taken for a food.
+     *
+     * Any other line is kept as a line typed by hand with the carbs eaten: the new dish never counts
+     * a line as 0 g, and never reads "50 g" of a food now counted in biscuits as "50 biscuits".
+     */
+    fun recipeItemsOf(meal: EatenMeal, foods: Map<Long, FD>, recipes: List<Recipe>, servings: String): List<RecipeItem> = meal.items.map { item ->
+        if (item.estimated) return@map typedLine(item)
+        if (item.recipeId == null && unitDiffers(item.unit, servings)) {
+            val byId = item.foodId?.let { foods[it] }?.takeUnless { unitChanged(item.unit, it) }
+            val food = byId ?: foods.values.filter { sameName(it.name, item.name) && !unitChanged(item.unit, it) }.singleOrNull()
+            if (food != null) return@map RecipeItem(item.name, item.quantity, item.unit, foodId = food.id)
+        } else {
+            val dishes = recipes.filter { it.kind == RecipeKind.DISH }
+            val dish = item.recipeId?.let { id -> dishes.firstOrNull { it.id == id } } ?: dishes.filter { sameName(it.name, item.name) }.singleOrNull()
+            if (dish != null) return@map RecipeItem(item.name, item.quantity, item.unit, recipeId = dish.id)
+        }
+        typedLine(item)
+    }
+
+    /** A line typed by hand with the carbs of [item], as the meal sheet makes it. */
+    private fun typedLine(item: EatenItem) = RecipeItem(item.name, quantity = 1.0, unit = "", estimatedCarbs = item.carbs)
+
+    private fun unitChanged(unit: String, food: FD): Boolean = food.portion > 0 && unitDiffers(unit, food.unit)
+
+    private fun sameName(a: String, b: String): Boolean = a.trim().equals(b.trim(), ignoreCase = true)
 
     /** True when [items], saved as recipe [id], would hold that recipe again somewhere below. */
     fun makesLoop(id: String, items: List<RecipeItem>, recipes: Map<String, Recipe>): Boolean {

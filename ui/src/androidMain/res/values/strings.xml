@@ -453,6 +453,8 @@
     <string name="food_book_save_title">Save as a dish or a meal</string>
     <string name="food_book_kind_dish" comment="Choice in the save dialog: save the foods as one dish">Dish</string>
     <string name="food_book_kind_meal" comment="Choice in the save dialog: save the foods as a standard meal">Standard meal</string>
+    <string name="food_book_save_eaten_carbs" comment="In the dialog that saves a meal of the history as a dish. %1$s = carbs of the new dish with the food values of today, %2$s = carbs eaten then, both with unit. Example: With the values of today: 52 g (eaten: 50 g)">With the values of today: %1$s (eaten: %2$s)</string>
+    <string name="food_book_save_eaten_typed">Some lines are kept as lines typed by hand, with the carbs eaten: their food or dish is not in the list any more, or its unit changed.</string>
     <string name="food_book_add_food">Add a food</string>
     <string name="food_book_no_dishes">No dish yet. Tap foods to put them in the meal, then save the meal as a dish.</string>
     <string name="food_book_no_meals">No standard meal yet. Put foods and dishes in the meal, then save it as a standard meal.</string>

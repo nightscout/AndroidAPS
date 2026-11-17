@@ -83,6 +83,14 @@ class FoodBookRepository(
 
     suspend fun addEatenMeal(meal: EatenMeal) = change { book -> book.copy(eaten = listOf(meal) + book.eaten) }
 
+    /**
+     * Gives the eaten meal [id] the name it was saved under after it was eaten. Its lines and its
+     * note stay as they are: the note is what links the meal to its treatment.
+     */
+    suspend fun nameEatenMeal(id: String, name: String) = change { book ->
+        book.copy(eaten = book.eaten.map { if (it.id == id) it.copy(name = name, savedLater = true) else it })
+    }
+
     /** Adds what a restore found missing. Nothing already there is changed. */
     suspend fun addRestored(merge: BackupMerge) = change { book ->
         book.copy(

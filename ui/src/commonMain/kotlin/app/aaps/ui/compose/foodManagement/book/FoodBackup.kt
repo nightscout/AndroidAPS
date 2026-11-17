@@ -266,7 +266,11 @@ internal object FoodBackupMath {
                 })
             }
         val eatenIds = book.eaten.map { it.id }.toSet()
-        val meals = backup.eaten.filter { it.id !in eatenIds }
+        // The ids of the other phone mean nothing here: each line points to the food or dish found
+        // on this phone, or to nothing (its photo is then not shown, and it is never the wrong one).
+        val meals = backup.eaten.filter { it.id !in eatenIds }.map { meal ->
+            meal.copy(items = meal.items.map { item -> item.copy(foodId = item.foodId?.let { foodIds[it] }, recipeId = item.recipeId?.let { recipeIds[it] ?: it }) })
+        }
         // The product of a food follows the food found for it. A food that already has one keeps it.
         val linkedIds = book.offLinks.map { it.foodId }.toSet()
         val offLinks = backup.offLinks

@@ -29,6 +29,74 @@ class FoodBookMathTest {
     )
     private val recipes = listOf(sweetYogurt, breakfast).associateBy { it.id }
 
+    // ---- A meal of the history saved as a dish or meal ----
+
+    private fun eatenItem(name: String, quantity: Double, unit: String, carbs: Double, foodId: Long? = null, recipeId: String? = null, estimated: Boolean = false) =
+        EatenItem(name, quantity, unit, carbs, fat = null, protein = null, energyKj = null, estimated = estimated, foodId = foodId, recipeId = recipeId)
+
+    private fun eatenMeal(vararg items: EatenItem) = EatenMeal("e", timestamp = 0, name = null, note = "n", wizardCarbs = 0, items = items.toList())
+
+    @Test
+    fun `a meal of the history keeps its foods, its dishes and its lines typed by hand`() {
+        val meal = eatenMeal(
+            eatenItem("Bread", 80.0, "g", 40.0, foodId = 3),
+            eatenItem("Sweet yogurt", 1.0, "servings", 16.0, recipeId = "dish"),
+            eatenItem("Quiche", 1.0, "", 35.0, estimated = true),
+        )
+
+        val items = FoodBookMath.recipeItemsOf(meal, foods, recipes.values.toList(), "servings")
+
+        assertEquals(
+            listOf(
+                RecipeItem("Bread", 80.0, "g", foodId = 3),
+                RecipeItem("Sweet yogurt", 1.0, "servings", recipeId = "dish"),
+                RecipeItem("Quiche", 1.0, "", estimatedCarbs = 35.0),
+            ),
+            items
+        )
+    }
+
+    @Test
+    fun `an older line without ids is found by its name, a food only in its unit`() {
+        val meal = eatenMeal(
+            eatenItem(" bread", 80.0, "G", 40.0),
+            eatenItem("Sweet Yogurt", 2.0, "servings", 32.0),
+            eatenItem("Yogurt", 125.0, "g", 7.0), // Yogurt is counted in pots: 125 g is not 125 pots
+        )
+
+        val items = FoodBookMath.recipeItemsOf(meal, foods, recipes.values.toList(), "servings")
+
+        assertEquals(3L, items[0].foodId)
+        assertEquals("dish", items[1].recipeId)
+        assertEquals(RecipeItem("Yogurt", 1.0, "", estimatedCarbs = 7.0), items[2])
+    }
+
+    @Test
+    fun `a deleted food, a food now in another unit, or a deleted dish keeps the carbs eaten`() {
+        val meal = eatenMeal(
+            eatenItem("Ham", 50.0, "g", 1.0, foodId = 99),
+            eatenItem("Yogurt", 100.0, "g", 6.0, foodId = 1),
+            eatenItem("Old cake", 1.0, "servings", 30.0, recipeId = "gone"),
+        )
+
+        val items = FoodBookMath.recipeItemsOf(meal, foods, recipes.values.toList(), "servings")
+
+        assertEquals(listOf(1.0, 6.0, 30.0), items.map { it.estimatedCarbs })
+        assertTrue(items.all { it.foodId == null && it.recipeId == null })
+        // The new dish gives the same carbs as eaten, never 0 g for a line.
+        assertEquals(37.0, FoodBookMath.nutritionOf(Recipe("new", "New", RecipeKind.MEAL, items), foods, recipes)!!.carbs, 0.0001)
+    }
+
+    @Test
+    fun `a name two foods have is not guessed`() {
+        val twin = FD(id = 4, name = "Bread", portion = 30.0, unit = "g", carbs = 15)
+        val meal = eatenMeal(eatenItem("Bread", 80.0, "g", 40.0))
+
+        val items = FoodBookMath.recipeItemsOf(meal, foods + (4L to twin), recipes.values.toList(), "servings")
+
+        assertEquals(40.0, items.single().estimatedCarbs)
+    }
+
     @Test
     fun `a dish is the sum of its foods`() {
         val n = FoodBookMath.nutritionOf(sweetYogurt, foods, recipes)!!
