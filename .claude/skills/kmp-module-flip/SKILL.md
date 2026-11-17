@@ -39,7 +39,9 @@ step is green on its own and the DI stays working:
 1. **DI first.** Any annotation-processor DI out, Metro in. Nothing else can proceed while a processor
    is in the module, and this is where the constructor traps below bite.
 2. **UI to Compose**, if it still has XML. A View-based screen cannot move to common code at all.
-3. **Strings** to the generated `TextRef`s.
+3. **Strings** to the generated `TextRef`s. `registerKeyStrings` configures the multiplatform extension
+   and reads `src/androidMain/res`, so it fails on a plain Android library: in practice this step comes
+   right after step 5.
 4. **Platform ports** - replace `Context` and other Android types with interfaces, checking first
    whether the parameter is used at all.
 5. **Flip the module type**, move the sources, add the iOS targets.
@@ -410,6 +412,19 @@ accepted unseen). What those tests found is worth knowing before the next move:
 - **A test that changes the default time zone must call `SystemTimeZone.invalidate()`.** Code moved
   off `Calendar`/`TimeZone.getDefault()` reads the zone through `SystemTimeZone`, which keeps a read
   for 10 s, so the test would otherwise run in the zone of the test before it.
+- **kotlinx can write exactly what Gson wrote.** Gson leaves a null field out, writes every other field
+  (also one at its default), skips unknown keys, and with `serializeSpecialFloatingPointValues` keeps
+  NaN. The same bytes come from `Json { explicitNulls = false; encodeDefaults = true;
+  ignoreUnknownKeys = true; allowSpecialFloatingPointValues = true }` (`carelevoJson` in
+  `:pump:carelevo`). Pin it through the DAOs with JSON that the Gson code wrote
+  (`CarelevoStoredJsonGoldenTest`). Two reads differ, and both are better: a missing field takes the
+  Kotlin default (Gson gave 0 or null, also in a non-null field), and an enum name the build does not
+  know throws, where Gson gave null - give such an enum a serializer that falls back to an "unknown"
+  entry, or one bad entry makes the whole stored list unreadable.
+- **`java.time.LocalDateTime` maths is clock maths.** `plusDays`, `plusHours` and
+  `ChronoUnit.MINUTES.between` ignore clock changes. In kotlinx-datetime keep that by doing the sum on
+  the date, or through `TimeZone.UTC` (`plusOnTheClock` and `clockMinutesBetween` in `:pump:carelevo`),
+  not with a `TimeZone` that has summer time. Pin it with a test that crosses a clock change.
 - **Moving `rh.gs(R.string.x)` to `TextRef` makes missing stubs fail.** The shared `TextRefStubs`
   throw for a string no test stubbed, where the mock used to answer null. Expect to add stubs.
 
