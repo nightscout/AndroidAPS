@@ -279,6 +279,39 @@ internal class CarelevoPatchMoreTest {
         assertThat(second).isSameInstanceAs(first)
     }
 
+    @Test
+    fun `initPatchAndAwait ends once a patch with Bluetooth on is ready`() {
+        sut.onBluetoothStateChanged(bleState(enabled = true))
+
+        val observer = sut.initPatchAndAwait().test()
+
+        assertThat(sut.patchState.value?.get()).isEqualTo(PatchState.ConnectedBooted)
+        observer.assertComplete()
+    }
+
+    @Test
+    fun `initPatchAndAwait ends once it is known that there is no patch`() {
+        whenever(patchInfoMonitorUseCase.execute())
+            .thenReturn(Observable.just(ResponseResult.Success<CarelevoUseCaseResponse>(null)))
+        sut = createPatch()
+        sut.onBluetoothStateChanged(bleState(enabled = true))
+
+        val observer = sut.initPatchAndAwait().test()
+
+        assertThat(sut.patchState.value?.get()).isEqualTo(PatchState.NotConnectedNotBooting)
+        observer.assertComplete()
+    }
+
+    @Test
+    fun `initPatchAndAwait keeps waiting while Bluetooth is off`() {
+        sut.onBluetoothStateChanged(bleState(enabled = false))
+
+        val observer = sut.initPatchAndAwait().test()
+
+        assertThat(sut.patchState.value?.get()).isEqualTo(PatchState.NotConnectedBooted)
+        observer.assertNotComplete()
+    }
+
     // ---------------------------------------------------------------------------------------------
     // observeChangeState → patchState publication + rxBus fan-out
     // ---------------------------------------------------------------------------------------------

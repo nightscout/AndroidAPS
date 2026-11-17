@@ -141,7 +141,10 @@ class CarelevoPatch @Inject constructor(
             initPatch()
             patchState
                 .filter { state ->
-                    state == PatchState.NotConnectedNotBooting || state == PatchState.ConnectedBooted
+                    // The stream holds an Optional. Comparing the Optional itself with a state never matched, so a
+                    // start waited for its whole time limit.
+                    val known = state.getOrNull()
+                    known == PatchState.NotConnectedNotBooting || known == PatchState.ConnectedBooted
                 }
                 .firstOrError()
                 .ignoreElement()
