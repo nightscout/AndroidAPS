@@ -546,6 +546,29 @@ class BgQualityCheckPluginTest : TestBase() {
     }
 
     @Test
+    fun `stateDescription names the states the overview shows`() {
+        plugin.state = BgQualityCheck.State.RECALCULATED
+        assertThat(plugin.stateDescription()).isEqualTo("recalculated")
+        plugin.state = BgQualityCheck.State.DOUBLED
+        assertThat(plugin.stateDescription()).isEqualTo("double entries")
+        plugin.state = BgQualityCheck.State.FLAT
+        assertThat(plugin.stateDescription()).isEqualTo("Flat data. Considered to be wrong")
+        plugin.state = BgQualityCheck.State.FIVE_MIN_DATA
+        assertThat(plugin.stateDescription()).isEmpty()
+        plugin.state = BgQualityCheck.State.UNKNOWN
+        assertThat(plugin.stateDescription()).isEmpty()
+    }
+
+    @Test
+    fun `the forced LGS mode says why`() {
+        plugin.state = BgQualityCheck.State.DOUBLED
+
+        val forced = plugin.isLgsForced(ConstraintObject(false, aapsLogger))
+
+        assertThat(forced.getReasons()).contains("LGS mode due to doubled values in BG source")
+    }
+
+    @Test
     fun isLgsForcedTest() {
         plugin.state = BgQualityCheck.State.UNKNOWN
         assertThat(plugin.isLgsForced(ConstraintObject(false, aapsLogger)).value()).isFalse()
