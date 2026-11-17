@@ -216,7 +216,9 @@ build fails if the owner is not in the list. Then:
    `androidMain`, and `implementation(project(":core:keys"))` to commonMain for `TextRef`.
 2. Nothing to register by hand. Every shell (`:app`, its instrumented tests, desktop, iOS) generates
    `GeneratedStringOwners` from `StringOwnerModules.ALL`. Add one of the module's strings to
-   `DesktopStringOwnersTest` and `IosStringOwnersTest`.
+   `DesktopStringOwnersTest` and `IosStringOwnersTest`. A module the desktop shell does not link, as
+   a pump driver, gets `onDesktop = false` in the list, or the desktop registry imports an object it
+   cannot see; then its string goes in the iOS test only.
 3. Swap `R.string.foo` for `XxxStrings.foo`. The substitution is name-preserving, so a wrong mapping
    cannot happen silently - it fails to compile.
 4. In Composables import `app.aaps.core.ui.compose.stringResource` alongside the androidx one. Both
@@ -422,9 +424,11 @@ accepted unseen). What those tests found is worth knowing before the next move:
   know throws, where Gson gave null - give such an enum a serializer that falls back to an "unknown"
   entry, or one bad entry makes the whole stored list unreadable.
 - **`java.time.LocalDateTime` maths is clock maths.** `plusDays`, `plusHours` and
-  `ChronoUnit.MINUTES.between` ignore clock changes. In kotlinx-datetime keep that by doing the sum on
-  the date, or through `TimeZone.UTC` (`plusOnTheClock` and `clockMinutesBetween` in `:pump:carelevo`),
-  not with a `TimeZone` that has summer time. Pin it with a test that crosses a clock change.
+  `ChronoUnit.MINUTES.between` ignore clock changes. In kotlinx-datetime keep that in the move by doing
+  the sum on the date, or through `TimeZone.UTC`, not with a `TimeZone` that has summer time. Pin it
+  with a test that crosses a clock change. Then ask whether clock maths was right at all: a device that
+  counts its own time, as a patch counts its 7 days, needs real hours on an `Instant`. The Carelevo
+  overview was wrong this way and was fixed after the move, as its own change.
 - **Moving `rh.gs(R.string.x)` to `TextRef` makes missing stubs fail.** The shared `TextRefStubs`
   throw for a string no test stubbed, where the mock used to answer null. Expect to add stubs.
 

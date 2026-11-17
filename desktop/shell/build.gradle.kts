@@ -149,9 +149,10 @@ val generateBuildInfo = tasks.register<GenerateBuildInfoTask>("generateDesktopBu
  * The list is `StringOwnerModules.ALL`, shared with `:app` and `:ios:shell`, so a module added to
  * the build cannot be missing from one platform and present on another. That is not theoretical:
  * this shell had five of sixteen and rendered plugin names as string names until it was run.
+ * Only the modules marked `onDesktop = false` are left out: this shell does not link them.
  */
 val generateStringOwners = tasks.register<GenerateStringOwnerRegistryTask>("generateDesktopStringOwners") {
-    owners.set(StringOwnerModules.ALL)
+    owners.set(StringOwnerModules.ALL.filter { it.onDesktop })
     packageName.set("app.aaps.desktop.shell.di")
     objectName.set("GeneratedStringOwners")
     // Text, not resource ids: a desktop JVM has no AAPT table to resolve an id against.
