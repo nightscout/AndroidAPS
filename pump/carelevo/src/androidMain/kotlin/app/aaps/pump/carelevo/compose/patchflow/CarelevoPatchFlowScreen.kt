@@ -17,15 +17,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.pump.ProfileGateWizardStep
 import app.aaps.core.ui.compose.pump.WizardScreen
 import app.aaps.core.ui.compose.siteRotation.SiteLocationWizardStep
-import app.aaps.pump.carelevo.R
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.common.model.UiState
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectEvent
 import app.aaps.pump.carelevo.presentation.type.CarelevoPatchStep
@@ -34,7 +35,6 @@ import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectViewMod
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectionFlowViewModel
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchNeedleInsertionViewModel
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchSafetyCheckViewModel
-import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 internal fun CarelevoPatchFlowScreen(
@@ -69,7 +69,7 @@ private fun CarelevoPatchConnectionFlowScreen(
     val connectUiState by connectViewModel.uiState.collectAsStateWithLifecycle()
     val needleInsertionUiState by needleInsertionViewModel.uiState.collectAsStateWithLifecycle()
     val safetyCheckUiState by safetyCheckViewModel.uiState.collectAsStateWithLifecycle()
-    val discardFailedMessage = stringResource(R.string.carelevo_toast_msg_discard_failed)
+    val discardFailedMessage = stringResource(CarelevoStrings.carelevo_toast_msg_discard_failed)
 
     // Every exit path MUST drop the ViewModel's one-shot init latch: the VM outlives this screen
     // (it is scoped to the plugin's NavBackStackEntry), so without the reset a SECOND activation
@@ -127,12 +127,12 @@ private fun CarelevoPatchConnectionFlowScreen(
             canGoBack = true,
             onBack = { viewModel.startPatchDiscardProcess() },
             cancelDialogTitle = stringResource(
-                if (beforePatch) R.string.carelevo_dialog_patch_activation_cancel_title
-                else R.string.carelevo_dialog_patch_discard_unused_title
+                if (beforePatch) CarelevoStrings.carelevo_dialog_patch_activation_cancel_title
+                else CarelevoStrings.carelevo_dialog_patch_discard_unused_title
             ),
             cancelDialogText = stringResource(
-                if (beforePatch) R.string.carelevo_dialog_patch_activation_cancel_desc
-                else R.string.carelevo_dialog_patch_discard_unused_desc
+                if (beforePatch) CarelevoStrings.carelevo_dialog_patch_activation_cancel_desc
+                else CarelevoStrings.carelevo_dialog_patch_discard_unused_desc
             ),
             title = patchStepTitle(page),
             setToolbarConfig = setToolbarConfig,
@@ -216,7 +216,7 @@ private fun CarelevoPatchConnectionFlowScreen(
                 ) {
                     CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                     Text(
-                        text = stringResource(CoreUiR.string.loading),
+                        text = stringResource(CoreUiStrings.loading),
                         color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.bodyLarge
                     )

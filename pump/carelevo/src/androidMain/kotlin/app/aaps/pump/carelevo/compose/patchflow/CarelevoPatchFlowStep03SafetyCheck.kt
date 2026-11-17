@@ -20,18 +20,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
-import app.aaps.pump.carelevo.R
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.compose.dialog.CarelevoActionDialog
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectSafetyCheckEvent
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectionFlowViewModel
@@ -46,7 +47,7 @@ internal fun CarelevoPatchFlowStep03SafetyCheck(
     val progress by viewModel.progress.collectAsStateWithLifecycle()
     val remainSec by viewModel.remainSec.collectAsStateWithLifecycle()
     var showDiscardDialog by remember { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf<Int?>(null) }
+    var errorMessage by remember { mutableStateOf<TextRef?>(null) }
     // Keyed on the patch, not the ViewModel: the ViewModel outlives the wizard, so a new patch would
     // otherwise inherit the last one's state.
     val patchAddress = viewModel.patchAddress()
@@ -73,11 +74,11 @@ internal fun CarelevoPatchFlowStep03SafetyCheck(
         viewModel.event.collect { event ->
             when (event) {
                 CarelevoConnectSafetyCheckEvent.ShowMessageBluetoothNotEnabled    -> {
-                    errorMessage = R.string.carelevo_toast_msg_bluetooth_not_enabled
+                    errorMessage = CarelevoStrings.carelevo_toast_msg_bluetooth_not_enabled
                 }
 
                 CarelevoConnectSafetyCheckEvent.ShowMessageCarelevoIsNotConnected -> {
-                    errorMessage = R.string.carelevo_toast_msg_not_connected_waiting_retry
+                    errorMessage = CarelevoStrings.carelevo_toast_msg_not_connected_waiting_retry
                 }
 
                 CarelevoConnectSafetyCheckEvent.SafetyCheckProgress               -> {
@@ -91,12 +92,12 @@ internal fun CarelevoPatchFlowStep03SafetyCheck(
                 }
 
                 CarelevoConnectSafetyCheckEvent.SafetyCheckFailed                 -> {
-                    errorMessage = R.string.carelevo_toast_msg_safety_check_failed
+                    errorMessage = CarelevoStrings.carelevo_toast_msg_safety_check_failed
                     safetyCheckState = SafetyCheckUiState.Ready
                 }
 
                 CarelevoConnectSafetyCheckEvent.AdditionalPrimingFailed           -> {
-                    errorMessage = R.string.carelevo_toast_msg_not_connected_waiting_retry
+                    errorMessage = CarelevoStrings.carelevo_toast_msg_not_connected_waiting_retry
                 }
 
                 // Releases the latch; the alarm's discard tears the record down and the host then
@@ -112,7 +113,7 @@ internal fun CarelevoPatchFlowStep03SafetyCheck(
 
                 CarelevoConnectSafetyCheckEvent.DiscardFailed                     -> {
                     showDiscardDialog = false
-                    errorMessage = R.string.carelevo_toast_msg_discard_failed
+                    errorMessage = CarelevoStrings.carelevo_toast_msg_discard_failed
                 }
 
                 CarelevoConnectSafetyCheckEvent.NoAction                          -> Unit
@@ -123,28 +124,28 @@ internal fun CarelevoPatchFlowStep03SafetyCheck(
     if (showDiscardDialog) {
         CarelevoActionDialog(
             onDismissRequest = { showDiscardDialog = false },
-            title = stringResource(R.string.carelevo_dialog_patch_discard_unused_title),
-            content = stringResource(R.string.carelevo_dialog_patch_discard_unused_desc),
-            primaryText = stringResource(R.string.carelevo_btn_confirm),
+            title = stringResource(CarelevoStrings.carelevo_dialog_patch_discard_unused_title),
+            content = stringResource(CarelevoStrings.carelevo_dialog_patch_discard_unused_desc),
+            primaryText = stringResource(CarelevoStrings.carelevo_btn_confirm),
             onPrimaryClick = {
                 showDiscardDialog = false
                 viewModel.startDiscardProcess()
             },
-            secondaryText = stringResource(R.string.carelevo_btn_cancel),
+            secondaryText = stringResource(CarelevoStrings.carelevo_btn_cancel),
             onSecondaryClick = { showDiscardDialog = false }
         )
     }
 
     val titleRes = when (safetyCheckState) {
         SafetyCheckUiState.Ready,
-        SafetyCheckUiState.Progress -> R.string.carelevo_patch_safety_check_start_title
+        SafetyCheckUiState.Progress -> CarelevoStrings.carelevo_patch_safety_check_start_title
 
-        SafetyCheckUiState.Success  -> R.string.carelevo_patch_safety_check_end_title
+        SafetyCheckUiState.Success  -> CarelevoStrings.carelevo_patch_safety_check_end_title
     }
     val descRes = when (safetyCheckState) {
-        SafetyCheckUiState.Ready    -> R.string.carelevo_patch_safety_check_start_desc
-        SafetyCheckUiState.Progress -> R.string.carelevo_patch_safety_check_progress_desc
-        SafetyCheckUiState.Success  -> R.string.carelevo_patch_safety_check_end_desc
+        SafetyCheckUiState.Ready    -> CarelevoStrings.carelevo_patch_safety_check_start_desc
+        SafetyCheckUiState.Progress -> CarelevoStrings.carelevo_patch_safety_check_progress_desc
+        SafetyCheckUiState.Success  -> CarelevoStrings.carelevo_patch_safety_check_end_desc
     }
 
     val nextEnabled = safetyCheckState == SafetyCheckUiState.Success
@@ -183,9 +184,9 @@ internal fun CarelevoPatchFlowStep03SafetyCheck(
 
 @Composable
 private fun CarelevoPatchFlowStep03SafetyCheckContent(
-    titleRes: Int,
-    descRes: Int,
-    errorMessage: Int?,
+    titleRes: TextRef,
+    descRes: TextRef,
+    errorMessage: TextRef?,
     progress: Int?,
     remainSec: Long?,
     showProgressDetails: Boolean,
@@ -201,18 +202,18 @@ private fun CarelevoPatchFlowStep03SafetyCheckContent(
     WizardStepLayout(
         primaryButton = if (showSafetyCheckButton) {
             WizardButton(
-                text = stringResource(R.string.carelevo_btn_safety_check),
+                text = stringResource(CarelevoStrings.carelevo_btn_safety_check),
                 onClick = onSafetyCheckClick
             )
         } else {
             WizardButton(
-                text = stringResource(R.string.carelevo_btn_next),
+                text = stringResource(CarelevoStrings.carelevo_btn_next),
                 onClick = onNextClick,
                 enabled = nextEnabled
             )
         },
         secondaryButton = WizardButton(
-            text = stringResource(R.string.carelevo_btn_patch_expiration),
+            text = stringResource(CarelevoStrings.carelevo_btn_patch_expiration),
             onClick = onDiscardClick,
             enabled = discardEnabled
         )
@@ -262,19 +263,19 @@ private fun CarelevoPatchFlowStep03SafetyCheckContent(
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = stringResource(R.string.carelevo_patch_safety_check_desc_warning),
+                    text = stringResource(CarelevoStrings.carelevo_patch_safety_check_desc_warning),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
             Text(
-                text = stringResource(R.string.carelevo_patch_safety_check_retry_desc),
+                text = stringResource(CarelevoStrings.carelevo_patch_safety_check_retry_desc),
                 style = MaterialTheme.typography.bodyMedium
             )
             Button(
                 onClick = onRetryClick,
                 modifier = Modifier.wrapContentWidth()
             ) {
-                Text(text = stringResource(R.string.carelevo_btn_retry))
+                Text(text = stringResource(CarelevoStrings.carelevo_btn_retry))
             }
         }
     }
@@ -291,20 +292,20 @@ private fun remainTimeText(remainSeconds: Long?): String {
     if (remainSeconds == null) return ""
     val minutes = remainSeconds / 60
     val seconds = remainSeconds % 60
-    return stringResource(R.string.common_unit_remain_min_sec, minutes, seconds)
+    return stringResource(CarelevoStrings.common_unit_remain_min_sec, minutes, seconds)
 }
 
 @Composable
 private fun progressText(progress: Int?): String =
-    if (progress == null) "" else stringResource(R.string.carelevo_progress_of_100, progress)
+    if (progress == null) "" else stringResource(CarelevoStrings.carelevo_progress_of_100, progress)
 
 @Preview(showBackground = true, name = "Safety Check Ready")
 @Composable
 private fun CarelevoPatchFlowStep03SafetyCheckReadyPreview() {
     MaterialTheme {
         CarelevoPatchFlowStep03SafetyCheckContent(
-            titleRes = R.string.carelevo_patch_safety_check_start_title,
-            descRes = R.string.carelevo_patch_safety_check_start_desc,
+            titleRes = CarelevoStrings.carelevo_patch_safety_check_start_title,
+            descRes = CarelevoStrings.carelevo_patch_safety_check_start_desc,
             errorMessage = null,
             progress = 0,
             remainSec = 180,
@@ -325,8 +326,8 @@ private fun CarelevoPatchFlowStep03SafetyCheckReadyPreview() {
 private fun CarelevoPatchFlowStep03SafetyCheckSuccessPreview() {
     MaterialTheme {
         CarelevoPatchFlowStep03SafetyCheckContent(
-            titleRes = R.string.carelevo_patch_safety_check_end_title,
-            descRes = R.string.carelevo_patch_safety_check_end_desc,
+            titleRes = CarelevoStrings.carelevo_patch_safety_check_end_title,
+            descRes = CarelevoStrings.carelevo_patch_safety_check_end_desc,
             errorMessage = null,
             progress = 100,
             remainSec = 0,

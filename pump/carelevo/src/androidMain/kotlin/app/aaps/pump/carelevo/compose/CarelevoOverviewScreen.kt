@@ -27,10 +27,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.icons.IcLoopPaused
@@ -38,6 +38,8 @@ import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewScreen
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.core.ui.compose.pump.StatusBanner
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.common.model.UiState
 import app.aaps.pump.carelevo.compose.dialog.CarelevoActionDialog
@@ -45,7 +47,6 @@ import app.aaps.pump.carelevo.compose.dialog.CarelevoPumpStopDurationDialog
 import app.aaps.pump.carelevo.presentation.model.CarelevoOverviewEvent
 import app.aaps.pump.carelevo.presentation.type.CarelevoScreenType
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoOverviewViewModel
-import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 internal fun CarelevoOverviewScreen(
@@ -63,20 +64,20 @@ internal fun CarelevoOverviewScreen(
 
     val stopDurations = remember { listOf(30, 60, 90, 120, 150, 180, 210, 240) }
     val stopDurationLabels = listOf(
-        stringResource(R.string.carelevo_pump_stop_duration_label_30_min),
-        stringResource(R.string.carelevo_pump_stop_duration_label_1_hour),
-        stringResource(R.string.carelevo_pump_stop_duration_label_1_hour_30_min),
-        stringResource(R.string.carelevo_pump_stop_duration_label_2_hour),
-        stringResource(R.string.carelevo_pump_stop_duration_label_2_hour_30_min),
-        stringResource(R.string.carelevo_pump_stop_duration_label_3_hour),
-        stringResource(R.string.carelevo_pump_stop_duration_label_3_hour_30_min),
-        stringResource(R.string.carelevo_pump_stop_duration_label_4_hour),
+        stringResource(CarelevoStrings.carelevo_pump_stop_duration_label_30_min),
+        stringResource(CarelevoStrings.carelevo_pump_stop_duration_label_1_hour),
+        stringResource(CarelevoStrings.carelevo_pump_stop_duration_label_1_hour_30_min),
+        stringResource(CarelevoStrings.carelevo_pump_stop_duration_label_2_hour),
+        stringResource(CarelevoStrings.carelevo_pump_stop_duration_label_2_hour_30_min),
+        stringResource(CarelevoStrings.carelevo_pump_stop_duration_label_3_hour),
+        stringResource(CarelevoStrings.carelevo_pump_stop_duration_label_3_hour_30_min),
+        stringResource(CarelevoStrings.carelevo_pump_stop_duration_label_4_hour),
     )
-    val bluetoothNotEnabledMessage = stringResource(R.string.carelevo_toast_msg_bluetooth_not_enabled)
-    val notConnectedMessage = stringResource(R.string.carelevo_toast_msg_patch_not_connected)
-    val discardFailedMessage = stringResource(R.string.carelevo_toast_msg_discard_failed)
-    val resumeFailedMessage = stringResource(R.string.carelevo_toast_mag_set_basal_resume_fail)
-    val suspendFailedMessage = stringResource(R.string.carelevo_toast_mag_set_basal_suspend_fail)
+    val bluetoothNotEnabledMessage = stringResource(CarelevoStrings.carelevo_toast_msg_bluetooth_not_enabled)
+    val notConnectedMessage = stringResource(CarelevoStrings.carelevo_toast_msg_patch_not_connected)
+    val discardFailedMessage = stringResource(CarelevoStrings.carelevo_toast_msg_discard_failed)
+    val resumeFailedMessage = stringResource(CarelevoStrings.carelevo_toast_mag_set_basal_resume_fail)
+    val suspendFailedMessage = stringResource(CarelevoStrings.carelevo_toast_mag_set_basal_suspend_fail)
     val isActionLoading = actionState is UiState.Loading
 
     LaunchedEffect(viewModel) {
@@ -110,30 +111,30 @@ internal fun CarelevoOverviewScreen(
 
     if (showDiscardDialog) {
         CarelevoActionDialog(
-            title = stringResource(R.string.carelevo_dialog_patch_discard_message_title),
-            content = stringResource(R.string.carelevo_dialog_patch_discard_message_desc),
+            title = stringResource(CarelevoStrings.carelevo_dialog_patch_discard_message_title),
+            content = stringResource(CarelevoStrings.carelevo_dialog_patch_discard_message_desc),
             onDismissRequest = { showDiscardDialog = false },
-            primaryText = stringResource(R.string.carelevo_btn_confirm),
+            primaryText = stringResource(CarelevoStrings.carelevo_btn_confirm),
             onPrimaryClick = {
                 showDiscardDialog = false
                 viewModel.startDiscardProcess()
             },
-            secondaryText = stringResource(R.string.carelevo_btn_cancel),
+            secondaryText = stringResource(CarelevoStrings.carelevo_btn_cancel),
             onSecondaryClick = { showDiscardDialog = false }
         )
     }
 
     if (showResumeDialog) {
         CarelevoActionDialog(
-            title = stringResource(R.string.carelevo_pump_resume_title),
-            content = stringResource(R.string.carelevo_pump_resume_description),
+            title = stringResource(CarelevoStrings.carelevo_pump_resume_title),
+            content = stringResource(CarelevoStrings.carelevo_pump_resume_description),
             onDismissRequest = { showResumeDialog = false },
-            primaryText = stringResource(R.string.carelevo_btn_confirm),
+            primaryText = stringResource(CarelevoStrings.carelevo_btn_confirm),
             onPrimaryClick = {
                 showResumeDialog = false
                 viewModel.startPumpResume()
             },
-            secondaryText = stringResource(R.string.carelevo_btn_cancel),
+            secondaryText = stringResource(CarelevoStrings.carelevo_btn_cancel),
             onSecondaryClick = { showResumeDialog = false }
         )
     }
@@ -183,7 +184,7 @@ internal fun CarelevoOverviewScreen(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                     Text(
-                        text = stringResource(CoreUiR.string.loading),
+                        text = stringResource(CoreUiStrings.loading),
                         color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.bodyLarge
                     )
@@ -200,58 +201,58 @@ private fun CarelevoOverviewScreenConnectedPreview() {
         PumpOverviewScreen(
             state = PumpOverviewUiState(
                 statusBanner = StatusBanner(
-                    text = stringResource(R.string.carelevo_state_connected_value),
+                    text = stringResource(CarelevoStrings.carelevo_state_connected_value),
                     level = StatusLevel.NORMAL
                 ),
                 infoRows = listOf(
                     PumpInfoRow(
-                        label = stringResource(R.string.carelevo_bluetooth_state_key),
-                        value = stringResource(R.string.carelevo_state_connected_value)
+                        label = stringResource(CarelevoStrings.carelevo_bluetooth_state_key),
+                        value = stringResource(CarelevoStrings.carelevo_state_connected_value)
                     ),
                     PumpInfoRow(
-                        label = stringResource(R.string.carelevo_serial_number_key),
+                        label = stringResource(CarelevoStrings.carelevo_serial_number_key),
                         value = "04:CD:15:D0:10:05"
                     ),
                     PumpInfoRow(
-                        label = stringResource(R.string.carelevo_boot_date_time_key),
+                        label = stringResource(CarelevoStrings.carelevo_boot_date_time_key),
                         value = "2026-04-13 09:00"
                     ),
                     PumpInfoRow(
-                        label = stringResource(R.string.carelevo_expiration_key),
+                        label = stringResource(CarelevoStrings.carelevo_expiration_key),
                         value = "2026-04-20 09:00"
                     ),
                     PumpInfoRow(
-                        label = stringResource(R.string.carelevo_running_remain_time),
+                        label = stringResource(CarelevoStrings.carelevo_running_remain_time),
                         value = "2d 11h 20m"
                     ),
                     PumpInfoRow(
-                        label = stringResource(R.string.carelevo_basal_rate_key),
-                        value = stringResource(R.string.common_label_unit_value_dose_per_speed_with_space, 1.2)
+                        label = stringResource(CarelevoStrings.carelevo_basal_rate_key),
+                        value = stringResource(CarelevoStrings.common_label_unit_value_dose_per_speed_with_space, 1.2)
                     ),
                     PumpInfoRow(
-                        label = stringResource(R.string.carelevo_temp_basal_rate_key),
-                        value = stringResource(R.string.common_label_unit_value_dose_per_speed_with_space, 0.5)
+                        label = stringResource(CarelevoStrings.carelevo_temp_basal_rate_key),
+                        value = stringResource(CarelevoStrings.common_label_unit_value_dose_per_speed_with_space, 0.5)
                     ),
                     PumpInfoRow(
-                        label = stringResource(R.string.carelevo_insulin_remain_key),
+                        label = stringResource(CarelevoStrings.carelevo_insulin_remain_key),
                         value = "298.0 U"
                     ),
                     PumpInfoRow(
-                        label = stringResource(R.string.carelevo_total_insulin_key),
-                        value = stringResource(R.string.common_label_unit_value_dose_with_space, "12.50")
+                        label = stringResource(CarelevoStrings.carelevo_total_insulin_key),
+                        value = stringResource(CarelevoStrings.common_label_unit_value_dose_with_space, "12.50")
                     )
                 ),
                 primaryActions = emptyList(),
                 managementActions = listOf(
                     ScreenAction(
-                        label = stringResource(R.string.carelevo_overview_pump_discard_btn_label),
+                        label = stringResource(CarelevoStrings.carelevo_overview_pump_discard_btn_label),
                         icon = Icons.Filled.Delete,
                         enabled = true,
                         visible = true,
                         onClick = {}
                     ),
                     ScreenAction(
-                        label = stringResource(R.string.carelevo_overview_pump_suspend_btn_label),
+                        label = stringResource(CarelevoStrings.carelevo_overview_pump_suspend_btn_label),
                         icon = IcLoopPaused,
                         enabled = true,
                         visible = true,
@@ -280,18 +281,18 @@ private fun CarelevoOverviewScreenDisconnectedPreview() {
         PumpOverviewScreen(
             state = PumpOverviewUiState(
                 statusBanner = StatusBanner(
-                    text = stringResource(R.string.carelevo_state_none_value),
+                    text = stringResource(CarelevoStrings.carelevo_state_none_value),
                     level = StatusLevel.WARNING
                 ),
                 infoRows = listOf(
                     PumpInfoRow(
-                        label = stringResource(R.string.carelevo_bluetooth_state_key),
-                        value = stringResource(R.string.carelevo_state_disconnected_value)
+                        label = stringResource(CarelevoStrings.carelevo_bluetooth_state_key),
+                        value = stringResource(CarelevoStrings.carelevo_state_disconnected_value)
                     )
                 ),
                 primaryActions = listOf(
                     ScreenAction(
-                        label = stringResource(R.string.carelevo_overview_connect_btn_label),
+                        label = stringResource(CarelevoStrings.carelevo_overview_connect_btn_label),
                         icon = Icons.Filled.SwapHoriz,
                         enabled = true,
                         onClick = {}

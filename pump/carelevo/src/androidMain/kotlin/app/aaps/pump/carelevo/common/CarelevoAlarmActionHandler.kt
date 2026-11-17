@@ -4,7 +4,7 @@ import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.pump.carelevo.R
+import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.coordinator.CarelevoAlarmClearCoordinator
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.type.AlarmCause
@@ -133,7 +133,7 @@ class CarelevoAlarmActionHandler @Inject constructor(
                         acknowledgeAndRemoveAlarm(info.alarmId)
                         alarmClearCoordinator.resumeInfusion()
                     } else {
-                        _uiRequests.emit(AlarmEvent.ShowToastMessage(R.string.alarm_feat_msg_check_patch_connect))
+                        _uiRequests.emit(AlarmEvent.ShowToastMessage(CarelevoStrings.alarm_feat_msg_check_patch_connect))
                     }
                 }
             }

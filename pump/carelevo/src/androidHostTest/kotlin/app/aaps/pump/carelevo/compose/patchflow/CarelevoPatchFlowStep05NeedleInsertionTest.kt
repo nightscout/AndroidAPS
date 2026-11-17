@@ -13,6 +13,7 @@ import app.aaps.pump.carelevo.common.asEventFlow
 import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectNeedleEvent
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchNeedleInsertionViewModel
+import app.aaps.pump.carelevo.registerCarelevoStrings
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
@@ -114,6 +115,7 @@ class CarelevoPatchFlowStep05NeedleInsertionTest {
 
     @Before
     fun setUp() {
+        registerCarelevoStrings()
         val context: Context = RuntimeEnvironment.getApplication()
 
         step1Label = context.getString(R.string.carelevo_patch_step_1)

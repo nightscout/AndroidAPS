@@ -131,7 +131,7 @@ abstract class CarelevoPumpPluginTestBase {
     @BeforeEach
     fun setupCarelevoPlugin() {
         whenever(dateUtil.now()).thenReturn(System.currentTimeMillis())
-        whenever(rh.gs(any<Int>())).thenReturn("Mocked")
+        whenever(rh.gs(any<TextRef>())).thenReturn("Mocked")
 
         testProfile = mock()
         whenever(testProfile.getBasal()).thenReturn(1.0)

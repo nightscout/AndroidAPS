@@ -12,13 +12,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
-import app.aaps.pump.carelevo.R
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.compose.dialog.CarelevoActionDialog
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectPrepareEvent
 import app.aaps.pump.carelevo.presentation.type.CarelevoPatchStep
@@ -32,7 +33,7 @@ internal fun CarelevoPatchFlowStep02Connect(
     onExitFlow: () -> Unit
 ) {
     var showConnectDialog by remember { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf<Int?>(null) }
+    var errorMessage by remember { mutableStateOf<TextRef?>(null) }
 
     LaunchedEffect(viewModel, sharedViewModel) {
         viewModel.event.collect { event ->
@@ -42,26 +43,26 @@ internal fun CarelevoPatchFlowStep02Connect(
                 }
 
                 CarelevoConnectPrepareEvent.ShowMessageScanFailed             -> {
-                    errorMessage = R.string.carelevo_toast_msg_scan_failed
+                    errorMessage = CarelevoStrings.carelevo_toast_msg_scan_failed
                 }
 
                 CarelevoConnectPrepareEvent.ShowMessageBluetoothNotEnabled    -> {
-                    errorMessage = R.string.carelevo_toast_msg_bluetooth_not_enabled
+                    errorMessage = CarelevoStrings.carelevo_toast_msg_bluetooth_not_enabled
                 }
 
                 CarelevoConnectPrepareEvent.ShowMessageScanIsWorking          -> Unit
 
                 CarelevoConnectPrepareEvent.ShowMessageNotSetUserSettingInfo  -> {
-                    errorMessage = R.string.carelevo_toast_msg_profile_not_set
+                    errorMessage = CarelevoStrings.carelevo_toast_msg_profile_not_set
                 }
 
                 CarelevoConnectPrepareEvent.ShowMessageSelectedDeviceIseEmpty -> {
-                    errorMessage = R.string.carelevo_toast_msg_patch_not_found
+                    errorMessage = CarelevoStrings.carelevo_toast_msg_patch_not_found
                 }
 
                 CarelevoConnectPrepareEvent.ConnectFailed                     -> {
                     showConnectDialog = false
-                    errorMessage = R.string.carelevo_toast_msg_connect_failed
+                    errorMessage = CarelevoStrings.carelevo_toast_msg_connect_failed
                 }
 
                 CarelevoConnectPrepareEvent.ConnectComplete                   -> {
@@ -75,7 +76,7 @@ internal fun CarelevoPatchFlowStep02Connect(
                 }
 
                 CarelevoConnectPrepareEvent.DiscardFailed                     -> {
-                    errorMessage = R.string.carelevo_toast_msg_discard_failed
+                    errorMessage = CarelevoStrings.carelevo_toast_msg_discard_failed
                 }
 
                 CarelevoConnectPrepareEvent.NoAction                          -> Unit
@@ -86,14 +87,14 @@ internal fun CarelevoPatchFlowStep02Connect(
     if (showConnectDialog) {
         CarelevoActionDialog(
             onDismissRequest = { showConnectDialog = false },
-            title = stringResource(R.string.carelevo_dialog_patch_connect_message_title),
+            title = stringResource(CarelevoStrings.carelevo_dialog_patch_connect_message_title),
             content = "CareLevo",
-            primaryText = stringResource(R.string.carelevo_btn_confirm),
+            primaryText = stringResource(CarelevoStrings.carelevo_btn_confirm),
             onPrimaryClick = {
                 showConnectDialog = false
                 viewModel.startConnect(sharedViewModel.inputInsulin)
             },
-            secondaryText = stringResource(R.string.carelevo_btn_research),
+            secondaryText = stringResource(CarelevoStrings.carelevo_btn_research),
             onSecondaryClick = {
                 showConnectDialog = false
                 viewModel.startScan()
@@ -115,30 +116,30 @@ internal fun CarelevoPatchFlowStep02Connect(
 
 @Composable
 private fun CarelevoPatchConnectContent(
-    errorMessage: Int?,
+    errorMessage: TextRef?,
     onCancelClick: () -> Unit,
     onSearchClick: () -> Unit
 ) {
     WizardStepLayout(
         primaryButton = WizardButton(
-            text = stringResource(R.string.carelevo_btn_input_search_patch),
+            text = stringResource(CarelevoStrings.carelevo_btn_input_search_patch),
             onClick = onSearchClick
         ),
         secondaryButton = WizardButton(
-            text = stringResource(R.string.carelevo_btn_cancel),
+            text = stringResource(CarelevoStrings.carelevo_btn_cancel),
             onClick = onCancelClick
         )
     ) {
         errorMessage?.let { ErrorBanner(message = stringResource(it)) }
         CarelevoPatchConnectStepSection(
-            stepLabel = stringResource(R.string.carelevo_patch_step_1),
-            title = stringResource(R.string.carelevo_patch_connect_step_1_title),
-            description = stringResource(R.string.carelevo_patch_connect_step_1_desc)
+            stepLabel = stringResource(CarelevoStrings.carelevo_patch_step_1),
+            title = stringResource(CarelevoStrings.carelevo_patch_connect_step_1_title),
+            description = stringResource(CarelevoStrings.carelevo_patch_connect_step_1_desc)
         )
         CarelevoPatchConnectStepSection(
-            stepLabel = stringResource(R.string.carelevo_patch_step_2),
-            title = stringResource(R.string.carelevo_patch_connect_step_2_title),
-            description = stringResource(R.string.carelevo_patch_connect_step_2_desc)
+            stepLabel = stringResource(CarelevoStrings.carelevo_patch_step_2),
+            title = stringResource(CarelevoStrings.carelevo_patch_connect_step_2_title),
+            description = stringResource(CarelevoStrings.carelevo_patch_connect_step_2_desc)
         )
     }
 }

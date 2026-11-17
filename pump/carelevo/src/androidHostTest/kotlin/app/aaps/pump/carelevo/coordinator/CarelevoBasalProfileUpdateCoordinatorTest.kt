@@ -86,7 +86,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
 
     @BeforeEach
     fun setUp() {
-        whenever(rh.gs(any<Int>())).thenReturn("Mocked")
+        whenever(rh.gs(any<TextRef>())).thenReturn("Mocked")
         whenever(carelevoPatch.getPatchInfoAddress()).thenReturn(ADDRESS)
         whenever(setBasalProgramUseCase.buildBasalProgramPlan(any())).thenReturn(plan())
         whenever(setBasalProgramUseCase.persistBasalProgram(any())).thenReturn(true)

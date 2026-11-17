@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.pump.carelevo.ContextResourceHelper
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.type.AlarmCause
@@ -109,7 +110,8 @@ class CarelevoAlarmNotifierTest {
             dateUtil = dateUtil,
             notificationManager = notificationManager,
             preferences = preferences,
-            alarmActionHandler = alarmActionHandler
+            alarmActionHandler = alarmActionHandler,
+            rh = ContextResourceHelper(context)
         )
         sut.dispatcher = Dispatchers.Unconfined
     }

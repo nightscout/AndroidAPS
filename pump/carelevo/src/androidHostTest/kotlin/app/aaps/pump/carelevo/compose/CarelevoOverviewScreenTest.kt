@@ -29,6 +29,7 @@ import app.aaps.pump.carelevo.common.model.UiState
 import app.aaps.pump.carelevo.presentation.model.CarelevoOverviewEvent
 import app.aaps.pump.carelevo.presentation.type.CarelevoScreenType
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoOverviewViewModel
+import app.aaps.pump.carelevo.registerCarelevoStrings
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
@@ -96,6 +97,7 @@ class CarelevoOverviewScreenTest {
 
     @Before
     fun setUp() {
+        registerCarelevoStrings()
         whenever(viewModel.overviewUiState).thenReturn(overviewState)
         whenever(viewModel.uiState).thenReturn(actionState)
         whenever(viewModel.event).thenReturn(events.asEventFlow())

@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -20,6 +21,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.icons.IcLoopPaused
@@ -28,7 +30,7 @@ import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.core.ui.compose.pump.tickerFlow
-import app.aaps.pump.carelevo.R
+import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.command.CmdDiscard
 import app.aaps.pump.carelevo.command.CmdPumpStop
@@ -94,8 +96,6 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreUiR
 
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
@@ -312,9 +312,9 @@ class CarelevoOverviewViewModel @Inject constructor(
             infusionStatus = info.mode,
             insulinRemainText = if (info.insulinRemain != null && info.insulinAmount != null)
                 rh.gs(
-                    R.string.carelevo_insulin_remain_value,
-                    rh.gs(R.string.common_label_unit_value_dose_with_space, info.insulinRemain),
-                    rh.gs(R.string.common_label_unit_value_dose_with_space, info.insulinAmount)
+                    CarelevoStrings.carelevo_insulin_remain_value,
+                    rh.gs(CarelevoStrings.common_label_unit_value_dose_with_space, info.insulinRemain),
+                    rh.gs(CarelevoStrings.common_label_unit_value_dose_with_space, info.insulinAmount)
                 )
             else "",
             totalBasal = infusedBasal,
@@ -567,7 +567,7 @@ class CarelevoOverviewViewModel @Inject constructor(
         val patch = carelevoPatch
         val notifications = notificationManager
         val logger = aapsLogger
-        val notReached = rh.gs(R.string.carelevo_discarded_not_reached)
+        val notReached = rh.gs(CarelevoStrings.carelevo_discarded_not_reached)
         val useCase = patchForceDiscardUseCase
         val removal = removalScope.async {
             val response = withTimeoutOrNull(REMOVAL_TIMEOUT) { useCase.execute() }
@@ -745,13 +745,13 @@ class CarelevoOverviewViewModel @Inject constructor(
         // are real top-status conditions.
         val banner = when {
             patchState == PatchState.NotConnectedNotBooting -> StatusBanner(
-                text = rh.gs(R.string.carelevo_state_none_value),
+                text = rh.gs(CarelevoStrings.carelevo_state_none_value),
                 level = StatusLevel.WARNING
             )
 
             // Suspended outranks the (idle) connection status — delivery is paused (matches Medtrum).
             overviewData.isPumpStopped                      -> StatusBanner(
-                text = rh.gs(InterfacesR.string.pumpsuspended),
+                text = rh.gs(InterfacesStrings.pumpsuspended),
                 level = StatusLevel.WARNING
             )
 
@@ -761,7 +761,7 @@ class CarelevoOverviewViewModel @Inject constructor(
         val infoRows = buildList {
             add(
                 PumpInfoRow(
-                    label = rh.gs(R.string.carelevo_bluetooth_state_key),
+                    label = rh.gs(CarelevoStrings.carelevo_bluetooth_state_key),
                     value = connectionLabel(patchState, connected)
                 )
             )
@@ -773,57 +773,57 @@ class CarelevoOverviewViewModel @Inject constructor(
                 PatchState.NotConnectedBooted -> {
                     add(
                         PumpInfoRow(
-                            label = rh.gs(CoreUiR.string.last_connection_label),
+                            label = rh.gs(CoreUiStrings.last_connection_label),
                             value = lastConnectionLabel(lastConnectedAt)
                         )
                     )
                     add(
                         PumpInfoRow(
-                            label = rh.gs(R.string.carelevo_serial_number_key),
+                            label = rh.gs(CarelevoStrings.carelevo_serial_number_key),
                             value = overviewData.serialNumber.ifBlank { "-" }
                         )
                     )
                     add(
                         PumpInfoRow(
-                            label = rh.gs(R.string.carelevo_boot_date_time_key),
+                            label = rh.gs(CarelevoStrings.carelevo_boot_date_time_key),
                             value = overviewData.bootDateTimeUi.ifBlank { "-" }
                         )
                     )
                     add(
                         PumpInfoRow(
-                            label = rh.gs(R.string.carelevo_expiration_key),
+                            label = rh.gs(CarelevoStrings.carelevo_expiration_key),
                             value = overviewData.expirationTime.ifBlank { "-" }
                         )
                     )
                     add(
                         PumpInfoRow(
-                            label = rh.gs(R.string.carelevo_running_remain_time),
+                            label = rh.gs(CarelevoStrings.carelevo_running_remain_time),
                             value = formatRemainingMinutes(overviewData.runningRemainMinutes)
                         )
                     )
                     add(
                         PumpInfoRow(
-                            label = rh.gs(R.string.carelevo_basal_rate_key),
-                            value = rh.gs(R.string.common_label_unit_value_dose_per_speed_with_space, basalRate)
+                            label = rh.gs(CarelevoStrings.carelevo_basal_rate_key),
+                            value = rh.gs(CarelevoStrings.common_label_unit_value_dose_per_speed_with_space, basalRate)
                         )
                     )
                     add(
                         PumpInfoRow(
-                            label = rh.gs(R.string.carelevo_temp_basal_rate_key),
-                            value = rh.gs(R.string.common_label_unit_value_dose_per_speed_with_space, tempBasalRate ?: 0.0)
+                            label = rh.gs(CarelevoStrings.carelevo_temp_basal_rate_key),
+                            value = rh.gs(CarelevoStrings.common_label_unit_value_dose_per_speed_with_space, tempBasalRate ?: 0.0)
                         )
                     )
                     add(
                         PumpInfoRow(
-                            label = rh.gs(R.string.carelevo_insulin_remain_key),
+                            label = rh.gs(CarelevoStrings.carelevo_insulin_remain_key),
                             value = overviewData.insulinRemainText.ifBlank { "-" }
                         )
                     )
                     add(
                         PumpInfoRow(
-                            label = rh.gs(R.string.carelevo_total_insulin_key),
+                            label = rh.gs(CarelevoStrings.carelevo_total_insulin_key),
                             value = rh.gs(
-                                R.string.common_label_unit_value_dose_with_space,
+                                CarelevoStrings.common_label_unit_value_dose_with_space,
                                 decimalFormatter.to2Decimal(overviewData.totalBasal + overviewData.totalBolus)
                             )
                         )
@@ -837,7 +837,7 @@ class CarelevoOverviewViewModel @Inject constructor(
         val primaryActions = when (patchState) {
             PatchState.NotConnectedNotBooting -> listOf(
                 ScreenAction(
-                    label = rh.gs(R.string.carelevo_overview_connect_btn_label),
+                    label = rh.gs(CarelevoStrings.carelevo_overview_connect_btn_label),
                     icon = Icons.Filled.SwapHoriz,
                     onClick = { triggerEvent(CarelevoOverviewEvent.StartConnectionFlow) }
                 )
@@ -851,15 +851,15 @@ class CarelevoOverviewViewModel @Inject constructor(
         val managementActions = if (patchState == PatchState.ConnectedBooted || patchState == PatchState.NotConnectedBooted) {
             listOf(
                 ScreenAction(
-                    label = rh.gs(R.string.carelevo_overview_pump_discard_btn_label),
+                    label = rh.gs(CarelevoStrings.carelevo_overview_pump_discard_btn_label),
                     icon = Icons.Filled.Delete,
                     onClick = { triggerEvent(CarelevoOverviewEvent.ShowPumpDiscardDialog) }
                 ),
                 ScreenAction(
                     label = if (overviewData.isPumpStopped) {
-                        rh.gs(R.string.carelevo_overview_pump_resume_btn_label)
+                        rh.gs(CarelevoStrings.carelevo_overview_pump_resume_btn_label)
                     } else {
-                        rh.gs(R.string.carelevo_overview_pump_suspend_btn_label)
+                        rh.gs(CarelevoStrings.carelevo_overview_pump_suspend_btn_label)
                     },
                     icon = if (overviewData.isPumpStopped) Icons.Filled.PlayArrow else IcLoopPaused,
                     onClick = { triggerEvent(CarelevoOverviewEvent.ClickPumpStopResumeBtn) }
@@ -880,9 +880,9 @@ class CarelevoOverviewViewModel @Inject constructor(
 
     /** Live connection label: Connected only while a session is open, Disconnected when idle, none when no patch. */
     private fun connectionLabel(patchState: PatchState?, connected: Boolean): String = when {
-        patchState == PatchState.NotConnectedNotBooting -> rh.gs(R.string.carelevo_state_none_value)
-        connected                                       -> rh.gs(R.string.carelevo_state_connected_value)
-        else                                            -> rh.gs(R.string.carelevo_state_disconnected_value)
+        patchState == PatchState.NotConnectedNotBooting -> rh.gs(CarelevoStrings.carelevo_state_none_value)
+        connected                                       -> rh.gs(CarelevoStrings.carelevo_state_connected_value)
+        else                                            -> rh.gs(CarelevoStrings.carelevo_state_disconnected_value)
     }
 
     /** "Last connection: X ago" reachability value via the shared [DateUtil.minAgo] (matching other pumps); "-" until the first connection. */
@@ -898,9 +898,9 @@ class CarelevoOverviewViewModel @Inject constructor(
         val minutes = remainingMinutesAfterDays % 60
 
         return if (days > 0) {
-            rh.gs(R.string.common_unit_value_day_hour_min, days, hours, minutes)
+            rh.gs(CarelevoStrings.common_unit_value_day_hour_min, days, hours, minutes)
         } else {
-            rh.gs(R.string.common_unit_value_hour_min, hours, minutes)
+            rh.gs(CarelevoStrings.common_unit_value_hour_min, hours, minutes)
         }
     }
 

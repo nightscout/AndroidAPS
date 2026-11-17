@@ -2,7 +2,7 @@ package app.aaps.pump.carelevo.common.keys
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.pump.carelevo.R
+import app.aaps.pump.carelevo.CarelevoStrings
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -28,7 +28,7 @@ internal class CarelevoBooleanPreferenceKeyTest {
         val k = CarelevoBooleanPreferenceKey.CARELEVO_BUZZER_REMINDER
         assertThat(k.key).isEqualTo("CARELEVO_BUZZER_REMINDER")
         assertThat(k.defaultValue).isFalse()
-        assertThat(k.title).isEqualTo(TextRef.AndroidRes(R.string.carelevo_patch_buzzer_alarm_title))
+        assertThat(k.title).isEqualTo(CarelevoStrings.carelevo_patch_buzzer_alarm_title)
     }
 
     @Test

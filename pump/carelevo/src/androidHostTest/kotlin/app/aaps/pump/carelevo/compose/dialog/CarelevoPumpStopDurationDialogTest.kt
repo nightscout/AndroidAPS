@@ -14,6 +14,7 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import app.aaps.pump.carelevo.R
+import app.aaps.pump.carelevo.registerCarelevoStrings
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -59,6 +60,7 @@ class CarelevoPumpStopDurationDialogTest {
 
     @Before
     fun setUp() {
+        registerCarelevoStrings()
         val context: Context = RuntimeEnvironment.getApplication()
         titleLabel = context.getString(R.string.carelevo_pump_stop_duration_title)
         confirmLabel = context.getString(R.string.carelevo_btn_confirm)

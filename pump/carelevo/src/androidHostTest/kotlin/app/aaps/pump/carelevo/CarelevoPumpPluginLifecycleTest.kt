@@ -33,6 +33,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotFlags
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotResponse
@@ -216,7 +217,7 @@ class CarelevoPumpPluginLifecycleTest {
         bleSession = mock()
         activationExecutor = mock()
 
-        whenever(rh.gs(any<Int>())).thenReturn("Mocked")
+        whenever(rh.gs(any<TextRef>())).thenReturn("Mocked")
         // onStart follows the link for the alarm snapshot read; a test about the link stubs its own flow.
         whenever(bleSession.connected).thenReturn(MutableStateFlow(false))
 

@@ -302,7 +302,7 @@ class CarelevoPumpPluginMoreTest : CarelevoPumpPluginTestBase() {
         val screen = plugin.getPreferenceScreenContent()
 
         assertThat(screen.key).isEqualTo("carelevo_settings")
-        assertThat(screen.title).isEqualTo(TextRef.AndroidRes(R.string.carelevo))
+        assertThat(screen.title).isEqualTo(CarelevoStrings.carelevo)
         assertThat(screen.items).hasSize(3)
         assertThat((screen.items[0] as IntPreferenceKey).key)
             .isEqualTo(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key)

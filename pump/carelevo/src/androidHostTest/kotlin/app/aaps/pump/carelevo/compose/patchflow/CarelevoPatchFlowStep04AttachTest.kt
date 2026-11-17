@@ -11,6 +11,7 @@ import androidx.compose.ui.test.performScrollTo
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.presentation.type.CarelevoPatchStep
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectionFlowViewModel
+import app.aaps.pump.carelevo.registerCarelevoStrings
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -63,6 +64,7 @@ class CarelevoPatchFlowStep04AttachTest {
 
     @Before
     fun setUp() {
+        registerCarelevoStrings()
         app = RuntimeEnvironment.getApplication()
         stepLabel1 = app.getString(R.string.carelevo_patch_step_1)
         stepLabel2 = app.getString(R.string.carelevo_patch_step_2)

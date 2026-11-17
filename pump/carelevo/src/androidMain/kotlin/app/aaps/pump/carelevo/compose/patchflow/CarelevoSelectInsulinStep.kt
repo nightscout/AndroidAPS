@@ -2,13 +2,13 @@ package app.aaps.pump.carelevo.compose.patchflow
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.insulin.SelectInsulin
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectionFlowViewModel
-import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Wizard step letting the user pick which insulin the pump/loop should use. Shown only when more
@@ -25,12 +25,12 @@ internal fun CarelevoSelectInsulinStep(
 
     WizardStepLayout(
         primaryButton = WizardButton(
-            text = stringResource(CoreUiR.string.next),
+            text = stringResource(CoreUiStrings.next),
             onClick = { viewModel.advanceFromInsulin() },
             enabled = selectedInsulin != null
         ),
         secondaryButton = WizardButton(
-            text = stringResource(CoreUiR.string.cancel),
+            text = stringResource(CoreUiStrings.cancel),
             onClick = { viewModel.exitWizard() }
         )
     ) {

@@ -8,7 +8,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalContext
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.ui.compose.metroViewModel
@@ -27,7 +26,6 @@ internal fun CarelevoAlarmHost(
     aapsLogger: AAPSLogger,
     snackbarHostState: SnackbarHostState
 ) {
-    val context = LocalContext.current
     val viewModel: CarelevoAlarmViewModel = metroViewModel()
 
     val requestBtLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -46,7 +44,7 @@ internal fun CarelevoAlarmHost(
 
                 is AlarmEvent.ShowToastMessage    -> {
                     snackbarHostState.showSnackbar(
-                        message = context.getString(event.messageRes)
+                        message = viewModel.text(event.message)
                     )
                 }
 

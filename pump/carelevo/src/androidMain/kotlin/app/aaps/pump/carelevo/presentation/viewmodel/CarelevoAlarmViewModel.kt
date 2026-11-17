@@ -1,6 +1,8 @@
 package app.aaps.pump.carelevo.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.common.CarelevoAlarmActionHandler
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -19,8 +21,12 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 class CarelevoAlarmViewModel @Inject constructor(
-    alarmActionHandler: CarelevoAlarmActionHandler
+    alarmActionHandler: CarelevoAlarmActionHandler,
+    private val rh: ResourceHelper
 ) : ViewModel() {
 
     val event = alarmActionHandler.uiRequests
+
+    /** The text of a message, for the host, which shows it from a coroutine where `stringResource` cannot run. */
+    fun text(ref: TextRef): String = rh.gs(ref)
 }

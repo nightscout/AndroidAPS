@@ -114,8 +114,8 @@ internal class CarelevoBolusCoordinatorTest {
     @BeforeEach
     fun setUp() {
         whenever(dateUtil.now()).thenReturn(1_000_000L)
-        whenever(rh.gs(any<Int>())).thenReturn("Mocked")
-        whenever(rh.gs(any<Int>(), any())).thenReturn("Mocked")
+        whenever(rh.gs(any<TextRef>())).thenReturn("Mocked")
+        whenever(rh.gs(any<TextRef>(), any())).thenReturn("Mocked")
 
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         whenever(carelevoPatch.getPatchInfoAddress()).thenReturn(address)

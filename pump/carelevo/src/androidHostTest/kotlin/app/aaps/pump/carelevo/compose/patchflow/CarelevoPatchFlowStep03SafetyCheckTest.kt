@@ -19,6 +19,7 @@ import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectSafetyCheckEvent
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectionFlowViewModel
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchSafetyCheckViewModel
+import app.aaps.pump.carelevo.registerCarelevoStrings
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
@@ -111,6 +112,7 @@ class CarelevoPatchFlowStep03SafetyCheckTest {
 
     @Before
     fun setUp() {
+        registerCarelevoStrings()
         val context: Context = RuntimeEnvironment.getApplication()
         startTitle = context.getString(R.string.carelevo_patch_safety_check_start_title)
         endTitle = context.getString(R.string.carelevo_patch_safety_check_end_title)

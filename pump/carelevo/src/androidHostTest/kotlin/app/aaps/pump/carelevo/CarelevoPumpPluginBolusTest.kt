@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.ble.commands.BolusCancelCommand
 import app.aaps.pump.carelevo.ble.commands.BolusCancelResponse
 import app.aaps.pump.carelevo.ble.commands.ExtendBolusCancelCommand
@@ -199,8 +198,8 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
     fun `deliverTreatment should explain an over-limit reject with the deliverable amount`() {
         whenever { bleSession.runSingle(any(), isA<ImmediateBolusCommand>(), any()) }
             .thenReturn(ImmediateBolusResponse(actionId = 1, resultCode = 20, expectedCompletionSeconds = 0, remainingReservoirUnits = 2.8))
-        whenever(rh.gs(eq(R.string.common_label_unit_value_dose_with_space), eq("2.80"))).thenReturn("2.80 U")
-        whenever(rh.gs(eq(R.string.carelevo_bolus_rejected_exceed_limit), eq("2.80 U"))).thenReturn("over limit 2.80 U")
+        whenever(rh.gs(eq(CarelevoStrings.common_label_unit_value_dose_with_space), eq("2.80"))).thenReturn("2.80 U")
+        whenever(rh.gs(eq(CarelevoStrings.carelevo_bolus_rejected_exceed_limit), eq("2.80 U"))).thenReturn("over limit 2.80 U")
 
         val result = runBlocking {
             plugin.deliverTreatment(DetailedBolusInfo().apply {
@@ -291,7 +290,7 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
             .thenReturn(infusionInfo(bolusTotal = 2.0))
             .thenAnswer { throw IllegalStateException("unreachable") }
         whenever(rh.gs(any<TextRef>(), any())).thenReturn("2.00 U")
-        whenever(rh.gs(any<Int>(), any())).thenReturn("The patch did not confirm the stop.")
+        whenever(rh.gs(eq(CarelevoStrings.carelevo_bolus_stop_not_confirmed_full), any())).thenReturn("The patch did not confirm the stop.")
 
         val result = runBlocking { plugin.deliverTreatment(bolus(2.0)) }
 
@@ -320,7 +319,7 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
         leftover(volume = 0.6, bolusTotalBefore = 12.5, bolusType = "SMB")
         whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 13.1))
         whenever { pumpSync.syncBolusWithPumpId(any(), any(), anyOrNull(), any(), any(), any()) }.thenReturn(true)
-        whenever(rh.gs(R.string.carelevo_bolus_rejected_missed_bolus_recorded)).thenReturn("added")
+        whenever(rh.gs(CarelevoStrings.carelevo_bolus_rejected_missed_bolus_recorded)).thenReturn("added")
 
         val result = runBlocking { plugin.deliverTreatment(bolus(1.0)) }
 
@@ -408,8 +407,8 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
     fun `a bolus the patch stopped on its own counts what the patch gave and is not reported as given`() {
         whenever(dateUtil.now()).thenReturn(START_PUMP_ID)
         whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0), infusionInfo(bolusTotal = 2.5))
-        whenever(rh.gs(any<Int>(), anyVararg())).thenReturn("0.50 U")
-        whenever(rh.gs(eq(R.string.carelevo_bolus_stopped_by_patch), anyVararg())).thenReturn("stopped")
+        whenever(rh.gs(any<TextRef>(), anyVararg())).thenReturn("0.50 U")
+        whenever(rh.gs(eq(CarelevoStrings.carelevo_bolus_stopped_by_patch), anyVararg())).thenReturn("stopped")
 
         val result = runBlocking { plugin.deliverTreatment(bolus(2.0)) }
 
@@ -625,12 +624,12 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
     @Test
     fun `every refusal of a bolus start shows its own reason`() {
         val reasons = mapOf(
-            1 to R.string.alarm_feat_title_warning_low_insulin,
-            2 to R.string.alarm_feat_title_warning_expired_patch,
-            3 to R.string.alarm_feat_title_warning_low_battery,
-            4 to R.string.alarm_feat_title_warning_invalid_temperature,
-            12 to R.string.alarm_feat_title_warning_patch_error,
-            99 to R.string.alarm_feat_msg_check_patch_connect
+            1 to CarelevoStrings.alarm_feat_title_warning_low_insulin,
+            2 to CarelevoStrings.alarm_feat_title_warning_expired_patch,
+            3 to CarelevoStrings.alarm_feat_title_warning_low_battery,
+            4 to CarelevoStrings.alarm_feat_title_warning_invalid_temperature,
+            12 to CarelevoStrings.alarm_feat_title_warning_patch_error,
+            99 to CarelevoStrings.alarm_feat_msg_check_patch_connect
         )
         reasons.values.forEach { id -> whenever(rh.gs(id)).thenReturn("reason $id") }
 
@@ -650,7 +649,7 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
     fun `an over limit refusal with less than one step left says nothing more can be given`() {
         whenever { bleSession.runSingle(any(), isA<ImmediateBolusCommand>(), any()) }
             .thenReturn(ImmediateBolusResponse(actionId = 1, resultCode = 20, expectedCompletionSeconds = 0, remainingReservoirUnits = 0.0))
-        whenever(rh.gs(R.string.carelevo_bolus_rejected_exceed_limit_none)).thenReturn("nothing more")
+        whenever(rh.gs(CarelevoStrings.carelevo_bolus_rejected_exceed_limit_none)).thenReturn("nothing more")
 
         val result = runBlocking { plugin.deliverTreatment(bolus(1.0)) }
 

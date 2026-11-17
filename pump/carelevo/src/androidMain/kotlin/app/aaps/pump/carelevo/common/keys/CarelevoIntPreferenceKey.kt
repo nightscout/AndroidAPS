@@ -3,7 +3,7 @@ package app.aaps.pump.carelevo.common.keys
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.pump.carelevo.R
+import app.aaps.pump.carelevo.CarelevoStrings
 
 /**
  * Only the parameters a key actually varies are declared. Everything else - `calculatedDefaultValue`,
@@ -18,7 +18,7 @@ import app.aaps.pump.carelevo.R
 enum class CarelevoIntPreferenceKey(
     override val key: String,
     override val defaultValue: Int,
-    private val titleResId: Int = 0,
+    override val title: TextRef,
     override val min: Int = Int.MIN_VALUE,
     override val max: Int = Int.MAX_VALUE,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD
@@ -27,7 +27,7 @@ enum class CarelevoIntPreferenceKey(
     CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS(
         "CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS",
         116,
-        R.string.carelevo_patch_expiration_reminders_title_value,
+        CarelevoStrings.carelevo_patch_expiration_reminders_title_value,
         preferenceType = PreferenceType.LIST
     ),
     /**
@@ -42,10 +42,7 @@ enum class CarelevoIntPreferenceKey(
     CARELEVO_LOW_INSULIN_REMINDER_UNITS(
         "CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS",
         30,
-        R.string.carelevo_low_reservoir_reminders_title_value,
+        CarelevoStrings.carelevo_low_reservoir_reminders_title_value,
         preferenceType = PreferenceType.LIST
     )
-    ;
-
-    override val title: TextRef = TextRef.AndroidRes(titleResId)
 }

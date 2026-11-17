@@ -11,6 +11,7 @@ import androidx.compose.ui.test.performScrollToIndex
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.config.FillConfig
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectionFlowViewModel
+import app.aaps.pump.carelevo.registerCarelevoStrings
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -66,6 +67,7 @@ class CarelevoSetAmountStepTest {
 
     @Before
     fun setUp() {
+        registerCarelevoStrings()
         val context = RuntimeEnvironment.getApplication()
         rangeText = context.getString(R.string.patch_prepare_dialog_msg_insulin_range, FillConfig.FILL_MIN_UNITS, FillConfig.FILL_MAX_UNITS)
         nextLabel = context.getString(CoreUiR.string.next)

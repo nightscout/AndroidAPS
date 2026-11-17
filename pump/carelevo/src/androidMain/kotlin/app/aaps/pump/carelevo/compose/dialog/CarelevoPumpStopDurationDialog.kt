@@ -15,9 +15,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import app.aaps.pump.carelevo.R
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.pump.carelevo.CarelevoStrings
 
 @Composable
 internal fun CarelevoPumpStopDurationDialog(
@@ -31,7 +31,7 @@ internal fun CarelevoPumpStopDurationDialog(
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = stringResource(R.string.carelevo_pump_stop_duration_title)) },
+        title = { Text(text = stringResource(CarelevoStrings.carelevo_pump_stop_duration_title)) },
         text = {
             Column {
                 labels.forEachIndexed { index, label ->
@@ -51,12 +51,12 @@ internal fun CarelevoPumpStopDurationDialog(
         },
         confirmButton = {
             TextButton(onClick = { onConfirm(options[selectedIndex]) }) {
-                Text(text = stringResource(R.string.carelevo_btn_confirm))
+                Text(text = stringResource(CarelevoStrings.carelevo_btn_confirm))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(text = stringResource(R.string.carelevo_btn_cancel))
+                Text(text = stringResource(CarelevoStrings.carelevo_btn_cancel))
             }
         }
     )

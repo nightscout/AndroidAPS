@@ -18,17 +18,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.core.ui.compose.pump.announceWhenShown
-import app.aaps.pump.carelevo.R
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.compose.dialog.CarelevoActionDialog
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectNeedleEvent
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchNeedleInsertionViewModel
@@ -43,7 +44,7 @@ internal fun CarelevoPatchFlowStep05NeedleInsertion(
     val isNeedleInserted by viewModel.isNeedleInsert.collectAsStateWithLifecycle()
     var showDiscardDialog by remember { mutableStateOf(false) }
     var failCount by remember { mutableIntStateOf(0) }
-    var errorMessage by remember { mutableStateOf<Int?>(null) }
+    var errorMessage by remember { mutableStateOf<TextRef?>(null) }
 
     LaunchedEffect(viewModel) {
         if (!viewModel.isCreated) {
@@ -56,15 +57,15 @@ internal fun CarelevoPatchFlowStep05NeedleInsertion(
         viewModel.event.collect { event ->
             when (event) {
                 CarelevoConnectNeedleEvent.ShowMessageBluetoothNotEnabled -> {
-                    errorMessage = R.string.carelevo_toast_msg_bluetooth_not_enabled
+                    errorMessage = CarelevoStrings.carelevo_toast_msg_bluetooth_not_enabled
                 }
 
                 CarelevoConnectNeedleEvent.ShowMessageCarelevoIsNotConnected -> {
-                    errorMessage = R.string.carelevo_toast_msg_not_connected_waiting_retry
+                    errorMessage = CarelevoStrings.carelevo_toast_msg_not_connected_waiting_retry
                 }
 
                 CarelevoConnectNeedleEvent.ShowMessageProfileNotSet -> {
-                    errorMessage = R.string.carelevo_toast_msg_profile_not_set
+                    errorMessage = CarelevoStrings.carelevo_toast_msg_profile_not_set
                 }
 
                 is CarelevoConnectNeedleEvent.CheckNeedleComplete -> {
@@ -79,7 +80,7 @@ internal fun CarelevoPatchFlowStep05NeedleInsertion(
                 }
 
                 CarelevoConnectNeedleEvent.CheckNeedleError -> {
-                    errorMessage = R.string.carelevo_toast_msg_needle_check_failed
+                    errorMessage = CarelevoStrings.carelevo_toast_msg_needle_check_failed
                 }
 
                 CarelevoConnectNeedleEvent.DiscardComplete -> {
@@ -89,7 +90,7 @@ internal fun CarelevoPatchFlowStep05NeedleInsertion(
 
                 CarelevoConnectNeedleEvent.DiscardFailed -> {
                     showDiscardDialog = false
-                    errorMessage = R.string.carelevo_toast_msg_discard_failed
+                    errorMessage = CarelevoStrings.carelevo_toast_msg_discard_failed
                 }
 
                 CarelevoConnectNeedleEvent.SetBasalComplete -> {
@@ -97,7 +98,7 @@ internal fun CarelevoPatchFlowStep05NeedleInsertion(
                 }
 
                 CarelevoConnectNeedleEvent.SetBasalFailed -> {
-                    errorMessage = R.string.carelevo_toast_msg_set_basal_failed
+                    errorMessage = CarelevoStrings.carelevo_toast_msg_set_basal_failed
                 }
 
                 CarelevoConnectNeedleEvent.NoAction -> Unit
@@ -108,14 +109,14 @@ internal fun CarelevoPatchFlowStep05NeedleInsertion(
     if (showDiscardDialog) {
         CarelevoActionDialog(
             onDismissRequest = { showDiscardDialog = false },
-            title = stringResource(R.string.carelevo_dialog_patch_discard_unused_title),
-            content = stringResource(R.string.carelevo_dialog_patch_discard_unused_desc),
-            primaryText = stringResource(R.string.carelevo_btn_confirm),
+            title = stringResource(CarelevoStrings.carelevo_dialog_patch_discard_unused_title),
+            content = stringResource(CarelevoStrings.carelevo_dialog_patch_discard_unused_desc),
+            primaryText = stringResource(CarelevoStrings.carelevo_btn_confirm),
             onPrimaryClick = {
                 showDiscardDialog = false
                 viewModel.startDiscardProcess()
             },
-            secondaryText = stringResource(R.string.carelevo_btn_cancel),
+            secondaryText = stringResource(CarelevoStrings.carelevo_btn_cancel),
             onSecondaryClick = { showDiscardDialog = false }
         )
     }
@@ -140,13 +141,13 @@ internal fun CarelevoPatchFlowStep05NeedleInsertion(
 private fun CarelevoPatchFlowStep05NeedleInsertionContent(
     isNeedleInserted: Boolean,
     failCount: Int,
-    errorMessage: Int?,
+    errorMessage: TextRef?,
     onCheckClick: () -> Unit,
     onStartDeliveryClick: () -> Unit,
     onDiscardClick: () -> Unit
 ) {
     val deactivateButton = WizardButton(
-        text = stringResource(R.string.carelevo_btn_patch_expiration),
+        text = stringResource(CarelevoStrings.carelevo_btn_patch_expiration),
         onClick = onDiscardClick
     )
 
@@ -154,19 +155,19 @@ private fun CarelevoPatchFlowStep05NeedleInsertionContent(
         // Needle detected — guide the user to detach the applicator, then start delivery.
         WizardStepLayout(
             primaryButton = WizardButton(
-                text = stringResource(R.string.carelevo_dialog_connect_detached),
+                text = stringResource(CarelevoStrings.carelevo_dialog_connect_detached),
                 onClick = onStartDeliveryClick
             ),
             secondaryButton = deactivateButton
         ) {
             errorMessage?.let { ErrorBanner(message = stringResource(it)) }
             Text(
-                text = stringResource(R.string.carelevo_dialog_patch_connect_needle_injected),
+                text = stringResource(CarelevoStrings.carelevo_dialog_patch_connect_needle_injected),
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
                 text = AnnotatedString.fromHtml(
-                    stringResource(R.string.carelevo_dialog_connect_detach_applicator_guide).replace("\n", "<br>")
+                    stringResource(CarelevoStrings.carelevo_dialog_connect_detach_applicator_guide).replace("\n", "<br>")
                 ),
                 style = MaterialTheme.typography.bodyMedium
             )
@@ -179,9 +180,9 @@ private fun CarelevoPatchFlowStep05NeedleInsertionContent(
     WizardStepLayout(
         primaryButton = WizardButton(
             text = if (isRetry) {
-                stringResource(R.string.carelevo_btn_retry)
+                stringResource(CarelevoStrings.carelevo_btn_retry)
             } else {
-                stringResource(R.string.carelevo_btn_needle_insert_check)
+                stringResource(CarelevoStrings.carelevo_btn_needle_insert_check)
             },
             onClick = onCheckClick
         ),
@@ -189,14 +190,14 @@ private fun CarelevoPatchFlowStep05NeedleInsertionContent(
     ) {
         errorMessage?.let { ErrorBanner(message = stringResource(it)) }
         CarelevoPatchNeedleSection(
-            stepLabel = stringResource(R.string.carelevo_patch_step_1),
-            title = stringResource(R.string.carelevo_patch_needle_insertion_step1_title),
-            description = stringResource(R.string.carelevo_patch_needle_insertion_step1_desc)
+            stepLabel = stringResource(CarelevoStrings.carelevo_patch_step_1),
+            title = stringResource(CarelevoStrings.carelevo_patch_needle_insertion_step1_title),
+            description = stringResource(CarelevoStrings.carelevo_patch_needle_insertion_step1_desc)
         )
         CarelevoPatchNeedleSection(
-            stepLabel = stringResource(R.string.carelevo_patch_step_2),
-            title = stringResource(R.string.carelevo_patch_needle_insertion_step2_title),
-            description = stringResource(R.string.carelevo_patch_needle_insertion_step2_desc)
+            stepLabel = stringResource(CarelevoStrings.carelevo_patch_step_2),
+            title = stringResource(CarelevoStrings.carelevo_patch_needle_insertion_step2_title),
+            description = stringResource(CarelevoStrings.carelevo_patch_needle_insertion_step2_desc)
         )
 
         Row(
@@ -210,7 +211,7 @@ private fun CarelevoPatchFlowStep05NeedleInsertionContent(
                 tint = MaterialTheme.colorScheme.tertiary
             )
             Text(
-                text = stringResource(R.string.carelevo_patch_needle_insertion_desc_warning),
+                text = stringResource(CarelevoStrings.carelevo_patch_needle_insertion_desc_warning),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.tertiary
             )
@@ -220,7 +221,7 @@ private fun CarelevoPatchFlowStep05NeedleInsertionContent(
             // A failed needle check only changed this count; said so the user knows it failed and
             // how many tries are left before the flow closes.
             val retryText = stringResource(
-                R.string.carelevo_dialog_patch_needle_retry_count,
+                CarelevoStrings.carelevo_dialog_patch_needle_retry_count,
                 (MAX_NEEDLE_CHECK_COUNT - failCount).coerceAtLeast(0)
             )
             Text(

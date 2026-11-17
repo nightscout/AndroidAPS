@@ -45,8 +45,9 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.core.keys.interfaces.withEntries
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcPluginCarelevo
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
@@ -111,7 +112,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import java.util.Calendar
 import kotlin.time.Duration.Companion.seconds
-import app.aaps.core.ui.R as CoreUiR
 import dev.zacsweers.metro.IntKey as MetroIntKey
 
 // Pump plugin registration — @MetroIntKey range 1000–1200, see AppRootGraph for the overview
@@ -156,8 +156,8 @@ class CarelevoPumpPlugin @Inject constructor(
             )
         }
         .icon(IcPluginCarelevo)
-        .pluginName(TextRef.AndroidRes(R.string.carelevo))
-        .description(TextRef.AndroidRes(R.string.carelevo_description)),
+        .pluginName(CarelevoStrings.carelevo)
+        .description(CarelevoStrings.carelevo_description),
     ownPreferences = CarelevoBooleanPreferenceKey.entries + CarelevoIntPreferenceKey.entries + CarelevoStringNonKey.entries,
     aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump {
@@ -547,7 +547,7 @@ class CarelevoPumpPlugin @Inject constructor(
         fresh.firstOrNull()?.let { alarm ->
             uiInteraction.runAlarm(
                 status = rh.gs(alarm.cause.transformNotificationStringResources().first),
-                title = rh.gs(R.string.carelevo),
+                title = rh.gs(CarelevoStrings.carelevo),
                 sound = AlarmSound.ERROR
             )
         }
@@ -557,15 +557,15 @@ class CarelevoPumpPlugin @Inject constructor(
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "carelevo_settings",
-        titleResId = R.string.carelevo,
+        title = CarelevoStrings.carelevo,
         items = listOf(
             // Labels come from the translated unit format templates. Building them as "$it U" or
             // "$it h" in code would put text where no translator can reach it.
             CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.withEntries(
-                (20..50 step 5).associateWith { TextRef.AndroidRes(CoreUiR.string.units_format_insulin_int, listOf(it)) }
+                (20..50 step 5).associateWith { CoreUiStrings.units_format_insulin_int.withArgs(it) }
             ),
             CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS.withEntries(
-                (24..167 step 1).associateWith { TextRef.AndroidRes(CoreUiR.string.units_format_hours, listOf(it)) }
+                (24..167 step 1).associateWith { CoreUiStrings.units_format_hours.withArgs(it) }
             ),
             CarelevoBooleanPreferenceKey.CARELEVO_BUZZER_REMINDER
         ),

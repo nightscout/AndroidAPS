@@ -2,6 +2,7 @@ package app.aaps.pump.carelevo.presentation.viewmodel
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
@@ -16,9 +17,11 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.PumpInfoRow
-import app.aaps.pump.carelevo.R
+import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.command.CmdDiscard
 import app.aaps.pump.carelevo.command.CmdPumpStop
@@ -91,8 +94,6 @@ import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Instant
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreUiR
 import java.time.Instant as JavaInstant
 
 /**
@@ -124,7 +125,7 @@ import java.time.Instant as JavaInstant
  * sources are real replay-1 flows ([latestValueFlow]), which also serve the `latest` reads the VM does
  * on the same properties.
  *
- * [ResourceHelper.gs] is answered with a deterministic `S<id>(arg,arg)` encoding ([s]) so assembled
+ * [ResourceHelper.gs] is answered with a deterministic `S<name>(arg,arg)` encoding ([s]) so assembled
  * row labels/values can be asserted exactly without depending on translations.
  *
  * The `secondTick` → `clearExpiredInfusions` loop in `init` runs on a real [Dispatchers.Default]
@@ -200,8 +201,8 @@ class CarelevoOverviewViewModelTest {
     // ---- helpers ------------------------------------------------------------------------------
 
     /** Mirror of the stubbed [ResourceHelper.gs] answers — lets tests assert exact assembled text. */
-    private fun s(id: Int): String = "S$id"
-    private fun s(id: Int, vararg args: Any?): String = "S$id(${args.joinToString(",")})"
+    private fun s(ref: TextRef): String = "S${(ref as TextRef.Named).name}"
+    private fun s(ref: TextRef, vararg args: Any?): String = "S${(ref as TextRef.Named).name}(${args.joinToString(",")})"
 
     private fun local(millis: Long): LocalDateTime =
         LocalDateTime.ofInstant(JavaInstant.ofEpochMilli(millis), ZoneId.systemDefault())
@@ -333,14 +334,14 @@ class CarelevoOverviewViewModelTest {
         whenever(bleSession.lastConnectedAt).thenReturn(lastConnectedFlow)
 
         // Deterministic, translation-independent resource text (see `s`).
-        whenever(rh.gs(any<Int>())).thenAnswer { inv -> "S${inv.getArgument<Int>(0)}" }
-        whenever(rh.gs(any<Int>(), anyOrNull()))
-            .thenAnswer { inv -> "S${inv.getArgument<Int>(0)}(${inv.getArgument<Any?>(1)})" }
-        whenever(rh.gs(any<Int>(), anyOrNull(), anyOrNull()))
-            .thenAnswer { inv -> "S${inv.getArgument<Int>(0)}(${inv.getArgument<Any?>(1)},${inv.getArgument<Any?>(2)})" }
-        whenever(rh.gs(any<Int>(), anyOrNull(), anyOrNull(), anyOrNull()))
+        whenever(rh.gs(any<TextRef>())).thenAnswer { inv -> s(inv.getArgument<TextRef>(0)) }
+        whenever(rh.gs(any<TextRef>(), anyOrNull()))
+            .thenAnswer { inv -> s(inv.getArgument<TextRef>(0), inv.getArgument<Any?>(1)) }
+        whenever(rh.gs(any<TextRef>(), anyOrNull(), anyOrNull()))
+            .thenAnswer { inv -> s(inv.getArgument<TextRef>(0), inv.getArgument<Any?>(1), inv.getArgument<Any?>(2)) }
+        whenever(rh.gs(any<TextRef>(), anyOrNull(), anyOrNull(), anyOrNull()))
             .thenAnswer { inv ->
-                "S${inv.getArgument<Int>(0)}(${inv.getArgument<Any?>(1)},${inv.getArgument<Any?>(2)},${inv.getArgument<Any?>(3)})"
+                s(inv.getArgument<TextRef>(0), inv.getArgument<Any?>(1), inv.getArgument<Any?>(2), inv.getArgument<Any?>(3))
             }
 
         // Default: the delete use case succeeds. Stubbed once here, because the `init` second-tick may
@@ -466,9 +467,9 @@ class CarelevoOverviewViewModelTest {
         assertThat(sut.isPumpStop.value).isFalse()
         assertThat(sut.insulinRemains.value).isEqualTo(
             s(
-                R.string.carelevo_insulin_remain_value,
-                s(R.string.common_label_unit_value_dose_with_space, 150.5),
-                s(R.string.common_label_unit_value_dose_with_space, 200)
+                CarelevoStrings.carelevo_insulin_remain_value,
+                s(CarelevoStrings.common_label_unit_value_dose_with_space, 150.5),
+                s(CarelevoStrings.common_label_unit_value_dose_with_space, 200)
             )
         )
         val expectedRemain = ((bootMillis + 7 * dayMillis - nowMillis) / 60_000L).toInt()
@@ -1369,15 +1370,15 @@ class CarelevoOverviewViewModelTest {
         val state = sut.overviewUiState.value
 
         assertThat(state.statusBanner).isNotNull()
-        assertThat(state.statusBanner?.text).isEqualTo(s(R.string.carelevo_state_none_value))
+        assertThat(state.statusBanner?.text).isEqualTo(s(CarelevoStrings.carelevo_state_none_value))
         assertThat(state.statusBanner?.level).isEqualTo(StatusLevel.WARNING)
         assertThat(state.queueStatus).isNull()
         // Only the bluetooth-state row; no patch data to show.
         assertThat(infoRows()).hasSize(1)
-        assertThat(infoRows()[0].label).isEqualTo(s(R.string.carelevo_bluetooth_state_key))
-        assertThat(infoRows()[0].value).isEqualTo(s(R.string.carelevo_state_none_value))
+        assertThat(infoRows()[0].label).isEqualTo(s(CarelevoStrings.carelevo_bluetooth_state_key))
+        assertThat(infoRows()[0].value).isEqualTo(s(CarelevoStrings.carelevo_state_none_value))
         assertThat(state.primaryActions).hasSize(1)
-        assertThat(state.primaryActions[0].label).isEqualTo(s(R.string.carelevo_overview_connect_btn_label))
+        assertThat(state.primaryActions[0].label).isEqualTo(s(CarelevoStrings.carelevo_overview_connect_btn_label))
         assertThat(state.managementActions).isEmpty()
     }
 
@@ -1400,21 +1401,21 @@ class CarelevoOverviewViewModelTest {
         // An activated patch surfaces the shared communication status instead of a warning banner.
         assertThat(state.statusBanner).isNull()
         assertThat(rows).hasSize(10)
-        assertThat(rows[0].value).isEqualTo(s(R.string.carelevo_state_connected_value))
-        assertThat(rows[1].label).isEqualTo(s(CoreUiR.string.last_connection_label))
-        assertThat(rows[2].label).isEqualTo(s(R.string.carelevo_serial_number_key))
+        assertThat(rows[0].value).isEqualTo(s(CarelevoStrings.carelevo_state_connected_value))
+        assertThat(rows[1].label).isEqualTo(s(CoreUiStrings.last_connection_label))
+        assertThat(rows[2].label).isEqualTo(s(CarelevoStrings.carelevo_serial_number_key))
         assertThat(rows[2].value).isEqualTo("SN-0001")
         assertThat(rows[3].value).isEqualTo(uiFormat(local(nowMillis - 2 * dayMillis)))
         assertThat(rows[4].value).isEqualTo(uiFormat(local(nowMillis - 2 * dayMillis).plusDays(7)))
-        assertThat(rows[6].value).isEqualTo(s(R.string.common_label_unit_value_dose_per_speed_with_space, 1.75))
-        assertThat(rows[7].value).isEqualTo(s(R.string.common_label_unit_value_dose_per_speed_with_space, 2.5))
+        assertThat(rows[6].value).isEqualTo(s(CarelevoStrings.common_label_unit_value_dose_per_speed_with_space, 1.75))
+        assertThat(rows[7].value).isEqualTo(s(CarelevoStrings.common_label_unit_value_dose_per_speed_with_space, 2.5))
         assertThat(rows[9].value).isEqualTo(
-            s(R.string.common_label_unit_value_dose_with_space, String.format(Locale.US, "%.2f", 3.58))
+            s(CarelevoStrings.common_label_unit_value_dose_with_space, String.format(Locale.US, "%.2f", 3.58))
         )
         assertThat(state.primaryActions).isEmpty()
         assertThat(state.managementActions).hasSize(2)
-        assertThat(state.managementActions[0].label).isEqualTo(s(R.string.carelevo_overview_pump_discard_btn_label))
-        assertThat(state.managementActions[1].label).isEqualTo(s(R.string.carelevo_overview_pump_suspend_btn_label))
+        assertThat(state.managementActions[0].label).isEqualTo(s(CarelevoStrings.carelevo_overview_pump_discard_btn_label))
+        assertThat(state.managementActions[1].label).isEqualTo(s(CarelevoStrings.carelevo_overview_pump_suspend_btn_label))
     }
 
     @Test
@@ -1429,7 +1430,7 @@ class CarelevoOverviewViewModelTest {
         // Idle-disconnect is normal (the queue reconnects on demand) → no warning banner.
         assertThat(state.statusBanner).isNull()
         assertThat(infoRows()).hasSize(10)
-        assertThat(infoRows()[0].value).isEqualTo(s(R.string.carelevo_state_disconnected_value))
+        assertThat(infoRows()[0].value).isEqualTo(s(CarelevoStrings.carelevo_state_disconnected_value))
         assertThat(state.primaryActions).isEmpty()
         assertThat(state.managementActions).hasSize(2)
     }
@@ -1441,7 +1442,7 @@ class CarelevoOverviewViewModelTest {
         patchInfoFlow.tryEmit(patchInfo(isStopped = true))
         patchStateFlow.tryEmit(PatchState.ConnectedBooted)
 
-        assertThat(sut.overviewUiState.value.managementActions[1].label).isEqualTo(s(R.string.carelevo_overview_pump_resume_btn_label))
+        assertThat(sut.overviewUiState.value.managementActions[1].label).isEqualTo(s(CarelevoStrings.carelevo_overview_pump_resume_btn_label))
     }
 
     @Test
@@ -1452,7 +1453,7 @@ class CarelevoOverviewViewModelTest {
         patchStateFlow.tryEmit(PatchState.ConnectedBooted)
 
         val banner = sut.overviewUiState.value.statusBanner
-        assertThat(banner?.text).isEqualTo(s(InterfacesR.string.pumpsuspended))
+        assertThat(banner?.text).isEqualTo(s(InterfacesStrings.pumpsuspended))
         assertThat(banner?.level).isEqualTo(StatusLevel.WARNING)
     }
 
@@ -1466,15 +1467,15 @@ class CarelevoOverviewViewModelTest {
         lastConnectedFlow.value = nowMillis - 5 * 60_000L
 
         // Idle: Bluetooth row reads Disconnected even though the patch is activated.
-        assertThat(infoRows()[0].value).isEqualTo(s(R.string.carelevo_state_disconnected_value))
+        assertThat(infoRows()[0].value).isEqualTo(s(CarelevoStrings.carelevo_state_disconnected_value))
         // Row 1 is the "last connection: N ago" reachability line (shared DateUtil.minAgo).
         val lastConnection = infoRows()[1]
-        assertThat(lastConnection.label).isEqualTo(s(CoreUiR.string.last_connection_label))
+        assertThat(lastConnection.label).isEqualTo(s(CoreUiStrings.last_connection_label))
         assertThat(lastConnection.value).isEqualTo("5m ago")
 
         // A live session flips it to Connected.
         connectedFlow.value = true
-        assertThat(infoRows()[0].value).isEqualTo(s(R.string.carelevo_state_connected_value))
+        assertThat(infoRows()[0].value).isEqualTo(s(CarelevoStrings.carelevo_state_connected_value))
     }
 
     @Test
@@ -1506,7 +1507,7 @@ class CarelevoOverviewViewModelTest {
         patchStateFlow.tryEmit(PatchState.ConnectedBooted)
 
         val total = sut.runningRemainMinutes.value!!
-        val expected = s(R.string.common_unit_value_day_hour_min, total / 1440, (total % 1440) / 60, total % 60)
+        val expected = s(CarelevoStrings.common_unit_value_day_hour_min, total / 1440, (total % 1440) / 60, total % 60)
         assertThat(infoRows()[5].value).isEqualTo(expected)
         assertThat(total / 1440).isGreaterThan(0)
     }
@@ -1529,7 +1530,7 @@ class CarelevoOverviewViewModelTest {
         // The hh:mm text comes from a format resource now, so assert the resource and its arguments
         // rather than a formatted literal - the padding is the translator's, not the VM's.
         assertThat(infoRows()[5].value)
-            .isEqualTo(s(R.string.common_unit_value_hour_min, total / 60, total % 60))
+            .isEqualTo(s(CarelevoStrings.common_unit_value_hour_min, total / 60, total % 60))
     }
 
     @Test
@@ -1541,7 +1542,7 @@ class CarelevoOverviewViewModelTest {
         patchStateFlow.tryEmit(PatchState.ConnectedBooted)
         infusionFlow.tryEmit(CarelevoInfusionInfoDomainModel())
 
-        assertThat(infoRows()[7].value).isEqualTo(s(R.string.common_label_unit_value_dose_per_speed_with_space, 0.0))
+        assertThat(infoRows()[7].value).isEqualTo(s(CarelevoStrings.common_label_unit_value_dose_per_speed_with_space, 0.0))
     }
 
     @Test

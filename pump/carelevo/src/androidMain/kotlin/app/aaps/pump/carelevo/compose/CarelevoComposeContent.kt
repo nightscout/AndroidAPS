@@ -13,7 +13,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
@@ -22,18 +21,19 @@ import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.ui.IconsProvider
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.pump.BlePreCheckHost
-import app.aaps.pump.carelevo.R
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.common.CarelevoAlarmNotifier
 import app.aaps.pump.carelevo.compose.alarm.CarelevoAlarmHost
 import app.aaps.pump.carelevo.compose.patchflow.CarelevoPatchFlowScreen
 import app.aaps.pump.carelevo.presentation.type.CarelevoScreenType
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoOverviewViewModel
-import app.aaps.core.ui.R as CoreUiR
 
 class CarelevoComposeContent(
     private val aapsLogger: AAPSLogger,
@@ -64,7 +64,7 @@ class CarelevoComposeContent(
             IconButton(onClick = onNavigateBack) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(CoreUiR.string.back)
+                    contentDescription = stringResource(CoreUiStrings.back)
                 )
             }
         }
@@ -73,7 +73,7 @@ class CarelevoComposeContent(
                 IconButton(onClick = action) {
                     Icon(
                         Icons.Filled.Settings,
-                        contentDescription = stringResource(CoreUiR.string.settings)
+                        contentDescription = stringResource(CoreUiStrings.settings)
                     )
                 }
             }
@@ -86,7 +86,7 @@ class CarelevoComposeContent(
         var workflowDismissed by remember { mutableStateOf(false) }
         val checkScreen by overviewViewModel.isCheckScreen.collectAsStateWithLifecycle()
         val activeWorkflowScreen = manualWorkflowScreen ?: latchedWorkflowScreen ?: checkScreen.takeUnless { workflowDismissed }
-        val pluginName = stringResource(R.string.carelevo)
+        val pluginName = stringResource(CarelevoStrings.carelevo)
         val dismissWorkflow: () -> Unit = {
             workflowDismissed = true
             manualWorkflowScreen = null

@@ -53,6 +53,7 @@ import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectViewMod
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectionFlowViewModel
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchNeedleInsertionViewModel
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchSafetyCheckViewModel
+import app.aaps.pump.carelevo.registerCarelevoStrings
 import com.google.common.truth.Truth.assertThat
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
@@ -163,6 +164,7 @@ class CarelevoPatchFlowScreenTest {
 
     @Before
     fun setUp() {
+        registerCarelevoStrings()
         Dispatchers.setMain(testDispatcher)
 
         aapsLogger = mock()

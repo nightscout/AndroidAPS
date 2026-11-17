@@ -20,7 +20,8 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
-import app.aaps.pump.carelevo.R
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.ble.commands.BolusCancelCommand
 import app.aaps.pump.carelevo.ble.commands.ExtendBolusCancelCommand
@@ -173,7 +174,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                 result.success = false
                 result.enacted = false
                 result.bolusDelivered = 0.0
-                result.comment(if (leftover == LeftoverBolus.ADDED) rh.gs(R.string.carelevo_bolus_rejected_missed_bolus_recorded) else "Another bolus is in progress")
+                result.comment(if (leftover == LeftoverBolus.ADDED) rh.gs(CarelevoStrings.carelevo_bolus_rejected_missed_bolus_recorded) else "Another bolus is in progress")
                 return result
             }
         }
@@ -428,7 +429,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                 result.success = false
                 result.enacted = false
                 result.bolusDelivered = 0.0
-                return result.comment(rh.gs(app.aaps.core.ui.R.string.stop))
+                return result.comment(rh.gs(CoreUiStrings.stop))
             }
             immeBolusPumpId = dateUtil.now()
             immeBolusType = detailedBolusInfo.bolusType
@@ -533,7 +534,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         result.bolusDelivered = insulin
         // A start the patch confirmed is a bolus as any other. One that cannot be confirmed raises the alarm.
         result.success = started == true
-        if (started == null) result.comment(rh.gs(R.string.carelevo_bolus_outcome_unknown))
+        if (started == null) result.comment(rh.gs(CarelevoStrings.carelevo_bolus_outcome_unknown))
         return result
     }
 
@@ -582,7 +583,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         aapsLogger.warn(LTag.PUMPCOMM, "newBle.deliverTreatment stop not confirmed, waiting for the bolus end")
         bolusProgressData.updateProgress(
             bolusProgressData.state.value?.percent ?: 0,
-            TextRef.AndroidRes(R.string.carelevo_bolus_stop_not_confirmed),
+            CarelevoStrings.carelevo_bolus_stop_not_confirmed,
             bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
         )
         val waitMs = bolusStartMs + bolusExpectMs + BOLUS_END_MARGIN_MS - System.currentTimeMillis()
@@ -623,7 +624,7 @@ class CarelevoBolusCoordinator @Inject constructor(
             bolusProgressData.updateProgress(percent, InterfacesStrings.bolus_delivered_successfully.withArgs(delivered.toFloat()), PumpInsulin(delivered))
             result.success = true
         } else {
-            val text = rh.gs(R.string.carelevo_bolus_stop_not_confirmed_full, rh.gs(InterfacesStrings.format_insulin_units, delivered))
+            val text = rh.gs(CarelevoStrings.carelevo_bolus_stop_not_confirmed_full, rh.gs(InterfacesStrings.format_insulin_units, delivered))
             bolusProgressData.updateProgress(percent, TextRef.Literal(text), PumpInsulin(delivered))
             result.success = false
             result.comment(text)
@@ -660,7 +661,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         }
         _lastBolusAmount.value = PumpInsulin(delivered)
         val text = rh.gs(
-            R.string.carelevo_bolus_stopped_by_patch,
+            CarelevoStrings.carelevo_bolus_stopped_by_patch,
             rh.gs(InterfacesStrings.format_insulin_units, delivered),
             rh.gs(InterfacesStrings.format_insulin_units, requested)
         )
@@ -930,7 +931,7 @@ class CarelevoBolusCoordinator @Inject constructor(
             result.success = false
             result.enacted = false
             result.bolusDelivered = 0.0
-            result.comment(rh.gs(app.aaps.core.ui.R.string.stop))
+            result.comment(rh.gs(CoreUiStrings.stop))
         }
         return completed
     }
@@ -940,16 +941,16 @@ class CarelevoBolusCoordinator @Inject constructor(
      * [SetBolusProgramResult.EXCEED_LIMIT] the response carries the amount still deliverable instead of the reservoir.
      */
     private fun startRejectedMessage(resultCode: Int, remains: Double): String = when (resultCode.codeToSetBolusProgramCommand()) {
-        SetBolusProgramResult.INSULIN_DEFICIENCY -> rh.gs(R.string.alarm_feat_title_warning_low_insulin)
-        SetBolusProgramResult.EXPIRED            -> rh.gs(R.string.alarm_feat_title_warning_expired_patch)
-        SetBolusProgramResult.LOW_VOLTAGE        -> rh.gs(R.string.alarm_feat_title_warning_low_battery)
-        SetBolusProgramResult.ABNORMAL_TEMP      -> rh.gs(R.string.alarm_feat_title_warning_invalid_temperature)
-        SetBolusProgramResult.PUMP_ERROR         -> rh.gs(R.string.alarm_feat_title_warning_patch_error)
+        SetBolusProgramResult.INSULIN_DEFICIENCY -> rh.gs(CarelevoStrings.alarm_feat_title_warning_low_insulin)
+        SetBolusProgramResult.EXPIRED            -> rh.gs(CarelevoStrings.alarm_feat_title_warning_expired_patch)
+        SetBolusProgramResult.LOW_VOLTAGE        -> rh.gs(CarelevoStrings.alarm_feat_title_warning_low_battery)
+        SetBolusProgramResult.ABNORMAL_TEMP      -> rh.gs(CarelevoStrings.alarm_feat_title_warning_invalid_temperature)
+        SetBolusProgramResult.PUMP_ERROR         -> rh.gs(CarelevoStrings.alarm_feat_title_warning_patch_error)
         SetBolusProgramResult.EXCEED_LIMIT       ->
-            if (remains < PumpType.CAREMEDI_CARELEVO.bolusSize()) rh.gs(R.string.carelevo_bolus_rejected_exceed_limit_none)
-            else rh.gs(R.string.carelevo_bolus_rejected_exceed_limit, rh.gs(R.string.common_label_unit_value_dose_with_space, decimalFormatter.to2Decimal(remains)))
+            if (remains < PumpType.CAREMEDI_CARELEVO.bolusSize()) rh.gs(CarelevoStrings.carelevo_bolus_rejected_exceed_limit_none)
+            else rh.gs(CarelevoStrings.carelevo_bolus_rejected_exceed_limit, rh.gs(CarelevoStrings.common_label_unit_value_dose_with_space, decimalFormatter.to2Decimal(remains)))
 
-        else                                     -> rh.gs(R.string.alarm_feat_msg_check_patch_connect)
+        else                                     -> rh.gs(CarelevoStrings.alarm_feat_msg_check_patch_connect)
     }
 
     private fun handleBolusError(e: Throwable, result: PumpEnactResult) {
@@ -959,7 +960,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         result.bolusDelivered = 0.0
         // The session times out with the coroutine timeout, not the java one.
         if (e is TimeoutException || e is TimeoutCancellationException) {
-            result.comment(rh.gs(R.string.alarm_feat_msg_check_patch_connect))
+            result.comment(rh.gs(CarelevoStrings.alarm_feat_msg_check_patch_connect))
         }
     }
 

@@ -22,6 +22,7 @@ import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.config.FillConfig
 import app.aaps.pump.carelevo.presentation.type.CarelevoPatchStep
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectionFlowViewModel
+import app.aaps.pump.carelevo.registerCarelevoStrings
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -76,6 +77,7 @@ class CarelevoPatchFlowStep01StartTest {
 
     @Before
     fun setUp() {
+        registerCarelevoStrings()
         val app = RuntimeEnvironment.getApplication()
         title = app.getString(R.string.carelevo_title_fill_insulin)
         notice = app.getString(R.string.carelevo_notice_fill_insulin_amount, FillConfig.FILL_MIN_UNITS, FillConfig.FILL_MAX_UNITS)

@@ -1,7 +1,6 @@
 package app.aaps.pump.carelevo.compose.dialog
 
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,29 +27,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.R
 import kotlinx.coroutines.launch
-import app.aaps.core.ui.R as CoreUiR
 
-private data class RefillStep(@DrawableRes val image: Int, @StringRes val text: Int)
+private data class RefillStep(@DrawableRes val image: Int, val text: TextRef)
 
 private val REFILL_STEPS = listOf(
-    RefillStep(R.drawable.carelevo_refill_step_01, R.string.carelevo_insulin_refill_step1),
-    RefillStep(R.drawable.carelevo_refill_step_02, R.string.carelevo_insulin_refill_step2),
-    RefillStep(R.drawable.carelevo_refill_step_03, R.string.carelevo_insulin_refill_step3),
-    RefillStep(R.drawable.carelevo_refill_step_04, R.string.carelevo_insulin_refill_step4),
-    RefillStep(R.drawable.carelevo_refill_step_05, R.string.carelevo_insulin_refill_step5),
-    RefillStep(R.drawable.carelevo_refill_step_06, R.string.carelevo_insulin_refill_step6),
-    RefillStep(R.drawable.carelevo_refill_step_07, R.string.carelevo_insulin_refill_step7),
-    RefillStep(R.drawable.carelevo_refill_step_08, R.string.carelevo_insulin_refill_step8),
-    RefillStep(R.drawable.carelevo_refill_step_09, R.string.carelevo_insulin_refill_step9),
-    RefillStep(R.drawable.carelevo_refill_step_10, R.string.carelevo_insulin_refill_step10),
-    RefillStep(R.drawable.carelevo_refill_step_11, R.string.carelevo_insulin_refill_step11),
-    RefillStep(R.drawable.carelevo_refill_step_12, R.string.carelevo_insulin_refill_step12)
+    RefillStep(R.drawable.carelevo_refill_step_01, CarelevoStrings.carelevo_insulin_refill_step1),
+    RefillStep(R.drawable.carelevo_refill_step_02, CarelevoStrings.carelevo_insulin_refill_step2),
+    RefillStep(R.drawable.carelevo_refill_step_03, CarelevoStrings.carelevo_insulin_refill_step3),
+    RefillStep(R.drawable.carelevo_refill_step_04, CarelevoStrings.carelevo_insulin_refill_step4),
+    RefillStep(R.drawable.carelevo_refill_step_05, CarelevoStrings.carelevo_insulin_refill_step5),
+    RefillStep(R.drawable.carelevo_refill_step_06, CarelevoStrings.carelevo_insulin_refill_step6),
+    RefillStep(R.drawable.carelevo_refill_step_07, CarelevoStrings.carelevo_insulin_refill_step7),
+    RefillStep(R.drawable.carelevo_refill_step_08, CarelevoStrings.carelevo_insulin_refill_step8),
+    RefillStep(R.drawable.carelevo_refill_step_09, CarelevoStrings.carelevo_insulin_refill_step9),
+    RefillStep(R.drawable.carelevo_refill_step_10, CarelevoStrings.carelevo_insulin_refill_step10),
+    RefillStep(R.drawable.carelevo_refill_step_11, CarelevoStrings.carelevo_insulin_refill_step11),
+    RefillStep(R.drawable.carelevo_refill_step_12, CarelevoStrings.carelevo_insulin_refill_step12)
 )
 
 // Diagram aspect runs 2.1:1 to 1:1.5 and the sentences one to five lines, so both are fixed —
@@ -66,7 +67,7 @@ internal fun CarelevoInsulinRefillGuideDialog(onDismissRequest: () -> Unit) {
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = stringResource(R.string.carelevo_btn_insulin_guide)) },
+        title = { Text(text = stringResource(CarelevoStrings.carelevo_btn_insulin_guide)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.large)) {
                 HorizontalPager(state = pagerState) { page ->
@@ -105,12 +106,12 @@ internal fun CarelevoInsulinRefillGuideDialog(onDismissRequest: () -> Unit) {
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.NavigateBefore,
-                            contentDescription = stringResource(CoreUiR.string.back)
+                            contentDescription = stringResource(CoreUiStrings.back)
                         )
                     }
                     Text(
                         text = stringResource(
-                            R.string.carelevo_insulin_refill_step_position,
+                            CarelevoStrings.carelevo_insulin_refill_step_position,
                             pagerState.currentPage + 1,
                             REFILL_STEPS.size
                         ),
@@ -124,7 +125,7 @@ internal fun CarelevoInsulinRefillGuideDialog(onDismissRequest: () -> Unit) {
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.NavigateNext,
-                            contentDescription = stringResource(CoreUiR.string.next)
+                            contentDescription = stringResource(CoreUiStrings.next)
                         )
                     }
                 }
@@ -132,7 +133,7 @@ internal fun CarelevoInsulinRefillGuideDialog(onDismissRequest: () -> Unit) {
         },
         confirmButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(text = stringResource(CoreUiR.string.close))
+                Text(text = stringResource(CoreUiStrings.close))
             }
         }
     )

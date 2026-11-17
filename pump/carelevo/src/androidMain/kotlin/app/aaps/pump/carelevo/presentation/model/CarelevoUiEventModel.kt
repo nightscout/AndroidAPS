@@ -1,6 +1,6 @@
 package app.aaps.pump.carelevo.presentation.model
 
-import androidx.annotation.StringRes
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 
@@ -83,6 +83,6 @@ sealed class AlarmEvent : Event {
     data class ClearAlarm(val info: CarelevoAlarmInfo) : AlarmEvent()
     data object RequestBluetoothEnable : AlarmEvent()
     data class ShowToastMessage(
-        @StringRes val messageRes: Int
+        val message: TextRef
     ) : AlarmEvent()
 }

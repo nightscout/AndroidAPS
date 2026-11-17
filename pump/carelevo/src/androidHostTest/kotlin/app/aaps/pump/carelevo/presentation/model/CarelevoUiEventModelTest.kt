@@ -1,5 +1,6 @@
 package app.aaps.pump.carelevo.presentation.model
 
+import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.type.AlarmCause
@@ -193,11 +194,11 @@ internal class CarelevoUiEventModelTest {
     }
 
     @Test
-    fun `ShowToastMessage carries its message resource id`() {
-        val event = AlarmEvent.ShowToastMessage(42)
-        assertThat(event.messageRes).isEqualTo(42)
-        assertThat(event).isEqualTo(AlarmEvent.ShowToastMessage(42))
-        assertThat(event).isNotEqualTo(AlarmEvent.ShowToastMessage(43))
-        assertThat(event.copy(messageRes = 7).messageRes).isEqualTo(7)
+    fun `ShowToastMessage carries its message`() {
+        val event = AlarmEvent.ShowToastMessage(CarelevoStrings.alarm_feat_msg_check_patch_connect)
+        assertThat(event.message).isEqualTo(CarelevoStrings.alarm_feat_msg_check_patch_connect)
+        assertThat(event).isEqualTo(AlarmEvent.ShowToastMessage(CarelevoStrings.alarm_feat_msg_check_patch_connect))
+        assertThat(event).isNotEqualTo(AlarmEvent.ShowToastMessage(CarelevoStrings.common_btn_ok))
+        assertThat(event.copy(message = CarelevoStrings.common_btn_ok).message).isEqualTo(CarelevoStrings.common_btn_ok)
     }
 }

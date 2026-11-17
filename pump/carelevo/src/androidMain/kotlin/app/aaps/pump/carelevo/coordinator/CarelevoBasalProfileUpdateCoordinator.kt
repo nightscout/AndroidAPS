@@ -6,7 +6,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.pump.carelevo.R
+import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.latest
@@ -82,7 +82,7 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
                 return result
                     .success(true)
                     .enacted(false)
-                    .comment(rh.gs(R.string.carelevo_profile_update_skip_comment))
+                    .comment(rh.gs(CarelevoStrings.carelevo_profile_update_skip_comment))
             }
             // Another profile, or a try again after a failure, waits for its turn. It was skipped and reported as set,
             // so AAPS recorded a profile the patch did not run.

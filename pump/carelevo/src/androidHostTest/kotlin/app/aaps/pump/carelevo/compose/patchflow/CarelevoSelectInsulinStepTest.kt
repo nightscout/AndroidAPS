@@ -13,6 +13,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import app.aaps.core.data.model.ICfg
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectionFlowViewModel
+import app.aaps.pump.carelevo.registerCarelevoStrings
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Before
 import org.junit.Rule
@@ -72,6 +73,7 @@ class CarelevoSelectInsulinStepTest {
 
     @Before
     fun setUp() {
+        registerCarelevoStrings()
         app = RuntimeEnvironment.getApplication()
         currentInsulinLabel = app.getString(CoreUiR.string.current_insulin)
         changeLabel = app.getString(CoreUiR.string.change_insulin)

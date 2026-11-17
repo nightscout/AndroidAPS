@@ -33,6 +33,7 @@ import app.aaps.pump.carelevo.common.model.UiState
 import app.aaps.pump.carelevo.presentation.model.CarelevoOverviewEvent
 import app.aaps.pump.carelevo.presentation.type.CarelevoScreenType
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoOverviewViewModel
+import app.aaps.pump.carelevo.registerCarelevoStrings
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
@@ -118,6 +119,7 @@ class CarelevoComposeContentTest {
 
     @Before
     fun setUp() {
+        registerCarelevoStrings()
         context = RuntimeEnvironment.getApplication()
         viewModel = mock()
         whenever(viewModel.overviewUiState).thenReturn(overviewState)

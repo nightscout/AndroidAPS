@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -15,10 +14,11 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.pump.carelevo.R
+import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.type.AlarmCause
@@ -62,7 +62,8 @@ class CarelevoAlarmNotifier @Inject constructor(
     private val dateUtil: DateUtil,
     private val notificationManager: app.aaps.core.interfaces.notifications.NotificationManager,
     private val preferences: Preferences,
-    private val alarmActionHandler: CarelevoAlarmActionHandler
+    private val alarmActionHandler: CarelevoAlarmActionHandler,
+    private val rh: ResourceHelper
 ) {
 
     /** Where alarms are handled: the main thread, so the handling never runs twice at once. A test sets an unconfined dispatcher. */
@@ -133,10 +134,10 @@ class CarelevoAlarmNotifier @Inject constructor(
             val critical = newAlarm.alarmType.isCritical()
             notificationManager.post(
                 id = NotificationId.CARELEVO_PATCH_ALERT,
-                text = context.getString(titleRes) + "\n" + desc,
+                text = rh.gs(titleRes) + "\n" + desc,
                 level = if (critical) NotificationLevel.IMPORTANT else NotificationLevel.NORMAL,
                 actions = listOf(
-                    NotificationAction(TextRef.AndroidRes(btnRes)) {
+                    NotificationAction(btnRes) {
                         alarmActionHandler.triggerEvent(AlarmEvent.ClearAlarm(info = newAlarm))
                     }
                 ),
@@ -162,7 +163,7 @@ class CarelevoAlarmNotifier @Inject constructor(
         val contentPendingIntent = createAlarmActivityPendingIntent()
 
         val notification = buildNotification(
-            title = context.getString(titleRes),
+            title = rh.gs(titleRes),
             description = description,
             contentIntent = contentPendingIntent
         )
@@ -173,14 +174,14 @@ class CarelevoAlarmNotifier @Inject constructor(
     /** Builds the final body text from the alarm metadata and descRes. */
     private fun buildNotificationDescription(
         alarm: CarelevoAlarmInfo,
-        @StringRes descRes: Int?
+        descRes: TextRef?
     ): String {
         if (descRes == null) return ""
         return when (alarm.cause) {
             AlarmCause.ALARM_ALERT_OUT_OF_INSULIN,
             AlarmCause.ALARM_NOTICE_LOW_INSULIN -> {
                 val remain = (alarm.value ?: 0).toString()
-                context.getString(descRes, remain)
+                rh.gs(descRes, remain)
             }
 
             AlarmCause.ALARM_NOTICE_PATCH_EXPIRED -> {
@@ -189,30 +190,30 @@ class CarelevoAlarmNotifier @Inject constructor(
 
             AlarmCause.ALARM_NOTICE_BG_CHECK -> {
                 val span = formatBgCheckSpan(alarm.value ?: 0)
-                context.getString(descRes, span)
+                rh.gs(descRes, span)
             }
 
-            else -> context.getString(descRes)
+            else -> rh.gs(descRes)
         }
     }
 
-    private fun formatPatchExpired(@StringRes descRes: Int, totalHours: Int): String {
+    private fun formatPatchExpired(descRes: TextRef, totalHours: Int): String {
         val days = totalHours / 24
         val remainHours = totalHours % 24
-        return context.getString(descRes, days, remainHours)
+        return rh.gs(descRes, days, remainHours)
     }
 
     private fun formatBgCheckSpan(totalMinutes: Int): String {
         val hours = totalMinutes / 60
         val minutes = totalMinutes % 60
         return if (hours > 0) {
-            context.getString(
-                R.string.common_label_unit_value_duration_hour_and_minute,
+            rh.gs(
+                CarelevoStrings.common_label_unit_value_duration_hour_and_minute,
                 hours, minutes
             )
         } else {
-            context.getString(
-                R.string.common_label_unit_value_minute,
+            rh.gs(
+                CarelevoStrings.common_label_unit_value_minute,
                 minutes
             )
         }
@@ -256,8 +257,8 @@ class CarelevoAlarmNotifier @Inject constructor(
     private fun createNotificationChannel() {
         // Resource strings — the channel name/description are user-visible in the system's
         // notification settings.
-        val name = context.getString(R.string.carelevo_alarm_channel_name)
-        val descriptionText = context.getString(R.string.carelevo_alarm_channel_description)
+        val name = rh.gs(CarelevoStrings.carelevo_alarm_channel_name)
+        val descriptionText = rh.gs(CarelevoStrings.carelevo_alarm_channel_description)
         val importance = NotificationManager.IMPORTANCE_HIGH
         val channel = NotificationChannel(channelId, name, importance).apply {
             description = descriptionText
@@ -289,9 +290,9 @@ class CarelevoAlarmNotifier @Inject constructor(
         else                                  -> emptyList()
     }
 
-    private fun buildDescription(@StringRes descRes: Int?, args: List<String>): String {
+    private fun buildDescription(descRes: TextRef?, args: List<String>): String {
         return descRes?.let { resId ->
-            if (args.isEmpty()) context.getString(resId) else context.getString(resId, *args.toTypedArray())
+            if (args.isEmpty()) rh.gs(resId) else rh.gs(resId, *args.toTypedArray())
         } ?: ""
     }
 
@@ -306,13 +307,13 @@ class CarelevoAlarmNotifier @Inject constructor(
         val minutes = totalMinutes % 60
         return when {
             hours > 0 && minutes > 0 ->
-                context.getString(R.string.common_label_unit_value_duration_hour_and_minute, hours, minutes)
+                rh.gs(CarelevoStrings.common_label_unit_value_duration_hour_and_minute, hours, minutes)
 
             hours > 0                ->
-                context.getString(R.string.common_label_unit_value_duration_hour, hours)
+                rh.gs(CarelevoStrings.common_label_unit_value_duration_hour, hours)
 
             else                     ->
-                context.getString(R.string.common_label_unit_value_minute, minutes)
+                rh.gs(CarelevoStrings.common_label_unit_value_minute, minutes)
         }
     }
 

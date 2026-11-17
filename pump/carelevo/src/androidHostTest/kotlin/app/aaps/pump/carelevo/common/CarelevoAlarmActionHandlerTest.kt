@@ -3,7 +3,7 @@ package app.aaps.pump.carelevo.common
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.pump.carelevo.R
+import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.coordinator.CarelevoAlarmClearCoordinator
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.type.AlarmCause
@@ -274,7 +274,7 @@ internal class CarelevoAlarmActionHandlerTest {
 
         awaitCondition { requests.isNotEmpty() }
         job.cancel()
-        assertThat(requests).containsExactly(AlarmEvent.ShowToastMessage(R.string.alarm_feat_msg_check_patch_connect))
+        assertThat(requests).containsExactly(AlarmEvent.ShowToastMessage(CarelevoStrings.alarm_feat_msg_check_patch_connect))
         assertThat(sut.alarmQueue.value.map { it.alarmId }).containsExactly("resume")
         verifyBlocking(alarmUseCase, never()) { acknowledgeAlarm(any()) }
         verifyBlocking(alarmClearCoordinator, never()) { resumeInfusion() }

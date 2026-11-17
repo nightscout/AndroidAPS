@@ -14,6 +14,7 @@ import app.aaps.pump.carelevo.presentation.model.CarelevoConnectPrepareEvent
 import app.aaps.pump.carelevo.presentation.type.CarelevoPatchStep
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectViewModel
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectionFlowViewModel
+import app.aaps.pump.carelevo.registerCarelevoStrings
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
@@ -84,6 +85,7 @@ class CarelevoPatchFlowStep02ConnectTest {
 
     @Before
     fun setUp() {
+        registerCarelevoStrings()
         val context: Context = RuntimeEnvironment.getApplication()
         searchLabel = context.getString(R.string.carelevo_btn_input_search_patch)
         cancelButtonLabel = context.getString(R.string.carelevo_btn_cancel)
