@@ -1,18 +1,27 @@
 package app.aaps.pump.carelevo.common
 
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.coordinator.CarelevoAlarmClearCoordinator
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.type.AlarmCause
+import app.aaps.pump.carelevo.domain.type.AlarmType
 import app.aaps.pump.carelevo.domain.usecase.alarm.CarelevoAlarmInfoUseCase
 import app.aaps.pump.carelevo.presentation.model.AlarmEvent
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.BeforeEach
@@ -23,13 +32,18 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
+import org.mockito.kotlin.timeout
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
 import java.util.Optional
+import java.util.concurrent.CopyOnWriteArrayList
 
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -207,5 +221,195 @@ internal class CarelevoAlarmActionHandlerTest {
         awaitCondition { sut.alarmQueue.value.isEmpty() }
         verifyBlocking(alarmClearCoordinator) { discardOnAlarm(any()) }
         verify(alarmClearCoordinator).forceQuitTeardown(any())
+    }
+
+    /** Collects the UI requests from now on, so a request sent on another thread is not missed. */
+    private fun collectUiRequests(): Pair<List<AlarmEvent>, Job> {
+        val requests = CopyOnWriteArrayList<AlarmEvent>()
+        val job = CoroutineScope(Dispatchers.Unconfined).launch { sut.uiRequests.collect { requests += it } }
+        return requests to job
+    }
+
+    private fun runTeardownCallback() {
+        doAnswer { invocation ->
+            @Suppress("UNCHECKED_CAST")
+            (invocation.arguments[0] as () -> Unit).invoke()
+        }.whenever(alarmClearCoordinator).forceQuitTeardown(any())
+    }
+
+    private fun statusRead(success: Boolean): PumpEnactResult = mock { on { this.success } doReturn success }
+
+    @Test
+    fun `a delivery resume timeout cleared on the patch resumes the delivery`() {
+        val timeout = alarm(id = "resume", cause = AlarmCause.ALARM_ALERT_RESUME_INSULIN_DELIVERY_TIMEOUT)
+        whenever { alarmClearCoordinator.clearAlarmOnPatch(any()) }.thenReturn(true)
+        whenever(alarmUseCase.getAlarmsOnce()).thenReturn(Single.just(Optional.of(listOf(timeout))))
+        sut.loadActiveAlarms()
+
+        sut.triggerEvent(AlarmEvent.ClearAlarm(timeout))
+
+        awaitCondition { sut.alarmQueue.value.isEmpty() }
+        verify(alarmUseCase).acknowledgeAlarm(eq("resume"))
+        verifyBlocking(alarmClearCoordinator, timeout(5_000)) { resumeInfusion() }
+    }
+
+    @Test
+    fun `an app auto off warning is cleared and the delivery resumed, not the patch discarded`() {
+        val autoOff = alarm(id = "auto-off", cause = AlarmCause.ALARM_WARNING_NOT_USED_APP_AUTO_OFF)
+        whenever { alarmClearCoordinator.clearAlarmOnPatch(any()) }.thenReturn(true)
+        whenever(alarmUseCase.getAlarmsOnce()).thenReturn(Single.just(Optional.of(listOf(autoOff))))
+        sut.loadActiveAlarms()
+
+        sut.triggerEvent(AlarmEvent.ClearAlarm(autoOff))
+
+        awaitCondition { sut.alarmQueue.value.isEmpty() }
+        verifyBlocking(alarmClearCoordinator, timeout(5_000)) { resumeInfusion() }
+        verifyBlocking(alarmClearCoordinator, never()) { discardOnAlarm(any()) }
+    }
+
+    @Test
+    fun `a delivery resume timeout the patch did not clear keeps the alarm and resumes nothing`() {
+        val timeout = alarm(id = "resume", cause = AlarmCause.ALARM_ALERT_RESUME_INSULIN_DELIVERY_TIMEOUT)
+        whenever { alarmClearCoordinator.clearAlarmOnPatch(any()) }.thenReturn(false)
+        whenever(alarmUseCase.getAlarmsOnce()).thenReturn(Single.just(Optional.of(listOf(timeout))))
+        sut.loadActiveAlarms()
+        val (requests, job) = collectUiRequests()
+
+        sut.triggerEvent(AlarmEvent.ClearAlarm(timeout))
+
+        awaitCondition { requests.isNotEmpty() }
+        job.cancel()
+        assertThat(requests).containsExactly(AlarmEvent.ShowToastMessage(R.string.alarm_feat_msg_check_patch_connect))
+        assertThat(sut.alarmQueue.value.map { it.alarmId }).containsExactly("resume")
+        verify(alarmUseCase, never()).acknowledgeAlarm(any())
+        verifyBlocking(alarmClearCoordinator, never()) { resumeInfusion() }
+    }
+
+    @Test
+    fun `a warning with the patch out of reach is abandoned at once without a discard command`() {
+        whenever(alarmClearCoordinator.isPatchReachable()).thenReturn(false)
+        runTeardownCallback()
+        val warning = alarm(id = "clog", cause = AlarmCause.ALARM_WARNING_PUMP_CLOGGED)
+        whenever(alarmUseCase.getAlarmsOnce()).thenReturn(Single.just(Optional.of(listOf(warning))))
+        sut.loadActiveAlarms()
+
+        sut.triggerEvent(AlarmEvent.ClearAlarm(warning))
+
+        // No wait: the teardown runs on the caller's thread.
+        assertThat(sut.alarmQueue.value).isEmpty()
+        verify(alarmClearCoordinator).forceQuitTeardown(any())
+        verify(alarmUseCase).clearAlarms()
+        verifyBlocking(alarmClearCoordinator, never()) { discardOnAlarm(any()) }
+    }
+
+    @Test
+    fun `an unknown cause of the warning tier discards the patch`() {
+        whenever(alarmClearCoordinator.isPatchReachable()).thenReturn(false)
+        runTeardownCallback()
+        val unknown = alarm(id = "unknown", cause = AlarmCause.ALARM_UNKNOWN).copy(alarmType = AlarmType.WARNING)
+        whenever(alarmUseCase.getAlarmsOnce()).thenReturn(Single.just(Optional.of(listOf(unknown))))
+        sut.loadActiveAlarms()
+
+        sut.triggerEvent(AlarmEvent.ClearAlarm(unknown))
+
+        verify(alarmClearCoordinator).forceQuitTeardown(any())
+        assertThat(sut.alarmQueue.value).isEmpty()
+    }
+
+    @Test
+    fun `an unknown cause of another tier does nothing`() {
+        val unknown = alarm(id = "unknown", cause = AlarmCause.ALARM_UNKNOWN)
+        whenever(alarmUseCase.getAlarmsOnce()).thenReturn(Single.just(Optional.of(listOf(unknown))))
+        sut.loadActiveAlarms()
+
+        sut.triggerEvent(AlarmEvent.ClearAlarm(unknown))
+
+        assertThat(sut.alarmQueue.value.map { it.alarmId }).containsExactly("unknown")
+        verify(alarmUseCase, never()).acknowledgeAlarm(any())
+        verify(alarmClearCoordinator, never()).forceQuitTeardown(any())
+        assertThat(sut.alarmInfo).isEqualTo(unknown)
+    }
+
+    @Test
+    fun `Bluetooth off asks for Bluetooth and keeps the alarm until the queue reaches the patch`() {
+        val btOff = alarm(id = "bt-off", cause = AlarmCause.ALARM_ALERT_BLUETOOTH_OFF)
+        val readDone = CompletableDeferred<Unit>()
+        val reached = statusRead(true)
+        whenever { commandQueue.readStatus(any()) }.thenAnswer { runBlocking { readDone.await() }; reached }
+        whenever(alarmUseCase.getAlarmsOnce()).thenReturn(Single.just(Optional.of(listOf(btOff))))
+        sut.loadActiveAlarms()
+        val (requests, job) = collectUiRequests()
+
+        sut.triggerEvent(AlarmEvent.ClearAlarm(btOff))
+
+        awaitCondition { requests.isNotEmpty() }
+        assertThat(requests).containsExactly(AlarmEvent.RequestBluetoothEnable)
+        assertThat(sut.alarmQueue.value.map { it.alarmId }).containsExactly("bt-off")
+        verify(alarmClearCoordinator, never()).forgetSnapshotAlarmCause(any())
+
+        readDone.complete(Unit)
+
+        awaitCondition { sut.alarmQueue.value.isEmpty() }
+        job.cancel()
+        verifyBlocking(commandQueue) { readStatus("Bluetooth re-enabled after alarm") }
+        verify(alarmUseCase, times(2)).acknowledgeAlarm(eq("bt-off"))
+    }
+
+    @Test
+    fun `Bluetooth off keeps the alarm when the queue cannot reach the patch`() {
+        val btOff = alarm(id = "bt-off", cause = AlarmCause.ALARM_ALERT_BLUETOOTH_OFF)
+        val notReached = statusRead(false)
+        whenever { commandQueue.readStatus(any()) }.thenReturn(notReached)
+        whenever(alarmUseCase.getAlarmsOnce()).thenReturn(Single.just(Optional.of(listOf(btOff))))
+        sut.loadActiveAlarms()
+
+        sut.triggerEvent(AlarmEvent.ClearAlarm(btOff))
+
+        verifyBlocking(commandQueue, timeout(5_000)) { readStatus(any()) }
+        verify(notReached, timeout(5_000)).success
+        assertThat(sut.alarmQueue.value.map { it.alarmId }).containsExactly("bt-off")
+        verify(alarmUseCase, times(1)).acknowledgeAlarm(eq("bt-off"))
+    }
+
+    @Test
+    fun `a failed wipe of all alarms keeps the queue`() {
+        whenever(alarmUseCase.clearAlarms()).thenReturn(Completable.error(IllegalStateException("boom")))
+        whenever(alarmUseCase.getAlarmsOnce()).thenReturn(Single.just(Optional.of(listOf(alarm()))))
+        sut.loadActiveAlarms()
+
+        sut.clearAllAlarms()
+
+        assertThat(sut.alarmQueue.value).hasSize(1)
+    }
+
+    @Test
+    fun `an emptied queue is announced once per emptying`() {
+        whenever(alarmUseCase.getAlarmsOnce()).thenReturn(Single.just(Optional.of(listOf(alarm()))))
+        sut.loadActiveAlarms()
+        val events = CopyOnWriteArrayList<Unit>()
+        val job = CoroutineScope(Dispatchers.Unconfined).launch { sut.alarmQueueEmptyEvent.collect { events += it } }
+
+        sut.acknowledgeAndRemoveAlarm("alarm-1")
+        sut.clearAllAlarms()
+
+        job.cancel()
+        assertThat(events).hasSize(2)
+    }
+
+    @Test
+    fun `observed alarms are a plain list, empty when nothing is stored`() {
+        whenever(alarmUseCase.observeAlarms()).thenReturn(Observable.just(Optional.empty(), Optional.of(listOf(alarm()))))
+
+        val lists = sut.observeAlarms().toList().blockingGet()
+
+        assertThat(lists.map { list -> list.map { it.alarmId } }).containsExactly(emptyList<String>(), listOf("alarm-1")).inOrder()
+    }
+
+    @Test
+    fun `an event that is not a clear does nothing`() {
+        sut.triggerEvent(AlarmEvent.NoAction)
+
+        assertThat(sut.alarmInfo).isNull()
+        verify(alarmUseCase, never()).acknowledgeAlarm(any())
     }
 }

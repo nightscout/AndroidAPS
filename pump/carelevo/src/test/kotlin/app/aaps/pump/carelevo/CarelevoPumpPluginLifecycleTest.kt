@@ -11,6 +11,7 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.ProcessLifecycleOwner
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
@@ -19,6 +20,7 @@ import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
@@ -33,6 +35,9 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotFlags
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotResponse
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotTier
 import app.aaps.pump.carelevo.ble.data.BleState
 import app.aaps.pump.carelevo.ble.data.BondingState
 import app.aaps.pump.carelevo.ble.data.DeviceModuleState
@@ -56,6 +61,7 @@ import app.aaps.pump.carelevo.coordinator.CarelevoSettingsCoordinator
 import app.aaps.pump.carelevo.coordinator.CarelevoTempBasalCoordinator
 import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
+import app.aaps.pump.carelevo.domain.model.infusion.CarelevoBasalInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoExtendBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoImmeBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
@@ -90,10 +96,12 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.after
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.clearInvocations
+import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -108,7 +116,10 @@ import org.robolectric.Shadows
 import org.robolectric.annotation.Config
 import java.util.Optional
 import kotlin.time.Clock
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 import app.aaps.core.interfaces.configuration.Config as AapsConfig
 
 /**
@@ -262,7 +273,11 @@ class CarelevoPumpPluginLifecycleTest {
         Dispatchers.resetMain()
     }
 
-    private fun buildPlugin(): CarelevoPumpPlugin {
+    private fun buildPlugin(
+        basalProfileUpdateCoordinator: CarelevoBasalProfileUpdateCoordinator? = null,
+        bolusCoordinator: CarelevoBolusCoordinator? = null,
+        tempBasalCoordinator: CarelevoTempBasalCoordinator? = null
+    ): CarelevoPumpPlugin {
         val pumpEnactResultProvider = Provider<PumpEnactResult> { mock() }
         val setBasalProgramUseCase: CarelevoSetBasalProgramUseCase = mock()
         val startTempBasalInfusionUseCase: CarelevoStartTempBasalInfusionUseCase = mock()
@@ -293,7 +308,7 @@ class CarelevoPumpPluginLifecycleTest {
             pumpEnactResultProvider = pumpEnactResultProvider,
             carelevoPatch = carelevoPatch,
             carelevoAlarmNotifier = carelevoAlarmNotifier,
-            basalProfileUpdateCoordinator = CarelevoBasalProfileUpdateCoordinator(
+            basalProfileUpdateCoordinator = basalProfileUpdateCoordinator ?: CarelevoBasalProfileUpdateCoordinator(
                 aapsLogger = aapsLogger,
                 rh = rh,
                 pumpEnactResultProvider = pumpEnactResultProvider,
@@ -301,7 +316,7 @@ class CarelevoPumpPluginLifecycleTest {
                 bleSession = bleSession,
                 setBasalProgramUseCase = setBasalProgramUseCase
             ),
-            bolusCoordinator = CarelevoBolusCoordinator(
+            bolusCoordinator = bolusCoordinator ?: CarelevoBolusCoordinator(
                 aapsLogger = aapsLogger,
                 rh = rh,
                 dateUtil = dateUtil,
@@ -318,7 +333,7 @@ class CarelevoPumpPluginLifecycleTest {
                 cancelExtendBolusInfusionUseCase = cancelExtendBolusInfusionUseCase,
                 decimalFormatter = decimalFormatter
             ),
-            tempBasalCoordinator = CarelevoTempBasalCoordinator(
+            tempBasalCoordinator = tempBasalCoordinator ?: CarelevoTempBasalCoordinator(
                 aapsLogger = aapsLogger,
                 dateUtil = dateUtil,
                 pumpSync = pumpSync,
@@ -1010,5 +1025,177 @@ class CarelevoPumpPluginLifecycleTest {
         started = false
 
         verify(carelevoAlarmNotifier, times(2)).stopObserving()
+    }
+
+    // ---- auto-resume watchdog (issue #4993) -------------------------------------------------------
+    // The first check runs at once after onStart, the next ones every 30 s.
+
+    /** A patch stopped for [stopMinutes], with the stop stored [stoppedFor] ago. */
+    private fun stoppedPatch(stopMinutes: Int?, stoppedFor: Duration) {
+        patchInfoSubject.onNext(Optional.of(samplePatchInfo().copy(isStopped = true, stopMinutes = stopMinutes)))
+        val basal = CarelevoBasalInfusionInfoDomainModel(
+            infusionId = "basal", address = "AA:BB:CC:DD:EE:FF", mode = 0, updatedAt = Clock.System.now() - stoppedFor,
+            segments = emptyList(), isStop = true
+        )
+        infusionInfoSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel(basalInfusionInfo = basal)))
+    }
+
+    @Test
+    fun `a timed stop whose time is over plus the margin is ended and the patch read`() {
+        stoppedPatch(stopMinutes = 1, stoppedFor = 2.minutes)
+
+        start()
+
+        verify(carelevoPatch, timeout(2_000)).reconcileAutoResumed()
+        verifyBlocking(commandQueue, timeout(2_000)) { readStatus("Carelevo auto-resume") }
+    }
+
+    @Test
+    fun `a timed stop still inside its time and margin is left alone`() {
+        stoppedPatch(stopMinutes = 1, stoppedFor = 70.seconds)
+
+        start()
+
+        verify(carelevoPatch, after(500).never()).reconcileAutoResumed()
+    }
+
+    @Test
+    fun `a stop without a time is left alone`() {
+        stoppedPatch(stopMinutes = 0, stoppedFor = 2.hours)
+
+        start()
+
+        verify(carelevoPatch, after(500).never()).reconcileAutoResumed()
+    }
+
+    @Test
+    fun `a stop is left alone until the infusion info with its start is loaded`() {
+        patchInfoSubject.onNext(Optional.of(samplePatchInfo().copy(isStopped = true, stopMinutes = 1)))
+        infusionInfoSubject.onNext(Optional.empty())
+
+        start()
+
+        verify(carelevoPatch, after(500).never()).reconcileAutoResumed()
+    }
+
+    @Test
+    fun `a failing check is logged and does not end the watchdog or the start`() {
+        stoppedPatch(stopMinutes = 1, stoppedFor = 2.minutes)
+        val failure = IllegalStateException("store gone")
+        doThrow(failure).whenever(carelevoPatch).reconcileAutoResumed()
+
+        start()
+
+        verify(aapsLogger, timeout(2_000)).error(LTag.PUMPCOMM, "auto-resume check failed (will retry)", failure)
+        verifyBlocking(commandQueue, never()) { readStatus("Carelevo auto-resume") }
+    }
+
+    // ---- active alarm snapshot after a reconnect -----------------------------------------------
+
+    private val connectedFlow = MutableStateFlow(false)
+
+    private fun snapshot(): ActiveAlarmSnapshotResponse =
+        ActiveAlarmSnapshotResponse(
+            tier = ActiveAlarmSnapshotTier.CRITICAL,
+            infusing = false,
+            flags = ActiveAlarmSnapshotFlags(
+                outOfInsulin = false, operatingLifeExpired = false, lowBattery = false, outOfRangeTemperature = false,
+                autoOff = false, unconnectedBle = false, patchAppIncomplete = false, startInsulin = false,
+                selfDiagnosisFailed = false, patchExpired = false, patchError = false, occlusionDetected = true,
+                userForcedTermination = false
+            )
+        )
+
+    private fun startWatchingTheLink(address: String? = "AA:BB:CC:DD:EE:FF") {
+        whenever(bleSession.connected).thenReturn(connectedFlow)
+        whenever(carelevoPatch.getPatchInfoAddress()).thenReturn(address)
+        start()
+        awaitCollector(connectedFlow)
+    }
+
+    @Test
+    fun `a new link reads the active alarms of the patch and applies them`() {
+        val snapshots = listOf(snapshot())
+        whenever { bleSession.readActiveAlarmSnapshots(any()) }.thenReturn(snapshots)
+        startWatchingTheLink()
+
+        connectedFlow.value = true
+
+        verifyBlocking(bleSession, timeout(2_000)) { readActiveAlarmSnapshots("AA:BB:CC:DD:EE:FF") }
+        verify(carelevoPatch, timeout(2_000)).applyActiveAlarmSnapshots(snapshots)
+    }
+
+    @Test
+    fun `the link state at the start and a lost link read nothing`() {
+        connectedFlow.value = true
+        startWatchingTheLink()
+
+        connectedFlow.value = false
+
+        verifyBlocking(bleSession, after(500).never()) { readActiveAlarmSnapshots(any()) }
+    }
+
+    @Test
+    fun `no answer from an older patch applies nothing`() {
+        whenever { bleSession.readActiveAlarmSnapshots(any()) }.thenReturn(emptyList())
+        startWatchingTheLink()
+
+        connectedFlow.value = true
+
+        verifyBlocking(bleSession, timeout(2_000)) { readActiveAlarmSnapshots(any()) }
+        verify(carelevoPatch, after(300).never()).applyActiveAlarmSnapshots(any())
+    }
+
+    @Test
+    fun `without a patch address nothing is read`() {
+        startWatchingTheLink(address = null)
+
+        connectedFlow.value = true
+
+        verify(aapsLogger, timeout(2_000)).warn(LTag.PUMPCOMM, "active alarm snapshot skipped: no patch address")
+        verifyBlocking(bleSession, never()) { readActiveAlarmSnapshots(any()) }
+    }
+
+    @Test
+    fun `a failed read is logged and the next link reads again`() {
+        val failure = IllegalStateException("link down")
+        whenever { bleSession.readActiveAlarmSnapshots(any()) }.thenAnswer { throw failure }
+        startWatchingTheLink()
+
+        connectedFlow.value = true
+        verify(aapsLogger, timeout(2_000)).error(LTag.PUMPCOMM, "active alarm snapshot FAILED", failure)
+        connectedFlow.value = false
+        Thread.sleep(100)
+        connectedFlow.value = true
+
+        verifyBlocking(bleSession, timeout(2_000).times(2)) { readActiveAlarmSnapshots(any()) }
+        verify(carelevoPatch, never()).applyActiveAlarmSnapshots(any())
+    }
+
+    // ---- profile update: the cancel steps reach the bolus and temp basal coordinators -------------
+
+    @Test
+    fun `a profile update may end a running extended bolus and temp basal on the patch`() {
+        val coordinator: CarelevoBasalProfileUpdateCoordinator = mock()
+        val bolusCoordinator: CarelevoBolusCoordinator = mock()
+        val tempBasalCoordinator: CarelevoTempBasalCoordinator = mock()
+        val ended: PumpEnactResult = mock()
+        whenever(coordinator.updateBasalProfile(any(), any(), any(), any())).thenAnswer { invocation ->
+            invocation.getArgument<() -> PumpEnactResult>(1).invoke()
+            invocation.getArgument<() -> PumpEnactResult>(2).invoke()
+            ended
+        }
+        whenever(bolusCoordinator.cancelExtendedBolus(any(), any())).thenReturn(ended)
+        whenever(tempBasalCoordinator.cancelTempBasal(any(), any())).thenReturn(ended)
+        whenever(carelevoPatch.resolvePatchState()).thenReturn(PatchState.ConnectedBooted)
+        plugin = buildPlugin(basalProfileUpdateCoordinator = coordinator, bolusCoordinator = bolusCoordinator, tempBasalCoordinator = tempBasalCoordinator)
+        plugin.bleSession = bleSession
+        val profile: PumpProfile = mock()
+
+        val result = runBlocking { plugin.setNewBasalProfile(profile) }
+
+        assertThat(result).isSameInstanceAs(ended)
+        verify(bolusCoordinator).cancelExtendedBolus(eq("CARELEVO-TEST-001"), any())
+        verify(tempBasalCoordinator).cancelTempBasal(eq("CARELEVO-TEST-001"), any())
     }
 }

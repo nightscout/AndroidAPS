@@ -1,9 +1,13 @@
 package app.aaps.pump.carelevo
 
 import app.aaps.core.data.model.BS
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.ble.commands.BolusCancelCommand
@@ -14,9 +18,12 @@ import app.aaps.pump.carelevo.ble.commands.ExtendBolusResponse
 import app.aaps.pump.carelevo.ble.commands.ImmediateBolusCommand
 import app.aaps.pump.carelevo.ble.commands.ImmediateBolusResponse
 import app.aaps.pump.carelevo.ble.commands.InfusionInfoResponse
+import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoImmeBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
+import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
 import com.google.common.truth.Truth.assertThat
+import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
@@ -560,6 +567,141 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
             plugin.stopBolusDelivering()
             ImmediateBolusResponse(actionId = 1, resultCode = 0, expectedCompletionSeconds = 1, remainingReservoirUnits = 60.0)
         }
+    }
+
+    // ---- an extended bolus AAPS keeps but the patch does not run ---------------------------------
+
+    private fun aapsRunsExtendedBolus() {
+        val extended = PumpSync.PumpState.ExtendedBolus(timestamp = LEFTOVER_PUMP_ID, duration = 60 * 60_000L, amount = 1.0, rate = 1.0)
+        whenever { pumpSync.expectedPumpState() }.thenReturn(
+            PumpSync.PumpState(temporaryBasal = null, extendedBolus = extended, bolus = null, profile = null, serialNumber = "CARELEVO-TEST-001")
+        )
+    }
+
+    @Test
+    fun `a status read in plain basal mode ends the extended bolus only AAPS still has`() {
+        whenever(dateUtil.now()).thenReturn(START_PUMP_ID)
+        aapsRunsExtendedBolus()
+        whenever { pumpSync.syncStopExtendedBolusWithPumpId(any(), any(), any(), any()) }.thenReturn(true)
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0, modeRaw = BASAL_MODE))
+
+        runBlocking { plugin.getPumpStatus("test") }
+
+        verifyBlocking(pumpSync) { syncStopExtendedBolusWithPumpId(START_PUMP_ID, START_PUMP_ID, PumpType.CAREMEDI_CARELEVO, "CARELEVO-TEST-001") }
+        verify(cancelExtendBolusInfusionUseCase).persistExtendBolusCancelled()
+    }
+
+    @Test
+    fun `a status read while the patch runs the extended bolus keeps it`() {
+        aapsRunsExtendedBolus()
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0, modeRaw = EXTEND_BOLUS_MODE))
+
+        runBlocking { plugin.getPumpStatus("test") }
+
+        verifyBlocking(pumpSync, never()) { syncStopExtendedBolusWithPumpId(any(), any(), any(), any()) }
+        verify(cancelExtendBolusInfusionUseCase, never()).persistExtendBolusCancelled()
+    }
+
+    @Test
+    fun `a status read with no extended bolus in AAPS ends nothing`() {
+        whenever { pumpSync.expectedPumpState() }.thenReturn(
+            PumpSync.PumpState(temporaryBasal = null, extendedBolus = null, bolus = null, profile = null, serialNumber = "CARELEVO-TEST-001")
+        )
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0, modeRaw = BASAL_MODE))
+
+        runBlocking { plugin.getPumpStatus("test") }
+
+        verifyBlocking(pumpSync, never()) { syncStopExtendedBolusWithPumpId(any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `an extended bolus end AAPS did not store leaves the patch record`() {
+        aapsRunsExtendedBolus()
+        whenever { pumpSync.syncStopExtendedBolusWithPumpId(any(), any(), any(), any()) }.thenReturn(false)
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0, modeRaw = BASAL_MODE))
+
+        runBlocking { plugin.getPumpStatus("test") }
+
+        verifyBlocking(pumpSync) { syncStopExtendedBolusWithPumpId(any(), any(), any(), any()) }
+        verify(cancelExtendBolusInfusionUseCase, never()).persistExtendBolusCancelled()
+    }
+
+    // ---- the reason shown when the patch refuses a bolus --------------------------------------------
+
+    @Test
+    fun `every refusal of a bolus start shows its own reason`() {
+        val reasons = mapOf(
+            1 to R.string.alarm_feat_title_warning_low_insulin,
+            2 to R.string.alarm_feat_title_warning_expired_patch,
+            3 to R.string.alarm_feat_title_warning_low_battery,
+            4 to R.string.alarm_feat_title_warning_invalid_temperature,
+            12 to R.string.alarm_feat_title_warning_patch_error,
+            99 to R.string.alarm_feat_msg_check_patch_connect
+        )
+        reasons.values.forEach { id -> whenever(rh.gs(id)).thenReturn("reason $id") }
+
+        for ((code, id) in reasons) {
+            whenever { bleSession.runSingle(any(), isA<ImmediateBolusCommand>(), any()) }
+                .thenReturn(ImmediateBolusResponse(actionId = 1, resultCode = code, expectedCompletionSeconds = 0, remainingReservoirUnits = 50.0))
+
+            val result = runBlocking { plugin.deliverTreatment(bolus(1.0)) }
+
+            assertThat(result.success).isFalse()
+            assertThat(result.enacted).isFalse()
+            assertThat(result.comment).isEqualTo("reason $id")
+        }
+    }
+
+    @Test
+    fun `an over limit refusal with less than one step left says nothing more can be given`() {
+        whenever { bleSession.runSingle(any(), isA<ImmediateBolusCommand>(), any()) }
+            .thenReturn(ImmediateBolusResponse(actionId = 1, resultCode = 20, expectedCompletionSeconds = 0, remainingReservoirUnits = 0.0))
+        whenever(rh.gs(R.string.carelevo_bolus_rejected_exceed_limit_none)).thenReturn("nothing more")
+
+        val result = runBlocking { plugin.deliverTreatment(bolus(1.0)) }
+
+        assertThat(result.success).isFalse()
+        assertThat(result.comment).isEqualTo("nothing more")
+    }
+
+    // ---- the record of the bolus end ---------------------------------------------------------------
+
+    private fun deliverWithFinish(finish: Single<ResponseResult<CarelevoUseCaseResponse>>): PumpEnactResult {
+        whenever(finishImmeBolusInfusionUseCase.execute()).thenReturn(finish)
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0), infusionInfo(bolusTotal = 2.25))
+        return runBlocking { plugin.deliverTreatment(bolus(0.25)) }
+    }
+
+    @Test
+    @Timeout(10)
+    fun `a bolus whose end record fails still counts as given`() {
+        val failure = IllegalStateException("store gone")
+
+        val result = deliverWithFinish(Single.just(ResponseResult.Error(failure)))
+
+        assertThat(result.success).isTrue()
+        assertThat(result.bolusDelivered).isWithin(0.001).of(0.25)
+        verify(aapsLogger).error(LTag.PUMPCOMM, "finishImmeBolus.responseError error=$failure")
+    }
+
+    @Test
+    @Timeout(10)
+    fun `a bolus whose end record is refused still counts as given`() {
+        val result = deliverWithFinish(Single.just(ResponseResult.Failure("no")))
+
+        assertThat(result.success).isTrue()
+        verify(aapsLogger).error(LTag.PUMPCOMM, "finishImmeBolus.failure")
+    }
+
+    @Test
+    @Timeout(10)
+    fun `a bolus whose end record throws still counts as given`() {
+        val failure = IllegalStateException("thrown")
+
+        val result = deliverWithFinish(Single.error(failure))
+
+        assertThat(result.success).isTrue()
+        verify(aapsLogger).error(LTag.PUMPCOMM, "finishImmeBolus.subscribeError error=$failure")
     }
 
     private fun bolus(insulin: Double) = DetailedBolusInfo().apply {

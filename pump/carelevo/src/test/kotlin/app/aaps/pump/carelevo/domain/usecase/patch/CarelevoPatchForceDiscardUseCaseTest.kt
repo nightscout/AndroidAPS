@@ -9,8 +9,10 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepositor
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.time.Clock
@@ -80,6 +82,48 @@ internal class CarelevoPatchForceDiscardUseCaseTest {
             verify(patchInfoRepository).deletePatchInfo()
             verify(infusionInfoRepository).deleteInfusionInfo()
         }
+    }
+
+    @Test
+    fun `the kept user setting no longer waits for a patch sync`() {
+        whenever(userSettingInfoRepository.getUserSettingInfoBySync()).thenReturn(sampleUserSetting())
+        whenever(userSettingInfoRepository.updateUserSettingInfo(any())).thenReturn(true)
+        whenever(infusionInfoRepository.deleteInfusionInfo()).thenReturn(true)
+        whenever(patchInfoRepository.deletePatchInfo()).thenReturn(true)
+
+        sut.execute().blockingGet()
+
+        val stored = argumentCaptor<CarelevoUserSettingInfoDomainModel>().also { verify(userSettingInfoRepository).updateUserSettingInfo(it.capture()) }.firstValue
+        assertThat(stored.needLowInsulinNoticeAmountSyncPatch).isFalse()
+        assertThat(stored.needMaxBasalSpeedSyncPatch).isFalse()
+        assertThat(stored.needMaxBolusDoseSyncPatch).isFalse()
+        assertThat(stored.maxBolusDose).isEqualTo(25.0)
+    }
+
+    @Test
+    fun `a failed user setting write stops before anything is deleted`() {
+        whenever(userSettingInfoRepository.getUserSettingInfoBySync()).thenReturn(sampleUserSetting())
+        whenever(userSettingInfoRepository.updateUserSettingInfo(any())).thenReturn(false)
+
+        val result = sut.execute().blockingGet()
+
+        assertThat((result as ResponseResult.Error).e.message).isEqualTo("update user setting info is failed")
+        verify(patchInfoRepository, never()).deletePatchInfo()
+        verify(infusionInfoRepository, never()).deleteInfusionInfo()
+        verify(pumpSync, never()).connectNewPump(any())
+    }
+
+    @Test
+    fun `a failed infusion delete is an error and ends no pump records`() {
+        whenever(userSettingInfoRepository.getUserSettingInfoBySync()).thenReturn(sampleUserSetting())
+        whenever(userSettingInfoRepository.updateUserSettingInfo(any())).thenReturn(true)
+        whenever(patchInfoRepository.deletePatchInfo()).thenReturn(true)
+        whenever(infusionInfoRepository.deleteInfusionInfo()).thenReturn(false)
+
+        val result = sut.execute().blockingGet()
+
+        assertThat((result as ResponseResult.Error).e.message).isEqualTo("delete infusion info is failed")
+        verify(pumpSync, never()).connectNewPump(any())
     }
 
     private fun sampleUserSetting(): CarelevoUserSettingInfoDomainModel {

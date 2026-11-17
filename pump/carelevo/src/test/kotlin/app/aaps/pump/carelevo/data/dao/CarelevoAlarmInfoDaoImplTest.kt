@@ -6,7 +6,9 @@ import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
 import app.aaps.pump.carelevo.data.model.entities.CarelevoAlarmInfoEntity
 import app.aaps.pump.carelevo.domain.type.AlarmCause
+import app.aaps.pump.carelevo.domain.type.AlarmType
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -446,5 +448,62 @@ internal class CarelevoAlarmInfoDaoImplTest {
         verify(preferences).put(eq(key), any<String>())
         verify(preferences).remove(eq(key))
         verifyNoMoreInteractions(preferences)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Merge groups and priority of every cause
+    // ---------------------------------------------------------------------------------------------
+
+    /** The causes that mean the same thing and are stored as one alarm. A cause not listed is a group of its own. */
+    private val mergeGroups = listOf(
+        setOf(AlarmCause.ALARM_WARNING_LOW_INSULIN, AlarmCause.ALARM_ALERT_OUT_OF_INSULIN, AlarmCause.ALARM_NOTICE_LOW_INSULIN),
+        setOf(
+            AlarmCause.ALARM_WARNING_PATCH_EXPIRED_PHASE_1, AlarmCause.ALARM_WARNING_PATCH_EXPIRED, AlarmCause.ALARM_ALERT_PATCH_EXPIRED_PHASE_1,
+            AlarmCause.ALARM_ALERT_PATCH_EXPIRED_PHASE_2, AlarmCause.ALARM_NOTICE_PATCH_EXPIRED
+        ),
+        setOf(AlarmCause.ALARM_WARNING_LOW_BATTERY, AlarmCause.ALARM_ALERT_LOW_BATTERY),
+        setOf(AlarmCause.ALARM_WARNING_INVALID_TEMPERATURE, AlarmCause.ALARM_ALERT_INVALID_TEMPERATURE),
+        setOf(AlarmCause.ALARM_WARNING_NOT_USED_APP_AUTO_OFF, AlarmCause.ALARM_ALERT_APP_NO_USE),
+        setOf(AlarmCause.ALARM_WARNING_BLE_NOT_CONNECTED, AlarmCause.ALARM_ALERT_BLE_NOT_CONNECTED, AlarmCause.ALARM_ALERT_BLUETOOTH_OFF),
+        setOf(AlarmCause.ALARM_WARNING_INCOMPLETE_PATCH_SETTING, AlarmCause.ALARM_ALERT_PATCH_APPLICATION_INCOMPLETE),
+        setOf(
+            AlarmCause.ALARM_NOTICE_LGS_FINISHED_DISCONNECTED_PATCH_OR_CGM, AlarmCause.ALARM_NOTICE_LGS_FINISHED_PAUSE_LGS,
+            AlarmCause.ALARM_NOTICE_LGS_FINISHED_TIME_OVER, AlarmCause.ALARM_NOTICE_LGS_FINISHED_OFF_LGS,
+            AlarmCause.ALARM_NOTICE_LGS_FINISHED_HIGH_BG, AlarmCause.ALARM_NOTICE_LGS_FINISHED_UNKNOWN
+        )
+    )
+
+    private fun sameGroup(a: AlarmCause, b: AlarmCause): Boolean = a == b || mergeGroups.any { a in it && b in it }
+
+    /** An alert outranks a warning, a warning a notice, and an unknown cause is the lowest. */
+    private fun rank(cause: AlarmCause): Int = when (cause.alarmType) {
+        AlarmType.ALERT        -> 3
+        AlarmType.WARNING      -> 2
+        AlarmType.NOTICE       -> 1
+        AlarmType.UNKNOWN_TYPE -> 0
+    }
+
+    @Test
+    fun `every cause merges with the causes of its group and with no other`() {
+        for (first in AlarmCause.entries) {
+            for (second in AlarmCause.entries) {
+                store.clear()
+                val dao = CarelevoAlarmInfoDaoImpl(preferences)
+                dao.upsertAlarm(entity(alarmId = "first", cause = first)).blockingAwait()
+                dao.upsertAlarm(entity(alarmId = "second", cause = second)).blockingAwait()
+
+                val stored = dao.getAlarmsOnce().blockingGet().get()
+
+                if (sameGroup(first, second)) {
+                    assertWithMessage("$first then $second").that(stored).hasSize(1)
+                    val kept = if (rank(second) > rank(first)) second else first
+                    assertWithMessage("$first then $second").that(stored.single().cause).isEqualTo(kept)
+                    assertWithMessage("$first then $second").that(stored.single().alarmType).isEqualTo(kept.alarmType.code)
+                    assertWithMessage("$first then $second").that(stored.single().occurrenceCount).isEqualTo(2)
+                } else {
+                    assertWithMessage("$first then $second").that(stored.map { it.cause }).containsExactly(first, second).inOrder()
+                }
+            }
+        }
     }
 }

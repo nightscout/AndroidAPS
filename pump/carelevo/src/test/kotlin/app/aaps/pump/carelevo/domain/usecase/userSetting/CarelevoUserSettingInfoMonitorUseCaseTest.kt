@@ -25,4 +25,34 @@ internal class CarelevoUserSettingInfoMonitorUseCaseTest {
 
         assertThat(result).isInstanceOf(ResponseResult.Success::class.java)
     }
+
+    @Test
+    fun `no stored setting is a success without data`() {
+        whenever(userSettingInfoRepository.getUserSettingInfo()).thenReturn(Observable.just(Optional.empty()))
+
+        val result = sut.execute().blockingFirst()
+
+        assertThat(result).isEqualTo(ResponseResult.Success(null))
+    }
+
+    @Test
+    fun `every new setting is passed on`() {
+        val first = CarelevoUserSettingInfoDomainModel(maxBolusDose = 5.0)
+        val second = CarelevoUserSettingInfoDomainModel(maxBolusDose = 7.0)
+        whenever(userSettingInfoRepository.getUserSettingInfo()).thenReturn(Observable.just(Optional.of(first), Optional.of(second)))
+
+        val results = sut.execute().toList().blockingGet()
+
+        assertThat(results).containsExactly(ResponseResult.Success(first), ResponseResult.Success(second)).inOrder()
+    }
+
+    @Test
+    fun `a repository that cannot give the stream is one error`() {
+        val failure = IllegalStateException("no store")
+        whenever(userSettingInfoRepository.getUserSettingInfo()).thenThrow(failure)
+
+        val results = sut.execute().toList().blockingGet()
+
+        assertThat(results).containsExactly(ResponseResult.Error(failure))
+    }
 }

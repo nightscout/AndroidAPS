@@ -20,4 +20,13 @@ internal class CarelevoDeleteUserSettingInfoUseCaseTest {
 
         assertThat(result).isInstanceOf(ResponseResult.Success::class.java)
     }
+
+    @Test
+    fun `a failed delete is an error`() {
+        whenever(userSettingInfoRepository.deleteUserSettingInfo()).thenReturn(false)
+
+        val result = sut.execute().blockingGet()
+
+        assertThat((result as ResponseResult.Error).e.message).isEqualTo("delete user setting info is failed")
+    }
 }

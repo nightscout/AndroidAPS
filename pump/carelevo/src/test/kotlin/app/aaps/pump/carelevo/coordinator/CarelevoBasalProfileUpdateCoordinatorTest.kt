@@ -287,6 +287,83 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
         verifyBlocking(bleSession, never()) { runBasalProgram(any(), any(), any()) }
     }
 
+    // --- tries of a cancel: three in all, 300 ms apart ---------------------------------------------
+
+    @Test
+    fun `a refused extended bolus cancel is tried three times in all`() {
+        stubInfusionInfo(CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = extendBolusInfusion()))
+        val extendCalls = AtomicInteger(0)
+
+        val started = System.nanoTime()
+        val result = sut.updateBasalProfile(profile, { extendCalls.incrementAndGet(); enact(false) }, { enact(true) }, { })
+        val tookMs = (System.nanoTime() - started) / 1_000_000
+
+        assertThat(result.success).isFalse()
+        assertThat(extendCalls.get()).isEqualTo(3)
+        // Two waits of 300 ms between the three tries.
+        assertThat(tookMs).isAtLeast(600)
+        verifyBlocking(bleSession, never()) { runBasalProgram(any(), any(), any()) }
+    }
+
+    @Test
+    fun `an extended bolus cancel that works on the second try goes on to the program`() {
+        stubInfusionInfo(CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = extendBolusInfusion()))
+        val extendCalls = AtomicInteger(0)
+
+        val result = sut.updateBasalProfile(profile, { enact(extendCalls.incrementAndGet() > 1) }, { enact(true) }, { })
+
+        assertThat(result.success).isTrue()
+        assertThat(extendCalls.get()).isEqualTo(2)
+        verifyBlocking(bleSession) { runBasalProgram(any(), any(), any()) }
+    }
+
+    @Test
+    fun `a refused temp basal cancel is tried three times without cancelling the extended bolus again`() {
+        stubInfusionInfo(
+            CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = extendBolusInfusion(), tempBasalInfusionInfo = tempBasalInfusion())
+        )
+        val extendCalls = AtomicInteger(0)
+        val tempCalls = AtomicInteger(0)
+
+        val result = sut.updateBasalProfile(
+            profile,
+            { extendCalls.incrementAndGet(); enact(true) },
+            { tempCalls.incrementAndGet(); enact(false) },
+            { }
+        )
+
+        assertThat(result.success).isFalse()
+        assertThat(extendCalls.get()).isEqualTo(1)
+        assertThat(tempCalls.get()).isEqualTo(3)
+        verifyBlocking(bleSession, never()) { runBasalProgram(any(), any(), any()) }
+    }
+
+    @Test
+    fun `a temp basal cancel that throws is tried again`() {
+        stubInfusionInfo(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasalInfusion()))
+        val tempCalls = AtomicInteger(0)
+
+        val result = sut.updateBasalProfile(
+            profile,
+            { enact(true) },
+            { if (tempCalls.incrementAndGet() == 1) throw IllegalStateException("link down") else enact(true) },
+            { }
+        )
+
+        assertThat(result.success).isTrue()
+        assertThat(tempCalls.get()).isEqualTo(2)
+        verifyBlocking(bleSession) { runBasalProgram(any(), any(), any()) }
+    }
+
+    @Test
+    fun `a failed program write is not tried again`() {
+        whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenReturn(false)
+
+        sut.updateBasalProfile(profile, { enact(true) }, { enact(true) }, { })
+
+        verifyBlocking(bleSession, times(1)) { runBasalProgram(any(), any(), any()) }
+    }
+
     // --- debounce ----------------------------------------------------------------------------------
 
     /** A clock that the wait moves on, so the spacing between updates takes no real time. */

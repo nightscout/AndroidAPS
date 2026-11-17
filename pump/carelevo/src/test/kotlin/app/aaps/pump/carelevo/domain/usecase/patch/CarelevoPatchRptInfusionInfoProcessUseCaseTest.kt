@@ -9,7 +9,9 @@ import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoPatchRptInfusio
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
@@ -67,6 +69,49 @@ internal class CarelevoPatchRptInfusionInfoProcessUseCaseTest {
         val result = sut.execute(CarelevoPatchRptInfusionInfoDefaultRequestModel(remains = 99.0)).blockingGet()
 
         assertThat(result).isInstanceOf(ResponseResult.Error::class.java)
+    }
+
+    @Test
+    fun `a full report stores every value it carries`() {
+        whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(samplePatchInfo())
+        whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
+        val request = CarelevoPatchRptInfusionInfoRequestModel(
+            runningMinute = 120, remains = 230.5, infusedTotalBasalAmount = 12.3, infusedTotalBolusAmount = 4.5,
+            pumpState = 1, mode = 3, currentInfusedProgramVolume = 0.0, realInfusedTime = 0
+        )
+
+        sut.execute(request).blockingGet()
+
+        val stored = argumentCaptor<CarelevoPatchInfoDomainModel>().also { verify(patchInfoRepository).updatePatchInfo(it.capture()) }.firstValue
+        assertThat(stored.address).isEqualTo("94:b2:16:1d:2f:6d")
+        assertThat(stored.mode).isEqualTo(3)
+        assertThat(stored.runningMinutes).isEqualTo(120)
+        assertThat(stored.insulinRemain).isEqualTo(230.5)
+        assertThat(stored.infusedTotalBasalAmount).isEqualTo(12.3)
+        assertThat(stored.infusedTotalBolusAmount).isEqualTo(4.5)
+        assertThat(stored.pumpState).isEqualTo(1)
+    }
+
+    @Test
+    fun `a default report changes only the insulin left`() {
+        val before = samplePatchInfo()
+        whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(before)
+        whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
+
+        sut.execute(CarelevoPatchRptInfusionInfoDefaultRequestModel(remains = 199.0)).blockingGet()
+
+        val stored = argumentCaptor<CarelevoPatchInfoDomainModel>().also { verify(patchInfoRepository).updatePatchInfo(it.capture()) }.firstValue
+        assertThat(stored).isEqualTo(before.copy(insulinRemain = 199.0))
+    }
+
+    @Test
+    fun `a failed write is an error`() {
+        whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(samplePatchInfo())
+        whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(false)
+
+        val result = sut.execute(CarelevoPatchRptInfusionInfoDefaultRequestModel(remains = 99.0)).blockingGet()
+
+        assertThat((result as ResponseResult.Error).e.message).isEqualTo("update patch info is failed")
     }
 
     private fun samplePatchInfo(): CarelevoPatchInfoDomainModel {
