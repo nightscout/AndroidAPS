@@ -41,8 +41,6 @@ data class DexcomOnePlusStatusInput(
     val calibrationWaiting: Boolean,
     /** `DexcomOnePlusBooleanKey.SendCalibrationToSensor`. */
     val sendCalibrationToSensor: Boolean,
-    /** `DexcomOnePlusBooleanKey.CorrectSensorStart`. */
-    val correctSensorStartEnabled: Boolean,
     val stagingState: StagingState,
     val stagingEvidence: CgmStagingEvidence?,
     val nowMs: Long,
@@ -76,9 +74,12 @@ class DexcomOnePlusStatusFormat(
     val dateTime: (Long) -> String = time,
 )
 
-/** What the three buttons at the bottom of the status screen do. */
+/** What the buttons of the status screen do. */
 class DexcomOnePlusStatusActions(
+    /** Start the sensor that feeds the loop (the Start screen locked on production). */
     val onOpenStart: () -> Unit,
+    /** Start a pre-soak sensor (the Start screen locked on pre-soak). */
+    val onOpenPresoak: () -> Unit,
     val onOpenWarmup: () -> Unit,
     val onOpenLog: () -> Unit,
 )
@@ -115,6 +116,11 @@ data class DexcomOnePlusStagingCard(
     val lastValueMgdl: Double?,
     val lastValueAtMs: Long?,
     val promote: DexcomOnePlusPromoteOffer,
+    /**
+     * The last reading is too old to promote. The card says the sensor has to connect again.
+     * The time of that reading is [lastValueAtMs].
+     */
+    val needsReconnect: Boolean = false,
 )
 
 /**
@@ -130,6 +136,11 @@ data class DexcomOnePlusStatusView(
     val calibration: DexcomOnePlusCalibrationCard?,
     val endOfLifePrompt: Boolean,
     val staging: DexcomOnePlusStagingCard,
+    /**
+     * False while no sensor feeds the loop and the pre-soak slot is empty: a second sensor only makes
+     * sense when there is a first one, so the pre-soak card is not shown.
+     */
+    val stagingOffered: Boolean,
     /** Start time the "correct insertion date" action works on, or null when the action is hidden. */
     val correctInsertionStartMs: Long?,
 )
@@ -161,8 +172,9 @@ object DexcomOnePlusStatusState {
             // replacement is warming up yet.
             endOfLifePrompt = input.lifecycle?.endOfLife == true && input.stagingState == StagingState.ABSENT,
             staging = stagingCard(input),
-            // Hidden while the setting is off. The plugin also refuses before any write.
-            correctInsertionStartMs = input.lifecycle?.startedAtEpochMs?.takeIf { input.correctSensorStartEnabled },
+            stagingOffered = input.lifecycle != null || input.stagingState != StagingState.ABSENT,
+            // Offered whenever a sensor runs: it asks for a date first, so no setting hides it.
+            correctInsertionStartMs = input.lifecycle?.startedAtEpochMs,
         )
     }
 
@@ -471,23 +483,29 @@ object DexcomOnePlusStatusState {
 
     private fun stagingCard(input: DexcomOnePlusStatusInput): DexcomOnePlusStagingCard {
         val evidence = input.stagingEvidence
+        val fresh = DexcomOnePlusStaging.readingFreshForPromotion(evidence?.lastValueAtEpochMs, input.nowMs)
         val promote = when {
             input.stagingState == StagingState.ABSENT -> DexcomOnePlusPromoteOffer.NONE
-            input.stagingState == StagingState.READY  -> DexcomOnePlusPromoteOffer.NORMAL
+            // A silent sensor must not be offered: promoting it would drop the one that feeds the loop.
+            input.stagingState == StagingState.READY && fresh -> DexcomOnePlusPromoteOffer.NORMAL
             // The way out when the production sensor stops before the soak ends - see canPromoteEarly.
-            DexcomOnePlusStaging.canPromoteEarly(
+            input.stagingState != StagingState.READY && DexcomOnePlusStaging.canPromoteEarly(
                 validEgvCount = evidence?.validCount ?: 0,
                 lastValueAtEpochMs = evidence?.lastValueAtEpochMs,
                 nowMs = input.nowMs,
             )                                         -> DexcomOnePlusPromoteOffer.EARLY
             else                                      -> DexcomOnePlusPromoteOffer.NONE
         }
+        val needsReconnect = input.stagingState != StagingState.ABSENT &&
+            input.stagingState != StagingState.WARMUP &&
+            !fresh
         return DexcomOnePlusStagingCard(
             state = input.stagingState,
             validCount = evidence?.validCount ?: 0,
             lastValueMgdl = evidence?.lastValueMgdl,
             lastValueAtMs = evidence?.lastValueAtEpochMs,
             promote = promote,
+            needsReconnect = needsReconnect,
         )
     }
 

@@ -9,9 +9,6 @@ package app.aaps.plugins.source
  * life, and nothing in the app could move it: adding a `SENSOR_CHANGE` by hand does not reach this
  * clock, and an added event that is EARLIER than the one the plugin already wrote is not even the
  * "last sensor change" any more, so the overview ignores it too.
- *
- * [Verdict.Disabled]: the user switched the correction off in the settings, so nothing is read or
- * written.
  */
 object DexcomOnePlusSensorStartCorrection {
 
@@ -28,9 +25,6 @@ object DexcomOnePlusSensorStartCorrection {
 
         /** No sensor session is stored, so there is no age to correct. */
         data object NoSession : Verdict
-
-        /** The setting is off. Nothing was read and nothing was written. */
-        data object Disabled : Verdict
     }
 
     /**

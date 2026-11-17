@@ -52,6 +52,8 @@ data class DexcomOnePlusWatchReport(val status: EventData.CgmWatchStatus, val re
  *
  * @param transport null on a phone without a watch link, which makes every call here a no-op.
  * @param productionSession reads the production slot's stored sensor, live, on every call.
+ * @param wearPluginEnabled whether the Wear plugin is on. Without it no message reaches a watch, so
+ *   the feature is not offered (see [isOffered]).
  */
 class DexcomOnePlusWatchHandover(
     private val preferences: Preferences,
@@ -59,6 +61,7 @@ class DexcomOnePlusWatchHandover(
     private val aapsLogger: AAPSLogger,
     private val transport: DexcomOnePlusWatchTransport?,
     private val productionSession: () -> OnePlusStoredSession?,
+    private val wearPluginEnabled: () -> Boolean = { true },
     private val nowMs: () -> Long = { Clock.System.now().toEpochMilliseconds() },
 ) {
 
@@ -73,8 +76,14 @@ class DexcomOnePlusWatchHandover(
     /** The watch's last report, for the Status screen. Null until the watch has said anything. */
     val report: StateFlow<DexcomOnePlusWatchReport?> = _report.asStateFlow()
 
-    /** False on a phone with no watch link. The feature is then not shown at all. */
+    /** False on a phone with no watch link. Nothing is ever sent then. */
     val isSupported: Boolean get() = transport != null
+
+    /**
+     * Whether the setting and the Status row are shown: a watch link exists and the Wear plugin is on.
+     * Read on every call, so turning the Wear plugin on or off shows or hides them at once.
+     */
+    val isOffered: Boolean get() = isSupported && wearPluginEnabled()
 
     val isEnabled: Boolean get() = preferences.get(DexcomOnePlusBooleanKey.WatchDirect)
 
@@ -102,11 +111,6 @@ class DexcomOnePlusWatchHandover(
         job?.cancel()
         job = null
         if (transport != null && lastSent?.active == true) send(EventData.CgmWatchDirect(active = false), "plugin stopped")
-    }
-
-    fun setEnabled(on: Boolean) {
-        // The preference observer sends the message.
-        preferences.put(DexcomOnePlusBooleanKey.WatchDirect, on)
     }
 
     /** Sends the wanted state only when it changed: a new sensor, a new key, a sensor gone. */

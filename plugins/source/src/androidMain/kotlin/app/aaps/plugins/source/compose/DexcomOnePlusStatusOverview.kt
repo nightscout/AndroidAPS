@@ -71,26 +71,27 @@ fun DexcomOnePlusStatusOverview(
                     )
                 }
                 view.calibration?.let { SensorCalibrationCard(it) }
-                if (view.endOfLifePrompt) EndOfLifeCard(onOpenStart = actions.onOpenStart)
-                StagingCard(
-                    card = view.staging,
-                    formatGlucose = viewModel.format.glucose,
-                    formatTime = viewModel.format.time,
-                    onPromoteClick = { early -> promoteAsked = early },
-                    onCancelStaging = { viewModel.cancelStaging() },
-                    onOpenStart = actions.onOpenStart,
-                )
-                // Direct-to-watch, only where a watch link exists.
+                if (view.endOfLifePrompt) EndOfLifeCard(onOpenStart = actions.onOpenPresoak)
+                if (view.stagingOffered) {
+                    StagingCard(
+                        card = view.staging,
+                        formatGlucose = viewModel.format.glucose,
+                        formatTime = viewModel.format.time,
+                        onPromoteClick = { early -> promoteAsked = early },
+                        onCancelStaging = { viewModel.cancelStaging() },
+                        onOpenStart = actions.onOpenPresoak,
+                    )
+                }
+                // Direct-to-watch: what the watch reports, only while the feature is on (the switch
+                // itself is in the settings) and the Wear plugin is on.
                 val watchHandover = viewModel.watchHandover
-                if (watchHandover.isSupported) {
-                    val watchDirectOn by viewModel.watchDirectEnabled.collectAsState()
+                val watchDirectOn by viewModel.watchDirectEnabled.collectAsState()
+                if (watchDirectOn && watchHandover.isOffered) {
                     val watchReport by watchHandover.report.collectAsState()
                     DexcomOnePlusWatchDirectCard(
-                        enabled = watchDirectOn,
                         // Read again on every status tick, so a new pairing shows at once.
                         available = remember(current) { watchHandover.isAvailable() },
                         report = watchReport,
-                        onEnabledChange = { watchHandover.setEnabled(it) },
                     )
                 }
                 promoteResult?.let { message ->
@@ -163,7 +164,7 @@ private fun EndOfLifeCard(onOpenStart: () -> Unit) {
 /**
  * "The sensor went in earlier than the app thinks."
  *
- * Shown only while `DexcomOnePlusBooleanKey.CorrectSensorStart` is on. The picked day comes from
+ * Always offered while a sensor runs (no setting). The picked day comes from
  * the date picker as UTC midnight; the time is the phone's local time, as on the old status screen.
  */
 @Composable
@@ -221,7 +222,6 @@ private fun CorrectInsertionDateAction(
                                 SourceStrings.dexcom_oneplus_insertion_date_too_old
                             DexcomOnePlusSensorStartCorrection.Verdict.Accepted,
                             DexcomOnePlusSensorStartCorrection.Verdict.NoSession,
-                            DexcomOnePlusSensorStartCorrection.Verdict.Disabled,
                                                                                 -> SourceStrings.dexcom_oneplus_insertion_date_no_session
                         },
                         formatTime(currentStartMs),
@@ -343,6 +343,13 @@ private fun ColumnScope.StagingDetails(
     } else {
         Text(
             text = stringResource(SourceStrings.dexcom_oneplus_staging_no_reading_yet),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+    if (card.needsReconnect) {
+        Text(
+            text = stringResource(SourceStrings.dexcom_oneplus_staging_needs_reconnect),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )

@@ -73,12 +73,14 @@
     <string name="staging_auto_promote_hours_title">Hours before the automatic switch</string>
     <string name="staging_auto_promote_done" comment="%1$s=hours since the pre-soak start, with unit. Example: The pre-soak sensor now feeds the loop. Automatic switch after 10 h.">The pre-soak sensor now feeds the loop. Automatic switch after %1$s.</string>
 
+    <string name="dexcom_oneplus_staging_needs_reconnect">No recent reading. This sensor has to connect again before it can replace the one in use. The time of the last reading is shown above.</string>
+
     <!-- Direct-to-watch: a Wear OS watch also reads the ONE+ / G7 sensor itself (Android only) -->
     <string name="dexcom_oneplus_watch_direct">Direct to watch</string>
     <string name="dexcom_oneplus_watch_direct_summary">Your Wear OS watch also reads the sensor itself, next to the phone. The watch face keeps showing values when the phone is away. Watch readings stay on the watch and never reach the loop.</string>
-    <string name="dexcom_oneplus_watch_direct_unavailable">Nothing is sent to the watch yet: this phone is not paired with the sensor that feeds the loop.</string>
     <string name="dexcom_oneplus_watch_direct_watch_label" comment="Label of a row that shows what the watch reports, for example: Watch - Connected">Watch</string>
     <string name="dexcom_oneplus_watch_direct_battery">The watch may put AAPS to sleep in the background and miss readings. Allow unrestricted battery use for AAPS on the watch.</string>
+    <string name="dexcom_oneplus_watch_state_waiting_sensor">Waiting for a sensor</string>
     <string name="dexcom_oneplus_watch_state_unknown">No answer from the watch yet</string>
     <string name="dexcom_oneplus_watch_state_off">Off</string>
     <string name="dexcom_oneplus_watch_state_not_supported">Not possible on this watch (needs Wear OS 3 or newer)</string>
@@ -104,6 +106,8 @@
     <string name="dexcom_oneplus_native">Dexcom ONE+ / G7</string>
     <string name="description_source_dexcom_oneplus_native">Native Dexcom ONE+ and G7 Bluetooth in AAPS. Apply the sensor, enter the pairing code immediately, then wait ~30 min warm-up before loop glucose.</string>
     <string name="dexcom_oneplus_plugin_summary">Status, connect with pairing code, and warm-up</string>
+    <string name="dexcom_oneplus_tab_status" comment="Tab at the top of the ONE+ / G7 plugin: the sensor status">Status</string>
+    <string name="dexcom_oneplus_tab_readings" comment="Tab at the top of the ONE+ / G7 plugin: the list of received glucose values">Readings</string>
     <string name="dexcom_oneplus_status_title">ONE+ / G7 status</string>
     <string name="dexcom_oneplus_start_title">Start sensor</string>
     <string name="dexcom_oneplus_start_summary">Apply sensor → enter code now → connect → ~30 min warm-up</string>
@@ -158,12 +162,6 @@
     <string name="dexcom_oneplus_calibration_state_needs_first">The sensor is asking for its first calibration.</string>
     <string name="dexcom_oneplus_calibration_state_needs_second">The sensor is asking for a second calibration.</string>
     <string name="dexcom_oneplus_calibration_state_sent">The sensor reports that a calibration has reached it.</string>
-    <string name="dexcom_oneplus_repair_missing_sensor_change">Repair a missing sensor change</string>
-    <string name="dexcom_oneplus_repair_missing_sensor_change_summary">On by default. When "Create sensor change" is also on, a missing sensor change for the running sensor is written once, so the sensor age is right. An event you delete after that write is not written again.</string>
-    <string name="dexcom_oneplus_anchor_session_to_manual_sensor_change">Use a sensor change you logged as the start</string>
-    <string name="dexcom_oneplus_anchor_session_to_manual_sensor_change_summary">On by default. When off, a new ONE+ / G7 session keeps the time of the start or of the first reading, and a sensor change logged earlier is not used to move that time back. When on, a sensor change from the last 24 hours that is earlier than that automatic time becomes the session start.</string>
-    <string name="dexcom_oneplus_correct_sensor_start">Allow correcting the insertion date</string>
-    <string name="dexcom_oneplus_correct_sensor_start_summary">On by default. When on, the Status screen can move the insertion time of the sensor in use. Sensor change events between the old and the new time are invalidated. Calibration entries are not deleted.</string>
     <string name="dexcom_oneplus_correct_insertion_date">Correct insertion date</string>
     <string name="dexcom_oneplus_insertion_date_future" comment="%1$s=current start time of the sensor. Example: 14:05">A sensor cannot be inserted in the future. The sensor still starts at %1$s.</string>
     <string name="dexcom_oneplus_insertion_date_too_old" comment="%1$s=current start time of the sensor. Example: 14:05">That date is older than a full sensor life, so it belongs to another sensor. The sensor still starts at %1$s.</string>

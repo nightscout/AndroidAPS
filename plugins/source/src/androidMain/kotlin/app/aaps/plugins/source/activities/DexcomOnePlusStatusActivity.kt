@@ -10,6 +10,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
+import app.aaps.core.interfaces.source.SensorSlot
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalPreferences
@@ -26,8 +27,8 @@ import dev.zacsweers.metro.Inject
 /**
  * Daily status of the native Dexcom ONE+ / G7 source, as a window of its own.
  *
- * The screen itself is [DexcomOnePlusStatusOverview]; the plugin tab shows the same one behind its
- * sensor button. This Activity stays for the places that cannot open the plugin tab: the session
+ * The screen itself is [DexcomOnePlusStatusOverview]; the plugin shows the same one in its Status
+ * tab. This Activity stays for the places that cannot open the plugin tab: the session
  * notification, and the start and warm-up screens, which are Activities themselves. The status is
  * no longer an entry of the settings, so it is not reachable there twice.
  */
@@ -46,7 +47,8 @@ class DexcomOnePlusStatusActivity : MetroAppCompatActivity() {
                     val viewModel: DexcomOnePlusStatusViewModel = metroViewModel()
                     val actions = remember {
                         DexcomOnePlusStatusActions(
-                            onOpenStart = { startActivity(Intent(this, DexcomOnePlusStartActivity::class.java)) },
+                            onOpenStart = { startActivity(DexcomOnePlusStartActivity.intent(this, SensorSlot.PRODUCTION)) },
+                            onOpenPresoak = { startActivity(DexcomOnePlusStartActivity.intent(this, SensorSlot.STAGING)) },
                             onOpenWarmup = { startActivity(Intent(this, DexcomOnePlusWarmupActivity::class.java)) },
                             // The full driver log window, as before.
                             onOpenLog = { startActivity(CgmDriverLogActivity.intent(this, setOf(OnePlusLogMarkers.TAG))) },

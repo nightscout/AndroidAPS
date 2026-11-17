@@ -1,70 +1,41 @@
 package app.aaps.plugins.source.compose
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.source.DexcomOnePlusWatchReport
 import app.aaps.plugins.source.SourceStrings
 
 /**
- * Direct-to-watch on the Status screen: the switch, and what the watch last said.
+ * Direct-to-watch on the Status screen: what the watch last said. Drawn only while the feature is on
+ * (its switch is in the settings) and the Wear plugin is on.
  *
- * Shown only on a phone that has a watch link. A host without one does not show it, see
- * `DexcomOnePlusWatchTransport`.
- *
- * @param available false while this phone does not hold the phone slot of the production sensor.
- *   The switch can still be turned on; nothing is handed over until the phone is paired.
+ * @param available false while no production sensor can be handed over (none started, or this phone
+ *   is not paired with it). The row then says the watch waits for a sensor, instead of "Off", which
+ *   read as if the feature were off.
  */
 @Composable
 fun DexcomOnePlusWatchDirectCard(
-    enabled: Boolean,
     available: Boolean,
     report: DexcomOnePlusWatchReport?,
-    onEnabledChange: (Boolean) -> Unit,
 ) {
     CgmCard {
         CgmCardHeader(stringResource(SourceStrings.dexcom_oneplus_watch_direct))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+        CgmKeyValueRow(
+            label = stringResource(SourceStrings.dexcom_oneplus_watch_direct_watch_label),
+            value = stringResource(
+                if (available) watchStateText(report?.status?.state) else SourceStrings.dexcom_oneplus_watch_state_waiting_sensor
+            ),
+        )
+        if (available && report?.status?.batteryRestricted == true) {
             Text(
-                text = stringResource(SourceStrings.dexcom_oneplus_watch_direct_summary),
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1f),
-            )
-            Switch(checked = enabled, onCheckedChange = onEnabledChange)
-        }
-        if (enabled && !available) {
-            Text(
-                text = stringResource(SourceStrings.dexcom_oneplus_watch_direct_unavailable),
+                text = stringResource(SourceStrings.dexcom_oneplus_watch_direct_battery),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error,
             )
-        }
-        if (enabled) {
-            CgmKeyValueRow(
-                label = stringResource(SourceStrings.dexcom_oneplus_watch_direct_watch_label),
-                value = stringResource(watchStateText(report?.status?.state)),
-            )
-            if (report?.status?.batteryRestricted == true) {
-                Text(
-                    text = stringResource(SourceStrings.dexcom_oneplus_watch_direct_battery),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error,
-                )
-            }
         }
     }
 }

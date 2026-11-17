@@ -119,8 +119,12 @@ interface DexcomOnePlusHost {
      */
     fun screenItems(plugin: DexcomOnePlusPlugin): List<PreferenceItem>
 
-    /** The screens of this plugin that the status screen opens through the host. */
-    enum class Screen { START, WARMUP }
+    /**
+     * The screens of this plugin that the status screen opens through the host. [START] starts the
+     * sensor that feeds the loop, [START_PRESOAK] a pre-soak sensor; each locks the Start screen on
+     * its own slot, so the wrong kind of sensor cannot be started by accident.
+     */
+    enum class Screen { START, START_PRESOAK, WARMUP }
 
     /** Opens [screen]. */
     fun openScreen(screen: Screen)

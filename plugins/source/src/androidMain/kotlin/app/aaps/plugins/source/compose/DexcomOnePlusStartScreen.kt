@@ -84,6 +84,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun DexcomOnePlusStartScreen(
     host: DexcomOnePlusHost,
+    /**
+     * The slot this visit starts, chosen by the button that opened the screen ("Start / new sensor"
+     * or "Start a pre-soak sensor"). The other slot is shown but disabled, so a production sensor
+     * cannot be started from the pre-soak button by accident, nor the other way round.
+     */
+    initialSlot: SensorSlot = SensorSlot.PRODUCTION,
     permissions: OnePlusBlePermissionGate,
     onBack: () -> Unit,
     onEnsureDriver: () -> OnePlusCgmDriver,
@@ -117,7 +123,8 @@ fun DexcomOnePlusStartScreen(
     // Which slot the guided flow starts. PRODUCTION keeps the existing behaviour (activates the
     // plugin + feeds the loop after warm-up). STAGING pre-soaks a second sensor collect-only — it
     // never touches the AAPS active BG source until promoted from the status screen.
-    var slot by remember { mutableStateOf(SensorSlot.PRODUCTION) }
+    // A phone with one sensor slot has no pre-soak: it always starts production.
+    var slot by remember { mutableStateOf(if (onStagingDriver == null) SensorSlot.PRODUCTION else initialSlot) }
     // EVERY store read below follows the selected slot. Reading the production store while starting a
     // STAGING sensor pre-filled the old sensor's code and MAC and ranked the scan with the old
     // sensor's fingerprint, so a pre-soak silently re-adopted the sensor already in use (seen in a
@@ -610,6 +617,8 @@ private fun ColumnScope.FormPane(
             SegmentedButton(
                 selected = slot == SensorSlot.PRODUCTION,
                 onClick = { onSlotChange(SensorSlot.PRODUCTION) },
+                // Locked on the slot the opening button asked for (see `initialSlot`).
+                enabled = slot == SensorSlot.PRODUCTION,
                 shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
             ) {
                 Text(stringResource(SourceStrings.dexcom_oneplus_slot_production_short))
@@ -617,6 +626,7 @@ private fun ColumnScope.FormPane(
             SegmentedButton(
                 selected = slot == SensorSlot.STAGING,
                 onClick = { onSlotChange(SensorSlot.STAGING) },
+                enabled = slot == SensorSlot.STAGING,
                 shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
             ) {
                 Text(stringResource(SourceStrings.dexcom_oneplus_slot_staging_short))

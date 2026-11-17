@@ -49,6 +49,7 @@ class DexcomOnePlusStatusStateTest {
     private var opened = ""
     private val actions = DexcomOnePlusStatusActions(
         onOpenStart = { opened = "start" },
+        onOpenPresoak = { opened = "presoak" },
         onOpenWarmup = { opened = "warmup" },
         onOpenLog = { opened = "log" },
     )
@@ -61,7 +62,6 @@ class DexcomOnePlusStatusStateTest {
         calibrationOutcome: OnePlusCalibrationOutcome? = null,
         calibrationWaiting: Boolean = false,
         sendCalibrationToSensor: Boolean = false,
-        correctSensorStartEnabled: Boolean = false,
         stagingState: StagingState = StagingState.ABSENT,
         stagingEvidence: CgmStagingEvidence? = null,
         driverMessage: String? = null,
@@ -76,7 +76,6 @@ class DexcomOnePlusStatusStateTest {
         calibrationOutcome = calibrationOutcome,
         calibrationWaiting = calibrationWaiting,
         sendCalibrationToSensor = sendCalibrationToSensor,
-        correctSensorStartEnabled = correctSensorStartEnabled,
         stagingState = stagingState,
         stagingEvidence = stagingEvidence,
         nowMs = NOW,
@@ -420,25 +419,38 @@ class DexcomOnePlusStatusStateTest {
     @Test
     fun promoteOfferFollowsTheSlotState() {
         fun offer(state: StagingState, evidence: CgmStagingEvidence? = null) =
-            DexcomOnePlusStatusState.build(input(stagingState = state, stagingEvidence = evidence), format, actions).staging.promote
+            DexcomOnePlusStatusState.build(input(stagingState = state, stagingEvidence = evidence), format, actions).staging
 
-        assertEquals(DexcomOnePlusPromoteOffer.NONE, offer(StagingState.ABSENT))
-        assertEquals(DexcomOnePlusPromoteOffer.NORMAL, offer(StagingState.READY))
-        assertEquals(DexcomOnePlusPromoteOffer.NONE, offer(StagingState.SETTLING))
-        val alive = CgmStagingEvidence(validCount = 100, lastValueMgdl = 110.0, lastValueAtEpochMs = NOW - 60_000L)
-        assertEquals(DexcomOnePlusPromoteOffer.EARLY, offer(StagingState.SETTLING, alive))
-        val silent = alive.copy(lastValueAtEpochMs = NOW - 2 * HOUR)
-        assertEquals(DexcomOnePlusPromoteOffer.NONE, offer(StagingState.SETTLING, silent))
+        assertEquals(DexcomOnePlusPromoteOffer.NONE, offer(StagingState.ABSENT).promote)
+        val fresh = CgmStagingEvidence(validCount = 100, lastValueMgdl = 110.0, lastValueAtEpochMs = NOW - 60_000L)
+        val ready = offer(StagingState.READY, fresh)
+        assertEquals(DexcomOnePlusPromoteOffer.NORMAL, ready.promote)
+        assertEquals(false, ready.needsReconnect)
+        assertEquals(DexcomOnePlusPromoteOffer.NONE, offer(StagingState.SETTLING).promote)
+        assertEquals(DexcomOnePlusPromoteOffer.EARLY, offer(StagingState.SETTLING, fresh).promote)
+        val silent = fresh.copy(lastValueAtEpochMs = NOW - 2 * HOUR)
+        val settlingSilent = offer(StagingState.SETTLING, silent)
+        assertEquals(DexcomOnePlusPromoteOffer.NONE, settlingSilent.promote)
+        assertEquals(true, settlingSilent.needsReconnect)
+        val readySilent = offer(StagingState.READY, silent)
+        assertEquals(DexcomOnePlusPromoteOffer.NONE, readySilent.promote)
+        assertEquals(true, readySilent.needsReconnect)
     }
 
+    /** No setting any more: the action is there whenever a sensor runs. */
     @Test
-    fun insertionDateActionOnlyWithTheSwitchAndASession() {
-        assertNull(DexcomOnePlusStatusState.build(input(lifecycle = lifecycle()), format, actions).correctInsertionStartMs)
-        assertNull(DexcomOnePlusStatusState.build(input(correctSensorStartEnabled = true), format, actions).correctInsertionStartMs)
-        assertEquals(
-            NOW - 5 * HOUR,
-            DexcomOnePlusStatusState.build(input(correctSensorStartEnabled = true, lifecycle = lifecycle()), format, actions).correctInsertionStartMs,
-        )
+    fun insertionDateActionWheneverASensorRuns() {
+        assertNull(DexcomOnePlusStatusState.build(input(), format, actions).correctInsertionStartMs)
+        assertEquals(NOW - 5 * HOUR, DexcomOnePlusStatusState.build(input(lifecycle = lifecycle()), format, actions).correctInsertionStartMs)
+    }
+
+    /** A second sensor only makes sense when there is a first one. */
+    @Test
+    fun presoakIsNotOfferedWithoutASensor() {
+        assertEquals(false, DexcomOnePlusStatusState.build(input(), format, actions).stagingOffered)
+        assertEquals(true, DexcomOnePlusStatusState.build(input(lifecycle = lifecycle()), format, actions).stagingOffered)
+        // A pre-soak already running stays visible, so it can be followed, promoted or cancelled.
+        assertEquals(true, DexcomOnePlusStatusState.build(input(stagingState = StagingState.WARMUP), format, actions).stagingOffered)
     }
 
     @Test

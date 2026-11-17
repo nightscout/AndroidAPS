@@ -1,6 +1,7 @@
 package app.aaps.plugins.source.activities
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -47,6 +48,7 @@ class DexcomOnePlusStartActivity : MetroAppCompatActivity() {
                 AapsTheme {
                     DexcomOnePlusStartScreen(
                         host = dexcomOnePlusHost,
+                        initialSlot = slotOf(intent),
                         permissions = ActivityBlePermissionGate(this),
                         onBack = { finish() },
                         onEnsureDriver = {
@@ -103,6 +105,20 @@ class DexcomOnePlusStartActivity : MetroAppCompatActivity() {
                 }
             }
         }
+    }
+
+    companion object {
+
+        private const val EXTRA_SLOT = "dexcom_oneplus_start_slot"
+
+        /** Opens the Start screen locked on [slot]: production, or pre-soak. */
+        fun intent(context: Context, slot: SensorSlot): Intent =
+            Intent(context, DexcomOnePlusStartActivity::class.java).putExtra(EXTRA_SLOT, slot.name)
+
+        /** The slot the Start screen opens on. Production when none was asked, as before. */
+        internal fun slotOf(intent: Intent?): SensorSlot =
+            intent?.getStringExtra(EXTRA_SLOT)?.let { name -> SensorSlot.entries.firstOrNull { it.name == name } }
+                ?: SensorSlot.PRODUCTION
     }
 }
 

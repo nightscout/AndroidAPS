@@ -1,11 +1,15 @@
 package app.aaps.plugins.source.compose
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.hasScrollToKeyAction
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollToKey
 import app.aaps.core.interfaces.resources.TextRefIdRegistry
+import app.aaps.core.interfaces.source.SensorSlot
 import app.aaps.core.keys.interfaces.PreferenceItem
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.dexcomoneplus.OnePlusCgmDriver
@@ -48,13 +52,14 @@ class DexcomOnePlusStartScreenTest {
     private fun text(name: String): String =
         requireNotNull(SourceStringsValues.textOf(name, null)) { "no English text for $name" }
 
-    private fun render(twoSlots: Boolean, host: DexcomOnePlusHost = FakeHost()) {
+    private fun render(twoSlots: Boolean, host: DexcomOnePlusHost = FakeHost(), initialSlot: SensorSlot = SensorSlot.PRODUCTION) {
         // MainApp does this in production. Without it every TextRef.Named draws as its raw name and
         // the assertions below read "the node is not displayed" without saying why.
         TextRefIdRegistry.register("source") { name -> SourceStringIds.idOf(name) }
         compose.setContent {
             DexcomOnePlusStartScreen(
                 host = host,
+                initialSlot = initialSlot,
                 permissions = GrantedPermissions,
                 onBack = {},
                 onEnsureDriver = { OnePlusCgmDriverStub.instance },
@@ -77,6 +82,21 @@ class DexcomOnePlusStartScreenTest {
         render(twoSlots = true)
         compose.onNodeWithText(text("dexcom_oneplus_slot_staging_short")).assertIsDisplayed()
         compose.onNodeWithText(text("dexcom_oneplus_slot_production_short")).assertIsDisplayed()
+    }
+
+    /** "Start a pre-soak sensor" must not be able to start a production sensor by accident. */
+    @Test
+    fun `opened for a pre-soak the production choice is disabled`() {
+        render(twoSlots = true, initialSlot = SensorSlot.STAGING)
+        compose.onNodeWithText(text("dexcom_oneplus_slot_staging_short")).assertIsSelected().assertIsEnabled()
+        compose.onNodeWithText(text("dexcom_oneplus_slot_production_short")).assertIsNotEnabled()
+    }
+
+    @Test
+    fun `opened for a new sensor the pre-soak choice is disabled`() {
+        render(twoSlots = true, initialSlot = SensorSlot.PRODUCTION)
+        compose.onNodeWithText(text("dexcom_oneplus_slot_production_short")).assertIsSelected().assertIsEnabled()
+        compose.onNodeWithText(text("dexcom_oneplus_slot_staging_short")).assertIsNotEnabled()
     }
 
     @Test

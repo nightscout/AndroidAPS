@@ -92,10 +92,11 @@ class OnePlusSensorStore(private val prefs: OnePlusSensorPrefs) {
      * reset a warming pre-soak sensor to ABSENT — it could then neither resume, leave warm-up, nor be
      * promoted, even though this store still held its identity, MAC and KEKS key.
      */
-    fun saveSlotProgress(present: Boolean, validEgvCount: Int) {
+    fun saveSlotProgress(present: Boolean, validEgvCount: Int, newestEgvMs: Long = loadSlotNewestEgvMs()) {
         prefs.edit {
             putBoolean(KEY_SLOT_PRESENT, present)
             putInt(KEY_SLOT_EGV_COUNT, validEgvCount.coerceAtLeast(0))
+            putLong(KEY_SLOT_EGV_TS, newestEgvMs.coerceAtLeast(0L))
         }
     }
 
@@ -104,6 +105,14 @@ class OnePlusSensorStore(private val prefs: OnePlusSensorPrefs) {
 
     /** Valid EGVs collected in this slot so far (promotion gate). */
     fun loadSlotValidEgvCount(): Int = prefs.getInt(KEY_SLOT_EGV_COUNT, 0)
+
+    /**
+     * Timestamp of the newest staging reading already counted, or 0 when none has been recorded.
+     *
+     * The backfill that follows a reconnect repeats readings this slot has already counted. Without
+     * this mark the counter adds them again.
+     */
+    fun loadSlotNewestEgvMs(): Long = prefs.getLong(KEY_SLOT_EGV_TS, 0L)
 
     /**
      * Latch: this slot's sensor has finished warm-up at least once.
@@ -400,6 +409,7 @@ class OnePlusSensorStore(private val prefs: OnePlusSensorPrefs) {
         private const val KEY_SESSION_START_SETTLED_MAC = "session_start_settled_mac"
         private const val KEY_SLOT_PRESENT = "slot_present"
         private const val KEY_SLOT_EGV_COUNT = "slot_valid_egv_count"
+        private const val KEY_SLOT_EGV_TS = "slot_newest_egv_ms"
         private const val KEY_SLOT_WARMUP_DONE = "slot_warmup_done"
         private const val KEY_REFUSAL_MAC = "auth_refusal_mac"
         private const val KEY_REFUSAL_COUNT = "auth_refusal_count"

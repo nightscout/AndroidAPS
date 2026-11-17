@@ -94,6 +94,12 @@ internal object DexcomOnePlusStaging {
      * @param warming     the staging sensor is warming up / (re)connecting (no glucose yet).
      * @param sessionStartMs staging session start (0 = unknown).
      * @param validEgvCount valid staging EGVs collected so far.
+     *
+     * The age of the last reading is **not** an input. A stale reading never keeps a soaked sensor
+     * out of [StagingState.READY]; it only hides the early ("not settled") promote offer, see
+     * [canPromoteEarly]. Callers must invoke this again as time passes. Computing it only when a
+     * reading arrives leaves the card on [StagingState.SETTLING] after the soak has ended, and with
+     * a stale reading there is then no button at all.
      */
     fun computeStagingState(
         present: Boolean,
@@ -141,6 +147,19 @@ internal object DexcomOnePlusStaging {
         return age in 0L..STAGING_MAX_EGV_AGE_MS
     }
 
+    /** How recent the newest staging reading must be before any promotion, manual or automatic. */
+    const val PROMOTION_MAX_READING_AGE_MS = 30L * 60L * 1000L
+
+    /**
+     * A promotion disconnects the sensor that feeds the loop. A staging reading older than
+     * [PROMOTION_MAX_READING_AGE_MS] is a sensor that is not talking, so it must not take over.
+     */
+    fun readingFreshForPromotion(lastValueAtEpochMs: Long?, nowMs: Long): Boolean {
+        if (lastValueAtEpochMs == null || lastValueAtEpochMs <= 0L) return false
+        val age = nowMs - lastValueAtEpochMs
+        return age in 0L until PROMOTION_MAX_READING_AGE_MS
+    }
+
     /**
      * Feed one driver warm-up phase into the staging warm-up latch.
      *
@@ -159,5 +178,95 @@ internal object DexcomOnePlusStaging {
     fun applyWarmupPhase(warmupDoneBefore: Boolean, readyPhase: Boolean): StagingWarmupDecision {
         val done = warmupDoneBefore || readyPhase
         return StagingWarmupDecision(warmupDone = done, warming = !done)
+    }
+
+    /**
+     * One staging reading every five minutes, the cadence the counter repair compares a stored
+     * total against. A G7 / ONE+ does not produce two thousand readings in twelve hours.
+     */
+    const val STAGING_READING_INTERVAL_MS = 5L * 60L * 1000L
+
+    /**
+     * Same near-duplicate window as [DexcomOnePlusIngest.DEDUP_WINDOW_MS]. A live reading and the
+     * backfill copy of that same moment must count once. Two real readings are five minutes apart,
+     * so they both count.
+     */
+    const val STAGING_DEDUP_WINDOW_MS = 4L * 60L * 1000L
+
+    /**
+     * Reasons a slot was stopped on purpose. Anything else is a link that went away on its own and
+     * is worth asking for again. The production reconnect watchdog uses this same set.
+     */
+    val DELIBERATE_SLOT_STOPS = setOf("disconnect", "shutdown", "cancelled")
+
+    /** Whether a down session should be asked to connect again. A session that is up is not. */
+    fun slotShouldBeAskedAgain(sessionUp: Boolean, reason: String?): Boolean {
+        if (sessionUp) return false
+        if (reason != null && reason in DELIBERATE_SLOT_STOPS) return false
+        return true
+    }
+
+    /** What [acceptCollectedReading] decided, and the high-water mark to store afterwards. */
+    data class CollectedReading(val accepted: Boolean, val newestCountedMs: Long)
+
+    /**
+     * Whether [timestampMs] is a staging reading we have not counted yet.
+     *
+     * The pre-soak counter used to increment for every sample the driver delivered, and the driver
+     * delivers the live reading and then up to three hours of backfill on every reconnect. The same
+     * moments were counted again each cycle, which is how a twelve-hour soak showed thousands of
+     * readings. A timestamp at or before [newestCountedMs], or within [STAGING_DEDUP_WINDOW_MS]
+     * after it, was already counted.
+     *
+     * Older backfill that arrives *after* a newer live reading is therefore not added. Those points
+     * are the history of a sensor the phone is already counting one reading at a time; counting them
+     * as well is what inflated the total. Fed oldest-first, the same window still counts each
+     * distinct moment once.
+     */
+    fun acceptCollectedReading(newestCountedMs: Long, timestampMs: Long): CollectedReading {
+        if (timestampMs <= 0L) return CollectedReading(accepted = false, newestCountedMs = newestCountedMs)
+        if (newestCountedMs > 0L) {
+            if (timestampMs <= newestCountedMs) return CollectedReading(accepted = false, newestCountedMs = newestCountedMs)
+            if (timestampMs - newestCountedMs < STAGING_DEDUP_WINDOW_MS) {
+                return CollectedReading(accepted = false, newestCountedMs = newestCountedMs)
+            }
+        }
+        return CollectedReading(accepted = true, newestCountedMs = timestampMs)
+    }
+
+    /** What [repairCollectedCount] returns. [newestCountedMs] is what to persist. */
+    data class CountRepair(val count: Int, val newestCountedMs: Long)
+
+    /**
+     * How many distinct readings a sensor on the five-minute cadence can have produced between
+     * [sessionStartMs] and [nowMs], or null when the start is unknown.
+     */
+    fun plausibleReadingCount(sessionStartMs: Long, nowMs: Long): Int? {
+        if (sessionStartMs <= 0L || nowMs <= sessionStartMs) return null
+        val elapsed = nowMs - sessionStartMs
+        return ((elapsed / STAGING_READING_INTERVAL_MS) + 1L).toInt()
+    }
+
+    /**
+     * Bring a stored pre-soak total back to something a sensor can actually have produced, once.
+     *
+     * [newestCountedMs] of 0 means this slot has never recorded the high-water mark, so the stored
+     * total may be the inflated one. A total more than twice the plausible count is replaced by
+     * that count. The high water is then frozen at [nowMs], so the backfill that follows a restart
+     * is not added on top. A total that is already tracked, or that a sensor could really have
+     * reached, is kept; only a missing high water is filled in.
+     */
+    fun repairCollectedCount(
+        storedCount: Int,
+        newestCountedMs: Long,
+        sessionStartMs: Long,
+        nowMs: Long,
+    ): CountRepair {
+        val count = storedCount.coerceAtLeast(0)
+        if (newestCountedMs > 0L) return CountRepair(count, newestCountedMs)
+        if (count == 0) return CountRepair(0, 0L)
+        val plausible = plausibleReadingCount(sessionStartMs, nowMs)
+        val repaired = if (plausible != null && count > plausible * 2) plausible else count
+        return CountRepair(repaired, nowMs.coerceAtLeast(1L))
     }
 }

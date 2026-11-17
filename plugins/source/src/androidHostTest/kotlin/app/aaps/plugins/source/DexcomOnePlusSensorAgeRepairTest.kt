@@ -17,6 +17,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.dexcomoneplus.OnePlusGlucoseSample
 import app.aaps.plugins.dexcomoneplus.identity.OnePlusSensorStore
 import app.aaps.plugins.source.keys.DexcomOnePlusBooleanKey
+import app.aaps.plugins.source.keys.DexcomOnePlusLongKey
 import app.aaps.shared.tests.SharedPreferencesMock
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
@@ -37,10 +38,10 @@ import org.mockito.kotlin.whenever
 import java.lang.reflect.Field
 
 /**
- * Age anchor call sites and the once-per-session repair.
- *
- * The repair key is a user setting, on by default. The tests set it explicitly: with it off a
- * refresh writes nothing, with it on the guards below still apply.
+ * The sensor start and its SENSOR_CHANGE, with no settings: the event is always written at the start
+ * (no second one next to an existing one), the start is never moved back to an earlier event, only
+ * the plugin's own event is moved when the sensor reports its start, and a missing event is put
+ * back once per session.
  */
 class DexcomOnePlusSensorAgeRepairTest : TestBase() {
 
@@ -74,6 +75,7 @@ class DexcomOnePlusSensorAgeRepairTest : TestBase() {
         }
         whenever(persistenceLayer.getTherapyEventDataIncludingInvalidFromTime(any(), any()))
             .thenReturn(emptyList())
+        whenever(persistenceLayer.getTherapyEventDataFromToTime(any(), any())).thenReturn(emptyList())
         plugin = DexcomOnePlusPlugin(
             rh, aapsLogger, preferences, config, notificationManager, DexcomOnePlusAndroidHost(context) { error("the log is not read here") }, persistenceLayer,
             mock<DexcomOnePlusWarmupBasalGuard>(), activePlugin, rxBus,
@@ -82,10 +84,24 @@ class DexcomOnePlusSensorAgeRepairTest : TestBase() {
     }
 
     @Test
-    fun `a start with no sensor change keeps the auto time`() = runTest {
-        whenever(preferences.get(BooleanKey.BgSourceCreateSensorChange)).thenReturn(true)
-        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(null)
+    fun `a start writes the sensor change at the start time`() = runTest {
         val auto = System.currentTimeMillis()
+
+        plugin.onSensorSessionStarted(MAC, previousMac = null, startMs = auto)
+
+        verify(persistenceLayer, timeout(2_000L)).insertCgmSourceData(any(), any(), any(), eq(auto))
+        assertThat(prefs.getLong(KEY_SESSION_START, 0L)).isEqualTo(auto)
+        verify(preferences, timeout(2_000L)).put(DexcomOnePlusLongKey.OwnSensorChangeAt, auto)
+    }
+
+    /**
+     * The bug the anchor had: a sensor replaced less than a day after the previous one was dated at
+     * the previous sensor's event. The start is now the start, whatever came before.
+     */
+    @Test
+    fun `a start is never moved back to the previous sensor's change`() = runTest {
+        val auto = System.currentTimeMillis()
+        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(sensorChange(auto - 10 * HOUR_MS))
 
         plugin.onSensorSessionStarted(MAC, previousMac = null, startMs = auto)
 
@@ -94,93 +110,21 @@ class DexcomOnePlusSensorAgeRepairTest : TestBase() {
     }
 
     @Test
-    fun `a start prefers a manual sensor change from the last day`() = runTest {
-        whenever(preferences.get(BooleanKey.BgSourceCreateSensorChange)).thenReturn(true)
-        whenever(preferences.get(DexcomOnePlusBooleanKey.AnchorSessionToManualSensorChange)).thenReturn(true)
+    fun `a sensor change already logged near the start is kept and not doubled`() = runTest {
         val auto = System.currentTimeMillis()
-        val manual = auto - 3 * HOUR_MS
-        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(sensorChange(manual))
+        whenever(persistenceLayer.getTherapyEventDataFromToTime(any(), any())).thenReturn(listOf(sensorChange(auto - 10 * MINUTE_MS)))
 
         plugin.onSensorSessionStarted(MAC, previousMac = null, startMs = auto)
 
-        verify(persistenceLayer, timeout(2_000L)).insertCgmSourceData(any(), any(), any(), eq(manual))
-        assertThat(prefs.getLong(KEY_SESSION_START, 0L)).isEqualTo(manual)
-    }
-
-    @Test
-    fun `a start ignores a sensor change that is later or older than a day`() = runTest {
-        whenever(preferences.get(BooleanKey.BgSourceCreateSensorChange)).thenReturn(true)
-        val auto = System.currentTimeMillis()
-        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE))
-            .thenReturn(sensorChange(auto + HOUR_MS))
-
-        plugin.onSensorSessionStarted("AA:BB:CC:DD:EE:02", previousMac = null, startMs = auto)
-
-        verify(persistenceLayer, timeout(2_000L)).insertCgmSourceData(any(), any(), any(), eq(auto))
+        verify(persistenceLayer, after(500L).never()).insertCgmSourceData(any(), any(), any(), anyOrNull())
         assertThat(prefs.getLong(KEY_SESSION_START, 0L)).isEqualTo(auto)
-
-        val stale = auto - 25 * HOUR_MS
-        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(sensorChange(stale))
-        plugin.onSensorSessionStarted("AA:BB:CC:DD:EE:03", previousMac = null, startMs = auto + 1L)
-
-        verify(persistenceLayer, timeout(2_000L)).insertCgmSourceData(any(), any(), any(), eq(auto + 1L))
     }
 
     @Test
-    fun `the first reading uses the manual sensor change as the session start`() = runTest {
-        whenever(preferences.get(DexcomOnePlusBooleanKey.AnchorSessionToManualSensorChange)).thenReturn(true)
+    fun `the first reading keeps the reading time even with an earlier sensor change`() = runTest {
         val auto = System.currentTimeMillis()
-        val manual = auto - 2 * HOUR_MS
-        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(sensorChange(manual))
+        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(sensorChange(auto - 2 * HOUR_MS))
         val sample = OnePlusGlucoseSample(mgdl = 110.0, timestampMs = auto, sequence = 1L)
-
-        ingest(sample)
-
-        verify(persistenceLayer, timeout(2_000L)).insertCgmSourceData(any(), any(), any(), eq(null))
-        assertThat(awaitSessionStart()).isEqualTo(manual)
-    }
-
-    @Test
-    fun `the manual anchor switch defaults to on is a user setting and is not exported`() {
-        val key = DexcomOnePlusBooleanKey.AnchorSessionToManualSensorChange
-        assertThat(key.defaultValue).isTrue()
-        assertThat(key.engineeringModeOnly).isFalse()
-        assertThat(key.exportable).isFalse()
-    }
-
-    @Test
-    fun `the three sensor change settings are on by default and shown to every user`() {
-        val keys = listOf(
-            DexcomOnePlusBooleanKey.RepairMissingSensorChange,
-            DexcomOnePlusBooleanKey.CorrectSensorStart,
-            DexcomOnePlusBooleanKey.AnchorSessionToManualSensorChange,
-        )
-        for (key in keys) {
-            assertThat(key.defaultValue).isTrue()
-            assertThat(key.engineeringModeOnly).isFalse()
-        }
-        assertThat(plugin.getPreferenceScreenContent().items).containsAtLeastElementsIn(keys)
-    }
-
-    @Test
-    fun `a start with the anchor switch off does not roll the date back`() = runTest {
-        whenever(preferences.get(BooleanKey.BgSourceCreateSensorChange)).thenReturn(true)
-        val auto = System.currentTimeMillis()
-        val manual = auto - 3 * HOUR_MS
-        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(sensorChange(manual))
-
-        plugin.onSensorSessionStarted("AA:BB:CC:DD:EE:21", previousMac = null, startMs = auto)
-
-        verify(persistenceLayer, timeout(2_000L)).insertCgmSourceData(any(), any(), any(), eq(auto))
-        assertThat(prefs.getLong(KEY_SESSION_START, 0L)).isEqualTo(auto)
-    }
-
-    @Test
-    fun `the first reading with the anchor switch off keeps the reading time`() = runTest {
-        val auto = System.currentTimeMillis()
-        val manual = auto - 2 * HOUR_MS
-        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(sensorChange(manual))
-        val sample = OnePlusGlucoseSample(mgdl = 110.0, timestampMs = auto, sequence = 7L)
 
         ingest(sample)
 
@@ -189,46 +133,46 @@ class DexcomOnePlusSensorAgeRepairTest : TestBase() {
     }
 
     @Test
-    fun `repair switched off writes nothing`() = runTest {
-        assertThat(DexcomOnePlusBooleanKey.RepairMissingSensorChange.defaultValue).isTrue()
-        // Stubbed explicitly: the point is the switch-off path, not the Mockito default.
-        whenever(preferences.get(DexcomOnePlusBooleanKey.RepairMissingSensorChange)).thenReturn(false)
-        // Create-sensor-change stays on, as in the tests below. Without this stub Mockito
-        // returns false and the second guard would refuse the write even if the repair switch
-        // were gone, so the test would pass for the wrong reason.
-        whenever(preferences.get(BooleanKey.BgSourceCreateSensorChange)).thenReturn(true)
-        val startedAt = System.currentTimeMillis() - 26 * HOUR_MS
-        OnePlusSensorStore(context).startSessionForSensor(MAC, startedAt, null)
-        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE))
-            .thenReturn(sensorChange(System.currentTimeMillis() - 13 * 24 * HOUR_MS))
-
-        refreshLifecycle()
-
-        verify(persistenceLayer, after(500L).never())
-            .insertCgmSourceData(any(), any(), any(), anyOrNull())
-        verify(rxBus, never()).send(any<EventRefreshOverview>())
-        assertThat(prefs.getLong(KEY_SESSION_START, 0L)).isEqualTo(startedAt)
+    fun `no sensor change setting is shown or read any more`() {
+        val items = plugin.getPreferenceScreenContent().items
+        assertThat(items).doesNotContain(BooleanKey.BgSourceCreateSensorChange)
+        assertThat(DexcomOnePlusBooleanKey.entries.map { it.key }).containsNoneOf(
+            "dexcom_oneplus_repair_missing_sensor_change",
+            "dexcom_oneplus_correct_sensor_start",
+            "dexcom_oneplus_anchor_session_to_manual_sensor_change",
+        )
     }
 
     @Test
-    fun `repair off for create sensor change writes nothing`() = runTest {
-        whenever(preferences.get(DexcomOnePlusBooleanKey.RepairMissingSensorChange)).thenReturn(true)
-        whenever(preferences.get(BooleanKey.BgSourceCreateSensorChange)).thenReturn(false)
-        val startedAt = System.currentTimeMillis() - 26 * HOUR_MS
-        OnePlusSensorStore(context).startSessionForSensor("AA:BB:CC:DD:EE:11", startedAt, null)
+    fun `the sensor's own start replaces the plugin's own sensor change`() = runTest {
+        val old = System.currentTimeMillis() - 2 * HOUR_MS
+        val reported = old - 30 * MINUTE_MS
+        whenever(preferences.get(DexcomOnePlusLongKey.OwnSensorChangeAt)).thenReturn(old)
+        val own = sensorChange(old)
+        whenever(persistenceLayer.getTherapyEventDataFromToTime(any(), any())).thenReturn(listOf(own)).thenReturn(emptyList())
 
-        refreshLifecycle()
+        plugin.moveToReportedStart(old, reported)
 
-        verify(persistenceLayer, after(500L).never())
-            .insertCgmSourceData(any(), any(), any(), anyOrNull())
-        verify(rxBus, never()).send(any<EventRefreshOverview>())
-        assertThat(prefs.getLong(KEY_SESSION_START, 0L)).isEqualTo(startedAt)
+        verify(persistenceLayer).invalidateTherapyEvent(eq(own.id), any(), any(), anyOrNull(), any())
+        verify(persistenceLayer, timeout(2_000L)).insertCgmSourceData(any(), any(), any(), eq(reported))
+    }
+
+    /** A sensor change logged by hand or synced from Nightscout is never removed by the plugin. */
+    @Test
+    fun `the sensor's own start never removes a sensor change the plugin did not write`() = runTest {
+        val old = System.currentTimeMillis() - 2 * HOUR_MS
+        val reported = old - 30 * MINUTE_MS
+        // The plugin's own event was at another time: the one near the old start is the user's.
+        whenever(preferences.get(DexcomOnePlusLongKey.OwnSensorChangeAt)).thenReturn(old - 5 * MINUTE_MS)
+        whenever(persistenceLayer.getTherapyEventDataFromToTime(any(), any())).thenReturn(listOf(sensorChange(old)))
+
+        plugin.moveToReportedStart(old, reported)
+
+        verify(persistenceLayer, never()).invalidateTherapyEvent(any(), any(), any(), anyOrNull(), any())
     }
 
     @Test
     fun `a sensor whose therapy event is missing gets its age put back once`() = runTest {
-        whenever(preferences.get(DexcomOnePlusBooleanKey.RepairMissingSensorChange)).thenReturn(true)
-        whenever(preferences.get(BooleanKey.BgSourceCreateSensorChange)).thenReturn(true)
         val startedAt = System.currentTimeMillis() - 26 * HOUR_MS
         OnePlusSensorStore(context).startSessionForSensor("AA:BB:CC:DD:EE:10", startedAt, null)
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE))
@@ -249,8 +193,6 @@ class DexcomOnePlusSensorAgeRepairTest : TestBase() {
 
     @Test
     fun `an age that already matches is left alone`() = runTest {
-        whenever(preferences.get(DexcomOnePlusBooleanKey.RepairMissingSensorChange)).thenReturn(true)
-        whenever(preferences.get(BooleanKey.BgSourceCreateSensorChange)).thenReturn(true)
         val startedAt = System.currentTimeMillis() - 26 * HOUR_MS
         OnePlusSensorStore(context).startSessionForSensor("AA:BB:CC:DD:EE:12", startedAt, null)
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(sensorChange(startedAt))
@@ -308,6 +250,7 @@ class DexcomOnePlusSensorAgeRepairTest : TestBase() {
 
     companion object {
         private const val HOUR_MS = 60L * 60L * 1000L
+        private const val MINUTE_MS = 60L * 1000L
         private const val MAC = "AA:BB:CC:DD:EE:01"
         private const val PRODUCTION_PREFS = "dexcom_oneplus_sensor"
         private const val KEY_SESSION_START = "session_start_ms"
