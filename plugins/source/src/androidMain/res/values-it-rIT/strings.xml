@@ -55,6 +55,8 @@
     <!-- Automatically translated Eversense UI drafts; linguistic review pending. -->
     <string name="eversense_status_title">Stato e connessione</string>
     <string name="eversense_cloud_upload_enabled">Attiva l’invio al cloud</string>
+    <string name="eversense_force_cloud_upload_title">Carica ora i dati nel cloud</string>
+    <string name="eversense_force_cloud_upload_summary">Forza l’invio immediato dei dati a Eversense DMS</string>
     <string name="eversense_credentials_title">Credenziali Eversense DMS</string>
     <string name="eversense_credentials_username">Nome utente</string>
     <string name="eversense_credentials_password">Password</string>

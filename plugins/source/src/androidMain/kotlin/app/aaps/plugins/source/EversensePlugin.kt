@@ -39,6 +39,7 @@ import app.aaps.plugins.eversense.callbacks.EversenseWatcher
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import app.aaps.plugins.eversense.enums.EversenseAlarm
 import app.aaps.plugins.eversense.enums.EversenseType
+import app.aaps.plugins.eversense.enums.EversenseTrendArrow
 import app.aaps.plugins.eversense.models.EversenseCGMResult
 import app.aaps.plugins.eversense.models.EversenseState
 import app.aaps.plugins.eversense.util.EversenseLogger
@@ -286,12 +287,34 @@ class EversensePlugin(
         }
     }
 
+    private fun triggerManualCloudUpload() {
+        if (!cloudUploadEnabled()) {
+            notificationManager.post(NotificationId.EVERSENSE_CREDENTIALS, rh.gs(R.string.eversense_cloud_upload_enabled) + " is disabled", level = NotificationLevel.URGENT)
+            return
+        }
+        ioScope.launch {
+            if (!eversense.hasInternet()) {
+                notificationManager.post(NotificationId.EVERSENSE_CREDENTIALS, rh.gs(R.string.eversense_cloud_upload_failed), level = NotificationLevel.URGENT)
+                return@launch
+            }
+            // Flush all pending readings accumulated in the queue since the last successful upload
+            cloudUploader.flush(force = true)
+
+            notificationManager.post(
+                NotificationId.EVERSENSE_CREDENTIALS,
+                "Upload eDMS avviato per le letture in sospeso",
+                level = NotificationLevel.INFO
+            )
+        }
+    }
+
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "eversense_settings",
         title = TextRef.AndroidRes(R.string.source_eversense),
         items = listOf(
             EversenseIntentKey.EversenseStatus.withClick { openActivity(EversenseStatusActivity::class.java) },
             EversenseBooleanKey.EversenseCloudUploadEnabled,
+            EversenseIntentKey.EversenseForceCloudUpload.withClick { triggerManualCloudUpload() },
             EversenseBooleanKey.EversenseDiagnosticLogging,
             PreferenceSubScreenDef(
                 key = "eversense_credentials_screen",
@@ -586,26 +609,63 @@ class EversensePlugin(
 
     private suspend fun uploadCloudBatch(prefs: EversenseStore, batch: app.aaps.plugins.source.eversense.EversenseCloudUploader.PendingUpload): Boolean {
         val state = batch.state
-        val readings = batch.readings
+        val rawReadings = batch.readings
+        if (rawReadings.isEmpty()) return true
+
+        val liveState = eversense.getCurrentState()
+        val activeSensorId = liveState.sensorId.ifEmpty { state.sensorId }
+        val readings = rawReadings.map { r ->
+            if (r.sensorId.isEmpty() && activeSensorId.isNotEmpty()) r.copy(sensorId = activeSensorId) else r
+        }
+
         val latest = readings.maxByOrNull { it.datetime } ?: return true
-        val calibrations = state.calibrationHistory.filter { it.datetime == state.lastCalibrationDate }
+        val rawCalibrations = liveState.calibrationHistory.ifEmpty { state.calibrationHistory }
+        val calibrations = rawCalibrations.sortedBy { it.datetime }
+            .fold(mutableListOf<app.aaps.plugins.eversense.packets.e365.CalibrationHistoryItem>()) { acc, item ->
+                if (acc.isEmpty() || (item.datetime - acc.last().datetime) >= 20 * 60_000L) {
+                    acc.add(item)
+                }
+                acc
+            }
+
         return if (batch.type == EversenseType.EVERSENSE_365) {
             val glucose = app.aaps.plugins.eversense.util.EversenseHttp365Util.uploadGlucoseReadings(
                 prefs, readings, state.transmitterName.ifEmpty { state.transmitterSerialNumber }, state.firmwareVersion)
-            aapsLogger.info(LTag.BGSOURCE, "Eversense hourly upload: success=${glucose.success} sent=${glucose.sentCount} status=${glucose.httpStatus}")
-            EversenseLogger.diagnostic { aapsLogger.info(LTag.BGSOURCE, "Eversense hourly upload details: ${glucose.describe()}") }
-            if (!glucose.success) return false
+            aapsLogger.info(LTag.BGSOURCE, "Eversense batch upload (365 essential logs): success=${glucose.success} sent=${glucose.sentCount} status=${glucose.httpStatus}")
+            EversenseLogger.diagnostic { aapsLogger.info(LTag.BGSOURCE, "Eversense batch upload details: ${glucose.describe()}") }
+
             val portal = app.aaps.plugins.eversense.util.EversenseHttp365Util.putCurrentValues(
                 prefs, latest.glucoseInMgDl, latest.datetime, latest.trend, state.sensorSignalStrength, state.batteryPercentage)
             if (!portal.success) return false
-            app.aaps.plugins.eversense.util.EversenseHttp365Util.putDeviceEvents(
-                prefs, readings, state.transmitterSerialNumber, calibrations, state.activeAlarms).success
+
+            val txId = state.transmitterName.ifEmpty { state.transmitterSerialNumber }
+            val dmsReadings = readings.map { r ->
+                if (r.sensorId.length >= 16) {
+                    val rev = r.sensorId.chunked(2).take(8).reversed().joinToString("").uppercase()
+                    r.copy(sensorId = rev)
+                } else r
+            }
+            val deviceEvents = app.aaps.plugins.eversense.util.EversenseHttp365Util.putDeviceEvents(
+                prefs, dmsReadings, txId, calibrations, state.activeAlarms)
+            aapsLogger.info(LTag.BGSOURCE, "Eversense batch upload (365 device events): success=${deviceEvents.success} sent=${deviceEvents.sentCount} status=${deviceEvents.httpStatus}")
+
+            deviceEvents.success && (glucose.success || (glucose.httpStatus ?: 0) < 400)
         } else {
+            val txId = state.transmitterName.ifEmpty { state.transmitterSerialNumber }
             val portal = app.aaps.plugins.eversense.util.EversenseHttpE3Util.putCurrentValues(
                 prefs, latest.glucoseInMgDl, latest.datetime, latest.trend, state.sensorSignalStrength, state.batteryPercentage)
             if (!portal) return false
-            app.aaps.plugins.eversense.util.EversenseHttpE3Util.putDeviceEvents(
-                prefs, readings, state.transmitterSerialNumber, calibrations, state.activeAlarms)
+
+            val dmsReadings = readings.map { r ->
+                if (r.sensorId.length >= 16) {
+                    val rev = r.sensorId.chunked(2).take(8).reversed().joinToString("").uppercase()
+                    r.copy(sensorId = rev)
+                } else r
+            }
+            val deviceEvents = app.aaps.plugins.eversense.util.EversenseHttpE3Util.putDeviceEvents(
+                prefs, dmsReadings, txId, calibrations, state.activeAlarms)
+            aapsLogger.info(LTag.BGSOURCE, "Eversense batch upload (E3 device events): success=$deviceEvents")
+            deviceEvents
         }
     }
 }

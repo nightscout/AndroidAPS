@@ -128,7 +128,7 @@ class Eversense365Communicator {
                 )
                 val backfill = history.glucoseHistory
                     .filter { it.datetime > previousGlucoseDatetime + BACKFILL_DEDUP_TOLERANCE_MS && it.datetime < glucoseData.datetime - BACKFILL_DEDUP_TOLERANCE_MS }
-                    .map { item -> EversenseCGMResult(glucoseInMgDl = item.valueInMgDl, datetime = item.datetime, trend = item.trend, rawResponseHex = item.rawResponseHex) }
+                    .map { item -> EversenseCGMResult(glucoseInMgDl = item.valueInMgDl, datetime = item.datetime, trend = item.trend, sensorId = state.sensorId, rawResponseHex = item.rawResponseHex) }
                 if (backfill.isNotEmpty()) {
                     result.addAll(0, backfill)
                     EversenseLogger.debug(TAG) { "Backfill: added ${backfill.size} historical readings" }

@@ -322,7 +322,8 @@ class EversenseHttp365Util {
                 return UploadOutcome(success = false, error = "no valid access token")
             }
             return try {
-                val sensorId = readings.firstOrNull { it.sensorId.isNotEmpty() }?.sensorId ?: ""
+                val rawSensorId = readings.firstOrNull { it.sensorId.isNotEmpty() }?.sensorId ?: getEversenseState(preferences).sensorId
+                val sensorId = if (rawSensorId.length >= 16) rawSensorId.chunked(2).take(8).reversed().joinToString("").uppercase() else rawSensorId
                 val tzOffsetSec = TimeZone.getDefault().getOffset(Date().time) / 1000
                 val offsetBytes = Base64.getEncoder().encodeToString(EversenseDmsBinaryCodec.int32LE(tzOffsetSec))
                 val sgBytes = EversenseDmsBinaryCodec.buildSgBytes(readings)
@@ -330,19 +331,23 @@ class EversenseHttp365Util {
                 val patientBytes = EversenseDmsBinaryCodec.buildEmptyPatientBytes()
                 val alertBytes = EversenseDmsBinaryCodec.buildAlertBytes(sensorId, alerts, readings.lastOrNull()?.datetime ?: System.currentTimeMillis(), readings.lastOrNull()?.glucoseInMgDl ?: 0)
 
-                EversenseLogger.debug(TAG) { "PutDeviceEvents: ${readings.size} reading(s), txId='$transmitterSerialNumber', sensorId='$sensorId'" }
+                EversenseLogger.debug(TAG) { "PutDeviceEvents: ${readings.size} reading(s), ${calibrations.size} calibration(s), txId='$transmitterSerialNumber', sensorId='$sensorId'" }
+                calibrations.forEach { c ->
+                    EversenseLogger.debug(TAG) { "   Calibration: glucose=${c.glucoseInMgDl} ts=${dateFormatter.get().format(Date(c.datetime))}" }
+                }
 
                 val jsonBody = """{"deviceType":"SMSIMeter","deviceName":"Smart Transmitter (Android)","deviceID":"$transmitterSerialNumber","offsetBytes":"$offsetBytes","sgBytes":"$sgBytes","mgBytes":"$mgBytes","patientBytes":"$patientBytes","alertBytes":"$alertBytes","algorithmVersion":"10"}"""
 
                 val reply = DmsHttpClient.post("${effectiveCareBaseUrl(getState(preferences))}api/care/PutDeviceEvents", jsonBody, token, tolerantBody = true)
                 val responseCode = reply.status
-                if (responseCode >= 400) {
-                    val error = reply.body
-                    EversenseLogger.error(TAG, "PutDeviceEvents failed — status: $responseCode")
-                    EversenseLogger.debug(TAG) { "Cloud response body: $error" }
-                    UploadOutcome(success = false, httpStatus = responseCode, responseBody = error)
+                val responseBody = reply.body
+                val isRejected = responseBody.contains("[-1") || responseBody.contains("-1,")
+                if (responseCode >= 400 || isRejected) {
+                    if (responseCode == 401) DmsAccessTokens.clear(preferences)
+                    val error = if (isRejected) "eDMS rejected device events ($responseBody)" else responseBody
+                    EversenseLogger.error(TAG, "PutDeviceEvents failed — status: $responseCode, error: $error")
+                    UploadOutcome(success = false, httpStatus = responseCode, responseBody = responseBody, error = error)
                 } else {
-                    val responseBody = reply.body
                     EversenseLogger.info(TAG, "PutDeviceEvents success — status: $responseCode, readings: ${readings.size}")
                     EversenseLogger.debug(TAG) { "Cloud response body: $responseBody" }
                     UploadOutcome(
@@ -362,6 +367,11 @@ class EversenseHttp365Util {
         private fun getState(preference: EversenseStore): EversenseSecureState {
             val stateJson = preference.getString(StorageKeys.SECURE_STATE, null) ?: "{}"
             return JSON.decodeFromString<EversenseSecureState>(stateJson)
+        }
+
+        private fun getEversenseState(preference: EversenseStore): app.aaps.plugins.eversense.models.EversenseState {
+            val stateJson = preference.getString(StorageKeys.STATE, null) ?: "{}"
+            return try { JSON.decodeFromString<app.aaps.plugins.eversense.models.EversenseState>(stateJson) } catch (_: Exception) { app.aaps.plugins.eversense.models.EversenseState() }
         }
     }
 

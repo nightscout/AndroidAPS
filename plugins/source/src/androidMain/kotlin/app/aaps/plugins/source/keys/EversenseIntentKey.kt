@@ -40,6 +40,13 @@ enum class EversenseIntentKey(
         key = "eversense_documentation",
         titleResId = R.string.eversense_documentation,
         preferenceType = PreferenceType.CLICK
+    ),
+    EversenseForceCloudUpload(
+        key = "eversense_force_cloud_upload",
+        titleResId = R.string.eversense_force_cloud_upload_title,
+        summaryResId = R.string.eversense_force_cloud_upload_summary,
+        preferenceType = PreferenceType.CLICK,
+        dependency = EversenseBooleanKey.EversenseCloudUploadEnabled
     );
 
     override val confirmationMessage get() = if (this == EversenseSignOut)
