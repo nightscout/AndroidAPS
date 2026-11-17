@@ -114,4 +114,9 @@
     <string name="eversense_status_connect">Connecter</string>
     <string name="eversense_status_disconnect">Déconnecter</string>
     <string name="eversense_sign_out_confirmation">La déconnexion supprimera le nom d’utilisateur et le mot de passe DMS enregistrés. Voulez-vous continuer ?</string>
+    <string name="eversense_force_cloud_upload_title">Envoyer les données maintenant</string>
+    <string name="eversense_force_cloud_upload_summary">Forcer l’envoi immédiat des données vers Eversense DMS</string>
+    <string name="eversense_cloud_upload_started">Envoi des mesures en attente vers le cloud demandé</string>
+    <string name="eversense_cloud_upload_disabled">L’envoi vers le cloud est désactivé</string>
+    <string name="eversense_cloud_upload_failed">Échec de l’envoi vers le cloud Eversense — vérifiez les identifiants et la connexion Internet</string>
 </resources>

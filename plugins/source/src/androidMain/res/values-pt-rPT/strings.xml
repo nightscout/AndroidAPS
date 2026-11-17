@@ -114,4 +114,9 @@
     <string name="eversense_status_connect">Ligar</string>
     <string name="eversense_status_disconnect">Desligar</string>
     <string name="eversense_sign_out_confirmation">Ao terminar a sessão, o nome de utilizador e a palavra-passe DMS guardados serão eliminados. Pretende continuar?</string>
+    <string name="eversense_force_cloud_upload_title">Enviar dados agora</string>
+    <string name="eversense_force_cloud_upload_summary">Forçar o envio imediato de dados para o Eversense DMS</string>
+    <string name="eversense_cloud_upload_started">Envio das leituras pendentes para a nuvem solicitado</string>
+    <string name="eversense_cloud_upload_disabled">O envio para a nuvem está desativado</string>
+    <string name="eversense_cloud_upload_failed">Falha no envio para a nuvem do Eversense — verifique as credenciais e a ligação à Internet</string>
 </resources>

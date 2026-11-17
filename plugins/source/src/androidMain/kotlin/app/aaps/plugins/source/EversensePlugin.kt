@@ -289,7 +289,7 @@ class EversensePlugin(
 
     private fun triggerManualCloudUpload() {
         if (!cloudUploadEnabled()) {
-            notificationManager.post(NotificationId.EVERSENSE_CREDENTIALS, rh.gs(R.string.eversense_cloud_upload_enabled) + " is disabled", level = NotificationLevel.URGENT)
+            notificationManager.post(NotificationId.EVERSENSE_CREDENTIALS, rh.gs(R.string.eversense_cloud_upload_disabled), level = NotificationLevel.URGENT)
             return
         }
         ioScope.launch {
@@ -302,7 +302,7 @@ class EversensePlugin(
 
             notificationManager.post(
                 NotificationId.EVERSENSE_CREDENTIALS,
-                "Upload eDMS avviato per le letture in sospeso",
+                rh.gs(R.string.eversense_cloud_upload_started),
                 level = NotificationLevel.INFO
             )
         }

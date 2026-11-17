@@ -286,4 +286,6 @@
     <string name="eversense_diagnostic_logging_summary">Record detailed Bluetooth and sensor data. Turn off after troubleshooting.</string>
     <string name="eversense_disconnect_confirm">Disconnect from transmitter?</string>
     <string name="eversense_sign_out_confirmation">Signing out will delete the saved DMS username and password. Do you want to continue?</string>
+    <string name="eversense_cloud_upload_started">Cloud upload requested for pending readings</string>
+    <string name="eversense_cloud_upload_disabled">Cloud upload is disabled</string>
 </resources>

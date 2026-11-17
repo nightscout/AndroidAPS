@@ -89,4 +89,9 @@
     <string name="eversense_status_connect">Verbinden</string>
     <string name="eversense_status_disconnect">Trennen</string>
     <string name="eversense_sign_out_confirmation">Beim Abmelden werden der gespeicherte DMS-Benutzername und das Passwort gelöscht. Möchtest du fortfahren?</string>
+    <string name="eversense_force_cloud_upload_title">Daten jetzt hochladen</string>
+    <string name="eversense_force_cloud_upload_summary">Sofortigen Cloud-Upload zu Eversense DMS erzwingen</string>
+    <string name="eversense_cloud_upload_started">Cloud-Upload für ausstehende Messwerte angefordert</string>
+    <string name="eversense_cloud_upload_disabled">Cloud-Upload ist deaktiviert</string>
+    <string name="eversense_cloud_upload_failed">Eversense-Cloud-Upload fehlgeschlagen — prüfe Zugangsdaten und Internetverbindung</string>
 </resources>

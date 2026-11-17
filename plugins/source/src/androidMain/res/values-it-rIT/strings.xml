@@ -116,4 +116,7 @@
     <string name="eversense_status_connect">Connetti</string>
     <string name="eversense_status_disconnect">Disconnetti</string>
     <string name="eversense_sign_out_confirmation">La disconnessione eliminerà il nome utente e la password DMS salvati. Vuoi continuare?</string>
+    <string name="eversense_cloud_upload_started">Richiesto il caricamento nel cloud delle letture in sospeso</string>
+    <string name="eversense_cloud_upload_disabled">Il caricamento nel cloud è disattivato</string>
+    <string name="eversense_cloud_upload_failed">Caricamento nel cloud Eversense non riuscito — verifica le credenziali e la connessione Internet</string>
 </resources>

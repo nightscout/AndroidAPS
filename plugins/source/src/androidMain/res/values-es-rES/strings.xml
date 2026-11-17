@@ -114,4 +114,9 @@
     <string name="eversense_status_connect">Conectar</string>
     <string name="eversense_status_disconnect">Desconectar</string>
     <string name="eversense_sign_out_confirmation">Al cerrar sesión se eliminarán el nombre de usuario y la contraseña de DMS guardados. ¿Quieres continuar?</string>
+    <string name="eversense_force_cloud_upload_title">Subir datos ahora</string>
+    <string name="eversense_force_cloud_upload_summary">Forzar la subida inmediata de datos a Eversense DMS</string>
+    <string name="eversense_cloud_upload_started">Se ha solicitado la subida de las lecturas pendientes a la nube</string>
+    <string name="eversense_cloud_upload_disabled">La subida a la nube está desactivada</string>
+    <string name="eversense_cloud_upload_failed">Error al subir datos a la nube de Eversense — comprueba las credenciales y la conexión a Internet</string>
 </resources>

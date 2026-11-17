@@ -114,4 +114,9 @@
     <string name="eversense_status_connect">Połącz</string>
     <string name="eversense_status_disconnect">Rozłącz</string>
     <string name="eversense_sign_out_confirmation">Wylogowanie usunie zapisaną nazwę użytkownika i hasło DMS. Czy chcesz kontynuować?</string>
+    <string name="eversense_force_cloud_upload_title">Wyślij dane teraz</string>
+    <string name="eversense_force_cloud_upload_summary">Wymuś natychmiastowe wysłanie danych do Eversense DMS</string>
+    <string name="eversense_cloud_upload_started">Zażądano wysłania oczekujących odczytów do chmury</string>
+    <string name="eversense_cloud_upload_disabled">Wysyłanie do chmury jest wyłączone</string>
+    <string name="eversense_cloud_upload_failed">Nie udało się wysłać danych do chmury Eversense — sprawdź dane logowania i połączenie z internetem</string>
 </resources>
