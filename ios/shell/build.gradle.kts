@@ -42,6 +42,8 @@ val migratedModules = listOf(
     ":plugins:smoothing",
     ":plugins:source",
     ":plugins:sync",
+    ":pump:carelevo:emulator",
+    ":pump:carelevo:protocol",
     ":pump:virtual",
     ":shared:clientbindings",
     ":shared:impl",

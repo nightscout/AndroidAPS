@@ -150,7 +150,7 @@ class EmulatedBleCentralTest {
         val central = central()
         val pump = Pump(DeviceId("PUMP"), "PUMP-1", service)
         central.add(pump)
-        val bonding = central.bonding!!
+        val bonding = central.bonding
 
         assertEquals(BondState.NONE, bonding.bondState(pump.device).first())
         assertIs<BleResult.Ok<Unit>>(bonding.createBond(pump.device, 5.seconds))
@@ -167,7 +167,7 @@ class EmulatedBleCentralTest {
 
         assertIs<BleResult.Ok<BleLink>>(central.connect(pump.device, ConnectOptions(androidBondBeforeDiscovery = true)))
 
-        assertEquals(BondState.BONDED, central.bonding!!.bondState(pump.device).first())
+        assertEquals(BondState.BONDED, central.bonding.bondState(pump.device).first())
     }
 
     @Test
@@ -180,7 +180,7 @@ class EmulatedBleCentralTest {
 
         assertEquals(BleFailure.Kind.REFUSED, assertIs<BleResult.Failed>(result).failure.kind)
         assertEquals(1, pump.disconnects)
-        assertEquals(BondState.NONE, central.bonding!!.bondState(pump.device).first())
+        assertEquals(BondState.NONE, central.bonding.bondState(pump.device).first())
     }
 
     @Test

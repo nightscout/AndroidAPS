@@ -347,6 +347,12 @@ Smaller ones: `Throwable.localizedMessage` is JVM only (use `message`); `@Synchr
 `AapsLock` + `withLock` from `:core:interfaces`; `@Volatile` needs `kotlin.concurrent.Volatile`;
 `Dispatchers.IO` needs `import kotlinx.coroutines.IO`.
 
+`java.io.Serializable` with `ObjectOutputStream` becomes `@Serializable` with `Json` (the `kotlinx-serialization`
+plugin in the module). A plain class with `var`s in its body serializes as it is: properties with a backing field are
+written, computed getters are not, and an enum from another module needs no annotation. A type from another module
+that is part of the saved object needs `@Serializable` there too, with the plugin in that module.
+`:pump:carelevo:emulator` saves its patch this way.
+
 ### Pin what the code writes and shows before you move it
 
 The safe order is: tests that pin the current output first, green on the old code, then the move,
@@ -367,6 +373,12 @@ accepted unseen). What those tests found is worth knowing before the next move:
   shortest decimal text (1.005 shows 1.01, 0.15 at one decimal shows 0.2); `DecimalFormat` HALF_UP
   rounds the double (1.00 and 0.1). `roundHalfUpAsText` in the Autotune view model keeps the old
   text and is checked against `String.format` over thousands of values.
+- **`BigDecimal.valueOf(x).setScale(2, HALF_UP)` rounds the shortest decimal text too**, so a plain
+  `round(x * 100)` turns 1.005 into 1.00 where it gave 1.01. The exact common replacement compares x with the double
+  nearest each half-way decimal, `(2c + 1) / 200.0` (one correctly rounded division): `hundredthsHalfUp` in
+  `:pump:carelevo:protocol`. For a dose, keep the old `BigDecimal` code in a JVM test as the reference and compare
+  every hundredth, every thousandth, the doubles next to each half-way point and random values
+  (`DoseEncodingEquivalenceTest`), with the hard values also in a common test that runs on iOS.
 - **A test that changes the default time zone must call `SystemTimeZone.invalidate()`.** Code moved
   off `Calendar`/`TimeZone.getDefault()` reads the zone through `SystemTimeZone`, which keeps a read
   for 10 s, so the test would otherwise run in the zone of the test before it.
@@ -457,7 +469,8 @@ do not belong in the API Swift sees. There is a `filterNot` in `ios/shell/build.
 
 Once a module builds for iOS, the ios-branch guard fails until it is listed. It names the module and
 what to do: add it to `migratedModules` in `ios/shell/build.gradle.kts` and bump
-`ShellInfo.LINKED_MODULES`. Expect this on every flip.
+`ShellInfo.LINKED_MODULES`. Expect this on every flip. Nothing checks the count: set it to the length of the list,
+do not add one to it. It was one behind (26 for 27 modules) until the Carelevo flip found it.
 
 ## Do not run a javax-stripping sweep over `:app`'s DI files
 
