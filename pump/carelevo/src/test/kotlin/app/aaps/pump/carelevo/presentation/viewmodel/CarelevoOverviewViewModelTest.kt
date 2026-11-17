@@ -86,6 +86,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Locale
+import java.util.TimeZone
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
@@ -497,6 +498,30 @@ class CarelevoOverviewViewModelTest {
         assertThat(sut.expirationTime.value).isEqualTo(uiFormat(bootLdt.plusDays(7).plusHours(12)))
         // One hour into the grace, so eleven of the twelve hours are left.
         assertThat(sut.runningRemainMinutes.value).isEqualTo(11 * 60)
+    }
+
+    /**
+     * The seven days are counted on the local clock: across the spring clock change the expiry stays at the boot hour,
+     * and the minutes left are clock minutes, not elapsed ones. This pins what the overview does today.
+     */
+    @Test
+    fun `the expiry is seven days later on the local clock also across a clock change`() {
+        val saved = TimeZone.getDefault()
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Prague"))
+        try {
+            // Booted 2026-03-25 10:00 CET, now 2026-03-28 10:00 CET; summer time starts on 2026-03-29.
+            val bootMillis = 1_774_429_200_000L
+            whenever(dateUtil.now()).thenReturn(bootMillis + 3 * dayMillis)
+            sut.observePatchInfo()
+
+            patchInfoFlow.tryEmit(patchInfo(bootDateTimeUtcMillis = bootMillis))
+
+            assertThat(sut.bootDateTime.value).isEqualTo("2026-03-25 10:00")
+            assertThat(sut.expirationTime.value).isEqualTo("2026-04-01 10:00")
+            assertThat(sut.runningRemainMinutes.value).isEqualTo(4 * 24 * 60)
+        } finally {
+            TimeZone.setDefault(saved)
+        }
     }
 
     @Test

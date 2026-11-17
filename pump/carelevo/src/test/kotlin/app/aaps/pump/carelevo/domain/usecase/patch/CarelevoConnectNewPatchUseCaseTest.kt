@@ -10,6 +10,10 @@ import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 internal class CarelevoConnectNewPatchUseCaseTest {
 
@@ -57,6 +61,39 @@ internal class CarelevoConnectNewPatchUseCaseTest {
             // Fabricated from the phone clock as yyMMddHHmm and parseable back.
             assertThat(bootDateTime).hasLength(10)
             assertThat(bootDateTimeUtcMillis).isNotNull()
+        }
+    }
+
+    /** A zone with a 45 minute offset, so a wrong zone or a lost offset shows in the minutes too. */
+    @Test
+    fun persistNewPatch_stamps_the_minute_of_pairing_in_local_time_and_as_utc_millis() {
+        whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
+        val kathmandu = TimeZone.getTimeZone("Asia/Kathmandu")
+        val saved = TimeZone.getDefault()
+        TimeZone.setDefault(kathmandu)
+        try {
+            val before = System.currentTimeMillis()
+            sut.persistNewPatch(
+                address = "94:b2:16:1d:2f:6d",
+                serialNumber = "EO12507099001",
+                firmwareVersion = "T168",
+                modelName = "6776514848",
+                request = request
+            )
+            val after = System.currentTimeMillis()
+
+            val captor = argumentCaptor<CarelevoPatchInfoDomainModel>()
+            verify(patchInfoRepository).updatePatchInfo(captor.capture())
+            val millis = captor.firstValue.bootDateTimeUtcMillis!!
+            // The start of the minute the patch was paired in.
+            assertThat(millis % 60_000L).isEqualTo(0L)
+            assertThat(millis).isAtLeast(before - before % 60_000L)
+            assertThat(millis).isAtMost(after)
+            // The text is that same minute, as the clock in Kathmandu shows it.
+            val text = SimpleDateFormat("yyMMddHHmm", Locale.US).apply { timeZone = kathmandu }.format(Date(millis))
+            assertThat(captor.firstValue.bootDateTime).isEqualTo(text)
+        } finally {
+            TimeZone.setDefault(saved)
         }
     }
 
