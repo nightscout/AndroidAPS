@@ -3,48 +3,60 @@ package app.aaps.pump.carelevo.di
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.pump.ble.BleCentral
+import app.aaps.core.interfaces.pump.ble.BondState
+import app.aaps.core.interfaces.pump.ble.EmulatedBleCentral
 import app.aaps.core.interfaces.pump.emulator.PumpEmulators
-import app.aaps.pump.carelevo.ble.CarelevoBleTransportImpl
-import app.aaps.pump.carelevo.config.BleEnvConfig
-import app.aaps.pump.carelevo.emulator.CarelevoEmulatorBleTransport
+import app.aaps.pump.carelevo.emulator.CarelevoEmulatorPeripheral
 import app.aaps.pump.carelevo.emulator.CarelevoPumpEmulator
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import java.util.UUID
 
 /**
- * Which Bluetooth the driver gets: the real one, or the in-tree emulator when its marker file is there. The marker
- * files of the alarm scenarios set the emulated patch's alarm flags. Bluetooth v2 changes what this provides, so the
- * choice is pinned here first.
+ * Which Bluetooth the driver gets: the phone's, or an emulated central with the in-tree emulator when its marker file
+ * is there. The marker files of the alarm scenarios set the emulated patch's alarm flags.
  */
 internal class CarelevoBleBindingsTest {
 
-    private val realTransport: CarelevoBleTransportImpl = mock()
+    private val phone: BleCentral = mock()
     private val aapsLogger: AAPSLogger = mock()
 
     private fun config(vararg enabled: ExternalOptions): Config = mock<Config>().also { config ->
         whenever(config.isEnabled(any())).thenAnswer { it.arguments[0] in enabled }
     }
 
-    @Test
-    fun `without the marker file the driver gets the real Bluetooth`() {
-        val transport = CarelevoBleBindings.provideCarelevoBleTransport(config(), realTransport, aapsLogger, PumpEmulators())
+    private fun peripheralOf(central: BleCentral): CarelevoEmulatorPeripheral =
+        (central as EmulatedBleCentral).devices.single() as CarelevoEmulatorPeripheral
 
-        assertThat(transport).isSameInstanceAs(realTransport)
+    @Test
+    fun `without the marker file the driver gets the phone's Bluetooth`() {
+        val central = CarelevoBleBindings.provideCarelevoCentral(config(), phone, aapsLogger, PumpEmulators())
+
+        assertThat(central).isSameInstanceAs(phone)
     }
 
     @Test
-    fun `with the marker file the driver gets the emulator and no alarm`() {
-        val transport = CarelevoBleBindings.provideCarelevoBleTransport(config(ExternalOptions.EMULATE_CARELEVO), realTransport, aapsLogger, PumpEmulators())
+    fun `with the marker file the driver gets the emulated patch and no alarm`() {
+        val central = CarelevoBleBindings.provideCarelevoCentral(config(ExternalOptions.EMULATE_CARELEVO), phone, aapsLogger, PumpEmulators())
 
-        val emulator = (transport as CarelevoEmulatorBleTransport).emulator
-        assertThat(emulator.state.criticalAlarmFlags.lowBattery).isFalse()
-        assertThat(emulator.state.criticalAlarmFlags.occlusionDetected).isFalse()
-        assertThat(emulator.state.advisoryAlarmFlags.lowBattery).isFalse()
-        assertThat(emulator.state.advisoryAlarmFlags.outOfRangeTemperature).isFalse()
+        val state = peripheralOf(central).emulator.state
+        assertThat(state.criticalAlarmFlags.lowBattery).isFalse()
+        assertThat(state.criticalAlarmFlags.occlusionDetected).isFalse()
+        assertThat(state.advisoryAlarmFlags.lowBattery).isFalse()
+        assertThat(state.advisoryAlarmFlags.outOfRangeTemperature).isFalse()
+    }
+
+    /** The emulated patch was always bonded: the pairing bonds only a patch that is not. */
+    @Test
+    fun `the emulated patch is bonded`() = runBlocking {
+        val central = CarelevoBleBindings.provideCarelevoCentral(config(ExternalOptions.EMULATE_CARELEVO), phone, aapsLogger, PumpEmulators())
+
+        assertThat(central.bonding!!.bondState(peripheralOf(central).device).first()).isEqualTo(BondState.BONDED)
     }
 
     /** Critical and advisory are separate: the same condition is a warning on one and an alert on the other. */
@@ -58,9 +70,9 @@ internal class CarelevoBleBindingsTest {
             ExternalOptions.EMULATE_CARELEVO_INVALID_TEMPERATURE
         )
 
-        val transport = CarelevoBleBindings.provideCarelevoBleTransport(config, realTransport, aapsLogger, PumpEmulators())
+        val central = CarelevoBleBindings.provideCarelevoCentral(config, phone, aapsLogger, PumpEmulators())
 
-        val state = (transport as CarelevoEmulatorBleTransport).emulator.state
+        val state = peripheralOf(central).emulator.state
         assertThat(state.criticalAlarmFlags.lowBattery).isTrue()
         assertThat(state.criticalAlarmFlags.occlusionDetected).isTrue()
         assertThat(state.advisoryAlarmFlags.lowBattery).isTrue()
@@ -73,17 +85,12 @@ internal class CarelevoBleBindingsTest {
         val emulators = PumpEmulators()
         val config = config(ExternalOptions.EMULATE_CARELEVO)
 
-        val first = CarelevoBleBindings.provideCarelevoBleTransport(config, realTransport, aapsLogger, emulators) as CarelevoEmulatorBleTransport
-        val second = CarelevoBleBindings.provideCarelevoBleTransport(config, realTransport, aapsLogger, emulators) as CarelevoEmulatorBleTransport
+        val first = CarelevoBleBindings.provideCarelevoCentral(config, phone, aapsLogger, emulators)
+        val second = CarelevoBleBindings.provideCarelevoCentral(config, phone, aapsLogger, emulators)
 
         assertThat(second).isNotSameInstanceAs(first)
-        assertThat(second.emulator).isSameInstanceAs(first.emulator)
-        assertThat(emulators.getOrCreate(CarelevoPumpEmulator.KEY) { error("not created") }).isSameInstanceAs(first.emulator)
-    }
-
-    @Test
-    fun `the characteristics are the write and the notify characteristic of the patch`() {
-        assertThat(CarelevoBleBindings.provideRxCharacteristicUuid()).isEqualTo(UUID.fromString(BleEnvConfig.BLE_RX_CHAR_UUID))
-        assertThat(CarelevoBleBindings.provideTxCharacteristicUuid()).isEqualTo(UUID.fromString(BleEnvConfig.BLE_TX_CHAR_UUID))
+        assertThat(peripheralOf(second)).isNotSameInstanceAs(peripheralOf(first))
+        assertThat(peripheralOf(second).emulator).isSameInstanceAs(peripheralOf(first).emulator)
+        assertThat(emulators.getOrCreate(CarelevoPumpEmulator.KEY) { error("not created") }).isSameInstanceAs(peripheralOf(first).emulator)
     }
 }

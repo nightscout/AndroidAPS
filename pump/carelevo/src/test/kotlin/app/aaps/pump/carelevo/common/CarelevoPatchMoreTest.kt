@@ -3,7 +3,9 @@ package app.aaps.pump.carelevo.common
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.pump.ble.BleAdapter
+import app.aaps.core.interfaces.pump.ble.BleBonding
+import app.aaps.core.interfaces.pump.ble.BleCentral
+import app.aaps.core.interfaces.pump.ble.DeviceId
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
@@ -12,7 +14,6 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.pump.carelevo.ble.CarelevoBleTransport
 import app.aaps.pump.carelevo.ble.UnsolicitedMessage
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotFlags
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotResponse
@@ -64,6 +65,8 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.stub
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
 import java.util.Optional
@@ -88,7 +91,7 @@ import kotlin.time.Duration.Companion.hours
 @MockitoSettings(strictness = Strictness.LENIENT)
 internal class CarelevoPatchMoreTest {
 
-    @Mock lateinit var transport: CarelevoBleTransport
+    @Mock lateinit var central: BleCentral
     @Mock lateinit var aapsSchedulers: AapsSchedulers
     @Mock lateinit var rxBus: RxBus
     @Mock lateinit var preferences: Preferences
@@ -101,7 +104,7 @@ internal class CarelevoPatchMoreTest {
     @Mock lateinit var carelevoAlarmInfoUseCase: CarelevoAlarmInfoUseCase
     @Mock lateinit var pumpResumeUseCase: CarelevoPumpResumeUseCase
     @Mock lateinit var pumpStopUseCase: CarelevoPumpStopUseCase
-    @Mock lateinit var bleAdapter: BleAdapter
+    @Mock lateinit var bonding: BleBonding
     @Mock lateinit var activeAlarmSnapshotAlarmMapper: ActiveAlarmSnapshotAlarmMapper
 
     private lateinit var sut: CarelevoPatch
@@ -154,7 +157,7 @@ internal class CarelevoPatchMoreTest {
     /** Rebuilds the SUT — call after re-stubbing a monitor use case, the wiring happens in the ctor/initPatch. */
     private fun createPatch(): CarelevoPatch =
         CarelevoPatch(
-            transport = transport,
+            central = central,
             aapsSchedulers = aapsSchedulers,
             rxBus = rxBus,
             preferences = preferences,
@@ -209,7 +212,7 @@ internal class CarelevoPatchMoreTest {
             .thenReturn(Single.just(ResponseResult.Success<CarelevoUseCaseResponse>(null)))
         whenever(createUserSettingInfoUseCase.execute(any()))
             .thenReturn(Single.just(ResponseResult.Success<CarelevoUseCaseResponse>(null)))
-        whenever(transport.adapter).thenReturn(bleAdapter)
+        whenever(central.bonding).thenReturn(bonding)
 
         sut = createPatch()
     }
@@ -766,7 +769,7 @@ internal class CarelevoPatchMoreTest {
 
         sut.discardTeardown()
 
-        verify(bleAdapter).removeBond("AA:BB:CC:DD:EE:FF")
+        verifyBlocking(bonding) { removeBond(DeviceId("AA:BB:CC:DD:EE:FF")) }
         assertThat(sut.getPatchInfoAddress()).isNull()
         assertThat(sut.resolvePatchState()).isEqualTo(PatchState.NotConnectedNotBooting)
     }
@@ -775,7 +778,7 @@ internal class CarelevoPatchMoreTest {
     fun `discardTeardown without a patch record skips the unbond`() {
         sut.discardTeardown()
 
-        verify(bleAdapter, never()).removeBond(any())
+        verifyBlocking(bonding, never()) { removeBond(any()) }
     }
 
     @Test
@@ -783,19 +786,21 @@ internal class CarelevoPatchMoreTest {
         sut.initPatch()
         sut.onBluetoothStateChanged(bleState(enabled = true))
         var reentered = false
-        doAnswer {
-            if (!reentered) {
-                reentered = true
-                // A queued CmdDiscard racing the ViewModel force-discard fallback: must be skipped.
-                sut.discardTeardown()
+        bonding.stub {
+            onBlocking { removeBond(any()) } doAnswer {
+                if (!reentered) {
+                    reentered = true
+                    // A queued CmdDiscard racing the ViewModel force-discard fallback: must be skipped.
+                    sut.discardTeardown()
+                }
+                null
             }
-            null
-        }.whenever(bleAdapter).removeBond(any())
+        }
 
         sut.discardTeardown()
 
         assertThat(reentered).isTrue()
-        verify(bleAdapter, times(1)).removeBond(any())
+        verifyBlocking(bonding, times(1)) { removeBond(any()) }
     }
 
     @Test
@@ -813,7 +818,7 @@ internal class CarelevoPatchMoreTest {
         patchRecords.onNext(ResponseResult.Success(patchInfo()))
         sut.discardTeardown()
 
-        verify(bleAdapter, times(2)).removeBond("AA:BB:CC:DD:EE:FF")
+        verifyBlocking(bonding, times(2)) { removeBond(DeviceId("AA:BB:CC:DD:EE:FF")) }
         assertThat(sut.getPatchInfoAddress()).isNull()
     }
 

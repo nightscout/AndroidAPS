@@ -4,6 +4,9 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.ble.BleCentral
+import app.aaps.core.interfaces.pump.ble.BleResult
+import app.aaps.core.interfaces.pump.ble.DeviceId
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventCustomActionsChanged
@@ -11,7 +14,6 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.pump.carelevo.ble.CarelevoBleTransport
 import app.aaps.pump.carelevo.ble.UnsolicitedMessage
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotResponse
 import app.aaps.pump.carelevo.ble.commands.InfusionInfoCommand
@@ -21,6 +23,7 @@ import app.aaps.pump.carelevo.ble.data.isAvailable
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
 import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.common.model.PatchState
+import app.aaps.pump.carelevo.di.CarelevoCentral
 import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.model.bt.InfusionModeResult.Companion.codeToInfusionModeCommand
@@ -50,6 +53,7 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 import java.util.Optional
 import java.util.UUID
@@ -64,7 +68,7 @@ import kotlin.time.Clock
 @OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)
 class CarelevoPatch @Inject constructor(
-    private val transport: CarelevoBleTransport,
+    @CarelevoCentral private val central: BleCentral,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val preferences: Preferences,
@@ -320,7 +324,11 @@ class CarelevoPatch @Inject constructor(
         // must never leave the discarded patch's cached info behind — a stale record would keep
         // patchState at ConnectedBooted and re-latch the wizard's check screens.
         try {
-            address?.let { transport.adapter.removeBond(it.uppercase()) }
+            address?.let { mac ->
+                // The callers are not coroutines yet. Removing a bond does not wait for the system on Android.
+                val result = runBlocking { central.bonding?.removeBond(DeviceId(mac.uppercase())) }
+                if (result is BleResult.Failed) aapsLogger.warn(LTag.PUMPCOMM, "discardTeardown unbond failed: ${result.failure}")
+            }
         } catch (e: Exception) {
             aapsLogger.error(LTag.PUMPCOMM, "discardTeardown unbond error", e)
         }

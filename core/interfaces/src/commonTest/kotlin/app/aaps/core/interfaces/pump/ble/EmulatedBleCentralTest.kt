@@ -159,6 +159,51 @@ class EmulatedBleCentralTest {
         assertEquals(BondState.NONE, bonding.bondState(pump.device).first())
     }
 
+    @Test
+    fun `a connect that bonds first leaves the device bonded`() = runTest {
+        val central = central()
+        val pump = Pump(DeviceId("PUMP"), "PUMP-1", service)
+        central.add(pump)
+
+        assertIs<BleResult.Ok<BleLink>>(central.connect(pump.device, ConnectOptions(androidBondBeforeDiscovery = true)))
+
+        assertEquals(BondState.BONDED, central.bonding!!.bondState(pump.device).first())
+    }
+
+    @Test
+    fun `a bond the device refuses fails the connect and ends the link`() = runTest {
+        val central = central()
+        val pump = Pump(DeviceId("PUMP"), "PUMP-1", service).apply { bondResult = BleResult.Failed(BleFailure(BleFailure.Kind.REFUSED)) }
+        central.add(pump)
+
+        val result = central.connect(pump.device, ConnectOptions(androidBondBeforeDiscovery = true))
+
+        assertEquals(BleFailure.Kind.REFUSED, assertIs<BleResult.Failed>(result).failure.kind)
+        assertEquals(1, pump.disconnects)
+        assertEquals(BondState.NONE, central.bonding!!.bondState(pump.device).first())
+    }
+
+    @Test
+    fun `a bond the device never ends leaves the connect waiting until its limit`() = runTest {
+        val central = central()
+        val pump = Pump(DeviceId("PUMP"), "PUMP-1", service).apply { bondResult = null }
+        central.add(pump)
+
+        val result = central.connect(pump.device, ConnectOptions(timeout = 2.seconds, androidBondBeforeDiscovery = true))
+
+        assertEquals(BleFailure.Kind.TIMEOUT, assertIs<BleResult.Failed>(result).failure.kind)
+    }
+
+    @Test
+    fun `a bonded device is not bonded again`() = runTest {
+        val central = central()
+        val pump = Pump(DeviceId("PUMP"), "PUMP-1", service).apply { bondResult = BleResult.Failed(BleFailure(BleFailure.Kind.REFUSED)) }
+        central.add(pump, bonded = true)
+
+        assertIs<BleResult.Ok<BleLink>>(central.connect(pump.device, ConnectOptions(androidBondBeforeDiscovery = true)))
+        assertEquals(0, pump.bondRequests)
+    }
+
     /** The central's own coroutines run on the test's clock, so the time limits are virtual too. */
     private fun TestScope.central() = EmulatedBleCentral(scope = backgroundScope)
 
@@ -167,6 +212,8 @@ class EmulatedBleCentralTest {
 
         var inRange = true
         var answerWrites = true
+        var bondResult: BleResult<Unit>? = BleResult.Ok(Unit)
+        var bondRequests = 0
         val written = mutableListOf<ByteArray>()
         val links = mutableListOf<PeripheralLink>()
         var disconnects = 0
@@ -184,6 +231,11 @@ class EmulatedBleCentralTest {
         override suspend fun onConnect(link: PeripheralLink): Boolean {
             if (inRange) links += link
             return inRange
+        }
+
+        override suspend fun onBond(): BleResult<Unit>? {
+            bondRequests++
+            return bondResult
         }
 
         override suspend fun onWrite(link: PeripheralLink, characteristic: CharacteristicId, data: ByteArray, type: WriteType): BleResult<Unit>? {

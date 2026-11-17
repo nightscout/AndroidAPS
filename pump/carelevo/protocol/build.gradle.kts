@@ -14,6 +14,4 @@ android {
 // emulator can sit on it without either depending on the other.
 dependencies {
     implementation(project(":core:interfaces"))
-
-    testImplementation(project(":shared:tests"))
 }

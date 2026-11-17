@@ -1,7 +1,7 @@
 package app.aaps.pump.carelevo.di
 
+import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.pump.carelevo.CarelevoPumpPlugin
-import app.aaps.pump.carelevo.ble.CarelevoBleTransport
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
@@ -11,12 +11,14 @@ import dev.zacsweers.metro.ContributesTo
  * test, for the reasons `DanaAccessors` in `:pump:dana:common` gives, and declared here so that removing
  * `:pump:carelevo` from `settings.gradle` takes it with it.
  *
- * [carelevoBleTransport] is where a test sees whether it got the emulator, and reaches its test hooks.
+ * [carelevoBleCentral] is where a test sees whether it got the emulator, and reaches the emulated patch's test hooks.
  */
 @ContributesTo(AppScope::class)
 interface CarelevoAccessors {
 
     val carelevoPumpPlugin: CarelevoPumpPlugin
     val carelevoPatch: CarelevoPatch
-    val carelevoBleTransport: CarelevoBleTransport
+
+    @CarelevoCentral
+    val carelevoBleCentral: BleCentral
 }

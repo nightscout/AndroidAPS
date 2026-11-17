@@ -4,7 +4,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.pump.carelevo.ble.CarelevoBleTransport
+import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.pump.carelevo.ble.UnsolicitedMessage
 import app.aaps.pump.carelevo.ble.data.BleState
 import app.aaps.pump.carelevo.ble.data.BondingState
@@ -54,7 +54,7 @@ import kotlin.time.Duration.Companion.hours
 @MockitoSettings(strictness = Strictness.LENIENT)
 internal class CarelevoPatchTest {
 
-    @Mock lateinit var transport: CarelevoBleTransport
+    @Mock lateinit var central: BleCentral
     @Mock lateinit var aapsSchedulers: AapsSchedulers
     @Mock lateinit var rxBus: RxBus
     @Mock lateinit var preferences: Preferences
@@ -103,7 +103,7 @@ internal class CarelevoPatchTest {
         whenever(pumpStopUseCase.persistStopped(any())).thenReturn(true)
 
         sut = CarelevoPatch(
-            transport = transport,
+            central = central,
             aapsSchedulers = aapsSchedulers,
             rxBus = rxBus,
             preferences = preferences,
@@ -202,7 +202,7 @@ internal class CarelevoPatchTest {
     fun `discardTeardown clears patch state even when the unbond throws`() {
         sut.initPatch()
         sut.onBluetoothStateChanged(bleState(enabled = true))
-        whenever(transport.adapter).thenThrow(RuntimeException("no adapter"))
+        whenever(central.bonding).thenThrow(RuntimeException("no adapter"))
 
         sut.discardTeardown()
 

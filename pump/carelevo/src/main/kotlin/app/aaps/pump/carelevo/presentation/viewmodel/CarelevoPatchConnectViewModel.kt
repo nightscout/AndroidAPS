@@ -4,12 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.pump.ble.ScannedDevice
+import app.aaps.core.interfaces.pump.ble.Advertisement
+import app.aaps.core.interfaces.pump.ble.BleCentral
+import app.aaps.core.interfaces.pump.ble.BleException
+import app.aaps.core.interfaces.pump.ble.DeviceId
+import app.aaps.core.interfaces.pump.ble.ScanFilter
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
-import app.aaps.pump.carelevo.ble.CarelevoBleTransport
+import app.aaps.pump.carelevo.ble.CarelevoGatt
 import app.aaps.pump.carelevo.command.CmdDiscard
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.MutableEventFlow
@@ -20,6 +24,7 @@ import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.common.model.State
 import app.aaps.pump.carelevo.common.model.UiState
+import app.aaps.pump.carelevo.di.CarelevoCentral
 import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoConnectNewPatchUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
@@ -34,10 +39,10 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import java.util.concurrent.TimeUnit
@@ -53,12 +58,13 @@ class CarelevoPatchConnectViewModel @Inject constructor(
     private val commandQueue: CommandQueue,
     private val preferences: Preferences,
     private val bleSession: CarelevoBleSession,
-    private val transport: CarelevoBleTransport,
+    @CarelevoCentral private val central: BleCentral,
     private val connectNewPatchUseCase: CarelevoConnectNewPatchUseCase,
     private val patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase
 ) : ViewModel() {
 
-    private var _selectedDevice: ScannedDevice? = null
+    private var _selectedDevice: Advertisement? = null
+    private var scanJob: Job? = null
 
     private var _isScanWorking = false
     val isScanWorking get() = _isScanWorking
@@ -102,9 +108,9 @@ class CarelevoPatchConnectViewModel @Inject constructor(
     }
 
     /**
-     * Discovery scan over the transport. `scanAddress = null` puts `CarelevoBleTransportImpl`'s scanner
-     * in service-UUID discovery mode; results are collected for a short window and the strongest RSSI
-     * patch is selected.
+     * Discovery scan for the patch service. Results are collected for a short window and the strongest RSSI patch
+     * is selected; a patch that tells no name is skipped, as before. A scan that cannot run (no permission) finds
+     * nothing.
      */
     fun startScan() {
         if (!carelevoPatch.isBluetoothEnabled()) {
@@ -118,27 +124,27 @@ class CarelevoPatchConnectViewModel @Inject constructor(
 
         setUiState(UiState.Loading)
         _isScanWorking = true
-        viewModelScope.launch(Dispatchers.IO) {
+        scanJob = viewModelScope.launch(Dispatchers.IO) {
             val found = try {
-                transport.scanAddress = null
-                val devicesByAddress = linkedMapOf<String, ScannedDevice>()
-                withTimeoutOrNull(DISCOVERY_COLLECTION_MS.milliseconds) {
-                    transport.scanner.scannedDevices
-                        // Subscribe BEFORE starting the scan so an immediate advertisement cannot be missed.
-                        .onSubscription { transport.scanner.startScan() }
-                        .collect { scanned ->
-                            val current = devicesByAddress[scanned.address]
+                val devicesById = linkedMapOf<DeviceId, Advertisement>()
+                try {
+                    withTimeoutOrNull(DISCOVERY_COLLECTION_MS.milliseconds) {
+                        central.scan(ScanFilter(services = listOf(CarelevoGatt.SERVICE))).collect { scanned ->
+                            if (scanned.name.isNullOrEmpty()) return@collect
+                            val current = devicesById[scanned.device]
                             if (scanned.rssi >= MIN_SCAN_RSSI && (current == null || scanned.rssi > current.rssi)) {
-                                devicesByAddress[scanned.address] = scanned
+                                devicesById[scanned.device] = scanned
                             }
                         }
+                    }
+                } catch (e: BleException) {
+                    aapsLogger.error(LTag.PUMPCOMM, "newBle.scan failed: ${e.failure}")
                 }
-                devicesByAddress.values.maxByOrNull { it.rssi }
+                devicesById.values.maxByOrNull { it.rssi }
             } finally {
-                transport.scanner.stopScan()
                 _isScanWorking = false
             }
-            aapsLogger.info(LTag.PUMPCOMM, "newBle.scan found=${found?.name} address=${found?.address}")
+            aapsLogger.info(LTag.PUMPCOMM, "newBle.scan found=${found?.name} address=${found?.device?.value}")
             _selectedDevice = found
             setUiState(UiState.Idle)
             if (found != null) {
@@ -243,10 +249,11 @@ class CarelevoPatchConnectViewModel @Inject constructor(
         setUiState(UiState.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             val outcome = runCatching {
-                transport.adapter.removeBond(device.address)
+                // A bond left from an older patch at this address would block the new one. iOS has none to remove.
+                central.bonding?.removeBond(device.device)
                 delay(commandDelay.milliseconds)
                 val pairing = bleSession.runPairing(
-                    device.address,
+                    device.device.value,
                     CarelevoBleSession.PairingSpec(
                         volume = request.volume,
                         remains = request.remains,
@@ -288,9 +295,11 @@ class CarelevoPatchConnectViewModel @Inject constructor(
     }
 
     fun resetForEnterStep() {
+        // Ends a scan that still runs; its result would belong to the step left.
+        scanJob?.cancel()
+        scanJob = null
         _selectedDevice = null
         _isScanWorking = false
-        transport.scanner.stopScan()
         setUiState(UiState.Idle)
     }
 

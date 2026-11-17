@@ -25,7 +25,7 @@ import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.ble.BleScanner
+import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.keys.BooleanKey
@@ -39,7 +39,6 @@ import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
-import app.aaps.pump.carelevo.ble.CarelevoBleTransport
 import app.aaps.pump.carelevo.command.CarelevoActivationExecutor
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.model.PatchState
@@ -137,8 +136,7 @@ class CarelevoPatchFlowScreenTest {
     private lateinit var insulinManager: InsulinManager
     private lateinit var persistenceLayer: PersistenceLayer
     private lateinit var bleSession: CarelevoBleSession
-    private lateinit var transport: CarelevoBleTransport
-    private lateinit var scanner: BleScanner
+    private lateinit var central: BleCentral
     private lateinit var connectNewPatchUseCase: CarelevoConnectNewPatchUseCase
     private lateinit var pumpSync: PumpSync
     private lateinit var carelevoAlarmInfoUseCase: CarelevoAlarmInfoUseCase
@@ -185,8 +183,7 @@ class CarelevoPatchFlowScreenTest {
         insulinManager = mock()
         persistenceLayer = mock()
         bleSession = mock()
-        transport = mock()
-        scanner = mock()
+        central = mock()
         connectNewPatchUseCase = mock()
         pumpSync = mock()
         carelevoAlarmInfoUseCase = mock()
@@ -199,7 +196,6 @@ class CarelevoPatchFlowScreenTest {
         patchInfoSubject = BehaviorSubject.create()
         whenever(carelevoPatch.patchState).thenReturn(patchStateSubject)
         whenever(carelevoPatch.patchInfo).thenReturn(patchInfoSubject)
-        whenever(transport.scanner).thenReturn(scanner)
 
         // AapsTheme resolves the dark-mode preference; pin it so the colour scheme is deterministic.
         whenever(preferences.observe(StringKey.GeneralDarkMode)).thenReturn(MutableStateFlow("light"))
@@ -229,7 +225,7 @@ class CarelevoPatchFlowScreenTest {
             commandQueue = commandQueue,
             preferences = preferences,
             bleSession = bleSession,
-            transport = transport,
+            central = central,
             connectNewPatchUseCase = connectNewPatchUseCase,
             patchForceDiscardUseCase = patchForceDiscardUseCase
         )
@@ -460,13 +456,15 @@ class CarelevoPatchFlowScreenTest {
 
     @Test
     fun patchConnectStep_rendersAndResetsTheConnectViewModelOnEnter() {
+        // A scan left running by a previous visit.
+        CarelevoPatchConnectViewModel::class.java.getDeclaredField("_isScanWorking").apply { isAccessible = true }.setBoolean(connectViewModel, true)
+
         startAt(CarelevoPatchStep.PATCH_CONNECT)
 
         assertThat(toolbar?.title).isEqualTo(string(R.string.carelevo_connect_patch_title))
         compose.onNodeWithText(string(R.string.carelevo_patch_connect_step_1_title)).assertIsDisplayed()
         compose.onNodeWithText(string(R.string.carelevo_btn_input_search_patch)).assertIsEnabled()
         // The page-entry effect must clear any scan left running by a previous visit.
-        verify(scanner).stopScan()
         assertThat(connectViewModel.isScanWorking).isFalse()
     }
 

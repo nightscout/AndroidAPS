@@ -1,14 +1,7 @@
 package app.aaps.pump.carelevo.config
 
-class BleEnvConfig {
-    companion object {
-
-        const val BLE_CCC_DESCRIPTOR = "00002902-0000-1000-8000-00805f9b34fb"
-        const val BLE_SERVICE_UUID = "e1b40001-ffc4-4daa-a49b-1c92f99072ab"
-        const val BLE_TX_CHAR_UUID = "e1b40003-ffc4-4daa-a49b-1c92f99072ab"
-        const val BLE_RX_CHAR_UUID = "e1b40002-ffc4-4daa-a49b-1c92f99072ab"
-    }
-}
+// BleEnvConfig was here. The Bluetooth ids are app.aaps.pump.carelevo.ble.CarelevoGatt in the protocol
+// module now, where the emulator can use them too; CarelevoGattTest pins the values.
 
 /**
  * Insulin fill limits of the patch reservoir. Single source of truth for the wizard's amount

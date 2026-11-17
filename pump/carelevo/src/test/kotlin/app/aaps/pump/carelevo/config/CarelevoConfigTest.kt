@@ -3,41 +3,12 @@ package app.aaps.pump.carelevo.config
 import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
-import java.util.UUID
 
 /**
- * Guards the Carelevo config constants — BLE UUIDs, reservoir fill limits, and the
- * preference storage keys — against accidental drift. Values here are the single source
- * of truth referenced across the driver.
+ * Guards the Carelevo config constants — reservoir fill limits and the preference storage keys —
+ * against accidental drift. The Bluetooth ids are pinned by `CarelevoGattTest` in the protocol module.
  */
 internal class CarelevoConfigTest {
-
-    // ---------- BleEnvConfig ----------
-
-    @Test
-    fun `BleEnvConfig UUID constants hold the exact expected values`() {
-        assertThat(BleEnvConfig.BLE_CCC_DESCRIPTOR).isEqualTo("00002902-0000-1000-8000-00805f9b34fb")
-        assertThat(BleEnvConfig.BLE_SERVICE_UUID).isEqualTo("e1b40001-ffc4-4daa-a49b-1c92f99072ab")
-        assertThat(BleEnvConfig.BLE_TX_CHAR_UUID).isEqualTo("e1b40003-ffc4-4daa-a49b-1c92f99072ab")
-        assertThat(BleEnvConfig.BLE_RX_CHAR_UUID).isEqualTo("e1b40002-ffc4-4daa-a49b-1c92f99072ab")
-    }
-
-    @Test
-    fun `BleEnvConfig UUID constants are well-formed UUIDs`() {
-        listOf(
-            BleEnvConfig.BLE_CCC_DESCRIPTOR,
-            BleEnvConfig.BLE_SERVICE_UUID,
-            BleEnvConfig.BLE_TX_CHAR_UUID,
-            BleEnvConfig.BLE_RX_CHAR_UUID
-        ).forEach { assertThat(UUID.fromString(it).toString()).isEqualTo(it) }
-    }
-
-    @Test
-    fun `BleEnvConfig TX and RX characteristics differ from each other and the service`() {
-        assertThat(BleEnvConfig.BLE_TX_CHAR_UUID).isNotEqualTo(BleEnvConfig.BLE_RX_CHAR_UUID)
-        assertThat(BleEnvConfig.BLE_TX_CHAR_UUID).isNotEqualTo(BleEnvConfig.BLE_SERVICE_UUID)
-        assertThat(BleEnvConfig.BLE_RX_CHAR_UUID).isNotEqualTo(BleEnvConfig.BLE_SERVICE_UUID)
-    }
 
     // ---------- FillConfig ----------
 

@@ -205,7 +205,13 @@ data class ConnectOptions(
      * Android only: let the system make the connection when the device comes in range, with no time limit of its own
      * (`autoConnect`). [timeout] still ends the wait. Ignored on iOS, whose connect always waits like this.
      */
-    val androidAutoConnect: Boolean = false
+    val androidAutoConnect: Boolean = false,
+    /**
+     * Android only: bond right after the connect and wait for [BondState.BONDED], then discover the services. A device
+     * that is bonded already is not bonded again. Some devices (Carelevo) accept a bond only in this order. Ignored on
+     * iOS, where the system pairs by itself. [timeout] covers the bond too.
+     */
+    val androidBondBeforeDiscovery: Boolean = false
 )
 
 /** Data that came from the device on [characteristic]. */

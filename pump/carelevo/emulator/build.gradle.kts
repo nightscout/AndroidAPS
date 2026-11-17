@@ -13,6 +13,4 @@ android {
 dependencies {
     implementation(project(":core:interfaces"))
     implementation(project(":pump:carelevo:protocol"))
-
-    testImplementation(project(":shared:tests"))
 }

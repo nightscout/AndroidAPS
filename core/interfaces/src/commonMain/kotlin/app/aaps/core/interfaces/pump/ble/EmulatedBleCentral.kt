@@ -41,6 +41,9 @@ interface EmulatedPeripheral {
      */
     suspend fun onConnect(link: PeripheralLink): Boolean
 
+    /** The phone bonds with the device. Ok: bonded. Null: the bond never ends, as a device that does not answer. */
+    suspend fun onBond(): BleResult<Unit>? = BleResult.Ok(Unit)
+
     /** Ok makes the characteristic subscribed: [PeripheralLink.send] works on it from then on. */
     suspend fun onSubscribe(link: PeripheralLink, characteristic: CharacteristicId): BleResult<Unit>? = BleResult.Ok(Unit)
 
@@ -109,6 +112,9 @@ class EmulatedBleCentral(
         peripherals.update { it - device }
     }
 
+    /** The devices added, for a test that needs the emulator behind its central. */
+    val devices: Collection<EmulatedPeripheral> get() = peripherals.value.values
+
     /** Bluetooth switched on or off, or the permission taken away. Not [AdapterState.ON] drops every link, as a phone does. */
     fun setAdapterState(state: AdapterState) {
         _adapterState.value = state
@@ -130,7 +136,7 @@ class EmulatedBleCentral(
 
     override suspend fun connect(device: DeviceId, options: ConnectOptions): BleResult<BleLink> {
         unavailable()?.let { return BleResult.Failed(it) }
-        val link = withTimeoutOrNull(options.timeout) {
+        val link: BleResult<BleLink>? = withTimeoutOrNull(options.timeout) {
             // A device that is not there, or does not answer, leaves the connect waiting, as a real one does.
             val peripheral = peripherals.value[device] ?: awaitCancellation()
             val peripheralLink = PeripheralLink()
@@ -138,11 +144,17 @@ class EmulatedBleCentral(
             port.link = QueuedBleLink(device, peripheral.services, port, aapsLogger)
             peripheralLink.port = port
             if (!peripheral.onConnect(peripheralLink)) awaitCancellation()
+            if (options.androidBondBeforeDiscovery) {
+                val bonded = emulatedBonding.bond(peripheral) ?: awaitCancellation()
+                if (bonded is BleResult.Failed) {
+                    port.link.close()
+                    return@withTimeoutOrNull BleResult.Failed(bonded.failure)
+                }
+            }
             links.update { it + port.link }
-            port.link
+            BleResult.Ok(port.link)
         }
-        return if (link == null) BleResult.Failed(BleFailure(BleFailure.Kind.TIMEOUT, message = "$device did not answer in ${options.timeout}"))
-        else BleResult.Ok(link)
+        return link ?: BleResult.Failed(BleFailure(BleFailure.Kind.TIMEOUT, message = "$device did not answer in ${options.timeout}"))
     }
 
     private fun unavailable(): BleFailure? = when (_adapterState.value) {
@@ -210,11 +222,20 @@ class EmulatedBleCentral(
         override fun bondState(device: DeviceId): Flow<BondState> = states.map { it[device] ?: BondState.NONE }.distinctUntilChanged()
 
         override suspend fun createBond(device: DeviceId, timeout: Duration): BleResult<Unit> {
-            if (device !in peripherals.value) return BleResult.Failed(BleFailure(BleFailure.Kind.REFUSED, message = "no device $device"))
+            val peripheral = peripherals.value[device] ?: return BleResult.Failed(BleFailure(BleFailure.Kind.REFUSED, message = "no device $device"))
+            return withTimeoutOrNull(timeout) { bond(peripheral) ?: awaitCancellation() }
+                ?: BleResult.Failed(BleFailure(BleFailure.Kind.TIMEOUT, message = "not bonded in $timeout"))
+        }
+
+        /** Bonds with [peripheral] unless it is bonded. Null when the device never ends the bond. */
+        suspend fun bond(peripheral: EmulatedPeripheral): BleResult<Unit>? {
+            val device = peripheral.device
+            if (states.value[device] == BondState.BONDED) return BleResult.Ok(Unit)
             set(device, BondState.BONDING)
             delay(BOND_TIME)
-            set(device, BondState.BONDED)
-            return BleResult.Ok(Unit)
+            val result = peripheral.onBond()
+            set(device, if (result is BleResult.Ok) BondState.BONDED else BondState.NONE)
+            return result
         }
 
         override suspend fun removeBond(device: DeviceId): BleResult<Unit> {

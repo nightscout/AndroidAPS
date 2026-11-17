@@ -2,6 +2,12 @@ package app.aaps.pump.carelevo.ble
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.ble.BleCentral
+import app.aaps.core.interfaces.pump.ble.BleLink
+import app.aaps.core.interfaces.pump.ble.BleResult
+import app.aaps.core.interfaces.pump.ble.ConnectOptions
+import app.aaps.core.interfaces.pump.ble.DeviceId
+import app.aaps.core.interfaces.pump.ble.LinkState
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotCommand
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotResponse
 import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotTier
@@ -18,11 +24,8 @@ import app.aaps.pump.carelevo.ble.commands.SafetyCheckResponse
 import app.aaps.pump.carelevo.ble.commands.SetTimeForPatchInfoCommand
 import app.aaps.pump.carelevo.ble.commands.SimpleResultResponse
 import app.aaps.pump.carelevo.ble.commands.ThresholdSetupCommand
-import app.aaps.pump.carelevo.ble.gatt.BleTransportGattConnection
-import app.aaps.pump.carelevo.ble.gatt.GattConnState
-import app.aaps.pump.carelevo.ble.gatt.GattEvent
-import app.aaps.pump.carelevo.di.CarelevoRxCharacteristic
-import app.aaps.pump.carelevo.di.CarelevoTxCharacteristic
+import app.aaps.pump.carelevo.ble.gatt.BleLinkGattConnection
+import app.aaps.pump.carelevo.di.CarelevoCentral
 import app.aaps.pump.carelevo.ext.checkSumV2
 import app.aaps.pump.carelevo.ext.convertHexToByteArray
 import dev.zacsweers.metro.AppScope
@@ -34,23 +37,21 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
-import java.util.UUID
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -65,27 +66,23 @@ import kotlin.time.Duration.Companion.milliseconds
  * - **Transient per-op session** ([transientSession]): open→run→close for pre-activation / pairing / any op
  *   with no held link.
  *
- * Either way each session builds a **fresh** [BleTransportGattConnection] + [BleClientImpl] + [CoroutineScope]
- * and closes them once: [BleTransportGattConnection.close] is one-shot (it latches `closed` and releases the
- * transport's single listener slot), so a closed instance is never reused — [openLink] builds a new one on
- * every connect, and [tearDownHeld]/[transientSession] close it exactly once.
+ * Either way each session connects a **new** Bluetooth v2 [BleLink] and builds a [BleLinkGattConnection] +
+ * [BleClientImpl] + [CoroutineScope] on it. A link is one connection and dead once closed, so nothing is
+ * reused: [openLink] connects anew each time, and [tearDownHeld]/[transientSession] close it exactly once.
  *
- * A session opens its own GATT; two GATT clients to one patch cause the status-133 collision, so a
- * session must not run concurrently with any other link to the patch. The caller (a customCommand)
- * is responsible for ensuring no other link is active before invoking a session.
+ * Two links to one patch cause the status-133 collision, so a session must not run concurrently with any
+ * other link to the patch. The caller (a customCommand) is responsible for ensuring no other link is
+ * active before invoking a session.
  */
 @SingleIn(AppScope::class)
 class CarelevoBleSession @Inject constructor(
-    private val transport: CarelevoBleTransport,
-    @CarelevoRxCharacteristic private val writeUuid: UUID,
-    @CarelevoTxCharacteristic private val notifyUuid: UUID,
+    @CarelevoCentral private val central: BleCentral,
     private val aapsLogger: AAPSLogger
 ) {
 
-    // The new transport is app-scoped with a SINGLE GATT + single listener slot, so two sessions can
-    // never physically overlap. This mutex enforces that at the API level: every session serializes, so an
-    // out-of-band caller (e.g. a bolus cancel fired off the queue worker by cancelAllBoluses) waits for the
-    // in-flight session to close and release before it opens — never a two-GATT status-133 collision.
+    // Two links to one patch at once end in status 133 on Android, so sessions never overlap. This mutex
+    // enforces that: every session serializes, so an out-of-band caller (e.g. a bolus cancel fired off the
+    // queue worker by cancelAllBoluses) waits for the in-flight session to close before it opens.
     private val sessionMutex = Mutex()
 
     // Test seam: the per-session scope dispatcher. Production always uses IO; tests inject a
@@ -137,14 +134,16 @@ class CarelevoBleSession @Inject constructor(
     /** The in-flight connect job, so [requestDisconnect]/stopConnecting can cancel a slow/hung openLink. */
     @Volatile private var connectJob: Job? = null
 
-    private class HeldLink(
-        val gatt: BleTransportGattConnection,
+    /** One open connection: the link, the client on it and the scope of its coroutines. Used held or transient. */
+    private class OpenLink(
+        val link: BleLink,
+        val gatt: BleLinkGattConnection,
         val client: BleClient,
         val scope: CoroutineScope
     )
 
     /** The currently held queue-owned link, or null when no session is up. */
-    @Volatile private var heldLink: HeldLink? = null
+    @Volatile private var heldLink: OpenLink? = null
 
     /** Read Infusion Info (0x31 → 0x91) — the periodic status read (reservoir, totals, pump state). */
     suspend fun readInfusionInfo(address: String): InfusionInfoResponse =
@@ -222,9 +221,12 @@ class CarelevoBleSession @Inject constructor(
         withSession(address, "pairing", PAIRING_TIMEOUT_MS, ensureBond = true) { client ->
             val key = (0..255).random()
             val macResponse = client.request(MacAddressCommand(key.toByte()))
-            // The persisted MAC is lowercase, colon-separated.
             val colonMac = macResponse.macAddress.lowercase().chunked(2).joinToString(":")
             aapsLogger.debug(LTag.PUMPCOMM, "bleSession: pairing MAC=$colonMac")
+            // The patch is stored under the id it was found and connected at (lower case, as stored before): on
+            // iOS that is the only id that works. On Android it is the MAC address the patch reports too.
+            val storedAddress = address.lowercase()
+            if (colonMac != storedAddress) aapsLogger.warn(LTag.PUMPCOMM, "bleSession: the patch reports MAC $colonMac, it was found at $storedAddress")
             val checkSumByte = (macResponse.macAddress + macResponse.checkSum).convertHexToByteArray().checkSumV2(key)
             val auth = client.request(AppAuthCommand(checkSumByte.toUByte().toInt()))
             check(auth.resultCode == RESULT_SUCCESS) { "app auth failed result=${auth.resultCode}" }
@@ -269,7 +271,7 @@ class CarelevoBleSession @Inject constructor(
             check(threshold.resultCode == RESULT_SUCCESS) { "threshold setup failed result=${threshold.resultCode}" }
 
             PairingResult(
-                address = colonMac,
+                address = storedAddress,
                 serialNumber = info.serialNumber.trim(),
                 firmwareVersion = info.firmwareVersion,
                 modelName = info.modelName
@@ -327,30 +329,22 @@ class CarelevoBleSession @Inject constructor(
     /**
      * Open the queue-owned held link — one attempt, then leave it up for [withSession] to reuse until the
      * queue's `disconnect()` (or an unexpected drop) closes it. Holds [sessionMutex] for the handshake so no
-     * transient session can race it onto the transport's single GATT.
+     * transient session can open a second link to the patch.
      */
     private suspend fun openLink(address: String, reason: String) = sessionMutex.withLock {
         if (heldLink != null) return@withLock
         awaitInterSessionSettle()
-        val mac = address.uppercase()
         val scope = CoroutineScope(sessionDispatcher + SupervisorJob())
-        val gatt = BleTransportGattConnection(transport, writeUuid, notifyUuid, scope)
-        val client: BleClient = BleClientImpl(gatt, writeUuid, notifyUuid, scope)
-        subscribeUnsolicited(scope, client)
-        try {
-            withTimeout(CONNECT_TIMEOUT_MS.milliseconds) { open(gatt, mac) }
+        val opened = try {
+            withTimeout(CONNECT_TIMEOUT_MS.milliseconds) { open(scope, address, ensureBond = false) }
         } catch (t: Throwable) {
-            // Half-open handshake: release the fresh gatt + scope (one-shot close) so the next queue
-            // connect() starts clean.
-            gatt.close()
+            // open() closed a half-open link itself; release the scope so the next queue connect() starts clean.
             scope.cancel()
             lastCloseAtMs = System.currentTimeMillis()
             throw t
         }
-        heldLink = HeldLink(gatt, client, scope)
-        // Subscribe the drop watcher (UNDISPATCHED → live synchronously) BEFORE marking the link up, so a
-        // DISCONNECTED racing the handshake can't slip through the replay-0 events flow with no subscriber.
-        watchForDrop(scope, gatt)
+        heldLink = opened
+        watchForDrop(opened)
         _lastConnectedAt.value = System.currentTimeMillis()
         _connected.value = true
         aapsLogger.debug(LTag.PUMPCOMM, "bleSession: held link up reason=$reason")
@@ -358,29 +352,27 @@ class CarelevoBleSession @Inject constructor(
 
     /**
      * Flip [connected] false and release the link on an unexpected drop (out-of-range / patch sleep), so
-     * the queue re-dials on its next command. Runs on the held session scope; the tear-down hops onto
-     * [linkScope] so it survives that scope's own cancellation.
+     * the queue re-dials on its next command. It follows the link's state, which keeps its last value, so a
+     * drop during the handshake is seen too. The tear-down hops onto [linkScope] so it survives the
+     * cancellation of the link's own scope.
      */
-    private fun watchForDrop(scope: CoroutineScope, gatt: BleTransportGattConnection) {
-        // UNDISPATCHED so the flow subscription registers synchronously on the calling thread (like open()'s
-        // CONNECTED wait) — the collector is live before this returns, closing the replay-0 lost-event window.
-        scope.launch(start = CoroutineStart.UNDISPATCHED) {
-            gatt.events
-                .filterIsInstance<GattEvent.ConnectionStateChanged>()
-                .first { it.state == GattConnState.DISCONNECTED }
+    private fun watchForDrop(held: OpenLink) {
+        held.scope.launch(start = CoroutineStart.UNDISPATCHED) {
+            held.link.state.first { it != LinkState.Up }
             aapsLogger.debug(LTag.PUMPCOMM, "bleSession: held link dropped")
-            linkScope.launch { sessionMutex.withLock { tearDownHeld("dropped") } }
+            // A link held after this one is not touched.
+            linkScope.launch { sessionMutex.withLock { if (heldLink === held) tearDownHeld("dropped") } }
         }
     }
 
     /** Idempotent teardown of the held link. Caller holds [sessionMutex]. */
-    private fun tearDownHeld(reason: String) {
+    private suspend fun tearDownHeld(reason: String) {
         val link = heldLink ?: return
+        heldLink = null
         _connected.value = false
-        link.gatt.close()
+        link.gatt.closeNow()
         link.scope.cancel()
         lastCloseAtMs = System.currentTimeMillis()
-        heldLink = null
         aapsLogger.debug(LTag.PUMPCOMM, "bleSession: held link closed reason=$reason")
     }
 
@@ -415,19 +407,19 @@ class CarelevoBleSession @Inject constructor(
                     throw t
                 }
             } else {
-                // A transient session must be the ONLY link on the single-GATT/single-listener transport. If
-                // a held link is somehow up (e.g. an ensureBond pairing while a prior link is still held),
-                // close it first to avoid a second concurrent GATT (status-133) and a stolen listener slot.
-                if (link != null) tearDownHeld("transient session needs the transport: $label")
+                // A transient session must be the ONLY link to the patch. If a held link is somehow up (e.g.
+                // an ensureBond pairing while a prior link is still held), close it first: two links to one
+                // patch end in status 133.
+                if (link != null) tearDownHeld("transient session needs the patch: $label")
                 transientSession(address, label, timeoutMs, ensureBond, block)
             }
         }
 
     /**
      * Per-op session: open a fresh connection, run [block] against the [BleClient], and close. Used for
-     * pre-activation / pairing / any op with no held link. Each call gets its own adapter+client+scope —
-     * see the class KDoc for why (one-shot [BleTransportGattConnection.close]). [ensureBond] (pairing only)
-     * creates the Android bond after CONNECTED, before discovery — the order the patch requires. Caller
+     * pre-activation / pairing / any op with no held link. Each call gets its own link+client+scope — see
+     * the class KDoc for why. [ensureBond] (pairing only) creates the Android bond after CONNECTED, before
+     * discovery — the order the patch requires. Caller
      * holds [sessionMutex].
      */
     private suspend fun <R> transientSession(
@@ -438,28 +430,23 @@ class CarelevoBleSession @Inject constructor(
         block: suspend (BleClient) -> R
     ): R {
         awaitInterSessionSettle()
-        // BluetoothAdapter.getRemoteDevice requires an UPPERCASE MAC (lowercase throws
-        // IllegalArgumentException); the stored address is lowercase, so normalize here.
-        val mac = address.uppercase()
         val scope = CoroutineScope(sessionDispatcher + SupervisorJob())
-        val gatt = BleTransportGattConnection(transport, writeUuid, notifyUuid, scope)
-        val client: BleClient = BleClientImpl(gatt, writeUuid, notifyUuid, scope)
-        subscribeUnsolicited(scope, client)
+        var opened: OpenLink? = null
         return try {
-            // Bound the ENTIRE connect→discover→enable handshake, not just the CONNECTED wait: a lost
-            // CCCD-write callback (which the transport documents as "surfaced by the caller's withTimeout")
-            // would otherwise suspend forever HERE while holding sessionMutex, wedging every later
-            // session op — including a delivery-critical out-of-band bolus cancel. On timeout the finally closes the
-            // gatt (aborting the pending ack) and releases the mutex.
+            // Bound the ENTIRE connect→bond→subscribe handshake: a step with no end would otherwise suspend
+            // forever HERE while holding sessionMutex, wedging every later session op — including a
+            // delivery-critical out-of-band bolus cancel. On timeout open() closes the link and the finally
+            // releases the mutex.
             val openTimeoutMs = if (ensureBond) CONNECT_TIMEOUT_MS + BOND_TIMEOUT_MS else CONNECT_TIMEOUT_MS
-            withTimeout(openTimeoutMs.milliseconds) { open(gatt, mac, ensureBond) }
+            val link = withTimeout(openTimeoutMs.milliseconds) { open(scope, address, ensureBond) }
+            opened = link
             // NB: a transient session does NOT touch _connected — that flag is the queue-owned held-link
             // signal (see [connected]). It updates lastConnectedAt only, since it is a real connection.
             _lastConnectedAt.value = System.currentTimeMillis()
             aapsLogger.debug(LTag.PUMPCOMM, "bleSession: reading $label")
-            withTimeout(timeoutMs.milliseconds) { block(client) }
+            withTimeout(timeoutMs.milliseconds) { block(link.client) }
         } finally {
-            gatt.close()
+            opened?.gatt?.closeNow()
             scope.cancel()
             lastCloseAtMs = System.currentTimeMillis()
         }
@@ -488,34 +475,38 @@ class CarelevoBleSession @Inject constructor(
         }
     }
 
-    private suspend fun open(gatt: BleTransportGattConnection, address: String, ensureBond: Boolean = false) = coroutineScope {
-        // Subscribe to the CONNECTED event BEFORE calling connect() so the state change cannot race
-        // ahead of our collector. UNDISPATCHED runs the async body up to the flow subscription
-        // synchronously, guaranteeing the subscription is live before connect() fires.
-        val connected = async(start = CoroutineStart.UNDISPATCHED) {
-            withTimeout(CONNECT_TIMEOUT_MS.milliseconds) {
-                gatt.events
-                    .filterIsInstance<GattEvent.ConnectionStateChanged>()
-                    .first { it.state == GattConnState.CONNECTED }
-            }
+    /**
+     * Connects (with discovery, and for [ensureBond] the bond between the two, the order the patch requires),
+     * builds the client on the link and enables the notifications. A failed step closes the link. The caller
+     * bounds the whole handshake.
+     */
+    private suspend fun open(scope: CoroutineScope, address: String, ensureBond: Boolean): OpenLink {
+        // On Android a device id is the MAC address in upper case; the stored address is lower case.
+        val device = DeviceId(address.uppercase())
+        aapsLogger.debug(LTag.PUMPCOMM, "bleSession: connecting to ${device.value}")
+        val options = ConnectOptions(
+            // The caller's time limit ends the wait first; this one only has to be longer.
+            timeout = (CONNECT_TIMEOUT_MS + BOND_TIMEOUT_MS + CONNECT_TIMEOUT_MARGIN_MS).milliseconds,
+            services = listOf(CarelevoGatt.SERVICE),
+            androidBondBeforeDiscovery = ensureBond
+        )
+        val link = when (val result = central.connect(device, options)) {
+            is BleResult.Ok     -> result.value
+            is BleResult.Failed -> throw IllegalArgumentException("bleSession: connect() refused for ${device.value}: ${result.failure}")
         }
-        aapsLogger.debug(LTag.PUMPCOMM, "bleSession: connecting to $address")
-        require(gatt.connect(address)) { "bleSession: connect() refused for $address" }
-        connected.await()
-        if (ensureBond && !transport.adapter.isDeviceBonded(address)) {
-            // The patch requires the bond be created right after STATE_CONNECTED; the transport exposes
-            // no bond-state callback, so poll isDeviceBonded until the SMP completes.
-            aapsLogger.debug(LTag.PUMPCOMM, "bleSession: creating bond")
-            transport.adapter.createBond(address)
-            withTimeout(BOND_TIMEOUT_MS.milliseconds) {
-                while (!transport.adapter.isDeviceBonded(address)) delay(BOND_POLL_MS.milliseconds)
-            }
-            aapsLogger.debug(LTag.PUMPCOMM, "bleSession: bonded")
+        try {
+            val gatt = BleLinkGattConnection(link, scope, aapsLogger)
+            val client: BleClient = BleClientImpl(gatt, BleLinkGattConnection.WRITE_UUID, BleLinkGattConnection.NOTIFY_UUID, scope)
+            subscribeUnsolicited(scope, client)
+            aapsLogger.debug(LTag.PUMPCOMM, "bleSession: connected; checking the services")
+            gatt.discoverServices()
+            gatt.enableNotifications(BleLinkGattConnection.NOTIFY_UUID)
+            aapsLogger.debug(LTag.PUMPCOMM, "bleSession: notifications enabled")
+            return OpenLink(link, gatt, client, scope)
+        } catch (t: Throwable) {
+            withContext(NonCancellable) { link.close() }
+            throw t
         }
-        aapsLogger.debug(LTag.PUMPCOMM, "bleSession: connected; discovering services")
-        gatt.discoverServices()
-        gatt.enableNotifications(notifyUuid)
-        aapsLogger.debug(LTag.PUMPCOMM, "bleSession: notifications enabled")
     }
 
     private companion object {
@@ -540,7 +531,9 @@ class CarelevoBleSession @Inject constructor(
         private const val PATCH_INFO_ROUND_RETRY_COUNT = 2
         private const val PATCH_INFO_ROUND_TIMEOUT_MS = 10_000L
         private const val BOND_TIMEOUT_MS = 15_000L
-        private const val BOND_POLL_MS = 250L
+
+        /** The central's own connect limit is this much longer than the session's, so the session's ends it. */
+        private const val CONNECT_TIMEOUT_MARGIN_MS = 1_000L
 
         // Activation sends alert-alarm mode 0.
         private const val ALERT_ALARM_MODE_DEFAULT = 0

@@ -2,14 +2,18 @@ package app.aaps.pump.carelevo.presentation.viewmodel
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.pump.ble.BleAdapter
-import app.aaps.core.interfaces.pump.ble.BleScanner
-import app.aaps.core.interfaces.pump.ble.ScannedDevice
+import app.aaps.core.interfaces.pump.ble.Advertisement
+import app.aaps.core.interfaces.pump.ble.BleBonding
+import app.aaps.core.interfaces.pump.ble.BleCentral
+import app.aaps.core.interfaces.pump.ble.BleException
+import app.aaps.core.interfaces.pump.ble.BleFailure
+import app.aaps.core.interfaces.pump.ble.DeviceId
+import app.aaps.core.interfaces.pump.ble.ScanFilter
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
-import app.aaps.pump.carelevo.ble.CarelevoBleTransport
+import app.aaps.pump.carelevo.ble.CarelevoGatt
 import app.aaps.pump.carelevo.command.CmdDiscard
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.keys.CarelevoBooleanPreferenceKey
@@ -36,7 +40,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -96,9 +102,8 @@ internal class CarelevoPatchConnectViewModelTest {
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var bleSession: CarelevoBleSession
-    @Mock lateinit var transport: CarelevoBleTransport
-    @Mock lateinit var scanner: BleScanner
-    @Mock lateinit var adapter: BleAdapter
+    @Mock lateinit var central: BleCentral
+    @Mock lateinit var bonding: BleBonding
     @Mock lateinit var connectNewPatchUseCase: CarelevoConnectNewPatchUseCase
     @Mock lateinit var patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase
 
@@ -108,7 +113,11 @@ internal class CarelevoPatchConnectViewModelTest {
     private val events = CopyOnWriteArrayList<Event>()
     private lateinit var collectorScope: CoroutineScope
 
-    private val device = ScannedDevice(name = "CareLevo-1234", address = "94:b2:16:1d:2f:6d", rssi = -40)
+    private val device = advertisement("CareLevo-1234", "94:B2:16:1D:2F:6D", rssi = -40)
+
+    /** The scan ran, and its collection ended: the scan stopped, as the old scanner's stopScan(). */
+    @Volatile private var scanStarted = false
+    @Volatile private var scanStopped = false
 
     private val pairingResult = CarelevoBleSession.PairingResult(
         address = "94:b2:16:1d:2f:6d",
@@ -135,8 +144,7 @@ internal class CarelevoPatchConnectViewModelTest {
 
         whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
         whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
-        whenever(transport.scanner).thenReturn(scanner)
-        whenever(transport.adapter).thenReturn(adapter)
+        whenever(central.bonding).thenReturn(bonding)
 
         sut = CarelevoPatchConnectViewModel(
             aapsLogger = aapsLogger,
@@ -145,7 +153,7 @@ internal class CarelevoPatchConnectViewModelTest {
             commandQueue = commandQueue,
             preferences = preferences,
             bleSession = bleSession,
-            transport = transport,
+            central = central,
             connectNewPatchUseCase = connectNewPatchUseCase,
             patchForceDiscardUseCase = patchForceDiscardUseCase
         )
@@ -177,8 +185,30 @@ internal class CarelevoPatchConnectViewModelTest {
     private fun userSettingSubject(model: CarelevoUserSettingInfoDomainModel?): BehaviorSubject<Optional<CarelevoUserSettingInfoDomainModel>> =
         if (model == null) BehaviorSubject.create() else BehaviorSubject.createDefault(Optional.of(model))
 
+    private fun advertisement(name: String?, address: String, rssi: Int) =
+        Advertisement(DeviceId(address), name, rssi, listOf(CarelevoGatt.SERVICE), emptyMap(), emptyMap())
+
+    /** A scan that reports [found] and then runs until its collection stops. */
+    private fun scanFlow(vararg found: Advertisement): Flow<Advertisement> = flow {
+        scanStarted = true
+        try {
+            found.forEach { emit(it) }
+            awaitCancellation()
+        } finally {
+            scanStopped = true
+        }
+    }
+
+    private fun awaitTrue(what: String, condition: () -> Boolean) {
+        val deadline = System.currentTimeMillis() + 3_000L
+        while (!condition()) {
+            check(System.currentTimeMillis() < deadline) { "Timeout waiting for: $what" }
+            Thread.sleep(5)
+        }
+    }
+
     /** `_selectedDevice` is private and only ever written by a successful scan; seed it directly. */
-    private fun setSelectedDevice(value: ScannedDevice?) {
+    private fun setSelectedDevice(value: Advertisement?) {
         val field = CarelevoPatchConnectViewModel::class.java.getDeclaredField("_selectedDevice")
         field.isAccessible = true
         field.set(sut, value)
@@ -237,7 +267,7 @@ internal class CarelevoPatchConnectViewModelTest {
         sut.startScan()
 
         assertThat(events).contains(CarelevoConnectPrepareEvent.ShowMessageBluetoothNotEnabled)
-        verify(scanner, never()).startScan()
+        verify(central, never()).scan(any())
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
         assertThat(sut.isScanWorking).isFalse()
     }
@@ -250,7 +280,7 @@ internal class CarelevoPatchConnectViewModelTest {
         sut.startScan()
 
         assertThat(events).contains(CarelevoConnectPrepareEvent.ShowMessageScanIsWorking)
-        verify(scanner, never()).startScan()
+        verify(central, never()).scan(any())
         // Guard returns before setUiState(Loading).
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
     }
@@ -261,19 +291,18 @@ internal class CarelevoPatchConnectViewModelTest {
     fun `startScan picks an advertised patch above the RSSI floor and offers the connect dialog`() {
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         // Discovery collects for the whole DISCOVERY_COLLECTION_MS window (no early stop) then selects the
-        // strongest-RSSI device seen. replay=1 buffers the advertisement so the collector cannot miss it.
-        whenever(scanner.scannedDevices).thenReturn(MutableSharedFlow<ScannedDevice>(replay = 1).apply { tryEmit(device) })
+        // strongest-RSSI device seen.
+        whenever(central.scan(any())).thenReturn(scanFlow(device))
 
         sut.startScan()
         // The window runs its full duration on the real IO pool, so wait past DISCOVERY_COLLECTION_MS.
         awaitEvent(timeoutMs = 15_000L)
 
         assertThat(events).contains(CarelevoConnectPrepareEvent.ShowConnectDialog)
-        // scanAddress = null puts the scanner in service-UUID discovery mode (no MAC filter).
-        verify(transport).scanAddress = null
-        verify(scanner).startScan()
-        // The finally arm stops the scanner and releases the latch once the window closes.
-        verify(scanner).stopScan()
+        // A discovery scan for the patch service (no address filter).
+        verify(central).scan(ScanFilter(services = listOf(CarelevoGatt.SERVICE)))
+        // The scan stops and the latch is released once the window closes.
+        assertThat(scanStopped).isTrue()
         assertThat(sut.isScanWorking).isFalse()
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
     }
@@ -283,15 +312,15 @@ internal class CarelevoPatchConnectViewModelTest {
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         // Too weak to be a nearby patch (below MIN_SCAN_RSSI = -45) → filtered out, so the window expires
         // with no selectable device and the scan reports failure.
-        val weak = ScannedDevice(name = "CareLevo-far", address = "94:b2:16:1d:2f:99", rssi = -80)
-        whenever(scanner.scannedDevices).thenReturn(MutableSharedFlow<ScannedDevice>(replay = 1).apply { tryEmit(weak) })
+        val weak = advertisement("CareLevo-far", "94:B2:16:1D:2F:99", rssi = -80)
+        whenever(central.scan(any())).thenReturn(scanFlow(weak))
 
         sut.startScan()
         awaitEvent(timeoutMs = 15_000L)
 
         assertThat(events).contains(CarelevoConnectPrepareEvent.ShowMessageScanFailed)
         assertThat(events).doesNotContain(CarelevoConnectPrepareEvent.ShowConnectDialog)
-        verify(scanner).stopScan()
+        assertThat(scanStopped).isTrue()
         assertThat(sut.isScanWorking).isFalse()
     }
 
@@ -301,15 +330,41 @@ internal class CarelevoPatchConnectViewModelTest {
         // Never emits → withTimeoutOrNull returns null only after the real 10 s SCAN_TIMEOUT_MS.
         // This is the one deliberately slow test: the VM hardcodes Dispatchers.IO, so the window
         // cannot be advanced with virtual time.
-        whenever(scanner.scannedDevices).thenReturn(MutableSharedFlow<ScannedDevice>())
+        whenever(central.scan(any())).thenReturn(scanFlow())
 
         sut.startScan()
         awaitEvent(timeoutMs = 15_000L)
 
         assertThat(events).contains(CarelevoConnectPrepareEvent.ShowMessageScanFailed)
-        verify(scanner).startScan()
-        // The finally arm still stops the scanner and releases the latch on the timeout path.
-        verify(scanner).stopScan()
+        assertThat(scanStarted).isTrue()
+        // The scan still stops and the latch is released on the timeout path.
+        assertThat(scanStopped).isTrue()
+        assertThat(sut.isScanWorking).isFalse()
+        assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
+    }
+
+    @Test
+    fun `startScan skips a patch that tells no name`() {
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        whenever(central.scan(any())).thenReturn(scanFlow(advertisement(null, "94:B2:16:1D:2F:6D", rssi = -40)))
+
+        sut.startScan()
+        awaitEvent(timeoutMs = 15_000L)
+
+        assertThat(events).contains(CarelevoConnectPrepareEvent.ShowMessageScanFailed)
+        assertThat(events).doesNotContain(CarelevoConnectPrepareEvent.ShowConnectDialog)
+    }
+
+    /** No permission, for example: the scan ends at once with the reason, and the wizard says it found nothing. */
+    @Test
+    fun `startScan reports failure at once when the scan cannot run`() {
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        whenever(central.scan(any())).thenReturn(flow { throw BleException(BleFailure(BleFailure.Kind.NOT_AUTHORIZED)) })
+
+        sut.startScan()
+        awaitEvent()
+
+        assertThat(events).contains(CarelevoConnectPrepareEvent.ShowMessageScanFailed)
         assertThat(sut.isScanWorking).isFalse()
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
     }
@@ -349,7 +404,7 @@ internal class CarelevoPatchConnectViewModelTest {
 
         assertThat(events).contains(CarelevoConnectPrepareEvent.ShowMessageNotSetUserSettingInfo)
         verifyBlocking(bleSession, never()) { runPairing(any(), any()) }
-        verify(adapter, never()).removeBond(any())
+        verifyBlocking(bonding, never()) { removeBond(any()) }
     }
 
     // ---- startConnect pairing -----------------------------------------------------------------
@@ -367,7 +422,7 @@ internal class CarelevoPatchConnectViewModelTest {
 
         assertThat(events).contains(CarelevoConnectPrepareEvent.ConnectComplete)
         // Stale bond must be cleared before the pairing session dials.
-        verify(adapter).removeBond(device.address)
+        verifyBlocking(bonding) { removeBond(device.device) }
         verifyBlocking(bleSession) { runPairing(any(), any()) }
         verify(connectNewPatchUseCase).persistNewPatch(any(), any(), any(), any(), any())
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
@@ -390,8 +445,8 @@ internal class CarelevoPatchConnectViewModelTest {
         val specCaptor = argumentCaptor<CarelevoBleSession.PairingSpec>()
         verifyBlocking(bleSession) { runPairing(addressCaptor.capture(), specCaptor.capture()) }
 
-        // The session dials the MAC the scan reported ...
-        assertThat(addressCaptor.firstValue).isEqualTo(device.address)
+        // The session dials the device the scan found ...
+        assertThat(addressCaptor.firstValue).isEqualTo(device.device.value)
         // ... and the spec carries the wizard's fill volume plus the safety limits the patch itself
         // enforces (maxBasalSpeed/maxBolusDose) — these are written to the patch once, at activation,
         // so a wrong value here is not correctable later without a re-pair.
@@ -408,9 +463,9 @@ internal class CarelevoPatchConnectViewModelTest {
     }
 
     @Test
-    fun `startConnect persists the MAC the pairing session read from the patch not the scanned address`() {
-        // The 0x3B MAC read is authoritative: the advertised address and the patch's own MAC need not
-        // match, and every later session dials the persisted one.
+    fun `startConnect persists the address the pairing session returns`() {
+        // The session decides which address the patch is stored at (CarelevoBleSessionPairingTest); every
+        // later session dials the persisted one.
         val sessionReported = pairingResult.copy(address = "aa:bb:cc:dd:ee:ff")
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         setSelectedDevice(device)
@@ -432,7 +487,7 @@ internal class CarelevoPatchConnectViewModelTest {
             requestCaptor.capture()
         )
         assertThat(addressCaptor.firstValue).isEqualTo("aa:bb:cc:dd:ee:ff")
-        assertThat(addressCaptor.firstValue).isNotEqualTo(device.address)
+        assertThat(addressCaptor.firstValue).isNotEqualTo(device.device.value.lowercase())
         // The same request that drove the pairing writes is the one persisted.
         assertThat(requestCaptor.firstValue.volume).isEqualTo(250)
         assertThat(requestCaptor.firstValue.expiry).isEqualTo(72)
@@ -621,14 +676,20 @@ internal class CarelevoPatchConnectViewModelTest {
     // ---- resetForEnterStep --------------------------------------------------------------------
 
     @Test
-    fun `resetForEnterStep stops the scanner and clears the scan latch`() {
-        setScanWorking(true)
+    fun `resetForEnterStep stops the scan and clears the scan latch`() {
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        whenever(central.scan(any())).thenReturn(scanFlow())
+        sut.startScan()
+        awaitTrue("the scan started") { scanStarted }
         setSelectedDevice(device)
 
         sut.resetForEnterStep()
 
-        verify(scanner).stopScan()
+        awaitTrue("the scan stopped") { scanStopped }
         assertThat(sut.isScanWorking).isFalse()
+        // The scan of the step left reports nothing.
+        Thread.sleep(100)
+        assertThat(events).doesNotContain(CarelevoConnectPrepareEvent.ShowMessageScanFailed)
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
 
         // The selection was dropped: re-entering the step must re-scan before connect is allowed.

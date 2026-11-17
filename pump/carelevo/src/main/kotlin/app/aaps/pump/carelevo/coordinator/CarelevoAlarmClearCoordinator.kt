@@ -2,17 +2,21 @@ package app.aaps.pump.carelevo.coordinator
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.ble.BleCentral
+import app.aaps.core.interfaces.pump.ble.BleResult
+import app.aaps.core.interfaces.pump.ble.DeviceId
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.pump.carelevo.ble.CarelevoBleTransport
 import app.aaps.pump.carelevo.command.CmdAlarmClear
 import app.aaps.pump.carelevo.command.CmdAlarmClearPatchDiscard
 import app.aaps.pump.carelevo.command.CmdPumpResume
 import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.di.CarelevoCentral
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -29,7 +33,7 @@ class CarelevoAlarmClearCoordinator @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val commandQueue: CommandQueue,
     private val carelevoPatch: CarelevoPatch,
-    private val transport: CarelevoBleTransport
+    @CarelevoCentral private val central: BleCentral
 ) {
 
     // Serialize the queue ops across BOTH surfaces (this is an app-scoped singleton): CommandQueue.customCommand dedups
@@ -81,7 +85,11 @@ class CarelevoAlarmClearCoordinator @Inject constructor(
      */
     fun forceQuitTeardown(onComplete: () -> Unit) {
         try {
-            carelevoPatch.getPatchInfoAddress()?.let { transport.adapter.removeBond(it.uppercase()) }
+            carelevoPatch.getPatchInfoAddress()?.let { mac ->
+                // The callers are not coroutines yet. Removing a bond does not wait for the system on Android.
+                val result = runBlocking { central.bonding?.removeBond(DeviceId(mac.uppercase())) }
+                if (result is BleResult.Failed) aapsLogger.warn(LTag.PUMPCOMM, "forceQuitTeardown.unbond failed: ${result.failure}")
+            }
         } catch (e: Exception) {
             aapsLogger.error(LTag.PUMPCOMM, "forceQuitTeardown.unbondError", e)
         }

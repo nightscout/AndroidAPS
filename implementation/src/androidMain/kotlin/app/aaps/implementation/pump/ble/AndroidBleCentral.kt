@@ -256,6 +256,11 @@ class AndroidBleCentral(
                 ?: return BleResult.Failed(BleFailure(BleFailure.Kind.REFUSED, message = "the system gave no GATT"))
             this.gatt = gatt
             connected.await()?.let { return BleResult.Failed(it) }
+            if (options.androidBondBeforeDiscovery) {
+                // The outer time limit of the connect ends the wait; this one only has to be longer.
+                val bonded = bonding.createBond(device, options.timeout)
+                if (bonded is BleResult.Failed) return bonded
+            }
             if (!gatt.discoverServices()) return BleResult.Failed(BleFailure(BleFailure.Kind.REFUSED, message = "the service discovery did not start"))
             discovered.await()?.let { return BleResult.Failed(it) }
             val link = QueuedBleLink(device, servicesOf(gatt), this, aapsLogger)

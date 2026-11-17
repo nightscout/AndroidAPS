@@ -297,6 +297,42 @@ class AndroidBleCentralTest {
         assertThat(failureOf(result.await()).kind).isEqualTo(BleFailure.Kind.REFUSED)
     }
 
+    /** Carelevo accepts the bond only between the connect and the discovery. */
+    @Test
+    fun aConnectThatBondsFirstWaitsForBondedBeforeTheDiscovery() = runBlocking {
+        shadowOf(remote).setBondState(BluetoothDevice.BOND_NONE)
+        shadowOf(remote).setCreatedBond(true)
+        val result = scope.async { central.connect(DEVICE, ConnectOptions(timeout = 5.seconds, androidBondBeforeDiscovery = true)) }
+        val gatt = awaitGatt()
+        shadowOf(gatt).addDiscoverableService(BluetoothGattService(UUID.fromString(service.value), BluetoothGattService.SERVICE_TYPE_PRIMARY))
+        shadowOf(remote).simulateGattConnectionChange(BluetoothGatt.GATT_SUCCESS, BluetoothProfile.STATE_CONNECTED)
+        awaitBondReceiver()
+
+        bondBroadcast(BluetoothDevice.BOND_BONDING)
+        assertThat(result.isActive).isTrue()
+        assertThat(gatt.services).isEmpty()
+        bondBroadcast(BluetoothDevice.BOND_BONDED)
+
+        assertThat(withTimeout(5.seconds) { result.await() } is BleResult.Ok).isTrue()
+        assertThat(gatt.services).isNotEmpty()
+    }
+
+    @Test
+    fun aConnectWhoseBondFailsFailsAndClosesItsGatt() = runBlocking {
+        shadowOf(remote).setBondState(BluetoothDevice.BOND_NONE)
+        shadowOf(remote).setCreatedBond(true)
+        val result = scope.async { central.connect(DEVICE, ConnectOptions(timeout = 5.seconds, androidBondBeforeDiscovery = true)) }
+        val gatt = awaitGatt()
+        shadowOf(remote).simulateGattConnectionChange(BluetoothGatt.GATT_SUCCESS, BluetoothProfile.STATE_CONNECTED)
+        awaitBondReceiver()
+
+        bondBroadcast(BluetoothDevice.BOND_BONDING)
+        bondBroadcast(BluetoothDevice.BOND_NONE)
+
+        assertThat(failureOf(withTimeout(5.seconds) { result.await() }).kind).isEqualTo(BleFailure.Kind.REFUSED)
+        assertThat(shadowOf(gatt).isClosed).isTrue()
+    }
+
     @Test
     fun aDeviceBondedBeforeIsOkAtOnce() = runBlocking {
         shadowOf(remote).setBondState(BluetoothDevice.BOND_BONDED)

@@ -2,8 +2,10 @@ package app.aaps.pump.carelevo.coordinator
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.ble.BleBonding
+import app.aaps.core.interfaces.pump.ble.BleCentral
+import app.aaps.core.interfaces.pump.ble.DeviceId
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.pump.carelevo.ble.CarelevoBleTransport
 import app.aaps.pump.carelevo.command.CmdAlarmClear
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
@@ -38,7 +40,7 @@ internal class CarelevoAlarmClearCoordinatorTest {
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var carelevoPatch: CarelevoPatch
-    @Mock lateinit var transport: CarelevoBleTransport
+    @Mock lateinit var central: BleCentral
 
     private lateinit var sut: CarelevoAlarmClearCoordinator
 
@@ -60,7 +62,7 @@ internal class CarelevoAlarmClearCoordinatorTest {
     @BeforeEach
     fun setUp() {
         whenever(carelevoPatch.patchInfo).thenReturn(BehaviorSubject.createDefault(Optional.empty<CarelevoPatchInfoDomainModel>()))
-        sut = CarelevoAlarmClearCoordinator(aapsLogger, commandQueue, carelevoPatch, transport)
+        sut = CarelevoAlarmClearCoordinator(aapsLogger, commandQueue, carelevoPatch, central)
     }
 
     @Test
@@ -122,9 +124,24 @@ internal class CarelevoAlarmClearCoordinatorTest {
     }
 
     @Test
+    fun `forceQuitTeardown removes the bond of the patch then flushes and completes`() {
+        val bonding = mock<BleBonding>()
+        whenever(central.bonding).thenReturn(bonding)
+        whenever(carelevoPatch.getPatchInfoAddress()).thenReturn("aa:bb:cc:dd:ee:ff")
+        var completed = false
+
+        sut.forceQuitTeardown { completed = true }
+
+        // On Android the device id is the MAC in upper case.
+        verifyBlocking(bonding) { removeBond(DeviceId("AA:BB:CC:DD:EE:FF")) }
+        verify(carelevoPatch).flushPatchInformation()
+        assertThat(completed).isTrue()
+    }
+
+    @Test
     fun `forceQuitTeardown flushes state and completes even when the unbond throws`() {
         whenever(carelevoPatch.getPatchInfoAddress()).thenReturn("aa:bb:cc:dd:ee:ff")
-        whenever(transport.adapter).thenThrow(RuntimeException("no adapter"))
+        whenever(central.bonding).thenThrow(RuntimeException("no adapter"))
         var completed = false
 
         sut.forceQuitTeardown { completed = true }
