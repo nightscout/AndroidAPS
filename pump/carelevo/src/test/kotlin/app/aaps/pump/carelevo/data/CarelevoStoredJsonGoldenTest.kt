@@ -165,6 +165,26 @@ internal class CarelevoStoredJsonGoldenTest {
         assertThat(CarelevoAlarmInfoDaoImpl(preferences).getAlarmsOnce()).isEqualTo(ALARMS)
     }
 
+    // ---- read differently from Gson, on purpose ---------------------------------------------------
+
+    /** Gson put null into the non-null field, and the next look at the alarm crashed. Now the rest of the list loads. */
+    @Test
+    fun `an alarm whose cause this build does not know reads as unknown`() {
+        store[CarelevoStringNonKey.AlarmInfoList.key] = ALARMS_JSON.replace("ALARM_WARNING_PUMP_CLOGGED", "ALARM_FROM_A_NEWER_BUILD")
+
+        val alarms = CarelevoAlarmInfoDaoImpl(preferences).getAlarmsOnce()
+
+        assertThat(alarms.map { it.cause }).containsExactly(AlarmCause.ALARM_WARNING_LOW_INSULIN, AlarmCause.ALARM_UNKNOWN).inOrder()
+    }
+
+    /** Gson read the missing count as 0, so the first repeat showed the alarm as seen once instead of twice. */
+    @Test
+    fun `an alarm stored before the count existed reads as seen once`() {
+        store[CarelevoStringNonKey.AlarmInfoList.key] = ALARMS_JSON.replace(""","occurrenceCount":3""", "")
+
+        assertThat(CarelevoAlarmInfoDaoImpl(preferences).getAlarmsOnce().first().occurrenceCount).isEqualTo(1)
+    }
+
     private companion object {
 
         const val C = "2026-11-17T08:00:00Z"

@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.metro)
+    // The patch, infusion, settings and alarm records are stored as JSON.
+    id("kotlinx-serialization")
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("compose-test-module-dependencies")

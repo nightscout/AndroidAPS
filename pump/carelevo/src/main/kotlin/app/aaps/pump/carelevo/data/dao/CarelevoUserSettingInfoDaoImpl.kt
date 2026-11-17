@@ -4,7 +4,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.common.latest
 import app.aaps.pump.carelevo.common.latestValueFlow
-import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
+import app.aaps.pump.carelevo.data.common.carelevoJson
 import app.aaps.pump.carelevo.data.model.entities.CarelevoUserSettingInfoEntity
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -28,7 +28,7 @@ class CarelevoUserSettingInfoDaoImpl @Inject constructor(
                 if (userSettingInfoString == "") {
                     throw NullPointerException("user setting info is empty")
                 }
-                CarelevoGsonHelper.sharedGson().fromJson(userSettingInfoString, CarelevoUserSettingInfoEntity::class.java)
+                carelevoJson.decodeFromString<CarelevoUserSettingInfoEntity>(userSettingInfoString)
             }.fold(
                 onSuccess = {
                     _userSettingInfo.tryEmit(it)
@@ -50,7 +50,7 @@ class CarelevoUserSettingInfoDaoImpl @Inject constructor(
                 if (userSettingInfoString == "") {
                     throw NullPointerException("user setting info is empty")
                 }
-                CarelevoGsonHelper.sharedGson().fromJson(userSettingInfoString, CarelevoUserSettingInfoEntity::class.java)
+                carelevoJson.decodeFromString<CarelevoUserSettingInfoEntity>(userSettingInfoString)
             }.fold(
                 onSuccess = {
                     _userSettingInfo.tryEmit(it)
@@ -66,7 +66,7 @@ class CarelevoUserSettingInfoDaoImpl @Inject constructor(
 
     override fun updateUserSetting(setting: CarelevoUserSettingInfoEntity): Boolean {
         return runCatching {
-            val userSettingInfoString = CarelevoGsonHelper.sharedGson().toJson(setting)
+            val userSettingInfoString = carelevoJson.encodeToString(setting)
             preferences.put(CarelevoStringNonKey.UserSettingInfo, userSettingInfoString)
         }.fold(
             onSuccess = {

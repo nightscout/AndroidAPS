@@ -4,7 +4,7 @@ import app.aaps.core.keys.interfaces.NonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
-import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
+import app.aaps.pump.carelevo.data.common.carelevoJson
 import app.aaps.pump.carelevo.data.model.entities.CarelevoBasalInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoBasalSegmentInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoExtendBolusInfusionInfoEntity
@@ -48,7 +48,6 @@ internal class CarelevoInfusionInfoDaoImplTest {
     private lateinit var store: MutableMap<String, String>
     private lateinit var sut: CarelevoInfusionInfoDaoImpl
 
-    private val gson get() = CarelevoGsonHelper.sharedGson()
 
     // ---- entity builders -------------------------------------------------------------------
 
@@ -102,8 +101,8 @@ internal class CarelevoInfusionInfoDaoImplTest {
         infusionDurationMin = 45
     )
 
-    private fun seed(key: StringNonPreferenceKey, value: Any) {
-        store[key.key] = gson.toJson(value)
+    private inline fun <reified T> seed(key: StringNonPreferenceKey, value: T) {
+        store[key.key] = carelevoJson.encodeToString(value)
     }
 
     @BeforeEach
@@ -202,7 +201,7 @@ internal class CarelevoInfusionInfoDaoImplTest {
 
         assertThat(sut.updateBasalInfusionInfo(b)).isTrue()
 
-        assertThat(store[CarelevoStringNonKey.BasalInfusionInfo.key]).isEqualTo(gson.toJson(b))
+        assertThat(store[CarelevoStringNonKey.BasalInfusionInfo.key]).isEqualTo(carelevoJson.encodeToString(b))
         assertThat(sut.getInfusionInfoBySync()!!.basalInfusionInfo).isEqualTo(b)
         verify(preferences).put(eq<StringNonPreferenceKey>(CarelevoStringNonKey.BasalInfusionInfo), any<String>())
     }
@@ -213,7 +212,7 @@ internal class CarelevoInfusionInfoDaoImplTest {
 
         assertThat(sut.updateTempBasalInfusionInfo(tb)).isTrue()
 
-        assertThat(store[CarelevoStringNonKey.TempBasalInfusionInfo.key]).isEqualTo(gson.toJson(tb))
+        assertThat(store[CarelevoStringNonKey.TempBasalInfusionInfo.key]).isEqualTo(carelevoJson.encodeToString(tb))
         assertThat(sut.getInfusionInfoBySync()!!.tempBasalInfusionInfo).isEqualTo(tb)
         verify(preferences).put(eq<StringNonPreferenceKey>(CarelevoStringNonKey.TempBasalInfusionInfo), any<String>())
     }
@@ -224,7 +223,7 @@ internal class CarelevoInfusionInfoDaoImplTest {
 
         assertThat(sut.updateImmeBolusInfusionInfo(ib)).isTrue()
 
-        assertThat(store[CarelevoStringNonKey.ImmeBolusInfusionInfo.key]).isEqualTo(gson.toJson(ib))
+        assertThat(store[CarelevoStringNonKey.ImmeBolusInfusionInfo.key]).isEqualTo(carelevoJson.encodeToString(ib))
         assertThat(sut.getInfusionInfoBySync()!!.immeBolusInfusionInfo).isEqualTo(ib)
         verify(preferences).put(eq<StringNonPreferenceKey>(CarelevoStringNonKey.ImmeBolusInfusionInfo), any<String>())
     }
@@ -235,7 +234,7 @@ internal class CarelevoInfusionInfoDaoImplTest {
 
         assertThat(sut.updateExtendBolusInfusionInfo(eb)).isTrue()
 
-        assertThat(store[CarelevoStringNonKey.ExtendBolusInfusionInfo.key]).isEqualTo(gson.toJson(eb))
+        assertThat(store[CarelevoStringNonKey.ExtendBolusInfusionInfo.key]).isEqualTo(carelevoJson.encodeToString(eb))
         assertThat(sut.getInfusionInfoBySync()!!.extendBolusInfusionInfo).isEqualTo(eb)
         verify(preferences).put(eq<StringNonPreferenceKey>(CarelevoStringNonKey.ExtendBolusInfusionInfo), any<String>())
     }

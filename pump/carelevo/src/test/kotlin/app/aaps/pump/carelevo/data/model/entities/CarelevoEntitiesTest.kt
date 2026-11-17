@@ -6,7 +6,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
 /**
- * Pure-logic coverage for the Gson (de)serialized Carelevo entity data classes.
+ * Pure-logic coverage for the JSON-stored Carelevo entity data classes.
  *
  * These are plain `data class` value objects, so the meaningful surface is the generated
  * constructor + defaults, `componentN` destructuring, `copy`, `equals`/`hashCode`, and `toString`.

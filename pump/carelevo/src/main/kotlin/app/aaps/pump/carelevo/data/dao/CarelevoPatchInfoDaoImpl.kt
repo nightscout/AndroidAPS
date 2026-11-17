@@ -4,7 +4,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.common.latest
 import app.aaps.pump.carelevo.common.latestValueFlow
-import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
+import app.aaps.pump.carelevo.data.common.carelevoJson
 import app.aaps.pump.carelevo.data.model.entities.CarelevoPatchInfoEntity
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -28,7 +28,7 @@ class CarelevoPatchInfoDaoImpl @Inject constructor(
                 if (patchInfoString == "") {
                     throw NullPointerException("patch info is empty")
                 }
-                CarelevoGsonHelper.sharedGson().fromJson(patchInfoString, CarelevoPatchInfoEntity::class.java)
+                carelevoJson.decodeFromString<CarelevoPatchInfoEntity>(patchInfoString)
             }.fold(
                 onSuccess = {
                     _patchInfo.tryEmit(it)
@@ -49,7 +49,7 @@ class CarelevoPatchInfoDaoImpl @Inject constructor(
                 if (patchInfoString == "") {
                     throw NullPointerException("patch info is empty")
                 }
-                CarelevoGsonHelper.sharedGson().fromJson(patchInfoString, CarelevoPatchInfoEntity::class.java)
+                carelevoJson.decodeFromString<CarelevoPatchInfoEntity>(patchInfoString)
             }.fold(
                 onSuccess = {
                     _patchInfo.tryEmit(it)
@@ -66,7 +66,7 @@ class CarelevoPatchInfoDaoImpl @Inject constructor(
 
     override fun updatePatchInfo(info: CarelevoPatchInfoEntity): Boolean {
         return runCatching {
-            val patchInfoString = CarelevoGsonHelper.sharedGson().toJson(info)
+            val patchInfoString = carelevoJson.encodeToString(info)
             preferences.put(CarelevoStringNonKey.PatchInfo, patchInfoString)
         }.fold(
             onSuccess = {

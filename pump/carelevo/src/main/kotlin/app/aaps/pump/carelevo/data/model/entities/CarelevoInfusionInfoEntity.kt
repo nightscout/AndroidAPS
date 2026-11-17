@@ -1,11 +1,12 @@
 package app.aaps.pump.carelevo.data.model.entities
 
+import app.aaps.pump.carelevo.data.common.AlarmCauseByNameSerializer
 import app.aaps.pump.carelevo.domain.type.AlarmCause
+import kotlinx.serialization.Serializable
 
-// NOTE: these entities are Gson-(de)serialized. Timestamps are deliberately REQUIRED parameters —
-// a `= DateTime.now().toString()` default is both non-deterministic (evaluated at call time) and
-// unreliable under Gson, which bypasses Kotlin default-parameter handling on decode. The mappers
-// in data/mapper always pass every field explicitly.
+// NOTE: these entities are stored as JSON (data/common/CarelevoJson.kt). Timestamps are deliberately REQUIRED
+// parameters: a `= Clock.System.now().toString()` default would be evaluated at call time, so a record would get a
+// time nobody chose. The mappers in data/mapper always pass every field explicitly.
 
 data class CarelevoInfusionInfoEntity(
     val basalInfusionInfo: CarelevoBasalInfusionInfoEntity? = null,
@@ -14,6 +15,7 @@ data class CarelevoInfusionInfoEntity(
     val extendBolusInfusionInfo: CarelevoExtendBolusInfusionInfoEntity? = null
 )
 
+@Serializable
 data class CarelevoBasalSegmentInfusionInfoEntity(
     val createdAt: String,
     val updatedAt: String,
@@ -22,6 +24,7 @@ data class CarelevoBasalSegmentInfusionInfoEntity(
     val speed: Double
 )
 
+@Serializable
 data class CarelevoBasalInfusionInfoEntity(
     val infusionId: String,
     val address: String,
@@ -32,6 +35,7 @@ data class CarelevoBasalInfusionInfoEntity(
     val isStop: Boolean
 )
 
+@Serializable
 data class CarelevoTempBasalInfusionInfoEntity(
     val infusionId: String,
     val address: String,
@@ -43,6 +47,7 @@ data class CarelevoTempBasalInfusionInfoEntity(
     val infusionDurationMin: Int? = null
 )
 
+@Serializable
 data class CarelevoImmeBolusInfusionInfoEntity(
     val infusionId: String,
     val address: String,
@@ -56,6 +61,7 @@ data class CarelevoImmeBolusInfusionInfoEntity(
     val bolusType: String? = null
 )
 
+@Serializable
 data class CarelevoExtendBolusInfusionInfoEntity(
     val infusionId: String,
     val address: String,
@@ -67,13 +73,16 @@ data class CarelevoExtendBolusInfusionInfoEntity(
     val infusionDurationMin: Int? = null
 )
 
+@Serializable
 data class CarelevoAlarmInfoEntity(
     val alarmId: String,
     val alarmType: Int,
+    @Serializable(with = AlarmCauseByNameSerializer::class)
     val cause: AlarmCause,
     val value: Int? = null,
     val createdAt: String,
     val updatedAt: String,
     val acknowledged: Boolean,
+    // Records stored before this field existed read as seen once. Gson read them as 0.
     val occurrenceCount: Int = 1
 )

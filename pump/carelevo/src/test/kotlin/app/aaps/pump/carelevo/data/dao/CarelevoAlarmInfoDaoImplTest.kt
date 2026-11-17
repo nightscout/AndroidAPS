@@ -3,7 +3,7 @@ package app.aaps.pump.carelevo.data.dao
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
-import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
+import app.aaps.pump.carelevo.data.common.carelevoJson
 import app.aaps.pump.carelevo.data.model.entities.CarelevoAlarmInfoEntity
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.AlarmType
@@ -38,10 +38,10 @@ import kotlin.concurrent.thread
 /**
  * Unit coverage for [CarelevoAlarmInfoDaoImpl].
  *
- * The DAO persists the alarm list as a Gson-serialized JSON string in [Preferences] under the single
+ * The DAO persists the alarm list as a JSON string in [Preferences] under the single
  * registered key [CarelevoStringNonKey.AlarmInfoList]. The mocked [Preferences] is driven as an
  * in-memory fake — a backing map answers `get`/`put`/`remove` — so every method exercises the *real*
- * [CarelevoGsonHelper] serialization round trip.
+ * real JSON (`carelevoJson`) round trip.
  *
  * The load path is deliberately UNFILTERED: everything in the store is an active (unacknowledged)
  * alarm by construction because acknowledging an alarm removes it (see `removeAlarm`). The regression
@@ -103,9 +103,9 @@ internal class CarelevoAlarmInfoDaoImplTest {
         occurrenceCount = occurrenceCount
     )
 
-    /** Seed the persisted store as a prior process would have — through the real Gson helper. */
+    /** Seed the persisted store as a prior process would have — through the real JSON. */
     private fun seedStore(vararg alarms: CarelevoAlarmInfoEntity) {
-        store[key] = CarelevoGsonHelper.sharedGson().toJson(alarms.toList())
+        store[key] = carelevoJson.encodeToString(alarms.toList())
     }
 
     /** The first value of the alarm stream, as a new collector sees it. */
@@ -143,7 +143,7 @@ internal class CarelevoAlarmInfoDaoImplTest {
 
     @Test
     fun `getAlarms emits null and does not crash when the persisted JSON is unparseable`() {
-        store[key] = "{}" // an object where an array is expected → Gson throws, runCatching swallows it
+        store[key] = "{}" // an object where an array is expected → the JSON read throws, runCatching swallows it
 
         val result = sut.firstAlarms()
 
@@ -466,7 +466,7 @@ internal class CarelevoAlarmInfoDaoImplTest {
     // ---------------------------------------------------------------------------------------------
 
     @Test
-    fun `a fresh DAO cold-reads exactly what a prior DAO persisted through Gson`() {
+    fun `a fresh DAO cold-reads exactly what a prior DAO persisted through the real JSON`() {
         val list = listOf(
             entity(alarmId = "with-value", cause = AlarmCause.ALARM_NOTICE_LGS_FINISHED_HIGH_BG, value = 5, acknowledged = true, occurrenceCount = 3),
             entity(alarmId = "plain", cause = AlarmCause.ALARM_WARNING_PATCH_ERROR)

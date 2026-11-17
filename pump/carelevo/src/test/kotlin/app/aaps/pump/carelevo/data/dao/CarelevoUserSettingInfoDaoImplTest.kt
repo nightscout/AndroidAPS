@@ -3,7 +3,7 @@ package app.aaps.pump.carelevo.data.dao
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
-import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
+import app.aaps.pump.carelevo.data.common.carelevoJson
 import app.aaps.pump.carelevo.data.model.entities.CarelevoUserSettingInfoEntity
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.first
@@ -29,7 +29,7 @@ import org.mockito.quality.Strictness
  * The DAO persists a single JSON blob under [CarelevoStringNonKey.UserSettingInfo] via [Preferences]
  * and caches the parsed entity in an internal stream that keeps its last value. We back the mocked [Preferences]
  * with an in-memory map (the "fake preferences" approach) so save/load/update really
- * round-trip through the real gson used by production code, and we can spawn a fresh DAO instance
+ * round-trip through the real JSON used by production code, and we can spawn a fresh DAO instance
  * sharing the same store to exercise the cold-read (cache-miss) branches.
  */
 @ExtendWith(MockitoExtension::class)
@@ -61,7 +61,7 @@ internal class CarelevoUserSettingInfoDaoImplTest {
         )
 
     private fun storeJson(entity: CarelevoUserSettingInfoEntity) {
-        store[CarelevoStringNonKey.UserSettingInfo.key] = CarelevoGsonHelper.sharedGson().toJson(entity)
+        store[CarelevoStringNonKey.UserSettingInfo.key] = carelevoJson.encodeToString(entity)
     }
 
     @BeforeEach
@@ -163,7 +163,7 @@ internal class CarelevoUserSettingInfoDaoImplTest {
 
         verify(preferences).put(any<StringNonPreferenceKey>(), any<String>())
         assertThat(store[CarelevoStringNonKey.UserSettingInfo.key])
-            .isEqualTo(CarelevoGsonHelper.sharedGson().toJson(setting))
+            .isEqualTo(carelevoJson.encodeToString(setting))
     }
 
     @Test

@@ -6,7 +6,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.common.latest
 import app.aaps.pump.carelevo.common.latestValueFlow
-import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
+import app.aaps.pump.carelevo.data.common.carelevoJson
 import app.aaps.pump.carelevo.data.model.entities.CarelevoAlarmInfoEntity
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import dev.zacsweers.metro.AppScope
@@ -113,16 +113,13 @@ class CarelevoAlarmInfoDaoImpl @Inject constructor(
         if (cached != null) return cached
 
         val json = preferences.get(CarelevoStringNonKey.AlarmInfoList)
-        val list = if (json.isBlank()) emptyList() else CarelevoGsonHelper.sharedGson()
-            .fromJson(json, Array<CarelevoAlarmInfoEntity>::class.java)
-            .toList()
+        val list = if (json.isBlank()) emptyList() else carelevoJson.decodeFromString<List<CarelevoAlarmInfoEntity>>(json)
         _alarms.tryEmit(list)
         return list
     }
 
     private fun saveList(list: List<CarelevoAlarmInfoEntity>) {
-        val json = CarelevoGsonHelper.sharedGson().toJson(list)
-        preferences.put(CarelevoStringNonKey.AlarmInfoList, json)
+        preferences.put(CarelevoStringNonKey.AlarmInfoList, carelevoJson.encodeToString(list))
     }
 
     private fun AlarmCause.canonicalKey(): String = when (this) {

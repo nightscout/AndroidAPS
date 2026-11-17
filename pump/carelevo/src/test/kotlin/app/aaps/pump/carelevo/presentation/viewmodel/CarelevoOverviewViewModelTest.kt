@@ -62,6 +62,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import kotlinx.datetime.toKotlinLocalDateTime
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -439,7 +440,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `parseBootDateTime parses the yyMMddHHmm patch format`() {
-        assertThat(sut.parseBootDateTime("2601011230")).isEqualTo(LocalDateTime.of(2026, 1, 1, 12, 30))
+        assertThat(sut.parseBootDateTime("2601011230")).isEqualTo(LocalDateTime.of(2026, 1, 1, 12, 30).toKotlinLocalDateTime())
     }
 
     @Test
@@ -456,7 +457,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `parseBootDateTime converts utc millis into the system zone`() {
-        assertThat(sut.parseBootDateTime(nowMillis)).isEqualTo(local(nowMillis))
+        assertThat(sut.parseBootDateTime(nowMillis)).isEqualTo(local(nowMillis).toKotlinLocalDateTime())
     }
 
     // ---- observePatchInfo ---------------------------------------------------------------------

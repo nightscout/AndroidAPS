@@ -5,7 +5,7 @@ import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.common.latest
 import app.aaps.pump.carelevo.common.latestValueFlow
-import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
+import app.aaps.pump.carelevo.data.common.carelevoJson
 import app.aaps.pump.carelevo.data.model.entities.CarelevoBasalInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoExtendBolusInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoImmeBolusInfusionInfoEntity
@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 
 /**
  * Preference-backed store of the four per-mode infusion records (basal / temp-basal / immediate
- * bolus / extended bolus), each persisted as Gson under its own [CarelevoStringNonKey] and mirrored
+ * bolus / extended bolus), each persisted as JSON under its own [CarelevoStringNonKey] and mirrored
  * into one aggregate [CarelevoInfusionInfoEntity] on the [_infusionInfo] stream.
  */
 @ContributesBinding(AppScope::class)
@@ -35,7 +35,7 @@ class CarelevoInfusionInfoDaoImpl @Inject constructor(
     private inline fun <reified T> loadEntity(key: StringNonPreferenceKey): T? = runCatching {
         val json = preferences.get(key)
         if (json == "") throw NullPointerException("${key.key} is empty")
-        CarelevoGsonHelper.sharedGson().fromJson(json, T::class.java)
+        carelevoJson.decodeFromString<T>(json)
     }.fold(
         onSuccess = { it },
         onFailure = {
@@ -70,8 +70,8 @@ class CarelevoInfusionInfoDaoImpl @Inject constructor(
      * Persist one per-mode record and fold it into the aggregate subject. [mutate] applies the new
      * record to the current aggregate (creating one if none exists yet).
      */
-    private fun updateField(key: StringNonPreferenceKey, info: Any, mutate: (CarelevoInfusionInfoEntity) -> CarelevoInfusionInfoEntity): Boolean = runCatching {
-        preferences.put(key, CarelevoGsonHelper.sharedGson().toJson(info))
+    private inline fun <reified T> updateField(key: StringNonPreferenceKey, info: T, mutate: (CarelevoInfusionInfoEntity) -> CarelevoInfusionInfoEntity): Boolean = runCatching {
+        preferences.put(key, carelevoJson.encodeToString(info))
     }.fold(
         onSuccess = {
             val current = _infusionInfo.latest ?: CarelevoInfusionInfoEntity()

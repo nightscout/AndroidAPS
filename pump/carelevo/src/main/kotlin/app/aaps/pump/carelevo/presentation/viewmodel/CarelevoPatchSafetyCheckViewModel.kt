@@ -25,6 +25,7 @@ import app.aaps.pump.carelevo.domain.type.AlarmType
 import app.aaps.pump.carelevo.domain.type.SafetyProgress
 import app.aaps.pump.carelevo.domain.usecase.alarm.CarelevoAlarmInfoUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
+import app.aaps.pump.carelevo.ext.localNowIsoText
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectSafetyCheckEvent
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -39,7 +40,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
-import java.time.LocalDateTime
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration.Companion.seconds
 
@@ -298,7 +298,7 @@ class CarelevoPatchSafetyCheckViewModel @Inject constructor(
     }
 
     private fun recordSafetyCheckFailAlarm() {
-        val now = LocalDateTime.now().toString()
+        val now = localNowIsoText()
         val info = CarelevoAlarmInfo(
             alarmId = System.currentTimeMillis().toString(),
             alarmType = AlarmType.WARNING,

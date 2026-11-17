@@ -45,6 +45,7 @@ import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoPatchRptInfusio
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoCreateUserSettingInfoUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoUserSettingInfoMonitorUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.model.CarelevoUserSettingInfoRequestModel
+import app.aaps.pump.carelevo.ext.localNowIsoText
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -62,7 +63,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeoutOrNull
-import java.time.LocalDateTime
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.atomics.AtomicBoolean
@@ -376,8 +376,8 @@ class CarelevoPatch @Inject constructor(
             alarmType = cause.alarmType,
             cause = cause,
             value = value,
-            createdAt = LocalDateTime.now().toString(),
-            updatedAt = LocalDateTime.now().toString(),
+            createdAt = localNowIsoText(),
+            updatedAt = localNowIsoText(),
             isAcknowledged = false
         )
         scope.launch {
@@ -413,7 +413,7 @@ class CarelevoPatch @Inject constructor(
 
         reconcileInfusingStateFromSnapshot(snapshots.first().infusing)
 
-        val now = LocalDateTime.now().toString()
+        val now = localNowIsoText()
         val currentAlarms = activeAlarmSnapshotAlarmMapper.map(
             snapshots = snapshots,
             currentPatch = patchInfo.latest,

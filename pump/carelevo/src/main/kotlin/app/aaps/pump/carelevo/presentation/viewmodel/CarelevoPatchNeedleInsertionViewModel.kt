@@ -28,6 +28,7 @@ import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.AlarmType
 import app.aaps.pump.carelevo.domain.usecase.alarm.CarelevoAlarmInfoUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
+import app.aaps.pump.carelevo.ext.localNowIsoText
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectNeedleEvent
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -42,7 +43,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
-import java.time.LocalDateTime
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration.Companion.seconds
 
@@ -348,8 +348,8 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
             alarmId = System.currentTimeMillis().toString(),
             alarmType = AlarmType.WARNING,
             cause = AlarmCause.ALARM_WARNING_NEEDLE_INSERTION_ERROR,
-            createdAt = LocalDateTime.now().toString(),
-            updatedAt = LocalDateTime.now().toString(),
+            createdAt = localNowIsoText(),
+            updatedAt = localNowIsoText(),
             isAcknowledged = false,
 
             )

@@ -3,12 +3,17 @@ package app.aaps.pump.carelevo.domain.usecase.patch
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoConnectNewPatchRequestModel
+import app.aaps.pump.carelevo.ext.BOOT_DATE_TIME_FORMAT
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
 
 // App-scoped: a view model injects this, and ViewModelOwnershipTest requires every concrete class
 // a view model injects to have one owner. It is a stateless view over the app-scoped DAOs, so one
@@ -17,11 +22,6 @@ import java.time.format.DateTimeFormatter
 class CarelevoConnectNewPatchUseCase @Inject constructor(
     private val patchInfoRepository: CarelevoPatchInfoRepository,
 ) {
-
-    companion object {
-
-        private val BOOT_DATE_TIME_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("yyMMddHHmm")
-    }
 
     /**
      * Persist the freshly paired patch — used by the pairing session (`CarelevoBleSession.runPairing`).
@@ -35,14 +35,17 @@ class CarelevoConnectNewPatchUseCase @Inject constructor(
         modelName: String,
         request: CarelevoConnectNewPatchRequestModel
     ): Boolean {
-        val bootDateTime = LocalDateTime.now().format(BOOT_DATE_TIME_FORMATTER)
+        val zone = TimeZone.currentSystemDefault()
+        val now = Clock.System.now().toLocalDateTime(zone)
+        // To the minute, as the stored text has it, so the text and the millis name the same time.
+        val bootMinute = LocalDateTime(now.date, LocalTime(now.hour, now.minute))
         return patchInfoRepository.updatePatchInfo(
             CarelevoPatchInfoDomainModel(
                 address = address,
                 manufactureNumber = serialNumber,
                 firmwareVersion = firmwareVersion,
-                bootDateTime = bootDateTime,
-                bootDateTimeUtcMillis = parseBootDateTimeUtcMillis(bootDateTime),
+                bootDateTime = bootMinute.format(BOOT_DATE_TIME_FORMAT),
+                bootDateTimeUtcMillis = bootMinute.toInstant(zone).toEpochMilliseconds(),
                 modelName = modelName,
                 insulinAmount = request.volume,
                 insulinRemain = request.volume.toDouble(),
@@ -52,18 +55,5 @@ class CarelevoConnectNewPatchUseCase @Inject constructor(
                 thresholdMaxBolusDose = request.maxVolume
             )
         )
-    }
-
-    private fun parseBootDateTimeUtcMillis(raw: String?): Long? {
-        if (raw.isNullOrBlank()) {
-            return null
-        }
-
-        return runCatching {
-            LocalDateTime.parse(raw, BOOT_DATE_TIME_FORMATTER)
-                .atZone(ZoneId.systemDefault())
-                .toInstant()
-                .toEpochMilli()
-        }.getOrNull()
     }
 }

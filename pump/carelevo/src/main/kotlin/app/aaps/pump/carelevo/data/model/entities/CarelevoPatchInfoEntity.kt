@@ -1,6 +1,8 @@
 package app.aaps.pump.carelevo.data.model.entities
 
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class CarelevoPatchInfoEntity(
     val address: String,
     val createdAt: String,
