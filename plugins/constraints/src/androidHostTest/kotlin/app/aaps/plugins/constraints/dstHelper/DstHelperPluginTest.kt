@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
@@ -55,6 +56,38 @@ class DstHelperPluginTest : TestBaseWithProfile() {
         cal = Calendar.getInstance(tz, Locale.ITALIAN)
         dateBeforeDST = df.parse("2018-03-25 06:05") //Cannot happen!!!
         cal.time = dateBeforeDST!!
+        assertThat(plugin.wasDST(cal)).isFalse()
+        assertThat(plugin.willBeDST(cal)).isFalse()
+    }
+
+    /** [utc] as a calendar in [zone]. Rome changed back from summer time on 2018-10-28 at 01:00 UTC. */
+    private fun calendarAt(zone: String, utc: String): Calendar =
+        Calendar.getInstance(TimeZone.getTimeZone(zone)).apply { timeInMillis = Instant.parse(utc).toEpochMilli() }
+
+    @Test
+    fun `autumn change in 11 hours warns`() {
+        val cal = calendarAt("Europe/Rome", "2018-10-27T14:00:00Z")
+        assertThat(plugin.willBeDST(cal)).isTrue()
+        assertThat(plugin.wasDST(cal)).isFalse()
+    }
+
+    @Test
+    fun `autumn change 2 hours ago suspends`() {
+        val cal = calendarAt("Europe/Rome", "2018-10-28T03:00:00Z")
+        assertThat(plugin.wasDST(cal)).isTrue()
+        assertThat(plugin.willBeDST(cal)).isFalse()
+    }
+
+    @Test
+    fun `autumn change 4 hours ago is over`() {
+        val cal = calendarAt("Europe/Rome", "2018-10-28T05:00:00Z")
+        assertThat(plugin.wasDST(cal)).isFalse()
+        assertThat(plugin.willBeDST(cal)).isFalse()
+    }
+
+    @Test
+    fun `a zone without summer time never changes`() {
+        val cal = calendarAt("Asia/Kolkata", "2018-03-25T01:00:00Z")
         assertThat(plugin.wasDST(cal)).isFalse()
         assertThat(plugin.willBeDST(cal)).isFalse()
     }
