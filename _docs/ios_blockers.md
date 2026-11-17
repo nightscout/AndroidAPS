@@ -279,6 +279,18 @@ now shows the doubled or flat readings badge like an Android follower does, and 
 the LGS fall-back on doubled readings. `IosBgQualityCheck` and its test were deleted;
 `IosBgQualityCheckWiringTest` checks the new wiring and has not run yet.
 
+### The plugin lists a master needs, and `FreeStorage`
+
+`@APS`, `@PumpDriver` and `@NotNSClient` are all in `core/interfaces/src/commonMain` now, so an iOS
+master graph can merge those three plugin lists the way `MetroGraphs` does on Android. `IosAppGraph`
+merges only the unqualified list today.
+
+In the `@APS` list, `StorageConstraintPlugin` (stops the closed loop when the phone is nearly full)
+is in `commonMain` and reads the free space through `FreeStorage`
+(`plugins/constraints/src/commonMain/.../storage/`). iOS needs one: the free space of the app's
+container, for example `NSFileManager.attributesOfFileSystemForPath` with `NSFileSystemFreeSize`, in
+MB. The graph needs it only once the `@APS` list is merged.
+
 ## Ready for iOS: the encrypted settings store (2026-10, not yet run on Apple)
 
 Written by the Windows session. `IosSp` and `NSUserDefaults` are gone as the settings store. iOS now

@@ -1,8 +1,5 @@
 package app.aaps.plugins.constraints.storage
 
-import android.os.Environment
-import android.os.StatFs
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.constraints.Constraint
@@ -25,7 +22,7 @@ import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 
-@OpenForTesting
+/** Stops the closed loop when the phone is nearly full, because the database could then fail to write. */
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @APS
 @IntKey(820)
@@ -34,7 +31,8 @@ import dev.zacsweers.metro.binding
 class StorageConstraintPlugin(
     aapsLogger: AAPSLogger,
     override val rh: TextResolver,
-    notificationManager: NotificationManager
+    notificationManager: NotificationManager,
+    private val freeStorage: FreeStorage
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
@@ -45,21 +43,12 @@ class StorageConstraintPlugin(
 ), PluginConstraints {
 
     override suspend fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
-        val diskFree = availableInternalMemorySize()
+        val diskFree = freeStorage.availableMb()
         if (diskFree < Constants.MINIMUM_FREE_SPACE) {
             aapsLogger.debug(LTag.CONSTRAINTS, "Closed loop disabled. Internal storage free (Mb):$diskFree")
             value.set(false, rh.gs(ConstraintsStrings.disk_full, Constants.MINIMUM_FREE_SPACE), this)
             notificationManager.post(NotificationId.DISK_FULL, ConstraintsStrings.disk_full.withArgs(Constants.MINIMUM_FREE_SPACE))
         }
         return value
-    }
-
-    fun availableInternalMemorySize(): Long {
-        val path = Environment.getDataDirectory()
-        val stat = StatFs(path.path)
-        val blockSize = stat.blockSizeLong
-        val blocksAvailable = stat.availableBlocksLong
-        val size = 1048576 // block size of 1 Mb
-        return blocksAvailable * blockSize / size
     }
 }
