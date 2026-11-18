@@ -351,7 +351,7 @@ wrong. What is actually left:
 
 | Missing binding | Whose | Note |
 |---|---|---|
-| `Autotune` | ours, stubbed | Still worth porting: it is portable Kotlin computation, not platform code. **The no-op this row warned about now exists** - `IosAutotune` is bound and does nothing. It is not reachable from the iOS UI today (autotune is not in the shared nav graph), so nothing silently lies yet, but it would the moment it is. Checked 2026-09-21. |
+| ~~`Autotune`~~ | done | `AutotunePlugin` is common code and registers itself on every platform; iOS supplies only `IosAutotuneFileStore` (`Documents/autotune`, zip written by `StoredZip`). `IosAutotune` is deleted. Compiled for iOS, not yet run on the simulator (2026-11-15). |
 | ~~`ExportPasswordDataStore`~~ | done | Shared `ExportPasswordDataStoreImpl` is in commonMain and the iOS half is `IosExportPasswordPlatform`. This section already says so further down ("`ExportPasswordDataStore` - iOS side done"); the table simply was not updated. Checked 2026-09-21. |
 | ~~`ImportExportPrefs`~~ | done | `LocalImportExportPrefs` in commonMain serves iOS and desktop; settings export and import were run end to end on the simulator, including Google Drive. A document picker is still missing, but that is a directory-chooser gap, not a missing binding. Checked 2026-09-21. |
 | ~~`IobCobCalculator`~~ | done | `IobCobCalculatorPlugin` is in `plugins/main/src/commonMain` now, and iOS builds it through `ClientHistoryWindowGraph` (shared with desktop). The "needs a home outside :app" problem is solved. Checked 2026-09-21. |

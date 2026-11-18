@@ -12,9 +12,11 @@ import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.UiObjectNotFoundException
 import androidx.test.uiautomator.UiSelector
 import androidx.work.WorkManager
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.ExternalOptions
+import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
@@ -27,6 +29,7 @@ import app.aaps.e2e.AbstractDanaEmulatorUiTest.Companion.DECREMENT
 import app.aaps.e2e.AbstractDanaEmulatorUiTest.Companion.INCREMENT
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
+import kotlin.time.Duration.Companion.seconds
 import org.junit.After
 import org.junit.Before
 import java.util.regex.Pattern
@@ -128,6 +131,18 @@ abstract class AbstractDanaEmulatorUiTest {
         runCatching { commandQueue.clear() }
         runCatching { WorkManager.getInstance(instrumentation.targetContext).cancelAllWork() }
         tearDownPump()
+        // A pump stays elected, as it does for a user who turns a driver off. With the category empty
+        // the next wake of the queue reaches `activePlugin.activePump` in `CommandExecutor.drainOnce`,
+        // which resolves the pump before it looks at whether there is anything to do, and that read is
+        // the "No pump selected" assertion. Same reason as in `PumpScenario.stopDriver`.
+        runCatching {
+            runBlocking {
+                commandQueue.withHold("dana ui: test end", VIRTUAL_PUMP_HOLD) {
+                    pluginStore.getSpecificPluginsListByInterface(VirtualPump::class).firstOrNull()
+                        ?.setPluginEnabledAwaiting(PluginType.PUMP, true)
+                }
+            }
+        }
         EmulatedOptions.enabled = emptySet()
         clearAllSharedPrefs()
     }
@@ -507,6 +522,9 @@ abstract class AbstractDanaEmulatorUiTest {
     companion object {
 
         const val PKG = "info.nightscout.androidaps"
+
+        /** How long the test end waits for a command in flight before it gives the virtual pump the category. */
+        private val VIRTUAL_PUMP_HOLD = 30.seconds
 
         /** `core.ui.R.string.pump_management` — the Manage sheet's entry onto the active pump. */
         private const val PUMP_MANAGEMENT = "Pump"

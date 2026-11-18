@@ -25,6 +25,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.pump.emulator.EmulatorSpeed
 import app.aaps.core.interfaces.pump.emulator.PumpEmulatorControl
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -124,6 +125,27 @@ class PumpScenario(private val pump: PumpUnderTest) {
     }
 
     /**
+     * The user selects the virtual pump in the config builder, and later this pump again. It goes the way of the config
+     * builder, with no hold of the queue: the new pump is enabled before the old one is disabled, so a pump is always
+     * elected. Not the same as [reloadDriver]: for [away] another pump is the active one, and this driver is stopped.
+     * The emulated pump goes on with what it runs the whole time.
+     */
+    fun switchPumpAwayAndBack(away: Long = SWITCH_AWAY_MS) {
+        val plugin = testGraphs.activePlugin.activePumpInternal as PluginBase
+        val virtual = checkNotNull(testGraphs.activePlugin.getSpecificPluginsListByInterface(VirtualPump::class).firstOrNull()) { "No virtual pump" }
+        testGraphs.configBuilder.performPluginSwitch(virtual, true, PluginType.PUMP)
+        awaitTrue("the virtual pump is the active pump") { testGraphs.activePlugin.activePumpInternal is VirtualPump }
+        val driverPackage = plugin.javaClass.packageName
+        awaitTrue("the services of ${pump.pluginName} are stopped", SERVICE_STOP_TIMEOUT) { runningServices().none { it.startsWith(driverPackage) } }
+
+        SystemClock.sleep(away)
+
+        testGraphs.configBuilder.performPluginSwitch(plugin, true, PluginType.PUMP)
+        awaitTrue("${pump.pluginName} is the active pump again") { testGraphs.activePlugin.activePumpInternal === plugin }
+        pump.awaitStarted(this)
+    }
+
+    /**
      * Run 1 of an app restart: what the emulated pump holds is saved to a file, and the test ends without any cleanup,
      * as a killed app. The instrumentation run ends after it, and the process with it.
      */
@@ -190,7 +212,21 @@ class PumpScenario(private val pump: PumpUnderTest) {
      */
     private fun stopDriver() {
         val plugin = testGraphs.activePlugin.activePumpInternal as PluginBase
-        runCatching { runBlocking { plugin.setPluginEnabledAwaiting(PluginType.PUMP, false) } }
+        // The virtual pump takes over, as it does for a user who turns a driver off, and the queue is
+        // held while the two change places. With no pump elected at all the next wake of the queue -
+        // and the release of this hold sends one itself - reaches `activePlugin.activePump` in
+        // `CommandExecutor.drainOnce`, which resolves the pump BEFORE it looks at whether there is
+        // anything to do. That read is the "No pump selected" assertion, and the loop reported it to
+        // Crashlytics from every test run. The app is never in that state; the test must not be either.
+        val virtual = testGraphs.activePlugin.getSpecificPluginsListByInterface(VirtualPump::class).firstOrNull()
+        runCatching {
+            runBlocking {
+                commandQueue.withHold("scenario: test end", RELOAD_HOLD) {
+                    plugin.setPluginEnabledAwaiting(PluginType.PUMP, false)
+                    virtual?.setPluginEnabledAwaiting(PluginType.PUMP, true)
+                }
+            }
+        }
         val driverPackage = plugin.javaClass.packageName
         awaitTrue("the services of ${pump.pluginName} are stopped", SERVICE_STOP_TIMEOUT) { runningServices().none { it.startsWith(driverPackage) } }
     }
@@ -542,6 +578,26 @@ class PumpScenario(private val pump: PumpUnderTest) {
     }
 
     /**
+     * A removed pump gives nothing, so AAPS counts nothing more from it: the temp basal and the extended bolus it ran end
+     * with the removal, or a 0 U/h stop starts. Kept, they count insulin that no pump gives until the next pump is
+     * paired, and the loop doses for it.
+     */
+    fun checkNothingCountedFromRemovedPump() {
+        val end = SystemClock.uptimeMillis() + RECORD_TIMEOUT
+        while (true) {
+            val now = System.currentTimeMillis()
+            val tempBasal = runBlocking { testGraphs.persistenceLayer.getTemporaryBasalActiveAt(now) }
+            val extendedBolus = runBlocking { testGraphs.persistenceLayer.getExtendedBolusActiveAt(now) }
+            if ((tempBasal == null || tempBasal.rate == 0.0) && extendedBolus == null) return
+            // An AssertionError: a wrong result, which RetryRule must not retry.
+            if (SystemClock.uptimeMillis() > end) {
+                throw AssertionError("AAPS still counts delivery of the removed pump: temp basal $tempBasal, extended bolus $extendedBolus")
+            }
+            SystemClock.sleep(POLL_MS)
+        }
+    }
+
+    /**
      * The extended bolus AAPS has is the one the pump runs, or neither has one. A pump that gives high temp basals as
      * extended boluses (the DanaR with its "Use extended boluses for >200%" setting) stores every extended bolus as one
      * that stands for a temp basal.
@@ -731,6 +787,9 @@ class PumpScenario(private val pump: PumpUnderTest) {
         const val RECORD_TIMEOUT = 10_000L
         const val LINK_TIMEOUT = 30_000L
         const val SERVICE_STOP_TIMEOUT = 10_000L
+
+        /** How long another pump is the active one in [switchPumpAwayAndBack]. A real user is away longer; this only has to be more than nothing. */
+        const val SWITCH_AWAY_MS = 20_000L
 
         /**
          * Long enough for a driver to fail one connect attempt and start the next one: Carelevo gives up an attempt

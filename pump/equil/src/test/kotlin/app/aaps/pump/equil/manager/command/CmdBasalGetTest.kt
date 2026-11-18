@@ -55,5 +55,7 @@ class CmdBasalGetTest : TestBaseWithProfile() {
         assertThat(CmdBasalSet.deliveredRate(1.0)).isEqualTo(1.0)
         assertThat(CmdBasalSet.deliveredRate(0.79)).isEqualTo(0.7875)
         assertThat(CmdBasalSet.deliveredRate(0.05)).isEqualTo(0.05)
+        // 0.6 U/h at 150 % is 0.8999999999999999: it was cut a step to 0.8875 U/h.
+        assertThat(CmdBasalSet.deliveredRate(0.6 * 1.5)).isEqualTo(0.9)
     }
 }

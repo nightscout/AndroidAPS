@@ -47,6 +47,14 @@ class HistoryEventStore : Serializable {
         }
     }
 
+    /** No records, as a new pump has. */
+    fun clear() {
+        synchronized(events) {
+            events.clear()
+            lastId = 0
+        }
+    }
+
     /**
      * Parse a "from" timestamp from request params (6 bytes: Y-2000, M, D, H, Min, Sec).
      *

@@ -107,6 +107,15 @@ class UtilsTest : TestBase() {
         assertEquals(800, Utils.decodeSpeedToUH(5.0))
     }
 
+    /** 0.6 U/h at 150 % is 0.8999999999999999: half of it for a half hour was cut to 71 steps, 0.8875 U/h. */
+    @Test
+    fun `decodeSpeedToUH double keeps a rate with float noise on its step`() {
+        assertEquals(72, Utils.decodeSpeedToUH(0.6 * 1.5 / 2))
+        for (i in 1..800) assertEquals(i, Utils.decodeSpeedToUH(i * 0.00625), "${i * 0.00625} U/h")
+        // Off the grid it still never gives more than was asked.
+        assertEquals(71, Utils.decodeSpeedToUH(0.445))
+    }
+
     @Test
     fun `decodeSpeedToUH double roundtrip should be accurate`() {
         val originalRate = 1.5

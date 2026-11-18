@@ -75,7 +75,7 @@ app-switcher snapshot does not hold the PIN, and show the warning the screen can
 
 | What | Where | Note |
 |---|---|---|
-| Autotune | `IosAutotune` | Bound but does nothing. It is portable Kotlin arithmetic over treatment history, not platform code, so port it rather than stub it. Not reachable from the iOS UI today, so nothing lies yet - it would the moment autotune reaches the shared nav graph. |
+| ~~Autotune~~ | `AutotunePlugin` | Ported: common code, the iOS part is `IosAutotuneFileStore`. Not yet run on the simulator. |
 | Document picker | `AapsAppHost`, three `reportNotReady` callbacks | Directory selection for exports. Shows "not ready on this platform yet" instead of doing nothing, which is the interim state, not the fix. |
 | Quick wizard | `AapsAppHost`, `onExecuteQuickWizard` | Same interim message. |
 | Notification actions | `IosSystemNotificationPlatform` | Buttons need a `UNNotificationCategory` per resolved label set, registered before posting and routed back by instance key. `IosLoopNotifier` already does exactly this for "ignore for N minutes" and is the worked example. Android's approach cannot be copied - its actions are `PendingIntent`s. |

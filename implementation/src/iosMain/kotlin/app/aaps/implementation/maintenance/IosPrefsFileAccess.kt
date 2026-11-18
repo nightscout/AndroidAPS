@@ -117,5 +117,5 @@ class IosPrefsFileAccess(
  * on the first write instead - unlike `extra`, which is created at start up because a user has to be
  * able to find it before anything has written to it.
  */
-private fun defaultDocumentsSubdirectory(name: String): String? =
+internal fun defaultDocumentsSubdirectory(name: String): String? =
     (NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstOrNull() as? String)?.let { "$it/$name" }

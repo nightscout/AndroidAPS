@@ -25,7 +25,7 @@ nothing is silently half-done:
 
 | Stub | Status |
 |---|---|
-| `DesktopAutotune` | Blocked: the algorithm itself is Android-only |
+| ~~`DesktopAutotune`~~ | Gone: `AutotunePlugin` is common code now, and the desktop supplies only `DesktopAutotuneFileStore` (`~/AAPS/autotune`) |
 | `DesktopBgQualityCheck` | Not started |
 | `DesktopMaintenance` | Partly - `deleteLogs` works, `executeSendLogs` needs a product decision |
 | `DesktopCloudDirectoryManager` | **Mostly unblocked - see below** |

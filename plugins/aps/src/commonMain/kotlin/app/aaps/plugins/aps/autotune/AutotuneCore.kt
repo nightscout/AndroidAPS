@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.autotune
 
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -10,8 +11,10 @@ import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import java.util.Calendar
+import kotlinx.datetime.toLocalDateTime
 import kotlin.math.max
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 @SingleIn(AppScope::class)
 @Inject
@@ -175,15 +178,13 @@ class AutotuneCore(
         for (hour in 0..23) {
             var deviations = 0.0
             for (i in basalGlucose.indices) {
-                val bgTime = Calendar.getInstance()
-                //var BGTime: Date? = null
-                if (basalGlucose[i].date != 0L) {
-                    bgTime.timeInMillis = basalGlucose[i].date
-                    //BGTime = Date(basalGlucose[i].date)
-                } else {
+                // A value without a time counts for the hour of now, as it did with Calendar.getInstance().
+                val bgTime = if (basalGlucose[i].date != 0L) basalGlucose[i].date
+                else {
                     log("Could not determine last BG time")
+                    Clock.System.now().toEpochMilliseconds()
                 }
-                val myHour = bgTime.get(Calendar.HOUR_OF_DAY)
+                val myHour = Instant.fromEpochMilliseconds(bgTime).toLocalDateTime(SystemTimeZone.current()).hour
                 //val myHour = BGTime!!.hours
                 if (hour == myHour) {
                     //log.debug(basalGlucose[i].deviation);

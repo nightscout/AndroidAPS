@@ -935,9 +935,12 @@ class EquilManager(
         // driver's own record ends here too, or the Equil screen goes on showing it.
         if (runMode.isStopped() && previous?.isStopped() == false) equilState?.tempBasal = null
         storePodState()
-        if (previous == null || previous.isStopped() == runMode.isStopped()) return
         val time = dateUtil.now()
         val serial = getSerialNumber()
+        // A stop for a reservoir change or a removal ends all the pod gives, also an extended bolus. Left running, AAPS
+        // counted it after the pod was removed, also when the pod could not be reached any more (D9).
+        if (runMode == RunMode.STOP) launchPumpSync { endExtendedBolus(time, serial) }
+        if (previous == null || previous.isStopped() == runMode.isStopped()) return
         launchPumpSync {
             // A "delivery stopped" gap that is still open ends here at the latest: the pump delivers again.
             val deliveryStoppedAt = if (runMode.isStopped()) null else equilState?.deliveryStoppedAt
@@ -962,6 +965,12 @@ class EquilManager(
     }
 
     private fun RunMode.isStopped() = this == RunMode.SUSPEND || this == RunMode.STOP
+
+    private suspend fun endExtendedBolus(time: Long, serial: String) {
+        if (pumpSync.expectedPumpState().extendedBolus == null) return
+        aapsLogger.debug(LTag.PUMP, "Pump stopped, ending the extended bolus")
+        pumpSync.syncStopExtendedBolusWithPumpId(time, time, PumpType.EQUIL, serial)
+    }
 
     private suspend fun syncRunMode(stopped: Boolean, time: Long, serial: String) {
         val suspendRunning = pumpSync.expectedPumpState().temporaryBasal?.type == PumpSync.TemporaryBasalType.PUMP_SUSPEND
