@@ -36,7 +36,10 @@ interface WatchSensorLink {
 
     fun isConnected(): Boolean
 
-    /** Set the link up for a new sensor. The first connection runs the key exchange. */
+    /**
+     * Set the link up for a new sensor. The first connection runs the key exchange. An old Bluetooth
+     * bond with that sensor is removed first, so the pairing is a complete one.
+     */
     fun connect(address: String, pairingCode: String, serial: String?)
 
     /**
@@ -51,7 +54,20 @@ interface WatchSensorLink {
      */
     fun pairAgain(): Boolean
 
-    /** Let the sensor go and forget it, key and all. */
+    /**
+     * Let the sensor go but keep it, with its key and its Bluetooth bond: direct to watch was turned
+     * off. Turned on again for the same sensor, [resume] goes on with the stored key. Stays paused
+     * over a restart of the watch app, until [connect], [resume] or [pairAgain].
+     *
+     * It is not a [forget], because a key the sensor already accepted is worth keeping: a key made
+     * again over the old bond was refused by the sensor a minute later, every time.
+     */
+    fun pause()
+
+    /** True after [pause]: a sensor is stored, but the link must stay down. */
+    fun isPaused(): Boolean
+
+    /** Let the sensor go and forget it: the key, and the Bluetooth bond of the watch with it. */
     fun forget()
 }
 

@@ -177,7 +177,8 @@ class WatchDirect(
         })
         // A sensor that was set up before the watch app restarted: pick it up again.
         scope.launch {
-            if (link.address() != null && hasPermissions) {
+            // Not while paused: direct to watch was turned off, and the sensor is only kept.
+            if (link.address() != null && !link.isPaused() && hasPermissions) {
                 // Resume needs a key. An app that was restarted before the first pairing has none,
                 // so it starts the pairing again by itself and does not wait for the phone.
                 if (!link.resume() && !link.hasKey()) {
@@ -194,7 +195,7 @@ class WatchDirect(
     fun retry() {
         scope.launch {
             waitingForPermission?.let { handle(it) } ?: run {
-                link?.let { if (it.address() != null && hasPermissions) it.resume() }
+                link?.let { if (it.address() != null && !it.isPaused() && hasPermissions) it.resume() }
                 report(describe())
             }
         }
@@ -243,9 +244,12 @@ class WatchDirect(
             }
         } else {
             waitingForPermission = null
-            if (link.address() != null) {
-                link.forget()
-                aapsLogger.info(LTag.WEAR, "Direct to watch: turned off by the phone")
+            if (link.address() != null && !link.isPaused()) {
+                // A pause, not a forget: the sensor, its key and the bond are kept, so turning it
+                // on again goes on where it was. Forgetting here cost the user the link: the key
+                // was gone, and the sensor did not keep a new one made over the old bond.
+                link.pause()
+                aapsLogger.info(LTag.WEAR, "Direct to watch: turned off by the phone, the sensor is kept")
             }
             connectAsked = false
             refusal = null
@@ -261,7 +265,7 @@ class WatchDirect(
         val address = link.address()
         val state = when {
             waitingForPermission != null && !hasPermissions -> EventData.CgmWatchState.NEEDS_PERMISSION
-            address == null                                  -> EventData.CgmWatchState.OFF
+            address == null || link.isPaused()               -> EventData.CgmWatchState.OFF
             !hasPermissions                                  -> EventData.CgmWatchState.NEEDS_PERMISSION
             !bluetoothOn                                     -> EventData.CgmWatchState.BLUETOOTH_OFF
             refusal != null                                  -> EventData.CgmWatchState.REFUSED
