@@ -171,8 +171,13 @@ abstract class CarelevoPumpPluginTestBase {
         // An unstubbed suspend mock answers null; false = the record of this pump id existed and was updated.
         whenever { pumpSync.syncBolusWithPumpId(any(), any(), anyOrNull(), any(), any(), any()) }.thenReturn(false)
         whenever(cancelImmeBolusInfusionUseCase.persistImmeBolusCancelled()).thenReturn(true)
-        whenever(startExtendBolusInfusionUseCase.persistExtendBolusStarted(any(), any(), any())).thenReturn(true)
+        whenever(startExtendBolusInfusionUseCase.persistExtendBolusStarted(any(), any(), any(), any())).thenReturn(true)
         whenever(cancelExtendBolusInfusionUseCase.persistExtendBolusCancelled()).thenReturn(true)
+        // As for an extended bolus started by an older build; a mock would answer 0.
+        whenever(cancelExtendBolusInfusionUseCase.runningExtendBolusPumpId()).thenReturn(null)
+        // Unstubbed suspend mocks answer null, which a caller that reads the Boolean cannot take.
+        whenever { pumpSync.syncExtendedBolusWithPumpId(any(), any(), any(), any(), any(), any(), any()) }.thenReturn(false)
+        whenever { pumpSync.syncStopExtendedBolusWithPumpId(any(), any(), any(), any()) }.thenReturn(true)
         whenever(setBasalProgramUseCase.buildBasalProgramPlan(any())).thenReturn(
             CarelevoSetBasalProgramUseCase.BasalProgramPlan(programs = List(3) { List(8) { 1.0 } }, segments = emptyList())
         )

@@ -1,9 +1,11 @@
 package app.aaps.pump.carelevo.coordinator
 
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
@@ -37,10 +39,14 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.isA
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
@@ -131,8 +137,13 @@ internal class CarelevoBolusCoordinatorTest {
         whenever { bleSession.runSingle(any(), isA<BolusCancelCommand>(), any()) }
             .thenReturn(BolusCancelResponse(resultCode = 0, infusedAmount = 0.3))
 
-        whenever(startExtendBolusInfusionUseCase.persistExtendBolusStarted(any(), any(), any())).thenReturn(true)
+        whenever(startExtendBolusInfusionUseCase.persistExtendBolusStarted(any(), any(), any(), any())).thenReturn(true)
         whenever(cancelExtendBolusInfusionUseCase.persistExtendBolusCancelled()).thenReturn(true)
+        // As for an extended bolus started by an older build; a mock would answer 0.
+        whenever(cancelExtendBolusInfusionUseCase.runningExtendBolusPumpId()).thenReturn(null)
+        // Unstubbed suspend mocks answer null, which a caller that reads the Boolean cannot take.
+        whenever { pumpSync.syncExtendedBolusWithPumpId(any(), any(), any(), any(), any(), any(), any()) }.thenReturn(false)
+        whenever { pumpSync.syncStopExtendedBolusWithPumpId(any(), any(), any(), any()) }.thenReturn(true)
         whenever(cancelImmeBolusInfusionUseCase.persistImmeBolusCancelled()).thenReturn(true)
 
         val provider = Provider<PumpEnactResult> { FakePumpEnactResult() }
@@ -290,6 +301,60 @@ internal class CarelevoBolusCoordinatorTest {
         assertThat(result.isTempCancel).isTrue()
         assertThat(lastUpdated).isTrue()
         verifyBlocking(pumpSync) { syncStopExtendedBolusWithPumpId(any(), any(), any(), any()) }
+    }
+
+    /**
+     * Real patch: 1 U over 30 min, cancelled after 2 min 39 s, had given 0.20 U (its reservoir and bolus total agreed),
+     * and the end by time counted 0.09 U.
+     */
+    @Test
+    fun `cancelExtendedBolus records what the patch gave when the record's pump id is known`() {
+        val start = 1_000_000L - 159_464L
+        whenever(cancelExtendBolusInfusionUseCase.runningExtendBolusPumpId()).thenReturn(start)
+        whenever { bleSession.runSingle(any(), isA<ExtendBolusCancelCommand>(), any()) }
+            .thenReturn(ExtendBolusCancelResponse(resultCode = 0, infusedAmount = 0.2))
+
+        val result = sut.cancelExtendedBolus(serialNumber = serial) {}
+
+        assertThat(result.success).isTrue()
+        val rate = argumentCaptor<PumpRate>()
+        verifyBlocking(pumpSync) {
+            syncExtendedBolusWithPumpId(eq(start), rate.capture(), eq(159_464L), eq(false), eq(start), eq(PumpType.CAREMEDI_CARELEVO), eq(serial))
+        }
+        assertThat(rate.firstValue.cU).isEqualTo(0.2)
+        verifyBlocking(pumpSync, never()) { syncStopExtendedBolusWithPumpId(any(), any(), any(), any()) }
+    }
+
+    /** An update by a wrong pump id would write a second record next to the running one. */
+    @Test
+    fun `cancelExtendedBolus ends by time an extended bolus started by an older build`() {
+        whenever(cancelExtendBolusInfusionUseCase.runningExtendBolusPumpId()).thenReturn(null)
+
+        sut.cancelExtendedBolus(serialNumber = serial) {}
+
+        verifyBlocking(pumpSync) { syncStopExtendedBolusWithPumpId(any(), any(), any(), any()) }
+        verifyBlocking(pumpSync, never()) { syncExtendedBolusWithPumpId(any(), any(), any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `cancelExtendedBolus reads the pump id before the record is deleted`() {
+        whenever(cancelExtendBolusInfusionUseCase.runningExtendBolusPumpId()).thenReturn(1L)
+
+        sut.cancelExtendedBolus(serialNumber = serial) {}
+
+        val order = inOrder(cancelExtendBolusInfusionUseCase)
+        order.verify(cancelExtendBolusInfusionUseCase).runningExtendBolusPumpId()
+        order.verify(cancelExtendBolusInfusionUseCase).persistExtendBolusCancelled()
+    }
+
+    @Test
+    fun `setExtendedBolus writes the record with one time for its start and its pump id`() {
+        sut.setExtendedBolus(insulin = 1.0, durationInMinutes = 30, serialNumber = serial)
+
+        verify(startExtendBolusInfusionUseCase).persistExtendBolusStarted(eq(1.0), any(), eq(30), eq(1_000_000L))
+        verifyBlocking(pumpSync) {
+            syncExtendedBolusWithPumpId(eq(1_000_000L), any(), any(), eq(false), eq(1_000_000L), eq(PumpType.CAREMEDI_CARELEVO), eq(serial))
+        }
     }
 
     // ---------------------------------------------------------------------------------------------

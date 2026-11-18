@@ -253,19 +253,21 @@ class CarelevoBolusCoordinator @Inject constructor(
                 aapsLogger.info(LTag.PUMPCOMM, "newBle.setExtendedBolus insulin=$insulin result=${response.resultCode}")
                 response.resultCode == RESULT_SUCCESS
             }
+            // One time for the record's start and its pump id: a cancel finds the record by the pump id it keeps.
+            val now = dateUtil.now()
             // Once the pump ACKs, the extended bolus IS running — pumpSync must record it even if the
             // local persist fails (otherwise IOB silently diverges from what the patch delivers).
-            val persisted = success && startExtendBolusInfusionUseCase.persistExtendBolusStarted(volume = insulin, speed = speed, minutes = durationInMinutes)
+            val persisted = success && startExtendBolusInfusionUseCase.persistExtendBolusStarted(volume = insulin, speed = speed, minutes = durationInMinutes, pumpId = now)
             aapsLogger.info(LTag.PUMPCOMM, "newBle.setExtendedBolus insulin=$insulin success=$success persisted=$persisted")
             if (success && !persisted) aapsLogger.error(LTag.PUMPCOMM, "newBle.setExtendedBolus persist failed — pump enacted, recording in pumpSync anyway")
             if (success) {
                 runBlocking {
                     pumpSync.syncExtendedBolusWithPumpId(
-                        timestamp = dateUtil.now(),
+                        timestamp = now,
                         rate = PumpRate(insulin),
                         duration = T.mins(durationInMinutes.toLong()).msecs(),
                         isEmulatingTB = false,
-                        pumpId = dateUtil.now(),
+                        pumpId = now,
                         pumpType = PumpType.CAREMEDI_CARELEVO,
                         pumpSerial = serialNumber
                     )
@@ -346,8 +348,13 @@ class CarelevoBolusCoordinator @Inject constructor(
 
     /**
      * Cancel-extended-bolus core. Discrete `ExtendBolusCancelCommand` (0x29→0x89, response carries
-     * `infusedAmount`) on the session → delete + recompute-mode persist →
-     * `pumpSync.syncStopExtendedBolusWithPumpId`. `infusedAmount` is logged only (not reconciled into the DB).
+     * `infusedAmount`) on the session → delete + recompute-mode persist → the AAPS record ends now.
+     *
+     * The record gets the amount the patch reports when its pump id is known: an end by time counts the planned rate,
+     * and the patch does not give an extended bolus at that rate. On a real patch 1 U over 30 min, cancelled after
+     * 2.7 min, had given 0.20 U (its reservoir and bolus total agreed), and the end by time counted 0.09 U. Without the
+     * pump id (an extended bolus started by an older build) or without the amount (a lost answer, then a status read),
+     * it ends by time as before: an update by a wrong pump id would write a second record next to the running one.
      */
     private fun cancelExtendedBolusInternal(
         serialNumber: String,
@@ -357,9 +364,13 @@ class CarelevoBolusCoordinator @Inject constructor(
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         return try {
+            // Read before the persist below, which deletes it.
+            val startPumpId = cancelExtendBolusInfusionUseCase.runningExtendBolusPumpId()
+            var infused: Double? = null
             val success = extendedSentOrAsked(address, "cancelExtendedBolus", doneWhenExtendedRuns = false) {
                 val response = bleSession.runSingle(address, ExtendBolusCancelCommand())
                 aapsLogger.info(LTag.PUMPCOMM, "newBle.cancelExtendedBolus result=${response.resultCode} infused=${response.infusedAmount}")
+                if (response.resultCode == RESULT_SUCCESS) infused = response.infusedAmount
                 response.resultCode == RESULT_SUCCESS
             }
             // Same pump-is-authoritative rule as the start path: on ACK the extended bolus IS stopped
@@ -369,13 +380,28 @@ class CarelevoBolusCoordinator @Inject constructor(
             if (success && !persisted) aapsLogger.error(LTag.PUMPCOMM, "newBle.cancelExtendedBolus persist failed — pump stopped, recording stop in pumpSync anyway")
             if (success) {
                 onLastDataUpdated()
-                runBlocking {
-                    pumpSync.syncStopExtendedBolusWithPumpId(
-                        timestamp = dateUtil.now(),
-                        endPumpId = dateUtil.now(),
-                        pumpType = PumpType.CAREMEDI_CARELEVO,
-                        pumpSerial = serialNumber
-                    )
+                val now = dateUtil.now()
+                val given = infused?.takeIf { it.isFinite() && it >= 0.0 }
+                runBlocking<Unit> {
+                    if (startPumpId != null && given != null && now > startPumpId) {
+                        // The record ends now with what the patch gave, so there is nothing left to end by time.
+                        pumpSync.syncExtendedBolusWithPumpId(
+                            timestamp = startPumpId,
+                            rate = PumpRate(given),
+                            duration = now - startPumpId,
+                            isEmulatingTB = false,
+                            pumpId = startPumpId,
+                            pumpType = PumpType.CAREMEDI_CARELEVO,
+                            pumpSerial = serialNumber
+                        )
+                    } else {
+                        pumpSync.syncStopExtendedBolusWithPumpId(
+                            timestamp = now,
+                            endPumpId = now,
+                            pumpType = PumpType.CAREMEDI_CARELEVO,
+                            pumpSerial = serialNumber
+                        )
+                    }
                 }
                 result.success = true
                 result.enacted = true

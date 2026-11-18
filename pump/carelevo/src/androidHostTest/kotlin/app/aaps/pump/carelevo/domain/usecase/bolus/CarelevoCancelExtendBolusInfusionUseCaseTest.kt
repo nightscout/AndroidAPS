@@ -52,6 +52,31 @@ internal class CarelevoCancelExtendBolusInfusionUseCaseTest {
         return captor.firstValue
     }
 
+    // ---------- runningExtendBolusPumpId ----------
+
+    @Test
+    fun `the pump id of the running extended bolus is read from the store`() {
+        whenever(infusionInfoRepository.getInfusionInfoBySync()).thenReturn(
+            CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = extendBolusInfusion().copy(pumpId = 1_795_014_817_887L))
+        )
+
+        assertThat(sut.runningExtendBolusPumpId()).isEqualTo(1_795_014_817_887L)
+    }
+
+    @Test
+    fun `an extended bolus started by an older build has no pump id`() {
+        whenever(infusionInfoRepository.getInfusionInfoBySync()).thenReturn(CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = extendBolusInfusion()))
+
+        assertThat(sut.runningExtendBolusPumpId()).isNull()
+    }
+
+    @Test
+    fun `no pump id when no extended bolus runs`() {
+        whenever(infusionInfoRepository.getInfusionInfoBySync()).thenReturn(CarelevoInfusionInfoDomainModel())
+
+        assertThat(sut.runningExtendBolusPumpId()).isNull()
+    }
+
     // ---------- guard / failure branches ----------
 
     @Test

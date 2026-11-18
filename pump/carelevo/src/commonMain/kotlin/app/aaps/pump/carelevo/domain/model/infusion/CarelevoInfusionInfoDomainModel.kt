@@ -92,5 +92,10 @@ data class CarelevoExtendBolusInfusionInfoDomainModel(
     val updatedAt: Instant = Clock.System.now(),
     val volume: Double? = null,
     val speed: Double? = null,
-    val infusionDurationMin: Int? = null
+    val infusionDurationMin: Int? = null,
+    /**
+     * The pump id the AAPS record of this extended bolus was written with, which is also its start time. A cancel
+     * needs it to put what the patch gave into that record. Null for a record from a build that did not keep it.
+     */
+    val pumpId: Long? = null
 )

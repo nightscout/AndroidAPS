@@ -12,10 +12,17 @@ class CarelevoCancelExtendBolusInfusionUseCase @Inject constructor(
 ) {
 
     /**
+     * The pump id of the AAPS record of the running extended bolus, from the store itself (the infusion-info stream
+     * follows a moment later). Null when none runs, or for one started by a build that did not keep it. Read it
+     * before [persistExtendBolusCancelled], which deletes it.
+     */
+    fun runningExtendBolusPumpId(): Long? = infusionInfoRepository.getInfusionInfoBySync()?.extendBolusInfusionInfo?.pumpId
+
+    /**
      * Persist a canceled extended bolus (delete the extend-bolus infusion-info + recompute the patch mode
      * from the remaining infusion state) after a successful cancel-extend-bolus write. Returns false with no
-     * infusion/patch record or if any write fails. (The pump-reported `infusedAmount` is surfaced by the
-     * caller, not persisted here — it is not reconciled into the DB.)
+     * infusion/patch record or if any write fails. The amount the patch reports is written to the AAPS record by
+     * the caller.
      */
     fun persistExtendBolusCancelled(): Boolean = runCatching {
         require(infusionInfoRepository.deleteExtendBolusInfusionInfo()) { "delete extend bolus infusion info is failed" }

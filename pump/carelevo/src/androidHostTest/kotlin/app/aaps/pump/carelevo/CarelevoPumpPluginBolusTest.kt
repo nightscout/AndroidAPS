@@ -214,7 +214,7 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
 
     @Test
     fun `setExtendedBolus should record in pumpSync even when the local persist fails`() {
-        whenever(startExtendBolusInfusionUseCase.persistExtendBolusStarted(any(), any(), any())).thenReturn(false)
+        whenever(startExtendBolusInfusionUseCase.persistExtendBolusStarted(any(), any(), any(), any())).thenReturn(false)
 
         val result = runBlocking { plugin.setExtendedBolus(insulin = 1.2, durationInMinutes = 30) }
 

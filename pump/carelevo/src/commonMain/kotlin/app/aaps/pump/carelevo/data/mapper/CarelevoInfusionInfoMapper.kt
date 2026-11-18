@@ -106,7 +106,8 @@ internal fun CarelevoExtendBolusInfusionInfoEntity.transformToCarelevoExtendBolu
     updatedAt = parseIsoInstant(updatedAt),
     volume = volume,
     speed = speed,
-    infusionDurationMin = infusionDurationMin
+    infusionDurationMin = infusionDurationMin,
+    pumpId = pumpId
 )
 
 internal fun CarelevoExtendBolusInfusionInfoDomainModel.transformToCarelevoExtendBolusInfusionInfoEntity() = CarelevoExtendBolusInfusionInfoEntity(
@@ -117,7 +118,8 @@ internal fun CarelevoExtendBolusInfusionInfoDomainModel.transformToCarelevoExten
     updatedAt = updatedAt.toString(),
     volume = volume,
     speed = speed,
-    infusionDurationMin = infusionDurationMin
+    infusionDurationMin = infusionDurationMin,
+    pumpId = pumpId
 )
 
 internal fun CarelevoInfusionInfoEntity.transformToCarelevoInfusionInfoDomainModel() = CarelevoInfusionInfoDomainModel(

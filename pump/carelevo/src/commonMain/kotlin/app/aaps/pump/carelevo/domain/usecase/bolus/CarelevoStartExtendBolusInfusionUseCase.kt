@@ -14,10 +14,11 @@ class CarelevoStartExtendBolusInfusionUseCase @Inject constructor(
 
     /**
      * Persist a started extended bolus (`mode=5` + extend-bolus infusion-info) after a successful
-     * start-extend-bolus write. [volume] is the total insulin, [speed] the computed U/h. Returns false with no
-     * patch record or if any write fails.
+     * start-extend-bolus write. [volume] is the total insulin, [speed] the computed U/h, [pumpId] the one the AAPS
+     * record is written with, so a cancel can find that record. Returns false with no patch record or if any write
+     * fails.
      */
-    fun persistExtendBolusStarted(volume: Double, speed: Double, minutes: Int): Boolean = runCatching {
+    fun persistExtendBolusStarted(volume: Double, speed: Double, minutes: Int, pumpId: Long): Boolean = runCatching {
         val patchInfo = patchInfoRepository.getPatchInfoBySync()
             ?: throw NullPointerException("patch info must be not null")
         require(
@@ -28,7 +29,8 @@ class CarelevoStartExtendBolusInfusionUseCase @Inject constructor(
                     mode = 5,
                     volume = volume,
                     speed = speed,
-                    infusionDurationMin = minutes
+                    infusionDurationMin = minutes,
+                    pumpId = pumpId
                 )
             )
         ) { "update infusion info is failed" }

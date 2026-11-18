@@ -50,7 +50,7 @@ internal class CarelevoStartExtendBolusInfusionUseCaseTest {
     fun `returns false when no patch record exists and never writes infusion info`() {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(null)
 
-        assertThat(sut.persistExtendBolusStarted(volume = 2.0, speed = 4.0, minutes = 30)).isFalse()
+        assertThat(sut.persistExtendBolusStarted(volume = 2.0, speed = 4.0, minutes = 30, pumpId = PUMP_ID)).isFalse()
         verify(infusionInfoRepository, never()).updateExtendBolusInfusionInfo(any())
         verify(patchInfoRepository, never()).updatePatchInfo(any())
     }
@@ -60,7 +60,7 @@ internal class CarelevoStartExtendBolusInfusionUseCaseTest {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(patchInfo())
         whenever(infusionInfoRepository.updateExtendBolusInfusionInfo(any())).thenReturn(false)
 
-        assertThat(sut.persistExtendBolusStarted(volume = 2.0, speed = 4.0, minutes = 30)).isFalse()
+        assertThat(sut.persistExtendBolusStarted(volume = 2.0, speed = 4.0, minutes = 30, pumpId = PUMP_ID)).isFalse()
         verify(patchInfoRepository, never()).updatePatchInfo(any())
     }
 
@@ -70,14 +70,14 @@ internal class CarelevoStartExtendBolusInfusionUseCaseTest {
         whenever(infusionInfoRepository.updateExtendBolusInfusionInfo(any())).thenReturn(true)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(false)
 
-        assertThat(sut.persistExtendBolusStarted(volume = 2.0, speed = 4.0, minutes = 30)).isFalse()
+        assertThat(sut.persistExtendBolusStarted(volume = 2.0, speed = 4.0, minutes = 30, pumpId = PUMP_ID)).isFalse()
     }
 
     @Test
     fun `returns false when patch read throws`() {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenThrow(RuntimeException("boom"))
 
-        assertThat(sut.persistExtendBolusStarted(volume = 2.0, speed = 4.0, minutes = 30)).isFalse()
+        assertThat(sut.persistExtendBolusStarted(volume = 2.0, speed = 4.0, minutes = 30, pumpId = PUMP_ID)).isFalse()
         verify(infusionInfoRepository, never()).updateExtendBolusInfusionInfo(any())
     }
 
@@ -86,7 +86,7 @@ internal class CarelevoStartExtendBolusInfusionUseCaseTest {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(patchInfo())
         whenever(infusionInfoRepository.updateExtendBolusInfusionInfo(any())).thenThrow(RuntimeException("boom"))
 
-        assertThat(sut.persistExtendBolusStarted(volume = 2.0, speed = 4.0, minutes = 30)).isFalse()
+        assertThat(sut.persistExtendBolusStarted(volume = 2.0, speed = 4.0, minutes = 30, pumpId = PUMP_ID)).isFalse()
         verify(patchInfoRepository, never()).updatePatchInfo(any())
     }
 
@@ -98,7 +98,7 @@ internal class CarelevoStartExtendBolusInfusionUseCaseTest {
         whenever(infusionInfoRepository.updateExtendBolusInfusionInfo(any())).thenReturn(true)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
-        assertThat(sut.persistExtendBolusStarted(volume = 3.0, speed = 6.0, minutes = 30)).isTrue()
+        assertThat(sut.persistExtendBolusStarted(volume = 3.0, speed = 6.0, minutes = 30, pumpId = PUMP_ID)).isTrue()
 
         val persisted = capturedInfusion()
         assertThat(persisted.address).isEqualTo("11:22:33:44:55:66")
@@ -107,6 +107,8 @@ internal class CarelevoStartExtendBolusInfusionUseCaseTest {
         assertThat(persisted.speed).isEqualTo(6.0)
         assertThat(persisted.infusionDurationMin).isEqualTo(30)
         assertThat(persisted.infusionId).isNotEmpty()
+        // A cancel finds the AAPS record by it.
+        assertThat(persisted.pumpId).isEqualTo(PUMP_ID)
     }
 
     @Test
@@ -116,7 +118,7 @@ internal class CarelevoStartExtendBolusInfusionUseCaseTest {
         whenever(infusionInfoRepository.updateExtendBolusInfusionInfo(any())).thenReturn(true)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
-        assertThat(sut.persistExtendBolusStarted(volume = 3.0, speed = 6.0, minutes = 30)).isTrue()
+        assertThat(sut.persistExtendBolusStarted(volume = 3.0, speed = 6.0, minutes = 30, pumpId = PUMP_ID)).isTrue()
 
         val persisted = capturedPatch()
         assertThat(persisted.mode).isEqualTo(5)
@@ -131,7 +133,7 @@ internal class CarelevoStartExtendBolusInfusionUseCaseTest {
         whenever(infusionInfoRepository.updateExtendBolusInfusionInfo(any())).thenReturn(true)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
-        assertThat(sut.persistExtendBolusStarted(volume = 1.0, speed = 2.0, minutes = 30)).isTrue()
+        assertThat(sut.persistExtendBolusStarted(volume = 1.0, speed = 2.0, minutes = 30, pumpId = PUMP_ID)).isTrue()
 
         val order = inOrder(infusionInfoRepository, patchInfoRepository)
         order.verify(infusionInfoRepository).updateExtendBolusInfusionInfo(any())
@@ -144,8 +146,8 @@ internal class CarelevoStartExtendBolusInfusionUseCaseTest {
         whenever(infusionInfoRepository.updateExtendBolusInfusionInfo(any())).thenReturn(true)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
-        assertThat(sut.persistExtendBolusStarted(volume = 1.0, speed = 2.0, minutes = 30)).isTrue()
-        assertThat(sut.persistExtendBolusStarted(volume = 1.0, speed = 2.0, minutes = 30)).isTrue()
+        assertThat(sut.persistExtendBolusStarted(volume = 1.0, speed = 2.0, minutes = 30, pumpId = PUMP_ID)).isTrue()
+        assertThat(sut.persistExtendBolusStarted(volume = 1.0, speed = 2.0, minutes = 30, pumpId = PUMP_ID)).isTrue()
 
         val captor = argumentCaptor<CarelevoExtendBolusInfusionInfoDomainModel>()
         verify(infusionInfoRepository, times(2)).updateExtendBolusInfusionInfo(captor.capture())
@@ -159,11 +161,16 @@ internal class CarelevoStartExtendBolusInfusionUseCaseTest {
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
         // 2.5 U over 90 min would be 1.666.. U/h; the use case must persist exactly what it was handed
-        assertThat(sut.persistExtendBolusStarted(volume = 2.5, speed = 1.5, minutes = 90)).isTrue()
+        assertThat(sut.persistExtendBolusStarted(volume = 2.5, speed = 1.5, minutes = 90, pumpId = PUMP_ID)).isTrue()
 
         val persisted = capturedInfusion()
         assertThat(persisted.volume).isEqualTo(2.5)
         assertThat(persisted.speed).isEqualTo(1.5)
         assertThat(persisted.infusionDurationMin).isEqualTo(90)
+    }
+
+    private companion object {
+
+        const val PUMP_ID = 1_795_014_817_887L
     }
 }

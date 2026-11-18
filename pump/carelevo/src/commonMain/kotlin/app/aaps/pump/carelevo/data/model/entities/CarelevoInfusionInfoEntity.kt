@@ -70,7 +70,8 @@ data class CarelevoExtendBolusInfusionInfoEntity(
     val updatedAt: String,
     val volume: Double? = null,
     val speed: Double? = null,
-    val infusionDurationMin: Int? = null
+    val infusionDurationMin: Int? = null,
+    val pumpId: Long? = null
 )
 
 @Serializable
