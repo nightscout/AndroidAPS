@@ -25,6 +25,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
@@ -272,14 +273,16 @@ internal fun nutritionText(nutrition: Nutrition): String {
 }
 
 /**
- * The photo of a food, a dish or a meal, with the buttons to take one with the camera or to remove
- * it. The camera opens in place.
+ * The top of a food, dish or meal editor: [content] (the title and the name) on the left, the photo on
+ * the right, and between them the buttons to take a photo with the camera or to remove it. The photo
+ * does not take a row of its own, so adding one does not make the editor longer. The camera opens
+ * below, full width.
  *
  * @param shown the photo shown, or null
  * @param canRemove true when [shown] is a photo of the user (an OFF photo cannot be removed)
  */
 @Composable
-internal fun ColumnScope.UserPhotoSection(
+internal fun EditorHeader(
     shown: ByteArray?,
     canRemove: Boolean,
     showCamera: Boolean,
@@ -287,27 +290,31 @@ internal fun ColumnScope.UserPhotoSection(
     onCloseCamera: () -> Unit,
     onPhoto: (ByteArray) -> Unit,
     onRemove: () -> Unit,
+    content: @Composable ColumnScope.() -> Unit,
 ) {
-    shown?.let { FoodPhoto(bytes = it, size = AapsSpacing.foodPhotoSize, modifier = Modifier.align(Alignment.CenterHorizontally)) }
-    if (!foodPhotoCameraAvailable) return
-    if (showCamera) {
-        FoodPhotoCamera(
-            onPhoto = onPhoto,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(4f / 3f)
-        )
-        TextButton(onClick = onCloseCamera, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            Text(stringResource(CoreUiStrings.cancel))
+    Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium), content = content)
+            if (foodPhotoCameraAvailable && !showCamera) Column {
+                IconButton(onClick = onOpenCamera) {
+                    Icon(Icons.Filled.PhotoCamera, contentDescription = stringResource(UiStrings.food_photo_take))
+                }
+                if (canRemove) IconButton(onClick = onRemove) {
+                    Icon(Icons.Filled.Delete, contentDescription = stringResource(UiStrings.food_photo_remove))
+                }
+            }
+            shown?.let { FoodPhoto(bytes = it, size = AapsSpacing.foodPhotoSize) }
         }
-    } else Row(modifier = Modifier.align(Alignment.CenterHorizontally), horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
-        TextButton(onClick = onOpenCamera) {
-            Icon(Icons.Filled.PhotoCamera, contentDescription = null)
-            Spacer(Modifier.width(AapsSpacing.small))
-            Text(stringResource(UiStrings.food_photo_take))
-        }
-        if (canRemove) TextButton(onClick = onRemove) {
-            Text(stringResource(UiStrings.food_photo_remove))
+        if (foodPhotoCameraAvailable && showCamera) {
+            FoodPhotoCamera(
+                onPhoto = onPhoto,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(4f / 3f)
+            )
+            TextButton(onClick = onCloseCamera, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                Text(stringResource(CoreUiStrings.cancel))
+            }
         }
     }
 }
@@ -654,22 +661,8 @@ internal fun RecipeEditContent(
             .padding(bottom = AapsSpacing.xxLarge),
         verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
     ) {
-        Text(text = stringResource(UiStrings.food_book_edit_title, recipe.name), style = MaterialTheme.typography.titleLarge)
-        Text(
-            text = stringResource(if (recipe.kind == RecipeKind.DISH) UiStrings.food_book_kind_dish else UiStrings.food_book_kind_meal),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        OutlinedTextField(
-            value = name,
-            onValueChange = onNameChange,
-            label = { Text(stringResource(CoreUiStrings.name)) },
-            singleLine = true,
-            isError = name.isBlank(),
-            modifier = Modifier.fillMaxWidth()
-        )
-        // A photo of the whole dish or plate: shown on its card and in the history. Optional.
-        UserPhotoSection(
+        // A photo of the whole dish or plate, beside the name: shown on its card and in the history. Optional.
+        EditorHeader(
             shown = photo,
             canRemove = photo != null,
             showCamera = showCamera,
@@ -677,7 +670,24 @@ internal fun RecipeEditContent(
             onCloseCamera = onCloseCamera,
             onPhoto = onPhoto,
             onRemove = onRemovePhoto,
-        )
+        ) {
+            Column {
+                Text(text = stringResource(UiStrings.food_book_edit_title, recipe.name), style = MaterialTheme.typography.titleLarge)
+                Text(
+                    text = stringResource(if (recipe.kind == RecipeKind.DISH) UiStrings.food_book_kind_dish else UiStrings.food_book_kind_meal),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            OutlinedTextField(
+                value = name,
+                onValueChange = onNameChange,
+                label = { Text(stringResource(CoreUiStrings.name)) },
+                singleLine = true,
+                isError = name.isBlank(),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
         Text(text = stringResource(UiStrings.food_book_edit_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         items.forEach { item -> MealLine(item, image = imageOf(item), onEdit = { onEditLine(item.key) }, onRemove = { onRemove(item.key) }) }
         HorizontalDivider()
@@ -695,12 +705,12 @@ internal fun RecipeEditContent(
             TextButton(onClick = onAddByHand) { Text(stringResource(UiStrings.food_meal_add_by_hand)) }
         }
         // A free comment on the dish or meal: shown only here, not on its card, not in the history.
+        // One line when empty; it grows while the user writes.
         OutlinedTextField(
             value = note,
             onValueChange = onNoteChange,
             label = { Text(stringResource(CoreUiStrings.notes_label)) },
-            modifier = Modifier.fillMaxWidth(),
-            minLines = 2
+            modifier = Modifier.fillMaxWidth()
         )
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             TextButton(onClick = onCancel) { Text(stringResource(CoreUiStrings.cancel)) }

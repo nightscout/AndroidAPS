@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -599,16 +598,11 @@ internal fun FoodEditorContent(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = AapsSpacing.xxLarge)
             .padding(bottom = AapsSpacing.xxLarge),
-        verticalArrangement = Arrangement.spacedBy(AapsSpacing.large)
+        verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
     ) {
-        Text(
-            text = stringResource(if (isEditing) CoreUiStrings.edit_food else CoreUiStrings.add_food),
-            style = MaterialTheme.typography.titleLarge
-        )
-
-        // The photo of the user, or else the package from OFF, to check the values against it.
-        // The OFF photo is downloaded again when the file is missing.
-        UserPhotoSection(
+        // The photo of the user, or else the package from OFF, beside the name, to check the values
+        // against it. The OFF photo is downloaded again when the file is missing.
+        EditorHeader(
             shown = state.editorUserPhoto ?: state.editorImage,
             canRemove = state.editorUserPhoto != null,
             showCamera = state.showPhotoCamera,
@@ -616,20 +610,24 @@ internal fun FoodEditorContent(
             onCloseCamera = onClosePhotoCamera,
             onPhoto = onPhoto,
             onRemove = onRemovePhoto,
-        )
+        ) {
+            Text(
+                text = stringResource(if (isEditing) CoreUiStrings.edit_food else CoreUiStrings.add_food),
+                style = MaterialTheme.typography.titleLarge
+            )
+            OutlinedTextField(
+                value = state.editorName,
+                onValueChange = onNameChange,
+                label = { Text(stringResource(CoreUiStrings.name)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                isError = state.editorSaveAttempted && state.editorName.isBlank()
+            )
+        }
 
         state.editorOffProduct?.let {
             OffEditorBanner(product = it, perServing = state.editorOffPerServing, onPerServingChange = onOffPerServingChange)
         }
-
-        OutlinedTextField(
-            value = state.editorName,
-            onValueChange = onNameChange,
-            label = { Text(stringResource(CoreUiStrings.name)) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            isError = state.editorSaveAttempted && state.editorName.isBlank()
-        )
 
         // One field per row: the list arrow takes width, and a long label must not wrap.
         // Only the subcategories of the chosen category are proposed.
@@ -667,7 +665,8 @@ internal fun FoodEditorContent(
         )
         val valuesEditable = !state.editorScaleMode
 
-        Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.large)) {
+        // Portion, unit and carbs on one row, like fat, protein and energy below.
+        Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
             OutlinedTextField(
                 value = state.editorPortion,
                 onValueChange = onPortionChange,
@@ -685,19 +684,18 @@ internal fun FoodEditorContent(
                 readOnly = !valuesEditable,
                 enabled = valuesEditable
             )
+            OutlinedTextField(
+                value = state.editorCarbs,
+                onValueChange = onCarbsChange,
+                label = { Text(stringResource(CoreUiStrings.label_carbs_g)) },
+                modifier = Modifier.weight(1f),
+                singleLine = true,
+                enabled = valuesEditable,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+            )
         }
 
-        OutlinedTextField(
-            value = state.editorCarbs,
-            onValueChange = onCarbsChange,
-            label = { Text(stringResource(CoreUiStrings.label_carbs_g)) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            enabled = valuesEditable,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-        )
-
-        Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.large)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
             OutlinedTextField(
                 value = state.editorFat,
                 onValueChange = onFatChange,
@@ -728,37 +726,34 @@ internal fun FoodEditorContent(
         }
 
         // A free comment. It stays on the food: not on its card, not in the dishes, not in the history.
+        // One line when empty; it grows while the user writes.
         OutlinedTextField(
             value = state.editorNote,
             onValueChange = onNoteChange,
             label = { Text(stringResource(CoreUiStrings.notes_label)) },
-            modifier = Modifier.fillMaxWidth(),
-            minLines = 2
+            modifier = Modifier.fillMaxWidth()
         )
 
-        // The barcode, small, to check it against the package. It can be selected and copied.
-        state.editorBarcode?.let { barcode ->
-            SelectionContainer {
-                Text(
-                    text = stringResource(UiStrings.food_barcode_line, barcode),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-
-        Spacer(Modifier.height(AapsSpacing.medium))
-
-        // Delete is done from the list: long press, then the delete button of the top bar.
+        // The barcode on the left of the buttons, small, to check it against the package. It can be
+        // selected and copied. Delete is done from the list: long press, then the delete button of the top bar.
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Box(modifier = Modifier.weight(1f)) {
+                state.editorBarcode?.let { barcode ->
+                    SelectionContainer {
+                        Text(
+                            text = stringResource(UiStrings.food_barcode_line, barcode),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
             TextButton(onClick = onCancel) {
                 Text(stringResource(CoreUiStrings.cancel))
             }
-            Spacer(Modifier.width(AapsSpacing.medium))
             TextButton(
                 onClick = onSave,
                 enabled = !state.editorSaveAttempted || state.editorName.isNotBlank()
