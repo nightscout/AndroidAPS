@@ -24,6 +24,43 @@ class DexcomOnePlusStartRulesTest {
             lastMac = mac,
         )
 
+    // ------------ codeEntry(): what the code field shows ------------
+
+    /** A whole applicator code: 01 + GTIN, 21 + serial, 240 + the 4-digit code. */
+    private val applicatorCode = "\u001d010123456789012321ABCD12345678\u001d2401234"
+
+    @Test
+    fun `a scanned applicator code shows only its four digits and keeps the serial`() {
+        val entry = DexcomOnePlusStartRules.codeEntry(applicatorCode, scanned = null)
+        assertEquals("1234", entry.shown)
+        assertEquals("1234", entry.identity?.pin)
+        assertEquals("ABCD12345678", entry.identity?.serial)
+    }
+
+    @Test
+    fun `the same four digits keep the scanned serial`() {
+        val scanned = DexcomOnePlusStartRules.codeEntry(applicatorCode, scanned = null).identity
+        val entry = DexcomOnePlusStartRules.codeEntry("1234", scanned)
+        assertEquals("1234", entry.shown)
+        assertEquals("ABCD12345678", entry.identity?.serial)
+    }
+
+    @Test
+    fun `other digits are another sensor and carry no serial`() {
+        val scanned = DexcomOnePlusStartRules.codeEntry(applicatorCode, scanned = null).identity
+        val entry = DexcomOnePlusStartRules.codeEntry("5678", scanned)
+        assertEquals("5678", entry.shown)
+        assertEquals("5678", entry.identity?.pin)
+        assertEquals(null, entry.identity?.serial)
+    }
+
+    @Test
+    fun `a code that is not complete yet is shown as typed and gives no identity`() {
+        val entry = DexcomOnePlusStartRules.codeEntry("12", scanned = null)
+        assertEquals("12", entry.shown)
+        assertEquals(null, entry.identity)
+    }
+
     // ------------ signalBars(): what the row draws ------------
 
     @Test

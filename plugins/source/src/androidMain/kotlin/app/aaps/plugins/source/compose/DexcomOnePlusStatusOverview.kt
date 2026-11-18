@@ -28,8 +28,8 @@ import app.aaps.plugins.source.SourceStrings
  *
  * It is the shared pump overview: a banner with the phase, the facts of the sensor that feeds the
  * loop, and the buttons to start a sensor, follow the warm-up and read the driver log. Below the
- * facts come the cards the status screen always had: calibration, end of life, and the pre-soak
- * sensor with its Promote button.
+ * facts come the cards: direct to watch, calibration, end of life, and the pre-soak sensor with its
+ * switch button.
  *
  * No frame of its own: the plugin tab gives it the toolbar, and the status Activity wraps it in
  * `CgmScaffold`.
@@ -55,6 +55,19 @@ fun DexcomOnePlusStatusOverview(
         modifier = modifier,
         customContent = {
             Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+                // Direct-to-watch: what the watch reports, only while the feature is on (the switch
+                // itself is in the settings) and the Wear plugin is on. First of the cards: it is
+                // about the sensor in use, like the facts above it.
+                val watchHandover = viewModel.watchHandover
+                val watchDirectOn by viewModel.watchDirectEnabled.collectAsState()
+                if (watchDirectOn && watchHandover.isOffered) {
+                    val watchReport by watchHandover.report.collectAsState()
+                    DexcomOnePlusWatchDirectCard(
+                        // Read again on every status tick, so a new pairing shows at once.
+                        available = remember(current) { watchHandover.isAvailable() },
+                        report = watchReport,
+                    )
+                }
                 view.calibration?.let { SensorCalibrationCard(it) }
                 if (view.endOfLifePrompt) EndOfLifeCard(onOpenStart = actions.onOpenPresoak)
                 if (view.stagingOffered) {
@@ -65,18 +78,6 @@ fun DexcomOnePlusStatusOverview(
                         onPromoteClick = { early -> promoteAsked = early },
                         onCancelStaging = { viewModel.cancelStaging() },
                         onOpenStart = actions.onOpenPresoak,
-                    )
-                }
-                // Direct-to-watch: what the watch reports, only while the feature is on (the switch
-                // itself is in the settings) and the Wear plugin is on.
-                val watchHandover = viewModel.watchHandover
-                val watchDirectOn by viewModel.watchDirectEnabled.collectAsState()
-                if (watchDirectOn && watchHandover.isOffered) {
-                    val watchReport by watchHandover.report.collectAsState()
-                    DexcomOnePlusWatchDirectCard(
-                        // Read again on every status tick, so a new pairing shows at once.
-                        available = remember(current) { watchHandover.isAvailable() },
-                        report = watchReport,
                     )
                 }
                 promoteResult?.let { message ->

@@ -1,6 +1,8 @@
 package app.aaps.plugins.source.compose
 
 import app.aaps.plugins.dexcomoneplus.identity.OnePlusAdvCandidate
+import app.aaps.plugins.dexcomoneplus.identity.OnePlusGs1ApplicatorParser
+import app.aaps.plugins.dexcomoneplus.identity.OnePlusSensorIdentity
 import app.aaps.plugins.dexcomoneplus.identity.OnePlusStoredSession
 import app.aaps.plugins.dexcomoneplus.scan.OnePlusScanResult
 
@@ -11,6 +13,30 @@ import app.aaps.plugins.dexcomoneplus.scan.OnePlusScanResult
  * same expressions, moved out, so a test can say what the screen shows for a given state.
  */
 object DexcomOnePlusStartRules {
+
+    /** What the code field shows, and the sensor identity that goes with it. */
+    data class CodeEntry(val shown: String, val identity: OnePlusSensorIdentity?)
+
+    /**
+     * Turns what was typed, pasted or scanned into the code field into what the field shows.
+     *
+     * A whole applicator code is about 50 digits. The user only knows the 4-digit code printed on
+     * the applicator, so the field shows those 4 digits and nothing else. The rest of the scanned
+     * code (the serial) is not lost: it stays in the identity.
+     *
+     * @param text the new text of the field
+     * @param scanned the identity of the last whole applicator code, or null. While the field still
+     *   holds the same 4 digits, that identity is kept, with its serial. Other digits are another
+     *   sensor, typed by hand, so they start an identity without a serial.
+     */
+    fun codeEntry(text: String, scanned: OnePlusSensorIdentity?): CodeEntry {
+        val parsed = OnePlusGs1ApplicatorParser.parse(text)
+        return when {
+            parsed?.rawGs1 != null                      -> CodeEntry(shown = parsed.pin, identity = parsed)
+            parsed != null && scanned?.pin == parsed.pin -> CodeEntry(shown = text, identity = scanned)
+            else                                        -> CodeEntry(shown = text, identity = parsed)
+        }
+    }
 
     /**
      * The scan list in the order the screen draws it: the sensor the code on screen points at
