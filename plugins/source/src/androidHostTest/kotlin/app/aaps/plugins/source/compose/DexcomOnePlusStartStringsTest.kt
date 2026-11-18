@@ -52,11 +52,6 @@ class DexcomOnePlusStartStringsTest {
     }
 
     @Test
-    fun `the last MAC hint carries the address`() {
-        allArgumentsLand(SourceStrings.dexcom_oneplus_last_mac_hint, "AA:BB:CC:DD:EE:FF")
-    }
-
-    @Test
     fun `the connect target line carries the sensor name`() {
         allArgumentsLand(SourceStrings.dexcom_oneplus_connect_target, "DX02ABCD")
     }
@@ -72,21 +67,13 @@ class DexcomOnePlusStartStringsTest {
     }
 
     @Test
-    fun `the step counter carries the current step and then the total`() {
-        val text = allArgumentsLand(SourceStrings.cgm_step_counter, 2, 4)
-        assertTrue(text.indexOf("2") < text.indexOf("4"), text)
-    }
-
-    @Test
     fun `every other line of this screen takes no arguments at all`() {
-        // The ones left out are the six above. If a plain line ever gains a placeholder this fails
+        // The ones left out are the four above. If a plain line ever gains a placeholder this fails
         // here rather than on a phone.
         val plain = listOf(
             SourceStrings.cgm_help_collapse,
             SourceStrings.cgm_help_expand,
             SourceStrings.cgm_nav_close,
-            SourceStrings.dexcom_oneplus_applicator_gs1_hint,
-            SourceStrings.dexcom_oneplus_applicator_gs1_label,
             SourceStrings.dexcom_oneplus_applicator_serial_none,
             SourceStrings.dexcom_oneplus_connect_follow,
             SourceStrings.dexcom_oneplus_device_required,
@@ -97,13 +84,14 @@ class DexcomOnePlusStartStringsTest {
             SourceStrings.dexcom_oneplus_help_slot,
             SourceStrings.cgm_nav_back,
             SourceStrings.dexcom_oneplus_new_sensor_code_warning,
+            SourceStrings.dexcom_oneplus_pairing_code_hint,
             SourceStrings.dexcom_oneplus_pairing_code_invalid,
+            SourceStrings.dexcom_oneplus_pairing_code_label,
             SourceStrings.dexcom_oneplus_pairing_code_required,
             SourceStrings.dexcom_oneplus_permissions_hint,
             SourceStrings.dexcom_oneplus_permissions_needed,
             SourceStrings.dexcom_oneplus_request_permissions,
             SourceStrings.dexcom_oneplus_scan_empty,
-            SourceStrings.dexcom_oneplus_scan_hint,
             SourceStrings.dexcom_oneplus_scan_last_used,
             SourceStrings.dexcom_oneplus_scan_pick_hint,
             SourceStrings.dexcom_oneplus_scan_rescan,
@@ -127,12 +115,8 @@ class DexcomOnePlusStartStringsTest {
             SourceStrings.dexcom_oneplus_start_return_warmup,
             SourceStrings.dexcom_oneplus_start_steps,
             SourceStrings.dexcom_oneplus_start_title,
-            SourceStrings.dexcom_oneplus_step_code,
-            SourceStrings.dexcom_oneplus_step_connect,
-            SourceStrings.dexcom_oneplus_step_prepare,
-            SourceStrings.dexcom_oneplus_step_warmup,
         )
-        assertEquals(49, plain.size, "the screen names 55 strings - 6 of them take arguments")
+        assertEquals(44, plain.size, "the screen names 48 strings - 4 of them take arguments")
         for (ref in plain) {
             val name = (ref as TextRef.Named).name
             assertTrue(!template(ref).contains('%'), "$name has a placeholder but is used without arguments")

@@ -35,7 +35,7 @@ import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.compose.icons.IcPluginByoda
+import app.aaps.core.ui.compose.icons.IcPluginDexcomG7
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.dexcomoneplus.OnePlusCgmDriver
 import app.aaps.plugins.dexcomoneplus.oem.DeviceProfileRegistry
@@ -49,7 +49,6 @@ import app.aaps.plugins.source.compose.DexcomOnePlusSensorFacts
 import app.aaps.plugins.source.keys.DexcomOnePlusBooleanKey
 import app.aaps.plugins.source.keys.DexcomOnePlusIntKey
 import app.aaps.plugins.source.keys.DexcomOnePlusLongKey
-import app.aaps.plugins.source.keys.DexcomOnePlusIntentKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.ContributesIntoMap
@@ -116,11 +115,11 @@ class DexcomOnePlusPlugin @Inject constructor(
                 title = rh.gs(SourceStrings.dexcom_oneplus_native),
             )
         }
-        .icon(IcPluginByoda)
+        .icon(IcPluginDexcomG7)
         .pluginName(SourceStrings.dexcom_oneplus_native)
         .preferencesVisibleInSimpleMode(false)
         .description(SourceStrings.description_source_dexcom_oneplus_native),
-    ownPreferences = DexcomOnePlusIntentKey.entries + DexcomOnePlusBooleanKey.entries + DexcomOnePlusIntKey.entries + DexcomOnePlusLongKey.entries,
+    ownPreferences = DexcomOnePlusBooleanKey.entries + DexcomOnePlusIntKey.entries + DexcomOnePlusLongKey.entries,
     aapsLogger,
     rh,
     preferences,
@@ -418,15 +417,14 @@ class DexcomOnePlusPlugin @Inject constructor(
         key = "dexcom_oneplus_settings",
         title = SourceStrings.dexcom_oneplus_native,
         summary = SourceStrings.dexcom_oneplus_plugin_summary,
-        // The start and warm-up buttons come from the host, because opening a screen needs a Context.
-        // Status is the first tab of the plugin instead.
-        items = host.screenItems(this) + listOf(
+        // Settings only. Start, warm-up and status are buttons of the plugin's Status tab.
+        items = listOf(
             DexcomOnePlusBooleanKey.SendCalibrationToSensor,
             DexcomOnePlusBooleanKey.AutoPromote,
             DexcomOnePlusIntKey.AutoPromoteHours,
             // No sensor change settings: the driver knows the real start, so there is nothing to
             // choose. The plugin always writes the SENSOR_CHANGE the overview sensor age reads (see
-            // logSensorChange) and the Status screen always offers "correct the insertion date".
+            // logSensorChange).
         ) + listOfNotNull(
             // Only where a watch link exists and the Wear plugin is on.
             DexcomOnePlusBooleanKey.WatchDirect.takeIf { watchHandover.isOffered },
@@ -821,65 +819,6 @@ class DexcomOnePlusPlugin @Inject constructor(
                 "inserted=${result.sensorInsertionsInserted.size}",
         )
         return inserted
-    }
-
-    /**
-     * Move the insertion time of the sensor that feeds the loop — the Status screen's "correct the
-     * insertion date".
-     *
-     * Two clocks have to agree, or the correction is only half visible: this source's own session
-     * start and the `SENSOR_CHANGE` therapy event. Calibration entries are kept.
-     */
-    suspend fun correctProductionSensorStart(newStartMs: Long): DexcomOnePlusSensorStartCorrection.Verdict {
-        val currentStartMs = sensorStore.loadSessionStart()
-        val now = nowMs()
-        val verdict = DexcomOnePlusSensorStartCorrection.validate(
-            newStartMs, currentStartMs, now,
-            maxAgeMs = DexcomOnePlusStaging.sessionLengthMs(sensorSessionLengthMs(sensorStore)),
-        )
-        if (verdict != DexcomOnePlusSensorStartCorrection.Verdict.Accepted) {
-            aapsLogger.info(
-                LTag.BGSOURCE,
-                "DEXCOM_ONEPLUS_SESSION: insertion date refused verdict=$verdict " +
-                    "newStartMs=$newStartMs currentStartMs=$currentStartMs",
-            )
-            return verdict
-        }
-        val from = DexcomOnePlusSensorStartCorrection.cleanupFrom(newStartMs, currentStartMs)
-        val taken = persistenceLayer.getTherapyEventDataIncludingInvalidFromTime(from, true)
-            .filter { it.type == TE.Type.SENSOR_CHANGE }
-            .map { it.timestamp }
-            .toSet()
-        val stampMs = DexcomOnePlusSensorStartCorrection.freeTimestamp(newStartMs, taken)
-        val stale = persistenceLayer.getTherapyEventDataFromToTime(from, now)
-            .filter { it.type == TE.Type.SENSOR_CHANGE }
-        stale.forEach { event ->
-            persistenceLayer.invalidateTherapyEvent(
-                id = event.id,
-                action = Action.CAREPORTAL_REMOVED,
-                source = Sources.DexcomOnePlus,
-                note = event.note,
-                listValues = listOf(
-                    ValueWithUnit.Timestamp(event.timestamp),
-                    ValueWithUnit.TEType(event.type),
-                ),
-            )
-        }
-        sensorStore.overwriteSessionStart(stampMs)
-        // Set by hand: the start the sensor reports must not move it back.
-        sensorStore.markSessionStartSettled()
-        val written = writeSensorChange(stampMs)
-        healedSensorChangeStartMs = stampMs
-        refreshProductionLifecycle()
-        rxBus.send(EventRefreshOverview(from = "DexcomOnePlus insertion date"))
-        val nowShowing = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)?.timestamp
-        aapsLogger.info(
-            LTag.BGSOURCE,
-            "DEXCOM_ONEPLUS_SESSION: insertion date corrected from=$currentStartMs to=$stampMs " +
-                "asked=$newStartMs removedSensorChanges=${stale.size} written=$written " +
-                "lastSensorChangeNow=$nowShowing",
-        )
-        return verdict
     }
 
     override fun onSession(up: Boolean, reason: String?) {

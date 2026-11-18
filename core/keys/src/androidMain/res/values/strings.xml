@@ -94,8 +94,8 @@
     <string name="pref_title_alert_cgm_sensor_issue_delay">Sensor issue for at least</string>
     <string name="pref_title_alert_cgm_warmup_done">Notify when sensor warm-up is done</string>
     <string name="pref_summary_alert_cgm_warmup_done">Notify when a new sensor sends its first usable reading. Only for BG sources that report their sensor state.</string>
-    <string name="pref_title_alert_cgm_second_sensor_ready">Notify when a second sensor is ready</string>
-    <string name="pref_summary_alert_cgm_second_sensor_ready">Notify when a pre-soaked second sensor is ready and you can switch to it. Only for BG sources that support a second sensor.</string>
+    <string name="pref_title_alert_cgm_second_sensor_ready">Notify when the pre-soak sensor is ready</string>
+    <string name="pref_summary_alert_cgm_second_sensor_ready">Notify when the pre-soak sensor is ready and you can switch to it. Only for BG sources that support a pre-soak sensor.</string>
 
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Upload BG data to NS</string>

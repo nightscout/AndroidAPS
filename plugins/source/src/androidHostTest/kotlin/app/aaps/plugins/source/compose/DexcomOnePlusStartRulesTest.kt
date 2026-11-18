@@ -11,7 +11,7 @@ import kotlin.test.assertTrue
 /**
  * The sensor start screen's own decisions.
  *
- * Which step the user is on, and which sensor is offered first.
+ * What a scan row draws, and which sensor is offered first.
  */
 class DexcomOnePlusStartRulesTest {
 
@@ -23,40 +23,6 @@ class DexcomOnePlusStartRulesTest {
             identity = OnePlusSensorIdentity(pin = pin, serial = serial),
             lastMac = mac,
         )
-
-    // ------------ currentStep(): the guided flow ------------
-
-    @Test
-    fun `a missing permission is the first step whatever else is filled in`() {
-        assertEquals(
-            DexcomOnePlusStartRules.STEP_PREPARE,
-            DexcomOnePlusStartRules.currentStep(hasPermissions = false, hasCode = true, hasDevice = true),
-        )
-    }
-
-    @Test
-    fun `with the permission granted and no code the user is on the code step`() {
-        assertEquals(
-            DexcomOnePlusStartRules.STEP_CODE,
-            DexcomOnePlusStartRules.currentStep(hasPermissions = true, hasCode = false, hasDevice = true),
-        )
-    }
-
-    @Test
-    fun `a code without a chosen sensor is the connect step`() {
-        assertEquals(
-            DexcomOnePlusStartRules.STEP_CONNECT,
-            DexcomOnePlusStartRules.currentStep(hasPermissions = true, hasCode = true, hasDevice = false),
-        )
-    }
-
-    @Test
-    fun `everything in place is the warm-up step`() {
-        assertEquals(
-            DexcomOnePlusStartRules.STEP_WARMUP,
-            DexcomOnePlusStartRules.currentStep(hasPermissions = true, hasCode = true, hasDevice = true),
-        )
-    }
 
     // ------------ signalBars(): what the row draws ------------
 

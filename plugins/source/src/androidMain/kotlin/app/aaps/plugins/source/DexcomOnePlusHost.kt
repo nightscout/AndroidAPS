@@ -1,7 +1,6 @@
 package app.aaps.plugins.source
 
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.keys.interfaces.PreferenceItem
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.dexcomoneplus.OnePlusCgmDriver
 import app.aaps.plugins.dexcomoneplus.OnePlusCompetingApps
@@ -110,14 +109,6 @@ interface DexcomOnePlusHost {
      * not know.
      */
     val installedApps: OnePlusInstalledApps?
-
-    /**
-     * The entries that open this plugin's own screens, for the settings screen.
-     *
-     * @param plugin the plugin these screens act on. It is passed in rather than injected because
-     *   the plugin builds the host, so a host that asked for the plugin would be a loop.
-     */
-    fun screenItems(plugin: DexcomOnePlusPlugin): List<PreferenceItem>
 
     /**
      * The screens of this plugin that the status screen opens through the host. [START] starts the

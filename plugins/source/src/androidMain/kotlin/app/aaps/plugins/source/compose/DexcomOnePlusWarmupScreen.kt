@@ -49,7 +49,7 @@ import kotlin.time.Clock
  * under it; on a short screen (phone in landscape) the ring moves beside the details, which is the
  * only arrangement that fits about 360 dp of height without cutting anything off.
  *
- * The three ways to another screen are nullable. A phone that has no such screen passes null, and
+ * The two ways to another screen (the driver log and the start screen) are nullable. A phone that has no such screen passes null, and
  * the button is not drawn, rather than drawn and doing nothing.
  *
  * @param storedSession reads the production slot's stored sensor once, for the sensor card.
@@ -63,7 +63,6 @@ fun DexcomOnePlusWarmupScreen(
     onRetry: () -> Unit,
     onOpenLog: (() -> Unit)?,
     onOpenStart: (() -> Unit)?,
-    onOpenStatus: (() -> Unit)?,
     formatTime: (Long) -> String,
 ) {
     val window = rememberCgmWindow()
@@ -115,9 +114,7 @@ fun DexcomOnePlusWarmupScreen(
     )
     val links = WarmupLinks(
         onRetry = onRetry,
-        onOpenLog = onOpenLog,
         onOpenStart = onOpenStart,
-        onOpenStatus = onOpenStatus,
     )
 
     CgmScaffold(
@@ -223,9 +220,7 @@ private data class WarmupUiModel(
 /** The ways out of this screen. A null entry is a screen this phone does not have. */
 private class WarmupLinks(
     val onRetry: () -> Unit,
-    val onOpenLog: (() -> Unit)?,
     val onOpenStart: (() -> Unit)?,
-    val onOpenStatus: (() -> Unit)?,
 )
 
 /**
@@ -332,8 +327,9 @@ private fun ColumnScope.WarmupDetails(
         }
 
         OnePlusWarmupState.Phase.FAILED -> {
-            // An interrupted warm-up used to be a red line and nothing else. These are the three
-            // ways out that actually exist, in the order they are worth trying.
+            // An interrupted warm-up used to be a red line and nothing else. These are the two
+            // ways out that actually exist, in the order they are worth trying. The driver log is
+            // the button at the top right of the screen.
             CgmCard(tone = CgmCardTone.Warning) {
                 CgmCardHeader(stringResource(SourceStrings.cgm_warmup_what_happened))
                 Text(
@@ -343,11 +339,6 @@ private fun ColumnScope.WarmupDetails(
             }
             Button(onClick = links.onRetry, modifier = Modifier.fillMaxWidth()) {
                 Text(stringResource(SourceStrings.dexcom_oneplus_warmup_retry))
-            }
-            links.onOpenLog?.let { openLog ->
-                OutlinedButton(onClick = openLog, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(SourceStrings.cgm_driver_log_open))
-                }
             }
             links.onOpenStart?.let { openStart ->
                 TextButton(onClick = openStart, modifier = Modifier.fillMaxWidth()) {
@@ -421,23 +412,4 @@ private fun ColumnScope.WarmupDetails(
         }
     }
 
-    if (model.state.phase != OnePlusWarmupState.Phase.FAILED &&
-        (links.onOpenLog != null || links.onOpenStatus != null)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
-        ) {
-            links.onOpenLog?.let { openLog ->
-                OutlinedButton(onClick = openLog, modifier = Modifier.weight(1f)) {
-                    Text(stringResource(SourceStrings.cgm_driver_log_open))
-                }
-            }
-            links.onOpenStatus?.let { openStatus ->
-                OutlinedButton(onClick = openStatus, modifier = Modifier.weight(1f)) {
-                    Text(stringResource(SourceStrings.dexcom_oneplus_open_status))
-                }
-            }
-        }
-    }
 }

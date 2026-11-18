@@ -141,8 +141,6 @@ data class DexcomOnePlusStatusView(
      * sense when there is a first one, so the pre-soak card is not shown.
      */
     val stagingOffered: Boolean,
-    /** Start time the "correct insertion date" action works on, or null when the action is hidden. */
-    val correctInsertionStartMs: Long?,
 )
 
 /** Turns a [DexcomOnePlusStatusInput] into a [DexcomOnePlusStatusView]. Pure: no clock, no driver. */
@@ -157,9 +155,10 @@ object DexcomOnePlusStatusState {
         val overview = PumpOverviewUiState(
             statusBanner = banner(input, format),
             infoRows = productionRows(input, format),
-            primaryActions = listOf(
+            primaryActions = listOfNotNull(
                 ScreenAction(label = rh.gs(SourceStrings.dexcom_oneplus_start_action), onClick = actions.onOpenStart),
-                ScreenAction(label = rh.gs(SourceStrings.dexcom_oneplus_step_warmup), onClick = actions.onOpenWarmup),
+                ScreenAction(label = rh.gs(SourceStrings.dexcom_oneplus_warmup_title), onClick = actions.onOpenWarmup)
+                    .takeIf { showsWarmupButton(input) },
             ),
             managementActions = listOf(
                 ScreenAction(label = rh.gs(SourceStrings.cgm_driver_log_open), onClick = actions.onOpenLog),
@@ -173,10 +172,19 @@ object DexcomOnePlusStatusState {
             endOfLifePrompt = input.lifecycle?.endOfLife == true && input.stagingState == StagingState.ABSENT,
             staging = stagingCard(input),
             stagingOffered = input.lifecycle != null || input.stagingState != StagingState.ABSENT,
-            // Offered whenever a sensor runs: it asks for a date first, so no setting hides it.
-            correctInsertionStartMs = input.lifecycle?.startedAtEpochMs,
         )
     }
+
+    /**
+     * The warm-up screen has something to show only while a sensor pairs or warms up, or after a
+     * failure (it offers "try again"). A reconnect in the middle of a warm-up changes the phase, so
+     * a warm-up end that is still in the future counts too. For a running sensor the button is hidden.
+     */
+    fun showsWarmupButton(input: DexcomOnePlusStatusInput): Boolean =
+        input.phase == OnePlusWarmupState.Phase.PAIRING ||
+            input.phase == OnePlusWarmupState.Phase.WARMING ||
+            input.phase == OnePlusWarmupState.Phase.FAILED ||
+            (input.warmupEndsAtMs ?: 0L) > input.nowMs
 
     /** The sensor sends a reading about every 5 minutes, then the link closes until the next one. */
     const val READING_INTERVAL_MS = 5L * 60_000L
@@ -347,15 +355,16 @@ object DexcomOnePlusStatusState {
             rows += PumpInfoRow(label = rh.gs(SourceStrings.dexcom_oneplus_row_pairing_code), value = code)
         }
         // The sensor's own state when the driver line holds one, else the last driver message.
+        // No row at all when the driver has said nothing.
         val sensorState = sensorStateRef(input.driverMessage)
-        rows += if (sensorState != null) {
-            PumpInfoRow(
+        if (sensorState != null) {
+            rows += PumpInfoRow(
                 label = rh.gs(SourceStrings.dexcom_oneplus_row_sensor_state),
                 value = rh.gs(sensorState),
                 level = sensorStateLevel(input.driverMessage),
             )
-        } else {
-            PumpInfoRow(
+        } else if (!input.driverMessage.isNullOrBlank()) {
+            rows += PumpInfoRow(
                 label = rh.gs(SourceStrings.dexcom_oneplus_row_message),
                 value = rh.gs(DexcomOnePlusUiLabels.userMessageRef(input.driverMessage)),
             )

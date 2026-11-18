@@ -465,11 +465,11 @@
     <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
     <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
-    <!-- Direct-to-watch: the watch reads the Dexcom ONE+ / G7 itself, next to the phone -->
+    <!-- Direct-to-watch: the watch reads the Dexcom G7 / ONE+ itself, next to the phone -->
     <string name="watch_direct_title">Direct to watch</string>
     <string name="watch_direct_channel">Direct to watch</string>
     <string name="watch_direct_service_channel">Direct to watch link</string>
-    <string name="watch_direct_state_off">Off. Turn it on in AAPS on the phone, on the Dexcom ONE+ status screen.</string>
+    <string name="watch_direct_state_off">Off. Turn it on in AAPS on the phone, in the Dexcom G7 / ONE+ settings.</string>
     <string name="watch_direct_state_not_supported">Not possible on this watch. It needs Wear OS 3 or newer.</string>
     <string name="watch_direct_state_bluetooth_off">Bluetooth is off on the watch.</string>
     <string name="watch_direct_state_running">The watch reads the sensor itself.</string>

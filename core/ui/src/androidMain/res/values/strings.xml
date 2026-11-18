@@ -109,7 +109,7 @@
     <string name="cgm_alert_signal_lost" comment="%1$s = time of the last link or the last reading of the sensor, e.g. 14:05">No signal from the CGM sensor since %1$s.</string>
     <string name="cgm_alert_sensor_issue" comment="%1$s = time since when the sensor sends no usable value, e.g. 14:05">The CGM sensor sends no usable glucose value since %1$s. This often passes by itself. Check your glucose with a meter if you need to.</string>
     <string name="cgm_alert_warmup_done" comment="%1$s = time of the first usable reading, e.g. 14:05">Warm-up finished. The CGM sensor is active, first usable reading at %1$s.</string>
-    <string name="cgm_alert_second_sensor_ready" comment="%1$s = time when the pre-soak sensor became ready, e.g. 14:05">The pre-soak CGM sensor has been ready to promote since %1$s. You can switch to it now.</string>
+    <string name="cgm_alert_second_sensor_ready" comment="%1$s = time when the pre-soak sensor became ready, e.g. 14:05">The pre-soak CGM sensor has been ready since %1$s. You can switch to it now.</string>
     <string name="cgm_alarm_acknowledge" comment="Short button label on a CGM alarm: the alarm stops for its repeat time set in the CGM alarm settings, and comes back after that if the cause is still there">Snooze</string>
     <string name="cgm_alarm_test_message" comment="%1$s = name of the alarm, e.g. Urgent low">Test of the alarm: %1$s. Dismiss it to stop.</string>
     <string name="cgm_alarm_urgent_low">Urgent low</string>
@@ -123,7 +123,7 @@
     <string name="cgm_alarm_sensor_ending_soon">Sensor ending soon</string>
     <string name="cgm_alarm_signal_loss">Signal loss</string>
     <string name="cgm_alarm_sensor_issue">Sensor issue</string>
-    <string name="cgm_alarm_second_sensor_ready">Second sensor ready</string>
+    <string name="cgm_alarm_second_sensor_ready">Pre-soak sensor ready</string>
     <string name="cgm_alarm_warmup_done">Warm-up done</string>
     <string name="cgm_alarms_title">CGM alarms</string>
     <string name="cgm_alarms_summary">Glucose and sensor alarms for every BG source. They only notify, they never change dosing.</string>
@@ -228,7 +228,7 @@
     <string name="wrong_pump_data">Data is coming from different pump. Change pump driver to reset pump state.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Calibration</string>
-    <string name="calibration_to_sensor_warning">This value goes to the sensor. The sensor keeps it for good: it cannot be removed later. Make sure it is right.</string>
+    <string name="calibration_to_sensor_warning">This value goes to the sensor. The sensor keeps it, and it cannot be removed later. Make sure it is right.</string>
     <string name="calibration_sent_to_sensor">Sent to the sensor</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Calibration not saved: BG is changing too fast (Δ %1$s %3$s per 5 min, limit %2$s). Try again when glucose is stable.</string>

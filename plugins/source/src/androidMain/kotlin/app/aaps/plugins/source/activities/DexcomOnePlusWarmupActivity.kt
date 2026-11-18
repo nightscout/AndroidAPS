@@ -58,14 +58,6 @@ class DexcomOnePlusWarmupActivity : MetroAppCompatActivity() {
                         onOpenStart = {
                             startActivity(Intent(this, DexcomOnePlusStartActivity::class.java))
                         },
-                        onOpenStatus = {
-                            // CLEAR_TOP so coming here from the status screen returns to that
-                            // instance instead of stacking a second one on every round trip.
-                            startActivity(
-                                Intent(this, DexcomOnePlusStatusActivity::class.java)
-                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                            )
-                        },
                         formatTime = { epochMs -> DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(epochMs)) },
                     )
                 }

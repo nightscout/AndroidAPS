@@ -309,6 +309,11 @@ class DexcomOnePlusStatusStateTest {
     }
 
     @Test
+    fun noMessageRowWhenTheDriverSaidNothing() {
+        assertTrue(rows(input()).none { it.label == "dexcom_oneplus_row_message" })
+    }
+
+    @Test
     fun driverCodesAreNeverShownRaw() {
         val message = rows(input(driverMessage = "ONEPLUS_GATT_133")).last()
         assertEquals("dexcom_oneplus_row_message", message.label)
@@ -325,8 +330,8 @@ class DexcomOnePlusStatusStateTest {
 
     @Test
     fun buttonsOpenStartWarmupAndLog() {
-        val overview = DexcomOnePlusStatusState.build(input(), format, actions).overview
-        assertEquals(listOf("dexcom_oneplus_start_action", "dexcom_oneplus_step_warmup"), overview.primaryActions.map { it.label })
+        val overview = DexcomOnePlusStatusState.build(input(phase = OnePlusWarmupState.Phase.WARMING), format, actions).overview
+        assertEquals(listOf("dexcom_oneplus_start_action", "dexcom_oneplus_warmup_title"), overview.primaryActions.map { it.label })
         assertEquals(listOf("cgm_driver_log_open"), overview.managementActions.map { it.label })
         overview.primaryActions[0].onClick()
         assertEquals("start", opened)
@@ -334,6 +339,24 @@ class DexcomOnePlusStatusStateTest {
         assertEquals("warmup", opened)
         overview.managementActions[0].onClick()
         assertEquals("log", opened)
+    }
+
+    @Test
+    fun warmupButtonOnlyWhileThereIsAWarmupToShow() {
+        fun labels(input: DexcomOnePlusStatusInput) =
+            DexcomOnePlusStatusState.build(input, format, actions).overview.primaryActions.map { it.label }
+
+        val hidden = listOf("dexcom_oneplus_start_action")
+        val shown = listOf("dexcom_oneplus_start_action", "dexcom_oneplus_warmup_title")
+        // A running sensor, with or without a link, and a sensor that is not connected at all.
+        assertEquals(hidden, labels(input(phase = OnePlusWarmupState.Phase.READY)))
+        assertEquals(hidden, labels(input(phase = OnePlusWarmupState.Phase.RECONNECTING)))
+        assertEquals(hidden, labels(input(phase = OnePlusWarmupState.Phase.IDLE)))
+        assertEquals(shown, labels(input(phase = OnePlusWarmupState.Phase.PAIRING)))
+        assertEquals(shown, labels(input(phase = OnePlusWarmupState.Phase.FAILED)))
+        // A reconnect in the middle of a warm-up keeps the button.
+        assertEquals(shown, labels(input(phase = OnePlusWarmupState.Phase.RECONNECTING, warmupEndsAtMs = NOW + MINUTE)))
+        assertEquals(hidden, labels(input(phase = OnePlusWarmupState.Phase.RECONNECTING, warmupEndsAtMs = NOW - MINUTE)))
     }
 
     @Test
@@ -435,13 +458,6 @@ class DexcomOnePlusStatusStateTest {
         val readySilent = offer(StagingState.READY, silent)
         assertEquals(DexcomOnePlusPromoteOffer.NONE, readySilent.promote)
         assertEquals(true, readySilent.needsReconnect)
-    }
-
-    /** No setting any more: the action is there whenever a sensor runs. */
-    @Test
-    fun insertionDateActionWheneverASensorRuns() {
-        assertNull(DexcomOnePlusStatusState.build(input(), format, actions).correctInsertionStartMs)
-        assertEquals(NOW - 5 * HOUR, DexcomOnePlusStatusState.build(input(lifecycle = lifecycle()), format, actions).correctInsertionStartMs)
     }
 
     /** A second sensor only makes sense when there is a first one. */

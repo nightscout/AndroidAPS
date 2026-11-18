@@ -12,31 +12,6 @@ import app.aaps.plugins.dexcomoneplus.scan.OnePlusScanResult
  */
 object DexcomOnePlusStartRules {
 
-    /** Step 1 of the guided flow: let the app use Bluetooth. */
-    const val STEP_PREPARE = 0
-
-    /** Step 2: type or scan the four digit pairing code from the applicator. */
-    const val STEP_CODE = 1
-
-    /** Step 3: pick the sensor out of what the scan heard. */
-    const val STEP_CONNECT = 2
-
-    /** Step 4: the sensor is adopted and warm-up starts. */
-    const val STEP_WARMUP = 3
-
-    /**
-     * How far along the guided flow the user is.
-     *
-     * The order is what makes it a flow: a missing permission is shown even when a code has already
-     * been typed, because nothing can be scanned until it is granted.
-     */
-    fun currentStep(hasPermissions: Boolean, hasCode: Boolean, hasDevice: Boolean): Int = when {
-        !hasPermissions -> STEP_PREPARE
-        !hasCode        -> STEP_CODE
-        !hasDevice      -> STEP_CONNECT
-        else            -> STEP_WARMUP
-    }
-
     /**
      * The scan list in the order the screen draws it: the sensor the code on screen points at
      * first, then by how well each hit matches, then free sensors before the ones another phone

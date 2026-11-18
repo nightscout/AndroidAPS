@@ -29,7 +29,7 @@ class DexcomOnePlusPromotionAlertTest {
         val shown = posted.extras.getCharSequence(Notification.EXTRA_BIG_TEXT).toString()
         assertThat(shown).isEqualTo(text)
         assertThat(shown).contains("older calibration entries could not be ignored")
-        assertThat(shown).contains("Remove fingerstick calibrations taken before this switch")
+        assertThat(shown).contains("Remove finger prick calibrations taken before this switch")
     }
 
     @Test
