@@ -9,5 +9,6 @@ data class EversenseCGMResult @JvmOverloads constructor(
     val trend: EversenseTrendArrow,
     val sensorId: String = "",
     val rawResponseHex: String = "",
-    val recordNumber: Int? = null
+    val recordNumber: Int? = null,
+    @kotlinx.serialization.Transient val cloudOnly: Boolean = false
 )

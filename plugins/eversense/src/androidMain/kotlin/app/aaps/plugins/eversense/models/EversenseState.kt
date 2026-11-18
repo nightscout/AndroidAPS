@@ -30,7 +30,19 @@ class EversenseState {
     var sensorId: String = ""
     var settings = EversenseTransmitterSettings()
     var calibrationHistory: List<CalibrationHistoryItem> = emptyList()
+    var e365GlucoseSync: E365GlucoseSync = E365GlucoseSync()
 }
+
+@Serializable
+data class E365GlucoseSync(
+    val transmitter: String = "",
+    val lastRecord: Int? = null,
+    val initialGlucoseDatetime: Long? = null,
+    val liveReadings: List<E365LiveReading> = emptyList()
+)
+
+@Serializable
+data class E365LiveReading(val datetime: Long, val glucoseInMgDl: Int, val sensorId: String)
 
 @Serializable
 class EversenseTransmitterSettings {

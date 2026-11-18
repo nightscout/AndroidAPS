@@ -20,6 +20,7 @@ import app.aaps.plugins.eversense.packets.e365.ExitDiagnosticMode365Packet
 import app.aaps.plugins.eversense.packets.e3.GetCalibrationReadinessPacket
 import app.aaps.plugins.eversense.packets.e3.GetSignalStrengthRawPacket
 import app.aaps.plugins.eversense.packets.e365.GetSignalStrengthPacket
+import app.aaps.plugins.eversense.packets.e365.GetCalibrationInfoPacket
 import app.aaps.plugins.eversense.packets.e365.SetBloodGlucosePointPacket365
 import app.aaps.plugins.eversense.enums.CalibrationReadiness
 import app.aaps.plugins.eversense.util.EversenseCrypto365Util
@@ -121,7 +122,10 @@ class EversenseCGMPlugin(
     internal fun sessionDisconnected(session: Long, status: Int, reuse: Boolean = false) = connection.disconnected(session, status, reuse)
 
     internal fun watchersFor(session: Long): List<EversenseWatcher> = listOf(object : EversenseWatcher {
-        override fun onCGMRead(type: EversenseType, readings: List<EversenseCGMResult>) { connection.dataReceived(session) }
+        override fun onCGMRead(type: EversenseType, readings: List<EversenseCGMResult>) {
+            // E365 log reads can succeed even while live glucose remains unavailable.
+            if (type != EversenseType.EVERSENSE_365 || readings.any { it.recordNumber == null }) connection.dataReceived(session)
+        }
         override fun onConnectionChanged(connected: Boolean) {}
         override fun onStateChanged(state: EversenseState) {}
         override fun onTransmitterReady() {}
@@ -374,13 +378,36 @@ class EversenseCGMPlugin(
                 store.contains(StorageKeys.STATE) // Reject an operation captured before a link change.
                 if (callback.is365()) {
                     val packet = SetBloodGlucosePointPacket365(glucoseMgDl, timestampMs)
-                    callback.writePacket<SetBloodGlucosePointPacket365.Response>(packet)
-                    EversenseLogger.info(TAG, "365 calibration sent: $glucoseMgDl mg/dL")
+                    val result = callback.writePacket<SetBloodGlucosePointPacket365.Response>(packet)
+                    if (!result.usedForCalibration) {
+                        EversenseLogger.warning(TAG, "365 transmitter did not use the value for calibration (flag ${result.useFlag})")
+                    }
+                    result.usedForCalibration
                 } else {
                     EversenseE3Communicator.sendCalibration(callback, glucoseMgDl)
+                    true
                 }
             }
-            await(future, 20_000)
+            if (!await(future, 20_000)) return false
+
+            if (callback.is365()) {
+                callback.submitToExecutor(readyOnly = true) {
+                    try {
+                        val info = callback.writePacket<GetCalibrationInfoPacket.Response>(GetCalibrationInfoPacket())
+                        val currentState = JSON.decodeFromString<EversenseState>(store.getString(StorageKeys.STATE, null) ?: "{}")
+                        currentState.calibrationPhase = info.currentPhase
+                        currentState.calibrationMode = info.calibrationMode
+                        currentState.calibrationReadiness = info.calibrationReadiness
+                        currentState.lastCalibrationDate = info.lastCalibration
+                        currentState.nextCalibrationDate = info.nextCalibration
+                        store.edit(commit = true) { putString(StorageKeys.STATE, JSON.encodeToString(currentState)) }
+                        watchersFor(callback.session).forEach { it.onStateChanged(currentState) }
+                    } catch (e: Exception) {
+                        EversenseLogger.warning(TAG, "Could not refresh E365 calibration state: $e")
+                    }
+                }
+                return true
+            }
 
             val stateJson = store.getString(StorageKeys.STATE, null) ?: "{}"
             val updatedState = JSON.decodeFromString<EversenseState>(stateJson)

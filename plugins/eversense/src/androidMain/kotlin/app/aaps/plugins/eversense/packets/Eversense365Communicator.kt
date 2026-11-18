@@ -8,6 +8,8 @@ import app.aaps.plugins.eversense.EversenseGattCallback
 import app.aaps.plugins.eversense.callbacks.EversenseWatcher
 import app.aaps.plugins.eversense.enums.EversenseAlarm
 import app.aaps.plugins.eversense.enums.EversenseType
+import app.aaps.plugins.eversense.models.E365GlucoseSync
+import app.aaps.plugins.eversense.models.E365LiveReading
 import app.aaps.plugins.eversense.models.EversenseCGMResult
 import app.aaps.plugins.eversense.models.EversenseState
 import app.aaps.plugins.eversense.models.EversenseTransmitterSettings
@@ -54,114 +56,141 @@ class Eversense365Communicator {
 
         private var sensorIdLength = 10
 
-        // The transmitter's history log and its "current glucose" characteristic timestamp the
-        // same physical measurement a few seconds apart (log entry first, live characteristic a
-        // moment later) - on a fast, already-connected keep-alive round trip that gap is usually
-        // too small for the log to have caught up yet, but after a slower full reconnect (BLE
-        // connect + service discovery + auth) there's enough elapsed time for the log to already
-        // contain it. The backfill filter below excludes any history entry within this tolerance
-        // of the live reading's timestamp so it isn't double-counted as a distinct reading -
-        // comfortably under the ~5-minute reading cadence, so a real gap still backfills correctly.
-        //
-        // The same slip happens at the OTHER end too: the history log can timestamp a reading we
-        // already stored last cycle (previousGlucoseDatetime) a second or two later than the live
-        // characteristic did back then. A bare ">" comparison against previousGlucoseDatetime has
-        // zero tolerance for that, so the already-seen reading re-backfills as "new" the moment the
-        // log catches up to it. Apply the same tolerance on this end too.
-        private val BACKFILL_DEDUP_TOLERANCE_MS = TimeUnit.SECONDS.toMillis(90)
+        private const val LOG_PAGE_SIZE = 20
+        private const val MAX_PENDING_LIVE_READINGS = 288
+        private val liveMaxAgeMs = TimeUnit.MINUTES.toMillis(6)
+        private val futureToleranceMs = TimeUnit.MINUTES.toMillis(5)
+        private val logMatchToleranceMs = TimeUnit.SECONDS.toMillis(90)
+        private val samplingIntervalMs = TimeUnit.MINUTES.toMillis(5)
 
         fun readGlucose(gatt: EversenseGattCallback, preferences: EversenseStore, watchers: List<EversenseWatcher>) {
-            val stateJson = preferences.getString(StorageKeys.STATE, null) ?: "{}"
-            val state = JSON.decodeFromString<EversenseState>(stateJson)
-
-            val glucoseData = gatt.writePacket<GetGlucoseDataPacket.Response>(GetGlucoseDataPacket(sensorIdLength))
-            if (glucoseData.datetime <= state.recentGlucoseDatetime) {
-                EversenseLogger.warning(TAG, "Glucose data is still recent after reading - currentReading: ${glucoseData.datetime}, lastReading: ${state.recentGlucoseDatetime}")
-                return
+            val state = JSON.decodeFromString<EversenseState>(preferences.getString(StorageKeys.STATE, null) ?: "{}")
+            val now = System.currentTimeMillis()
+            val savedSync = state.e365GlucoseSync
+            val sameTransmitter = savedSync.transmitter == state.transmitterSerialNumber
+            var sync = if (sameTransmitter) savedSync else E365GlucoseSync(transmitter = state.transmitterSerialNumber)
+            val previousTime = state.recentGlucoseDatetime.takeIf {
+                (sameTransmitter || savedSync.transmitter.isEmpty()) && it in 1..(now + futureToleranceMs)
+            } ?: 0L
+            if (savedSync.transmitter.isEmpty() && sync.lastRecord == null && sync.initialGlucoseDatetime == null &&
+                previousTime > 0 && state.sensorId.isNotEmpty()
+            ) {
+                sync = sync.copy(liveReadings = listOf(E365LiveReading(previousTime, state.recentGlucoseValue, state.sensorId)))
+            }
+            if (sync.lastRecord == null && sync.initialGlucoseDatetime == null) {
+                sync = sync.copy(initialGlucoseDatetime = previousTime)
+                state.e365GlucoseSync = sync
+                saveState(preferences, state)
             }
 
-            var currentGlucose = glucoseData.glucoseInMgDl
+            val live = try {
+                gatt.writePacket<GetGlucoseDataPacket.Response>(GetGlucoseDataPacket(sensorIdLength))
+            } catch (e: Exception) {
+                EversenseLogger.warning(TAG, "Could not read current glucose: $e")
+                null
+            }
+            if (live != null && live.glucoseInMgDl in 40..400 &&
+                live.datetime in (now - liveMaxAgeMs)..(now + futureToleranceMs) &&
+                (live.datetime > previousTime || (previousTime > now && live.datetime <= now) ||
+                    (state.sensorId.isNotEmpty() && live.sensorId != state.sensorId))
+            ) {
+                state.recentGlucoseDatetime = live.datetime
+                state.recentGlucoseValue = live.glucoseInMgDl
+                state.lastGlucoseRaw = live.glucoseInMgDl
+                state.sensorSignalStrength = live.signalStrength
+                state.sensorId = live.sensorId
+                val marker = E365LiveReading(live.datetime, live.glucoseInMgDl, live.sensorId)
+                sync = sync.copy(liveReadings = (sync.liveReadings + marker).takeLast(MAX_PENDING_LIVE_READINGS))
+                // Hand off the usable value before any optional log command can end this link.
+                watchers.forEach {
+                    it.onCGMRead(EversenseType.EVERSENSE_365, listOf(EversenseCGMResult(live.glucoseInMgDl, live.datetime, live.trend, live.sensorId)))
+                }
+                state.e365GlucoseSync = sync
+                saveState(preferences, state)
+            }
 
-            val result = mutableListOf<EversenseCGMResult>()
-            val previousGlucoseDatetime = state.recentGlucoseDatetime
-            state.recentGlucoseDatetime = glucoseData.datetime
-            state.recentGlucoseValue = currentGlucose
-            state.lastGlucoseRaw = glucoseData.glucoseInMgDl
-            state.sensorSignalStrength = glucoseData.signalStrength
-            EversenseLogger.debug(TAG) { "Sensor signal strength from glucose packet: ${glucoseData.signalStrength}" }
+            try {
+                syncGlucoseLog(gatt, preferences, watchers, state, sync, previousTime, now)
+                syncCalibrationLog(gatt, preferences, state)
+            } catch (e: Exception) {
+                EversenseLogger.warning(TAG, "Could not sync transmitter logs: $e")
+            }
 
-            state.sensorId = glucoseData.sensorId
+            handler.post { watchers.forEach { it.onStateChanged(state) } }
+        }
 
-            var liveReading = EversenseCGMResult(
-                glucoseInMgDl = currentGlucose,
-                datetime = glucoseData.datetime,
-                trend = glucoseData.trend,
-                sensorId = glucoseData.sensorId,
-                rawResponseHex = glucoseData.rawResponseHex
+        private fun syncGlucoseLog(
+            gatt: EversenseGattCallback,
+            preferences: EversenseStore,
+            watchers: List<EversenseWatcher>,
+            state: EversenseState,
+            sync: E365GlucoseSync,
+            previousTime: Long,
+            now: Long
+        ) {
+            val range = gatt.writePacket<GetLogRangePacket365.Response>(GetLogRangePacket365(LogType.GLUCOSE))
+            if (range.rangeFrom < 0 || range.rangeTo < range.rangeFrom) return
+
+            val cursor = sync.lastRecord?.takeIf { it <= range.rangeTo }
+            if (cursor == range.rangeTo) return
+            val initialTime = sync.initialGlucoseDatetime ?: previousTime
+            val initialLookback = if (initialTime > 0) {
+                ((now - initialTime).coerceAtLeast(0) / samplingIntervalMs + 2).coerceAtMost(range.rangeTo.toLong())
+            } else (LOG_PAGE_SIZE - 1).toLong()
+            val from = maxOf(range.rangeFrom, cursor?.plus(1) ?: (range.rangeTo - initialLookback).toInt())
+            val to = minOf(range.rangeTo.toLong(), from.toLong() + LOG_PAGE_SIZE - 1).toInt()
+            if (cursor == null) {
+                // Keep the initial position even if the first page times out.
+                state.e365GlucoseSync = sync.copy(lastRecord = from - 1, initialGlucoseDatetime = null)
+                saveState(preferences, state)
+            }
+            val page = gatt.writePacket<GetGlucoseLogValuesPacket.Response>(
+                GetGlucoseLogValuesPacket(from, to, sensorIdLength)
             )
 
-            // Read last calibration entry for DMS upload (must run while GATT is connected)
-            try {
-                val calibLogRange = gatt.writePacket<GetLogRangePacket365.Response>(
-                    GetLogRangePacket365(LogType.CALIBRATIONS)
-                )
-                if (calibLogRange.rangeTo > calibLogRange.rangeFrom) {
-                    val calibFrom = maxOf(calibLogRange.rangeTo - 1, calibLogRange.rangeFrom)
-                    val calibHistory = gatt.writePacket<GetCalibrationLogValuesPacket.Response>(
-                        GetCalibrationLogValuesPacket(from = calibFrom, to = calibLogRange.rangeTo)
-                    )
-                    state.calibrationHistory = calibHistory.calibrationHistory
-                    EversenseLogger.debug(TAG) { "Calibration: ${calibHistory.count} entries read (range $calibFrom..${calibLogRange.rangeTo})" }
-                }
-            } catch (e: Exception) {
-                EversenseLogger.warning(TAG, "Could not read calibration history: $e")
-            }
-
-            // Read glucose history for backfill — use previousGlucoseDatetime so gap readings are included
-            try {
-                val logRange = gatt.writePacket<GetLogRangePacket365.Response>(GetLogRangePacket365(LogType.GLUCOSE))
-                val range = app.aaps.plugins.eversense.util.RangeCalculator.calculateGlucoseRange(
-                    logRange.rangeFrom, logRange.rangeTo, previousGlucoseDatetime
-                )
-                val history = gatt.writePacket<GetGlucoseLogValuesPacket.Response>(
-                    GetGlucoseLogValuesPacket(from = range.from, to = range.to, sensorIdLength = sensorIdLength)
-                )
-                // The live response has no record number. Use the matching entry from the log.
-                val currentRecord = history.glucoseHistory.singleOrNull {
-                    it.datetime == glucoseData.datetime && it.valueInMgDl == glucoseData.glucoseInMgDl
-                }
-                if (currentRecord != null) {
-                    liveReading = liveReading.copy(recordNumber = currentRecord.recordNumber)
-                }
-                val backfill = history.glucoseHistory
-                    .filter { it.datetime > previousGlucoseDatetime + BACKFILL_DEDUP_TOLERANCE_MS && it.datetime < glucoseData.datetime - BACKFILL_DEDUP_TOLERANCE_MS }
-                    .map { item ->
-                        EversenseCGMResult(
-                            glucoseInMgDl = item.valueInMgDl,
-                            datetime = item.datetime,
-                            trend = item.trend,
-                            sensorId = state.sensorId,
-                            rawResponseHex = item.rawResponseHex,
-                            recordNumber = item.recordNumber
-                        )
+            // Only acknowledge consecutive records. A missing or truncated response leaves the
+            // next record eligible for the next sync, even after a newer live reading arrives.
+            val received = page.recordNumbers.toSet()
+            val lastRecord = (from..to).takeWhile { it in received }.lastOrNull() ?: return
+            val remainingMarkers = sync.liveReadings.toMutableList()
+            val readings = page.glucoseHistory
+                .filter { (it.recordNumber ?: -1) in from..lastRecord && it.valueInMgDl in 40..400 && it.datetime in 1..(now + futureToleranceMs) }
+                .distinctBy { it.recordNumber }
+                .sortedBy { it.recordNumber }
+                .map { item ->
+                    val matchingLive = remainingMarkers.singleOrNull {
+                        it.sensorId.equals(item.sensorId, ignoreCase = true) && it.glucoseInMgDl == item.valueInMgDl &&
+                            abs(it.datetime - item.datetime) <= logMatchToleranceMs
                     }
-                if (backfill.isNotEmpty()) {
-                    result.addAll(backfill)
-                    EversenseLogger.debug(TAG) { "Backfill: added ${backfill.size} historical readings" }
+                    if (matchingLive != null) remainingMarkers.remove(matchingLive)
+                    EversenseCGMResult(
+                        glucoseInMgDl = item.valueInMgDl,
+                        datetime = item.datetime,
+                        trend = item.trend,
+                        sensorId = item.sensorId,
+                        rawResponseHex = item.rawResponseHex,
+                        recordNumber = item.recordNumber,
+                        cloudOnly = matchingLive != null
+                    )
                 }
-            } catch (e: Exception) {
-                EversenseLogger.warning(TAG, "Could not read glucose history: $e")
-            }
-            result.add(liveReading)
+            if (readings.isNotEmpty()) watchers.forEach { it.onCGMRead(EversenseType.EVERSENSE_365, readings) }
 
-            preferences.edit(commit = true) {
-                putString(StorageKeys.STATE, JSON.encodeToString(state))
-            }
+            state.e365GlucoseSync = sync.copy(lastRecord = lastRecord, initialGlucoseDatetime = null, liveReadings = remainingMarkers)
+            saveState(preferences, state)
+        }
 
-            handler.post {
-                watchers.forEach { it.onCGMRead(EversenseType.EVERSENSE_365, result) }
-                watchers.forEach { it.onStateChanged(state) }
-            }
+        private fun syncCalibrationLog(gatt: EversenseGattCallback, preferences: EversenseStore, state: EversenseState) {
+            val range = gatt.writePacket<GetLogRangePacket365.Response>(GetLogRangePacket365(LogType.CALIBRATIONS))
+            if (range.rangeTo <= range.rangeFrom) return
+            val history = gatt.writePacket<GetCalibrationLogValuesPacket.Response>(
+                GetCalibrationLogValuesPacket(from = maxOf(range.rangeTo - 1, range.rangeFrom), to = range.rangeTo)
+            )
+            state.calibrationHistory = history.calibrationHistory
+            saveState(preferences, state)
+        }
+
+        private fun saveState(preferences: EversenseStore, state: EversenseState) {
+            preferences.edit(commit = true) { putString(StorageKeys.STATE, JSON.encodeToString(state)) }
         }
 
         fun fullSync(gatt: EversenseGattCallback, preferences: EversenseStore, watchers: List<EversenseWatcher>, force: Boolean = false) {

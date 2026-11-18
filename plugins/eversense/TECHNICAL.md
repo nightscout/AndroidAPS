@@ -160,9 +160,9 @@ Some legacy rules remain intentionally unchanged: E3 accepts 20 through 450 mg/d
 
 E3 reads current glucose, status and calibration/log information. It does not backfill glucose history into AAPS.
 
-ES365 reads current glucose and attempts calibration/history requests. RangeCalculator uses the prior glucose timestamp and caps a history request at 20 log indices. Returned history must lie between the previous and new live reading, with a 90-second margin at both ends. A history failure does not make recovery mandatory before publishing an otherwise usable current reading.
+ES365 publishes fresh live readings between 40 and 400 mg/dL before requesting optional logs. It rejects glucose timestamps more than five minutes ahead of the phone and ignores a saved live timestamp beyond that limit. The glucose log advances in pages of up to 20 consecutive record numbers. A cursor tied to the transmitter lets later reads continue after long gaps or interrupted requests as long as the records remain in its log. The initial request uses the previous live timestamp when available.
 
-The status UI saves eversense_sync_days, default 14. Neither communicator uses it to calculate history requests. It is not a multi-day archive-download control. Recovered entries can lack sensor ID or raw data needed for full cloud representation.
+The status UI saves eversense_sync_days, default 14. Neither communicator uses it to calculate history requests. ES365 reads the sensor ID and record number from each log entry and uses the log timestamp for DMS. A unique match against a recent live reading with the same sensor ID and glucose value within 90 seconds avoids a second local entry. DMS upload waits for a numbered entry with a sensor ID.
 
 A forced full sync bypasses the recent-sync check and requests transmitter data. It does not flush cloud work or bypass the hourly upload limit.
 
@@ -172,7 +172,7 @@ The source implements EversenseCalibrationSource. If needed, it requests a conne
 
 The shared calibration dialog limits input to 40–400 mg/dL or 2.2–22.2 mmol/L. The Android settings form checks a positive number and converts the displayed unit. These validation paths are not identical. Model-specific command adapters encode and send calibration values.
 
-After successful send, the manager updates local calibration timestamps and provisional waiting state, then asynchronously re-reads E3 readiness. Callers request a forced sync and record EversenseLastCalibrationSubmittedAt. That timestamp drives the 15-minute overview countdown; it is presentation state, not proof of clinical readiness or an enforced interval.
+For ES365, the manager only reports calibration success if the transmitter confirms that it used the submitted value. It then re-reads the calibration phase, readiness and timestamps from the transmitter. E3 keeps its provisional timestamps and waiting state, then re-reads readiness. A successful submission drives the overview countdown while the transmitter processes the calibration.
 
 EversenseCalibrationDynamics reads LastBgData and DateUtil. It warns only for fresh SINGLE, DOUBLE or TRIPLE up/down arrows. FORTY_FIVE_UP, FORTY_FIVE_DOWN, FLAT and NONE do not warn; a computed delta does not override that rule. Data older than Constants.OLD_BG_MINUTES or dated in the future is ignored. Missing data is not evidence of stability. The warning component is shared by both calibration entry points and uses the standard AAPS WarningBanner. It refreshes on resume and every five seconds while resumed, reading off the UI thread. Pause/disposal cancels that job; it does not poll Bluetooth or DMS. Warning state does not participate in canSubmit and does not block the driver call.
 

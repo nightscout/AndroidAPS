@@ -221,9 +221,12 @@ class SetBloodGlucosePointPacket365(private val glucoseInMgDl: Int, private val 
 
     override fun getRequestData(): ByteArray = CalibrationPayload.v2(glucoseInMgDl, timestampMs, PacketTime.nowMillis())
 
-    override fun parseResponse(): Response = Response()
+    override fun parseResponse(): Response? = receivedData.getOrNull(2)?.let { Response(it.toInt()) }
 
-    class Response : EversenseBasePacket.Response()
+    data class Response(val useFlag: Int) : EversenseBasePacket.Response() {
+        // E365 response codes differ from the calibration history flags.
+        val usedForCalibration: Boolean get() = useFlag == 0x01 || useFlag == 0x09
+    }
 }
 
 class SetCurrentDateTimePacket : EversenseBasePacket(PacketSpec.v2(Eversense365Packets.WriteCommandId, Eversense365Packets.WriteResponseId, Eversense365Packets.WriteCurrentDateTime)) {

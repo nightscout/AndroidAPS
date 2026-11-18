@@ -49,7 +49,16 @@ class ProtocolCompatibilityTest {
             for ((index, response) in responses(original).withIndex()) {
                 val old = create(reference, variant)
                 val new = create(current, variant)
-                assertEquals(decode(old, response, index % 3), decode(new, response, index % 3), "$name response case=$index variant=$variant size=${response.size}")
+                val actual = decode(new, response, index % 3)
+                val expected = when {
+                    name.endsWith(".SetBloodGlucosePointPacket365") ->
+                        listOf("value", response.getOrNull(2)?.let { mapOf("useFlag" to (it.toInt() and 0xff).toString()) })
+                    name.endsWith(".GetGlucoseLogValuesPacket") &&
+                        (response.size < 7 || (variant != 0 && response[6].toInt() == 13)) ->
+                        listOf("value", null)
+                    else -> decode(old, response, index % 3)
+                }
+                assertEquals(expected, actual, "$name response case=$index variant=$variant size=${response.size}")
             }
         }
     }
@@ -157,8 +166,14 @@ class ProtocolCompatibilityTest {
         is Collection<*> -> value.map(::normalize)
         is Map<*, *> -> value.entries.associate { normalize(it.key).toString() to normalize(it.value) }
         else -> value.javaClass.declaredFields.filterNot { Modifier.isStatic(it.modifiers) || it.isSynthetic }
-            // The frozen parser did not expose the E365 log record number.
-            .filterNot { value.javaClass.simpleName == "GlucoseHistoryItem" && it.name == "recordNumber" }
+            // The frozen parser did not expose these E365 history fields.
+            .filterNot {
+                when (value.javaClass.enclosingClass?.simpleName ?: value.javaClass.simpleName) {
+                    "GlucoseHistoryItem" -> it.name == "recordNumber" || it.name == "sensorId"
+                    "GetGlucoseLogValuesPacket" -> it.name == "recordNumbers"
+                    else -> false
+                }
+            }
             .sortedBy { it.name }.associate { it.name to normalize(it.apply { isAccessible = true }.get(value)) }
     }
 }

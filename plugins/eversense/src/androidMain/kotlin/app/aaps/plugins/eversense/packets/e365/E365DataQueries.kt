@@ -227,7 +227,7 @@ class GetGlucoseLogValuesPacket(
     }
 
     override fun parseResponse(): Response? {
-        if (receivedData.isEmpty()) return null
+        if (receivedData.size < 7) return null
         if (receivedData[6].toInt() != 13) {
             EversenseLogger.error("GetGlucoseLogValuesPacket", "Invalid log type: ${receivedData[6]}")
             return Response(count = 0, glucoseHistory = emptyList())
@@ -236,10 +236,14 @@ class GetGlucoseLogValuesPacket(
         val recordLength = 193
         val offsetGlucose = sensorIdLength + 8 + 4
         val offsetTrend = offsetGlucose + 2 + 4
+        if (sensorIdLength <= 0 || offsetTrend >= recordLength) return null
         val history = mutableListOf<GlucoseHistoryItem>()
+        val recordNumbers = mutableListOf<Int>()
         var i = 0
         while (i + recordLength <= actualData.size) {
             val chunk = actualData.copyOfRange(i, i + recordLength)
+            val recordNumber = BinaryFields.unsigned(chunk, 0, 4).toInt()
+            recordNumbers.add(recordNumber)
             val datetime = chunk.copyOfRange(4, 12).toUnix()
             val glucose = (chunk[offsetGlucose].toInt() and 0xFF) or
                 ((chunk[offsetGlucose + 1].toInt() and 0xFF) shl 8)
@@ -258,12 +262,15 @@ class GetGlucoseLogValuesPacket(
                     datetime = datetime,
                     trend = trend,
                     rawResponseHex = rawHex,
-                    recordNumber = BinaryFields.unsigned(chunk, 0, 4).toInt()
+                    recordNumber = recordNumber,
+                    sensorId = chunk.copyOfRange(12, offsetGlucose)
+                        .takeUnless { bytes -> bytes.all { it.toInt() == 0 } || bytes.all { it.toInt() == 255 } }
+                        ?.toByteArray()?.toHexString().orEmpty()
                 )
             )
         }
         EversenseLogger.debug("GetGlucoseLogValuesPacket") { "History records: ${history.size}" }
-        return Response(count = history.size, glucoseHistory = history)
+        return Response(count = history.size, glucoseHistory = history, recordNumbers = recordNumbers)
     }
 
     private fun getTrend(value: Int): EversenseTrendArrow =
@@ -271,7 +278,8 @@ class GetGlucoseLogValuesPacket(
 
     data class Response(
         val count: Int,
-        val glucoseHistory: List<GlucoseHistoryItem>
+        val glucoseHistory: List<GlucoseHistoryItem>,
+        val recordNumbers: List<Int> = emptyList()
     ) : EversenseBasePacket.Response()
 }
 

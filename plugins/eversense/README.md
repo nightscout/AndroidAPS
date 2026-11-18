@@ -162,8 +162,8 @@ For ES365, AAPS can also resend recent glucose readings that it already uploaded
 | ES365 cannot finish registration | Internet, DMS credentials and European region. |
 | No readings after Disconnect | Press Connect to resume automatic connection attempts. |
 | Connected but no fresh glucose | Check the glucose timestamp, transmitter state, battery and placement. A status sync is not a new reading. |
-| Gaps remain in history | E3 has no glucose backfill. ES365 recovery is limited, not a complete archive download. |
-| Readings appear in AAPS but not DMS | Check upload, account/region and internet; allow for the hourly limit. Some recovered ES365 history cannot be uploaded. |
+| Gaps remain in history | E3 has no glucose backfill. ES365 resumes reading missing entries in batches while the transmitter still has them. |
+| Readings appear in AAPS but not DMS | Check upload, account/region and internet and allow for the hourly limit. ES365 uploads a reading once its numbered transmitter log entry and sensor ID are available. |
 
 A settings export does not replace transmitter setup on a new phone. ES365 registration may be required again.
 

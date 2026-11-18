@@ -540,9 +540,6 @@ class EversensePlugin(
         // log - the Eversense packet classes log through EversenseLogger, which only reaches
         // logcat. Without this, a reading that never makes it to the portal cannot be told apart
         // from one the server discarded.
-        //
-        // Backfill readings are the ones to watch: GlucoseHistoryItem carries no sensorId at all,
-        // so anything reconstructed from the transmitter's log arrives here with sensorId empty.
         EversenseLogger.diagnostic {
             readings.forEach { r ->
                 aapsLogger.info(
@@ -552,7 +549,7 @@ class EversensePlugin(
                 )
             }
         }
-        val glucoseValues = readings.map { reading ->
+        val glucoseValues = readings.filterNot { it.cloudOnly }.map { reading ->
             GV(
                 timestamp = reading.datetime,
                 value = reading.glucoseInMgDl.toDouble(),
@@ -569,17 +566,23 @@ class EversensePlugin(
         ioScope.launch {
             val state = eversense.getCurrentState()
             val insertionDate = state.insertionDate.takeIf { it > 0 }
-            val result = persistenceLayer.insertCgmSourceData(
-                Sources.Eversense,
-                glucoseValues,
-                listOf(),
-                insertionDate
-            )
-            EversenseLogger.diagnostic { aapsLogger.info(LTag.BGSOURCE, "CGM insert complete — inserted: ${result.inserted}, updated: ${result.updated}") }
+            if (glucoseValues.isNotEmpty()) {
+                val result = persistenceLayer.insertCgmSourceData(
+                    Sources.Eversense,
+                    glucoseValues,
+                    listOf(),
+                    insertionDate
+                )
+                EversenseLogger.diagnostic { aapsLogger.info(LTag.BGSOURCE, "CGM insert complete — inserted: ${result.inserted}, updated: ${result.updated}") }
+            }
 
             if (cloudUploadEnabled()) {
                 try {
-                    cloudUploader.enqueue(type, readings, state)
+                    val uploadable = if (type == EversenseType.EVERSENSE_365) {
+                        readings.filter { it.recordNumber != null && it.sensorId.isNotEmpty() }
+                            .map { if (it.cloudOnly) it.copy(cloudOnly = false) else it }
+                    } else readings
+                    if (uploadable.isNotEmpty()) cloudUploader.enqueue(type, uploadable, state)
                 } catch (e: kotlinx.coroutines.CancellationException) {
                     throw e
                 } catch (e: Exception) {
