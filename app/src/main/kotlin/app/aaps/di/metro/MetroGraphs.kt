@@ -26,10 +26,12 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.scenes.Scenes
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
@@ -283,6 +285,10 @@ class MetroGraphs(
     val cryptoUtil: CryptoUtil get() = root.cryptoUtil
     val concentrationHelper: ConcentrationHelper get() = root.concentrationHelper
     val processedTbrEbData: ProcessedTbrEbData get() = root.processedTbrEbData
+
+    /** The instrumented tests' `StaticInjector` reads these two; nothing in the app does. */
+    val resourceHelper: ResourceHelper get() = root.resourceHelper
+    val profileUtil: ProfileUtil get() = root.profileUtil
     val configBuilder: ConfigBuilder get() = root.configBuilder
     val scenes: Scenes get() = root.scenes
 
