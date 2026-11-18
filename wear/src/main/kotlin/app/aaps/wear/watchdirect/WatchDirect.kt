@@ -89,6 +89,9 @@ class WatchDirect(
     /** The last problem the link gave up on, for the status. Cleared by a connection. */
     private var refusal: String? = null
 
+    /** True once this app run has asked the link to connect, so a running pairing is not started twice. */
+    private var connectAsked = false
+
     private val _status = MutableStateFlow(EventData.CgmWatchStatus(EventData.CgmWatchState.OFF))
 
     /** For the watch's own screen. */
@@ -106,9 +109,16 @@ class WatchDirect(
      * itself rather than at the Android version: the version does not say whether a maker kept the
      * setting, and a watch that has it must still be asked, or it may stop the link in the background.
      * The app info screen does not count, it has no battery choice on these watches.
+     *
+     * A screen that answers is not enough. A Galaxy Watch 5 on Wear OS 6 answers both requests with
+     * an empty stand-in screen of the watch settings (`FakeSettingsActivity`): it opens and closes
+     * at once, so the button did nothing and the warning never went away. That stand-in does not count.
      */
     private val canAskForUnrestrictedBattery: Boolean by lazy {
-        val found = batterySettingsIntents(context.packageName).any { context.packageManager.resolveActivity(it, 0) != null }
+        val found = batterySettingsIntents(context.packageName).any { intent ->
+            val screen = context.packageManager.resolveActivity(intent, 0)?.activityInfo?.name
+            screen != null && !screen.endsWith(STAND_IN_SETTINGS_SCREEN)
+        }
         if (!found) aapsLogger.info(LTag.WEAR, "Direct to watch: this watch has no battery setting to ask for, the battery warning is not shown")
         found
     }
@@ -156,7 +166,12 @@ class WatchDirect(
         // A sensor that was set up before the watch app restarted: pick it up again.
         scope.launch {
             if (link.address() != null && hasPermissions) {
-                link.resume()
+                // Resume needs a key. An app that was restarted before the first pairing has none,
+                // so it starts the pairing again by itself and does not wait for the phone.
+                if (!link.resume() && !link.hasKey()) {
+                    connectAsked = link.pairAgain()
+                    if (connectAsked) aapsLogger.info(LTag.WEAR, "Direct to watch: not paired yet, pairing started again after a restart")
+                }
                 WatchDirectService.start(context)
             }
             report(describe())
@@ -198,10 +213,19 @@ class WatchDirect(
                     refusal = null
                     aapsLogger.info(LTag.WEAR, "Direct to watch: set up for ${message.sensorName ?: address}")
                     link.connect(address, pairingCode, message.serial)
+                    connectAsked = true
                 } else if (!link.isConnected()) {
                     // The phone sends the setting again each time the watch asks for data. A link that
                     // is already running is left alone; resume does nothing then.
-                    link.resume()
+                    val resumed = link.resume()
+                    // Resume needs a key. A watch app that was restarted before the first pairing
+                    // has the sensor and its code but no key, so nothing was running any more and
+                    // the pairing request never came back. Start the pairing again, once per app run.
+                    if (!resumed && !link.hasKey() && !connectAsked) {
+                        aapsLogger.info(LTag.WEAR, "Direct to watch: not paired yet, pairing started again for ${message.sensorName ?: address}")
+                        link.connect(address, pairingCode, message.serial)
+                        connectAsked = true
+                    }
                 }
                 WatchDirectService.start(context)
             }
@@ -211,6 +235,7 @@ class WatchDirect(
                 link.forget()
                 aapsLogger.info(LTag.WEAR, "Direct to watch: turned off by the phone")
             }
+            connectAsked = false
             refusal = null
             WatchDirectService.stop(context)
             clearLowAlarm()
@@ -350,6 +375,9 @@ class WatchDirect(
         /** About 10 s for an urgent low and 5 s for a low, as before. */
         const val URGENT_VIBRATION_S = 10
         const val LOW_VIBRATION_S = 5
+
+        /** The empty screen Wear OS settings put in place of a setting the watch does not have. */
+        const val STAND_IN_SETTINGS_SCREEN = "FakeSettingsActivity"
     }
 }
 

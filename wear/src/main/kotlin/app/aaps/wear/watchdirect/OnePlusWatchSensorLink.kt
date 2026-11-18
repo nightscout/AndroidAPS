@@ -71,6 +71,13 @@ class OnePlusWatchSensorLink(context: Context) : WatchSensorLink {
 
     override fun resume(): Boolean = driver.resumeStoredSession()
 
+    override fun pairAgain(): Boolean {
+        val stored = driver.sensorStore()?.load() ?: return false
+        val address = stored.lastMac ?: return false
+        driver.connect(address, stored.identity.pin)
+        return true
+    }
+
     override fun forget() {
         driver.disconnect()
         driver.sensorStore()?.clearAll()

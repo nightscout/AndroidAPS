@@ -39,8 +39,17 @@ interface WatchSensorLink {
     /** Set the link up for a new sensor. The first connection runs the key exchange. */
     fun connect(address: String, pairingCode: String, serial: String?)
 
-    /** Pick the stored sensor up again, after the watch app restarted. False when none is stored. */
+    /**
+     * Pick the stored sensor up again, after the watch app restarted. False when none is stored, and
+     * also when the stored sensor has no key yet: then only [pairAgain] gets the link going.
+     */
     fun resume(): Boolean
+
+    /**
+     * Start the key exchange again for the stored sensor, with the stored code. For a watch app that
+     * was restarted before the first pairing was accepted. False when no sensor is stored.
+     */
+    fun pairAgain(): Boolean
 
     /** Let the sensor go and forget it, key and all. */
     fun forget()
