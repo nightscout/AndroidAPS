@@ -146,7 +146,10 @@ class WatchDirect(
         }
         link.setListener(object : WatchSensorLink.Listener {
             override fun onReading(reading: WatchSensorReading) {
-                scope.launch { onReading(reading) }
+                // The name must differ from this method. With the same name the call inside meant
+                // this method again, not the one of WatchDirect: the reading was never handled, and
+                // the app launched the same call without end (a full processor core, for hours).
+                scope.launch { showReading(reading) }
             }
 
             override fun onConnected(connected: Boolean) {
@@ -278,7 +281,8 @@ class WatchDirect(
         rxBus.send(EventWearToMobile(status))
     }
 
-    private suspend fun onReading(reading: WatchSensorReading) {
+    /** One reading from the watch's own link: to the faces, and a low alarm when the phone is away. */
+    private suspend fun showReading(reading: WatchSensorReading) {
         if (!WatchDirectReadings.isUsable(reading)) return
         val data = repository.current()
         val template = data.bgData.takeIf { !it.fromSensor && it.timeStamp > 0 } ?: data.bgData.takeIf { it.timeStamp > 0 }
@@ -286,6 +290,8 @@ class WatchDirect(
         dataHandler.showSensorReadings(bg)
         if (bg.timeStamp > (latestReadingAt ?: 0L)) {
             latestReadingAt = bg.timeStamp
+            // For the watch's own screen only. Not sent to the phone: its next status carries it.
+            _status.value = describe()
             checkLow(bg)
         }
     }
