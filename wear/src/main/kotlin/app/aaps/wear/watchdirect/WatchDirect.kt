@@ -77,7 +77,14 @@ class WatchDirect(
 
     private val link: WatchSensorLink? by lazy { if (isSupported) OnePlusWatchSensorLink(context) else null }
 
-    /** Start time counts as "phone heard": the phone gets its quiet minutes after a restart of the watch app. */
+    /**
+     * The time of the newest reading the phone has: the reading's own time, not when its message
+     * arrived. A phone that is away from the sensor but reaches the watch over Wi-Fi or LTE sends its
+     * old reading again with every sync. By arrival time it looked present, and the watch kept its
+     * own low alarm quiet while the phone could not see the glucose at all.
+     *
+     * Start time counts as "phone heard": the phone gets its quiet minutes after a restart of the watch app.
+     */
     private var lastPhoneReadingAt = System.currentTimeMillis()
     private var raisedLow: WatchDirectReadings.Low? = null
     private var raisedLowAt = 0L
@@ -137,7 +144,9 @@ class WatchDirect(
         started = true
         scope.launch { rxBus.toFlow(EventData.CgmWatchDirect::class).collect { handle(it) } }
         scope.launch {
-            rxBus.toFlow(EventData.SingleBg::class).collect { if (it.dataset == 0 && !it.fromSensor) lastPhoneReadingAt = System.currentTimeMillis() }
+            rxBus.toFlow(EventData.SingleBg::class).collect {
+                if (it.dataset == 0 && !it.fromSensor) lastPhoneReadingAt = WatchDirectReadings.newestPhoneReading(lastPhoneReadingAt, it.timeStamp)
+            }
         }
         val link = link
         if (link == null) {

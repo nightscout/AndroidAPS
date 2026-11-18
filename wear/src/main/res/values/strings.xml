@@ -482,6 +482,8 @@
     <string name="watch_direct_notification_refused">The sensor refused the watch. Check the sensor on the phone.</string>
     <string name="watch_direct_allow">Allow</string>
     <string name="watch_direct_allow_battery">Allow unrestricted battery use</string>
+    <string name="watch_direct_phone_signal_lost_title">Phone has no sensor signal</string>
+    <string name="watch_direct_phone_signal_lost" comment="Shown on the watch when the phone lost the sensor but the watch still reads it. %1$s=the alarm text from the phone, a full sentence with its full stop. Example: On the phone: No signal from the CGM sensor since 12:25. The loop is not running. The watch still reads the sensor.">On the phone: %1$s The loop is not running. The watch still reads the sensor.</string>
     <string name="watch_direct_low">Low glucose</string>
     <string name="watch_direct_urgent_low">Urgent low glucose</string>
     <string name="watch_direct_low_message" comment="%1$s=glucose value with its number format, %2$s=trend arrow. Example: 62 ↘ - no reading from the phone for 15 minutes">%1$s %2$s - no reading from the phone for 15 minutes</string>

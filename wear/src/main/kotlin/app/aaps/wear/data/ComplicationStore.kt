@@ -130,10 +130,13 @@ data class ComplicationData(
     val customWatchfaceDefault: CwfData? = null,
     val customWatchfaceDefaultFull: CwfData? = null,
     val lastUpdateTimestamp: Long = 0L,
-    // When the phone last sent its status (IOB, COB, basal). 0 = not known yet. Apart from
-    // lastUpdateTimestamp, which a reading the watch took from the sensor itself also moves.
+    // The time of the newest glucose reading the phone has sent (the reading's own time, not when
+    // it arrived). 0 = not known yet. It tells how fresh the phone's IOB, COB and basal can be: a
+    // phone that has no new reading runs no loop. The arrival time is no use for that, because a
+    // phone that is away from the sensor but reaches the watch over Wi-Fi or LTE keeps sending its
+    // old reading and its old status again.
     // Keep new fields at the END of this class: the ProtoBuf wire format numbers fields by declaration order.
-    val phoneStatusTimestamp: Long = 0L
+    val phoneReadingTimestamp: Long = 0L
 )
 
 /**

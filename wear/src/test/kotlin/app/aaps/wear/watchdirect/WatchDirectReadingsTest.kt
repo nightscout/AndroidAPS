@@ -109,13 +109,56 @@ class WatchDirectReadingsTest {
     @Test
     fun `phone values are old only while the watch shows its own reading and the phone is silent`() {
         val silent = now - WatchDirectReadings.PHONE_SILENT_MS - 1
-        assertThat(WatchDirectReadings.phoneValuesAreOld(shownFromSensor = true, phoneStatusAt = silent, now = now)).isTrue()
-        // The phone sent its status a moment ago.
-        assertThat(WatchDirectReadings.phoneValuesAreOld(shownFromSensor = true, phoneStatusAt = now - 60_000L, now = now)).isFalse()
+        assertThat(WatchDirectReadings.phoneValuesAreOld(shownFromSensor = true, phoneReadingAt = silent, now = now)).isTrue()
+        // The phone has a reading from a moment ago.
+        assertThat(WatchDirectReadings.phoneValuesAreOld(shownFromSensor = true, phoneReadingAt = now - 60_000L, now = now)).isFalse()
         // The glucose on the face is the phone's: no direct to watch, or the phone is here.
-        assertThat(WatchDirectReadings.phoneValuesAreOld(shownFromSensor = false, phoneStatusAt = silent, now = now)).isFalse()
-        // Not known yet when the phone last sent a status (first run after the update).
-        assertThat(WatchDirectReadings.phoneValuesAreOld(shownFromSensor = true, phoneStatusAt = 0L, now = now)).isFalse()
+        assertThat(WatchDirectReadings.phoneValuesAreOld(shownFromSensor = false, phoneReadingAt = silent, now = now)).isFalse()
+        // Not known yet which reading the phone has (first run after the update).
+        assertThat(WatchDirectReadings.phoneValuesAreOld(shownFromSensor = true, phoneReadingAt = 0L, now = now)).isFalse()
+    }
+
+    @Test
+    fun `an old phone reading that is sent again does not make the phone look present`() {
+        // The phone is at home without the sensor and syncs over the cloud: the same reading, again.
+        val old = now - 40 * 60_000L
+        val heard = WatchDirectReadings.newestPhoneReading(known = old, readingAt = old)
+        assertThat(heard).isEqualTo(old)
+        assertThat(now - heard > WatchDirectReadings.PHONE_SILENT_MS).isTrue()
+        // A really new reading moves it, and an older one after that does not move it back.
+        assertThat(WatchDirectReadings.newestPhoneReading(known = old, readingAt = now)).isEqualTo(now)
+        assertThat(WatchDirectReadings.newestPhoneReading(known = now, readingAt = old)).isEqualTo(now)
+    }
+
+    @Test
+    fun `the phone's signal loss is reworded only while the watch has a fresh reading of its own`() {
+        val id = WatchDirectReadings.SIGNAL_LOSS_ALARM_ID
+        val own = phone(now - 2 * 60_000L).copy(fromSensor = true)
+        assertThat(WatchDirectReadings.phoneLostSignalWhileWatchReads(id, own, now)).isTrue()
+        // Without direct to watch the value on the face is the phone's.
+        assertThat(WatchDirectReadings.phoneLostSignalWhileWatchReads(id, phone(now - 2 * 60_000L), now)).isFalse()
+        // The watch lost the sensor too: a real signal loss.
+        val oldOwn = own.copy(timeStamp = now - WatchDirectReadings.OWN_READING_FRESH_MS - 1)
+        assertThat(WatchDirectReadings.phoneLostSignalWhileWatchReads(id, oldOwn, now)).isFalse()
+        // Every other alarm stays as the phone sent it.
+        assertThat(WatchDirectReadings.phoneLostSignalWhileWatchReads("low", own, now)).isFalse()
+    }
+
+    @Test
+    fun `old predictions are taken out and the history of boluses and basals stays`() {
+        val treatments = EventData.TreatmentData(
+            temps = arrayListOf(EventData.TreatmentData.TempBasal(now - 60 * 60_000L, 0.3, now - 30 * 60_000L, 0.3, 0.5)),
+            basals = arrayListOf(EventData.TreatmentData.Basal(now - 60 * 60_000L, now, 0.35)),
+            boluses = arrayListOf(EventData.TreatmentData.Treatment(now - 50 * 60_000L, 1.0, 0.0, isSMB = false, isValid = true)),
+            predictions = arrayListOf(phone(now + 5 * 60_000L), phone(now + 10 * 60_000L)),
+        )
+        val shown = WatchDirectReadings.withoutOldPredictions(treatments)
+        assertThat(shown.predictions).isEmpty()
+        assertThat(shown.temps).isEqualTo(treatments.temps)
+        assertThat(shown.basals).isEqualTo(treatments.basals)
+        assertThat(shown.boluses).isEqualTo(treatments.boluses)
+        // The stored data is not touched: the phone's next sync shows its predictions again.
+        assertThat(treatments.predictions).hasSize(2)
     }
 
     @Test

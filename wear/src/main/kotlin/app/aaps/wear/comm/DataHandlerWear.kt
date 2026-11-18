@@ -56,6 +56,7 @@ import app.aaps.wear.alarm.CgmAlarmWatch
 import app.aaps.wear.alarm.PhoneAlarmWatch
 import app.aaps.wear.eatreminder.EatReminderWatch
 import app.aaps.wear.interaction.WatchfaceConfigurationActivity
+import app.aaps.wear.watchdirect.WatchDirectReadings
 import app.aaps.wear.interaction.actions.AcceptActivity
 import app.aaps.wear.interaction.actions.ContactingMasterActivity
 import app.aaps.wear.interaction.actions.ProfileSwitchActivity
@@ -126,6 +127,24 @@ class DataHandlerWear(
     }
 
     /**
+     * [alarm] as this watch should show it.
+     *
+     * One case is changed: the phone says it has no signal from the sensor while this watch reads
+     * the sensor itself (direct-to-watch) and has a fresh reading. "No signal from the CGM sensor"
+     * next to a glucose value from a minute ago read as a mistake. The alarm still matters, because
+     * a phone without readings runs no loop, so it stays an alarm and says that. Every other alarm,
+     * and this one on a watch without a fresh reading of its own, is shown as the phone sent it.
+     */
+    private suspend fun forThisWatch(alarm: EventData.CgmAlarm): EventData.CgmAlarm {
+        val shown = complicationDataRepository.current().bgData
+        if (!WatchDirectReadings.phoneLostSignalWhileWatchReads(alarm.id, shown, System.currentTimeMillis())) return alarm
+        return alarm.copy(
+            title = context.getString(R.string.watch_direct_phone_signal_lost_title),
+            message = context.getString(R.string.watch_direct_phone_signal_lost, alarm.message)
+        )
+    }
+
+    /**
      * A reading the watch took from the sensor itself (direct-to-watch). It takes the same way to the
      * faces, complications and tiles as a reading from the phone, and goes nowhere else.
      */
@@ -190,7 +209,7 @@ class DataHandlerWear(
         }
         onEvent<EventData.AlarmRinging>(detail = { " ${it.title}: ${it.status}" }) { phoneAlarmWatch.show(it) }
         onEvent<EventData.AlarmStopped> { phoneAlarmWatch.clear() }
-        onEvent<EventData.CgmAlarm>(detail = { " ${it.id}" }) { cgmAlarmWatch.show(it) }
+        onEvent<EventData.CgmAlarm>(detail = { " ${it.id}" }) { alarm -> dataStoreScope.launch { cgmAlarmWatch.show(forThisWatch(alarm)) } }
         onEvent<EventData.CgmAlarmCancel>(detail = { " ${it.id}" }) { cgmAlarmWatch.remove(it.id) }
         onEvent<EventData.OpenLoopRequest> { handleOpenLoopRequest(it) }
         onEvent<EventData.OpenSettings> {
