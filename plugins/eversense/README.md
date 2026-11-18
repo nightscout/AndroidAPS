@@ -10,6 +10,8 @@ The screenshots below show AAPS 4.0.0 (`5d85b5094e`) in English with the dark th
 
 Complete sensor setup and alarm configuration in the official Eversense app first. Keep that app installed for functions not provided by AAPS.
 
+For ES365, use the official Eversense 365 app throughout the initial sensor warm-up and for all calibrations on the first day after sensor insertion.
+
 1. Enable Bluetooth and select **Eversense** as the active blood glucose source in AAPS. Allow the requested Bluetooth/Nearby devices permissions.
 2. Open the Eversense settings and expand **Eversense DMS credentials**.
 3. Enter your DMS username and password. Both fields are required for E3 and ES365, even with cloud upload disabled.
@@ -137,11 +139,11 @@ Account or region changes can interrupt reception and require ES365 registration
 **The original app can stay installed; uninstalling it is not required.** Keep it for sensor setup, transmitter settings and switching back to the manufacturer workflow.
 
 - **E3:** parallel reception can work. Keep using both only if both receive current readings reliably.
-- **ES365:** reliable parallel reception has not been established. Start with one active receiver.
+- **ES365:** Reliable parallel reception has not been established. Start with one active receiver. When both apps run at the same time, they can take the transmitter connection from each other, interrupting the connection and delaying readings in either app. AAPS resumes reliable reception once the official app is stopped.
 
-If the apps compete, use Android **Settings > Apps > Eversense / Eversense 365 > Force stop** for the original app, then connect in AAPS. Swiping its window away may not stop its Bluetooth service. A force-stopped app does not provide its normal phone notifications until restarted.
+If the apps compete, use Android **Settings > Apps > Eversense / Eversense 365 > Force stop** for the official app. Swiping its window away may not stop its Bluetooth service. A force-stopped app does not provide its normal phone notifications until restarted.
 
-To switch back, disconnect in AAPS first, then open the original app and check reception. Returning to AAPS may require ES365 online registration again. Do not clear app storage, remove Bluetooth pairing or relink the sensor simply to switch receivers.
+To switch back, disconnect in AAPS first, then open the official app and check reception. When switching back to AAPS, force-stop the official app; AAPS resumes without resetting it, signing in again or repeating registration. Do not clear app storage, remove Bluetooth pairing or relink the sensor simply to switch receivers.
 
 ## Offline use and cloud upload
 
