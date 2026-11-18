@@ -20,6 +20,7 @@ import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.protobuf.ProtoBuf
 import java.io.InputStream
@@ -63,11 +64,22 @@ class ComplicationDataRepository(
     /**
      * Reactive Flow of complication data
      * Complications should collect this Flow to get automatic updates
+     *
+     * While the watch shows its own sensor reading and the phone has been silent for too long, the
+     * values only the phone knows (IOB, COB, basal) come out blank, see
+     * [WatchDirectReadings.withoutOldPhoneValues]. The store keeps the last values: the blank is made
+     * here, on the way out, so every face, complication and tile gets it, and the next status from
+     * the phone shows at once.
      */
     val complicationData: Flow<ComplicationData> = dataStore.data
         .catch { exception ->
             aapsLogger.error(LTag.WEAR, "Error reading complication data", exception)
             emit(ComplicationData()) // Emit default on error
+        }
+        .map { stored ->
+            if (WatchDirectReadings.phoneValuesAreOld(stored.bgData.fromSensor, stored.phoneStatusTimestamp, System.currentTimeMillis()))
+                stored.copy(statusData = WatchDirectReadings.withoutOldPhoneValues(stored.statusData))
+            else stored
         }
 
     /**
@@ -124,7 +136,7 @@ class ComplicationDataRepository(
         try {
             dataStore.updateData { current ->
                 when (status.dataset) {
-                    0 -> current.copy(statusData = status, lastUpdateTimestamp = System.currentTimeMillis())
+                    0 -> System.currentTimeMillis().let { now -> current.copy(statusData = status, lastUpdateTimestamp = now, phoneStatusTimestamp = now) }
                     1 -> current.copy(statusData1 = status, lastUpdateTimestamp = System.currentTimeMillis())
                     2 -> current.copy(statusData2 = status, lastUpdateTimestamp = System.currentTimeMillis())
                     else -> {

@@ -107,6 +107,40 @@ class WatchDirectReadingsTest {
     }
 
     @Test
+    fun `phone values are old only while the watch shows its own reading and the phone is silent`() {
+        val silent = now - WatchDirectReadings.PHONE_SILENT_MS - 1
+        assertThat(WatchDirectReadings.phoneValuesAreOld(shownFromSensor = true, phoneStatusAt = silent, now = now)).isTrue()
+        // The phone sent its status a moment ago.
+        assertThat(WatchDirectReadings.phoneValuesAreOld(shownFromSensor = true, phoneStatusAt = now - 60_000L, now = now)).isFalse()
+        // The glucose on the face is the phone's: no direct to watch, or the phone is here.
+        assertThat(WatchDirectReadings.phoneValuesAreOld(shownFromSensor = false, phoneStatusAt = silent, now = now)).isFalse()
+        // Not known yet when the phone last sent a status (first run after the update).
+        assertThat(WatchDirectReadings.phoneValuesAreOld(shownFromSensor = true, phoneStatusAt = 0L, now = now)).isFalse()
+    }
+
+    @Test
+    fun `old phone values are blanked and what does not go out of date stays`() {
+        val status = EventData.Status(
+            dataset = 0, externalStatus = "5m 0.35U/h 1.20U", iobSum = "1.20", iobDetail = "(0.9|0.3)", cob = "12g", currentBasal = "0.35U/h",
+            battery = "80", rigBattery = "60%", openApsStatus = now - 20 * 60_000L, bgi = "-0.5", batteryLevel = 1,
+            tempTarget = "5.5", tempTargetLevel = 0, reservoirString = "50U", reservoir = 50.0, reservoirLevel = 0, cobValue = 12.0
+        )
+        val blank = WatchDirectReadings.withoutOldPhoneValues(status)
+        assertThat(blank.iobSum).isEqualTo("--")
+        assertThat(blank.iobDetail).isEmpty()
+        assertThat(blank.cob).isEqualTo("--g")
+        assertThat(blank.currentBasal).isEqualTo("-.--U/h")
+        assertThat(blank.bgi).isEqualTo("--")
+        assertThat(blank.externalStatus).isEqualTo("--")
+        assertThat(blank.cobValue).isEqualTo(-1.0)
+        // Kept: the loop time (so its age keeps counting), the temp target, the reservoir, the batteries.
+        assertThat(blank.openApsStatus).isEqualTo(status.openApsStatus)
+        assertThat(blank.tempTarget).isEqualTo("5.5")
+        assertThat(blank.reservoirString).isEqualTo("50U")
+        assertThat(blank.battery).isEqualTo("80")
+    }
+
+    @Test
     fun `the watch raises a low only while the phone is away`() {
         val urgent = WatchDirectReadings.lowLevel(50.0, 70.0)
         val low = WatchDirectReadings.lowLevel(65.0, 70.0)

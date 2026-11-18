@@ -129,7 +129,11 @@ data class ComplicationData(
     val customWatchface: CwfData? = null,
     val customWatchfaceDefault: CwfData? = null,
     val customWatchfaceDefaultFull: CwfData? = null,
-    val lastUpdateTimestamp: Long = 0L
+    val lastUpdateTimestamp: Long = 0L,
+    // When the phone last sent its status (IOB, COB, basal). 0 = not known yet. Apart from
+    // lastUpdateTimestamp, which a reading the watch took from the sensor itself also moves.
+    // Keep new fields at the END of this class: the ProtoBuf wire format numbers fields by declaration order.
+    val phoneStatusTimestamp: Long = 0L
 )
 
 /**

@@ -155,6 +155,40 @@ object WatchDirectReadings {
         return if (own.isEmpty()) fromPhone else mergeIntoGraph(fromPhone, own)
     }
 
+    /**
+     * True when the values only the phone knows are too old to show.
+     *
+     * The glucose on the face is the watch's own ([shownFromSensor]), so it looks current, and the
+     * phone has sent no status for [PHONE_SILENT_MS]. IOB, COB and basal from before that are not
+     * what is true now. A [phoneStatusAt] of 0 is "not known yet" and never counts as old. Without
+     * direct to watch the shown glucose is never the watch's own, so nothing changes there.
+     */
+    fun phoneValuesAreOld(shownFromSensor: Boolean, phoneStatusAt: Long, now: Long): Boolean =
+        shownFromSensor && phoneStatusAt > 0L && now - phoneStatusAt > PHONE_SILENT_MS
+
+    /**
+     * [status] with the values that go out of date while the phone is away shown as "no value":
+     * IOB, COB, the basal rate and the lines built from them. The watch cannot work them out itself
+     * (it has no profile and no pump history), and a blank is safer than a number that is an hour old.
+     *
+     * What does not change by itself stays: the temp target, the batteries, the reservoir. The time
+     * of the last loop run stays too, so a face that shows the loop age keeps counting up.
+     */
+    fun withoutOldPhoneValues(status: EventData.Status): EventData.Status = status.copy(
+        externalStatus = NO_VALUE,
+        iobSum = NO_VALUE,
+        iobDetail = "",
+        cob = NO_COB,
+        currentBasal = NO_BASAL,
+        bgi = NO_VALUE,
+        cobValue = -1.0
+    )
+
+    /** The texts the watch shows for a status value it has never received (see `ComplicationData`). */
+    const val NO_VALUE = "--"
+    const val NO_COB = "--g"
+    const val NO_BASAL = "-.--U/h"
+
     enum class Low { LOW, URGENT_LOW }
 
     /** The low a reading of [mgdl] is, against the phone's [lowLineMgdl]; null when it is not low. */
