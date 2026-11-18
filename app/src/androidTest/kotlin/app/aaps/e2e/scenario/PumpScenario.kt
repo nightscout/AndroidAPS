@@ -125,6 +125,27 @@ class PumpScenario(private val pump: PumpUnderTest) {
     }
 
     /**
+     * The user selects the virtual pump in the config builder, and later this pump again. It goes the way of the config
+     * builder, with no hold of the queue: the new pump is enabled before the old one is disabled, so a pump is always
+     * elected. Not the same as [reloadDriver]: for [away] another pump is the active one, and this driver is stopped.
+     * The emulated pump goes on with what it runs the whole time.
+     */
+    fun switchPumpAwayAndBack(away: Long = SWITCH_AWAY_MS) {
+        val plugin = testGraphs.activePlugin.activePumpInternal as PluginBase
+        val virtual = checkNotNull(testGraphs.activePlugin.getSpecificPluginsListByInterface(VirtualPump::class).firstOrNull()) { "No virtual pump" }
+        testGraphs.configBuilder.performPluginSwitch(virtual, true, PluginType.PUMP)
+        awaitTrue("the virtual pump is the active pump") { testGraphs.activePlugin.activePumpInternal is VirtualPump }
+        val driverPackage = plugin.javaClass.packageName
+        awaitTrue("the services of ${pump.pluginName} are stopped", SERVICE_STOP_TIMEOUT) { runningServices().none { it.startsWith(driverPackage) } }
+
+        SystemClock.sleep(away)
+
+        testGraphs.configBuilder.performPluginSwitch(plugin, true, PluginType.PUMP)
+        awaitTrue("${pump.pluginName} is the active pump again") { testGraphs.activePlugin.activePumpInternal === plugin }
+        pump.awaitStarted(this)
+    }
+
+    /**
      * Run 1 of an app restart: what the emulated pump holds is saved to a file, and the test ends without any cleanup,
      * as a killed app. The instrumentation run ends after it, and the process with it.
      */
@@ -766,6 +787,9 @@ class PumpScenario(private val pump: PumpUnderTest) {
         const val RECORD_TIMEOUT = 10_000L
         const val LINK_TIMEOUT = 30_000L
         const val SERVICE_STOP_TIMEOUT = 10_000L
+
+        /** How long another pump is the active one in [switchPumpAwayAndBack]. A real user is away longer; this only has to be more than nothing. */
+        const val SWITCH_AWAY_MS = 20_000L
 
         /**
          * Long enough for a driver to fail one connect attempt and start the next one: Carelevo gives up an attempt

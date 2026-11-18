@@ -63,7 +63,8 @@ A class `<Pump>ScenarioTest : AbstractPumpScenarioTest()` runs all of these. A s
   `aTempBasalCancelThatIsLostKeepsTheTempBasal`.
 - **S6** Other lost answers: `aProfileWhoseAnswerIsLostIsKnown`, `anExtendedBolusWhoseAnswerIsLostIsKnown`,
   `anExtendedBolusCancelWhoseAnswerIsLostIsKnown`.
-- **S7** The driver itself: `aDriverReloadKeepsThePump`, `aPumpOutOfRangeFailsCleanly`, `aDeadPumpCanBeRemoved` (D9).
+- **S7** The driver itself: `aDriverReloadKeepsThePump`, `aPumpSwitchedAwayAndBackKeepsItsTempBasal`,
+  `aPumpOutOfRangeFailsCleanly`, `aDeadPumpCanBeRemoved` (D9).
 - **S8** What happens on the pump: `aSuspendOnThePumpIsRecorded`, `aBolusGivenOnThePumpIsImported`,
   `aBolusWithThePumpClockOffIsStoredAtItsTime`.
 - **S9** Alarms: `anOcclusionRaisesAnAlarm`, `anEmptyReservoirRaisesAnAlarm`.
@@ -128,3 +129,9 @@ A requirement that a pump cannot meet stays visible:
 - a line in the PR that names the requirement and the reason.
 
 A requirement left out silently counts as not passed.
+
+Known exceptions in drivers that are in the tree now:
+
+- **Omnipod Eros, D2:** the activation wizard calls the pod directly for "Initialize Pod" and "Insert Cannula", not
+  through the queue. Left as it is until someone can test the change on an Eros pod with a RileyLink. The Dash and
+  Omnipod 5 drivers moved these steps to queue commands in #5591; Eros can use the same ones.
