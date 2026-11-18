@@ -24,11 +24,13 @@ fun DexcomOnePlusWatchDirectCard(
 ) {
     CgmCard {
         CgmCardHeader(stringResource(SourceStrings.dexcom_oneplus_watch_direct))
-        CgmKeyValueRow(
-            label = stringResource(SourceStrings.dexcom_oneplus_watch_direct_watch_label),
-            value = stringResource(
+        // A plain line, not a label and a value: the card title already says what this is about,
+        // and the longer states ("Pairing: accept the request on the watch") broke badly in a row.
+        Text(
+            text = stringResource(
                 if (available) watchStateText(report?.status?.state) else SourceStrings.dexcom_oneplus_watch_state_waiting_sensor
             ),
+            style = MaterialTheme.typography.bodyMedium,
         )
         if (available && report?.status?.batteryRestricted == true) {
             Text(

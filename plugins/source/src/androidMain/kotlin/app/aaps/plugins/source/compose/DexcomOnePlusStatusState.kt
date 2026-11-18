@@ -179,12 +179,28 @@ object DexcomOnePlusStatusState {
      * The warm-up screen has something to show only while a sensor pairs or warms up, or after a
      * failure (it offers "try again"). A reconnect in the middle of a warm-up changes the phase, so
      * a warm-up end that is still in the future counts too. For a running sensor the button is hidden.
+     *
+     * After an app restart in the middle of a warm-up the driver knows neither the phase nor the end
+     * until the sensor answers again, which can take minutes. So a sensor that was started less than
+     * [WARMUP_BUTTON_WINDOW_MS] ago keeps the button too, until it is known to be ready: the phase
+     * says so, or the sensor has sent its first reading. The phase alone is not enough, because
+     * between two readings the link is closed and the phase is "reconnecting".
      */
-    fun showsWarmupButton(input: DexcomOnePlusStatusInput): Boolean =
-        input.phase == OnePlusWarmupState.Phase.PAIRING ||
+    fun showsWarmupButton(input: DexcomOnePlusStatusInput): Boolean {
+        val startedAt = input.lifecycle?.startedAtEpochMs ?: input.sensor?.startedAtMs
+        val justStarted = startedAt != null && input.nowMs - startedAt < WARMUP_BUTTON_WINDOW_MS
+        val hasReading = startedAt != null && input.newestGlucose
+            ?.takeIf { it.sourceSensor == SourceSensor.DEXCOM_ONEPLUS_NATIVE }
+            ?.let { it.timestamp >= startedAt } == true
+        return input.phase == OnePlusWarmupState.Phase.PAIRING ||
             input.phase == OnePlusWarmupState.Phase.WARMING ||
             input.phase == OnePlusWarmupState.Phase.FAILED ||
-            (input.warmupEndsAtMs ?: 0L) > input.nowMs
+            (input.warmupEndsAtMs ?: 0L) > input.nowMs ||
+            (justStarted && input.phase != OnePlusWarmupState.Phase.READY && !hasReading)
+    }
+
+    /** A warm-up takes about 30 minutes. Twice that, so a slow start is still inside the window. */
+    const val WARMUP_BUTTON_WINDOW_MS = 60L * 60_000L
 
     /** The sensor sends a reading about every 5 minutes, then the link closes until the next one. */
     const val READING_INTERVAL_MS = 5L * 60_000L
@@ -355,7 +371,7 @@ object DexcomOnePlusStatusState {
             rows += PumpInfoRow(label = rh.gs(SourceStrings.dexcom_oneplus_row_pairing_code), value = code)
         }
         // The sensor's own state when the driver line holds one, else the last driver message.
-        // No row at all when the driver has said nothing.
+        // No row at all when the driver has said nothing, or only that a normal round goes on.
         val sensorState = sensorStateRef(input.driverMessage)
         if (sensorState != null) {
             rows += PumpInfoRow(
@@ -363,7 +379,7 @@ object DexcomOnePlusStatusState {
                 value = rh.gs(sensorState),
                 level = sensorStateLevel(input.driverMessage),
             )
-        } else if (!input.driverMessage.isNullOrBlank()) {
+        } else if (!input.driverMessage.isNullOrBlank() && !DexcomOnePlusUiLabels.isRoutineMessage(input.driverMessage)) {
             rows += PumpInfoRow(
                 label = rh.gs(SourceStrings.dexcom_oneplus_row_message),
                 value = rh.gs(DexcomOnePlusUiLabels.userMessageRef(input.driverMessage)),

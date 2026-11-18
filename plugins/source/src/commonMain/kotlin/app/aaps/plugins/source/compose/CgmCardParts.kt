@@ -115,16 +115,18 @@ fun CgmKeyValueRow(
         horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        // The label keeps its own width and the value takes the rest. The other way round, a long
+        // value left the label a few characters wide and broke it in the middle of a word.
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.weight(1f),
         )
         Text(
             text = value,
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.End,
+            modifier = Modifier.weight(1f),
         )
     }
 }

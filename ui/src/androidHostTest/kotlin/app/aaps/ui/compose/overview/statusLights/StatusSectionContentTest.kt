@@ -149,7 +149,7 @@ class StatusSectionContentTest {
                         label = "Warm-up", age = "23 min", agePercent = 0.24f, icon = IcCgmInsert, compactLevel = false
                     ),
                     secondSensorStatus = StatusItem(
-                        label = "New sensor", age = "Ready in 8 h", agePercent = 0.33f, level = "Readings: 12",
+                        label = "Pre-soak sensor", age = "Ready in 8 h", agePercent = 0.33f, level = "Readings: 12",
                         icon = IcGenericCgm, compactLevel = false
                     )
                 )
@@ -157,7 +157,7 @@ class StatusSectionContentTest {
         }
         compose.onNodeWithText("Warm-up").assertIsDisplayed()
         compose.onNodeWithText("23 min").assertIsDisplayed()
-        compose.onNodeWithText("New sensor").assertIsDisplayed()
+        compose.onNodeWithText("Pre-soak sensor").assertIsDisplayed()
         compose.onNodeWithText("Ready in 8 h").assertIsDisplayed()
         compose.onNodeWithText("Readings: 12").assertIsDisplayed()
         // Not ready: no Switch button at all.
@@ -175,7 +175,7 @@ class StatusSectionContentTest {
                     cannulaStatus = null,
                     batteryStatus = null,
                     secondSensorStatus = StatusItem(
-                        label = "New sensor", age = "Ready to switch", ageStatus = StatusLevel.NORMAL,
+                        label = "Pre-soak sensor", age = "Ready to switch", ageStatus = StatusLevel.NORMAL,
                         level = "Readings: 72", icon = IcGenericCgm, compactLevel = false
                     ),
                     onPromoteSecondSensorClick = { clicks++ }
@@ -183,7 +183,7 @@ class StatusSectionContentTest {
             }
         }
         // Named after its row, like the other row buttons.
-        compose.onNode(hasContentDescription("New sensor") and hasClickAction()).assertIsDisplayed()
+        compose.onNode(hasContentDescription("Pre-soak sensor") and hasClickAction()).assertIsDisplayed()
         compose.onNodeWithText("Switch").performClick()
         assertThat(clicks).isEqualTo(1)
     }

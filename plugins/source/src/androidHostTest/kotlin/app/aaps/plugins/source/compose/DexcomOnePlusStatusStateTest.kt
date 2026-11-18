@@ -314,6 +314,13 @@ class DexcomOnePlusStatusStateTest {
     }
 
     @Test
+    fun noMessageRowForTheMessagesOfANormalRound() {
+        for (routine in listOf("waiting_for_adv", "waiting_for_next_adv", "egv_loop_exit", "connect_attempt_2")) {
+            assertTrue(rows(input(driverMessage = routine)).none { it.label == "dexcom_oneplus_row_message" }, routine)
+        }
+    }
+
+    @Test
     fun driverCodesAreNeverShownRaw() {
         val message = rows(input(driverMessage = "ONEPLUS_GATT_133")).last()
         assertEquals("dexcom_oneplus_row_message", message.label)
@@ -357,6 +364,19 @@ class DexcomOnePlusStatusStateTest {
         // A reconnect in the middle of a warm-up keeps the button.
         assertEquals(shown, labels(input(phase = OnePlusWarmupState.Phase.RECONNECTING, warmupEndsAtMs = NOW + MINUTE)))
         assertEquals(hidden, labels(input(phase = OnePlusWarmupState.Phase.RECONNECTING, warmupEndsAtMs = NOW - MINUTE)))
+        // After an app restart in a warm-up the driver knows nothing yet: a sensor started a short
+        // time ago keeps the button, a day-old one does not, and neither does a ready one.
+        val justStarted = facts(startedAtMs = NOW - 20 * MINUTE)
+        assertEquals(shown, labels(input(phase = OnePlusWarmupState.Phase.RECONNECTING, sensor = justStarted)))
+        assertEquals(shown, labels(input(phase = OnePlusWarmupState.Phase.IDLE, sensor = justStarted)))
+        assertEquals(hidden, labels(input(phase = OnePlusWarmupState.Phase.READY, sensor = justStarted)))
+        assertEquals(hidden, labels(input(phase = OnePlusWarmupState.Phase.RECONNECTING, sensor = facts())))
+        // The first reading ends it: between two readings the phase is "reconnecting", not "ready".
+        val firstReading = reading(SourceSensor.DEXCOM_ONEPLUS_NATIVE, ageMs = MINUTE)
+        assertEquals(hidden, labels(input(phase = OnePlusWarmupState.Phase.RECONNECTING, sensor = justStarted, newestGlucose = firstReading)))
+        // A reading of the sensor before this one does not count.
+        val oldReading = reading(SourceSensor.DEXCOM_ONEPLUS_NATIVE, ageMs = 40 * MINUTE)
+        assertEquals(shown, labels(input(phase = OnePlusWarmupState.Phase.RECONNECTING, sensor = justStarted, newestGlucose = oldReading)))
     }
 
     @Test

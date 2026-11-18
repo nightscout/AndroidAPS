@@ -54,7 +54,7 @@ class OverviewStatusSectionSwitchTest {
                     cannulaStatus = null,
                     batteryStatus = null,
                     secondSensorStatus = StatusItem(
-                        label = "New sensor", age = "Ready to switch", ageStatus = StatusLevel.NORMAL,
+                        label = "Pre-soak sensor", age = "Ready to switch", ageStatus = StatusLevel.NORMAL,
                         level = "Readings: 72", icon = Icons.Default.Circle, compactLevel = false
                     ),
                     canPromoteSecondSensor = canPromote,
@@ -96,7 +96,7 @@ class OverviewStatusSectionSwitchTest {
         compose.onNodeWithText("Switch").performClick()
         // Nothing happens before the user confirms.
         assertThat(promoted).isEqualTo(0)
-        compose.onNodeWithText("Use the new sensor for the loop from now on?", substring = true).assertIsDisplayed()
+        compose.onNodeWithText("Use the pre-soak sensor for the loop from now on?", substring = true).assertIsDisplayed()
 
         compose.onNodeWithText("OK").performClick()
         assertThat(promoted).isEqualTo(1)
@@ -110,7 +110,7 @@ class OverviewStatusSectionSwitchTest {
         compose.onNodeWithText("Cancel").performClick()
 
         assertThat(promoted).isEqualTo(0)
-        compose.onAllNodes(hasText("Use the new sensor for the loop from now on?", substring = true)).assertCountEquals(0)
+        compose.onAllNodes(hasText("Use the pre-soak sensor for the loop from now on?", substring = true)).assertCountEquals(0)
     }
 
     @Test

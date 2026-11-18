@@ -77,7 +77,6 @@
     <!-- Direct-to-watch: a Wear OS watch also reads the G7 / ONE+ sensor itself (Android only) -->
     <string name="dexcom_oneplus_watch_direct">Direct to watch</string>
     <string name="dexcom_oneplus_watch_direct_summary">Your Wear OS watch also reads the sensor itself, next to the phone. The watch face keeps showing values when the phone is away. Watch readings stay on the watch and never reach the loop.</string>
-    <string name="dexcom_oneplus_watch_direct_watch_label" comment="Label of a row that shows what the watch reports, for example: Watch - Connected">Watch</string>
     <string name="dexcom_oneplus_watch_direct_battery">The watch may put AAPS to sleep in the background and miss readings. Allow unrestricted battery use for AAPS on the watch.</string>
     <string name="dexcom_oneplus_watch_state_waiting_sensor">Waiting for a sensor</string>
     <string name="dexcom_oneplus_watch_state_unknown">No answer from the watch yet</string>
