@@ -6,5 +6,6 @@ data class GlucoseHistoryItem(
     val valueInMgDl: Int,
     val datetime: Long,
     val trend: EversenseTrendArrow,
-    val rawResponseHex: String = ""
+    val rawResponseHex: String = "",
+    val recordNumber: Int? = null
 )

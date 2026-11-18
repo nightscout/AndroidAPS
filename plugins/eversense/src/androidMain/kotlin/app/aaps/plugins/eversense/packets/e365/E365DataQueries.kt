@@ -14,6 +14,7 @@ import app.aaps.plugins.eversense.packets.e365.utils.toInt
 import app.aaps.plugins.eversense.packets.e365.utils.toShort
 import app.aaps.plugins.eversense.packets.e365.utils.toUnix
 import app.aaps.plugins.eversense.packets.e365.utils.toUtfString
+import app.aaps.plugins.eversense.protocol.BinaryFields
 import app.aaps.plugins.eversense.protocol.GlucoseDecoders
 import app.aaps.plugins.eversense.protocol.PacketSpec
 import app.aaps.plugins.eversense.util.EversenseLogger
@@ -251,7 +252,15 @@ class GetGlucoseLogValuesPacket(
                 continue
             }
             val rawHex = chunk.joinToString("") { "%02X".format(it.toInt()) }
-            history.add(GlucoseHistoryItem(valueInMgDl = glucose, datetime = datetime, trend = trend, rawResponseHex = rawHex))
+            history.add(
+                GlucoseHistoryItem(
+                    valueInMgDl = glucose,
+                    datetime = datetime,
+                    trend = trend,
+                    rawResponseHex = rawHex,
+                    recordNumber = BinaryFields.unsigned(chunk, 0, 4).toInt()
+                )
+            )
         }
         EversenseLogger.debug("GetGlucoseLogValuesPacket") { "History records: ${history.size}" }
         return Response(count = history.size, glucoseHistory = history)

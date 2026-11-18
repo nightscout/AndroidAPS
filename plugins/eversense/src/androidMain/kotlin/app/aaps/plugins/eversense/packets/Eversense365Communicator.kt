@@ -92,7 +92,7 @@ class Eversense365Communicator {
 
             state.sensorId = glucoseData.sensorId
 
-            result += EversenseCGMResult(
+            var liveReading = EversenseCGMResult(
                 glucoseInMgDl = currentGlucose,
                 datetime = glucoseData.datetime,
                 trend = glucoseData.trend,
@@ -126,16 +126,33 @@ class Eversense365Communicator {
                 val history = gatt.writePacket<GetGlucoseLogValuesPacket.Response>(
                     GetGlucoseLogValuesPacket(from = range.from, to = range.to, sensorIdLength = sensorIdLength)
                 )
+                // The live response has no record number. Use the matching entry from the log.
+                val currentRecord = history.glucoseHistory.singleOrNull {
+                    it.datetime == glucoseData.datetime && it.valueInMgDl == glucoseData.glucoseInMgDl
+                }
+                if (currentRecord != null) {
+                    liveReading = liveReading.copy(recordNumber = currentRecord.recordNumber)
+                }
                 val backfill = history.glucoseHistory
                     .filter { it.datetime > previousGlucoseDatetime + BACKFILL_DEDUP_TOLERANCE_MS && it.datetime < glucoseData.datetime - BACKFILL_DEDUP_TOLERANCE_MS }
-                    .map { item -> EversenseCGMResult(glucoseInMgDl = item.valueInMgDl, datetime = item.datetime, trend = item.trend, sensorId = state.sensorId, rawResponseHex = item.rawResponseHex) }
+                    .map { item ->
+                        EversenseCGMResult(
+                            glucoseInMgDl = item.valueInMgDl,
+                            datetime = item.datetime,
+                            trend = item.trend,
+                            sensorId = state.sensorId,
+                            rawResponseHex = item.rawResponseHex,
+                            recordNumber = item.recordNumber
+                        )
+                    }
                 if (backfill.isNotEmpty()) {
-                    result.addAll(0, backfill)
+                    result.addAll(backfill)
                     EversenseLogger.debug(TAG) { "Backfill: added ${backfill.size} historical readings" }
                 }
             } catch (e: Exception) {
                 EversenseLogger.warning(TAG, "Could not read glucose history: $e")
             }
+            result.add(liveReading)
 
             preferences.edit(commit = true) {
                 putString(StorageKeys.STATE, JSON.encodeToString(state))

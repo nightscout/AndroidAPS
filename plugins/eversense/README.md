@@ -151,6 +151,8 @@ After initial setup, readings can be received without internet, including in air
 
 DMS upload is optional and does not affect local glucose reception. Uploads are attempted at most once per hour; readings are kept for up to seven days while waiting for connectivity.
 
+For ES365, AAPS can also resend recent glucose readings that it already uploaded with their original transmitter record numbers. Each sync looks back to the last successful upload with about two hours of overlap, using up to 30 days of stored upload history. This history builds up as AAPS uploads new readings.
+
 ## Troubleshooting and limits
 
 | Problem | Check or limitation |

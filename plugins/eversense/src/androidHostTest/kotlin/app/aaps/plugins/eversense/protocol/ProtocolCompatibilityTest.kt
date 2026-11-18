@@ -157,6 +157,8 @@ class ProtocolCompatibilityTest {
         is Collection<*> -> value.map(::normalize)
         is Map<*, *> -> value.entries.associate { normalize(it.key).toString() to normalize(it.value) }
         else -> value.javaClass.declaredFields.filterNot { Modifier.isStatic(it.modifiers) || it.isSynthetic }
+            // The frozen parser did not expose the E365 log record number.
+            .filterNot { value.javaClass.simpleName == "GlucoseHistoryItem" && it.name == "recordNumber" }
             .sortedBy { it.name }.associate { it.name to normalize(it.apply { isAccessible = true }.get(value)) }
     }
 }

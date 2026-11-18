@@ -189,7 +189,8 @@ EversenseCloudUploader owns an optional persistent queue, independent of BLE con
 - Upload requires validated internet and the enabled setting. An attempt is reserved before HTTP, so failures also consume the hourly slot.
 - The wall-clock attempt timestamp survives restart. A monotonic timestamp also prevents repeat attempts within an hour in the same process. A backward wall-clock jump resets the stored reference and defers that cycle.
 - A later enqueue can trigger a due flush. There is no independent hourly wake-up timer.
-- Successful batches are removed. Failure retains the batch and stops that cycle. Earlier successful requests can be repeated on retry; multiple endpoints are not one transaction.
+- Successful batches leave the pending queue. Failure retains the batch and stops that cycle. Earlier successful requests can be repeated on retry; multiple endpoints are not one transaction.
+- For ES365, AAPS keeps a separate history of sent glucose records with a sensor ID and an original transmitter record number. A later upload repeats device events in the window since the last successful upload for that transmitter, rounded down to whole hours with two hours added, up to 30 days and 8640 stored readings. Replay does not send essential logs or update live values. Changing credentials or region, or signing out, clears this history along with the pending queue.
 
 ES365 delivery sends raw glucose, current portal values and device events. E3 sends current values and device events. One hourly cycle can make several requests. Upload failure does not request BLE reconnection.
 

@@ -6,6 +6,7 @@ class StorageKeys {
         const val STATE = "eversense_state"
         const val SECURE_STATE = "eversense_state_secure"
         const val CLOUD_QUEUE = "eversense_cloud_queue"
+        const val CLOUD_REPLAY_HISTORY = "eversense_cloud_replay_history"
         const val CLOUD_LAST_ATTEMPT = "eversense_cloud_last_attempt"
         const val ACCESS_TOKEN = "eversense_access_token"
         const val ACCESS_TOKEN_EXPIRY = "eversense_access_token_expiry"

@@ -246,6 +246,7 @@ class EversenseCGMPlugin(
                 remove(StorageKeys.ACCESS_TOKEN)
                 remove(StorageKeys.ACCESS_TOKEN_EXPIRY)
                 remove(StorageKeys.CLOUD_QUEUE)
+                remove(StorageKeys.CLOUD_REPLAY_HISTORY)
             }
         }
         if (username.isNotEmpty() && password.isNotEmpty()) connection.connect()
@@ -265,6 +266,7 @@ class EversenseCGMPlugin(
             remove(StorageKeys.ACCESS_TOKEN)
             remove(StorageKeys.ACCESS_TOKEN_EXPIRY)
             remove(StorageKeys.CLOUD_QUEUE)
+            remove(StorageKeys.CLOUD_REPLAY_HISTORY)
         }
     }
 

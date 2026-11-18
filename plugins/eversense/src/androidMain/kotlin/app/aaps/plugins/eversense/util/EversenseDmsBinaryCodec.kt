@@ -35,7 +35,7 @@ internal object EversenseDmsBinaryCodec {
         bytes(0x8c, 0, 1, 0, 0)
         number(readings.size, 3)
         readings.forEachIndexed { index, reading ->
-            number(index + 1, 3)
+            number(reading.recordNumber ?: (index + 1), 3)
             timestamp(reading.datetime)
             number(reading.glucoseInMgDl)
             bytes(0)
