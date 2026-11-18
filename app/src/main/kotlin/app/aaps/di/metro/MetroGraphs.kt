@@ -1,8 +1,7 @@
 package app.aaps.di.metro
 
 import android.content.Context
-import app.aaps.core.interfaces.alerts.EatReminder
-import app.aaps.core.interfaces.alerts.LocalAlertUtils
+import app.aaps.appshell.start.AppStartSequence
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.autotune.Autotune
@@ -27,12 +26,10 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.scenes.Scenes
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
@@ -44,7 +41,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.interfaces.widget.WidgetUpdater
@@ -58,9 +54,7 @@ import app.aaps.di.ExternalOptionsOverride
 import app.aaps.di.PluginSource
 import app.aaps.di.mergePlugins
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
-import app.aaps.implementation.notifications.SnackbarNotificationFallback
 import app.aaps.implementation.plugin.PluginStore
-import app.aaps.implementation.profile.ProfileSwitchScheduler
 import app.aaps.implementation.resources.ResourceHelperImpl
 import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
@@ -68,7 +62,6 @@ import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
 import app.aaps.plugins.aps.openAPSAutoISF.DetermineBasalAutoISF
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
-import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.source.di.SourceMetroGraph
@@ -248,7 +241,6 @@ class MetroGraphs(
     val versionCheckerUtils: VersionCheckerUtils get() = root.versionCheckerUtils
     val nsIncomingDataProcessor: NsIncomingDataProcessor get() = root.nsIncomingDataProcessor
     val automation: Automation get() = root.automation
-    val automationRuntime: AutomationRuntime get() = root.automationRuntime
 
     /** Same plugin as [objectives], by class. The instrumented tests ask for the concrete type. */
     val objectivesPlugin: ObjectivesPlugin get() = root.objectivesPlugin
@@ -266,7 +258,6 @@ class MetroGraphs(
     val determineBasalAMA: DetermineBasalAMA get() = root.determineBasalAMA
     val determineBasalAutoISF: DetermineBasalAutoISF get() = root.determineBasalAutoISF
     val signatureVerifier: SignatureVerifierPlugin get() = root.signatureVerifierPlugin
-    val resourceHelper: ResourceHelper get() = root.resourceHelper
     val fabricPrivacy: FabricPrivacy get() = root.fabricPrivacy
     val uiInteraction: UiInteraction get() = root.uiInteraction
     val preferences: Preferences get() = root.preferences
@@ -278,15 +269,12 @@ class MetroGraphs(
     val iconsProvider: IconsProvider get() = root.iconsProvider
     val widgetUpdater: WidgetUpdater get() = root.widgetUpdater
     val commandQueue: CommandQueue get() = root.commandQueue
-    val localAlertUtils: LocalAlertUtils get() = root.localAlertUtils
     val persistenceLayer: PersistenceLayer get() = root.persistenceLayer
     val appRepository: AppRepository get() = root.appRepository
     val constraintsChecker: ConstraintsChecker get() = root.constraintsChecker
     val notificationManager: NotificationManager get() = root.notificationManager
-    val profileSwitchScheduler: ProfileSwitchScheduler get() = root.profileSwitchScheduler
-    val snackbarNotificationFallback: SnackbarNotificationFallback get() = root.snackbarNotificationFallback
-    val eatReminder: EatReminder get() = root.eatReminder
     val uiRestart: UiRestart get() = root.uiRestart
+    val appStartSequence: AppStartSequence get() = root.appStartSequence
     val activePlugin: ActivePlugin get() = root.activePlugin
     val pluginStore: PluginStore get() = root.pluginStore
     val maintenance: Maintenance get() = root.maintenance
@@ -300,8 +288,6 @@ class MetroGraphs(
 
     /** The one scene state holder, for classes that ask for the concrete type. */
     val decimalFormatter: DecimalFormatter get() = root.decimalFormatter
-    val profileUtil: ProfileUtil get() = root.profileUtil
-    val hardLimits: HardLimits get() = root.hardLimits
     val storage: Storage get() = root.storage
 
     val pumpSync: PumpSync get() = root.pumpSync

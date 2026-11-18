@@ -39,7 +39,7 @@ import dev.zacsweers.metro.Inject
  * ## Why it is a class and not `MainApp` code
  *
  * It used to be three private methods on `MainApp`, which has no test and cannot have one. Everything else
- * in `doMigrations` was moved into `PreferenceMigrations` and covered; this half stayed behind untested, and
+ * in `MainApp.doMigrations` was moved into `PreferenceMigrations` and covered; this half stayed behind untested, and
  * two defects lived there for months - a DIA that silently became the hard-limit maximum of 9 h, and the
  * two sources asked in the wrong order, so an install whose own record knew the answer got a
  * reconstruction anyway.

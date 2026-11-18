@@ -15,7 +15,7 @@ enum class BooleanComposedKey(
      * It used to be `appwidget_use_black_`, which sits inside `IntComposedKey.WidgetOpacity`'s
      * `appwidget_` prefix - so the stored key matched both, and a prefix lookup answered with
      * whichever came first out of the registration order. That reads a Boolean as an Int.
-     * `ComposedKeyPrefixTest` now fails if any prefix swallows another; `MainApp.doMigrations` moves
+     * `ComposedKeyPrefixTest` now fails if any prefix swallows another; `AppStartSequence.migratePreferences` moves
      * the old values across.
      */
     WidgetUseBlack("widget_use_black_", "%d", false),

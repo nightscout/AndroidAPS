@@ -269,7 +269,42 @@ The mode itself ends on its own time. The job is a safety net: it cancels the ze
 set for the mode, so that insulin does not stay off after it. iOS cannot run code at an exact time
 while the app sleeps, so the iOS timer should run the job late rather than never: a coroutine delay
 while the app is awake, and at the next wake check whether the end has passed and run the job then.
-`MainApp` calls `runningModeExpiryScheduler.start()`; a master iOS app has to call it too.
+`AppStartSequence` (below) starts the scheduler, so the iOS graph needs the timer as soon as it runs
+the sequence, follower or not. The desktop's `DesktopRunningModeExpiryTimer` (a coroutine delay) is
+the shape to start from.
+
+### One start sequence for every app: `AppStartSequence`
+
+`appshell/src/commonMain/.../start/AppStartSequence.kt` is everything `MainApp` did at start, in one
+order: the snackbar fallback, the preference migrations (and the simple mode and temp target defaults
+of a new master), the profile reload, the monthly database vacuum, the plugins and the wait for them,
+the running mode reconciler and expiry scheduler, the profile switch scheduler, automation, the eat
+reminder, the old-record insulin migration, then the version record, the "AAPS started" note, the
+setup notices, the pre-snooze, the keep-alive, `initCompleted()` and `EventAppInitialized`. A platform
+gives only what it alone can do, through `AppStartPlatform`. Android and the desktop run it; iOS does
+not yet. Tests: `AppStartSequenceTest` (16, `androidHostTest`).
+
+What the iOS side has to do to run it:
+
+- **Expose it** in `IosAppGraph` (`val appStartSequence: AppStartSequence`) and bind a
+  `RunningModeExpiryTimer` (see above), or the graph does not compile.
+- **Run it in the background, behind the splash screen.** `IosAppStartup.run()` registers the plugins
+  on the main thread before the first screen, because a view model built before that throws "No pump
+  selected". The sequence does the registration itself, after the migrations, and can take seconds
+  (the vacuum). So `IosClientConfig` has to start with `InitProgress(done = false)`: `AapsAppRoot`
+  then shows the splash and composes nothing that reads the pump until `initCompleted()`. Android
+  works this way. Then call `appStartSequence.run(plugins, platform)` from a coroutine, with the same
+  sorted `contributedPlugins` list.
+- **`AppStartPlatform` for iOS**: `versionCode` from `CFBundleVersion`, `deviceName` from the device
+  model, `startServices()` for what is iOS-only, `startKeepAlive()` = `periodicMaintenance.start(...)`
+  for a follower (the keep-alive runner on wake for a master), `beforeReady()` empty or iOS-only work.
+- **Then remove** from `IosAppStartup` and `startApp` what the sequence does now: the plugin
+  registration and `announceReadyWhenStarted`, `startAutomation`, `preSnoozeAlarms` before
+  `periodicMaintenance.start`, `snackbarNotificationFallback.start()` and `eatReminder.restore()`.
+  `announceReadyWhenStarted` in `core/interfaces` is used only by iOS and can be deleted after. Install
+  `IosNotificationDelegate` before the sequence runs, because the snackbar fallback posts through it.
+- **Run `IosBgQualityCheckWiringTest` and `AppStartSequenceTest`'s scenarios on the simulator** once
+  wired; the migrations and the vacuum have never run on Apple.
 
 ### `IosBgQualityCheck` is gone: iOS uses the real `BgQualityCheckPlugin`
 

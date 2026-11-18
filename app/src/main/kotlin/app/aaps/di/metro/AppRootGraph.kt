@@ -2,7 +2,7 @@ package app.aaps.di.metro
 
 import android.content.Context
 import androidx.work.WorkManager
-import app.aaps.core.interfaces.alerts.EatReminder
+import app.aaps.appshell.start.AppStartSequence
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensData
@@ -123,9 +123,7 @@ import app.aaps.database.di.DatabaseConfig
 import app.aaps.di.ExternalOptionsOverride
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
-import app.aaps.implementation.notifications.SnackbarNotificationFallback
 import app.aaps.implementation.plugin.PluginStore
-import app.aaps.implementation.profile.ProfileSwitchScheduler
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.implementation.queue.CommandExecutor
 import app.aaps.implementation.resources.ResourceHelperImpl
@@ -355,9 +353,6 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val apsResult: APSResult
     val pumpEnactResult: PumpEnactResult
     val profileSwitchSilentGate: ProfileSwitchSilentGate
-    val profileSwitchScheduler: ProfileSwitchScheduler
-    val snackbarNotificationFallback: SnackbarNotificationFallback
-    val eatReminder: EatReminder
     val uiRestart: UiRestart
     val runningConfiguration: RunningConfiguration
     val runningConfigurationKeys: RunningConfigurationKeys
@@ -393,6 +388,9 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val resourceHelperImpl: ResourceHelperImpl
     val fabricPrivacyImpl: FabricPrivacyImpl
     val processLifecycleListener: ProcessLifecycleListener
+
+    /** The start sequence every platform runs, from `:appshell`. */
+    val appStartSequence: AppStartSequence
     val dataSyncSelectorXdrip: DataSyncSelectorXdrip
     val activeSceneSync: ActiveSceneSync
 
@@ -474,7 +472,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     /** Autotune, for the automation actions. */
     val autotune: Autotune
 
-    /** Running-mode helpers, from commonMain. `MainApp` reads the reconciler. */
+    /** Running-mode helpers, from commonMain. The instrumented tests read the reconciler. */
     val runningModeReconciler: RunningModeReconciler
     val runningModeExpiryJob: RunningModeExpiryJob
 

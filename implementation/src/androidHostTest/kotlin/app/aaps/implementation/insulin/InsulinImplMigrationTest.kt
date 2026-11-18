@@ -205,7 +205,7 @@ class InsulinImplMigrationTest : TestBase() {
 
     @Test
     fun runningInsulinWithAnOldLabelIsAddedOnlyOnce() {
-        // MainApp.dataMigrations() does this at every start. The running profile keeps its old label
+        // AppStartSequence.migrateRecords() does this at every start. The running profile keeps its old label
         // "Novorapid", which the label rebuild at start never produces, so a match by label failed at every
         // start and added one more copy each time.
         val running = ICfg(insulinLabel = "Novorapid", insulinEndTime = rapidEndMs, insulinPeakTime = rapidPeakMs, concentration = 1.0)

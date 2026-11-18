@@ -1,7 +1,6 @@
 package app.aaps.desktop.shell.di
 
-import app.aaps.core.interfaces.alerts.EatReminder
-import app.aaps.core.interfaces.alerts.LocalAlertUtils
+import app.aaps.appshell.start.AppStartSequence
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
@@ -44,8 +43,6 @@ import app.aaps.database.di.JvmAppDatabaseBuilder
 import app.aaps.implementation.maintenance.DesktopFolders
 import app.aaps.implementation.maintenance.PeriodicMaintenance
 import app.aaps.implementation.maintenance.cloud.AuthBrowser
-import app.aaps.implementation.notifications.SnackbarNotificationFallback
-import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.shared.clientbindings.ClientGraphBindings
@@ -122,15 +119,8 @@ interface DesktopAppGraph : MetroViewModelMultibindings {
     // The periodic housekeeping shared with Android, and the scope the shell drives it on.
     val periodicMaintenance: PeriodicMaintenance
 
-    /**
-     * The local alarms, for one call Android makes and this shell has to make too:
-     * `preSnoozeAlarms` holds the stale-data alarm back for five minutes so the first Nightscout
-     * round can land before the database is judged out of date.
-     */
-    val localAlertUtils: LocalAlertUtils
-    // Turns a snackbar into a notification when no screen is up to show it. Shared with Android.
-    val snackbarNotificationFallback: SnackbarNotificationFallback
-    val eatReminder: EatReminder
+    /** The start every platform runs, from `:appshell`. */
+    val appStartSequence: AppStartSequence
     val appScope: CoroutineScope
 
     /** Collected by the composition root, which rebuilds when it moves. */
@@ -138,7 +128,6 @@ interface DesktopAppGraph : MetroViewModelMultibindings {
     val prefsFileInfo: PrefsFileInfo
     val persistenceLayer: PersistenceLayer
     val logger: AAPSLogger
-    val pluginStore: PluginStore
     val contributedPlugins: Map<Int, PluginBase>
     val automationRuntime: AutomationRuntime
     val swDefinition: SWDefinition

@@ -14,7 +14,12 @@ import org.mockito.kotlin.verify
 class WorkManagerRunningModeExpiryTimerTest {
 
     private val workManager: WorkManager = mock()
-    private val timer = WorkManagerRunningModeExpiryTimer(workManager)
+    private val timer = WorkManagerRunningModeExpiryTimer(lazyOf(workManager))
+
+    @Test
+    fun `building the timer does not start WorkManager`() {
+        WorkManagerRunningModeExpiryTimer(lazy { error("WorkManager was taken when the timer was built") })
+    }
 
     @Test
     fun `schedule replaces the pending run with the worker at the delay`() {

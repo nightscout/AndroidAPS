@@ -39,7 +39,7 @@ import dev.zacsweers.metro.Inject
  *
  * ## Call it late
  *
- * The plugin list is `lateinit` and assigned in `MainApp.onCreate` AFTER `doMigrations()`. Building
+ * The plugin list is `lateinit` and assigned in `AppStartSequence.run` AFTER `migratePreferences()`. Building
  * a resolver before that point throws, and building one during start-up would capture a half-built
  * registry, so this makes a fresh one per call rather than caching. The cost is one pass over the
  * plugins and one map build; an import does it once.

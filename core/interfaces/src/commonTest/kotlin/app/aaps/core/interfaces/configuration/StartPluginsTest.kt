@@ -1,15 +1,11 @@
 package app.aaps.core.interfaces.configuration
 
-import app.aaps.core.data.plugin.PluginType
-import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -67,26 +63,6 @@ class StartPluginsTest {
         override fun error(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) = Unit
     }
 
-    /** Only [initialize] is used here; the rest of the interface is not part of this behaviour. */
-    private class FakeConfigBuilder(private val jobs: List<Job>) : ConfigBuilder {
-
-        var initializeCalls = 0
-        override val syncedSelectionTypes: List<PluginType> get() = emptyList()
-        override val activeSelectionChanges: Flow<Unit> get() = emptyFlow()
-        override fun initialize(): List<Job> {
-            initializeCalls++
-            return jobs
-        }
-
-        override suspend fun applyConfiguration() = Unit
-        override fun storeSettings(from: String) = Unit
-        override fun performPluginSwitch(changedPlugin: PluginBase, enabled: Boolean, type: PluginType) = Unit
-        override fun requestPluginSwitch(plugin: PluginBase, enabled: Boolean, type: PluginType): String? = null
-        override fun confirmPumpPluginSwitch(plugin: PluginBase, enabled: Boolean, type: PluginType) = Unit
-        override fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType) = Unit
-        override fun exitApp(from: String, source: Sources, launchAgain: Boolean) = Unit
-    }
-
     @Test
     fun `the app is announced ready only after the plugins have started`() = runTest {
         val bus = RecordingBus()
@@ -94,7 +70,7 @@ class StartPluginsTest {
         val starting = CompletableDeferred<Unit>()
         val startJob = launch { starting.await() }
 
-        val announcement = FakeConfigBuilder(listOf(startJob)).initializeAndAnnounceReady(this, bus, logger)
+        val announcement = announceReadyWhenStarted(listOf(startJob), this, bus, logger)
 
         advanceTimeBy(5.seconds)
         assertTrue(bus.sent.isEmpty(), "the event was sent while the plugins were still starting, so nobody is subscribed yet")
@@ -112,7 +88,7 @@ class StartPluginsTest {
         // Never completed, like a driver whose onStart does not settle.
         val stuck = launch { CompletableDeferred<Unit>().await() }
 
-        val announcement = FakeConfigBuilder(listOf(stuck)).initializeAndAnnounceReady(this, bus, logger, wait = 30.seconds)
+        val announcement = announceReadyWhenStarted(listOf(stuck), this, bus, logger, wait = 30.seconds)
 
         advanceTimeBy(29.seconds)
         assertTrue(bus.sent.isEmpty(), "the wait is not over yet")
@@ -122,16 +98,5 @@ class StartPluginsTest {
         assertTrue(logger.warnings.any { it.contains("did not finish starting") }, "a timed out start has to say so")
         stuck.cancel()
         announcement.join()
-    }
-
-    @Test
-    fun `the plugins are started exactly once`() = runTest {
-        val bus = RecordingBus()
-        val builder = FakeConfigBuilder(emptyList())
-
-        builder.initializeAndAnnounceReady(this, bus, RecordingLogger()).join()
-
-        assertEquals(1, builder.initializeCalls)
-        assertEquals(1, bus.sent.size)
     }
 }

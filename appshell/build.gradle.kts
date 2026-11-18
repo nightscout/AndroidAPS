@@ -5,28 +5,18 @@ plugins {
 }
 
 /**
- * The app's shell: navigation and the composable root.
+ * The shared part of every app: navigation, the composable root and the start sequence.
  *
  * `:app` cannot be multiplatform - it is `com.android.application`, and it owns the product flavours
- * and the Android entry points. So the part of it that is really just UI lives here instead, in a
- * module that can become multiplatform.
+ * and the Android entry points. So the part of it that is the same on every platform lives here
+ * instead. Android, iOS and the desktop all build on it.
  *
  * The plugin dependencies moved here from `:app` rather than being copied: they are `api`, so `:app`
  * still sees them for its DI graph. That keeps the number of edges in the build graph the same bar
  * one, which matters because every plugin is on this list.
  *
- * `AppRoute` and `AppNavGraph` are both in **commonMain**, and every module this one depends on
- * already has Apple targets. Three things still have to happen before this module can declare its
- * own, and they are all inside `AppNavGraph`:
- *
- *  1. **Seven `R.string` references**, aliased in from `:plugins:main` and `:core:ui`. Both modules
- *     already generate `TextRef`s, so this is the usual name-preserving swap.
- *  2. **`backStackEntry.arguments?.getString(...)`** - `arguments` is a `Bundle` on Android and a
- *     `SavedState` in multiplatform navigation, so those reads need the `SavedState` API.
- *  3. A stale `androidx.compose.ui.res.stringResource` import.
- *
- * The navigation dependency is already the JetBrains republish, so nothing is waiting on that.
- * `:plugins:sync` is multiplatform now too - an older note here said otherwise.
+ * `:implementation` is here for `AppStartSequence`, which runs its migrations and its schedulers. The
+ * plugins already depend on it, so this adds no new step to the build order.
  */
 kotlin {
     android {
@@ -47,6 +37,7 @@ kotlin {
                 api(project(":core:objects"))
                 api(project(":core:ui"))
                 api(project(":ui"))
+                implementation(project(":implementation"))
 
                 // Feature plugins self-register into the plugin map. This list moved here from `:app`
                 // with the navigation graph that routes to them; `api` so `:app` still builds its
