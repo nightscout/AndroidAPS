@@ -36,7 +36,12 @@ data class CarelevoPatchInfoDomainModel(
     val infusedTotalBolusAmount: Double? = null,
     val pumpState: Int? = null,
     val mode: Int? = null,
-    val bolusActionSeq: Int? = null
+    val bolusActionSeq: Int? = null,
+    /**
+     * Whether the activation wizard has finished: false from the pairing until its last step programmed the basal,
+     * then true. Null for a patch stored by a build that did not have this flag; for those a passed needle check counts.
+     */
+    val activationComplete: Boolean? = null
 ) : CarelevoUseCaseResponse
 
 data object NeedleCheckSuccess : CarelevoUseCaseResponse

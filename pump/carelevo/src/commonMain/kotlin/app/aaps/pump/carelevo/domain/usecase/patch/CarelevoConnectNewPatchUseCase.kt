@@ -52,7 +52,9 @@ class CarelevoConnectNewPatchUseCase @Inject constructor(
                 thresholdInsulinRemain = request.remains,
                 thresholdExpiry = request.expiry,
                 thresholdMaxBasalSpeed = request.maxBasalSpeed,
-                thresholdMaxBolusDose = request.maxVolume
+                thresholdMaxBolusDose = request.maxVolume,
+                // False, not null: null means a patch from an older build, and those count once the needle is in.
+                activationComplete = false
             )
         )
     }

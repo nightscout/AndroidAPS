@@ -30,16 +30,21 @@ internal class CarelevoConnectionCoordinatorTest {
 
     private lateinit var sut: CarelevoConnectionCoordinator
 
+    /** An activated patch unless said otherwise. */
     private fun patchInfo(
         mode: Int? = null,
         runningMinutes: Int? = null,
-        pumpState: Int? = null
+        pumpState: Int? = null,
+        activationComplete: Boolean? = true,
+        checkNeedle: Boolean? = null
     ): CarelevoPatchInfoDomainModel =
         CarelevoPatchInfoDomainModel(
             address = "AA:BB:CC:DD:EE:FF",
             mode = mode,
             runningMinutes = runningMinutes,
-            pumpState = pumpState
+            pumpState = pumpState,
+            activationComplete = activationComplete,
+            checkNeedle = checkNeedle
         )
 
     /** A patch info stream that holds [value]; null = it holds "no record". */
@@ -94,12 +99,38 @@ internal class CarelevoConnectionCoordinatorTest {
         assertThat(sut.isInitialized()).isTrue()
     }
 
+    /** Seen on a real patch: the loop set temp basals during the safety check and gave an SMB before the last step. */
+    @Test
+    fun `isInitialized false during the activation even after a status read`() {
+        stubPatchInfo(patchInfoFlow(patchInfo(mode = 1, runningMinutes = 10074, pumpState = 0, activationComplete = false, checkNeedle = true)))
+        assertThat(sut.isInitialized()).isFalse()
+    }
+
+    @Test
+    fun `isInitialized true for a patch from an older build once its needle check passed`() {
+        stubPatchInfo(patchInfoFlow(patchInfo(mode = 1, activationComplete = null, checkNeedle = true)))
+        assertThat(sut.isInitialized()).isTrue()
+    }
+
+    @Test
+    fun `isInitialized false for a patch from an older build without a passed needle check`() {
+        stubPatchInfo(patchInfoFlow(patchInfo(mode = 1, activationComplete = null, checkNeedle = null)))
+        assertThat(sut.isInitialized()).isFalse()
+    }
+
     // ---- isConnected / isConnecting ----
 
     @Test
     fun `isConnected is true pre-activation even when the link is down`() {
         // Not initialized (empty patch info) → forced true so the queue never dials a missing device.
         stubPatchInfo(patchInfoFlow(null))
+        whenever(bleSession.connected).thenReturn(MutableStateFlow(false))
+        assertThat(sut.isConnected()).isTrue()
+    }
+
+    @Test
+    fun `isConnected is true during the activation so the queue holds no link`() {
+        stubPatchInfo(patchInfoFlow(patchInfo(mode = 1, activationComplete = false, checkNeedle = true)))
         whenever(bleSession.connected).thenReturn(MutableStateFlow(false))
         assertThat(sut.isConnected()).isTrue()
     }

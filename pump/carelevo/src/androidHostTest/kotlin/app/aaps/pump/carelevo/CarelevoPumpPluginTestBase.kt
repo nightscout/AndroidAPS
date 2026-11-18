@@ -284,7 +284,8 @@ abstract class CarelevoPumpPluginTestBase {
             manufactureNumber = manufactureNumber,
             insulinRemain = insulinRemain,
             bolusActionSeq = bolusActionSeq,
-            mode = 1
+            mode = 1,
+            activationComplete = true
         )
 
     /** A concrete [PumpEnactResult] for stubbing suspend queue calls (e.g. `commandQueue.customCommand`). */

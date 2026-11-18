@@ -191,6 +191,8 @@ internal class CarelevoSetBasalProgramUseCaseTest {
         verify(patchInfoRepository).updatePatchInfo(patchCaptor.capture())
         assertThat(patchCaptor.firstValue.mode).isEqualTo(1)
         assertThat(patchCaptor.firstValue.address).isEqualTo("11:22:33:44:55:66")
+        // A profile can be written during the activation too: storing a program does not end the activation.
+        assertThat(patchCaptor.firstValue.activationComplete).isNull()
 
         val infusionCaptor = argumentCaptor<CarelevoBasalInfusionInfoDomainModel>()
         verify(infusionInfoRepository).updateBasalInfusionInfo(infusionCaptor.capture())
@@ -211,5 +213,27 @@ internal class CarelevoSetBasalProgramUseCaseTest {
         whenever(infusionInfoRepository.updateBasalInfusionInfo(any())).thenThrow(RuntimeException("boom"))
 
         assertThat(sut.persistBasalProgram(emptyList())).isFalse()
+    }
+
+    @Test
+    fun `persistActivationComplete marks the stored patch activated`() {
+        whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(patchInfo("11:22:33:44:55:66").copy(activationComplete = false, checkNeedle = true))
+        whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
+
+        assertThat(sut.persistActivationComplete()).isTrue()
+
+        val captor = argumentCaptor<CarelevoPatchInfoDomainModel>()
+        verify(patchInfoRepository).updatePatchInfo(captor.capture())
+        assertThat(captor.firstValue.activationComplete).isTrue()
+        assertThat(captor.firstValue.checkNeedle).isTrue()
+        assertThat(captor.firstValue.address).isEqualTo("11:22:33:44:55:66")
+    }
+
+    @Test
+    fun `persistActivationComplete returns false when no patch record exists`() {
+        whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(null)
+
+        assertThat(sut.persistActivationComplete()).isFalse()
+        verify(patchInfoRepository, never()).updatePatchInfo(any())
     }
 }

@@ -120,7 +120,7 @@ class CarelevoActivationExecutor @Inject constructor(
      * Initial basal program (**delivery-critical**): build the 3-program plan with the use case's exact
      * mapping, send all three [app.aaps.pump.carelevo.ble.commands.BasalProgramCommand]s over ONE session
      * (via [CarelevoBleSession.runBasalProgram]), and only on all-success reuse the use case's `mode=1` +
-     * infusion-info persist. Activation-only op.
+     * infusion-info persist, then mark the activation complete. Activation-only op.
      */
     private fun runSetBasal(): PumpEnactResult {
         val result = pumpEnactResultProvider()
@@ -134,8 +134,10 @@ class CarelevoActivationExecutor @Inject constructor(
                 bleSession.runBasalProgram(address, plan.programs)
             }
             val persisted = if (programmed) setBasalUseCase.persistBasalProgram(plan.segments) else false
-            aapsLogger.info(LTag.PUMPCOMM, "newBle.setBasal programmed=$programmed persisted=$persisted")
-            val ok = programmed && persisted
+            // The end of the activation: from here the pump counts as initialized and the loop may dose.
+            val activated = persisted && setBasalUseCase.persistActivationComplete()
+            aapsLogger.info(LTag.PUMPCOMM, "newBle.setBasal programmed=$programmed persisted=$persisted activated=$activated")
+            val ok = programmed && persisted && activated
             result.success(ok).enacted(ok)
         } catch (e: Exception) {
             aapsLogger.error(LTag.PUMPCOMM, "newBle.setBasal FAILED", e)

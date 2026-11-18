@@ -272,6 +272,10 @@ class CarelevoOverviewViewModel @Inject constructor(
 
             patchInfo.checkSafety == null                          -> CarelevoScreenType.SAFETY_CHECK
             patchInfo.checkSafety && patchInfo.checkNeedle == null -> CarelevoScreenType.SAFETY_CHECK
+            // Needle in, last step not done (the app ended in between): back to it, or the patch never counts as
+            // initialized and the loop never doses.
+            patchInfo.checkNeedle == true &&
+                patchInfo.activationComplete == false              -> CarelevoScreenType.NEEDLE_INSERTION
             else                                                   -> null
         }
         _isCheckScreen.tryEmit(screenType)

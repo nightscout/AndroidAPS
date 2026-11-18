@@ -222,7 +222,8 @@ class CarelevoOverviewViewModelTest {
         isStopped: Boolean? = false,
         infusedTotalBasalAmount: Double? = 1.234,
         infusedTotalBolusAmount: Double? = 2.345,
-        mode: Int? = 1
+        mode: Int? = 1,
+        activationComplete: Boolean? = null
     ): CarelevoPatchInfoDomainModel = CarelevoPatchInfoDomainModel(
         address = "AA:BB:CC:DD:EE:FF",
         manufactureNumber = manufactureNumber,
@@ -237,7 +238,8 @@ class CarelevoOverviewViewModelTest {
         isStopped = isStopped,
         infusedTotalBasalAmount = infusedTotalBasalAmount,
         infusedTotalBolusAmount = infusedTotalBolusAmount,
-        mode = mode
+        mode = mode,
+        activationComplete = activationComplete
     )
 
     private fun tempBasal(
@@ -705,9 +707,28 @@ class CarelevoOverviewViewModelTest {
     fun `check screen is clear for a fully activated patch`() {
         sut.observePatchInfo()
 
-        patchInfoFlow.tryEmit(patchInfo(checkSafety = true, checkNeedle = true))
+        patchInfoFlow.tryEmit(patchInfo(checkSafety = true, checkNeedle = true, activationComplete = true))
 
         assertThat(sut.isCheckScreen.value).isNull()
+    }
+
+    @Test
+    fun `check screen is clear for a patch from an older build whose needle check passed`() {
+        sut.observePatchInfo()
+
+        patchInfoFlow.tryEmit(patchInfo(checkSafety = true, checkNeedle = true, activationComplete = null))
+
+        assertThat(sut.isCheckScreen.value).isNull()
+    }
+
+    /** The app ended between the needle check and the last step: the patch would never count as initialized. */
+    @Test
+    fun `check screen goes back to the needle step while the activation is not complete`() {
+        sut.observePatchInfo()
+
+        patchInfoFlow.tryEmit(patchInfo(checkSafety = true, checkNeedle = true, activationComplete = false))
+
+        assertThat(sut.isCheckScreen.value).isEqualTo(CarelevoScreenType.NEEDLE_INSERTION)
     }
 
     @Test

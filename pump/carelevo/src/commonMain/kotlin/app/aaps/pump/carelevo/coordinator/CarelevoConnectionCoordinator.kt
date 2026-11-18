@@ -23,15 +23,24 @@ class CarelevoConnectionCoordinator @Inject constructor(
     private val bleSession: CarelevoBleSession
 ) {
 
+    /**
+     * True once the activation is complete and the patch status has been read at least once (as Omnipod Dash and
+     * Medtrum). Must stay true with no link up, otherwise the loop's applyTBRRequest / applySMBRequest gate aborts
+     * with "pump not initialized" during the normal resting state.
+     *
+     * Not before the activation is complete: everything that doses checks this, and a status read alone came early
+     * enough that on a real patch (2026-11-18) the loop set temp basals during the safety check, before the needle
+     * was in, and gave an SMB before the last step. A patch stored by an older build has no flag; it counts once its
+     * needle check passed.
+     */
     fun isInitialized(): Boolean {
-        // Activation-based, NOT connection-based (matches Omnipod Dash / Medtrum): true once the
-        // patch is paired and its operational status has been read at least once. Must stay true with
-        // no link up, otherwise the loop's applyTBRRequest / applySMBRequest gate aborts with "pump
-        // not initialized" during the normal resting state.
         val patchInfo = carelevoPatch.patchInfo.latest ?: return false
-        return patchInfo.mode != null ||
-            patchInfo.runningMinutes != null ||
-            patchInfo.pumpState != null
+        val activated = patchInfo.activationComplete ?: (patchInfo.checkNeedle == true)
+        return activated && (
+            patchInfo.mode != null ||
+                patchInfo.runningMinutes != null ||
+                patchInfo.pumpState != null
+            )
     }
 
     /**

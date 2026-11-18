@@ -87,6 +87,18 @@ internal class CarelevoStoredJsonGoldenTest {
         assertThat(CarelevoPatchInfoDaoImpl(preferences).getPatchInfoBySync()).isEqualTo(PATCH_MINIMAL)
     }
 
+    /** A record stored before the flag existed reads with no flag, so it is still the activated patch it was. */
+    @Test
+    fun `the activation flag is written last and a record without it reads as before`() {
+        CarelevoPatchInfoDaoImpl(preferences).updatePatchInfo(PATCH_MINIMAL.copy(activationComplete = false))
+
+        assertThat(store[CarelevoStringNonKey.PatchInfo.key]).isEqualTo(PATCH_MINIMAL_JSON.dropLast(1) + ""","activationComplete":false}""")
+        assertThat(CarelevoPatchInfoDaoImpl(preferences).getPatchInfoBySync()!!.activationComplete).isFalse()
+
+        store[CarelevoStringNonKey.PatchInfo.key] = PATCH_FULL_JSON
+        assertThat(CarelevoPatchInfoDaoImpl(preferences).getPatchInfoBySync()!!.activationComplete).isNull()
+    }
+
     // ---- infusion info --------------------------------------------------------------------------
 
     @Test

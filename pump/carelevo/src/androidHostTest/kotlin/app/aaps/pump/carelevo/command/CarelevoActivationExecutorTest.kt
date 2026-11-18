@@ -55,6 +55,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -217,6 +218,7 @@ internal class CarelevoActivationExecutorTest {
         stubBasalPlan()
         whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenReturn(true)
         whenever(setBasalUseCase.persistBasalProgram(any())).thenReturn(true)
+        whenever(setBasalUseCase.persistActivationComplete()).thenReturn(true)
 
         val result = sut.execute(CmdSetBasal())
 
@@ -238,9 +240,35 @@ internal class CarelevoActivationExecutorTest {
         stubBasalPlan()
         whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenReturn(true)
         whenever(setBasalUseCase.persistBasalProgram(any())).thenReturn(true)
+        whenever(setBasalUseCase.persistActivationComplete()).thenReturn(true)
         val result = sut.execute(CmdSetBasal())
         assertThat(result?.success).isTrue()
         assertThat(result?.enacted).isTrue()
+    }
+
+    /** The end of the activation: only from here does the pump count as initialized, so the loop may dose. */
+    @Test fun `setBasal marks the activation complete after the program is stored`() {
+        stubProfilePresent()
+        stubBasalPlan()
+        whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenReturn(true)
+        whenever(setBasalUseCase.persistBasalProgram(any())).thenReturn(true)
+        whenever(setBasalUseCase.persistActivationComplete()).thenReturn(true)
+
+        sut.execute(CmdSetBasal())
+
+        val order = inOrder(setBasalUseCase)
+        order.verify(setBasalUseCase).persistBasalProgram(any())
+        order.verify(setBasalUseCase).persistActivationComplete()
+    }
+
+    @Test fun `setBasal fails when the activation cannot be marked complete`() {
+        stubProfilePresent()
+        stubBasalPlan()
+        whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenReturn(true)
+        whenever(setBasalUseCase.persistBasalProgram(any())).thenReturn(true)
+        whenever(setBasalUseCase.persistActivationComplete()).thenReturn(false)
+        val result = sut.execute(CmdSetBasal())
+        assertThat(result?.success).isFalse()
     }
 
     @Test fun `setBasal fails when programmed but persist fails`() {
@@ -250,6 +278,7 @@ internal class CarelevoActivationExecutorTest {
         whenever(setBasalUseCase.persistBasalProgram(any())).thenReturn(false)
         val result = sut.execute(CmdSetBasal())
         assertThat(result?.success).isFalse()
+        verify(setBasalUseCase, never()).persistActivationComplete()
     }
 
     @Test fun `setBasal fails when the program is rejected and does not persist`() {
@@ -259,6 +288,7 @@ internal class CarelevoActivationExecutorTest {
         val result = sut.execute(CmdSetBasal())
         assertThat(result?.success).isFalse()
         verify(setBasalUseCase, never()).persistBasalProgram(any())
+        verify(setBasalUseCase, never()).persistActivationComplete()
     }
 
     @Test fun `setBasal returns failed result on exception`() {

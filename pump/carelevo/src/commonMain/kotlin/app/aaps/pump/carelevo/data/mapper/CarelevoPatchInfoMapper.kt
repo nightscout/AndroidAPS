@@ -36,7 +36,8 @@ internal fun CarelevoPatchInfoEntity.transformToCarelevoPatchInfoDomainModel() =
     infusedTotalBolusAmount = infusedTotalBolusAmount,
     pumpState = pumpState,
     mode = mode,
-    bolusActionSeq = bolusActionSeq
+    bolusActionSeq = bolusActionSeq,
+    activationComplete = activationComplete
 )
 
 internal fun CarelevoPatchInfoDomainModel.transformToCarelevoPatchInfoEntity() = CarelevoPatchInfoEntity(
@@ -71,5 +72,6 @@ internal fun CarelevoPatchInfoDomainModel.transformToCarelevoPatchInfoEntity() =
     infusedTotalBolusAmount = infusedTotalBolusAmount,
     pumpState = pumpState,
     mode = mode,
-    bolusActionSeq = bolusActionSeq
+    bolusActionSeq = bolusActionSeq,
+    activationComplete = activationComplete
 )

@@ -105,6 +105,14 @@ class CarelevoPumpPluginTest : CarelevoPumpPluginTestBase() {
         assertThat(plugin.isInitialized()).isTrue()
     }
 
+    /** The loop, client actions and scenes all check this: none of them may dose a patch that is being activated. */
+    @Test
+    fun `isInitialized should return false while the activation is not complete`() {
+        patchInfoFlow.tryEmit(samplePatchInfo().copy(activationComplete = false, checkSafety = true, checkNeedle = true))
+
+        assertThat(plugin.isInitialized()).isFalse()
+    }
+
     @Test
     fun `isConnected should return true when patch address is missing`() {
         patchInfoFlow.tryEmit(null)

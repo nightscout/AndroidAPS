@@ -63,6 +63,15 @@ class CarelevoSetBasalProgramUseCase @Inject constructor(
     }.isSuccess
 
     /**
+     * Marks the activation finished. Only the activation's own basal step calls this, not a profile change: a profile
+     * can be written during the activation too, before the needle is in.
+     */
+    fun persistActivationComplete(): Boolean {
+        val patchInfo = patchInfoRepository.getPatchInfoBySync() ?: return false
+        return patchInfoRepository.updatePatchInfo(patchInfo.copy(updatedAt = Clock.System.now(), activationComplete = true))
+    }
+
+    /**
      * The 24 hourly segments of the program the patch accepted, as [persistBasalProgram] stored it, or null before
      * one was. Read from the store itself: the infusion-info stream that `CarelevoPatch` exposes follows a moment
      * later, so right after a set it still held the old program (#2454).

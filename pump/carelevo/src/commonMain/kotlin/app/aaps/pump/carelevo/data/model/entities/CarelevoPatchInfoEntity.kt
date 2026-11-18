@@ -35,5 +35,6 @@ data class CarelevoPatchInfoEntity(
     val infusedTotalBolusAmount: Double? = null,
     val pumpState: Int? = null,
     val mode: Int? = null,
-    val bolusActionSeq: Int? = null
+    val bolusActionSeq: Int? = null,
+    val activationComplete: Boolean? = null
 )
