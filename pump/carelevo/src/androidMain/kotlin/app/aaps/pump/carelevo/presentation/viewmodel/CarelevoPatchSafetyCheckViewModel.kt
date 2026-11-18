@@ -71,6 +71,15 @@ class CarelevoPatchSafetyCheckViewModel @Inject constructor(
     private val _remainSec = MutableStateFlow<Long?>(null)
     val remainSec = _remainSec.asStateFlow()
 
+    /**
+     * The priming pulse being sent now (1 to [primingPulseCount]), or null when none is. The patch answers each pulse
+     * only after about 30 s (the same on a real patch with the old driver), so a Retry takes one to two minutes and
+     * the screen says which pulse it is at instead of only "Loading".
+     */
+    private val _primingPulse = MutableStateFlow<Int?>(null)
+    val primingPulse = _primingPulse.asStateFlow()
+    val primingPulseCount: Int get() = PRIMING_BURST_COUNT
+
     private var tickerJob: Job? = null
     private var currentTimeoutSec: Long = 0L
 
@@ -267,17 +276,22 @@ class CarelevoPatchSafetyCheckViewModel @Inject constructor(
 
         setUiState(UiState.Loading)
         viewModelScope.launch {
-            repeat(PRIMING_BURST_COUNT) { pulse ->
-                if (!sendPrimingPulse(pulse)) {
-                    // The link failed, not the patch — leave the allowance unspent.
-                    setUiState(UiState.Idle)
-                    triggerEvent(CarelevoConnectSafetyCheckEvent.AdditionalPrimingFailed)
-                    return@launch
+            try {
+                repeat(PRIMING_BURST_COUNT) { pulse ->
+                    _primingPulse.value = pulse + 1
+                    if (!sendPrimingPulse(pulse)) {
+                        // The link failed, not the patch — leave the allowance unspent.
+                        setUiState(UiState.Idle)
+                        triggerEvent(CarelevoConnectSafetyCheckEvent.AdditionalPrimingFailed)
+                        return@launch
+                    }
+                    if (pulse < PRIMING_BURST_COUNT - 1) delay(PRIMING_BURST_INTERVAL_MS)
                 }
-                if (pulse < PRIMING_BURST_COUNT - 1) delay(PRIMING_BURST_INTERVAL_MS)
+                primingRetries++
+                setUiState(UiState.Idle)
+            } finally {
+                _primingPulse.value = null
             }
-            primingRetries++
-            setUiState(UiState.Idle)
         }
     }
 

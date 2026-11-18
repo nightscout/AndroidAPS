@@ -109,6 +109,7 @@
     <string name="carelevo_patch_safety_check_end_desc">Safety check completed.\nPlease press the Next button.</string>
     <string name="carelevo_patch_safety_check_desc_warning">Please check whether an insulin droplet has formed at the needle tip.</string>
     <string name="carelevo_patch_safety_check_retry_desc">If no insulin droplet is visible, please press the [Retry] button.</string>
+    <string name="carelevo_priming_pulse_progress" comment="%1$d=number of the priming pulse being sent, %2$d=number of all pulses. Example: Priming 1 of 3. The patch answers each pulse after about 30 seconds.">Priming %1$d of %2$d. The patch answers each pulse after about 30 seconds.</string>
 
     <string name="carelevo_patch_attach_step1_title">Disinfect Patch Site</string>
     <string name="carelevo_patch_attach_step1_desc">Clean thoroughly with an alcohol swab.</string>

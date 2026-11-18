@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
@@ -17,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
@@ -69,6 +71,7 @@ private fun CarelevoPatchConnectionFlowScreen(
     val connectUiState by connectViewModel.uiState.collectAsStateWithLifecycle()
     val needleInsertionUiState by needleInsertionViewModel.uiState.collectAsStateWithLifecycle()
     val safetyCheckUiState by safetyCheckViewModel.uiState.collectAsStateWithLifecycle()
+    val primingPulse by safetyCheckViewModel.primingPulse.collectAsStateWithLifecycle()
     val discardFailedMessage = stringResource(CarelevoStrings.carelevo_toast_msg_discard_failed)
 
     // Every exit path MUST drop the ViewModel's one-shot init latch: the VM outlives this screen
@@ -215,10 +218,15 @@ private fun CarelevoPatchConnectionFlowScreen(
                     verticalArrangement = Arrangement.spacedBy(AapsSpacing.extraLarge)
                 ) {
                     CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                    // A Retry waits about 30 s for each of its pulses, so it says which one it is at.
+                    val pulse = primingPulse.takeIf { page == CarelevoPatchStep.SAFETY_CHECK }
                     Text(
-                        text = stringResource(CoreUiStrings.loading),
+                        text = if (pulse != null) stringResource(CarelevoStrings.carelevo_priming_pulse_progress, pulse, safetyCheckViewModel.primingPulseCount)
+                        else stringResource(CoreUiStrings.loading),
                         color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodyLarge
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(horizontal = AapsSpacing.extraLarge)
                     )
                 }
             }

@@ -842,6 +842,37 @@ internal class CarelevoPatchSafetyCheckViewModelTest {
         verifyBlocking(commandQueue, times(3)) { customCommand(any<CmdAdditionalPriming>()) }
     }
 
+    /** A real patch answers each pulse after about 30 s, so the screen says which pulse is running. */
+    @Test
+    fun `retryAdditionalPriming says which pulse it is sending and clears it at the end`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        val seen = mutableListOf<Int?>()
+        whenever(commandQueue.customCommand(any())).doSuspendableAnswer {
+            seen += sut.primingPulse.value
+            enactResult(true)
+        }
+
+        sut.retryAdditionalPriming()
+        advanceUntilIdle()
+
+        assertThat(seen).containsExactly(1, 2, 3).inOrder()
+        assertThat(sut.primingPulse.value).isNull()
+        assertThat(sut.primingPulseCount).isEqualTo(3)
+    }
+
+    @Test
+    fun `retryAdditionalPriming clears the pulse when the link fails`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        stubCustomCommand(enactResult(false))
+
+        sut.retryAdditionalPriming()
+        advanceUntilIdle()
+
+        assertThat(sut.primingPulse.value).isNull()
+    }
+
     @Test
     fun `retryAdditionalPriming stops the burst and reports a link failure`() = runTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
