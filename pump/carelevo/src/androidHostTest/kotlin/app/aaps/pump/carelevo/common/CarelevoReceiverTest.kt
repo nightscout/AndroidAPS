@@ -83,11 +83,13 @@ class CarelevoReceiverTest {
     }
 
     @Test
-    fun `the receiver is never registered as exported`() {
-        // Only protected system broadcasts are consumed; nothing here may be targetable by other apps.
+    fun `the receiver is registered as exported so the Bluetooth process can reach it`() {
+        // The Bluetooth stack sends with its own uid, not the system uid; a not-exported receiver never gets it.
+        // Robolectric delivers either way, so the flag is all a test can check.
         register(action) {}
 
-        assertThat(wrappersFor(action).single().flags and Context.RECEIVER_EXPORTED).isEqualTo(0)
+        assertThat(wrappersFor(action).single().flags and Context.RECEIVER_EXPORTED).isEqualTo(Context.RECEIVER_EXPORTED)
+        assertThat(wrappersFor(action).single().flags and Context.RECEIVER_NOT_EXPORTED).isEqualTo(0)
     }
 
     @Test

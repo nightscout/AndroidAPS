@@ -13,6 +13,7 @@ import android.bluetooth.BluetoothProfile
 import android.bluetooth.le.ScanRecord
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Looper
@@ -42,6 +43,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
 import org.junit.After
 import org.junit.Assert.fail
 import org.junit.Before
@@ -53,6 +55,7 @@ import org.robolectric.annotation.Config
 import java.time.Duration as JavaDuration
 import java.util.UUID
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
@@ -67,7 +70,14 @@ class AndroidBleCentralTest {
     private val context: Application = ApplicationProvider.getApplicationContext()
     private val adapter: BluetoothAdapter = context.getSystemService(BluetoothManager::class.java).adapter
     private val remote: BluetoothDevice get() = adapter.getRemoteDevice(ADDRESS)
-    private val central = AndroidBleCentral(context, AAPSLoggerTest())
+    /**
+     * Reads no bond state, so a test sees what the broadcasts alone do. Robolectric's createBond() makes the device
+     * BONDED at once, where a real system says BONDING, so a read would end every bond wait at its first look.
+     */
+    private val central = AndroidBleCentral(context, AAPSLoggerTest()).apply { bondReadInterval = 1.hours }
+
+    /** Reads the bond state as in the app. */
+    private val readingCentral = AndroidBleCentral(context, AAPSLoggerTest())
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     private val service = BleUuid.of("fff0")
@@ -317,6 +327,35 @@ class AndroidBleCentralTest {
         assertThat(gatt.services).isNotEmpty()
     }
 
+    /**
+     * Seen on a real phone: the system had the bond 3 s before its broadcast reached the app, and the patch had dropped
+     * the link 2.4 s after the bond. The discovery must start from the system's own state, not wait for the broadcast.
+     */
+    @Test
+    fun aConnectThatBondsFirstStartsTheDiscoveryWhenTheSystemIsBondedBeforeItsBroadcast() = runBlocking {
+        shadowOf(remote).setBondState(BluetoothDevice.BOND_NONE)
+        shadowOf(remote).setCreatedBond(true) // the system has the bond at once; no broadcast is sent
+        val result = scope.async { readingCentral.connect(DEVICE, ConnectOptions(timeout = 5.seconds, androidBondBeforeDiscovery = true)) }
+        val gatt = awaitGatt()
+        shadowOf(gatt).addDiscoverableService(BluetoothGattService(UUID.fromString(service.value), BluetoothGattService.SERVICE_TYPE_PRIMARY))
+        shadowOf(remote).simulateGattConnectionChange(BluetoothGatt.GATT_SUCCESS, BluetoothProfile.STATE_CONNECTED)
+
+        assertThat(withTimeout(2.seconds) { result.await() } is BleResult.Ok).isTrue()
+        assertThat(gatt.services).isNotEmpty()
+    }
+
+    /** The same wait with the broadcasts alone never ends: the read is what ends it. */
+    @Test
+    fun aBondReadFromTheSystemIsOkWithoutItsBroadcast() = runBlocking {
+        shadowOf(remote).setBondState(BluetoothDevice.BOND_NONE)
+        shadowOf(remote).setCreatedBond(true) // the system has the bond at once; no broadcast is sent
+
+        assertThat(withTimeoutOrNull(500.milliseconds) { central.bonding!!.createBond(DEVICE, 5.seconds) }).isNull()
+
+        shadowOf(remote).setBondState(BluetoothDevice.BOND_NONE)
+        assertThat(withTimeout(2.seconds) { readingCentral.bonding!!.createBond(DEVICE, 5.seconds) }).isEqualTo(BleResult.Ok(Unit))
+    }
+
     @Test
     fun aConnectWhoseBondFailsFailsAndClosesItsGatt() = runBlocking {
         shadowOf(remote).setBondState(BluetoothDevice.BOND_NONE)
@@ -338,6 +377,29 @@ class AndroidBleCentralTest {
         shadowOf(remote).setBondState(BluetoothDevice.BOND_BONDED)
 
         assertThat(central.bonding!!.createBond(DEVICE, 1.seconds)).isEqualTo(BleResult.Ok(Unit))
+    }
+
+    /**
+     * The Bluetooth process sends with its own uid, not the system uid, so on a real phone a not-exported receiver never
+     * hears BONDED and the pairing waits until its time limit. Robolectric delivers either way: only the flag shows it.
+     */
+    @Test
+    fun theBondReceiverIsExportedSoTheBluetoothProcessCanReachIt() = runBlocking {
+        shadowOf(remote).setBondState(BluetoothDevice.BOND_NONE)
+        shadowOf(remote).setCreatedBond(true)
+        val result = scope.async { central.bonding!!.createBond(DEVICE, 5.seconds) }
+        awaitBondReceiver()
+
+        assertExported(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
+        result.cancel()
+    }
+
+    /** The same rule for Bluetooth turned off or on. */
+    @Test
+    fun theAdapterReceiverIsExportedSoTheBluetoothProcessCanReachIt() {
+        central.adapterState
+
+        assertExported(BluetoothAdapter.ACTION_STATE_CHANGED)
     }
 
     // ---- Helpers ------------------------------------------------------------------------------------------------
@@ -379,6 +441,12 @@ class AndroidBleCentralTest {
     /** A real system reports the bond only after createBond(), which comes after the receiver is registered. */
     private fun awaitBondReceiver() =
         await("the bond receiver") { shadowOf(context).registeredReceivers.any { it.intentFilter.hasAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED) } }
+
+    private fun assertExported(action: String) {
+        val receivers = shadowOf(context).registeredReceivers.filter { it.intentFilter.hasAction(action) }
+        assertThat(receivers).isNotEmpty()
+        receivers.forEach { assertThat(it.flags and Context.RECEIVER_EXPORTED).isEqualTo(Context.RECEIVER_EXPORTED) }
+    }
 
     private fun bondBroadcast(state: Int) {
         context.sendBroadcast(

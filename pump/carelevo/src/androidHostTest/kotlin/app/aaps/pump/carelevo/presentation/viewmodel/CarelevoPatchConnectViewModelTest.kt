@@ -39,6 +39,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
@@ -46,9 +47,11 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -69,6 +72,7 @@ import org.mockito.quality.Strictness
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Unit tests for [CarelevoPatchConnectViewModel] — the activation wizard's scan/pair/discard step.
@@ -509,6 +513,24 @@ internal class CarelevoPatchConnectViewModelTest {
         Thread.sleep(200) // let the fold arm run; it must stay silent
         assertThat(events).isEmpty()
         verify(connectNewPatchUseCase, never()).persistNewPatch(any(), any(), any(), any(), any())
+    }
+
+    /** Seen on a real patch: the bond was never reported, the session hit its time limit, and the step went back silently. */
+    @Test
+    fun `startConnect reports a pairing that hits its time limit as failed`() {
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        setSelectedDevice(device)
+        whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingFlow(userSettings))
+        val timeout = runBlocking { runCatching { withTimeout(1.milliseconds) { awaitCancellation() } }.exceptionOrNull() }
+        assertThat(timeout).isInstanceOf(TimeoutCancellationException::class.java)
+        whenever { bleSession.runPairing(any(), any()) }.thenAnswer { throw timeout!! }
+
+        sut.startConnect(300)
+        awaitEvent()
+
+        assertThat(events).contains(CarelevoConnectPrepareEvent.ConnectFailed)
+        verify(connectNewPatchUseCase, never()).persistNewPatch(any(), any(), any(), any(), any())
+        assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
     }
 
     @Test

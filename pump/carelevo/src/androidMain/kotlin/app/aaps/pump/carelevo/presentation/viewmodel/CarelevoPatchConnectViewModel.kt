@@ -38,6 +38,7 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -279,7 +280,9 @@ class CarelevoPatchConnectViewModel @Inject constructor(
                     triggerEvent(CarelevoConnectPrepareEvent.ConnectComplete)
                 },
                 onFailure = { e ->
-                    if (e is CancellationException) throw e
+                    // A time limit of the session ends in a TimeoutCancellationException. That is a failed
+                    // pairing, not a cancel: rethrown, it ended the wizard step with no message and no log.
+                    if (e is CancellationException && e !is TimeoutCancellationException) throw e
                     aapsLogger.error(LTag.PUMPCOMM, "newBle.pairing FAILED", e)
                     triggerEvent(CarelevoConnectPrepareEvent.ConnectFailed)
                 }

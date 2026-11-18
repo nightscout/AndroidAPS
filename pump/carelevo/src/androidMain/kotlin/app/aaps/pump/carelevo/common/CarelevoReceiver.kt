@@ -11,9 +11,10 @@ import android.os.Build
  * Used by the plugin to follow the Bluetooth adapter state. The caller unregisters the returned receiver with
  * [Context.unregisterReceiver] when it stops, or the receiver leaks.
  *
- * Registered NOT_EXPORTED — the only consumers listen to protected system broadcasts
- * (e.g. `BluetoothAdapter.ACTION_STATE_CHANGED`), which the system delivers regardless; nothing
- * here should ever be targetable by other apps.
+ * Registered EXPORTED, so give it only protected broadcasts of the Bluetooth stack, as
+ * `BluetoothAdapter.ACTION_STATE_CHANGED`. No other app can send those. The Bluetooth process sends them with its own
+ * uid (1002), not the system uid, and Android gives a not-exported receiver only the broadcasts of the system and of
+ * this app: registered not-exported, the plugin never saw Bluetooth turned off or on.
  */
 fun registerCarelevoReceiver(context: Context, filter: IntentFilter, onIntent: (Intent) -> Unit): BroadcastReceiver {
     val receiver = object : BroadcastReceiver() {
@@ -24,7 +25,7 @@ fun registerCarelevoReceiver(context: Context, filter: IntentFilter, onIntent: (
         }
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-        context.registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        context.registerReceiver(receiver, filter, Context.RECEIVER_EXPORTED)
     else
         context.registerReceiver(receiver, filter)
     return receiver

@@ -52,6 +52,7 @@ import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -60,11 +61,13 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
 import java.util.UUID
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 import android.bluetooth.le.ScanFilter as SystemScanFilter
 
 /**
@@ -94,14 +97,32 @@ class AndroidBleCentral(
                 states.value = readAdapterState()
             }
         }
-        ContextCompat.registerReceiver(context, receiver, IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED)
+        registerBluetoothReceiver(receiver, BluetoothAdapter.ACTION_STATE_CHANGED)
         states
+    }
+
+    /**
+     * Registers a receiver for a broadcast of the Bluetooth stack. It must be EXPORTED. The Bluetooth process sends
+     * these broadcasts with its own uid (1002), not the system uid, and Android gives a not-exported receiver only
+     * the broadcasts of the system and of this app. With a not-exported bond receiver a real phone never reported
+     * BONDED, so a pairing waited until its time limit while the patch had already been bonded. No other app can
+     * send these actions, because they are protected broadcasts. Robolectric does not apply this rule, so a test
+     * can only check the flag.
+     */
+    private fun registerBluetoothReceiver(receiver: BroadcastReceiver, action: String) {
+        ContextCompat.registerReceiver(context, receiver, IntentFilter(action), ContextCompat.RECEIVER_EXPORTED)
     }
 
     /** Kept current by the system's broadcast. A permission change sends none, so each scan and connect reads it again. */
     override val adapterState: StateFlow<AdapterState> get() = adapterStates
 
     override val bonding: BleBonding = AndroidBonding()
+
+    /**
+     * How often a bond wait reads the system's state, well inside the 2.4 s a Carelevo patch waits after the bond.
+     * A test makes it long to see what the broadcasts alone do.
+     */
+    internal var bondReadInterval: Duration = 100.milliseconds
 
     private val scanning = Mutex()
 
@@ -450,7 +471,7 @@ class AndroidBleCentral(
                 }
             }
             // First the receiver, then the state now: no change can fall between the two.
-            ContextCompat.registerReceiver(context, receiver, IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED)
+            registerBluetoothReceiver(receiver, BluetoothDevice.ACTION_BOND_STATE_CHANGED)
             trySend(currentBondState(remote))
             awaitClose { context.unregisterReceiver(receiver) }
         }
@@ -462,7 +483,11 @@ class AndroidBleCentral(
             var first = true
             val end = withTimeoutOrNull(timeout) {
                 // The raw events: a failed bond can report NONE after NONE, which bondState() would not pass on.
-                bondEvents(device).first { state ->
+                // Merged with a read of the state, because the broadcast can come late: on a real phone it reached
+                // this app 3 s after the stack had the bond, and a Carelevo patch drops the link 2.4 s after the
+                // bond when no discovery follows. The read only ever gives BONDED, so a failure still comes from
+                // the broadcast, and a BONDED read before createBond() means the device was bonded already.
+                merge(bondEvents(device), bondedByReading(remote)).first { state ->
                     if (first) {
                         first = false
                         when (state) {
@@ -491,6 +516,17 @@ class AndroidBleCentral(
             } catch (e: Exception) {
                 aapsLogger.error(LTag.PUMPBTCOMM, "BLE $device: removeBond failed", e)
                 BleResult.Failed(BleFailure(BleFailure.Kind.NOT_SUPPORTED, message = e.message))
+            }
+        }
+
+        /** BONDED once the system's own state says so, read every [bondReadInterval]. Emits nothing else. */
+        private fun bondedByReading(remote: BluetoothDevice): Flow<BondState> = flow {
+            while (true) {
+                delay(bondReadInterval)
+                if (currentBondState(remote) == BondState.BONDED) {
+                    emit(BondState.BONDED)
+                    return@flow
+                }
             }
         }
 
