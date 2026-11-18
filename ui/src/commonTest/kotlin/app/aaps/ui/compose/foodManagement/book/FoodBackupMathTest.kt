@@ -78,6 +78,21 @@ class FoodBackupMathTest {
     }
 
     @Test
+    fun `the comments of foods and dishes are in the backup, a food here keeps its own`() {
+        val dish = toast.copy(note = "With butter")
+        val book = FoodBook(recipes = listOf(dish), foodNotes = listOf(FoodNote(foodId = 3, text = "Whole wheat"), FoodNote(foodId = 4, text = "Plain")))
+
+        val backup = assertNotNull(FoodBackupMath.decode(FoodBackupMath.encode(listOf(bread, yogurt), book, now = 5000)))
+
+        assertEquals(listOf(FoodNote(3, "Whole wheat"), FoodNote(4, "Plain")), backup.foodNotes)
+        assertEquals("With butter", backup.recipes.single().note)
+        // Bread is food 50 here and has no comment; yogurt is food 51 here and keeps its own.
+        val here = listOf(FD(id = 50, ids = IDs(nightscoutId = NS_BREAD), name = "Bread", portion = 100.0, unit = "g", carbs = 50), FD(id = 51, name = "Yogurt", portion = 1.0, unit = "pot", carbs = 6))
+        val merge = FoodBackupMath.merge(backup, here, FoodBook(foodNotes = listOf(FoodNote(51, "Mine"))))
+        assertEquals(listOf(FoodNote(50, "Whole wheat")), merge.foodNotes)
+    }
+
+    @Test
     fun `a meal still waiting for its treatment is not in the backup`() {
         val waiting = eaten.copy(id = "eaten-2", validatedAt = null, treatmentId = null)
 

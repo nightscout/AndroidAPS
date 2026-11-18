@@ -28,6 +28,8 @@ data class FoodBackup(
     val offLinks: List<OffLink> = emptyList(),
     /** Format 2: the photos taken by the user. Their files are in the archive, see [FoodBackupMath.IMAGE_FOLDER]. */
     val photos: List<FoodPhoto> = emptyList(),
+    /** Format 3: the comments of the foods. */
+    val foodNotes: List<FoodNote> = emptyList(),
 )
 
 /**
@@ -79,7 +81,7 @@ data class FoodArchive(
  * @param notInOff true when Open Food Facts did not know [barcode]: the food was typed by hand with it
  * @param image key of the photo taken by the user. Its file is "images/<key>.jpg".
  * @param fiber not kept by the POC: always empty in a file of the POC
- * @param note not kept by the POC: always empty in a file of the POC
+ * @param note the comment of the food
  */
 @Serializable
 data class ArchiveFood(
@@ -108,7 +110,13 @@ data class ArchiveFood(
 private data class FileFormat(val format: Int)
 
 /** What a restore adds to the food book: only what is not there yet. */
-data class BackupMerge(val recipes: List<Recipe>, val meals: List<EatenMeal>, val offLinks: List<OffLink> = emptyList(), val photos: List<FoodPhoto> = emptyList())
+data class BackupMerge(
+    val recipes: List<Recipe>,
+    val meals: List<EatenMeal>,
+    val offLinks: List<OffLink> = emptyList(),
+    val photos: List<FoodPhoto> = emptyList(),
+    val foodNotes: List<FoodNote> = emptyList(),
+)
 
 /**
  * Writes and reads backups, and decides what a restore adds.
@@ -157,6 +165,7 @@ internal object FoodBackupMath {
     fun encode(foods: List<FD>, book: FoodBook, now: Long): String {
         val links = book.offLinks.associateBy { it.foodId }
         val photos = book.photos.associateBy { it.foodId }
+        val notes = book.foodNotes.associateBy { it.foodId }
         return json.encodeToString(
             FoodArchive.serializer(),
             FoodArchive(
@@ -181,6 +190,7 @@ internal object FoodBackupMath {
                         noOffPhoto = link?.hasImage == false,
                         notInOff = link?.inOff == false,
                         image = photos[food.id]?.key,
+                        note = notes[food.id]?.text,
                     )
                 },
                 recipes = book.recipes,
@@ -228,6 +238,7 @@ internal object FoodBackupMath {
         // The address of the photo is not in the file: a missing photo reads the product again.
         offLinks = archive.foods.mapNotNull { food -> food.barcode?.let { OffLink(foodId = food.id, barcode = it, hasImage = !food.noOffPhoto, inOff = !food.notInOff) } },
         photos = archive.foods.mapNotNull { food -> food.image?.let { FoodPhoto(foodId = food.id, key = it) } },
+        foodNotes = archive.foods.mapNotNull { food -> food.note?.takeIf { it.isNotBlank() }?.let { FoodNote(foodId = food.id, text = it) } },
     )
 
     /** The foods of [backup] not found in [existing], ready to be saved (new database rows). */
@@ -283,7 +294,13 @@ internal object FoodBackupMath {
             .mapNotNull { photo -> foodIds[photo.foodId]?.let { photo.copy(foodId = it) } }
             .filter { it.foodId !in photoIds }
             .distinctBy { it.foodId }
-        return BackupMerge(recipes, meals, offLinks, photos)
+        // The same for the comment: a food that already has one keeps it.
+        val noteIds = book.foodNotes.map { it.foodId }.toSet()
+        val foodNotes = backup.foodNotes
+            .mapNotNull { note -> foodIds[note.foodId]?.let { note.copy(foodId = it) } }
+            .filter { it.foodId !in noteIds }
+            .distinctBy { it.foodId }
+        return BackupMerge(recipes, meals, offLinks, photos, foodNotes)
     }
 
     /**

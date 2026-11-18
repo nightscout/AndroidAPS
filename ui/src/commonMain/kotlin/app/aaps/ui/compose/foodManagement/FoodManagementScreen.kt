@@ -339,6 +339,7 @@ fun FoodManagementScreen(
                     onFatChange = viewModel::updateEditorFat,
                     onProteinChange = viewModel::updateEditorProtein,
                     onEnergyChange = viewModel::updateEditorEnergy,
+                    onNoteChange = viewModel::updateEditorNote,
                     onOffPerServingChange = viewModel::setOffPerServing,
                     onOpenPhotoCamera = { focusManager.clearFocus(); viewModel.openPhotoCamera() },
                     onClosePhotoCamera = viewModel::closePhotoCamera,
@@ -404,6 +405,8 @@ fun FoodManagementScreen(
                         onPhoto = viewModel::takeEditPhoto,
                         onRemovePhoto = viewModel::removeEditPhoto,
                         onNameChange = viewModel::updateEditName,
+                        note = state.editNote,
+                        onNoteChange = viewModel::updateEditNote,
                         onEditLine = viewModel::editLine,
                         onRemove = viewModel::removeMealItem,
                         onAddFood = { viewModel.closeMeal(); viewModel.selectTab(FoodTab.FOODS) },
@@ -585,6 +588,7 @@ internal fun FoodEditorContent(
     onPhoto: (ByteArray) -> Unit = {},
     onRemovePhoto: () -> Unit = {},
     onScaleModeChange: (Boolean) -> Unit = {},
+    onNoteChange: (String) -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -722,6 +726,15 @@ internal fun FoodEditorContent(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
         }
+
+        // A free comment. It stays on the food: not on its card, not in the dishes, not in the history.
+        OutlinedTextField(
+            value = state.editorNote,
+            onValueChange = onNoteChange,
+            label = { Text(stringResource(CoreUiStrings.notes_label)) },
+            modifier = Modifier.fillMaxWidth(),
+            minLines = 2
+        )
 
         // The barcode, small, to check it against the package. It can be selected and copied.
         state.editorBarcode?.let { barcode ->

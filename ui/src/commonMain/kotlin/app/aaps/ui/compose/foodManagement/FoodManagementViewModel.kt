@@ -284,7 +284,9 @@ class FoodManagementViewModel(
             foodBook.load()
             refreshTreatmentLinks()
             foodBook.book.collect { book ->
-                _uiState.update { it.copy(recipes = book.recipes, eatenMeals = book.eaten, foodBarcodes = book.offLinks.associate { link -> link.foodId to link.barcode }) }
+                _uiState.update { it.copy(recipes = book.recipes, eatenMeals = book.eaten, foodBarcodes = book.offLinks.associate { link -> link.foodId to link.barcode },
+                    foodNotes = book.foodNotes.associate { note -> note.foodId to note.text },
+                ) }
                 loadRecipePhotos(book)
             }
         }
@@ -373,6 +375,7 @@ class FoodManagementViewModel(
                     editorProtein = food.protein?.toString() ?: "",
                     editorEnergy = food.energy?.toString() ?: "",
                     editorBarcode = it.foodBarcodes[food.id],
+                    editorNote = it.foodNotes[food.id].orEmpty(),
                     editorSaveAttempted = false,
                     editorOffProduct = null,
                     editorScaleMode = false,
@@ -399,6 +402,7 @@ class FoodManagementViewModel(
                     editorProtein = "",
                     editorEnergy = "",
                     editorBarcode = null,
+                    editorNote = "",
                     editorSaveAttempted = false,
                     editorOffProduct = null,
                     editorScaleMode = false,
@@ -789,6 +793,7 @@ class FoodManagementViewModel(
                 mealSource = null,
                 editing = recipe,
                 editName = recipe.name,
+                editNote = recipe.note.orEmpty(),
                 editPhoto = recipe.photo?.let { key -> it.recipePhotos[key] },
                 editPhotoChanged = false,
                 showEditCamera = false,
@@ -808,6 +813,8 @@ class FoodManagementViewModel(
 
     fun updateEditName(v: String) = _uiState.update { it.copy(editName = v) }
 
+    fun updateEditNote(v: String) = _uiState.update { it.copy(editNote = v) }
+
     fun cancelEdit() = endEdit()
 
     /** Writes the changed dish or meal back, with the same id and kind. */
@@ -823,11 +830,12 @@ class FoodManagementViewModel(
         if (FoodBookMath.makesLoop(recipe.id, items, recipesById())) return showMessage(UiStrings.food_book_loop)
         val photoChanged = state.editPhotoChanged
         val newPhoto = state.editPhoto
+        val note = state.editNote.trim().ifBlank { null }
         viewModelScope.launch {
             val photo = if (!photoChanged) recipe.photo else newPhoto?.let { bytes ->
                 foodImages.savePhoto(bytes)?.also { key -> _uiState.update { it.copy(recipePhotos = it.recipePhotos + (key to bytes)) } }
             }
-            foodBook.saveRecipe(recipe.copy(name = name, items = items, photo = photo))
+            foodBook.saveRecipe(recipe.copy(name = name, items = items, photo = photo, note = note))
             // The old file stays while a meal of the history shows it.
             if (photoChanged) recipe.photo?.let { foodImages.deleteUnused(listOf(it)) }
         }
@@ -843,6 +851,7 @@ class FoodManagementViewModel(
             parkedSource = null,
             editing = null,
             editName = "",
+            editNote = "",
             editPhoto = null,
             editPhotoChanged = false,
             showEditCamera = false,
@@ -1132,6 +1141,7 @@ class FoodManagementViewModel(
     fun updateEditorFat(v: String) = _uiState.update { it.copy(editorFat = v) }
     fun updateEditorProtein(v: String) = _uiState.update { it.copy(editorProtein = v) }
     fun updateEditorEnergy(v: String) = _uiState.update { it.copy(editorEnergy = v) }
+    fun updateEditorNote(v: String) = _uiState.update { it.copy(editorNote = v) }
 
     fun saveFood() {
         _uiState.update { it.copy(editorSaveAttempted = true) }
@@ -1166,6 +1176,8 @@ class FoodManagementViewModel(
         val product = state.editorOffProduct
         // A new food typed by hand for a barcode OFF does not know keeps the barcode.
         val barcode = state.editorBarcode.takeIf { product == null && state.editorFood == null }
+        val note = state.editorNote.trim().ifBlank { null }
+        val noteChanged = note != state.editorFood?.let { state.foodNotes[it.id] }
         val photo = state.editorImage
         val userPhoto = state.editorUserPhoto
         val photoChanged = state.editorPhotoChanged
@@ -1175,11 +1187,12 @@ class FoodManagementViewModel(
                 persistenceLayer.insertOrUpdateFood(food)
                 _uiState.update { it.copy(showEditor = false, showPhotoCamera = false) }
                 warnUnitChanged(state.editorFood, food)
-                if (product == null && barcode == null && !photoChanged) return@launch
+                if (product == null && barcode == null && !photoChanged && !noteChanged) return@launch
                 val foodId = savedFoodId(food, lastId) ?: return@launch
                 // The OFF product with its photo, then the photo of the user, which is shown instead.
                 if (product != null) foodImages.link(foodId, product, photo)
                 else if (barcode != null) foodImages.linkBarcode(foodId, barcode)
+                if (noteChanged) foodBook.saveFoodNote(foodId, note)
                 if (photoChanged) foodImages.setUserPhoto(foodId, userPhoto)
                 val shown = foodImages.saved(listOf(foodId))[foodId]
                 _uiState.update { it.copy(foodImages = if (shown != null) it.foodImages + (foodId to shown) else it.foodImages - foodId) }
@@ -1359,6 +1372,8 @@ data class FoodManagementUiState(
     val editorPhotoChanged: Boolean = false,
     /** The barcode of the editor food, shown small at the bottom of the editor. Null when it has none. */
     val editorBarcode: String? = null,
+    /** The comment of the editor food. It is shown only here, never on the card. */
+    val editorNote: String = "",
     val showPhotoCamera: Boolean = false,
     /** The photo shown for each food on the list, by food id: the photo of the user, or else the OFF photo. */
     val foodImages: Map<Long, ByteArray> = emptyMap(),
@@ -1376,6 +1391,8 @@ data class FoodManagementUiState(
     val barcodeOwners: List<FD> = emptyList(),
     /** The barcode of each food that has one, by food id. The POC keeps it in the OFF links of the food book. */
     val foodBarcodes: Map<Long, String> = emptyMap(),
+    /** The comment of each food that has one, by food id. The POC keeps it in the food book. */
+    val foodNotes: Map<Long, String> = emptyMap(),
     // Meal (proof of concept)
     val mealItems: List<MealItem> = emptyList(),
     val showMeal: Boolean = false,
@@ -1408,6 +1425,8 @@ data class FoodManagementUiState(
     /** The dish or meal being changed (pencil). While set, the meal lines are its lines. */
     val editing: Recipe? = null,
     val editName: String = "",
+    /** The comment of the dish or meal being changed. Shown only in its pencil, never on the card. */
+    val editNote: String = "",
     /** The photo of the dish or meal being changed, and whether the user changed it. */
     val editPhoto: ByteArray? = null,
     val editPhotoChanged: Boolean = false,

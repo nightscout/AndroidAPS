@@ -20,6 +20,18 @@ data class FoodBook(
     val offLinks: List<OffLink> = emptyList(),
     /** Added later: an older file reads as "no photo taken". */
     val photos: List<FoodPhoto> = emptyList(),
+    /** Added later: the comments of the foods. The POC database has no column for them. */
+    val foodNotes: List<FoodNote> = emptyList(),
+)
+
+/**
+ * A free comment on a food. It stays on the food: it is not copied into the dishes that use the
+ * food, nor into the meal history.
+ */
+@Serializable
+data class FoodNote(
+    val foodId: Long,
+    val text: String,
 )
 
 /**
@@ -79,6 +91,8 @@ data class Recipe(
     val kind: RecipeKind,
     val items: List<RecipeItem>,
     val photo: String? = null,
+    /** A free comment on the dish or meal. Not copied into the meal history. */
+    val note: String? = null,
 )
 
 /**

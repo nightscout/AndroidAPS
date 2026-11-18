@@ -641,6 +641,8 @@ internal fun RecipeEditContent(
     onAddByHand: () -> Unit,
     onCancel: () -> Unit,
     onSave: () -> Unit,
+    note: String = "",
+    onNoteChange: (String) -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -692,6 +694,14 @@ internal fun RecipeEditContent(
             TextButton(onClick = onAddFood) { Text(stringResource(UiStrings.food_book_add_food)) }
             TextButton(onClick = onAddByHand) { Text(stringResource(UiStrings.food_meal_add_by_hand)) }
         }
+        // A free comment on the dish or meal: shown only here, not on its card, not in the history.
+        OutlinedTextField(
+            value = note,
+            onValueChange = onNoteChange,
+            label = { Text(stringResource(CoreUiStrings.notes_label)) },
+            modifier = Modifier.fillMaxWidth(),
+            minLines = 2
+        )
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             TextButton(onClick = onCancel) { Text(stringResource(CoreUiStrings.cancel)) }
             TextButton(onClick = onSave, enabled = name.isNotBlank() && items.isNotEmpty()) { Text(stringResource(CoreUiStrings.save)) }

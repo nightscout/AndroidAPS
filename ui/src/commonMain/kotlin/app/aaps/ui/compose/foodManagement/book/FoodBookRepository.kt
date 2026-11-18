@@ -81,6 +81,11 @@ class FoodBookRepository(
 
     suspend fun removePhoto(foodId: Long) = change { book -> book.copy(photos = book.photos.filterNot { it.foodId == foodId }) }
 
+    /** Sets the comment of [foodId], or removes it when [text] is null. */
+    suspend fun saveFoodNote(foodId: Long, text: String?) = change { book ->
+        book.copy(foodNotes = book.foodNotes.filterNot { it.foodId == foodId } + listOfNotNull(text?.let { FoodNote(foodId, it) }))
+    }
+
     suspend fun addEatenMeal(meal: EatenMeal) = change { book -> book.copy(eaten = listOf(meal) + book.eaten) }
 
     /**
@@ -98,6 +103,7 @@ class FoodBookRepository(
             eaten = (book.eaten + merge.meals).sortedByDescending { it.timestamp },
             offLinks = book.offLinks + merge.offLinks,
             photos = book.photos + merge.photos,
+            foodNotes = book.foodNotes + merge.foodNotes,
         )
     }
 

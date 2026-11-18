@@ -22,6 +22,7 @@ import app.aaps.ui.compose.foodManagement.book.FoodBook
 import app.aaps.ui.compose.foodManagement.book.FoodBookRepository
 import app.aaps.ui.compose.foodManagement.book.FoodCsv
 import app.aaps.ui.compose.foodManagement.book.FoodImages
+import app.aaps.ui.compose.foodManagement.book.FoodNote
 import app.aaps.ui.compose.foodManagement.book.MealTarget
 import app.aaps.ui.compose.foodManagement.book.MemoryFoodBookStore
 import app.aaps.ui.compose.foodManagement.book.NoFoodExportFiles
@@ -1364,6 +1365,63 @@ internal class FoodManagementViewModelTest {
 
         vm.selectOffProduct(yogurt)
         assertThat(vm.uiState.value.editorBarcode).isEqualTo(yogurt.barcode)
+    }
+
+    // ---- Comments ----
+
+    @Test
+    fun `the comment of a food is saved with it, shown again, and removed when cleared`() {
+        val (vm, book) = barcodeScreen(emptyList(), nutella)
+
+        vm.openEditor(nutella)
+        assertThat(vm.uiState.value.editorNote).isEmpty()
+        vm.updateEditorNote("  Only the small jar  ")
+        vm.saveFood()
+        runUntil { book.book.value.foodNotes.isNotEmpty() }
+        assertThat(book.book.value.foodNotes).containsExactly(FoodNote(foodId = 5, text = "Only the small jar"))
+
+        runUntil { vm.uiState.value.foodNotes.isNotEmpty() }
+        vm.openEditor(nutella)
+        assertThat(vm.uiState.value.editorNote).isEqualTo("Only the small jar")
+
+        vm.updateEditorNote(" ")
+        vm.saveFood()
+        runUntil { book.book.value.foodNotes.isEmpty() }
+        assertThat(book.book.value.foodNotes).isEmpty()
+    }
+
+    @Test
+    fun `a new food typed by hand keeps its comment`() {
+        val (vm, book) = barcodeScreen(emptyList(), nutella)
+        vm.openEditor()
+        vm.updateEditorName("Home cake")
+        vm.updateEditorCarbs("30")
+        vm.updateEditorNote("Recipe of grandma")
+
+        vm.saveFood()
+        runUntil { book.book.value.foodNotes.isNotEmpty() }
+
+        assertThat(book.book.value.foodNotes).containsExactly(FoodNote(foodId = 100, text = "Recipe of grandma"))
+    }
+
+    @Test
+    fun `a changed dish keeps its comment, which goes neither into the food nor into the history`() {
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        val toast = Recipe("toast", "Toast", RecipeKind.DISH, listOf(RecipeItem("Bread", 40.0, "g", foodId = 1)))
+        runBlocking { book.saveRecipe(toast) }
+        val vm = screenWith(book, bread)
+        runUntil { vm.uiState.value.recipes.isNotEmpty() }
+
+        vm.startEdit(toast)
+        vm.updateEditNote("With salted butter")
+        vm.saveEdit()
+        runUntil { book.book.value.recipes.single().note != null }
+
+        assertThat(book.book.value.recipes.single().note).isEqualTo("With salted butter")
+        assertThat(book.book.value.foodNotes).isEmpty()
+        assertThat(vm.uiState.value.editNote).isEmpty()
+        vm.startEdit(book.book.value.recipes.single())
+        assertThat(vm.uiState.value.editNote).isEqualTo("With salted butter")
     }
 
     @Test
