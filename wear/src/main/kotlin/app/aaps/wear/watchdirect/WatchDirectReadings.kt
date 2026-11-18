@@ -139,6 +139,22 @@ object WatchDirectReadings {
         return merged
     }
 
+    /**
+     * The graph the phone has just sent, with the watch's own readings of the graph it replaces kept
+     * where the phone has no reading of that time.
+     *
+     * The phone sends its whole graph with every sync, also while it cannot reach the sensor. Taking
+     * it as it is wiped the watch's own readings each time, so the graph stood still and the next
+     * delta had no earlier reading to count from. When the phone has the reading too (its own copy,
+     * or one the sensor filled in later), the phone's copy is the one that stays.
+     *
+     * Returns [fromPhone] itself when the watch has nothing of its own to keep.
+     */
+    fun keepOwnReadings(fromPhone: ArrayList<EventData.SingleBg>, replaced: List<EventData.SingleBg>): ArrayList<EventData.SingleBg> {
+        val own = replaced.filter { it.fromSensor }
+        return if (own.isEmpty()) fromPhone else mergeIntoGraph(fromPhone, own)
+    }
+
     enum class Low { LOW, URGENT_LOW }
 
     /** The low a reading of [mgdl] is, against the phone's [lowLineMgdl]; null when it is not low. */

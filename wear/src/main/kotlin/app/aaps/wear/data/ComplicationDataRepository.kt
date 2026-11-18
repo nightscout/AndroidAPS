@@ -139,13 +139,14 @@ class ComplicationDataRepository(
     }
 
     /**
-     * Update Graph data from phone
+     * Update Graph data from phone. Readings the watch took from the sensor itself (direct-to-watch)
+     * stay where the phone has none of that time, see [WatchDirectReadings.keepOwnReadings].
      */
     suspend fun updateGraphData(graphData: EventData.GraphData) {
         try {
             dataStore.updateData { current ->
                 current.copy(
-                    graphData = graphData,
+                    graphData = EventData.GraphData(WatchDirectReadings.keepOwnReadings(graphData.entries, current.graphData.entries)),
                     lastUpdateTimestamp = System.currentTimeMillis()
                 )
             }

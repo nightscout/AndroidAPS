@@ -81,6 +81,32 @@ class WatchDirectReadingsTest {
     }
 
     @Test
+    fun `a graph from the phone keeps the watch readings the phone does not have`() {
+        // The phone was away from the sensor: its graph ends at "now", the watch has two newer readings.
+        val fromPhone = arrayListOf(phone(now - 5 * 60_000L), phone(now))
+        val onWatch = listOf(phone(now - 5 * 60_000L), phone(now), watch(now + 5 * 60_000L), watch(now + 10 * 60_000L))
+        val kept = WatchDirectReadings.keepOwnReadings(fromPhone, onWatch)
+        assertThat(kept.map { it.timeStamp }).containsExactly(now - 5 * 60_000L, now, now + 5 * 60_000L, now + 10 * 60_000L).inOrder()
+        assertThat(kept.takeLast(2).all { it.fromSensor }).isTrue()
+    }
+
+    @Test
+    fun `when the phone has the reading too its copy stays and the watch copy goes`() {
+        // The phone is back and the sensor has filled in what it missed.
+        val fromPhone = arrayListOf(phone(now), phone(now + 5 * 60_000L))
+        val onWatch = listOf(phone(now), watch(now + 5 * 60_000L + 20_000L))
+        val kept = WatchDirectReadings.keepOwnReadings(fromPhone, onWatch)
+        assertThat(kept.map { it.timeStamp }).containsExactly(now, now + 5 * 60_000L).inOrder()
+        assertThat(kept.none { it.fromSensor }).isTrue()
+    }
+
+    @Test
+    fun `a graph from the phone is taken as it is when the watch has no reading of its own`() {
+        val fromPhone = arrayListOf(phone(now), phone(now - 5 * 60_000L))
+        assertThat(WatchDirectReadings.keepOwnReadings(fromPhone, listOf(phone(now - 10 * 60_000L)))).isSameInstanceAs(fromPhone)
+    }
+
+    @Test
     fun `the watch raises a low only while the phone is away`() {
         val urgent = WatchDirectReadings.lowLevel(50.0, 70.0)
         val low = WatchDirectReadings.lowLevel(65.0, 70.0)
