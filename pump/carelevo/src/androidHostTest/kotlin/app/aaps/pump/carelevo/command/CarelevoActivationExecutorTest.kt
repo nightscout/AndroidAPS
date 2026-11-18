@@ -227,6 +227,28 @@ internal class CarelevoActivationExecutorTest {
         verify(carelevoPatch).setProfile(requested)
     }
 
+    /**
+     * During the activation the driver answers the queue's profile check with "set", so a profile switch made then (or
+     * while no patch was paired) never reaches the patch model. The last step must program the one AAPS asks for.
+     */
+    @Test fun `setBasal takes the requested profile over the one in memory`() {
+        val inMemory = mock<Profile>()
+        val requested = mock<PumpProfile>()
+        whenever(carelevoPatch.profile).thenReturn(holding<Profile>(inMemory))
+        whenever { pumpSync.expectedPumpState() }.thenReturn(pumpState(profile = requested))
+        stubBasalPlan()
+        whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenReturn(true)
+        whenever(setBasalUseCase.persistBasalProgram(any())).thenReturn(true)
+        whenever(setBasalUseCase.persistActivationComplete()).thenReturn(true)
+
+        val result = sut.execute(CmdSetBasal())
+
+        assertThat(result?.success).isTrue()
+        verify(setBasalUseCase).buildBasalProgramPlan(requested)
+        verify(setBasalUseCase, never()).buildBasalProgramPlan(inMemory)
+        verify(carelevoPatch).setProfile(requested)
+    }
+
     @Test fun `setBasal returns no-patch-address when profile present but address missing`() {
         stubProfilePresent()
         whenever(carelevoPatch.getPatchInfoAddress()).thenReturn(null)

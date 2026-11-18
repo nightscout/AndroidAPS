@@ -709,9 +709,15 @@ class CarelevoPumpPlugin @Inject constructor(
      * is the running one after a restart, and that holds the basal the patch gives, rounded (#2454). It never matched
      * the requested profile, so every restart set the basal again and cancelled the running temp basal. Before a
      * program was accepted (no patch yet) the profile held in memory is used.
+     *
+     * A patch that is being activated counts as set: the activation's last step programs the basal, from the profile
+     * AAPS asks for then. Before, the queue's profile check wrote a program to a real patch during the activation,
+     * before its needle was in (2026-11-18).
      */
-    override fun isThisProfileSet(profile: PumpProfile): Boolean =
-        basalProfileUpdateCoordinator.isAccepted(profile) ?: carelevoPatch.checkIsSameProfile(profile)
+    override fun isThisProfileSet(profile: PumpProfile): Boolean {
+        if (carelevoPatch.patchInfo.latest?.activationComplete == false) return true
+        return basalProfileUpdateCoordinator.isAccepted(profile) ?: carelevoPatch.checkIsSameProfile(profile)
+    }
 
     /**
      * The 24 hourly rates the patch runs: the program it accepted, each rate rounded to 0.01 U/h as it is sent (#2454).

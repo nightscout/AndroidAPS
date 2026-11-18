@@ -154,6 +154,26 @@ class CarelevoPumpPluginMoreTest : CarelevoPumpPluginTestBase() {
         verify(carelevoPatch).checkIsSameProfile(profile)
     }
 
+    /** The queue's profile check wrote a program to a real patch during the activation, before its needle was in. */
+    @Test
+    fun `isThisProfileSet counts a patch that is being activated as set`() {
+        val profile = pumpProfile()
+        patchInfoFlow.tryEmit(samplePatchInfo().copy(activationComplete = false, checkSafety = true))
+        whenever(setBasalProgramUseCase.isAccepted(profile)).thenReturn(false)
+        whenever(carelevoPatch.checkIsSameProfile(profile)).thenReturn(false)
+
+        assertThat(plugin.isThisProfileSet(profile)).isTrue()
+    }
+
+    @Test
+    fun `isThisProfileSet compares again once the activation is complete`() {
+        val profile = pumpProfile()
+        patchInfoFlow.tryEmit(samplePatchInfo().copy(activationComplete = true))
+        whenever(setBasalProgramUseCase.isAccepted(profile)).thenReturn(false)
+
+        assertThat(plugin.isThisProfileSet(profile)).isFalse()
+    }
+
     // ---- executeCustomCommand (queue routing) ---------------------------------------------------
 
     @Test
