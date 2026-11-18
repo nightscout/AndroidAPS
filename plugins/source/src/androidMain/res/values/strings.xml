@@ -157,6 +157,8 @@
     <string name="dexcom_oneplus_session_up">Connected</string>
     <string name="dexcom_oneplus_session_down">Not connected</string>
     <string name="dexcom_oneplus_session_between_readings">Closed between readings (normal)</string>
+    <string name="dexcom_oneplus_session_bluetooth_off">Bluetooth is off</string>
+    <string name="dexcom_oneplus_bluetooth_off">Bluetooth is off on the phone. Turn it on to read the sensor.</string>
     <string name="dexcom_oneplus_banner_next_reading_in" comment="%1$s=minutes with unit. Example: Sensor OK. Next reading in about 3 min">Sensor OK. Next reading in about %1$s</string>
     <string name="dexcom_oneplus_banner_next_reading_due">Sensor OK. The next reading is due now.</string>
     <string name="dexcom_oneplus_banner_no_reading_for" comment="%1$s=minutes with unit. Example: No reading for 14 min">No reading for %1$s</string>

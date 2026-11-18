@@ -48,6 +48,8 @@ data class DexcomOnePlusStatusInput(
     val sensor: DexcomOnePlusSensorFacts? = null,
     /** End of the warm-up the driver works with, or null when not warming up. */
     val warmupEndsAtMs: Long? = null,
+    /** The phone's Bluetooth is switched off, so nothing the driver says about the sensor counts. */
+    val bluetoothOff: Boolean = false,
 )
 
 /** What the plugin knows about the sensor in use. Plain data, read from the slot store. */
@@ -273,6 +275,10 @@ object DexcomOnePlusStatusState {
         val sessionEnd = sessionEndMs(input)
         val left = nominalEnd?.let { it - input.nowMs }?.takeIf { it > 0L }?.let { format.age(it) }
         val inGrace = nominalEnd != null && sessionEnd != null && input.nowMs >= nominalEnd && input.nowMs < sessionEnd
+        // The cause the user can do something about, before anything the driver concluded without a radio.
+        if (input.bluetoothOff) {
+            return StatusBanner(text = rh.gs(SourceStrings.dexcom_oneplus_bluetooth_off), level = StatusLevel.WARNING)
+        }
         val text = when {
             age == null || !isLinkPhase(input.phase)       -> rh.gs(DexcomOnePlusUiLabels.phaseLabelRef(input.phase))
             age > READING_LATE_MS                         -> rh.gs(SourceStrings.dexcom_oneplus_banner_no_reading_for, minutesText(rh, age))
@@ -338,15 +344,17 @@ object DexcomOnePlusStatusState {
                 label = rh.gs(SourceStrings.cgm_session_label),
                 value = rh.gs(
                     when {
-                        input.sessionUp -> SourceStrings.dexcom_oneplus_session_up
-                        onTime          -> SourceStrings.dexcom_oneplus_session_between_readings
-                        else            -> SourceStrings.dexcom_oneplus_session_down
+                        input.bluetoothOff -> SourceStrings.dexcom_oneplus_session_bluetooth_off
+                        input.sessionUp    -> SourceStrings.dexcom_oneplus_session_up
+                        onTime             -> SourceStrings.dexcom_oneplus_session_between_readings
+                        else               -> SourceStrings.dexcom_oneplus_session_down
                     }
                 ),
                 level = when {
-                    input.sessionUp -> StatusLevel.NORMAL
-                    onTime          -> StatusLevel.UNSPECIFIED
-                    else            -> StatusLevel.WARNING
+                    input.bluetoothOff -> StatusLevel.WARNING
+                    input.sessionUp    -> StatusLevel.NORMAL
+                    onTime             -> StatusLevel.UNSPECIFIED
+                    else               -> StatusLevel.WARNING
                 },
             ),
         )

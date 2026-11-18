@@ -1,5 +1,6 @@
 package app.aaps.plugins.source
 
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import app.aaps.core.interfaces.logging.LoggerUtils
@@ -29,6 +30,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
+ * True unless the phone's Bluetooth is known to be switched off. A phone without Bluetooth, or one
+ * that does not let the app ask, counts as on: then the driver's own message is shown as it is.
+ */
+internal fun phoneBluetoothOn(context: Context): Boolean =
+    try {
+        context.getSystemService(BluetoothManager::class.java)?.adapter?.isEnabled != false
+    } catch (_: SecurityException) {
+        true
+    }
+
+/**
  * [DexcomOnePlusHost] on Android: the driver registry, the start and warm-up screens, the driver
  * lines of `AndroidAPS.log`, the `connectedDevice` foreground service and the status-bar warm-up
  * notification.
@@ -55,6 +67,8 @@ class DexcomOnePlusAndroidHost(
     private val platform by lazy { OnePlusAndroidPlatform(appContext) }
 
     override fun attachPlatform(driver: OnePlusCgmDriver) = driver.attach(platform)
+
+    override fun bluetoothOn(): Boolean = phoneBluetoothOn(appContext)
 
     override fun slotStore(namespace: String?): OnePlusSensorStore =
         OnePlusSensorStore(appContext, namespace)

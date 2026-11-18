@@ -60,6 +60,30 @@ class DexcomOnePlusReconnectNoticeTest {
     }
 
     @Test
+    fun `with the phone's Bluetooth off it says so, not no signal or wrong sensor`() {
+        fun off(state: OnePlusWarmupState) = DexcomOnePlusReconnectNotice.of(state, now, bluetoothOff = true)
+
+        assertThat(off(reconnecting("waiting_for_adv", 2L, staleMac = true))).isEqualTo(DexcomOnePlusReconnectNotice.BLUETOOTH_OFF)
+        assertThat(off(reconnecting("waiting_for_adv", 6L))).isEqualTo(DexcomOnePlusReconnectNotice.BLUETOOTH_OFF)
+        assertThat(off(reconnecting("ONEPLUS_GATT_STATUS_133"))).isEqualTo(DexcomOnePlusReconnectNotice.BLUETOOTH_OFF)
+        // Not sooner than the other notices: the wait between two readings stays hidden.
+        assertThat(off(reconnecting("waiting_for_adv", 3L))).isEqualTo(DexcomOnePlusReconnectNotice.HIDE)
+    }
+
+    @Test
+    fun `a tap opens the warm-up page only while there is a warm-up to show`() {
+        fun state(phase: OnePlusWarmupState.Phase, warmupEndsAt: Long? = null) = OnePlusWarmupState(phase = phase, endsAtEpochMs = warmupEndsAt)
+
+        assertThat(DexcomOnePlusReconnectNotice.opensWarmupPage(state(OnePlusWarmupState.Phase.WARMING), now)).isTrue()
+        assertThat(DexcomOnePlusReconnectNotice.opensWarmupPage(state(OnePlusWarmupState.Phase.PAIRING), now)).isTrue()
+        assertThat(DexcomOnePlusReconnectNotice.opensWarmupPage(state(OnePlusWarmupState.Phase.FAILED), now)).isTrue()
+        assertThat(DexcomOnePlusReconnectNotice.opensWarmupPage(state(OnePlusWarmupState.Phase.RECONNECTING, now + 60_000L), now)).isTrue()
+        // A sensor past its warm-up that lost the signal or may be the wrong one: the status screen.
+        assertThat(DexcomOnePlusReconnectNotice.opensWarmupPage(reconnecting("waiting_for_adv", 9L, staleMac = true), now)).isFalse()
+        assertThat(DexcomOnePlusReconnectNotice.opensWarmupPage(state(OnePlusWarmupState.Phase.CONNECTING), now)).isFalse()
+    }
+
+    @Test
     fun `during warm-up the wait keeps the countdown`() {
         assertThat(DexcomOnePlusReconnectNotice.of(reconnecting("waiting_for_adv", 2L, warmupEndsAt = now + 10 * 60_000L), now))
             .isEqualTo(DexcomOnePlusReconnectNotice.WARMUP_COUNTDOWN)

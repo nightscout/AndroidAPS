@@ -54,6 +54,7 @@ import kotlin.time.Clock
  *
  * @param storedSession reads the production slot's stored sensor once, for the sensor card.
  * @param onRetry starts the stored session again after a failed warm-up.
+ * @param bluetoothOn false while the phone's Bluetooth is switched off. Asked every second.
  * @param formatTime the time of day of an epoch millisecond value, in the phone's own format.
  */
 @Composable
@@ -63,6 +64,7 @@ fun DexcomOnePlusWarmupScreen(
     onRetry: () -> Unit,
     onOpenLog: (() -> Unit)?,
     onOpenStart: (() -> Unit)?,
+    bluetoothOn: () -> Boolean,
     formatTime: (Long) -> String,
 ) {
     val window = rememberCgmWindow()
@@ -76,11 +78,13 @@ fun DexcomOnePlusWarmupScreen(
     var localFallbackEndsAt by remember { mutableStateOf<Long?>(null) }
     var remainingMs by remember { mutableStateOf<Long?>(null) }
     var usingLocalFallback by remember { mutableStateOf(false) }
+    var bluetoothOff by remember { mutableStateOf(!bluetoothOn()) }
 
     LaunchedEffect(Unit) {
         while (true) {
             val driver = OnePlusCgmDrivers.default()
             val now = Clock.System.now().toEpochMilliseconds()
+            bluetoothOff = !bluetoothOn()
             state = driver.warmupState()
             val info = state.toCgmWarmupInfo()
             sessionUp = driver.isSessionUp()
@@ -111,6 +115,7 @@ fun DexcomOnePlusWarmupScreen(
         remainingMs = remainingMs,
         localFallbackEndsAt = localFallbackEndsAt,
         usingLocalFallback = usingLocalFallback,
+        bluetoothOff = bluetoothOff,
     )
     val links = WarmupLinks(
         onRetry = onRetry,
@@ -215,6 +220,8 @@ private data class WarmupUiModel(
     val remainingMs: Long?,
     val localFallbackEndsAt: Long?,
     val usingLocalFallback: Boolean,
+    /** The phone's Bluetooth is off: said in place of "no signal" and "wrong sensor". */
+    val bluetoothOff: Boolean,
 )
 
 /** The ways out of this screen. A null entry is a screen this phone does not have. */
@@ -369,14 +376,25 @@ private fun ColumnScope.WarmupDetails(
 
     // Typed driver signals the old screen carried but never showed: how long the sensor has been
     // silent, and whether the sensor answering nearby is not the paired one at all.
-    model.state.advSilenceMinutes?.let { minutes ->
+    //
+    // Not with the phone's Bluetooth off: the driver hears nothing then, and both lines would blame
+    // the sensor for it.
+    if (model.bluetoothOff) {
+        CgmCard(tone = CgmCardTone.Warning) {
+            Text(
+                text = stringResource(SourceStrings.dexcom_oneplus_bluetooth_off),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+    }
+    model.state.advSilenceMinutes?.takeIf { !model.bluetoothOff }?.let { minutes ->
         Text(
             text = stringResource(SourceStrings.dexcom_oneplus_notif_waiting_adv, minutes.toInt()),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
-    if (model.state.staleMacSuspected) {
+    if (model.state.staleMacSuspected && !model.bluetoothOff) {
         CgmCard(tone = CgmCardTone.Warning) {
             CgmCardHeader(stringResource(SourceStrings.dexcom_oneplus_notif_stale_mac_title))
             Text(

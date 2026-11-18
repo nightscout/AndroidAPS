@@ -71,6 +71,7 @@ class DexcomOnePlusStatusViewModel(
         val sendCalibrationToSensor: Boolean,
         val nowMs: Long,
         val sensor: DexcomOnePlusSensorFacts,
+        val bluetoothOff: Boolean,
     )
 
     init {
@@ -93,6 +94,7 @@ class DexcomOnePlusStatusViewModel(
                     sendCalibrationToSensor = preferences.get(DexcomOnePlusBooleanKey.SendCalibrationToSensor),
                     nowMs = dateUtil.now(),
                     sensor = plugin.sensorFacts(),
+                    bluetoothOff = !host.bluetoothOn(),
                 ),
             )
             delay(DRIVER_REFRESH_MILLIS)
@@ -127,6 +129,7 @@ class DexcomOnePlusStatusViewModel(
             nowMs = driver.nowMs,
             sensor = driver.sensor,
             warmupEndsAtMs = driver.state.endsAtEpochMs,
+            bluetoothOff = driver.bluetoothOff,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000L), null)
 

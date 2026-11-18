@@ -111,6 +111,15 @@ interface DexcomOnePlusHost {
     val installedApps: OnePlusInstalledApps?
 
     /**
+     * False when the phone's Bluetooth is switched off.
+     *
+     * The driver cannot tell a radio that is off from a sensor that is silent, so after some minutes
+     * it suspects a wrong sensor. The screens ask here first and say "Bluetooth is off" then.
+     * True by default: a host that cannot tell must not hide the driver's own message.
+     */
+    fun bluetoothOn(): Boolean = true
+
+    /**
      * The screens of this plugin that the status screen opens through the host. [START] starts the
      * sensor that feeds the loop, [START_PRESOAK] a pre-soak sensor; each locks the Start screen on
      * its own slot, so the wrong kind of sensor cannot be started by accident.

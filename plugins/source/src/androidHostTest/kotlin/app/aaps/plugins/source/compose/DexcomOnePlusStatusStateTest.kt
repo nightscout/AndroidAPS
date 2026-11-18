@@ -299,6 +299,17 @@ class DexcomOnePlusStatusStateTest {
     }
 
     @Test
+    fun bluetoothOffOnThePhoneIsSaidInTheBannerAndTheRow() {
+        val off = input(sessionUp = false, phase = OnePlusWarmupState.Phase.RECONNECTING).copy(bluetoothOff = true)
+        val view = DexcomOnePlusStatusState.build(off, format, actions)
+        assertEquals("dexcom_oneplus_bluetooth_off", view.overview.statusBanner?.text)
+        assertEquals(StatusLevel.WARNING, view.overview.statusBanner?.level)
+        val session = rows(off).single { it.label == "cgm_session_label" }
+        assertEquals("dexcom_oneplus_session_bluetooth_off", session.value)
+        assertEquals(StatusLevel.WARNING, session.level)
+    }
+
+    @Test
     fun sensorAgeRowWarnsNearTheEnd() {
         assertNull(rows(input()).firstOrNull { it.label == "dexcom_oneplus_row_sensor_age" })
         val young = rows(input(lifecycle = lifecycle())).single { it.label == "dexcom_oneplus_row_sensor_age" }
