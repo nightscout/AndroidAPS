@@ -1439,6 +1439,35 @@ class CarelevoOverviewViewModelTest {
         assertThat(state.managementActions[1].label).isEqualTo(s(CarelevoStrings.carelevo_overview_pump_suspend_btn_label))
     }
 
+    /** "0.00 U/hr" for no temp basal read as a running zero temp basal on a real patch. */
+    @Test
+    fun `overview shows a dash for the temp basal when none runs`() {
+        sut.observePatchInfo()
+        sut.observePatchState()
+        sut.observeInfusionInfo()
+        patchInfoFlow.tryEmit(patchInfo())
+        infusionFlow.tryEmit(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = null))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
+
+        val tempBasalRow = infoRows().single { it.label == s(CarelevoStrings.carelevo_temp_basal_rate_key) }
+
+        assertThat(tempBasalRow.value).isEqualTo("-")
+    }
+
+    @Test
+    fun `overview shows a running zero temp basal as zero`() {
+        sut.observePatchInfo()
+        sut.observePatchState()
+        sut.observeInfusionInfo()
+        patchInfoFlow.tryEmit(patchInfo())
+        infusionFlow.tryEmit(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasal(speed = 0.0)))
+        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
+
+        val tempBasalRow = infoRows().single { it.label == s(CarelevoStrings.carelevo_temp_basal_rate_key) }
+
+        assertThat(tempBasalRow.value).isEqualTo(s(CarelevoStrings.common_label_unit_value_dose_per_speed_with_space, 0.0))
+    }
+
     @Test
     fun `overview keeps the last known status for an idle-disconnected patch`() {
         sut.observePatchInfo()
@@ -1552,18 +1581,6 @@ class CarelevoOverviewViewModelTest {
         // rather than a formatted literal - the padding is the translator's, not the VM's.
         assertThat(infoRows()[5].value)
             .isEqualTo(s(CarelevoStrings.common_unit_value_hour_min, total / 60, total % 60))
-    }
-
-    @Test
-    fun `overview temp basal row falls back to zero when nothing is running`() {
-        sut.observePatchInfo()
-        sut.observePatchState()
-        sut.observeInfusionInfo()
-        patchInfoFlow.tryEmit(patchInfo())
-        patchStateFlow.tryEmit(PatchState.ConnectedBooted)
-        infusionFlow.tryEmit(CarelevoInfusionInfoDomainModel())
-
-        assertThat(infoRows()[7].value).isEqualTo(s(CarelevoStrings.common_label_unit_value_dose_per_speed_with_space, 0.0))
     }
 
     @Test

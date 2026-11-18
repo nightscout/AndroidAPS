@@ -623,7 +623,11 @@ class CarelevoOverviewViewModel @Inject constructor(
                     true
                 }
 
-                aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] isTempBasalRunning=$cancelTempBasalResult, isExtendBolusRunning=$cancelExtendBolusResult, stopMinute: $stopMinute")
+                aapsLogger.debug(
+                    LTag.PUMPCOMM,
+                    "[startPumpStopProcess] tempBasal running=$isTempBasalRunning cancelled=$cancelTempBasalResult, " +
+                        "extendedBolus running=$isExtendBolusRunning cancelled=$cancelExtendBolusResult, stopMinute: $stopMinute"
+                )
 
                 if (cancelExtendBolusResult && cancelTempBasalResult) {
                     // Route the stop frame through the queue (connect-before-execute). The pre-cancel above
@@ -814,7 +818,8 @@ class CarelevoOverviewViewModel @Inject constructor(
                     add(
                         PumpInfoRow(
                             label = rh.gs(CarelevoStrings.carelevo_temp_basal_rate_key),
-                            value = rh.gs(CarelevoStrings.common_label_unit_value_dose_per_speed_with_space, tempBasalRate ?: 0.0)
+                            // "-" when none runs, as the other rows: "0.00 U/hr" read as a running zero temp basal.
+                            value = tempBasalRate?.let { rh.gs(CarelevoStrings.common_label_unit_value_dose_per_speed_with_space, it) } ?: "-"
                         )
                     )
                     add(
