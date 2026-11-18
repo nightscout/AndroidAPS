@@ -468,11 +468,14 @@
     <!-- Direct-to-watch: the watch reads the Dexcom G7 / ONE+ itself, next to the phone -->
     <string name="watch_direct_title">Direct to watch</string>
     <string name="watch_direct_channel">Direct to watch</string>
-    <string name="watch_direct_service_channel">Direct to watch link</string>
     <string name="watch_direct_state_off">Off. Turn it on in AAPS on the phone, in the Dexcom G7 / ONE+ settings.</string>
     <string name="watch_direct_state_not_supported">Not possible on this watch. It needs Wear OS 3 or newer.</string>
     <string name="watch_direct_state_bluetooth_off">Bluetooth is off on the watch.</string>
-    <string name="watch_direct_state_running">The watch reads the sensor itself.</string>
+    <string name="watch_direct_state_waiting">Paired with the sensor. Waiting for its next reading.</string>
+    <string name="watch_direct_state_connected">Connected to the sensor.</string>
+    <string name="watch_direct_last_reading" comment="%1$s=time of day of the last glucose reading the watch took from the sensor itself. Example: Last reading from the sensor: 14:05">Last reading from the sensor: %1$s</string>
+    <string name="watch_direct_no_reading">No reading from the sensor yet. The sensor sends one about every 5 minutes.</string>
+    <string name="watch_direct_pairing_hint">The request comes when the sensor next connects, within about 5 minutes. It stays for about 25 seconds. This screen stays on while you wait.</string>
     <string name="watch_direct_notification_permission">Allow Bluetooth for AAPS on the watch, so it can read the sensor.</string>
     <string name="watch_direct_notification_battery">The watch may put AAPS to sleep in the background and miss readings. Allow unrestricted battery use.</string>
     <string name="watch_direct_notification_pairing">Pairing with the sensor. Accept the pairing request on the watch when it comes.</string>
