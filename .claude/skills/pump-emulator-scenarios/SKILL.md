@@ -88,9 +88,12 @@ The steps below are the order that worked for the Diaconn G8 (2026-11). The code
 
 ## Adding a pump
 
-1. The emulator transport implements `PumpEmulatorControl`. Start with what the pump already does, and return false
-   for the rest.
-2. `<Pump>Accessors` in the pump module (as `CarelevoAccessors`), so the test reaches the transport and the plugin.
+1. The emulator's radio implements `PumpEmulatorControl`. On Bluetooth v2 that is an `EmulatedPeripheral` added to
+   an `EmulatedBleCentral`, which the driver gets in place of the phone's central (`CarelevoEmulatorPeripheral`,
+   `CarelevoBleBindings`); a v1 driver has an emulator `BleTransport`. Start with what the pump already does, and
+   return false for the rest.
+2. `<Pump>Accessors` in the pump module (as `CarelevoAccessors`), so the test reaches the emulator and the plugin. On
+   v2 the test takes the peripheral from the driver's central: `(central as EmulatedBleCentral).devices.single()`.
 3. An adapter `<Pump>PumpUnderTest`: how to pair (through the wizard's own ViewModels from
    `testGraphs.viewModelFactory`, or through its queue commands), how to unpair, how to restore a saved emulator.
 4. A test class `<Pump>ScenarioTest : AbstractPumpScenarioTest()` that returns the adapter. Add the source dir to

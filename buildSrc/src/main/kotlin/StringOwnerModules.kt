@@ -10,10 +10,15 @@ import java.io.Serializable
  *
  * Only the owner and the package are written down. The object names follow from the owner - `sync`
  * gives `SyncStrings` and `SyncStringIds` - so they cannot be spelled two different ways in two places.
+ *
+ * [onDesktop] is false for a module the desktop shell does not link, as a pump driver: a desktop has
+ * no Bluetooth radio to reach a pump with. The desktop registry leaves such a module out, because it
+ * cannot import the module's strings.
  */
 data class StringOwnerModule(
     val owner: String,
-    val packageName: String
+    val packageName: String,
+    val onDesktop: Boolean = true
 ) : Serializable {
 
     /** The generated object of `TextRef` names, for example `SyncStrings`. */
@@ -27,7 +32,7 @@ data class StringOwnerModule(
 
     companion object {
 
-        private const val serialVersionUID: Long = 2L
+        private const val serialVersionUID: Long = 3L
     }
 }
 
@@ -73,7 +78,8 @@ object StringOwnerModules {
         StringOwnerModule("smoothing", "app.aaps.plugins.smoothing"),
         StringOwnerModule("source", "app.aaps.plugins.source"),
         StringOwnerModule("sync", "app.aaps.plugins.sync"),
-        StringOwnerModule("virtual", "app.aaps.pump.virtual")
+        StringOwnerModule("virtual", "app.aaps.pump.virtual"),
+        StringOwnerModule("carelevo", "app.aaps.pump.carelevo", onDesktop = false)
     )
 }
 

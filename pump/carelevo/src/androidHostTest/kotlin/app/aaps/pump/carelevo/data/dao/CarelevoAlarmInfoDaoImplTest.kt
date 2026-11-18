@@ -1,0 +1,556 @@
+package app.aaps.pump.carelevo.data.dao
+
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
+import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
+import app.aaps.pump.carelevo.data.common.carelevoJson
+import app.aaps.pump.carelevo.data.model.entities.CarelevoAlarmInfoEntity
+import app.aaps.pump.carelevo.domain.type.AlarmCause
+import app.aaps.pump.carelevo.domain.type.AlarmType
+import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.junit.jupiter.MockitoSettings
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
+import org.mockito.quality.Strictness
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
+
+/**
+ * Unit coverage for [CarelevoAlarmInfoDaoImpl].
+ *
+ * The DAO persists the alarm list as a JSON string in [Preferences] under the single
+ * registered key [CarelevoStringNonKey.AlarmInfoList]. The mocked [Preferences] is driven as an
+ * in-memory fake — a backing map answers `get`/`put`/`remove` — so every method exercises the *real*
+ * real JSON (`carelevoJson`) round trip.
+ *
+ * The load path is deliberately UNFILTERED: everything in the store is an active (unacknowledged)
+ * alarm by construction because acknowledging an alarm removes it (see `removeAlarm`). The regression
+ * these tests guard against is the old vendor code filtering the cold-load stream to `it.acknowledged`
+ * — which is never true — silently dropping every persisted active alarm on process restart.
+ */
+@ExtendWith(MockitoExtension::class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+internal class CarelevoAlarmInfoDaoImplTest {
+
+    @Mock lateinit var preferences: Preferences
+
+    private val key = CarelevoStringNonKey.AlarmInfoList
+    private val store = mutableMapOf<StringNonPreferenceKey, String>()
+
+    private lateinit var sut: CarelevoAlarmInfoDaoImpl
+
+    @BeforeEach
+    fun setUp() {
+        // Fake preference store: a backing map behind the three key-typed methods the DAO uses.
+        // An absent key falls back to the key's own declared defaultValue, exactly as the real store does.
+        whenever(preferences.get(any<StringNonPreferenceKey>())).thenAnswer {
+            val k = it.getArgument<StringNonPreferenceKey>(0)
+            store[k] ?: k.defaultValue
+        }
+        doAnswer {
+            store[it.getArgument<StringNonPreferenceKey>(0)] = it.getArgument<String>(1)
+            null
+        }.whenever(preferences).put(any<StringNonPreferenceKey>(), any<String>())
+        doAnswer {
+            store.remove(it.getArgument<StringNonPreferenceKey>(0))
+            null
+        }.whenever(preferences).remove(any<StringNonPreferenceKey>())
+
+        sut = CarelevoAlarmInfoDaoImpl(preferences)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Helpers
+    // ---------------------------------------------------------------------------------------------
+
+    private fun entity(
+        alarmId: String = "alarm-1",
+        cause: AlarmCause = AlarmCause.ALARM_ALERT_OUT_OF_INSULIN,
+        alarmType: Int = cause.alarmType.code,
+        value: Int? = null,
+        acknowledged: Boolean = false,
+        occurrenceCount: Int = 1,
+        createdAt: String = "2026-07-16T10:00:00",
+        updatedAt: String = "2026-07-16T10:00:00"
+    ): CarelevoAlarmInfoEntity = CarelevoAlarmInfoEntity(
+        alarmId = alarmId,
+        alarmType = alarmType,
+        cause = cause,
+        value = value,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        acknowledged = acknowledged,
+        occurrenceCount = occurrenceCount
+    )
+
+    /** Seed the persisted store as a prior process would have — through the real JSON. */
+    private fun seedStore(vararg alarms: CarelevoAlarmInfoEntity) {
+        store[key] = carelevoJson.encodeToString(alarms.toList())
+    }
+
+    /** The first value of the alarm stream, as a new collector sees it. */
+    private fun CarelevoAlarmInfoDaoImpl.firstAlarms(): List<CarelevoAlarmInfoEntity>? = runBlocking { getAlarms().first() }
+
+    /** Collect the alarm stream into [values] until the returned job is cancelled. */
+    private fun collectAlarms(values: MutableList<List<CarelevoAlarmInfoEntity>?>): Job {
+        val flow = sut.getAlarms()
+        return CoroutineScope(Dispatchers.Unconfined).launch { flow.toList(values) }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // getAlarms — cold load
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `getAlarms cold-loads an empty list when nothing is persisted`() {
+        val result = sut.firstAlarms()
+        assertThat(result).isNotNull()
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `getAlarms cold-loads every persisted alarm UNFILTERED including acknowledged ones`() {
+        val active = entity(alarmId = "active", cause = AlarmCause.ALARM_ALERT_OUT_OF_INSULIN, acknowledged = false)
+        val acked = entity(alarmId = "acked", cause = AlarmCause.ALARM_WARNING_PUMP_CLOGGED, acknowledged = true)
+        seedStore(active, acked)
+
+        val result = sut.firstAlarms()
+
+        assertThat(result).isNotNull()
+        // The regression guard: BOTH alarms survive the cold load, not just the (never-true) acknowledged one.
+        assertThat(result).containsExactly(active, acked)
+    }
+
+    @Test
+    fun `getAlarms emits null and does not crash when the persisted JSON is unparseable`() {
+        store[key] = "{}" // an object where an array is expected → the JSON read throws, runCatching swallows it
+
+        val result = sut.firstAlarms()
+
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun `getAlarms warms the cache and does not re-read preferences on the second call`() {
+        seedStore(entity())
+        assertThat(sut.firstAlarms()!!).hasSize(1)
+
+        store[key] = "{}" // corrupt the store; a second read would blow up if it re-read
+        val second = sut.firstAlarms()
+
+        assertThat(second!!).hasSize(1)
+        verify(preferences, times(1)).get(any<StringNonPreferenceKey>())
+    }
+
+    @Test
+    fun `getAlarms returns the live stream and emits subsequent upserts to existing collectors`() {
+        val values = mutableListOf<List<CarelevoAlarmInfoEntity>?>()
+        val job = collectAlarms(values)
+
+        sut.upsertAlarm(entity())
+
+        assertThat(values).hasSize(2) // initial cold-load empty list + post-upsert list
+        assertThat(values.last()!!).hasSize(1)
+        job.cancel()
+    }
+
+    @Test
+    fun `getAlarms does not reload after clearAlarms even when the store is re-seeded`() {
+        seedStore(entity())
+        sut.firstAlarms()
+        sut.clearAlarms() // the stream now holds null, so it has a value → the cold-load guard stays false
+
+        seedStore(entity("a1"), entity("a2"))
+        val after = sut.firstAlarms()
+
+        assertThat(after).isNull()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // getAlarmsOnce
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `getAlarmsOnce cold-loads an empty list when nothing is persisted`() {
+        val result = sut.getAlarmsOnce()
+        assertThat(result).isNotNull()
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `getAlarmsOnce returns all stored alarms unfiltered`() {
+        val a = entity(alarmId = "a", cause = AlarmCause.ALARM_WARNING_LOW_INSULIN, acknowledged = false)
+        val b = entity(alarmId = "b", cause = AlarmCause.ALARM_NOTICE_LGS_START, acknowledged = true)
+        seedStore(a, b)
+
+        val result = sut.getAlarmsOnce()
+
+        assertThat(result).containsExactly(a, b)
+    }
+
+    @Test
+    fun `getAlarmsOnce uses the warm cache after a prior setAlarms`() {
+        val list = listOf(entity())
+        sut.setAlarms(list)
+
+        store[key] = "{}" // would fail to parse if the cache were bypassed
+        val result = sut.getAlarmsOnce()
+
+        assertThat(result).isEqualTo(list)
+    }
+
+    @Test
+    fun `getAlarmsOnce surfaces the parse error when the persisted JSON is unparseable`() {
+        store[key] = "{}"
+
+        assertThrows<RuntimeException> { sut.getAlarmsOnce() }
+    }
+
+    @Test
+    fun `getAlarmsOnce reloads from the store after clearAlarms clears the cache to empty`() {
+        seedStore(entity())
+        sut.firstAlarms()
+        sut.clearAlarms() // key removed, cache null → ensureLoaded re-reads store
+
+        val result = sut.getAlarmsOnce()
+
+        assertThat(result).isEmpty()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // setAlarms
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `setAlarms persists the list as JSON and pushes it onto the stream`() {
+        val list = listOf(entity(alarmId = "x"), entity(alarmId = "y", cause = AlarmCause.ALARM_WARNING_LOW_BATTERY))
+
+        sut.setAlarms(list)
+
+        verify(preferences).put(eq(key), any<String>())
+        assertThat(store).containsKey(key)
+        assertThat(sut.firstAlarms()).containsExactlyElementsIn(list)
+    }
+
+    @Test
+    fun `setAlarms overwrites the previously persisted content`() {
+        sut.setAlarms(listOf(entity(alarmId = "first")))
+        sut.setAlarms(listOf(entity(alarmId = "second")))
+
+        val reloaded = CarelevoAlarmInfoDaoImpl(preferences).getAlarmsOnce()
+        assertThat(reloaded.map { it.alarmId }).containsExactly("second")
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // clearAlarms
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `clearAlarms removes the preference key and emits null`() {
+        seedStore(entity())
+        sut.firstAlarms() // warm the cache first
+
+        sut.clearAlarms()
+
+        verify(preferences).remove(eq(key))
+        assertThat(store).doesNotContainKey(key)
+        assertThat(sut.firstAlarms()).isNull()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // upsertAlarm
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `upsertAlarm appends a brand new alarm and forces its occurrenceCount to one`() {
+        // occurrenceCount passed in (7) must be normalized to 1 for a first-seen alarm.
+        sut.upsertAlarm(entity(alarmId = "new", occurrenceCount = 7))
+
+        val stored = sut.firstAlarms()!!
+        assertThat(stored).hasSize(1)
+        assertThat(stored.single().occurrenceCount).isEqualTo(1)
+    }
+
+    @Test
+    fun `upsertAlarm increments occurrenceCount and refreshes updatedAt on an existing match`() {
+        val existing = entity(
+            alarmId = "existing",
+            cause = AlarmCause.ALARM_ALERT_OUT_OF_INSULIN,
+            acknowledged = false,
+            occurrenceCount = 1,
+            createdAt = "2026-07-16T09:00:00",
+            updatedAt = "2026-07-16T09:00:00"
+        )
+        seedStore(existing)
+        sut.firstAlarms()
+
+        // Same alarmType + cause + unacknowledged, but a different id/updatedAt.
+        sut.upsertAlarm(
+            entity(alarmId = "incoming", cause = AlarmCause.ALARM_ALERT_OUT_OF_INSULIN, updatedAt = "2026-07-16T11:00:00")
+        )
+
+        val stored = sut.firstAlarms()!!
+        assertThat(stored).hasSize(1)
+        val merged = stored.single()
+        assertThat(merged.occurrenceCount).isEqualTo(2)
+        assertThat(merged.updatedAt).isEqualTo("2026-07-16T11:00:00")
+        // Identity of the existing row is preserved (copy, not replace).
+        assertThat(merged.alarmId).isEqualTo("existing")
+        assertThat(merged.createdAt).isEqualTo("2026-07-16T09:00:00")
+    }
+
+    @Test
+    fun `upsertAlarm appends instead of merging when the only match is acknowledged`() {
+        seedStore(entity(alarmId = "acked", cause = AlarmCause.ALARM_ALERT_OUT_OF_INSULIN, acknowledged = true))
+        sut.firstAlarms()
+
+        sut.upsertAlarm(entity(alarmId = "fresh", cause = AlarmCause.ALARM_ALERT_OUT_OF_INSULIN))
+
+        val stored = sut.firstAlarms()!!
+        assertThat(stored).hasSize(2)
+    }
+
+    @Test
+    fun `upsertAlarm appends when the cause differs from every stored alarm`() {
+        seedStore(entity(alarmId = "one", cause = AlarmCause.ALARM_ALERT_OUT_OF_INSULIN))
+        sut.firstAlarms()
+
+        sut.upsertAlarm(entity(alarmId = "two", cause = AlarmCause.ALARM_ALERT_LOW_BATTERY))
+
+        val stored = sut.firstAlarms()!!
+        assertThat(stored).hasSize(2)
+        assertThat(stored.map { it.cause }).containsExactly(
+            AlarmCause.ALARM_ALERT_OUT_OF_INSULIN, AlarmCause.ALARM_ALERT_LOW_BATTERY
+        )
+    }
+
+    @Test
+    fun `upsertAlarm replaces an existing lower-tier alarm when the new alarm has the same canonical meaning`() {
+        seedStore(entity(alarmId = "notice", cause = AlarmCause.ALARM_NOTICE_LOW_INSULIN, alarmType = AlarmCause.ALARM_NOTICE_LOW_INSULIN.alarmType.code))
+        sut.firstAlarms()
+
+        sut.upsertAlarm(
+            entity(
+                alarmId = "alert",
+                cause = AlarmCause.ALARM_ALERT_OUT_OF_INSULIN,
+                alarmType = AlarmCause.ALARM_ALERT_OUT_OF_INSULIN.alarmType.code,
+                updatedAt = "2026-07-16T11:00:00"
+            )
+        )
+
+        val stored = sut.firstAlarms()!!
+        assertThat(stored).hasSize(1)
+        assertThat(stored.single().alarmId).isEqualTo("notice")
+        assertThat(stored.single().cause).isEqualTo(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)
+        assertThat(stored.single().alarmType).isEqualTo(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN.alarmType.code)
+        assertThat(stored.single().occurrenceCount).isEqualTo(2)
+        assertThat(stored.single().updatedAt).isEqualTo("2026-07-16T11:00:00")
+    }
+
+    @Test
+    fun `upsertAlarm merges on cause alone, even if the stored record's alarmType field disagrees`() {
+        // The match key is cause.canonicalKey() only (see the cross-tier merge test above) — a stored
+        // record's raw alarmType field is never part of the identity check, even if (e.g. corrupted or
+        // legacy data) it disagrees with what its own cause implies. This used to require an exact
+        // alarmType match too; that was deliberately dropped when canonicalKey-based merging replaced it.
+        seedStore(entity(alarmId = "weird", cause = AlarmCause.ALARM_ALERT_OUT_OF_INSULIN, alarmType = 999))
+        sut.firstAlarms()
+
+        sut.upsertAlarm(entity(alarmId = "normal", cause = AlarmCause.ALARM_ALERT_OUT_OF_INSULIN))
+
+        val stored = sut.firstAlarms()!!
+        assertThat(stored).hasSize(1)
+        assertThat(stored.single().alarmId).isEqualTo("weird") // existing record kept, just bumped
+        assertThat(stored.single().occurrenceCount).isEqualTo(2)
+    }
+
+    @Test
+    fun `upsertAlarm keeps incrementing occurrenceCount across repeated calls`() {
+        val alarm = entity(alarmId = "repeat", cause = AlarmCause.ALARM_WARNING_LOW_INSULIN)
+        sut.upsertAlarm(alarm)
+        sut.upsertAlarm(alarm)
+        sut.upsertAlarm(alarm)
+
+        val stored = sut.firstAlarms()!!
+        assertThat(stored).hasSize(1)
+        assertThat(stored.single().occurrenceCount).isEqualTo(3)
+    }
+
+    @Test
+    fun `two alarm writes that overlap are both kept`() {
+        sut.firstAlarms()
+        val firstWriteStarted = CountDownLatch(1)
+        doAnswer {
+            firstWriteStarted.countDown()
+            // Hold each write long enough for the other one to start.
+            Thread.sleep(200)
+            store[it.getArgument<StringNonPreferenceKey>(0)] = it.getArgument<String>(1)
+            null
+        }.whenever(preferences).put(any<StringNonPreferenceKey>(), any<String>())
+
+        val first = thread { sut.upsertAlarm(entity(alarmId = "a", cause = AlarmCause.ALARM_WARNING_LOW_BATTERY)) }
+        assertThat(firstWriteStarted.await(5, TimeUnit.SECONDS)).isTrue()
+        val second = thread { sut.upsertAlarm(entity(alarmId = "b", cause = AlarmCause.ALARM_WARNING_PUMP_CLOGGED)) }
+        first.join()
+        second.join()
+
+        assertThat(sut.getAlarmsOnce().map { it.alarmId }).containsExactly("a", "b")
+        // Stored too: a new store object reads both back.
+        assertThat(CarelevoAlarmInfoDaoImpl(preferences).getAlarmsOnce().map { it.alarmId }).containsExactly("a", "b")
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // removeAlarm
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `removeAlarm drops the matching id and persists the remainder`() {
+        seedStore(entity(alarmId = "keep"), entity(alarmId = "drop", cause = AlarmCause.ALARM_WARNING_LOW_BATTERY))
+        sut.firstAlarms()
+
+        sut.removeAlarm("drop")
+
+        val stored = sut.firstAlarms()!!
+        assertThat(stored.map { it.alarmId }).containsExactly("keep")
+        // Persisted too: a fresh cold read agrees.
+        val reloaded = CarelevoAlarmInfoDaoImpl(preferences).getAlarmsOnce()
+        assertThat(reloaded.map { it.alarmId }).containsExactly("keep")
+    }
+
+    @Test
+    fun `removeAlarm with an unknown id leaves the list intact but still persists and emits`() {
+        seedStore(entity(alarmId = "a"), entity(alarmId = "b", cause = AlarmCause.ALARM_WARNING_LOW_BATTERY))
+        sut.firstAlarms()
+
+        sut.removeAlarm("does-not-exist")
+
+        val stored = sut.firstAlarms()!!
+        assertThat(stored.map { it.alarmId }).containsExactly("a", "b")
+        verify(preferences, times(1)).put(eq(key), any<String>())
+    }
+
+    @Test
+    fun `removeAlarm emits the updated list to existing stream collectors`() {
+        seedStore(entity(alarmId = "a"), entity(alarmId = "b", cause = AlarmCause.ALARM_WARNING_LOW_BATTERY))
+        val values = mutableListOf<List<CarelevoAlarmInfoEntity>?>()
+        val job = collectAlarms(values)
+
+        sut.removeAlarm("a")
+
+        assertThat(values.last()!!.map { it.alarmId }).containsExactly("b")
+        job.cancel()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // End-to-end serialization
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `a fresh DAO cold-reads exactly what a prior DAO persisted through the real JSON`() {
+        val list = listOf(
+            entity(alarmId = "with-value", cause = AlarmCause.ALARM_NOTICE_LGS_FINISHED_HIGH_BG, value = 5, acknowledged = true, occurrenceCount = 3),
+            entity(alarmId = "plain", cause = AlarmCause.ALARM_WARNING_PATCH_ERROR)
+        )
+        sut.setAlarms(list)
+
+        val fresh = CarelevoAlarmInfoDaoImpl(preferences)
+        val read = fresh.getAlarmsOnce()
+
+        assertThat(read).isNotNull()
+        // data-class equality covers alarmType, cause enum, value, occurrenceCount, acknowledged, timestamps.
+        assertThat(read).containsExactlyElementsIn(list)
+    }
+
+    @Test
+    fun `the DAO reads and writes nothing but the alarm-list key`() {
+        // Sanity guard on the fake wiring. It used to check that the DAO never reached the @StringRes
+        // overloads of SP; those overloads are gone with SP, and the equivalent worry on a registered
+        // store is the DAO touching some OTHER key, so that is what is asserted now.
+        seedStore(entity())
+        sut.firstAlarms()
+        sut.setAlarms(listOf(entity()))
+        sut.clearAlarms()
+
+        verify(preferences).get(eq(key))
+        verify(preferences).put(eq(key), any<String>())
+        verify(preferences).remove(eq(key))
+        verifyNoMoreInteractions(preferences)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Merge groups and priority of every cause
+    // ---------------------------------------------------------------------------------------------
+
+    /** The causes that mean the same thing and are stored as one alarm. A cause not listed is a group of its own. */
+    private val mergeGroups = listOf(
+        setOf(AlarmCause.ALARM_WARNING_LOW_INSULIN, AlarmCause.ALARM_ALERT_OUT_OF_INSULIN, AlarmCause.ALARM_NOTICE_LOW_INSULIN),
+        setOf(
+            AlarmCause.ALARM_WARNING_PATCH_EXPIRED_PHASE_1, AlarmCause.ALARM_WARNING_PATCH_EXPIRED, AlarmCause.ALARM_ALERT_PATCH_EXPIRED_PHASE_1,
+            AlarmCause.ALARM_ALERT_PATCH_EXPIRED_PHASE_2, AlarmCause.ALARM_NOTICE_PATCH_EXPIRED
+        ),
+        setOf(AlarmCause.ALARM_WARNING_LOW_BATTERY, AlarmCause.ALARM_ALERT_LOW_BATTERY),
+        setOf(AlarmCause.ALARM_WARNING_INVALID_TEMPERATURE, AlarmCause.ALARM_ALERT_INVALID_TEMPERATURE),
+        setOf(AlarmCause.ALARM_WARNING_NOT_USED_APP_AUTO_OFF, AlarmCause.ALARM_ALERT_APP_NO_USE),
+        setOf(AlarmCause.ALARM_WARNING_BLE_NOT_CONNECTED, AlarmCause.ALARM_ALERT_BLE_NOT_CONNECTED, AlarmCause.ALARM_ALERT_BLUETOOTH_OFF),
+        setOf(AlarmCause.ALARM_WARNING_INCOMPLETE_PATCH_SETTING, AlarmCause.ALARM_ALERT_PATCH_APPLICATION_INCOMPLETE),
+        setOf(
+            AlarmCause.ALARM_NOTICE_LGS_FINISHED_DISCONNECTED_PATCH_OR_CGM, AlarmCause.ALARM_NOTICE_LGS_FINISHED_PAUSE_LGS,
+            AlarmCause.ALARM_NOTICE_LGS_FINISHED_TIME_OVER, AlarmCause.ALARM_NOTICE_LGS_FINISHED_OFF_LGS,
+            AlarmCause.ALARM_NOTICE_LGS_FINISHED_HIGH_BG, AlarmCause.ALARM_NOTICE_LGS_FINISHED_UNKNOWN
+        )
+    )
+
+    private fun sameGroup(a: AlarmCause, b: AlarmCause): Boolean = a == b || mergeGroups.any { a in it && b in it }
+
+    /** An alert outranks a warning, a warning a notice, and an unknown cause is the lowest. */
+    private fun rank(cause: AlarmCause): Int = when (cause.alarmType) {
+        AlarmType.ALERT        -> 3
+        AlarmType.WARNING      -> 2
+        AlarmType.NOTICE       -> 1
+        AlarmType.UNKNOWN_TYPE -> 0
+    }
+
+    @Test
+    fun `every cause merges with the causes of its group and with no other`() {
+        for (first in AlarmCause.entries) {
+            for (second in AlarmCause.entries) {
+                store.clear()
+                val dao = CarelevoAlarmInfoDaoImpl(preferences)
+                dao.upsertAlarm(entity(alarmId = "first", cause = first))
+                dao.upsertAlarm(entity(alarmId = "second", cause = second))
+
+                val stored = dao.getAlarmsOnce()
+
+                if (sameGroup(first, second)) {
+                    assertWithMessage("$first then $second").that(stored).hasSize(1)
+                    val kept = if (rank(second) > rank(first)) second else first
+                    assertWithMessage("$first then $second").that(stored.single().cause).isEqualTo(kept)
+                    assertWithMessage("$first then $second").that(stored.single().alarmType).isEqualTo(kept.alarmType.code)
+                    assertWithMessage("$first then $second").that(stored.single().occurrenceCount).isEqualTo(2)
+                } else {
+                    assertWithMessage("$first then $second").that(stored.map { it.cause }).containsExactly(first, second).inOrder()
+                }
+            }
+        }
+    }
+}
