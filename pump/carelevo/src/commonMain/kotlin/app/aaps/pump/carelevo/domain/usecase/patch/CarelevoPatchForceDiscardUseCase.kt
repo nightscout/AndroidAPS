@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
+import app.aaps.pump.carelevo.domain.repository.CarelevoAlarmInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
@@ -22,6 +23,7 @@ class CarelevoPatchForceDiscardUseCase @Inject constructor(
     private val patchInfoRepository: CarelevoPatchInfoRepository,
     private val infusionInfoRepository: CarelevoInfusionInfoRepository,
     private val userSettingInfoRepository: CarelevoUserSettingInfoRepository,
+    private val alarmInfoRepository: CarelevoAlarmInfoRepository,
     private val pumpSync: PumpSync
 ) {
 
@@ -48,6 +50,10 @@ class CarelevoPatchForceDiscardUseCase @Inject constructor(
             if (!deleteInfusionInfoResult) {
                 throw IllegalStateException("delete infusion info is failed")
             }
+            // The alarms belong to the discarded patch. Kept, a "Self-Diagnosis Failed" from a real patch's activation
+            // sounded again at every app start and after a switch to another pump and back, and offered only to
+            // deactivate a patch that was already gone.
+            alarmInfoRepository.clearAlarms()
             // A discarded patch gives nothing more, so AAPS counts nothing more from it: its temp basal and extended
             // bolus end now. Both discards come here, the one the patch confirmed and the one of a patch that could
             // not be reached (D9). Before, they ran on until the next patch was activated.

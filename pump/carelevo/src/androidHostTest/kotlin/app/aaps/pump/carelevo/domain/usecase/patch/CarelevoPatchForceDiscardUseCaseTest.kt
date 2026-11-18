@@ -3,6 +3,7 @@ package app.aaps.pump.carelevo.domain.usecase.patch
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.userSetting.CarelevoUserSettingInfoDomainModel
+import app.aaps.pump.carelevo.domain.repository.CarelevoAlarmInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
@@ -25,14 +26,43 @@ internal class CarelevoPatchForceDiscardUseCaseTest {
     private val patchInfoRepository: CarelevoPatchInfoRepository = mock()
     private val infusionInfoRepository: CarelevoInfusionInfoRepository = mock()
     private val userSettingInfoRepository: CarelevoUserSettingInfoRepository = mock()
+    private val alarmInfoRepository: CarelevoAlarmInfoRepository = mock()
     private val pumpSync: PumpSync = mock()
 
     private val sut = CarelevoPatchForceDiscardUseCase(
         patchInfoRepository = patchInfoRepository,
         infusionInfoRepository = infusionInfoRepository,
         userSettingInfoRepository = userSettingInfoRepository,
+        alarmInfoRepository = alarmInfoRepository,
         pumpSync = pumpSync
     )
+
+    /**
+     * Kept, a "Self-Diagnosis Failed" of a real patch sounded again at every app start and after a switch to another
+     * pump and back, and offered only to deactivate a patch that was already gone.
+     */
+    @Test
+    fun `the alarms of the discarded patch go with it`() {
+        whenever(userSettingInfoRepository.getUserSettingInfoBySync()).thenReturn(sampleUserSetting())
+        whenever(userSettingInfoRepository.updateUserSettingInfo(any())).thenReturn(true)
+        whenever(infusionInfoRepository.deleteInfusionInfo()).thenReturn(true)
+        whenever(patchInfoRepository.deletePatchInfo()).thenReturn(true)
+
+        runBlocking { sut.execute() }
+
+        verify(alarmInfoRepository).clearAlarms()
+    }
+
+    @Test
+    fun `a discard that fails keeps the alarms`() {
+        whenever(userSettingInfoRepository.getUserSettingInfoBySync()).thenReturn(sampleUserSetting())
+        whenever(userSettingInfoRepository.updateUserSettingInfo(any())).thenReturn(true)
+        whenever(patchInfoRepository.deletePatchInfo()).thenReturn(false)
+
+        runBlocking { sut.execute() }
+
+        verify(alarmInfoRepository, never()).clearAlarms()
+    }
 
     /** The records of the discarded patch end with the discard (D9). */
     @Test
