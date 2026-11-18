@@ -149,9 +149,9 @@ To switch back, disconnect in AAPS first, then open the official app and check r
 
 After initial setup, readings can be received without internet, including in airplane mode with Bluetooth enabled. ES365 needs internet if registration is required again.
 
-DMS upload is optional and does not affect local glucose reception. Uploads are attempted at most once per hour; readings are kept for up to seven days while waiting for connectivity.
+DMS upload is optional and does not affect local glucose reception. Automatic uploads are attempted at most once per hour. E365 keeps readings with a sensor ID and original record number in the local upload queue for up to seven days, including while upload is switched off. Turning upload back on requests a sync within the normal hourly limit.
 
-For ES365, AAPS can also resend recent glucose readings that it already uploaded with their original transmitter record numbers. Each sync looks back to the last successful upload with about two hours of overlap, using up to 30 days of stored upload history. This history builds up as AAPS uploads new readings.
+For ES365, automatic uploads and **Upload data now** send pending readings. AAPS remembers recently acknowledged readings to avoid sending them again if the transmitter reports them twice.
 
 ## Troubleshooting and limits
 

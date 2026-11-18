@@ -118,17 +118,33 @@ class EversenseCloudUploaderTest {
         runCurrent()
         assertEquals(2, errors.size)
     }
-    @Test fun duplicateReadingsAreDeduplicatedAndDisabledUploadDoesNotQueue() = runTest {
+    @Test fun e365DeduplicatesAndRetainsReadingsWhileUploadIsPaused() = runTest {
         online = false
         val uploader = uploader()
         uploader.enqueue(EversenseType.EVERSENSE_365, listOf(reading(0), reading(0)), state)
         runCurrent()
         assertEquals(1, pending().single().readings.size)
         enabled = false
-        uploader.enqueue(EversenseType.EVERSENSE_365, listOf(reading(5)), state)
+        val pausedReading = reading(5).copy(recordNumber = 42)
+        uploader.enqueue(EversenseType.EVERSENSE_365, listOf(pausedReading), state)
+        online = true
+        uploader.flush()
         runCurrent()
-        assertEquals(1, pending().single().readings.size)
+        assertEquals(listOf(reading(0), pausedReading), pending().single().readings)
         assertTrue(uploads.isEmpty())
+
+        enabled = true
+        uploader.flush()
+        runCurrent()
+        assertEquals(listOf(reading(0), pausedReading), uploads.single().readings)
+        assertTrue(pending().isEmpty())
+
+        uploader.enqueue(EversenseType.EVERSENSE_365, listOf(pausedReading), state)
+        runCurrent()
+        uploader.flush(force = true)
+        runCurrent()
+        assertEquals(1, uploads.size)
+        assertTrue(pending().isEmpty())
     }
     @Test fun historyWithoutRaw365PayloadDoesNotBlockUploadQueue() = runTest {
         val uploader = uploader()

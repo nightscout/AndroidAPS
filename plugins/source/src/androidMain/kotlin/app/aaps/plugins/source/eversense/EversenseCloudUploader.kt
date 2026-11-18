@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import kotlinx.serialization.json.Json
 
 /** Optional cloud delivery. Local glucose persistence never waits for network IO. */
@@ -31,12 +30,11 @@ internal class EversenseCloudUploader(
     data class PendingUpload(
         val type: EversenseType,
         val state: EversenseState,
-        val readings: List<EversenseCGMResult>,
-        @Transient val replayReadings: List<EversenseCGMResult> = emptyList()
+        val readings: List<EversenseCGMResult>
     )
 
     @Serializable
-    private data class ReplayHistory(
+    private data class SentHistory(
         val state: EversenseState,
         val lastSuccess: Long,
         val readings: List<EversenseCGMResult>
@@ -48,7 +46,8 @@ internal class EversenseCloudUploader(
     private var lastAttemptElapsed: Long? = null
 
     suspend fun enqueue(type: EversenseType, readings: List<EversenseCGMResult>, state: EversenseState) {
-        if (!enabled()) return
+        // For E365 the switch pauses delivery. Preserve its numbered records locally for resume.
+        if (type != EversenseType.EVERSENSE_365 && !enabled()) return
         mutex.withLock {
             val prefs = store() ?: return
             val batches = read(prefs).toMutableList()
@@ -66,10 +65,10 @@ internal class EversenseCloudUploader(
             if (merged.isNotEmpty()) batches.add(PendingUpload(type, state, merged))
             save(prefs, bounded(batches))
         }
-        flush()
+        if (enabled()) flush()
     }
 
-    fun flush(force: Boolean = false, replayTransmitter: String? = null) {
+    fun flush(force: Boolean = false) {
         if (!busy.compareAndSet(false, true)) return
         val job = scope().launch {
             try {
@@ -88,20 +87,17 @@ internal class EversenseCloudUploader(
                         if (prefs.contains(StorageKeys.CLOUD_LAST_ATTEMPT) && wall - last < HOUR_MS) return@launch
                     }
                     val pending = bounded(read(prefs))
-                    val history = if (replayTransmitter != null || pending.any { it.type == EversenseType.EVERSENSE_365 })
-                        readReplayHistory(prefs) else emptyMap()
-                    val batches = pending.map { batch ->
-                        if (batch.type == EversenseType.EVERSENSE_365) {
-                            val replay = history[batch.state.transmitterSerialNumber]?.let { historyInWindow(it, wall) }.orEmpty()
-                            batch.copy(replayReadings = replay)
-                        } else batch
-                    }.toMutableList()
-                    if (replayTransmitter != null && batches.none { it.type == EversenseType.EVERSENSE_365 && it.state.transmitterSerialNumber == replayTransmitter }) {
-                        history[replayTransmitter]?.let { entry ->
-                            val replay = historyInWindow(entry, wall)
-                            if (replay.isNotEmpty()) batches.add(PendingUpload(EversenseType.EVERSENSE_365, entry.state, emptyList(), replay))
+                    val sent = if (pending.any { it.type == EversenseType.EVERSENSE_365 }) readSentHistory(prefs) else emptyMap()
+                    val batches = pending.mapNotNull { batch ->
+                        val acknowledged = if (batch.type == EversenseType.EVERSENSE_365)
+                            sent[batch.state.transmitterSerialNumber]?.readings else null
+                        if (acknowledged.isNullOrEmpty()) batch else {
+                            val keys = acknowledged.mapTo(mutableSetOf()) { it.datetime to it.sensorId }
+                            val remaining = batch.readings.filterNot { (it.datetime to it.sensorId) in keys }
+                            if (remaining.isEmpty()) null else batch.copy(readings = remaining)
                         }
                     }
+                    if (batches != pending) save(prefs, batches)
                     if (batches.isEmpty()) return@launch
                     // Reserve before IO, including failed attempts, and retain across process restarts.
                     prefs.edit(commit = true) { putLong(StorageKeys.CLOUD_LAST_ATTEMPT, wall) }
@@ -119,7 +115,7 @@ internal class EversenseCloudUploader(
                             else current
                         }.filter { it.readings.isNotEmpty() }
                         val history = if (batch.type == EversenseType.EVERSENSE_365 && batch.state.transmitterSerialNumber.isNotEmpty()) {
-                            updatedReplayHistory(prefs, batch, now())
+                            updatedSentHistory(prefs, batch, now())
                         } else null
                         prefs.edit(commit = true) {
                             putString(StorageKeys.CLOUD_QUEUE, json.encodeToString(remaining))
@@ -143,27 +139,21 @@ internal class EversenseCloudUploader(
         prefs.edit(commit = true) { putString(StorageKeys.CLOUD_QUEUE, json.encodeToString(batches)) }
     }
 
-    private fun readReplayHistory(prefs: EversenseStore): Map<String, ReplayHistory> =
+    private fun readSentHistory(prefs: EversenseStore): Map<String, SentHistory> =
         json.decodeFromString(prefs.getString(StorageKeys.CLOUD_REPLAY_HISTORY, null) ?: "{}")
 
-    private fun historyInWindow(history: ReplayHistory, wall: Long): List<EversenseCGMResult> {
-        val hoursBack = ((wall - history.lastSuccess).coerceAtLeast(0) / HOUR_MS + 2).coerceAtMost(REPLAY_HOURS)
-        val window = (wall - hoursBack * HOUR_MS)..(wall + 5 * 60_000L)
-        return history.readings.filter { it.datetime in window }
-    }
-
-    private fun updatedReplayHistory(prefs: EversenseStore, batch: PendingUpload, wall: Long): Map<String, ReplayHistory> {
-        val history = readReplayHistory(prefs).toMutableMap()
+    private fun updatedSentHistory(prefs: EversenseStore, batch: PendingUpload, wall: Long): Map<String, SentHistory> {
+        val history = readSentHistory(prefs).toMutableMap()
         val transmitter = batch.state.transmitterSerialNumber
         val old = history[transmitter]?.readings.orEmpty()
         val sent = batch.readings.filter { it.recordNumber != null && it.sensorId.isNotEmpty() }
-            .map { it.copy(rawResponseHex = "") } // Replay uses the device event format only.
+            .map { it.copy(rawResponseHex = "") } // The receipt does not need the raw payload.
         val readings = (old + sent).associateBy { it.datetime to it.sensorId }.values
-        history[transmitter] = ReplayHistory(batch.state, wall, readings.toList())
+        history[transmitter] = SentHistory(batch.state, wall, readings.toList())
 
-        var budget = MAX_REPLAY_READINGS
+        var budget = MAX_SENT_READINGS
         return history.entries.sortedByDescending { it.value.lastSuccess }.mapNotNull { (key, entry) ->
-            val kept = entry.readings.filter { it.datetime >= wall - REPLAY_HOURS * HOUR_MS }
+            val kept = entry.readings.filter { it.datetime >= wall - SENT_RETENTION_HOURS * HOUR_MS }
                 .sortedByDescending { it.datetime }.take(budget)
             budget -= kept.size
             if (kept.isEmpty()) null else key to entry.copy(readings = kept.sortedBy { it.datetime })
@@ -184,7 +174,7 @@ internal class EversenseCloudUploader(
         const val HOUR_MS = 60 * 60_000L
         private const val RETENTION_MS = 7 * 24 * HOUR_MS
         private const val MAX_READINGS = 2016
-        private const val REPLAY_HOURS = 30 * 24L
-        private const val MAX_REPLAY_READINGS = 30 * 24 * 12
+        private const val SENT_RETENTION_HOURS = 30 * 24L
+        private const val MAX_SENT_READINGS = 30 * 24 * 12
     }
 }
