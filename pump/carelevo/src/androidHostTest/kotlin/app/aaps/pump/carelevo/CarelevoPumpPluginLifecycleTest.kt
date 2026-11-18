@@ -92,6 +92,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.after
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.clearInvocations
@@ -218,6 +219,7 @@ class CarelevoPumpPluginLifecycleTest {
         activationExecutor = mock()
 
         whenever(rh.gs(any<TextRef>())).thenReturn("Mocked")
+        whenever(rh.gs(any<TextRef>(), anyVararg())).thenReturn("Mocked")
         // onStart follows the link for the alarm snapshot read; a test about the link stubs its own flow.
         whenever(bleSession.connected).thenReturn(MutableStateFlow(false))
 
@@ -901,6 +903,18 @@ class CarelevoPumpPluginLifecycleTest {
 
         verify(carelevoAlarmNotifier).showTopNotification(any())
         verify(uiInteraction).runAlarm(any(), any(), eq(AlarmSound.ERROR))
+    }
+
+    @Test
+    fun `the full-screen alarm names the button on the notification that acts on the alarm`() {
+        whenever(rh.gs(CarelevoStrings.alarm_feat_title_alert_incomplete_patch_setting)).thenReturn("Patch Activation Incomplete")
+        whenever(rh.gs(CarelevoStrings.common_btn_ok)).thenReturn("OK")
+        whenever(rh.gs(eq(CarelevoStrings.carelevo_alarm_screen_text), anyVararg())).thenAnswer { it.arguments.drop(1).joinToString("|") }
+        start()
+
+        alarmHandler().invoke(listOf(alarm(AlarmCause.ALARM_ALERT_PATCH_APPLICATION_INCOMPLETE)))
+
+        verify(uiInteraction).runAlarm(eq("Patch Activation Incomplete|OK"), any(), eq(AlarmSound.ERROR))
     }
 
     @Test

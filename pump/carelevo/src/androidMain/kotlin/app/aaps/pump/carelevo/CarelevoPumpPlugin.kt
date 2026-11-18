@@ -536,6 +536,9 @@ class CarelevoPumpPlugin @Inject constructor(
      *   (wired to [app.aaps.pump.carelevo.presentation.model.AlarmEvent.ClearAlarm] in
      *   [CarelevoAlarmNotifier.showTopNotification] itself) — so silencing the full-screen alarm is
      *   not the same as acknowledging it; the card is what the user confirms on.
+     *
+     * The full-screen text says so and names the card's button, because the alarm descriptions say
+     * "Tap the [OK] button" and the full-screen alarm has its own button that does not clear anything.
      */
     private fun handleAlarms(alarms: List<CarelevoAlarmInfo>) {
         aapsLogger.debug(LTag.NOTIFICATION, "startAlarmObserving handleAlarms:: $alarms")
@@ -545,8 +548,9 @@ class CarelevoPumpPlugin @Inject constructor(
         // so a condition the snapshot keeps re-reporting rings once rather than on every reconnect.
         val fresh = alarms.filter { it.alarmType.isCritical() && globallyAlarmedIds.add(it.alarmId) }
         fresh.firstOrNull()?.let { alarm ->
+            val (title, _, button) = alarm.cause.transformNotificationStringResources()
             uiInteraction.runAlarm(
-                status = rh.gs(alarm.cause.transformNotificationStringResources().first),
+                status = rh.gs(CarelevoStrings.carelevo_alarm_screen_text, rh.gs(title), rh.gs(button)),
                 title = rh.gs(CarelevoStrings.carelevo),
                 sound = AlarmSound.ERROR
             )
