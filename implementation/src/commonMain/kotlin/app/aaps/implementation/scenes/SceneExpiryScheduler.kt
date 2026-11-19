@@ -12,14 +12,19 @@ package app.aaps.implementation.scenes
  * A scene applies a temp target, a profile switch and an SMB setting, and the only thing that takes
  * them off again is this callback. If it does not fire, those stay applied indefinitely: the user
  * gets an exercise profile that never ends. So an implementation must survive the app being killed
- * between [schedule] and the deadline. A plain in-process timer does NOT satisfy this contract and
- * must not be used to implement it - unlike
- * [app.aaps.implementation.profile.ProfileSwitchScheduler], which can be lightweight because
- * KeepAliveWorker is its backstop. Scene expiry has no backstop.
+ * between [schedule] and the deadline, and a plain in-process timer on its own does not.
  *
- * Android satisfies it with WorkManager. There is deliberately no iOS implementation yet: iOS has no
- * equivalent that fires at an exact time in the background, so scenes are visibly absent there
- * rather than present with an expiry that silently never runs.
+ * **There is a backstop now, and this paragraph used to say there was not.**
+ * `PostCalculationRunner.endOverdueScene` calls [app.aaps.core.interfaces.scenes.SceneExpiryCheck.endIfOverdue]
+ * before every loop run, so a scheduled end that never fired is caught by the next glucose
+ * calculation. That makes scene expiry the same shape as
+ * [app.aaps.implementation.profile.ProfileSwitchScheduler], which is lightweight because
+ * KeepAliveWorker catches what it misses. An implementation may therefore be a timer *plus* that
+ * sweep; what it may not be is a timer alone, trusting a process that iOS is free to kill.
+ *
+ * Android satisfies it with WorkManager, which fires on time whether or not the app is alive. iOS
+ * has no equivalent, so `IosSceneExpiryScheduler` is the combination above: exact while awake, and
+ * late rather than never otherwise.
  */
 interface SceneExpiryScheduler {
 

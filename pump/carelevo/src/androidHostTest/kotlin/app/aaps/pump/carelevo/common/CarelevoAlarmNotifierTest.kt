@@ -56,6 +56,7 @@ class CarelevoAlarmNotifierTest {
 
         private val _active = MutableStateFlow<List<PumpAlert>>(emptyList())
         override val active: StateFlow<List<PumpAlert>> = _active
+        override val sounding: PumpAlert? get() = _active.value.lastOrNull()
         val raised = mutableListOf<PumpAlert>()
         val resolved = mutableListOf<String>()
 

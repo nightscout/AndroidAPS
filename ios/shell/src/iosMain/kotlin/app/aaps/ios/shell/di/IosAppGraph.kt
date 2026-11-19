@@ -1,6 +1,6 @@
 package app.aaps.ios.shell.di
 
-import app.aaps.core.interfaces.alerts.EatReminder
+import app.aaps.appshell.start.AppStartSequence
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
@@ -8,9 +8,12 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.di.NotNSClient
+import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.PrefsFileInfo
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
@@ -23,6 +26,8 @@ import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.PasswordHasher
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.alerts.PumpAlerts
+import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -44,8 +49,7 @@ import app.aaps.database.AppRepository
 import app.aaps.database.di.IosAppDatabaseBuilder
 import app.aaps.implementation.maintenance.PeriodicMaintenance
 import app.aaps.implementation.maintenance.cloud.AuthBrowser
-import app.aaps.implementation.notifications.SnackbarNotificationFallback
-import app.aaps.implementation.plugin.PluginStore
+import app.aaps.implementation.pump.alerts.IosPumpAlertPlatform
 import app.aaps.implementation.receivers.IosReceiverStatusStore
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
@@ -59,6 +63,7 @@ import app.aaps.ui.search.BuiltInSearchables
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Includes
+import dev.zacsweers.metro.Multibinds
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
@@ -139,24 +144,47 @@ interface IosAppGraph : MetroViewModelMultibindings {
     val iobCobCalculator: IobCobCalculator
 
     /**
-     * The plugin registry itself, not just the [ActivePlugin] view of it.
+     * The shared app start, the same one `MainApp` and the desktop `Main` run.
      *
-     * `PluginStore.plugins` is a `lateinit` that something has to fill at start up - `MainApp` does
-     * it on Android, `IosAppStartup` here. Until it is filled, the first call that asks for the
-     * active pump throws, which is what the app did before this existed.
+     * It owns the order of everything that happens at start up, the plugin registration included, so
+     * the shell only launches it and gives it an [app.aaps.appshell.start.AppStartPlatform]. Nothing
+     * else here fills `PluginStore.plugins` any more - the sequence does, after the migrations.
      */
-    val pluginStore: PluginStore
+    val appStartSequence: AppStartSequence
 
     /**
      * Plugins that register themselves with `@ContributesIntoMap`, keyed by their order.
      *
-     * Only this one bucket, unlike Android, which also merges `@APS`, `@PumpDriver` and
-     * `@NotNSClient` sets. An iOS build is a follower client: `config.APS`, `config.PUMPDRIVERS`
-     * are false and `config.AAPSCLIENT` is true, so all three of those buckets are excluded by the
-     * same rules `:app` applies. One bucket also means no key can collide, which is what
-     * `mergePlugins` exists to detect on Android.
+     * The unqualified bucket. [contributedPumpDriverPlugins] is the second one, and because there
+     * are now two, the shell merges them through
+     * [app.aaps.appshell.start.mergePlugins] exactly as `MetroGraphs` does on Android, rather than
+     * adding the maps together. A bucket cannot see another bucket's contributions, so two plugins
+     * on one order key, or one plugin contributed by both, is silent without that check - and
+     * silently dropping a pump driver is not a failure anyone would notice until the pump was gone.
      */
     val contributedPlugins: Map<Int, PluginBase>
+
+    /**
+     * The pump drivers, keyed by their order. CareLevo registers here through
+     * `CarelevoIosRegistration`.
+     *
+     * `@Multibinds(allowEmpty = true)` for the reason `AppRootGraph` gives: a map with no
+     * contributions has no binding at all, and Metro reports "no binding found" rather than an empty
+     * map. Every other driver is still Android-only, so on a build where CareLevo is absent this is
+     * legitimately empty.
+     */
+    @Multibinds(allowEmpty = true)
+    @PumpDriver
+    val contributedPumpDriverPlugins: Map<Int, PluginBase>
+
+    /**
+     * Plugins that a follower does not get. Empty on iOS today - `VersionChecker`, OpenHumans and
+     * Tidepool are all Android-only - and declared so that the graph can be built for a master,
+     * where `!config.AAPSCLIENT` makes `:app` merge this bucket too.
+     */
+    @Multibinds(allowEmpty = true)
+    @NotNSClient
+    val contributedNotNsClientPlugins: Map<Int, PluginBase>
     val automationRuntime: AutomationRuntime
     // The periodic housekeeping shared with Android, and the scope the shell drives it on.
     val periodicMaintenance: PeriodicMaintenance
@@ -174,9 +202,6 @@ interface IosAppGraph : MetroViewModelMultibindings {
      * dead - see `IosForegroundWatcher`.
      */
     val nsConnection: NsConnection
-    // Turns a snackbar into a notification when no screen is up to show it. Shared with Android.
-    val snackbarNotificationFallback: SnackbarNotificationFallback
-    val eatReminder: EatReminder
     val appScope: CoroutineScope
     val swDefinition: SWDefinition
     val builtInSearchables: BuiltInSearchables
@@ -208,6 +233,20 @@ interface IosAppGraph : MetroViewModelMultibindings {
     val authBrowser: AuthBrowser
     val notificationManager: NotificationManager
 
+    /** What the user did, for the pump alert screen's buttons. */
+    val uel: UserEntryLogger
+
+    /**
+     * Pump alerts, and the iOS half of them.
+     *
+     * The concrete class as well as the interface, because the alarm screen is not a window iOS can
+     * open: [IosPumpAlertPlatform.alarmScreen] says which alert wants it and `AapsAppHost` shows
+     * `PumpAlertScreen` for it. Everything else - the card, the sound, the silence, the re-ring -
+     * is the shared `PumpAlertsImpl` behind [pumpAlerts], the same as on Android.
+     */
+    val pumpAlerts: PumpAlerts
+    val pumpAlertPlatform: IosPumpAlertPlatform
+
     /**
      * The view model maps come from [MetroViewModelMultibindings], the same interface `AppRootGraph`
      * implements. `ClientViewModelFactory` turns them into the factory `metroViewModel()` asks for:
@@ -221,6 +260,17 @@ interface IosAppGraph : MetroViewModelMultibindings {
      * The logger is passed in so that a database that could not be moved out of Documents says so in
      * `aaps.log`, where it will actually be read. `:database:impl` cannot see `AAPSLogger` itself.
      */
+    /**
+     * The emulated pumps of this app run, kept outside the graph so a test that restarts the app can
+     * hand the old one back. iOS has no such test, so it is simply made here - one holder per graph,
+     * which means new emulated pumps on every app start, exactly as production does on Android.
+     *
+     * `CarelevoBleBindings` needs it to decide between the emulated patch and the phone's Bluetooth.
+     */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun pumpEmulators(): PumpEmulators = PumpEmulators()
+
     @Provides
     @SingleIn(AppScope::class)
     fun repository(aapsLogger: AAPSLogger): AppRepository =

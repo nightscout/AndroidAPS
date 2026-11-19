@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.pump.ble.EmulatedBleCentral
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -147,7 +146,6 @@ class CarelevoPumpPluginLifecycleTest {
     private lateinit var fabricPrivacy: FabricPrivacy
     private lateinit var profileFunction: ProfileFunction
     private lateinit var protectionCheck: ProtectionCheck
-    private lateinit var iconsProvider: IconsProvider
     private lateinit var config: AapsConfig
     private lateinit var carelevoPatch: CarelevoPatch
     private lateinit var carelevoAlarmNotifier: CarelevoAlarmNotifier
@@ -191,7 +189,6 @@ class CarelevoPumpPluginLifecycleTest {
         fabricPrivacy = mock()
         profileFunction = mock()
         protectionCheck = mock()
-        iconsProvider = mock()
         config = mock()
         carelevoPatch = mock()
         carelevoAlarmNotifier = mock()
@@ -274,7 +271,6 @@ class CarelevoPumpPluginLifecycleTest {
             appForeground = appForeground,
             protectionCheck = protectionCheck,
             bleReadyCheck = FakeCarelevoBleReadyCheck(),
-            iconsProvider = iconsProvider,
             config = config,
             pumpEnactResultProvider = pumpEnactResultProvider,
             carelevoPatch = carelevoPatch,

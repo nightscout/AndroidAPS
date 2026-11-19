@@ -1018,7 +1018,7 @@ public class AapsOmnipodErosManager {
     }
 
     private void showErrorDialog(@NonNull String message, AlarmSound sound) {
-        uiInteraction.runAlarm(message, rh.gs(app.aaps.core.ui.R.string.error), sound);
+        uiInteraction.runAlarm("omnipod-eros-error", message, rh.gs(app.aaps.core.ui.R.string.error), sound);
     }
 
     private void showPodFaultNotification(FaultEventCode faultEventCode) {

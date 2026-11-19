@@ -15,8 +15,10 @@ import app.aaps.core.interfaces.pump.alerts.PumpAlert
 import app.aaps.core.interfaces.pump.alerts.PumpAlertPlatform
 import app.aaps.core.interfaces.pump.alerts.PumpAlerts
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.ui.AndroidActivities
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.implementation.androidNotification.AlarmNotificationManager
+import app.aaps.implementation.ui.UiInteractionImpl
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesBinding
@@ -35,6 +37,10 @@ object PumpAlertsAndroidBindings {
 
     @Provides
     fun pumpAlerts(impl: PumpAlertsImpl): PumpAlerts = impl
+
+    /** The app's own alarms are alerts too, and the shared implementation needs the same platform half. */
+    @Provides
+    fun uiInteraction(impl: UiInteractionImpl): UiInteraction = impl
 }
 
 /**
@@ -53,14 +59,27 @@ class AndroidPumpAlertPlatform(
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     // Providers: both reach Android when they are built, which must not happen while the graph is built.
-    private val uiInteraction: () -> UiInteraction,
+    private val androidActivities: () -> AndroidActivities,
     private val alarmNotificationManager: () -> AlarmNotificationManager
 ) : PumpAlertPlatform {
 
     private val mainHandler by lazy { Handler(Looper.getMainLooper()) }
 
+    /**
+     * The alarm screen that was asked for while AAPS was not on the screen, and has not been shown since.
+     *
+     * Read by `ComposeMainActivity` when the app comes to the front, so an alarm that rang in the user's pocket is
+     * the first thing they see (#5338). It used to live in `AlarmNotificationManager.unansweredAlarm`, set by
+     * `postFullScreenAlarm` - the path `UiInteraction.runAlarm` took before every alarm became an alert.
+     *
+     * Cleared by [withdrawn], which every way of answering an alert ends in: the alert is resolved or silenced, and
+     * either way its screen is no longer wanted. Guarded because it is written from the main thread and read from
+     * whichever thread the activity resumes on.
+     */
+    @Volatile private var unanswered: Intent? = null
+
     override fun showAlarmScreen(alert: PumpAlert) {
-        val intent = Intent(context, uiInteraction().errorHelperActivity.java).apply {
+        val intent = Intent(context, androidActivities().alarm.java).apply {
             putExtra(AlarmIntent.EXTRA_PUMP_ALERT_SOURCE, alert.source)
             putExtra(AlarmIntent.EXTRA_PUMP_ALERT_KEY, alert.key)
             putExtra(AlarmIntent.EXTRA_TITLE, rh.gs(alert.title))
@@ -72,17 +91,23 @@ class AndroidPumpAlertPlatform(
             if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
                 try {
                     context.startActivity(intent)
+                    unanswered = null
                     return@post
                 } catch (e: Exception) {
                     aapsLogger.error(LTag.NOTIFICATION, "Pump alert screen did not start, waking the screen instead", e)
                 }
             }
+            // Not shown, so it is owed to the user the next time they open AAPS.
+            unanswered = intent
             val pendingIntent = PendingIntent.getActivity(
                 context, requestCode(alert.source, alert.key), intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
             alarmNotificationManager().scheduleScreenWakeAndLaunch(pendingIntent)
         }
     }
+
+    /** A copy, so the caller starting it cannot change what is held here. Null when nothing is owed. */
+    fun unansweredAlarmIntent(): Intent? = unanswered?.let { Intent(it) }
 
     override fun chime(alert: PumpAlert) {
         alarmNotificationManager().postChime(
@@ -105,6 +130,10 @@ class AndroidPumpAlertPlatform(
     }
 
     override fun withdrawn(source: String, key: String) {
+        // Answered, resolved or silenced: whatever happened, its screen is no longer owed.
+        if (unanswered?.getStringExtra(AlarmIntent.EXTRA_PUMP_ALERT_KEY) == key &&
+            unanswered?.getStringExtra(AlarmIntent.EXTRA_PUMP_ALERT_SOURCE) == source
+        ) unanswered = null
         alarmNotificationManager().cancelChime(requestCode(source, key))
         (context.getSystemService(Context.ALARM_SERVICE) as AlarmManager).cancel(wakeIntent(source, key))
     }

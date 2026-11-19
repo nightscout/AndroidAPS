@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.alerts.PumpAlert
 import app.aaps.core.interfaces.pump.alerts.PumpAlertAction
+import app.aaps.core.interfaces.pump.alerts.PumpAlertLifetime
 import app.aaps.core.interfaces.pump.alerts.PumpAlertPlatform
 import app.aaps.core.interfaces.pump.alerts.PumpAlertSeverity
 import app.aaps.core.interfaces.pump.alerts.PumpAlerts
@@ -128,8 +129,12 @@ class PumpAlertsImplTest : TestBase() {
         severity: PumpAlertSeverity = PumpAlertSeverity.CRITICAL,
         raisedAt: Long = 500L,
         source: String = "pump",
-        action: PumpAlertAction? = null
-    ) = PumpAlert(source = source, key = key, severity = severity, title = TextRef.Literal(key), raisedAt = raisedAt, action = action)
+        action: PumpAlertAction? = null,
+        lifetime: PumpAlertLifetime = PumpAlertLifetime.CONDITION
+    ) = PumpAlert(
+        source = source, key = key, severity = severity, title = TextRef.Literal(key), raisedAt = raisedAt,
+        action = action, lifetime = lifetime
+    )
 
     private fun cards(): List<AapsNotification> = notificationManager.notifications.value.filter { it.id == NotificationId.PUMP_ALERT }
 
@@ -345,4 +350,136 @@ class PumpAlertsImplTest : TestBase() {
         assertThat(snackbars).hasSize(1)
         assertThat(snackbars.single().type).isEqualTo(EventShowSnackbar.Type.Error)
     }
+    // ---------------------------------------------------------------------------------------------
+    // An EVENT alert: the user's answer is the end of it
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * The difference the lifetime makes. A pump's alert is a condition the pump still holds, so silence only quiets
+     * it; one of the app's own - a bolus that failed - is over once the user has read it, and bringing it back half
+     * an hour later would be telling them about something they already dealt with.
+     */
+    @Test
+    fun `silencing an event alert ends it`() {
+        sut.raise(alert(key = "bolus-error", source = "aaps", lifetime = PumpAlertLifetime.EVENT))
+
+        sut.silence("aaps", "bolus-error")
+
+        assertThat(sut.active.value).isEmpty()
+        assertThat(cards()).isEmpty()
+        assertThat(alertPlatform.withdrawals).containsExactly("bolus-error")
+    }
+
+    @Test
+    fun `silencing a condition alert keeps it, quieted`() {
+        sut.raise(alert())
+
+        sut.silence("pump", "occlusion")
+
+        assertThat(sut.active.value.map { it.key }).containsExactly("occlusion")
+        assertThat(card().sound).isNull()
+    }
+
+    /** Mute 5 min on an event alert is still a delay, not the end: that is what Silence is for. */
+    @Test
+    fun `snoozing an event alert keeps it and schedules the re-ring`() {
+        sut.raise(alert(key = "bolus-error", source = "aaps", lifetime = PumpAlertLifetime.EVENT))
+
+        sut.snooze("aaps", "bolus-error", 5)
+
+        assertThat(sut.active.value.map { it.key }).containsExactly("bolus-error")
+        assertThat(card().sound).isNull()
+        assertThat(alertPlatform.snoozes.map { it.second }).containsExactly(now + 5 * 60_000L)
+    }
+
+    /**
+     * The card going away is the user's answer, however they gave it - a swipe, Mute on the notification, "mute all
+     * alarms". For an event that is the end of it; a condition comes back without sound, which the test above this
+     * one covers for the pump case.
+     */
+    @Test
+    fun `an event alert whose card is removed is over`() {
+        sut.raise(alert(key = "bolus-error", source = "aaps", lifetime = PumpAlertLifetime.EVENT))
+        notificationManager.muteAllAlarms()
+        scope.runCurrent()
+
+        assertThat(sut.active.value).isEmpty()
+        assertThat(cards()).isEmpty()
+    }
+
+    /** The pump still holds it, so the card comes back - silenced, not ringing. */
+    @Test
+    fun `a condition alert whose card is removed comes back without sound`() {
+        sut.raise(alert())
+        notificationManager.muteAllAlarms()
+        scope.runCurrent()
+
+        assertThat(sut.active.value.map { it.key }).containsExactly("occlusion")
+        assertThat(card().sound).isNull()
+    }
+
+    /**
+     * An event's action is the answer, so a success ends it. "+5 min" on the "time to eat" timer moves the timer and
+     * the reminder is done; the same button failing has to leave the alarm exactly as it was, because the user still
+     * has to eat.
+     */
+    @Test
+    fun `an event action that succeeds ends the alert`() {
+        sut.raise(alert(key = "eat-reminder", source = "aaps", lifetime = PumpAlertLifetime.EVENT, action = PumpAlertAction(TextRef.Literal("+5 min")) { true }))
+
+        sut.act("aaps", "eat-reminder")
+        scope.runCurrent()
+
+        assertThat(sut.active.value).isEmpty()
+    }
+
+    @Test
+    fun `an event action that fails leaves the alert ringing`() {
+        sut.raise(alert(key = "eat-reminder", source = "aaps", lifetime = PumpAlertLifetime.EVENT, action = PumpAlertAction(TextRef.Literal("+5 min")) { false }))
+
+        sut.act("aaps", "eat-reminder")
+        scope.runCurrent()
+
+        assertThat(sut.active.value.map { it.key }).containsExactly("eat-reminder")
+        assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
+    }
+
+    /** A pump's alert is silenced while its step runs: the pump takes its time, and the driver resolves it. */
+    @Test
+    fun `a condition action silences the alert while it runs`() {
+        sut.raise(alert(action = PumpAlertAction(TextRef.Literal("Deactivate")) { true }))
+
+        sut.act("pump", "occlusion")
+        scope.runCurrent()
+
+        assertThat(sut.active.value.map { it.key }).containsExactly("occlusion")
+        assertThat(card().sound).isNull()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Which alert is ringing
+    // ---------------------------------------------------------------------------------------------
+
+    /** For the watch's Mute and the Mute action, which cannot name an alert. */
+    @Test
+    fun `the newest ringing alert is the sounding one`() {
+        sut.raise(alert(key = "first", raisedAt = 500L))
+        sut.raise(alert(key = "second", raisedAt = 600L))
+
+        assertThat(sut.sounding?.key).isEqualTo("second")
+    }
+
+    @Test
+    fun `a silenced alert is not the sounding one`() {
+        sut.raise(alert(key = "only"))
+        sut.snooze("pump", "only", 5)
+
+        assertThat(sut.sounding).isNull()
+    }
+
+    @Test
+    fun `nothing ringing means no sounding alert`() {
+        assertThat(sut.sounding).isNull()
+    }
+
 }

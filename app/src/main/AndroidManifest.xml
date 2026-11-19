@@ -91,11 +91,6 @@
             android:name="app.aaps.implementation.androidNotification.AlarmScreenWakeReceiver"
             android:exported="false" />
 
-        <!-- "Mute" action on the background alarm notification → silences the looping alarm. -->
-        <receiver
-            android:name="app.aaps.implementation.androidNotification.AlarmMuteReceiver"
-            android:exported="false" />
-
         <!-- The silence of a pump alert has ended: it rings again if still active (AndroidPumpAlertPlatform). -->
         <receiver
             android:name="app.aaps.implementation.pump.alerts.PumpAlertWakeReceiver"

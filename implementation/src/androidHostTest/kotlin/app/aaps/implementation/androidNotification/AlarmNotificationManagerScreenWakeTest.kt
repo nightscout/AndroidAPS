@@ -4,11 +4,10 @@ import android.app.Activity
 import android.app.AlarmManager
 import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.IconsProvider
-import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.ui.AndroidActivities
 import app.aaps.core.keys.interfaces.Preferences
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.anyOrNull
@@ -35,16 +34,15 @@ class AlarmNotificationManagerScreenWakeTest {
     private fun sut(): AlarmNotificationManager {
         val context: Context = mock()
         whenever(context.getSystemService(Context.ALARM_SERVICE)).thenReturn(alarmManager)
-        val uiInteraction: UiInteraction = mock()
-        whenever(uiInteraction.mainActivity).thenReturn(Activity::class)
+        val activities: AndroidActivities = mock()
+        whenever(activities.main).thenReturn(Activity::class)
         return AlarmNotificationManager(
             context = context,
             aapsLogger = mock<AAPSLogger>(),
             preferences = mock<Preferences>(),
             iconsProvider = mock<IconsProvider>(),
-            uiInteractionProvider = { uiInteraction },
+            androidActivitiesProvider = { activities },
             notificationHolderProvider = { mock<NotificationHolder>() },
-            alarmSoundPlayer = mock<AlarmSoundPlayer>(),
             rh = mock<ResourceHelper>()
         )
     }

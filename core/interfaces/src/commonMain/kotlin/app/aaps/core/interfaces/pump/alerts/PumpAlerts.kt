@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.pump.alerts
 
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.keys.interfaces.TextRef
 import kotlinx.coroutines.flow.StateFlow
 
@@ -17,6 +18,28 @@ enum class PumpAlertSeverity {
 
     /** For information only. A card, no sound. */
     INFO
+}
+
+/**
+ * How an alert ends. The one real difference between a pump's alert and the app's own, and the reason both can use
+ * this one path. See `_docs/PUMP_DESIGN.md`, section 8.
+ */
+enum class PumpAlertLifetime {
+
+    /**
+     * The raiser owns it: it lasts until the pump drops it or its action clears it. Removing its card - a swipe,
+     * "mute all alarms", the sheet closing - does not end it; it counts as a silence and the card comes back without
+     * sound, because the condition is still there. Every pump alert is one of these.
+     */
+    CONDITION,
+
+    /**
+     * The user owns it: answering it ends it. A swipe, Mute, or Silence-and-close resolves it and it does not come
+     * back. A bolus error is one of these - nobody will ever resolve it from the pump side - and so is the "time to
+     * eat" timer. [PumpAlerts.silence] resolves it rather than quieting it; [PumpAlerts.snooze] still delays it, which
+     * is what "Mute 5 min" is.
+     */
+    EVENT
 }
 
 /** A step on the pump that the user can start from the alert, for example "clear the alarm on the patch". */
@@ -41,7 +64,36 @@ class PumpAlert(
      * occurrence of the same condition has a new time and rings at once.
      */
     val raisedAt: Long,
-    val action: PumpAlertAction? = null
+    val action: PumpAlertAction? = null,
+    /** Default [PumpAlertLifetime.CONDITION], because a pump driver always raises one. */
+    val lifetime: PumpAlertLifetime = PumpAlertLifetime.CONDITION,
+    /**
+     * Shown on the card and sent to the watch. A pump alert leaves it null and the card is titled by its severity, as
+     * every other notification is; the app's own alarms pass the title their caller gave, which the watch shows.
+     */
+    val notificationTitle: String? = null,
+    /**
+     * Whether this alarm can be delayed: the "Mute 5 min" button on the alarm screen, and Mute on the watch.
+     *
+     * False for an alarm whose own action is already the delay - the "time to eat" timer, where "+5 min" moves the
+     * timer rather than ringing the same reminder again, and two buttons five minutes apart would only confuse.
+     */
+    val canMute: Boolean = true,
+    /**
+     * Whether the watch is told this alarm is ringing.
+     *
+     * False only for an alarm the watch rings by itself, which is the "time to eat" timer (`EatReminderWatch`).
+     * Telling it as well would show the phone's alarm next to the watch's own for one reminder.
+     */
+    val tellWatch: Boolean = true,
+    /**
+     * Which sound a CRITICAL alert rings with, or null for the one its severity picks.
+     *
+     * **A pump driver leaves this null** - it says how bad the alert is and the core picks the sound, which is the
+     * rule in `_docs/PUMP_DESIGN.md`. It is here for the app's own alarms, which have always chosen between a bolus
+     * error, the eat reminder and the plain alarm, and would otherwise all sound the same.
+     */
+    val sound: AlarmSound? = null
 )
 
 /**
@@ -52,6 +104,17 @@ interface PumpAlerts {
 
     /** Every alert raised and not resolved yet, in the order they were raised. */
     val active: StateFlow<List<PumpAlert>>
+
+    /**
+     * The alert whose card is ringing now, or null.
+     *
+     * For the surfaces where the user cannot pick one - the watch's Silence and Mute, the Mute action on the
+     * notification - which have to act on whatever is making the noise. It is the newest active alert that is
+     * CRITICAL, has a card and is not silenced, which is how the notification list picks the card that owns the
+     * sound. A sounding card that is not an alert, which a driver still posting its own alarm can leave, is not seen
+     * here; `UiInteraction.stopAlarm` falls back to silencing everything in that case.
+     */
+    val sounding: PumpAlert?
 
     /** The pump reports this alert. */
     fun raise(alert: PumpAlert)

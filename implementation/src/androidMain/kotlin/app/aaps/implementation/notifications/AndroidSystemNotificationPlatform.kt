@@ -88,7 +88,10 @@ class AndroidSystemNotificationPlatform(
                 notificationKey = notification.instanceKey,
                 title = title,
                 body = notification.text,
-                urgent = true
+                urgent = true,
+                // Mute and a swipe both mean "answered", and both reach the registry as a dismissal of this one
+                // card, so they act on this alarm alone rather than silencing everything.
+                dismissIntent = deleteIntent(notification.instanceKey)
             )
         } else if (preferences.get(BooleanKey.AlertUrgentAsAndroidNotification) && notification.actions.isEmpty()) {
             raiseSystemNotification(notification, title)

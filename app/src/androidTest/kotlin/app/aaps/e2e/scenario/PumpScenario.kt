@@ -20,7 +20,6 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.implementation.androidNotification.AlarmNotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -527,24 +526,24 @@ class PumpScenario(private val pump: PumpUnderTest) {
     private fun shownNotifications(): List<NotificationId> = testGraphs.notificationManager.notifications.value.map { it.id }
 
     /**
-     * AAPS raised an alarm the user hears at [since] or later: a notification at [NotificationLevel.URGENT] that carries
-     * a sound (an URGENT card without one is silent), or the full-screen alarm of `UiInteraction.runAlarm`. Without a
-     * screen in the test, runAlarm posts that alarm as a system notification.
+     * AAPS raised an alarm the user hears at [since] or later: a notification at [NotificationLevel.URGENT] that
+     * carries a sound (an URGENT card without one is silent), or the alarm screen over whatever is on top.
+     *
+     * There used to be a third way, the full-screen alarm of `UiInteraction.runAlarm` with its own notification id.
+     * Every alarm is a card now - the app's own as well as a pump's - so the first check covers what that one did.
      */
     fun checkUrgentAlarmSince(since: Long) {
         fun urgent() = testGraphs.notificationManager.notifications.value.any { it.level == NotificationLevel.URGENT && it.sound != null && it.date >= since }
-        fun fullScreen() = instrumentation.targetContext.getSystemService(NotificationManager::class.java)
-            .activeNotifications.any { it.id == AlarmNotificationManager.NOTIFICATION_ID_FULL_SCREEN && it.postTime >= since }
-        // From the main thread with the app in front, runAlarm opens its alarm screen at once instead.
+        // With the app in front the alert platform opens its alarm screen at once instead of waking the screen.
         fun alarmScreen(): Boolean {
             var shown = false
             onMain {
                 shown = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED)
-                    .any { testGraphs.uiInteraction.errorHelperActivity.isInstance(it) }
+                    .any { testGraphs.androidActivities.alarm.isInstance(it) }
             }
             return shown
         }
-        fun alarmed() = urgent() || fullScreen() || alarmScreen()
+        fun alarmed() = urgent() || alarmScreen()
         awaitValue(RECORD_TIMEOUT) { alarmed().takeIf { it } }
         assertWithMessage("an alarm since the pump raised it, AAPS shows ${shownForAlarm()}")
             .that(alarmed()).isTrue()

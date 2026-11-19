@@ -19,7 +19,6 @@ import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
-import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.LocalSnackbarHostState
@@ -39,7 +38,6 @@ class CarelevoComposeContent(
     private val carelevoAlarmNotifier: CarelevoAlarmNotifier,
     private val protectionCheck: ProtectionCheck,
     private val bleReadyCheck: CarelevoBleReadyCheck,
-    private val iconsProvider: IconsProvider,
     private val config: Config
 ) : ComposablePluginContent {
 

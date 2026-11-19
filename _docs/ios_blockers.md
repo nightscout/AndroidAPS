@@ -259,7 +259,7 @@ What the iOS side has to do:
 
 The tests are in `androidHostTest` (`KeepAliveRunnerTest`, 36 tests), so they do not run on iOS yet.
 
-### `RunningModeExpiryTimer` needs an iOS implementation
+### DONE on the iOS side: `RunningModeExpiryTimer`
 
 `RunningModeExpiryScheduler` is in `plugins/aps/src/commonMain` now. It decides when the end of a
 temporary running mode (loop suspended, pump disconnected) has to run `RunningModeExpiryJob`, and asks a
@@ -273,7 +273,16 @@ while the app is awake, and at the next wake check whether the end has passed an
 the sequence, follower or not. The desktop's `DesktopRunningModeExpiryTimer` (a coroutine delay) is
 the shape to start from.
 
-### One start sequence for every app: `AppStartSequence`
+**Done (2026-11-19).** `IosRunningModeExpiryTimer`
+(`plugins/aps/src/iosMain/.../loop/runningMode/`) is exactly that: a coroutine delay on the app
+scope, cancelled and re-armed on each `schedule`. It runs the job late rather than never, as asked -
+a delay that fell due while the app was suspended fires on resume. The real net is still
+`RunningModeExpiryScheduler.start()` re-reading the database at the next start, which is what covers
+a delay the system threw away entirely. Five tests in `plugins/aps/src/iosTest/`; the provider throws
+a marker rather than building a real `RunningModeExpiryJob`, which is final and wants five
+collaborators.
+
+### DONE on the iOS side: one start sequence for every app, `AppStartSequence`
 
 `appshell/src/commonMain/.../start/AppStartSequence.kt` is everything `MainApp` did at start, in one
 order: the snackbar fallback, the preference migrations (and the simple mode and temp target defaults
@@ -306,6 +315,26 @@ What the iOS side has to do to run it:
 - **Run `IosBgQualityCheckWiringTest` and `AppStartSequenceTest`'s scenarios on the simulator** once
   wired; the migrations and the vacuum have never run on Apple.
 
+**Done (2026-11-19), and the migrations and the vacuum have now run on Apple.** Every item above is
+in place: `IosStartPlatform` (`ios/shell/src/iosMain/.../start/`), `appStartSequence` on
+`IosAppGraph`, `IosClientConfig` starting at `InitProgress(done = false)`, and `IosAppStartup`,
+`PluginRegistry` and `IosAppStartupTest` deleted. `IosNotificationDelegate.install()` had to move
+**above** the sequence, because the snackbar fallback the sequence starts posts through it.
+
+Observed on the simulator, not merely compiled: `Startup VACUUM done: DONE` (1326 changes), the
+old-record insulin migration, `Registered 21 plugins`, `App start finished`, `onEventAppInitialized`,
+the "Identification not set in dev mode" banner from `postSetupNotifications()`, zero uncaught
+exceptions, and a `versionChanges` row written 10 s after start as `RECORD_DELAY` intends.
+
+Async registration is safe because `AapsAppRoot` composes `content` inside
+`AnimatedVisibility(visible = initProgress.done)`, which keeps the subtree out of composition
+entirely until the sequence finishes - so nothing reads the pump early. Android has always worked
+this way.
+
+One caveat: **`AppStartSequenceTest` still has not run on Apple.** `:appshell` has no iOS test source
+set, so its 16 tests remain `androidHostTest` only. What ran on the simulator is the sequence itself,
+through the app, not those tests.
+
 ### `IosBgQualityCheck` is gone: iOS uses the real `BgQualityCheckPlugin`
 
 The plugin is in `plugins/constraints/src/commonMain` and registers itself on every platform, as a
@@ -322,9 +351,28 @@ merges only the unqualified list today.
 
 In the `@APS` list, `StorageConstraintPlugin` (stops the closed loop when the phone is nearly full)
 is in `commonMain` and reads the free space through `FreeStorage`
-(`plugins/constraints/src/commonMain/.../storage/`). iOS needs one: the free space of the app's
-container, for example `NSFileManager.attributesOfFileSystemForPath` with `NSFileSystemFreeSize`, in
-MB. The graph needs it only once the `@APS` list is merged.
+(`plugins/constraints/src/commonMain/.../storage/`).
+
+**Done (2026-11-19): `IosFreeStorage` in `plugins/constraints/src/iosMain/.../storage/`.** Four tests
+on the simulator.
+
+**It does not use `NSFileSystemFreeSize`, which is what this section used to recommend.** Follow that
+advice and the plugin misfires: the plain figure reports only what is free right now, while iOS will
+evict gigabytes of purgeable caches to satisfy a write. Against a 200 MB threshold the two disagree
+completely, and the smaller number is not the cautious choice - `StorageConstraintPlugin` turns a low
+answer into `isClosedLoopAllowed = false`, so it would switch closed looping off on a healthy phone.
+It reads `NSURLVolumeAvailableCapacityForImportantUsageKey` instead, which is what the app could
+actually write, and reads the plain figure alongside only to log a line when the two differ by more
+than a tenth. When it cannot measure at all it returns 0 and logs an error: not knowing how much room
+the database has is a fair reason not to run a closed loop, and an invented value would be a silent
+no-op in the one class whose job is to notice a full disk.
+
+A probe of the master graph on iOS found exactly **three** missing bindings, not a wall: `FreeStorage`
+(now done), `@PumpDriver Map<Int, PluginBase>` and `@NotNSClient Map<Int, PluginBase>`. `Loop` and
+`@APS Map` already resolved, and after `IosFreeStorage` the whole `@APS` bucket - loop, openAPS
+engines, constraints - builds for iOS. The remaining two are *unpopulated*, not broken: every pump
+driver, and `VersionChecker` / OpenHumans / Tidepool, are Android-only. `@Multibinds(allowEmpty =
+true)` is what makes an empty bucket legal, with the precedent in `AppRootGraph`.
 
 ## Ready for iOS: the encrypted settings store (2026-10, not yet run on Apple)
 
@@ -448,7 +496,7 @@ wrong. What is actually left:
 | ~~`ExportPasswordDataStore`~~ | done | Shared `ExportPasswordDataStoreImpl` is in commonMain and the iOS half is `IosExportPasswordPlatform`. This section already says so further down ("`ExportPasswordDataStore` - iOS side done"); the table simply was not updated. Checked 2026-09-21. |
 | ~~`ImportExportPrefs`~~ | done | `LocalImportExportPrefs` in commonMain serves iOS and desktop; settings export and import were run end to end on the simulator, including Google Drive. A document picker is still missing, but that is a directory-chooser gap, not a missing binding. Checked 2026-09-21. |
 | ~~`IobCobCalculator`~~ | done | `IobCobCalculatorPlugin` is in `plugins/main/src/commonMain` now, and iOS builds it through `ClientHistoryWindowGraph` (shared with desktop). The "needs a home outside :app" problem is solved. Checked 2026-09-21. |
-| `UiInteraction` | ours, nearly done | `IosUiInteraction` exists and is bound. **One method left**: `runAlarm` still only logs. Note this is a different path from `setAudibleAlarm`, which does sound - see the corrected alarm entry below. Checked 2026-09-21. |
+| ~~`UiInteraction`~~ | done | There is no iOS implementation any more, and that is the fix rather than a gap. `runAlarm` raises a `PumpAlert` with `PumpAlertLifetime.EVENT`, so the app's own alarms are cards in the notification list like a pump's alert, and the one implementation - `app.aaps.implementation.ui.UiInteractionImpl` in commonMain - serves both platforms. `IosUiInteraction`, whose `runAlarm` only wrote a line in the log, is deleted. The two `KClass` members that had no iOS meaning are `AndroidActivities` now. Step 6 of `_docs/PUMP_DESIGN.md`, 2026-11-19. |
 | `NsSocketFactory` | ours, by design | Correct as written, and not a missing class: there is deliberately no `IosNsSocketFactory`. The implementation is Swift and enters as a factory parameter at start up. Checked 2026-09-21. |
 
 **Correction to what this section used to say.** It listed `BolusWizard`, `QuickWizard`,
@@ -717,12 +765,26 @@ Not blockers, and not for the Windows session to fix. Listed so nobody is surpri
 
   Earlier notes here said the entitlement was the only route. That was wrong: it is the only route
   for a notification-delivered alarm, not for one the app plays itself.
+
+  **The gap between those two was open until 2026-11-19 and is now closed.** "While the app is not
+  running" is not only the suspended case: the ramping player cannot start *at all* while the app is
+  in the background, because `AVAudioSession` needs the process running and AAPS has no `audio`
+  background mode. So the common case - a phone in a pocket - got no sound from either path, since
+  every notification was posted silently on purpose. `IosSystemNotificationPlatform` now attaches
+  `UNNotificationSound.defaultSound()` to a notification that carries an `AlarmSound` while no AAPS
+  screen is in front (`audibleInBackground`), and starts the ramping player when the app comes to the
+  front with an alarm still ringing (`onAppForeground`) - which the registry never did on its own,
+  because `refreshAlarmSound` only calls `setAudibleAlarm` when the *top* alarm changes. A default
+  notification sound is one shot rather than a ramp, and Focus still applies unless
+  `AlertOverrideDoNotDisturb` is on, so the entitlement above remains the only way to break through
+  silent mode. What changed is that silence is no longer the default outcome.
 - `IosSystemNotificationPlatform.onDismissed` **is** wired now. Two things were needed and either
   one missing makes it silently never fire: a delegate on the shared centre, held in a property
   because that slot is weak, and a `UNNotificationCategory` carrying `customDismissAction`, without
-  which iOS reports taps but not dismissals. The one caveat left is that it calls
-  `setNotificationCategories` with only its own category, so it would clobber categories registered
-  elsewhere - nothing else registers any today.
+  which iOS reports taps but not dismissals. That caveat is now fixed: categories are
+  accumulated by `IosNotificationDelegate` (`core/interfaces/src/iosMain/.../notifications/`) and
+  registered together, because `setNotificationCategories` replaces the whole set and iOS gives the
+  app only one delegate slot. Register through it rather than calling the centre directly.
 - **The pairing PIN is not protected from screenshots on iOS.** `blockScreenshotsWhileVisible()`
   (`plugins/sync/.../clientcontrol/compose/ScreenshotBlocking.kt`) is an `expect` that returns
   whether the platform really blocked capture. Android applies `FLAG_SECURE` and returns true; the
@@ -775,7 +837,11 @@ behind it, written for `IosSecureEncrypt` and directly reusable here.
 `ImportExportPrefs` is a separate matter - 37 methods, document picker work on both sides - and is
 not being asked for here.
 
-### For the iOS side: none of `:ios:shell`'s eleven tests has ever run
+### FIXED: none of `:ios:shell`'s eleven tests had ever run
+
+Fixed since this was written. `:ios:shell` now runs in `.github/workflows/ios-ci.yml` and reports
+**88 tests** on the simulator. The account below is kept because the shape of the hole came back
+twice more, in a form the fix did not cover - see the note at the end of this section.
 
 Raised rather than fixed, because it is your workflow and only your CI can prove the change works.
 
@@ -824,6 +890,41 @@ return to running nothing. The compile side is already fine from here:
 `:ios:shell:compileKotlinIosArm64`, `compileKotlinIosSimulatorArm64` and
 `compileTestKotlinIosSimulatorArm64` all pass on Windows, so the sources are real and only
 execution is missing.
+
+### The same hole came back twice, in a form the fix did not cover (2026-11-19)
+
+That fix watched `iosTest` source sets. Both of the next two escapes were `commonTest`:
+
+- **Ten modules had a populated `commonTest` and were absent from the run step**, so their shared
+  tests ran on the JVM only: `ui`, `database:impl`, `database:persistence`, `workflow`,
+  `shared:impl`, `shared:clientbindings`, `core:ui`, `core:objects`, `core:utils` and
+  `pump:carelevo`. All ten pass on Apple - 339 tests, 0 failures - so nothing was broken; the point
+  is that nothing would have said so if something had been. `:ui` was among them, and its
+  `DiacriticsTest` is the only thing that makes "the same search matches on both platforms" true
+  rather than assumed.
+- **`:core:keys` was in the run step but not in the `check()` list**, and its task is `SKIPPED`
+  because its only tests are `androidHostTest`. Listing it read as Apple coverage it never had.
+
+Both are fixed, and so is the cause: the auto-guard now finds `commonTest` as well as `iosTest`, and
+skips a module that does not build for iOS (no `kmp-android-library`, no declared iOS target) so a
+`commonTest` in a JVM-only module cannot fail it. Keep the run step and the `check()` list in the
+same order - they are compared by eye, and that is how `:core:nssdk` came to run without being
+checked.
+
+**And a third time, through the guard itself (same day).** `:pump:carelevo:protocol` has a populated
+`commonTest` (`DoseEncodingTest`, which checks the bytes a bolus is encoded into) and was in neither
+list. The auto-guard did not catch it either, and that is the part worth remembering: it searched
+with `find . -maxdepth 4`, and a nested module puts its source set at
+`pump/carelevo/protocol/src/commonTest`, one level deeper than every other module in the repo. So
+the step written to make this hole impossible had a hole of exactly the same shape. It is
+`-maxdepth 5` now, and the derived list and the two hand lists agree at 20 modules. If a module is
+ever nested deeper than that, raise it again rather than adding the module by hand - the hand lists
+are the thing that keeps failing.
+
+**A cast warning in that batch is not a bug.** `ui/src/iosMain/.../Diacritics.ios.kt` compiles with
+"This cast can never succeed" on `(this as NSString)`. That cast is the Kotlin/Native bridge between
+mapped types and converts at run time; `DiacriticsTest` passes on `iosSimulatorArm64`, Czech and the
+Turkish capital-I case included. It carries `@Suppress("CAST_NEVER_SUCCEEDS")` now. Do not "fix" it.
 
 ## Done, with one thing you did not have visibility of
 
@@ -975,10 +1076,19 @@ Checked the rest of the tree while there: the only other `kotlin.random.Random` 
 pump serial number and a date helper, neither of which is security.
 
 
-## Before anyone writes `IosUiInteraction`: the alarm owner tag is a trap
+## HISTORY: the alarm owner tag was a trap, and the trap is gone
 
-Not a live bug - nothing on iOS plays with `OWNER_FULLSCREEN` today - but the next person to write
-`UiInteraction.runAlarm` for iOS will walk into it, so it is written down before that happens.
+Nothing on iOS ever played with `OWNER_FULLSCREEN`, and nothing anywhere does now: the tag is
+deleted. This was written as a warning for whoever wrote `UiInteraction.runAlarm` for iOS. Nobody
+had to in the end, because step 6 made `runAlarm` shared code over `PumpAlerts`.
+
+**This is history now, and the answer was route 1.** Step 6 of `_docs/PUMP_DESIGN.md` landed on
+2026-11-19: every alarm is a card, the registry under `OWNER_INTERNAL` is the only sound owner, and
+the alarm screen is a *view* of the sounding card rather than a second owner. `OWNER_FULLSCREEN` is
+deleted, so the trap below can no longer be walked into. The title problem at the end of this
+section is answered too: a card carries its own `alarmTitle`, which the system notification and the
+watch both use. The account is kept because it explains why the other route was tempting - and
+because the same shape will come up again on the next platform.
 
 `AlarmSoundPlayer` records who started a sound. Two owners exist: `OWNER_INTERNAL`, used by the
 notification registry through `setAudibleAlarm`, and `OWNER_FULLSCREEN`, used by Android's

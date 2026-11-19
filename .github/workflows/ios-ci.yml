@@ -178,12 +178,20 @@ jobs:
         run: |
           set -o pipefail
           echo "Running with TZ=$TZ"
+          # Every module with a populated `commonTest` or `iosTest` belongs here. `:core:keys` is
+          # deliberately NOT in the list: its only tests are `androidHostTest`, so its iOS task is
+          # SKIPPED. It used to be listed, which read as Apple coverage it never had.
           ./gradlew --console=plain --no-daemon \
-            :core:data:iosSimulatorArm64Test :core:nssdk:iosSimulatorArm64Test :core:keys:iosSimulatorArm64Test \
-            :core:interfaces:iosSimulatorArm64Test \
+            :core:data:iosSimulatorArm64Test :core:nssdk:iosSimulatorArm64Test \
+            :core:interfaces:iosSimulatorArm64Test :core:objects:iosSimulatorArm64Test \
+            :core:ui:iosSimulatorArm64Test :core:utils:iosSimulatorArm64Test \
+            :database:impl:iosSimulatorArm64Test :database:persistence:iosSimulatorArm64Test \
             :implementation:iosSimulatorArm64Test :ios:shell:iosSimulatorArm64Test \
             :plugins:sync:iosSimulatorArm64Test :plugins:aps:iosSimulatorArm64Test \
-            :plugins:automation:iosSimulatorArm64Test \
+            :plugins:automation:iosSimulatorArm64Test :plugins:constraints:iosSimulatorArm64Test \
+            :pump:carelevo:iosSimulatorArm64Test :pump:carelevo:protocol:iosSimulatorArm64Test \
+            :shared:clientbindings:iosSimulatorArm64Test :shared:impl:iosSimulatorArm64Test \
+            :ui:iosSimulatorArm64Test :workflow:iosSimulatorArm64Test \
             | tee test.log
 
       # Every module that HAS iOS tests is checked by name. A module added to the run above but not
@@ -210,30 +218,61 @@ jobs:
             grep -ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' \
               "$dir"/build/test-results/iosSimulatorArm64Test/TEST-*.xml || true
           }
+          # One line per module in the run step above, in the same order, so the two lists can be
+          # compared by eye. `:core:nssdk` was missing from here while it ran, which is the same
+          # hole in the other direction: it could have gone SKIPPED and nothing would have said so.
           check ":core:data" core/data
+          check ":core:nssdk" core/nssdk
           check ":core:interfaces" core/interfaces
+          check ":core:objects" core/objects
+          check ":core:ui" core/ui
+          check ":core:utils" core/utils
+          check ":database:impl" database/impl
+          check ":database:persistence" database/persistence
           check ":implementation" implementation
           check ":ios:shell" ios/shell
           check ":plugins:sync" plugins/sync
           check ":plugins:aps" plugins/aps
           check ":plugins:automation" plugins/automation
+          check ":plugins:constraints" plugins/constraints
+          check ":pump:carelevo" pump/carelevo
+          check ":pump:carelevo:protocol" pump/carelevo/protocol
+          check ":shared:clientbindings" shared/clientbindings
+          check ":shared:impl" shared/impl
+          check ":ui" ui
+          check ":workflow" workflow
           exit $fail
 
       # The list above is written by hand, which is how three modules came to be missed: a module
-      # gains an `iosTest` source set and nobody remembers this file. This step needs no list. It
-      # finds every module that HAS Apple-only tests and insists each one produced results, so the
-      # next module to grow an `iosTest` fails here until it is added above, instead of passing
-      # quietly for months.
-      - name: Assert no module with Apple-only tests was left out
+      # gains a test source set and nobody remembers this file. This step needs no list. It finds
+      # every module that HAS tests which should run on Apple and insists each one produced results,
+      # so the next such module fails here until it is added above, instead of passing quietly for
+      # months.
+      #
+      # It covers `commonTest` as well as `iosTest`, because only watching `iosTest` was itself a
+      # hole: ten modules had a populated `commonTest` and were absent from the run step, so their
+      # shared tests ran on the JVM only. `:ui` was among them, and its `DiacriticsTest` is the only
+      # thing that makes "the same search matches on both platforms" true rather than assumed.
+      - name: Assert no module whose tests should run on Apple was left out
         run: |
           fail=0
-          for src in $(find . -maxdepth 4 -type d -name iosTest -not -path "*/build/*" | sed 's|^\./||'); do
-            dir="${src%/src/iosTest}"
+          # -maxdepth 5, not 4: a nested module such as pump/carelevo/protocol puts its source set at
+          # pump/carelevo/protocol/src/commonTest, which is one level deeper than every other module in the
+          # repo. At 4 this guard could not see it, which is how :pump:carelevo:protocol kept a commonTest
+          # that no Apple run executed while this very step was meant to make that impossible.
+          for src in $(find . -maxdepth 5 -type d \( -name iosTest -o -name commonTest \) -not -path "*/build/*" | sed 's|^\./||'); do
+            dir="${src%/src/*}"
             # An empty source-set directory still exists for some modules - only populated ones count.
             if [ -z "$(find "$src" -name '*.kt' 2>/dev/null | head -1)" ]; then continue; fi
+            # A module that does not build for iOS has no task to run, and a `commonTest` of its own
+            # is no reason to fail. It builds for iOS when it declares the target itself, or applies
+            # kmp-android-library, which declares it for the module. Comment lines are skipped, so a
+            # KDoc that merely names a target does not count as declaring one.
+            if ! grep -v '^[[:space:]]*//' "$dir/build.gradle.kts" 2>/dev/null \
+              | grep -qE 'kmp-android-library|iosArm64|iosSimulatorArm64|ios\(\)'; then continue; fi
             FOUND=$(find "$dir/build/test-results/iosSimulatorArm64Test" -name "TEST-*.xml" 2>/dev/null | wc -l)
             if [ "$FOUND" -le 0 ]; then
-              echo "::error::$dir has iosTest sources but produced no iOS test results. Add :$(echo "$dir" | tr '/' ':'):iosSimulatorArm64Test to the run step and a check() line above."
+              echo "::error::$dir has tests that should run on Apple but produced no iOS test results. Add :$(echo "$dir" | tr '/' ':'):iosSimulatorArm64Test to the run step and a check() line above."
               fail=1
             fi
           done
@@ -246,7 +285,13 @@ jobs:
           name: ios-test-results
           path: |
             core/*/build/test-results/iosSimulatorArm64Test/**
+            database/*/build/test-results/iosSimulatorArm64Test/**
             implementation/build/test-results/iosSimulatorArm64Test/**
             ios/shell/build/test-results/iosSimulatorArm64Test/**
-            plugins/sync/build/test-results/iosSimulatorArm64Test/**
+            plugins/*/build/test-results/iosSimulatorArm64Test/**
+            pump/carelevo/build/test-results/iosSimulatorArm64Test/**
+            pump/carelevo/protocol/build/test-results/iosSimulatorArm64Test/**
+            shared/*/build/test-results/iosSimulatorArm64Test/**
+            ui/build/test-results/iosSimulatorArm64Test/**
+            workflow/build/test-results/iosSimulatorArm64Test/**
           if-no-files-found: warn

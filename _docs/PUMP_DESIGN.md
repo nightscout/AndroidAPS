@@ -250,8 +250,8 @@ How to move a module is in the `kmp-module-flip` skill. The pump-specific rules,
 4. The scenario check for an alarm (`PumpScenario.checkUrgentAlarmSince`) reads `PumpAlerts.active` instead of any
    URGENT card.
 5. Add the requirements below to `PUMP_DRIVER_ACCEPTANCE.md`.
-6. Later, not pumps: move the other `runAlarm` callers to the same sound owner, and move the two `KClass` members of
-   `UiInteraction` to an Android-only interface.
+6. **Done (2026-11-19).** Not pumps: the other `runAlarm` callers moved to the same sound owner, and the two
+   `KClass` members of `UiInteraction` became `AndroidActivities`. See section 8.
 
 ## 6. Requirements in the acceptance file
 
@@ -278,3 +278,128 @@ form.
    active, it rings again. Not chosen: silence until the alert ends (an occlusion could stay unheard for hours), and
    a silence that a restart forgets (a restart would ring an alert the user had just silenced).
 4. **The name is `PumpAlerts`.**
+
+## 8. Step 6: the alarms that are not pump alerts
+
+Step 6 of section 5. Built on 2026-11-19; the decisions at the end are Milos's. What is written here is what the
+code does, not a plan.
+
+### Why it exists
+
+`UiInteraction.runAlarm` is the other alarm path. `IosUiInteraction.runAlarm` only writes a line in the log, so every
+caller of it is **silent on iOS** - there is no sound, no screen and no notification. Two of those callers are shared
+code, so this is not a gap in an Android feature, it is a gap in code that both platforms run.
+
+### Inventory, 2026-11-19
+
+Callers that are in scope (a pump driver's own `runAlarm` is not - those go away with step 3, one driver at a time):
+
+| Caller | Source set | What it is |
+|---|---|---|
+| `CommandQueueImplementation` | **commonMain** | a bolus or insulin-change command failed (`BOLUS_ERROR`) |
+| `OverviewScreen` | **commonMain** | the same error, shown from the manage sheet |
+| `ComposeMainActivity` | androidMain | the same error again, the Android copy of the `OverviewScreen` call |
+| `EatReminderReceiver` | androidMain | the "time to eat" timer (`runEatReminderAlarm`) |
+| `TimerReminderReceiver` (automation) | androidMain | an automation timer reminder |
+| `UiInteractionImpl.muteAlarm` | androidMain | the re-ring 5 minutes after a mute |
+
+The two commonMain callers are the ones that are silent on iOS today. The androidMain ones have no iOS counterpart
+yet, so they are not silent so much as absent - but the eat reminder and the automation reminder both already have an
+iOS scheduler (`IosReminderScheduler`), so they will reach this path as soon as anything rings them.
+
+### What `runAlarm` does on Android today
+
+Worth writing down, because all of it has to keep working. `UiInteractionImpl.runAlarm`:
+
+1. cancels a pending mute re-ring and remembers this alarm as the one shown;
+2. tells the watch (`AlarmRinging` with **the caller's title** and **`canMute = true`**, or `AlarmStopped` for the eat
+   alarm, which the watch rings itself);
+3. writes an announcement (`config.APS` only, and not for a re-ring);
+4. off the main thread, or in the background: `AlarmNotificationManager.postFullScreenAlarm` - a notification on a
+   sound-bearing channel (silent channel while Do Not Disturb is on and the override is off, see `DoNotDisturbRule`),
+   `CATEGORY_ALARM`, `setOngoing(true)`, a **Mute action** and a **swipe-to-mute** delete intent (`AlarmMuteReceiver`,
+   #5338), `+5 min` for the eat alarm, the looping `AlarmSoundPlayer` under `OWNER_FULLSCREEN` deferred past the
+   channel's one-shot sound, and two `setAlarmClock` alarms that light the screen and launch the alarm screen;
+5. in the foreground on the main thread: starts the alarm screen directly, which owns the ramp from zero.
+
+And `stopAlarm` is `muteAllAlarms()` - every audible alarm, not only this one - plus `AlarmStopped` to the watch;
+`dismissAlarm` adds `EventAlarmDismissed`; `muteAlarm(minutes)` stops and re-rings after N minutes from an in-process
+coroutine; `stopEatReminderAlarm` cancels the full-screen alarm alone.
+
+### The design
+
+The same card model as pump alerts, because it already answers every one of those points on both platforms. One alert
+path, not two.
+
+1. **Widen the core.** `PumpAlert` gains a lifetime, which is the one real difference between the two kinds:
+   - `CONDITION` - today's pump behaviour. The raiser resolves it; a card removed while it is still active counts as a
+     30-minute silence and comes back.
+   - `EVENT` - the user's acknowledgement ends it. Silence-and-close, a swipe or Mute **resolves** it, and it does not
+     come back. A bolus error is an event: nobody will ever "resolve" it from the pump side.
+
+   Everything else - severity, the card, the sound, the alarm screen, snooze, the announcement - is unchanged.
+2. **`runAlarm` becomes a shim.** `runAlarm(status, title, sound)` raises an `EVENT` alert with `source = "aaps"`.
+   `stopAlarm` resolves, `dismissAlarm` resolves and closes the screen, `muteAlarm(minutes)` is `snooze(..., minutes)`,
+   `stopEatReminderAlarm` resolves the eat alert alone.
+3. **The eat reminder's `+5 min` becomes an alert action.** `PumpAlertAction(label = "+5 min") { eatReminder.extend() }`
+   - the model already carries exactly this, so the special case in `ErrorScreen` and in the notification goes away.
+4. **Restore Mute and swipe on the sounding card.** `AlarmNotificationManager.postSilentAlarmNotification`, which is
+   what the registry posts for an URGENT card with a sound, has no Mute action and no delete intent;
+   `postFullScreenAlarm` has both. They are added to the silent one, so #5338 is answered for **every** sounding card -
+   pump alerts included, which do not have it today either.
+5. **The watch keeps its title and its Mute.** `CommonNotificationManager.refreshAlarmSound` sends a fixed
+   "Urgent alarm" title and `canMute = false`. The card needs to carry the title and whether it can be muted, so the
+   watch says what it says today.
+6. **Move the Android-only members out of `UiInteraction`.** `mainActivity` and `errorHelperActivity` are `KClass`.
+   Every real reader is androidMain (`UiInteractionImpl`, `AlarmNotificationManager`, `NotificationHolderImpl`,
+   `AndroidPumpAlertPlatform`); the only other implementation is the desktop stub, which exists solely to satisfy the
+   interface and points both at a class that is not an activity. That is the proof they do not belong in shared code.
+
+iOS needed no new mechanism at all: `IosPumpAlertPlatform` already shows the alarm screen, chimes, schedules the
+re-ring as a local notification and withdraws it, and `IosSystemNotificationPlatform` already gives a background card
+its sound. `IosUiInteraction` is deleted - there is one shared `UiInteractionImpl` in `:implementation` commonMain,
+bound by each platform beside `PumpAlerts`, and the desktop keeps its own honest stub because it has no alert
+platform.
+
+### What was deleted
+
+A whole parallel alarm path, which is the point of the step:
+
+- `AlarmNotificationManager.postFullScreenAlarm` and everything only it used: the record of an unanswered alarm, the
+  `OWNER_FULLSCREEN` sound owner, the deferral of the ramp past a channel one-shot sound and the duration probe
+  behind it, `NOTIFICATION_ID_FULL_SCREEN`.
+- `AlarmMuteReceiver`: Mute and a swipe are an ordinary dismissal of the card now, which the notification platform
+  already reported, and dismissing one card acts on one alert.
+- `UiInteractionImpl` in `:app`, 150 lines of activity starts, watch events, an announcement and an in-process
+  re-ring timer. What is left of it there is `AndroidActivitiesImpl`, two lines naming two activities.
+- `ErrorActivity`'s own `MediaPlayer`, its five intent extras and its non-pump branch: it shows `PumpAlertScreen` and
+  nothing else.
+- `IosUiInteraction`, whose `runAlarm` only wrote a line in the log.
+
+`unansweredAlarmIntent` moved rather than went: it is `AndroidPumpAlertPlatform` now, set when the alarm screen
+could not be shown and cleared when the alert is answered, and `ComposeMainActivity` reads it on the way in (#5338).
+
+### What must not change on Android
+
+The volume ramp; `DoNotDisturbRule` on the channel choice; the `setAlarmClock` screen wake when AAPS is in the
+background; reopening an unanswered alarm on the way back in (`unansweredAlarmIntent`, #5338); the Mute action and the
+swipe; the watch events (`AlarmRinging` with `canMute`, `AlarmStopped`, `EventAlarmDismissed`); the eat reminder's
+`+5 min`; and `MUTE_MINUTES` re-ringing. These tests stay green: `AlarmNotificationManager*Test`,
+`AndroidSystemNotificationPlatformTest`, `CommonNotificationManagerTest`, `UiInteractionImplTest`,
+`ErrorActivityInjectionTest` and `CarelevoUiTest.aPatchAlarmOpensTheAlarmScreenThatSilencesAndActs`.
+
+### Decisions (2026-11-19)
+
+1. **A key per caller.** A bolus error and a pump-unreachable alarm are two cards, each silenced on its own. The
+   registry still sounds only the top one, so the user hears one alarm. Not chosen: one shared key, which is what
+   Android does today - a new alarm replaces the one shown, so two different problems can never both be on screen and
+   silencing one silences whichever arrived last.
+2. **A mute is stored and survives a restart.** It is a snooze, exactly like a pump alert's silence. Not chosen: the
+   in-process coroutine used today, which a restart forgets - and which cannot work on iOS at all, where a suspended
+   app cannot re-ring itself.
+3. **The OK button silences only its own alarm.** A ringing pump alert keeps ringing, because the pump condition is
+   still there. Not chosen: today's `muteAllAlarms()`, where OK on a bolus error also stops an occlusion alarm, so one
+   alarm can hide another.
+4. **An EVENT alert ends when the user answers it.** A swipe, Mute or Silence-and-close resolves it and it does not
+   come back. A CONDITION alert is unchanged: removing its card is a 30-minute silence, because the pump still holds
+   it. This is what the lifetime is for.

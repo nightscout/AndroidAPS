@@ -1,4 +1,4 @@
-package app.aaps.di
+package app.aaps.appshell.start
 
 import app.aaps.core.interfaces.plugin.PluginBase
 
@@ -40,8 +40,8 @@ fun mergePlugins(sources: List<PluginSource>): Pair<List<PluginBase>, List<Strin
             val previousOwner = keyOwner[key]
             if (previousOwner != null) {
                 val previous = merged.getValue(key)
-                problems += "order key $key used by both ${previousOwner} (${previous.javaClass.simpleName})" +
-                    " and ${source.name} (${plugin.javaClass.simpleName}) - one of them is dropped"
+                problems += "order key $key used by both ${previousOwner} (${previous::class.simpleName})" +
+                    " and ${source.name} (${plugin::class.simpleName}) - one of them is dropped"
             }
             merged[key] = plugin
             keyOwner[key] = source.name
@@ -49,7 +49,7 @@ fun mergePlugins(sources: List<PluginSource>): Pair<List<PluginBase>, List<Strin
     }
 
     val ordered = merged.toList().sortedBy { it.first }.map { it.second }
-    ordered.groupBy { it.javaClass }
+    ordered.groupBy { it::class }
         .filterValues { it.size > 1 }
         .forEach { (type, copies) ->
             problems += "plugin ${type.simpleName} is in the list ${copies.size} times" +

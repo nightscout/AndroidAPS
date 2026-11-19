@@ -47,7 +47,10 @@ class RecordingNotificationManager : NotificationManager {
         validTo: Long,
         sound: AlarmSound?,
         actions: List<NotificationAction>,
-        validityCheck: (() -> Boolean)?
+        validityCheck: (() -> Boolean)?,
+        alarmTitle: String?,
+        canMute: Boolean,
+        tellWatch: Boolean
     ): NotificationHandle {
         posted += id to null
         return NotificationHandle(posted.size)

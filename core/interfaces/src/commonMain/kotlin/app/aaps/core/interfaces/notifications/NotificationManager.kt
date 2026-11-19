@@ -21,6 +21,10 @@ interface NotificationManager {
         validityCheck: (() -> Boolean)? = null
     ): NotificationHandle
 
+    /**
+     * The overload the alarm path uses. [alarmTitle] and [canMute] are what an alarm tells the system notification
+     * and the watch beyond its text; see [AapsNotification]. Nothing but an alarm needs to pass them.
+     */
     fun post(
         id: NotificationId,
         text: String,
@@ -29,7 +33,10 @@ interface NotificationManager {
         validTo: Long = 0L,
         sound: AlarmSound? = null,
         actions: List<NotificationAction> = emptyList(),
-        validityCheck: (() -> Boolean)? = null
+        validityCheck: (() -> Boolean)? = null,
+        alarmTitle: String? = null,
+        canMute: Boolean = false,
+        tellWatch: Boolean = true
     ): NotificationHandle
 
     /**
@@ -61,7 +68,7 @@ interface NotificationManager {
      * Silence and dismiss every currently audible alarm. Used by the global "mute all" entry
      * points (Wear snooze/mute gesture, full-screen acknowledge, app onTerminate). Stops both the
      * internal-notification (`AlarmSoundPlayer.OWNER_INTERNAL`) and full-screen
-     * (`AlarmSoundPlayer.OWNER_FULLSCREEN`) audio, cancels their system notifications, and removes
+     * audio, cancels their system notifications, and removes
      * the audible alarms from the registry so the in-app cards clear. Non-audible notifications are
      * left untouched.
      */

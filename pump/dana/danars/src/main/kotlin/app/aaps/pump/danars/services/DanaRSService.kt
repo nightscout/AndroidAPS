@@ -249,7 +249,7 @@ class DanaRSService : MetroService() {
                 if (abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds - large difference")
                     //If time-diff is very large, warn user until we can synchronize history readings properly
-                    uiInteraction.runAlarm(rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), AlarmSound.ERROR)
+                    uiInteraction.runAlarm("danars-time-diff", rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), AlarmSound.ERROR)
 
                     //de-initialize pump
                     danaPump.reset()

@@ -68,12 +68,7 @@ class IosAlarmSoundPlayer(
     private var currentOwner: String? = null
     private var rampJob: Job? = null
 
-    /**
-     * [postedAtElapsedRealtime] is ignored: it exists so Android can wait out a notification's own
-     * one-shot channel sound before starting the loop, and an iOS notification posted by
-     * `IosSystemNotificationPlatform` deliberately carries no sound.
-     */
-    override fun play(sound: AlarmSound, ownerTag: String, postedAtElapsedRealtime: Long) {
+    override fun play(sound: AlarmSound, ownerTag: String) {
         scope.launch { doPlay(sound, ownerTag) }
     }
 

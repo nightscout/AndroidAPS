@@ -121,7 +121,20 @@ class IosClientConfig(
             ?: "AAPSClient"
     )
 
-    private val _initProgressFlow = MutableStateFlow(InitProgress(done = true))
+    /**
+     * Not done yet, which is what makes the splash screen appear.
+     *
+     * `AapsAppRoot` composes the app itself only once this reports done, so nothing that reads the
+     * active pump is built while `AppStartSequence` is still running the preference migrations, the
+     * database vacuum and the plugin start. That gate is the whole protection: a view model built
+     * while the plugin list is still empty throws from its own constructor, and on Kotlin/Native an
+     * exception thrown there is unhandled and **aborts the process**.
+     *
+     * This started at `done = true` before, because the shell registered its plugins itself, on the
+     * main thread, before the first screen - and then had no start sequence for a splash to cover.
+     * It runs the shared sequence now, so the splash has to cover it, exactly as on Android.
+     */
+    private val _initProgressFlow = MutableStateFlow(InitProgress(done = false))
     override val initProgressFlow: StateFlow<InitProgress> = _initProgressFlow.asStateFlow()
 
     private val _initSnackbarFlow = MutableSharedFlow<String>(extraBufferCapacity = 8)
@@ -131,8 +144,9 @@ class IosClientConfig(
     // and what the start-up progress wants. The one field that must survive is the reconfigure depth:
     // it belongs to whoever opened the window, not to init progress, and clobbering it here would
     // close a window that `whileReconfiguring` still believes is open - reopening the app to readers
-    // in the middle of an import. It matters more on iOS than anywhere else, because iOS starts at
-    // `done = true` and has no start-up sequence that would put the state right again afterwards.
+    // in the middle of an import. This used to matter more on iOS than anywhere else, when the
+    // platform started at `done = true` and had no start sequence to put the state right again. It
+    // runs the shared sequence now, so iOS is no different here - the depth still has to survive.
     override fun updateInitProgress(step: String, current: Int, total: Int) {
         _initProgressFlow.update { InitProgress(step = step, current = current, total = total, reconfiguringDepth = it.reconfiguringDepth) }
     }

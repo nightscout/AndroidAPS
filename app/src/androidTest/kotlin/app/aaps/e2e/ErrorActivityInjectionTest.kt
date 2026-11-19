@@ -40,7 +40,7 @@ class ErrorActivityInjectionTest : AapsInstrumentedTest() {
         // On the main thread on purpose: runAlarm takes the direct-launch path only from there, and the
         // off-main path posts a full screen intent instead, which a test cannot tap reliably.
         instrumentation.runOnMainSync {
-            uiInteraction.runAlarm(status = "member injector check", title = "Metro alarm")
+            uiInteraction.runAlarm(key = "injection-check", status = "member injector check", title = "Metro alarm")
         }
 
         assertThat(device.wait(Until.findObject(By.textContains("Metro alarm")), TIMEOUT)).isNotNull()

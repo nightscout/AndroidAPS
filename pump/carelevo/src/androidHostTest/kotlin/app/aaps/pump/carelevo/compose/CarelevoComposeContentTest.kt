@@ -16,7 +16,6 @@ import androidx.compose.ui.text.AnnotatedString
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.ProtectionCheck
-import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.StatusLevel
@@ -90,7 +89,6 @@ class CarelevoComposeContentTest {
     private val carelevoAlarmNotifier = mock<CarelevoAlarmNotifier>()
     private val protectionCheck = mock<ProtectionCheck>()
     private val bleReadyCheck = mock<CarelevoBleReadyCheck>()
-    private val iconsProvider = mock<IconsProvider>()
 
     /** Not emulating by default — the emulator path skips the BLE pre-check. */
     private val config = mock<AapsConfig> {
@@ -133,7 +131,6 @@ class CarelevoComposeContentTest {
         carelevoAlarmNotifier = carelevoAlarmNotifier,
         protectionCheck = protectionCheck,
         bleReadyCheck = bleReadyCheck,
-        iconsProvider = iconsProvider,
         config = config
     )
 
@@ -166,7 +163,7 @@ class CarelevoComposeContentTest {
 
         assertThat(content).isInstanceOf(CarelevoComposeContent::class.java)
         // The plugin builds this eagerly; construction must stay side-effect free.
-        verifyNoInteractions(aapsLogger, carelevoAlarmNotifier, protectionCheck, bleReadyCheck, iconsProvider)
+        verifyNoInteractions(aapsLogger, carelevoAlarmNotifier, protectionCheck, bleReadyCheck)
     }
 
     // ── Overview route: content ────────────────────────────────────────────────

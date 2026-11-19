@@ -2,7 +2,6 @@ package app.aaps.di.metro
 
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import app.aaps.implementation.alerts.EatReminderReceiver
-import app.aaps.implementation.androidNotification.AlarmMuteReceiver
 import app.aaps.implementation.pump.alerts.PumpAlertWakeReceiver
 import app.aaps.implementation.receivers.BTReceiver
 import app.aaps.implementation.receivers.ChargingStateReceiver
@@ -35,24 +34,17 @@ import dev.zacsweers.metro.Provides
 @BindingContainer
 object AppReceiversBindings {
 
-    // Android builds this one from a notification action, so it must be in the map like the rest.
-    // It was converted to MetroBroadcastReceiver without an entry here, and tapping Mute or Dismiss
-    // on the background alarm notification then died with "No Metro binding for AlarmMuteReceiver"
-    // (issue #5124).
-    @Provides
-    @FeatureMemberInjectors
-    @IntoMap
-    @ClassKey(AlarmMuteReceiver::class)
-    fun bindAlarmMuteReceiver(injector: MembersInjector<AlarmMuteReceiver>): MembersInjector<*> = injector
-
-    // The end of a pump alert's silence (an exact alarm) - same story as AlarmMuteReceiver above.
+    // Android builds this one from an exact alarm, so it must be in the map like the rest: a receiver converted to
+    // MetroBroadcastReceiver without an entry here dies with "No Metro binding for ..." when it fires (#5124). The
+    // Mute and swipe of an alarm notification used to need one too, through `AlarmMuteReceiver`; both are an
+    // ordinary dismissal of the card now, which the notification platform already handles.
     @Provides
     @FeatureMemberInjectors
     @IntoMap
     @ClassKey(PumpAlertWakeReceiver::class)
     fun bindPumpAlertWakeReceiver(injector: MembersInjector<PumpAlertWakeReceiver>): MembersInjector<*> = injector
 
-    // The "time to eat" alarm and its notification buttons - same story as AlarmMuteReceiver above.
+    // The "time to eat" alarm and its notification buttons - same story as the receiver above.
     @Provides
     @FeatureMemberInjectors
     @IntoMap

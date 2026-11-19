@@ -29,7 +29,6 @@ import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -114,7 +113,6 @@ class CarelevoPumpPlugin @Inject constructor(
     private val appForeground: CarelevoAppForeground,
     private val protectionCheck: ProtectionCheck,
     private val bleReadyCheck: CarelevoBleReadyCheck,
-    private val iconsProvider: IconsProvider,
     private val config: Config,
     private var pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val carelevoPatch: CarelevoPatch,
@@ -135,7 +133,6 @@ class CarelevoPumpPlugin @Inject constructor(
                 carelevoAlarmNotifier = carelevoAlarmNotifier,
                 protectionCheck = protectionCheck,
                 bleReadyCheck = bleReadyCheck,
-                iconsProvider = iconsProvider,
                 config = config
             )
         }

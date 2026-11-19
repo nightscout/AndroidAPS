@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.IosNotificationDelegate
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
+import app.aaps.implementation.lifecycle.observeAppForeground
 import platform.UserNotifications.UNAuthorizationOptionAlert
 import platform.UserNotifications.UNAuthorizationOptionBadge
 import platform.UserNotifications.UNAuthorizationOptionSound
@@ -19,6 +20,7 @@ import platform.UserNotifications.UNNotificationDismissActionIdentifier
 import platform.UserNotifications.UNNotificationInterruptionLevel.UNNotificationInterruptionLevelActive
 import platform.UserNotifications.UNNotificationInterruptionLevel.UNNotificationInterruptionLevelTimeSensitive
 import platform.UserNotifications.UNNotificationRequest
+import platform.UserNotifications.UNNotificationSound
 import platform.UserNotifications.UNUserNotificationCenter
 
 /**
@@ -49,6 +51,42 @@ class IosSystemNotificationPlatform(
     /** The alarm currently owning the audio, so an unchanged owner does not restart the sound. */
     private var soundingKey: Int? = null
 
+    /** The sound [soundingKey] should be playing, kept so [onAppForeground] can start it after a failed background start. */
+    private var audibleSound: AlarmSound? = null
+
+    /** Whether an AAPS screen is in front. See [onAppForeground] for the two things that depend on it. */
+    private var inForeground = false
+
+    init {
+        observeAppForeground { onAppForeground(it) }
+    }
+
+    /**
+     * Two things change with the app leaving or entering the screen.
+     *
+     * **A notification posted in the background carries a sound** ([show]), because [AlarmSoundPlayer] cannot start
+     * there. `AVAudioSession` needs the process to be running and the app has no `audio` background mode, so an alarm
+     * that arrives while the app is suspended - which is most of them, on a phone in a pocket - plays nothing at all.
+     * A notification sound is one shot rather than a ramping loop, but it is heard, and that is the whole point of an
+     * alarm.
+     *
+     * **The ramping alarm is started again on the way in.** The registry calls [setAudibleAlarm] once, when the top
+     * alarm changes, and never again for the same alarm (`CommonNotificationManager.refreshAlarmSound`). So a CRITICAL
+     * alarm whose audio was refused in the background stayed silent after the user opened the app, with the alarm
+     * still on screen. Starting it here is what closes that gap. `play` stops any previous playback first, so an
+     * alarm that *is* already sounding is not cut in two.
+     *
+     * `internal` so a test can drive it: the UIKit read behind [observeAppForeground] does not run in a test binary.
+     */
+    internal fun onAppForeground(inForeground: Boolean) {
+        val came = inForeground && !this.inForeground
+        this.inForeground = inForeground
+        if (!came) return
+        val sound = audibleSound ?: return
+        aapsLogger.debug(LTag.NOTIFICATION, "App in front with alarm $soundingKey still ringing, starting its audio")
+        alarmSoundPlayer.play(sound, AlarmSoundPlayer.OWNER_INTERNAL)
+    }
+
     /**
      * Instance keys whose notification carries actions and has not been answered yet.
      *
@@ -76,11 +114,12 @@ class IosSystemNotificationPlatform(
      * AAPS raises an OS notification at all, and on iOS that choice belongs to the user in Settings.
      * The key says so itself now - it is marked Android only.
      *
-     * `sound` is not read either, because every notification here is posted silently and the audio is
-     * handed to [AlarmSoundPlayer] through [setAudibleAlarm] - the same split Android uses, so a
-     * replaced alarm does not restart the sound. (An earlier version of this comment claimed there
-     * was no ramping player to hand it to. There is: `IosAlarmSoundPlayer`, which ramps exactly as
-     * the Android one does.)
+     * `sound` **is** read, but only to decide whether this notification has to be audible by itself. While an AAPS
+     * screen is in front the notification stays silent and the audio is handed to [AlarmSoundPlayer] through
+     * [setAudibleAlarm], which is the same split Android uses, so a replaced alarm does not restart the ramp. In the
+     * background the player cannot start at all, so the notification carries the system sound instead - see
+     * [onAppForeground]. (An earlier version of this comment said `sound` was not read and that every notification
+     * here was silent. That was true, and it meant a CRITICAL pump alert on a phone in a pocket made no noise.)
      *
      * `actions` **is** still ignored, and that one is a real gap rather than a decision - a
      * notification carrying actions reaches the tray here with none of them attached, where Android
@@ -93,8 +132,9 @@ class IosSystemNotificationPlatform(
         val content = UNMutableNotificationContent().apply {
             setTitle(title)
             setBody(notification.text)
-            // The sound stays off here on purpose: audible alarms are driven by setAudibleAlarm, the
-            // same split the Android side uses so a replaced alarm does not restart the sound.
+            // Silent while the app is in front, where setAudibleAlarm drives the ramping player instead; audible when
+            // it is not, where that player cannot start. See onAppForeground.
+            if (audibleInBackground(notification)) setSound(UNNotificationSound.defaultSound())
             // Without the category the dismiss callback never fires - see onDismissed.
             setCategoryIdentifier(CATEGORY)
             setInterruptionLevel(
@@ -132,6 +172,19 @@ class IosSystemNotificationPlatform(
      */
     internal fun breaksThroughFocus(level: NotificationLevel): Boolean =
         level == NotificationLevel.URGENT && overrideDoNotDisturb()
+
+    /**
+     * Whether this notification has to make the noise itself.
+     *
+     * Only an alarm does - one the registry gave a [AlarmSound] - and only while no AAPS screen is in front, because
+     * that is the case [AlarmSoundPlayer] cannot cover. The Focus decision is left to [breaksThroughFocus] above: the
+     * sound is what the user hears, the interruption level is whether they are allowed to hear it, and the setting
+     * that governs the second one must not be quietly widened by the first.
+     *
+     * `internal` so it can be checked without a notification centre, which a test binary has no bundle for.
+     */
+    internal fun audibleInBackground(notification: AapsNotification): Boolean =
+        notification.sound != null && !inForeground
 
     /**
      * Notes, before posting, that this notification must survive a swipe.
@@ -206,9 +259,13 @@ class IosSystemNotificationPlatform(
         if (instanceKey == soundingKey) return
         soundingKey = instanceKey
         if (instanceKey == null || sound == null) {
+            audibleSound = null
             alarmSoundPlayer.stop(AlarmSoundPlayer.OWNER_INTERNAL)
             aapsLogger.debug(LTag.NOTIFICATION, "Alarm audio stopped")
         } else {
+            // Remembered, not only played: in the background the start below does nothing, and onAppForeground is
+            // then the only thing that gets the ramp going when the user opens the app.
+            audibleSound = sound
             alarmSoundPlayer.play(sound, AlarmSoundPlayer.OWNER_INTERNAL)
             aapsLogger.debug(LTag.NOTIFICATION, "Alarm audio owner is now $instanceKey ($sound)")
         }

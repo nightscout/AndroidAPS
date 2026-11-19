@@ -37,6 +37,8 @@ import app.aaps.appshell.navigation.appNavGraph
 import app.aaps.appshell.navigation.handleNotificationAction
 import app.aaps.appshell.navigation.handleQuickLaunchAction
 import app.aaps.appshell.navigation.handleSearchResultClick
+import app.aaps.appshell.start.PluginSource
+import app.aaps.appshell.start.mergePlugins
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -62,12 +64,12 @@ import app.aaps.implementation.logging.AAPSLoggerIos
 import app.aaps.implementation.protection.IosBiometricPrompt
 import app.aaps.implementation.protection.KeychainUnavailableException
 import app.aaps.implementation.protection.LocalAuthenticationEvaluator
-import app.aaps.ios.shell.IosAppStartup
-import app.aaps.ios.shell.PluginStoreRegistry
+import app.aaps.ios.shell.di.GeneratedStringOwners
 import app.aaps.ios.shell.di.IosAppGraph
 import app.aaps.ios.shell.platform.IosLanguage
 import app.aaps.ios.shell.platform.notOnThisPlatform
 import app.aaps.ios.shell.prefs.IosStorage
+import app.aaps.ios.shell.start.IosStartPlatform
 import app.aaps.plugins.sync.nsclientV3.ws.IosForegroundWatcher
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.shared.clientbindings.ClientGraphBindings
@@ -96,6 +98,7 @@ import app.aaps.ui.compose.stats.viewmodels.StatsViewModel
 import app.aaps.ui.compose.tempTarget.TempTargetManagementViewModel
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentsViewModel
 import app.aaps.ui.compose.treatmentsSheet.TreatmentViewModel
+import app.aaps.ui.activities.PumpAlertScreen
 import app.aaps.ui.search.SearchViewModel
 import dev.zacsweers.metro.createGraphFactory
 import kotlin.experimental.ExperimentalNativeApi
@@ -256,48 +259,31 @@ private fun startApp(nsSocketFactory: NsSocketFactory, crashReporter: CrashRepor
     crashReporter.setCollectionEnabled(graph.fabricPrivacy.fabricEnabled())
     setBuildIdentityKeys(crashReporter, graph.config)
 
-    // Before the composition, not beside it: the first view model built reads the active pump, and
-    // an empty plugin list there throws from a coroutine and takes the process with it.
-    IosAppStartup(
-        logger,
-        PluginStoreRegistry(graph.pluginStore, graph.configBuilder),
-        graph.contributedPlugins,
-        graph.rxBus,
-        graph.appScope,
-        startPeriodicWork = {
-            // Android does this in `MainApp`, next to scheduling `KeepAliveWorker`; this shell never
-            // did. `PeriodicMaintenance.start` runs its first pass straight away, and that pass asks
-            // whether the newest stored glucose value is stale. On a cold start it always is, by
-            // however long the app was not running - which on iOS is every launch, because the
-            // process is suspended rather than kept alive. The pre-snooze holds the alarm back for
-            // five minutes so the first Nightscout round can land first. Without it the app raises
-            // "BG readings missed" while Nightscout has the data (nightscout/AndroidAPS#5495).
-            graph.localAlertUtils.preSnoozeAlarms()
-            graph.periodicMaintenance.start(graph.appScope)
-        },
-        startAutomation = { graph.automationRuntime.start() }
-    ).run()
+    // Before anything can render: a screen composed before this shows string names rather than
+    // words, and the plugin descriptions the start sequence builds carry names. The desktop does the
+    // same thing in the same place, for the same reason.
+    GeneratedStringOwners.registerAll()
 
-    // Attach to the notification centre. Registering a category only records it now, so that building
-    // the graph does not need an app bundle - see `IosNotificationDelegate.install`. It is done here
-    // rather than in `IosAppStartup` because only the real app reaches this function: startup is unit
-    // tested, and `currentNotificationCenter()` cannot be called from a test binary.
     // Before the first screen composes, or it renders English and only corrects itself on the next
     // recomposition. Android gets this from `Resources`; here the registry has to be told.
     IosLanguage.apply(graph.preferences)
     logger.debug(LTag.CORE, "Language: ${TextRefValueRegistry.locale ?: "English"}")
 
+    // Attach to the notification centre. Registering a category only records it now, so that building
+    // the graph does not need an app bundle - see `IosNotificationDelegate.install`. It is done here
+    // rather than inside the start sequence because only the real app reaches this function, and
+    // `currentNotificationCenter()` cannot be called from a test binary.
+    //
+    // Before the sequence is launched, not after: the first thing the sequence does is start the
+    // snackbar fallback, which posts through this delegate. Installed later, every message the start
+    // itself sends would be lost.
     IosNotificationDelegate.install()
 
-    // A snackbar sent while no screen is up becomes a notification instead of being lost. Shared
-    // with Android and desktop; started after the delegate above, because it posts through it.
-    graph.snackbarNotificationFallback.start()
-
-    // Sets the alarm of a running "time to eat" timer again. Master only, so a no-op in the client app today.
-    graph.eatReminder.restore()
-
     // Same placement and the same reason: this touches UIKit, so it cannot live in the graph or in
-    // `IosAppStartup`. Until this ran, Nightscout sync was blocked forever - see `startBatteryWatch`.
+    // shared code. Until this ran, Nightscout sync was blocked forever - see `startBatteryWatch`.
+    // Before the start sequence as well, rather than from `IosStartPlatform.startServices()`: the
+    // sequence can spend seconds on the migrations and the database vacuum, and the first sync must
+    // not wait for them.
     graph.receiverStatusStore.startBatteryWatch()
 
     // Clears a granted PIN or biometric session when the app is backgrounded, which is what Android
@@ -349,6 +335,41 @@ private fun startApp(nsSocketFactory: NsSocketFactory, crashReporter: CrashRepor
             graph.nsConnection.start("resume")
         }
     ).start()
+
+    // The shared start sequence, the same one Android and the desktop run: the preference migrations,
+    // the profile reload, the monthly database vacuum, the plugins and the wait for them, the running
+    // mode reconciler and expiry scheduler, the profile switch scheduler, automation, the eat
+    // reminder, the record migrations, the version record, the setup notices, the pre-snooze, the
+    // keep-alive, `initCompleted()` and `EventAppInitialized`. This shell used to do a few of those
+    // itself and silently skip the rest - the migrations and the vacuum never ran on iOS at all.
+    //
+    // In the background, behind the splash screen. The plugins are registered inside the sequence,
+    // after the migrations, so they are no longer in place before the first composition - and that is
+    // safe only because `IosClientConfig` now starts at `InitProgress(done = false)`. `AapsAppRoot`
+    // composes `content` inside an `AnimatedVisibility(visible = initProgress.done)`, which builds
+    // nothing while hidden, so no view model reads the active pump until `initCompleted()`. Without
+    // that gate a view model would be built against an empty plugin list and abort the process, which
+    // is the crash this shell was first written around. Android has always worked this way.
+    graph.appScope.launch {
+        // Merged rather than added together, the same way `MetroGraphs` does it on Android: no bucket
+        // can see another bucket's contributions, so two plugins sharing an order key, or one plugin
+        // contributed by both, is invisible to Metro. `mergePlugins` is what notices, and it names the
+        // bucket a clashing plugin came from.
+        //
+        // The buckets are gated on the same flags `:app` uses, and that is not decoration. A follower
+        // has `PUMPDRIVERS = false`, and merging that bucket regardless would list CareLevo in
+        // AAPSClient - offering the user a pump the build cannot drive. The `@APS` bucket joins here
+        // when a build with `APS = true` exists; while it is false for every iOS target there is
+        // nothing to merge.
+        val sources = buildList {
+            add(PluginSource("Metro", graph.contributedPlugins))
+            if (graph.config.PUMPDRIVERS) add(PluginSource("Metro @PumpDriver", graph.contributedPumpDriverPlugins))
+            if (!graph.config.AAPSCLIENT) add(PluginSource("Metro @NotNSClient", graph.contributedNotNsClientPlugins))
+        }
+        val (plugins, problems) = mergePlugins(sources)
+        problems.forEach { graph.logger.error(LTag.CORE, "Plugin list problem: $it") }
+        graph.appStartSequence.run(plugins, IosStartPlatform(graph.config, graph.periodicMaintenance, graph.appScope))
+    }
 
     return StartedApp(graph, viewModelFactory, appName, appIcon)
 }
@@ -479,6 +500,33 @@ private fun AapsApp(app: StartedApp) {
                     usingBlock = { requestUnlock() }
                 )
                 onDispose { NSNotificationCenter.defaultCenter.removeObserver(observer) }
+            }
+
+            // The alarm screen of a pump alert, shown in place of the app while the alert rings.
+            //
+            // Android opens `ErrorActivity` for this, over whatever is on screen and over the lock
+            // screen. iOS cannot open a window from a background class, so `IosPumpAlertPlatform`
+            // only records which alert asked for the screen and this shows it. The alert that was
+            // raised while the app was away therefore comes up the moment AAPS is opened. The ring
+            // does not wait for that: the card carries the system sound in the background.
+            //
+            // In place of the app, not over it, because the content slot here is a single child and
+            // the screen already draws its own scrim. The card is the same one Android shows -
+            // `PumpAlertScreen` is shared - and the same buttons do the same things.
+            //
+            // Before the protection gate below, on purpose, for the same reason `ErrorActivity`
+            // ignores application protection: an alarm the user cannot see is an alarm that did not
+            // happen, and what it says is "the pump stopped", not anything about them.
+            val alarmScreen by graph.pumpAlertPlatform.alarmScreen.collectAsState()
+            alarmScreen?.let { alert ->
+                PumpAlertScreen(
+                    pumpAlerts = graph.pumpAlerts,
+                    source = alert.source,
+                    key = alert.key,
+                    uel = graph.uel,
+                    onClose = { graph.pumpAlertPlatform.alarmScreenClosed(alert.source, alert.key) }
+                )
+                return@AapsAppRoot
             }
 
             // Nothing is drawn until it is granted. Showing the app behind the prompt would make

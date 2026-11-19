@@ -3,32 +3,33 @@ package app.aaps.implementation.androidNotification
 import android.app.NotificationManager
 import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.ui.AndroidActivities
 import app.aaps.core.interfaces.ui.IconsProvider
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.Preferences
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 /**
- * Covers [AlarmNotificationManager.cancelAlarm].
+ * Covers [AlarmNotificationManager.cancelAlarm]: it takes down the alarm notifications this class posted, and only
+ * those.
  *
- * The alarm the user hears is not the notification. `postFullScreenAlarm` starts a looping sound
- * through [AlarmSoundPlayer] under [AlarmSoundPlayer.OWNER_FULLSCREEN], and that playback carries on
- * after the notification is cancelled unless it is stopped on purpose.
- *
- * `cancelAlarm` is the single path behind Mute on the notification, the Wear snooze gesture and
- * `onTerminate`. None of them silenced the loop, so the notification vanished and the alarm kept
- * sounding with nothing left on screen to stop it - issue #5133.
+ * This test used to be about something else. `cancelAlarm` also stopped `AlarmSoundPlayer.OWNER_FULLSCREEN`, the
+ * looping sound that the deleted `postFullScreenAlarm` started, because Mute on the notification, the watch's snooze
+ * and `onTerminate` all reached it and none of them silenced the loop (#5133). There is one sound owner now - the
+ * notification list, through `OWNER_INTERNAL` - so what silences the alarm is the card going away, and
+ * `AndroidSystemNotificationPlatform.cancelAll` is what stops the audio. The part worth pinning here is that this
+ * clears every sound alarm it is tracking, because a tracked key left behind is a notification nothing can remove.
  */
 class AlarmNotificationManagerCancelTest {
 
     private val notificationManager: NotificationManager = mock()
-    private val alarmSoundPlayer: AlarmSoundPlayer = mock()
+    private val activities: AndroidActivities = mock()
 
     private fun sut(): AlarmNotificationManager {
         val context: Context = mock()
@@ -38,25 +39,27 @@ class AlarmNotificationManagerCancelTest {
             aapsLogger = mock<AAPSLogger>(),
             preferences = mock<Preferences>(),
             iconsProvider = mock<IconsProvider>(),
-            uiInteractionProvider = { mock<UiInteraction>() },
+            androidActivitiesProvider = { activities },
             notificationHolderProvider = { mock<NotificationHolder>() },
-            alarmSoundPlayer = alarmSoundPlayer,
             rh = mock<ResourceHelper>()
         )
     }
 
-    /** The point of the fix: the sound stops, not just the notification. */
+    /** Nothing posted, nothing to cancel - and in particular no sweep of notifications this class does not own. */
     @Test
-    fun cancellingTheAlarmStopsTheFullScreenAudio() {
+    fun cancellingWithNothingPostedTouchesNoNotification() {
         sut().cancelAlarm()
 
-        verify(alarmSoundPlayer).stop(AlarmSoundPlayer.OWNER_FULLSCREEN)
+        verify(notificationManager, never()).cancel(any())
     }
 
+    /** A second cancel is harmless: the tracked keys were cleared by the first. */
     @Test
-    fun cancellingTheAlarmStillRemovesTheFullScreenNotification() {
-        sut().cancelAlarm()
+    fun cancellingTwiceIsHarmless() {
+        val sut = sut()
+        sut.cancelAlarm()
+        sut.cancelAlarm()
 
-        verify(notificationManager).cancel(AlarmNotificationManager.NOTIFICATION_ID_FULL_SCREEN)
+        verify(notificationManager, never()).cancel(any())
     }
 }

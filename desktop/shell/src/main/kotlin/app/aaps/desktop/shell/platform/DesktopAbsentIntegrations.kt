@@ -15,7 +15,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlin.reflect.KClass
 
 /**
  * Phone features a desktop does not have.
@@ -131,16 +130,18 @@ class DesktopUiInteraction(
     private val notificationManager: NotificationManager
 ) : UiInteraction {
 
-    override val mainActivity: KClass<*> = DesktopUiInteraction::class
-    override val errorHelperActivity: KClass<*> = DesktopUiInteraction::class
-
-    override fun runAlarm(status: String, title: String, sound: AlarmSound?) {
-        aapsLogger.debug(LTag.CORE, "Alarm: $title - $status")
-        notificationManager.post(NotificationId.TOAST_ALARM, status, sound = sound)
+    override fun runAlarm(key: String, status: String, title: String, sound: AlarmSound?) {
+        aapsLogger.debug(LTag.CORE, "Alarm $key: $title - $status")
+        notificationManager.post(NotificationId.TOAST_ALARM, status, sound = sound, alarmTitle = title)
     }
+
+    override fun runEatReminderAlarm(status: String, title: String) =
+        runAlarm(UiInteraction.KEY_EAT_REMINDER, status, title, AlarmSound.EAT_REMINDER)
 
     override fun stopAlarm(reason: String) {
         aapsLogger.debug(LTag.CORE, "Alarm stopped: $reason")
         notificationManager.dismiss(NotificationId.TOAST_ALARM)
     }
+
+    override fun stopEatReminderAlarm() = stopAlarm("Eat reminder")
 }

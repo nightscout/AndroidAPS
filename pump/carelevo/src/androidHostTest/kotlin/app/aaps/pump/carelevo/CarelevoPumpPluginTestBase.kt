@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.ble.AdapterState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -96,7 +95,6 @@ abstract class CarelevoPumpPluginTestBase {
 
     @Mock lateinit var protectionCheck: ProtectionCheck
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var iconsProvider: IconsProvider
     @Mock lateinit var config: Config
     protected val adapterState = MutableStateFlow(AdapterState.ON)
     protected val appForeground = FakeCarelevoAppForeground()
@@ -234,7 +232,6 @@ abstract class CarelevoPumpPluginTestBase {
             appForeground = appForeground,
             protectionCheck = protectionCheck,
             bleReadyCheck = FakeCarelevoBleReadyCheck(),
-            iconsProvider = iconsProvider,
             config = config,
             pumpEnactResultProvider = pumpEnactResultProvider,
             carelevoPatch = carelevoPatch,

@@ -1,6 +1,5 @@
 package app.aaps.ui.activities
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,24 +22,25 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 
 /**
- * Modal-style screen rendered over a scrim by [ErrorActivity] when an urgent alarm fires.
- * Displays the alarm title/status and three actions, each saying what it does: mute for 5 minutes
- * (+5 min for the "time to eat" timer), silence, and silence and close.
+ * Modal-style screen rendered over a scrim when an urgent alarm fires. Displays the alarm title/status and three
+ * actions, each saying what it does: mute for 5 minutes (+5 min for the "time to eat" timer), silence, and silence
+ * and close.
  *
- * Audio (MediaPlayer + volume ramp) is owned by [ErrorActivity] itself — the [onStart]
- * callback fires once on first composition so the activity can begin playback when the
- * screen is shown.
+ * Shared code, because iOS needs the same screen: `ErrorActivity` hosts it on Android, and the Compose host of the
+ * iOS app shows it for a pump alert through [PumpAlertScreen]. Nothing in here is platform specific any more; the one
+ * thing that was - the app icon, which is a drawable id on Android - comes in as [badge] instead.
+ *
+ * It owns no audio. Every alarm is a card in the notification list and that list is the only sound owner, so this
+ * screen is a view of the ringing card. It used to take an `onStart` callback for the host to begin playback with,
+ * which was the second alarm path - see `_docs/PUMP_DESIGN.md`, section 8.
  *
  * @see ErrorScreenPreview
  * @see ErrorScreenShortPreview
@@ -49,24 +49,25 @@ import app.aaps.core.ui.compose.stringResource
 fun ErrorScreen(
     title: String,
     status: String,
-    appIcon: Int,
     onOk: () -> Unit,
     onMute: () -> Unit,
     onMute5Min: () -> Unit,
-    onStart: () -> Unit,
-    /** The alarm of the "time to eat" timer: the first button moves the timer 5 minutes instead of muting for 5 minutes. */
-    eatReminder: Boolean = false,
+    /**
+     * Whether "Mute 5 min" is offered. False for an alarm whose own action is already the delay - the "time to eat"
+     * timer, where "+5 min" moves the timer instead.
+     */
+    showMute5Min: Boolean = true,
     /** A pump alert's own step, for example "clear the alarm on the patch", shown first. Null: no such button. */
     actionLabel: String? = null,
     onAction: () -> Unit = {},
     /** A pump alert: its silence lasts this long, and the two silence buttons say so. Null: they say nothing of time. */
-    silenceMinutes: Int? = null
+    silenceMinutes: Int? = null,
+    /**
+     * Drawn small over the error icon, to say which AAPS this is. Android passes its flavour launcher icon, which is
+     * a drawable id and so cannot be a parameter of shared code. Null: no badge, which is what iOS shows.
+     */
+    badge: (@Composable () -> Unit)? = null
 ) {
-    DisposableEffect(Unit) {
-        onStart()
-        onDispose { }
-    }
-
     // Semi-transparent background
     Box(
         modifier = Modifier
@@ -101,7 +102,7 @@ fun ErrorScreen(
                         modifier = Modifier.size(48.dp)
                     )
                     // App icon badge in bottom-right corner
-                    Box(
+                    if (badge != null) Box(
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
                             .size(24.dp)
@@ -111,11 +112,7 @@ fun ErrorScreen(
                             )
                             .padding(2.dp)
                     ) {
-                        Image(
-                            painter = painterResource(id = appIcon),
-                            contentDescription = "App icon",
-                            modifier = Modifier.size(20.dp)
-                        )
+                        badge()
                     }
                 }
 
@@ -153,18 +150,17 @@ fun ErrorScreen(
                     Spacer(modifier = Modifier.height(12.dp))
                 }
 
-                // Mute 5 min button (+5 min for the eat timer)
-                Button(
-                    onClick = onMute5Min,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        if (eatReminder) stringResource(CoreUiStrings.eat_reminder_extend, EatReminder.EXTEND_MINUTES)
-                        else stringResource(CoreUiStrings.mute5min)
-                    )
-                }
+                // Mute 5 min: the alarm goes quiet and comes back in five minutes
+                if (showMute5Min) {
+                    Button(
+                        onClick = onMute5Min,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(CoreUiStrings.mute5min))
+                    }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
 
                 // Silence button: the sound stops, this screen stays open
                 Button(

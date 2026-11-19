@@ -44,6 +44,8 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import platform.CoreBluetooth.CBCentralManager
 import platform.CoreBluetooth.CBCentralManagerDelegateProtocol
+import platform.CoreBluetooth.CBCentralManagerOptionRestoreIdentifierKey
+import platform.CoreBluetooth.CBCentralManagerRestoredStatePeripheralsKey
 import platform.CoreBluetooth.CBCentralManagerScanOptionAllowDuplicatesKey
 import platform.CoreBluetooth.CBCharacteristic
 import platform.CoreBluetooth.CBCharacteristicPropertyIndicate
@@ -90,8 +92,25 @@ class IosBleCentral(
 
     private val states = MutableStateFlow(AdapterState.UNKNOWN)
 
-    /** Made on first use, not with the graph: making it shows the Bluetooth permission dialog the first time. */
-    private val manager: CBCentralManager by lazy { CBCentralManager(delegate = CentralDelegate(this), queue = null, options = null) }
+    /**
+     * Made on first use, not with the graph: making it shows the Bluetooth permission dialog the first time.
+     *
+     * The restore identifier is what lets iOS **relaunch a terminated app** when something happens on a
+     * connection it was holding - a disconnect, or a notification from a pump. Without it a terminated app
+     * stays gone until the user opens it, which for a pump driver means an alarm nobody hears. It has to be
+     * the same string on every launch, so it is a constant, and a manager created with it **must** have a
+     * delegate that implements `willRestoreState` or iOS complains - see [restored].
+     *
+     * It only has an effect on a target that also declares the `bluetooth-central` background mode. On a
+     * target that does not, this is inert rather than wrong.
+     */
+    private val manager: CBCentralManager by lazy {
+        CBCentralManager(
+            delegate = CentralDelegate(this),
+            queue = null,
+            options = mapOf<Any?, Any>(CBCentralManagerOptionRestoreIdentifierKey to RESTORE_IDENTIFIER)
+        )
+    }
 
     override val adapterState: StateFlow<AdapterState>
         get() {
@@ -195,6 +214,26 @@ class IosBleCentral(
     internal fun discovered(peripheral: CBPeripheral, data: Map<Any?, *>, rssi: NSNumber) {
         val sink = scanSink.value ?: return
         sink(advertisementOf(DeviceId(peripheral.identifier.UUIDString), peripheral.name, data, rssi.intValue), peripheral)
+    }
+
+    /**
+     * The peripherals iOS was holding for this app when it was last terminated.
+     *
+     * They are put in [found] so that a [connect] in this new process finds the peripheral object straight
+     * away. The connection itself is still iOS's: a peripheral that is already connected answers
+     * `connectPeripheral` immediately, so the driver's reconnect costs nothing.
+     *
+     * **What this does not do**: it does not hand the old [BleLink] back. That link belonged to a process
+     * that no longer exists, and [BleCentral]'s contract is that a link is one connection which never comes
+     * back - so the driver has to connect again, and data it was subscribed to in the old process is gone
+     * rather than silently re-routed. Adopting a live link across a relaunch is a bigger change in the
+     * driver layer, and pretending to do it here would be the dangerous version.
+     */
+    internal fun restored(peripherals: List<*>) {
+        val restored = peripherals.filterIsInstance<CBPeripheral>()
+        aapsLogger.debug(LTag.PUMPBTCOMM, "BLE restored by iOS after a relaunch: ${restored.map { it.identifier.UUIDString }}")
+        if (restored.isEmpty()) return
+        found.update { known -> known + restored.associateBy { it.identifier.UUIDString } }
     }
 
     internal fun connectionOf(peripheral: CBPeripheral): Connection? = connections.value[peripheral.identifier.UUIDString]
@@ -387,6 +426,9 @@ class IosBleCentral(
 
     private companion object {
 
+        /** Stable across launches on purpose: iOS matches a restored manager to the app by this string. */
+        const val RESTORE_IDENTIFIER = "app.aaps.ble.central"
+
         val STATE_WAIT = 2.seconds
 
         /** How long a connect waits for iOS to end the last link to the same device. */
@@ -410,6 +452,11 @@ private fun onMain(block: () -> Unit) {
 private class CentralDelegate(private val owner: IosBleCentral) : NSObject(), CBCentralManagerDelegateProtocol {
 
     override fun centralManagerDidUpdateState(central: CBCentralManager) = owner.stateChanged(central.state)
+
+    @ObjCSignatureOverride
+    override fun centralManager(central: CBCentralManager, willRestoreState: Map<Any?, *>) {
+        owner.restored((willRestoreState[CBCentralManagerRestoredStatePeripheralsKey] as? List<*>).orEmpty())
+    }
 
     override fun centralManager(central: CBCentralManager, didDiscoverPeripheral: CBPeripheral, advertisementData: Map<Any?, *>, RSSI: NSNumber) =
         owner.discovered(didDiscoverPeripheral, advertisementData, RSSI)

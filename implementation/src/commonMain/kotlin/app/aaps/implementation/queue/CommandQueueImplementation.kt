@@ -276,6 +276,7 @@ class CommandQueueImplementation(
                 // is in the pump and the old program runs: the basal is wrong, and only the user can stop it. KeepAlive
                 // tries the write again about every 5 minutes, so this comes back until the write succeeds.
                 uiInteraction().runAlarm(
+                    UiInteraction.KEY_COMMAND_FAILED,
                     rh.gs(ImplementationStrings.concentration_change_failed),
                     rh.gs(ImplementationStrings.concentration_change_failed_title),
                     AlarmSound.BOLUS_ERROR

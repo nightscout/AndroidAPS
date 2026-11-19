@@ -34,11 +34,18 @@ class TimerReminderReceiver : MetroBroadcastReceiver() {
         super.onReceive(context, intent)
         val text = intent.getStringExtra(EXTRA_TEXT)?.takeIf { it.isNotBlank() } ?: rh.gs(config.appName)
         aapsLogger.debug(LTag.AUTOMATION, "TimerReminderReceiver fired: $text")
-        uiInteraction.runAlarm(status = text, title = rh.gs(config.appName), sound = AlarmSound.ALARM)
+        uiInteraction.runAlarm(key = KEY, status = text, title = rh.gs(config.appName), sound = AlarmSound.ALARM)
     }
 
     companion object {
 
         const val EXTRA_TEXT = "app.aaps.plugins.automation.timerReminder.text"
+
+        /**
+         * One key for every timer reminder, so a second one that fires while the first is still on screen replaces
+         * it rather than stacking a card the user has to answer twice. They all say the same thing - "the timer you
+         * set has run out" - and only the text differs.
+         */
+        const val KEY = "automation-timer"
     }
 }

@@ -2,6 +2,8 @@ package app.aaps.di.metro
 
 import android.content.Context
 import app.aaps.appshell.start.AppStartSequence
+import app.aaps.appshell.start.PluginSource
+import app.aaps.appshell.start.mergePlugins
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.autotune.Autotune
@@ -39,6 +41,7 @@ import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.interfaces.ui.IconsProvider
+import app.aaps.core.interfaces.ui.AndroidActivities
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.interfaces.utils.DateUtil
@@ -53,8 +56,6 @@ import app.aaps.core.objects.workflow.MetroWorkerCreator
 import app.aaps.database.AppRepository
 import app.aaps.database.di.DatabaseConfig
 import app.aaps.di.ExternalOptionsOverride
-import app.aaps.di.PluginSource
-import app.aaps.di.mergePlugins
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.resources.ResourceHelperImpl
@@ -262,6 +263,7 @@ class MetroGraphs(
     val signatureVerifier: SignatureVerifierPlugin get() = root.signatureVerifierPlugin
     val fabricPrivacy: FabricPrivacy get() = root.fabricPrivacy
     val uiInteraction: UiInteraction get() = root.uiInteraction
+    val androidActivities: AndroidActivities get() = root.androidActivities
     val preferences: Preferences get() = root.preferences
     val aapsLogger: AAPSLogger get() = root.aapsLogger
     val rxBus: RxBus get() = root.rxBus

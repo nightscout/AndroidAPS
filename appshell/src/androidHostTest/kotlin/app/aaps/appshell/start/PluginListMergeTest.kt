@@ -1,4 +1,4 @@
-package app.aaps.di
+package app.aaps.appshell.start
 
 import app.aaps.core.interfaces.plugin.PluginBase
 import com.google.common.truth.Truth.assertThat

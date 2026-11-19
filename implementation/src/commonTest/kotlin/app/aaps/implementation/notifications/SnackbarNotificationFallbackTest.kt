@@ -156,7 +156,10 @@ class SnackbarNotificationFallbackTest {
             validTo: Long,
             sound: AlarmSound?,
             actions: List<NotificationAction>,
-            validityCheck: (() -> Boolean)?
+            validityCheck: (() -> Boolean)?,
+            alarmTitle: String?,
+            canMute: Boolean,
+            tellWatch: Boolean
         ): NotificationHandle = error("the fallback posts with validMinutes, not with a date range")
 
         override fun post(
