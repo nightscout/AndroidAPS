@@ -39,8 +39,10 @@ import app.aaps.pump.carelevo.presentation.model.CarelevoConnectEvent
 import app.aaps.pump.carelevo.presentation.type.CarelevoPatchStep
 import app.aaps.pump.carelevo.presentation.type.CarelevoScreenType
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.cancellation.CancellationException
@@ -118,6 +120,15 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
 
     private var _inputInsulin = 300
     val inputInsulin get() = _inputInsulin
+
+    /**
+     * When the patch raises "Patch Activation Incomplete" if the basal has not started by then: 20 minutes after its
+     * first connection (CareLevo, 2026-11-19). The pairing time is stored to the minute, so this is up to a minute
+     * early, never late. Null before pairing, once the activation is complete, and for a patch stored without it.
+     */
+    fun activationDeadline(): Flow<Long?> = carelevoPatch.patchInfo.map { info ->
+        info?.takeIf { it.activationComplete == false }?.bootDateTimeUtcMillis?.plus(ACTIVATION_LIMIT_MS)
+    }
 
 
     fun setIsCreated(isCreated: Boolean) {
@@ -383,6 +394,11 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
     }
 
     // endregion
+
+    private companion object {
+
+        const val ACTIVATION_LIMIT_MS = 20 * 60_000L
+    }
 }
 
 private val FORCE_DISCARD_TIMEOUT = 3.seconds

@@ -29,6 +29,7 @@ import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.common.model.UiState
 import app.aaps.pump.carelevo.domain.model.ResponseResult
+import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
@@ -40,6 +41,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestScope
@@ -251,6 +253,27 @@ class CarelevoPatchConnectionFlowViewModelTest {
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
         assertThat(sut.inputInsulin).isEqualTo(300)
         assertThat(sut.isCreated).isFalse()
+    }
+
+    /** CareLevo, 2026-11-19: the patch raises "Patch Activation Incomplete" 20 minutes after the first connection. */
+    @Test
+    fun `the activation deadline is 20 minutes after pairing until the activation is complete`() = runBlocking {
+        val paired = 1_000_000L
+        val patchInfo = latestValueFlow<CarelevoPatchInfoDomainModel?>()
+        whenever(carelevoPatch.patchInfo).thenReturn(patchInfo)
+
+        patchInfo.tryEmit(null)
+        assertThat(sut.activationDeadline().first()).isNull()
+
+        patchInfo.tryEmit(CarelevoPatchInfoDomainModel(address = "AA", bootDateTimeUtcMillis = paired, activationComplete = false))
+        assertThat(sut.activationDeadline().first()).isEqualTo(paired + 20 * 60_000L)
+
+        patchInfo.tryEmit(CarelevoPatchInfoDomainModel(address = "AA", bootDateTimeUtcMillis = paired, activationComplete = true))
+        assertThat(sut.activationDeadline().first()).isNull()
+
+        // A patch stored by a build that did not keep the pairing time.
+        patchInfo.tryEmit(CarelevoPatchInfoDomainModel(address = "AA", bootDateTimeUtcMillis = null, activationComplete = false))
+        assertThat(sut.activationDeadline().first()).isNull()
     }
 
     @Test

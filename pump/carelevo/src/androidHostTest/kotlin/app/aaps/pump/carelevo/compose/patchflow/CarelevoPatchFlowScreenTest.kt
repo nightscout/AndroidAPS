@@ -501,6 +501,41 @@ class CarelevoPatchFlowScreenTest {
         assertThat(patchInfoFlow.subscriptionCount.value).isGreaterThan(0)
     }
 
+    // ---- the 20 minutes from pairing to the basal --------------------------------------------
+
+    private fun pairedMinutesAgo(minutes: Long) {
+        val paired = System.currentTimeMillis() - minutes * 60_000L
+        patchInfoFlow.tryEmit(CarelevoPatchInfoDomainModel(address = "AA", bootDateTimeUtcMillis = paired, activationComplete = false))
+    }
+
+    private fun timeLeftText(minutes: Int): String =
+        context.getString(R.string.carelevo_activation_time_left, context.getString(CoreUiR.string.format_mins, minutes))
+
+    @Test
+    fun afterPairingEveryStepShowsTheTimeLeft() {
+        pairedMinutesAgo(5)
+        startAt(CarelevoPatchStep.PATCH_ATTACH)
+
+        compose.onNodeWithText(timeLeftText(15)).assertIsDisplayed()
+    }
+
+    @Test
+    fun beforePairingNoTimeIsShown() {
+        pairedMinutesAgo(5)
+        startAt(CarelevoPatchStep.PATCH_START)
+
+        compose.onNodeWithText(timeLeftText(15)).assertDoesNotExist()
+    }
+
+    @Test
+    fun afterTheLimitTheScreenSaysWhichAlarmComes() {
+        pairedMinutesAgo(25)
+        startAt(CarelevoPatchStep.SAFETY_CHECK)
+
+        val alarm = string(R.string.alarm_feat_title_alert_incomplete_patch_setting)
+        compose.onNodeWithText(context.getString(R.string.carelevo_activation_time_over, alarm)).assertIsDisplayed()
+    }
+
     // ---- loading scrim ------------------------------------------------------------------------
 
     @Test

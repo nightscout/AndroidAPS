@@ -72,6 +72,7 @@ private fun CarelevoPatchConnectionFlowScreen(
     val needleInsertionUiState by needleInsertionViewModel.uiState.collectAsStateWithLifecycle()
     val safetyCheckUiState by safetyCheckViewModel.uiState.collectAsStateWithLifecycle()
     val primingPulse by safetyCheckViewModel.primingPulse.collectAsStateWithLifecycle()
+    val activationDeadline by remember(viewModel) { viewModel.activationDeadline() }.collectAsStateWithLifecycle(null)
     val discardFailedMessage = stringResource(CarelevoStrings.carelevo_toast_msg_discard_failed)
 
     // Every exit path MUST drop the ViewModel's one-shot init latch: the VM outlives this screen
@@ -123,74 +124,80 @@ private fun CarelevoPatchConnectionFlowScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        WizardScreen(
-            currentStep = page,
-            totalSteps = totalSteps,
-            currentStepIndex = currentStepIndex,
-            canGoBack = true,
-            onBack = { viewModel.startPatchDiscardProcess() },
-            cancelDialogTitle = stringResource(
-                if (beforePatch) CarelevoStrings.carelevo_dialog_patch_activation_cancel_title
-                else CarelevoStrings.carelevo_dialog_patch_discard_unused_title
-            ),
-            cancelDialogText = stringResource(
-                if (beforePatch) CarelevoStrings.carelevo_dialog_patch_activation_cancel_desc
-                else CarelevoStrings.carelevo_dialog_patch_discard_unused_desc
-            ),
-            title = patchStepTitle(page),
-            setToolbarConfig = setToolbarConfig,
-        ) { step, _ ->
-            when (step) {
-                CarelevoPatchStep.PROFILE_GATE     -> {
-                    ProfileGateWizardStep(host = viewModel)
-                }
+        Column(modifier = Modifier.fillMaxSize()) {
+            // Above the step, so it stays in place while the steps change.
+            activationDeadline?.takeIf { !beforePatch }?.let { CarelevoActivationTimeLimit(deadline = it) }
+            Box(modifier = Modifier.weight(1f)) {
+                WizardScreen(
+                    currentStep = page,
+                    totalSteps = totalSteps,
+                    currentStepIndex = currentStepIndex,
+                    canGoBack = true,
+                    onBack = { viewModel.startPatchDiscardProcess() },
+                    cancelDialogTitle = stringResource(
+                        if (beforePatch) CarelevoStrings.carelevo_dialog_patch_activation_cancel_title
+                        else CarelevoStrings.carelevo_dialog_patch_discard_unused_title
+                    ),
+                    cancelDialogText = stringResource(
+                        if (beforePatch) CarelevoStrings.carelevo_dialog_patch_activation_cancel_desc
+                        else CarelevoStrings.carelevo_dialog_patch_discard_unused_desc
+                    ),
+                    title = patchStepTitle(page),
+                    setToolbarConfig = setToolbarConfig,
+                ) { step, _ ->
+                    when (step) {
+                        CarelevoPatchStep.PROFILE_GATE     -> {
+                            ProfileGateWizardStep(host = viewModel)
+                        }
 
-                CarelevoPatchStep.SELECT_INSULIN   -> {
-                    CarelevoSelectInsulinStep(viewModel = viewModel)
-                }
+                        CarelevoPatchStep.SELECT_INSULIN   -> {
+                            CarelevoSelectInsulinStep(viewModel = viewModel)
+                        }
 
-                CarelevoPatchStep.PATCH_START      -> {
-                    CarelevoPatchFlowStep01Start(
-                        viewModel = viewModel,
-                        onExitFlow = exitFlow
-                    )
-                }
+                        CarelevoPatchStep.PATCH_START      -> {
+                            CarelevoPatchFlowStep01Start(
+                                viewModel = viewModel,
+                                onExitFlow = exitFlow
+                            )
+                        }
 
-                CarelevoPatchStep.SET_AMOUNT       -> {
-                    CarelevoSetAmountStep(viewModel = viewModel)
-                }
+                        CarelevoPatchStep.SET_AMOUNT       -> {
+                            CarelevoSetAmountStep(viewModel = viewModel)
+                        }
 
-                CarelevoPatchStep.PATCH_CONNECT    -> {
-                    CarelevoPatchFlowStep02Connect(
-                        viewModel = connectViewModel,
-                        sharedViewModel = viewModel,
-                        onExitFlow = exitFlow
-                    )
-                }
+                        CarelevoPatchStep.PATCH_CONNECT    -> {
+                            CarelevoPatchFlowStep02Connect(
+                                viewModel = connectViewModel,
+                                sharedViewModel = viewModel,
+                                onExitFlow = exitFlow
+                            )
+                        }
 
-                CarelevoPatchStep.SAFETY_CHECK     -> {
-                    CarelevoPatchFlowStep03SafetyCheck(
-                        viewModel = safetyCheckViewModel,
-                        sharedViewModel = viewModel,
-                        onExitFlow = exitFlow
-                    )
-                }
+                        CarelevoPatchStep.SAFETY_CHECK     -> {
+                            CarelevoPatchFlowStep03SafetyCheck(
+                                viewModel = safetyCheckViewModel,
+                                sharedViewModel = viewModel,
+                                onExitFlow = exitFlow
+                            )
+                        }
 
-                CarelevoPatchStep.SITE_LOCATION    -> {
-                    SiteLocationWizardStep(host = viewModel)
-                }
+                        CarelevoPatchStep.SITE_LOCATION    -> {
+                            SiteLocationWizardStep(host = viewModel)
+                        }
 
-                CarelevoPatchStep.PATCH_ATTACH     -> {
-                    CarelevoPatchFlowStep04Attach(
-                        viewModel = viewModel
-                    )
-                }
+                        CarelevoPatchStep.PATCH_ATTACH     -> {
+                            CarelevoPatchFlowStep04Attach(
+                                viewModel = viewModel
+                            )
+                        }
 
-                CarelevoPatchStep.NEEDLE_INSERTION -> {
-                    CarelevoPatchFlowStep05NeedleInsertion(
-                        viewModel = needleInsertionViewModel,
-                        onExitFlow = exitFlow
-                    )
+                        CarelevoPatchStep.NEEDLE_INSERTION -> {
+                            CarelevoPatchFlowStep05NeedleInsertion(
+                                viewModel = needleInsertionViewModel,
+                                onExitFlow = exitFlow
+                            )
+                        }
+                    }
                 }
             }
         }

@@ -111,6 +111,8 @@
     <string name="carelevo_patch_safety_check_retry_desc">If no insulin droplet is visible, please press the [Retry] button.</string>
     <string name="carelevo_alarm_screen_text" comment="Text of the full-screen alarm. %1$s=alarm title, for example: Patch Activation Incomplete. %2$s=label of the button on the alarm notification in AAPS, for example: OK">%1$s\nClosing this screen only stops the sound. To act on the alarm, tap [%2$s] on its notification in AAPS.</string>
     <string name="carelevo_priming_pulse_progress" comment="%1$d=number of the priming pulse being sent, %2$d=number of all pulses. Example: Priming 1 of 3. The patch answers each pulse after about 30 seconds.">Priming %1$d of %2$d. The patch answers each pulse after about 30 seconds.</string>
+    <string name="carelevo_activation_time_left" comment="Shown on the activation steps after pairing. %1$s=time left, for example: 12 min">Finish the activation within 20 minutes of pairing. Time left: %1$s</string>
+    <string name="carelevo_activation_time_over" comment="Shown on the activation steps when more than 20 minutes have passed since pairing. %1$s=title of the alarm the patch raises, for example: Patch Activation Incomplete">More than 20 minutes have passed since pairing. The patch will raise the alarm: %1$s. Finish the activation, then confirm that alarm.</string>
 
     <string name="carelevo_patch_attach_step1_title">Disinfect Patch Site</string>
     <string name="carelevo_patch_attach_step1_desc">Clean thoroughly with an alcohol swab.</string>
