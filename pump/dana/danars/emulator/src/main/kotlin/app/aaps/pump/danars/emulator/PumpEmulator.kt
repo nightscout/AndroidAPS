@@ -57,17 +57,23 @@ class PumpEmulator(val state: PumpState = PumpState()) {
      * Call this in tests before teardown to avoid Mockito mock-cleared races.
      */
     fun awaitPendingCallbacks(timeoutMs: Long = 2000) {
-        pendingThreads.toList().forEach { it.join(timeoutMs) }
+        snapshotOfPendingThreads().forEach { it.join(timeoutMs) }
         pendingThreads.removeAll { !it.isAlive }
     }
 
     /** Interrupt and join all pending notification threads (used on disconnect/teardown). */
     fun cancelPendingWork(timeoutMs: Long = 500) {
-        val threads = pendingThreads.toList()
+        val threads = snapshotOfPendingThreads()
         pendingThreads.clear()
         threads.forEach { it.interrupt() }
         threads.forEach { runCatching { it.join(timeoutMs) } }
     }
+
+    /**
+     * One atomic copy of the list. Not `toList()`: for one element it reads the size and then that element, and a thread
+     * that ends and removes itself in between failed the test with `ArrayIndexOutOfBoundsException` (flaky in CI).
+     */
+    private fun snapshotOfPendingThreads(): List<Thread> = ArrayList(pendingThreads)
 
     private fun launchTracked(block: () -> Unit) {
         val thread = Thread {
