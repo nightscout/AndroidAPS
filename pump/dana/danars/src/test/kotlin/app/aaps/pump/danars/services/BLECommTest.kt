@@ -346,10 +346,12 @@ class BLECommTest : TestBase() {
     /** A v1 OK answer to the pump check */
     private val okAnswer = unknownAnswer + "OK".encodeToByteArray()
 
-    private fun pumpAnswersAt(time: Long, answer: ByteArray) {
+    /** The pump sends [answer] at [time]. Then the link drops, as after a real connection, unless [linkStays]. */
+    private fun pumpAnswersAt(time: Long, answer: ByteArray, linkStays: Boolean = false) {
         whenever(dateUtil.now()).thenReturn(time)
         whenever(bleEncryption.getDecryptedPacket(any())).thenReturn(answer)
         bleComm.onCharacteristicChanged(framedPacket())
+        if (!linkStays) bleComm.onConnectionStateChanged(false)
     }
 
     @Test
@@ -441,6 +443,40 @@ class BLECommTest : TestBase() {
     /** A BLE5 OK answer of a Dana-i2 (model 0x0B) carrying [key] */
     private fun ble5OkAnswer(key: String): ByteArray =
         okAnswer + byteArrayOf('M'.code.toByte(), 0x0B, 'P'.code.toByte(), 0x30) + key.encodeToByteArray()
+
+    /**
+     * Seen on a real Dana-i2: AAPS connected again 0.6 s after a disconnect, Android kept the radio link, and the pump
+     * got two pump checks on one link. It answered OK to the first, then `02 00` to the second, and then went on
+     * with the handshake. Closing the link on the `02 00` threw away a connection that worked.
+     */
+    @Test
+    fun anUnknownAnswerAfterAnOkOnTheSameConnectionIsIgnored() {
+        whenever(danaPump.hwModel).thenReturn(0x0B)
+        whenever(preferences.get(eq(DanaStringComposedKey.Ble5PairingKey), anyVararg<Any>())).thenReturn("982316")
+        whenever(bleEncryption.getEncryptedPacket(anyInt(), anyOrNull(), anyOrNull())).thenReturn(byteArrayOf(0))
+
+        pumpAnswersAt(START, ble5OkAnswer("982316"), linkStays = true)
+        pumpAnswersAt(START + 57, unknownAnswer, linkStays = true)
+
+        verify(bleGatt, never()).disconnect()
+        verify(danaRSPlugin, never()).clearPairing()
+        verify(bleTransport, never()).updatePairingState(PairingState(step = PairingStep.ERROR, errorMessage = "test"))
+        assertThat(bleComm.isConnecting).isFalse()
+        // The handshake went on once, from the OK
+        verify(bleEncryption, times(1)).getEncryptedPacket(eq(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION), anyOrNull(), anyOrNull())
+    }
+
+    @Test
+    fun onANewConnectionAnUnknownAnswerClosesTheLinkAgain() {
+        whenever(danaPump.hwModel).thenReturn(0x0B)
+        whenever(preferences.get(eq(DanaStringComposedKey.Ble5PairingKey), anyVararg<Any>())).thenReturn("982316")
+        whenever(bleEncryption.getEncryptedPacket(anyInt(), anyOrNull(), anyOrNull())).thenReturn(byteArrayOf(0))
+
+        pumpAnswersAt(START, ble5OkAnswer("982316"))
+        pumpAnswersAt(START + 60_000L, unknownAnswer)
+
+        verify(bleGatt).disconnect()
+    }
 
     /** A key that is not 6 digits made BleEncryption.setBle5Key throw inside the Bluetooth callback, and the handshake stopped with no message */
     @Test

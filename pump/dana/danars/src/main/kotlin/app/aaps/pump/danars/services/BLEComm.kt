@@ -110,6 +110,7 @@ class BLEComm(
     private var encryptedDataRead = false
     private var encryptedCommandSent = false
     private var pumpCheckSent = false  // Guard against duplicate ENCRYPTION__PUMP_CHECK
+    private var pumpCheckOk = false  // The pump answered the pump check with OK on this connection, see onUnknownPumpCheckAnswer
 
     init {
         bleTransport.setListener(this)
@@ -146,6 +147,7 @@ class BLEComm(
         encryptedDataRead = false
         encryptedCommandSent = false
         pumpCheckSent = false  // Reset the guard flag for new connection
+        pumpCheckOk = false
         notificationsEnabled = false  // Same lifetime: a new connection registers notifications again
         // The queue does not call connect during the pause. A call now comes from the user (the pair wizard), who
         // wants the connection at once.
@@ -227,6 +229,7 @@ class BLEComm(
         encryptedDataRead = false
         encryptedCommandSent = false
         pumpCheckSent = false  // Reset for next connection attempt
+        pumpCheckOk = false
         notificationsEnabled = false
     }
 
@@ -301,6 +304,7 @@ class BLEComm(
             encryptedDataRead = false
             encryptedCommandSent = false
             pumpCheckSent = false  // Reset for next connection attempt
+            pumpCheckOk = false
             notificationsEnabled = false
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
             bleTransport.updatePairingState(PairingState(step = PairingStep.IDLE))
@@ -506,6 +510,12 @@ class BLEComm(
 
     // 1st packet response
     private fun processConnectResponse(decryptedBuffer: ByteArray) {
+        // AAPS sends one pump check per connection, so a second answer belongs to a check sent just before, on the same
+        // radio link (see onUnknownPumpCheckAnswer). The pump already said OK and the handshake goes on: leave it alone.
+        if (pumpCheckOk) {
+            aapsLogger.warn(LTag.PUMPBTCOMM, "<<<<< ENCRYPTION__PUMP_CHECK second answer (${decryptedBuffer.size} bytes) ignored, the pump already answered OK")
+            return
+        }
         // Read again on every connection by the easy menu check (0xF4), pumps without easy mode keep false
         danaPump.isEasyModeEnabled = false
         danaPump.isConfigUD = false
@@ -513,6 +523,7 @@ class BLEComm(
         if (decryptedBuffer.size == 4 && decryptedBuffer[2] == 'O'.code.toByte() && decryptedBuffer[3] == 'K'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (OK)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
             unknownAnswerCount = 0
+            pumpCheckOk = true
             encryption = EncryptionType.ENCRYPTION_DEFAULT
             danaPump.ignoreUserPassword = false
             // Grab pairing key from preferences if exists
@@ -528,6 +539,7 @@ class BLEComm(
         } else if (decryptedBuffer.size == 9 && decryptedBuffer[2] == 'O'.code.toByte() && decryptedBuffer[3] == 'K'.code.toByte()) {
             // v3 2nd layer encryption
             unknownAnswerCount = 0
+            pumpCheckOk = true
             encryption = EncryptionType.ENCRYPTION_RSv3
             danaPump.ignoreUserPassword = true
             danaPump.hwModel = decryptedBuffer[5].toInt()
@@ -548,6 +560,7 @@ class BLEComm(
         } else if (decryptedBuffer.size == 14 && decryptedBuffer[2] == 'O'.code.toByte() && decryptedBuffer[3] == 'K'.code.toByte()) {
             // v3 2nd layer encryption
             unknownAnswerCount = 0
+            pumpCheckOk = true
             encryption = EncryptionType.ENCRYPTION_BLE5
             danaPump.ignoreUserPassword = true
             danaPump.hwModel = decryptedBuffer[5].toInt()
@@ -621,13 +634,17 @@ class BLEComm(
      * The pump answered the pump check with something we do not know, for example the empty `02 00` of #5571.
      *
      * This used to clear the pairing at once. Tests on a real Dana-i2 show that it is not a pairing problem: the pump
-     * answers `02 00` when the handshake before it was left unfinished, and it answers OK again at the first new
-     * connection after a disconnect. A wrong pump name or an old bond gives no answer at all.
+     * answers `02 00` to a second pump check that comes while it still handles the first one. That happens when AAPS
+     * connects again within a second: Android keeps the radio link up for a moment after a disconnect, so the pump
+     * sees both checks on one link. At the first really new link it answers OK. A wrong pump name or an old bond gives
+     * no answer at all.
      *
-     * So the link is closed at once, which also empties the send queue of this class (not the command queue), and the
-     * queue waits [UNKNOWN_ANSWER_PAUSE_MS] before it connects again. The pairing is cleared only when the pump keeps
-     * answering like this, at least [UNKNOWN_ANSWER_CLEAR_AFTER_TRIES] times over [UNKNOWN_ANSWER_CLEAR_AFTER_MS]
-     * with no OK answer between them. The Dana RS was not tested this way, so the clearing stays for that case.
+     * When the pump already answered OK on this connection, processConnectResponse ignores the `02 00`, as the
+     * handshake goes on. Otherwise the link is closed at once, which also empties the send queue of this class (not the
+     * command queue), and the queue waits [UNKNOWN_ANSWER_PAUSE_MS] before it connects again. The pairing is cleared
+     * only when the pump keeps answering like this, at least [UNKNOWN_ANSWER_CLEAR_AFTER_TRIES] times over
+     * [UNKNOWN_ANSWER_CLEAR_AFTER_MS] with no OK answer between them. The Dana RS was not tested this way, so the
+     * clearing stays for that case.
      */
     private fun onUnknownPumpCheckAnswer(decryptedBuffer: ByteArray) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (ERROR)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
