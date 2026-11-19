@@ -19,17 +19,16 @@ import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
-import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.metroViewModel
-import app.aaps.core.ui.compose.pump.BlePreCheckHost
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.common.CarelevoAlarmNotifier
+import app.aaps.pump.carelevo.common.CarelevoBleReadyCheck
 import app.aaps.pump.carelevo.compose.alarm.CarelevoAlarmHost
 import app.aaps.pump.carelevo.compose.patchflow.CarelevoPatchFlowScreen
 import app.aaps.pump.carelevo.presentation.type.CarelevoScreenType
@@ -39,7 +38,7 @@ class CarelevoComposeContent(
     private val aapsLogger: AAPSLogger,
     private val carelevoAlarmNotifier: CarelevoAlarmNotifier,
     private val protectionCheck: ProtectionCheck,
-    private val blePreCheck: BlePreCheck,
+    private val bleReadyCheck: CarelevoBleReadyCheck,
     private val iconsProvider: IconsProvider,
     private val config: Config
 ) : ComposablePluginContent {
@@ -154,8 +153,7 @@ class CarelevoComposeContent(
                     // The flow scans for the patch, so it starts only after the check has passed.
                     var bleReady by remember { mutableStateOf(isEmulating) }
                     if (!isEmulating) {
-                        BlePreCheckHost(
-                            blePreCheck = blePreCheck,
+                        bleReadyCheck.Check(
                             onReady = { bleReady = true },
                             onFailed = { manualWorkflowScreen = null }
                         )

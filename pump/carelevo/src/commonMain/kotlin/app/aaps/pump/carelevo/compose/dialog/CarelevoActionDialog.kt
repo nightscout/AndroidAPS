@@ -10,9 +10,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.compose.htmlToAnnotatedString
 
 @Composable
 internal fun CarelevoActionDialog(
@@ -36,7 +36,7 @@ internal fun CarelevoActionDialog(
                 if (content.isNotBlank()) {
                     Text(
                         text = if (content.contains('<') || content.contains("<br>")) {
-                            AnnotatedString.fromHtml(content.replace("\n", "<br>"))
+                            content.replace("\n", "<br>").htmlToAnnotatedString()
                         } else {
                             AnnotatedString(content)
                         },

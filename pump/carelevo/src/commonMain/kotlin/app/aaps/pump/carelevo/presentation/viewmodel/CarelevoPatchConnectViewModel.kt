@@ -2,6 +2,7 @@ package app.aaps.pump.carelevo.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.ble.Advertisement
@@ -30,13 +31,8 @@ import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoConnectNewPatchUseCas
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoConnectNewPatchRequestModel
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectPrepareEvent
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
@@ -47,8 +43,6 @@ import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
-@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
-@ViewModelKey
 class CarelevoPatchConnectViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val carelevoPatch: CarelevoPatch,
@@ -120,7 +114,7 @@ class CarelevoPatchConnectViewModel @Inject constructor(
 
         setUiState(UiState.Loading)
         _isScanWorking = true
-        scanJob = viewModelScope.launch(Dispatchers.IO) {
+        scanJob = viewModelScope.launch(aapsIoDispatcher) {
             val found = try {
                 val devicesById = linkedMapOf<DeviceId, Advertisement>()
                 try {
@@ -246,7 +240,7 @@ class CarelevoPatchConnectViewModel @Inject constructor(
         )
 
         setUiState(UiState.Loading)
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(aapsIoDispatcher) {
             val outcome = runCatching {
                 // A bond left from an older patch at this address would block the new one. iOS has none to remove.
                 central.bonding?.removeBond(device.device)

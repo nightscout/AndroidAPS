@@ -1,20 +1,12 @@
 package app.aaps.pump.carelevo.common
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import androidx.core.app.NotificationCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ProcessLifecycleOwner
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
@@ -43,7 +35,8 @@ import kotlin.coroutines.cancellation.CancellationException
  * Presentation half of the alarm pipeline: observes the persisted active-alarm set (via
  * [CarelevoAlarmActionHandler]) and surfaces it — the in-app AAPS "top notification" cards
  * ([showTopNotification], with the clear action wired back to the shared state machine), the
- * system-tray notification for backgrounded users ([showNotification]), and the [alarms] StateFlow.
+ * phone notification for backgrounded users ([showNotification], through [CarelevoSystemNotifier]), and the
+ * [alarms] StateFlow.
  * `CarelevoPumpPlugin.handleAlarms` additionally routes a critical alarm through the shared AAPS
  * full-screen alarm (`UiInteraction.runAlarm`) — that escalation is independent of this class.
  *
@@ -57,13 +50,14 @@ import kotlin.coroutines.cancellation.CancellationException
  */
 @SingleIn(AppScope::class)
 class CarelevoAlarmNotifier @Inject constructor(
-    private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
-    private val notificationManager: app.aaps.core.interfaces.notifications.NotificationManager,
+    private val notificationManager: NotificationManager,
     private val preferences: Preferences,
     private val alarmActionHandler: CarelevoAlarmActionHandler,
-    private val rh: ResourceHelper
+    private val rh: TextResolver,
+    private val systemNotifier: CarelevoSystemNotifier,
+    private val appForeground: CarelevoAppForeground
 ) {
 
     /** Where alarms are handled: the main thread, so the handling never runs twice at once. A test sets an unconfined dispatcher. */
@@ -72,13 +66,11 @@ class CarelevoAlarmNotifier @Inject constructor(
     private val _alarms = MutableStateFlow<List<CarelevoAlarmInfo>>(emptyList())
     val alarms = _alarms.asStateFlow()
     private var onAlarmsUpdated: ((List<CarelevoAlarmInfo>) -> Unit)? = null
-    private val channelId = "carelevo_alarm_channel"
 
     fun startObserving(
         onAlarmsUpdated: (List<CarelevoAlarmInfo>) -> Unit
     ) {
         this.onAlarmsUpdated = onAlarmsUpdated
-        createNotificationChannel()
 
         // Asked for here, as before: the store loads its alarms on the caller's thread, not on the main thread.
         val stored = alarmActionHandler.observeAlarms()
@@ -105,7 +97,7 @@ class CarelevoAlarmNotifier @Inject constructor(
         aapsLogger.debug(LTag.PUMPCOMM, "handleAlarmsInternal alarms=$alarms")
         _alarms.value = alarms
 
-        if (!isInForeground) {
+        if (!appForeground.isInForeground()) {
             alarms.forEach { alarm ->
                 showNotification(alarm)
             }
@@ -154,21 +146,8 @@ class CarelevoAlarmNotifier @Inject constructor(
     }
 
     fun showNotification(alarm: CarelevoAlarmInfo) {
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
         val (titleRes, descRes, _) = alarm.cause.transformNotificationStringResources()
-        val description = buildNotificationDescription(alarm, descRes)
-
-        val contentPendingIntent = createAlarmActivityPendingIntent()
-
-        val notification = buildNotification(
-            title = rh.gs(titleRes),
-            description = description,
-            contentIntent = contentPendingIntent
-        )
-
-        notificationManager.notify(alarm.alarmId.hashCode(), notification)
+        systemNotifier.show(alarm.alarmId, rh.gs(titleRes), buildNotificationDescription(alarm, descRes))
     }
 
     /** Builds the final body text from the alarm metadata and descRes. */
@@ -219,55 +198,6 @@ class CarelevoAlarmNotifier @Inject constructor(
         }
     }
 
-    private fun buildNotification(
-        title: String,
-        description: String,
-        contentIntent: PendingIntent
-    ): Notification {
-        return NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(app.aaps.core.ui.R.drawable.notif_icon)
-            .setContentTitle(title)
-            .setContentText(description)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setContentIntent(contentIntent)
-            .setAutoCancel(true)
-            .build()
-    }
-
-    private fun createAlarmActivityPendingIntent(): PendingIntent {
-        val launchIntent =
-            context.packageManager.getLaunchIntentForPackage(context.packageName)
-                ?.apply {
-                    addFlags(
-                        Intent.FLAG_ACTIVITY_NEW_TASK or
-                            Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
-                    )
-                }
-
-        val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-
-        return PendingIntent.getActivity(
-            context,
-            0,
-            launchIntent,
-            flags
-        )
-    }
-
-    private fun createNotificationChannel() {
-        // Resource strings — the channel name/description are user-visible in the system's
-        // notification settings.
-        val name = rh.gs(CarelevoStrings.carelevo_alarm_channel_name)
-        val descriptionText = rh.gs(CarelevoStrings.carelevo_alarm_channel_description)
-        val importance = NotificationManager.IMPORTANCE_HIGH
-        val channel = NotificationChannel(channelId, name, importance).apply {
-            description = descriptionText
-        }
-        val notificationManager: NotificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
-    }
-
     private fun buildDescArgsFor(alarm: CarelevoAlarmInfo): List<String> = when (alarm.cause) {
         AlarmCause.ALARM_NOTICE_LOW_INSULIN,
         AlarmCause.ALARM_ALERT_OUT_OF_INSULIN -> {
@@ -316,7 +246,4 @@ class CarelevoAlarmNotifier @Inject constructor(
                 rh.gs(CarelevoStrings.common_label_unit_value_minute, minutes)
         }
     }
-
-    val isInForeground: Boolean
-        get() = ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
 }

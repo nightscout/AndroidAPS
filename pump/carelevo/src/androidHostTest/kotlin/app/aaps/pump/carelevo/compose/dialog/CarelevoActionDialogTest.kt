@@ -237,12 +237,13 @@ class CarelevoActionDialogTest {
 
     @Test
     fun htmlContent_newlinesAreConvertedToLineBreaks() {
-        // Contains '<' -> HTML branch, so the "\n" is replaced by "<br>" before parsing.
+        // Contains '<' -> HTML branch, so the "\n" is replaced by "<br>" before parsing. <b> is used because
+        // the shared HTML helper knows only <b> and <br>, the only tags any app string uses.
         compose.setContent {
             MaterialTheme {
                 CarelevoActionDialog(
                     title = title,
-                    content = "<i>Alpha</i>\nBravo",
+                    content = "<b>Alpha</b>\nBravo",
                     onDismissRequest = {},
                     primaryText = primaryLabel,
                     onPrimaryClick = {}
@@ -252,7 +253,7 @@ class CarelevoActionDialogTest {
 
         compose.onNodeWithText("Alpha", substring = true).assertIsDisplayed()
         compose.onNodeWithText("Bravo", substring = true).assertIsDisplayed()
-        compose.onNodeWithText("<i>Alpha</i>", substring = true).assertDoesNotExist()
+        compose.onNodeWithText("<b>Alpha</b>", substring = true).assertDoesNotExist()
     }
 
     @Test

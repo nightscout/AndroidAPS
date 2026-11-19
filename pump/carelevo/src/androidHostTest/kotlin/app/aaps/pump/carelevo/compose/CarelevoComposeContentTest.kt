@@ -16,7 +16,6 @@ import androidx.compose.ui.text.AnnotatedString
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.ProtectionCheck
-import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ScreenAction
@@ -26,6 +25,7 @@ import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.common.CarelevoAlarmNotifier
+import app.aaps.pump.carelevo.common.CarelevoBleReadyCheck
 import app.aaps.pump.carelevo.common.MutableEventFlow
 import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.common.model.State
@@ -89,7 +89,7 @@ class CarelevoComposeContentTest {
     private val aapsLogger = mock<AAPSLogger>()
     private val carelevoAlarmNotifier = mock<CarelevoAlarmNotifier>()
     private val protectionCheck = mock<ProtectionCheck>()
-    private val blePreCheck = mock<BlePreCheck>()
+    private val bleReadyCheck = mock<CarelevoBleReadyCheck>()
     private val iconsProvider = mock<IconsProvider>()
 
     /** Not emulating by default — the emulator path skips the BLE pre-check. */
@@ -132,7 +132,7 @@ class CarelevoComposeContentTest {
         aapsLogger = aapsLogger,
         carelevoAlarmNotifier = carelevoAlarmNotifier,
         protectionCheck = protectionCheck,
-        blePreCheck = blePreCheck,
+        bleReadyCheck = bleReadyCheck,
         iconsProvider = iconsProvider,
         config = config
     )
@@ -166,7 +166,7 @@ class CarelevoComposeContentTest {
 
         assertThat(content).isInstanceOf(CarelevoComposeContent::class.java)
         // The plugin builds this eagerly; construction must stay side-effect free.
-        verifyNoInteractions(aapsLogger, carelevoAlarmNotifier, protectionCheck, blePreCheck, iconsProvider)
+        verifyNoInteractions(aapsLogger, carelevoAlarmNotifier, protectionCheck, bleReadyCheck, iconsProvider)
     }
 
     // ── Overview route: content ────────────────────────────────────────────────

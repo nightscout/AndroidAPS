@@ -1,6 +1,5 @@
 package app.aaps.pump.carelevo.presentation.viewmodel
 
-import android.os.SystemClock
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.TE
@@ -29,12 +28,9 @@ import app.aaps.pump.carelevo.domain.type.AlarmType
 import app.aaps.pump.carelevo.domain.usecase.alarm.CarelevoAlarmInfoUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
 import app.aaps.pump.carelevo.ext.localNowIsoText
+import app.aaps.pump.carelevo.ext.sleepBlocking
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectNeedleEvent
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,10 +40,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 
-@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
-@ViewModelKey
 class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val pumpSync: PumpSync,
@@ -120,7 +115,7 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
             val isNeedleInserted = patchInfo.checkNeedle ?: false
             _isNeedleInsert.tryEmit(isNeedleInserted)
             if (isNeedleInserted) {
-                if (needleInsertedAtMs == null) needleInsertedAtMs = System.currentTimeMillis()
+                if (needleInsertedAtMs == null) needleInsertedAtMs = Clock.System.now().toEpochMilliseconds()
             } else {
                 needleInsertedAtMs = null
                 delayedStartBasalJob?.cancel()
@@ -164,7 +159,7 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
     fun startSetBasal() {
         val insertedAt = needleInsertedAtMs
         if (insertedAt != null) {
-            val elapsed = System.currentTimeMillis() - insertedAt
+            val elapsed = Clock.System.now().toEpochMilliseconds() - insertedAt
             val remain = NEEDLE_TO_BASAL_DELAY_MS - elapsed
             if (remain > 0) {
                 setUiState(UiState.Loading)
@@ -204,7 +199,7 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
                 val serial = carelevoPatch.patchInfo.latest?.manufactureNumber ?: ""
                 pumpSync.connectNewPump(true)
                 delay(1000)
-                insertCannulaChangeWithSite(serial, System.currentTimeMillis())
+                insertCannulaChangeWithSite(serial, Clock.System.now().toEpochMilliseconds())
                 insertTherapyEventWithSingleRetry(TE.Type.INSULIN_CHANGE, serial)
                 setUiState(UiState.Idle)
                 triggerEvent(CarelevoConnectNeedleEvent.SetBasalComplete)
@@ -219,16 +214,16 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
     private fun insertTherapyEventWithSingleRetry(type: TE.Type, serial: String) {
         viewModelScope.launch {
             var inserted = pumpSync.insertTherapyEventIfNewWithTimestamp(
-                timestamp = System.currentTimeMillis(),
+                timestamp = Clock.System.now().toEpochMilliseconds(),
                 type = type,
                 pumpType = PumpType.CAREMEDI_CARELEVO,
                 pumpSerial = serial
             )
             aapsLogger.debug(LTag.PUMPCOMM, "$type insert result=$inserted serial=$serial")
             if (!inserted) {
-                SystemClock.sleep(INSERT_RETRY_DELAY_MS)
+                sleepBlocking(INSERT_RETRY_DELAY_MS)
                 inserted = pumpSync.insertTherapyEventIfNewWithTimestamp(
-                    timestamp = System.currentTimeMillis(),
+                    timestamp = Clock.System.now().toEpochMilliseconds(),
                     type = type,
                     pumpType = PumpType.CAREMEDI_CARELEVO,
                     pumpSerial = serial
@@ -252,7 +247,7 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
             )
             aapsLogger.debug(LTag.PUMPCOMM, "CANNULA_CHANGE insert result=$inserted serial=$serial")
             if (!inserted) {
-                SystemClock.sleep(INSERT_RETRY_DELAY_MS)
+                sleepBlocking(INSERT_RETRY_DELAY_MS)
                 inserted = pumpSync.insertTherapyEventIfNewWithTimestamp(
                     timestamp = timestamp,
                     type = TE.Type.CANNULA_CHANGE,
@@ -345,7 +340,7 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
 
     private fun recordNeedleInsertFailAlarm() {
         val info = CarelevoAlarmInfo(
-            alarmId = System.currentTimeMillis().toString(),
+            alarmId = Clock.System.now().toEpochMilliseconds().toString(),
             alarmType = AlarmType.WARNING,
             cause = AlarmCause.ALARM_WARNING_NEEDLE_INSERTION_ERROR,
             createdAt = localNowIsoText(),

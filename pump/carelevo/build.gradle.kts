@@ -10,6 +10,11 @@ plugins {
 
 registerKeyStrings("carelevo")
 
+compose.resources {
+    packageOfResClass = "app.aaps.pump.carelevo.resources"
+    publicResClass = false
+}
+
 kotlin {
     android {
         namespace = "app.aaps.pump.carelevo"
@@ -41,6 +46,8 @@ kotlin {
                 // The multiplatform lifecycle: ViewModel, viewModelScope and collectAsStateWithLifecycle.
                 implementation(libs.jetbrains.lifecycle.viewmodel.compose)
                 implementation(libs.jetbrains.lifecycle.runtime.compose)
+                // The patch picture and the refill guide photos, one copy for every platform (src/commonMain/composeResources).
+                implementation(libs.jetbrains.compose.components.resources)
             }
         }
 

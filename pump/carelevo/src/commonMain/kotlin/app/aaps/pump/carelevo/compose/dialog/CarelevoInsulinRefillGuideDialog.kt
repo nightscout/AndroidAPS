@@ -1,6 +1,5 @@
 package app.aaps.pump.carelevo.compose.dialog
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.keys.interfaces.TextRef
@@ -34,24 +32,38 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.pump.carelevo.CarelevoStrings
-import app.aaps.pump.carelevo.R
+import app.aaps.pump.carelevo.resources.Res
+import app.aaps.pump.carelevo.resources.carelevo_refill_step_01
+import app.aaps.pump.carelevo.resources.carelevo_refill_step_02
+import app.aaps.pump.carelevo.resources.carelevo_refill_step_03
+import app.aaps.pump.carelevo.resources.carelevo_refill_step_04
+import app.aaps.pump.carelevo.resources.carelevo_refill_step_05
+import app.aaps.pump.carelevo.resources.carelevo_refill_step_06
+import app.aaps.pump.carelevo.resources.carelevo_refill_step_07
+import app.aaps.pump.carelevo.resources.carelevo_refill_step_08
+import app.aaps.pump.carelevo.resources.carelevo_refill_step_09
+import app.aaps.pump.carelevo.resources.carelevo_refill_step_10
+import app.aaps.pump.carelevo.resources.carelevo_refill_step_11
+import app.aaps.pump.carelevo.resources.carelevo_refill_step_12
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 
-private data class RefillStep(@DrawableRes val image: Int, val text: TextRef)
+private data class RefillStep(val image: DrawableResource, val text: TextRef)
 
 private val REFILL_STEPS = listOf(
-    RefillStep(R.drawable.carelevo_refill_step_01, CarelevoStrings.carelevo_insulin_refill_step1),
-    RefillStep(R.drawable.carelevo_refill_step_02, CarelevoStrings.carelevo_insulin_refill_step2),
-    RefillStep(R.drawable.carelevo_refill_step_03, CarelevoStrings.carelevo_insulin_refill_step3),
-    RefillStep(R.drawable.carelevo_refill_step_04, CarelevoStrings.carelevo_insulin_refill_step4),
-    RefillStep(R.drawable.carelevo_refill_step_05, CarelevoStrings.carelevo_insulin_refill_step5),
-    RefillStep(R.drawable.carelevo_refill_step_06, CarelevoStrings.carelevo_insulin_refill_step6),
-    RefillStep(R.drawable.carelevo_refill_step_07, CarelevoStrings.carelevo_insulin_refill_step7),
-    RefillStep(R.drawable.carelevo_refill_step_08, CarelevoStrings.carelevo_insulin_refill_step8),
-    RefillStep(R.drawable.carelevo_refill_step_09, CarelevoStrings.carelevo_insulin_refill_step9),
-    RefillStep(R.drawable.carelevo_refill_step_10, CarelevoStrings.carelevo_insulin_refill_step10),
-    RefillStep(R.drawable.carelevo_refill_step_11, CarelevoStrings.carelevo_insulin_refill_step11),
-    RefillStep(R.drawable.carelevo_refill_step_12, CarelevoStrings.carelevo_insulin_refill_step12)
+    RefillStep(Res.drawable.carelevo_refill_step_01, CarelevoStrings.carelevo_insulin_refill_step1),
+    RefillStep(Res.drawable.carelevo_refill_step_02, CarelevoStrings.carelevo_insulin_refill_step2),
+    RefillStep(Res.drawable.carelevo_refill_step_03, CarelevoStrings.carelevo_insulin_refill_step3),
+    RefillStep(Res.drawable.carelevo_refill_step_04, CarelevoStrings.carelevo_insulin_refill_step4),
+    RefillStep(Res.drawable.carelevo_refill_step_05, CarelevoStrings.carelevo_insulin_refill_step5),
+    RefillStep(Res.drawable.carelevo_refill_step_06, CarelevoStrings.carelevo_insulin_refill_step6),
+    RefillStep(Res.drawable.carelevo_refill_step_07, CarelevoStrings.carelevo_insulin_refill_step7),
+    RefillStep(Res.drawable.carelevo_refill_step_08, CarelevoStrings.carelevo_insulin_refill_step8),
+    RefillStep(Res.drawable.carelevo_refill_step_09, CarelevoStrings.carelevo_insulin_refill_step9),
+    RefillStep(Res.drawable.carelevo_refill_step_10, CarelevoStrings.carelevo_insulin_refill_step10),
+    RefillStep(Res.drawable.carelevo_refill_step_11, CarelevoStrings.carelevo_insulin_refill_step11),
+    RefillStep(Res.drawable.carelevo_refill_step_12, CarelevoStrings.carelevo_insulin_refill_step12)
 )
 
 // Diagram aspect runs 2.1:1 to 1:1.5 and the sentences one to five lines, so both are fixed —

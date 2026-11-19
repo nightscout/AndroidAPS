@@ -1,15 +1,5 @@
 package app.aaps.pump.carelevo
 
-// Aliased: the simple name collides with Robolectric's @Config annotation used below.
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothManager
-import android.content.Context
-import android.content.Intent
-import android.os.Looper
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.ProcessLifecycleOwner
-import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
@@ -17,11 +7,13 @@ import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.protection.ProtectionCheck
-import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.ble.AdapterState
+import app.aaps.core.interfaces.pump.ble.BleCentral
+import app.aaps.core.interfaces.pump.ble.EmulatedBleCentral
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -106,8 +98,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
-import org.robolectric.Shadows
 import org.robolectric.annotation.Config
 import java.util.Locale
 import kotlin.time.Clock
@@ -123,22 +113,20 @@ import app.aaps.core.interfaces.configuration.Config as AapsConfig
  * ([CarelevoPumpPluginTest] and friends) cannot reach:
  *
  *  - `onStart`: the one-shot CAGE threshold defaults, `initPatchOnce` + best-effort profile apply,
- *    the reservoir/battery mirror, the Bluetooth adapter seed + broadcast receiver, and the alarm
- *    observer registration.
+ *    the reservoir/battery mirror, the Bluetooth adapter seed + follow of the central's adapter state,
+ *    the foreground follow, and the alarm observer registration.
  *  - the four preference observers (max bolus / expiry threshold / low-insulin zero-skip / buzzer)
  *    and the deferred settings-sync recovery combiner.
  *  - `handleAlarms` — the critical-alarm escalation to `UiInteraction.runAlarm` when the Compose
  *    host is NOT mounted, plus the `globallyAlarmedIds` dedup/prune.
  *  - `onStop`: alarm-observer teardown and preference-scope cancellation.
  *
- * Robolectric is required because `startAlarmObserving`/`onStop` touch [ProcessLifecycleOwner]
- * (a real `Looper` + `ArchTaskExecutor` main-thread check) and `PumpPluginBase.onStart` builds a
- * real `HandlerThread`. Same rationale and style as
- * [app.aaps.pump.carelevo.common.CarelevoAlarmNotifierTest].
+ * Robolectric is required because `PumpPluginBase.onStart` builds a real `HandlerThread`. The
+ * Bluetooth adapter and the foreground state come from the test (`adapterState`, `appForeground`).
  *
- * `Dispatchers.setMain(UnconfinedTestDispatcher())` backs the `withContext(Dispatchers.Main)` hops
- * in `startAlarmObserving`/`onStop`: without it the real Android main dispatcher would post to the
- * paused Robolectric looper while `runBlocking` holds that very thread, and deadlock.
+ * `Dispatchers.setMain(UnconfinedTestDispatcher())` keeps any main-dispatcher work on the test thread:
+ * the real Android main dispatcher would post to the paused Robolectric looper while `runBlocking`
+ * holds that very thread, and deadlock.
  *
  * The plugin's scope runs on [Dispatchers.Unconfined] here (see `buildPlugin`), so `initPatchOnce`, the
  * patchInfo mirror, the settings-sync combiner and the preference observers all run on the test thread
@@ -154,9 +142,6 @@ class CarelevoPumpPluginLifecycleTest {
         whenever(it.to2Decimal(any<Double>())).thenAnswer { inv -> "%.2f".format(Locale.US, inv.getArgument<Double>(0)) }
     }
 
-    // REAL application context: getSystemService(BLUETOOTH_SERVICE) and registerReceiver must work.
-    private val context: Context = RuntimeEnvironment.getApplication()
-
     private lateinit var aapsLogger: AAPSLogger
     private lateinit var rh: ResourceHelper
     private lateinit var preferences: Preferences
@@ -164,7 +149,6 @@ class CarelevoPumpPluginLifecycleTest {
     private lateinit var fabricPrivacy: FabricPrivacy
     private lateinit var profileFunction: ProfileFunction
     private lateinit var protectionCheck: ProtectionCheck
-    private lateinit var blePreCheck: BlePreCheck
     private lateinit var iconsProvider: IconsProvider
     private lateinit var config: AapsConfig
     private lateinit var uiInteraction: UiInteraction
@@ -174,6 +158,10 @@ class CarelevoPumpPluginLifecycleTest {
     private lateinit var activationExecutor: CarelevoActivationExecutor
 
     private lateinit var plugin: CarelevoPumpPlugin
+
+    // The phone's Bluetooth adapter as the driver's central reports it, and AAPS in front or not.
+    private val adapterState = MutableStateFlow(AdapterState.ON)
+    private val appForeground = FakeCarelevoAppForeground()
 
     // EffectiveProfile, not plain Profile: ProfileFunction.getProfile() returns EffectiveProfile? and
     // the same mock also backs carelevoPatch.profile (EffectiveProfile : Profile).
@@ -197,11 +185,6 @@ class CarelevoPumpPluginLifecycleTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        // ProcessLifecycleOwner is a PROCESS singleton and survives between test methods, so pin it to
-        // a known background state: addObserver replays events up to the current state, and a leftover
-        // STARTED from another test would fire ON_START (-> refreshAlarms) the moment onStart registers.
-        (ProcessLifecycleOwner.get().lifecycle as LifecycleRegistry).handleLifecycleEvent(Lifecycle.Event.ON_STOP)
-
         aapsLogger = mock()
         rh = mock()
         preferences = mock()
@@ -209,7 +192,6 @@ class CarelevoPumpPluginLifecycleTest {
         fabricPrivacy = mock()
         profileFunction = mock()
         protectionCheck = mock()
-        blePreCheck = mock()
         iconsProvider = mock()
         config = mock()
         uiInteraction = mock()
@@ -256,8 +238,8 @@ class CarelevoPumpPluginLifecycleTest {
 
     @After
     fun tearDown() {
-        // Cancel the IO preference scope, PumpPluginBase's delayed initial-readStatus job and the
-        // ProcessLifecycleOwner observer, so nothing leaks into the next test in this class.
+        // Cancel the plugin scope (preferences, adapter and foreground follows) and PumpPluginBase's
+        // delayed initial-readStatus job, so nothing leaks into the next test in this class.
         if (started) runBlocking { plugin.onStop() }
         Dispatchers.resetMain()
     }
@@ -265,7 +247,8 @@ class CarelevoPumpPluginLifecycleTest {
     private fun buildPlugin(
         basalProfileUpdateCoordinator: CarelevoBasalProfileUpdateCoordinator? = null,
         bolusCoordinator: CarelevoBolusCoordinator? = null,
-        tempBasalCoordinator: CarelevoTempBasalCoordinator? = null
+        tempBasalCoordinator: CarelevoTempBasalCoordinator? = null,
+        central: BleCentral = bleCentralWith(adapterState)
     ): CarelevoPumpPlugin {
         val pumpEnactResultProvider = Provider<PumpEnactResult> { mock() }
         val setBasalProgramUseCase: CarelevoSetBasalProgramUseCase = mock()
@@ -287,9 +270,10 @@ class CarelevoPumpPluginLifecycleTest {
             commandQueue = commandQueue,
             fabricPrivacy = fabricPrivacy,
             profileFunction = profileFunction,
-            context = context,
+            central = central,
+            appForeground = appForeground,
             protectionCheck = protectionCheck,
-            blePreCheck = blePreCheck,
+            bleReadyCheck = FakeCarelevoBleReadyCheck(),
             iconsProvider = iconsProvider,
             config = config,
             uiInteraction = uiInteraction,
@@ -506,20 +490,18 @@ class CarelevoPumpPluginLifecycleTest {
         assertThat(plugin.reservoirLevel.value?.cU).isWithin(0.001).of(12.25)
     }
 
-    // ---- onStart: Bluetooth adapter seed + receiver ---------------------------------------------
+    // ---- onStart: Bluetooth adapter seed + follow of the central's adapter state ------------------
 
-    /**
-     * Pin the adapter explicitly rather than leaning on a Robolectric default — the default is OFF,
-     * and an implicit one silently decides which branch of `currentAdapterBleState()` a test covers.
-     */
-    private fun setAdapterEnabled(enabled: Boolean) {
-        val adapter = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
-        Shadows.shadowOf(adapter).setEnabled(enabled)
+    /** The adapter-level states the plugin gave the patch, in order. */
+    private fun forwardedAdapterStates(): List<DeviceModuleState> {
+        val captor = argumentCaptor<BleState>()
+        verify(carelevoPatch, atLeastOnce()).onBluetoothStateChanged(captor.capture())
+        return captor.allValues.map { it.isEnabled }
     }
 
     @Test
-    fun `onStart seeds the adapter state so patchState resolves before the first broadcast`() {
-        setAdapterEnabled(true)
+    fun `onStart seeds the adapter state so patchState resolves before the first change`() {
+        adapterState.value = AdapterState.ON
 
         start()
 
@@ -535,83 +517,69 @@ class CarelevoPumpPluginLifecycleTest {
     }
 
     @Test
-    fun `onStart seeds OFF when the adapter is disabled`() {
-        setAdapterEnabled(false)
+    fun `onStart seeds OFF when the adapter is off`() {
+        adapterState.value = AdapterState.OFF
 
         start()
 
-        val captor = argumentCaptor<BleState>()
-        verify(carelevoPatch, atLeastOnce()).onBluetoothStateChanged(captor.capture())
-        assertThat(captor.firstValue.isEnabled).isEqualTo(DeviceModuleState.DEVICE_STATE_OFF)
+        assertThat(forwardedAdapterStates().first()).isEqualTo(DeviceModuleState.DEVICE_STATE_OFF)
     }
 
     @Test
-    fun `while emulating the adapter is reported ON even though it is disabled`() {
+    fun `the emulated central reports ON so the emulated patch is not stopped by the phone Bluetooth`() {
         // The emulated patch has no radio behind it, so every isBluetoothEnabled() gate in the
         // coordinators and view models would otherwise refuse before reaching the emulated transport.
-        whenever(config.isEnabled(ExternalOptions.EMULATE_CARELEVO)).thenReturn(true)
-        setAdapterEnabled(false)
+        // The driver gets the emulated central while emulating, and that central is always on.
+        plugin = buildPlugin(central = EmulatedBleCentral(aapsLogger))
+        plugin.bleSession = bleSession
 
         start()
 
-        val captor = argumentCaptor<BleState>()
-        verify(carelevoPatch, atLeastOnce()).onBluetoothStateChanged(captor.capture())
-        assertThat(captor.firstValue.isEnabled).isEqualTo(DeviceModuleState.DEVICE_STATE_ON)
+        // The seed and the first value of the follow: both ON, nothing else.
+        assertThat(forwardedAdapterStates().toSet()).containsExactly(DeviceModuleState.DEVICE_STATE_ON)
     }
 
     @Test
-    fun `while emulating a host adapter OFF broadcast cannot kill the session`() {
-        whenever(config.isEnabled(ExternalOptions.EMULATE_CARELEVO)).thenReturn(true)
-        setAdapterEnabled(false)
+    fun `an adapter OFF change is forwarded to the patch`() {
         start()
+
+        adapterState.value = AdapterState.OFF
+
+        assertThat(forwardedAdapterStates().last()).isEqualTo(DeviceModuleState.DEVICE_STATE_OFF)
+    }
+
+    @Test
+    fun `an unknown adapter state is not reported as off`() {
+        // iOS says UNKNOWN for a moment after the start. An OFF would raise the Bluetooth-off alarm.
+        adapterState.value = AdapterState.UNKNOWN
+
+        start()
+
+        assertThat(forwardedAdapterStates()).doesNotContain(DeviceModuleState.DEVICE_STATE_OFF)
+    }
+
+    @Test
+    fun `no Bluetooth permission and no Bluetooth at all count as off`() {
+        start()
+
+        adapterState.value = AdapterState.UNAUTHORIZED
+        assertThat(forwardedAdapterStates().last()).isEqualTo(DeviceModuleState.DEVICE_STATE_OFF)
+
+        adapterState.value = AdapterState.ON
+        adapterState.value = AdapterState.UNSUPPORTED
+        assertThat(forwardedAdapterStates().last()).isEqualTo(DeviceModuleState.DEVICE_STATE_OFF)
+    }
+
+    @Test
+    fun `onStop ends the adapter follow`() {
+        start()
+        runBlocking { plugin.onStop() }
+        started = false
         clearInvocations(carelevoPatch)
 
-        sendAdapterState(BluetoothAdapter.STATE_OFF)
+        adapterState.value = AdapterState.OFF
 
-        // The receiver is never registered while emulating, so the broadcast reaches nothing.
         verify(carelevoPatch, never()).onBluetoothStateChanged(any())
-    }
-
-    @Test
-    fun `an adapter OFF broadcast is forwarded to the patch`() {
-        start()
-
-        sendAdapterState(BluetoothAdapter.STATE_OFF)
-
-        val captor = argumentCaptor<BleState>()
-        verify(carelevoPatch, atLeastOnce()).onBluetoothStateChanged(captor.capture())
-        assertThat(captor.lastValue.isEnabled).isEqualTo(DeviceModuleState.DEVICE_STATE_OFF)
-    }
-
-    @Test
-    fun `an adapter TURNING_OFF broadcast is forwarded to the patch`() {
-        start()
-
-        sendAdapterState(BluetoothAdapter.STATE_TURNING_OFF)
-
-        val captor = argumentCaptor<BleState>()
-        verify(carelevoPatch, atLeastOnce()).onBluetoothStateChanged(captor.capture())
-        assertThat(captor.lastValue.isEnabled).isEqualTo(DeviceModuleState.DEVICE_STATE_TUNING_OFF)
-    }
-
-    @Test
-    fun `an out-of-range adapter state is ignored instead of crashing the receiver`() {
-        // codeToDeviceResult() throws on anything outside {-1, 10..13}, so the receiver MUST filter
-        // first — an unfiltered EXTRA_STATE would blow up inside a system broadcast.
-        start()
-        // Exactly one call so far: the startup seed.
-        verify(carelevoPatch, times(1)).onBluetoothStateChanged(any())
-
-        sendAdapterState(BluetoothAdapter.ERROR)
-
-        verify(carelevoPatch, times(1)).onBluetoothStateChanged(any())
-    }
-
-    private fun sendAdapterState(state: Int) {
-        context.sendBroadcast(
-            Intent(BluetoothAdapter.ACTION_STATE_CHANGED).putExtra(BluetoothAdapter.EXTRA_STATE, state)
-        )
-        Shadows.shadowOf(Looper.getMainLooper()).idle()
     }
 
     // ---- preference observers -------------------------------------------------------------------
@@ -1005,13 +973,31 @@ class CarelevoPumpPluginLifecycleTest {
     @Test
     fun `a foreground transition refreshes the alarms`() {
         start()
-        val registry = ProcessLifecycleOwner.get().lifecycle as LifecycleRegistry
+        verify(carelevoAlarmNotifier, never()).refreshAlarms()
 
-        // Force a real ON_START edge regardless of the state Robolectric left the process at.
-        registry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
-        registry.handleLifecycleEvent(Lifecycle.Event.ON_START)
+        appForeground.state.value = true
 
-        verify(carelevoAlarmNotifier, atLeastOnce()).refreshAlarms()
+        verify(carelevoAlarmNotifier, times(1)).refreshAlarms()
+    }
+
+    @Test
+    fun `each return to the front refreshes the alarms again`() {
+        start()
+
+        appForeground.state.value = true
+        appForeground.state.value = false
+        appForeground.state.value = true
+
+        verify(carelevoAlarmNotifier, times(2)).refreshAlarms()
+    }
+
+    @Test
+    fun `onStart refreshes the alarms once when AAPS is already in front`() {
+        appForeground.state.value = true
+
+        start()
+
+        verify(carelevoAlarmNotifier, times(1)).refreshAlarms()
     }
 
     // ---- onStop ---------------------------------------------------------------------------------
@@ -1045,10 +1031,8 @@ class CarelevoPumpPluginLifecycleTest {
         start()
         runBlocking { plugin.onStop() }
         started = false
-        val registry = ProcessLifecycleOwner.get().lifecycle as LifecycleRegistry
 
-        registry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
-        registry.handleLifecycleEvent(Lifecycle.Event.ON_START)
+        appForeground.state.value = true
 
         verify(carelevoAlarmNotifier, never()).refreshAlarms()
     }
@@ -1056,7 +1040,7 @@ class CarelevoPumpPluginLifecycleTest {
     @Test
     fun `onStop without a preceding onStart does not throw`() {
         // PluginBase launches onStart/onStop as separate unjoined coroutines, so a teardown with no
-        // live generation (null scope / null observer) must be a clean no-op.
+        // live generation (null scope) must be a clean no-op.
         runBlocking { plugin.onStop() }
 
         verify(carelevoAlarmNotifier).stopObserving()

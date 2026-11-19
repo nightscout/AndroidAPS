@@ -1,15 +1,14 @@
 package app.aaps.pump.carelevo
 
-import android.content.Context
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.protection.ProtectionCheck
-import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.ble.AdapterState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.IconsProvider
@@ -62,6 +61,7 @@ import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartImmeBolusInfusio
 import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -97,10 +97,10 @@ abstract class CarelevoPumpPluginTestBase {
 
     @Mock lateinit var protectionCheck: ProtectionCheck
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var blePreCheck: BlePreCheck
     @Mock lateinit var iconsProvider: IconsProvider
     @Mock lateinit var config: Config
-    @Mock lateinit var context: Context
+    protected val adapterState = MutableStateFlow(AdapterState.ON)
+    protected val appForeground = FakeCarelevoAppForeground()
     @Mock lateinit var bolusProgressData: BolusProgressData
 
     @Mock lateinit var carelevoPatch: CarelevoPatch
@@ -232,9 +232,10 @@ abstract class CarelevoPumpPluginTestBase {
             commandQueue = commandQueue,
             fabricPrivacy = fabricPrivacy,
             profileFunction = profileFunction,
-            context = context,
+            central = bleCentralWith(adapterState),
+            appForeground = appForeground,
             protectionCheck = protectionCheck,
-            blePreCheck = blePreCheck,
+            bleReadyCheck = FakeCarelevoBleReadyCheck(),
             iconsProvider = iconsProvider,
             config = config,
             uiInteraction = uiInteraction,

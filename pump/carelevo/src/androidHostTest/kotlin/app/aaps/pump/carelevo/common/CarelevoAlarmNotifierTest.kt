@@ -11,6 +11,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ContextResourceHelper
+import app.aaps.pump.carelevo.FakeCarelevoAppForeground
+import app.aaps.pump.carelevo.FakeCarelevoSystemNotifier
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.type.AlarmCause
@@ -18,7 +20,6 @@ import app.aaps.pump.carelevo.presentation.model.AlarmEvent
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import org.junit.Before
@@ -36,27 +37,21 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import org.robolectric.Shadows
 import org.robolectric.annotation.Config
-import org.robolectric.shadows.ShadowNotificationManager
-import android.app.NotificationManager as AndroidNotificationManager
 
 /**
  * Robolectric unit tests for [CarelevoAlarmNotifier].
  *
- * [CarelevoAlarmNotifier] takes a real [Context] and calls into the Android framework directly —
- * `context.getString(...)`, `PendingIntent.getActivity(...)`, `NotificationCompat.Builder(...)`,
- * `ProcessLifecycleOwner`, and the system [AndroidNotificationManager]
- * (via `getSystemService`). Under a plain JVM Mockito test those calls returned defaulted/null
- * values (e.g. `getString` → null → NPE), so this suite runs under [RobolectricTestRunner] with a
- * REAL application [Context]: string formatting, HTML parsing, PendingIntents and system
- * notifications all execute for real.
+ * The strings come from a REAL application [Context] ([ContextResourceHelper]), so this suite runs under
+ * [RobolectricTestRunner]: the texts are the real formatted ones, not stubs.
  *
- * Only the non-Android collaborators are mocked ([aapsLogger], [dateUtil], the
- * AAPS [NotificationManager] interface, [preferences], [alarmActionHandler]). Assertions are made against:
+ * The other collaborators are mocked ([aapsLogger], [dateUtil], the AAPS [NotificationManager] interface,
+ * [preferences], [alarmActionHandler]) or faked (the phone notification and the foreground state, which are
+ * platform ports). Assertions are made against:
  *  - the mocked AAPS [NotificationManager] (the in-app "top notification" cards),
  *  - the [CarelevoAlarmNotifier.alarms] StateFlow and the `onAlarmsUpdated` callback,
- *  - Robolectric's [ShadowNotificationManager] for the system-tray notifications and channel.
+ *  - [FakeCarelevoSystemNotifier] for the phone notifications. The Android notification itself is tested in
+ *    `AndroidCarelevoSystemNotifierTest`.
  *
  * The notifier's dispatcher is set to [Dispatchers.Unconfined], so every emission is handled
  * synchronously on the test thread, keeping the tests deterministic.
@@ -65,7 +60,7 @@ import android.app.NotificationManager as AndroidNotificationManager
 @Config(sdk = [35])
 class CarelevoAlarmNotifierTest {
 
-    // REAL application context (getString / PendingIntent / NotificationCompat all work).
+    // REAL application context, for the real strings.
     private val context: Context = RuntimeEnvironment.getApplication()
 
     private lateinit var aapsLogger: AAPSLogger
@@ -73,11 +68,10 @@ class CarelevoAlarmNotifierTest {
     private lateinit var notificationManager: NotificationManager
     private lateinit var preferences: Preferences
     private lateinit var alarmActionHandler: CarelevoAlarmActionHandler
+    private val systemNotifier = FakeCarelevoSystemNotifier()
+    private val appForeground = FakeCarelevoAppForeground()
 
     private lateinit var sut: CarelevoAlarmNotifier
-
-    // Must match the private channelId in the SUT.
-    private val channelId = "carelevo_alarm_channel"
 
     private fun alarm(
         cause: AlarmCause,
@@ -105,13 +99,14 @@ class CarelevoAlarmNotifierTest {
         whenever(dateUtil.now()).thenReturn(1_000_000L)
 
         sut = CarelevoAlarmNotifier(
-            context = context,
             aapsLogger = aapsLogger,
             dateUtil = dateUtil,
             notificationManager = notificationManager,
             preferences = preferences,
             alarmActionHandler = alarmActionHandler,
-            rh = ContextResourceHelper(context)
+            rh = ContextResourceHelper(context),
+            systemNotifier = systemNotifier,
+            appForeground = appForeground
         )
         sut.dispatcher = Dispatchers.Unconfined
     }
@@ -140,13 +135,10 @@ class CarelevoAlarmNotifierTest {
         return textCaptor.firstValue
     }
 
-    private fun systemNmShadow(): ShadowNotificationManager =
-        Shadows.shadowOf(context.getSystemService(AndroidNotificationManager::class.java))
-
-    /** Create the system notification channel (needed before posting system-tray notifications). */
-    private fun createChannel() {
-        whenever(alarmActionHandler.observeAlarms()).thenReturn(emptyFlow<List<CarelevoAlarmInfo>>())
-        sut.startObserving { }
+    /** The one phone notification the notifier asked for. */
+    private fun shownNotification(): FakeCarelevoSystemNotifier.Shown {
+        assertThat(systemNotifier.shown).hasSize(1)
+        return systemNotifier.shown.single()
     }
 
     // ---- simple state / accessors -------------------------------------------------------------
@@ -157,10 +149,23 @@ class CarelevoAlarmNotifierTest {
     }
 
     @Test
-    fun `isInForeground can be read without crashing`() {
-        // ProcessLifecycleOwner resolves under Robolectric; the exact foreground state depends on the
-        // Robolectric process-lifecycle setup, so only assert the accessor returns a Boolean, no throw.
-        assertThat(listOf(true, false)).contains(sut.isInForeground)
+    fun `alarms become phone notifications while AAPS is in the background`() {
+        appForeground.state.value = false
+        whenever(alarmActionHandler.observeAlarms()).thenReturn(flowOf(listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "bg"))))
+
+        sut.startObserving { }
+
+        assertThat(shownNotification().alarmId).isEqualTo("bg")
+    }
+
+    @Test
+    fun `no phone notification while AAPS is in front`() {
+        appForeground.state.value = true
+        whenever(alarmActionHandler.observeAlarms()).thenReturn(flowOf(listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED))))
+
+        sut.startObserving { }
+
+        assertThat(systemNotifier.shown).isEmpty()
     }
 
     // ---- showTopNotification (in-app AAPS cards) ----------------------------------------------
@@ -312,17 +317,7 @@ class CarelevoAlarmNotifierTest {
         verifyPosted(NotificationLevel.IMPORTANT)
     }
 
-    // ---- startObserving / stopObserving / channel ---------------------------------------------
-
-    @Test
-    fun `startObserving creates the system notification channel`() {
-        whenever(alarmActionHandler.observeAlarms()).thenReturn(emptyFlow<List<CarelevoAlarmInfo>>())
-
-        sut.startObserving { }
-
-        val realNm = context.getSystemService(AndroidNotificationManager::class.java)
-        assertThat(realNm.getNotificationChannel(channelId)).isNotNull()
-    }
+    // ---- startObserving / stopObserving -------------------------------------------------------
 
     @Test
     fun `startObserving forwards emitted alarms to the callback and the state flow`() {
@@ -390,60 +385,56 @@ class CarelevoAlarmNotifierTest {
         verify(aapsLogger).error(eq(LTag.PUMPCOMM), any<String>())
     }
 
-    // ---- showNotification (system-tray, asserted via ShadowNotificationManager) ---------------
+    // ---- showNotification (the phone notification, through the port) --------------------------
 
     @Test
-    fun `showNotification posts a system-tray notification`() {
-        createChannel()
+    fun `showNotification hands the alarm id, title and text to the phone notification`() {
+        sut.showNotification(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "clog"))
 
-        sut.showNotification(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED))
-
-        assertThat(systemNmShadow().allNotifications).isNotEmpty()
+        val shown = shownNotification()
+        assertThat(shown.alarmId).isEqualTo("clog")
+        assertThat(shown.title).isNotEmpty()
+        assertThat(shown.text).isNotEmpty()
     }
 
     @Test
-    fun `showNotification for out-of-insulin embeds the remaining amount without crashing`() {
-        createChannel()
-
+    fun `showNotification for out-of-insulin embeds the remaining amount`() {
         sut.showNotification(alarm(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN, value = 15))
 
-        assertThat(systemNmShadow().allNotifications).isNotEmpty()
+        assertThat(shownNotification().text).contains("15")
     }
 
     @Test
-    fun `showNotification for patch-expired splits days and hours without crashing`() {
-        createChannel()
-
+    fun `showNotification for patch-expired splits days and hours`() {
+        // 50 h -> 2 days 2 hours.
         sut.showNotification(alarm(AlarmCause.ALARM_NOTICE_PATCH_EXPIRED, value = 50))
 
-        assertThat(systemNmShadow().allNotifications).isNotEmpty()
+        assertThat(shownNotification().text).contains("2")
     }
 
     @Test
-    fun `showNotification for bg-check hours and minutes without crashing`() {
-        createChannel()
-
+    fun `showNotification for bg-check formats hours and minutes`() {
         sut.showNotification(alarm(AlarmCause.ALARM_NOTICE_BG_CHECK, value = 125))
 
-        assertThat(systemNmShadow().allNotifications).isNotEmpty()
+        val text = shownNotification().text
+        assertThat(text).contains("2")
+        assertThat(text).contains("5")
     }
 
     @Test
-    fun `showNotification for bg-check under an hour formats minutes only without crashing`() {
-        createChannel()
-
+    fun `showNotification for bg-check under an hour formats minutes only`() {
         sut.showNotification(alarm(AlarmCause.ALARM_NOTICE_BG_CHECK, value = 45))
 
-        assertThat(systemNmShadow().allNotifications).isNotEmpty()
+        assertThat(shownNotification().text).contains("45")
     }
 
     @Test
-    fun `showNotification for a cause without a description still builds a notification`() {
+    fun `showNotification for a cause without a description still shows the title`() {
         // ALARM_NOTICE_ATTACH_PATCH_CHECK has a null notification description -> empty body, title only.
-        createChannel()
-
         sut.showNotification(alarm(AlarmCause.ALARM_NOTICE_ATTACH_PATCH_CHECK))
 
-        assertThat(systemNmShadow().allNotifications).isNotEmpty()
+        val shown = shownNotification()
+        assertThat(shown.title).isNotEmpty()
+        assertThat(shown.text).isEmpty()
     }
 }

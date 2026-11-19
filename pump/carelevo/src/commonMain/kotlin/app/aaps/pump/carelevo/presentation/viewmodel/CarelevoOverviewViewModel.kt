@@ -4,8 +4,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SwapHoriz
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.InterfacesStrings
@@ -16,7 +14,7 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -55,11 +53,7 @@ import app.aaps.pump.carelevo.ext.OVERVIEW_DATE_TIME_FORMAT
 import app.aaps.pump.carelevo.presentation.model.CarelevoOverviewEvent
 import app.aaps.pump.carelevo.presentation.model.CarelevoOverviewUiModel
 import app.aaps.pump.carelevo.presentation.type.CarelevoScreenType
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -70,6 +64,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
@@ -87,8 +82,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
-import java.math.RoundingMode
-import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
@@ -97,10 +92,9 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
-@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
-@ViewModelKey
+@OptIn(ExperimentalAtomicApi::class)
 class CarelevoOverviewViewModel @Inject constructor(
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val notificationManager: NotificationManager,
     private val dateUtil: DateUtil,
     private val commandQueue: CommandQueue,
@@ -115,32 +109,32 @@ class CarelevoOverviewViewModel @Inject constructor(
     private val decimalFormatter: DecimalFormatter
 ) : ViewModel() {
 
-    private val _patchState = MutableLiveData<PatchState>(PatchState.NotConnectedNotBooting)
-    val patchState: LiveData<PatchState?> get() = _patchState
+    private val _patchState = MutableStateFlow<PatchState>(PatchState.NotConnectedNotBooting)
+    val patchState: StateFlow<PatchState> = _patchState.asStateFlow()
 
-    private val _serialNumber = MutableLiveData<String>()
-    val serialNumber get() = _serialNumber
+    private val _serialNumber = MutableStateFlow<String?>(null)
+    val serialNumber: StateFlow<String?> = _serialNumber.asStateFlow()
 
-    private val _bootDateTime = MutableLiveData<String>()
-    val bootDateTime get() = _bootDateTime
+    private val _bootDateTime = MutableStateFlow<String?>(null)
+    val bootDateTime: StateFlow<String?> = _bootDateTime.asStateFlow()
 
-    private val _expirationTime = MutableLiveData<String>()
-    val expirationTime get() = _expirationTime
+    private val _expirationTime = MutableStateFlow<String?>(null)
+    val expirationTime: StateFlow<String?> = _expirationTime.asStateFlow()
 
-    private val _basalRate = MutableLiveData<Double>()
-    val basalRate get() = _basalRate
+    private val _basalRate = MutableStateFlow<Double?>(null)
+    val basalRate: StateFlow<Double?> = _basalRate.asStateFlow()
 
-    private val _tempBasalRate = MutableLiveData<Double?>()
-    val tempBasalRate get() = _tempBasalRate
+    private val _tempBasalRate = MutableStateFlow<Double?>(null)
+    val tempBasalRate: StateFlow<Double?> = _tempBasalRate.asStateFlow()
 
-    private val _insulinRemains = MutableLiveData<String?>()
-    val insulinRemains get() = _insulinRemains
+    private val _insulinRemains = MutableStateFlow<String?>(null)
+    val insulinRemains: StateFlow<String?> = _insulinRemains.asStateFlow()
 
-    private val _totalInsulinAmount = MutableLiveData<Double?>()
-    val totalInsulinAmount get() = _totalInsulinAmount
+    private val _totalInsulinAmount = MutableStateFlow<Double?>(null)
+    val totalInsulinAmount: StateFlow<Double?> = _totalInsulinAmount.asStateFlow()
 
-    private val _runningRemainMinutes = MutableLiveData<Int?>()
-    val runningRemainMinutes get() = _runningRemainMinutes
+    private val _runningRemainMinutes = MutableStateFlow<Int?>(null)
+    val runningRemainMinutes: StateFlow<Int?> = _runningRemainMinutes.asStateFlow()
 
     private var _isCreated = false
     val isCreated get() = _isCreated
@@ -206,8 +200,8 @@ class CarelevoOverviewViewModel @Inject constructor(
         )
     )
 
-    private var _isPumpStop = MutableLiveData(false)
-    val isPumpStop get() = _isPumpStop
+    private val _isPumpStop = MutableStateFlow(false)
+    val isPumpStop: StateFlow<Boolean> = _isPumpStop.asStateFlow()
 
     private var _isCheckScreen = MutableStateFlow<CarelevoScreenType?>(null)
     val isCheckScreen get() = _isCheckScreen
@@ -301,10 +295,9 @@ class CarelevoOverviewViewModel @Inject constructor(
             ?: parseBootDateTime(info.bootDateTime)?.toInstant(zone)
         val bootUi = boot?.toLocalDateTime(zone)?.format(OVERVIEW_DATE_TIME_FORMAT) ?: ""
 
-        val infusedBasal = (info.infusedTotalBasalAmount ?: 0.0)
-            .toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
-        val infusedBolus = (info.infusedTotalBolusAmount ?: 0.0)
-            .toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
+        // The patch reports these in hundredths already, so this rounding only shows them as two decimals.
+        val infusedBasal = Round.roundTo(info.infusedTotalBasalAmount ?: 0.0, 0.01)
+        val infusedBolus = Round.roundTo(info.infusedTotalBolusAmount ?: 0.0, 0.01)
 
         val remainMinutes = boot?.let { getRemainMin(it) } ?: 0
         val expireAt = boot?.let { endAt(it).toLocalDateTime(zone).format(OVERVIEW_DATE_TIME_FORMAT) } ?: ""
@@ -512,7 +505,7 @@ class CarelevoOverviewViewModel @Inject constructor(
 
     /** Release the operation lock and return the screen to idle. Safe to call when nothing is held. */
     private fun endOperation() {
-        operationInProgress.set(false)
+        operationInProgress.store(false)
         setUiState(UiState.Idle)
     }
 

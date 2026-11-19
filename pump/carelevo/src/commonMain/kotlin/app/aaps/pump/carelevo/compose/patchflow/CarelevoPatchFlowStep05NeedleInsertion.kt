@@ -18,13 +18,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.banner.ErrorBanner
+import app.aaps.core.ui.compose.htmlToAnnotatedString
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.core.ui.compose.pump.announceWhenShown
@@ -166,9 +165,7 @@ private fun CarelevoPatchFlowStep05NeedleInsertionContent(
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
-                text = AnnotatedString.fromHtml(
-                    stringResource(CarelevoStrings.carelevo_dialog_connect_detach_applicator_guide).replace("\n", "<br>")
-                ),
+                text = stringResource(CarelevoStrings.carelevo_dialog_connect_detach_applicator_guide).replace("\n", "<br>").htmlToAnnotatedString(),
                 style = MaterialTheme.typography.bodyMedium
             )
         }

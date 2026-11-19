@@ -464,22 +464,53 @@ identical - `provider()` either way - so only the type and the import change.
 ### A pump driver: what moves now, and what stays until the platform can run a pump
 
 `:pump:carelevo` was the first driver to flip. Its logic (BLE session, commands, coordinators, use cases, storage)
-went to commonMain; the plugin class, its view models, its screens, the Android notifications and the broadcast
-receiver stayed in androidMain.
+went to commonMain first; the plugin class, its view models, its screens, the Android notifications and the broadcast
+receiver stayed in androidMain until the iOS app was ready to run a pump. Then they moved too - see "Moving the plugin
+and its screens" below.
 
 - **Find what can move by its dependencies, not file by file.** A file stays when it imports a platform API, or when it
   uses a file that stays. Compute that closure first; a handful of blocking calls usually hold back most of a module.
   In Carelevo they were `java.util.UUID`, `SystemClock.sleep`, `TimeUnit`, `BigInteger`, `String.format`,
   `synchronized`, `java.lang.Float.MIN_NORMAL` and `ResourceHelper` (use `TextResolver`, which is common).
-- **Keep the plugin and its view models in androidMain while the iOS app runs no pump.** A plugin registered from
-  commonMain joins the iOS graph, and its view models join the iOS view model map, so iOS would need every pump binding.
-  Left on Android, the driver is visibly absent on iOS rather than present and dead. Plain `@ContributesBinding`
+- **Do not let the plugin or its view models register themselves from commonMain while iOS cannot run the pump.** A
+  plugin registered from commonMain joins the iOS graph, and its view models join the iOS view model map, so iOS would
+  need every pump binding. The classes can still move: register them per platform (below), so the driver is visibly
+  absent on iOS rather than present and dead. Plain `@ContributesBinding`
   classes (the driver's storage) can move: Metro accepts them in the iOS graph while nothing there injects them.
   Compile `:ios:shell:compileKotlinIosArm64` to prove it, since that is where the graph is checked.
 - **A blocking sleep is platform code.** `SystemClock.sleep` keeps sleeping through an interrupt; `runBlocking { delay }`
   throws on one. Use an `expect fun` with the platform call on each target, as `sleepBlocking` in `:pump:carelevo`.
 - **A commonTest also runs in `testAndroidHostTest`, where Android calls do nothing.** `isReturnDefaultValues` makes
   `SystemClock.sleep` return at once, so a timing test of an Android `actual` cannot live in commonTest.
+
+#### Moving the plugin and its screens
+
+How the Carelevo plugin, its 6 view models and 15 screens went to commonMain while iOS still has no Carelevo:
+
+- **Register per platform, not on the class.** Take `@ContributesIntoMap` off the plugin and off every view model, and
+  list them as `@Provides @IntoMap` in one commonMain `@BindingContainer` that is *not* contributed
+  (`CarelevoRegistration`: `@PumpDriver @MetroIntKey(1190)` for the plugin, `@ViewModelKey(X::class)` for each view
+  model). Each platform switches it on with a contributed container that only includes it
+  (`@ContributesTo(AppScope::class) @BindingContainer(includes = [CarelevoRegistration::class]) object ...`). A view
+  model contributed from commonMain is enough to drag the whole driver into `IosAppGraph` - it failed on
+  `PumpEmulators`, which iOS does not provide.
+- **`PumpDriverBucketTest` reads driver keys from annotations.** It now also reads them from `@PumpDriver` providers in
+  binding containers. A new driver registered this way needs nothing more.
+- **Put what the platform does behind small ports in the driver**, each with the Android implementation in androidMain:
+  foreground state (`CarelevoAppForeground`), the phone notification (`CarelevoSystemNotifier`), the Bluetooth check
+  before pairing (`CarelevoBleReadyCheck`, a `@Composable` member that wraps `BlePreCheckHost` on Android). The
+  Bluetooth adapter state needs no port: read `BleCentral.adapterState` from the driver's own central, which also covers
+  the emulated patch.
+- **What failed to compile, and the fix:** `ResourceHelper` → `TextResolver` (also in view models and the notifier);
+  `AnnotatedString.fromHtml` → `htmlToAnnotatedString()` from `:core:ui` (knows only `<b>` and `<br>`); `LiveData` →
+  `StateFlow`; `java.util.concurrent.atomic.AtomicBoolean` → `kotlin.concurrent.atomics.AtomicBoolean` with
+  `@OptIn(ExperimentalAtomicApi::class)` (`set` is `store`); `BigDecimal.setScale` for display → `Round.roundTo`;
+  `Dispatchers.IO` → `aapsIoDispatcher`; an Activity result launcher → an `expect @Composable` with a null `actual` on
+  iOS and JVM.
+- **Images:** `painterResource(R.drawable.x)` cannot be common. Move the files to `src/commonMain/composeResources/drawable`
+  and add `libs.jetbrains.compose.components.resources` with a `compose.resources { packageOfResClass = ... }` block;
+  each accessor (`Res.drawable.x`) needs its own import. Android vector XML with `aapt:attr` gradients renders.
+- **The module also builds for `jvm()`**, so every `expect` needs a `jvmMain` actual, even though desktop links no pump.
 
 ### Lift the platform call out, keep the rule
 

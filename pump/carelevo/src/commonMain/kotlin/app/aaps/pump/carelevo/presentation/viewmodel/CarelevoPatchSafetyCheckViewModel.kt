@@ -27,11 +27,7 @@ import app.aaps.pump.carelevo.domain.usecase.alarm.CarelevoAlarmInfoUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
 import app.aaps.pump.carelevo.ext.localNowIsoText
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectSafetyCheckEvent
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,10 +37,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 
-@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
-@ViewModelKey
 class CarelevoPatchSafetyCheckViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val carelevoPatch: CarelevoPatch,
@@ -314,7 +309,7 @@ class CarelevoPatchSafetyCheckViewModel @Inject constructor(
     private fun recordSafetyCheckFailAlarm() {
         val now = localNowIsoText()
         val info = CarelevoAlarmInfo(
-            alarmId = System.currentTimeMillis().toString(),
+            alarmId = Clock.System.now().toEpochMilliseconds().toString(),
             alarmType = AlarmType.WARNING,
             cause = AlarmCause.ALARM_WARNING_SELF_DIAGNOSIS_FAILED,
             createdAt = now,

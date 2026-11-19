@@ -1,14 +1,10 @@
 package app.aaps.pump.carelevo.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.common.CarelevoAlarmActionHandler
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metrox.viewmodel.ViewModelKey
 
 /**
  * UI shell over [CarelevoAlarmActionHandler] for [app.aaps.pump.carelevo.compose.alarm.CarelevoAlarmHost]:
@@ -18,11 +14,9 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
  * [app.aaps.pump.carelevo.common.CarelevoAlarmNotifier.showTopNotification]'s action button; this shell
  * does not sit in that path.
  */
-@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
-@ViewModelKey
 class CarelevoAlarmViewModel @Inject constructor(
     alarmActionHandler: CarelevoAlarmActionHandler,
-    private val rh: ResourceHelper
+    private val rh: TextResolver
 ) : ViewModel() {
 
     val event = alarmActionHandler.uiRequests

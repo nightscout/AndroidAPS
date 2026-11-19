@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
@@ -38,20 +38,15 @@ import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseC
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectEvent
 import app.aaps.pump.carelevo.presentation.type.CarelevoPatchStep
 import app.aaps.pump.carelevo.presentation.type.CarelevoScreenType
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 
-@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
-@ViewModelKey
 class CarelevoPatchConnectionFlowViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val carelevoPatch: CarelevoPatch,
@@ -62,7 +57,7 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val insulinManager: InsulinManager,
     private val persistenceLayer: PersistenceLayer,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val rxBus: RxBus
 ) : ViewModel(), ProfileGateStepHost, SiteLocationStepHost {
 
@@ -299,7 +294,7 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
         val iCfg = _selectedInsulin.value ?: insulinManager.insulins.firstOrNull() ?: return
         viewModelScope.launch {
             // A refused switch says why and keeps the gate on screen.
-            if (activateProfileFromGate(profileFunction, rh, rxBus, store, name, iCfg, Sources.Carelevo, System.currentTimeMillis()))
+            if (activateProfileFromGate(profileFunction, rh, rxBus, store, name, iCfg, Sources.Carelevo, Clock.System.now().toEpochMilliseconds()))
                 goToNextStep(CarelevoPatchStep.PROFILE_GATE)
             else aapsLogger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
         }
@@ -347,7 +342,7 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
     private fun loadSiteRotationEntries() {
         viewModelScope.launch {
             _siteRotationEntries.value = persistenceLayer.getTherapyEventDataFromTime(
-                System.currentTimeMillis() - T.days(45).msecs(), false
+                Clock.System.now().toEpochMilliseconds() - T.days(45).msecs(), false
             ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
         }
     }

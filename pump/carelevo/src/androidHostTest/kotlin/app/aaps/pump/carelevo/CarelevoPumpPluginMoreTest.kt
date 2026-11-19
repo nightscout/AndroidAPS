@@ -33,8 +33,8 @@ import org.mockito.kotlin.whenever
  * remaining `timezoneOrDSTChanged` branches and the preference-screen definition.
  *
  * The lifecycle half of the plugin (onStart/onStop, the preference observers, the deferred
- * settings-sync recovery and handleAlarms) needs a real Looper/ProcessLifecycleOwner and lives in
- * the Robolectric suite [CarelevoPumpPluginLifecycleTest].
+ * settings-sync recovery and handleAlarms) needs a real Looper and lives in the Robolectric suite
+ * [CarelevoPumpPluginLifecycleTest].
  */
 class CarelevoPumpPluginMoreTest : CarelevoPumpPluginTestBase() {
 
