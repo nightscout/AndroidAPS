@@ -527,12 +527,12 @@ class PumpScenario(private val pump: PumpUnderTest) {
     private fun shownNotifications(): List<NotificationId> = testGraphs.notificationManager.notifications.value.map { it.id }
 
     /**
-     * AAPS raised an alarm the user hears at [since] or later: a notification at [NotificationLevel.URGENT], or the
-     * full-screen alarm of `UiInteraction.runAlarm`, which a driver can use for the sound while its own card stays lower
-     * (Carelevo). Without a screen in the test, runAlarm posts that alarm as a system notification.
+     * AAPS raised an alarm the user hears at [since] or later: a notification at [NotificationLevel.URGENT] that carries
+     * a sound (an URGENT card without one is silent), or the full-screen alarm of `UiInteraction.runAlarm`. Without a
+     * screen in the test, runAlarm posts that alarm as a system notification.
      */
     fun checkUrgentAlarmSince(since: Long) {
-        fun urgent() = testGraphs.notificationManager.notifications.value.any { it.level == NotificationLevel.URGENT && it.date >= since }
+        fun urgent() = testGraphs.notificationManager.notifications.value.any { it.level == NotificationLevel.URGENT && it.sound != null && it.date >= since }
         fun fullScreen() = instrumentation.targetContext.getSystemService(NotificationManager::class.java)
             .activeNotifications.any { it.id == AlarmNotificationManager.NOTIFICATION_ID_FULL_SCREEN && it.postTime >= since }
         // From the main thread with the app in front, runAlarm opens its alarm screen at once instead.
@@ -546,9 +546,23 @@ class PumpScenario(private val pump: PumpUnderTest) {
         }
         fun alarmed() = urgent() || fullScreen() || alarmScreen()
         awaitValue(RECORD_TIMEOUT) { alarmed().takeIf { it } }
-        assertWithMessage("an alarm since the pump raised it, AAPS shows ${testGraphs.notificationManager.notifications.value.map { "${it.id} ${it.level}" }}")
+        assertWithMessage("an alarm since the pump raised it, AAPS shows ${shownForAlarm()}")
             .that(alarmed()).isTrue()
     }
+
+    /**
+     * The alarm is a pump alert of the core (acceptance A1): a `PumpAlerts` card at [NotificationLevel.URGENT] that rings,
+     * at [since] or later - not an alarm the driver raises in its own way.
+     */
+    fun checkPumpAlertSince(since: Long) {
+        fun ringing() = testGraphs.notificationManager.notifications.value.any {
+            it.id == NotificationId.PUMP_ALERT && it.level == NotificationLevel.URGENT && it.sound != null && it.date >= since
+        }
+        awaitValue(RECORD_TIMEOUT) { ringing().takeIf { it } }
+        assertWithMessage("a ringing pump alert since the pump raised it, AAPS shows ${shownForAlarm()}").that(ringing()).isTrue()
+    }
+
+    private fun shownForAlarm() = testGraphs.notificationManager.notifications.value.map { "${it.id} ${it.level} sound=${it.sound}" }
 
     /** The temp basal AAPS has is the one the pump runs, or neither has one. */
     /**

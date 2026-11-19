@@ -94,7 +94,8 @@ A class `<Pump>ScenarioTest : AbstractPumpScenarioTest()` runs all of these. A s
   `aPumpOutOfRangeFailsCleanly`, `aDeadPumpCanBeRemoved` (D9).
 - **S8** What happens on the pump: `aSuspendOnThePumpIsRecorded`, `aBolusGivenOnThePumpIsImported`,
   `aBolusWithThePumpClockOffIsStoredAtItsTime`.
-- **S9** Alarms: `anOcclusionRaisesAnAlarm`, `anEmptyReservoirRaisesAnAlarm`.
+- **S9** Alarms: `anOcclusionRaisesAnAlarm`, `anEmptyReservoirRaisesAnAlarm` (an alarm the user hears: an URGENT card
+  with a sound, or the full-screen alarm), and `anOcclusionIsARingingPumpAlert` (A1: it is a ringing pump alert).
 - **S10** App restart: `appKilledDuringABolus`, in its two runs (`killRestart 1` and `2`).
 - **S11** Pump-specific behaviour has a scenario of its own in the pump's class (for example a log that wraps, a
   setting the pump carries out later).

@@ -18,6 +18,7 @@ import app.aaps.pump.danar.emulator.EmulatorRfcommTransport
 import com.google.common.truth.Truth.assertWithMessage
 import kotlinx.coroutines.runBlocking
 import org.junit.Assume.assumeTrue
+import org.junit.Ignore
 import org.junit.Test
 import kotlin.math.abs
 
@@ -40,6 +41,11 @@ abstract class AbstractDanaRScenarioTest : AbstractPumpScenarioTest() {
 
     /** A pump clock off by more than 1.5 hours raises an alarm. Only the DanaR v2 does that, the others set the clock. */
     protected open val alarmsOnAFarClock: Boolean = false
+
+    @Ignore("Acceptance A1: DanaR alarms are not pump alerts yet; they move with acceptance v2 (and the emulator sends none)")
+    @Test
+    override fun anOcclusionIsARingingPumpAlert() {
+    }
 
     /** The driver writes the user options to the pump. The Korean DanaR driver does not. */
     protected open val writesUserOptions: Boolean = true
