@@ -91,6 +91,7 @@
     <string name="press_OK_to_return">Trykk <b>OK</b> for å gå tilbake til hovedskjermen.</string>
     <string name="deactivate_sure">Er du sikker på at du vil deaktivere den gjeldende patchen?</string>
     <string name="cancel_sure">Er du sikker på at du vil avbryte aktiveringen?</string>
+    <string name="cancel_deactivation_sure">Er du sikker på at du vil avbryte deaktiveringen? Patchen kan fortsatt være aktiv.</string>
     <string name="medtrum_deactivate_pump_confirm">Er du sikker? Denne handlingen kan ikke angres!!</string>
     <string name="press_next_or_cancel">Trykk på <b>Neste</b> for å deaktivere eller <b>Avbryt</b> for å gå tilbake til hovedskjermen.</string>
     <string name="deactivating_pump">Deaktiverer patch. Vent litt.</string>
