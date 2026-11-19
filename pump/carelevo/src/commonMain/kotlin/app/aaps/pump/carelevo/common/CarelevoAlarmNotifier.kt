@@ -2,14 +2,13 @@ package app.aaps.pump.carelevo.common
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.NotificationAction
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.pump.alerts.PumpAlert
+import app.aaps.core.interfaces.pump.alerts.PumpAlertAction
+import app.aaps.core.interfaces.pump.alerts.PumpAlertSeverity
+import app.aaps.core.interfaces.pump.alerts.PumpAlerts
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
@@ -29,35 +28,24 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import kotlin.coroutines.cancellation.CancellationException
 
 /**
- * Presentation half of the alarm pipeline: observes the persisted active-alarm set (via
- * [CarelevoAlarmActionHandler]) and surfaces it — the in-app AAPS "top notification" cards
- * ([showTopNotification], with the clear action wired back to the shared state machine), the
- * phone notification for backgrounded users ([showNotification], through [CarelevoSystemNotifier]), and the
- * [alarms] StateFlow.
- * `CarelevoPumpPlugin.handleAlarms` additionally routes a critical alarm through the shared AAPS
- * full-screen alarm (`UiInteraction.runAlarm`) — that escalation is independent of this class.
- *
- * [showTopNotification] deliberately never posts at [app.aaps.core.interfaces.notifications.NotificationLevel.URGENT]
- * (see the comment there) — that level is `NotificationManagerImpl`'s own alarm tier, which the
- * shared full-screen alarm's OK button silences *app-wide* on confirm (`muteAllAlarms`), wiping any
- * URGENT+sound card off the screen without actually acknowledging it. Matching `eopatch`'s
- * `AlarmManager.showNotification` pattern, the sound/full-screen escalation is left entirely to
- * `runAlarm`, so the card survives that confirm and stays until the user genuinely clears the
- * alarm through it.
+ * Presentation half of the alarm pipeline: observes the persisted active-alarm set (via [CarelevoAlarmActionHandler]),
+ * keeps it in [alarms] for the Carelevo screen, and shows it through [PumpAlerts] ([showAlerts]). The core does the
+ * rest - the card, the sound, the alarm screen, the system notification in the background, silencing - the same as for
+ * every driver. See `_docs/PUMP_DESIGN.md`, section 2.
  */
 @SingleIn(AppScope::class)
 class CarelevoAlarmNotifier @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val dateUtil: DateUtil,
-    private val notificationManager: NotificationManager,
+    private val pumpAlerts: PumpAlerts,
     private val preferences: Preferences,
     private val alarmActionHandler: CarelevoAlarmActionHandler,
-    private val rh: TextResolver,
-    private val systemNotifier: CarelevoSystemNotifier,
-    private val appForeground: CarelevoAppForeground
+    private val rh: TextResolver
 ) {
 
     /** Where alarms are handled: the main thread, so the handling never runs twice at once. A test sets an unconfined dispatcher. */
@@ -96,106 +84,52 @@ class CarelevoAlarmNotifier @Inject constructor(
     private fun handleAlarmsInternal(alarms: List<CarelevoAlarmInfo>) {
         aapsLogger.debug(LTag.PUMPCOMM, "handleAlarmsInternal alarms=$alarms")
         _alarms.value = alarms
-
-        if (!appForeground.isInForeground()) {
-            alarms.forEach { alarm ->
-                showNotification(alarm)
-            }
-        }
-
         onAlarmsUpdated?.invoke(alarms)
-    }
-
-    fun showTopNotification(alarms: List<CarelevoAlarmInfo>) {
-        // CARELEVO_PATCH_ALERT is allowMultiple=true (a fresh instance per post with no replace), so
-        // clear the previous carelevo cards before re-posting the current set. This gives
-        // replace-on-refresh semantics while still letting distinct concurrent alarms coexist.
-        notificationManager.dismiss(NotificationId.CARELEVO_PATCH_ALERT)
-        alarms.forEach { newAlarm ->
-            val (titleRes, descRes, btnRes) = newAlarm.cause.transformNotificationStringResources()
-
-            val descArgs = buildDescArgsFor(newAlarm)
-            val desc = buildDescription(descRes, descArgs)
-            aapsLogger.debug(LTag.PUMPCOMM, "showTopNotification titleRes=$titleRes descArgs=$descArgs desc=$desc")
-            // Critical tiers get IMPORTANT (not URGENT) — deliberately below NotificationManagerImpl's
-            // alarm tier, matching eopatch's AlarmManager.showNotification. URGENT+sound is what the
-            // shared full-screen alarm's OK button silences app-wide on confirm (muteAllAlarms), which
-            // would wipe this card without it ever being acknowledged; sound/full-screen is runAlarm's
-            // job alone (CarelevoPumpPlugin.handleAlarms). Neither severity auto-expires — an unhandled
-            // alarm, critical or not, must not disappear on its own.
-            val critical = newAlarm.alarmType.isCritical()
-            notificationManager.post(
-                id = NotificationId.CARELEVO_PATCH_ALERT,
-                text = rh.gs(titleRes) + "\n" + desc,
-                level = if (critical) NotificationLevel.IMPORTANT else NotificationLevel.NORMAL,
-                actions = listOf(
-                    NotificationAction(btnRes) {
-                        alarmActionHandler.triggerEvent(AlarmEvent.ClearAlarm(info = newAlarm))
-                    }
-                ),
-                date = dateUtil.now(),
-                // No sound here on purpose (see the level comment above) - runAlarm owns the escalation.
-                sound = null,
-                validityCheck = null,
-            )
-        }
     }
 
     fun stopObserving() {
         scope.coroutineContext.cancelChildren()
     }
 
-    fun showNotification(alarm: CarelevoAlarmInfo) {
-        val (titleRes, descRes, _) = alarm.cause.transformNotificationStringResources()
-        systemNotifier.show(alarm.alarmId, rh.gs(titleRes), buildNotificationDescription(alarm, descRes))
+    /**
+     * Every stored alarm is one pump alert, keyed by its alarm id; one no longer stored has ended. An alarm raised again
+     * keeps its id and its creation time, so the core does not ring it again, also not after a restart.
+     */
+    fun showAlerts(alarms: List<CarelevoAlarmInfo>) {
+        val keys = alarms.map { it.alarmId }.toSet()
+        pumpAlerts.active.value.filter { it.source == SOURCE && it.key !in keys }.forEach { pumpAlerts.resolve(SOURCE, it.key) }
+        alarms.forEach { pumpAlerts.raise(toPumpAlert(it)) }
     }
 
-    /** Builds the final body text from the alarm metadata and descRes. */
-    private fun buildNotificationDescription(
-        alarm: CarelevoAlarmInfo,
-        descRes: TextRef?
-    ): String {
-        if (descRes == null) return ""
-        return when (alarm.cause) {
-            AlarmCause.ALARM_ALERT_OUT_OF_INSULIN,
-            AlarmCause.ALARM_NOTICE_LOW_INSULIN -> {
-                val remain = (alarm.value ?: 0).toString()
-                rh.gs(descRes, remain)
-            }
+    /** The patch is gone or the driver stops: none of its alerts is left. */
+    fun clearAlerts() = pumpAlerts.resolveAll(SOURCE)
 
-            AlarmCause.ALARM_NOTICE_PATCH_EXPIRED -> {
-                formatPatchExpired(descRes, alarm.value ?: 0)
+    internal fun toPumpAlert(alarm: CarelevoAlarmInfo): PumpAlert {
+        val (titleRes, descRes, btnRes) = alarm.cause.transformNotificationStringResources()
+        val descArgs = buildDescArgsFor(alarm)
+        return PumpAlert(
+            source = SOURCE,
+            key = alarm.alarmId,
+            // WARNING and ALERT stop the insulin or end the patch; a NOTICE only informs.
+            severity = if (alarm.alarmType.isCritical()) PumpAlertSeverity.CRITICAL else PumpAlertSeverity.INFO,
+            title = titleRes,
+            text = descRes?.let { if (descArgs.isEmpty()) it else it.withArgs(*descArgs.toTypedArray()) },
+            raisedAt = raisedAt(alarm),
+            // The clear runs the per-cause flow of the action handler, with its own fallbacks; the alert ends when that
+            // flow removes the alarm from the store.
+            action = PumpAlertAction(btnRes) {
+                alarmActionHandler.triggerEvent(AlarmEvent.ClearAlarm(info = alarm))
+                true
             }
-
-            AlarmCause.ALARM_NOTICE_BG_CHECK -> {
-                val span = formatBgCheckSpan(alarm.value ?: 0)
-                rh.gs(descRes, span)
-            }
-
-            else -> rh.gs(descRes)
-        }
+        )
     }
 
-    private fun formatPatchExpired(descRes: TextRef, totalHours: Int): String {
-        val days = totalHours / 24
-        val remainHours = totalHours % 24
-        return rh.gs(descRes, days, remainHours)
-    }
-
-    private fun formatBgCheckSpan(totalMinutes: Int): String {
-        val hours = totalMinutes / 60
-        val minutes = totalMinutes % 60
-        return if (hours > 0) {
-            rh.gs(
-                CarelevoStrings.common_label_unit_value_duration_hour_and_minute,
-                hours, minutes
-            )
-        } else {
-            rh.gs(
-                CarelevoStrings.common_label_unit_value_minute,
-                minutes
-            )
-        }
+    /** The stored creation time: local ISO text with no offset, read in the zone of the phone. */
+    private fun raisedAt(alarm: CarelevoAlarmInfo): Long = try {
+        LocalDateTime.parse(alarm.createdAt).toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+    } catch (e: IllegalArgumentException) {
+        aapsLogger.error(LTag.PUMPCOMM, "alarm ${alarm.alarmId} has no readable creation time: ${alarm.createdAt}", e)
+        0L
     }
 
     private fun buildDescArgsFor(alarm: CarelevoAlarmInfo): List<String> = when (alarm.cause) {
@@ -220,12 +154,6 @@ class CarelevoAlarmNotifier @Inject constructor(
         else                                  -> emptyList()
     }
 
-    private fun buildDescription(descRes: TextRef?, args: List<String>): String {
-        return descRes?.let { resId ->
-            if (args.isEmpty()) rh.gs(resId) else rh.gs(resId, *args.toTypedArray())
-        } ?: ""
-    }
-
     private fun splitDaysAndHours(totalHours: Int): Pair<Int, Int> {
         val days = totalHours / 24
         val hours = totalHours % 24
@@ -245,5 +173,11 @@ class CarelevoAlarmNotifier @Inject constructor(
             else                     ->
                 rh.gs(CarelevoStrings.common_label_unit_value_minute, minutes)
         }
+    }
+
+    companion object {
+
+        /** The source of every Carelevo pump alert. */
+        const val SOURCE = "carelevo"
     }
 }

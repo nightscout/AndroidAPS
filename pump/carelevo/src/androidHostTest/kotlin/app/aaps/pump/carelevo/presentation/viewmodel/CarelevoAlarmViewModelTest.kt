@@ -17,7 +17,7 @@ import org.mockito.kotlin.whenever
  * The VM is now a pure pass-through: [app.aaps.pump.carelevo.compose.alarm.CarelevoAlarmHost] only
  * ever needs the handler's UI-request stream (Bluetooth-enable intent, failure toast). The actual
  * alarm state machine — including clearing an alarm — lives entirely in [CarelevoAlarmActionHandler],
- * driven directly from `CarelevoAlarmNotifier.showTopNotification`'s action button; this shell is not
+ * driven directly from the action of each pump alert (`CarelevoAlarmNotifier.toPumpAlert`); this shell is not
  * in that path and owns no state or sound lifecycle of its own.
  */
 class CarelevoAlarmViewModelTest {

@@ -2,7 +2,6 @@ package app.aaps.pump.carelevo
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -18,7 +17,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.IconsProvider
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -117,8 +115,7 @@ import app.aaps.core.interfaces.configuration.Config as AapsConfig
  *    the foreground follow, and the alarm observer registration.
  *  - the four preference observers (max bolus / expiry threshold / low-insulin zero-skip / buzzer)
  *    and the deferred settings-sync recovery combiner.
- *  - `handleAlarms` — the critical-alarm escalation to `UiInteraction.runAlarm` when the Compose
- *    host is NOT mounted, plus the `globallyAlarmedIds` dedup/prune.
+ *  - `handleAlarms` — every alarm set goes to the pump alerts (`CarelevoAlarmNotifier.showAlerts`).
  *  - `onStop`: alarm-observer teardown and preference-scope cancellation.
  *
  * Robolectric is required because `PumpPluginBase.onStart` builds a real `HandlerThread`. The
@@ -151,7 +148,6 @@ class CarelevoPumpPluginLifecycleTest {
     private lateinit var protectionCheck: ProtectionCheck
     private lateinit var iconsProvider: IconsProvider
     private lateinit var config: AapsConfig
-    private lateinit var uiInteraction: UiInteraction
     private lateinit var carelevoPatch: CarelevoPatch
     private lateinit var carelevoAlarmNotifier: CarelevoAlarmNotifier
     private lateinit var bleSession: CarelevoBleSession
@@ -194,7 +190,6 @@ class CarelevoPumpPluginLifecycleTest {
         protectionCheck = mock()
         iconsProvider = mock()
         config = mock()
-        uiInteraction = mock()
         carelevoPatch = mock()
         carelevoAlarmNotifier = mock()
         bleSession = mock()
@@ -276,7 +271,6 @@ class CarelevoPumpPluginLifecycleTest {
             bleReadyCheck = FakeCarelevoBleReadyCheck(),
             iconsProvider = iconsProvider,
             config = config,
-            uiInteraction = uiInteraction,
             pumpEnactResultProvider = pumpEnactResultProvider,
             carelevoPatch = carelevoPatch,
             carelevoAlarmNotifier = carelevoAlarmNotifier,
@@ -829,143 +823,40 @@ class CarelevoPumpPluginLifecycleTest {
     }
 
     // ---- handleAlarms ---------------------------------------------------------------------------
+    // How an alarm rings, and that one still active does not ring again, is the core's job (PumpAlertsImplTest).
 
     @Test
-    fun `handleAlarms ignores an empty alarm set`() {
+    fun `handleAlarms hands an empty alarm set to the pump alerts, so the ended ones are resolved`() {
         start()
 
         alarmHandler().invoke(emptyList())
 
-        verify(uiInteraction, never()).runAlarm(any(), any(), any())
-        verify(carelevoAlarmNotifier).showTopNotification(eq(emptyList()))
+        verify(carelevoAlarmNotifier).showAlerts(eq(emptyList()))
     }
 
     @Test
-    fun `handleAlarms shows a top notification for non-critical notices`() {
+    fun `handleAlarms hands notices and critical alarms alike to the pump alerts`() {
         start()
-
-        alarmHandler().invoke(listOf(alarm(AlarmCause.ALARM_NOTICE_LGS_START)))
-
-        verify(carelevoAlarmNotifier).showTopNotification(any())
-        verify(uiInteraction, never()).runAlarm(any(), any(), any())
-    }
-
-    @Test
-    fun `handleAlarms shows a top notification AND rings the full-screen alarm for a critical alarm`() {
-        start()
-
-        alarmHandler().invoke(listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED)))
-
-        verify(carelevoAlarmNotifier).showTopNotification(any())
-        // Critical (WARNING/ALERT tier) alarms additionally escalate through the shared full-screen
-        // alarm — see handleAlarms KDoc. Sound/full-screen wake-up alone does not clear the alarm;
-        // the top-notification card's own action button does that (CarelevoAlarmNotifier).
-        verify(uiInteraction).runAlarm(any(), any(), eq(AlarmSound.ERROR))
-    }
-
-    @Test
-    fun `handleAlarms rings the full-screen alarm for a critical ALERT tier too`() {
-        start()
-
-        alarmHandler().invoke(listOf(alarm(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)))
-
-        verify(carelevoAlarmNotifier).showTopNotification(any())
-        verify(uiInteraction).runAlarm(any(), any(), eq(AlarmSound.ERROR))
-    }
-
-    @Test
-    fun `the full-screen alarm names the button on the notification that acts on the alarm`() {
-        whenever(rh.gs(CarelevoStrings.alarm_feat_title_alert_incomplete_patch_setting)).thenReturn("Patch Activation Incomplete")
-        whenever(rh.gs(CarelevoStrings.common_btn_ok)).thenReturn("OK")
-        whenever(rh.gs(eq(CarelevoStrings.carelevo_alarm_screen_text), anyVararg())).thenAnswer { it.arguments.drop(1).joinToString("|") }
-        start()
-
-        alarmHandler().invoke(listOf(alarm(AlarmCause.ALARM_ALERT_PATCH_APPLICATION_INCOMPLETE)))
-
-        verify(uiInteraction).runAlarm(eq("Patch Activation Incomplete|OK"), any(), eq(AlarmSound.ERROR))
-    }
-
-    @Test
-    fun `handleAlarms includes both notice and critical alarms in the top notification path`() {
-        start()
-
-        alarmHandler().invoke(
-            listOf(
-                alarm(AlarmCause.ALARM_NOTICE_LGS_START, id = "notice"),
-                alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "critical")
-            )
+        val alarms = listOf(
+            alarm(AlarmCause.ALARM_NOTICE_LGS_START, id = "notice"),
+            alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "critical")
         )
 
-        verify(carelevoAlarmNotifier).showTopNotification(any())
-        // Only the critical member rings the shared alarm — still exactly once per call.
-        verify(uiInteraction).runAlarm(any(), any(), any())
+        alarmHandler().invoke(alarms)
+
+        verify(carelevoAlarmNotifier).showAlerts(eq(alarms))
     }
 
     @Test
-    fun `handleAlarms re-posts the top notification but rings the full-screen alarm only once for a still-active id`() {
+    fun `handleAlarms hands every repeat of the alarm set on`() {
         start()
         val handle = alarmHandler()
         val alarms = listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "a"))
 
         handle.invoke(alarms)
         handle.invoke(alarms)
-        handle.invoke(alarms)
 
-        // The card re-posts every time (that's how the user always sees current state)...
-        verify(carelevoAlarmNotifier, times(3)).showTopNotification(eq(alarms))
-        // ...but the same still-active id must not re-ring the shared alarm on every reconnect poll.
-        verify(uiInteraction, times(1)).runAlarm(any(), any(), any())
-    }
-
-    @Test
-    fun `handleAlarms rings the full-screen alarm again for each newly distinct critical id`() {
-        start()
-        val handle = alarmHandler()
-
-        handle.invoke(listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "a")))
-        handle.invoke(
-            listOf(
-                alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "a"),
-                alarm(AlarmCause.ALARM_WARNING_PATCH_ERROR, id = "b")
-            )
-        )
-
-        verify(carelevoAlarmNotifier, times(2)).showTopNotification(any())
-        // "a" only rings once (already seen); "b" is new on the second call → 2 rings total.
-        verify(uiInteraction, times(2)).runAlarm(any(), any(), any())
-    }
-
-    @Test
-    fun `handleAlarms rings the full-screen alarm again after an alarm id clears and recurs`() {
-        start()
-        val handle = alarmHandler()
-        val alarms = listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "a"))
-
-        handle.invoke(alarms)
-        handle.invoke(emptyList())
-        handle.invoke(alarms)
-
-        verify(carelevoAlarmNotifier, times(3)).showTopNotification(any())
-        // Dropping out of the incoming set (resolved/acknowledged) clears the dedup id, so the same id
-        // recurring later is treated as new again — rings twice (first appearance + recurrence).
-        verify(uiInteraction, times(2)).runAlarm(any(), any(), any())
-    }
-
-    @Test
-    fun `handleAlarms re-posts when the critical set shrinks but does not re-ring an already-seen id`() {
-        start()
-        val handle = alarmHandler()
-        val a = alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "a")
-        val b = alarm(AlarmCause.ALARM_WARNING_PATCH_ERROR, id = "b")
-
-        handle.invoke(listOf(a, b))
-        handle.invoke(listOf(a))
-
-        verify(carelevoAlarmNotifier, times(2)).showTopNotification(any())
-        // Both "a" and "b" are new on the first call, but only ONE ring per handleAlarms invocation
-        // (the first fresh id) — matching EOPatch-style "announce one, the card lists the rest".
-        // The second call has no fresh id ("a" already seen), so no additional ring.
-        verify(uiInteraction, times(1)).runAlarm(any(), any(), any())
+        verify(carelevoAlarmNotifier, times(2)).showAlerts(eq(alarms))
     }
 
     // ---- foreground refresh ---------------------------------------------------------------------
@@ -1003,13 +894,14 @@ class CarelevoPumpPluginLifecycleTest {
     // ---- onStop ---------------------------------------------------------------------------------
 
     @Test
-    fun `onStop stops the alarm observer`() {
+    fun `onStop stops the alarm observer and leaves no pump alert behind`() {
         start()
 
         runBlocking { plugin.onStop() }
         started = false
 
         verify(carelevoAlarmNotifier).stopObserving()
+        verify(carelevoAlarmNotifier).clearAlerts()
     }
 
     @Test

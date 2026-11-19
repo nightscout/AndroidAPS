@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
@@ -30,7 +29,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.ui.IconsProvider
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -72,8 +70,6 @@ import app.aaps.pump.carelevo.di.CarelevoCentral
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.userSetting.CarelevoUserSettingInfoDomainModel
-import app.aaps.pump.carelevo.domain.type.AlarmType.Companion.isCritical
-import app.aaps.pump.carelevo.ext.transformNotificationStringResources
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.Provider
@@ -118,7 +114,6 @@ class CarelevoPumpPlugin @Inject constructor(
     private val bleReadyCheck: CarelevoBleReadyCheck,
     private val iconsProvider: IconsProvider,
     private val config: Config,
-    private val uiInteraction: UiInteraction,
     private var pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val carelevoPatch: CarelevoPatch,
 
@@ -151,14 +146,6 @@ class CarelevoPumpPlugin @Inject constructor(
 
     /** Where the plugin collects its streams. A test sets an unconfined dispatcher. */
     internal var dispatcher: CoroutineDispatcher = aapsIoDispatcher
-
-    // Critical alarms escalate through the shared AAPS full-screen alarm (uiInteraction.runAlarm) —
-    // see handleAlarms. This dedups that escalation to once per still-active alarm id: the alarms
-    // stream re-emits on every reconnect/snapshot poll while the condition remains, and runAlarm must
-    // not re-fire (re-ring/re-launch the activity) for an alarm the patch is still reporting as active,
-    // only for one that is newly seen. An id drops out (and can re-fire later) once it's no longer in
-    // the incoming alarm list — resolved, or acknowledged.
-    private val globallyAlarmedIds = mutableSetOf<String>()
 
     private var _pumpType: PumpType = PumpType.CAREMEDI_CARELEVO
     private val _pumpDescription = PumpDescription().fillFor(_pumpType)
@@ -203,6 +190,8 @@ class CarelevoPumpPlugin @Inject constructor(
         if (scope === scopeToCancel) scope = null
 
         carelevoAlarmNotifier.stopObserving()
+        // A stopped driver leaves no alerts behind; the next start raises again what the store still holds.
+        carelevoAlarmNotifier.clearAlerts()
     }
 
     private fun registerPreferenceChangeObserver() {
@@ -478,38 +467,13 @@ class CarelevoPumpPlugin @Inject constructor(
     }
 
     /**
-     * Two escalation surfaces, same shape EOPatch's `AlarmManager.showNotification` uses (a critical
-     * alarm gets BOTH, every other alarm gets only the second):
-     * - [uiInteraction.runAlarm]: the shared AAPS full-screen alarm — wakes/unlocks the screen and
-     *   rings, so a critical patch failure (occlusion, out of insulin, patch error, …) isn't missed
-     *   while the phone is locked or the user is elsewhere in the app. Fire-and-forget: its own OK
-     *   button only silences the sound (it's shared UI with no notion of a CareLevo alarm to clear).
-     * - [CarelevoAlarmNotifier.showTopNotification]: the persistent notification card, for every
-     *   alarm regardless of severity. Its action button is the one that actually clears the alarm
-     *   (wired to [app.aaps.pump.carelevo.presentation.model.AlarmEvent.ClearAlarm] in
-     *   [CarelevoAlarmNotifier.showTopNotification] itself) — so silencing the full-screen alarm is
-     *   not the same as acknowledging it; the card is what the user confirms on.
-     *
-     * The full-screen text says so and names the card's button, because the alarm descriptions say
-     * "Tap the [OK] button" and the full-screen alarm has its own button that does not clear anything.
+     * Every stored alarm is a pump alert ([CarelevoAlarmNotifier.showAlerts]). The core rings a critical one with its
+     * alarm screen, and the clear button is on both the card and the alarm screen. An alarm the patch keeps reporting
+     * does not ring again: it keeps its id and its time.
      */
     private fun handleAlarms(alarms: List<CarelevoAlarmInfo>) {
         aapsLogger.debug(LTag.NOTIFICATION, "startAlarmObserving handleAlarms:: $alarms")
-        globallyAlarmedIds.retainAll(alarms.map { it.alarmId }.toSet())
-
-        // filter-with-add: keeps only the not-yet-escalated critical alarms AND marks them escalated,
-        // so a condition the snapshot keeps re-reporting rings once rather than on every reconnect.
-        val fresh = alarms.filter { it.alarmType.isCritical() && globallyAlarmedIds.add(it.alarmId) }
-        fresh.firstOrNull()?.let { alarm ->
-            val (title, _, button) = alarm.cause.transformNotificationStringResources()
-            uiInteraction.runAlarm(
-                status = rh.gs(CarelevoStrings.carelevo_alarm_screen_text, rh.gs(title), rh.gs(button)),
-                title = rh.gs(CarelevoStrings.carelevo),
-                sound = AlarmSound.ERROR
-            )
-        }
-
-        carelevoAlarmNotifier.showTopNotification(alarms)
+        carelevoAlarmNotifier.showAlerts(alarms)
     }
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(

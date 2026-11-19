@@ -3,16 +3,12 @@ package app.aaps.pump.carelevo.common
 import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.NotificationAction
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.pump.alerts.PumpAlert
+import app.aaps.core.interfaces.pump.alerts.PumpAlertSeverity
+import app.aaps.core.interfaces.pump.alerts.PumpAlerts
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ContextResourceHelper
-import app.aaps.pump.carelevo.FakeCarelevoAppForeground
-import app.aaps.pump.carelevo.FakeCarelevoSystemNotifier
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.type.AlarmCause
@@ -20,19 +16,21 @@ import app.aaps.pump.carelevo.presentation.model.AlarmEvent
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.isNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
-import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
@@ -40,106 +38,95 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 
 /**
- * Robolectric unit tests for [CarelevoAlarmNotifier].
+ * Robolectric unit tests for [CarelevoAlarmNotifier]: how each stored alarm becomes a pump alert.
  *
- * The strings come from a REAL application [Context] ([ContextResourceHelper]), so this suite runs under
- * [RobolectricTestRunner]: the texts are the real formatted ones, not stubs.
+ * The strings come from a REAL application [Context] ([ContextResourceHelper]), so the texts are the real formatted
+ * ones, with the pump values put in through the alert's text arguments. The alerts go to [RecordingPumpAlerts]; the
+ * core side of pump alerts has its own tests (`PumpAlertsImplTest`).
  *
- * The other collaborators are mocked ([aapsLogger], [dateUtil], the AAPS [NotificationManager] interface,
- * [preferences], [alarmActionHandler]) or faked (the phone notification and the foreground state, which are
- * platform ports). Assertions are made against:
- *  - the mocked AAPS [NotificationManager] (the in-app "top notification" cards),
- *  - the [CarelevoAlarmNotifier.alarms] StateFlow and the `onAlarmsUpdated` callback,
- *  - [FakeCarelevoSystemNotifier] for the phone notifications. The Android notification itself is tested in
- *    `AndroidCarelevoSystemNotifierTest`.
- *
- * The notifier's dispatcher is set to [Dispatchers.Unconfined], so every emission is handled
- * synchronously on the test thread, keeping the tests deterministic.
+ * The notifier's dispatcher is set to [Dispatchers.Unconfined], so every emission is handled synchronously on the
+ * test thread.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
 class CarelevoAlarmNotifierTest {
 
+    /** Keeps what was raised and resolved, as the core would. */
+    private class RecordingPumpAlerts : PumpAlerts {
+
+        private val _active = MutableStateFlow<List<PumpAlert>>(emptyList())
+        override val active: StateFlow<List<PumpAlert>> = _active
+        val raised = mutableListOf<PumpAlert>()
+        val resolved = mutableListOf<String>()
+
+        override fun raise(alert: PumpAlert) {
+            raised += alert
+            _active.value = _active.value.filterNot { it.source == alert.source && it.key == alert.key } + alert
+        }
+
+        override fun resolve(source: String, key: String) {
+            resolved += key
+            _active.value = _active.value.filterNot { it.source == source && it.key == key }
+        }
+
+        override fun resolveAll(source: String) {
+            _active.value.filter { it.source == source }.forEach { resolve(source, it.key) }
+        }
+
+        override fun silence(source: String, key: String) {}
+        override fun snooze(source: String, key: String, minutes: Int) {}
+        override fun act(source: String, key: String) {}
+    }
+
     // REAL application context, for the real strings.
     private val context: Context = RuntimeEnvironment.getApplication()
+    private val rh = ContextResourceHelper(context)
 
     private lateinit var aapsLogger: AAPSLogger
-    private lateinit var dateUtil: DateUtil
-    private lateinit var notificationManager: NotificationManager
     private lateinit var preferences: Preferences
     private lateinit var alarmActionHandler: CarelevoAlarmActionHandler
-    private val systemNotifier = FakeCarelevoSystemNotifier()
-    private val appForeground = FakeCarelevoAppForeground()
+    private val pumpAlerts = RecordingPumpAlerts()
 
     private lateinit var sut: CarelevoAlarmNotifier
 
     private fun alarm(
         cause: AlarmCause,
         value: Int? = null,
-        id: String = "alarm-1"
+        id: String = "alarm-1",
+        createdAt: String = "2026-07-16T10:00:00"
     ): CarelevoAlarmInfo =
         CarelevoAlarmInfo(
             alarmId = id,
             alarmType = cause.alarmType,
             cause = cause,
             value = value,
-            createdAt = "2026-07-16T10:00:00",
-            updatedAt = "2026-07-16T10:00:00",
+            createdAt = createdAt,
+            updatedAt = createdAt,
             isAcknowledged = false
         )
 
     @Before
     fun setUp() {
         aapsLogger = mock()
-        dateUtil = mock()
-        notificationManager = mock()
         preferences = mock()
         alarmActionHandler = mock()
 
-        whenever(dateUtil.now()).thenReturn(1_000_000L)
-
         sut = CarelevoAlarmNotifier(
             aapsLogger = aapsLogger,
-            dateUtil = dateUtil,
-            notificationManager = notificationManager,
+            pumpAlerts = pumpAlerts,
             preferences = preferences,
             alarmActionHandler = alarmActionHandler,
-            rh = ContextResourceHelper(context),
-            systemNotifier = systemNotifier,
-            appForeground = appForeground
+            rh = rh
         )
         sut.dispatcher = Dispatchers.Unconfined
     }
 
-    // ---- helpers ------------------------------------------------------------------------------
-
-    /**
-     * Verify one post() to the mocked AAPS NotificationManager (the 8-arg date/validTo overload).
-     * `sound` is always null — see the class KDoc on why [showTopNotification] never posts at
-     * [NotificationLevel.URGENT] (NotificationManagerImpl's own alarm/sound tier).
-     */
-    private fun verifyPosted(level: NotificationLevel, count: Int = 1) {
-        verify(notificationManager, times(count)).post(
-            eq(NotificationId.CARELEVO_PATCH_ALERT), any<String>(), eq(level),
-            any<Long>(), any<Long>(), isNull(), any<List<NotificationAction>>(), anyOrNull()
-        )
+    private fun shown(alarm: CarelevoAlarmInfo): PumpAlert {
+        sut.showAlerts(listOf(alarm))
+        return pumpAlerts.raised.last()
     }
 
-    /** Capture the `text` argument of the single post() to the AAPS NotificationManager. */
-    private fun capturePostedText(): String {
-        val textCaptor = argumentCaptor<String>()
-        verify(notificationManager).post(
-            any(), textCaptor.capture(), any(), any<Long>(), any<Long>(), anyOrNull(),
-            any<List<NotificationAction>>(), anyOrNull()
-        )
-        return textCaptor.firstValue
-    }
-
-    /** The one phone notification the notifier asked for. */
-    private fun shownNotification(): FakeCarelevoSystemNotifier.Shown {
-        assertThat(systemNotifier.shown).hasSize(1)
-        return systemNotifier.shown.single()
-    }
+    private fun PumpAlert.textShown(): String = text?.let { rh.gs(it) } ?: ""
 
     // ---- simple state / accessors -------------------------------------------------------------
 
@@ -148,173 +135,129 @@ class CarelevoAlarmNotifierTest {
         assertThat(sut.alarms.value).isEmpty()
     }
 
+    // ---- showAlerts ---------------------------------------------------------------------------
+
     @Test
-    fun `alarms become phone notifications while AAPS is in the background`() {
-        appForeground.state.value = false
-        whenever(alarmActionHandler.observeAlarms()).thenReturn(flowOf(listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "bg"))))
+    fun `each stored alarm is one pump alert keyed by its id`() {
+        sut.showAlerts(listOf(alarm(AlarmCause.ALARM_NOTICE_LGS_START, id = "a"), alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "b")))
 
-        sut.startObserving { }
-
-        assertThat(shownNotification().alarmId).isEqualTo("bg")
+        assertThat(pumpAlerts.active.value.map { it.key }).containsExactly("a", "b")
+        assertThat(pumpAlerts.active.value.map { it.source }.toSet()).containsExactly(CarelevoAlarmNotifier.SOURCE)
     }
 
     @Test
-    fun `no phone notification while AAPS is in front`() {
-        appForeground.state.value = true
-        whenever(alarmActionHandler.observeAlarms()).thenReturn(flowOf(listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED))))
+    fun `an alarm no longer stored is resolved`() {
+        sut.showAlerts(listOf(alarm(AlarmCause.ALARM_NOTICE_LGS_START, id = "a"), alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "b")))
 
-        sut.startObserving { }
+        sut.showAlerts(listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "b")))
 
-        assertThat(systemNotifier.shown).isEmpty()
-    }
-
-    // ---- showTopNotification (in-app AAPS cards) ----------------------------------------------
-
-    @Test
-    fun `showTopNotification with an empty list only dismisses the previous cards`() {
-        sut.showTopNotification(emptyList())
-
-        verify(notificationManager).dismiss(eq(NotificationId.CARELEVO_PATCH_ALERT))
-        verify(notificationManager, never()).post(
-            any(), any<String>(), any(), any<Long>(), any<Long>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull()
-        )
+        assertThat(pumpAlerts.resolved).containsExactly("a")
+        assertThat(pumpAlerts.active.value.map { it.key }).containsExactly("b")
     }
 
     @Test
-    fun `showTopNotification dismisses previous cards before re-posting`() {
-        sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_NOTICE_LGS_START)))
+    fun `clearAlerts ends every Carelevo alert`() {
+        sut.showAlerts(listOf(alarm(AlarmCause.ALARM_NOTICE_LGS_START, id = "a")))
 
-        verify(notificationManager).dismiss(eq(NotificationId.CARELEVO_PATCH_ALERT))
+        sut.clearAlerts()
+
+        assertThat(pumpAlerts.active.value).isEmpty()
     }
 
     @Test
-    fun `showTopNotification for a critical WARNING posts IMPORTANT, never URGENT, and silent`() {
-        sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED)))
-
-        verifyPosted(NotificationLevel.IMPORTANT)
+    fun `a WARNING alarm is a critical pump alert`() {
+        assertThat(shown(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED)).severity).isEqualTo(PumpAlertSeverity.CRITICAL)
     }
 
     @Test
-    fun `showTopNotification for a critical ALERT posts IMPORTANT, never URGENT, and silent`() {
-        sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)))
-
-        verifyPosted(NotificationLevel.IMPORTANT)
+    fun `an ALERT alarm is a critical pump alert`() {
+        whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)).thenReturn(25)
+        assertThat(shown(alarm(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)).severity).isEqualTo(PumpAlertSeverity.CRITICAL)
     }
 
     @Test
-    fun `showTopNotification for a non-critical NOTICE posts NORMAL and silent`() {
-        sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_NOTICE_LGS_START)))
+    fun `a NOTICE alarm is an info pump alert`() {
+        assertThat(shown(alarm(AlarmCause.ALARM_NOTICE_LGS_START)).severity).isEqualTo(PumpAlertSeverity.INFO)
+    }
 
-        verifyPosted(NotificationLevel.NORMAL)
+    /** The silence of the core holds for one occurrence, so the time must be the stored one, the same after a restart. */
+    @Test
+    fun `the alert is raised at the stored creation time of the alarm`() {
+        val alert = shown(alarm(AlarmCause.ALARM_NOTICE_LGS_START, createdAt = "2026-07-16T10:00:00"))
+
+        val expected = LocalDateTime.parse("2026-07-16T10:00:00").toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+        assertThat(alert.raisedAt).isEqualTo(expected)
     }
 
     @Test
-    fun `showTopNotification posts one card per alarm`() {
-        sut.showTopNotification(
-            listOf(
-                alarm(AlarmCause.ALARM_NOTICE_LGS_START, id = "a"),
-                alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "b")
-            )
-        )
+    fun `the title and text come from real resources`() {
+        val alert = shown(alarm(AlarmCause.ALARM_NOTICE_LGS_START))
 
-        verify(notificationManager).dismiss(eq(NotificationId.CARELEVO_PATCH_ALERT))
-        verify(notificationManager, times(2)).post(
-            eq(NotificationId.CARELEVO_PATCH_ALERT), any<String>(), any(),
-            any<Long>(), any<Long>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull()
-        )
+        assertThat(rh.gs(alert.title)).isNotEmpty()
+        assertThat(alert.textShown()).isNotEmpty()
     }
 
     @Test
-    fun `showTopNotification builds a non-blank card text from real resources`() {
-        sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_NOTICE_LGS_START)))
+    fun `the action clears the alarm through the action handler`() = runBlocking {
+        val alert = shown(alarm(AlarmCause.ALARM_NOTICE_LGS_START))
 
-        // With a real Context, getString resolves to actual text (no more NPE / "Stub!").
-        assertThat(capturePostedText()).isNotEmpty()
-    }
-
-    @Test
-    fun `showTopNotification action clears the alarm through the action handler`() {
-        val info = alarm(AlarmCause.ALARM_NOTICE_LGS_START)
-        sut.showTopNotification(listOf(info))
-
-        val actionsCaptor = argumentCaptor<List<NotificationAction>>()
-        verify(notificationManager).post(
-            any(), any<String>(), any(), any<Long>(), any<Long>(), anyOrNull(), actionsCaptor.capture(), anyOrNull()
-        )
-        actionsCaptor.firstValue.first().action.invoke()
+        assertThat(alert.action!!.run()).isTrue()
 
         verify(alarmActionHandler).triggerEvent(any<AlarmEvent.ClearAlarm>())
     }
 
     @Test
-    fun `showTopNotification for low-insulin notice reads the low-insulin reminder preference`() {
+    fun `the low-insulin notice reads the low-insulin reminder preference into its text`() {
         whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)).thenReturn(25)
 
-        sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_NOTICE_LOW_INSULIN)))
+        val alert = shown(alarm(AlarmCause.ALARM_NOTICE_LOW_INSULIN))
 
         verify(preferences).get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)
-        verifyPosted(NotificationLevel.NORMAL)
+        assertThat(alert.textShown()).contains("25")
     }
 
     @Test
-    fun `showTopNotification for out-of-insulin alert reads the low-insulin reminder preference`() {
+    fun `the out-of-insulin alert reads the low-insulin reminder preference`() {
         whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)).thenReturn(25)
 
-        sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)))
+        shown(alarm(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN))
 
         verify(preferences).get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)
-        verifyPosted(NotificationLevel.IMPORTANT)
     }
 
     @Test
-    fun `showTopNotification for patch-expired notice reads the patch-expiration preference and formats text`() {
+    fun `the patch-expired notice splits the reminder hours into days and hours`() {
         whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS)).thenReturn(50)
 
-        sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_NOTICE_PATCH_EXPIRED)))
+        val alert = shown(alarm(AlarmCause.ALARM_NOTICE_PATCH_EXPIRED))
 
-        // 50h -> 2 days 2 hours split fed into the description template; the formatted text is real.
-        verify(preferences).get(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS)
-        val text = capturePostedText()
-        assertThat(text).isNotEmpty()
-        // Locale-independent: the "%s days %s hours" template embeds the digits 2 and 2.
-        assertThat(text).contains("2")
+        // 50 h -> 2 days 2 hours. Locale-independent: the template embeds the digits.
+        assertThat(alert.textShown()).contains("2")
     }
 
     @Test
-    fun `showTopNotification for bg-check notice formats hours and minutes`() {
-        // 125 min -> 2 hrs 5 min branch of formatBgCheckDuration; must not throw against real resources.
-        sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_NOTICE_BG_CHECK, value = 125)))
+    fun `the bg-check notice formats hours and minutes`() {
+        val text = shown(alarm(AlarmCause.ALARM_NOTICE_BG_CHECK, value = 125)).textShown()
 
-        val text = capturePostedText()
         assertThat(text).contains("2")
         assertThat(text).contains("5")
-        verifyPosted(NotificationLevel.NORMAL)
     }
 
     @Test
-    fun `showTopNotification for bg-check notice formats whole hours`() {
-        // 120 min -> whole-hours branch (2 hrs).
-        sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_NOTICE_BG_CHECK, value = 120)))
-
-        assertThat(capturePostedText()).contains("2")
-        verifyPosted(NotificationLevel.NORMAL)
+    fun `the bg-check notice formats whole hours`() {
+        assertThat(shown(alarm(AlarmCause.ALARM_NOTICE_BG_CHECK, value = 120)).textShown()).contains("2")
     }
 
     @Test
-    fun `showTopNotification for bg-check notice formats minutes only`() {
-        // 45 min -> minutes-only branch.
-        sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_NOTICE_BG_CHECK, value = 45)))
-
-        assertThat(capturePostedText()).contains("45")
-        verifyPosted(NotificationLevel.NORMAL)
+    fun `the bg-check notice formats minutes only`() {
+        assertThat(shown(alarm(AlarmCause.ALARM_NOTICE_BG_CHECK, value = 45)).textShown()).contains("45")
     }
 
     @Test
-    fun `showTopNotification for a cause with no description args posts without reading preferences`() {
-        sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_WARNING_NEEDLE_INSERTION_ERROR)))
+    fun `a cause with no description arguments reads no preference`() {
+        shown(alarm(AlarmCause.ALARM_WARNING_NEEDLE_INSERTION_ERROR))
 
         verify(preferences, never()).get(any<IntPreferenceKey>())
-        verifyPosted(NotificationLevel.IMPORTANT)
     }
 
     // ---- startObserving / stopObserving -------------------------------------------------------
@@ -383,58 +326,5 @@ class CarelevoAlarmNotifierTest {
 
         assertThat(sut.alarms.value).isEmpty()
         verify(aapsLogger).error(eq(LTag.PUMPCOMM), any<String>())
-    }
-
-    // ---- showNotification (the phone notification, through the port) --------------------------
-
-    @Test
-    fun `showNotification hands the alarm id, title and text to the phone notification`() {
-        sut.showNotification(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "clog"))
-
-        val shown = shownNotification()
-        assertThat(shown.alarmId).isEqualTo("clog")
-        assertThat(shown.title).isNotEmpty()
-        assertThat(shown.text).isNotEmpty()
-    }
-
-    @Test
-    fun `showNotification for out-of-insulin embeds the remaining amount`() {
-        sut.showNotification(alarm(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN, value = 15))
-
-        assertThat(shownNotification().text).contains("15")
-    }
-
-    @Test
-    fun `showNotification for patch-expired splits days and hours`() {
-        // 50 h -> 2 days 2 hours.
-        sut.showNotification(alarm(AlarmCause.ALARM_NOTICE_PATCH_EXPIRED, value = 50))
-
-        assertThat(shownNotification().text).contains("2")
-    }
-
-    @Test
-    fun `showNotification for bg-check formats hours and minutes`() {
-        sut.showNotification(alarm(AlarmCause.ALARM_NOTICE_BG_CHECK, value = 125))
-
-        val text = shownNotification().text
-        assertThat(text).contains("2")
-        assertThat(text).contains("5")
-    }
-
-    @Test
-    fun `showNotification for bg-check under an hour formats minutes only`() {
-        sut.showNotification(alarm(AlarmCause.ALARM_NOTICE_BG_CHECK, value = 45))
-
-        assertThat(shownNotification().text).contains("45")
-    }
-
-    @Test
-    fun `showNotification for a cause without a description still shows the title`() {
-        // ALARM_NOTICE_ATTACH_PATCH_CHECK has a null notification description -> empty body, title only.
-        sut.showNotification(alarm(AlarmCause.ALARM_NOTICE_ATTACH_PATCH_CHECK))
-
-        val shown = shownNotification()
-        assertThat(shown.title).isNotEmpty()
-        assertThat(shown.text).isEmpty()
     }
 }

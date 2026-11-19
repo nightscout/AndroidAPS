@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.pump.ble.AdapterState
 import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.pump.carelevo.common.CarelevoAppForeground
 import app.aaps.pump.carelevo.common.CarelevoBleReadyCheck
-import app.aaps.pump.carelevo.common.CarelevoSystemNotifier
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.mockito.kotlin.mock
@@ -20,18 +19,6 @@ class FakeCarelevoAppForeground(inFront: Boolean = false) : CarelevoAppForegroun
     override fun isInForeground(): Boolean = state.value
 
     override fun inForeground(): Flow<Boolean> = state
-}
-
-/** Keeps each phone notification it was asked to show. */
-class FakeCarelevoSystemNotifier : CarelevoSystemNotifier {
-
-    data class Shown(val alarmId: String, val title: String, val text: String)
-
-    val shown = mutableListOf<Shown>()
-
-    override fun show(alarmId: String, title: String, text: String) {
-        shown += Shown(alarmId, title, text)
-    }
 }
 
 /** Says Bluetooth is ready at once, or never, as the test sets it. */

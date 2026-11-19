@@ -19,9 +19,9 @@ import dev.zacsweers.metro.IntKey as MetroIntKey
 /**
  * What makes Carelevo appear in the app: the pump plugin and the ViewModels of its screens.
  *
- * It is not contributed by itself. A platform includes it once it has implemented `CarelevoAppForeground`,
- * `CarelevoSystemNotifier` and `CarelevoBleReadyCheck` (Android: `CarelevoAndroidRegistration`). A platform without
- * them has no Carelevo at all, so it never offers a pump that cannot work.
+ * It is not contributed by itself. A platform includes it once it has implemented `CarelevoAppForeground` and
+ * `CarelevoBleReadyCheck` and binds `PumpAlerts` (Android: `CarelevoAndroidRegistration`). A platform without them has
+ * no Carelevo at all, so it never offers a pump that cannot work.
  */
 @BindingContainer
 object CarelevoRegistration {

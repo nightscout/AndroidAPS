@@ -12,7 +12,6 @@ import app.aaps.core.interfaces.pump.ble.AdapterState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.IconsProvider
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -117,7 +116,6 @@ abstract class CarelevoPumpPluginTestBase {
     @Mock lateinit var finishImmeBolusInfusionUseCase: CarelevoFinishImmeBolusInfusionUseCase
 
     @Mock lateinit var carelevoAlarmNotifier: CarelevoAlarmNotifier
-    @Mock lateinit var uiInteraction: UiInteraction
 
     protected lateinit var plugin: CarelevoPumpPlugin
     protected lateinit var testProfile: Profile
@@ -238,7 +236,6 @@ abstract class CarelevoPumpPluginTestBase {
             bleReadyCheck = FakeCarelevoBleReadyCheck(),
             iconsProvider = iconsProvider,
             config = config,
-            uiInteraction = uiInteraction,
             pumpEnactResultProvider = pumpEnactResultProvider,
             carelevoPatch = carelevoPatch,
             carelevoAlarmNotifier = carelevoAlarmNotifier,
