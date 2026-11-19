@@ -91,6 +91,7 @@
     <string name="press_OK_to_return">Premi <b>OK</b> per tornare alla schermata principale.</string>
     <string name="deactivate_sure">Sei sicuro di voler disattivare la patch corrente?</string>
     <string name="cancel_sure">Sei sicuro di voler annullare l\'attivazione?</string>
+    <string name="cancel_deactivation_sure">Sei sicuro di voler annullare la disattivazione? La patch potrebbe rimanere attiva.</string>
     <string name="medtrum_deactivate_pump_confirm">Sei sicuro? Questa azione non può essere annullata!!</string>
     <string name="press_next_or_cancel">Premi <b>Avanti</b> per disattivare o <b>Annulla</b> per tornare alla schermata principale.</string>
     <string name="deactivating_pump">Disattivazione patch. Attendi.</string>
