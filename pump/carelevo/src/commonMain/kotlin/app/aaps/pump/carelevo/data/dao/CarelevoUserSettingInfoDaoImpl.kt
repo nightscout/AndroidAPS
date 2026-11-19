@@ -5,6 +5,7 @@ import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.common.latest
 import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.data.common.carelevoJson
+import app.aaps.pump.carelevo.data.common.readStoredJson
 import app.aaps.pump.carelevo.data.model.entities.CarelevoUserSettingInfoEntity
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -23,21 +24,7 @@ class CarelevoUserSettingInfoDaoImpl @Inject constructor(
 
     override fun getUserSetting(): Flow<CarelevoUserSettingInfoEntity?> {
         if (_userSettingInfo.replayCache.isEmpty()) {
-            runCatching {
-                val userSettingInfoString = preferences.get(CarelevoStringNonKey.UserSettingInfo)
-                if (userSettingInfoString == "") {
-                    throw NullPointerException("user setting info is empty")
-                }
-                carelevoJson.decodeFromString<CarelevoUserSettingInfoEntity>(userSettingInfoString)
-            }.fold(
-                onSuccess = {
-                    _userSettingInfo.tryEmit(it)
-                },
-                onFailure = {
-                    it.printStackTrace()
-                    _userSettingInfo.tryEmit(null)
-                }
-            )
+            _userSettingInfo.tryEmit(preferences.readStoredJson<CarelevoUserSettingInfoEntity>(CarelevoStringNonKey.UserSettingInfo))
         }
 
         return _userSettingInfo
@@ -45,21 +32,7 @@ class CarelevoUserSettingInfoDaoImpl @Inject constructor(
 
     override fun getUserSettingBySync(): CarelevoUserSettingInfoEntity? {
         if (_userSettingInfo.replayCache.isEmpty()) {
-            runCatching {
-                val userSettingInfoString = preferences.get(CarelevoStringNonKey.UserSettingInfo)
-                if (userSettingInfoString == "") {
-                    throw NullPointerException("user setting info is empty")
-                }
-                carelevoJson.decodeFromString<CarelevoUserSettingInfoEntity>(userSettingInfoString)
-            }.fold(
-                onSuccess = {
-                    _userSettingInfo.tryEmit(it)
-                },
-                onFailure = {
-                    it.printStackTrace()
-                    _userSettingInfo.tryEmit(null)
-                }
-            )
+            _userSettingInfo.tryEmit(preferences.readStoredJson<CarelevoUserSettingInfoEntity>(CarelevoStringNonKey.UserSettingInfo))
         }
         return _userSettingInfo.latest
     }

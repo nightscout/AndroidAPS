@@ -6,6 +6,7 @@ import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.common.latest
 import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.data.common.carelevoJson
+import app.aaps.pump.carelevo.data.common.readStoredJson
 import app.aaps.pump.carelevo.data.model.entities.CarelevoBasalInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoExtendBolusInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoImmeBolusInfusionInfoEntity
@@ -31,27 +32,14 @@ class CarelevoInfusionInfoDaoImpl @Inject constructor(
 
     private val _infusionInfo: MutableSharedFlow<CarelevoInfusionInfoEntity?> = latestValueFlow()
 
-    /** Load one per-mode record from its preference key; null when absent or unparseable. */
-    private inline fun <reified T> loadEntity(key: StringNonPreferenceKey): T? = runCatching {
-        val json = preferences.get(key)
-        if (json == "") throw NullPointerException("${key.key} is empty")
-        carelevoJson.decodeFromString<T>(json)
-    }.fold(
-        onSuccess = { it },
-        onFailure = {
-            it.printStackTrace()
-            null
-        }
-    )
-
     /** Seed [_infusionInfo] from prefs if this is the first read of the process. */
     private fun ensureLoaded() {
         if (_infusionInfo.replayCache.isNotEmpty()) return
         val infusionInfo = CarelevoInfusionInfoEntity(
-            basalInfusionInfo = loadEntity<CarelevoBasalInfusionInfoEntity>(CarelevoStringNonKey.BasalInfusionInfo),
-            tempBasalInfusionInfo = loadEntity<CarelevoTempBasalInfusionInfoEntity>(CarelevoStringNonKey.TempBasalInfusionInfo),
-            immeBolusInfusionInfo = loadEntity<CarelevoImmeBolusInfusionInfoEntity>(CarelevoStringNonKey.ImmeBolusInfusionInfo),
-            extendBolusInfusionInfo = loadEntity<CarelevoExtendBolusInfusionInfoEntity>(CarelevoStringNonKey.ExtendBolusInfusionInfo)
+            basalInfusionInfo = preferences.readStoredJson<CarelevoBasalInfusionInfoEntity>(CarelevoStringNonKey.BasalInfusionInfo),
+            tempBasalInfusionInfo = preferences.readStoredJson<CarelevoTempBasalInfusionInfoEntity>(CarelevoStringNonKey.TempBasalInfusionInfo),
+            immeBolusInfusionInfo = preferences.readStoredJson<CarelevoImmeBolusInfusionInfoEntity>(CarelevoStringNonKey.ImmeBolusInfusionInfo),
+            extendBolusInfusionInfo = preferences.readStoredJson<CarelevoExtendBolusInfusionInfoEntity>(CarelevoStringNonKey.ExtendBolusInfusionInfo)
         ).takeUnless { it.basalInfusionInfo == null && it.tempBasalInfusionInfo == null && it.immeBolusInfusionInfo == null && it.extendBolusInfusionInfo == null }
         _infusionInfo.tryEmit(infusionInfo)
     }

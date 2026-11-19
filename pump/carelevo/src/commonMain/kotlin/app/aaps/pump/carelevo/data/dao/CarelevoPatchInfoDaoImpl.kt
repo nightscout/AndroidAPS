@@ -5,6 +5,7 @@ import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.common.latest
 import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.data.common.carelevoJson
+import app.aaps.pump.carelevo.data.common.readStoredJson
 import app.aaps.pump.carelevo.data.model.entities.CarelevoPatchInfoEntity
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -23,42 +24,14 @@ class CarelevoPatchInfoDaoImpl @Inject constructor(
 
     override fun getPatchInfo(): Flow<CarelevoPatchInfoEntity?> {
         if (_patchInfo.replayCache.isEmpty()) {
-            runCatching {
-                val patchInfoString = preferences.get(CarelevoStringNonKey.PatchInfo)
-                if (patchInfoString == "") {
-                    throw NullPointerException("patch info is empty")
-                }
-                carelevoJson.decodeFromString<CarelevoPatchInfoEntity>(patchInfoString)
-            }.fold(
-                onSuccess = {
-                    _patchInfo.tryEmit(it)
-                },
-                onFailure = {
-                    it.printStackTrace()
-                    _patchInfo.tryEmit(null)
-                }
-            )
+            _patchInfo.tryEmit(preferences.readStoredJson<CarelevoPatchInfoEntity>(CarelevoStringNonKey.PatchInfo))
         }
         return _patchInfo
     }
 
     override fun getPatchInfoBySync(): CarelevoPatchInfoEntity? {
         if (_patchInfo.replayCache.isEmpty()) {
-            runCatching {
-                val patchInfoString = preferences.get(CarelevoStringNonKey.PatchInfo)
-                if (patchInfoString == "") {
-                    throw NullPointerException("patch info is empty")
-                }
-                carelevoJson.decodeFromString<CarelevoPatchInfoEntity>(patchInfoString)
-            }.fold(
-                onSuccess = {
-                    _patchInfo.tryEmit(it)
-                },
-                onFailure = {
-                    it.printStackTrace()
-                    _patchInfo.tryEmit(null)
-                }
-            )
+            _patchInfo.tryEmit(preferences.readStoredJson<CarelevoPatchInfoEntity>(CarelevoStringNonKey.PatchInfo))
         }
 
         return _patchInfo.latest

@@ -32,6 +32,8 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
+import java.io.ByteArrayOutputStream
+import java.io.PrintStream
 
 /**
  * Unit tests for [CarelevoInfusionInfoDaoImpl] — exercises the preference-backed round-trip
@@ -151,6 +153,21 @@ internal class CarelevoInfusionInfoDaoImplTest {
     @Test
     fun `getInfusionInfoBySync on empty store returns null`() {
         assertThat(sut.getInfusionInfoBySync()).isNull()
+    }
+
+    /** No record is normal (no bolus running). It printed a NullPointerException stack trace at every app start. */
+    @Test
+    fun `an empty store is no error and prints nothing`() {
+        val printed = ByteArrayOutputStream()
+        val standardError = System.err
+        System.setErr(PrintStream(printed))
+        try {
+            sut.getInfusionInfoBySync()
+        } finally {
+            System.setErr(standardError)
+        }
+
+        assertThat(printed.toString()).isEmpty()
     }
 
     @Test

@@ -1,5 +1,7 @@
 package app.aaps.pump.carelevo.data.common
 
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -21,6 +23,23 @@ internal val carelevoJson: Json = Json {
     encodeDefaults = true
     ignoreUnknownKeys = true
     allowSpecialFloatingPointValues = true
+}
+
+/**
+ * The record stored under [key], or null when there is none. No record is normal - no patch yet, no bolus running - so
+ * it is not an error: an exception for it printed a stack trace at every app start. Only text that cannot be read is
+ * reported.
+ */
+internal inline fun <reified T> Preferences.readStoredJson(key: StringNonPreferenceKey): T? {
+    val json = get(key)
+    if (json.isEmpty()) return null
+    return try {
+        carelevoJson.decodeFromString<T>(json)
+    } catch (e: IllegalArgumentException) {
+        // SerializationException is an IllegalArgumentException.
+        e.printStackTrace()
+        null
+    }
 }
 
 /**
