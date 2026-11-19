@@ -10,7 +10,7 @@ import app.aaps.core.keys.interfaces.TextRef
  * `strings.xml`. iOS and the desktop JVM have no `Resources` to look a name up in, so without this
  * every label renders as its own name and a settings screen reads `configbuilder_general`.
  *
- * Registration happens once from the platform shell, in the same spirit as `registerStringOwners()`
+ * Registration happens once from the platform shell, in the same spirit as `GeneratedStringOwners.registerAll()`
  * on Android: each shell registers the modules it actually depends on, because a name is only unique
  * inside one module.
  *
