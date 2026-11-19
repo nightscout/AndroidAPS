@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.source.NSClientSource
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.ui.compose.icons.IcPluginNsClientBg
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import dev.zacsweers.metro.AppScope
@@ -44,6 +45,12 @@ class NSClientSourcePlugin(
         // Forced on for a client, which has no other BG source. On a master it stays the user's choice, so
         // this is one-sided on purpose - no forced-off half.
         .enforce(EnforcedState.Enabled) { config.AAPSCLIENT }
-        .setDefault(config.AAPSCLIENT),
+        // TEMPORARY: also the default for the full app on iOS. Nightscout is the only glucose source iOS
+        // has today. On Android the full app's default source is `DexcomPlugin`, which exists only on
+        // Android, so without this the iOS full app has no default source at all and its start stops with
+        // "Default plugin not found". Drop the iOS half once iOS has a glucose source of its own -
+        // `_docs/ios_todo.md` tracks it. Matched on iOS exactly, not on "not Android", so this cannot
+        // quietly reach another platform.
+        .setDefault(config.AAPSCLIENT || config.platform == AppPlatform.Ios),
     aapsLogger, rh, notificationManager
 ), BgSource, NSClientSource
