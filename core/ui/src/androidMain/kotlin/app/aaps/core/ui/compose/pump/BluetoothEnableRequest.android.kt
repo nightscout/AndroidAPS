@@ -1,4 +1,4 @@
-package app.aaps.pump.carelevo.compose.alarm
+package app.aaps.core.ui.compose.pump
 
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
@@ -7,11 +7,11 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 
-/** The system dialog that turns Bluetooth on. */
+/** The system dialog that turns Bluetooth on. Since Android 13 an app cannot turn it on itself, only ask. */
 @Composable
-internal actual fun rememberBluetoothEnableRequest(onEnabled: () -> Unit): (() -> Unit)? {
+actual fun rememberBluetoothEnableRequest(onResult: (enabled: Boolean) -> Unit): (() -> Unit)? {
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) onEnabled()
+        onResult(result.resultCode == Activity.RESULT_OK)
     }
     return { launcher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)) }
 }

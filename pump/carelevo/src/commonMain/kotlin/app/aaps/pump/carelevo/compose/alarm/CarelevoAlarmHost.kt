@@ -6,6 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.ui.compose.metroViewModel
+import app.aaps.core.ui.compose.pump.rememberBluetoothEnableRequest
 import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.presentation.model.AlarmEvent
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoAlarmViewModel
@@ -24,7 +25,7 @@ internal fun CarelevoAlarmHost(
 ) {
     val viewModel: CarelevoAlarmViewModel = metroViewModel()
 
-    val requestBluetoothEnable = rememberBluetoothEnableRequest(onEnabled = { aapsLogger.debug(LTag.PUMPCOMM, "bluetooth enabled for alarm") })
+    val requestBluetoothEnable = rememberBluetoothEnableRequest { enabled -> aapsLogger.debug(LTag.PUMPCOMM, "bluetooth enable for alarm, turned on=$enabled") }
 
     LaunchedEffect(viewModel) {
         viewModel.event.collect { event ->
