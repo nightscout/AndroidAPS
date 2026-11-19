@@ -4,7 +4,8 @@ How a pump driver does the parts that every driver has. `PUMP_DRIVER_ACCEPTANCE.
 this file says how to build it. When the two disagree, the acceptance file wins and this file is fixed.
 
 **Status:** the driver contract (section 1) describes the code as it is. Pump alerts (section 2) are agreed
-(2026-11-19) and not built yet; the decisions are in section 7.
+(2026-11-19); the core, the Android side and Carelevo are built (steps 1 and 2 of section 5) but not yet tested on a
+device, and the iOS side and the other drivers are not built. The decisions are in section 7.
 
 ## 1. The driver contract
 
@@ -113,8 +114,9 @@ class PumpAlert(
     /** Stable id inside the source. Raising the same key again updates the alert; it does not ring again. */
     val key: String,
     val severity: PumpAlertSeverity,
-    val title: String,
-    val text: String,
+    /** Resources, not resolved text, so the core resolves them when it shows them. A pump value goes in as an argument. */
+    val title: TextRef,
+    val text: TextRef? = null,
     /** When the pump raised it. A driver that raises it again after a restart passes the same time. */
     val raisedAt: Long,
     val action: PumpAlertAction? = null
@@ -132,11 +134,27 @@ interface PumpAlerts {
     /** The pump is removed, discarded or stopped. */
     fun resolveAll(source: String)
 
-    /** Called by the alarm screen and the card, never by a driver. The alert stays; only the sound stops. */
+    /** Called by the alarm screen and the card, never by a driver. The alert stays; the sound stops for 30 minutes. */
     fun silence(source: String, key: String)
     fun snooze(source: String, key: String, minutes: Int)
+
+    /** Called by the alarm screen: run the alert's action, as its button on the card does. It also silences. */
+    fun act(source: String, key: String)
+}
+
+/** What a platform does beyond the notification list, which already owns the card and the sound. */
+interface PumpAlertPlatform {
+    fun showAlarmScreen(alert: PumpAlert)      // CRITICAL rings: the alarm screen, also from the background
+    fun chime(alert: PumpAlert)                // WARNING: a system notification with one sound
+    fun snoozed(alert: PumpAlert, until: Long) // a platform that cannot run a timer in the background schedules the ring
+    fun withdrawn(source: String, key: String) // the alert ended or rings again: take back what chime/snoozed left
 }
 ```
+
+`PumpAlertsImpl` (`:implementation` commonMain) is not contributed from shared code: a platform binds it once it has a
+`PumpAlertPlatform` (Android: `PumpAlertsAndroidBindings`). The end of a silence is checked against the clock
+(`checkSilences`), by a timer while the app runs and by the platform's wake (Android: an exact alarm to
+`PumpAlertWakeReceiver`; iOS: a scheduled local notification).
 
 **Why not `UiInteraction`.** Pump alerts have an identity, a pump-side action that must go through the queue, a
 lifetime tied to the pump (removal, discard, restart) and a test seam for the scenario suite. `UiInteraction` has none
@@ -158,9 +176,12 @@ for the callers that are not pumps until those move too.
 - **The watch** gets ringing and stopped, as today.
 - **The action.** The card and the alarm screen show the action button. The core shows that it runs and what came
   back. On false the alert stays and the user sees that the pump did not confirm.
-- **Restart.** The core does not store alerts: the pump and the driver are the truth. It stores only which alerts the
-  user silenced (`source`, `key`, `raisedAt`), so an alert raised again after a restart is shown but does not ring
-  again.
+- **Silence.** Silence is a snooze of 30 minutes; `snooze` takes another length. When the window ends and the alert
+  is still active, it rings again. Any other way the card goes away while the alert is still active (OK on another
+  alarm screen, a swipe) counts as a silence, and the card comes back without sound.
+- **Restart.** The core does not store alerts: the pump and the driver are the truth. It stores only the silences
+  (`source`, `key`, `raisedAt`, until when), so an alert raised again after a restart keeps the rest of its window.
+  `raisedAt` is part of it: a new occurrence of the same condition has a new time and rings at once.
 
 **What the driver does:**
 
@@ -242,5 +263,7 @@ How to move a module is in the `kmp-module-flip` skill. The pump-specific rules,
    the full-screen alarm's own sound and giving iOS a way to stop it (`_docs/ios_blockers.md`, option 2). That fixes
    the iOS stop, but it keeps two owners on one player, and the alarm screen still cannot silence only its own alert.
 2. **WARNING** is a card plus one notification sound, with no repeating alarm and no alarm screen.
-3. **Silenced alerts are kept across a restart**, so a restart does not ring an alert the user already silenced.
+3. **Silence is a snooze of 30 minutes, and it survives a restart.** When the window ends and the alert is still
+   active, it rings again. Not chosen: silence until the alert ends (an occlusion could stay unheard for hours), and
+   a silence that a restart forgets (a restart would ring an alert the user had just silenced).
 4. **The name is `PumpAlerts`.**

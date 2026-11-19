@@ -497,10 +497,10 @@ How the Carelevo plugin, its 6 view models and 15 screens went to commonMain whi
 - **`PumpDriverBucketTest` reads driver keys from annotations.** It now also reads them from `@PumpDriver` providers in
   binding containers. A new driver registered this way needs nothing more.
 - **Put what the platform does behind small ports in the driver**, each with the Android implementation in androidMain:
-  foreground state (`CarelevoAppForeground`), the phone notification (`CarelevoSystemNotifier`), the Bluetooth check
-  before pairing (`CarelevoBleReadyCheck`, a `@Composable` member that wraps `BlePreCheckHost` on Android). The
-  Bluetooth adapter state needs no port: read `BleCentral.adapterState` from the driver's own central, which also covers
-  the emulated patch.
+  foreground state (`CarelevoAppForeground`), the Bluetooth check before pairing (`CarelevoBleReadyCheck`, a
+  `@Composable` member that wraps `BlePreCheckHost` on Android). The Bluetooth adapter state needs no port: read
+  `BleCentral.adapterState` from the driver's own central, which also covers the emulated patch. Alarms and the phone
+  notification need no port either: they go through `PumpAlerts` (`_docs/PUMP_DESIGN.md`, section 2).
 - **What failed to compile, and the fix:** `ResourceHelper` → `TextResolver` (also in view models and the notifier);
   `AnnotatedString.fromHtml` → `htmlToAnnotatedString()` from `:core:ui` (knows only `<b>` and `<br>`); `LiveData` →
   `StateFlow`; `java.util.concurrent.atomic.AtomicBoolean` → `kotlin.concurrent.atomics.AtomicBoolean` with
