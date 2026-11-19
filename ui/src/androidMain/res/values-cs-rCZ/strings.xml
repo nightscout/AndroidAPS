@@ -224,7 +224,6 @@
     <string name="a11y_prediction_name_uam" comment="Spoken name of the prediction for a meal the user did not enter. UAM is the term AAPS users know.">Předpověď UAM</string>
     <string name="a11y_prediction_name_zt" comment="Spoken name of the prediction for what happens with no insulin at all, the zero-temp curve.">Předpověď s nulovým bazálem</string>
     <string name="a11y_badge_attention" comment="Screen-reader state of a navigation button that carries a warning badge. On screen the badge is a dot or an exclamation mark, which a screen reader cannot see at all.">potřebná akce</string>
-    <string name="a11y_badge_available" comment="Screen-reader state of a navigation button whose badge counts what the user can start right now. %1$d=the count. Example: 3 available">%1$d dostupné</string>
     <string name="a11y_objectives_progress" comment="Screen-reader state of the Objectives navigation button, whose badge shows progress. %1$d=objectives finished, %2$d=objectives in total. Example: 9 of 10 done">%1$d z %2$d hotovo</string>
     <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Spustit</string>
     <string name="add_new_profile">Přidat nový profil</string>
