@@ -484,11 +484,15 @@ Collected so nobody pays for them twice. All were found by tests or a crash, not
 
 ## Open
 
-### Six bindings stand between the NS client and iOS
+### DONE: nothing stands between the NS client and iOS any more
 
-Re-measured with the probe procedure above, against the current tree. The earlier list of twelve was
-out of date in both directions - some entries had been cleared, and two of the claims in it were
-wrong. What is actually left:
+**Re-measured 2026-11-19.** This section was called "Six bindings stand between the NS client and
+iOS". Five of the six are done and the sixth is deliberate, so the list below is a record rather
+than work. `UiInteraction` was the last one, cleared by step 6 of `_docs/PUMP_DESIGN.md`.
+
+It is kept because the corrections under the table are still worth reading: two of the entries the
+earlier list of twelve named as missing were never missing at all, for a reason that will happen
+again.
 
 | Missing binding | Whose | Note |
 |---|---|---|
@@ -991,16 +995,41 @@ iOS and the JVM desktop target from the one source, unchanged apart from that pa
 `:ios:shell:compileKotlinIosArm64` is green without it, so the binding really is satisfied by the
 shared class.
 
-### What `AapsAppRoot` still needs beyond that
+### DONE: `AapsAppRoot` is hosted on iOS, and a master graph resolves as well
 
-`ClientControlActionDispatcher` resolves, but pulling it in drags every remaining blocker with it -
-`Autotune`, `ExportPasswordDataStore`, `ImportExportPrefs`, `IobCobCalculator`, `NsSocketFactory`
-and `UiInteraction` - because it reaches the loop and the NS client. So hosting the real Compose
-root on iOS is gated on that whole set, not on any single one.
+This section used to say that pulling in `ClientControlActionDispatcher` drags every remaining
+blocker with it, so hosting the real Compose root on iOS was gated on the whole set. Do not plan
+from that. `AapsAppRoot` is called in `ios/shell/.../ui/AapsAppHost.kt`, and
+`ClientControlActionDispatcher` is one of the accessors on `IosAppGraph`.
 
-`ExportPasswordDataStore` is worth pulling forward in that list: `AapsAppRoot` takes it directly, so
-it is now on the path to running the real UI on iOS rather than only affecting the export screen.
-The request for it is in the section above.
+**Measured 2026-11-19 with the probe procedure above, and the answer is wider than this section.**
+Nothing a *master* build needs is missing either. `IosProbeGraph` was given accessors for `Loop`,
+`LoopPlugin`, the three openAPS plugins, `CommandQueue`, `CarelevoPumpPlugin`, `ObjectivesPlugin`,
+`StorageConstraintPlugin`, `IobCobCalculator` and the `@APS` plugin map, and
+`:ios:shell:compileKotlinIosSimulatorArm64` was green. The one binding it reported, `PumpEmulators`,
+was a gap in the probe and not in the app - `IosAppGraph` already provides it - so the probe needs
+that one provider copied in before it can answer this question again.
+
+So what keeps iOS a follower is not a missing implementation. It is three answers in
+`IosClientConfig` - `APS = false`, `PUMPDRIVERS = false`, `AAPSCLIENT = true` - and what reads them:
+
+- `AapsAppHost` merges the `@PumpDriver` bucket only when `PUMPDRIVERS`, and the `@NotNSClient`
+  bucket only when `!AAPSCLIENT`. CareLevo is fully wired through `CarelevoIosRegistration`, with
+  all three ports in place, and is invisible for that reason alone.
+- There is **no `@APS` bucket accessor on `IosAppGraph` at all**, so that one has to be added and
+  not merely merged. `LoopPlugin` and the three openAPS plugins are unqualified, so a follower
+  already builds them.
+- That bucket would hold two of its three plugins on iOS: `SignatureVerifierPlugin` is in
+  `androidMain`, so a master iOS build has no signature constraint. Decide whether that is right -
+  there is no APK to verify - or a gap, before shipping one.
+
+Three entries filed elsewhere as deliberate become real bugs the day `AAPSCLIENT` is false. Read
+them before flipping the flag, not after: `IosSceneExpiryScheduler.schedule` only logs,
+`RoleBranch.prepare`/`commit` take the send-to-master path instead of calling the local lambda, and
+`IosAppStartup.run()` does not wait for plugin start jobs where Android does.
+
+**A resolving graph is not a working app.** The probe proves Metro can build these objects. It says
+nothing about whether the loop runs, the patch connects, or the UI offers either.
 
 ## Fixed on the iOS side: `is24HourClock` answered wrongly in Traditional Chinese
 

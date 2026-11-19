@@ -18,11 +18,20 @@ that need a decision.
 
 ## 1. A user would notice these
 
-### Full-screen alarms only log
-`IosUiInteraction.runAlarm` calls the logger and returns. **Not the same thing as
-`setAudibleAlarm`**, which does play sound through `IosAlarmSoundPlayer` on `AVAudioPlayer` - the two
-were conflated before and the old file claimed iOS alarms were silent for ten days after they worked.
-What is missing is the full-screen alarm surface Android raises, not the sound.
+### FIXED: the alarm surface Android raises exists on iOS now
+This entry used to say `IosUiInteraction.runAlarm` only logs, and that the full-screen alarm surface
+was still missing. Both are wrong now, and reading them as current would mean redoing finished work.
+
+`IosUiInteraction` is deleted. `runAlarm` raises a `PumpAlert` with `PumpAlertLifetime.EVENT` through
+the one shared `UiInteractionImpl` in commonMain, so the app's own alarms are cards in the
+notification list exactly like a pump's alert. The screen is `PumpAlertScreen` in `ui/commonMain`,
+hosted on iOS as an overlay in `AapsAppHost` ahead of the protection gate - the same way
+`ErrorActivity` ignores application protection on Android. Step 6 of `_docs/PUMP_DESIGN.md`,
+2026-11-19.
+
+Sound was always a separate question, and `_docs/ios_blockers.md` answers it: the ramping player
+covers the foreground, a `UNNotificationSound` covers the background, and only breaking through
+silent and Focus still needs the Critical Alerts entitlement.
 
 ### A subscribe that never gets its ack leaves the client silently stalled
 Measured on 2026-10-05 against Nightscout 15.0.7, on the simulator and on an iPhone 15 Pro Max. The
@@ -72,6 +81,14 @@ app-switcher snapshot does not hold the PIN, and show the warning the screen can
 ---
 
 ## 2. Features not built yet
+
+**The big one is a full build.** iOS ships as a follower only: `IosClientConfig` answers
+`APS = false`, `PUMPDRIVERS = false`, `AAPSCLIENT = true`, so the app carries no pump and does not
+run the loop. Measured on 2026-11-19, no binding stands in the way - the loop, the three openAPS
+plugins, `CommandQueue` and the whole CareLevo driver all resolve on iOS today. What is missing is a
+build that says so, an `@APS` bucket accessor on `IosAppGraph`, and a third Xcode target; and three
+items in section 4 below stop being deliberate the day `AAPSCLIENT` is false. The measurement and
+the full gate list are in `_docs/ios_blockers.md`, under "DONE: `AapsAppRoot` is hosted on iOS".
 
 | What | Where | Note |
 |---|---|---|
