@@ -1,11 +1,5 @@
 package app.aaps.plugins.source
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.os.Handler
-import android.os.HandlerThread
-import android.os.PowerManager
-import android.os.SystemClock
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.GV
@@ -25,63 +19,83 @@ import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.VirtualPump
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginRandomBg
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.utils.isRunningTest
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import kotlinx.coroutines.runBlocking
-import java.security.SecureRandom
-import java.util.Calendar
-import java.util.GregorianCalendar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.random.Random
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Instant
+import kotlin.time.TimeSource
 import dev.zacsweers.metro.IntKey as MetroIntKey
 
+/**
+ * A made-up glucose source for testing and demonstration: a slow sine wave between `MIN` and `MAX`,
+ * one reading every few minutes, with some noise and the odd carb entry when "randomize" is on.
+ *
+ * Shared code on every platform. It was Android-only before, only because of how it kept time: a
+ * `Handler` thread, a `GregorianCalendar` and a wake lock. The timer is a coroutine now and the local
+ * time comes from `kotlinx-datetime`, which gives the same minute and hour the calendar did, so the
+ * readings are the same as before. The wake lock is the one part that differs by platform, and sits
+ * behind [RandomBgWakeLock].
+ */
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @MetroIntKey(550)
 @SingleIn(AppScope::class)
 @Inject
 class RandomBgPlugin(
-    private val context: Context,
-    rh: ResourceHelper,
+    rh: TextResolver,
     aapsLogger: AAPSLogger,
     private val persistenceLayer: PersistenceLayer,
     private val virtualPump: VirtualPump,
     preferences: Preferences,
     config: Config,
     notificationManager: NotificationManager,
+    private val dateUtil: DateUtil,
+    private val appScope: CoroutineScope,
+    private val wakeLock: RandomBgWakeLock
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .composeContent { plugin ->
             BgSourceComposeContent(
-                title = rh.gs(R.string.random_bg)
+                title = rh.gs(SourceStrings.random_bg)
             )
         }
         .icon(IcPluginRandomBg)
-        .pluginName(TextRef.AndroidRes(R.string.random_bg))
+        .pluginName(SourceStrings.random_bg)
         .preferencesVisibleInSimpleMode(false)
-        // A debug BG source: only in a test, or on the virtual pump in an engineering build, or with the
+        // A debug BG source: only on the virtual pump in an engineering build, or with the
         // unfinished-features option file. Forced off otherwise. This is the one enforcement that reads
         // something other than build config - `virtualPump.isEnabled()` changes when the user picks another
         // pump - which is why the virtual pump must never gain an enforcement that reads this plugin back.
+        //
+        // It also allowed itself inside an instrumented test, through `isRunningTest()`. That was its only
+        // caller, and no test relied on it: the tests that need random readings write them themselves.
         .enforce(EnforcedState.Disabled) {
-            !(isRunningTest() || virtualPump.isEnabled() && config.isEngineeringMode() || config.isEnabled(ExternalOptions.UNFINISHED_MODE))
+            !(virtualPump.isEnabled() && config.isEngineeringMode() || config.isEnabled(ExternalOptions.UNFINISHED_MODE))
         }
-        .description(TextRef.AndroidRes(R.string.description_source_random_bg)),
+        .description(SourceStrings.description_source_random_bg),
     aapsLogger = aapsLogger,
     rh = rh,
     preferences = preferences,
@@ -89,10 +103,10 @@ class RandomBgPlugin(
     notificationManager = notificationManager
 ), BgSource {
 
+    /** The refresh loop while the plugin runs, null while it is stopped. */
     @VisibleForTesting
-    var handler: Handler? = null
-    private var refreshLoop: Runnable
-    private var wakeLock: PowerManager.WakeLock? = null
+    internal var job: Job? = null
+    private var held: RandomBgWakeLock.Held? = null
     private var interval = 5L // minutes
 
     companion object {
@@ -102,91 +116,95 @@ class RandomBgPlugin(
         const val PERIOD = 120.0 // minutes
     }
 
-    init {
-        refreshLoop = Runnable {
-            updateInterval()
-            handler?.postDelayed(refreshLoop, T.mins(interval).msecs())
-            handleNewData()
-        }
-    }
-
     private fun updateInterval() {
         interval = preferences.get(IntKey.BgSourceRandomInterval).toLong()
     }
 
-    private val disposable = CompositeDisposable()
-
-    @SuppressLint("WakelockTimeout")
     override suspend fun onStart() {
         super.onStart()
-        handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+        stopLoop()
         updateInterval()
-        val cal = GregorianCalendar()
-        cal[Calendar.MILLISECOND] = 0
-        cal[Calendar.SECOND] = 0
-        cal[Calendar.MINUTE] -= cal[Calendar.MINUTE] % interval.toInt()
-        handler?.postAtTime(refreshLoop, SystemClock.uptimeMillis() + cal.timeInMillis + T.mins(interval).msecs() + 1000 - System.currentTimeMillis())
-        disposable.clear()
-        wakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager?)?.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AAPS:RandomBgPlugin")
-        wakeLock?.acquire()
+        // The first reading lands one second after the next whole interval, as it always has.
+        val firstAt = roundedToInterval(dateUtil.now()) + T.mins(interval).msecs() + 1000
+        job = appScope.launch {
+            delay(firstAt - dateUtil.now())
+            while (isActive) {
+                updateInterval()
+                // Timed from before the work, so a slow insert does not push every later reading back.
+                val started = TimeSource.Monotonic.markNow()
+                handleNewData()
+                delay(T.mins(interval).msecs().milliseconds - started.elapsedNow())
+            }
+        }
+        held = wakeLock.acquire()
     }
 
     override suspend fun onStop() {
         super.onStop()
-        handler?.removeCallbacksAndMessages(null)
-        handler?.looper?.quit()
-        handler = null
-        if (wakeLock?.isHeld == true) wakeLock?.release()
+        stopLoop()
     }
 
+    private fun stopLoop() {
+        job?.cancel()
+        job = null
+        held?.release()
+        held = null
+    }
 
-    @SuppressLint("CheckResult")
     @VisibleForTesting
-    fun handleNewData() {
+    internal suspend fun handleNewData() {
         if (!isEnabled()) return
 
         val randomize = preferences.get(BooleanKey.BgSourceRandomBgRandomize)
-        val cal = GregorianCalendar()
-        val currentMinute = cal[Calendar.MINUTE] + (cal[Calendar.HOUR_OF_DAY] % 2) * 60
+        val now = dateUtil.now()
+        val local = Instant.fromEpochMilliseconds(now).toLocalDateTime(TimeZone.currentSystemDefault())
+        val currentMinute = local.minute + (local.hour % 2) * 60
         val sineBgMgdl = MIN + ((MAX - MIN) + (MAX - MIN) * sin(currentMinute / PERIOD * 2 * PI)) / 2
         val bgMgdl =
-            if (randomize) sineBgMgdl + (SecureRandom().nextDouble() - 0.5) * (MAX - MIN) * 0.08 * interval
+            if (randomize) sineBgMgdl + (Random.nextDouble() - 0.5) * (MAX - MIN) * 0.08 * interval
             else sineBgMgdl
 
-        cal[Calendar.MILLISECOND] = 0
-        cal[Calendar.SECOND] = 0
-        cal[Calendar.MINUTE] -= cal[Calendar.MINUTE] % interval.toInt()
+        val rounded = roundedToInterval(now)
         val timestamp =
-            if (randomize) cal.timeInMillis - T.secs(40).msecs() + SecureRandom().nextInt(T.secs(40).msecs().toInt())
-            else cal.timeInMillis
+            if (randomize) rounded - T.secs(40).msecs() + Random.nextInt(T.secs(40).msecs().toInt())
+            else rounded
         val trend =
-            if (randomize) TrendArrow.entries.shuffled().first()
+            if (randomize) TrendArrow.entries.random()
             else trendFromSineSlope(currentMinute)
-        val glucoseValues = mutableListOf<GV>()
-        glucoseValues += GV(
-            timestamp = timestamp,
-            value = bgMgdl,
-            raw = 0.0,
-            noise = null,
-            trendArrow = trend,
-            sourceSensor = SourceSensor.RANDOM
+        val glucoseValues = listOf(
+            GV(
+                timestamp = timestamp,
+                value = bgMgdl,
+                raw = 0.0,
+                noise = null,
+                trendArrow = trend,
+                sourceSensor = SourceSensor.RANDOM
+            )
         )
-        runBlocking {
-            persistenceLayer.insertCgmSourceData(Sources.Random, glucoseValues, emptyList(), null)
-        }
+        persistenceLayer.insertCgmSourceData(Sources.Random, glucoseValues, emptyList(), null)
 
         //  Generate carbs around once in 4 hours (skipped in deterministic mode)
-        if (randomize && SecureRandom().nextDouble() <= 0.02) {
+        if (randomize && Random.nextDouble() <= 0.02) {
             val ca = CA(
-                timestamp = cal.timeInMillis + T.mins(1).msecs(),
+                timestamp = rounded + T.mins(1).msecs(),
                 isValid = true,
-                amount = SecureRandom().nextInt(50).toDouble(),
+                amount = Random.nextInt(50).toDouble(),
                 duration = 0,
                 notes = "Random carbs",
                 ids = IDs()
             )
-            runBlocking { persistenceLayer.insertOrUpdateCarbs(ca, Action.TREATMENT, Sources.CarbDialog, ca.notes) }
+            persistenceLayer.insertOrUpdateCarbs(ca, Action.TREATMENT, Sources.CarbDialog, ca.notes)
         }
+    }
+
+    /**
+     * [millis] with seconds and milliseconds cleared, and the local minute rounded down to the interval -
+     * what the calendar arithmetic did before. Seconds are the same in every time zone, and the minute is
+     * read in local time, so this gives the same result, half-hour time zones included.
+     */
+    private fun roundedToInterval(millis: Long): Long {
+        val local = Instant.fromEpochMilliseconds(millis).toLocalDateTime(TimeZone.currentSystemDefault())
+        return millis - millis.mod(T.mins(1).msecs()) - (local.minute % interval) * T.mins(1).msecs()
     }
 
     // Derivative of MIN + (MAX - MIN) * (1 + sin(currentMinute / PERIOD * 2π)) / 2 with respect to minute.
@@ -205,7 +223,7 @@ class RandomBgPlugin(
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "bg_source_upload_settings",
-        titleResId = R.string.random_bg,
+        title = SourceStrings.random_bg,
         items = listOf(
             BooleanKey.BgSourceUploadToNs,
             IntKey.BgSourceRandomInterval,
