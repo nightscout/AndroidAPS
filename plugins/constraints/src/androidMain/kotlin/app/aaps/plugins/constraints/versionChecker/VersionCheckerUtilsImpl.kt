@@ -198,22 +198,25 @@ class VersionCheckerUtilsImpl(
         return true
     }
 
+    /**
+     * The expiry warnings keep their own time ([VersionCheckerLongKey.LastExpiredWarning]), apart from the new-version
+     * warning ([VersionCheckerLongKey.LastVersionCheckWarning]), as before the remote config: with one time for both,
+     * a new-version warning held back the expiry warning, and the other way round.
+     */
     private fun onExpireDateDetected(currentVersion: String, endDate: Long) {
         val now = dateUtil.now()
-        if (dateUtil.now() > endDate && shouldWarnAgain()) {
-            // store last notification time
-            preferences.put(VersionCheckerLongKey.LastVersionCheckWarning, now)
-            //notify
+        if (now > endDate && shouldWarnAgain()) {
+            preferences.put(VersionCheckerLongKey.LastExpiredWarning, now)
             notificationManager.post(NotificationId.VERSION_EXPIRE, ConstraintsStrings.application_expired)
-        } else if (dateUtil.isAfterNoon() && now > preferences.get(VersionCheckerLongKey.LastVersionCheckWarning) + warnEvery(endDate)) {
+        } else if (dateUtil.isAfterNoon() && now > preferences.get(VersionCheckerLongKey.LastExpiredWarning) + warnEvery(endDate)) {
             aapsLogger.debug(LTag.CORE, rh.gs(ConstraintsStrings.version_expire, currentVersion, dateUtil.dateString(endDate)))
-            notificationManager.post(NotificationId.VERSION_EXPIRE, ConstraintsStrings.version_expire.withArgs(currentVersion,dateUtil.dateString(endDate)), level = NotificationLevel.LOW)
+            notificationManager.post(NotificationId.VERSION_EXPIRE, ConstraintsStrings.version_expire.withArgs(currentVersion, dateUtil.dateString(endDate)), level = NotificationLevel.LOW)
             preferences.put(VersionCheckerLongKey.LastExpiredWarning, now)
         }
     }
 
     private fun shouldWarnAgain() =
-        dateUtil.now() > preferences.get(VersionCheckerLongKey.LastVersionCheckWarning) + warnEvery(expiration = preferences.get(LongComposedKey.AppExpiration, config().VERSION_NAME))
+        dateUtil.now() > preferences.get(VersionCheckerLongKey.LastExpiredWarning) + warnEvery(expiration = preferences.get(LongComposedKey.AppExpiration, config().VERSION_NAME))
 
     private fun String?.toNumberList() =
         this?.numericVersionPart().takeIf { !it.isNullOrBlank() }?.split(".")?.map { it.toInt() }

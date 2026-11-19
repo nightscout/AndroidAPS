@@ -1,12 +1,15 @@
 package app.aaps.plugins.constraints.signatureVerifier
 
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionDefinition
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.constraints.versionChecker.VersionCheckerUtilsImpl
+import app.aaps.plugins.constraints.versionChecker.keys.VersionCheckerLongKey
 import app.aaps.plugins.constraints.versionChecker.numericVersionPart
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
@@ -24,6 +27,11 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyVararg
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 @Suppress("SpellCheckingInspection")
@@ -106,6 +114,26 @@ class VersionCheckerUtilsKtTest : TestBase() {
         fetchFromGithub { """[{"minAndroid":30,"maxAndroid":99,"supported":"9.9.9"}]""" }
 
         assertThat(versionCheckerUtils.definition.text("38")).isEqualTo("3.3.1.4")
+    }
+
+    /** The two warnings had one time between them, so a new-version warning held back the expiry warning. */
+    @Test
+    fun `an expiry warning is not held back by a new-version warning just given`() {
+        val devConfig = mock<Config> {
+            on { isDev() } doReturn true
+            on { VERSION_NAME } doReturn "3.3.1.3"
+        }
+        whenever(config.invoke()).thenReturn(devConfig)
+        whenever(dateUtil.isAfterNoon()).thenReturn(true)
+        whenever(rh.gs(any<TextRef>(), anyVararg())).thenReturn("expires")
+        val now = dateUtil.now()
+        whenever(preferences.get(VersionCheckerLongKey.LastVersionCheckWarning)).thenReturn(now)
+        whenever(preferences.get(VersionCheckerLongKey.LastExpiredWarning)).thenReturn(0L)
+
+        versionCheckerUtils.triggerCheckVersion()
+
+        val expiryPosted = Mockito.mockingDetails(notificationManager).invocations.any { it.method.name == "post" && it.arguments[0] == NotificationId.VERSION_EXPIRE }
+        assertThat(expiryPosted).isTrue()
     }
 
     @Test
