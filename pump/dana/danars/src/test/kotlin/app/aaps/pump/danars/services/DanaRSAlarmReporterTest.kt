@@ -1,6 +1,8 @@
 package app.aaps.pump.danars.services
 
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -68,5 +70,13 @@ class DanaRSAlarmReporterTest : TestBase() {
 
         verify(notificationManager).post(eq(NotificationId.DANA_PUMP_ALARM), eq("Occlusion"), any(), any<Int>(), anyOrNull(), any(), anyOrNull())
         verifyBlocking(pumpSync) { insertAnnouncement(eq("Occlusion"), anyOrNull(), anyOrNull(), eq("CFL00001TJ")) }
+    }
+
+    /** An URGENT card without a sound is silent: an occlusion was only a card. */
+    @Test
+    fun theAlarmRings() {
+        sut.report("Occlusion")
+
+        verify(notificationManager).post(eq(NotificationId.DANA_PUMP_ALARM), eq("Occlusion"), eq(NotificationLevel.URGENT), any<Int>(), eq(AlarmSound.ALARM), any(), anyOrNull())
     }
 }
