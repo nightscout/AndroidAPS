@@ -35,7 +35,8 @@ class WorkflowChainDataTest : TestBase() {
         bgDataReload = false,
         limitDataToOldestAvailable = false,
         triggeredByNewBG = false,
-        emitFinalProgress = false
+        emitFinalProgress = false,
+        liveWindow = false
     )
 
     private fun post() = PostCalculationData(

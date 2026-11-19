@@ -1,11 +1,15 @@
 package app.aaps.workflow
 
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.overview.OverviewData
+import app.aaps.core.interfaces.overview.liveGraphWindowEnd
+import kotlinx.datetime.TimeZone
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.time.Instant
 
 /**
- * Which phase may change the right edge of the graph window.
+ * Which phase may change the right edge of the graph window, and how a live run moves the window on.
  *
  * One function, and the failure it prevents is silent: a series that is merely two hours short still
  * draws, it just stops before the axis does. The rule it carries is in [keptEndTime] - the prepare
@@ -61,5 +65,78 @@ class GraphWindowTest {
     @Test
     fun `a zero horizon does not drag the end back to 1970`() {
         assertEquals(toTime, keptEndTime(0L, toTime))
+    }
+
+    // ---- moving the live window (#5614) ------------------------------------------------------------
+
+    private class Window(override var toTime: Long, override var fromTime: Long, override var endTime: Long) : OverviewData
+
+    /** 2026-11-18 11:25:07 UTC, the first reading after the gap in the issue. */
+    private val now = Instant.parse("2026-11-18T11:25:07Z")
+    private val endOfNowsHour = Instant.parse("2026-11-18T12:00:00Z").toEpochMilliseconds() + 100_000
+
+    @Test
+    fun `the live window ends at the next full hour plus 100 s`() {
+        assertEquals(endOfNowsHour, liveGraphWindowEnd(now, TimeZone.UTC))
+    }
+
+    /** Local hours: +05:30 does not line up with the UTC hour. */
+    @Test
+    fun `the live window ends at the next full local hour`() {
+        val zone = TimeZone.of("Asia/Kolkata") // 11:25 UTC is 16:55 there
+        assertEquals(Instant.parse("2026-11-18T11:30:00Z").toEpochMilliseconds() + 100_000, liveGraphWindowEnd(now, zone))
+    }
+
+    /**
+     * The window of the run before the gap ended at 10:01:40. Not moved, the readings after it were not picked,
+     * the newest one too.
+     */
+    @Test
+    fun `a window left behind by the clock is moved on and keeps its width`() {
+        val oldToTime = Instant.parse("2026-11-18T10:01:40Z").toEpochMilliseconds()
+        val window = Window(toTime = oldToTime, fromTime = oldToTime - hours(22), endTime = oldToTime + hours(2))
+
+        window.moveLiveWindowTo(now, TimeZone.UTC)
+
+        assertEquals(endOfNowsHour, window.toTime)
+        assertEquals(endOfNowsHour - hours(22), window.fromTime)
+        // The old horizon is behind the new end: widened to it, not kept behind it
+        assertEquals(endOfNowsHour, window.endTime)
+    }
+
+    @Test
+    fun `a horizon past the new window end is kept`() {
+        val oldToTime = endOfNowsHour - hours(1)
+        val horizon = endOfNowsHour + hours(2)
+        val window = Window(toTime = oldToTime, fromTime = oldToTime - hours(24), endTime = horizon)
+
+        window.moveLiveWindowTo(now, TimeZone.UTC)
+
+        assertEquals(endOfNowsHour, window.toTime)
+        assertEquals(horizon, window.endTime)
+    }
+
+    /** The window of this hour, as the run before left it: nothing to do. */
+    @Test
+    fun `a window that is up to date is not changed`() {
+        val window = Window(toTime = endOfNowsHour, fromTime = endOfNowsHour - hours(23), endTime = endOfNowsHour + hours(3))
+
+        window.moveLiveWindowTo(now, TimeZone.UTC)
+
+        assertEquals(endOfNowsHour, window.toTime)
+        assertEquals(endOfNowsHour - hours(23), window.fromTime)
+        assertEquals(endOfNowsHour + hours(3), window.endTime)
+    }
+
+    /** After a clock or time zone change back: moving the window back is left to the post pass, as before. */
+    @Test
+    fun `a window ahead of the clock is not moved back`() {
+        val ahead = endOfNowsHour + hours(5)
+        val window = Window(toTime = ahead, fromTime = ahead - hours(24), endTime = ahead)
+
+        window.moveLiveWindowTo(now, TimeZone.UTC)
+
+        assertEquals(ahead, window.toTime)
+        assertEquals(ahead - hours(24), window.fromTime)
     }
 }
