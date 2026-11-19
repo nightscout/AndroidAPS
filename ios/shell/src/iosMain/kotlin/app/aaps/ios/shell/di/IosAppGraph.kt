@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.di.APS
 import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -185,6 +186,22 @@ interface IosAppGraph : MetroViewModelMultibindings {
     @Multibinds(allowEmpty = true)
     @NotNSClient
     val contributedNotNsClientPlugins: Map<Int, PluginBase>
+
+    /**
+     * Plugins only the full app gets, merged when `config.APS` - the same condition `:app` uses.
+     *
+     * On iOS this holds `ObjectivesPlugin` and `StorageConstraintPlugin`. Android has a third,
+     * `SignatureVerifierPlugin`, which is Android-only: it checks the APK signature, and there is no
+     * APK here. `allowEmpty` for the same reason as the buckets above, so the graph still builds if
+     * both ever move elsewhere.
+     *
+     * The loop and the three openAPS plugins are not in here. They are unqualified, so they are in
+     * [contributedPlugins] and a follower builds them too; what keeps a follower from looping is
+     * `APS`, not which bucket a plugin sits in.
+     */
+    @Multibinds(allowEmpty = true)
+    @APS
+    val contributedApsPlugins: Map<Int, PluginBase>
     val automationRuntime: AutomationRuntime
     // The periodic housekeeping shared with Android, and the scope the shell drives it on.
     val periodicMaintenance: PeriodicMaintenance

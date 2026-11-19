@@ -11,10 +11,13 @@
 // Signing & Capabilities tab also creates the signing certificate, which does not
 // exist until you do that.
 //
-// The include below is optional, the `?` is what makes it so. A clone without that
-// file still builds for the simulator: a simulator build is signed ad hoc, which
-// needs no team. Only a device build needs one, and without it the build stops with
-// "requires a development team".
+// Every build needs a team now, the simulator too, because the team id is part of the
+// bundle identifier (see AAPS_CLIENT_ID_PREFIX below). This is the way Trio does it.
+// Without one the "Build shared framework" step stops with an error naming this file.
+//
+// The include stays optional all the same, the `?` is what makes it so. A required
+// include that is missing does NOT fail the build: Xcode drops this whole file with a
+// warning and carries on, which would lose the version numbers and every setting here.
 //
 // A simulator build gets its entitlements from Simulator.entitlements rather than
 // from a profile, because the Keychain refuses to work without them. That file says
@@ -23,6 +26,20 @@
 // This file itself must stay committed. Xcode treats a missing base configuration
 // as an error, not a warning, so pointing the project straight at an ignored file
 // would break every fresh clone.
+// The start of the clients' bundle identifiers. Somebody who builds a client themselves
+// gets their own team id in it - app.aaps.<teamid>.client and app.aaps.<teamid>.client2 -
+// which keeps every builder's app apart and lets Xcode register the App ID by itself.
+//
+// app.aaps.client and app.aaps.client2 are the project's own published apps in App Store
+// Connect. A build that publishes them puts this line in Signing.local.xcconfig, as
+// .github/workflows/ios-testflight.yml does:
+//
+//     AAPS_CLIENT_ID_PREFIX = app.aaps
+//
+// The full app has no such switch. It is always app.aaps.<teamid>.full, set on the target.
+// Set before the include so that the local file can override it.
+AAPS_CLIENT_ID_PREFIX = app.aaps.$(DEVELOPMENT_TEAM)
+
 #include? "Signing.local.xcconfig"
 
 // The generated version numbers, from :ios:shell:generateIosVersionXcconfig. Optional for the same

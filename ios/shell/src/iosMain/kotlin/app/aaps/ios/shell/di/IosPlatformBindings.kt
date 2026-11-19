@@ -60,7 +60,7 @@ object IosPlatformBindings {
     @SingleIn(AppScope::class)
     fun dateUtil(): DateUtil = DateUtilImpl(IosDateFormatPlatform())
 
-    /** What kind of build this is. An iOS build is a follower client, not a loop. */
+    /** What kind of build this is - the full app or a client - read from the bundle identifier. */
     @Provides
     @SingleIn(AppScope::class)
     fun config(): Config = IosClientConfig()

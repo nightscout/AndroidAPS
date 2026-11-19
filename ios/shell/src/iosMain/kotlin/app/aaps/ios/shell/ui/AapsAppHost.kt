@@ -356,13 +356,14 @@ private fun startApp(nsSocketFactory: NsSocketFactory, crashReporter: CrashRepor
         // contributed by both, is invisible to Metro. `mergePlugins` is what notices, and it names the
         // bucket a clashing plugin came from.
         //
-        // The buckets are gated on the same flags `:app` uses, and that is not decoration. A follower
-        // has `PUMPDRIVERS = false`, and merging that bucket regardless would list CareLevo in
-        // AAPSClient - offering the user a pump the build cannot drive. The `@APS` bucket joins here
-        // when a build with `APS = true` exists; while it is false for every iOS target there is
-        // nothing to merge.
+        // The buckets are gated on the same flags `:app` uses, in the same order, and that is not
+        // decoration. A follower has `PUMPDRIVERS = false`, and merging that bucket regardless would
+        // list CareLevo in AAPSClient - offering the user a pump the build cannot drive. The flags
+        // come from the bundle identifier, so the `AAPS` target is the only one that merges the
+        // `@APS` and `@PumpDriver` buckets.
         val sources = buildList {
             add(PluginSource("Metro", graph.contributedPlugins))
+            if (graph.config.APS) add(PluginSource("Metro @APS", graph.contributedApsPlugins))
             if (graph.config.PUMPDRIVERS) add(PluginSource("Metro @PumpDriver", graph.contributedPumpDriverPlugins))
             if (!graph.config.AAPSCLIENT) add(PluginSource("Metro @NotNSClient", graph.contributedNotNsClientPlugins))
         }
@@ -647,8 +648,8 @@ private fun AapsApp(app: StartedApp) {
                     pluginPermissions = graph.pluginPermissions,
                     // Passed so the rules can be read and edited here. A follower edits definitions
                     // and the master runs them - and `start()` is what the follower needs to do its
-                    // half: it loads the rules and keeps them in step with the master. `IosAppStartup`
-                    // calls it, as `MainApp` does on every flavour.
+                    // half: it loads the rules and keeps them in step with the master. `AppStartSequence`
+                    // calls it, on every platform and every flavour.
                     //
                     // This does not give this phone the power to fire anything. `start()` returns
                     // before the processing loop when `config.APS` is false, and `runEvent` - the one

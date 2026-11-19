@@ -1010,23 +1010,26 @@ Nothing a *master* build needs is missing either. `IosProbeGraph` was given acce
 was a gap in the probe and not in the app - `IosAppGraph` already provides it - so the probe needs
 that one provider copied in before it can answer this question again.
 
-So what keeps iOS a follower is not a missing implementation. It is three answers in
-`IosClientConfig` - `APS = false`, `PUMPDRIVERS = false`, `AAPSCLIENT = true` - and what reads them:
+So what kept iOS a follower was not a missing implementation. It was three fixed answers in
+`IosClientConfig` - `APS = false`, `PUMPDRIVERS = false`, `AAPSCLIENT = true` - and what read them.
 
-- `AapsAppHost` merges the `@PumpDriver` bucket only when `PUMPDRIVERS`, and the `@NotNSClient`
-  bucket only when `!AAPSCLIENT`. CareLevo is fully wired through `CarelevoIosRegistration`, with
-  all three ports in place, and is invisible for that reason alone.
-- There is **no `@APS` bucket accessor on `IosAppGraph` at all**, so that one has to be added and
-  not merely merged. `LoopPlugin` and the three openAPS plugins are unqualified, so a follower
-  already builds them.
-- That bucket would hold two of its three plugins on iOS: `SignatureVerifierPlugin` is in
-  `androidMain`, so a master iOS build has no signature constraint. Decide whether that is right -
-  there is no APK to verify - or a gap, before shipping one.
+**Done the same day: the `AAPS` target is the full app.** `IosClientConfig` now reads which build it
+is from the bundle identifier (`flavorFor`), with the same expressions as Android's `ConfigImpl`, and
+`AapsAppHost` merges the `@APS` and `@PumpDriver` buckets only when the build asks for them. CareLevo
+was fully wired through `CarelevoIosRegistration` already and was invisible for that reason alone.
+`IosAppGraph` gained the `@APS` accessor it never had. On iOS that bucket holds two plugins of three:
+`SignatureVerifierPlugin` is Android-only, and whether the full app should have an equivalent is not
+decided.
 
-Three entries filed elsewhere as deliberate become real bugs the day `AAPSCLIENT` is false. Read
-them before flipping the flag, not after: `IosSceneExpiryScheduler.schedule` only logs,
-`RoleBranch.prepare`/`commit` take the send-to-master path instead of calling the local lambda, and
-`IosAppStartup.run()` does not wait for plugin start jobs where Android does.
+Reading the code rather than the lists turned up one gate that would have been skipped:
+`isEngineeringModeOrRelease()` was a fixed `true`, which is right for a follower and wrong for the full
+app - `SafetyPlugin` uses it to keep a development build from closing the loop. It follows Android now.
+
+An earlier version of this section said three entries filed as deliberate would become bugs once
+`AAPSCLIENT` was false. Two of the three were already solved: `IosSceneExpiryScheduler` is a real
+implementation, and the shared `AppStartSequence` waits for plugin start off the main thread. The one
+real gap on the full app is the keep-alive section above - nothing on iOS calls `KeepAliveRunner`, so
+there is no pump-unreachable alarm yet. `_docs/ios_todo.md` section 2 keeps the current list.
 
 **A resolving graph is not a working app.** The probe proves Metro can build these objects. It says
 nothing about whether the loop runs, the patch connects, or the UI offers either.

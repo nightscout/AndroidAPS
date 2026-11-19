@@ -23,12 +23,14 @@ import platform.UIKit.UIDevice
 /**
  * What kind of build this is, answered for iOS.
  *
- * On Android these values come from the Gradle flavour: `full`, `pumpcontrol`, `aapsclient`. iOS
- * builds only the client today, so the answers are fixed rather than generated - the app has no
- * pump drivers and does not run the loop, which is exactly what `AAPSCLIENT` means.
+ * On Android these values come from the Gradle flavour: `full`, `pumpcontrol`, `aapsclient`. iOS has
+ * no flavours - one Kotlin framework is linked into every target - so the answer is read from the
+ * bundle identifier instead, through [flavorFor]. The `AAPS` target is the full app: it runs the loop
+ * and drives a pump. `AAPSClient` and `AAPSClient2` are followers. There is no `pumpcontrol` target.
  *
  * This is a real implementation, not a stand-in. Getting [APS] or [PUMPDRIVERS] wrong here would
- * make shared code offer features the app cannot perform.
+ * make shared code offer features the app cannot perform - or, the dangerous way round, let a
+ * follower run the loop.
  */
 class IosClientConfig(
     override val VERSION_NAME: String = GeneratedBuildInfo.VERSION,
@@ -46,15 +48,8 @@ class IosClientConfig(
 
     override val SUPPORTED_NS_VERSION: Int = 150000
 
-    // No loop and no pump drivers on iOS: this is a follower.
-    override val APS: Boolean = false
-    override val PUMPCONTROL: Boolean = false
-    override val PUMPDRIVERS: Boolean = false
-
-    override val AAPSCLIENT: Boolean = true
-
     /**
-     * Which client this build is, worked out from the bundle it was built into.
+     * Which build this is, worked out from the bundle it was built into.
      *
      * Read rather than written down, for the same reason as [appName] and the app icon: one Kotlin
      * framework is linked into **both** AAPSClient and AAPSClient2, so a fixed answer here is wrong
@@ -63,9 +58,17 @@ class IosClientConfig(
      * one thing the tint exists to prevent.
      *
      * Derived through [FLAVOR] so the shape matches Android, where `ConfigImpl` compares
-     * `BuildConfig.FLAVOR` against the same three names.
+     * `BuildConfig.FLAVOR` against the same names.
      */
-    override val FLAVOR: String = clientFlavorFor(APPLICATION_ID)
+    override val FLAVOR: String = flavorFor(APPLICATION_ID)
+
+    // The same expressions as Android's `ConfigImpl`. They must stay below [FLAVOR]: Kotlin sets
+    // properties in the order they are written, so above it they would read FLAVOR before it is set
+    // and every one of them would quietly be false.
+    override val APS: Boolean = FLAVOR == "full"
+    override val PUMPCONTROL: Boolean = FLAVOR == "pumpcontrol"
+    override val PUMPDRIVERS: Boolean = FLAVOR == "full" || FLAVOR == "pumpcontrol"
+    override val AAPSCLIENT: Boolean = FLAVOR == "aapsclient" || FLAVOR == "aapsclient2" || FLAVOR == "aapsclient3"
 
     override val AAPSCLIENT1: Boolean = FLAVOR == "aapsclient"
     override val AAPSCLIENT2: Boolean = FLAVOR == "aapsclient2"
@@ -104,12 +107,11 @@ class IosClientConfig(
     /**
      * What the app calls itself, taken from the bundle it was built into.
      *
-     * Android sets `app_name` per flavour, and this build is a client, so the name is "AAPSClient" -
-     * not "AAPS", which is the name of the master. A follower claiming to be the master is exactly
-     * the confusion the flavour names exist to prevent.
+     * Android sets `app_name` per flavour: "AAPS" for the full app and "AAPSClient" for a follower. A
+     * follower claiming to be the master is exactly the confusion the flavour names exist to prevent.
      *
      * Read rather than written down, for the same reason as the app icon: one Kotlin framework is
-     * linked into both AAPSClient and AAPSClient2, and each target already sets its own
+     * linked into AAPS, AAPSClient and AAPSClient2, and each target already sets its own
      * `CFBundleDisplayName`. Asking the bundle therefore names the app that is really running, and
      * cannot disagree with the name under its icon on the home screen.
      *
@@ -187,13 +189,15 @@ class IosClientConfig(
     override fun isEngineeringMode(): Boolean = isEnabled(ExternalOptions.ENGINEERING_MODE)
 
     /**
-     * Always true, and correct rather than a shortcut.
+     * The same expression as Android, and a safety gate rather than a detail.
      *
-     * Android computes `if (!APS) true else isEngineeringMode() || !isDev()`. [APS] is false here
-     * because this is a follower, so that expression is true whatever the rest says. Written out
-     * rather than copied so it does not read as a stub.
+     * `SafetyPlugin.isClosedLoopAllowed` reads it: a development build of the full app may close the
+     * loop only in engineering mode. A follower has no loop to close, so it is always true there.
+     *
+     * This was a fixed `true` while iOS built followers only. Left that way, a Debug build of the full
+     * app would have closed the loop with that gate silently skipped.
      */
-    override fun isEngineeringModeOrRelease(): Boolean = true
+    override fun isEngineeringModeOrRelease(): Boolean = if (!APS) true else isEngineeringMode() || !isDev()
 
     /**
      * Read the same way Android does - by the presence of a file in the `extra` folder.
@@ -226,12 +230,19 @@ class IosClientConfig(
  * Separate and pure so it can be tested: the bundle identifier of a test binary is the test
  * binary's, so the real [IosClientConfig] can never observe anything but client 1 under test.
  *
- * Matched on the trailing `client<n>` rather than on a whole identifier, so it holds for both the
- * `app.aaps.client2` the targets use now and the older `info.nightscout.aapsclient2`. Client 1's
- * identifier is a prefix of the others, so the numbered ones are checked first. Anything
- * unrecognised is client 1, which keeps exactly one of the three flags true.
+ * Matched on the end of the identifier only, never the whole of it. The full app is
+ * `app.aaps.<teamid>.full`, and a client is `app.aaps.client2` when published or
+ * `app.aaps.<teamid>.client2` when somebody builds it themselves - the team id in the middle must
+ * not change the answer. The older `info.nightscout.aapsclient2` still matches too.
+ *
+ * The full app is matched strictly, on `.full` with the dot, and checked first. Getting this wrong
+ * the other way round - a follower taking itself for the full app - would let it run the loop and
+ * drive a pump, so anything that is not clearly the full app is a client. Client 1's identifier is a
+ * prefix of the others, so the numbered ones come before it, and anything unrecognised is client 1,
+ * which keeps exactly one of the flags true.
  */
-internal fun clientFlavorFor(bundleId: String): String = when {
+internal fun flavorFor(bundleId: String): String = when {
+    bundleId.endsWith(".full")   -> "full"
     bundleId.endsWith("client2") -> "aapsclient2"
     bundleId.endsWith("client3") -> "aapsclient3"
     else                         -> "aapsclient"

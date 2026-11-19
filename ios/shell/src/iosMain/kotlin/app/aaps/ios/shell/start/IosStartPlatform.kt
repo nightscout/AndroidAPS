@@ -61,9 +61,10 @@ class IosStartPlatform(
      * pre-snoozes the alarms immediately before calling this, which is what keeps a cold start from
      * raising "BG readings missed" for its own downtime (nightscout/AndroidAPS#5495).
      *
-     * A master iOS app will need more than this: `KeepAliveRunner.runOnce` on every wake rather than a
-     * timer, because iOS keeps nothing running between wakes. See the keep-alive section of
-     * `_docs/ios_blockers.md`. Until this build drives a pump there is nothing here to decide.
+     * **Not enough for the full app, which drives a pump.** It needs `KeepAliveRunner.runOnce` on every
+     * wake rather than a timer, because iOS keeps nothing running between wakes - and until that is
+     * wired, the pump status check, the pump-unreachable alarm and the zero temp basal retry do not run
+     * on iOS at all. See the keep-alive section of `_docs/ios_blockers.md`.
      */
     override fun startKeepAlive() {
         periodicMaintenance.start(scope)

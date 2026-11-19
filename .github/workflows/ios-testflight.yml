@@ -151,10 +151,16 @@ jobs:
       - name: Generate the version numbers
         run: ./gradlew --console=plain --no-daemon :ios:shell:generateIosVersionXcconfig
 
+      # The second line keeps the published apps on their own identifiers, app.aaps.client and
+      # app.aaps.client2. Without it a client takes the team id the way a self-built one does, and
+      # -allowProvisioningUpdates below would quietly register a new App ID that App Store Connect
+      # has no app for. See ios/app/Signing.xcconfig.
       - name: Provide the team id
         env:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-        run: echo "DEVELOPMENT_TEAM = $APPLE_TEAM_ID" > ios/app/Signing.local.xcconfig
+        run: |
+          echo "DEVELOPMENT_TEAM = $APPLE_TEAM_ID" > ios/app/Signing.local.xcconfig
+          echo "AAPS_CLIENT_ID_PREFIX = app.aaps" >> ios/app/Signing.local.xcconfig
 
       - name: Write the App Store Connect API key
         env:

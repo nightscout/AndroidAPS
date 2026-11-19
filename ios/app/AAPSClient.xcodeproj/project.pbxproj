@@ -21,6 +21,13 @@
 		D32B0F783048851500FAFE85 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = AA00SP02000000000000002 /* SocketIO */; };
 		D32B0F793048851500FAFE85 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = AA00SP02000000000000003 /* FirebaseCrashlytics */; };
 		D32B0F7A3048851500FAFE85 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = AA00SP02000000000000004 /* FirebaseCrashlytics */; };
+		AA4000300000000000000 /* ClientApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1000100000000000000 /* ClientApp.swift */; };
+		AA4000400000000000000 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA4000200000000000000 /* Assets.xcassets */; };
+		AA4000500000000000000 /* AapsShared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA1000200000000000000 /* AapsShared.framework */; };
+		AA4009600000000000000 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = AA00SP02000000000000005 /* SocketIO */; };
+		AA4009700000000000000 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = AA00SP02000000000000006 /* FirebaseCrashlytics */; };
+		AA4009800000000000000 /* CrashlyticsCrashReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1009800000000000000 /* CrashlyticsCrashReporter.swift */; };
+		AA4009900000000000000 /* NsSocketBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1009900000000000000 /* NsSocketBridge.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +42,8 @@
 		AA2000200000000000000 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = AAPSClient/Assets.xcassets; sourceTree = "<group>"; };
 		AA3000100000000000000 /* AAPSClient2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AAPSClient2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA3000200000000000000 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = AAPSClient2/Assets.xcassets; sourceTree = "<group>"; };
+		AA4000100000000000000 /* AAPS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AAPS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA4000200000000000000 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = AAPS/Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +67,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AA4000700000000000000 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA4009600000000000000 /* SocketIO in Frameworks */,
+				AA4009700000000000000 /* FirebaseCrashlytics in Frameworks */,
+				AA4000500000000000000 /* AapsShared.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -71,6 +90,7 @@
 				AA1009900000000000000 /* NsSocketBridge.swift */,
 				AA2001200000000000000 /* AAPSClient */,
 				AA3001200000000000000 /* AAPSClient2 */,
+				AA4001200000000000000 /* AAPS */,
 				AA1000300000000000000 /* Signing.xcconfig */,
 				AA1000200000000000000 /* AapsShared.framework */,
 				AA1001400000000000000 /* Products */,
@@ -82,6 +102,7 @@
 			children = (
 				AA2000100000000000000 /* AAPSClient.app */,
 				AA3000100000000000000 /* AAPSClient2.app */,
+				AA4000100000000000000 /* AAPS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -100,6 +121,14 @@
 				AA3000200000000000000 /* Assets.xcassets */,
 			);
 			name = AAPSClient2;
+			sourceTree = "<group>";
+		};
+		AA4001200000000000000 /* AAPS */ = {
+			isa = PBXGroup;
+			children = (
+				AA4000200000000000000 /* Assets.xcassets */,
+			);
+			name = AAPS;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -151,6 +180,29 @@
 			productReference = AA3000100000000000000 /* AAPSClient2.app */;
 			productType = "com.apple.product-type.application";
 		};
+		AA4001300000000000000 /* AAPS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA4001100000000000000 /* Build configuration list for PBXNativeTarget "AAPS" */;
+			buildPhases = (
+				AA4000900000000000000 /* Build shared framework */,
+				AA4000600000000000000 /* Sources */,
+				AA4000700000000000000 /* Frameworks */,
+				AA4000800000000000000 /* Resources */,
+				AA4009500000000000000 /* Copy the Firebase config */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AAPS;
+			packageProductDependencies = (
+				AA00SP02000000000000005 /* SocketIO */,
+				AA00SP02000000000000006 /* FirebaseCrashlytics */,
+			);
+			productName = AAPS;
+			productReference = AA4000100000000000000 /* AAPS.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -180,6 +232,7 @@
 			targets = (
 				AA2001300000000000000 /* AAPSClient */,
 				AA3001300000000000000 /* AAPSClient2 */,
+				AA4001300000000000000 /* AAPS */,
 			);
 		};
 /* End PBXProject section */
@@ -201,6 +254,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AA4000800000000000000 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA4000400000000000000 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -216,7 +277,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Keep the framework in step with the Kotlin sources.\n# The simulator and a real phone are different architectures, so the Gradle target follows\n# whatever Xcode is building rather than being fixed to one of them.\ncase \"$PLATFORM_NAME\" in\n  iphonesimulator) KOTLIN_TARGET=IosSimulatorArm64 ;;\n  iphoneos)        KOTLIN_TARGET=IosArm64 ;;\n  *) echo \"error: unsupported platform $PLATFORM_NAME\" >&2; exit 1 ;;\nesac\n# Xcode does not inherit a login shell, so JAVA_HOME is set here rather than assumed.\nexport JAVA_HOME=\"$(/usr/libexec/java_home -v 21)\"\n# Debug or Release Kotlin, following what Xcode is building. Pinned to Debug before, which meant an\n# archive for TestFlight shipped unoptimised Kotlin - the whole app logic - while everything\n# around it was built as a release.\ncase \"$CONFIGURATION\" in\n  Release) KOTLIN_BUILD=Release ;;\n  *)       KOTLIN_BUILD=Debug ;;\nesac\n# A fresh clone has no Version.xcconfig, so Xcode falls back to the project defaults and the app\n# calls itself 1.0 (1). Crashlytics sorts everything by version, so every self-builder would\n# land in one bucket and one person building 200 times would look like 200 users.\n# Written only when it is missing, not on every build: an xcconfig that changes each time\n# invalidates the build settings and forces a full rebuild. CI runs the task itself before\n# archiving, which is what keeps the TestFlight build number going up.\nif [ ! -f \"$SRCROOT/Version.xcconfig\" ]; then\n  \"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" :ios:shell:generateIosVersionXcconfig --no-daemon\nfi\n\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" \":ios:shell:link${KOTLIN_BUILD}Framework$KOTLIN_TARGET\" --no-daemon\n\n# Compose Multiplatform resources do NOT travel inside the .framework. Their own task copies\n# them into the app bundle under compose-resources, reading BUILT_PRODUCTS_DIR and\n# UNLOCALIZED_RESOURCES_FOLDER_PATH from Xcode - the same two variables the alarm sound copy\n# below reads. Without this step painterResource throws at run time and the CareLevo overview\n# crashes as soon as it is opened, while a klib compile and a framework link both still pass,\n# so nothing else in the build catches it. :pump:carelevo is the first module in the repo with\n# a composeResources directory, which is why this was never needed before.\n\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" \":ios:shell:syncComposeResourcesForIos\" --no-daemon\n\n# The alarm sounds live once, in :core:ui's Android resources. Copying them at build time rather\n# than keeping a second set under ios/ means the two cannot drift - a replaced alarm tone stays one\n# edit, not two.\nSOUNDS=\"$SRCROOT/../../core/ui/src/androidMain/res/raw\"\nDEST=\"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"\nmkdir -p \"$DEST\"\nfor s in alarm urgentalarm error boluserror eatreminder; do\n  if [ ! -f \"$SOUNDS/$s.mp3\" ]; then\n    echo \"error: alarm sound $s.mp3 missing from $SOUNDS\" >&2; exit 1\n  fi\n  cp \"$SOUNDS/$s.mp3\" \"$DEST/\"\ndone\n";
+			shellScript = "# The team id is part of the bundle identifier (see Signing.xcconfig), so no build works without\n# one, the simulator included. Checked here because a missing team otherwise gives an identifier\n# with an empty part in it, and nothing says why.\nif [ -z \"$DEVELOPMENT_TEAM\" ]; then\n  echo \"error: no development team. Put DEVELOPMENT_TEAM = <your team id> in ios/app/Signing.local.xcconfig - ios/app/Signing.xcconfig says how to find it.\" >&2\n  exit 1\nfi\n# Keep the framework in step with the Kotlin sources.\n# The simulator and a real phone are different architectures, so the Gradle target follows\n# whatever Xcode is building rather than being fixed to one of them.\ncase \"$PLATFORM_NAME\" in\n  iphonesimulator) KOTLIN_TARGET=IosSimulatorArm64 ;;\n  iphoneos)        KOTLIN_TARGET=IosArm64 ;;\n  *) echo \"error: unsupported platform $PLATFORM_NAME\" >&2; exit 1 ;;\nesac\n# Xcode does not inherit a login shell, so JAVA_HOME is set here rather than assumed.\nexport JAVA_HOME=\"$(/usr/libexec/java_home -v 21)\"\n# Debug or Release Kotlin, following what Xcode is building. Pinned to Debug before, which meant an\n# archive for TestFlight shipped unoptimised Kotlin - the whole app logic - while everything\n# around it was built as a release.\ncase \"$CONFIGURATION\" in\n  Release) KOTLIN_BUILD=Release ;;\n  *)       KOTLIN_BUILD=Debug ;;\nesac\n# A fresh clone has no Version.xcconfig, so Xcode falls back to the project defaults and the app\n# calls itself 1.0 (1). Crashlytics sorts everything by version, so every self-builder would\n# land in one bucket and one person building 200 times would look like 200 users.\n# Written only when it is missing, not on every build: an xcconfig that changes each time\n# invalidates the build settings and forces a full rebuild. CI runs the task itself before\n# archiving, which is what keeps the TestFlight build number going up.\nif [ ! -f \"$SRCROOT/Version.xcconfig\" ]; then\n  \"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" :ios:shell:generateIosVersionXcconfig --no-daemon\nfi\n\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" \":ios:shell:link${KOTLIN_BUILD}Framework$KOTLIN_TARGET\" --no-daemon\n\n# Compose Multiplatform resources do NOT travel inside the .framework. Their own task copies\n# them into the app bundle under compose-resources, reading BUILT_PRODUCTS_DIR and\n# UNLOCALIZED_RESOURCES_FOLDER_PATH from Xcode - the same two variables the alarm sound copy\n# below reads. Without this step painterResource throws at run time and the CareLevo overview\n# crashes as soon as it is opened, while a klib compile and a framework link both still pass,\n# so nothing else in the build catches it. :pump:carelevo is the first module in the repo with\n# a composeResources directory, which is why this was never needed before.\n\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" \":ios:shell:syncComposeResourcesForIos\" --no-daemon\n\n# The alarm sounds live once, in :core:ui's Android resources. Copying them at build time rather\n# than keeping a second set under ios/ means the two cannot drift - a replaced alarm tone stays one\n# edit, not two.\nSOUNDS=\"$SRCROOT/../../core/ui/src/androidMain/res/raw\"\nDEST=\"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"\nmkdir -p \"$DEST\"\nfor s in alarm urgentalarm error boluserror eatreminder; do\n  if [ ! -f \"$SOUNDS/$s.mp3\" ]; then\n    echo \"error: alarm sound $s.mp3 missing from $SOUNDS\" >&2; exit 1\n  fi\n  cp \"$SOUNDS/$s.mp3\" \"$DEST/\"\ndone\n";
 		};
 		AA3000900000000000000 /* Build shared framework */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -230,7 +291,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Keep the framework in step with the Kotlin sources.\n# The simulator and a real phone are different architectures, so the Gradle target follows\n# whatever Xcode is building rather than being fixed to one of them.\ncase \"$PLATFORM_NAME\" in\n  iphonesimulator) KOTLIN_TARGET=IosSimulatorArm64 ;;\n  iphoneos)        KOTLIN_TARGET=IosArm64 ;;\n  *) echo \"error: unsupported platform $PLATFORM_NAME\" >&2; exit 1 ;;\nesac\n# Xcode does not inherit a login shell, so JAVA_HOME is set here rather than assumed.\nexport JAVA_HOME=\"$(/usr/libexec/java_home -v 21)\"\n# Debug or Release Kotlin, following what Xcode is building. Pinned to Debug before, which meant an\n# archive for TestFlight shipped unoptimised Kotlin - the whole app logic - while everything\n# around it was built as a release.\ncase \"$CONFIGURATION\" in\n  Release) KOTLIN_BUILD=Release ;;\n  *)       KOTLIN_BUILD=Debug ;;\nesac\n# A fresh clone has no Version.xcconfig, so Xcode falls back to the project defaults and the app\n# calls itself 1.0 (1). Crashlytics sorts everything by version, so every self-builder would\n# land in one bucket and one person building 200 times would look like 200 users.\n# Written only when it is missing, not on every build: an xcconfig that changes each time\n# invalidates the build settings and forces a full rebuild. CI runs the task itself before\n# archiving, which is what keeps the TestFlight build number going up.\nif [ ! -f \"$SRCROOT/Version.xcconfig\" ]; then\n  \"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" :ios:shell:generateIosVersionXcconfig --no-daemon\nfi\n\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" \":ios:shell:link${KOTLIN_BUILD}Framework$KOTLIN_TARGET\" --no-daemon\n\n# Compose Multiplatform resources do NOT travel inside the .framework. Their own task copies\n# them into the app bundle under compose-resources, reading BUILT_PRODUCTS_DIR and\n# UNLOCALIZED_RESOURCES_FOLDER_PATH from Xcode - the same two variables the alarm sound copy\n# below reads. Without this step painterResource throws at run time and the CareLevo overview\n# crashes as soon as it is opened, while a klib compile and a framework link both still pass,\n# so nothing else in the build catches it. :pump:carelevo is the first module in the repo with\n# a composeResources directory, which is why this was never needed before.\n\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" \":ios:shell:syncComposeResourcesForIos\" --no-daemon\n\n# The alarm sounds live once, in :core:ui's Android resources. Copying them at build time rather\n# than keeping a second set under ios/ means the two cannot drift - a replaced alarm tone stays one\n# edit, not two.\nSOUNDS=\"$SRCROOT/../../core/ui/src/androidMain/res/raw\"\nDEST=\"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"\nmkdir -p \"$DEST\"\nfor s in alarm urgentalarm error boluserror eatreminder; do\n  if [ ! -f \"$SOUNDS/$s.mp3\" ]; then\n    echo \"error: alarm sound $s.mp3 missing from $SOUNDS\" >&2; exit 1\n  fi\n  cp \"$SOUNDS/$s.mp3\" \"$DEST/\"\ndone\n";
+			shellScript = "# The team id is part of the bundle identifier (see Signing.xcconfig), so no build works without\n# one, the simulator included. Checked here because a missing team otherwise gives an identifier\n# with an empty part in it, and nothing says why.\nif [ -z \"$DEVELOPMENT_TEAM\" ]; then\n  echo \"error: no development team. Put DEVELOPMENT_TEAM = <your team id> in ios/app/Signing.local.xcconfig - ios/app/Signing.xcconfig says how to find it.\" >&2\n  exit 1\nfi\n# Keep the framework in step with the Kotlin sources.\n# The simulator and a real phone are different architectures, so the Gradle target follows\n# whatever Xcode is building rather than being fixed to one of them.\ncase \"$PLATFORM_NAME\" in\n  iphonesimulator) KOTLIN_TARGET=IosSimulatorArm64 ;;\n  iphoneos)        KOTLIN_TARGET=IosArm64 ;;\n  *) echo \"error: unsupported platform $PLATFORM_NAME\" >&2; exit 1 ;;\nesac\n# Xcode does not inherit a login shell, so JAVA_HOME is set here rather than assumed.\nexport JAVA_HOME=\"$(/usr/libexec/java_home -v 21)\"\n# Debug or Release Kotlin, following what Xcode is building. Pinned to Debug before, which meant an\n# archive for TestFlight shipped unoptimised Kotlin - the whole app logic - while everything\n# around it was built as a release.\ncase \"$CONFIGURATION\" in\n  Release) KOTLIN_BUILD=Release ;;\n  *)       KOTLIN_BUILD=Debug ;;\nesac\n# A fresh clone has no Version.xcconfig, so Xcode falls back to the project defaults and the app\n# calls itself 1.0 (1). Crashlytics sorts everything by version, so every self-builder would\n# land in one bucket and one person building 200 times would look like 200 users.\n# Written only when it is missing, not on every build: an xcconfig that changes each time\n# invalidates the build settings and forces a full rebuild. CI runs the task itself before\n# archiving, which is what keeps the TestFlight build number going up.\nif [ ! -f \"$SRCROOT/Version.xcconfig\" ]; then\n  \"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" :ios:shell:generateIosVersionXcconfig --no-daemon\nfi\n\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" \":ios:shell:link${KOTLIN_BUILD}Framework$KOTLIN_TARGET\" --no-daemon\n\n# Compose Multiplatform resources do NOT travel inside the .framework. Their own task copies\n# them into the app bundle under compose-resources, reading BUILT_PRODUCTS_DIR and\n# UNLOCALIZED_RESOURCES_FOLDER_PATH from Xcode - the same two variables the alarm sound copy\n# below reads. Without this step painterResource throws at run time and the CareLevo overview\n# crashes as soon as it is opened, while a klib compile and a framework link both still pass,\n# so nothing else in the build catches it. :pump:carelevo is the first module in the repo with\n# a composeResources directory, which is why this was never needed before.\n\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" \":ios:shell:syncComposeResourcesForIos\" --no-daemon\n\n# The alarm sounds live once, in :core:ui's Android resources. Copying them at build time rather\n# than keeping a second set under ios/ means the two cannot drift - a replaced alarm tone stays one\n# edit, not two.\nSOUNDS=\"$SRCROOT/../../core/ui/src/androidMain/res/raw\"\nDEST=\"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"\nmkdir -p \"$DEST\"\nfor s in alarm urgentalarm error boluserror eatreminder; do\n  if [ ! -f \"$SOUNDS/$s.mp3\" ]; then\n    echo \"error: alarm sound $s.mp3 missing from $SOUNDS\" >&2; exit 1\n  fi\n  cp \"$SOUNDS/$s.mp3\" \"$DEST/\"\ndone\n";
 		};
 		AA2009500000000000000 /* Copy the Firebase config */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -249,6 +310,36 @@
 			shellScript = "# Each target gets the plist from its own folder, keyed on TARGET_NAME.\n# A missing file is a warning, not an error: a clone without the config must still build and\n# simply not report, which is what CrashlyticsCrashReporter.start() is written to do.\nSRC=\"$SRCROOT/$TARGET_NAME/GoogleService-Info.plist\"\nDST=\"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/GoogleService-Info.plist\"\nif [ -f \"$SRC\" ]; then\n  cp \"$SRC\" \"$DST\"\nelse\n  # Remove a copy an earlier build left behind. Without this, deleting the config does\n  # not stop reporting: the stale plist stays in the bundle and the warning below lies.\n  rm -f \"$DST\"\n  echo \"warning: no $TARGET_NAME/GoogleService-Info.plist, so this build has no crash reporting\"\nfi\n";
 		};
 		AA3009500000000000000 /* Copy the Firebase config */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/$(TARGET_NAME)/GoogleService-Info.plist",
+			);
+			name = "Copy the Firebase config";
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Each target gets the plist from its own folder, keyed on TARGET_NAME.\n# A missing file is a warning, not an error: a clone without the config must still build and\n# simply not report, which is what CrashlyticsCrashReporter.start() is written to do.\nSRC=\"$SRCROOT/$TARGET_NAME/GoogleService-Info.plist\"\nDST=\"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/GoogleService-Info.plist\"\nif [ -f \"$SRC\" ]; then\n  cp \"$SRC\" \"$DST\"\nelse\n  # Remove a copy an earlier build left behind. Without this, deleting the config does\n  # not stop reporting: the stale plist stays in the bundle and the warning below lies.\n  rm -f \"$DST\"\n  echo \"warning: no $TARGET_NAME/GoogleService-Info.plist, so this build has no crash reporting\"\nfi\n";
+		};
+		AA4000900000000000000 /* Build shared framework */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Build shared framework";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# The team id is part of the bundle identifier (see Signing.xcconfig), so no build works without\n# one, the simulator included. Checked here because a missing team otherwise gives an identifier\n# with an empty part in it, and nothing says why.\nif [ -z \"$DEVELOPMENT_TEAM\" ]; then\n  echo \"error: no development team. Put DEVELOPMENT_TEAM = <your team id> in ios/app/Signing.local.xcconfig - ios/app/Signing.xcconfig says how to find it.\" >&2\n  exit 1\nfi\n# Keep the framework in step with the Kotlin sources.\n# The simulator and a real phone are different architectures, so the Gradle target follows\n# whatever Xcode is building rather than being fixed to one of them.\ncase \"$PLATFORM_NAME\" in\n  iphonesimulator) KOTLIN_TARGET=IosSimulatorArm64 ;;\n  iphoneos)        KOTLIN_TARGET=IosArm64 ;;\n  *) echo \"error: unsupported platform $PLATFORM_NAME\" >&2; exit 1 ;;\nesac\n# Xcode does not inherit a login shell, so JAVA_HOME is set here rather than assumed.\nexport JAVA_HOME=\"$(/usr/libexec/java_home -v 21)\"\n# Debug or Release Kotlin, following what Xcode is building. Pinned to Debug before, which meant an\n# archive for TestFlight shipped unoptimised Kotlin - the whole app logic - while everything\n# around it was built as a release.\ncase \"$CONFIGURATION\" in\n  Release) KOTLIN_BUILD=Release ;;\n  *)       KOTLIN_BUILD=Debug ;;\nesac\n# A fresh clone has no Version.xcconfig, so Xcode falls back to the project defaults and the app\n# calls itself 1.0 (1). Crashlytics sorts everything by version, so every self-builder would\n# land in one bucket and one person building 200 times would look like 200 users.\n# Written only when it is missing, not on every build: an xcconfig that changes each time\n# invalidates the build settings and forces a full rebuild. CI runs the task itself before\n# archiving, which is what keeps the TestFlight build number going up.\nif [ ! -f \"$SRCROOT/Version.xcconfig\" ]; then\n  \"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" :ios:shell:generateIosVersionXcconfig --no-daemon\nfi\n\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" \":ios:shell:link${KOTLIN_BUILD}Framework$KOTLIN_TARGET\" --no-daemon\n\n# Compose Multiplatform resources do NOT travel inside the .framework. Their own task copies\n# them into the app bundle under compose-resources, reading BUILT_PRODUCTS_DIR and\n# UNLOCALIZED_RESOURCES_FOLDER_PATH from Xcode - the same two variables the alarm sound copy\n# below reads. Without this step painterResource throws at run time and the CareLevo overview\n# crashes as soon as it is opened, while a klib compile and a framework link both still pass,\n# so nothing else in the build catches it. :pump:carelevo is the first module in the repo with\n# a composeResources directory, which is why this was never needed before.\n\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../..\" \":ios:shell:syncComposeResourcesForIos\" --no-daemon\n\n# The alarm sounds live once, in :core:ui's Android resources. Copying them at build time rather\n# than keeping a second set under ios/ means the two cannot drift - a replaced alarm tone stays one\n# edit, not two.\nSOUNDS=\"$SRCROOT/../../core/ui/src/androidMain/res/raw\"\nDEST=\"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"\nmkdir -p \"$DEST\"\nfor s in alarm urgentalarm error boluserror eatreminder; do\n  if [ ! -f \"$SOUNDS/$s.mp3\" ]; then\n    echo \"error: alarm sound $s.mp3 missing from $SOUNDS\" >&2; exit 1\n  fi\n  cp \"$SOUNDS/$s.mp3\" \"$DEST/\"\ndone\n";
+		};
+		AA4009500000000000000 /* Copy the Firebase config */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -284,6 +375,16 @@
 				AA3000300000000000000 /* ClientApp.swift in Sources */,
 				AA3009800000000000000 /* CrashlyticsCrashReporter.swift in Sources */,
 				AA3009900000000000000 /* NsSocketBridge.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA4000600000000000000 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA4000300000000000000 /* ClientApp.swift in Sources */,
+				AA4009800000000000000 /* CrashlyticsCrashReporter.swift in Sources */,
+				AA4009900000000000000 /* NsSocketBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,7 +446,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=4.0.0)";
-				PRODUCT_BUNDLE_IDENTIFIER = app.aaps.client;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(AAPS_CLIENT_ID_PREFIX).client";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -387,7 +488,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=4.0.0)";
-				PRODUCT_BUNDLE_IDENTIFIER = app.aaps.client2;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(AAPS_CLIENT_ID_PREFIX).client2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -450,7 +551,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=4.0.0)";
-				PRODUCT_BUNDLE_IDENTIFIER = app.aaps.client;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(AAPS_CLIENT_ID_PREFIX).client";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -492,7 +593,91 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=4.0.0)";
-				PRODUCT_BUNDLE_IDENTIFIER = app.aaps.client2;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(AAPS_CLIENT_ID_PREFIX).client2";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		AA4001000000000000000 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AA1000300000000000000 /* Signing.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = Simulator.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(AAPS_BUILD_NUMBER:default=1)";
+				ENABLE_PREVIEWS = YES;
+				// Which Kotlin/Native output to look in. `linkDebugFramework` and
+				// `linkReleaseFramework` write to different folders, so a path that named one of
+				// them worked in that configuration only - a Release archive found no Kotlin at all.
+				KOTLIN_FRAMEWORK_KIND = debug;
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
+					"$(inherited)",
+					"$(SRCROOT)/../shell/build/bin/iosArm64/$(KOTLIN_FRAMEWORK_KIND)Framework",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					"$(inherited)",
+					"$(SRCROOT)/../shell/build/bin/iosSimulatorArm64/$(KOTLIN_FRAMEWORK_KIND)Framework",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Shared/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AAPS;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				// iPhone stays portrait. iPad must declare all four or the App Store rejects the
+				// upload as an invalid bundle: an app in the iPad device family takes part in
+				// multitasking, and a multitasking app has to survive being any shape.
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=4.0.0)";
+				PRODUCT_BUNDLE_IDENTIFIER = "app.aaps.$(DEVELOPMENT_TEAM).full";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA4001500000000000000 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AA1000300000000000000 /* Signing.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = Simulator.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(AAPS_BUILD_NUMBER:default=1)";
+				ENABLE_PREVIEWS = YES;
+				// Which Kotlin/Native output to look in. `linkDebugFramework` and
+				// `linkReleaseFramework` write to different folders, so a path that named one of
+				// them worked in that configuration only - a Release archive found no Kotlin at all.
+				KOTLIN_FRAMEWORK_KIND = release;
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
+					"$(inherited)",
+					"$(SRCROOT)/../shell/build/bin/iosArm64/$(KOTLIN_FRAMEWORK_KIND)Framework",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					"$(inherited)",
+					"$(SRCROOT)/../shell/build/bin/iosSimulatorArm64/$(KOTLIN_FRAMEWORK_KIND)Framework",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Shared/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AAPS;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				// iPhone stays portrait. iPad must declare all four or the App Store rejects the
+				// upload as an invalid bundle: an app in the iPad device family takes part in
+				// multitasking, and a multitasking app has to survive being any shape.
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				MARKETING_VERSION = "$(AAPS_MARKETING_VERSION:default=4.0.0)";
+				PRODUCT_BUNDLE_IDENTIFIER = "app.aaps.$(DEVELOPMENT_TEAM).full";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -525,6 +710,15 @@
 			buildConfigurations = (
 				AA3001000000000000000 /* Debug */,
 				D32B0F7B304886E000FAFE85 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AA4001100000000000000 /* Build configuration list for PBXNativeTarget "AAPS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA4001000000000000000 /* Debug */,
+				AA4001500000000000000 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -567,6 +761,16 @@
 			productName = FirebaseCrashlytics;
 		};
 		AA00SP02000000000000004 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA00SP01000000000000002 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		AA00SP02000000000000005 /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA00SP01000000000000001 /* XCRemoteSwiftPackageReference "socket" */;
+			productName = SocketIO;
+		};
+		AA00SP02000000000000006 /* FirebaseCrashlytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AA00SP01000000000000002 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCrashlytics;
