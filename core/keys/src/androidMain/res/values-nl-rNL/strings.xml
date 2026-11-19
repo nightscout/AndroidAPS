@@ -296,10 +296,14 @@
     <string name="pref_title_fill_button_3">Vulknop 3</string>
     <!-- DoubleKey: Safety preferences -->
     <string name="pref_title_max_bolus">Maximale bolus</string>
+    <string name="treatmentssafety_maxbolus_summary">De geselecteerde patiëntenleeftijd begrenst deze waarde. Een hogere waarde hier heeft geen effect.</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Maximale basaalstand</string>
+    <string name="openapsma_max_basal_summary">Deze waarde wordt in de OpenAPS-context ‘max basal’ genoemd.\nDe geselecteerde patiëntenleeftijd begrenst deze waarde. Een hogere waarde hier heeft geen effect.</string>
     <string name="pref_title_smb_max_iob">Max. IOB voor SMB</string>
+    <string name="openapssmb_max_iob_summary">Deze waarde wordt in de OpenAPS-context ‘Max IOB’ genoemd.\nOpenAPS zal geen extra insuline toedienen als de huidige IOB hoger is dan deze waarde.\nDe geselecteerde patiëntenleeftijd begrenst deze waarde. Een hogere waarde heeft geen effect.</string>
     <string name="pref_title_ama_max_iob">Max. IOB voor AMA</string>
+    <string name="openapsma_max_iob_summary">Deze waarde wordt in de OpenAPS-context ‘Max IOB’ genoemd.\nDit is de maximale hoeveelheid insuline [in E] die APS in één keer kan toedienen.\nDe geselecteerde patiëntenleeftijd begrenst deze waarde. Een hogere waarde heeft geen effect.</string>
     <string name="pref_title_max_daily_multiplier">Maximum op basis van profiel</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standaardwaarde: 3\nDit is een belangrijke veiligheidslimiet van OpenAPS. Hiermee wordt de basaalstand beperkt tot maximaal dit getal vermenigvuldigd met de hoogste basaalstand van de gebruiker. Waarschijnlijk hoeft deze instelling nooit te worden gewijzigd. Het is wel goed om te weten dat hiermee wordt verwezen naar de veiligheidsbegrenzingen die worden aangeduid als ‘3x max daily; 4x current’.</string>
     <string name="pref_title_current_basal_multiplier">Maximum op basis van actuele basaal</string>
