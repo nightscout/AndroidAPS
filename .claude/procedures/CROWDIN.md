@@ -44,9 +44,10 @@ repo's `values-xx/` files** (which would conflict with Crowdin's own sync).
 
 ### 1. Prepare a temp workspace
 
-Create a minimal `crowdin.yml` in a temp directory, listing only the file(s) being worked
-on. **`preserve_hierarchy: true` is required** or the CLI looks for files at the wrong
-branch-internal path.
+Make a new folder in the session scratchpad (or in `%TEMP%` when there is no scratchpad), not in
+`/tmp`. Below it is called `<work>`; write its full path in the commands. Create a minimal
+`crowdin.yml` in it, listing only the file(s) being worked on. **`preserve_hierarchy: true` is
+required** or the CLI looks for files at the wrong branch-internal path.
 
 ```yaml
 preserve_hierarchy: true
@@ -59,8 +60,8 @@ Copy the source file(s) from the repo into the temp dir at the same relative pat
 CLI refuses to work if the source is missing under `--base-path`:
 
 ```bash
-mkdir -p /tmp/crowdin-work/app/src/main/res/values
-cp app/src/main/res/values/strings.xml /tmp/crowdin-work/app/src/main/res/values/
+mkdir -p <work>/app/src/main/res/values
+cp app/src/main/res/values/strings.xml <work>/app/src/main/res/values/
 ```
 
 ### 2. Download current translations (inspect state)
@@ -68,12 +69,12 @@ cp app/src/main/res/values/strings.xml /tmp/crowdin-work/app/src/main/res/values
 ```bash
 java -jar "C:/Program Files (x86)/CrowdinCLI/crowdin-cli.jar" download \
   -l cs -b dev \
-  --base-path="/tmp/crowdin-work" \
-  -c "/tmp/crowdin-work/crowdin.yml" \
+  --base-path="<work>" \
+  -c "<work>/crowdin.yml" \
   --no-progress --plain
 ```
 
-Writes to `/tmp/crowdin-work/app/src/main/res/values-cs-rCZ/strings.xml`.
+Writes to `<work>/app/src/main/res/values-cs-rCZ/strings.xml`.
 
 ### 3. Edit the translation file
 
@@ -86,8 +87,8 @@ Add new translations, keep existing ones. Keep all source keys present.
 ```bash
 java -jar "C:/Program Files (x86)/CrowdinCLI/crowdin-cli.jar" upload translations \
   -l cs -b dev \
-  --base-path="/tmp/crowdin-work" \
-  -c "/tmp/crowdin-work/crowdin.yml" \
+  --base-path="<work>" \
+  -c "<work>/crowdin.yml" \
   --no-progress
 ```
 
@@ -96,8 +97,8 @@ java -jar "C:/Program Files (x86)/CrowdinCLI/crowdin-cli.jar" upload translation
 ```bash
 java -jar "C:/Program Files (x86)/CrowdinCLI/crowdin-cli.jar" upload translations \
   -l cs -b dev \
-  --base-path="/tmp/crowdin-work" \
-  -c "/tmp/crowdin-work/crowdin.yml" \
+  --base-path="<work>" \
+  -c "<work>/crowdin.yml" \
   --auto-approve-imported \
   --no-progress
 ```
@@ -221,12 +222,14 @@ string, and the build stays silent. These need a placeholder comparison against 
 
 ## Checking a "New Crowdin updates" pull request before merge
 
-No CI runs on the `l10n_dev` pull requests, so nothing else checks them. Run this from the repo
-root, with the merge base and the fetched branch:
+No CI runs on the `l10n_dev` pull requests, so nothing else checks them. The script is not in the
+repo: first save the code block at the end of this section as `crowdin-pr-check.js` in the session
+scratchpad (or `%TEMP%`). Then run it from the repo root, because it calls `git` there, with the
+merge base and the fetched branch:
 
 ```bash
 git fetch origin dev l10n_dev
-node crowdin-pr-check.js $(git merge-base origin/dev origin/l10n_dev) origin/l10n_dev > check.log
+node <scratchpad>/crowdin-pr-check.js $(git merge-base origin/dev origin/l10n_dev) origin/l10n_dev > check.log
 ```
 
 It looks only at translations the pull request changes and compares each with English in the same
