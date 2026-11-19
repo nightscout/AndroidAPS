@@ -349,7 +349,12 @@ interface Pump {
     fun isBatteryChangeLoggingEnabled(): Boolean = false
 
     /**
-     * Pump is connected via RileyLink
+     * Whether [batteryLevel] is a level to show and to run automation on. By default the [PumpType] says it. The type
+     * check matters: the virtual pump always reports 50 %, and Combo reports 0, 25 or 100 from a battery state, and
+     * neither is a real level. A driver that has a level its type does not (Eros, through RileyLink) says so here.
+     *
+     * A user setting belongs here and not in [PumpDescription]: a client fills its description from the master's
+     * type, so a virtual pump that emulates Eros keeps the type's answer.
      */
-    fun isUseRileyLinkBatteryLevel(): Boolean = false
+    fun reportsBatteryLevel(): Boolean = model().supportBatteryLevel
 }

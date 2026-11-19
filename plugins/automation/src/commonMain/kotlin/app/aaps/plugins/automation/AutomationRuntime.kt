@@ -5,7 +5,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -777,8 +776,7 @@ class AutomationRuntime(
         if (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()) {
             triggers.add(TriggerPumpBatteryAge(triggerDeps))
         }
-        val erosBatteryLinkAvailable = pump.model() == PumpType.OMNIPOD_EROS && pump.isUseRileyLinkBatteryLevel()
-        if (pump.model().supportBatteryLevel || erosBatteryLinkAvailable) {
+        if (pump.reportsBatteryLevel()) {
             triggers.add(TriggerPumpBatteryLevel(triggerDeps))
         }
 

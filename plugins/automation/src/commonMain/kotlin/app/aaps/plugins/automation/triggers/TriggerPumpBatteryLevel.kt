@@ -1,7 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.data.format.NumberFormat
-import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.interfaces.TextRef
@@ -37,9 +36,8 @@ class TriggerPumpBatteryLevel(deps: TriggerDeps) : Trigger(deps) {
 
     override suspend fun shouldRun(): Boolean {
         val pump = activePlugin.activePump
-        val erosBatteryLinkAvailable = pump.model() == PumpType.OMNIPOD_EROS && pump.isUseRileyLinkBatteryLevel()
         val currentLevel = pump.batteryLevel.value?.toDouble()
-        val available = currentLevel != null && (pump.model().supportBatteryLevel || erosBatteryLinkAvailable)
+        val available = currentLevel != null && pump.reportsBatteryLevel()
         if (!available) {
             aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution: " + friendlyDescription())
             return false

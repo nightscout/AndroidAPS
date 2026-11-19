@@ -835,7 +835,8 @@ class OmnipodErosPumpPlugin(
         return getOperationNotSupportedWithCustomText(app.aaps.pump.common.R.string.pump_operation_not_supported_by_pump_driver)
     }
 
-    override fun isUseRileyLinkBatteryLevel(): Boolean = aapsOmnipodErosManager.isShowRileyLinkBatteryLevel
+    // The pod has no battery level; the RileyLink's is shown when the user asked for it.
+    override fun reportsBatteryLevel(): Boolean = aapsOmnipodErosManager.isShowRileyLinkBatteryLevel
 
     override fun isBatteryChangeLoggingEnabled(): Boolean = aapsOmnipodErosManager.isBatteryChangeLoggingEnabled
 
