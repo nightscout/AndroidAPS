@@ -300,7 +300,10 @@ class WatchDirect(
         val data = repository.current()
         val template = data.bgData.takeIf { !it.fromSensor && it.timeStamp > 0 } ?: data.bgData.takeIf { it.timeStamp > 0 }
         val bg = WatchDirectReadings.toSingleBg(reading, template, data.graphData.entries)
-        dataHandler.showSensorReadings(bg)
+        // The driver asks the sensor for its last 3 hours at every connection, so each round brings
+        // 36 readings the watch already has. Storing one changes nothing, but it still wrote the
+        // store and redrew the face, the complications and the tile: 37 times per round, not once.
+        if (!WatchDirectReadings.addsNothing(bg, data.bgData, data.graphData.entries)) dataHandler.showSensorReadings(bg)
         if (bg.timeStamp > (latestReadingAt ?: 0L)) {
             latestReadingAt = bg.timeStamp
             // For the watch's own screen only. Not sent to the phone: its next status carries it.

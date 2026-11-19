@@ -128,6 +128,17 @@ object WatchDirectReadings {
         else                -> if (stored.fromSensor && stored.timeStamp > incoming.timeStamp + SAME_READING_MS) stored else incoming
     }
 
+    /**
+     * True when storing [reading], one of the watch's own, would change nothing: the value on the
+     * face ([shown]) is as new, and [graph] already has a reading of that time.
+     *
+     * It is the two rules of [choose] and [mergeIntoGraph] asked beforehand, so the caller can leave
+     * out the write and the redraw. A reading that is new for the face or for the graph is never
+     * left out.
+     */
+    fun addsNothing(reading: EventData.SingleBg, shown: EventData.SingleBg, graph: List<EventData.SingleBg>): Boolean =
+        choose(shown, reading) === shown && graph.any { abs(it.timeStamp - reading.timeStamp) < SAME_READING_MS }
+
     /** [entries] with [added] put in where no reading of the same time is yet, and old ones dropped. */
     fun mergeIntoGraph(entries: List<EventData.SingleBg>, added: List<EventData.SingleBg>): ArrayList<EventData.SingleBg> {
         val merged = ArrayList(entries)

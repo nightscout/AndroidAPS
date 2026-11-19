@@ -145,6 +145,24 @@ class WatchDirectReadingsTest {
     }
 
     @Test
+    fun `a reading the watch already has adds nothing and a new one does`() {
+        // The sensor sends its last hours again at every connection.
+        val shown = watch(now)
+        val graph = listOf(watch(now - 10 * 60_000L), watch(now - 5 * 60_000L), shown)
+        // Known: an old reading that is in the graph, and the newest one sent again.
+        assertThat(WatchDirectReadings.addsNothing(watch(now - 5 * 60_000L), shown, graph)).isTrue()
+        assertThat(WatchDirectReadings.addsNothing(watch(now), shown, graph)).isTrue()
+        // The phone's reading of the same time counts as having it.
+        assertThat(WatchDirectReadings.addsNothing(watch(now - 5 * 60_000L), shown, listOf(phone(now - 5 * 60_000L + 20_000L), shown))).isTrue()
+        // New for the graph: a reading from a gap.
+        assertThat(WatchDirectReadings.addsNothing(watch(now - 15 * 60_000L), shown, graph)).isFalse()
+        // New for the face: the next reading.
+        assertThat(WatchDirectReadings.addsNothing(watch(now + 5 * 60_000L), shown, graph)).isFalse()
+        // Newer than the face, though the phone already put it in the graph: the face must still change.
+        assertThat(WatchDirectReadings.addsNothing(watch(now + 5 * 60_000L), shown, graph + phone(now + 5 * 60_000L))).isFalse()
+    }
+
+    @Test
     fun `old predictions are taken out and the history of boluses and basals stays`() {
         val treatments = EventData.TreatmentData(
             temps = arrayListOf(EventData.TreatmentData.TempBasal(now - 60 * 60_000L, 0.3, now - 30 * 60_000L, 0.3, 0.5)),
