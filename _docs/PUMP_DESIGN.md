@@ -31,6 +31,11 @@ device, and the iOS side and the other drivers are not built. The decisions are 
 - `PumpAlerts` for every pump alert (section 2). `NotificationManager` only for plain cards that are not alerts.
 - `BleCentral` with `QueuedBleLink` for Bluetooth. `BleTransport` is version 1 and is deleted when the last driver
   has moved.
+- `BlePreCheck` with `BlePreCheckHost` before the driver talks to the pump: Bluetooth there, on and allowed. When it is
+  off, the host asks the system to turn it on (`rememberBluetoothEnableRequest` in `:core:ui`) and goes on after a
+  yes; only a no, or a platform that cannot ask (iOS), ends in the message. A driver that needs Bluetooth on from
+  somewhere else, as Carelevo when its Bluetooth-off alarm is cleared, uses the same request. It has no code of its
+  own for this.
 - `Preferences` with generated keys, `TextRef` strings, `TextResolver`, and `PumpEnactResult` for every result.
 
 Not the driver's job: `PumpStatusProvider` (the status text for SMS and the watch), `PumpWithConcentration` (the
@@ -211,7 +216,8 @@ How to move a module is in the `kmp-module-flip` skill. The pump-specific rules,
   platform includes it once its ports exist (`CarelevoAndroidRegistration`). Contributing from commonMain pulls the
   driver into every graph, ready or not.
 - Bluetooth state comes from `BleCentral.adapterState`, not from a broadcast receiver. Asking the user to turn
-  Bluetooth on is an `expect` function that returns null where the platform cannot ask.
+  Bluetooth on is the shared `rememberBluetoothEnableRequest` of `:core:ui`, which returns null where the platform
+  cannot ask (section 1).
 - Images are Compose Multiplatform resources. The iOS app build must copy them into the app bundle, or the screen
   that uses one fails when it opens.
 - No foreground check and no notification port for alerts: that is `PumpAlerts`.
@@ -238,14 +244,19 @@ How to move a module is in the `kmp-module-flip` skill. The pump-specific rules,
    snooze for one card, pump alerts never removed by `muteAllAlarms`), the Android alarm screen as a view of the card,
    the iOS alarm screen and background sound. Tests.
 2. Carelevo, because it is shared code already and iOS needs it first. Real-patch test.
-3. The other drivers, one change each, each with a real-pump test (see the `pump-emulator-scenarios` skill).
+3. The other drivers, one change each, each with a real-pump test (see the `pump-emulator-scenarios` skill). Not a
+   task of its own (decided 2026-11-19): a driver moves to pump alerts, to Bluetooth version 2 and to shared code
+   when it is brought to the acceptance file's current requirements (A1-A6, T2, K1-K3).
 4. The scenario check for an alarm (`PumpScenario.checkUrgentAlarmSince`) reads `PumpAlerts.active` instead of any
    URGENT card.
 5. Add the requirements below to `PUMP_DRIVER_ACCEPTANCE.md`.
 6. Later, not pumps: move the other `runAlarm` callers to the same sound owner, and move the two `KClass` members of
    `UiInteraction` to an Android-only interface.
 
-## 6. Requirements to add to the acceptance file (after step 2)
+## 6. Requirements in the acceptance file
+
+Added to `PUMP_DRIVER_ACCEPTANCE.md` on 2026-11-19 (sections A and K, and R14 for the real pump); kept here as the short
+form.
 
 - **A1** Every alert the pump reports, and every delivery problem the user must act on, goes through `PumpAlerts`.
 - **A2** The driver plays no sound and has no notification channel, alarm screen or foreground check of its own.
