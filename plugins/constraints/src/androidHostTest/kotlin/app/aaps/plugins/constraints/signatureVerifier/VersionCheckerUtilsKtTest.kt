@@ -10,8 +10,15 @@ import app.aaps.plugins.constraints.versionChecker.VersionCheckerUtilsImpl
 import app.aaps.plugins.constraints.versionChecker.numericVersionPart
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonObject
+import java.io.IOException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -20,6 +27,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.whenever
 
 @Suppress("SpellCheckingInspection")
+@OptIn(ExperimentalCoroutinesApi::class)
 class VersionCheckerUtilsKtTest : TestBase() {
 
     private lateinit var versionCheckerUtils: VersionCheckerUtilsImpl
@@ -46,9 +54,74 @@ class VersionCheckerUtilsKtTest : TestBase() {
             "  \"3.3.1.3\": \"2025-05-31\"\n" +
             "}"
 
+    private val scope = TestScope(StandardTestDispatcher())
+
     @BeforeEach fun setup() {
         val definition = VersionDefinition { Json.parseToJsonElement(generateSupportedVersions()).jsonObject }
-        versionCheckerUtils = VersionCheckerUtilsImpl(aapsLogger, preferences, rh, config, dateUtil, notificationManager, definition)
+        versionCheckerUtils = VersionCheckerUtilsImpl(aapsLogger, preferences, rh, config, dateUtil, notificationManager, definition, scope)
+    }
+
+    // ---- the three sources of the allowed versions ----------------------------------------------------
+
+    private fun JsonObject.text(key: String): String? = (this[key] as? JsonPrimitive)?.content
+
+    private fun fetchFromGithub(answer: suspend () -> String) {
+        versionCheckerUtils.fetchGithubDefinition = answer
+        versionCheckerUtils.fetchGithubDefinitionIfDue()
+        scope.runCurrent()
+    }
+
+    @Test
+    fun `the GitHub file wins over the bundled one, and remote config over both`() {
+        fetchFromGithub { """{"38": "3.4.0.0", "3.3.1.3": "2025-06-30"}""" }
+
+        assertThat(versionCheckerUtils.definition.text("38")).isEqualTo("3.4.0.0")
+        assertThat(versionCheckerUtils.definition.text("30")).isEqualTo("3.3.1.4")
+
+        versionCheckerUtils.setRemoteDefinition(Json.parseToJsonElement("""{"38": "3.5.0.0"}""").jsonObject)
+
+        assertThat(versionCheckerUtils.definition.text("38")).isEqualTo("3.5.0.0")
+        assertThat(versionCheckerUtils.definition.text("3.3.1.3")).isEqualTo("2025-06-30")
+    }
+
+    @Test
+    fun `remote config still wins when GitHub answers after it`() {
+        versionCheckerUtils.setRemoteDefinition(Json.parseToJsonElement("""{"38": "3.5.0.0"}""").jsonObject)
+
+        fetchFromGithub { """{"38": "3.4.0.0"}""" }
+
+        assertThat(versionCheckerUtils.definition.text("38")).isEqualTo("3.5.0.0")
+    }
+
+    @Test
+    fun `a GitHub file that cannot be read keeps the bundled one`() {
+        fetchFromGithub { throw IOException("offline") }
+
+        assertThat(versionCheckerUtils.definition.text("38")).isEqualTo("3.3.1.4")
+    }
+
+    /** `definition.json` on the same branch is the old array form, kept for older versions. It must not be taken. */
+    @Test
+    fun `the old array form is not taken`() {
+        fetchFromGithub { """[{"minAndroid":30,"maxAndroid":99,"supported":"9.9.9"}]""" }
+
+        assertThat(versionCheckerUtils.definition.text("38")).isEqualTo("3.3.1.4")
+    }
+
+    @Test
+    fun `GitHub is read at most once a day after a success`() {
+        var now = 10_000_000_000L
+        whenever(dateUtil.now()).thenAnswer { now }
+        var reads = 0
+        val answer: suspend () -> String = { reads++; """{"38": "3.4.0.0"}""" }
+
+        fetchFromGithub(answer)
+        fetchFromGithub(answer)
+        assertThat(reads).isEqualTo(1)
+
+        now += 24 * 60 * 60 * 1000L
+        fetchFromGithub(answer)
+        assertThat(reads).isEqualTo(2)
     }
 
     @Test

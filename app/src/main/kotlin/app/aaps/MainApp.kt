@@ -59,13 +59,10 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 import rxdogtag2.RxDogTag
 import java.io.IOException
 import java.util.Locale
-import kotlin.reflect.KMutableProperty
-import kotlin.reflect.full.declaredMemberProperties
 import kotlin.time.Duration.Companion.milliseconds
 import android.content.res.Configuration as ResourcesConfiguration
 import app.aaps.core.ui.R as CoreUiR
@@ -487,19 +484,13 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         aapsLogger.debug("RemoteConfig received successfully")
-                        @Suppress("UNCHECKED_CAST")
-                        (versionCheckersUtils::class.declaredMemberProperties.find { it.name == "definition" } as KMutableProperty<Any>?)
-                            ?.let {
-                                // `definition` is read through reflection, so the cast below is unchecked and the
-                                // compiler cannot see it. It said JSONObject long after the property became a
-                                // kotlinx JsonObject, and the app crashed on start as soon as a remote config
-                                // fetch actually succeeded - which needs network and Play Services, so no test or
-                                // CI build ever reached it. Keep the two types here in step by hand.
-                                val current = it.getter.call(versionCheckersUtils) as JsonObject
-                                val remote = Json.parseToJsonElement(firebaseRemoteConfig.getString("defs")).jsonObject
-                                // Plus on the maps is a shallow merge with the remote keys winning.
-                                it.setter.call(versionCheckersUtils, JsonObject(current + remote))
-                            }
+                        // It was put in by reflection on a writable property, which crashed the start when the two
+                        // types here fell out of step. The checker keeps the order of its three sources itself.
+                        try {
+                            versionCheckersUtils.setRemoteDefinition(Json.parseToJsonElement(firebaseRemoteConfig.getString("defs")).jsonObject)
+                        } catch (e: IllegalArgumentException) {
+                            aapsLogger.error("RemoteConfig defs not readable: $e")
+                        }
                     } else aapsLogger.error("RemoteConfig fetch failed")
                 }
         }
