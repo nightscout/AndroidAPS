@@ -4,7 +4,6 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.SceneLifecycle
@@ -25,11 +24,8 @@ import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.clientcontrol.isNotDeliveryError
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.appInitializedFlow
 import app.aaps.core.interfaces.configuration.ExternalOptions
-import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
@@ -39,12 +35,9 @@ import app.aaps.core.interfaces.overview.graph.TbrDisplayData
 import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.interfaces.overview.graph.TempTargetDisplayData
 import app.aaps.core.interfaces.overview.graph.TempTargetState
-import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
-import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -57,14 +50,12 @@ import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.UrlOpener
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
-import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.objects.wizard.QuickWizardMode
@@ -120,7 +111,6 @@ import kotlin.time.TimeSource
 @Stable
 @Inject
 class MainViewModel(
-    private val activePlugin: ActivePlugin,
     val config: Config,
     private val urlOpener: UrlOpener,
     val preferences: Preferences,
@@ -128,9 +118,7 @@ class MainViewModel(
     private val rh: TextResolver,
     private val dateUtil: DateUtil,
     private val overviewDataCache: OverviewDataCache,
-    private val iobCobCalculator: IobCobCalculator,
     private val profileFunction: ProfileFunction,
-    private val constraintChecker: ConstraintsChecker,
     private val quickWizard: QuickWizard,
     private val automation: Automation,
     private val persistenceLayer: PersistenceLayer,
@@ -230,11 +218,7 @@ class MainViewModel(
         overviewDataCache.profileFlow,
         overviewDataCache.runningModeFlow,
         overviewDataCache.tbrFlow,
-        // Re-emit the latest tick whenever QuickWizard entries change (local edit or synced from the
-        // main phone) so the carousel rebuilds. changes is a StateFlow (initial 0) → never blocks.
-        // Also when app init completes: the QuickWizard items are built only after that, and must not
-        // wait for the next tick to appear.
-        combine(progressTicker, quickWizard.changes, config.appInitializedFlow) { now, _, _ -> now }
+        progressTicker
     ) { ttData, profileData, rmData, tbrData, now ->
         buildChipState(ttData, profileData, rmData, tbrData, now)
     }
@@ -267,8 +251,7 @@ class MainViewModel(
             runningModeProgress = chip.runningModeProgress,
             runningModeRecordId = chip.runningModeRecordId,
             tbrState = chip.tbrState,
-            smbEnabled = ev.smbEnabled,
-            quickWizardItems = chip.quickWizardItems
+            smbEnabled = ev.smbEnabled
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MainUiState())
 
@@ -381,115 +364,8 @@ class MainViewModel(
             runningModeRemaining = rmRemaining,
             runningModeProgress = rmProgress,
             runningModeRecordId = if (rmExpired) 0 else rmData?.recordId ?: 0,
-            tbrState = if (tbrExpired) TbrState.NONE else tbrData?.state ?: TbrState.NONE,
-            quickWizardItems = computeQuickWizardItems(rmData?.mode)
+            tbrState = if (tbrExpired) TbrState.NONE else tbrData?.state ?: TbrState.NONE
         )
-    }
-
-    private suspend fun computeQuickWizardItems(runningMode: RM.Mode?): List<QuickWizardItem> {
-        val activeEntries = quickWizard.list().filter { it.isActive() }
-        if (activeEntries.isEmpty()) return emptyList()
-        // Read and calculate nothing before app init completes; chipStateFlow rebuilds as soon as it has.
-        // Until then activePlugin.activeAPS is null, and a profile read now keeps that null: ProfileSealed
-        // takes the APS when it is built. Checking just before doCalc() was not enough, because the profile
-        // was read before that check, and it reached ProfileSealed's "APS not defined" guard (crash at start).
-        if (!config.appInitialized) return emptyList()
-
-        val lastBG = iobCobCalculator.ads.lastBg()
-        val profile = profileFunction.getProfile()
-        val profileName = profileFunction.getProfileName()
-        val pump = activePlugin.activePump
-
-        return activeEntries.map { entry ->
-            when (entry.mode()) {
-                QuickWizardMode.INSULIN -> computeInsulinItem(entry, pump, runningMode)
-                QuickWizardMode.CARBS   -> computeCarbsItem(entry)
-                QuickWizardMode.WIZARD  -> computeWizardItem(entry, lastBG, profile, profileName, pump, runningMode)
-            }
-        }
-    }
-
-    private fun computeInsulinItem(entry: QuickWizardEntry, pump: Pump, runningMode: RM.Mode?): QuickWizardItem {
-        val buttonText = entry.buttonText()
-        val guid = entry.guid()
-        val detail = rh.gs(InterfacesStrings.format_insulin_units, entry.insulin())
-
-        val disabledReason = when {
-            !pump.isInitialized()                    -> rh.gs(CoreUiStrings.pump_not_initialized_profile_not_set)
-            pump.isSuspended()                       -> rh.gs(InterfacesStrings.pumpsuspended)
-            runningMode == RM.Mode.DISCONNECTED_PUMP -> rh.gs(InterfacesStrings.pump_disconnected)
-            else                                     -> null
-        }
-        if (disabledReason != null)
-            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = disabledReason)
-
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(entry.insulin(), aapsLogger)).value()
-        if (Round.isMoreThanRounding(entry.insulin(), insulinAfterConstraints, pump.bolusStepSize(insulinAfterConstraints)))
-            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(UiStrings.insulin_constraint_violation))
-
-        return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, isEnabled = true)
-    }
-
-    private fun computeCarbsItem(entry: QuickWizardEntry): QuickWizardItem {
-        val buttonText = entry.buttonText()
-        val guid = entry.guid()
-        val detail = rh.gs(InterfacesStrings.format_carbs, entry.carbs())
-
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
-        if (carbsAfterConstraints != entry.carbs())
-            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(UiStrings.carbs_constraint_violation))
-        // The eCarbs amount is stored in the preset, so the limit may have been lowered since it was entered.
-        val eCarbs = entry.eCarbsGrams()
-        if (constraintChecker.applyCarbsConstraints(ConstraintObject(eCarbs, aapsLogger)).value() != eCarbs)
-            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(UiStrings.carbs_constraint_violation))
-
-        return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, isEnabled = true)
-    }
-
-    private suspend fun computeWizardItem(
-        entry: QuickWizardEntry,
-        lastBG: InMemoryGlucoseValue?,
-        profile: Profile?,
-        profileName: String,
-        pump: Pump,
-        runningMode: RM.Mode?
-    ): QuickWizardItem {
-        val buttonText = entry.buttonText()
-        val guid = entry.guid()
-
-        val globalReason = when {
-            // App init is checked in computeQuickWizardItems, before the profile is read.
-            lastBG == null                           -> rh.gs(CoreUiStrings.wizard_no_actual_bg)
-            profile == null                          -> rh.gs(CoreUiStrings.noprofile)
-            !pump.isInitialized()                    -> rh.gs(CoreUiStrings.pump_not_initialized_profile_not_set)
-            pump.isSuspended()                       -> rh.gs(InterfacesStrings.pumpsuspended)
-            runningMode == RM.Mode.DISCONNECTED_PUMP -> rh.gs(InterfacesStrings.pump_disconnected)
-            else                                     -> null
-        }
-        if (globalReason != null)
-            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, disabledReason = globalReason)
-
-        val wizard = entry.doCalc(profile!!, profileName, lastBG!!)
-        if (wizard.calculatedTotalInsulin <= 0.0)
-            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, disabledReason = rh.gs(UiStrings.wizard_no_insulin_required))
-
-        val detail = rh.gs(
-            CoreUiStrings.value_with_unit,
-            rh.gs(InterfacesStrings.format_carbs, entry.carbs()),
-            rh.gs(InterfacesStrings.format_insulin_units, wizard.calculatedTotalInsulin)
-        )
-
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
-        if (carbsAfterConstraints != entry.carbs())
-            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(UiStrings.carbs_constraint_violation))
-        // The eCarbs amount is stored in the preset, so the limit may have been lowered since it was entered.
-        val eCarbs = entry.eCarbsGrams()
-        if (constraintChecker.applyCarbsConstraints(ConstraintObject(eCarbs, aapsLogger)).value() != eCarbs)
-            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(UiStrings.carbs_constraint_violation))
-        if (Round.isMoreThanRounding(wizard.calculatedTotalInsulin, wizard.insulinAfterConstraints, pump.bolusStepSize(wizard.insulinAfterConstraints)))
-            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(UiStrings.insulin_constraint_violation))
-
-        return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, isEnabled = true)
     }
 
     /**
@@ -1053,6 +929,5 @@ private data class ChipState(
     val runningModeRemaining: String = "",
     val runningModeProgress: Float = 0f,
     val runningModeRecordId: Long = 0,
-    val tbrState: TbrState = TbrState.NONE,
-    val quickWizardItems: List<QuickWizardItem> = emptyList()
+    val tbrState: TbrState = TbrState.NONE
 )
