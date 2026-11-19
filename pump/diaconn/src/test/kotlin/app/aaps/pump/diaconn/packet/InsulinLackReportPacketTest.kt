@@ -103,7 +103,7 @@ class InsulinLackReportPacketTest : TestBaseWithProfile() {
         val packet = InsulinLackReportPacket(packetInjector)
 
         // Then
-        assertThat(packet.msgType).isEqualTo(0xD8.toByte())
+        assertThat(packet.msgType).isEqualTo(0xD9.toByte())
     }
 
     @Test
@@ -122,7 +122,7 @@ class InsulinLackReportPacketTest : TestBaseWithProfile() {
     ): ByteArray {
         val data = ByteArray(20)
         data[0] = 0xef.toByte() // SOP
-        data[1] = 0xD8.toByte() // msgType
+        data[1] = 0xD9.toByte() // msgType
         data[2] = 0x01.toByte() // seq
         data[3] = 0x00.toByte() // con_end
         data[4] = grade.toByte()
