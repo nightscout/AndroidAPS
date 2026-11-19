@@ -1,153 +1,187 @@
-# Crowdin CLI Workflow
+# Crowdin API Workflow
 
-Working commands for translating AAPS strings via the Crowdin CLI **without touching the
-repo's `values-xx/` files** (which would conflict with Crowdin's own sync).
+How to translate AAPS strings on Crowdin through its API v2, **without touching the repo's
+`values-xx/` files** (they come back from Crowdin's own sync, and an edit there would conflict).
 
-## One-time setup
+## One-time setup: the token
 
-1. Install Crowdin CLI (Java 17+ required). Default Windows install:
-   `C:\Program Files (x86)\CrowdinCLI\crowdin-cli.jar`.
-2. Create a Personal Access Token at https://crowdin.com/settings#api-key with scopes
-   `Projects` + `Translations`. Token is only shown at creation — copy it then.
-3. Store credentials in `~/.crowdin.yml` (NOT in the repo's `crowdin.yml`):
-   ```yaml
-   api_token: "<token>"
-   project_id: "309752"
-   base_url: "https://api.crowdin.com"
-   ```
-   Proper YAML, one key per line — no JSON-style quoted keys on a single line.
-4. Invoke the CLI as `crowdin ...`. The installer does put a `crowdin.bat` on PATH — check with
-   `where crowdin`, which resolves to `C:\Program Files (x86)\CrowdinCLI\crowdin.bat`. Wrap it as
-   `powershell.exe -Command "crowdin ..."` so it starts with an allowed command prefix.
-   The `java -jar "C:/Program Files (x86)/CrowdinCLI/crowdin-cli.jar" ...` form below still works and
-   is the fallback if `where crowdin` finds nothing.
+1. Create a Personal Access Token at https://crowdin.com/settings#api-key with the scopes
+   `Projects` and `Translations`. It is shown only once, at creation.
+2. Save the bare token (nothing else in the file) in a file **outside every git checkout**, and set
+   the environment variable `CROWDIN_TOKEN_FILE` to that file's path.
+3. **Never show the token.** Do not `cat`, `type`, `echo`, `grep` or `sed` the token file, and never
+   put the token on a command line or in a URL: command lines end up in logs and in permission
+   prompts. Only the helper script below reads it, and it never prints it.
+
+There is no Crowdin CLI step anywhere in this procedure. Everything runs as small Node scripts
+(Node 18 or newer, for `fetch`). Save them in a new folder in the session scratchpad (or in
+`%TEMP%` when there is no scratchpad), not in the repo, and run them from the repo root.
+
+### The helper: `crowdin-api.js`
+
+Every script below starts with `require('<scripts folder>/crowdin-api')`.
+
+```js
+// crowdin-api.js - Crowdin API v2 for the AndroidAPS project (309752). Reads the token from the
+// file named in CROWDIN_TOKEN_FILE and never prints it.
+const fs = require('fs')
+const tokenFile = process.env.CROWDIN_TOKEN_FILE
+if (!tokenFile || !fs.existsSync(tokenFile)) {
+  console.error('Set CROWDIN_TOKEN_FILE to the file that holds the token.')
+  process.exit(2)
+}
+const token = fs.readFileSync(tokenFile, 'utf8').trim()
+const base = 'https://api.crowdin.com/api/v2/projects/309752'
+
+async function call(method, path, body) {
+  for (let attempt = 1; ; attempt++) {
+    let r
+    try {
+      r = await fetch(base + path, {
+        method,
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: body ? JSON.stringify(body) : undefined,
+      })
+    } catch (e) { // a short network drop
+      if (attempt < 6) { await new Promise(res => setTimeout(res, 2000 * attempt)); continue }
+      throw e
+    }
+    if ((r.status === 429 || r.status >= 500) && attempt < 6) { await new Promise(res => setTimeout(res, 2000 * attempt)); continue }
+    const text = await r.text()
+    const json = text ? JSON.parse(text) : {}
+    if (!r.ok) { const e = new Error(`${method} ${path} -> HTTP ${r.status} ${text.slice(0, 300)}`); e.status = r.status; e.body = json; throw e }
+    return json
+  }
+}
+const get = path => call('GET', path)
+const post = (path, body) => call('POST', path, body)
+
+// Every page of a list, as plain objects.
+async function all(path) {
+  const out = []
+  for (let offset = 0; ; offset += 500) {
+    const page = await get(`${path}${path.includes('?') ? '&' : '?'}limit=500&offset=${offset}`)
+    out.push(...page.data.map(x => x.data))
+    if (page.data.length < 500) return out
+  }
+}
+
+const devBranch = async () => (await all('/branches')).find(b => b.name === 'dev').id
+
+// Add a translation; when the same text is already there, use that one. Approve it only when asked.
+// Approving moves the approval away from an older translation of the same string.
+async function addTranslation(stringId, languageId, text, approve) {
+  let id
+  try {
+    id = (await post('/translations', { stringId, languageId, text })).data.id
+  } catch (e) {
+    if (e.status !== 400 && e.status !== 409) throw e
+    const same = (await all(`/translations?stringId=${stringId}&languageId=${languageId}`)).find(t => t.text === text)
+    if (!same) throw e
+    id = same.id
+  }
+  if (approve) await post('/approvals', { translationId: id }).catch(e => { if (e.status !== 400 && e.status !== 409) throw e })
+  return id
+}
+
+module.exports = { get, post, all, devBranch, addTranslation }
+```
 
 ## Project specifics
 
-- Project id: `309752`, branch: **`dev`** — every command must include `-b dev`.
-- Android locale mapping: `%android_code%` resolves to full locale (e.g. `cs` → `cs-rCZ`,
-  `pt-BR` → `pt-rBR`), so translations land in `values-cs-rCZ/`, not `values-cs/`.
-- Project has **"Export only approved"** enabled. Downloads hide unapproved translations
-  even when they exist. To see all (approved + unapproved), query the REST API:
-  `GET /api/v2/projects/309752/languages/{lang}/translations?fileId={id}`.
-- Sources reach Crowdin through Crowdin's GitHub integration, not through the CLI. It syncs `dev` a
-  few minutes after a push and reads **only the paths listed in `crowdin.yml`**. Translations come
-  back as "New Crowdin updates" pull requests, which hold the last approved export - so the repo's
-  `values-xx/` files are a record of what was approved.
+- Project id `309752`. Everything lives in the Crowdin branch **`dev`**, so file paths in the API
+  start with `/dev/` (for example `/dev/app/src/main/res/values/strings.xml`).
+- Language ids are Crowdin's (`cs`, `pt-BR`, `es-ES`). The repo folders use the Android code
+  (`values-cs-rCZ`, `values-pt-rBR`); the project's `targetLanguages` give both (`id`, `androidCode`).
+- The project has **"Export only approved"** on. The repo's `values-xx/` files therefore hold only
+  approved text. To see unapproved translations too, read them through the API (step 2 below).
+- Sources reach Crowdin through Crowdin's GitHub integration. It syncs `dev` a few minutes after a
+  push and reads **only the paths listed in `crowdin.yml`**. Translations come back as "New Crowdin
+  updates" pull requests, which hold the last approved export - so the repo's `values-xx/` files
+  are a record of what was approved.
 - **The integration owns `crowdin.yml`.** Saving its settings in the Crowdin web UI rewrites the
   file and strips every comment (commit "Update Crowdin configuration file [ci skip]", e.g.
   `2be1bd2831`). Keep notes in commit messages or here, never in `crowdin.yml`.
 - Some `values-xx/` folders in the repo are for languages that are not Crowdin target languages
-  (in 2026-09: `cy`, `fi`, `sl`, `ta`). `upload translations` skips them without a message.
+  (in 2026-09: `cy`, `fi`, `sl`, `ta`). The API refuses translations for them.
 
-## Workflow — translate without touching the repo
+## Workflow: translate one file
 
-### 1. Prepare a temp workspace
+### 1. Find the file id
 
-Make a new folder in the session scratchpad (or in `%TEMP%` when there is no scratchpad), not in
-`/tmp`. Below it is called `<work>`; write its full path in the commands. Create a minimal
-`crowdin.yml` in it, listing only the file(s) being worked on. **`preserve_hierarchy: true` is
-required** or the CLI looks for files at the wrong branch-internal path.
-
-```yaml
-preserve_hierarchy: true
-files:
-  - source: /app/src/main/res/values/strings.xml
-    translation: /app/src/main/res/values-%android_code%/strings.xml
+```js
+// files.js - node files.js [part of a path]
+const { all, devBranch } = require('<scripts folder>/crowdin-api')
+;(async () => {
+  const files = await all(`/files?branchId=${await devBranch()}&recursion=1`)
+  for (const f of files) if (f.path.includes(process.argv[2] ?? '')) console.log(f.id, f.path)
+})()
 ```
 
-Copy the source file(s) from the repo into the temp dir at the same relative path — the
-CLI refuses to work if the source is missing under `--base-path`:
+### 2. Read the state of one language
 
-```bash
-mkdir -p <work>/app/src/main/res/values
-cp app/src/main/res/values/strings.xml <work>/app/src/main/res/values/
+```js
+// state.js - node state.js <fileId> <languageId>      e.g. node state.js 7 cs
+const { all } = require('<scripts folder>/crowdin-api')
+;(async () => {
+  const [fileId, lang] = process.argv.slice(2)
+  const strings = await all(`/strings?fileId=${fileId}`)
+  const translations = new Map((await all(`/languages/${lang}/translations?fileId=${fileId}`)).map(t => [t.stringId, t]))
+  const approved = new Set((await all(`/approvals?fileId=${fileId}&languageId=${lang}`)).map(a => a.translationId))
+  for (const s of strings) {
+    const t = translations.get(s.id)
+    const state = !t ? 'missing' : approved.has(t.translationId) ? 'approved' : 'unapproved'
+    console.log(`${s.identifier}\t${state}\t${t?.text ?? ''}`)
+  }
+})()
 ```
 
-### 2. Download current translations (inspect state)
+Look at how the existing translations of the file are written - escapes such as `\'` and `\n`,
+and the placeholders - and write new ones the same way.
 
-```bash
-java -jar "C:/Program Files (x86)/CrowdinCLI/crowdin-cli.jar" download \
-  -l cs -b dev \
-  --base-path="<work>" \
-  -c "<work>/crowdin.yml" \
-  --no-progress --plain
+### 3. Add translations
+
+Write the new texts to a JSON file, `{ "<string key>": "<text>", ... }`, then:
+
+```js
+// add.js - node add.js <fileId> <languageId> <json file> [--approve]
+const fs = require('fs')
+const { all, addTranslation } = require('<scripts folder>/crowdin-api')
+;(async () => {
+  const [fileId, lang, json, flag] = process.argv.slice(2)
+  const wanted = JSON.parse(fs.readFileSync(json, 'utf8'))
+  const ids = new Map((await all(`/strings?fileId=${fileId}`)).map(s => [s.identifier, s.id]))
+  for (const [key, text] of Object.entries(wanted)) {
+    if (!ids.has(key)) { console.log('no such string:', key); continue }
+    await addTranslation(ids.get(key), lang, text, flag === '--approve')
+    console.log('ok', key)
+  }
+})()
 ```
 
-Writes to `<work>/app/src/main/res/values-cs-rCZ/strings.xml`.
+- **Without `--approve`** (the default) the translations wait for review in Crowdin. This is the
+  normal way.
+- **With `--approve`** they are approved at once. Use it only for text you trust.
+- To approve a translation that is already there, unapproved: `post('/approvals', { translationId })`
+  with the id from step 2.
+- Never delete other people's translations. `DELETE /translations/<id>` is only for your own wrong
+  suggestion.
 
-### 3. Edit the translation file
-
-Add new translations, keep existing ones. Keep all source keys present.
-
-### 4. Upload translations
-
-**Unapproved (default — recommended for review):**
-
-```bash
-java -jar "C:/Program Files (x86)/CrowdinCLI/crowdin-cli.jar" upload translations \
-  -l cs -b dev \
-  --base-path="<work>" \
-  -c "<work>/crowdin.yml" \
-  --no-progress
-```
-
-**Auto-approved (skip review — only when you trust the output):**
-
-```bash
-java -jar "C:/Program Files (x86)/CrowdinCLI/crowdin-cli.jar" upload translations \
-  -l cs -b dev \
-  --base-path="<work>" \
-  -c "<work>/crowdin.yml" \
-  --auto-approve-imported \
-  --no-progress
-```
-
-Note: re-uploading the same text that already exists as unapproved won't retroactively
-approve it — Crowdin dedupes. To approve existing unapproved translations, use the REST
-API (see below) or the web editor.
-
-### 5. Approve existing unapproved translations via REST API
-
-```bash
-# List unapproved translations for a language+file
-TOKEN=$(sed -n 's/^api_token: "\(.*\)"/\1/p' ~/.crowdin.yml)
-curl -s -H "Authorization: Bearer $TOKEN" \
-  "https://api.crowdin.com/api/v2/projects/309752/languages/cs/translations?fileId=7&limit=50"
-
-# Approve a single translation by id
-curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
-  -d '{"translationId":<id>}' \
-  "https://api.crowdin.com/api/v2/projects/309752/approvals"
-```
+Then run step 2 again and check that every string you meant to add is there.
 
 ## Common gotchas
 
-- **"Couldn't find any file to download"** — you forgot `-b dev`, or the source file isn't
-  present under `--base-path`.
-- **"file 'dev\strings.xml' is missing in the project"** on upload — `preserve_hierarchy`
-  is missing from the minimal `crowdin.yml`.
-- **Using the repo's committed `crowdin.yml` with a temp `--base-path`** fails because it
-  lists 40+ files whose sources don't exist in temp. Use a minimal temp yml listing only
-  what you're touching.
-- **`--dest-folder` does not exist** — use `--base-path` instead (CLI error message
-  suggests `--dest`, which is a different option for file rename).
-- **`crowdin file list` prints only "Fetching project info"** unless you pass
-  `-c <yml> --base-path=<dir>`.
-- **`upload translations` skips a translation that is the same as the English text** (names, units,
-  "STEP 1."), so the count on Crowdin comes out lower than the file. That is expected;
-  `--import-eq-suggestions` would import them too.
 - **A hand-written translation in a short folder** (e.g. `values-ko` next to Crowdin's
-  `values-ko-rKR`) is not what Crowdin reads or writes. To bring it in, copy it into the temp
-  workspace under the Crowdin folder name (`values-ko-rKR`) and upload with `-l <lang>`. Then
-  delete the short folder, or Korean lives in two places and drifts (carelevo's `values-ko` was
-  deleted on 2026-10-15 for this reason).
+  `values-ko-rKR`) is not what Crowdin reads or writes. To bring it in, add its strings to Crowdin
+  for that language (step 3), then delete the short folder, or Korean lives in two places and
+  drifts (carelevo's `values-ko` was deleted on 2026-10-15 for this reason).
 - **Changing the placeholders of an English string drops its translations on Crowdin.** Numbering
   `%s %s` to `%1$s %2$s` (carelevo, 2026-09-29) left those strings untranslated in every language.
   The old text is still offered by translation memory; enter it again with the new placeholders
   and approve it.
-- **Crowdin QA can block Save for a correct text**, e.g. the Korean grammar marker `(으)로` is
-  reported as "extra symbol". Use "Save Anyway".
+- **A string the same as the English text** (names, units, "STEP 1.") can still be added as a
+  translation. Whether it counts as translated depends on the project settings, so the percentage
+  on Crowdin may stay below 100 %.
 
 ## Wiki links in strings
 
@@ -177,10 +211,10 @@ open the wiki in its own language when there is one.
   label only with the next docs Crowdin export.
 - **Changing an English link drops all its translations on Crowdin.** After the sync, set the
   wiki languages again. Handy when anchors change: there is nothing old left to delete.
-- **Many links × 30 languages is not a job for the web editor.** Use API v2 with a small script:
-  list the strings of the file, `DELETE /translations?stringId=&languageId=`,
-  `POST /translations`, `POST /approvals`. Run it as a dry run first, and again after applying,
-  until it reports nothing left to change.
+- **Many links × 30 languages is not a job for the web editor.** Use the helper with a small script:
+  list the strings of the file, `DELETE /translations?stringId=&languageId=` (only for these link
+  strings, which nobody else edits), `addTranslation(..., true)`. Run it as a dry run first, and
+  again after applying, until it reports nothing left to change.
 
 ## Fixing one string in the web editor
 
@@ -203,6 +237,8 @@ browser extension, so it suits a handful of strings at most.
   from the old one. Only approved text is exported.
 - After Save the editor moves on to the next search result, so check which string is selected
   before you approve.
+- **Crowdin QA can block Save for a correct text**, e.g. the Korean grammar marker `(으)로` is
+  reported as "extra symbol". Use "Save Anyway".
 
 ## Seeing the aapt warnings about translations
 
@@ -320,24 +356,12 @@ two after the push.
    the old path, and list the old path in `crowdin.yml` again. Push both commits. At the sync
    Crowdin empties the old file to 0 strings. Say in the commit message that the entry is
    temporary - not in a comment in `crowdin.yml`, which the integration strips.
-3. **Check that no string drops out** of the new file (the script in the next section, with the
-   new file's id and `res` folder). If any do, restore them - see below. Do it before the next
-   "New Crowdin updates" PR is merged.
+3. **Check that no string drops out** of the new file (`crowdin-check.js` in the next section, with
+   the new file's id and `res` folder). If any do, restore their approvals with
+   `crowdin-check.js --fix` - see below. Do it before the next "New Crowdin updates" PR is merged.
 4. **Cleanup.** Once the old file has 0 strings, remove the placeholder and its `crowdin.yml`
    entry, and push. At the sync Crowdin deletes the empty old file.
 5. **Check** with the script and no arguments: it must print nothing.
-
-Restoring approvals (step 3): upload the repo's translations of that file with auto-approve, in a
-temp workspace as in the workflow above (a `crowdin.yml` listing only that file, with the source
-and all its `values-xx/` folders copied in):
-
-```bash
-crowdin upload translations -b dev --base-path=<dir> -c <dir>/crowdin.yml --auto-approve-imported --no-progress --plain
-```
-
-The repo holds the last approved export, so this approves exactly what was approved before.
-Strings already approved with the same text are left alone. Then run the script again - it must
-print nothing.
 
 Why each step is there:
 
@@ -355,58 +379,67 @@ Why each step is there:
 - The live `omnipod/dash` and `omnipod/eros` files were not affected by emptying and deleting the
   old ones.
 
-If a stale file is found some other time, the same steps 2, 4 and 5 remove it. The CLI can also
-delete it directly: `crowdin file delete <path on Crowdin, without /dev> -b dev`.
+If a stale file is found some other time, the same steps 2, 4 and 5 remove it.
 
 ## Checking for stale files and strings that would drop out
 
-Save as a `.js` file in a scratch directory and run with `node` from the repo root. It prints the
-Crowdin files that have no `source:` line in `crowdin.yml` (and the other way round). With
-`<fileId>:<res dir>` arguments it also prints, per language, the strings that the repo has
+Save as `crowdin-check.js` next to `crowdin-api.js` and run it with `node` from the repo root. It
+prints the Crowdin files that have no `source:` line in `crowdin.yml` (and the other way round).
+With `<fileId>:<res dir>` arguments it also prints, per language, the strings that the repo has
 translated but Crowdin has not approved - the ones the next export would drop. No output means
 everything is fine.
 
+A string whose **English text changed** since the last export is listed too, and that is expected:
+Crowdin dropped the approval because the old translation no longer fits, and translators must
+redo it. (On 2026-11-19 `plugins/sync` listed such strings in nine languages, after the English
+fixes of 2026-11-01.)
+
+With `--fix` it approves the listed strings again: the repo holds the last approved export, so for
+each one it looks for a translation on Crowdin with exactly the repo's text and approves it. It
+never adds or deletes text. A string it cannot match (the text differs, for example in its escapes)
+is printed as `not fixed`; handle those in the web editor.
+
+**Use `--fix` only right after a file move, when the English text did not change.** After an
+English change the repo's text is a translation of the *old* English, and `--fix` would approve it
+again.
+
 ```js
-// node crowdin-check.js [<fileId>:<res dir> ...]   e.g. 5881:pump/dana/common/src/main/res
-const fs = require('fs'), os = require('os'), path = require('path')
-const token = /api_token:\s*"([^"]+)"/.exec(fs.readFileSync(path.join(os.homedir(), '.crowdin.yml'), 'utf8'))[1]
-const base = 'https://api.crowdin.com/api/v2/projects/309752'
-const get = async url => (await fetch(url, { headers: { Authorization: `Bearer ${token}` } })).json()
-const names = xml => [...xml.matchAll(/<string\s+name="([^"]+)"/g)].map(m => m[1])
+// node crowdin-check.js [--fix] [<fileId>:<res dir> ...]   e.g. 5881:pump/dana/common/src/main/res
+const fs = require('fs'), path = require('path')
+const { get, post, all, devBranch } = require('./crowdin-api')
+const fix = process.argv.includes('--fix')
+const args = process.argv.slice(2).filter(a => a !== '--fix')
+// name -> text of the <string> entries of a resource file
+const texts = xml => new Map([...xml.matchAll(/<string\s+name="([^"]+)"[^>]*>([\s\S]*?)<\/string>/g)].map(m => [m[1], m[2]]))
 
 ;(async () => {
-  const onCrowdin = (await get(`${base}/files?branchId=1&recursion=1&limit=500`)).data.map(x => x.data.path.replace(/^\/dev/, ''))
+  const onCrowdin = (await all(`/files?branchId=${await devBranch()}&recursion=1`)).map(f => f.path.replace(/^\/dev/, ''))
   const listed = [...fs.readFileSync('crowdin.yml', 'utf8').matchAll(/^\s*- source:\s*(\S+)/gm)].map(m => m[1])
   onCrowdin.filter(p => !listed.includes(p)).forEach(p => console.log('only on Crowdin:', p))
   listed.filter(p => !onCrowdin.includes(p)).forEach(p => console.log('not on Crowdin yet:', p))
 
-  const languages = (await get(base)).data.targetLanguages
-  for (const arg of process.argv.slice(2)) {
+  const languages = (await get('')).data.targetLanguages
+  for (const arg of args) {
     const [fileId, dir] = arg.split(':')
-    const strings = (await get(`${base}/strings?fileId=${fileId}&limit=500`)).data.map(x => x.data)
-    const nameOf = new Map(strings.map(s => [s.id, s.identifier]))
+    const strings = await all(`/strings?fileId=${fileId}`)
+    const idOf = new Map(strings.map(s => [s.identifier, s.id]))
     for (const l of languages) {
       const repoFile = path.join(dir, `values-${l.androidCode}`, 'strings.xml')
       if (!fs.existsSync(repoFile)) continue
-      const approved = new Set((await get(`${base}/approvals?fileId=${fileId}&languageId=${l.id}&limit=500`)).data.map(x => nameOf.get(x.data.stringId)))
-      const lost = names(fs.readFileSync(repoFile, 'utf8')).filter(n => strings.some(s => s.identifier === n) && !approved.has(n))
-      if (lost.length) console.log(`${dir} ${l.id}: ${lost.join(', ')}`)
+      const approvedIds = new Set((await all(`/approvals?fileId=${fileId}&languageId=${l.id}`)).map(a => a.stringId))
+      const repo = texts(fs.readFileSync(repoFile, 'utf8'))
+      const lost = [...repo.keys()].filter(n => idOf.has(n) && !approvedIds.has(idOf.get(n)))
+      if (!lost.length) continue
+      console.log(`${dir} ${l.id}: ${lost.join(', ')}`)
+      if (!fix) continue
+      for (const name of lost) {
+        const same = (await all(`/translations?stringId=${idOf.get(name)}&languageId=${l.id}`)).find(t => t.text === repo.get(name))
+        if (same) await post('/approvals', { translationId: same.id })
+        else console.log(`  not fixed: ${l.id} ${name}`)
+      }
     }
   }
 })()
 ```
 
-It reads 500 strings and 500 approvals per file and language, which covers every file today; a
-bigger file needs `offset` paging.
-
-## Finding file IDs in the project
-
-```bash
-TOKEN=$(sed -n 's/^api_token: "\(.*\)"/\1/p' ~/.crowdin.yml)
-curl -s -H "Authorization: Bearer $TOKEN" \
-  "https://api.crowdin.com/api/v2/projects/309752/files?limit=500" \
-  | grep -oE '"id":[0-9]+[^}]*"path":"[^"]*"'
-```
-
-Paths in the API include the branch prefix, e.g.
-`/dev/app/src/main/res/values/strings.xml`.
+Then run it again without `--fix`: it must print nothing.
