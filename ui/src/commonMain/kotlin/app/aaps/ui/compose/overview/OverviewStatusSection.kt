@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
@@ -203,22 +201,21 @@ private fun StatusLightsSettingsBottomSheet(
 
 @Composable
 internal fun StatusLightsSettingsContent(settingsDef: PreferenceSubScreenDef) {
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .padding(bottom = 24.dp)
-    ) {
-        Text(
-            text = stringResource(CoreUiStrings.statuslights),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
-        )
-
-        // Multiple group subscreens → one expandable card each (collapsed by default), matching the
-        // main Settings screen's look. Shared renderer; groups are the SSOT in BuiltInSearchables.
-        PreferenceSheetContent(settingsDef = settingsDef)
-    }
+    // Multiple group subscreens → one expandable card each (collapsed by default), matching the
+    // main Settings screen's look. Shared renderer; groups are the SSOT in BuiltInSearchables.
+    // It scrolls itself, so the title goes in its header rather than a scrolling column around it.
+    PreferenceSheetContent(
+        settingsDef = settingsDef,
+        modifier = Modifier.padding(bottom = 24.dp),
+        header = {
+            Text(
+                text = stringResource(CoreUiStrings.statuslights),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
+            )
+        }
+    )
 }
 
 @Composable
