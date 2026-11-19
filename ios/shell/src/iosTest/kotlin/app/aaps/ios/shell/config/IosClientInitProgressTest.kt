@@ -37,14 +37,24 @@ class IosClientInitProgressTest {
         assertTrue(config.initProgressFlow.value.done)
     }
 
+    /**
+     * The splash is where a failed start is shown: "Initialization failed", the reason and Close. It is
+     * drawn only while not done, so a failure must leave `done` false.
+     *
+     * This test used to say the opposite - "done as well, or the failure screen would never be composed"
+     * - and pinned `done = true`. That hid the reason and built the app's screens over a start that never
+     * finished. On the first run of the full app it ended in "No pump selected" from a view model, which
+     * on Kotlin/Native aborts the process. Android has always kept `done` false here.
+     */
     @Test
-    fun `a failed start also releases the splash and carries the reason`() {
+    fun `a failed start keeps the splash up and carries the reason`() {
         val config = IosClientConfig(extraDir = null)
-        config.initFailed("the store would not open")
+        config.updateInitProgress("Initializing plugins", current = 3, total = 7)
+        config.initFailed("Default plugin not found")
 
-        // Done as well, or the failure screen it is meant to show would never be composed.
-        assertTrue(config.initProgressFlow.value.done)
-        assertEquals("the store would not open", config.initProgressFlow.value.error)
+        assertFalse(config.initProgressFlow.value.done, "the splash is where the failure is shown")
+        assertEquals("Default plugin not found", config.initProgressFlow.value.error)
+        assertFalse(config.appInitialized, "nothing may read the plugins after a failed start")
     }
 
     @Test

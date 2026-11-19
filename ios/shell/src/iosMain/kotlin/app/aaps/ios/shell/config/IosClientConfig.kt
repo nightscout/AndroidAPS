@@ -140,8 +140,9 @@ class IosClientConfig(
     private val _initSnackbarFlow = MutableSharedFlow<String>(extraBufferCapacity = 8)
     override val initSnackbarFlow: SharedFlow<String> = _initSnackbarFlow.asSharedFlow()
 
-    // Each of these replaces the whole value rather than copying it, which is how they were written
-    // and what the start-up progress wants. The one field that must survive is the reconfigure depth:
+    // The progress and the completion replace the whole value, which is what the start-up progress
+    // wants. A failure copies it instead, the same as Android, so that `done` stays false - see
+    // [initFailed]. The one field that must survive is the reconfigure depth:
     // it belongs to whoever opened the window, not to init progress, and clobbering it here would
     // close a window that `whileReconfiguring` still believes is open - reopening the app to readers
     // in the middle of an import. This used to matter more on iOS than anywhere else, when the
@@ -155,8 +156,17 @@ class IosClientConfig(
         _initProgressFlow.update { InitProgress(done = true, reconfiguringDepth = it.reconfiguringDepth) }
     }
 
+    /**
+     * Keeps the splash up and shows the reason on it, the same as Android's `ConfigImpl`.
+     *
+     * `done` must stay false here. `AapsAppRoot` draws the failure - "Initialization failed", the reason
+     * and Close - only inside the splash, which it shows only while not done. This set `done = true`
+     * before, which hid that message and built the app's screens on top of a start that never finished;
+     * the first view model that read the active pump then threw "No pump selected" and, on Kotlin/Native,
+     * took the process down. A copy also keeps the reconfigure depth.
+     */
     override fun initFailed(error: String) {
-        _initProgressFlow.update { InitProgress(done = true, error = error, reconfiguringDepth = it.reconfiguringDepth) }
+        _initProgressFlow.update { it.copy(error = error) }
     }
 
     override fun beginReconfiguring() {

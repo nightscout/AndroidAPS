@@ -119,9 +119,8 @@ class DesktopClientConfigOptionsTest {
      *
      * These three replace the whole [app.aaps.core.interfaces.configuration.InitProgress] rather than
      * copying it, so the depth has to be carried across by hand. Getting it wrong reopens the app to
-     * readers while a settings import still believes plugin state is being rebuilt - and this shape is
-     * shared with `IosClientConfig`, where it is worse: iOS starts at `done = true` and has no start-up
-     * sequence that would put the state right afterwards.
+     * readers while a settings import still believes plugin state is being rebuilt. `IosClientConfig`
+     * has the same shape.
      */
     @Test
     fun `init progress does not clear an open reconfiguration window`() {
@@ -141,5 +140,23 @@ class DesktopClientConfigOptionsTest {
         config.endReconfiguring()
         assertFalse(config.initProgressFlow.value.reconfiguring)
         assertTrue(config.appInitialized)
+    }
+
+    /**
+     * A failed start stays on the splash, which is the only place `AapsAppRoot` shows the reason. This
+     * set `done = true` before, the same as iOS, which hid the reason and built the app over a start
+     * that never finished. Android has always kept `done` false here.
+     */
+    @Test
+    fun `a failed start keeps the splash up and carries the reason`() {
+        val fresh = DesktopClientConfig(extraDir = extraDir)
+        assertFalse(fresh.initProgressFlow.value.done, "a fresh app must not claim to be ready")
+
+        fresh.updateInitProgress("Initializing plugins", 3, 7)
+        fresh.initFailed("Default plugin not found")
+
+        assertFalse(fresh.initProgressFlow.value.done, "the splash is where the failure is shown")
+        assertEquals("Default plugin not found", fresh.initProgressFlow.value.error)
+        assertFalse(fresh.appInitialized, "nothing may read the plugins after a failed start")
     }
 }

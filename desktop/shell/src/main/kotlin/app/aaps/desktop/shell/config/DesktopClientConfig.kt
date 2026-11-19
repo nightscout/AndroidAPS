@@ -100,13 +100,17 @@ class DesktopClientConfig(
     /** [appNameText]. A literal rather than a resource: desktop has no resource table, and the name is not translated on Android either. */
     override val appName: TextRef = TextRef.Literal(appNameText)
 
-    private val _initProgressFlow = MutableStateFlow(InitProgress(done = true))
+    // Not done at the start, the same as Android. The window composes the app only after `startApp` has
+    // run the whole start sequence, so this first value is never seen on success - it matters only when
+    // the start fails before its first progress step, where it keeps the failure on the splash.
+    private val _initProgressFlow = MutableStateFlow(InitProgress())
     override val initProgressFlow: StateFlow<InitProgress> = _initProgressFlow.asStateFlow()
 
     private val _initSnackbarFlow = MutableSharedFlow<String>(extraBufferCapacity = 8)
     override val initSnackbarFlow: SharedFlow<String> = _initSnackbarFlow.asSharedFlow()
 
-    // See IosClientConfig: these replace the whole value, and the reconfigure depth must survive it -
+    // See IosClientConfig: progress and completion replace the whole value, a failure copies it so that
+    // `done` stays false, and the reconfigure depth must survive all three -
     // it belongs to whoever opened the window, not to init progress. Clobbering it would reopen the
     // app to readers while an import still believes the window is held.
     override fun updateInitProgress(step: String, current: Int, total: Int) {
@@ -117,8 +121,9 @@ class DesktopClientConfig(
         _initProgressFlow.update { InitProgress(done = true, reconfiguringDepth = it.reconfiguringDepth) }
     }
 
+    /** Keeps the splash up with the reason on it, as Android does. See `IosClientConfig.initFailed`. */
     override fun initFailed(error: String) {
-        _initProgressFlow.update { InitProgress(done = true, error = error, reconfiguringDepth = it.reconfiguringDepth) }
+        _initProgressFlow.update { it.copy(error = error) }
     }
 
     override fun beginReconfiguring() {
