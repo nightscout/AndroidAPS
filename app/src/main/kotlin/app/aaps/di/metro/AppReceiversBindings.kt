@@ -3,6 +3,7 @@ package app.aaps.di.metro
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import app.aaps.implementation.alerts.EatReminderReceiver
 import app.aaps.implementation.androidNotification.AlarmMuteReceiver
+import app.aaps.implementation.pump.alerts.PumpAlertWakeReceiver
 import app.aaps.implementation.receivers.BTReceiver
 import app.aaps.implementation.receivers.ChargingStateReceiver
 import app.aaps.implementation.receivers.NetworkChangeReceiver
@@ -43,6 +44,13 @@ object AppReceiversBindings {
     @IntoMap
     @ClassKey(AlarmMuteReceiver::class)
     fun bindAlarmMuteReceiver(injector: MembersInjector<AlarmMuteReceiver>): MembersInjector<*> = injector
+
+    // The end of a pump alert's silence (an exact alarm) - same story as AlarmMuteReceiver above.
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(PumpAlertWakeReceiver::class)
+    fun bindPumpAlertWakeReceiver(injector: MembersInjector<PumpAlertWakeReceiver>): MembersInjector<*> = injector
 
     // The "time to eat" alarm and its notification buttons - same story as AlarmMuteReceiver above.
     @Provides

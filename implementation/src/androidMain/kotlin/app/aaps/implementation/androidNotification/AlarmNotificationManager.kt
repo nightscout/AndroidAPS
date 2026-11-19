@@ -118,6 +118,9 @@ class AlarmNotificationManager(
          */
         const val SOUND_ID_OFFSET = 100_000
 
+        /** Base of the ids of [postChime]: above the sound alarms, whose keys stay far below 100 000. */
+        const val CHIME_ID_OFFSET = 300_000
+
         private val SOUND_NAMES: Map<AlarmSound, String> = mapOf(
             AlarmSound.ALARM to "alarm",
             AlarmSound.BOLUS_ERROR to "boluserror",
@@ -482,6 +485,36 @@ class AlarmNotificationManager(
             )
         }
     }
+
+    /**
+     * A notification that sounds once, for a WARNING pump alert: the sound channel of [AlarmSound.ALARM], so the sound
+     * plays one time and does not loop. While Do Not Disturb is on and the override is off it only vibrates, as every
+     * alarm here (see [DoNotDisturbRule]). [chimeKey] identifies it for [cancelChime].
+     */
+    fun postChime(chimeKey: Int, title: String, body: String) {
+        channels // created on first post, see the field
+        val overrideDnd = preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
+        val channelId =
+            if (DoNotDisturbRule.staysQuiet(overrideDnd, mgr.currentInterruptionFilter)) CHANNEL_SILENT
+            else channelIdForSound(AlarmSound.ALARM, overrideDnd)
+        val notification = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(iconsProvider.getNotificationIcon())
+            .setContentTitle(title)
+            .setContentText(body)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(body))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .setContentIntent(notificationHolderProvider().openAppIntent())
+            .build()
+        try {
+            mgr.notify(CHIME_ID_OFFSET + chimeKey, notification)
+            aapsLogger.debug(LTag.NOTIFICATION, "Posted chime key=$chimeKey: $title")
+        } catch (ex: SecurityException) {
+            aapsLogger.error(LTag.NOTIFICATION, "Failed to post chime \"$title\" - POST_NOTIFICATIONS likely revoked", ex)
+        }
+    }
+
+    fun cancelChime(chimeKey: Int) = mgr.cancel(CHIME_ID_OFFSET + chimeKey)
 
     /**
      * Cancel a specific sound alarm by its [notificationKey] (the `AapsNotification.instanceKey`).

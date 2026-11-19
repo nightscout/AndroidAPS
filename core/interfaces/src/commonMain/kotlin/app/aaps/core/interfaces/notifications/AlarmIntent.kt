@@ -29,4 +29,11 @@ object AlarmIntent {
 
     /** True for the alarm of the "time to eat" timer: the alarm screen then offers +5 min instead of a 5 minute mute. */
     const val EXTRA_EAT_REMINDER = "eatReminder"
+
+    /**
+     * Set for the alarm screen of a pump alert (`PumpAlerts`): its `source` and `key`. The screen then shows that alert,
+     * plays no sound of its own (the notification list owns it) and its buttons silence or act on that alert only.
+     */
+    const val EXTRA_PUMP_ALERT_SOURCE = "pumpAlertSource"
+    const val EXTRA_PUMP_ALERT_KEY = "pumpAlertKey"
 }

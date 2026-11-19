@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +28,7 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.AlarmIntent
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
+import app.aaps.core.interfaces.pump.alerts.PumpAlerts
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAlarmDismissed
 import app.aaps.core.interfaces.ui.IconsProvider
@@ -42,6 +44,7 @@ import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
+import app.aaps.core.ui.compose.stringResource
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
 
@@ -63,10 +66,19 @@ class ErrorActivity : MetroAppCompatActivity() {
     @Inject lateinit var iconsProvider: IconsProvider
     @Inject lateinit var alarmSoundPlayer: AlarmSoundPlayer
     @Inject lateinit var eatReminder: EatReminder
+    @Inject lateinit var pumpAlerts: PumpAlerts
 
     private var status by mutableStateOf("")
     private var title by mutableStateOf("")
     private var eatReminderAlarm by mutableStateOf(false)
+
+    /**
+     * Set when this screen shows a pump alert ([AlarmIntent.EXTRA_PUMP_ALERT_SOURCE]). It then plays no sound of its
+     * own - the notification list owns it - and its buttons silence or act on that alert only.
+     */
+    private var pumpAlertSource by mutableStateOf<String?>(null)
+    private var pumpAlertKey by mutableStateOf<String?>(null)
+    private val isPumpAlert get() = pumpAlertSource != null && pumpAlertKey != null
 
     /** The eat reminder's alarm was silenced on this screen. The screen then stays, as for every alarm. */
     private var mutedHere = false
@@ -96,11 +108,21 @@ class ErrorActivity : MetroAppCompatActivity() {
         eatReminderAlarm = intent.getBooleanExtra(AlarmIntent.EXTRA_EAT_REMINDER, false)
         sound = intent.getStringExtra(AlarmIntent.EXTRA_SOUND)?.let { runCatching { AlarmSound.valueOf(it) }.getOrNull() } ?: AlarmSound.ERROR
         postedAtElapsedRealtime = intent.getLongExtra(AlarmIntent.EXTRA_POSTED_AT_ELAPSED_REALTIME, 0L)
+        readPumpAlert(intent)
         val appIcon = iconsProvider.getIcon()
 
         aapsLogger.debug("Error activity displayed: $title - $status")
 
         setContent {
+            val source = pumpAlertSource
+            val key = pumpAlertKey
+            val activeAlerts by pumpAlerts.active.collectAsState()
+            val pumpAlert = if (source != null && key != null) activeAlerts.firstOrNull { it.source == source && it.key == key } else null
+            // The alert ended (the pump dropped it, or its action cleared it): nothing is left to show.
+            if (source != null && key != null) LaunchedEffect(source, key) {
+                pumpAlerts.active.first { list -> list.none { it.source == source && it.key == key } }
+                finish()
+            }
             // The timer ended or was moved +5 min somewhere else (the watch, a client, the notification): its
             // alarm is silenced there, and this screen has nothing left to offer, so it closes. The alarm has
             // rung when this screen opens, so a timer that has not rung is one that was extended.
@@ -126,7 +148,30 @@ class ErrorActivity : MetroAppCompatActivity() {
                             modifier = Modifier.fillMaxSize(),
                             color = Color.Transparent
                         ) {
-                            ErrorScreen(
+                            if (source != null && key != null) ErrorScreen(
+                                title = pumpAlert?.let { stringResource(it.title) } ?: title,
+                                status = pumpAlert?.text?.let { stringResource(it) } ?: status,
+                                appIcon = appIcon,
+                                onOk = {
+                                    uel.log(Action.ERROR_DIALOG_OK, Sources.Unknown)
+                                    pumpAlerts.silence(source, key)
+                                    finish()
+                                },
+                                onMute = {
+                                    uel.log(Action.ERROR_DIALOG_MUTE, Sources.Unknown)
+                                    pumpAlerts.silence(source, key)
+                                },
+                                onMute5Min = {
+                                    uel.log(Action.ERROR_DIALOG_MUTE_5MIN, Sources.Unknown)
+                                    pumpAlerts.snooze(source, key, UiInteraction.MUTE_MINUTES)
+                                },
+                                // The notification list owns the sound of a pump alert.
+                                onStart = {},
+                                actionLabel = pumpAlert?.action?.let { stringResource(it.label) },
+                                // The screen stays until the alert ends, so a failure shows here.
+                                onAction = { pumpAlerts.act(source, key) },
+                                silenceMinutes = PumpAlerts.SILENCE_MINUTES
+                            ) else ErrorScreen(
                                 title = title,
                                 status = status,
                                 appIcon = appIcon,
@@ -179,9 +224,15 @@ class ErrorActivity : MetroAppCompatActivity() {
         eatReminderAlarm = intent.getBooleanExtra(AlarmIntent.EXTRA_EAT_REMINDER, false)
         sound = intent.getStringExtra(AlarmIntent.EXTRA_SOUND)?.let { runCatching { AlarmSound.valueOf(it) }.getOrNull() } ?: AlarmSound.ERROR
         postedAtElapsedRealtime = intent.getLongExtra(AlarmIntent.EXTRA_POSTED_AT_ELAPSED_REALTIME, 0L)
+        readPumpAlert(intent)
         aapsLogger.debug("Error activity updated: $title - $status")
         // play() stops any previous playback first.
         startAlarm()
+    }
+
+    private fun readPumpAlert(intent: Intent) {
+        pumpAlertSource = intent.getStringExtra(AlarmIntent.EXTRA_PUMP_ALERT_SOURCE)
+        pumpAlertKey = intent.getStringExtra(AlarmIntent.EXTRA_PUMP_ALERT_KEY)
     }
 
     override fun onDestroy() {
@@ -191,6 +242,8 @@ class ErrorActivity : MetroAppCompatActivity() {
     }
 
     private fun startAlarm() {
+        // A pump alert rings through the notification list, not through this screen.
+        if (isPumpAlert) return
         alarmSoundPlayer.play(sound, AlarmSoundPlayer.OWNER_FULLSCREEN, postedAtElapsedRealtime)
     }
 

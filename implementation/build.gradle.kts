@@ -106,6 +106,8 @@ kotlin {
             dependencies {
                 // OkHttp on Android, the engine the app already ships.
                 implementation(libs.io.ktor.client.okhttp)
+                // The alarm screen of a pump alert opens at once when AAPS is in front (AndroidPumpAlertPlatform).
+                implementation(libs.androidx.lifecycle.process)
             }
             dependencies {
                 implementation(project(":core:data"))

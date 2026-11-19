@@ -96,6 +96,11 @@
             android:name="app.aaps.implementation.androidNotification.AlarmMuteReceiver"
             android:exported="false" />
 
+        <!-- The silence of a pump alert has ended: it rings again if still active (AndroidPumpAlertPlatform). -->
+        <receiver
+            android:name="app.aaps.implementation.pump.alerts.PumpAlertWakeReceiver"
+            android:exported="false" />
+
         <!-- "Time to eat" timer: its alarm (setAlarmClock) and the Stop / +5 min notification buttons. -->
         <receiver
             android:name="app.aaps.implementation.alerts.EatReminderReceiver"

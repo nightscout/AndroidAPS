@@ -407,6 +407,7 @@ pref_rileylink_mac_address|RileyLinkStringKey|true
 pref_rileylink_name|RileyLinkStringKey|true
 profile_switch_last_synced_id|XdripLongKey|false
 protection_timeout|IntKey|true
+pump_alert_silences|StringNonKey|false
 pump_expiry_warning_hour|MedtrumIntKey|true
 pump_serial_no|DiaconnIntNonKey|true
 pump_state|MedtrumIntNonKey|true

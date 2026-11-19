@@ -55,7 +55,12 @@ fun ErrorScreen(
     onMute5Min: () -> Unit,
     onStart: () -> Unit,
     /** The alarm of the "time to eat" timer: the first button moves the timer 5 minutes instead of muting for 5 minutes. */
-    eatReminder: Boolean = false
+    eatReminder: Boolean = false,
+    /** A pump alert's own step, for example "clear the alarm on the patch", shown first. Null: no such button. */
+    actionLabel: String? = null,
+    onAction: () -> Unit = {},
+    /** A pump alert: its silence lasts this long, and the two silence buttons say so. Null: they say nothing of time. */
+    silenceMinutes: Int? = null
 ) {
     DisposableEffect(Unit) {
         onStart()
@@ -136,6 +141,18 @@ fun ErrorScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
+                // A pump alert's own step: the button that acts on the alarm, not only on the sound
+                if (actionLabel != null) {
+                    Button(
+                        onClick = onAction,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(actionLabel)
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+
                 // Mute 5 min button (+5 min for the eat timer)
                 Button(
                     onClick = onMute5Min,
@@ -154,7 +171,10 @@ fun ErrorScreen(
                     onClick = onMute,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(stringResource(CoreUiStrings.alarm_silence))
+                    Text(
+                        if (silenceMinutes != null) stringResource(CoreUiStrings.alarm_silence_for, stringResource(CoreUiStrings.format_mins, silenceMinutes))
+                        else stringResource(CoreUiStrings.alarm_silence)
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -164,7 +184,10 @@ fun ErrorScreen(
                     onClick = onOk,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(stringResource(CoreUiStrings.alarm_silence_and_close))
+                    Text(
+                        if (silenceMinutes != null) stringResource(CoreUiStrings.alarm_silence_for_and_close, stringResource(CoreUiStrings.format_mins, silenceMinutes))
+                        else stringResource(CoreUiStrings.alarm_silence_and_close)
+                    )
                 }
             }
         }
