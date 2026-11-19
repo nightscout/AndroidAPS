@@ -99,7 +99,7 @@ class CarelevoActivationExecutor @Inject constructor(
         is CmdSafetyCheck            -> runSafetyCheck()
         is CmdNeedleCheck            -> runNeedleCheck()
         is CmdSetBasal               -> runSetBasal()
-        is CmdAdditionalPriming      -> runAdditionalPriming()
+        is CmdAdditionalPriming      -> runAdditionalPriming(command)
         is CmdDiscard                -> runDiscard()
         is CmdPumpStop               -> runPumpStop(command.durationMin)
         is CmdPumpResume             -> runPumpResume()
@@ -348,7 +348,7 @@ class CarelevoActivationExecutor @Inject constructor(
         }
     }
 
-    private fun runAdditionalPriming(): PumpEnactResult {
+    private fun runAdditionalPriming(command: CmdAdditionalPriming): PumpEnactResult {
         val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
@@ -357,7 +357,8 @@ class CarelevoActivationExecutor @Inject constructor(
                 bleSession.runAdditionalPriming(address)
             }
             val success = response.resultCode == RESULT_SUCCESS
-            aapsLogger.info(LTag.PUMPCOMM, "ble.additionalPriming OK result=${response.resultCode}")
+            command.patchRefused = !success
+            aapsLogger.info(LTag.PUMPCOMM, "ble.additionalPriming answered result=${response.resultCode}")
             result.success(success).enacted(success)
         } catch (e: Exception) {
             aapsLogger.error(LTag.PUMPCOMM, "ble.additionalPriming FAILED", e)

@@ -274,11 +274,23 @@ class CarelevoPatchSafetyCheckViewModel @Inject constructor(
             try {
                 repeat(PRIMING_BURST_COUNT) { pulse ->
                     _primingPulse.value = pulse + 1
-                    if (!sendPrimingPulse(pulse)) {
-                        // The link failed, not the patch — leave the allowance unspent.
-                        setUiState(UiState.Idle)
-                        triggerEvent(CarelevoConnectSafetyCheckEvent.AdditionalPrimingFailed)
-                        return@launch
+                    when (sendPrimingPulse(pulse)) {
+                        PulseOutcome.DELIVERED     -> Unit
+
+                        PulseOutcome.NO_ANSWER     -> {
+                            // The link failed, not the patch — leave the allowance unspent.
+                            setUiState(UiState.Idle)
+                            triggerEvent(CarelevoConnectSafetyCheckEvent.AdditionalPrimingFailed)
+                            return@launch
+                        }
+
+                        PulseOutcome.PATCH_REFUSED -> {
+                            // The patch itself refused the pulse twice: a bad patch, the same end as a spent allowance.
+                            setUiState(UiState.Idle)
+                            recordSafetyCheckFailAlarm()
+                            triggerEvent(CarelevoConnectSafetyCheckEvent.PrimingRetryLimitExceeded)
+                            return@launch
+                        }
                     }
                     if (pulse < PRIMING_BURST_COUNT - 1) delay(PRIMING_BURST_INTERVAL_MS)
                 }
@@ -290,20 +302,26 @@ class CarelevoPatchSafetyCheckViewModel @Inject constructor(
         }
     }
 
+    private enum class PulseOutcome { DELIVERED, NO_ANSWER, PATCH_REFUSED }
+
     // Each pulse opens its own BLE session; on a slow phone that outlasts the gap and the pulse is
-    // refused — the handset, not the patch, so try again.
-    private suspend fun sendPrimingPulse(pulse: Int): Boolean {
+    // refused — the handset, not the patch, so try again once. The CareLevo app stops at the first
+    // answer that is not success; here a second try is allowed, and a patch that refuses both is bad.
+    private suspend fun sendPrimingPulse(pulse: Int): PulseOutcome {
+        var refusals = 0
         repeat(PULSE_ATTEMPTS) { attempt ->
-            val result = commandQueue.customCommand(CmdAdditionalPriming())
+            val command = CmdAdditionalPriming()
+            val result = commandQueue.customCommand(command)
             aapsLogger.debug(
                 LTag.PUMPCOMM,
-                "priming pulse ${pulse + 1}/$PRIMING_BURST_COUNT attempt ${attempt + 1} success=${result.success}"
+                "priming pulse ${pulse + 1}/$PRIMING_BURST_COUNT attempt ${attempt + 1} success=${result.success} patchRefused=${command.patchRefused}"
             )
-            if (result.success) return true
+            if (result.success) return PulseOutcome.DELIVERED
+            if (command.patchRefused) refusals++
             if (attempt < PULSE_ATTEMPTS - 1) delay(PRIMING_BURST_INTERVAL_MS)
         }
-        aapsLogger.error(LTag.PUMPCOMM, "additional priming pulse ${pulse + 1} not delivered")
-        return false
+        aapsLogger.error(LTag.PUMPCOMM, "additional priming pulse ${pulse + 1} not delivered, refused by the patch $refusals times")
+        return if (refusals == PULSE_ATTEMPTS) PulseOutcome.PATCH_REFUSED else PulseOutcome.NO_ANSWER
     }
 
     private fun recordSafetyCheckFailAlarm() {

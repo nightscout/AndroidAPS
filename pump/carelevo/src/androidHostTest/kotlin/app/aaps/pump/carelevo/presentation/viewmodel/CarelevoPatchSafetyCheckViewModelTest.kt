@@ -162,6 +162,21 @@ internal class CarelevoPatchSafetyCheckViewModelTest {
         whenever(commandQueue.customCommand(any())).thenReturn(result)
     }
 
+    /**
+     * Answer the priming pulses in turn: true = delivered, false = the patch answered "not success", null = no answer.
+     * After the last one, the last answer repeats.
+     */
+    private fun stubPrimingAnswers(vararg answers: Boolean?) = runBlocking {
+        val delivered = enactResult(true)
+        val failed = enactResult(false)
+        var call = 0
+        whenever(commandQueue.customCommand(any())).thenAnswer { invocation ->
+            val answer = answers.getOrElse(call++) { answers.last() }
+            if (answer == false) (invocation.arguments[0] as CmdAdditionalPriming).patchRefused = true
+            if (answer == true) delivered else failed
+        }
+    }
+
     /** Stub `customCommand` so it emits one 60 s Progress frame while "running", then returns [result]. */
     private fun stubCustomCommandEmittingProgress(
         result: PumpEnactResult,
@@ -903,6 +918,54 @@ internal class CarelevoPatchSafetyCheckViewModelTest {
 
         // Two failed attempts on the abandoned burst, then a full burst of three.
         verifyBlocking(commandQueue, times(5)) { customCommand(any<CmdAdditionalPriming>()) }
+        verifyBlocking(carelevoAlarmInfoUseCase, never()) { upsertAlarm(any()) }
+    }
+
+    @Test
+    fun `a pulse the patch refuses twice ends in the self-diagnosis alarm`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        stubPrimingAnswers(false, false)
+        val events = collectEvents()
+
+        sut.retryAdditionalPriming()
+        advanceUntilIdle()
+
+        assertThat(events).contains(CarelevoConnectSafetyCheckEvent.PrimingRetryLimitExceeded)
+        assertThat(events).doesNotContain(CarelevoConnectSafetyCheckEvent.AdditionalPrimingFailed)
+        verifyBlocking(commandQueue, times(2)) { customCommand(any<CmdAdditionalPriming>()) }
+        verifyBlocking(carelevoAlarmInfoUseCase) { upsertAlarm(any()) }
+    }
+
+    @Test
+    fun `a pulse the patch refuses once and then takes goes on with the burst`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        stubPrimingAnswers(false, true)
+        val events = collectEvents()
+
+        sut.retryAdditionalPriming()
+        advanceUntilIdle()
+
+        // Pulse 1 twice, then pulses 2 and 3.
+        verifyBlocking(commandQueue, times(4)) { customCommand(any<CmdAdditionalPriming>()) }
+        assertThat(events).doesNotContain(CarelevoConnectSafetyCheckEvent.PrimingRetryLimitExceeded)
+        assertThat(events).doesNotContain(CarelevoConnectSafetyCheckEvent.AdditionalPrimingFailed)
+        verifyBlocking(carelevoAlarmInfoUseCase, never()) { upsertAlarm(any()) }
+    }
+
+    @Test
+    fun `a refusal and then no answer is the link, not a bad patch`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        stubPrimingAnswers(false, null)
+        val events = collectEvents()
+
+        sut.retryAdditionalPriming()
+        advanceUntilIdle()
+
+        assertThat(events).contains(CarelevoConnectSafetyCheckEvent.AdditionalPrimingFailed)
+        assertThat(events).doesNotContain(CarelevoConnectSafetyCheckEvent.PrimingRetryLimitExceeded)
         verifyBlocking(carelevoAlarmInfoUseCase, never()) { upsertAlarm(any()) }
     }
 

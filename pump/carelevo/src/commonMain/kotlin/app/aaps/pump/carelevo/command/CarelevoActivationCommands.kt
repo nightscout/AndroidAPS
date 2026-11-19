@@ -3,6 +3,7 @@ package app.aaps.pump.carelevo.command
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.AlarmType
+import kotlin.concurrent.Volatile
 
 /**
  * Activation operations routed through the AAPS CommandQueue (managed connect-before-execute /
@@ -23,6 +24,12 @@ class CmdSetBasal : CustomCommand {
 class CmdAdditionalPriming : CustomCommand {
 
     override val statusDescription: String = "ADDITIONAL PRIMING"
+
+    /**
+     * Set by the executor when the patch answered and the answer was not success. A failed result without it means no
+     * answer came (the link). The wizard treats a patch that refuses the same pulse twice as a bad patch.
+     */
+    @Volatile var patchRefused: Boolean = false
 }
 
 class CmdDiscard : CustomCommand {

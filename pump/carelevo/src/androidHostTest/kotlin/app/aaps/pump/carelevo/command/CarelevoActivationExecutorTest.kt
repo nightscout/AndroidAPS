@@ -776,17 +776,29 @@ internal class CarelevoActivationExecutorTest {
         verifyBlocking(bleSession) { runAdditionalPriming(any()) }
     }
 
-    @Test fun `additionalPriming fails when rejected`() {
+    @Test fun `additionalPriming fails when rejected and says the patch refused`() {
         stubAdditionalPriming(SimpleResultResponse(resultCode = 7))
-        val result = sut.execute(CmdAdditionalPriming())
+        val command = CmdAdditionalPriming()
+        val result = sut.execute(command)
         assertThat(result?.success).isFalse()
+        assertThat(command.patchRefused).isTrue()
     }
 
-    @Test fun `additionalPriming returns failed result on exception`() {
+    @Test fun `additionalPriming accepted is not a refusal`() {
+        stubAdditionalPriming(SimpleResultResponse(resultCode = 0))
+        val command = CmdAdditionalPriming()
+        sut.execute(command)
+        assertThat(command.patchRefused).isFalse()
+    }
+
+    @Test fun `additionalPriming returns failed result on exception and no refusal`() {
         stubAdditionalPrimingThrows()
-        val result = sut.execute(CmdAdditionalPriming())
+        val command = CmdAdditionalPriming()
+        val result = sut.execute(command)
         assertThat(result?.success).isFalse()
         assertThat(result?.comment).isEqualTo(BOOM)
+        // No answer came: the link, not the patch.
+        assertThat(command.patchRefused).isFalse()
     }
 
     @Test fun `timeZoneUpdate success when accepted`() {
