@@ -7,6 +7,7 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.appInitializedFlow
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -89,6 +90,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
@@ -326,8 +328,8 @@ class CarelevoPumpPlugin @Inject constructor(
         // onStart() is now a suspend function launched fire-and-forget, so the (non-replayed)
         // EventAppInitialized could fire before this subscription was registered — leaving the
         // patch uninitialized and appearing deactivated after an app update (dev fixed the same
-        // race in eopatch). initPatchOnce() does not depend on other plugins; the basal profile is
-        // applied best-effort here and, if not yet available, is set later via setNewBasalProfile().
+        // race in eopatch). initPatchOnce() does not depend on other plugins. The basal profile is
+        // read once the app start has finished; with no profile at all it comes with setNewBasalProfile().
         val activeScope = scope ?: return
         activeScope.launch {
             aapsLogger.debug(LTag.PUMPCOMM, "onStart: 1) initPatchOnce waiting")
@@ -340,6 +342,11 @@ class CarelevoPumpPlugin @Inject constructor(
             }
             aapsLogger.debug(LTag.PUMPCOMM, "onStart: 1) initPatchOnce completed")
             try {
+                // Plugins start before the app start has finished, and until then getProfile() answers null on
+                // purpose. Read too early, the profile stayed empty after every app restart: the patch already
+                // has the program, so no setNewBasalProfile comes, and the Carelevo screen showed basal 0.00
+                // until the next profile switch.
+                config.appInitializedFlow.first { it }
                 val profile = profileFunction.getProfile()
                 if (profile != null) {
                     carelevoPatch.setProfile(profile)

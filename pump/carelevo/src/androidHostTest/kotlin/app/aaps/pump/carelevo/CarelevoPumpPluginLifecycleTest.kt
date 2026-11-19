@@ -1,5 +1,6 @@
 package app.aaps.pump.carelevo
 
+import app.aaps.core.interfaces.configuration.InitProgress
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.EffectiveProfile
@@ -178,6 +179,8 @@ class CarelevoPumpPluginLifecycleTest {
 
     private var started = false
 
+    private val initProgress = MutableStateFlow(InitProgress(done = true))
+
     @Before
     fun setUp() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
@@ -199,6 +202,8 @@ class CarelevoPumpPluginLifecycleTest {
         whenever(rh.gs(any<TextRef>(), anyVararg())).thenReturn("Mocked")
         // onStart follows the link for the alarm snapshot read; a test about the link stubs its own flow.
         whenever(bleSession.connected).thenReturn(MutableStateFlow(false))
+        // The app start has finished, unless a test says otherwise.
+        whenever(config.initProgressFlow).thenReturn(initProgress)
 
         testProfile = mock()
         whenever(testProfile.getBasal()).thenReturn(1.0)
@@ -436,12 +441,28 @@ class CarelevoPumpPluginLifecycleTest {
 
     @Test
     fun `onStart defers the profile to setNewBasalProfile when none is available yet`() {
-        // profileFunction.getProfile() answers null on the un-stubbed mock: the profile store is not up
-        // yet. onStart must still complete — the profile arrives later via setNewBasalProfile.
+        // profileFunction.getProfile() answers null on the un-stubbed mock: no profile switch was ever made.
+        // onStart must still complete — the profile arrives later via setNewBasalProfile.
         start()
 
         verify(carelevoPatch).initPatchOnce()
         verify(carelevoPatch, never()).setProfile(any())
+    }
+
+    /**
+     * An app restart: plugins start before the app start has finished, and getProfile() answers null until then.
+     * Read at once, the profile stayed empty, and the Carelevo screen showed basal 0.00 until the next profile switch.
+     */
+    @Test
+    fun `onStart reads the profile once the app start has finished`() {
+        initProgress.value = InitProgress(done = false)
+        whenever { profileFunction.getProfile() }.thenReturn(testProfile)
+
+        start()
+        verify(carelevoPatch, never()).setProfile(any())
+
+        initProgress.value = InitProgress(done = true)
+        verify(carelevoPatch).setProfile(testProfile)
     }
 
     @Test
