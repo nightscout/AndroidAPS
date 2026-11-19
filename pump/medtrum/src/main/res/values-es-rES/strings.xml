@@ -91,6 +91,7 @@
     <string name="press_OK_to_return">Presiona <b>OK</b> para volver a la pantalla principal</string>
     <string name="deactivate_sure">¿Estás seguro de que quieres desactivar el parche actual?</string>
     <string name="cancel_sure">¿Estás seguro de que quieres cancelar la activación?</string>
+    <string name="cancel_deactivation_sure">¿Está seguro de que desea cancelar la desactivación? El parche puede permanecer activo</string>
     <string name="medtrum_deactivate_pump_confirm">¿Estás seguro? ¡¡Esta acción no se puede revertir!!</string>
     <string name="press_next_or_cancel">Presiona <b>Siguiente</b> para desactivar o <b>Cancelar</b> para volver a la pantalla principal</string>
     <string name="deactivating_pump">Desactivando parche. Espera, por favor</string>
