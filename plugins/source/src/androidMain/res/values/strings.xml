@@ -210,7 +210,6 @@
     <string name="dexcom_oneplus_notif_title">Dexcom G7 / ONE+</string>
     <string name="dexcom_oneplus_notif_channel_name">Dexcom G7 / ONE+ status</string>
     <string name="dexcom_oneplus_notif_channel_desc">Ongoing sensor connection and warm-up status.</string>
-    <string name="dexcom_oneplus_notif_session_alive">Keeping the sensor connected</string>
     <string name="dexcom_oneplus_slot_conflict_title">This sensor is already your pre-soak sensor</string>
     <string name="dexcom_oneplus_slot_conflict_message">It is running as your pre-soak sensor. One sensor cannot be paired twice at the same time: the two connections would disturb each other and the pairing fails for both.\n\nIf it is ready, switch to it. That keeps everything it has collected. Otherwise cancel the pre-soak, which deletes what it has collected, and start it here instead.</string>
     <string name="dexcom_oneplus_slot_conflict_promote">Switch to it instead</string>

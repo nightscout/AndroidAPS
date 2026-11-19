@@ -207,7 +207,7 @@ class DexcomOnePlusWarmupNotification(private val context: Context) {
         private const val CHANNEL_ID = "DEXCOM_ONEPLUS_STATUS"
         private const val NOTIFICATION_ID = 8931
 
-        /** Not 8931 (warm-up) and not 8932 (session foreground service): those replace each other. */
+        /** Not 8931 (warm-up): the two would replace each other. */
         private const val ALERT_ID = 8933
 
         private const val REQUEST_WARMUP = 0
