@@ -1,20 +1,25 @@
 package app.aaps.implementation.pump
 
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.spy
 import org.mockito.kotlin.whenever
 
 /**
@@ -61,6 +66,47 @@ class PumpStatusProviderImplTest : TestBaseWithProfile() {
      * same fields", but "the bytes we upload still parse into the same document".
      */
     private suspend fun status(): JSONObject = JSONObject(sut.generatePumpJsonStatus().toString())
+
+    private fun setReservoir(pumpType: PumpType, units: Double) {
+        val pump = spy(testPumpPlugin)
+        pump.pumpDescription.pumpType = pumpType
+        whenever(pump.reservoirLevel).thenReturn(MutableStateFlow(PumpInsulin(units)))
+        whenever(activePlugin.activePump).thenReturn(pump)
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = PumpType::class, names = ["OMNIPOD_5", "OMNIPOD_DASH"])
+    fun `pod reservoir above the measuring range is omitted`(pumpType: PumpType) = runTest {
+        setReservoir(pumpType, 75.0)
+
+        val json = status()
+
+        assertThat(json.has("reservoir")).isFalse()
+        assertThat(json.has("reservoir_display_override")).isFalse()
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = PumpType::class, names = ["OMNIPOD_5", "OMNIPOD_DASH"])
+    fun `measured pod reservoir values stay numeric`(pumpType: PumpType) = runTest {
+        for (units in listOf(50.0, 25.0, 0.0)) {
+            setReservoir(pumpType, units)
+
+            val json = status()
+
+            assertThat(json.get("reservoir")).isEqualTo(units.toInt())
+            assertThat(json.has("reservoir_display_override")).isFalse()
+        }
+    }
+
+    @Test
+    fun `75 units from another pump stays numeric`() = runTest {
+        setReservoir(PumpType.GENERIC_AAPS, 75.0)
+
+        val json = status()
+
+        assertThat(json.get("reservoir")).isEqualTo(75)
+        assertThat(json.has("reservoir_display_override")).isFalse()
+    }
 
     @Test
     fun `carries the top level shape Nightscout expects`() = runTest {

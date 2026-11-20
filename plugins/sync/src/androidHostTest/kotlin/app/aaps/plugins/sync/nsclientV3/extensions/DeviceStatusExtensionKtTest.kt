@@ -59,6 +59,21 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
     }
 
     @Test
+    fun `omitted reservoir stays absent through Nightscout upload conversion`() {
+        val deviceStatus = DS(
+            timestamp = 10000,
+            pump = """{}""",
+            uploaderBattery = 0,
+            isCharging = false
+        )
+
+        val status = deviceStatus.toNSDeviceStatus().convertToRemoteAndBack()
+
+        assertThat(status.pump?.reservoir).isNull()
+        assertThat(status.pump?.reservoirDisplayOverride).isNull()
+    }
+
+    @Test
     fun dotest() {
 
         val deviceStatus = DS(
