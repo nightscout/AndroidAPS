@@ -387,6 +387,8 @@
     <string name="eat_reminder_channel_silent">Time to eat during Do Not Disturb</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
     <string name="phone_alarm_channel">Alarms from the phone</string>
+    <string name="cgm_alarm_channel">CGM alarms from the phone</string>
+    <string name="cgm_alarm_acknowledge" comment="Short button label on a CGM alarm: the user has seen the alarm, it stops and comes back later if the cause is still there">Acknowledge</string>
     <string name="phone_alarm_channel_silent">Alarms from the phone during Do Not Disturb</string>
     <string name="phone_alarm_silence">Silence</string>
     <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">Mute %1$d min</string>

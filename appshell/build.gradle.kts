@@ -5,6 +5,21 @@ plugins {
 }
 
 /**
+ * Modules under `:plugins:` that are libraries, not feature plugins. They register nothing into the
+ * plugin map, so this shell does not need them: the plugin that uses one depends on it directly.
+ * They are also left out because they have no Apple targets, and listing one in commonMain would make
+ * every iOS build of this module fail at dependency resolution.
+ */
+val PLUGIN_LIBRARIES = setOf(
+    // KEKS authentication for Dexcom ONE+ / G7 (Android and JVM only).
+    ":plugins:libkeks",
+    // The Dexcom ONE+ / G7 BLE driver (Android only). The plugin itself is in :plugins:source.
+    ":plugins:dexcom_oneplus",
+    // The Libre 3 / Libre 3 Plus BLE and NFC driver (Android only). The plugin itself is in :plugins:source.
+    ":plugins:libre3",
+)
+
+/**
  * The app's shell: navigation and the composable root.
  *
  * `:app` cannot be multiplatform - it is `com.android.application`, and it owns the product flavours
@@ -52,7 +67,7 @@ kotlin {
                 // with the navigation graph that routes to them; `api` so `:app` still builds its
                 // graph against them. Adding or removing a plugin stays an edit in settings.gradle.
                 rootProject.subprojects
-                    .filter { it.path.startsWith(":plugins:") && it.buildFile.exists() }
+                    .filter { it.path.startsWith(":plugins:") && it.buildFile.exists() && it.path !in PLUGIN_LIBRARIES }
                     .forEach { api(project(it.path)) }
 
                 api(libs.jetbrains.compose.runtime)

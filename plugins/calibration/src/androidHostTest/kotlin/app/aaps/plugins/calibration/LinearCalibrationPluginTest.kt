@@ -19,9 +19,13 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.plugins.calibration.keys.CalibrationLongKey
 import app.aaps.shared.tests.TestBase
 import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -29,8 +33,10 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
+import org.mockito.kotlin.timeout
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -42,6 +48,10 @@ class LinearCalibrationPluginTest : TestBase() {
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Mock lateinit var config: Config
+    @Mock lateinit var preferences: Preferences
+
+    /** What the [preferences] mock holds for [CalibrationLongKey.EntriesValidFrom]. */
+    private var storedCut = 0L
 
     private lateinit var plugin: LinearCalibrationPlugin
 
@@ -57,8 +67,11 @@ class LinearCalibrationPluginTest : TestBase() {
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(sensorChange(defaultSessionStart))
         whenever(persistenceLayer.getTherapyEventDataFromToTime(any(), any())).thenReturn(emptyList())
         whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenReturn(emptyList())
+        storedCut = 0L
+        whenever(preferences.get(CalibrationLongKey.EntriesValidFrom)).thenAnswer { storedCut }
+        doAnswer { storedCut = it.getArgument(1); null }.whenever(preferences).put(eq(CalibrationLongKey.EntriesValidFrom), any<Long>())
         plugin = LinearCalibrationPlugin(
-            aapsLogger, rh, dateUtil, persistenceLayer, notificationManager, glucoseStatusProvider, rxBus, config
+            aapsLogger, rh, dateUtil, persistenceLayer, notificationManager, glucoseStatusProvider, rxBus, config, preferences
         )
     }
 
@@ -416,6 +429,135 @@ class LinearCalibrationPluginTest : TestBase() {
     }
 
     // ------------ helpers ------------
+
+    // ------------ ignoreEntriesBefore() ------------
+
+    /** Makes the database answer like the real query: valid entries at or after `from`. */
+    private suspend fun storeEntries(entries: List<CAL>) {
+        whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenAnswer { call ->
+            val from = call.getArgument<Long>(0)
+            entries.filter { it.timestamp >= from }
+        }
+    }
+
+    @Test
+    fun calibrate_neverCut_fitsEveryEntryOfTheSession() = runTest {
+        // Without a call to ignoreEntriesBefore the plugin works as before: it reads from the session start.
+        storeEntries(
+            listOf(
+                calEntry(sensor = 100.0, fs = 110.0, timestamp = now - T.hours(6).msecs()),
+                calEntry(sensor = 200.0, fs = 220.0, timestamp = now - T.hours(5).msecs())
+            )
+        )
+        val data = bucketed(listOf(now to 150.0))
+        plugin.calibrate(data, CalibrationContext.NONE)
+        verify(persistenceLayer).getValidCalibrationEntriesSince(defaultSessionStart)
+        assertThat(data[0].calibrated!!).isWithin(0.01).of(165.0)
+    }
+
+    @Test
+    fun calibrate_afterCut_leavesOlderEntriesOutOfTheFit() = runTest {
+        // Two fingersticks paired with the retired sensor, inside the same recorded session.
+        storeEntries(
+            listOf(
+                calEntry(sensor = 100.0, fs = 110.0, timestamp = now - T.hours(6).msecs()),
+                calEntry(sensor = 200.0, fs = 220.0, timestamp = now - T.hours(5).msecs())
+            )
+        )
+        plugin.ignoreEntriesBefore(now - T.hours(1).msecs())
+        val data = bucketed(listOf(now to 150.0))
+        plugin.calibrate(data, CalibrationContext.NONE)
+        verify(persistenceLayer).getValidCalibrationEntriesSince(now - T.hours(1).msecs())
+        // Nothing is left to fit, so the reading is not changed.
+        assertThat(data[0].calibrated).isNull()
+    }
+
+    @Test
+    fun calibrate_afterCut_fitsOnlyTheNewerEntries() = runTest {
+        val cut = now - T.hours(1).msecs()
+        storeEntries(
+            listOf(
+                // Retired sensor: would give slope 1.1.
+                calEntry(sensor = 100.0, fs = 110.0, timestamp = cut - T.hours(3).msecs()),
+                calEntry(sensor = 200.0, fs = 220.0, timestamp = cut - T.hours(2).msecs()),
+                // New sensor: reads 10 mg/dL low, slope 1.
+                calEntry(sensor = 100.0, fs = 110.0, timestamp = cut + T.mins(10).msecs()),
+                calEntry(sensor = 200.0, fs = 210.0, timestamp = cut + T.mins(20).msecs())
+            )
+        )
+        plugin.ignoreEntriesBefore(cut)
+        val data = bucketed(listOf(now to 150.0))
+        plugin.calibrate(data, CalibrationContext.NONE)
+        assertThat(data[0].calibrated!!).isWithin(0.01).of(160.0)
+    }
+
+    @Test
+    fun ignoreEntriesBefore_storesTheCut() = runTest {
+        plugin.ignoreEntriesBefore(now)
+        verify(preferences).put(CalibrationLongKey.EntriesValidFrom, now)
+    }
+
+    @Test
+    fun ignoreEntriesBefore_neverMovesTheCutBack() = runTest {
+        plugin.ignoreEntriesBefore(now)
+        plugin.ignoreEntriesBefore(now)
+        plugin.ignoreEntriesBefore(now - 1L)
+        verify(preferences).put(eq(CalibrationLongKey.EntriesValidFrom), any<Long>())
+        assertThat(storedCut).isEqualTo(now)
+    }
+
+    @Test
+    fun ignoreEntriesBefore_cutBeforeSessionStart_changesNothing() = runTest {
+        // A cut older than the session start does not widen the window: the session start still wins.
+        plugin.ignoreEntriesBefore(defaultSessionStart - T.hours(1).msecs())
+        plugin.calibrate(bucketed(listOf(now to 150.0)), CalibrationContext.NONE)
+        verify(persistenceLayer).getValidCalibrationEntriesSince(defaultSessionStart)
+    }
+
+    @Test
+    fun ignoreEntriesBefore_laterSessionStart_winsOverOlderCut() = runTest {
+        // The cut was set for the last sensor. A new SENSOR_CHANGE after it starts the window again.
+        val cut = now - T.hours(6).msecs()
+        val newSessionStart = now - T.hours(3).msecs()
+        plugin.ignoreEntriesBefore(cut)
+        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(sensorChange(newSessionStart))
+        plugin.calibrate(bucketed(listOf(now to 150.0)), CalibrationContext.NONE)
+        verify(persistenceLayer).getValidCalibrationEntriesSince(newSessionStart)
+    }
+
+    @Test
+    fun ignoreEntriesBefore_cutInTheFuture_isIgnored() = runTest {
+        plugin.ignoreEntriesBefore(now + T.hours(1).msecs())
+        verify(preferences, never()).put(eq(CalibrationLongKey.EntriesValidFrom), any<Long>())
+        assertThat(storedCut).isEqualTo(0L)
+        plugin.calibrate(bucketed(listOf(now to 150.0)), CalibrationContext.NONE)
+        verify(persistenceLayer).getValidCalibrationEntriesSince(defaultSessionStart)
+    }
+
+    @Test
+    fun ignoreEntriesBefore_cutSlightlyAhead_isAccepted() = runTest {
+        // A small clock step between the caller and dateUtil is not a bad value.
+        plugin.ignoreEntriesBefore(now + T.mins(1).msecs())
+        assertThat(storedCut).isEqualTo(now + T.mins(1).msecs())
+    }
+
+    @Test
+    fun databaseCleared_removesTheCut() = runTest {
+        plugin.ignoreEntriesBefore(now)
+        whenever(persistenceLayer.observeChanges(CAL::class)).thenReturn(emptyFlow())
+        // Emits once when collected, like a "Reset databases" right after start.
+        whenever(persistenceLayer.databaseClearedFlow).thenReturn(flowOf(Unit))
+        plugin.onStart()
+        try {
+            // The plugin collects on its own dispatcher, so wait for it with a real-time timeout.
+            verify(preferences, timeout(5_000)).remove(CalibrationLongKey.EntriesValidFrom)
+        } finally {
+            plugin.onStop()
+        }
+    }
+
+    private fun calEntry(sensor: Double, fs: Double, timestamp: Long): CAL =
+        CAL(id = 0L, timestamp = timestamp, fingerstickMgdl = fs, sensorMgdlAtPairing = sensor)
 
     private fun value(ts: Long, v: Double) = InMemoryGlucoseValue(
         timestamp = ts,

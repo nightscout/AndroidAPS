@@ -230,8 +230,126 @@ enum class StringKey(
         validator = StringValidator.minLength(17)
     ),
 
+    // Sound of each CGM alarm: "default" (the standard AAPS alarm sound), "none" (notification only),
+    // or a Trio sound (see core/ui/SOUNDS.md). The value of a Trio sound is its file name. Urgent low
+    // has no "none".
+    AlertUrgentLowSound(
+        key = "alert_cgm_urgent_low_sound",
+        defaultValue = "default",
+        title = KeysStrings.pref_title_alert_cgm_sound,
+        summary = KeysStrings.pref_summary_alert_cgm_sound,
+        preferenceType = PreferenceType.LIST,
+        entriesRefs = cgmAlarmSoundEntries("ulg", allowNone = false),
+        dependency = BooleanKey.AlertUrgentLow,
+    ),
+    AlertUrgentLowSoonSound(
+        key = "alert_cgm_urgent_low_soon_sound",
+        defaultValue = "default",
+        title = KeysStrings.pref_title_alert_cgm_sound,
+        summary = KeysStrings.pref_summary_alert_cgm_sound,
+        preferenceType = PreferenceType.LIST,
+        entriesRefs = cgmAlarmSoundEntries("lgs", allowNone = true),
+        dependency = BooleanKey.AlertUrgentLowSoon,
+    ),
+    AlertHypoSound(
+        key = "alert_cgm_low_sound",
+        defaultValue = "default",
+        title = KeysStrings.pref_title_alert_cgm_sound,
+        summary = KeysStrings.pref_summary_alert_cgm_sound,
+        preferenceType = PreferenceType.LIST,
+        entriesRefs = cgmAlarmSoundEntries("lg", allowNone = true),
+        dependency = BooleanKey.AlertHypo,
+    ),
+    AlertRapidFallSound(
+        key = "alert_cgm_fall_rate_sound",
+        defaultValue = "default",
+        title = KeysStrings.pref_title_alert_cgm_sound,
+        summary = KeysStrings.pref_summary_alert_cgm_sound,
+        preferenceType = PreferenceType.LIST,
+        entriesRefs = cgmAlarmSoundEntries("lgs", allowNone = true),
+        dependency = BooleanKey.AlertRapidFall,
+    ),
+    AlertHyperSound(
+        key = "alert_cgm_high_sound",
+        defaultValue = "none",
+        title = KeysStrings.pref_title_alert_cgm_sound,
+        summary = KeysStrings.pref_summary_alert_cgm_sound,
+        preferenceType = PreferenceType.LIST,
+        entriesRefs = cgmAlarmSoundEntries("hg", allowNone = true),
+        dependency = BooleanKey.AlertHyper,
+    ),
+    AlertRapidRiseSound(
+        key = "alert_cgm_rise_rate_sound",
+        defaultValue = "none",
+        title = KeysStrings.pref_title_alert_cgm_sound,
+        summary = KeysStrings.pref_summary_alert_cgm_sound,
+        preferenceType = PreferenceType.LIST,
+        entriesRefs = cgmAlarmSoundEntries("hg", allowNone = true),
+        dependency = BooleanKey.AlertRapidRise,
+    ),
+    AlertCgmSensorFailedSound(
+        key = "alert_cgm_sensor_failed_sound",
+        defaultValue = "default",
+        title = KeysStrings.pref_title_alert_cgm_sound,
+        summary = KeysStrings.pref_summary_alert_cgm_sound,
+        preferenceType = PreferenceType.LIST,
+        entriesRefs = cgmAlarmSoundEntries("dcr", allowNone = true),
+        dependency = BooleanKey.AlertCgmSensorFailed,
+    ),
+    AlertCgmSensorExpiredSound(
+        key = "alert_cgm_sensor_ended_sound",
+        defaultValue = "default",
+        title = KeysStrings.pref_title_alert_cgm_sound,
+        summary = KeysStrings.pref_summary_alert_cgm_sound,
+        preferenceType = PreferenceType.LIST,
+        entriesRefs = cgmAlarmSoundEntries("dts", allowNone = true),
+        dependency = BooleanKey.AlertCgmSensorExpired,
+    ),
+    AlertCgmSignalLostSound(
+        key = "alert_cgm_signal_loss_sound",
+        defaultValue = "none",
+        title = KeysStrings.pref_title_alert_cgm_sound,
+        summary = KeysStrings.pref_summary_alert_cgm_sound,
+        preferenceType = PreferenceType.LIST,
+        entriesRefs = cgmAlarmSoundEntries("dts", allowNone = true),
+        dependency = BooleanKey.AlertCgmSignalLost,
+    ),
+    AlertCgmSensorIssueSound(
+        key = "alert_cgm_sensor_issue_sound",
+        defaultValue = "none",
+        title = KeysStrings.pref_title_alert_cgm_sound,
+        summary = KeysStrings.pref_summary_alert_cgm_sound,
+        preferenceType = PreferenceType.LIST,
+        entriesRefs = cgmAlarmSoundEntries("dts", allowNone = true),
+        dependency = BooleanKey.AlertCgmSensorIssue,
+    ),
+
     ;
 
     override val entries: Map<String, TextRef> =
         entriesRefs + entriesLiterals.mapValues { TextRef.Literal(it.value) }
+}
+
+/**
+ * The sound choices of one CGM alarm: the AAPS sound, no sound (unless [allowNone] is false), the six
+ * Trio sounds made for [trioSet] (acoustic and electronic, mild to harsh), then the eight Trio tones.
+ * The value of a Trio sound is its file name in `core/ui/res/raw`, which `AlarmSound.fileName` holds.
+ */
+private fun cgmAlarmSoundEntries(trioSet: String, allowNone: Boolean): Map<String, TextRef> = buildMap {
+    put("default", KeysStrings.alert_sound_default)
+    if (allowNone) put("none", KeysStrings.alert_sound_none)
+    put("trio_acoustic_${trioSet}_mild", KeysStrings.alert_sound_trio_acoustic_mild)
+    put("trio_acoustic_${trioSet}_medium", KeysStrings.alert_sound_trio_acoustic_medium)
+    put("trio_acoustic_${trioSet}_harsh", KeysStrings.alert_sound_trio_acoustic_harsh)
+    put("trio_electronic_${trioSet}_mild", KeysStrings.alert_sound_trio_electronic_mild)
+    put("trio_electronic_${trioSet}_medium", KeysStrings.alert_sound_trio_electronic_medium)
+    put("trio_electronic_${trioSet}_harsh", KeysStrings.alert_sound_trio_electronic_harsh)
+    put("trio_tone_glass_bell", KeysStrings.alert_sound_trio_glass_bell)
+    put("trio_tone_harp", KeysStrings.alert_sound_trio_harp)
+    put("trio_tone_meow", KeysStrings.alert_sound_trio_meow)
+    put("trio_tone_saw_wave", KeysStrings.alert_sound_trio_saw_wave)
+    put("trio_tone_hard_saw_wave", KeysStrings.alert_sound_trio_hard_saw_wave)
+    put("trio_tone_sine_wave", KeysStrings.alert_sound_trio_sine_wave)
+    put("trio_tone_open_can", KeysStrings.alert_sound_trio_open_can)
+    put("trio_tone_open_wrapper", KeysStrings.alert_sound_trio_open_wrapper)
 }
