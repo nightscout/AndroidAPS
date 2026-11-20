@@ -47,4 +47,26 @@ interface Calibration {
      * re-evaluates everything. This is a UX hint, not a contract.
      */
     suspend fun checkPreconditions(): AddEntryResult
+
+    /**
+     * Leave every calibration entry older than [timestamp] (epoch ms) out of the fit from now on.
+     *
+     * For a BG source that swaps sensors inside one recorded sensor session: a pre-soaked sensor
+     * that is made the production sensor gets a session that starts at its own start, hours before
+     * the swap. Without this cut, fingersticks paired with the retired sensor would be fitted onto
+     * the new one.
+     *
+     * Rules:
+     * - The cut only moves forward. A [timestamp] that is not later than the current cut is ignored.
+     * - A [timestamp] in the future (more than a few minutes after now) is ignored and logged, so a
+     *   wrong clock cannot hide every new fingerstick.
+     * - The fit uses entries from max(session start, cut). So a later SENSOR_CHANGE wins over an
+     *   older cut, and the cut needs no reset at the next sensor.
+     * - A SENSOR_CHANGE that is entered with a time older than the cut is still clipped by the cut:
+     *   entries between that SENSOR_CHANGE and the cut stay out of the fit.
+     * - The cut is cleared when the database is cleared.
+     *
+     * A plugin that fits nothing has nothing to cut, so the default does nothing.
+     */
+    suspend fun ignoreEntriesBefore(timestamp: Long) {}
 }

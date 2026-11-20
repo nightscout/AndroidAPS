@@ -33,6 +33,9 @@ internal class SourcesExtensionTest {
 
         assertEquals(UserEntry.Sources.Garmin, Sources.Garmin.toDb())
         assertEquals(Sources.Garmin, UserEntry.Sources.Garmin.fromDb())
+
+        assertEquals(UserEntry.Sources.DexcomOnePlus, Sources.DexcomOnePlus.toDb())
+        assertEquals(Sources.DexcomOnePlus, UserEntry.Sources.DexcomOnePlus.fromDb())
     }
 
     @Test

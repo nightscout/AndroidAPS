@@ -42,11 +42,24 @@ kotlin {
 
         androidMain {
             dependencies {
+                // The Dexcom ONE+ / G7 BLE driver. Android only: the driver has no other target yet,
+                // so the plugin, its host and its screens live in androidMain. commonMain keeps only
+                // the ONE+ code that does not need the driver.
+                implementation(project(":plugins:dexcom_oneplus"))
+
                 implementation(project.dependencies.platform(libs.androidx.compose.bom))
                 implementation(libs.androidx.compose.material3)
                 implementation(libs.androidx.compose.runtime)
                 implementation(libs.androidx.lifecycle.runtime.compose)
                 implementation(libs.androidx.work.runtime)
+
+                // The camera that reads the Dexcom ONE+ / G7 applicator barcode on the start screen.
+                // The same CameraX and ZXing versions as the client set-up QR scanner of :plugins:sync.
+                implementation(libs.androidx.camera.camera2)
+                implementation(libs.androidx.camera.core)
+                implementation(libs.androidx.camera.lifecycle)
+                implementation(libs.androidx.camera.view)
+                implementation(libs.com.google.zxing.core)
             }
         }
 

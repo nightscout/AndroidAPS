@@ -11,7 +11,7 @@ import app.aaps.core.ui.compose.metroViewModel
  * use the same UI to display blood glucose readings.
  */
 internal class BgSourceComposeContent(
-    private val title: String
+    private val title: String,
 ) : ComposablePluginContent {
 
     @Composable

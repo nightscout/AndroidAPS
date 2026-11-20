@@ -30,6 +30,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.source.SensorCalibrationResult
 import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
@@ -42,6 +43,7 @@ import app.aaps.core.ui.extensions.toStringFull
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -358,20 +360,51 @@ class MasterRecordWriter(
 
     // ----- Calibration -----
 
-    /** Why the master cannot take a calibration now, or null when it can. Checked on the master's own data. */
-    suspend fun calibrationRefusal(): String? =
-        (activePlugin.activeCalibration.checkPreconditions() as? AddEntryResult.Rejected)?.let { rejectionMessage(it) }
-
-    /** The confirmation line for a calibration. */
-    fun calibrationLine(calibration: BatchAction.Calibration): ConfirmationLine =
-        ConfirmationLine(ConfirmationRole.PRIMARY, line(CoreUiStrings.calibration, profileUtil.fromMgdlToStringWithUnits(calibration.glucoseMgdl)))
+    /**
+     * Why the master cannot take a calibration now, or null when it can. Checked on the master's own data: by
+     * the sensor itself when the BG source calibrates in the sensor, by the calibration plugin otherwise.
+     */
+    suspend fun calibrationRefusal(calibration: BatchAction.Calibration): String? {
+        val bgSource = activePlugin.activeBgSource
+        if (bgSource.calibratesInSensor()) return bgSource.sensorCalibrationRefusal(calibration.glucoseMgdl.roundToInt(), dateUtil.now())
+        return (activePlugin.activeCalibration.checkPreconditions() as? AddEntryResult.Rejected)?.let { rejectionMessage(it) }
+    }
 
     /**
-     * Store a calibration on the master, paired with its own latest sensor reading. The conditions are checked
-     * again here (time has passed since the prepare); a refusal goes to [onError] so the user is told.
+     * The confirmation lines for a calibration. A value that goes to the sensor gets a warning: the sensor keeps
+     * it for good, unlike a calibration entry stored in the app.
+     */
+    fun calibrationLines(calibration: BatchAction.Calibration): List<ConfirmationLine> {
+        val value = ConfirmationLine(ConfirmationRole.PRIMARY, line(CoreUiStrings.calibration, profileUtil.fromMgdlToStringWithUnits(calibration.glucoseMgdl)))
+        return if (activePlugin.activeBgSource.calibratesInSensor()) listOf(value, ConfirmationLine(ConfirmationRole.WARNING, rh.gs(CoreUiStrings.calibration_to_sensor_warning)))
+        else listOf(value)
+    }
+
+    /**
+     * Store a calibration on the master, paired with its own latest sensor reading, or hand it to the sensor when the
+     * BG source calibrates in the sensor. Never both: a sensor that holds a calibration re-bases its own readings,
+     * and a line fitted in the app on top would correct them twice. The conditions are checked again here (time has
+     * passed since the prepare); a refusal goes to [onError] so the user is told.
      */
     suspend fun addCalibration(calibration: BatchAction.Calibration, source: Sources, onError: (MasterActionExecutor.Failure) -> Unit) {
         val value = ValueWithUnit.fromGlucoseUnit(profileUtil.fromMgdlToUnits(calibration.glucoseMgdl), profileUtil.units)
+        val bgSource = activePlugin.activeBgSource
+        if (bgSource.calibratesInSensor()) {
+            when (val sent = bgSource.calibrateSensor(calibration.glucoseMgdl.roundToInt(), dateUtil.now())) {
+                SensorCalibrationResult.Queued       -> {
+                    uel.log(action = Action.CALIBRATION, source = source, note = rh.gs(CoreUiStrings.calibration_sent_to_sensor), value = value)
+                    return
+                }
+
+                is SensorCalibrationResult.Refused   -> {
+                    uel.log(action = Action.CALIBRATION, source = source, note = "rejected: ${sent.reason}", value = value)
+                    onError(MasterActionExecutor.Failure(sent.reason))
+                    return
+                }
+                // The source changed its mind between the two calls: store it in the app as before.
+                SensorCalibrationResult.NotSupported -> Unit
+            }
+        }
         when (val result = activePlugin.activeCalibration.addEntry(calibration.glucoseMgdl, dateUtil.now())) {
             AddEntryResult.Accepted    -> {
                 uel.log(action = Action.CALIBRATION, source = source, value = value)

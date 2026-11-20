@@ -31,7 +31,9 @@ import app.aaps.core.interfaces.notifications.NotificationLevel.URGENT
 enum class NotificationId(
     val defaultLevel: NotificationLevel,
     val category: NotificationCategory,
-    val allowMultiple: Boolean = false
+    val allowMultiple: Boolean = false,
+    /** Extra action button carried by this alarm's system notification, if any. */
+    val alarmAction: AlarmAction? = null
 ) {
 
     // Profile
@@ -262,7 +264,33 @@ enum class NotificationId(
     // A real pump is selected, but AAPS has no Bluetooth (Nearby devices) permission, so no command can reach the
     // pump and the queue fails them (#5440). It removes itself once the permission is back. IMPORTANT, not URGENT:
     // a bolus that fails because of it raises its own alarm. Appended at the END for the same reason as above.
-    BLUETOOTH_PERMISSION_MISSING(IMPORTANT, PUMP);
+    BLUETOOTH_PERMISSION_MISSING(IMPORTANT, PUMP),
+
+    // A pre-soak sensor of a native CGM driver was made the production sensor by the app itself, without the
+    // user pressing the promote button. Appended at the END for the same reason as above.
+    CGM_STAGING_AUTO_PROMOTED(NORMAL, CGM),
+
+    // CGM alarms (`CgmAlarmType`), one alarm layer for every BG source. The glucose ones read the
+    // stored glucose; the sensor ones are raised only for a source that reports its sensor state
+    // ([app.aaps.core.interfaces.source.CgmSensorAlertProvider]). They only notify; they never change
+    // dosing. An alarm the user gave a sound is posted URGENT, whatever its level here. Appended at
+    // the END for the same reason as above.
+    BG_HYPO(URGENT, CGM, alarmAction = AlarmAction.HYPO_TREATED),
+    BG_HYPER(IMPORTANT, CGM, alarmAction = AlarmAction.CGM_ACKNOWLEDGE),
+    BG_RAPID_FALL(URGENT, CGM, alarmAction = AlarmAction.CGM_ACKNOWLEDGE),
+    CGM_URGENT_LOW(URGENT, CGM, alarmAction = AlarmAction.CGM_ACKNOWLEDGE),
+    CGM_URGENT_LOW_SOON(URGENT, CGM, alarmAction = AlarmAction.CGM_ACKNOWLEDGE),
+    CGM_RAPID_RISE(IMPORTANT, CGM, alarmAction = AlarmAction.CGM_ACKNOWLEDGE),
+    CGM_SENSOR_FAILED(URGENT, CGM, alarmAction = AlarmAction.CGM_ACKNOWLEDGE),
+    CGM_SENSOR_EXPIRED(URGENT, CGM, alarmAction = AlarmAction.CGM_ACKNOWLEDGE),
+    CGM_SENSOR_EXPIRING(IMPORTANT, CGM),
+    CGM_SIGNAL_LOST(IMPORTANT, CGM, alarmAction = AlarmAction.CGM_ACKNOWLEDGE),
+    CGM_SENSOR_ISSUE(IMPORTANT, CGM, alarmAction = AlarmAction.CGM_ACKNOWLEDGE),
+    CGM_WARMUP_DONE(NORMAL, CGM),
+    CGM_SECOND_SENSOR_READY(NORMAL, CGM),
+
+    /** The test button of a CGM alarm: its sound and text, once, until the user dismisses it. */
+    CGM_ALARM_TEST(URGENT, CGM);
 
     companion object {
 
