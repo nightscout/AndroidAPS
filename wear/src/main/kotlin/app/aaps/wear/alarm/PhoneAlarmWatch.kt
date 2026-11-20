@@ -6,6 +6,8 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import androidx.core.app.NotificationCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -39,6 +41,20 @@ import dev.zacsweers.metro.SingleIn
  *
  * While the watch is in Do Not Disturb and the phone's "Override Do Not Disturb mode" is off, the notification
  * only vibrates, as the phone's alarm does then, see [DoNotDisturbRule].
+ *
+ * An alarm that has buttons on the phone, as a Nightscout alarm with Snooze 15, 30 and 60 min, shows those buttons
+ * here instead, in the same order, and a swipe presses the first. Silence would only stop the sound: it does not tell
+ * Nightscout the alarm was answered, so Nightscout sent the same alarm again a minute later.
+ *
+ * A stop from the phone does not take the notification away at once, but after a short grace. The phone drops a
+ * Nightscout alarm on every new BG and posts it again a moment later, so the stop is often followed by a new
+ * [EventData.AlarmRinging] within a second. Cancelling the notification and posting it again that fast made
+ * Samsung's watch system fire the swipe of the old one against the new one, and that swipe snoozed the alarm in
+ * Nightscout without anybody touching the watch. With the grace, the new alarm only updates the notification.
+ *
+ * The stop and the new alarm can also arrive in the same moment and run in parallel, in any order. The phone stamps
+ * both with its clock in sending order, so a stop older than the alarm shown belongs to an earlier alarm and is
+ * ignored. The methods are synchronized so the two cannot interleave.
  */
 @SingleIn(AppScope::class)
 @Inject
@@ -52,49 +68,121 @@ class PhoneAlarmWatch(
 
     private val alarmManager get() = context.getSystemService(AlarmManager::class.java)
     private val notificationManager get() = context.getSystemService(NotificationManager::class.java)
+    private val handler = Handler(Looper.getMainLooper())
+    private val clearAfterStop = Runnable { clear() }
+
+    /** Own lock, not the object: a synchronized method is not recorded by a Mockito mock of this class. */
+    private val lock = Any()
 
     /** An alarm rings on the phone. A newer one takes the place of the one shown, as on the phone. */
-    fun show(alarm: EventData.AlarmRinging) {
+    fun show(alarm: EventData.AlarmRinging): Unit = synchronized(lock) {
         aapsLogger.debug(LTag.WEAR, "Phone alarm: ${alarm.title} - ${alarm.status}")
+        handler.removeCallbacks(clearAfterStop)
+        sp.remove(R.string.key_phone_alarm_stopping)
+        sp.putLong(R.string.key_phone_alarm_rang_at, alarm.timeStamp)
         sp.putString(R.string.key_phone_alarm_title, alarm.title)
         sp.putString(R.string.key_phone_alarm_text, alarm.status)
         sp.putLong(R.string.key_phone_alarm_since, System.currentTimeMillis())
         sp.putBoolean(R.string.key_phone_alarm_can_mute, alarm.canMute)
-        post(alarm.title, alarm.status, alarm.canMute)
+        sp.putInt(R.string.key_phone_alarm_key, alarm.alarmKey)
+        sp.putString(R.string.key_phone_alarm_actions, alarm.actions.joinToString(ACTIONS_SEPARATOR))
+        post(alarm.title, alarm.status, alarm.canMute, alarm.actions)
         scheduleRepeat()
     }
 
+    /**
+     * The phone reports that its alarm stopped. The notification goes away after [STOP_GRACE_MS], unless a new alarm
+     * takes its place before that: then it is only updated, never cancelled and posted again (see the class doc).
+     * A stop older than the alarm shown is for an earlier alarm: ignored.
+     */
+    fun stop(stopped: EventData.AlarmStopped): Unit = synchronized(lock) {
+        if (!isShown()) return
+        if (stopped.timeStamp < sp.getLong(R.string.key_phone_alarm_rang_at, 0L)) {
+            aapsLogger.debug(LTag.WEAR, "Phone alarm stop is older than the alarm shown: ignored")
+            return
+        }
+        aapsLogger.debug(LTag.WEAR, "Phone alarm stopped, clearing after grace")
+        sp.putBoolean(R.string.key_phone_alarm_stopping, true)
+        handler.removeCallbacks(clearAfterStop)
+        handler.postDelayed(clearAfterStop, STOP_GRACE_MS)
+    }
+
     /** A repeat: posted again so the watch vibrates again, as long as the phone has not reported a stop. */
-    fun repeat() {
-        if (sp.getLong(R.string.key_phone_alarm_since, 0L) == 0L) return
+    fun repeat(): Unit = synchronized(lock) {
+        if (!isShown()) return
+        if (sp.getBoolean(R.string.key_phone_alarm_stopping, false)) {
+            // The process was gone before the grace ran out
+            clear()
+            return
+        }
         post(
             sp.getString(R.string.key_phone_alarm_title, ""),
             sp.getString(R.string.key_phone_alarm_text, ""),
-            sp.getBoolean(R.string.key_phone_alarm_can_mute, false)
+            sp.getBoolean(R.string.key_phone_alarm_can_mute, false),
+            storedActions()
         )
         scheduleRepeat()
     }
 
-    /** Silence, or a swipe: the alarm on the phone stops and its screen closes. */
-    fun silence() {
+    /**
+     * The notification was swiped away, or removed by the watch system in the user's name: the first button, or
+     * Silence when the phone's notification has no buttons. Nothing when no alarm is shown: the swipe of a notification
+     * that was already answered must not answer the next one.
+     */
+    fun swipe(): Unit = synchronized(lock) {
+        if (!isShown()) {
+            aapsLogger.debug(LTag.WEAR, "Phone alarm swiped away, but no alarm is shown: ignored")
+            return
+        }
+        aapsLogger.debug(LTag.WEAR, "Phone alarm swiped away")
+        if (storedActions().isNotEmpty()) runAction(0) else silence()
+    }
+
+    /** A button of the phone's notification: the phone runs the same button. */
+    fun runAction(index: Int): Unit = synchronized(lock) {
+        if (!isShown()) {
+            aapsLogger.debug(LTag.WEAR, "Phone alarm button $index, but no alarm is shown: ignored")
+            return
+        }
+        val alarmKey = sp.getInt(R.string.key_phone_alarm_key, 0)
+        aapsLogger.debug(LTag.WEAR, "Phone alarm button $index of $alarmKey")
+        rxBus.send(EventWearToMobile(EventData.AlarmAction(System.currentTimeMillis(), alarmKey, index)))
+        clear()
+    }
+
+    private fun isShown(): Boolean = sp.getLong(R.string.key_phone_alarm_since, 0L) != 0L
+
+    /** Every text in its place, also an empty one: the index is what the phone runs. No buttons are the empty string. */
+    private fun storedActions(): List<String> =
+        sp.getString(R.string.key_phone_alarm_actions, "").let { if (it.isEmpty()) emptyList() else it.split(ACTIONS_SEPARATOR) }
+
+    /** Silence: the alarm on the phone stops and its screen closes. */
+    fun silence(): Unit = synchronized(lock) {
+        aapsLogger.debug(LTag.WEAR, "Phone alarm silenced")
         rxBus.send(EventWearToMobile(EventData.DismissAlert(System.currentTimeMillis())))
         clear()
     }
 
     /** Mute 5 min: the alarm on the phone is silenced and rings again after the minutes, here too. */
-    fun mute() {
+    fun mute(): Unit = synchronized(lock) {
+        aapsLogger.debug(LTag.WEAR, "Phone alarm muted")
         rxBus.send(EventWearToMobile(EventData.MuteAlert(System.currentTimeMillis(), UiInteraction.MUTE_MINUTES)))
         clear()
     }
 
     /** The alarm is over, answered on the phone or here. */
-    fun clear() {
+    fun clear(): Unit = synchronized(lock) {
+        handler.removeCallbacks(clearAfterStop)
         alarmManager.cancel(repeatIntent())
         notificationManager.cancel(NOTIFICATION_ID)
+        sp.remove(R.string.key_phone_alarm_rang_at)
         sp.remove(R.string.key_phone_alarm_title)
         sp.remove(R.string.key_phone_alarm_text)
         sp.remove(R.string.key_phone_alarm_since)
         sp.remove(R.string.key_phone_alarm_can_mute)
+        sp.remove(R.string.key_phone_alarm_key)
+        sp.remove(R.string.key_phone_alarm_actions)
+        sp.remove(R.string.key_phone_alarm_stopping)
     }
 
     private fun scheduleRepeat() {
@@ -104,10 +192,12 @@ class PhoneAlarmWatch(
     }
 
     /**
-     * Silence, and Mute 5 min when the phone can honour it, as buttons, and a swipe silences. Posted again on every
-     * repeat, so the watch vibrates again: not alert-once on purpose. Our own cancel does not fire the delete intent.
+     * Silence, and Mute 5 min when the phone can honour it, as buttons. When the phone's notification has buttons of
+     * its own, those replace them. A swipe has its own intent, so the log tells a swipe from a button, see [swipe].
+     * Posted again on every repeat, so the watch vibrates again: not alert-once on purpose. Our own cancel does not
+     * fire the delete intent.
      */
-    private fun post(title: String, text: String, canMute: Boolean) {
+    private fun post(title: String, text: String, canMute: Boolean, actions: List<String>) {
         notificationManager.createNotificationChannel(
             NotificationChannel(CHANNEL_ID, context.getString(R.string.phone_alarm_channel), NotificationManager.IMPORTANCE_HIGH).apply {
                 enableVibration(true)
@@ -129,19 +219,27 @@ class PhoneAlarmWatch(
             .setStyle(NotificationCompat.BigTextStyle().bigText(text))
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setDeleteIntent(actionIntent(PhoneAlarmReceiver.ACTION_SILENCE, SILENCE_REQUEST_CODE))
-            .addAction(0, context.getString(R.string.phone_alarm_silence), actionIntent(PhoneAlarmReceiver.ACTION_SILENCE, SILENCE_REQUEST_CODE))
-        if (canMute)
-            builder.addAction(0, context.getString(R.string.phone_alarm_mute, UiInteraction.MUTE_MINUTES), actionIntent(PhoneAlarmReceiver.ACTION_MUTE, MUTE_REQUEST_CODE))
+            .setDeleteIntent(actionIntent(PhoneAlarmReceiver.ACTION_SWIPE, SWIPE_REQUEST_CODE))
+        if (actions.isNotEmpty()) {
+            actions.forEachIndexed { index, label -> builder.addAction(0, label, phoneButtonIntent(index)) }
+        } else {
+            builder.addAction(0, context.getString(R.string.phone_alarm_silence), actionIntent(PhoneAlarmReceiver.ACTION_SILENCE, SILENCE_REQUEST_CODE))
+            if (canMute)
+                builder.addAction(0, context.getString(R.string.phone_alarm_mute, UiInteraction.MUTE_MINUTES), actionIntent(PhoneAlarmReceiver.ACTION_MUTE, MUTE_REQUEST_CODE))
+        }
         notificationManager.notify(NOTIFICATION_ID, builder.build())
     }
 
     private fun repeatIntent(): PendingIntent = actionIntent(PhoneAlarmReceiver.ACTION_REPEAT, REPEAT_REQUEST_CODE)
 
-    private fun actionIntent(action: String, requestCode: Int): PendingIntent =
+    /** One request code per button: the code, not the extra, is what keeps their PendingIntents apart. */
+    private fun phoneButtonIntent(index: Int): PendingIntent =
+        actionIntent(PhoneAlarmReceiver.ACTION_PHONE_BUTTON, PHONE_BUTTON_REQUEST_CODE + index) { putExtra(PhoneAlarmReceiver.EXTRA_INDEX, index) }
+
+    private fun actionIntent(action: String, requestCode: Int, extras: Intent.() -> Unit = {}): PendingIntent =
         PendingIntent.getBroadcast(
             context, requestCode,
-            Intent(context, PhoneAlarmReceiver::class.java).setAction(action),
+            Intent(context, PhoneAlarmReceiver::class.java).setAction(action).apply(extras),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
@@ -153,10 +251,20 @@ class PhoneAlarmWatch(
         const val REPEAT_REQUEST_CODE = 4730
         const val SILENCE_REQUEST_CODE = 4731
         const val MUTE_REQUEST_CODE = 4732
+        const val SWIPE_REQUEST_CODE = 4733
+
+        /** The phone's buttons take this code and the ones after it, one each (a Nightscout alarm has three). */
+        const val PHONE_BUTTON_REQUEST_CODE = 4740
+
+        /** Between the button texts in preferences: a control character no text has, so a text with a line break keeps its place. */
+        const val ACTIONS_SEPARATOR = "\u001F"
 
         /** The notification is posted again this often, for this long after the alarm rang, until it is answered. */
         const val REPEAT_MS = 30_000L
         const val REPEAT_FOR_MS = 5 * 60_000L
+
+        /** A stop from the phone takes the notification away after this, unless a new alarm replaces it before. */
+        const val STOP_GRACE_MS = 1_500L
         val VIBRATION = longArrayOf(0, 500, 300, 500, 300, 500)
     }
 }

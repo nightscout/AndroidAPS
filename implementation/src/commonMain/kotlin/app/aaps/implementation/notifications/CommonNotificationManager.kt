@@ -245,7 +245,8 @@ class CommonNotificationManager(
      *
      * The watch follows the same slot: it is told of the alarm that takes the sound, and of silence. These alarms
      * cannot be muted from the watch: the phone has only Dismiss for them, and they come back by themselves while
-     * their cause lasts.
+     * their cause lasts. Their buttons go along, so the watch can press them: a Nightscout alarm comes back a
+     * minute after a plain Dismiss, and only its snooze buttons tell Nightscout it was answered.
      *
      * Caller must hold [lock].
      */
@@ -266,7 +267,14 @@ class CommonNotificationManager(
                 platform.setAudibleAlarm(top.instanceKey, top.sound)
                 rxBus.send(
                     EventMobileToWear(
-                        EventData.AlarmRinging(now(), title = rh.gs(CoreUiStrings.urgent_alarm), status = top.text, canMute = false)
+                        EventData.AlarmRinging(
+                            now(),
+                            title = rh.gs(CoreUiStrings.urgent_alarm),
+                            status = top.text,
+                            canMute = false,
+                            alarmKey = top.instanceKey,
+                            actions = top.actions.map { rh.gs(it.buttonText) }
+                        )
                     )
                 )
             }

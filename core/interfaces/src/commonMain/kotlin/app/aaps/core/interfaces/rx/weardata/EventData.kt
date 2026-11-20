@@ -644,14 +644,36 @@ sealed class EventData : Event() {
     data class MuteAlert(val timeStamp: Long, val minutes: Int) : EventData()
 
     /**
+     * Wear -> Mobile: a button of the phone's alarm notification ([AlarmRinging.actions]), pressed on the watch, or
+     * the swipe, which presses the first one. The phone runs that button of the notification [alarmKey], as a tap on
+     * it on the phone does: for a Nightscout alarm, the snooze, which also tells Nightscout the alarm was answered.
+     * Ignored when that notification is gone. A notification posted later under the same id, as the next Nightscout
+     * alarm, has the same key: a press on a watch notification that is older than it runs the button of the newer one.
+     */
+    @Serializable
+    data class AlarmAction(val timeStamp: Long, val alarmKey: Int, val index: Int) : EventData()
+
+    /**
      * Mobile -> Wear: an alarm rings on the phone, with its title and text. The watch shows them in a notification
      * with Silence, and Mute 5 min when [canMute], so it tells why the phone makes a sound. Sent for the alarm
      * screen ([app.aaps.core.interfaces.ui.UiInteraction.runAlarm], can be muted) and for an urgent notification
      * with a sound, as "Pump unreachable" (cannot: the phone has only Dismiss for those, and such an alarm comes
      * back by itself while its cause lasts). Not sent for the "time to eat" alarm: the watch rings that one by itself.
+     *
+     * [actions] are the button texts of the urgent notification, in the phone's order, and [alarmKey] says which
+     * notification they belong to. A Nightscout alarm has its snooze buttons there (15, 30 and 60 min): the watch
+     * shows those instead of Silence, because Silence alone does not answer Nightscout, and Nightscout sends the
+     * alarm again a minute later. A swipe presses the first button, so the first must be the safe answer.
      */
     @Serializable
-    data class AlarmRinging(val timeStamp: Long, val title: String, val status: String, val canMute: Boolean) : EventData()
+    data class AlarmRinging(
+        val timeStamp: Long,
+        val title: String,
+        val status: String,
+        val canMute: Boolean,
+        val alarmKey: Int = 0,
+        val actions: List<String> = emptyList()
+    ) : EventData()
 
     /** Mobile -> Wear: the alarm shown on the phone was stopped, on the phone or from the watch, or replaced. */
     @Serializable
