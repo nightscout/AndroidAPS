@@ -3,6 +3,16 @@
 
     <uses-permission android:name="com.dexcom.cgm.EXTERNAL_PERMISSION" />
 
+    <!-- The CGM apps of the catalog (cgm_apps.json) must be visible to be found and opened (Android 11+). The
+         catalog updates without a release, so naming the packages here could never keep up: every app with a
+         launcher icon is visible instead. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
     <application>
         <activity android:name=".activities.RequestEversensePermissionActivity" android:exported="false" />
         <activity android:name=".activities.EversensePlacementActivity" android:exported="false" />

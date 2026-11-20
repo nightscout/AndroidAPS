@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "apps": [
+    {"id":"xdrip","name":"xDrip+","packages":["com.eveningoutpost.dexdrip"]},
+    {"id":"juggluco","name":"Juggluco","packages":["tk.glucodata"],"calibration":"app"},
+    {"id":"glimp","name":"Glimp","packages":["it.ct.glicemia"],"calibration":"app"},
+    {"id":"600-series-uploader","name":"600 Series Uploader","packages":["info.nightscout.android"],"calibration":"pump"},
+    {"id":"dexcom-g6","name":"Dexcom G6","packages":["com.dexcom.g6","com.dexcom.g6.region1.mmol","com.dexcom.g6.region2.mgdl","com.dexcom.g6.region3.mgdl","com.dexcom.g6.region4.mmol","com.dexcom.g6.region5.mmol","com.dexcom.g6.region6.mgdl","com.dexcom.g6.region7.mmol","com.dexcom.g6.region8.mmol","com.dexcom.g6.region9.mgdl","com.dexcom.g6.region10.mgdl","com.dexcom.g6.region11.mmol"],"notification":{"sensor":"AAPS-DexcomG6","intervalMinutes":5},"calibration":"app"},
+    {"id":"dexcom-g7","name":"Dexcom G7","packages":["com.dexcom.g7"],"notification":{"sensor":"AAPS-DexcomG7","intervalMinutes":5},"calibration":"app"},
+    {"id":"dexcom-one","name":"Dexcom ONE","packages":["com.dexcom.dexcomone","com.dexcom.d1plus"],"notification":{"sensor":"AAPS-Dexcom","intervalMinutes":5},"calibration":"app"},
+    {"id":"dexcom-stelo","name":"Dexcom Stelo","packages":["com.dexcom.stelo"],"notification":{"sensor":"AAPS-Dexcom","intervalMinutes":5}},
+    {"id":"camaps-fx","name":"CamAPS FX","packages":["com.camdiab.fx_alert.mmoll","com.camdiab.fx_alert.mgdl","com.camdiab.fx_alert.hx.mmoll","com.camdiab.fx_alert.hx.mgdl","com.camdiab.fx_alert.mmoll.ca"],"notification":{"sensor":"AAPS-Dexcom","intervalMinutes":5},"calibration":"app"},
+    {"id":"medtronic-guardian","name":"Medtronic Guardian","packages":["com.medtronic.diabetes.guardian","com.medtronic.diabetes.guardianconnect","com.medtronic.diabetes.guardianconnect.us"],"notification":{"sensor":"MM600Series","intervalMinutes":5},"calibration":"app"},
+    {"id":"medtronic-minimed","name":"Medtronic MiniMed Mobile","packages":["com.medtronic.diabetes.minimedmobile.eu","com.medtronic.diabetes.minimedmobile.us"],"notification":{"sensor":"MM600Series","intervalMinutes":5},"calibration":"pump"},
+    {"id":"medtronic-simplera","name":"Medtronic Simplera","packages":["com.medtronic.diabetes.simplera.eu","com.medtronic.diabetes.simplera.us"],"notification":{"sensor":"Simplera","intervalMinutes":5},"calibration":"app"},
+    {"id":"eversense","name":"Eversense","packages":["com.senseonics.gen12androidapp","com.senseonics.androidapp","com.senseonics.eversense365.us","com.senseonics.eversense365.ous"],"notification":{"sensor":"Eversense","intervalMinutes":5},"calibration":"app"},
+    {"id":"aidex","name":"GlucoRx Aidex","packages":["com.microtechmd.cgms.uk","com.microtechmd.cgms.mg","com.microtechmd.cgms.mmol","com.microtechmd.cgms.medmgtrust.mg","com.microtechmd.cgms.medmmoltrust.mmol","com.microtech.aidexx","com.microtech.aidexx.mgdl","com.microtech.aidexx.linxneo.mmoll","com.microtech.aidexx.equil.mmoll","com.microtech.aidexx.diaexport.mmoll","com.microtech.aidexx.smart.mmoll"],"notification":{"sensor":"GlucoRx Aidex","intervalMinutes":5},"calibration":"app"},
+    {"id":"ottai","name":"Ottai","packages":["com.ottai.seas","com.ottai.tag"],"notification":{"sensor":"Ottai","intervalMinutes":5}},
+    {"id":"syai","name":"Syai Tag","packages":["com.syai.tag"]},
+    {"id":"sibionics","name":"SIBIONICS","packages":["com.sisensing.sijoy","com.sisensing.gs3","com.sisensing.eco"]},
+    {"id":"sinocare","name":"Sinocare iCan","packages":["com.sinocare.cgm.ce","com.sinocare.ican.health.ce","com.sinocare.ican.health.de","com.sinocare.ican.health.ru"],"notification":{"sensor":"Sino App","intervalMinutes":5}},
+    {"id":"poctech","name":"POCTech CGM","packages":["com.poctechcorp.pocct2","com.poctechcorp.pocct"],"calibration":"app"},
+    {"id":"instara","name":"Instara","packages":["com.teljane.instara"]},
+    {"id":"kakao-pasta","name":"PASTA","packages":["com.kakaohealthcare.pasta"],"notification":{"sensor":"Unknown","intervalMinutes":5},"calibration":"app"},
+    {"id":"glucotech","name":"GlucoTech","packages":["com.glucotech.app.android"],"notification":{"sensor":"Unknown","intervalMinutes":5}},
+    {"id":"suswel","name":"Suswel","packages":["com.suswel.ai"],"notification":{"sensor":"Unknown","intervalMinutes":5}}
+  ]
+}

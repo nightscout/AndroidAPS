@@ -58,7 +58,7 @@ class ElementTypeTest {
     fun defaultProtection_isNone() {
         // Entries that don't explicitly request protection must not silently inherit a stricter
         // default. Verifies it for a representative non-protected entry.
-        assertThat(ElementType.CGM_DEX.protection).isEqualTo(ProtectionCheck.Protection.NONE)
+        assertThat(ElementType.CGM.protection).isEqualTo(ProtectionCheck.Protection.NONE)
         assertThat(ElementType.ANNOUNCEMENT.protection).isEqualTo(ProtectionCheck.Protection.NONE)
     }
 

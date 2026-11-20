@@ -21,7 +21,6 @@ import app.aaps.core.ui.compose.icons.IcAs
 import app.aaps.core.ui.compose.icons.IcAutomation
 import app.aaps.core.ui.compose.icons.IcBgCheck
 import app.aaps.core.ui.compose.icons.IcBolus
-import app.aaps.core.ui.compose.icons.IcByoda
 import app.aaps.core.ui.compose.icons.IcCalculator
 import app.aaps.core.ui.compose.icons.IcCalibration
 import app.aaps.core.ui.compose.icons.IcCannulaChange
@@ -50,7 +49,6 @@ import app.aaps.core.ui.compose.icons.IcStats
 import app.aaps.core.ui.compose.icons.IcTbrHigh
 import app.aaps.core.ui.compose.icons.IcTtHigh
 import app.aaps.core.ui.compose.icons.IcUserOptions
-import app.aaps.core.ui.compose.icons.IcXDrip
 import app.aaps.core.ui.compose.icons.Pump
 
 /**
@@ -71,8 +69,7 @@ fun ElementType.color(): Color = when (this) {
 
     ElementType.FOOD_MANAGEMENT         -> AapsTheme.elementColors.carbs
 
-    ElementType.CGM_XDRIP               -> AapsTheme.elementColors.cgmXdrip
-    ElementType.CGM_DEX                 -> AapsTheme.elementColors.cgmDex
+    ElementType.CGM                     -> AapsTheme.elementColors.cgmDex
     ElementType.CALIBRATION             -> AapsTheme.elementColors.calibration
     ElementType.INSULIN_MANAGEMENT      -> AapsTheme.elementColors.insulin
 
@@ -97,7 +94,6 @@ fun ElementType.color(): Color = when (this) {
     ElementType.AUTOMATION_MANAGEMENT   -> AapsTheme.elementColors.automation
 
     ElementType.PUMP                    -> AapsTheme.elementColors.pump
-    ElementType.CGM                     -> AapsTheme.elementColors.cgmXdrip
     ElementType.SETTINGS,
     ElementType.QUICK_LAUNCH_CONFIG     -> AapsTheme.elementColors.settings
 
@@ -138,8 +134,7 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.FOOD_MANAGEMENT         -> IcPluginFood
 
     ElementType.TREATMENT               -> Icons.Default.Add
-    ElementType.CGM_XDRIP               -> IcXDrip
-    ElementType.CGM_DEX                 -> IcByoda
+    ElementType.CGM                     -> IcGenericCgm
     ElementType.CALIBRATION             -> IcCalibration
     ElementType.INSULIN_MANAGEMENT      -> IcPluginInsulin
 
@@ -163,7 +158,6 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.AUTOMATION_MANAGEMENT   -> IcPluginAutomation
 
     ElementType.PUMP                    -> Pump
-    ElementType.CGM                     -> IcGenericCgm
     ElementType.SETTINGS                -> Icons.Default.Settings
     ElementType.QUICK_LAUNCH_CONFIG     -> Icons.Default.Settings
     ElementType.TREATMENTS              -> IcClinicalNotes
@@ -210,8 +204,7 @@ fun ElementType.label(): TextRef? = when (this) {
     ElementType.QUICK_WIZARD_MANAGEMENT -> CoreUiStrings.quickwizard_managemnt
     ElementType.FOOD_MANAGEMENT         -> CoreUiStrings.food_management
     ElementType.TREATMENT               -> CoreUiStrings.overview_treatment_label
-    ElementType.CGM_XDRIP               -> CoreUiStrings.cgm
-    ElementType.CGM_DEX                 -> CoreUiStrings.cgm
+    ElementType.CGM                     -> CoreUiStrings.cgm
     ElementType.CALIBRATION             -> CoreUiStrings.calibration
     ElementType.INSULIN_MANAGEMENT      -> CoreUiStrings.insulin_management
     ElementType.PROFILE_MANAGEMENT      -> CoreUiStrings.profile_management
@@ -231,7 +224,6 @@ fun ElementType.label(): TextRef? = when (this) {
     ElementType.AUTOMATION              -> null // dynamic label
     ElementType.AUTOMATION_MANAGEMENT   -> CoreUiStrings.automation
     ElementType.PUMP                    -> CoreUiStrings.pump
-    ElementType.CGM                     -> CoreUiStrings.cgm
     ElementType.SETTINGS                -> CoreUiStrings.settings
     ElementType.QUICK_LAUNCH_CONFIG     -> CoreUiStrings.quick_launch_configure
     ElementType.TREATMENTS              -> CoreUiStrings.treatments_history
@@ -272,8 +264,7 @@ fun ElementType.description(): TextRef? = when (this) {
     ElementType.SITE_ROTATION           -> CoreUiStrings.manage_site_rotation_desc
     ElementType.NOTE                    -> CoreUiStrings.treatment_note_desc
     ElementType.QUESTION                -> CoreUiStrings.treatment_question_desc
-    ElementType.CGM_XDRIP,
-    ElementType.CGM_DEX                 -> CoreUiStrings.treatment_cgm_desc
+    ElementType.CGM                     -> CoreUiStrings.treatment_cgm_desc
 
     ElementType.CALIBRATION             -> CoreUiStrings.treatment_calibration_desc
     ElementType.BG_CHECK                -> CoreUiStrings.treatment_bg_check_desc
@@ -302,7 +293,6 @@ fun ElementType.description(): TextRef? = when (this) {
     ElementType.QUICK_WIZARD,
     ElementType.AUTOMATION,
     ElementType.PUMP,
-    ElementType.CGM,
     ElementType.SETTINGS,
     ElementType.COB,
     ElementType.SENSITIVITY,

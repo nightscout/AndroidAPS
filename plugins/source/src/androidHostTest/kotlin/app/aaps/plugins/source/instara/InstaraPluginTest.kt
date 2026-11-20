@@ -12,7 +12,7 @@ class InstaraPluginTest : TestBaseWithProfile() {
     private lateinit var instaraPlugin: InstaraPlugin
 
     @BeforeEach fun prepare() {
-        instaraPlugin = InstaraPlugin(context, rh, aapsLogger, preferences, config, mock())
+        instaraPlugin = InstaraPlugin(context, rh, aapsLogger, preferences, config, mock(), mock())
     }
 
     @Test

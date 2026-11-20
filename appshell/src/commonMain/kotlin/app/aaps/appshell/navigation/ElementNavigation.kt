@@ -9,8 +9,9 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
+import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.source.CgmDriver
-import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.navigation.NavigationRequest
@@ -32,8 +33,9 @@ import app.aaps.ui.search.SearchIndexEntry
  * Two things genuinely are platform specific and are passed in: launching another app for a CGM, and
  * closing the app. Everything else is shared.
  *
- * @param onOpenCgmApp opens the CGM app by package name. Android only; elsewhere there is no app to
- *   open, and the caller should say so rather than doing nothing quietly.
+ * @param onOpenCgmApp opens the first of these packages that is installed (a vendor app has several, for
+ *   regions and units). Android only; elsewhere there is no app to open, and the caller should say so rather
+ *   than doing nothing quietly.
  * @param onExit closes the window or activity. Called **before** `configBuilder.exitApp`, which is
  *   what the phone did: the UI goes first, then the app records the exit and stops the process.
  */
@@ -44,8 +46,7 @@ class ElementNavigator(
     val activePlugin: ActivePlugin,
     val protectionCheck: ProtectionCheck,
     private val configBuilder: ConfigBuilder,
-    private val dexcomBoyda: DexcomBoyda,
-    private val onOpenCgmApp: (packageName: String) -> Unit,
+    private val onOpenCgmApp: (packages: List<String>) -> Unit,
     private val onExit: () -> Unit,
     val onRequestDirectoryAccess: () -> Unit,
     val onOpenUrl: (url: String) -> Unit
@@ -147,11 +148,18 @@ class ElementNavigator(
             ElementType.TEMP_BASAL              -> navController.navigate(AppRoute.TempBasalDialog.route)
             ElementType.EXTENDED_BOLUS          -> navController.navigate(AppRoute.ExtendedBolusDialog.route)
 
-            // CGM
-            ElementType.CGM_XDRIP               -> onOpenCgmApp("com.eveningoutpost.dexdrip")
-            ElementType.CGM_DEX                 -> dexcomBoyda.dexcomPackages().forEach { onOpenCgmApp(it) }
+            // CGM: a CGM driver's own screen, else the vendor app the source reads (packages from the CGM app catalog)
+            ElementType.CGM                     -> activePlugin.activeBgSource.let { source ->
+                if (source is CgmDriver && source is PluginBase) openPlugin(source, navController, activePlugin)
+                else openSourceApp(source)
+            }
 
-            ElementType.CALIBRATION            -> navController.navigate(AppRoute.CalibrationDialog.route)
+            // The vendor app calibrates (OWN_APP): open it. Otherwise the AAPS dialog, which passes the value on (or, for a
+            // sensor calibrated on the pump, says so: the button is hidden then, this is for any other way in)
+            ElementType.CALIBRATION             -> activePlugin.activeBgSource.let { source ->
+                if (source.calibrationMode == CalibrationMode.OWN_APP) openSourceApp(source)
+                else navController.navigate(AppRoute.CalibrationDialog.route)
+            }
 
             // Careportal
             ElementType.BG_CHECK                -> navController.navigate(AppRoute.CareDialog.createRoute(CareportalEventType.BGCHECK.ordinal))
@@ -173,8 +181,6 @@ class ElementNavigator(
             }
 
             ElementType.PUMP                    -> openPlugin(activePlugin.activePumpInternal as PluginBase, navController, activePlugin)
-            // Shown only while the BG source is a CgmDriver; anything else has nothing to open here.
-            ElementType.CGM                     -> (activePlugin.activeBgSource as? CgmDriver as? PluginBase)?.let { openPlugin(it, navController, activePlugin) }
 
             // Non-searchable types - listed explicitly so the compiler catches new enum values
             ElementType.QUICK_WIZARD,
@@ -188,6 +194,8 @@ class ElementNavigator(
             }
         }
     }
+
+    private fun openSourceApp(source: BgSource) = onOpenCgmApp(source.appPackages)
 }
 
 

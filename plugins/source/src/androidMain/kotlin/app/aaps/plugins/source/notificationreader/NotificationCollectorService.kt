@@ -15,8 +15,6 @@ import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.keys.StringNonKey
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.source.NotificationReaderPlugin
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +29,6 @@ class NotificationCollectorService : NotificationListenerService() {
     @Inject lateinit var notificationReaderPlugin: NotificationReaderPlugin
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var preferences: Preferences
 
     private var parser: NotificationParser? = null
     private var deduplicator: GlucoseDeduplicator? = null
@@ -43,17 +40,7 @@ class NotificationCollectorService : NotificationListenerService() {
         // Calling the injector directly is what MetroService does anyway.
         (applicationContext as MetroMemberInjector).injectMembers(this)
         parser = NotificationParser(notificationReaderPlugin.packageConfig)
-        deduplicator = GlucoseDeduplicator(
-            packageConfig = notificationReaderPlugin.packageConfig,
-            store = object : GlucoseDeduplicator.StateStore {
-                override fun load(): String? =
-                    preferences.get(StringNonKey.NotificationReaderDedupState).takeIf { it.isNotBlank() }
-
-                override fun save(json: String) {
-                    preferences.put(StringNonKey.NotificationReaderDedupState, json)
-                }
-            }
-        )
+        deduplicator = notificationReaderPlugin.deduplicator
         aapsLogger.debug(LTag.BGSOURCE, "NotificationCollectorService created")
     }
 

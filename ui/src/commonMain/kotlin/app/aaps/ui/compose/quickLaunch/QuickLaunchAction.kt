@@ -81,7 +81,7 @@ sealed class QuickLaunchAction {
         val Carbs = StaticAction(ElementType.CARBS)
         val Wizard = StaticAction(ElementType.BOLUS_WIZARD)
         val Treatment = StaticAction(ElementType.TREATMENT)
-        val Cgm = StaticAction(ElementType.CGM_XDRIP)
+        val Cgm = StaticAction(ElementType.CGM)
         val Calibration = StaticAction(ElementType.CALIBRATION)
         val InsulinManagement = StaticAction(ElementType.INSULIN_MANAGEMENT)
         val ProfileSwitch = StaticAction(ElementType.PROFILE_MANAGEMENT)
@@ -129,5 +129,9 @@ sealed class QuickLaunchAction {
         /** Lookup static action by typeId */
         fun fromTypeId(typeId: String): QuickLaunchAction? = staticActions.find { it.typeId == typeId }
             ?: if (typeId == QuickLaunchConfig.typeId) QuickLaunchConfig else null
+            ?: if (typeId == LEGACY_CGM_TYPE_ID) Cgm else null
+
+        /** The CGM tile was saved as `cgm_xdrip` before the xDrip and Dexcom elements became one CGM element. */
+        private const val LEGACY_CGM_TYPE_ID = "cgm_xdrip"
     }
 }

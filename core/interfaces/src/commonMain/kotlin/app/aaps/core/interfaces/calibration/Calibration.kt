@@ -1,6 +1,8 @@
 package app.aaps.core.interfaces.calibration
 
 import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginBase
 
 interface Calibration {
 
@@ -48,3 +50,10 @@ interface Calibration {
      */
     suspend fun checkPreconditions(): AddEntryResult
 }
+
+/**
+ * True when a real calibration plugin is active, not the default one that does nothing. Only then does a calibration
+ * stored by AAPS change any reading. The default plugin accepts every entry without storing it, so a caller that
+ * hands it one must check this first, or the calibration is lost while it looks done.
+ */
+fun ActivePlugin.isCalibrationPluginActive(): Boolean = (activeCalibration as? PluginBase)?.pluginDescription?.defaultPlugin == false

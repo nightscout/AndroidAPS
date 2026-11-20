@@ -28,7 +28,8 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventCalibrationChanged
-import app.aaps.core.interfaces.source.calibratingCgmDriver
+import app.aaps.core.interfaces.source.CalibrationMode
+import app.aaps.core.interfaces.source.activeBgSourceOrNull
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.icons.IcCalibration
 import app.aaps.plugins.calibration.compose.CalibrationComposeContent
@@ -69,9 +70,10 @@ class LinearCalibrationPlugin(
         .pluginName(CalibrationStrings.linear_calibration_name)
         .description(CalibrationStrings.description_linear_calibration)
         .composeContent { CalibrationComposeContent() }
-        // Off while the BG source is a CGM driver that takes calibrations: its values are calibrated by the sensor
-        // already, and a fit on top would correct them twice. Reads the BG source, which never reads this plugin.
-        .enforce(EnforcedState.Disabled) { activePlugin.calibratingCgmDriver() != null },
+        // Off unless the BG source leaves calibration to AAPS: a source that takes calibrations (a CGM driver, xDrip)
+        // or a sensor calibrated in its own app sends values that are calibrated already, and a fit on top would
+        // correct them twice. Reads the BG source, which never reads this plugin.
+        .enforce(EnforcedState.Disabled) { (activePlugin.activeBgSourceOrNull()?.calibrationMode ?: CalibrationMode.AAPS) != CalibrationMode.AAPS },
     aapsLogger, rh, notificationManager
 ), Calibration {
 

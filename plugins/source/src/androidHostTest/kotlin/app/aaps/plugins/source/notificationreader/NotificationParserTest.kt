@@ -13,7 +13,6 @@ class NotificationParserTest {
     companion object {
 
         val TEST_CONFIG = PackageConfig(
-            version = 1,
             supportedPackages = setOf(
                 "com.dexcom.g7", "com.dexcom.g6", "com.dexcom.g6.region1.mmol",
                 "com.dexcom.dexcomone", "com.dexcom.stelo", "com.camdiab.fx_alert.mmoll",

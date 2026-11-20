@@ -24,7 +24,6 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.smsCommunicator.Sms
-import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
@@ -72,7 +71,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var loop: LoopPlugin
     @Mock lateinit var otp: OneTimePassword
-    @Mock lateinit var xDripBroadcast: XDripBroadcast
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var dateUtilMocked: DateUtil
     @Mock lateinit var autosensDataStore: AutosensDataStore
@@ -142,7 +140,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         runBlocking { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         smsCommunicatorPlugin = SmsCommunicatorPlugin(
             aapsLogger, text, smsManager, preferences, constraintChecker, profileFunction, profileUtil, activePlugin, profileRepository,
-            commandQueue, loop, iobCobCalculator, xDripBroadcast, otp, config, dateUtilMocked, uel,
+            commandQueue, loop, iobCobCalculator, otp, config, dateUtilMocked, uel,
             smbGlucoseStatusProvider, decimalFormatter, configBuilder, pumpStatusProvider, notificationManager,
             runningModeGuard, bolusProgressData, { masterActionExecutor }, repository
         )
@@ -1188,17 +1186,35 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CAL 0")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
-        whenever(xDripBroadcast.sendCalibration(anyDouble())).thenReturn(true)
-        //CAL 1
+        //CAL 100
         smsCommunicatorPlugin.messages = ArrayList()
-        sms = Sms("1234", "CAL 1")
+        sms = Sms("1234", "CAL 100")
         smsCommunicatorPlugin.processSms(sms)
-        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CAL 1")
-        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To send calibration 1.00 reply with code")
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CAL 100")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To send calibration 100.00 reply with code")
         val passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
-        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Calibration sent. Receiving must be enabled in xDrip+.")
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Calibration accepted")
+        // The master's calibration path takes it, in mg/dL, and records it as coming from SMS. Where it goes is the
+        // BG source's decision, covered by the executor's own tests.
+        assertThat(lastAction()).isEqualTo(BatchAction.Calibration(100.0))
+        verify(masterActionExecutor).confirm(eq(42L), eq(Sources.SMS), anyOrNull(), anyBoolean(), anyDouble(), isNull(), anyOrNull())
+    }
+
+    /** The master refuses it, for example the sensor is calibrated in its own app: the reason goes back, nothing is confirmed. */
+    @Test fun processCalRefusedTest() = runTest {
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
+        whenever(masterActionExecutor.prepareBatch(anyOrNull(), isNull()))
+            .thenReturn(MasterActionExecutor.PrepareResult.Error("Calibration not saved: this sensor is calibrated in its own app. Calibrate it there."))
+
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(Sms("1234", "CAL 100"))
+        val passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
+        smsCommunicatorPlugin.processSms(Sms("1234", passCode))
+
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Calibration not saved: this sensor is calibrated in its own app. Calibrate it there.")
+        verifyBlocking(masterActionExecutor, never()) { confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), isNull(), anyOrNull()) }
     }
 
     @Test fun processCarbsTest() = runTest {

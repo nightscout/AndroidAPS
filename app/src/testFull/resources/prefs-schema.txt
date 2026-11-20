@@ -122,6 +122,7 @@ carelevo_patch_info|CarelevoStringNonKey|false
 carelevo_temp_basal_infusion_info|CarelevoStringNonKey|false
 carelevo_user_setting_info|CarelevoStringNonKey|false
 categorize_uam_as_basal|BooleanKey|true
+cgm_app_catalog|StringNonKey|false
 combov2-bt-address-key|ComboStringNonKey|true
 combov2-cp-cipher-key|ComboStringNonKey|true
 combov2-key-response-address-key|ComboIntNonKey|true
@@ -310,7 +311,6 @@ missed_bg_readings_threshold|IntKey|true
 nextMissedReadingsAlarm|LocalAlertLongKey|false
 nextPumpDisconnectedAlarm|LocalAlertLongKey|false
 notification_reader_dedup_state|StringNonKey|true
-notification_reader_packages|StringNonKey|true
 ns_alarm_stale_data_value|IntKey|true
 ns_alarm_urgent_stale_data_value|IntKey|true
 ns_alarms|BooleanKey|true

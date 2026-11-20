@@ -74,7 +74,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
-import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.SnackbarHostPresence
@@ -167,7 +166,6 @@ class ComposeMainActivity : MetroAppCompatActivity() {
     @Inject lateinit var config: Config
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var visibilityContext: VisibilityContext
-    @Inject lateinit var dexcomBoyda: DexcomBoyda
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var prefFileList: FileListProvider
     @Inject lateinit var notificationManager: NotificationManager
@@ -700,8 +698,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
         activePlugin = activePlugin,
         protectionCheck = protectionCheck,
         configBuilder = configBuilder,
-        dexcomBoyda = dexcomBoyda,
-        onOpenCgmApp = { packageName -> openCgmApp(packageName) },
+        onOpenCgmApp = { packages -> openCgmApp(packages) },
         onExit = { finish() },
         onRequestDirectoryAccess = {
             try {
@@ -734,13 +731,18 @@ class ComposeMainActivity : MetroAppCompatActivity() {
         navigator(navController).handleSearchResultClick(entry)
     }
 
-    private fun openCgmApp(packageName: String) {
+    /** Opens the first of [packages] that is installed: one app, also when the user has two of them. */
+    private fun openCgmApp(packages: List<String>) {
+        val intent = packages.firstNotNullOfOrNull { packageManager.getLaunchIntentForPackage(it) }
+        if (intent == null) {
+            aapsLogger.debug("No CGM app installed of $packages")
+            return
+        }
         try {
-            val intent = packageManager.getLaunchIntentForPackage(packageName) ?: throw ActivityNotFoundException()
             intent.addCategory(Intent.CATEGORY_LAUNCHER)
             startActivity(intent)
         } catch (_: ActivityNotFoundException) {
-            aapsLogger.debug("Error opening CGM app: $packageName")
+            aapsLogger.debug("Error opening CGM app: ${intent.`package`}")
         }
     }
 

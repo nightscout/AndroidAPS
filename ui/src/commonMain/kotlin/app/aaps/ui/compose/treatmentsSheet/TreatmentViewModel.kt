@@ -14,13 +14,14 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
-import app.aaps.core.interfaces.source.DexcomBoyda
+import app.aaps.core.interfaces.source.activeBgSourceOrNull
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -66,7 +67,6 @@ class TreatmentViewModel(
     private val quickWizard: QuickWizard,
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,
-    private val dexcomBoyda: DexcomBoyda,
     private val elementAvailability: ElementAvailability
 ) : ViewModel() {
 
@@ -98,12 +98,12 @@ class TreatmentViewModel(
 
     fun refreshState() {
         viewModelScope.launch {
-            val isDexcomSource = dexcomBoyda.isEnabled()
-
             val quickWizardItems = buildQuickWizardItems()
 
-            // Check element availability (plugin-dependent) + user preference
-            val showCgm = elementAvailability.isAvailable(ElementType.CGM_XDRIP) && preferences.get(BooleanKey.OverviewShowCgmButton)
+            // Check element availability (plugin-dependent) + user preference. CGM follows the active BG source:
+            // a CGM driver's screen or the vendor app, shown with that source's own icon.
+            val showCgm = elementAvailability.isAvailable(ElementType.CGM) && preferences.get(BooleanKey.OverviewShowCgmButton)
+            val cgmIcon = (activePlugin.activeBgSourceOrNull() as? PluginBase)?.pluginDescription?.icon
             val showCalibration = elementAvailability.isAvailable(ElementType.CALIBRATION)
                 && iobCobCalculator.ads.actualBg() != null
                 && (elementAvailability.isCalibrationOverrideActive() || preferences.get(BooleanKey.OverviewShowCalibrationButton))
@@ -122,7 +122,7 @@ class TreatmentViewModel(
                     showInsulin = showInsulin,
                     showCarbs = showCarbs,
                     showCalculator = showCalculator,
-                    isDexcomSource = isDexcomSource,
+                    cgmIcon = cgmIcon,
                     quickWizardItems = quickWizardItems,
                     showSettingsIcon = showSettingsIcon
                 )

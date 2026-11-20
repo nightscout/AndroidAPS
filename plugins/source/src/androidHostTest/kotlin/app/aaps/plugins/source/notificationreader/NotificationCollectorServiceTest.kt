@@ -7,7 +7,6 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.source.NotificationReaderPlugin
 import app.aaps.shared.tests.AAPSLoggerTest
 import kotlinx.coroutines.runBlocking
@@ -37,7 +36,6 @@ class NotificationCollectorServiceTest {
     private val packageConfig: PackageConfig = mock()
     private val persistenceLayer: PersistenceLayer = mock()
     private val profileFunction: ProfileFunction = mock()
-    private val preferences: Preferences = mock()
     private val parser: NotificationParser = mock()
     private val deduplicator: GlucoseDeduplicator = mock()
 
@@ -50,7 +48,6 @@ class NotificationCollectorServiceTest {
         service.notificationReaderPlugin = plugin
         service.persistenceLayer = persistenceLayer
         service.profileFunction = profileFunction
-        service.preferences = preferences
         setPrivate("parser", parser)
         setPrivate("deduplicator", deduplicator)
         whenever(plugin.packageConfig).thenReturn(packageConfig)

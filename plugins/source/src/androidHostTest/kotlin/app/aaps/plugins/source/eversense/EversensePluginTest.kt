@@ -8,7 +8,7 @@ import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.source.CgmCalibrationMode
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.source.CgmDriver
 import app.aaps.core.keys.LongNonKey
 import app.aaps.plugins.eversense.EversenseCGMPlugin
@@ -67,7 +67,7 @@ class EversensePluginTest {
     @Test fun isACgmDriverThatTakesCalibrations() {
         val plugin = EversensePlugin(mock(), mock(), mock(), mock(), mock(), mock(), mock(), mock())
         assertThat(plugin).isInstanceOf(CgmDriver::class.java)
-        assertThat(plugin.calibrationMode).isEqualTo(CgmCalibrationMode.DRIVER)
+        assertThat(plugin.calibrationMode).isEqualTo(CalibrationMode.SOURCE)
     }
 
     @Test fun successfulCalibrationUpdatesCountdownAndRequestsSync() = runBlocking {

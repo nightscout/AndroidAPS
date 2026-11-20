@@ -13,10 +13,10 @@ import app.aaps.core.interfaces.calibration.AddEntryResult
 import app.aaps.core.interfaces.calibration.Calibration
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.source.CgmCalibrationMode
-import app.aaps.core.interfaces.source.CgmDriver
-import app.aaps.core.interfaces.source.XDripSource
-import app.aaps.core.interfaces.sync.XDripBroadcast
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -43,9 +43,15 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var translator: Translator
     @Mock lateinit var uel: UserEntryLogger
-    @Mock lateinit var xDripSource: XDripSource
-    @Mock lateinit var xDripBroadcast: XDripBroadcast
-    @Mock lateinit var calibration: Calibration
+
+    /** The active calibration plugin, as the Linear one: a real plugin, not the default one that stores nothing. */
+    private val calibration: Calibration = calibrationPlugin(defaultPlugin = false)
+
+    private fun calibrationPlugin(defaultPlugin: Boolean): Calibration {
+        val plugin = mock<PluginBase>(extraInterfaces = arrayOf(Calibration::class))
+        whenever(plugin.pluginDescription).thenReturn(PluginDescription().apply { this.defaultPlugin = defaultPlugin })
+        return plugin as Calibration
+    }
 
     private lateinit var sut: MasterRecordWriter
 
@@ -54,7 +60,7 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
         whenever(activePlugin.activeCalibration).thenReturn(calibration)
         sut = MasterRecordWriter(
             persistenceLayer, baseText, dateUtil, profileUtil, profileFunction, decimalFormatter, translator, activePlugin,
-            uel, xDripSource, xDripBroadcast, aapsLogger
+            uel, aapsLogger
         )
     }
 
@@ -151,8 +157,17 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
         verify(persistenceLayer).invalidateTherapyEventsWithNote(baseText.gs(CoreUiStrings.androidaps_start), Action.RESTART_EVENTS_REMOVED, Sources.NSClient)
     }
 
+    // ----- calibration: AAPS, the BG source does not calibrate -----
+
+    /** The BG source and its calibration mode. A Mockito mock does not run interface defaults. */
+    private fun bgSource(mode: CalibrationMode): BgSource = mock<BgSource>().also {
+        whenever(it.calibrationMode).thenReturn(mode)
+        whenever(activePlugin.activeBgSource).thenReturn(it)
+    }
+
     @Test
     fun `a calibration the master cannot take now is refused with its reason`() = runTest {
+        bgSource(CalibrationMode.AAPS)
         whenever(calibration.checkPreconditions()).thenReturn(AddEntryResult.Rejected.NoSession)
 
         assertThat(sut.calibrationRefusal()).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_session))
@@ -160,69 +175,84 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
 
     @Test
     fun `a calibration the master can take is not refused`() = runTest {
+        bgSource(CalibrationMode.AAPS)
         whenever(calibration.checkPreconditions()).thenReturn(AddEntryResult.Accepted)
 
         assertThat(sut.calibrationRefusal()).isNull()
     }
 
     @Test
-    fun `a stored calibration is logged and also sent to xDrip when xDrip is the BG source`() = runTest {
+    fun `a calibration stored by the calibration plugin is logged`() = runTest {
+        val source = bgSource(CalibrationMode.AAPS)
         whenever(calibration.addEntry(eq(120.0), any())).thenReturn(AddEntryResult.Accepted)
-        whenever(xDripSource.isEnabled()).thenReturn(true)
         var failure: MasterActionExecutor.Failure? = null
 
         sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
 
         assertThat(failure).isNull()
         verify(uel).log(eq(Action.CALIBRATION), eq(Sources.NSClient), anyOrNull(), any<ValueWithUnit>())
-        verify(xDripBroadcast).sendCalibration(any())
+        verify(source, never()).calibrate(any())
     }
 
     @Test
     fun `a calibration refused when it is stored reports the reason`() = runTest {
+        bgSource(CalibrationMode.AAPS)
         whenever(calibration.addEntry(eq(120.0), any())).thenReturn(AddEntryResult.Rejected.NoSensorPair)
         var failure: MasterActionExecutor.Failure? = null
 
         sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
 
         assertThat(failure?.comment).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_pair))
-        verify(xDripBroadcast, never()).sendCalibration(any())
     }
 
-    // ----- a CGM driver that takes calibrations -----
+    /**
+     * No calibration plugin: the default one would take the value and store nothing, so it would look done and be
+     * lost. An SMS CAL or a client with an out-of-date plugin selection can send one.
+     */
+    @Test
+    fun `a calibration with no calibration plugin is refused, not lost`() = runTest {
+        bgSource(CalibrationMode.AAPS)
+        val noCalibration = calibrationPlugin(defaultPlugin = true)
+        whenever(activePlugin.activeCalibration).thenReturn(noCalibration)
+        var failure: MasterActionExecutor.Failure? = null
 
-    private fun cgmDriver(mode: CgmCalibrationMode): CgmDriver = mock<CgmDriver>().also {
-        whenever(it.calibrationMode).thenReturn(mode)
-        whenever(activePlugin.activeBgSource).thenReturn(it)
+        assertThat(sut.calibrationRefusal()).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_plugin))
+        sut.addCalibration(BatchAction.Calibration(120.0), Sources.SMS) { failure = it }
+
+        assertThat(failure?.comment).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_plugin))
+        verify(noCalibration, never()).addEntry(any(), any())
+        verify(uel).log(eq(Action.CALIBRATION), eq(Sources.SMS), anyOrNull(), any<ValueWithUnit>())
     }
+
+    // ----- calibration: SOURCE, a CGM driver or xDrip takes it -----
 
     @Test
-    fun `a CGM driver that takes calibrations decides the refusal, not the calibration plugin`() = runTest {
-        val driver = cgmDriver(CgmCalibrationMode.DRIVER)
-        whenever(driver.calibrationRefusal()).thenReturn("transmitter busy")
+    fun `a source that takes calibrations decides the refusal, not the calibration plugin`() = runTest {
+        val source = bgSource(CalibrationMode.SOURCE)
+        whenever(source.calibrationRefusal()).thenReturn("transmitter busy")
 
         assertThat(sut.calibrationRefusal()).isEqualTo("transmitter busy")
         verify(calibration, never()).checkPreconditions()
     }
 
     @Test
-    fun `a calibration goes to the CGM driver that takes calibrations and is logged`() = runTest {
-        val driver = cgmDriver(CgmCalibrationMode.DRIVER)
-        whenever(driver.calibrate(120.0)).thenReturn(null)
+    fun `a calibration goes to the source that takes calibrations and is logged`() = runTest {
+        val source = bgSource(CalibrationMode.SOURCE)
+        whenever(source.calibrate(120.0)).thenReturn(null)
         var failure: MasterActionExecutor.Failure? = null
 
         sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
 
         assertThat(failure).isNull()
-        verify(driver).calibrate(120.0)
+        verify(source).calibrate(120.0)
         verify(calibration, never()).addEntry(any(), any())
         verify(uel).log(eq(Action.CALIBRATION), eq(Sources.NSClient), anyOrNull(), any<ValueWithUnit>())
     }
 
     @Test
-    fun `a calibration the CGM driver refuses reports the driver's reason`() = runTest {
-        val driver = cgmDriver(CgmCalibrationMode.DRIVER)
-        whenever(driver.calibrate(120.0)).thenReturn("sensor refused")
+    fun `a calibration the source refuses reports the source's reason`() = runTest {
+        val source = bgSource(CalibrationMode.SOURCE)
+        whenever(source.calibrate(120.0)).thenReturn("sensor refused")
         var failure: MasterActionExecutor.Failure? = null
 
         sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
@@ -230,14 +260,36 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
         assertThat(failure?.comment).isEqualTo("sensor refused")
     }
 
+    // ----- calibration: OWN_APP, the vendor app calibrates -----
+
+    /** Only a client can send one: on this phone the button opens the vendor app. It must not look done. */
     @Test
-    fun `a factory-calibrated CGM driver leaves the calibration to the calibration plugin`() = runTest {
-        val driver = cgmDriver(CgmCalibrationMode.NONE)
-        whenever(calibration.addEntry(eq(120.0), any())).thenReturn(AddEntryResult.Accepted)
+    fun `a calibration for a sensor calibrated in its own app is refused, not dropped`() = runTest {
+        val source = bgSource(CalibrationMode.OWN_APP)
+        var failure: MasterActionExecutor.Failure? = null
 
-        sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { }
+        assertThat(sut.calibrationRefusal()).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_in_cgm_app))
+        sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
 
-        verify(calibration).addEntry(eq(120.0), any())
-        verify(driver, never()).calibrate(any())
+        assertThat(failure?.comment).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_in_cgm_app))
+        verify(calibration, never()).addEntry(any(), any())
+        verify(source, never()).calibrate(any())
+    }
+
+    // ----- calibration: PUMP, the sensor is calibrated on the pump -----
+
+    /** A Medtronic sensor read through the pump: neither AAPS nor an app can take it, and the user is told where. */
+    @Test
+    fun `a calibration for a sensor calibrated on the pump is refused with where to do it`() = runTest {
+        val source = bgSource(CalibrationMode.PUMP)
+        var failure: MasterActionExecutor.Failure? = null
+
+        assertThat(sut.calibrationRefusal()).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_on_pump))
+        sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
+
+        assertThat(failure?.comment).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_on_pump))
+        verify(calibration, never()).checkPreconditions()
+        verify(calibration, never()).addEntry(any(), any())
+        verify(source, never()).calibrate(any())
     }
 }

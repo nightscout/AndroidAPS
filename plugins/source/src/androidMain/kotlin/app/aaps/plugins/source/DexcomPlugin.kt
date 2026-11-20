@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -38,6 +39,10 @@ import app.aaps.core.ui.compose.icons.IcPluginByoda
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.core.utils.receivers.Inbox
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
+import app.aaps.plugins.source.cgmapps.CgmApp
+import app.aaps.plugins.source.cgmapps.CgmAppCatalog
+import app.aaps.plugins.source.cgmapps.CgmApps
+import app.aaps.plugins.source.cgmapps.calibrationMode
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
@@ -64,7 +69,8 @@ class DexcomPlugin(
     private val context: Context,
     config: Config,
     preferences: Preferences,
-    notificationManager: NotificationManager
+    notificationManager: NotificationManager,
+    private val cgmAppCatalog: CgmAppCatalog
 ) : AbstractBgSourceWithSensorInsertLogPlugin(
     pluginDescription = PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -99,16 +105,18 @@ class DexcomPlugin(
             )
         ) else emptyList()
 
-    private fun isDexcomAppInstalled(): Boolean =
-        PACKAGE_NAMES.any { pkg ->
-            try {
-                @Suppress("DEPRECATION")
-                context.packageManager.getPackageInfo(pkg, 0)
-                true
-            } catch (_: Exception) {
-                false
-            }
-        }
+    /** The Dexcom G6 and G7 apps, in every region, as the CGM app catalog lists them. */
+    override val appPackages: List<String>
+        get() = cgmAppCatalog.apps.packagesOf(CgmApps.DEXCOM_G6, CgmApps.DEXCOM_G7)
+
+    /** The Dexcom app on this phone, or null when there is none. */
+    private fun installedApp(): CgmApp? = cgmAppCatalog.firstInstalled(CgmApps.DEXCOM_G6, CgmApps.DEXCOM_G7)
+
+    /** The Dexcom G6 and G7 apps calibrate their sensor (optional): the calibrate button opens the app. */
+    override val calibrationMode: CalibrationMode
+        get() = installedApp().calibrationMode()
+
+    private fun isDexcomAppInstalled(): Boolean = installedApp() != null
 
     override suspend fun onStart() {
         super.onStart()
@@ -262,15 +270,8 @@ class DexcomPlugin(
         }
     }
 
-    override fun dexcomPackages() = PACKAGE_NAMES
-
     companion object {
 
-        private val PACKAGE_NAMES = listOf(
-            "com.dexcom.g6.region1.mmol", "com.dexcom.g6.region2.mgdl",
-            "com.dexcom.g6.region3.mgdl", "com.dexcom.g6.region3.mmol",
-            "com.dexcom.g6", "com.dexcom.g7"
-        )
         const val PERMISSION = "com.dexcom.cgm.EXTERNAL_PERMISSION"
     }
 }

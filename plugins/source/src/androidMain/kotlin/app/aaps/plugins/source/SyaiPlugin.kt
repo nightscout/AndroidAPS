@@ -18,12 +18,16 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.objects.workflow.MetroWorkerCreator
 import app.aaps.core.ui.compose.icons.IcPluginSyai
+import app.aaps.plugins.source.cgmapps.CgmAppCatalog
+import app.aaps.plugins.source.cgmapps.CgmApps
+import app.aaps.plugins.source.cgmapps.calibrationMode
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
@@ -47,7 +51,8 @@ class SyaiPlugin(
     aapsLogger: AAPSLogger,
     preferences: Preferences,
     config: Config,
-    notificationManager: NotificationManager
+    notificationManager: NotificationManager,
+    private val cgmAppCatalog: CgmAppCatalog
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -64,6 +69,13 @@ class SyaiPlugin(
     aapsLogger, rh, preferences, config, notificationManager
 ), BgSource {
 
+    /** The Syai Tag and Ottai apps: both send to this plugin. */
+    override val appPackages: List<String>
+        get() = cgmAppCatalog.apps.packagesOf(CgmApps.SYAI, CgmApps.OTTAI)
+
+    /** Syai and Ottai sensors are factory calibrated and their apps take no calibration: AAPS's calibration plugin may. */
+    override val calibrationMode: CalibrationMode
+        get() = cgmAppCatalog.firstInstalled(CgmApps.SYAI, CgmApps.OTTAI).calibrationMode()
 
     @AssistedInject
     class SyaiWorker(

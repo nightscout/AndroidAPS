@@ -20,9 +20,12 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.receivers.Intents
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.source.XDripSource
+import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
@@ -33,6 +36,10 @@ import app.aaps.core.objects.workflow.MetroWorkerCreator
 import app.aaps.core.ui.compose.icons.IcXDrip
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.core.utils.receivers.Inbox
+import app.aaps.plugins.source.cgmapps.CgmApp
+import app.aaps.plugins.source.cgmapps.CgmAppCatalog
+import app.aaps.plugins.source.cgmapps.CgmApps
+import app.aaps.plugins.source.cgmapps.calibrationMode
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
@@ -59,7 +66,11 @@ class XdripSourcePlugin(
     aapsLogger: AAPSLogger,
     preferences: Preferences,
     config: Config,
-    notificationManager: NotificationManager
+    notificationManager: NotificationManager,
+    private val cgmAppCatalog: CgmAppCatalog,
+    private val profileUtil: ProfileUtil,
+    // Deferred: the xDrip sync plugin behind it is large, and only a calibration needs it
+    private val xDripBroadcast: () -> XDripBroadcast
 ) : AbstractBgSourceWithSensorInsertLogPlugin(
     pluginDescription = PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -79,6 +90,27 @@ class XdripSourcePlugin(
 ), BgSource, XDripSource {
 
     override var sensorBatteryLevel = -1
+
+    /**
+     * The app that sends the readings, as far as AAPS can tell: the broadcast does not name it. xDrip+ when it is
+     * installed, else Juggluco, which sends the same broadcast. Null when neither is installed (another sender).
+     */
+    private fun sender(): CgmApp? = cgmAppCatalog.firstInstalled(CgmApps.XDRIP, CgmApps.JUGGLUCO)
+
+    /** What the CGM button opens: the first of xDrip+ and Juggluco that is installed. */
+    override val appPackages: List<String>
+        get() = cgmAppCatalog.apps.packagesOf(CgmApps.XDRIP, CgmApps.JUGGLUCO)
+
+    /**
+     * xDrip+ calibrates its own readings: the value from the AAPS dialog goes to it by broadcast. Juggluco calibrates
+     * in its own app (since version 10), so the calibrate button opens it. Another sender: AAPS's calibration plugin.
+     */
+    override val calibrationMode: CalibrationMode
+        get() = sender().let { if (it?.id == CgmApps.XDRIP) CalibrationMode.SOURCE else it.calibrationMode() }
+
+    override suspend fun calibrate(bgMgdl: Double): String? =
+        if (xDripBroadcast().sendCalibration(profileUtil.fromMgdlToUnits(bgMgdl))) null
+        else rh.gs(SourceStrings.xdrip_calibration_not_sent)
 
     // cannot be inner class because of needed injection
 

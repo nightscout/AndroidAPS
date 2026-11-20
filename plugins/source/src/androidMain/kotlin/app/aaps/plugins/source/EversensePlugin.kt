@@ -28,7 +28,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.source.CgmCalibrationMode
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.source.CgmDriver
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.LongNonKey
@@ -216,7 +216,7 @@ class EversensePlugin(
     // ── CgmDriver ── The user enters the finger-stick value in the AAPS calibration dialog; the master's
     // record writer hands it to calibrate() below.
 
-    override val calibrationMode = CgmCalibrationMode.DRIVER
+    override val calibrationMode = CalibrationMode.SOURCE
 
     override suspend fun calibrate(bgMgdl: Double): String? = withContext(Dispatchers.IO) {
         // Rounded, not truncated: 2.2 mmol/L is 39.6 mg/dL and must not become 39

@@ -20,7 +20,7 @@ class PatchedSiAppPluginTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        patchedSiAppPlugin = PatchedSiAppPlugin(rh, aapsLogger, preferences, config, mock())
+        patchedSiAppPlugin = PatchedSiAppPlugin(rh, aapsLogger, preferences, config, mock(), mock())
     }
 
     @Test

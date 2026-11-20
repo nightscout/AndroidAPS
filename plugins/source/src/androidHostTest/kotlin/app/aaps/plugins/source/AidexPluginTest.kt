@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.clearInvocations
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 
@@ -34,7 +35,7 @@ class AidexPluginTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        aidexPlugin = AidexPlugin(rh, aapsLogger, preferences, config, notificationManager)
+        aidexPlugin = AidexPlugin(rh, aapsLogger, preferences, config, notificationManager, mock())
     }
 
     @Test

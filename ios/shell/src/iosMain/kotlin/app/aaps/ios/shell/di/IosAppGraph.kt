@@ -32,7 +32,6 @@ import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -240,7 +239,6 @@ interface IosAppGraph : MetroViewModelMultibindings {
     val bolusProgressData: BolusProgressData
     val commandQueue: CommandQueue
     val pumpCommunicationStatus: PumpCommunicationStatus
-    val dexcomBoyda: DexcomBoyda
     /** Concrete, not the interface: the app has to start the battery watch, which is iOS-only. */
     val receiverStatusStore: IosReceiverStatusStore
 

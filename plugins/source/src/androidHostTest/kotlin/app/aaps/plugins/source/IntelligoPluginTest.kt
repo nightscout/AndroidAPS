@@ -41,7 +41,7 @@ class IntelligoPluginTest : TestBaseWithProfile() {
             whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
         }
 
-        intelligoPlugin = IntelligoPlugin(rh, aapsLogger, preferences, config, context, persistenceLayer, dateUtil, fabricPrivacy, mock())
+        intelligoPlugin = IntelligoPlugin(rh, aapsLogger, preferences, config, context, persistenceLayer, dateUtil, fabricPrivacy, mock(), mock())
 
         // Default cursor to be empty
         whenever(cursor.isAfterLast).thenReturn(true)

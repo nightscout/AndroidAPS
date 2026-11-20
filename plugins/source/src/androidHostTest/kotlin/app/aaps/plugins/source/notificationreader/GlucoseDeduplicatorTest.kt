@@ -1,5 +1,8 @@
 package app.aaps.plugins.source.notificationreader
 
+import app.aaps.plugins.source.cgmapps.CgmApp
+import app.aaps.plugins.source.cgmapps.CgmApps
+import app.aaps.plugins.source.cgmapps.NotificationReading
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -19,13 +22,11 @@ class GlucoseDeduplicatorTest {
         }
     }
 
-    private fun configWith(vararg packages: Pair<String, Int?>): PackageConfig {
-        val entries = packages.joinToString(",") { (pkg, interval) ->
-            val intervalField = interval?.let { ", \"intervalMinutes\": $it" } ?: ""
-            """{ "package": "$pkg", "sensor": "Unknown"$intervalField }"""
-        }
-        return PackageConfig.fromJson("""{ "version": 2, "packages": [$entries] }""")
-    }
+    /** One catalog app per package; a null interval leaves it to the reader's default. */
+    private fun configWith(vararg packages: Pair<String, Int?>): PackageConfig =
+        PackageConfig.fromCatalog(
+            CgmApps(apps = packages.map { (pkg, interval) -> CgmApp(pkg, pkg, listOf(pkg), NotificationReading("Unknown", interval ?: 0)) })
+        )
 
     // ----- basic -----
 

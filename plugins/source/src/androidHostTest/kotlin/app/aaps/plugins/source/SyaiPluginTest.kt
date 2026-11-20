@@ -20,7 +20,7 @@ class SyaiPluginTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        syaiPlugin = SyaiPlugin(rh, aapsLogger, preferences, config, mock())
+        syaiPlugin = SyaiPlugin(rh, aapsLogger, preferences, config, mock(), mock())
     }
 
     @Test

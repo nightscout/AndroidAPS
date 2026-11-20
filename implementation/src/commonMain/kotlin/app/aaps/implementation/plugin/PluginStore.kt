@@ -153,8 +153,8 @@ class PluginStore(
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting SmoothingInterface")
         }
 
-        // PluginType.BGSOURCE - before CALIBRATION: the linear calibration is forced off while the BG source is a
-        // CGM driver that takes calibrations, so the calibration election must see this election's BG source.
+        // PluginType.BGSOURCE - before CALIBRATION: the linear calibration is forced off unless the BG source leaves
+        // calibration to AAPS, so the calibration election must see this election's BG source.
         pluginsInCategory = getSpecificPluginsList(PluginType.BGSOURCE)
         activeBgSourceStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.BGSOURCE, jobs) as BgSource?
         if (activeBgSourceStore == null) {

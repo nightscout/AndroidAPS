@@ -10,6 +10,6 @@ class GlimpPluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        glimpPlugin = GlimpPlugin(rh, aapsLogger, preferences, config, mock())
+        glimpPlugin = GlimpPlugin(rh, aapsLogger, preferences, config, mock(), mock())
     }
 }

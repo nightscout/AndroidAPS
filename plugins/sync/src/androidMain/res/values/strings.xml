@@ -312,8 +312,8 @@
     <string name="smscommunicator_loop_suspended">Loop suspended</string>
     <string name="smscommunicator_loop_resumed">Loop resumed</string>
     <string name="smscommunicator_invalid_phone_number">Invalid SMS phone number</string>
-    <string name="smscommunicator_calibration_sent">Calibration sent. Receiving must be enabled in xDrip+.</string>
-    <string name="smscommunicator_calibration_failed">xDrip+ is not receiving calibrations</string>
+    <string name="smscommunicator_calibration_accepted">Calibration accepted</string>
+    <string name="smscommunicator_calibration_not_accepted">Calibration not accepted</string>
     <string name="smscommunicator_message_body">Invalid message body</string>
     <string name="smscommunicator_set_lgs_reply_with_code">In order to switch Loop mode to LGS (Low Glucose Suspend) reply with code %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">In order to switch Loop mode to Closed loop reply with code %1$s</string>

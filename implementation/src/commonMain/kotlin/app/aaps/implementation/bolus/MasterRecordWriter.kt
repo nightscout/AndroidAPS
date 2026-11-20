@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.calibration.AddEntryResult
+import app.aaps.core.interfaces.calibration.isCalibrationPluginActive
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -30,9 +31,8 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.interfaces.source.XDripSource
-import app.aaps.core.interfaces.source.calibratingCgmDriver
-import app.aaps.core.interfaces.sync.XDripBroadcast
+import app.aaps.core.interfaces.source.CalibrationMode
+import app.aaps.core.interfaces.source.activeBgSourceOrNull
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
@@ -64,8 +64,6 @@ class MasterRecordWriter(
     private val translator: Translator,
     private val activePlugin: ActivePlugin,
     private val uel: UserEntryLogger,
-    private val xDripSource: XDripSource,
-    private val xDripBroadcast: XDripBroadcast,
     private val aapsLogger: AAPSLogger
 ) {
 
@@ -360,12 +358,21 @@ class MasterRecordWriter(
     // ----- Calibration -----
 
     /**
-     * Why the master cannot take a calibration now, or null when it can. Checked on the master's own data. A CGM
-     * driver that takes calibrations decides itself: the calibration plugin is off while it is active.
+     * Why the master cannot take a calibration now, or null when it can. Checked on the master's own data, by the
+     * BG source's calibration mode: a source that takes calibrations decides itself, a sensor calibrated in its own
+     * app or on the pump takes none from AAPS, and otherwise the calibration plugin decides - when there is one.
      */
     suspend fun calibrationRefusal(): String? {
-        activePlugin.calibratingCgmDriver()?.let { return it.calibrationRefusal() }
-        return (activePlugin.activeCalibration.checkPreconditions() as? AddEntryResult.Rejected)?.let { rejectionMessage(it) }
+        val bgSource = activePlugin.activeBgSourceOrNull()
+        return when (bgSource?.calibrationMode) {
+            CalibrationMode.SOURCE  -> bgSource.calibrationRefusal()
+            CalibrationMode.OWN_APP -> rh.gs(CoreUiStrings.cal_reject_in_cgm_app)
+            CalibrationMode.PUMP    -> rh.gs(CoreUiStrings.cal_reject_on_pump)
+            CalibrationMode.AAPS,
+            null                    ->
+                if (!activePlugin.isCalibrationPluginActive()) rh.gs(CoreUiStrings.cal_reject_no_plugin)
+                else (activePlugin.activeCalibration.checkPreconditions() as? AddEntryResult.Rejected)?.let { rejectionMessage(it) }
+        }
     }
 
     /** The confirmation line for a calibration. */
@@ -378,29 +385,46 @@ class MasterRecordWriter(
      */
     suspend fun addCalibration(calibration: BatchAction.Calibration, source: Sources, onError: (MasterActionExecutor.Failure) -> Unit) {
         val value = ValueWithUnit.fromGlucoseUnit(profileUtil.fromMgdlToUnits(calibration.glucoseMgdl), profileUtil.units)
-        // A CGM driver that takes calibrations sends it to the sensor; the calibration plugin is off meanwhile
-        activePlugin.calibratingCgmDriver()?.let { driver ->
-            val refusal = driver.calibrate(calibration.glucoseMgdl)
-            if (refusal == null) uel.log(action = Action.CALIBRATION, source = source, value = value)
-            else {
-                uel.log(action = Action.CALIBRATION, source = source, note = "rejected: $refusal", value = value)
-                onError(MasterActionExecutor.Failure(refusal))
-            }
-            return
-        }
-        when (val result = activePlugin.activeCalibration.addEntry(calibration.glucoseMgdl, dateUtil.now())) {
-            AddEntryResult.Accepted    -> {
-                uel.log(action = Action.CALIBRATION, source = source, value = value)
-                // xDrip, when it is the BG source here, calibrates its own readings too.
-                if (xDripSource.isEnabled()) xDripBroadcast.sendCalibration(profileUtil.fromMgdlToUnits(calibration.glucoseMgdl))
+        val bgSource = activePlugin.activeBgSourceOrNull()
+        when (bgSource?.calibrationMode) {
+            // The source passes it on (a CGM driver to the sensor, xDrip by broadcast); the calibration plugin is off
+            CalibrationMode.SOURCE  -> {
+                val refusal = bgSource.calibrate(calibration.glucoseMgdl)
+                if (refusal == null) uel.log(action = Action.CALIBRATION, source = source, value = value)
+                else refuseCalibration(refusal, value, source, onError)
+                return
             }
 
-            is AddEntryResult.Rejected -> {
-                val message = rejectionMessage(result)
-                uel.log(action = Action.CALIBRATION, source = source, note = "rejected: $message", value = value)
-                onError(MasterActionExecutor.Failure(message))
+            // Reached only from a client: the button on this phone opens the vendor app instead
+            CalibrationMode.OWN_APP -> {
+                refuseCalibration(rh.gs(CoreUiStrings.cal_reject_in_cgm_app), value, source, onError)
+                return
+            }
+
+            // Reached only from a client: this phone shows no button, there is nothing AAPS can reach
+            CalibrationMode.PUMP    -> {
+                refuseCalibration(rh.gs(CoreUiStrings.cal_reject_on_pump), value, source, onError)
+                return
+            }
+
+            // The default plugin would take it and store nothing: the calibration would look done and be lost. Reached
+            // by SMS, or from a client whose synced calibration plugin is out of date.
+            CalibrationMode.AAPS,
+            null                    -> if (!activePlugin.isCalibrationPluginActive()) {
+                refuseCalibration(rh.gs(CoreUiStrings.cal_reject_no_plugin), value, source, onError)
+                return
             }
         }
+        when (val result = activePlugin.activeCalibration.addEntry(calibration.glucoseMgdl, dateUtil.now())) {
+            AddEntryResult.Accepted    -> uel.log(action = Action.CALIBRATION, source = source, value = value)
+
+            is AddEntryResult.Rejected -> refuseCalibration(rejectionMessage(result), value, source, onError)
+        }
+    }
+
+    private fun refuseCalibration(message: String, value: ValueWithUnit, source: Sources, onError: (MasterActionExecutor.Failure) -> Unit) {
+        uel.log(action = Action.CALIBRATION, source = source, note = "rejected: $message", value = value)
+        onError(MasterActionExecutor.Failure(message))
     }
 
     private fun rejectionMessage(rejected: AddEntryResult.Rejected): String = when (rejected) {

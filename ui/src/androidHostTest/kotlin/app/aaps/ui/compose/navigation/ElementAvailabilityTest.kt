@@ -2,16 +2,15 @@ package app.aaps.ui.compose.navigation
 
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.calibration.Calibration
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.source.BgSource
-import app.aaps.core.interfaces.source.CgmCalibrationMode
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.source.CgmDriver
-import app.aaps.core.interfaces.source.DexcomBoyda
-import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -23,89 +22,149 @@ import org.mockito.kotlin.whenever
 /**
  * Verifies the gating rules in [ElementAvailability] — these decide whether a CGM/calibration
  * button is rendered at all. The contract is:
- *  - CGM_XDRIP → only when XDrip source plugin is enabled
- *  - CGM_DEX   → only when Dexcom/BYODA source plugin is enabled
- *  - CALIBRATION → when XDrip is enabled OR a non-default calibration override plugin is active
+ *  - CGM → when the active BG source is a CGM driver (its screen) or reads a vendor app (opens it); never on a client
+ *  - CALIBRATION → by the source's calibration mode: SOURCE always, OWN_APP with a known app, PUMP never, AAPS only
+ *    with a non-default calibration plugin. On a client only with a non-default calibration plugin.
  *  - FILL → only when the pump can be refilled (not on patch pumps)
  *  - BATTERY_CHANGE → when the pump battery is replaceable OR battery change logging is enabled
  *  - everything else → always available
  */
 class ElementAvailabilityTest : TestBase() {
 
-    @Mock lateinit var xDripSource: XDripSource
-    @Mock lateinit var dexcomBoyda: DexcomBoyda
     @Mock lateinit var activePlugin: ActivePlugin
+    @Mock lateinit var config: Config
 
     private lateinit var elementAvailability: ElementAvailability
 
     @BeforeEach
     fun setUp() {
-        elementAvailability = ElementAvailability(xDripSource, dexcomBoyda, activePlugin)
+        elementAvailability = ElementAvailability(activePlugin, config)
     }
 
-    // -------- CGM_XDRIP --------
-
-    @Test
-    fun cgmXdrip_isAvailable_whenXDripEnabled() {
-        whenever(xDripSource.isEnabled()).thenReturn(true)
-        assertThat(elementAvailability.isAvailable(ElementType.CGM_XDRIP)).isTrue()
+    /** The active BG source, with what the buttons look at. A Mockito mock does not run interface defaults. */
+    private fun source(mode: CalibrationMode = CalibrationMode.AAPS, appPackages: List<String> = emptyList(), driver: Boolean = false): BgSource {
+        val source: BgSource = if (driver) mock<CgmDriver>() else mock()
+        whenever(source.calibrationMode).thenReturn(mode)
+        whenever(source.appPackages).thenReturn(appPackages)
+        whenever(activePlugin.activeBgSource).thenReturn(source)
+        return source
     }
 
-    @Test
-    fun cgmXdrip_isUnavailable_whenXDripDisabled() {
-        whenever(xDripSource.isEnabled()).thenReturn(false)
-        assertThat(elementAvailability.isAvailable(ElementType.CGM_XDRIP)).isFalse()
-    }
-
-    // -------- CGM_DEX --------
+    // -------- CGM --------
 
     @Test
-    fun cgmDex_isAvailable_whenDexcomEnabled() {
-        whenever(dexcomBoyda.isEnabled()).thenReturn(true)
-        assertThat(elementAvailability.isAvailable(ElementType.CGM_DEX)).isTrue()
+    fun cgm_isAvailable_forACgmDriver() {
+        source(driver = true)
+        assertThat(elementAvailability.isAvailable(ElementType.CGM)).isTrue()
     }
 
     @Test
-    fun cgmDex_isUnavailable_whenDexcomDisabled() {
-        whenever(dexcomBoyda.isEnabled()).thenReturn(false)
-        assertThat(elementAvailability.isAvailable(ElementType.CGM_DEX)).isFalse()
+    fun cgm_isAvailable_forASourceWithAnApp() {
+        source(appPackages = listOf("com.eveningoutpost.dexdrip"))
+        assertThat(elementAvailability.isAvailable(ElementType.CGM)).isTrue()
+    }
+
+    @Test
+    fun cgm_isUnavailable_forASourceWithNoAppAndNoScreen() {
+        source()
+        assertThat(elementAvailability.isAvailable(ElementType.CGM)).isFalse()
+    }
+
+    @Test
+    fun cgm_isUnavailable_beforeABgSourceIsElected() {
+        whenever(activePlugin.activeBgSource).thenThrow(IllegalStateException("No bg source selected"))
+        assertThat(elementAvailability.isAvailable(ElementType.CGM)).isFalse()
     }
 
     // -------- CALIBRATION --------
 
+    /** A CGM driver or xDrip takes the value from the AAPS dialog. */
     @Test
-    fun calibration_isAvailable_whenXDripEnabled_evenWithoutOverride() {
-        whenever(xDripSource.isEnabled()).thenReturn(true)
-        whenever(activePlugin.activeCalibration).thenReturn(mock<Calibration>())
+    fun calibration_isAvailable_whenTheSourceTakesCalibrations() {
+        source(CalibrationMode.SOURCE)
         assertThat(elementAvailability.isAvailable(ElementType.CALIBRATION)).isTrue()
     }
 
+    /** The button opens the vendor app, which calibrates. */
     @Test
-    fun calibration_isAvailable_whenOverrideActive_evenWithoutXDrip() {
-        // Build the helper-stubbed plugin first; calling realCalibrationPlugin() inside
-        // whenever() trips Mockito's "unfinished stubbing" detector because the helper itself
-        // calls whenever() on the mock it constructs.
+    fun calibration_isAvailable_whenTheAppCalibrates() {
+        source(CalibrationMode.OWN_APP, appPackages = listOf("com.dexcom.g7"))
+        assertThat(elementAvailability.isAvailable(ElementType.CALIBRATION)).isTrue()
+    }
+
+    /** The app calibrates, but AAPS does not know which one to open: a button that does nothing is worse than none. */
+    @Test
+    fun calibration_isUnavailable_whenTheAppCalibratesButIsNotKnown() {
+        source(CalibrationMode.OWN_APP)
+        assertThat(elementAvailability.isAvailable(ElementType.CALIBRATION)).isFalse()
+    }
+
+    /** Calibrated on the pump: nothing in AAPS can take it, also not with the calibration plugin on. */
+    @Test
+    fun calibration_isUnavailable_whenThePumpCalibrates() {
         val plugin = realCalibrationPlugin(defaultPlugin = false)
-        whenever(xDripSource.isEnabled()).thenReturn(false)
-        whenever(activePlugin.activeCalibration).thenReturn(plugin)
-        assertThat(elementAvailability.isAvailable(ElementType.CALIBRATION)).isTrue()
-    }
-
-    @Test
-    fun calibration_isUnavailable_whenXDripDisabled_andOverrideIsDefaultPlugin() {
-        val plugin = realCalibrationPlugin(defaultPlugin = true)
-        whenever(xDripSource.isEnabled()).thenReturn(false)
+        source(CalibrationMode.PUMP, appPackages = listOf("info.nightscout.android"))
         whenever(activePlugin.activeCalibration).thenReturn(plugin)
         assertThat(elementAvailability.isAvailable(ElementType.CALIBRATION)).isFalse()
     }
 
     @Test
-    fun calibration_isUnavailable_whenXDripDisabled_andActivePluginIsNotPluginBase() {
+    fun calibration_isAvailable_whenTheSourceDoesNotCalibrateButTheCalibrationPluginIsOn() {
+        // Build the helper-stubbed plugin first; calling realCalibrationPlugin() inside
+        // whenever() trips Mockito's "unfinished stubbing" detector because the helper itself
+        // calls whenever() on the mock it constructs.
+        val plugin = realCalibrationPlugin(defaultPlugin = false)
+        source(CalibrationMode.AAPS)
+        whenever(activePlugin.activeCalibration).thenReturn(plugin)
+        assertThat(elementAvailability.isAvailable(ElementType.CALIBRATION)).isTrue()
+    }
+
+    @Test
+    fun calibration_isUnavailable_whenNothingCalibrates() {
+        val plugin = realCalibrationPlugin(defaultPlugin = true)
+        source(CalibrationMode.AAPS)
+        whenever(activePlugin.activeCalibration).thenReturn(plugin)
+        assertThat(elementAvailability.isAvailable(ElementType.CALIBRATION)).isFalse()
+    }
+
+    @Test
+    fun calibration_isUnavailable_whenTheActiveCalibrationIsNotAPlugin() {
         // The override check casts via `as? PluginBase` — a Calibration impl that isn't a
         // PluginBase (e.g., a bare lambda/test double in some future codepath) must safely
         // resolve to "no override".
-        whenever(xDripSource.isEnabled()).thenReturn(false)
+        source(CalibrationMode.AAPS)
         whenever(activePlugin.activeCalibration).thenReturn(mock<Calibration>())
+        assertThat(elementAvailability.isAvailable(ElementType.CALIBRATION)).isFalse()
+    }
+
+    // -------- on a client --------
+
+    /** The CGM app and a CGM driver's screen are on the master's phone: a client has no CGM button. */
+    @Test
+    fun cgm_isUnavailable_onAClient() {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        source(appPackages = listOf("com.eveningoutpost.dexdrip"))
+        assertThat(elementAvailability.isAvailable(ElementType.CGM)).isFalse()
+        source(driver = true)
+        assertThat(elementAvailability.isAvailable(ElementType.CGM)).isFalse()
+    }
+
+    /** A client calibrates only through the calibration plugin it syncs from the master. */
+    @Test
+    fun calibration_isAvailable_onAClient_withTheCalibrationPlugin() {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        val plugin = realCalibrationPlugin(defaultPlugin = false)
+        whenever(activePlugin.activeCalibration).thenReturn(plugin)
+        assertThat(elementAvailability.isAvailable(ElementType.CALIBRATION)).isTrue()
+    }
+
+    /** A source of its own on the client does not count: the client does not know how the master's CGM calibrates. */
+    @Test
+    fun calibration_isUnavailable_onAClient_withoutTheCalibrationPlugin() {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        val plugin = realCalibrationPlugin(defaultPlugin = true)
+        source(CalibrationMode.SOURCE)
+        whenever(activePlugin.activeCalibration).thenReturn(plugin)
         assertThat(elementAvailability.isAvailable(ElementType.CALIBRATION)).isFalse()
     }
 
@@ -174,37 +233,12 @@ class ElementAvailabilityTest : TestBase() {
         // Every type except the CGM/calibration and pump entries falls through to `true`. Looping
         // catches the case where someone adds a new entry to the gating `when` without
         // intentional defaults — this test will start failing for the new type.
-        val gated = setOf(ElementType.CGM_XDRIP, ElementType.CGM_DEX, ElementType.CALIBRATION, ElementType.CGM, ElementType.FILL, ElementType.BATTERY_CHANGE)
+        val gated = setOf(ElementType.CGM, ElementType.CALIBRATION, ElementType.FILL, ElementType.BATTERY_CHANGE)
         ElementType.entries
             .filterNot { it in gated }
             .forEach { type ->
                 assertThat(elementAvailability.isAvailable(type)).isTrue()
             }
-    }
-
-    // -------- CGM driver --------
-
-    private fun cgmDriver(mode: CgmCalibrationMode): CgmDriver = mock<CgmDriver>().also {
-        whenever(it.calibrationMode).thenReturn(mode)
-        whenever(activePlugin.activeBgSource).thenReturn(it)
-    }
-
-    @Test fun cgm_isAvailable_onlyWhileTheBgSourceIsACgmDriver() {
-        whenever(activePlugin.activeBgSource).thenReturn(mock<BgSource>())
-        assertThat(elementAvailability.isAvailable(ElementType.CGM)).isFalse()
-
-        cgmDriver(CgmCalibrationMode.NONE)
-        assertThat(elementAvailability.isAvailable(ElementType.CGM)).isTrue()
-    }
-
-    @Test fun calibration_isAvailable_whenTheCgmDriverTakesCalibrations() {
-        cgmDriver(CgmCalibrationMode.DRIVER)
-        assertThat(elementAvailability.isAvailable(ElementType.CALIBRATION)).isTrue()
-    }
-
-    @Test fun calibration_isNotAvailable_forAFactoryCalibratedCgmDriver() {
-        cgmDriver(CgmCalibrationMode.NONE)
-        assertThat(elementAvailability.isAvailable(ElementType.CALIBRATION)).isFalse()
     }
 
     // -------- helpers --------

@@ -1,21 +1,25 @@
 package app.aaps.plugins.source
 
-import android.content.Context
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginByoda
+import app.aaps.plugins.source.cgmapps.CgmApp
+import app.aaps.plugins.source.cgmapps.CgmAppCatalog
+import app.aaps.plugins.source.cgmapps.CgmApps
+import app.aaps.plugins.source.cgmapps.calibrationMode
 import app.aaps.plugins.source.compose.BgSourceComposeContent
+import app.aaps.plugins.source.notificationreader.GlucoseDeduplicator
 import app.aaps.plugins.source.notificationreader.PackageConfig
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -23,7 +27,6 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
-import java.net.URL
 
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(530)
@@ -34,7 +37,7 @@ class NotificationReaderPlugin(
     aapsLogger: AAPSLogger,
     preferences: Preferences,
     config: Config,
-    private val context: Context,
+    private val cgmAppCatalog: CgmAppCatalog,
     notificationManager: NotificationManager,
 ) : AbstractBgSourcePlugin(
     pluginDescription = PluginDescription()
@@ -52,13 +55,43 @@ class NotificationReaderPlugin(
     aapsLogger, rh, preferences, config, notificationManager
 ), BgSource {
 
-    @Volatile var packageConfig: PackageConfig = loadPackageConfig()
-        private set
+    @Volatile private var cachedConfig: Pair<CgmApps, PackageConfig>? = null
+
+    /** The apps of the CGM app catalog that post readings in notifications. Built again when the catalog changes. */
+    val packageConfig: PackageConfig
+        get() {
+            val apps = cgmAppCatalog.apps
+            cachedConfig?.takeIf { it.first === apps }?.let { return it.second }
+            return PackageConfig.fromCatalog(apps).also { cachedConfig = apps to it }
+        }
+
+    /** Drops re-posted notifications. Kept here, not in the service, so the plugin knows which app sent the last reading. */
+    val deduplicator: GlucoseDeduplicator by lazy {
+        GlucoseDeduplicator(
+            packageConfig = packageConfig,
+            store = object : GlucoseDeduplicator.StateStore {
+                override fun load(): String? = preferences.get(StringNonKey.NotificationReaderDedupState).takeIf { it.isNotBlank() }
+                override fun save(json: String) = preferences.put(StringNonKey.NotificationReaderDedupState, json)
+            }
+        )
+    }
+
+    /** The catalog app of the newest reading, or null before the first one. Several apps can post; the newest one counts. */
+    private val lastApp: CgmApp?
+        get() = deduplicator.lastPackage()?.let { cgmAppCatalog.apps.byPackage(it) }
+
+    /** The app the readings come from: the CGM button opens it, and the calibrate button when it calibrates. */
+    override val appPackages: List<String>
+        get() = lastApp?.packages.orEmpty()
+
+    /** Whether that app calibrates its sensor, from the CGM app catalog. */
+    override val calibrationMode: CalibrationMode
+        get() = lastApp.calibrationMode()
 
     override suspend fun onStart() {
         super.onStart()
         Thread {
-            updateDefinitionsFromRemote()
+            cgmAppCatalog.updateFromRemote()
         }.start()
     }
 
@@ -71,49 +104,8 @@ class NotificationReaderPlugin(
         )
     )
 
-    private fun loadPackageConfig(): PackageConfig {
-        return try {
-            val stored = preferences.get(StringNonKey.NotificationReaderPackages)
-            val storedConfig = stored.takeIf { it.isNotEmpty() }?.let { PackageConfig.fromJson(it) }
-            val asset = try {
-                context.assets.open(PACKAGE_CONFIG_ASSET).bufferedReader().use { it.readText() }
-            } catch (e: Exception) {
-                if (storedConfig != null) return storedConfig
-                throw e
-            }
-            val assetConfig = PackageConfig.fromJson(asset)
-            if (storedConfig != null && storedConfig.version >= assetConfig.version) {
-                storedConfig
-            } else {
-                preferences.put(StringNonKey.NotificationReaderPackages, asset)
-                assetConfig
-            }
-        } catch (e: Exception) {
-            aapsLogger.error(LTag.BGSOURCE, "Failed to load package config", e)
-            PackageConfig(0, emptySet(), emptyMap(), emptyMap())
-        }
-    }
-
-    private fun updateDefinitionsFromRemote() {
-        try {
-            val remoteJson = URL(REMOTE_DEFINITIONS_URL).readText()
-            val remoteConfig = PackageConfig.fromJson(remoteJson)
-            if (remoteConfig.version > packageConfig.version) {
-                aapsLogger.info(LTag.BGSOURCE, "Updating notification reader definitions: v${packageConfig.version} → v${remoteConfig.version}")
-                preferences.put(StringNonKey.NotificationReaderPackages, remoteJson)
-                packageConfig = remoteConfig
-            } else {
-                aapsLogger.debug(LTag.BGSOURCE, "Notification reader definitions up to date (v${packageConfig.version})")
-            }
-        } catch (e: Exception) {
-            aapsLogger.debug(LTag.BGSOURCE, "Failed to fetch remote definitions: ${e.message}")
-        }
-    }
-
     companion object {
 
         const val PERMISSION_NOTIFICATION_LISTENER = "app.aaps.permission.NOTIFICATION_LISTENER"
-        private const val PACKAGE_CONFIG_ASSET = "notification_reader_packages.json"
-        private const val REMOTE_DEFINITIONS_URL = "https://raw.githubusercontent.com/nightscout/AndroidAPS/refs/heads/versions/notification_reader_packages.json"
     }
 }

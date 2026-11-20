@@ -31,10 +31,10 @@ enum class EnforcedState { Enabled, Disabled }
  * - **[applies] should read what is constant for the process** - the build flavour, engineering mode, an
  *   external option file. `isEnabled()` is answered on a hot path, so it must stay cheap and must not
  *   throw. Two exceptions today. `RandomBgPlugin` also reads `virtualPump.isEnabled()`, so its answer
- *   changes when the user picks another pump. `LinearCalibrationPlugin` reads the active BG source (off while
- *   a CGM driver calibrates the sensor itself), through `calibratingCgmDriver()`, which never throws; the BG
- *   source is elected first for this. Both are tolerable because they cannot throw, but an enforcement must
- *   never read a plugin that reads it back - there is no cycle detection here.
+ *   changes when the user picks another pump. `LinearCalibrationPlugin` reads the active BG source's
+ *   calibration mode (off unless the source leaves calibration to AAPS), through `activeBgSourceOrNull()`,
+ *   which never throws; the BG source is elected first for this. Both are tolerable because they cannot
+ *   throw, but an enforcement must never read a plugin that reads it back - there is no cycle detection here.
  * - **A rule that varies with the live pump is a *constraint*, not an enforcement.** See
  *   `SafetyPlugin.isLoopInvocationAllowed`, which refuses the loop on a pump that cannot do temp basals:
  *   re-evaluated every run, and it carries a reason the user can read. Three APS plugins used to duplicate

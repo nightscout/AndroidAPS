@@ -21,8 +21,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.source.BgSource
-import app.aaps.core.interfaces.source.CgmCalibrationMode
-import app.aaps.core.interfaces.source.CgmDriver
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
 import app.aaps.shared.tests.generatedTextResolver
@@ -71,28 +70,37 @@ class LinearCalibrationPluginTest : TestBase() {
 
     // ------------ enforcement ------------
 
-    private fun cgmDriver(mode: CgmCalibrationMode) {
-        val driver = mock<CgmDriver>()
-        whenever(driver.calibrationMode).thenReturn(mode)
-        whenever(activePlugin.activeBgSource).thenReturn(driver)
+    /** The active BG source and its calibration mode. A Mockito mock does not run interface defaults. */
+    private fun bgSource(mode: CalibrationMode) {
+        val source = mock<BgSource>()
+        whenever(source.calibrationMode).thenReturn(mode)
+        whenever(activePlugin.activeBgSource).thenReturn(source)
     }
 
-    /** The sensor calibrates its values itself: a fit on top would correct them twice. */
+    /** A CGM driver or xDrip takes the value: its readings come back calibrated, a fit on top would correct them twice. */
     @Test
-    fun isOff_whileACgmDriverTakesTheCalibrations() {
-        cgmDriver(CgmCalibrationMode.DRIVER)
+    fun isOff_whileTheSourceTakesTheCalibrations() {
+        bgSource(CalibrationMode.SOURCE)
+        assertThat(plugin.enforcedState()).isEqualTo(EnforcedState.Disabled)
+    }
+
+    /** The vendor app calibrates its sensor: the same. */
+    @Test
+    fun isOff_whileTheVendorAppCalibrates() {
+        bgSource(CalibrationMode.OWN_APP)
+        assertThat(plugin.enforcedState()).isEqualTo(EnforcedState.Disabled)
+    }
+
+    /** The pump calibrates its sensor: the same. */
+    @Test
+    fun isOff_whileThePumpCalibrates() {
+        bgSource(CalibrationMode.PUMP)
         assertThat(plugin.enforcedState()).isEqualTo(EnforcedState.Disabled)
     }
 
     @Test
-    fun isTheUsersChoice_withAFactoryCalibratedCgmDriver() {
-        cgmDriver(CgmCalibrationMode.NONE)
-        assertThat(plugin.enforcedState()).isNull()
-    }
-
-    @Test
-    fun isTheUsersChoice_withAnotherBgSource() {
-        whenever(activePlugin.activeBgSource).thenReturn(mock<BgSource>())
+    fun isTheUsersChoice_withASourceThatDoesNotCalibrate() {
+        bgSource(CalibrationMode.AAPS)
         assertThat(plugin.enforcedState()).isNull()
     }
 
