@@ -50,7 +50,7 @@ compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMu
 # org.jetbrains.androidx.lifecycle, the republish the Apple targets need.
 metrox-viewmodel = { module = "dev.zacsweers.metro:metrox-viewmodel", version.ref = "metro" }
 com-android-tools-build = { group = "com.android.tools.build", name = "gradle", version.ref = "gradlePlugin" }
-com-google-gms = { group = "com.google.gms", name = "google-services", version = "4.5.0" }
+com-google-gms = { group = "com.google.gms", name = "google-services", version = "4.6.0" }
 
 
 com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.8" }
