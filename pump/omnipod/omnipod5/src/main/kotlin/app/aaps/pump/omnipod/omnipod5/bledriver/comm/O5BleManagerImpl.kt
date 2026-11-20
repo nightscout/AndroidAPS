@@ -1,8 +1,5 @@
 package app.aaps.pump.omnipod.omnipod5.bledriver.comm
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothManager
-import android.content.Context
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -13,11 +10,9 @@ import app.aaps.pump.omnipod.common.bledriver.comm.SharedBleManager
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ConnectException
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.FailedToConnectException
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.PairingException
-import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.device.BleDeviceManager
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.session.BleConnection
 import app.aaps.pump.omnipod.common.bledriver.comm.session.ConnectionWaitCondition
 import app.aaps.pump.omnipod.common.bledriver.event.PodEvent
-import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodType
 import app.aaps.pump.omnipod.common.bledriver.pod.response.AlarmStatusResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.DefaultStatusResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.PodInfoActivationTimeResponse
@@ -25,7 +20,6 @@ import app.aaps.pump.omnipod.common.bledriver.pod.response.PodInfoTriggeredAlert
 import app.aaps.pump.omnipod.common.bledriver.pod.response.Response
 import app.aaps.pump.omnipod.common.bledriver.pod.response.SetUniqueIdResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.VersionResponse
-import app.aaps.pump.omnipod.omnipod5.bledriver.comm.legacy.O5BleConnectionFactory
 import app.aaps.pump.omnipod.omnipod5.bledriver.comm.pair.O5CertificateStore
 import app.aaps.pump.omnipod.omnipod5.bledriver.comm.pair.O5LTKExchanger
 import app.aaps.pump.omnipod.omnipod5.bledriver.comm.pair.O5RegistrationData
@@ -33,7 +27,6 @@ import app.aaps.pump.omnipod.omnipod5.bledriver.pod.command.aid.O5AidSetupComman
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.security.SecureO5RegistrationStorage
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.util.P256KeyGenerator
-import app.aaps.pump.omnipod.omnipod5.bledriver.pod.util.PodTypeAwarePodScanner
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
@@ -49,19 +42,14 @@ class O5BleManagerImpl @Inject constructor(
     aapsLogger: AAPSLogger,
     private val podState: O5PodStateManager,
     private val config: Config,
-    private val context: Context,
-    private val bleConnectionFactory: O5BleConnectionFactory,
-    bleDeviceManager: BleDeviceManager,
+    private val radio: O5Radio,
     secureO5RegistrationStorage: SecureO5RegistrationStorage,
     private val p256KeyGenerator: P256KeyGenerator
-) : SharedBleManager(aapsLogger, bleDeviceManager), O5BleManager {
+) : SharedBleManager(aapsLogger, radio.deviceManager), O5BleManager {
 
     init {
         secureO5RegistrationStorage.loadAndInstallAll()
     }
-
-    private val bluetoothAdapter: BluetoothAdapter?
-        get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
 
     override val bluetoothAddress: String?
         get() = podState.bluetoothAddress
@@ -80,7 +68,7 @@ class O5BleManagerImpl @Inject constructor(
     override val connectionName = "O5 pod"
 
     override fun createConnection(podAddress: String): BleConnection =
-        bleConnectionFactory.createConnection(podAddress)
+        radio.createConnection(podAddress, null)
 
     override fun increaseEapAkaSequenceNumber(): ByteArray = podState.increaseEapAkaSequenceNumber()
 
@@ -169,10 +157,8 @@ class O5BleManagerImpl @Inject constructor(
         }
         val certStore = O5CertificateStore(aapsLogger, p256KeyGenerator, controllerId)
         val address = podState.bluetoothAddress ?: run {
-            val adapter = bluetoothAdapter ?: throw ConnectException("Bluetooth not available")
             emitter.onNext(PodEvent.Scanning)
-            PodTypeAwarePodScanner(aapsLogger, adapter).scanForPod(PodType.OMNIPOD_5).address
-                .also { podState.bluetoothAddress = it }
+            radio.scanForNewPod().also { podState.bluetoothAddress = it }
         }
         val podIdLong = podState.podId
             ?.takeIf { podState.controllerId == controllerId }
@@ -184,7 +170,7 @@ class O5BleManagerImpl @Inject constructor(
         podState.nextPodId = null
 
         emitter.onNext(PodEvent.BluetoothConnecting)
-        val conn = bleConnectionFactory.createConnection(address, controllerId)
+        val conn = radio.createConnection(address, controllerId)
         connection = conn
         conn.connect(ConnectionWaitCondition(timeoutMs = BleConnection.DEFAULT_CONNECT_TIMEOUT_MS))
         emitter.onNext(PodEvent.BluetoothConnected(address))

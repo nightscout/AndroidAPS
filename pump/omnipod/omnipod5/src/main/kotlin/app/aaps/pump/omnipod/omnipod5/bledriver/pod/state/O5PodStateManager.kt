@@ -376,6 +376,19 @@ interface O5PodStateManager {
     fun completeBolus(startedAt: Long, requestedUnits: Double, deliveredUnits: Double, deliveredPulses: Short?)
 
     fun reset()
+
+    /**
+     * Stores the state and drops the copy in memory. The next read loads the stored state again, as a start of the
+     * app does. A manager without storage has nothing to drop.
+     */
+    fun onStop() = Unit
+
+    /**
+     * Loads the stored state again when something else wrote it, as a settings import does.
+     *
+     * @return true when the state in memory was dropped, so the pod can be another one now
+     */
+    fun reloadIfChangedOutside(): Boolean = false
 }
 
 /**

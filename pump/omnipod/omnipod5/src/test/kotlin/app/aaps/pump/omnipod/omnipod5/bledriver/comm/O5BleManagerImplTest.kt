@@ -1,11 +1,9 @@
 package app.aaps.pump.omnipod.omnipod5.bledriver.comm
 
-import android.content.Context
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.FailedToConnectException
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.PairingException
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.device.BleDeviceManager
-import app.aaps.pump.omnipod.omnipod5.bledriver.comm.legacy.O5BleConnectionFactory
 import app.aaps.pump.omnipod.omnipod5.bledriver.comm.pair.O5RegistrationData
 import app.aaps.pump.omnipod.common.bledriver.comm.session.NotConnected
 import app.aaps.pump.omnipod.common.bledriver.pod.command.base.Command
@@ -18,6 +16,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -36,15 +35,14 @@ class O5BleManagerImplTest {
     private val aapsLogger = AAPSLoggerTest()
     private val podState = mock<O5PodStateManager>()
     private val config = mock<Config>()
-    private val context = mock<Context>()
-    private val bleConnectionFactory = mock<O5BleConnectionFactory>()
     private val bleDeviceManager = mock<BleDeviceManager>()
+    private val radio = mock<O5Radio> { on { deviceManager } doReturn bleDeviceManager }
     private val secureO5RegistrationStorage = mock<SecureO5RegistrationStorage>()
     private val p256KeyGenerator = P256KeyGenerator()
 
     private fun newManager() = O5BleManagerImpl(
-        aapsLogger, podState, config, context, bleConnectionFactory,
-        bleDeviceManager, secureO5RegistrationStorage, p256KeyGenerator
+        aapsLogger, podState, config, radio,
+        secureO5RegistrationStorage, p256KeyGenerator
     )
 
     @BeforeEach

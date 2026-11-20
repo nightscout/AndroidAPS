@@ -130,27 +130,22 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         whenever(history.markSendingFailure(any())).thenReturn(Completable.complete())
         whenever(history.markFailure(any())).thenReturn(Completable.complete())
         whenever(history.setTotalAmountDelivered(any(), anyOrNull())).thenReturn(Completable.complete())
+        // A command that opens the link itself finds it open.
+        whenever(bleManager.connect()).thenReturn(Observable.empty())
     }
 
-
-    @Test
-    fun `isBusy is false when no activation is running or started`() {
-        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.NOT_STARTED)
-        whenever(bleManager.isActivationRunning).thenReturn(false)
-
-        assertThat(plugin.isBusy()).isFalse()
-    }
 
     /**
-     * Pairing runs while the progress is still NOT_STARTED. If the pump was not busy then, the queue
-     * ran its commands and disconnected the pod in the middle of the pairing (Dash #5219).
+     * The activation runs as commands of the queue. A busy pump would keep the queue from running them, so the
+     * pump is never busy, also not part way through the activation.
      */
     @Test
-    fun `isBusy is true while an activation step is running, even before any progress`() {
-        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.NOT_STARTED)
+    fun `the pump is not busy at any point of the activation`() {
         whenever(bleManager.isActivationRunning).thenReturn(true)
-
-        assertThat(plugin.isBusy()).isTrue()
+        for (progress in listOf(ActivationProgress.NOT_STARTED, ActivationProgress.GOT_POD_VERSION, ActivationProgress.COMPLETED)) {
+            whenever(podStateManager.activationProgress).thenReturn(progress)
+            assertThat(plugin.isBusy()).isFalse()
+        }
     }
 
     @Test
@@ -162,27 +157,25 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         verify(bleManager, never()).disconnect(any<Boolean>())
     }
 
+    /** The queue is empty while the user puts the pod on. Closing the link there breaks the pairing (Dash #5219). */
+    @Test
+    fun `disconnect does not close the link between the two parts of the activation`() {
+        whenever(bleManager.isActivationRunning).thenReturn(false)
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.PHASE_1_COMPLETED)
+
+        plugin.disconnect("Queue empty")
+
+        verify(bleManager, never()).disconnect(any<Boolean>())
+    }
+
     @Test
     fun `disconnect closes the link when no activation is running`() {
         whenever(bleManager.isActivationRunning).thenReturn(false)
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
 
         plugin.disconnect("Queue empty")
 
         verify(bleManager).disconnect(false)
-    }
-
-    @Test
-    fun `isBusy is true while activation is in progress`() {
-        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.GOT_POD_VERSION)
-
-        assertThat(plugin.isBusy()).isTrue()
-    }
-
-    @Test
-    fun `isBusy is false once activation is completed`() {
-        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
-
-        assertThat(plugin.isBusy()).isFalse()
     }
 
     @Test
@@ -206,13 +199,30 @@ class O5PumpPluginTest : TestBaseWithProfile() {
     @Test
     fun `isConnected is true when unpaired - nothing to connect to yet`() {
         whenever(podStateManager.ltk).thenReturn(null)
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.NOT_STARTED)
 
         assertThat(plugin.isConnected()).isTrue()
     }
 
+    /**
+     * On a real pod a pairing was stored and the first activation step then failed. The queue saw "paired and not
+     * connected", connected by itself before the retry, failed, and the retry never ran. The activation commands
+     * open the link themselves, so the queue is told the link is up until the activation is complete.
+     */
     @Test
-    fun `isConnected reflects bluetoothConnectionState once paired`() {
+    fun `isConnected is true for a pod that is paired but not yet activated`() {
         whenever(podStateManager.ltk).thenReturn(byteArrayOf(1))
+        whenever(podStateManager.bluetoothConnectionState).thenReturn(O5PodStateManager.BluetoothConnectionState.DISCONNECTED)
+        for (progress in listOf(ActivationProgress.NOT_STARTED, ActivationProgress.GOT_POD_VERSION, ActivationProgress.PHASE_1_COMPLETED)) {
+            whenever(podStateManager.activationProgress).thenReturn(progress)
+            assertThat(plugin.isConnected()).isTrue()
+        }
+    }
+
+    @Test
+    fun `isConnected reflects bluetoothConnectionState once the pod is activated`() {
+        whenever(podStateManager.ltk).thenReturn(byteArrayOf(1))
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
         whenever(podStateManager.bluetoothConnectionState).thenReturn(O5PodStateManager.BluetoothConnectionState.CONNECTED)
         assertThat(plugin.isConnected()).isTrue()
 
@@ -659,8 +669,8 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         val result = plugin.setTempBasalAbsolute(0.4, 30, false, PumpSync.TemporaryBasalType.NORMAL)
 
         assertThat(result.success).isTrue()
-        // The correction is queued from pluginScope, so wait for it before checking the order
-        verify(commandQueue, timeout(2_000)).customCommand(argThat { this is CommandDeliverBasalCorrection })
+        // No wait: the correction is in the queue before the command returns.
+        verify(commandQueue).customCommand(argThat { this is CommandDeliverBasalCorrection })
         val commands = inOrder(bleManager, commandQueue)
         commands.verify(bleManager).sendCommand(argThat { this is StopDeliveryCommand }, any())
         commands.verify(bleManager).sendCommand(argThat { this is ProgramTempBasalCommand }, any())
@@ -705,8 +715,8 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         val result = plugin.cancelTempBasal(false)
 
         assertThat(result.success).isTrue()
-        // The correction is queued from pluginScope, so wait for it before checking the order
-        verify(commandQueue, timeout(2_000)).customCommand(argThat { this is CommandDeliverBasalCorrection })
+        // No wait: the correction is in the queue before the command returns.
+        verify(commandQueue).customCommand(argThat { this is CommandDeliverBasalCorrection })
         val commands = inOrder(bleManager, commandQueue)
         commands.verify(bleManager).sendCommand(argThat { this is StopDeliveryCommand }, any())
         commands.verify(commandQueue).customCommand(argThat { this is CommandDeliverBasalCorrection })
@@ -726,7 +736,8 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         assertThat(result!!.success).isFalse()
         assertThat(result.enacted).isFalse()
         verify(podStateManager, never()).basalExpected = any()
-        verify(bleManager, never()).sendCommand(any(), any())
+        // The open dose is checked on the pod with a status read. What must not go out is a dose.
+        verify(bleManager, never()).sendCommand(argThat { this is ProgramBolusCommand }, any())
         verify(podStateManager, never()).lastBasalCorrectionTime = anyOrNull()
     }
 
@@ -1184,6 +1195,104 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         verify(podStateManager).completeBolus(1_000L, 3.0, 3.0, 60)
     }
 
+    // On a real pod a bolus stopped after 14 pulses was stored as 0.7000000000000001 U.
+    @Test
+    fun `a bolus stopped after 14 pulses is stored as 0_7 U without a float tail`() {
+        whenever(podStateManager.pendingDoseCommand).thenReturn(pendingBolus(sequenceNumber = 9))
+        whenever(podStateManager.sequenceNumberOfLastProgrammingCommand).thenReturn(9)
+        whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.BASAL_ACTIVE)
+        whenever(podStateManager.bolusPulsesRemaining).thenReturn(46)
+        whenever(podStateManager.lastBolusDeliveredUnits).thenReturn(null)
+        whenever(podStateManager.podId).thenReturn(9999L)
+
+        runBlocking {
+            plugin.reconcilePendingDose()
+
+            verify(pumpSync).syncBolusWithPumpId(
+                eq(1_000L), argThat<PumpInsulin> { cU == 0.7 }, eq(BS.Type.NORMAL), eq(1_000L), eq(PumpType.OMNIPOD_5), eq("9999")
+            )
+        }
+        verify(podStateManager).completeBolus(1_000L, 3.0, 0.7, 14)
+    }
+
+    // On a real pod the "delivery status is uncertain" alarm stayed after the pod had answered.
+    @Test
+    fun `a bolus that is settled takes the uncertain alarm away`() {
+        whenever(podStateManager.pendingDoseCommand).thenReturn(pendingBolus(sequenceNumber = 9))
+        whenever(podStateManager.sequenceNumberOfLastProgrammingCommand).thenReturn(9)
+        whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.BASAL_ACTIVE)
+        whenever(podStateManager.bolusPulsesRemaining).thenReturn(0)
+        whenever(podStateManager.podId).thenReturn(9999L)
+
+        runBlocking { plugin.reconcilePendingDose() }
+
+        verify(notificationManager).dismiss(NotificationId.OMNIPOD_POD_FAULT)
+    }
+
+    // A pod in alarm shows its fault under the same notification id. That one must stay.
+    @Test
+    fun `a bolus settled on a pod in alarm keeps the fault notification`() {
+        whenever(podStateManager.pendingDoseCommand).thenReturn(pendingBolus(sequenceNumber = 9))
+        whenever(podStateManager.sequenceNumberOfLastProgrammingCommand).thenReturn(9)
+        whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.BASAL_ACTIVE)
+        whenever(podStateManager.bolusPulsesRemaining).thenReturn(0)
+        whenever(podStateManager.podId).thenReturn(9999L)
+        whenever(podStateManager.isPodKaput).thenReturn(true)
+
+        runBlocking { plugin.reconcilePendingDose() }
+
+        verify(notificationManager, never()).dismiss(NotificationId.OMNIPOD_POD_FAULT)
+    }
+
+    // A temp basal the pod still runs after another pump was the active one for a while. AAPS ended its record then.
+
+    private fun stubStatusReadOfAPodWithATempBasal(startedMinutesAgo: Long) {
+        whenever(podStateManager.ltk).thenReturn(ByteArray(16))
+        whenever(podStateManager.podId).thenReturn(9999L)
+        whenever(podStateManager.pendingDoseCommand).thenReturn(null)
+        whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.TEMP_BASAL_ACTIVE)
+        whenever(podStateManager.activeTempBasalRate).thenReturn(0.5)
+        whenever(podStateManager.activeTempBasalStartTime).thenReturn(System.currentTimeMillis() - startedMinutesAgo * 60_000L)
+        whenever(podStateManager.activeTempBasalDurationMinutes).thenReturn(30)
+        whenever(bleManager.connect()).thenReturn(Observable.empty())
+        whenever(bleManager.sendCommand(any(), any())).thenReturn(Observable.empty())
+    }
+
+    @Test
+    fun `a temp basal the pod runs and AAPS has no record of is recorded for the time it has left`() = runBlocking<Unit> {
+        stubStatusReadOfAPodWithATempBasal(startedMinutesAgo = 5)
+        whenever(pumpSync.expectedPumpState()).thenReturn(pumpState())
+
+        plugin.getPumpStatus("Pump driver changed")
+
+        verify(pumpSync).syncTemporaryBasalWithPumpId(
+            any(), argThat { this.cU == 0.5 }, argThat { this in (24 * 60_000L)..(25 * 60_000L) }, eq(true),
+            eq(PumpSync.TemporaryBasalType.NORMAL), any(), eq(PumpType.OMNIPOD_5), eq("9999")
+        )
+    }
+
+    @Test
+    fun `a temp basal AAPS knows is not recorded a second time`() = runBlocking<Unit> {
+        stubStatusReadOfAPodWithATempBasal(startedMinutesAgo = 5)
+        whenever(pumpSync.expectedPumpState()).thenReturn(
+            pumpState(PumpSync.PumpState.TemporaryBasal(timestamp = 1_000L, duration = 1_800_000L, rate = 0.5, isAbsolute = true, type = PumpSync.TemporaryBasalType.NORMAL, id = 1L, pumpId = 1L))
+        )
+
+        plugin.getPumpStatus("KeepAlive")
+
+        verifyNoTempBasalSynced()
+    }
+
+    @Test
+    fun `a temp basal whose time is over is not recorded again`() = runBlocking<Unit> {
+        stubStatusReadOfAPodWithATempBasal(startedMinutesAgo = 31)
+        whenever(pumpSync.expectedPumpState()).thenReturn(pumpState())
+
+        plugin.getPumpStatus("KeepAlive")
+
+        verifyNoTempBasalSynced()
+    }
+
     @Test
     fun `a confirmed partial bolus updates accounting and cumulative pulses`() {
         whenever(podStateManager.pendingDoseCommand).thenReturn(pendingBolus(sequenceNumber = 9))
@@ -1319,6 +1428,44 @@ class O5PumpPluginTest : TestBaseWithProfile() {
 
         assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()
+    }
+
+    @Test
+    fun `a command that ends with an unresolved dose has the status read in the queue before it returns`() {
+        whenever(podStateManager.ltk).thenReturn(ByteArray(16))
+        whenever(podStateManager.podId).thenReturn(12345L)
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
+        whenever(podStateManager.pendingDoseCommand).thenReturn(pendingBolus(sequenceNumber = 4))
+        whenever(podStateManager.sequenceNumberOfLastProgrammingCommand).thenReturn(9)
+        whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.BOLUS_AND_BASAL_ACTIVE)
+        whenever(bleManager.sendCommand(any(), any())).thenReturn(Observable.empty())
+        whenever(rh.gs(R.string.omnipod_5_unconfirmed_command)).thenReturn("Unconfirmed command")
+
+        runBlocking { plugin.setTempBasalAbsolute(1.0, 30, false, PumpSync.TemporaryBasalType.NORMAL) }
+
+        // No wait: the read is queued before the command returns.
+        runBlocking { verify(commandQueue).readStatus("Unconfirmed command") }
+    }
+
+    @Test
+    fun `a command that ends with nothing open queues no status read`() = runBlocking<Unit> {
+        stubBasalCorrectionDrift(0.0)
+        stubStopTempBasal()
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
+
+        plugin.cancelTempBasal(false)
+
+        verify(commandQueue, after(300).never()).readStatus(any())
+    }
+
+    @Test
+    fun `a stop closes the link and drops the pod state in memory`() = runBlocking<Unit> {
+        plugin.onStop()
+
+        val order = inOrder(bleManager, podStateManager)
+        order.verify(bleManager).closeLink()
+        order.verify(podStateManager).bluetoothConnectionState = O5PodStateManager.BluetoothConnectionState.DISCONNECTED
+        order.verify(podStateManager).onStop()
     }
 
     @Test

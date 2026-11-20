@@ -662,4 +662,62 @@ class PersistedO5PodStateManagerTest : TestBase() {
         assertThat(manager.activationProgress).isEqualTo(ActivationProgress.NOT_STARTED)
         assertThat(manager.ltk).isNull()
     }
+
+    // A driver that stops drops its copy, and a stored state that something else wrote is loaded again.
+
+    @Test
+    fun `after a stop the state is read from storage again`() {
+        val manager = newManager()
+        manager.bluetoothAddress = "AA:AA"
+        manager.onStop()
+        // Somebody else writes the stored state while the driver is stopped.
+        backingStore = backingStore!!.replace("AA:AA", "BB:BB")
+
+        assertThat(manager.bluetoothAddress).isEqualTo("BB:BB")
+    }
+
+    @Test
+    fun `a stop loses nothing that was set before`() {
+        val manager = newManager()
+        manager.successfulConnections = 3
+        manager.bluetoothAddress = "AA:AA"
+
+        manager.onStop()
+
+        assertThat(manager.successfulConnections).isEqualTo(3)
+        assertThat(manager.bluetoothAddress).isEqualTo("AA:AA")
+    }
+
+    @Test
+    fun `a stop does not write over a stored state from outside`() {
+        val manager = newManager()
+        manager.bluetoothAddress = "AA:AA"
+        backingStore = backingStore!!.replace("AA:AA", "BB:BB")
+
+        manager.onStop()
+
+        assertThat(manager.bluetoothAddress).isEqualTo("BB:BB")
+    }
+
+    @Test
+    fun `its own writes are not taken for a write from outside`() {
+        val manager = newManager()
+        manager.bluetoothAddress = "AA:AA"
+        manager.bluetoothAddress = "CC:CC"
+
+        assertThat(manager.reloadIfChangedOutside()).isFalse()
+        assertThat(manager.bluetoothAddress).isEqualTo("CC:CC")
+    }
+
+    @Test
+    fun `a stored state written from outside is loaded again`() {
+        val manager = newManager()
+        manager.bluetoothAddress = "AA:AA"
+        backingStore = backingStore!!.replace("AA:AA", "BB:BB")
+
+        assertThat(manager.reloadIfChangedOutside()).isTrue()
+        assertThat(manager.bluetoothAddress).isEqualTo("BB:BB")
+        // The new state is now the known one.
+        assertThat(manager.reloadIfChangedOutside()).isFalse()
+    }
 }

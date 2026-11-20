@@ -123,6 +123,19 @@ interface OmnipodDashPodStateManager {
     fun markLastBolusComplete(): LastBolus?
     fun onStart()
 
+    /**
+     * Stores the state and drops the copy in memory. The next read loads the stored state again, as a start of the
+     * app does.
+     */
+    fun onStop()
+
+    /**
+     * Loads the stored state again when something else wrote it, as a settings import does.
+     *
+     * @return true when the state in memory was dropped, so the pod can be another one now
+     */
+    fun reloadIfChangedOutside(): Boolean
+
     /*
     This is called only:. It overwrites activationStatus
        - when activation was interrupted(application crash, killed, etc)

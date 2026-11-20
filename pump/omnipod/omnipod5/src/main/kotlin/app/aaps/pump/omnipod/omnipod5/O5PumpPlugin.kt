@@ -42,6 +42,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.collectResilient
+import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withCompose
@@ -96,6 +97,8 @@ import app.aaps.pump.omnipod.common.queue.command.CommandDeactivatePod
 import app.aaps.pump.omnipod.common.queue.command.CommandDeliverBasalCorrection
 import app.aaps.pump.omnipod.common.queue.command.CommandDisableSuspendAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandHandleTimeChange
+import app.aaps.pump.omnipod.common.queue.command.CommandInitializePod
+import app.aaps.pump.omnipod.common.queue.command.CommandInsertCannula
 import app.aaps.pump.omnipod.omnipod5.queue.command.CommandPairNewPod
 import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
@@ -103,6 +106,7 @@ import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandSuspendDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguration
 import app.aaps.pump.omnipod.omnipod5.keys.O5IntentKey
+import app.aaps.pump.omnipod.omnipod5.keys.O5StringNonPreferenceKey
 import app.aaps.pump.omnipod.omnipod5.ui.O5CertificateStoreScreen
 import app.aaps.pump.omnipod.omnipod5.ui.compose.OmnipodO5ComposeContent
 import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
@@ -111,6 +115,7 @@ import app.aaps.pump.omnipod.common.util.PodTimeZone
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -207,6 +212,10 @@ class O5PumpPlugin @Inject constructor(
         DashBooleanPreferenceKey.entries + O5IntentKey.ConfigEnabledEntries(config),
     aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump, OwnDatabasePlugin, PluginConstraints {
+
+    private val podActivation = O5PodActivation(
+        bleManager, podStateManager, preferences, rh, history, pumpSync, notificationManager, pumpEnactResultProvider, aapsLogger
+    )
 
     @Volatile private var bolusCanceled = false
     @Volatile private var bolusDeliveryInProgress = false
@@ -319,6 +328,25 @@ class O5PumpPlugin @Inject constructor(
     }
 
     /**
+     * Drops a pod the user discards, as one that does not answer any more. A removed pod gives nothing, so the 0 U/h
+     * record starts now and not at the next check, up to a minute later. A deactivation does the same itself.
+     */
+    fun removeDiscardedPod() {
+        val podSerial = serialNumber()
+        podStateManager.reset()
+        notificationManager.dismiss(NotificationId.OMNIPOD_POD_FAULT)
+        pluginScope.launch {
+            try {
+                recordNoDelivery(pumpSync.expectedPumpState(), podSerial)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.warn(LTag.PUMP, "O5 could not record zero delivery after discarding the pod: $e")
+            }
+        }
+    }
+
+    /**
      * Records a zero-rate [PumpSync.TemporaryBasalType.PUMP_SUSPEND] temp basal for the whole pod
      * lifetime, unless one is already running. A zero temp basal of another type (for example a
      * 30 minute one from the loop) is replaced, because it would end while the pod still delivers
@@ -418,6 +446,10 @@ class O5PumpPlugin @Inject constructor(
             preferences.observe(OmnipodBooleanPreferenceKey.LowReservoirAlert).drop(1).map {},
             preferences.observe(OmnipodIntPreferenceKey.LowReservoirAlertUnits).drop(1).map {},
         ).collectResilient(newScope, aapsLogger, LTag.PUMP) { commandQueue.customCommand(CommandUpdateAlertConfiguration()) }
+        // A settings import writes the stored pod without stopping a driver that stays enabled.
+        preferences.observe(O5StringNonPreferenceKey.PodState).drop(1)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP) { reloadPodWrittenFromOutside() }
+        syncPumpFlows()
     }
 
     override suspend fun onStop() {
@@ -427,6 +459,29 @@ class O5PumpPlugin @Inject constructor(
         handler = null
         scope?.cancel()
         scope = null
+        // The next start trusts nothing of this run: not the link with its session, and not the pod state in memory.
+        // First the check for a state stored from outside, so that nothing below writes the old pod over it.
+        podStateManager.reloadIfChangedOutside()
+        forgetLink()
+        podStateManager.onStop()
+        nextPodWarningCheck = 0
+        bolusCanceled = false
+        timeChangeHandler.reset()
+    }
+
+    private fun forgetLink() {
+        stopConnecting?.countDown()
+        bleManager.closeLink()
+        podStateManager.bluetoothConnectionState = O5PodStateManager.BluetoothConnectionState.DISCONNECTED
+    }
+
+    private fun reloadPodWrittenFromOutside() {
+        if (!podStateManager.reloadIfChangedOutside()) return
+        // The link and its session belong to the pod that was stored before.
+        forgetLink()
+        nextPodWarningCheck = 0
+        if (podStateManager.pendingDoseCommand != null) armStatusChecker()
+        syncPumpFlows()
     }
 
 
@@ -437,15 +492,23 @@ class O5PumpPlugin @Inject constructor(
         podStateManager.activationProgress == ActivationProgress.COMPLETED && podStateManager.isPodRunning
     override fun isSuspended(): Boolean = podStateManager.deliverySuspended
 
-    // The progress alone does not cover pairing: it is still NOT_STARTED until the first step is done,
-    // and the queue then ran and disconnected in the middle of the pairing (Dash #5219).
-    override fun isBusy(): Boolean =
-        bleManager.isActivationRunning ||
-            (podStateManager.activationProgress != ActivationProgress.NOT_STARTED &&
-                podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED))
+    // The activation runs as commands of the queue, so the queue needs no holding back for it: a busy pump here
+    // would keep the queue from ever running the activation.
+    override fun isBusy(): Boolean = false
 
+    /** Between the two parts of the activation, while the user puts the pod on. */
+    private fun isActivationBetweenParts(): Boolean =
+        podStateManager.activationProgress != ActivationProgress.NOT_STARTED &&
+            podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)
+
+    /**
+     * Until a pod is fully activated the queue is told the link is up, as the Dash driver does. The activation
+     * commands open the link themselves. Otherwise the queue connects before it runs a command, and for a pod that
+     * is paired but not yet activated that connect can fail for the two minutes the queue allows: a retry of the
+     * first activation step then never ran (seen on a real pod, 2026-11-16).
+     */
     override fun isConnected(): Boolean =
-        podStateManager.ltk == null ||
+        podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED) ||
             podStateManager.bluetoothConnectionState == O5PodStateManager.BluetoothConnectionState.CONNECTED
 
     override fun isConnecting(): Boolean = stopConnecting != null
@@ -481,8 +544,9 @@ class O5PumpPlugin @Inject constructor(
 
     override fun disconnect(reason: String) {
         aapsLogger.info(LTag.PUMP, "O5 disconnect reason=$reason")
-        if (bleManager.isActivationRunning) {
-            // The activation uses the BLE link outside the queue. Closing it here breaks the pairing (Dash #5219).
+        if (bleManager.isActivationRunning || isActivationBetweenParts()) {
+            // The pod keeps its link until the activation is done: the queue is empty between the two parts, and
+            // closing the link there breaks the pairing (Dash #5219).
             aapsLogger.info(LTag.PUMP, "O5 disconnect ignored, pod activation is running")
             return
         }
@@ -507,6 +571,13 @@ class O5PumpPlugin @Inject constructor(
                 try {
                     fetchStatus().blockingAwait()
                     reconcilePendingDoseLocked()
+                    recordTempBasalThePodRuns()
+                } catch (e: Exception) {
+                    // A pod in alarm answers with its alarm page: the pod state is updated, and the command reports
+                    // an error. That page is the last word on a pending dose, so it is settled here. Without this a
+                    // bolus the pod stopped stays counted in full.
+                    if (podStateManager.isPodKaput) reconcilePendingDoseLocked()
+                    throw e
                 } finally {
                     // Alarm responses update pod state before the command reports an error.
                     checkPodKaput()
@@ -736,6 +807,7 @@ class O5PumpPlugin @Inject constructor(
                 if (podStateManager.deliveryStatus?.tempBasalActive() != true) {
                     syncTempBasalCancelled(pending.startedAt, pending.historyId ?: pending.startedAt)
                     markDoseSuccess(pending)
+                    notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
                     podStateManager.pendingDoseCommand = null
                 }
 
@@ -748,6 +820,34 @@ class O5PumpPlugin @Inject constructor(
                     podStateManager.pendingDoseCommand = null
                 }
         }
+    }
+
+    /**
+     * The pod runs a temp basal that AAPS has no record of. AAPS ends its record when another pump becomes the active
+     * one, and the pod knows nothing of that: back on this driver, the pod delivered at a rate nobody counted until
+     * the temp basal ran out. The rest of it is written again, from the rate and the times in the pod state.
+     */
+    private suspend fun recordTempBasalThePodRuns() {
+        if (podStateManager.pendingDoseCommand != null) return
+        if (podStateManager.deliveryStatus?.tempBasalActive() != true) return
+        val rate = podStateManager.activeTempBasalRate ?: return
+        val start = podStateManager.activeTempBasalStartTime ?: return
+        val minutes = podStateManager.activeTempBasalDurationMinutes ?: return
+        val now = System.currentTimeMillis()
+        val remaining = start + T.mins(minutes.toLong()).msecs() - now
+        if (remaining <= 0) return
+        if (pumpSync.expectedPumpState().temporaryBasal != null) return
+        aapsLogger.info(LTag.PUMP, "O5 pod runs a temp basal of $rate U/h that AAPS has no record of - recording the rest of it")
+        pumpSync.syncTemporaryBasalWithPumpId(
+            timestamp = now,
+            rate = PumpRate(rate),
+            duration = remaining,
+            isAbsolute = true,
+            type = PumpSync.TemporaryBasalType.NORMAL,
+            pumpId = now,
+            pumpType = PumpType.OMNIPOD_5,
+            pumpSerial = serialNumber()
+        )
     }
 
     private fun markDoseSuccess(pending: O5PodStateManager.PendingDoseCommand) {
@@ -901,7 +1001,47 @@ class O5PumpPlugin @Inject constructor(
     private suspend fun setNewBasalProfile(
         profile: PumpProfile,
         historyType: OmnipodCommandType = OmnipodCommandType.SET_BASAL_PROFILE
-    ): PumpEnactResult = doseMutex.withLock { setNewBasalProfileLocked(profile, historyType) }
+    ): PumpEnactResult = withDoseLock { setNewBasalProfileLocked(profile, historyType) }
+
+    /**
+     * Runs a dose command under the dose lock. A dose the pod did not confirm is checked on the pod at once, still in
+     * this command. When that check gets no answer either, the status read that settles the dose is queued here,
+     * before this command ends, so the queue is not empty in between. The check every minute stays for a pod that is
+     * out of reach longer.
+     */
+    private suspend fun <T> withDoseLock(block: suspend () -> T): T =
+        try {
+            doseMutex.withLock {
+                try {
+                    block()
+                } finally {
+                    checkUnconfirmedDoseLocked()
+                }
+            }
+        } finally {
+            queueStatusReadWhenUnconfirmed()
+        }
+
+    private suspend fun checkUnconfirmedDoseLocked() {
+        if (podStateManager.activationProgress != ActivationProgress.COMPLETED || podStateManager.pendingDoseCommand == null) return
+        try {
+            fetchStatus().blockingAwait()
+            reconcilePendingDoseLocked()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            aapsLogger.warn(LTag.PUMP, "O5 could not check the unconfirmed dose: ${e.message}")
+            // A pod in alarm answers with its alarm page. That page is the last word on a pending dose.
+            if (podStateManager.isPodKaput) reconcilePendingDoseLocked()
+        }
+    }
+
+    private fun queueStatusReadWhenUnconfirmed() {
+        if (podStateManager.activationProgress == ActivationProgress.COMPLETED && podStateManager.pendingDoseCommand != null) {
+            // Queue-worker deadlock guard - don't unwrap the .launch. See CommandQueue kdoc.
+            pluginScope.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.readStatus(rh.gs(R.string.omnipod_5_unconfirmed_command)) }
+        }
+    }
 
     private suspend fun setNewBasalProfileLocked(
         profile: PumpProfile,
@@ -1014,7 +1154,7 @@ class O5PumpPlugin @Inject constructor(
 
 
     override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult =
-        doseMutex.withLock { deliverTreatmentLocked(detailedBolusInfo) }
+        withDoseLock { deliverTreatmentLocked(detailedBolusInfo) }
 
     private suspend fun deliverTreatmentLocked(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
@@ -1104,7 +1244,13 @@ class O5PumpPlugin @Inject constructor(
                 val accepted = podStateManager.pendingDoseCommand?.confirmedByStatus == true
                 if (deliveredUnits != null && accepted) {
                     finalizeBolus(podStateManager.pendingDoseCommand ?: pendingDose, deliveredUnits)
-                    pumpEnactResultProvider.get().success(true).enacted(true).bolusDelivered(deliveredUnits)
+                    // A pod in alarm that gave less than asked stopped the bolus on its own. What it gave is counted,
+                    // but the bolus is not a success. A bolus given in full before the alarm still is.
+                    val podStoppedBolus = podStateManager.isPodKaput &&
+                        deliveredUnits < requestedUnits - PodConstants.POD_PULSE_BOLUS_UNITS / 2
+                    pumpEnactResultProvider.get().success(!podStoppedBolus).enacted(true).bolusDelivered(deliveredUnits).also {
+                        if (podStoppedBolus) it.comment(podFaultDescription() ?: "")
+                    }
                 } else {
                     pumpEnactResultProvider.get().success(true).enacted(true).bolusDelivered(requestedUnits)
                         .comment(rh.gs(R.string.omnipod_5_error_bolus_delivery_status_uncertain))
@@ -1183,6 +1329,18 @@ class O5PumpPlugin @Inject constructor(
             } catch (e: Exception) {
                 aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$e")
                 reportPodFault()
+                // A pod in alarm answers every status read with its alarm page, which says how much of the bolus is
+                // left. No later read says more, so the bolus is settled from it now.
+                if (podStateManager.isPodKaput) {
+                    val deliveredPulses = podStateManager.pendingDoseCommand?.deliveredBolusPulses(
+                        podStateManager.sequenceNumberOfLastProgrammingCommand,
+                        podStateManager.deliveryStatus,
+                        podStateManager.bolusPulsesRemaining
+                    )
+                    if (deliveredPulses != null) {
+                        return@defer Single.just(BolusCompletion(deliveredPulses * PodConstants.POD_PULSE_BOLUS_UNITS))
+                    }
+                }
                 bolusSleep(BOLUS_RETRY_INTERVAL_MS)
                 return@repeat
             }
@@ -1232,7 +1390,8 @@ class O5PumpPlugin @Inject constructor(
     }
 
     private suspend fun finalizeBolus(pending: O5PodStateManager.PendingDoseCommand, deliveredUnits: Double) {
-        val finalUnits = deliveredUnits.coerceIn(0.0, pending.requestedUnits ?: deliveredUnits)
+        // Rounded to the pulse: 14 pulses of 0.05 U are 0.7000000000000001 as a plain product, and that was stored.
+        val finalUnits = Round.roundTo(deliveredUnits.coerceIn(0.0, pending.requestedUnits ?: deliveredUnits), PodConstants.POD_PULSE_BOLUS_UNITS)
         pending.historyId?.let {
             history.markSent(it)
                 .andThen(history.setTotalAmountDelivered(it, finalUnits))
@@ -1268,6 +1427,9 @@ class O5PumpPlugin @Inject constructor(
             deliveredUnits = finalUnits,
             deliveredPulses = deliveredPulses
         )
+        // The bolus is known now, so the "delivery status is uncertain" alarm has nothing to say any more. A pod in
+        // alarm shows its fault under the same id, and that one stays.
+        if (!podStateManager.isPodKaput) notificationManager.dismiss(NotificationId.OMNIPOD_POD_FAULT)
     }
 
     private fun cancelBolus(): Completable = ensureConnected().andThen(Completable.defer {
@@ -1318,7 +1480,7 @@ class O5PumpPlugin @Inject constructor(
         durationInMinutes: Int,
         enforceNew: Boolean,
         tbrType: PumpSync.TemporaryBasalType
-    ): PumpEnactResult = doseMutex.withLock {
+    ): PumpEnactResult = withDoseLock {
         setTempBasalAbsoluteLocked(absoluteRate, durationInMinutes, enforceNew, tbrType)
     }
 
@@ -1380,7 +1542,7 @@ class O5PumpPlugin @Inject constructor(
         error("Pump doesn't support percent basal rate")
 
     override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult =
-        doseMutex.withLock {
+        withDoseLock {
             cancelTempBasalLocked(enforceNew)
         }
 
@@ -1460,6 +1622,8 @@ class O5PumpPlugin @Inject constructor(
         when (customCommand) {
             is CommandPairNewPod      -> pairNewPod()
             is CommandDeactivatePod   -> deactivatePod()
+            is CommandInitializePod   -> runBlocking { podActivation.initializePod() }
+            is CommandInsertCannula   -> insertCannula()
             is CommandSilenceAlerts   -> silenceAlerts()
             is CommandResumeDelivery  -> runBlocking { resumeOrHandleTimeChange() }
             is CommandSuspendDelivery -> suspendDelivery()
@@ -1473,6 +1637,18 @@ class O5PumpPlugin @Inject constructor(
                 pumpEnactResultProvider.get().success(false).enacted(false).comment(
                     rh.gs(R.string.omnipod_common_error_unsupported_custom_command, customCommand.javaClass.name)
                 )
+            }
+        }
+
+    private fun insertCannula(): PumpEnactResult =
+        runBlocking { podActivation.insertCannula() }.also {
+            if (it.success) {
+                // The pod is active now. A status read takes the reservoir away from its start value at once.
+                // Queued here, before this command ends.
+                // Queue-worker deadlock guard - don't unwrap the .launch. See CommandQueue kdoc.
+                pluginScope.launch(start = CoroutineStart.UNDISPATCHED) {
+                    commandQueue.readStatus(rh.gs(R.string.omnipod_common_pod_activation_wizard_pod_activated_title))
+                }
             }
         }
 
@@ -1494,6 +1670,8 @@ class O5PumpPlugin @Inject constructor(
                 .setSequenceNumber(podStateManager.msgSequenceNumber.toShort())
                 .setNonce(FIXED_NONCE)
                 .build()
+            // The queue opens the link only for a fully activated pod, so a pod that is not is connected here.
+            ensureConnected().blockingAwait()
             bleManager.sendCommand(cmd, DefaultStatusResponse::class).ignoreElements().blockingAwait()
             val podSerial = serialNumber()
             reportPodFault()
@@ -1575,13 +1753,13 @@ class O5PumpPlugin @Inject constructor(
         pumpSync.expectedPumpState().profile?.let { setNewBasalProfile(it, OmnipodCommandType.RESUME_DELIVERY) }
             ?: pumpEnactResultProvider.get().success(false).enacted(false).comment(rh.gs(R.string.omnipod_5_error_no_active_profile))
 
-    private suspend fun handleTimeChange(requestedByUser: Boolean): PumpEnactResult = doseMutex.withLock {
+    private suspend fun handleTimeChange(requestedByUser: Boolean): PumpEnactResult = withDoseLock {
         if (!requestedByUser) {
             fetchStatus().blockingAwait()
             reconcilePendingDoseLocked()
             if (!timeCorrectionNeeded() || !canCorrectTime()) {
                 aapsLogger.info(LTag.PUMP, "Deferring automatic O5 time update")
-                return@withLock pumpEnactResultProvider.get().success(true).enacted(false)
+                return@withDoseLock pumpEnactResultProvider.get().success(true).enacted(false)
             }
         }
         pumpSync.expectedPumpState().profile?.let {
@@ -1790,7 +1968,8 @@ class O5PumpPlugin @Inject constructor(
     private fun queueBasalCorrectionIfNeeded() {
         if (!commandQueue.isCustomCommandInQueue(CommandDeliverBasalCorrection::class) && needsBasalCorrection()) {
             // Queue-worker deadlock guard - don't unwrap the .launch. See CommandQueue kdoc.
-            pluginScope.launch { commandQueue.customCommand(CommandDeliverBasalCorrection()) }
+            // UNDISPATCHED: the command is in the queue before this one ends.
+            pluginScope.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.customCommand(CommandDeliverBasalCorrection()) }
         }
     }
 
@@ -1798,7 +1977,7 @@ class O5PumpPlugin @Inject constructor(
      *  drift - see [needsBasalCorrection]. Reuses [waitForBolusDeliveryToComplete] for the
      *  same progress-polling/confirmation logic a regular bolus uses. */
     private fun deliverBasalCorrection(): PumpEnactResult = runBlocking {
-        doseMutex.withLock { deliverBasalCorrectionLocked() }
+        withDoseLock { deliverBasalCorrectionLocked() }
     }
 
     private fun deliverBasalCorrectionLocked(): PumpEnactResult {

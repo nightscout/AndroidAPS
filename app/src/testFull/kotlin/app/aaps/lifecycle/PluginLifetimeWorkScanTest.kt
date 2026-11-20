@@ -287,6 +287,35 @@ class PluginLifetimeWorkScanTest {
             "readStatus(omnipod_5_unconfirmed_command). A copy of OmnipodDashPumpPlugin#refreshStatusOnUnacknowledgedCommands. " +
                 "A read. SAFE to abandon."
         ),
+        "OmnipodDashPumpPlugin.kt#queueStatusReadWhenUnconfirmed" to Site(
+            1,
+            "readStatus(unconfirmed_command), queued before the command that was not confirmed ends (D4). A read. " +
+                "SAFE to abandon; refreshStatusOnUnacknowledgedCommands queues the same read again within a minute."
+        ),
+        "O5PumpPlugin.kt#queueStatusReadWhenUnconfirmed" to Site(
+            1,
+            "readStatus(omnipod_5_unconfirmed_command). The O5 copy of " +
+                "OmnipodDashPumpPlugin#queueStatusReadWhenUnconfirmed. A read. SAFE to abandon."
+        ),
+        "OmnipodDashPumpPlugin.kt#insertCannula" to Site(
+            1,
+            "readStatus(pod activated), queued before the cannula command ends (D4). A read that takes the " +
+                "reservoir away from its start value. SAFE to abandon; the next status read does the same."
+        ),
+        "O5PumpPlugin.kt#insertCannula" to Site(
+            1,
+            "readStatus(pod activated). The O5 copy of OmnipodDashPumpPlugin#insertCannula. A read. SAFE to abandon."
+        ),
+        "OmnipodDashPumpPlugin.kt#removePod" to Site(
+            1,
+            "Not a queue command and no pod talk: it writes the 0 U/h record of a removed pod (D9). SAFE to " +
+                "abandon; the check that runs every minute writes the same record when it is missing."
+        ),
+        "O5PumpPlugin.kt#removeDiscardedPod" to Site(
+            1,
+            "Not a queue command and no pod talk: it writes the 0 U/h record of a discarded pod (D9). The O5 copy " +
+                "of OmnipodDashPumpPlugin#removePod. SAFE to abandon; the next check writes the same record."
+        ),
         "OmnipodErosPumpPlugin.kt#queueAcknowledgeAlertsCommand" to Site(
             1,
             "customCommand(CommandSilenceAlerts), result only logged. Silencing an alert is a pod write, but " +

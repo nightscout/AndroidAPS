@@ -16,6 +16,8 @@ import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlarmType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodStatus
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.omnipod5.R
+import app.aaps.pump.omnipod.omnipod5.O5PumpPlugin
+import org.mockito.kotlin.mock
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -76,7 +78,7 @@ internal class O5OverviewViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun createViewModel() = O5OverviewViewModel(rh, podStateManager, commandQueue, rxBus, dateUtil, config, ch)
+    private fun createViewModel() = O5OverviewViewModel(rh, mock<O5PumpPlugin>(), podStateManager, commandQueue, rxBus, dateUtil, config, ch)
 
     @ParameterizedTest
     @CsvSource(

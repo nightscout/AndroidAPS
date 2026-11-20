@@ -124,6 +124,10 @@ class OmnipodDashManagerImpl(
         bleManager.disconnect(closeGatt)
     }
 
+    override fun closeLink() {
+        bleManager.closeLink()
+    }
+
     override fun connect(stop: CountDownLatch): Observable<PodEvent> {
         return observeConnectToPodWithStop(stop)
             .interceptPodEvents()

@@ -26,6 +26,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":pump:common"))
     implementation(project(":pump:omnipod:common"))
+    implementation(project(":pump:omnipod:emulator"))
 
     api(libs.androidx.room.runtime)
     implementation(libs.androidx.room.rxjava3)
