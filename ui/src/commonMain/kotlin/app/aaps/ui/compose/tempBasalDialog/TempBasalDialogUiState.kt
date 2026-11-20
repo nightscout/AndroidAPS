@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.tempBasalDialog
 
 import androidx.compose.runtime.Stable
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.profile.Profile
 
 @Stable
@@ -15,6 +16,7 @@ data class TempBasalDialogUiState(
     val tempPercentStep: Double = 10.0,
     val maxTempAbsolute: Double = 10.0,
     val tempAbsoluteStep: Double = 0.05,
+    val tempAbsoluteFormat: NumberFormat = NumberFormat.DECIMAL_2,
     val tempDurationStep: Double = 60.0,
     val tempMaxDuration: Double = 720.0,
     val profile: Profile? = null,

@@ -273,8 +273,8 @@
     <string name="loopstatus_targets">TARGETS:</string>
     <string name="loopstatus_OAPS_result">OAPS RESULT:</string>
     <string name="extended_bolus_data_point_graph">%1$.2f U ( %2$.2f U/h )</string>
-    <string name="temp_basal_tsf_fake_extended">%1$.2f U/h (%2$.2fE) @%3$s</string>
-    <string name="temp_basal_tsf_absolute">%1$.2f U/h @%2$s</string>
+    <string name="temp_basal_tsf_fake_extended_dynamic" comment="A temp basal that runs an extended bolus. %1$s=whole rate, %2$s=the extended part of it, both with the digits the pump can run, %3$s=start time and minutes run of all minutes. Example: 1.275 U/h (0.775E) @12:00 5/30'">%1$s U/h (%2$sE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute_dynamic" comment="%1$s=rate with the digits the pump can run, %2$s=start time and minutes run of all minutes. Example: 0.275 U/h @12:00 5/30'">%1$s U/h @%2$s</string>
     <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
     <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s min</string>
     <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>

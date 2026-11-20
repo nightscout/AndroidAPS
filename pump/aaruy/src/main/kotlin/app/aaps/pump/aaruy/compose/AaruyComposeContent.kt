@@ -1,0 +1,229 @@
+package app.aaps.pump.aaruy.compose
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
+import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.ui.compose.ComposablePluginContent
+import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.metroViewModel
+import app.aaps.core.ui.compose.pump.BlePreCheckHost
+import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
+import app.aaps.core.ui.compose.pump.PumpOverviewScreen
+import app.aaps.pump.aaruy.R
+import app.aaps.core.ui.R as CoreUiR
+
+private val PUMP_IMAGE_HEIGHT = 128.dp
+
+private enum class AaruyScreen {
+    OVERVIEW,
+    PAIR_WIZARD,
+    REPLACE_WIZARD,
+    HISTORY
+}
+
+/** How far the unpair question has come. A pump out of reach is asked about twice, as it stays paired on its side. */
+private enum class UnpairDialog {
+    NONE,
+
+    /** Before the queue tries to reach the pump. */
+    FIRST,
+
+    /** The queue could not reach the pump. */
+    NOT_REACHED,
+
+    /** The last question before the pump is forgotten without being told. */
+    SECOND
+}
+
+class AaruyComposeContent(
+    private val pluginName: String,
+    private val blePreCheck: BlePreCheck
+) : ComposablePluginContent {
+
+    @Composable
+    override fun Render(
+        setToolbarConfig: (ToolbarConfig) -> Unit,
+        onNavigateBack: () -> Unit,
+        onSettings: (() -> Unit)?
+    ) {
+        val overviewViewModel: AaruyOverviewViewModel = metroViewModel()
+        var currentScreen by remember { mutableStateOf(AaruyScreen.OVERVIEW) }
+        var unpairDialog by remember { mutableStateOf(UnpairDialog.NONE) }
+
+        when (unpairDialog) {
+            UnpairDialog.NONE   -> Unit
+            UnpairDialog.FIRST       -> OkCancelDialog(
+                title = pluginName,
+                icon = Icons.Filled.Bluetooth,
+                message = stringResource(R.string.actions_pump_disconnect_prompt, overviewViewModel.pumpName),
+                onConfirm = {
+                    overviewViewModel.unpair()
+                    unpairDialog = UnpairDialog.NONE
+                },
+                onDismiss = { unpairDialog = UnpairDialog.NONE }
+            )
+
+            UnpairDialog.NOT_REACHED -> OkCancelDialog(
+                title = pluginName,
+                icon = Icons.Filled.Bluetooth,
+                message = stringResource(R.string.actions_pump_disconnect, overviewViewModel.pumpName),
+                onConfirm = { unpairDialog = UnpairDialog.SECOND },
+                onDismiss = { unpairDialog = UnpairDialog.NONE }
+            )
+
+            UnpairDialog.SECOND      -> OkCancelDialog(
+                title = pluginName,
+                icon = Icons.Filled.Bluetooth,
+                message = stringResource(R.string.actions_pump_disconnect_again, overviewViewModel.pumpName),
+                onConfirm = {
+                    overviewViewModel.forgetPump()
+                    unpairDialog = UnpairDialog.NONE
+                },
+                onDismiss = { unpairDialog = UnpairDialog.NONE }
+            )
+        }
+
+        val pairingTitle = stringResource(R.string.aaruy_pairing)
+        val replaceTitle = stringResource(R.string.replace_bat_rescv_label)
+        val historyTitle = stringResource(CoreUiR.string.pump_history)
+        val backDescription = stringResource(CoreUiR.string.back)
+        val settingsDescription = stringResource(CoreUiR.string.settings)
+
+        // A wizard sets the toolbar itself, so that its back arrow asks before it leaves.
+        LaunchedEffect(currentScreen) {
+            if (currentScreen == AaruyScreen.HISTORY) {
+                setToolbarConfig(
+                    ToolbarConfig(
+                        title = historyTitle,
+                        navigationIcon = {
+                            IconButton(onClick = { currentScreen = AaruyScreen.OVERVIEW }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = backDescription) }
+                        },
+                        actions = {}
+                    )
+                )
+            }
+            if (currentScreen == AaruyScreen.OVERVIEW) {
+                setToolbarConfig(
+                    ToolbarConfig(
+                        title = pluginName,
+                        navigationIcon = {
+                            IconButton(onClick = onNavigateBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = backDescription) }
+                        },
+                        actions = {
+                            onSettings?.let { action ->
+                                IconButton(onClick = action) { Icon(Icons.Filled.Settings, contentDescription = settingsDescription) }
+                            }
+                        }
+                    )
+                )
+            }
+        }
+
+        LaunchedEffect(overviewViewModel) {
+            overviewViewModel.events.collect { event ->
+                when (event) {
+                    is AaruyOverviewEvent.StartPairWizard -> currentScreen = AaruyScreen.PAIR_WIZARD
+                    is AaruyOverviewEvent.StartReplace    -> currentScreen = AaruyScreen.REPLACE_WIZARD
+                    is AaruyOverviewEvent.StartHistory    -> currentScreen = AaruyScreen.HISTORY
+                    is AaruyOverviewEvent.ConfirmUnpair   -> unpairDialog = UnpairDialog.FIRST
+                    is AaruyOverviewEvent.PumpNotReached  -> unpairDialog = UnpairDialog.NOT_REACHED
+                }
+            }
+        }
+
+        when (currentScreen) {
+            AaruyScreen.OVERVIEW    -> {
+                val uiState by overviewViewModel.uiState.collectAsStateWithLifecycle()
+                PumpOverviewScreen(
+                    state = uiState,
+                    customContent = {
+                        Image(
+                            painter = painterResource(id = CoreUiR.drawable.ic_aaruy_128),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(PUMP_IMAGE_HEIGHT),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
+                )
+            }
+
+            AaruyScreen.HISTORY -> {
+                // The system back button returns to the pump screen too, as the arrow in the toolbar does.
+                NavigationBackHandler(
+                    state = rememberNavigationEventState(NavigationEventInfo.None),
+                    isBackEnabled = true,
+                    onBackCompleted = { currentScreen = AaruyScreen.OVERVIEW }
+                )
+                AaruyHistoryScreen(viewModel = metroViewModel())
+            }
+
+            AaruyScreen.REPLACE_WIZARD -> {
+                KeepScreenOnEffect()
+                val replaceViewModel: AaruyReplaceWizardViewModel = metroViewModel()
+                AaruyReplaceWizardScreen(
+                    viewModel = replaceViewModel,
+                    title = replaceTitle,
+                    setToolbarConfig = setToolbarConfig,
+                    onFinish = {
+                        // It lives as long as the pump screen: the next run must start at the first step.
+                        replaceViewModel.reset()
+                        currentScreen = AaruyScreen.OVERVIEW
+                    }
+                )
+            }
+
+            AaruyScreen.PAIR_WIZARD -> {
+                KeepScreenOnEffect()
+                // The scan needs the Bluetooth permissions, so show the wizard only after the check.
+                var bleReady by remember { mutableStateOf(false) }
+                if (!bleReady) {
+                    BlePreCheckHost(
+                        blePreCheck = blePreCheck,
+                        onReady = { bleReady = true },
+                        onFailed = { currentScreen = AaruyScreen.OVERVIEW }
+                    )
+                } else {
+                    val pairViewModel: AaruyPairWizardViewModel = metroViewModel()
+                    AaruyPairWizardScreen(
+                        viewModel = pairViewModel,
+                        title = pairingTitle,
+                        setToolbarConfig = setToolbarConfig,
+                        onFinish = {
+                            pairViewModel.reset()
+                            currentScreen = AaruyScreen.OVERVIEW
+                        },
+                        onCancel = {
+                            pairViewModel.reset()
+                            currentScreen = AaruyScreen.OVERVIEW
+                        }
+                    )
+                }
+            }
+        }
+    }
+}

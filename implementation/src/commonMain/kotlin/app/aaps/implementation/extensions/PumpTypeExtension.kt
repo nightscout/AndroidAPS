@@ -5,6 +5,8 @@ import app.aaps.core.data.ue.Sources
 
 fun PumpType.Source.toUeSource(): Sources =
     when (this) {
+        PumpType.Source.AaruyBase   -> Sources.AaruyBase
+        PumpType.Source.AaruyFull   -> Sources.AaruyFull
         PumpType.Source.Dana        -> Sources.Dana
         PumpType.Source.DanaR       -> Sources.DanaR
         PumpType.Source.DanaRC      -> Sources.DanaRC

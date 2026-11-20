@@ -1587,7 +1587,8 @@ class DataHandlerMobile(
             cobString = cobInfo.generateCOBString(decimalFormatter)
             cobValue = cobInfo.displayCob ?: -1.0
             currentBasal =
-                processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort(rh) ?: rh.gs(CoreUiStrings.pump_base_basal_rate, profile.getBasal())
+                processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort(rh, activePlugin.activePump.pumpDescription.tempAbsoluteFormat)
+                    ?: rh.gs(CoreUiStrings.pump_base_basal_rate, profile.getBasal())
 
             //bgi
             if (glucoseStatusProvider.glucoseStatusData != null) {

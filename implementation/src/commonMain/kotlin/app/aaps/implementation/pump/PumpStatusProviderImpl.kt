@@ -70,7 +70,7 @@ class PumpStatusProviderImpl(
 
             val expectedState = pumpSync.expectedPumpState()
             expectedState.temporaryBasal?.let { temporaryBasal ->
-                lines += rh.gs(ImplementationStrings.short_status_temp_basal, temporaryBasal.toStringFull(dateUtil, rh))
+                lines += rh.gs(ImplementationStrings.short_status_temp_basal, temporaryBasal.toStringFull(dateUtil, rh, pump.pumpDescription.tempAbsoluteFormat))
             }
 
             expectedState.extendedBolus?.let { extendedBolus ->

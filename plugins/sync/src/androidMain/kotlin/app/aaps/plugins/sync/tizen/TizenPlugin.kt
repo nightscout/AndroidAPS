@@ -211,7 +211,7 @@ class TizenPlugin(
             bundle.putLong("tempBasalDurationInMinutes", it.durationInMinutes)
             if (it.isAbsolute) bundle.putDouble("tempBasalAbsolute", it.rate) // U/h for absolute TBR
             else bundle.putInt("tempBasalPercent", it.rate.toInt()) // % for percent type TBR
-            bundle.putString("tempBasalString", it.toStringFull(profile, dateUtil, rh)) // user friendly string
+            bundle.putString("tempBasalString", it.toStringFull(profile, dateUtil, rh, activePlugin.activePump.pumpDescription.tempAbsoluteFormat)) // user friendly string
         }
     }
 

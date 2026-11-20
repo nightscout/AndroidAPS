@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.pump
 
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TB
@@ -99,10 +100,14 @@ interface PumpSync {
                 if (isAbsolute) rate
                 else profile.getBasal(time) * rate / 100
 
-            fun toStringFull(dateUtil: DateUtil, rh: TextResolver): String {
+            /**
+             * @param rateFormat the digits of a rate: `PumpDescription.tempAbsoluteFormat` of the active pump. A pump with a step
+             * of 0.025 needs 3 digits, or 0.275 U/h is shown as 0.28 U/h. The default is the old fixed 2 digits.
+             */
+            fun toStringFull(dateUtil: DateUtil, rh: TextResolver, rateFormat: NumberFormat = NumberFormat.withDecimalsHalfUp(2)): String {
                 return when {
                     isAbsolute -> {
-                        rh.gs(InterfacesStrings.temp_basal_absolute_rate, rate, dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), durationInMinutes)
+                        rh.gs(InterfacesStrings.temp_basal_absolute_rate_dynamic, rateFormat.format(rate), dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), durationInMinutes)
                     }
 
                     else       -> { // percent

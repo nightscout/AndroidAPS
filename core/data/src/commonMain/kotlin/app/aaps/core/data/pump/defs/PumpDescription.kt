@@ -1,5 +1,9 @@
 package app.aaps.core.data.pump.defs
 
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.format.NumberRounding
+import kotlin.math.round
+
 class PumpDescription {
 
     var pumpType = PumpType.GENERIC_AAPS
@@ -15,6 +19,11 @@ class PumpDescription {
     var tempPercentStep = 0
     var maxTempAbsolute = 0.0
     var tempAbsoluteStep = 0.0
+
+    /** Shows every rate this pump can run. A step of 0.025 needs 3 digits, or 0.275 U/h looks like 0.28 U/h. */
+    val tempAbsoluteFormat: NumberFormat
+        get() = NumberFormat(minFractionDigits = 2, maxFractionDigits = if (round(tempAbsoluteStep * 1000).toLong() % 10 != 0L) 3 else 2, rounding = NumberRounding.HALF_UP)
+
     var tempDurationStep = 0
     var tempDurationStep15mAllowed = false
     var tempDurationStep30mAllowed = false

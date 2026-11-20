@@ -55,22 +55,28 @@ class ConcentrationHelperImpl(
         // Was "%.${decimals}f". String.format is JVM only; NumberFormat is the multiplatform
         // equivalent, and HALF_UP is stated explicitly because that is what String.format did - the
         // NumberFormat default is HALF_EVEN, which would round a tie the other way.
-        val fmt = NumberFormat(minFractionDigits = decimals, rounding = NumberRounding.HALF_UP)
+        // The pump unit (cU) is on the driver's own step. The wrapper scales its step into insulin units, for U200 0.025 cU
+        // becomes 0.05 U: with those digits a pump rate of 0.275 cU/h showed as 0.28.
+        val cuFmt = rateFormat(decimals, activePlugin.activePumpInternal.pumpDescription.tempAbsoluteFormat.maxFractionDigits)
         if (isU100())
-            return rh.gs(CoreUiStrings.pump_base_basal_rate_dynamic, fmt.format(rate.cU))
+            return rh.gs(CoreUiStrings.pump_base_basal_rate_dynamic, cuFmt.format(rate.cU))
         else {
-            val iUString = rh.gs(CoreUiStrings.pump_base_basal_rate_dynamic, fmt.format(rate.iU(concentration, isAbsolute)))
-            val cUString = rh.gs(ImplementationStrings.pump_base_basal_rate_cu_dynamic, fmt.format(rate.cU))
+            val iuFmt = rateFormat(decimals, activePlugin.activePump.pumpDescription.tempAbsoluteFormat.maxFractionDigits)
+            val iUString = rh.gs(CoreUiStrings.pump_base_basal_rate_dynamic, iuFmt.format(rate.iU(concentration, isAbsolute)))
+            val cUString = rh.gs(ImplementationStrings.pump_base_basal_rate_cu_dynamic, cuFmt.format(rate.cU))
             return rh.gs(ImplementationStrings.concentration_format, iUString, cUString)
         }
     }
+
+    private fun rateFormat(decimals: Int, pumpDigits: Int) =
+        NumberFormat(minFractionDigits = decimals, maxFractionDigits = max(decimals, pumpDigits), rounding = NumberRounding.HALF_UP)
 
 override fun basalTbrString(rate: PumpRate, startTime: Long, durationInMin: Int, isAbsolute: Boolean, isExtended: Boolean, decimals: Int): String {
     val startTimeString = dateUtil.timeString(startTime)
     val passedMinutes = min(T.msecs(max(0, dateUtil.now() - startTime)).mins().toInt(), durationInMin)
     return rh.gs(
         if (isExtended) ImplementationStrings.concentration_etbr_format else ImplementationStrings.concentration_tbr_format,
-        basalRateString(rate, isAbsolute), startTimeString, passedMinutes, durationInMin
+        basalRateString(rate, isAbsolute, decimals), startTimeString, passedMinutes, durationInMin
     )
 }
 

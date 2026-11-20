@@ -1,0 +1,1120 @@
+package app.aaps.pump.aaruy.comm
+
+import android.annotation.SuppressLint
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.Handler
+import android.os.HandlerThread
+import android.os.Looper
+import android.os.SystemClock
+import app.aaps.core.interfaces.pump.ble.BleTransportListener
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.util.Locale
+import java.util.concurrent.ConcurrentLinkedDeque
+import java.util.concurrent.ConcurrentLinkedQueue
+import javax.crypto.Cipher
+import javax.crypto.spec.SecretKeySpec
+
+/**
+ * Talks to the pump. Turns commands into encrypted packets and pump messages into [AaruyBleListener] calls.
+ *
+ * Recovered from the vendor library `mylibrary-release.aar`. `AaruyCommandBytesTest` checks that it still sends the
+ * same bytes as that library did.
+ * Commands that the driver did not use are left out.
+ */
+class AaruyBleClient(
+    context: Context,
+    private val aapsLogger: AAPSLogger,
+    private val transport: AaruyBleTransport,
+    private val testLooper: Looper? = null
+) {
+
+    /**
+     * All pump events run here. Not the main thread: the pump must not wait for the screen, and the screen must not wait for the pump.
+     * It starts at the first use, as this class exists also for users of other pumps.
+     */
+    val eventLooper: Looper by lazy { testLooper ?: HandlerThread("AaruyPump").apply { start() }.looper }
+
+    private val appContext = context
+    private val link = PumpLink()
+
+    private var prepareStartBasal = false
+    private var currentStatus: CurrentStatusPacket? = null
+    private var needRestoreUnRunState = false
+    private var isSmbType = false
+    private var pumpVersionNum = ""
+
+    /** Sent by the pump when it reports the device. It changes the size of the control packets. */
+    private var protocolVersion = 0
+
+    private val runningStatus: Int? get() = currentStatus?.runningStatus?.toInt()
+
+    private val bondReceiver = object : BroadcastReceiver() {
+        @SuppressLint("MissingPermission")
+        override fun onReceive(context: Context, intent: Intent) {
+            val action = intent.action
+            val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+            aapsLogger.debug(LTag.PUMPBTCOMM, "onReceive action=$action")
+            when (action) {
+                BluetoothAdapter.ACTION_STATE_CHANGED     -> {
+                    val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0)
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "blueState=$state")
+                    // Seen on a real phone: no GATT event comes for this, and the driver stays connected to a dead link.
+                    if (state == BluetoothAdapter.STATE_TURNING_OFF || state == BluetoothAdapter.STATE_OFF) link.onAdapterOff()
+                }
+
+                BluetoothDevice.ACTION_FOUND              -> onDeviceFound(device)
+                BluetoothDevice.ACTION_PAIRING_REQUEST    -> onPairingRequest(device, intent)
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun onDeviceFound(device: BluetoothDevice?) {
+        val name = device?.name ?: return
+        if (!name.contains(DEVICE_NAME, ignoreCase = true)) return
+        when (device.bondState) {
+            BluetoothDevice.BOND_BONDED -> bindDevice(device)
+            BluetoothDevice.BOND_NONE   ->
+                try {
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "attempt to bond: $name")
+                    device.createBond()
+                } catch (e: Exception) {
+                    aapsLogger.error(LTag.PUMPBTCOMM, "createBond failed", e)
+                }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun BroadcastReceiver.onPairingRequest(device: BluetoothDevice?, intent: Intent) {
+        val name = device?.name ?: return
+        if (!name.contains(DEVICE_NAME, ignoreCase = true)) return
+        val variant = intent.getIntExtra(BluetoothDevice.EXTRA_PAIRING_VARIANT, Int.MIN_VALUE)
+        try {
+            if (setPairingPin(device, name, variant)) {
+                abortBroadcast()
+                bindDevice(device)
+            }
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "pairing failed", e)
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun setPairingPin(device: BluetoothDevice, name: String, variant: Int): Boolean {
+        val pin = pinFromDeviceName(name).toByteArray(Charsets.UTF_8)
+        val success = when (variant) {
+            BluetoothDevice.PAIRING_VARIANT_PIN                   -> device.setPin(pin)
+
+            PAIRING_VARIANT_PASSKEY_CONFIRMATION                  -> {
+                device.setPairingConfirmation(true)
+                device.setPin(pin)
+            }
+
+            else                                                  -> false
+        }
+        aapsLogger.debug(LTag.PUMPBTCOMM, "set pin variant=$variant success=$success")
+        return success
+    }
+
+    private fun registerBondReceiver() {
+        val filter = IntentFilter().apply {
+            addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
+            addAction(BluetoothDevice.ACTION_FOUND)
+            addAction(BluetoothDevice.ACTION_PAIRING_REQUEST)
+            addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
+        }
+        appContext.registerReceiver(bondReceiver, filter)
+    }
+
+    @SuppressLint("MissingPermission")
+    fun bindDevice(device: BluetoothDevice) {
+        registerBondReceiver()
+        // The bond state of the transport comes first: the emulator has a bond, though Android knows no such device.
+        if (!transport.adapter.isDeviceBonded(device.address) && device.bondState == BluetoothDevice.BOND_NONE) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "createBond")
+            device.createBond()
+        } else {
+            link.connectDevice(device.address)
+        }
+    }
+
+fun setOnBleListener(listener: AaruyBleListener) {
+        link.listener = listener
+    }
+
+    fun getOnBleListener(): AaruyBleListener? = link.listener
+
+    fun getPumpVersionNum(): String {
+        link.readVersion()
+        SystemClock.sleep(500L)
+        return pumpVersionNum
+    }
+
+    fun setupBasicParamInfo(param: BasicParam) {
+        val pumpType = link.pumpType
+        val packet = BasicParamPacket().apply {
+            settingTime = AaruyPumpTime.now()
+            bolusStep = param.bolusStep.toByte()
+            closeInjectSound = param.closeInjectSound.toByte()
+            lowAlert = param.lowAlert.toLong().toShort()
+            maxBasal = param.maxBasal.toThousandths()
+            maxBolus = param.maxBolus.toThousandths()
+            this.pumpType = pumpType.toByte()
+            bInit = 1
+            bolusDelayState = if ((pumpType and 0x7F) != 0 && (pumpType and 0x7F) != 2) 1 else 0
+            bolusInc = 2
+            fastBolusStep = 0
+            originBasal = 0.5.toThousandths()
+            tempBasalState = 1
+            precision = 25
+            noOperateWarning = 0
+            noRunWarning = 1
+            softNeedleType = 0
+            storageCapacity = 0
+            dailyLimit = 0
+            timeZoneCorrection = 0
+        }
+        link.write(AaruyParamId.BASIC_PARAM, packet.toBytes())
+    }
+
+    fun setupBasalInfo(basalInfo: BasalInfo) {
+        val info = BasalInfoPacket()
+        basalInfo.basalItems?.let { items ->
+            info.segment = 0
+            info.injectPerDay = (items.injectPerDay * 10).toInt().toShort()
+            info.totalArea = items.totalArea.toByte()
+            info.areaBytes = items.basalItemList.map { item ->
+                BasalAreaPacket().apply {
+                    startTime = item.startTime.toByte()
+                    inject = item.basalSpeed.toThousandths()
+                }.toBytes()
+            }
+        }
+        val packet = BasalSettingPacket().apply {
+            settingTime = AaruyPumpTime.now()
+            totalBasal = 3
+            curIndex = 0
+            basalInfoBytes = info.toBytes()
+        }
+        link.write(AaruyParamId.BASAL_SETTING, packet.toBytes())
+    }
+
+    fun confirmReply(errorType: Int) {
+        val type = errorType.toByte()
+        val value: Byte = if (type.toInt() != 1 && type.toInt() != 3) 1 else 0
+        link.write(AaruyParamId.CONFIRM_WARN, byteArrayOf(value))
+    }
+
+    fun startBasal() {
+        when (val status = runningStatus) {
+            1    -> Unit
+
+            // The flag stays until basal runs: a restore that was lost or refused must be sent again when the user tries again.
+            8    -> if (needRestoreUnRunState) restoreUnRunState() else link.listener?.onRunReplaceFirst(status)
+
+            0    -> {
+                prepareStartBasal = false
+                link.write(AaruyParamId.BASAL_CONTROL, BasalControlPacket(AaruyPumpTime.now(), 1).toBytes())
+            }
+
+            7    -> continueInject()
+
+            else -> Unit
+        }
+    }
+
+    /**
+     * The bolus is sent in two steps: first the setting, then the start command when the pump has
+     * taken the setting. See `onWriteDone`.
+     *
+     * @param now units to give now
+     * @param delayed units to give as an extended bolus
+     * @param delayMinutes length of the extended bolus, in steps of 30 minutes
+     */
+    fun setupAndStartBolus(now: Double, delayed: Double, delayMinutes: Int, isSmb: Boolean) {
+        val status = runningStatus
+        isSmbType = isSmb
+        link.newBolus()
+        val listener = link.listener
+        when {
+            status == 0                                                -> listener?.onRunBasalFirst(status)
+            status == 7                                                -> listener?.onRunReplaceFirst(status)
+            delayed > 0.0 && delayMinutes > 0 && delayMinutes % 30 != 0 -> listener?.onInjectTimeError(delayMinutes)
+
+            else                                                       -> {
+                val total = delayed + now
+                val maxBolus = link.maxBolus
+                if (total > maxBolus) {
+                    listener?.onBolusValueTooHigh(total, maxBolus)
+                } else if (status == 1 || status == 2) {
+                    val packet = BolusSettingPacket().apply {
+                        bolus = total.toThousandths()
+                        bolusNow = now.toThousandths()
+                        bolusDelayTime = delayMinutes.toShort()
+                    }
+                    link.writeBolusSetting(packet.toBytes())
+                }
+            }
+        }
+    }
+
+    /** @return false when the start was not queued, so it can never be sent */
+    private fun startBolus(): Boolean {
+        val listener = link.listener
+        when (val status = runningStatus) {
+            1, 2 -> {
+                val type: Byte = if (isSmbType) 2 else 0
+                isSmbType = false
+                link.writeBolusStart(ControlPacket(AaruyPumpTime.now(), 1, type).toBytes(protocolVersion))
+                return true
+            }
+
+            3    -> listener?.onBolusIsRunning(status)
+            else -> listener?.onRunBasalFirst(status ?: UNKNOWN_STATUS)
+        }
+        return false
+    }
+
+    /**
+     * The driver stopped waiting for the pump to report the bolus. A start that is still waiting here is never sent.
+     * The pump answers a start only with a status, so a start that went to the radio may run with no answer seen.
+     *
+     * @return true when the start went to the radio and the pump may run the bolus
+     */
+    fun abandonBolusStart(): Boolean = link.abandonBolusStart()
+
+    fun cancelBolus() {
+        // A stop that goes out before the start stops nothing, and then the whole bolus runs.
+        link.abandonBolusStart()
+        link.write(AaruyParamId.BOLUS_CONTROL, ControlPacket(AaruyPumpTime.now(), 0).toBytes(protocolVersion))
+    }
+
+    /**
+     * The driver gave up on the temp basal it set or ended: a frame of it that still waits in the queue, or that the
+     * pump's count shows lost, never goes out again. Sent again after the driver had reported the failure, it ran on
+     * the pump while AAPS said it had failed.
+     */
+    fun abandonTempBasal() = link.abandon(AaruyParamId.TEMP_BASAL_CONTROL)
+
+    fun startTempBasal(rate: Double, durationMinutes: Int) {
+        val listener = link.listener
+        if (durationMinutes > 0 && durationMinutes % 30 != 0) {
+            listener?.onInjectTimeError(durationMinutes)
+            return
+        }
+        when (val status = runningStatus) {
+            7    -> listener?.onRunReplaceFirst(status)
+            1    -> link.write(
+                AaruyParamId.TEMP_BASAL_CONTROL,
+                TempBasalControlPacket(AaruyPumpTime.now(), 1, rate.toThousandths(), durationMinutes.toShort()).toBytes()
+            )
+
+            else -> listener?.onRunBasalFirst(status ?: UNKNOWN_STATUS)
+        }
+    }
+
+    fun cancelTempBasal() {
+        when (val status = runningStatus) {
+            2    -> link.write(AaruyParamId.TEMP_BASAL_CONTROL, TempBasalControlPacket(AaruyPumpTime.now(), 0, 0, 0).toBytes())
+            else -> link.listener?.onRunTempBasalFirst(status ?: UNKNOWN_STATUS)
+        }
+    }
+
+    fun setClosedMode(mode: Int) {
+        link.write(AaruyParamId.CLOSED_MODE, byteArrayOf(if (mode == 0) 0 else 1))
+    }
+
+    fun continueInject() {
+        val listener = link.listener
+        when (val status = runningStatus) {
+            8    -> if (needRestoreUnRunState) restoreUnRunState() else listener?.onRunReplaceFirst(status)
+            0, 7 -> sendTotalControl(AaruyTotalControl.CONTINUE)
+            else -> listener?.onCurrentNoSuspend(status ?: UNKNOWN_STATUS)
+        }
+    }
+
+    private fun restoreUnRunState() {
+        prepareStartBasal = true
+        sendTotalControl(AaruyTotalControl.RESTORE_UN_RUN)
+    }
+
+    fun pushPosition() = sendTotalControl(AaruyTotalControl.PUSH_POSITION)
+
+    fun replaceDevice() {
+        needRestoreUnRunState = true
+        sendTotalControl(AaruyTotalControl.REPLACE)
+    }
+
+    /**
+     * The rewind of a change of reservoir was done in an earlier app run, and the pump log shows no delivery since. The pump
+     * leaves its stop only with a restore, and this client sends one only after a rewind it knows of. Without this the user
+     * had to rewind and prime again after an app restart, with more insulin.
+     */
+    fun allowRestoreAfterRewind() {
+        needRestoreUnRunState = true
+    }
+
+    fun needlePushAir(softNeedleType: Byte) = sendTotalControl(AaruyTotalControl.PUSH_AIR, softNeedleType)
+
+    private fun sendTotalControl(action: Byte, extra: Byte = 0) {
+        link.write(AaruyParamId.TOTAL_CONTROL, ControlPacket(AaruyPumpTime.now(), action, extra).toBytes(protocolVersion))
+    }
+
+    fun getHistoryDailyData(lastTime: Long) {
+        val start = if (lastTime > AaruyPumpTime.BASE_TIME_MS) ((lastTime - AaruyPumpTime.BASE_TIME_MS) / (AaruyPumpTime.DAY_SECONDS * 1000)).toInt() else 0
+        link.write(AaruyParamId.HISTORY_REQUEST, HistoryRequestPacket(start, 0, 1).toBytes())
+    }
+
+    fun getHistoryLogData(lastTime: Long) {
+        val start = if (lastTime > AaruyPumpTime.BASE_TIME_MS) ((lastTime - AaruyPumpTime.BASE_TIME_MS) / 1000).toInt() else 0
+        link.write(AaruyParamId.HISTORY_REQUEST, HistoryRequestPacket(start, 0, 0).toBytes())
+    }
+
+    /**
+     * Ends the link and the tries to make one: when the command queue has nothing more to send, for an unpaired pump, or
+     * for a plugin that is off. Nothing connects again until the driver asks. (The vendor library meant to drop the link
+     * here too, but it never sent its request, so the link stayed up.)
+     */
+    fun closeLink() = link.close()
+
+    fun unbindDevice() {
+        link.write(AaruyParamId.UNBIND, byteArrayOf(1))
+    }
+
+    fun updatePumpTime() = link.syncTime()
+
+    fun getCurStatus(): Int? {
+        link.read(AaruyParamId.CURRENT_STATUS)
+        link.read(AaruyParamId.REAL_DATA)
+        return runningStatus
+    }
+
+    /** @param bolusId not 0 for the start of a bolus: which bolus it starts */
+    private class Request(val paramId: Short, val isRead: Boolean, val data: ByteArray = ByteArray(0), val bolusId: Int = 0) {
+
+        /** The driver gave up on it: it never goes out again. Set and read under the send lock. */
+        var abandoned = false
+    }
+
+    /** A frame that went to the radio, with its number. */
+    private class Sent(val sequence: Short, val request: Request)
+
+    /** NONE: no bolus asked. PENDING: the setting is sent, the start is not yet at the radio. SENT: the start went to the radio. DROPPED: the start must never be sent. */
+    private enum class BolusStart { NONE, PENDING, SENT, DROPPED }
+
+    /**
+     * The connection and the command queue. Runs the steps the vendor library got from its BLE library:
+     * connect with a timeout and retries, wait, discover services, ask for a large MTU, enable notifications.
+     * Events come from any thread and are handled one by one on the pump thread, in the order they came.
+     */
+    private inner class PumpLink : BleTransportListener, AaruyTransportExtras {
+
+        private val events by lazy { Handler(eventLooper) }
+        private val connectTimeout = Runnable { onConnectFailed("timeout") }
+        private val setupTimeout = Runnable { onConnectFailed("setup timeout") }
+        private var address: String? = null
+        private var retriesLeft = 0
+        private var servicesFound = false
+
+        /** From the first connect until the setup ended, either way. Closing the GATT in this time also ends a running pairing. */
+        private var connecting = false
+
+        /** Commands may be sent. It is set when the setup is complete. */
+        private var ready = false
+        private val sendLock = Any()
+        private var sequence: Short = 0
+        private var writing = false
+
+        /** The pump has answered the report of this link with its sequence. See `reportConnected`. */
+        @Volatile private var reportAnswered = false
+        private val queue = ConcurrentLinkedDeque<Request>()
+        private val inFlight = ConcurrentLinkedQueue<Sent>()
+        private var status = BleStatus.DISCONNECTED
+
+        /**
+         * Frames the pump counts and may not have taken yet, oldest first. Under [sendLock]. Seen on a real pump: a frame
+         * whose number is not the next one is refused (error 28) and not carried out, and the pump's count stays where it
+         * was. So the count tells which of these to send again, see [onPumpCount].
+         */
+        private val unconfirmed = ArrayDeque<Sent>()
+
+        /** A frame was refused for its number. Nothing but the count read goes out until the pump has told its count. */
+        private var resyncing = false
+
+        /** The count read is the next frame to go out. */
+        private var countWanted = false
+
+        /** A count read is out, and its answer is wanted. */
+        private var countAsked = false
+
+        /** When the last count read went out. Seen on a real pump: it answers a count read twice, the second answer later. */
+        private var countReadAt = 0L
+        private var countTries = 0
+        private val countTimeout = Runnable { askCount() }
+
+        /** Changed only under [sendLock], so the start cannot go out while the driver gives up on it. */
+        private var bolusStart = BolusStart.NONE
+
+        /** The bolus [bolusStart] is about. A start of an older bolus is never sent. */
+        private var bolusId = 0
+
+        /** The driver has asked whether the start of [bolusId] went out. From then on it never goes out again. */
+        private var bolusStartAsked = false
+
+        var listener: AaruyBleListener? = null
+        var maxBolus = 0.0
+        var pumpType = DEFAULT_PUMP_TYPE
+
+        fun connectDevice(address: String) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "connectDevice status=$status")
+            if (status == BleStatus.CONNECTED) {
+                if (address == this.address) {
+                    listener?.onBleStatusChanged(status)
+                    return
+                }
+                // A link to another pump is no link to this one.
+                closeNow()
+            }
+            this.address = address
+            if (connecting) return
+            connecting = true
+            events.removeCallbacks(connectTimeout)
+            status = BleStatus.CONNECTING
+            listener?.onBleStatusChanged(status)
+            retriesLeft = CONNECT_RETRIES
+            startConnect()
+        }
+
+        private fun startConnect() {
+            val target = address ?: return
+            servicesFound = false
+            transport.setListener(this)
+            transport.setExtrasListener(this)
+            events.removeCallbacks(connectTimeout)
+            events.postDelayed(connectTimeout, CONNECT_TIMEOUT_MS)
+            if (!transport.gatt.connect(target)) onConnectFailed("connect refused")
+        }
+
+        /** After the last try the link is DISCONNECTED. The command queue then asks again, until its own time is up. */
+        private fun onConnectFailed(reason: String) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "connect failed: $reason, retries left: $retriesLeft")
+            events.removeCallbacks(connectTimeout)
+            events.removeCallbacks(setupTimeout)
+            transport.gatt.close()
+            if (retriesLeft > 0) {
+                retriesLeft--
+                events.postDelayed({ startConnect() }, CONNECT_RETRY_DELAY_MS)
+            } else {
+                connecting = false
+                status = BleStatus.DISCONNECTED
+                listener?.onBleStatusChanged(status)
+            }
+        }
+
+        /** False from the moment the radio reports a loss, before the loss is handled: nothing more may go out then. */
+        @Volatile private var linkUp = false
+
+        override fun onConnectionStateChanged(connected: Boolean) {
+            if (!connected) linkUp = false
+            events.post {
+                when {
+                    // A link that was closed can still report. A loss would end the next connect, a connect would open a link nobody asked for.
+                    status == BleStatus.DISCONNECTED && !connecting -> aapsLogger.debug(LTag.PUMPBTCOMM, "a closed link reported connected=$connected, ignored")
+                    connected                                       -> onConnected()
+                    else                                            -> onDisconnected()
+                }
+            }
+        }
+
+        private fun onConnected() {
+            events.removeCallbacks(connectTimeout)
+            events.removeCallbacks(setupTimeout)
+            events.postDelayed(setupTimeout, SETUP_TIMEOUT_MS)
+            val bonded = address?.let { transport.adapter.isDeviceBonded(it) } == true
+            events.postDelayed({ transport.gatt.discoverServices() }, if (bonded) DISCOVERY_DELAY_BONDED_MS else DISCOVERY_DELAY_MS)
+        }
+
+        fun onAdapterOff() {
+            linkUp = false
+            events.post { if (status == BleStatus.CONNECTED || connecting) onDisconnected() }
+        }
+
+        /** Ends the link and every try to make one. Nothing connects again until the driver asks. */
+        fun close() {
+            events.post { closeNow() }
+        }
+
+        private fun closeNow() {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "close link, status=$status connecting=$connecting")
+            val wasUp = status != BleStatus.DISCONNECTED || connecting
+            // Also the retries and the delayed CONNECTED, which are posted here.
+            events.removeCallbacksAndMessages(null)
+            linkUp = false
+            // A loss of the link reported after this must not start a retry.
+            retriesLeft = 0
+            connecting = false
+            servicesFound = false
+            ready = false
+            synchronized(sendLock) {
+                writing = false
+                inFlight.clear()
+                queue.clear()
+                endResync()
+                if (bolusStart == BolusStart.PENDING) bolusStart = BolusStart.DROPPED
+            }
+            transport.gatt.disconnect()
+            transport.gatt.close()
+            status = BleStatus.DISCONNECTED
+            if (wasUp) listener?.onBleStatusChanged(status)
+        }
+
+        private fun onDisconnected() {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "disconnected, servicesFound=$servicesFound")
+            transport.gatt.close()
+            if (!servicesFound) {
+                onConnectFailed("link lost during setup")
+                return
+            }
+            events.removeCallbacks(setupTimeout)
+            connecting = false
+            servicesFound = false
+            ready = false
+            synchronized(sendLock) {
+                writing = false
+                inFlight.clear()
+                // A command that waited here was asked on the old link, and the driver has given up on it. After a reconnect it would come too late.
+                queue.clear()
+                endResync()
+                if (bolusStart == BolusStart.PENDING) bolusStart = BolusStart.DROPPED
+            }
+            status = BleStatus.DISCONNECTED
+            listener?.onBleStatusChanged(status)
+        }
+
+        override fun onServicesDiscovered(success: Boolean) {
+            events.post {
+                if (success && transport.gatt.findCharacteristics()) {
+                    servicesFound = true
+                    transport.requestMtu(REQUESTED_MTU)
+                } else {
+                    aapsLogger.error(LTag.PUMPBTCOMM, "The pump services are missing")
+                    transport.gatt.disconnect()
+                }
+            }
+        }
+
+        override fun onMtuChanged(mtu: Int) {
+            events.post {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "mtu: $mtu")
+                transport.gatt.enableNotifications()
+            }
+        }
+
+        override fun onDescriptorWritten() {
+            events.post { onReady() }
+        }
+
+        private fun onReady() {
+            events.removeCallbacks(setupTimeout)
+            connecting = false
+            status = BleStatus.CONNECTED
+            ready = true
+            linkUp = true
+            reportAnswered = false
+            sendReportDevice()
+            reportConnected(CONNECTED_DELAY_MS, System.currentTimeMillis() + REPORT_ANSWER_TIMEOUT_MS)
+        }
+
+        /**
+         * Tells the driver the link is up once the pump has answered the report with its sequence. After a fixed 500 ms,
+         * the driver's first frames could go out before a late answer, which then set the sequence back below them: the
+         * next frame was refused (error 28) and its request lost. Without an answer in [REPORT_ANSWER_TIMEOUT_MS] the link
+         * is reported up anyway, as before. On this thread, so it comes before or after a loss of the link, never over it.
+         */
+        private fun reportConnected(delayMs: Long, latest: Long) {
+            events.postDelayed({
+                if (status != BleStatus.CONNECTED || !ready) return@postDelayed
+                if (!reportAnswered && System.currentTimeMillis() < latest) reportConnected(REPORT_ANSWER_POLL_MS, latest)
+                else listener?.onBleStatusChanged(status)
+            }, delayMs)
+        }
+
+        override fun onCharacteristicChanged(data: ByteArray) {
+            events.post { handleFrame(data) }
+        }
+
+        override fun onCharacteristicWritten() {
+            events.post { inFlight.poll()?.let { onWriteDone(it.request.paramId) } }
+        }
+
+        override fun onWriteFailed() {
+            events.post { inFlight.poll()?.let { onWriteFailed(it) } }
+        }
+
+        override fun onFirmwareVersionRead(data: ByteArray) {
+            if (data.isNotEmpty()) pumpVersionNum = String(data, Charsets.UTF_8)
+        }
+
+        fun read(paramId: Short) {
+            if (!ready) return
+            queue.add(Request(paramId, isRead = true))
+            sendNextIfIdle()
+        }
+
+        fun write(paramId: Short, data: ByteArray) {
+            if (!ready) return
+            queue.add(Request(paramId, isRead = false, data = data))
+            sendNextIfIdle()
+        }
+
+        fun writeBolusStart(data: ByteArray) {
+            if (!ready) return
+            synchronized(sendLock) { queue.add(Request(AaruyParamId.BOLUS_CONTROL, isRead = false, data = data, bolusId = bolusId)) }
+            sendNextIfIdle()
+        }
+
+        /** A new bolus: what the last one left behind is never sent. */
+        fun newBolus() = synchronized(sendLock) {
+            abandonBolusStart()
+            bolusId++
+            bolusStart = BolusStart.NONE
+            bolusStartAsked = false
+        }
+
+        /** The start follows when the pump has taken the setting, see [onWriteDone]. */
+        fun writeBolusSetting(data: ByteArray) {
+            if (!ready) return
+            synchronized(sendLock) { bolusStart = BolusStart.PENDING }
+            write(AaruyParamId.BOLUS_SETTING, data)
+        }
+
+        fun abandonBolusStart(): Boolean = synchronized(sendLock) {
+            bolusStartAsked = true
+            when (bolusStart) {
+                BolusStart.SENT    -> true
+
+                BolusStart.PENDING -> {
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "bolus start dropped before it was sent")
+                    bolusStart = BolusStart.DROPPED
+                    queue.removeIf { it.bolusId != 0 }
+                    false
+                }
+
+                else               -> false
+            }
+        }
+
+        /** See [AaruyBleClient.abandonTempBasal]. */
+        fun abandon(paramId: Short) = synchronized(sendLock) {
+            queue.removeIf { it.paramId == paramId && !it.isRead }
+            unconfirmed.forEach { if (it.request.paramId == paramId) it.request.abandoned = true }
+        }
+
+        private fun sendNextIfIdle() {
+            synchronized(sendLock) {
+                if (!writing) nextRequest()?.let { send(it) }
+            }
+        }
+
+        private fun sendNext() {
+            synchronized(sendLock) { nextRequest()?.let { send(it) } }
+        }
+
+        /** Under [sendLock]. While the pump's count is asked, only the count read goes out. */
+        private fun nextRequest(): Request? = when {
+            countWanted -> {
+                countWanted = false
+                Request(AaruyParamId.SERIAL, isRead = true)
+            }
+
+            resyncing   -> null
+            else        -> queue.poll()
+        }
+
+        fun syncTime() {
+            write(AaruyParamId.SYNC_TIME, ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(AaruyPumpTime.now()).array())
+        }
+
+        private fun sendReportDevice() {
+            val packet = ReportDevicePacket().apply {
+                deviceType = 7
+                version = 1
+                settingTime = AaruyPumpTime.now()
+            }
+            write(AaruyParamId.REPORT_DEVICE, packet.toBytes())
+        }
+
+        fun readVersion() = transport.readFirmwareVersion()
+
+        /** Writes come from the pump thread and from coroutines. The pump refuses a frame whose sequence is out of order. */
+        private fun send(first: Request) {
+            synchronized(sendLock) {
+                var request = first
+                // Taken from the queue just before the driver gave up on it.
+                while (request.bolusId != 0 && (request.bolusId != bolusId || bolusStart != BolusStart.PENDING)) request = nextRequest() ?: return
+                if (request.bolusId != 0) bolusStart = BolusStart.SENT
+                sequence = if (sequence.unsigned() >= 0xFFFF) 0 else (sequence.unsigned() + 1).toShort()
+                val frame =
+                    if (request.isRead) AaruyFrame.buildRead(request.paramId, sequence)
+                    else AaruyFrame.buildWrite(request.paramId, sequence, request.data)
+                aapsLogger.debug(LTag.PUMPBTCOMM, "TX ${if (request.isRead) "read" else "write"} param=${request.paramId} seq=${sequence.unsigned()} data=${if (request.isRead) "" else request.data.toHexText()}")
+                val sent = Sent(sequence, request)
+                when (request.paramId) {
+                    AaruyParamId.SERIAL        -> {
+                        countAsked = true
+                        countReadAt = SystemClock.uptimeMillis()
+                    }
+
+                    // The pump does not count the report: it answers it with its count.
+                    AaruyParamId.REPORT_DEVICE -> Unit
+
+                    else                       -> {
+                        unconfirmed.addLast(sent)
+                        // A refusal comes within a few frames. Older ones are taken, or lost for good as before this list.
+                        if (unconfirmed.size > MAX_UNCONFIRMED) unconfirmed.removeFirst()
+                    }
+                }
+                writing = true
+                inFlight.add(sent)
+                transport.gatt.writeCharacteristic(frame)
+            }
+        }
+
+        private fun onWriteDone(paramId: Short) {
+            if (paramId == AaruyParamId.UNBIND) {
+                address?.let { unbound ->
+                    CoroutineScope(Dispatchers.IO).launch {
+                        delay(3000L)
+                        transport.adapter.removeBond(unbound)
+                    }
+                }
+            } else if (paramId == AaruyParamId.BOLUS_SETTING) {
+                synchronized(sendLock) {
+                    if (bolusStart == BolusStart.PENDING && !startBolus()) bolusStart = BolusStart.NONE
+                }
+            }
+            writing = false
+            listener?.onRequestResult(true, paramId.unsigned())
+            sendNext()
+        }
+
+        private fun onWriteFailed(sent: Sent) {
+            synchronized(sendLock) {
+                writing = false
+                // The driver hears that it failed, so it never goes out later. The pump never got it.
+                unconfirmed.remove(sent)
+            }
+            listener?.onRequestResult(false, sent.request.paramId.unsigned())
+            // The commands behind it are still wanted now, not at the next command, when the driver has given up on them.
+            // Not into a link that is gone: a bolus start sent there would count as sent, and its loss clears the queue anyway.
+            if (linkUp) sendNext()
+        }
+
+        /**
+         * The pump refused a frame for its number (error 28). The frames sent behind it are refused too, so one count read
+         * covers them all. Not before both answers of the last count read can have come: the second one could be taken for
+         * the answer of this one, and its count is old.
+         */
+        private fun startResync() {
+            val wait = synchronized(sendLock) {
+                if (resyncing) return
+                resyncing = true
+                countTries = 0
+                countReadAt + COUNT_SECOND_ANSWER_MS - SystemClock.uptimeMillis()
+            }
+            if (wait > 0) events.postDelayed(countTimeout, wait) else askCount()
+        }
+
+        private fun askCount() {
+            events.removeCallbacks(countTimeout)
+            synchronized(sendLock) {
+                if (!resyncing) return
+                if (countTries++ == COUNT_TRIES) {
+                    // As before the count was used: what was refused stays lost, and the waits of the driver tell.
+                    aapsLogger.error(LTag.PUMPBTCOMM, "The pump did not tell its count")
+                    endResync()
+                } else {
+                    countWanted = true
+                    events.postDelayed(countTimeout, COUNT_ANSWER_TIMEOUT_MS)
+                }
+            }
+            sendNextIfIdle()
+        }
+
+        /**
+         * The pump's count: the number of the last frame it took. A frame with a higher number was refused or lost, and
+         * the pump did not carry it out. So it goes out again, in the same order, with a new number.
+         */
+        private fun onPumpCount(count: Short) {
+            synchronized(sendLock) {
+                // The second answer to a count read, or one to a read from before: its count can be old.
+                if (!resyncing || !countAsked) {
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "count ${count.unsigned()} not asked for, ignored")
+                    return
+                }
+                sequence = count
+                val again = unconfirmed.filter { it.sequence.isAfter(count) }.mapNotNull { sendAgain(it.request) }
+                endResync()
+                again.asReversed().forEach { queue.addFirst(it) }
+                aapsLogger.debug(LTag.PUMPBTCOMM, "pump count ${count.unsigned()}, sent again: ${again.map { it.paramId }}")
+            }
+            sendNextIfIdle()
+        }
+
+        /** Under [sendLock]. @return the request to send again, or null when it must never go out again */
+        private fun sendAgain(request: Request): Request? {
+            if (request.abandoned) return null
+            if (request.bolusId == 0) return request
+            // A start the driver has asked about, or the start of an older bolus.
+            if (request.bolusId != bolusId || bolusStart != BolusStart.SENT || bolusStartAsked) return null
+            bolusStart = BolusStart.PENDING
+            return request
+        }
+
+        /** Under [sendLock]. */
+        private fun endResync() {
+            events.removeCallbacks(countTimeout)
+            resyncing = false
+            countWanted = false
+            countAsked = false
+            unconfirmed.clear()
+        }
+
+        private fun handleFrame(frame: ByteArray) {
+            try {
+                val message = AaruyFrame.parse(frame)
+                if (message == null) {
+                    aapsLogger.error(LTag.PUMPBTCOMM, "RX frame not made of full blocks: ${frame.toHexText()}")
+                    return
+                }
+                aapsLogger.debug(LTag.PUMPBTCOMM, "RX param=${message.paramId} data=${message.payload.toHexText()}")
+                if (message.paramId != AaruyParamId.SERIAL) sendNext()
+                handleMessage(message.paramId, message.payload)
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPBTCOMM, "Failed to handle a pump message", e)
+            }
+        }
+
+        private fun handleMessage(paramId: Short, payload: ByteArray) {
+            when (paramId) {
+                AaruyParamId.REPORT_DEVICE                                 -> handleReportDevice(payload)
+
+                AaruyParamId.SERIAL                                        ->
+                    if (payload.size == 2) onPumpCount(AaruyByteReader(payload).u16())
+
+                AaruyParamId.BASIC_PARAM                                   -> {
+                    val param = BasicParamPacket.parse(payload).toBasicParam()
+                    maxBolus = param.maxBolus
+                    pumpType = param.pumpType
+                    listener?.onReceiveBasicParamSetting(param)
+                }
+
+                AaruyParamId.BASAL_SETTING                                 ->
+                    listener?.onReceiveBasalSetting(BasalSettingPacket.parse(payload).toBasalInfo())
+
+                AaruyParamId.CURRENT_STATUS                                -> {
+                    val packet = CurrentStatusPacket.parse(payload)
+                    // From stopped to not running: the restore worked. From here basal starts without it.
+                    if (runningStatus == 8 && packet.runningStatus.toInt() == 0) needRestoreUnRunState = false
+                    currentStatus = packet
+                    if (packet.runningStatus.toInt() == 0 && prepareStartBasal) {
+                        prepareStartBasal = false
+                        startBasal()
+                    }
+                    listener?.onReceiveCurrentStatus(packet.toStatusInfo())
+                }
+
+                AaruyParamId.HISTORY_LOG                                   ->
+                    listener?.onReceiveHistoryLog(HistoryLogPacket.parse(payload).toLogInfo())
+
+                AaruyParamId.HISTORY_DAILY                                 ->
+                    listener?.onReceiveHistoryDaily(HistoryDailyPacket.parse(payload).toDailyInfo())
+
+                AaruyParamId.REAL_DATA                                     -> {
+                    val packet = RealDataPacket.parse(payload)
+                    listener?.onReceiveRealData(packet.remainBattery.unsigned(), packet.bleSignal)
+                }
+
+                AaruyParamId.CLOSED_MODE                                   ->
+                    listener?.onPumpClosedMode(AaruyByteReader(payload).u8())
+
+                AaruyParamId.ERROR_INFO                                    -> handleError(payload)
+
+                AaruyParamId.CONFIRM_WARN                                  ->
+                    listener?.onReceiveConfirmWarn(AaruyByteReader(payload).u8())
+
+                // The pump also sends these. Nothing is done with them.
+                AaruyParamId.BASAL_SETTING_TWO, AaruyParamId.BASAL_SETTING_THREE, AaruyParamId.BOLUS_SETTING,
+                AaruyParamId.PARAM_MINUS_20, AaruyParamId.PARAM_MINUS_21, AaruyParamId.PARAM_19 -> Unit
+            }
+        }
+
+        private fun handleReportDevice(payload: ByteArray) {
+            val packet = ReportDevicePacket.parse(payload)
+            synchronized(sendLock) { sequence = packet.serial }
+            reportAnswered = true
+            protocolVersion = packet.version.toInt()
+            if (packet.deviceType.toInt() == REPORT_DEVICE_ACCEPTED) {
+                syncTime()
+            } else {
+                listener?.onUnbindClearInfo()
+                unbindDevice()
+            }
+        }
+
+        private fun handleError(payload: ByteArray) {
+            val packet = ErrorInfoPacket.parse(payload)
+            if (packet.error == 0 && packet.errorType == ERROR_TYPE_LIQUID_SHOW) listener?.onLiquidShow()
+            if (packet.error == ERROR_OPERATION && packet.errorType == ERROR_TYPE_READ_SERIAL) startResync()
+            listener?.onReceiveErrorData(packet.errorType, packet.error)
+        }
+    }
+
+    companion object {
+
+        private const val CONNECT_TIMEOUT_MS = 15_000L
+
+        /** Pairing waits for a button on the pump, and Android gives up on it after 30 s. */
+        private const val SETUP_TIMEOUT_MS = 45_000L
+        private const val CONNECT_RETRIES = 2
+        private const val CONNECT_RETRY_DELAY_MS = 1_000L
+        private const val DISCOVERY_DELAY_MS = 300L
+        private const val DISCOVERY_DELAY_BONDED_MS = 1_600L
+
+        /** As in the vendor library: the answers to the first frames come before the driver hears of the link. */
+        private const val CONNECTED_DELAY_MS = 500L
+
+        /** How long the link waits for the pump's sequence before it is reported up anyway, and how often it looks. */
+        private const val REPORT_ANSWER_TIMEOUT_MS = 5_000L
+        private const val REPORT_ANSWER_POLL_MS = 100L
+
+        /** A refusal comes within a few frames. */
+        private const val MAX_UNCONFIRMED = 32
+
+        /** Seen on a real pump: the second answer to a count read came up to about 0.6 s after the read. */
+        private const val COUNT_SECOND_ANSWER_MS = 1_500L
+        private const val COUNT_ANSWER_TIMEOUT_MS = 1_000L
+        private const val COUNT_TRIES = 5
+
+        /** Whether this frame number comes after [count]. The numbers go round after 0xFFFF. */
+        private fun Short.isAfter(count: Short): Boolean = ((unsigned() - count.unsigned()) and 0xFFFF) in 1..0x7FFF
+        private const val REQUESTED_MTU = 517
+        private const val DEVICE_NAME = "aaruy"
+        private const val DEFAULT_PIN = "210101"
+        private const val DEFAULT_PUMP_TYPE = 131
+        private const val REPORT_DEVICE_ACCEPTED = 6
+        private const val ERROR_TYPE_LIQUID_SHOW = 25
+        private const val ERROR_TYPE_READ_SERIAL = 28
+        private const val ERROR_OPERATION = 128
+
+        /** Hidden constant of `BluetoothDevice`. */
+        private const val PAIRING_VARIANT_PASSKEY_CONFIRMATION = 2
+
+        /** Used only so that a missing status is logged and does not crash. */
+        private const val UNKNOWN_STATUS = -1
+
+
+        private fun pinCode(char: Char): Char = when (char) {
+            '0'  -> '3'
+            '1'  -> '7'
+            '2'  -> '6'
+            '3'  -> '2'
+            '4'  -> '1'
+            '5'  -> '8'
+            '6'  -> '9'
+            '7'  -> '0'
+            '8'  -> '5'
+            '9'  -> '4'
+            'Q'  -> '5'
+            'R'  -> '6'
+            'S'  -> '0'
+            'T'  -> '1'
+            'U'  -> '2'
+            'V'  -> '3'
+            'W'  -> '4'
+            'X'  -> '9'
+            'Y'  -> '8'
+            'Z'  -> '7'
+            else -> ' '
+        }
+
+        /** The PIN comes from the six characters after `aaruy_` in the device name. */
+        internal fun pinFromDeviceName(name: String): String {
+            if (name.trim().length !in 12 until 18) return DEFAULT_PIN
+            val pin = name.substring(6, 12).map { pinCode(it) }.joinToString("")
+            return if (pin.trim().length < 6) DEFAULT_PIN else pin
+        }
+    }
+}
+
+private fun ByteArray.toHexText(): String = joinToString(" ") { "%02X".format(Locale.ROOT, it) }
+
+/** The encrypted frame around each packet. */
+/** The AES key of the BLE frames. The emulator needs it too. */
+fun aaruyFrameKey(): ByteArray = AaruyFrame.key.copyOf()
+
+internal object AaruyFrame {
+
+    class Message(val paramId: Short, val payload: ByteArray)
+
+    private const val ALGORITHM = "AES/ECB/PKCS5Padding"
+    private const val FRAME_START: Byte = 0x55
+    private const val OUTER_HEADER = 3
+    private const val INNER_HEADER = 7
+    private const val INNER_HEADER_AFTER_LENGTH = 5
+    private const val COMMAND_READ: Byte = 0
+    private const val COMMAND_WRITE: Byte = 1
+    private const val BLOCK_SIZE = 16
+
+    val key = byteArrayOf(65, 97, 114, 117, 121, 121, 105, 108, 105, 97, 111, 49, 50, 51, 52, 53)
+
+    private fun cipher(mode: Int): Cipher = Cipher.getInstance(ALGORITHM).apply { init(mode, SecretKeySpec(key, "AES")) }
+
+    private fun wrap(plain: ByteArray): ByteArray {
+        val encrypted = cipher(Cipher.ENCRYPT_MODE).doFinal(plain)
+        return ByteBuffer.allocate(encrypted.size + OUTER_HEADER).order(ByteOrder.LITTLE_ENDIAN)
+            .put(FRAME_START)
+            .putShort(encrypted.size.toShort())
+            .put(encrypted)
+            .array()
+    }
+
+    private fun inner(length: Short, command: Byte, paramId: Short, sequence: Short, payload: ByteArray): ByteArray =
+        ByteBuffer.allocate(INNER_HEADER + payload.size).order(ByteOrder.LITTLE_ENDIAN)
+            .putShort(length)
+            .put(command)
+            .putShort(paramId)
+            .putShort(sequence)
+            .put(payload)
+            .array()
+
+    fun buildRead(paramId: Short, sequence: Short): ByteArray =
+        wrap(inner(INNER_HEADER_AFTER_LENGTH.toShort(), COMMAND_READ, paramId, sequence, ByteArray(0)))
+
+    fun buildWrite(paramId: Short, sequence: Short, payload: ByteArray): ByteArray =
+        wrap(inner((payload.size + INNER_HEADER_AFTER_LENGTH).toShort(), COMMAND_WRITE, paramId, sequence, payload))
+
+    /** @return null if the frame is not made of full blocks */
+    fun parse(frame: ByteArray): Message? {
+        val body = AaruyByteReader.slice(frame, OUTER_HEADER, frame.size - OUTER_HEADER)
+        if (body.size % BLOCK_SIZE != 0) return null
+        val plain = cipher(Cipher.DECRYPT_MODE).doFinal(body)
+        val reader = AaruyByteReader(plain)
+        reader.u16()
+        reader.u8()
+        val paramId = reader.u16()
+        return Message(paramId, AaruyByteReader.slice(plain, INNER_HEADER, plain.size - INNER_HEADER))
+    }
+}
