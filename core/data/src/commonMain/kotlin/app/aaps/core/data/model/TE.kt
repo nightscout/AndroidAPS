@@ -109,6 +109,10 @@ data class TE(
         FEELING_HIGH("Feeling High"),
         LEAKING_INFUSION_SET("Leaking Infusion Set"),
 
+        PUMP_VENT("Pump Vent"),            // Vent started on the pump
+        PUMP_SUSPENDED("Pump Suspended"),  // Delivery suspended on the pump
+        PUMP_RESUMED("Pump Resumed"),      // Delivery resumed on the pump
+
         // Default
         NONE("<none>")
         ;

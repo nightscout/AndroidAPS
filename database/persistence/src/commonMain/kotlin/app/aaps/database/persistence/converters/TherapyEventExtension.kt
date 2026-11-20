@@ -48,6 +48,9 @@ fun TherapyEvent.Type.fromDb(): TE.Type = when (this) {
     TherapyEvent.Type.FEELING_LOW             -> TE.Type.FEELING_LOW
     TherapyEvent.Type.FEELING_HIGH            -> TE.Type.FEELING_HIGH
     TherapyEvent.Type.LEAKING_INFUSION_SET    -> TE.Type.LEAKING_INFUSION_SET
+    TherapyEvent.Type.PUMP_VENT               -> TE.Type.PUMP_VENT
+    TherapyEvent.Type.PUMP_SUSPENDED          -> TE.Type.PUMP_SUSPENDED
+    TherapyEvent.Type.PUMP_RESUMED            -> TE.Type.PUMP_RESUMED
     TherapyEvent.Type.NONE                    -> TE.Type.NONE
 }
 
@@ -96,6 +99,9 @@ fun TE.Type.toDb(): TherapyEvent.Type = when (this) {
     TE.Type.FEELING_LOW             -> TherapyEvent.Type.FEELING_LOW
     TE.Type.FEELING_HIGH            -> TherapyEvent.Type.FEELING_HIGH
     TE.Type.LEAKING_INFUSION_SET    -> TherapyEvent.Type.LEAKING_INFUSION_SET
+    TE.Type.PUMP_VENT               -> TherapyEvent.Type.PUMP_VENT
+    TE.Type.PUMP_SUSPENDED          -> TherapyEvent.Type.PUMP_SUSPENDED
+    TE.Type.PUMP_RESUMED            -> TherapyEvent.Type.PUMP_RESUMED
     TE.Type.NONE                    -> TherapyEvent.Type.NONE
 }
 
