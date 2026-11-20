@@ -91,6 +91,7 @@
     <string name="press_OK_to_return">Naciśnij <b>OK</b>, aby powrócić do ekranu głównego.</string>
     <string name="deactivate_sure">Czy na pewno chcesz dezaktywować bieżący Patch?</string>
     <string name="cancel_sure">Czy na pewno chcesz anulować aktywację?</string>
+    <string name="cancel_deactivation_sure">Czy na pewno chcesz anulować deaktywację? Patch może pozostać aktywny.</string>
     <string name="medtrum_deactivate_pump_confirm">Jesteś pewien? Tej akcji nie można cofnąć!!</string>
     <string name="press_next_or_cancel">Naciśnij <b>Dalej</b>, aby dezaktywować lub <b>Anuluj</b>, aby powrócić do ekranu głównego.</string>
     <string name="deactivating_pump">Dezaktywacja Patcha. Proszę czekać.</string>
