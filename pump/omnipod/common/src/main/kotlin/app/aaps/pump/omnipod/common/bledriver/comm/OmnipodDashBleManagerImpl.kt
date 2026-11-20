@@ -28,7 +28,8 @@ class OmnipodDashBleManagerImpl(
         get() = podState.bluetoothAddress
     override val ltk: ByteArray?
         get() = podState.ltk
-    override val ids = Ids(podState)
+    // Read each time: the pod can be another one after a settings import.
+    override val ids get() = Ids(podState)
 
     override fun createConnection(podAddress: String): BleConnection =
         bleConnectionFactory.createConnection(podAddress)

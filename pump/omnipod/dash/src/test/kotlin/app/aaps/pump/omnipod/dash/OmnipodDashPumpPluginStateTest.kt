@@ -18,6 +18,8 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertConfiguration
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
@@ -28,11 +30,15 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import kotlinx.coroutines.test.runTest
 import org.mockito.kotlin.any
+import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.time.Duration
+import java.util.concurrent.CountDownLatch
 
 /**
  * The pump-state answers the command queue and the loop rely on.
@@ -118,8 +124,7 @@ class OmnipodDashPumpPluginStateTest {
      */
     @Test
     fun `an alarming pod reports a zero base rate even with a program loaded`() {
-        val program = mock<BasalProgram>()
-        whenever(program.rateAt(any())).thenReturn(1.25)
+        val program = BasalProgram(listOf(BasalProgram.Segment(0, 48, 125)))
         whenever(podStateManager.basalProgram).thenReturn(program)
         whenever(podStateManager.alarmType).thenReturn(mock())
 
@@ -128,10 +133,10 @@ class OmnipodDashPumpPluginStateTest {
 
     @Test
     fun `a healthy pod reports the rate its program gives for now`() {
-        val program = mock<BasalProgram>()
-        whenever(program.rateAt(any())).thenReturn(1.25)
+        val program = BasalProgram(listOf(BasalProgram.Segment(0, 48, 125)))
         whenever(podStateManager.basalProgram).thenReturn(program)
         whenever(podStateManager.alarmType).thenReturn(null)
+        whenever(podStateManager.timeZoneOffset).thenReturn(null)
 
         assertThat(sut.baseBasalRate.cU).isEqualTo(1.25)
     }
@@ -201,26 +206,17 @@ class OmnipodDashPumpPluginStateTest {
         assertThat(sut.isSuspended()).isFalse()
     }
 
-    /** Busy blocks the command queue, and it must do so only part way through activation. */
-    @Test
-    fun `the pump is busy only part way through activation`() {
-        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.NOT_STARTED)
-        assertThat(sut.isBusy()).isFalse()
-
-        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
-        assertThat(sut.isBusy()).isFalse()
-    }
-
     /**
-     * Pairing runs while the progress is still NOT_STARTED. If the pump was not busy then, the queue
-     * ran its commands and disconnected the pod in the middle of the pairing (#5219).
+     * The activation runs as commands of the queue. A busy pump would keep the queue from running them, so the
+     * pump is never busy, also not part way through the activation.
      */
     @Test
-    fun `the pump is busy while an activation step is running, even before any progress`() {
-        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.NOT_STARTED)
+    fun `the pump is not busy at any point of the activation`() {
         whenever(omnipodManager.isActivationRunning).thenReturn(true)
-
-        assertThat(sut.isBusy()).isTrue()
+        for (progress in listOf(ActivationProgress.NOT_STARTED, ActivationProgress.PHASE_1_COMPLETED, ActivationProgress.COMPLETED)) {
+            whenever(podStateManager.activationProgress).thenReturn(progress)
+            assertThat(sut.isBusy()).isFalse()
+        }
     }
 
     @Test
@@ -232,9 +228,21 @@ class OmnipodDashPumpPluginStateTest {
         verify(omnipodManager, never()).disconnect(any<Boolean>())
     }
 
+    /** The queue is empty while the user puts the pod on. Closing the link there broke the pairing (#5219). */
+    @Test
+    fun `disconnect does not close the link between the two parts of the activation`() {
+        whenever(omnipodManager.isActivationRunning).thenReturn(false)
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.PHASE_1_COMPLETED)
+
+        sut.disconnect("Queue empty")
+
+        verify(omnipodManager, never()).disconnect(any<Boolean>())
+    }
+
     @Test
     fun `disconnect closes the link when no activation is running`() {
         whenever(omnipodManager.isActivationRunning).thenReturn(false)
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
 
         sut.disconnect("Queue empty")
 
@@ -290,10 +298,102 @@ class OmnipodDashPumpPluginStateTest {
     }
 
     @Test
-    fun `the pump reports itself as an Insulet pump that cannot handle DST`() {
+    fun `the pump supports automatic time handling without an active pod`() {
         assertThat(sut.manufacturer()).isEqualTo(ManufacturerType.Insulet)
-        assertThat(sut.canHandleDST()).isFalse()
+        assertThat(sut.canHandleDST()).isTrue()
         assertThat(sut.isFakingTempsByExtendedBoluses).isFalse()
+    }
+
+    @Test
+    fun `an active pod needs a known offset before disabling the old DST guard`() {
+        whenever(podStateManager.isPodRunning).thenReturn(true)
+        whenever(podStateManager.timeZoneOffset).thenReturn(null)
+        assertThat(sut.canHandleDST()).isFalse()
+        whenever(podStateManager.timeZoneOffset).thenReturn(3600000)
+        assertThat(sut.canHandleDST()).isTrue()
+    }
+
+    // endregion
+
+    // region alertConfigurations - an alert whose time is over
+
+    /** What the pod gets for one alert: its slot, whether it is on, and its trigger. */
+    private class SentAlert(val slot: Int, val on: Boolean, val trigger: Int)
+
+    private fun sent(alerts: List<AlertConfiguration>): Map<Int, SentAlert> = alerts.map { it.encoded }.associate { bytes ->
+        val first = bytes[0].toInt() and 0xff
+        val trigger = (((bytes[2].toInt() and 0xff) shl 8) or (bytes[3].toInt() and 0xff)).toShort().toInt()
+        (first shr 4) to SentAlert(first shr 4, first and 0x08 != 0, trigger)
+    }
+
+    private fun alertsOfAPodWith(hoursLeft: Long) = sent(
+        sut.alertConfigurations(
+            podLifeLeft = Duration.ofHours(hoursLeft),
+            expirationReminderEnabled = true, expirationReminderHours = 4,
+            expirationAlarmEnabled = true, expirationAlarmHours = 8,
+            lowReservoirAlertEnabled = true, lowReservoirAlertUnits = 20
+        )
+    )
+
+    @Test
+    fun `a new pod gets every alert with its own time`() {
+        val alerts = alertsOfAPodWith(hoursLeft = 70)
+
+        assertThat(alerts.getValue(AlertType.LOW_RESERVOIR.index.toInt()).trigger).isEqualTo(200)
+        assertThat(alerts.getValue(AlertType.USER_SET_EXPIRATION.index.toInt()).trigger).isEqualTo(66 * 60)
+        assertThat(alerts.getValue(AlertType.EXPIRATION.index.toInt()).trigger).isEqualTo(70 * 60)
+        assertThat(alerts.values.all { it.on }).isTrue()
+    }
+
+    /** The reminder at 4 hours before the end cannot be set with 3 hours left. It was sent as a negative timer. */
+    @Test
+    fun `a reminder whose time is over goes to the pod as off and the others are still set`() {
+        val alerts = alertsOfAPodWith(hoursLeft = 3)
+
+        val reminder = alerts.getValue(AlertType.USER_SET_EXPIRATION.index.toInt())
+        assertThat(reminder.on).isFalse()
+        assertThat(reminder.trigger).isEqualTo(0)
+        assertThat(alerts.getValue(AlertType.EXPIRATION.index.toInt()).on).isTrue()
+        assertThat(alerts.getValue(AlertType.EXPIRATION.index.toInt()).trigger).isEqualTo(3 * 60)
+        assertThat(alerts.getValue(AlertType.LOW_RESERVOIR.index.toInt()).on).isTrue()
+    }
+
+    /** In the 8 hours a pod runs after its end, the low reservoir alert must still be saved, and no timer is negative. */
+    @Test
+    fun `a pod past its end gets no negative timer and still gets the low reservoir alert`() {
+        val alerts = alertsOfAPodWith(hoursLeft = -1)
+
+        assertThat(alerts.getValue(AlertType.USER_SET_EXPIRATION.index.toInt()).on).isFalse()
+        assertThat(alerts.getValue(AlertType.EXPIRATION.index.toInt()).on).isFalse()
+        assertThat(alerts.getValue(AlertType.EXPIRATION_IMMINENT.index.toInt()).on).isTrue()
+        assertThat(alerts.getValue(AlertType.EXPIRATION_IMMINENT.index.toInt()).trigger).isEqualTo(6 * 60)
+        assertThat(alerts.getValue(AlertType.LOW_RESERVOIR.index.toInt()).on).isTrue()
+        assertThat(alerts.values.none { it.trigger < 0 }).isTrue()
+    }
+
+    // endregion
+
+    // region onStop - what the next start must not trust
+
+    @Test
+    fun `a stop closes the link and drops the pod state in memory`() = runTest {
+        sut.onStop()
+
+        inOrder(omnipodManager, podStateManager) {
+            verify(omnipodManager).closeLink()
+            verify(podStateManager).bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
+            verify(podStateManager).onStop()
+        }
+    }
+
+    @Test
+    fun `a stop releases a connect that still waits`() = runTest {
+        val waiting = CountDownLatch(1)
+        sut.stopConnecting = waiting
+
+        sut.onStop()
+
+        assertThat(waiting.count).isEqualTo(0)
     }
 
     // endregion

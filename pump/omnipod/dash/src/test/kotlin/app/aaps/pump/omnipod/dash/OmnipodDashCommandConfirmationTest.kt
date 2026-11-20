@@ -23,6 +23,7 @@ import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
 import app.aaps.pump.omnipod.common.history.data.HistoryRecord
 import app.aaps.pump.omnipod.common.history.data.InitialResult
 import app.aaps.pump.omnipod.common.queue.command.CommandDisableSuspendAlerts
+import app.aaps.pump.omnipod.common.util.PodTimeZone
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.DashHistory
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
@@ -97,6 +98,7 @@ class OmnipodDashCommandConfirmationTest {
         verifyBlocking(pumpSync) { syncStopTemporaryBasalWithPumpId(eq(CREATED_AT), eq(HISTORY_ID), eq(PumpType.OMNIPOD_DASH), any(), any()) }
         verifyBlocking(commandQueue, timeout(2_000)) { customCommand(any<CommandDisableSuspendAlerts>()) }
         verify(podStateManager).basalProgram = basalProgram
+        verify(podStateManager).tempBasal = null
         verify(notificationManager).dismiss(NotificationId.OMNIPOD_POD_SUSPENDED)
         verify(notificationManager).dismiss(NotificationId.OMNIPOD_TIME_OUT_OF_SYNC)
     }
@@ -109,6 +111,40 @@ class OmnipodDashCommandConfirmationTest {
         sut.handleCommandConfirmation(confirmation(success = true))
 
         verify(rxBus, never()).send(any<EventProfileChangeRequested>())
+    }
+
+    @Test
+    fun `late time confirmation uses the sent offset and clears the in-progress flag`() = runBlocking<Unit> {
+        givenHistoryEntry(OmnipodCommandType.SET_TIME)
+        val sentZone = PodTimeZone("Europe/Amsterdam", 7200000, CREATED_AT)
+        whenever(podStateManager.timeChangeInProgress).thenReturn(true)
+        val original = confirmation(success = true)
+
+        sut.handleCommandConfirmation(original.copy(command = original.command.copy(basalTimeZone = sentZone)))
+
+        verify(podStateManager).confirmTimeZone(sentZone)
+        verify(podStateManager, never()).updateTimeZone()
+        verify(podStateManager).timeChangeInProgress = false
+    }
+
+    @Test
+    fun `confirmed suspend retains the internal zero basal`() = runBlocking<Unit> {
+        givenHistoryEntry(OmnipodCommandType.SUSPEND_DELIVERY)
+
+        sut.handleCommandConfirmation(confirmation(success = true))
+
+        verify(podStateManager, never()).tempBasal = null
+    }
+
+    @Test
+    fun `cancel during suspension retains the internal zero basal`() = runBlocking<Unit> {
+        givenHistoryEntry(OmnipodCommandType.CANCEL_TEMPORARY_BASAL)
+        whenever(podStateManager.isSuspended).thenReturn(true)
+
+        sut.handleCommandConfirmation(confirmation(success = true))
+
+        verify(podStateManager, never()).tempBasal = null
+        verifyBlocking(pumpSync, never()) { syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any()) }
     }
 
     @Test

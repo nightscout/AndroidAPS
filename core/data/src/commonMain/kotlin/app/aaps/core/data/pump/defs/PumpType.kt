@@ -256,6 +256,26 @@ enum class PumpType(
         hasCustomUnreachableAlertCheck = false,
         supportBatteryLevel = false
     ),
+    OMNIPOD_5(
+        description = "Omnipod 5",
+        manufacturer = ManufacturerType.Insulet,
+        model = "5",
+        bolusSize = 0.05,
+        specialBolusSize = null,
+        extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05),
+        pumpTempBasalType = PumpTempBasalType.Absolute,
+        tbrSettings = DoseSettings(0.05, 30, 12 * 60, 0.0, 30.0),
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration30minAllowed),
+        baseBasalMinValue = 0.05,
+        baseBasalMaxValue = null,
+        baseBasalStep = 0.05,
+        baseBasalSpecialSteps = null,
+        isPatchPump = true,
+        maxReservoirReading = 50,
+        pumpCapability = PumpCapability.OmnipodCapabilities,
+        hasCustomUnreachableAlertCheck = false,
+        supportBatteryLevel = false
+    ),
     MEDTRONIC_512_712(
         description = "Medtronic 512/712",
         manufacturer = ManufacturerType.Medtronic,

@@ -35,6 +35,7 @@ data class InterfaceIDs @Ignore constructor(
         DANA_RS_KOREAN,
         OMNIPOD_EROS,
         OMNIPOD_DASH,
+        OMNIPOD_5,
         MEDTRONIC_512_517,
         MEDTRONIC_515_715,
         MEDTRONIC_522_722,
