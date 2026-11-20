@@ -11,7 +11,7 @@ import kotlin.test.assertTrue
 /**
  * The sensor start screen's own decisions.
  *
- * Which step the user is on, and which sensor is offered first.
+ * What a scan row draws, and which sensor is offered first.
  */
 class DexcomOnePlusStartRulesTest {
 
@@ -24,38 +24,41 @@ class DexcomOnePlusStartRulesTest {
             lastMac = mac,
         )
 
-    // ------------ currentStep(): the guided flow ------------
+    // ------------ codeEntry(): what the code field shows ------------
+
+    /** A whole applicator code: 01 + GTIN, 21 + serial, 240 + the 4-digit code. */
+    private val applicatorCode = "\u001d010123456789012321ABCD12345678\u001d2401234"
 
     @Test
-    fun `a missing permission is the first step whatever else is filled in`() {
-        assertEquals(
-            DexcomOnePlusStartRules.STEP_PREPARE,
-            DexcomOnePlusStartRules.currentStep(hasPermissions = false, hasCode = true, hasDevice = true),
-        )
+    fun `a scanned applicator code shows only its four digits and keeps the serial`() {
+        val entry = DexcomOnePlusStartRules.codeEntry(applicatorCode, scanned = null)
+        assertEquals("1234", entry.shown)
+        assertEquals("1234", entry.identity?.pin)
+        assertEquals("ABCD12345678", entry.identity?.serial)
     }
 
     @Test
-    fun `with the permission granted and no code the user is on the code step`() {
-        assertEquals(
-            DexcomOnePlusStartRules.STEP_CODE,
-            DexcomOnePlusStartRules.currentStep(hasPermissions = true, hasCode = false, hasDevice = true),
-        )
+    fun `the same four digits keep the scanned serial`() {
+        val scanned = DexcomOnePlusStartRules.codeEntry(applicatorCode, scanned = null).identity
+        val entry = DexcomOnePlusStartRules.codeEntry("1234", scanned)
+        assertEquals("1234", entry.shown)
+        assertEquals("ABCD12345678", entry.identity?.serial)
     }
 
     @Test
-    fun `a code without a chosen sensor is the connect step`() {
-        assertEquals(
-            DexcomOnePlusStartRules.STEP_CONNECT,
-            DexcomOnePlusStartRules.currentStep(hasPermissions = true, hasCode = true, hasDevice = false),
-        )
+    fun `other digits are another sensor and carry no serial`() {
+        val scanned = DexcomOnePlusStartRules.codeEntry(applicatorCode, scanned = null).identity
+        val entry = DexcomOnePlusStartRules.codeEntry("5678", scanned)
+        assertEquals("5678", entry.shown)
+        assertEquals("5678", entry.identity?.pin)
+        assertEquals(null, entry.identity?.serial)
     }
 
     @Test
-    fun `everything in place is the warm-up step`() {
-        assertEquals(
-            DexcomOnePlusStartRules.STEP_WARMUP,
-            DexcomOnePlusStartRules.currentStep(hasPermissions = true, hasCode = true, hasDevice = true),
-        )
+    fun `a code that is not complete yet is shown as typed and gives no identity`() {
+        val entry = DexcomOnePlusStartRules.codeEntry("12", scanned = null)
+        assertEquals("12", entry.shown)
+        assertEquals(null, entry.identity)
     }
 
     // ------------ signalBars(): what the row draws ------------

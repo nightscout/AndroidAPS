@@ -30,6 +30,17 @@ object DexcomOnePlusUiLabels {
     @Composable
     fun phaseLabel(phase: OnePlusWarmupState.Phase): String = stringResource(phaseLabelRef(phase))
 
+    /** The driver's messages of a normal round: the link closes after a reading and opens for the next. */
+    private val ROUTINE_MESSAGES = setOf("egv_loop_exit", "waiting_for_next_adv", "waiting_for_adv")
+
+    /**
+     * True for a driver message that is part of normal work and no problem. The status screen shows
+     * no message for these: the generic "if the problem continues" line next to a working sensor
+     * read as if something were wrong.
+     */
+    fun isRoutineMessage(raw: String?): Boolean =
+        raw != null && (raw in ROUTINE_MESSAGES || raw.startsWith("connect_attempt_"))
+
     /**
      * Maps driver/log message codes to user-facing copy. Unknown technical codes are not shown raw.
      */

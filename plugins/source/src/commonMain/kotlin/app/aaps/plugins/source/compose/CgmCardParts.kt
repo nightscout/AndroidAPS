@@ -13,12 +13,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -33,7 +32,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.StatusLevel
+import app.aaps.core.ui.compose.statusLevelToColor
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.source.SourceStrings
 
@@ -113,16 +115,18 @@ fun CgmKeyValueRow(
         horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        // The label keeps its own width and the value takes the rest. The other way round, a long
+        // value left the label a few characters wide and broke it in the middle of a word.
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.weight(1f),
         )
         Text(
             text = value,
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.End,
+            modifier = Modifier.weight(1f),
         )
     }
 }
@@ -133,7 +137,8 @@ fun CgmKeyValueRow(
  * The start screen carried five permanently expanded help blocks — about two screens of scrolling
  * before the first control. They are worth reading once and in the way once the user knows the
  * flow, so they keep their place but start closed. [tone] lets a warning stay recognisable while
- * closed, because an unread warning that looks like ordinary help is not a warning.
+ * closed (a warning sign before the title), because an unread warning that looks like ordinary help
+ * is not a warning.
  */
 @Composable
 fun CgmHelpCard(
@@ -144,10 +149,6 @@ fun CgmHelpCard(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     var expanded by remember { mutableStateOf(expandedByDefault) }
-    val titleColor = when (tone) {
-        CgmCardTone.Neutral -> MaterialTheme.colorScheme.onSurface
-        CgmCardTone.Warning -> MaterialTheme.colorScheme.error
-    }
     CgmCard(modifier = modifier) {
         Row(
             modifier = Modifier
@@ -156,10 +157,19 @@ fun CgmHelpCard(
             horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            // A warning is marked with a sign, not with red text: the sign is also read out by a
+            // screen reader, and the title stays as easy to read as the others.
+            if (tone == CgmCardTone.Warning) {
+                Icon(
+                    imageVector = Icons.Filled.Warning,
+                    contentDescription = stringResource(CoreUiStrings.warning),
+                    tint = statusLevelToColor(StatusLevel.WARNING),
+                )
+            }
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyMedium,
-                color = titleColor,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f),
             )
             Icon(
@@ -260,122 +270,3 @@ private fun TimelineNode(
     }
 }
 
-/**
- * The guided-flow progress of the start screen, in the form the window can afford.
- *
- * Wide: the four labelled steps side by side. Compact: "Step 2 of 4" plus the step name and a
- * four-segment bar — no label is ever squeezed into 82 dp, so nothing truncates on a narrow phone
- * or when the theme scales type up on a tablet.
- */
-@Composable
-fun CgmStepper(
-    currentStep: Int,
-    labels: List<String>,
-    compact: Boolean,
-    modifier: Modifier = Modifier,
-) {
-    if (compact) {
-        Column(
-            modifier = modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(AapsSpacing.small),
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
-                verticalAlignment = Alignment.Bottom,
-            ) {
-                Text(
-                    text = stringResource(
-                        SourceStrings.cgm_step_counter,
-                        (currentStep + 1).coerceAtMost(labels.size),
-                        labels.size,
-                    ),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                Text(
-                    text = labels.getOrElse(currentStep) { labels.last() },
-                    style = MaterialTheme.typography.titleSmall,
-                )
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
-                labels.indices.forEach { index ->
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(AapsSpacing.chipProgressHeight)
-                            .background(
-                                color = if (index <= currentStep) {
-                                    MaterialTheme.colorScheme.primary
-                                } else {
-                                    MaterialTheme.colorScheme.surfaceVariant
-                                },
-                                shape = RoundedCornerShape(AapsSpacing.extraSmall),
-                            ),
-                    )
-                }
-            }
-        }
-    } else {
-        Row(
-            modifier = modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.Top,
-        ) {
-            labels.forEachIndexed { index, label ->
-                if (index > 0) {
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(top = AapsSpacing.large)
-                            .height(AapsSpacing.extraSmall)
-                            .background(
-                                if (index <= currentStep) {
-                                    MaterialTheme.colorScheme.primary
-                                } else {
-                                    MaterialTheme.colorScheme.surfaceVariant
-                                },
-                            ),
-                    )
-                }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(AapsSpacing.small),
-                    modifier = Modifier.width(AapsSpacing.xxLarge * 3),
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(AapsSpacing.chipIconSize)
-                            .background(
-                                color = if (index <= currentStep) {
-                                    MaterialTheme.colorScheme.primary
-                                } else {
-                                    MaterialTheme.colorScheme.surfaceVariant
-                                },
-                                shape = CircleShape,
-                            ),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = "${index + 1}",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = if (index <= currentStep) {
-                                MaterialTheme.colorScheme.onPrimary
-                            } else {
-                                MaterialTheme.colorScheme.onSurfaceVariant
-                            },
-                        )
-                    }
-                    Text(
-                        text = label,
-                        style = MaterialTheme.typography.labelSmall,
-                        textAlign = TextAlign.Center,
-                        color = if (index <= currentStep) {
-                            MaterialTheme.colorScheme.onSurface
-                        } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant
-                        },
-                    )
-                }
-            }
-        }
-    }
-}

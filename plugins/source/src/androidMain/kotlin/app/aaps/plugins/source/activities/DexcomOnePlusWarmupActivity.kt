@@ -15,6 +15,7 @@ import app.aaps.plugins.dexcomoneplus.OnePlusLogMarkers
 import app.aaps.plugins.dexcomoneplus.identity.OnePlusSensorStore
 import app.aaps.plugins.dexcomoneplus.setContext
 import app.aaps.plugins.source.compose.DexcomOnePlusWarmupScreen
+import app.aaps.plugins.source.phoneBluetoothOn
 import dev.zacsweers.metro.Inject
 import java.text.DateFormat
 import java.util.Date
@@ -58,14 +59,7 @@ class DexcomOnePlusWarmupActivity : MetroAppCompatActivity() {
                         onOpenStart = {
                             startActivity(Intent(this, DexcomOnePlusStartActivity::class.java))
                         },
-                        onOpenStatus = {
-                            // CLEAR_TOP so coming here from the status screen returns to that
-                            // instance instead of stacking a second one on every round trip.
-                            startActivity(
-                                Intent(this, DexcomOnePlusStatusActivity::class.java)
-                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                            )
-                        },
+                        bluetoothOn = { phoneBluetoothOn(applicationContext) },
                         formatTime = { epochMs -> DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(epochMs)) },
                     )
                 }

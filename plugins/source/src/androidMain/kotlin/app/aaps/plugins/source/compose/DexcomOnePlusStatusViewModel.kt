@@ -15,7 +15,6 @@ import app.aaps.plugins.dexcomoneplus.OnePlusCgmDrivers
 import app.aaps.plugins.dexcomoneplus.OnePlusWarmupState
 import app.aaps.plugins.source.DexcomOnePlusHost
 import app.aaps.plugins.source.DexcomOnePlusPlugin
-import app.aaps.plugins.source.DexcomOnePlusSensorStartCorrection
 import app.aaps.plugins.source.DexcomOnePlusWatchHandover
 import app.aaps.plugins.source.SourceStrings
 import app.aaps.plugins.source.keys.DexcomOnePlusBooleanKey
@@ -46,8 +45,8 @@ private const val GLUCOSE_REFRESH_MILLIS = 30_000L
  *
  * It reads what the status Activity used to read itself: the driver every second, the newest
  * reading every 30 seconds, and the slot flows of the plugin as they change. It only reads,
- * except for the three actions the person starts by hand: promote, cancel the pre-soak, and
- * correct the insertion date. All three are the plugin's own functions, with their own checks.
+ * except for the two actions the person starts by hand: promote and cancel the pre-soak. Both are
+ * the plugin's own functions, with their own checks.
  */
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
@@ -72,6 +71,7 @@ class DexcomOnePlusStatusViewModel(
         val sendCalibrationToSensor: Boolean,
         val nowMs: Long,
         val sensor: DexcomOnePlusSensorFacts,
+        val bluetoothOff: Boolean,
     )
 
     init {
@@ -94,6 +94,7 @@ class DexcomOnePlusStatusViewModel(
                     sendCalibrationToSensor = preferences.get(DexcomOnePlusBooleanKey.SendCalibrationToSensor),
                     nowMs = dateUtil.now(),
                     sensor = plugin.sensorFacts(),
+                    bluetoothOff = !host.bluetoothOn(),
                 ),
             )
             delay(DRIVER_REFRESH_MILLIS)
@@ -128,6 +129,7 @@ class DexcomOnePlusStatusViewModel(
             nowMs = driver.nowMs,
             sensor = driver.sensor,
             warmupEndsAtMs = driver.state.endsAtEpochMs,
+            bluetoothOff = driver.bluetoothOff,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000L), null)
 
@@ -163,9 +165,6 @@ class DexcomOnePlusStatusViewModel(
         plugin.cancelStaging()
         _promoteResult.value = null
     }
-
-    suspend fun correctSensorStart(startMs: Long): DexcomOnePlusSensorStartCorrection.Verdict =
-        plugin.correctProductionSensorStart(startMs)
 
     /** Direct-to-watch for the production sensor. Its card is drawn only where [DexcomOnePlusWatchHandover.isSupported]. */
     val watchHandover: DexcomOnePlusWatchHandover get() = plugin.watchHandover

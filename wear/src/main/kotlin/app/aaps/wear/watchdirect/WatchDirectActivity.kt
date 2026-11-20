@@ -7,6 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.text.format.DateFormat
 import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -31,13 +32,15 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.wear.R
 import app.aaps.wear.di.WearMetroActivity
 import dev.zacsweers.metro.Inject
+import java.util.Date
 
 /**
  * Direct-to-watch on the watch itself: what the watch's own link is doing, the Bluetooth permission
  * and unrestricted battery use. Keeps the screen on while the sensor's pairing request is due, so it
  * is not missed behind the watch face.
  *
- * Opened from the notifications of [WatchDirect] and [WatchDirectService].
+ * Opened from the Status menu of the watch app while the feature is on, and from the notifications
+ * of [WatchDirect] and [WatchDirectService].
  */
 class WatchDirectActivity : WearMetroActivity() {
 
@@ -70,6 +73,24 @@ class WatchDirectActivity : WearMetroActivity() {
                         }
                         item {
                             Text(stringResource(stateText(state)), style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
+                        }
+                        if (state == EventData.CgmWatchState.PAIRING) {
+                            item {
+                                Text(stringResource(R.string.watch_direct_pairing_hint), style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+                            }
+                        }
+                        // Once paired: when the watch last heard the sensor, so the wearer can see
+                        // that the link is alive without waiting for a face to change.
+                        if (state == EventData.CgmWatchState.WAITING || state == EventData.CgmWatchState.CONNECTED) {
+                            item {
+                                val at = status.latestReadingAt
+                                Text(
+                                    text = if (at != null) stringResource(R.string.watch_direct_last_reading, DateFormat.getTimeFormat(this@WatchDirectActivity).format(Date(at)))
+                                    else stringResource(R.string.watch_direct_no_reading),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
                         if (state == EventData.CgmWatchState.NEEDS_PERMISSION) {
                             item {
@@ -137,8 +158,8 @@ class WatchDirectActivity : WearMetroActivity() {
         EventData.CgmWatchState.NEEDS_PERMISSION -> R.string.watch_direct_notification_permission
         EventData.CgmWatchState.BLUETOOTH_OFF    -> R.string.watch_direct_state_bluetooth_off
         EventData.CgmWatchState.PAIRING          -> R.string.watch_direct_notification_pairing
-        EventData.CgmWatchState.WAITING,
-        EventData.CgmWatchState.CONNECTED        -> R.string.watch_direct_state_running
+        EventData.CgmWatchState.WAITING          -> R.string.watch_direct_state_waiting
+        EventData.CgmWatchState.CONNECTED        -> R.string.watch_direct_state_connected
         EventData.CgmWatchState.REFUSED          -> R.string.watch_direct_notification_refused
     }
 }

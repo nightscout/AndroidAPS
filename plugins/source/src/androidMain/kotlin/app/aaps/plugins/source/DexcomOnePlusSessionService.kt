@@ -1,18 +1,14 @@
 package app.aaps.plugins.source
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
-import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
-import app.aaps.plugins.source.activities.DexcomOnePlusStatusActivity
-import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.objects.workflow.MetroService
+import dev.zacsweers.metro.Inject
 
 /**
  * Keeps the Dexcom ONE+ / G7 Bluetooth session alive while the screen is off.
@@ -29,20 +25,23 @@ import app.aaps.core.ui.R as CoreUiR
  * foreground service for as long as a sensor session is wanted, and it disappears the moment it is
  * not — see [start] and [stop].
  *
- * The notification is separate from [DexcomOnePlusWarmupNotification]: that one is about warm-up
- * progress and clears at READY, while this one has to stay for the whole session or the service is
- * not a foreground service any more. Both live on the same channel, so the user has one switch.
+ * It has no notification of its own. A foreground service must show one, and this one shows the
+ * app's permanent notification ([NotificationHolder]), as the location service of the automation
+ * plugin does. Several foreground services may share one notification. Its own "Keeping the sensor
+ * connected" line said nothing the user could act on, and it came back after every app start.
+ * What the user needs to know about the sensor is in [DexcomOnePlusWarmupNotification].
  */
-class DexcomOnePlusSessionService : Service() {
+class DexcomOnePlusSessionService : MetroService() {
+
+    @Inject lateinit var notificationHolder: NotificationHolder
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        createChannel()
         ServiceCompat.startForeground(
             this,
-            NOTIFICATION_ID,
-            buildNotification(),
+            notificationHolder.notificationID,
+            notificationHolder.notification,
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
             } else {
@@ -54,51 +53,13 @@ class DexcomOnePlusSessionService : Service() {
         return START_NOT_STICKY
     }
 
-    private fun buildNotification() =
-        NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(CoreUiR.drawable.notif_icon)
-            .setContentTitle(getString(R.string.dexcom_oneplus_notif_title))
-            .setContentText(getString(R.string.dexcom_oneplus_notif_session_alive))
-            .setOngoing(true)
-            .setOnlyAlertOnce(true)
-            .setShowWhen(false)
-            .setContentIntent(openStatusIntent())
-            .build()
-
-    private fun openStatusIntent(): PendingIntent =
-        PendingIntent.getActivity(
-            this,
-            REQUEST_CODE,
-            Intent(this, DexcomOnePlusStatusActivity::class.java)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP),
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-        )
-
-    private fun createChannel() {
-        val manager = getSystemService(NotificationManager::class.java) ?: return
-        if (manager.getNotificationChannel(CHANNEL_ID) != null) return
-        manager.createNotificationChannel(
-            NotificationChannel(
-                CHANNEL_ID,
-                getString(R.string.dexcom_oneplus_notif_channel_name),
-                DEXCOM_ONEPLUS_STATUS_CHANNEL_IMPORTANCE,
-            ).apply { description = getString(R.string.dexcom_oneplus_notif_channel_desc) },
-        )
-    }
-
     companion object {
-
-        private const val CHANNEL_ID = "DEXCOM_ONEPLUS_STATUS"
-
-        /** Distinct from the warm-up notification id: both may be shown at the same time. */
-        private const val NOTIFICATION_ID = 8932
-        private const val REQUEST_CODE = 8932
 
         /**
          * Ask the platform for a `connectedDevice` foreground service.
          *
-         * Safe to call repeatedly: a second start on a running service only re-posts the same
-         * notification. Failures are swallowed on purpose — a sensor session that cannot get a
+         * Safe to call repeatedly: a second start on a running service only shows the same
+         * notification again. Failures are swallowed on purpose — a sensor session that cannot get a
          * service is worse off, but it must still run.
          */
         fun start(context: Context) {

@@ -306,10 +306,7 @@ class DexcomOnePlusPromotionOrderTest : TestBase() {
     @Test
     fun `promotion texts distinguish refusal, a failed bound, and a later failure`() {
         val english = readResource("src/androidMain/res/values/strings.xml")
-        assertThat(english).contains(
-            "Sensor promoted, but older calibration entries could not be ignored. " +
-                "Remove fingerstick calibrations taken before this switch, then calibrate again if needed.",
-        )
+        assertThat(english).contains(BOUND_FAILED_TEXT)
         assertThat(DexcomOnePlusStatusState.promotionMessage(PromotionResult.Rejected(PromotionRejectReason.STAGING_ABSENT)))
             .isEqualTo(SourceStrings.dexcom_oneplus_staging_promote_rejected_absent)
         assertThat(DexcomOnePlusStatusState.promotionMessage(PromotionResult.OkBoundFailed))
@@ -471,11 +468,11 @@ class DexcomOnePlusPromotionOrderTest : TestBase() {
         private const val KEY_MAC = "last_mac"
         private const val HOUR_MS = 60L * 60L * 1000L
         private const val BOUND_FAILED_TEXT =
-            "Sensor promoted, but older calibration entries could not be ignored. " +
-                "Remove fingerstick calibrations taken before this switch, then calibrate again if needed."
+            "The switch was made, but older calibration entries could not be ignored. " +
+                "Remove finger prick calibrations taken before this switch, then calibrate again if needed."
         private const val FOLLOW_UP_TEXT =
-            "Sensor promoted, but reconnecting it failed. The production sensor is the one just promoted."
+            "The switch was made, but reconnecting the sensor failed. The sensor in use is now the one that was the pre-soak sensor."
         private const val FOLLOW_UP_NO_IDENTITY_TEXT =
-            "A step after the exchange failed, and the production sensor identity is missing."
+            "A step after the switch failed, and the app does not know which sensor is in use."
     }
 }

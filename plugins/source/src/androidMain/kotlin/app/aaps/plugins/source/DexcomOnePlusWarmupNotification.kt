@@ -9,6 +9,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import app.aaps.plugins.dexcomoneplus.OnePlusWarmupState
+import app.aaps.plugins.source.activities.DexcomOnePlusStatusActivity
 import app.aaps.plugins.source.activities.DexcomOnePlusWarmupActivity
 import app.aaps.plugins.source.compose.DexcomOnePlusWarmupCountdown
 import app.aaps.plugins.source.compose.toCgmWarmupInfo
@@ -44,8 +45,9 @@ class DexcomOnePlusWarmupNotification(private val context: Context) {
 
             else                           -> Unit
         }
+        val now = System.currentTimeMillis()
         val reconnect = if (state.phase == OnePlusWarmupState.Phase.RECONNECTING) {
-            DexcomOnePlusReconnectNotice.of(state, System.currentTimeMillis())
+            DexcomOnePlusReconnectNotice.of(state, now, bluetoothOff = !phoneBluetoothOn(context))
         } else null
         if (reconnect == DexcomOnePlusReconnectNotice.HIDE) {
             cancel()
@@ -59,7 +61,7 @@ class DexcomOnePlusWarmupNotification(private val context: Context) {
             .setOnlyAlertOnce(true)
             .setOngoing(ongoing)
             .setAutoCancel(!ongoing)
-            .setContentIntent(openDetailIntent())
+            .setContentIntent(openDetailIntent(DexcomOnePlusReconnectNotice.opensWarmupPage(state, now)))
 
         when (state.phase) {
             OnePlusWarmupState.Phase.PAIRING      ->
@@ -75,6 +77,15 @@ class DexcomOnePlusWarmupNotification(private val context: Context) {
             OnePlusWarmupState.Phase.RECONNECTING -> when (reconnect) {
                 // Between two radio windows of a warm-up: the countdown, as while warming.
                 DexcomOnePlusReconnectNotice.WARMUP_COUNTDOWN -> showWarmupCountdown(builder, state)
+
+                // The phone's own Bluetooth is off. No busy bar: nothing is being tried.
+                DexcomOnePlusReconnectNotice.BLUETOOTH_OFF    ->
+                    builder.setContentText(context.getString(R.string.dexcom_oneplus_bluetooth_off))
+                        .setStyle(
+                            NotificationCompat.BigTextStyle()
+                                .bigText(context.getString(R.string.dexcom_oneplus_bluetooth_off)),
+                        )
+                        .setShowWhen(false)
 
                 // A reconnect that is really a long ADV silence must say so: the field case showed
                 // an unchanging "Reconnecting…" for 18 min while nothing was happening.
@@ -158,13 +169,20 @@ class DexcomOnePlusWarmupNotification(private val context: Context) {
         }
     }
 
-    private fun openDetailIntent(): PendingIntent {
-        val intent = Intent(context, DexcomOnePlusWarmupActivity::class.java).apply {
+    /**
+     * Where a tap goes: the warm-up page while a warm-up runs or has failed, the status screen in
+     * every other state. The warm-up page says nothing useful about a sensor that is long past its
+     * warm-up, and its title would be wrong there.
+     */
+    private fun openDetailIntent(warmupPage: Boolean): PendingIntent {
+        val target = if (warmupPage) DexcomOnePlusWarmupActivity::class.java else DexcomOnePlusStatusActivity::class.java
+        val intent = Intent(context, target).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
         }
         return PendingIntent.getActivity(
             context,
-            0,
+            // One request code per target, so the two do not replace each other's extras or flags.
+            if (warmupPage) REQUEST_WARMUP else REQUEST_STATUS,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
@@ -189,8 +207,11 @@ class DexcomOnePlusWarmupNotification(private val context: Context) {
         private const val CHANNEL_ID = "DEXCOM_ONEPLUS_STATUS"
         private const val NOTIFICATION_ID = 8931
 
-        /** Not 8931 (warm-up) and not 8932 (session foreground service): those replace each other. */
+        /** Not 8931 (warm-up): the two would replace each other. */
         private const val ALERT_ID = 8933
+
+        private const val REQUEST_WARMUP = 0
+        private const val REQUEST_STATUS = 1
     }
 }
 
@@ -218,7 +239,13 @@ internal enum class DexcomOnePlusReconnectNotice {
     STALE_MAC,
 
     /** A reconnect after an error, or a refusal pause: shown as "Reconnecting". */
-    RECONNECTING;
+    RECONNECTING,
+
+    /**
+     * The phone's Bluetooth is off. The driver hears nothing then and cannot tell that from a silent
+     * sensor, so it would say "no signal" and later "wrong sensor". This says what is really wrong.
+     */
+    BLUETOOTH_OFF;
 
     companion object {
 
@@ -229,11 +256,18 @@ internal enum class DexcomOnePlusReconnectNotice {
         private val NORMAL_CYCLE_MESSAGES = setOf("egv_loop_exit", "waiting_for_next_adv", "waiting_for_adv")
         private const val CONNECT_ATTEMPT_PREFIX = "connect_attempt_"
 
-        fun of(state: OnePlusWarmupState, nowMs: Long): DexcomOnePlusReconnectNotice {
+        /**
+         * @param bluetoothOff the phone's Bluetooth is switched off. It takes the place of every
+         *   notice about a silent or wrong sensor, but it does not show sooner than they would:
+         *   the normal wait between two readings stays hidden.
+         */
+        fun of(state: OnePlusWarmupState, nowMs: Long, bluetoothOff: Boolean = false): DexcomOnePlusReconnectNotice {
             val silenceMinutes = state.advSilenceMinutes ?: 0L
             val message = state.message
             val normalCycle = message == null || message in NORMAL_CYCLE_MESSAGES || message.startsWith(CONNECT_ATTEMPT_PREFIX)
+            val problem = state.staleMacSuspected || silenceMinutes >= NO_SIGNAL_NOTICE_MINUTES || !normalCycle
             return when {
+                bluetoothOff && problem                        -> BLUETOOTH_OFF
                 state.staleMacSuspected                        -> STALE_MAC
                 silenceMinutes >= NO_SIGNAL_NOTICE_MINUTES     -> NO_SIGNAL
                 !normalCycle                                   -> RECONNECTING
@@ -241,5 +275,16 @@ internal enum class DexcomOnePlusReconnectNotice {
                 else                                           -> HIDE
             }
         }
+
+        /**
+         * True when a tap on the notification opens the warm-up page: a sensor that pairs or warms
+         * up, a failed start (the page offers "try again"), or a warm-up whose end is still ahead.
+         * Otherwise the tap opens the status screen.
+         */
+        fun opensWarmupPage(state: OnePlusWarmupState, nowMs: Long): Boolean =
+            state.phase == OnePlusWarmupState.Phase.PAIRING ||
+                state.phase == OnePlusWarmupState.Phase.WARMING ||
+                state.phase == OnePlusWarmupState.Phase.FAILED ||
+                (state.endsAtEpochMs ?: 0L) > nowMs
     }
 }

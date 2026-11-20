@@ -66,6 +66,8 @@ fun PreferenceScreenView(
         snackbarScope.launch { snackbarHostState.showSnackbar(message) }
     }
     var composeScreen: ComposeScreenContent? by remember { mutableStateOf(null) }
+    // Kept here, above the early return below, so back from an opened screen returns to the same place.
+    val listState = rememberLazyListState()
 
     // Auto-expand the main section
     LaunchedEffect(screenDef.key) {
@@ -108,7 +110,6 @@ fun PreferenceScreenView(
                     )
                 }
             ) { paddingValues ->
-                val listState = rememberLazyListState()
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()

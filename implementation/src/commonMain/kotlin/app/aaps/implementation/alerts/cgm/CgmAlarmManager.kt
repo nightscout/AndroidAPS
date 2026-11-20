@@ -271,7 +271,9 @@ class CgmAlarmManager(
 
     private fun actionsFor(type: CgmAlarmType): List<NotificationAction> = buildList {
         add(NotificationAction(CoreUiStrings.cgm_alarm_acknowledge) { acknowledge(type) })
-        if (type.group == CgmAlarmGroup.LOW) add(NotificationAction(CoreUiStrings.alert_hypo_treated) { acknowledgeHypoTreated(HYPO_TREATED_SNOOZE_MS) })
+        // Only where glucose is low now. A fall rate or an "urgent low soon" alarm is a warning
+        // before the hypo, so there is nothing treated yet to report.
+        if (type in HYPO_TREATED_ALARMS) add(NotificationAction(CoreUiStrings.alert_hypo_treated) { acknowledgeHypoTreated(HYPO_TREATED_SNOOZE_MS) })
     }
 
     /** Look again at [nextCheckAt] even when no reading comes, for the delays, reminders and the mute end. */
@@ -309,6 +311,9 @@ class CgmAlarmManager(
 
         /** "Hypo treated": about how long carbs need to raise glucose. */
         val HYPO_TREATED_SNOOZE_MS: Long = T.mins(20).msecs()
+
+        /** The alarms that offer the "Hypo treated" button: the ones that mean glucose is low now. */
+        val HYPO_TREATED_ALARMS: Set<CgmAlarmType> = setOf(CgmAlarmType.LOW, CgmAlarmType.URGENT_LOW)
 
         /** The rate for urgent low soon is taken over this many minutes. */
         const val RATE_WINDOW_MIN: Int = 15

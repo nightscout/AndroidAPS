@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.PromotionRejectReason
 import app.aaps.core.interfaces.source.PromotionResult
 import app.aaps.core.interfaces.source.StagingState
-import app.aaps.core.keys.interfaces.PreferenceItem
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.dexcomoneplus.OnePlusCgmDriver
 import app.aaps.plugins.dexcomoneplus.OnePlusCgmDriverStub
@@ -279,7 +278,6 @@ class DexcomOnePlusPluginLifetimeTest : TestBase() {
         override fun cancelWarmupNotification() = Unit
         override fun alert(message: String) = Unit
         override fun screenScanner(): OnePlusBleScanner = OnePlusBleScannerStub()
-        override fun screenItems(plugin: DexcomOnePlusPlugin): List<PreferenceItem> = emptyList()
         override fun openScreen(screen: DexcomOnePlusHost.Screen) = Unit
         override suspend fun driverLog(): DexcomOnePlusHost.DriverLog =
             DexcomOnePlusHost.DriverLog(emptyList(), SourceStrings.dexcom_oneplus_log_note_file)

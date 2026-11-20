@@ -20,6 +20,7 @@ import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.protobuf.ProtoBuf
 import java.io.InputStream
@@ -63,11 +64,25 @@ class ComplicationDataRepository(
     /**
      * Reactive Flow of complication data
      * Complications should collect this Flow to get automatic updates
+     *
+     * While the watch shows its own sensor reading and the phone has had no new reading for too long,
+     * the values only the phone knows (IOB, COB, basal) come out blank and the predictions empty, see
+     * [WatchDirectReadings.withoutOldPhoneValues]. The store keeps the last values: the blank is made
+     * here, on the way out, so every face, complication and tile gets it, and the next status from
+     * the phone shows at once.
      */
     val complicationData: Flow<ComplicationData> = dataStore.data
         .catch { exception ->
             aapsLogger.error(LTag.WEAR, "Error reading complication data", exception)
             emit(ComplicationData()) // Emit default on error
+        }
+        .map { stored ->
+            if (WatchDirectReadings.phoneValuesAreOld(stored.bgData.fromSensor, stored.phoneReadingTimestamp, System.currentTimeMillis()))
+                stored.copy(
+                    statusData = WatchDirectReadings.withoutOldPhoneValues(stored.statusData),
+                    treatmentData = WatchDirectReadings.withoutOldPredictions(stored.treatmentData)
+                )
+            else stored
         }
 
     /**
@@ -80,7 +95,12 @@ class ComplicationDataRepository(
                 when (singleBg.dataset) {
                     // A newer reading the watch took from the sensor itself (direct-to-watch) is not
                     // replaced by an older one from the phone. The phone's copy of the same reading wins.
-                    0 -> current.copy(bgData = WatchDirectReadings.choose(current.bgData, singleBg), lastUpdateTimestamp = System.currentTimeMillis())
+                    0 -> current.copy(
+                        bgData = WatchDirectReadings.choose(current.bgData, singleBg),
+                        lastUpdateTimestamp = System.currentTimeMillis(),
+                        // The reading's own time. The phone sends an old reading again when it has no new one.
+                        phoneReadingTimestamp = if (singleBg.fromSensor) current.phoneReadingTimestamp else maxOf(current.phoneReadingTimestamp, singleBg.timeStamp)
+                    )
                     1 -> current.copy(bgData1 = singleBg, lastUpdateTimestamp = System.currentTimeMillis())
                     2 -> current.copy(bgData2 = singleBg, lastUpdateTimestamp = System.currentTimeMillis())
                     else -> {
@@ -139,13 +159,14 @@ class ComplicationDataRepository(
     }
 
     /**
-     * Update Graph data from phone
+     * Update Graph data from phone. Readings the watch took from the sensor itself (direct-to-watch)
+     * stay where the phone has none of that time, see [WatchDirectReadings.keepOwnReadings].
      */
     suspend fun updateGraphData(graphData: EventData.GraphData) {
         try {
             dataStore.updateData { current ->
                 current.copy(
-                    graphData = graphData,
+                    graphData = EventData.GraphData(WatchDirectReadings.keepOwnReadings(graphData.entries, current.graphData.entries)),
                     lastUpdateTimestamp = System.currentTimeMillis()
                 )
             }

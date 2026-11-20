@@ -147,6 +147,10 @@ fun AllPreferencesScreen(
         snackbarScope.launch { snackbarHostState.showSnackbar(message) }
     }
     var composeScreen: ComposeScreenContent? by remember { mutableStateOf(null) }
+    // Kept here, above the early return below: a screen opened from a row replaces the list, and
+    // state remembered inside the list would be lost. Back then returns to the same place.
+    val listState = rememberLazyListState()
+    val sectionState = rememberPreferenceSectionState()
 
     NavigationBackHandler(
         state = rememberNavigationEventState(NavigationEventInfo.None),
@@ -183,8 +187,6 @@ fun AllPreferencesScreen(
                     )
                 }
             ) { paddingValues ->
-                val listState = rememberLazyListState()
-                val sectionState = rememberPreferenceSectionState()
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()

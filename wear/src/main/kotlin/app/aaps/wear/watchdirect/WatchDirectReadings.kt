@@ -3,6 +3,7 @@ package app.aaps.wear.watchdirect
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.interfaces.alerts.CgmAlarmType
 import app.aaps.core.interfaces.rx.weardata.EventData
 import java.util.Locale
 import kotlin.math.abs
@@ -127,6 +128,17 @@ object WatchDirectReadings {
         else                -> if (stored.fromSensor && stored.timeStamp > incoming.timeStamp + SAME_READING_MS) stored else incoming
     }
 
+    /**
+     * True when storing [reading], one of the watch's own, would change nothing: the value on the
+     * face ([shown]) is as new, and [graph] already has a reading of that time.
+     *
+     * It is the two rules of [choose] and [mergeIntoGraph] asked beforehand, so the caller can leave
+     * out the write and the redraw. A reading that is new for the face or for the graph is never
+     * left out.
+     */
+    fun addsNothing(reading: EventData.SingleBg, shown: EventData.SingleBg, graph: List<EventData.SingleBg>): Boolean =
+        choose(shown, reading) === shown && graph.any { abs(it.timeStamp - reading.timeStamp) < SAME_READING_MS }
+
     /** [entries] with [added] put in where no reading of the same time is yet, and old ones dropped. */
     fun mergeIntoGraph(entries: List<EventData.SingleBg>, added: List<EventData.SingleBg>): ArrayList<EventData.SingleBg> {
         val merged = ArrayList(entries)
@@ -138,6 +150,94 @@ object WatchDirectReadings {
         merged.sortBy { it.timeStamp }
         return merged
     }
+
+    /**
+     * The graph the phone has just sent, with the watch's own readings of the graph it replaces kept
+     * where the phone has no reading of that time.
+     *
+     * The phone sends its whole graph with every sync, also while it cannot reach the sensor. Taking
+     * it as it is wiped the watch's own readings each time, so the graph stood still and the next
+     * delta had no earlier reading to count from. When the phone has the reading too (its own copy,
+     * or one the sensor filled in later), the phone's copy is the one that stays.
+     *
+     * Returns [fromPhone] itself when the watch has nothing of its own to keep.
+     */
+    fun keepOwnReadings(fromPhone: ArrayList<EventData.SingleBg>, replaced: List<EventData.SingleBg>): ArrayList<EventData.SingleBg> {
+        val own = replaced.filter { it.fromSensor }
+        return if (own.isEmpty()) fromPhone else mergeIntoGraph(fromPhone, own)
+    }
+
+    /** The id the phone sends with its signal loss alarm. */
+    val SIGNAL_LOSS_ALARM_ID = CgmAlarmType.SIGNAL_LOSS.id
+
+    /** A reading of the watch's own is fresh for two reading intervals and a minute of margin. */
+    const val OWN_READING_FRESH_MS = 11 * 60_000L
+
+    /**
+     * True when the phone's signal loss alarm ([alarmId]) arrives while this watch reads the sensor
+     * itself: the value on the face ([shown]) is the watch's own and fresh. Only with direct to
+     * watch can the shown value be the watch's own, so nothing changes without it.
+     */
+    fun phoneLostSignalWhileWatchReads(alarmId: String, shown: EventData.SingleBg, now: Long): Boolean =
+        alarmId == SIGNAL_LOSS_ALARM_ID && shown.fromSensor && now - shown.timeStamp in 0..OWN_READING_FRESH_MS
+
+    /**
+     * The time the phone counts as last heard, after a reading from it with the time [readingAt].
+     *
+     * The reading's own time, never the time the message came: a reading that is sent again does not
+     * move it. [known] only goes forward, so an old reading sent again after a newer one changes nothing.
+     */
+    fun newestPhoneReading(known: Long, readingAt: Long): Long = maxOf(known, readingAt)
+
+    /**
+     * True when the values only the phone knows are too old to show.
+     *
+     * The glucose on the face is the watch's own ([shownFromSensor]), so it looks current, and the
+     * newest reading the phone has is older than [PHONE_SILENT_MS]. A phone without a new reading
+     * runs no loop, so its IOB, COB and basal are not what is true now.
+     *
+     * [phoneReadingAt] is the time of that reading itself, not the time a message arrived. A phone
+     * that is away from the sensor can still reach the watch over Wi-Fi or LTE, and it then sends
+     * its old reading and its old status again and again: by arrival time it would never look old.
+     *
+     * A [phoneReadingAt] of 0 is "not known yet" and never counts as old. Without direct to watch
+     * the shown glucose is never the watch's own, so nothing changes there.
+     */
+    fun phoneValuesAreOld(shownFromSensor: Boolean, phoneReadingAt: Long, now: Long): Boolean =
+        shownFromSensor && phoneReadingAt > 0L && now - phoneReadingAt > PHONE_SILENT_MS
+
+    /**
+     * [status] with the values that go out of date while the phone is away shown as "no value":
+     * IOB, COB, the basal rate and the lines built from them. The watch cannot work them out itself
+     * (it has no profile and no pump history), and a blank is safer than a number that is an hour old.
+     *
+     * What does not change by itself stays: the temp target, the batteries, the reservoir. The time
+     * of the last loop run stays too, so a face that shows the loop age keeps counting up.
+     */
+    fun withoutOldPhoneValues(status: EventData.Status): EventData.Status = status.copy(
+        externalStatus = NO_VALUE,
+        iobSum = NO_VALUE,
+        iobDetail = "",
+        cob = NO_COB,
+        currentBasal = NO_BASAL,
+        bgi = NO_VALUE,
+        cobValue = -1.0
+    )
+
+    /**
+     * [treatments] without the prediction lines, for the same case as [withoutOldPhoneValues].
+     *
+     * The predictions come from the phone's last loop run and start at the glucose it saw then. Next
+     * to the watch's own newer readings they no longer meet the curve, and they still look like a
+     * forecast for now. Boluses, carbs and temp basals stay: they show what did happen.
+     */
+    fun withoutOldPredictions(treatments: EventData.TreatmentData): EventData.TreatmentData =
+        if (treatments.predictions.isEmpty()) treatments else treatments.copy(predictions = ArrayList())
+
+    /** The texts the watch shows for a status value it has never received (see `ComplicationData`). */
+    const val NO_VALUE = "--"
+    const val NO_COB = "--g"
+    const val NO_BASAL = "-.--U/h"
 
     enum class Low { LOW, URGENT_LOW }
 

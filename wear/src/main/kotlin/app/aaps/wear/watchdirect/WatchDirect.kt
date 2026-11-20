@@ -77,7 +77,14 @@ class WatchDirect(
 
     private val link: WatchSensorLink? by lazy { if (isSupported) OnePlusWatchSensorLink(context) else null }
 
-    /** Start time counts as "phone heard": the phone gets its quiet minutes after a restart of the watch app. */
+    /**
+     * The time of the newest reading the phone has: the reading's own time, not when its message
+     * arrived. A phone that is away from the sensor but reaches the watch over Wi-Fi or LTE sends its
+     * old reading again with every sync. By arrival time it looked present, and the watch kept its
+     * own low alarm quiet while the phone could not see the glucose at all.
+     *
+     * Start time counts as "phone heard": the phone gets its quiet minutes after a restart of the watch app.
+     */
     private var lastPhoneReadingAt = System.currentTimeMillis()
     private var raisedLow: WatchDirectReadings.Low? = null
     private var raisedLowAt = 0L
@@ -88,6 +95,9 @@ class WatchDirect(
 
     /** The last problem the link gave up on, for the status. Cleared by a connection. */
     private var refusal: String? = null
+
+    /** True once this app run has asked the link to connect, so a running pairing is not started twice. */
+    private var connectAsked = false
 
     private val _status = MutableStateFlow(EventData.CgmWatchStatus(EventData.CgmWatchState.OFF))
 
@@ -106,9 +116,16 @@ class WatchDirect(
      * itself rather than at the Android version: the version does not say whether a maker kept the
      * setting, and a watch that has it must still be asked, or it may stop the link in the background.
      * The app info screen does not count, it has no battery choice on these watches.
+     *
+     * A screen that answers is not enough. A Galaxy Watch 5 on Wear OS 6 answers both requests with
+     * an empty stand-in screen of the watch settings (`FakeSettingsActivity`): it opens and closes
+     * at once, so the button did nothing and the warning never went away. That stand-in does not count.
      */
     private val canAskForUnrestrictedBattery: Boolean by lazy {
-        val found = batterySettingsIntents(context.packageName).any { context.packageManager.resolveActivity(it, 0) != null }
+        val found = batterySettingsIntents(context.packageName).any { intent ->
+            val screen = context.packageManager.resolveActivity(intent, 0)?.activityInfo?.name
+            screen != null && !screen.endsWith(STAND_IN_SETTINGS_SCREEN)
+        }
         if (!found) aapsLogger.info(LTag.WEAR, "Direct to watch: this watch has no battery setting to ask for, the battery warning is not shown")
         found
     }
@@ -127,7 +144,9 @@ class WatchDirect(
         started = true
         scope.launch { rxBus.toFlow(EventData.CgmWatchDirect::class).collect { handle(it) } }
         scope.launch {
-            rxBus.toFlow(EventData.SingleBg::class).collect { if (it.dataset == 0 && !it.fromSensor) lastPhoneReadingAt = System.currentTimeMillis() }
+            rxBus.toFlow(EventData.SingleBg::class).collect {
+                if (it.dataset == 0 && !it.fromSensor) lastPhoneReadingAt = WatchDirectReadings.newestPhoneReading(lastPhoneReadingAt, it.timeStamp)
+            }
         }
         val link = link
         if (link == null) {
@@ -136,7 +155,10 @@ class WatchDirect(
         }
         link.setListener(object : WatchSensorLink.Listener {
             override fun onReading(reading: WatchSensorReading) {
-                scope.launch { onReading(reading) }
+                // The name must differ from this method. With the same name the call inside meant
+                // this method again, not the one of WatchDirect: the reading was never handled, and
+                // the app launched the same call without end (a full processor core, for hours).
+                scope.launch { showReading(reading) }
             }
 
             override fun onConnected(connected: Boolean) {
@@ -155,8 +177,14 @@ class WatchDirect(
         })
         // A sensor that was set up before the watch app restarted: pick it up again.
         scope.launch {
-            if (link.address() != null && hasPermissions) {
-                link.resume()
+            // Not while paused: direct to watch was turned off, and the sensor is only kept.
+            if (link.address() != null && !link.isPaused() && hasPermissions) {
+                // Resume needs a key. An app that was restarted before the first pairing has none,
+                // so it starts the pairing again by itself and does not wait for the phone.
+                if (!link.resume() && !link.hasKey()) {
+                    connectAsked = link.pairAgain()
+                    if (connectAsked) aapsLogger.info(LTag.WEAR, "Direct to watch: not paired yet, pairing started again after a restart")
+                }
                 WatchDirectService.start(context)
             }
             report(describe())
@@ -167,7 +195,7 @@ class WatchDirect(
     fun retry() {
         scope.launch {
             waitingForPermission?.let { handle(it) } ?: run {
-                link?.let { if (it.address() != null && hasPermissions) it.resume() }
+                link?.let { if (it.address() != null && !it.isPaused() && hasPermissions) it.resume() }
                 report(describe())
             }
         }
@@ -198,19 +226,32 @@ class WatchDirect(
                     refusal = null
                     aapsLogger.info(LTag.WEAR, "Direct to watch: set up for ${message.sensorName ?: address}")
                     link.connect(address, pairingCode, message.serial)
+                    connectAsked = true
                 } else if (!link.isConnected()) {
                     // The phone sends the setting again each time the watch asks for data. A link that
                     // is already running is left alone; resume does nothing then.
-                    link.resume()
+                    val resumed = link.resume()
+                    // Resume needs a key. A watch app that was restarted before the first pairing
+                    // has the sensor and its code but no key, so nothing was running any more and
+                    // the pairing request never came back. Start the pairing again, once per app run.
+                    if (!resumed && !link.hasKey() && !connectAsked) {
+                        aapsLogger.info(LTag.WEAR, "Direct to watch: not paired yet, pairing started again for ${message.sensorName ?: address}")
+                        link.connect(address, pairingCode, message.serial)
+                        connectAsked = true
+                    }
                 }
                 WatchDirectService.start(context)
             }
         } else {
             waitingForPermission = null
-            if (link.address() != null) {
-                link.forget()
-                aapsLogger.info(LTag.WEAR, "Direct to watch: turned off by the phone")
+            if (link.address() != null && !link.isPaused()) {
+                // A pause, not a forget: the sensor, its key and the bond are kept, so turning it
+                // on again goes on where it was. Forgetting here cost the user the link: the key
+                // was gone, and the sensor did not keep a new one made over the old bond.
+                link.pause()
+                aapsLogger.info(LTag.WEAR, "Direct to watch: turned off by the phone, the sensor is kept")
             }
+            connectAsked = false
             refusal = null
             WatchDirectService.stop(context)
             clearLowAlarm()
@@ -224,7 +265,7 @@ class WatchDirect(
         val address = link.address()
         val state = when {
             waitingForPermission != null && !hasPermissions -> EventData.CgmWatchState.NEEDS_PERMISSION
-            address == null                                  -> EventData.CgmWatchState.OFF
+            address == null || link.isPaused()               -> EventData.CgmWatchState.OFF
             !hasPermissions                                  -> EventData.CgmWatchState.NEEDS_PERMISSION
             !bluetoothOn                                     -> EventData.CgmWatchState.BLUETOOTH_OFF
             refusal != null                                  -> EventData.CgmWatchState.REFUSED
@@ -253,14 +294,20 @@ class WatchDirect(
         rxBus.send(EventWearToMobile(status))
     }
 
-    private suspend fun onReading(reading: WatchSensorReading) {
+    /** One reading from the watch's own link: to the faces, and a low alarm when the phone is away. */
+    private suspend fun showReading(reading: WatchSensorReading) {
         if (!WatchDirectReadings.isUsable(reading)) return
         val data = repository.current()
         val template = data.bgData.takeIf { !it.fromSensor && it.timeStamp > 0 } ?: data.bgData.takeIf { it.timeStamp > 0 }
         val bg = WatchDirectReadings.toSingleBg(reading, template, data.graphData.entries)
-        dataHandler.showSensorReadings(bg)
+        // The driver asks the sensor for its last 3 hours at every connection, so each round brings
+        // 36 readings the watch already has. Storing one changes nothing, but it still wrote the
+        // store and redrew the face, the complications and the tile: 37 times per round, not once.
+        if (!WatchDirectReadings.addsNothing(bg, data.bgData, data.graphData.entries)) dataHandler.showSensorReadings(bg)
         if (bg.timeStamp > (latestReadingAt ?: 0L)) {
             latestReadingAt = bg.timeStamp
+            // For the watch's own screen only. Not sent to the phone: its next status carries it.
+            _status.value = describe()
             checkLow(bg)
         }
     }
@@ -350,6 +397,9 @@ class WatchDirect(
         /** About 10 s for an urgent low and 5 s for a low, as before. */
         const val URGENT_VIBRATION_S = 10
         const val LOW_VIBRATION_S = 5
+
+        /** The empty screen Wear OS settings put in place of a setting the watch does not have. */
+        const val STAND_IN_SETTINGS_SCREEN = "FakeSettingsActivity"
     }
 }
 

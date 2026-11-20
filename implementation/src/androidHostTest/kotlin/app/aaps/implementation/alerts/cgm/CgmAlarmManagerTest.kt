@@ -306,6 +306,19 @@ class CgmAlarmManagerTest : TestBase() {
     }
 
     @Test
+    fun hypoTreatedIsOfferedOnlyWhereGlucoseIsLowNow() = runTest {
+        // Not on fall rate or urgent low soon: those warn before the hypo.
+        assertThat(CgmAlarmManager.HYPO_TREATED_ALARMS).containsExactly(CgmAlarmType.LOW, CgmAlarmType.URGENT_LOW)
+        preferences.put(BooleanKey.AlertHypo, true)
+        lastReading(60.0)
+        sut.check()
+        val actions = mockingDetails(notificationManager).invocations
+            .last { it.method.name == "post" && it.arguments[0] == NotificationId.BG_HYPO }
+            .arguments.filterIsInstance<List<*>>().first()
+        assertThat(actions).hasSize(2)
+    }
+
+    @Test
     fun theSensorStateOfTheSourceRaisesTheSensorAlarms() = runTest {
         val provider = mock<BgSource>(extraInterfaces = arrayOf(CgmSensorAlertProvider::class))
         whenever(activePlugin.activeBgSource).thenReturn(provider)

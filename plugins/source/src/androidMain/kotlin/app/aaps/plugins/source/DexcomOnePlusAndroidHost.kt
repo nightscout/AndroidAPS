@@ -1,13 +1,12 @@
 package app.aaps.plugins.source
 
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.source.SensorSlot
-import app.aaps.core.keys.interfaces.PreferenceItem
-import app.aaps.core.keys.interfaces.withClick
 import app.aaps.plugins.dexcomoneplus.OnePlusAndroidPlatform
 import app.aaps.plugins.dexcomoneplus.OnePlusCgmDriver
 import app.aaps.plugins.dexcomoneplus.OnePlusCgmDrivers
@@ -21,7 +20,6 @@ import app.aaps.plugins.dexcomoneplus.scan.OnePlusBleScanner
 import app.aaps.plugins.dexcomoneplus.scan.OnePlusBleScannerAndroid
 import app.aaps.plugins.source.activities.DexcomOnePlusStartActivity
 import app.aaps.plugins.source.activities.DexcomOnePlusWarmupActivity
-import app.aaps.plugins.source.keys.DexcomOnePlusIntentKey
 import app.aaps.plugins.source.logs.DriverLogReader
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -30,6 +28,17 @@ import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+
+/**
+ * True unless the phone's Bluetooth is known to be switched off. A phone without Bluetooth, or one
+ * that does not let the app ask, counts as on: then the driver's own message is shown as it is.
+ */
+internal fun phoneBluetoothOn(context: Context): Boolean =
+    try {
+        context.getSystemService(BluetoothManager::class.java)?.adapter?.isEnabled != false
+    } catch (_: SecurityException) {
+        true
+    }
 
 /**
  * [DexcomOnePlusHost] on Android: the driver registry, the start and warm-up screens, the driver
@@ -58,6 +67,8 @@ class DexcomOnePlusAndroidHost(
     private val platform by lazy { OnePlusAndroidPlatform(appContext) }
 
     override fun attachPlatform(driver: OnePlusCgmDriver) = driver.attach(platform)
+
+    override fun bluetoothOn(): Boolean = phoneBluetoothOn(appContext)
 
     override fun slotStore(namespace: String?): OnePlusSensorStore =
         OnePlusSensorStore(appContext, namespace)
@@ -104,16 +115,6 @@ class DexcomOnePlusAndroidHost(
 
     /** Android can list the installed apps it declares in its manifest `<queries>`. */
     override val installedApps: OnePlusInstalledApps by lazy { OnePlusInstalledAppsAndroid(appContext) }
-
-    /**
-     * Start and Warm-up stay in the settings, as before. Status is not here any more: it is the first
-     * tab of the plugin, and the status Activity is still what the notification and
-     * the start and warm-up screens open.
-     */
-    override fun screenItems(plugin: DexcomOnePlusPlugin): List<PreferenceItem> = listOf(
-        DexcomOnePlusIntentKey.Start.withClick { open(DexcomOnePlusStartActivity::class.java) },
-        DexcomOnePlusIntentKey.Warmup.withClick { open(DexcomOnePlusWarmupActivity::class.java) },
-    )
 
     override fun openScreen(screen: DexcomOnePlusHost.Screen) = when (screen) {
         DexcomOnePlusHost.Screen.START         -> appContext.startActivity(

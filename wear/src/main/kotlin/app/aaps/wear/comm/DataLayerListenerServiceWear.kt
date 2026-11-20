@@ -1,8 +1,10 @@
 package app.aaps.wear.comm
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.HandlerThread
@@ -167,17 +169,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
     }
 
     private fun startForegroundService() {
-        createNotificationChannel()
-        val notificationIntent = Intent(this, ConfigurationActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(getString(R.string.datalayer_notification_title))
-            .setContentText(getString(R.string.datalayer_notification_text))
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setSmallIcon(R.drawable.ic_icon)
-            .setContentIntent(pendingIntent)
-            .build()
-        startForeground(FOREGROUND_NOTIF_ID, notification)
+        startForeground(FOREGROUND_NOTIF_ID, foregroundNotification(this))
     }
 
     private fun updateHeartRateListener() {
@@ -210,17 +202,6 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         }
     }
 
-    @Suppress("PrivatePropertyName")
-    private val CHANNEL_ID: String = "DataLayerForegroundServiceChannel"
-    private fun createNotificationChannel() {
-        val serviceChannel = NotificationChannel(CHANNEL_ID, "Data Layer Foreground Service Channel", NotificationManager.IMPORTANCE_LOW)
-        serviceChannel.setShowBadge(false)
-        serviceChannel.enableLights(false)
-        serviceChannel.enableVibration(false)
-        serviceChannel.setSound(null, null)
-        val manager = getSystemService(NotificationManager::class.java)
-        manager.createNotificationChannel(serviceChannel)
-    }
 
     private var transcriptionNodeId: String? = null
 
@@ -319,5 +300,32 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         const val AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP = "AndroidAPS-OpenLoop-v2"
         const val AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS = "bolus progress vibration"
         const val AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS_SILENT = "bolus progress silent"
+
+        private const val FOREGROUND_CHANNEL_ID = "DataLayerForegroundServiceChannel"
+
+        /**
+         * The one "AAPS is running" notification of the watch app, on its own channel.
+         *
+         * Every foreground service of the watch app shows this same notification with
+         * [FOREGROUND_NOTIF_ID]. Android then shows it once, however many of the services run, and
+         * keeps it until the last of them stops. A user who has hidden the channel has hidden it for
+         * all of them. Used by this service and by `WatchDirectService`.
+         */
+        fun foregroundNotification(context: Context): Notification {
+            val channel = NotificationChannel(FOREGROUND_CHANNEL_ID, "Data Layer Foreground Service Channel", NotificationManager.IMPORTANCE_LOW)
+            channel.setShowBadge(false)
+            channel.enableLights(false)
+            channel.enableVibration(false)
+            channel.setSound(null, null)
+            context.getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
+            val open = PendingIntent.getActivity(context, 0, Intent(context, ConfigurationActivity::class.java), PendingIntent.FLAG_IMMUTABLE)
+            return NotificationCompat.Builder(context, FOREGROUND_CHANNEL_ID)
+                .setContentTitle(context.getString(R.string.datalayer_notification_title))
+                .setContentText(context.getString(R.string.datalayer_notification_text))
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setSmallIcon(R.drawable.ic_icon)
+                .setContentIntent(open)
+                .build()
+        }
     }
 }
