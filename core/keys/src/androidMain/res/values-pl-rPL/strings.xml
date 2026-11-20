@@ -296,10 +296,14 @@
     <string name="pref_title_fill_button_3">Przycisk wypełnienia 3</string>
     <!-- DoubleKey: Safety preferences -->
     <string name="pref_title_max_bolus">Maksymalny bolus</string>
+    <string name="treatmentssafety_maxbolus_summary">Wybrany wiek pacjenta ogranicza tę wartość. Podanie tutaj wyższej wartości nie zadziała.</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Maksymalna dawka bazowa</string>
+    <string name="openapsma_max_basal_summary">W kontekście OpenAPS ta wartość nazywa się „max. basal”.\nWybrany wiek pacjenta ogranicza tę wartość. Podanie tutaj wyższej wartości nie zadziała.</string>
     <string name="pref_title_smb_max_iob">Maks. IOB dla SMB</string>
+    <string name="openapssmb_max_iob_summary">Ta wartość nazywa się Maks. IOB w kontekście OpenAPS\nOpenAPS nie doda więcej insuliny, jeśli aktualne IOB będzie większe niż ta wartość.\nWybrany wiek pacjenta ogranicza tę wartość. Podanie tutaj wyższej wartości nie zadziała.</string>
     <string name="pref_title_ama_max_iob">Maks. IOB dla AMA</string>
+    <string name="openapsma_max_iob_summary">W kontekście OpenAPS ta wartość nazywa się Max IOB.\nJest to maksymalna ilość insuliny w [U], jaką APS może podać jednorazowo.\nWybrany wiek pacjenta ogranicza tę wartość. Podanie tutaj wyższej wartości nie zadziała.</string>
     <string name="pref_title_max_daily_multiplier">Maks. dzienny mnożnik bezpieczeństwa</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Wartość domyślna: 3. To jest kluczowy limit bezpieczeństwa OpenAPS. Ogranicza dawki bazowe do 3x Twojej największej dawki bazowej. Prawdopodobnie nie będziesz musiał tego zmieniać, ale powinieneś wiedzieć, że o tym mówi zasada „3x max dzienna; 4x aktualna” dla limitów bezpieczeństwa.</string>
     <string name="pref_title_current_basal_multiplier">Aktualny współczynnik bezpieczeństwa bazy</string>
