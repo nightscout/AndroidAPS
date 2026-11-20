@@ -142,6 +142,11 @@ class DexcomOnePlusWatchHandover(
         val previous = _report.value?.status
         _report.value = DexcomOnePlusWatchReport(status, now)
         if (previous?.state != status.state) aapsLogger.info(LTag.BGSOURCE, "DEXCOM_ONEPLUS_WATCH: watch reports ${status.state}")
+        // One line per reading the watch took from the sensor itself. A reading the watch missed never
+        // shows here, also when the sensor's backfill brings it later: only the newest time is reported.
+        val readingAt = status.latestReadingAt
+        if (readingAt != null && readingAt > (previous?.latestReadingAt ?: 0L))
+            aapsLogger.info(LTag.BGSOURCE, "DEXCOM_ONEPLUS_WATCH: watch read the sensor ts=$readingAt ageS=${(now - readingAt) / 1000}")
         if (DexcomOnePlusWatchDirectRules.shouldCorrect(wanted(), status, lastCorrectionAtMs, now)) {
             lastCorrectionAtMs = now
             resend("watch is out of step")
