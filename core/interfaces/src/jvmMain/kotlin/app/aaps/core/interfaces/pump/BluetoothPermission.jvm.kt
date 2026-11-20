@@ -7,4 +7,4 @@ import app.aaps.core.interfaces.plugin.PermissionGroup
  * answer as iOS, and for the same reason: null means "this platform does not ask", not "no
  * permissions needed to talk to a pump".
  */
-internal actual fun bluetoothPermissionGroup(): PermissionGroup? = null
+actual fun bluetoothPermissionGroup(): PermissionGroup? = null

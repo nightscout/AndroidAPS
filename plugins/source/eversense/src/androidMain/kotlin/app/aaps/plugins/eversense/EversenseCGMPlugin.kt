@@ -107,10 +107,23 @@ class EversenseCGMPlugin(
     }
 
     fun start() = connection.start(username.isNotEmpty() && password.isNotEmpty())
+
+    /**
+     * Closes the link and drops what this object holds in memory: the scan, the retries and timers (the connection's
+     * stop), the failure counters and the login. The transmitter, its keys and the stored login stay in [preferences];
+     * the next start reads them again.
+     */
+    @Synchronized
     fun stop() {
         isPositioningMode = false
+        lastPositioningModeExitAt = 0L
         stopScan()
         connection.stop()
+        shortcutFailures = 0
+        fullAuthFailures = 0
+        placementFailures = 0
+        username = ""
+        password = ""
     }
     fun onBluetoothAvailable() = connection.bluetoothAvailable()
     internal fun sessionActive(session: Long) = connection.active(session)

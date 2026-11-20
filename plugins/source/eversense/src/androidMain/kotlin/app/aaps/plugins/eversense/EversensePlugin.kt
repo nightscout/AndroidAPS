@@ -1,17 +1,17 @@
 package app.aaps.plugins.eversense
 
-import android.Manifest
-import android.bluetooth.BluetoothAdapter
-import android.content.BroadcastReceiver
-import android.content.Intent
-import android.content.IntentFilter
-import android.content.Context
+import android.os.SystemClock
+import app.aaps.core.interfaces.plugin.PermissionGroup
+import app.aaps.core.interfaces.pump.ble.AdapterState
+import app.aaps.core.interfaces.pump.ble.BleCentral
+import app.aaps.core.interfaces.pump.bluetoothPermissionGroup
+import app.aaps.plugins.eversense.cloud.EversenseCloudUploader
 import app.aaps.plugins.eversense.storage.EversenseStore
-import android.content.pm.PackageManager
-import android.os.Handler
-import android.os.Looper
-import androidx.core.content.ContextCompat
 import app.aaps.plugins.eversense.storage.edit
+import app.aaps.plugins.eversense.util.EversenseHttp365Util
+import app.aaps.plugins.eversense.util.EversenseHttpE3Util
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
@@ -42,6 +42,7 @@ import app.aaps.plugins.eversense.models.EversenseCGMResult
 import app.aaps.plugins.eversense.models.EversenseState
 import app.aaps.plugins.eversense.util.EversenseLogger
 import app.aaps.plugins.eversense.util.StorageKeys
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -78,13 +79,13 @@ import kotlinx.coroutines.flow.onEach
 @Inject
 class EversensePlugin(
     override val rh: ResourceHelper,
-    private val context: Context,
     aapsLogger: AAPSLogger,
     preferences: Preferences,
     config: Config,
     notificationManager: NotificationManager,
     private val eversenseProvider: () -> EversenseCGMPlugin,
-    private val persistenceLayer: PersistenceLayer
+    private val persistenceLayer: PersistenceLayer,
+    private val bleCentral: BleCentral
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -115,21 +116,19 @@ class EversensePlugin(
 
     override var sensorBatteryLevel = -1
 
-    private val mainHandler = Handler(Looper.getMainLooper())
-    private var ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    /**
+     * What one start of the plugin owns: its coroutines, the cloud upload in progress and the counters in memory.
+     * [onStop] drops it whole, and the next [onStart] builds a new one from storage, so nothing of a stopped run is
+     * trusted again. Null while the plugin is stopped: a callback that arrives late finds nothing to work with.
+     */
+    private class Running(val scope: CoroutineScope, val cloudUploader: EversenseCloudUploader) {
 
-    // Android can omit the disconnect callback while Bluetooth is off. Reopen the client when
-    // the radio returns, respecting manual pause and the source's stopped state.
-    private val bluetoothStateReceiver = object : BroadcastReceiver() {
-        override fun onReceive(ctx: Context, intent: Intent) {
-            if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR) == BluetoothAdapter.STATE_ON) {
-                aapsLogger.info(LTag.BGSOURCE, "Bluetooth turned back on — forcing Eversense reconnect")
-                ioScope.launch {
-                    eversense.onBluetoothAvailable()
-                }
-            }
-        }
+        /** Readings in a row with no sensor signal: three mean the transmitter is not over the sensor. */
+        var consecutiveNoSignalReadings = 0
     }
+
+    @Volatile private var running: Running? = null
+
     private val json = Json { ignoreUnknownKeys = true }
 
     private val securePrefs: EversenseStore get() = eversense.preferences
@@ -150,68 +149,63 @@ class EversensePlugin(
         securePrefs.getBoolean("eversense_battery_low_dismissed", false)
     private fun setBatteryLowDismissed() =
         securePrefs.edit(commit = true) { putBoolean("eversense_battery_low_dismissed", true) }
-    private var consecutiveNoSignalReadings: Int = 0
     private val NO_SIGNAL_WARNING_THRESHOLD = 3
     private val CALIBRATION_RECONNECT_TIMEOUT_MS = 30_000L
 
-    @Volatile private var placementNotificationSnoozed: Boolean = false
+    /** Asked for on the app's permission sheet, as a pump driver's; a start never opens a screen of its own. */
+    override fun requiredPermissions(): List<PermissionGroup> = listOfNotNull(bluetoothPermissionGroup())
 
+    /**
+     * Loads everything from storage and connects: the login goes to the driver, which then finds the transmitter and
+     * its keys in its own store. A start after a stop is a fresh start: [Running] is new, and so are the driver's
+     * counters.
+     */
     override suspend fun onStart() {
         super.onStart()
-        ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        running = Running(scope, newCloudUploader(scope))
         EversenseLogger.setDiagnosticLogging(preferences.get(EversenseBooleanKey.EversenseDiagnosticLogging))
         preferences.observe(EversenseBooleanKey.EversenseDiagnosticLogging)
             .onEach { EversenseLogger.setDiagnosticLogging(it) }
-            .launchIn(ioScope)
+            .launchIn(scope)
         eversense.addWatcher(this)
-        context.registerReceiver(bluetoothStateReceiver, IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED))
-        if (!hasBluetoothPermissions()) {
-            aapsLogger.warn(LTag.BGSOURCE, "Bluetooth permissions not granted — requesting permissions")
-            requestBluetoothPermissions()
-        }
         // Always sync credentials on startup — eversense.is365() is false until first connect
         // so we must set username/password unconditionally for new phone first-boot
         checkCredentialsNotification()
         eversense.start()
+        // Android can leave out the disconnect callback while Bluetooth is off: reconnect when it is back on. The
+        // current state is skipped, the start above has just connected.
+        bleCentral.adapterState.drop(1).filter { it == AdapterState.ON }
+            .onEach {
+                aapsLogger.info(LTag.BGSOURCE, "Bluetooth turned back on — forcing Eversense reconnect")
+                eversense.onBluetoothAvailable()
+            }
+            .launchIn(scope)
         combine(
             preferences.observe(EversenseStringKey.EversenseUsername),
             preferences.observe(EversenseStringKey.EversensePassword),
             preferences.observe(EversenseBooleanKey.EversenseEuropeanRegion)
         ) { user, password, region -> Triple(user, password, region) }
             .onEach { checkCredentialsNotification() }
-            .launchIn(ioScope)
+            .launchIn(scope)
     }
 
+    /**
+     * Drops everything [onStart] built: the coroutines with the cloud upload in progress, the link and its retries
+     * (the driver's stop), the counters, and the notices this plugin clears itself when their condition ends - once
+     * stopped, it no longer could. Readings and the upload queue are stored and stay.
+     */
     override suspend fun onStop() {
         super.onStop()
-        ioScope.cancel()
-        mainHandler.removeCallbacksAndMessages(null)
+        running?.scope?.cancel()
+        running = null
         eversense.removeWatcher(this)
         eversense.stop()
         EversenseLogger.setDiagnosticLogging(false)
-        try {
-            context.unregisterReceiver(bluetoothStateReceiver)
-        } catch (e: IllegalArgumentException) {
-            // Not registered (e.g. onStart never completed registration) — safe to ignore
-        }
+        sensorBatteryLevel = -1
+        notificationManager.dismiss(NotificationId.EVERSENSE_CREDENTIALS)
+        notificationManager.dismiss(NotificationId.EVERSENSE_PLACEMENT)
     }
-
-    private fun requestBluetoothPermissions() {
-        val intent = Intent(context, app.aaps.plugins.eversense.ui.RequestEversensePermissionActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)
-    }
-
-    private fun hasBluetoothPermissions(): Boolean {
-        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED
-        } else {
-            ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED
-        }
-    }
-
-    fun syncCredentialsIfNeeded() = checkCredentialsNotification()
 
     // ── CgmDriver ── The user enters the finger-stick value in the AAPS calibration dialog; the master's
     // record writer hands it to calibrate() below.
@@ -316,6 +310,7 @@ class EversensePlugin(
     }
 
     override fun onStateChanged(state: EversenseState) {
+        val running = running ?: return   // stopped: a late callback changes nothing
         EversenseLogger.diagnostic { aapsLogger.info(LTag.BGSOURCE, "New state received: ${Json.encodeToString(state)}") }
 
         // Update sensor battery level for Overview status lights
@@ -326,7 +321,7 @@ class EversensePlugin(
         // uptime (subject to deep-sleep pauses), causing the home screen timer to drift.
         // E365 is unaffected and retains the original sync behavior.
         if (state.insertionDate > 0 && eversense.is365()) {
-            ioScope.launch {
+            running.scope.launch {
                 persistenceLayer.insertCgmSourceData(Sources.Eversense, emptyList(), emptyList(), state.insertionDate)
                 EversenseLogger.diagnostic { aapsLogger.info(LTag.BGSOURCE, "Updated SENSOR_CHANGE event to insertionDate: ${state.insertionDate}") }
             }
@@ -343,17 +338,14 @@ class EversensePlugin(
 
         // Check for persistent no-signal — indicates transmitter not placed over sensor
         if (state.sensorSignalStrength == 0) {
-            consecutiveNoSignalReadings++
-            aapsLogger.warn(LTag.BGSOURCE, "No signal reading $consecutiveNoSignalReadings of $NO_SIGNAL_WARNING_THRESHOLD")
-            if (consecutiveNoSignalReadings >= NO_SIGNAL_WARNING_THRESHOLD) {
-                if (!placementNotificationSnoozed) {
-                    onTransmitterNotPlaced()
-                }
-                consecutiveNoSignalReadings = 0
+            running.consecutiveNoSignalReadings++
+            aapsLogger.warn(LTag.BGSOURCE, "No signal reading ${running.consecutiveNoSignalReadings} of $NO_SIGNAL_WARNING_THRESHOLD")
+            if (running.consecutiveNoSignalReadings >= NO_SIGNAL_WARNING_THRESHOLD) {
+                onTransmitterNotPlaced()
+                running.consecutiveNoSignalReadings = 0
             }
         } else {
-            consecutiveNoSignalReadings = 0
-            placementNotificationSnoozed = false
+            running.consecutiveNoSignalReadings = 0
             notificationManager.dismiss(NotificationId.EVERSENSE_PLACEMENT)
         }
 
@@ -427,13 +419,12 @@ class EversensePlugin(
 
     override fun onTransmitterNotPlaced() {
         aapsLogger.warn(LTag.BGSOURCE, "Transmitter not placed — firing placement warning notification")
-        mainHandler.post {
-            notificationManager.post(
-                NotificationId.EVERSENSE_PLACEMENT,
-                rh.gs(R.string.eversense_transmitter_not_placed),
-                level = NotificationLevel.URGENT
-            )
-        }
+        if (running == null) return
+        notificationManager.post(
+            NotificationId.EVERSENSE_PLACEMENT,
+            rh.gs(R.string.eversense_transmitter_not_placed),
+            level = NotificationLevel.URGENT
+        )
     }
 
     override fun onConnectionChanged(connected: Boolean) {
@@ -479,16 +470,16 @@ class EversensePlugin(
             alarm.code.isInfo -> NotificationLevel.INFO
             else -> NotificationLevel.URGENT
         }
-        mainHandler.post {
-            notificationManager.post(
-                NotificationId.EVERSENSE_ALARM,
-                title,
-                level = level
-            )
-        }
+        if (running == null) return
+        notificationManager.post(
+            NotificationId.EVERSENSE_ALARM,
+            title,
+            level = level
+        )
     }
 
     override fun onCGMRead(type: EversenseType, readings: List<EversenseCGMResult>) {
+        val running = running ?: return   // stopped: a reading of the old link is not stored
         // The transmitter is alive — reset the liveness watchdog.
         // Log what the BLE layer actually produced, per reading, before anything downstream can
         // filter or reshape it. The DMS uploader drops readings with no rawResponseHex and keys
@@ -522,7 +513,7 @@ class EversensePlugin(
             )
         }
 
-        ioScope.launch {
+        running.scope.launch {
             val state = eversense.getCurrentState()
             val insertionDate = state.insertionDate.takeIf { it > 0 }
             val result = persistenceLayer.insertCgmSourceData(
@@ -535,8 +526,8 @@ class EversensePlugin(
 
             if (cloudUploadEnabled()) {
                 try {
-                    cloudUploader.enqueue(type, readings, state)
-                } catch (e: kotlinx.coroutines.CancellationException) {
+                    running.cloudUploader.enqueue(type, readings, state)
+                } catch (e: CancellationException) {
                     throw e
                 } catch (e: Exception) {
                     logCloudError("Eversense cloud queue failed; local readings are stored", e)
@@ -545,45 +536,45 @@ class EversensePlugin(
         }
     }
 
-    private val cloudUploader by lazy {
-        app.aaps.plugins.eversense.cloud.EversenseCloudUploader(
-            scope = { ioScope },
+    /** The upload of one start: it runs on that start's [scope] and ends with it. The queue itself is stored. */
+    private fun newCloudUploader(scope: CoroutineScope) =
+        EversenseCloudUploader(
+            scope = { scope },
             store = { eversense.cloudStore() },
             enabled = ::cloudUploadEnabled,
             online = { eversense.hasInternet() },
             now = System::currentTimeMillis,
-            elapsed = android.os.SystemClock::elapsedRealtime,
+            elapsed = SystemClock::elapsedRealtime,
             upload = ::uploadCloudBatch,
             onError = { logCloudError("Eversense cloud upload failed; local readings are stored", it) }
         )
-    }
 
     private fun logCloudError(message: String, error: Exception) {
         aapsLogger.error(LTag.BGSOURCE, "$message (${error.javaClass.simpleName})")
         EversenseLogger.diagnostic { aapsLogger.error(LTag.BGSOURCE, message, error) }
     }
 
-    private suspend fun uploadCloudBatch(prefs: EversenseStore, batch: app.aaps.plugins.eversense.cloud.EversenseCloudUploader.PendingUpload): Boolean {
+    private suspend fun uploadCloudBatch(prefs: EversenseStore, batch: EversenseCloudUploader.PendingUpload): Boolean {
         val state = batch.state
         val readings = batch.readings
         val latest = readings.maxByOrNull { it.datetime } ?: return true
         val calibrations = state.calibrationHistory.filter { it.datetime == state.lastCalibrationDate }
         return if (batch.type == EversenseType.EVERSENSE_365) {
-            val glucose = app.aaps.plugins.eversense.util.EversenseHttp365Util.uploadGlucoseReadings(
+            val glucose = EversenseHttp365Util.uploadGlucoseReadings(
                 prefs, readings, state.transmitterName.ifEmpty { state.transmitterSerialNumber }, state.firmwareVersion)
             aapsLogger.info(LTag.BGSOURCE, "Eversense hourly upload: success=${glucose.success} sent=${glucose.sentCount} status=${glucose.httpStatus}")
             EversenseLogger.diagnostic { aapsLogger.info(LTag.BGSOURCE, "Eversense hourly upload details: ${glucose.describe()}") }
             if (!glucose.success) return false
-            val portal = app.aaps.plugins.eversense.util.EversenseHttp365Util.putCurrentValues(
+            val portal = EversenseHttp365Util.putCurrentValues(
                 prefs, latest.glucoseInMgDl, latest.datetime, latest.trend, state.sensorSignalStrength, state.batteryPercentage)
             if (!portal.success) return false
-            app.aaps.plugins.eversense.util.EversenseHttp365Util.putDeviceEvents(
+            EversenseHttp365Util.putDeviceEvents(
                 prefs, readings, state.transmitterSerialNumber, calibrations, state.activeAlarms).success
         } else {
-            val portal = app.aaps.plugins.eversense.util.EversenseHttpE3Util.putCurrentValues(
+            val portal = EversenseHttpE3Util.putCurrentValues(
                 prefs, latest.glucoseInMgDl, latest.datetime, latest.trend, state.sensorSignalStrength, state.batteryPercentage)
             if (!portal) return false
-            app.aaps.plugins.eversense.util.EversenseHttpE3Util.putDeviceEvents(
+            EversenseHttpE3Util.putDeviceEvents(
                 prefs, readings, state.transmitterSerialNumber, calibrations, state.activeAlarms)
         }
     }

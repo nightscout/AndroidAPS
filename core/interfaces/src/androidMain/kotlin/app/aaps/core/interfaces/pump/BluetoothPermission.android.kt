@@ -11,7 +11,7 @@ import app.aaps.core.interfaces.plugin.PermissionGroup
  * older versions, where the permissions are granted at install time.
  */
 @SuppressLint("InlinedApi")
-internal actual fun bluetoothPermissionGroup(): PermissionGroup? = PermissionGroup(
+actual fun bluetoothPermissionGroup(): PermissionGroup? = PermissionGroup(
     permissions = listOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN),
     rationaleTitle = InterfacesStrings.permission_bluetooth_title,
     rationaleDescription = InterfacesStrings.permission_bluetooth_description,

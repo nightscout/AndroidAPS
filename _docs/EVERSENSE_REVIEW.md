@@ -27,7 +27,8 @@ The PR's own CI on `dev` failed, and so did the full gate here.
   `:plugins:source`'s classpath, `Uri.parse` returned null and `IntelligoPlugin.<init>` failed. `ContributedPluginsTest`
   then also needed Eversense's order key 415.
 - Fixed earlier: `ViewModelOwnershipTest` (the PR's calibration dialog is gone).
-- Still open: `PluginLifetimeWorkScanTest`, for the `Handler` that `EversensePlugin` creates at construction (step 3a).
+- Fixed by the lifecycle step (3.1): `PluginLifetimeWorkScanTest`, for the `Handler` that `EversensePlugin` created at
+  construction. Nothing of the PR fails any more.
 
 ### Glucose data
 
@@ -131,9 +132,12 @@ Bluetooth off and on; a lost answer; app restart.
 2. Install on the test phone, look at the UI, test with a real transmitter as the PR is, record frames.
 3. Cleanup and alignment with AAPS. Done so far: calibration through the AAPS paths (`CalibrationMode.SOURCE`), its own
    screen opened from Manage (`CgmDriver`). Agreed next, each its own commit:
-   1. **Lifecycle.** `onStart` loads everything from storage (transmitter, keys, login) and connects; `onStop` closes
-      the link, stops the scan and cancels retries, deadline, watchdog, upload timer and handlers, so nothing is left
-      that the next start would trust. A reload test, as a pump's.
+   1. **Lifecycle.** Done. `onStart` builds a `Running` (coroutines, cloud upload, counters) and loads the login into
+      the driver, which reads the transmitter and keys from its store; `onStop` drops it whole, stops the driver (link,
+      scan, retries, timers, failure counters, login in memory) and clears the notices the plugin itself would clear.
+      A late callback after the stop finds no `Running` and does nothing. Bluetooth back on comes from the shared
+      `BleCentral.adapterState`, not an Android receiver; the permission is asked on the app's permission sheet
+      (`bluetoothPermissionGroup()`, now public), not by an Activity at start. Reload test as a pump's.
    2. **Pairing wizard, like a pump's.** Before you start (the official app is set up and force stopped, Bluetooth
       permission) - Account (username, password, region; "Sign in" makes a real DMS login; with a stored login it
       shows "Signed in as ..." with Continue and Sign out) - Transmitter (10 s scan, pick one) - Connect
