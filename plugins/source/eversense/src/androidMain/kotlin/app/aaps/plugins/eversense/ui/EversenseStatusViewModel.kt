@@ -47,11 +47,10 @@ class EversenseStatusViewModel(
 
     data class UiState(
         val lines: List<String> = emptyList(),
-        val connected: Boolean = false,
-        val syncDays: Int = DEFAULT_SYNC_DAYS
+        val connected: Boolean = false
     )
 
-    private val _uiState = MutableStateFlow(UiState(syncDays = eversense.preferences.getInt(SYNC_DAYS_KEY, DEFAULT_SYNC_DAYS)))
+    private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     val attention: StateFlow<CgmAttention?> = pairing.attention
@@ -130,15 +129,8 @@ class EversenseStatusViewModel(
         }
     }
 
-    fun setSyncDays(days: Int) {
-        eversense.preferences.edit().putInt(SYNC_DAYS_KEY, days).apply()
-        _uiState.update { it.copy(syncDays = days) }
-    }
-
     private companion object {
 
-        const val SYNC_DAYS_KEY = "eversense_sync_days"
-        const val DEFAULT_SYNC_DAYS = 14
         const val REFRESH_AFTER_UNPAIR_MS = 500L
         const val REFRESH_AFTER_SYNC_MS = 5_000L
     }

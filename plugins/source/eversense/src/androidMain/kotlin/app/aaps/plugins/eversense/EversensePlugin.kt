@@ -245,7 +245,7 @@ class EversensePlugin(
         }
         eversense.addWatcher(watcher)
         cont.invokeOnCancellation { eversense.removeWatcher(watcher) }
-        eversense.connect(null)
+        eversense.connect()
     }
 
     // Pairing, status, calibration and placement are on the plugin's own screen (EversenseComposeContent), opened from

@@ -263,7 +263,7 @@ class EversensePluginTest {
             withTimeout(5_000) { cloudFailed.await() }
             plugin.onCGMRead(EversenseType.EVERSENSE_365, listOf(EversenseCGMResult(124, 1_800_000_300_000L, EversenseTrendArrow.FLAT)))
             assertThat(withTimeout(5_000) { received.receive() }.single().value).isEqualTo(124.0)
-            verify(backend, never()).forceReconnect()
+            verify(backend, never()).connect()
             verify(backend, never()).disconnect()
         } finally { plugin.onStop() }
     }

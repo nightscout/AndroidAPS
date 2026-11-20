@@ -214,8 +214,6 @@ class EversenseCGMPlugin(
             capabilities.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_VALIDATED)
     }
 
-    fun activeSessionStore(): EversenseStore? = activeCallback?.takeIf { sessionActive(it.session) }?.stateStore
-
     fun isConnected(): Boolean = activeCallback?.isConnected() == true
     fun is365(): Boolean = activeCallback?.is365() == true
 
@@ -253,15 +251,8 @@ class EversenseCGMPlugin(
         catch (e: SecurityException) { EversenseLogger.warning(TAG, "Scan permission was revoked: $e") }
     }
 
-    fun forceReconnect(): Boolean = connection.connect(force = true)
-
-    fun connect(device: BluetoothDevice? = null): Boolean {
-        if (device != null) {
-            preferences.edit { putString(StorageKeys.REMOTE_DEVICE_KEY, device.address) }
-            EversenseCrypto365Util(preferences).disallowUseShortcut()
-        }
-        return connection.connect(force = device != null)
-    }
+    /** Connects to the paired transmitter now, unless a connection is already up or on its way. A new one is [pair]. */
+    fun connect(): Boolean = connection.connect()
 
     @SuppressLint("MissingPermission")
     private fun openConnection(session: Long): Boolean {

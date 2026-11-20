@@ -2,7 +2,7 @@
 
 This document describes the Eversense E3/365 implementation in this AAPS 4 checkout. It explains ownership, data flow, failure handling and current limits. It is not a claim of complete transmitter compatibility.
 
-For setup and practical instructions, read the [user guide](README.md). Project: [BernhardRo/AndroidAPS, master](https://github.com/BernhardRo/AndroidAPS/tree/master).
+The user guide is the AndroidAPS wiki; setup is the pairing wizard on the plugin's screen. Project: [BernhardRo/AndroidAPS, master](https://github.com/BernhardRo/AndroidAPS/tree/master).
 
 ## Module boundaries
 

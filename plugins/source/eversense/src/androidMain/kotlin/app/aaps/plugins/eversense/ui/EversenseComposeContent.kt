@@ -2,17 +2,13 @@ package app.aaps.plugins.eversense.ui
 
 import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -23,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -144,7 +139,6 @@ private fun EversenseStatusTab(
         onPair = onPair,
         onSignInAgain = onSignInAgain,
         onUnpair = viewModel::unpair,
-        onDays = viewModel::setSyncDays,
         onSync = viewModel::onSyncClick,
         // The AAPS calibration dialog: the master hands the value to EversensePlugin.calibrate()
         onCalibrate = { navigate(NavigationRequest.Element(ElementType.CALIBRATION)) },
@@ -162,7 +156,6 @@ internal fun EversenseStatusContent(
     onPair: () -> Unit,
     onSignInAgain: () -> Unit,
     onUnpair: () -> Unit,
-    onDays: (Int) -> Unit,
     onSync: () -> Unit,
     onCalibrate: () -> Unit,
     onPlacement: () -> Unit
@@ -189,7 +182,6 @@ internal fun EversenseStatusContent(
                     state.lines.forEach { Text(it, style = MaterialTheme.typography.bodyLarge) }
                 }
             }
-            SyncDaysRow(syncDays = state.syncDays, onDays = onDays)
             Button(onClick = onSync, modifier = Modifier.fillMaxWidth(), enabled = state.connected) {
                 Text(stringResource(R.string.eversense_information_last_sync))
             }
@@ -206,20 +198,3 @@ internal fun EversenseStatusContent(
     }
 }
 
-@Composable
-private fun SyncDaysRow(syncDays: Int, onDays: (Int) -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
-    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(stringResource(R.string.eversense_default_sync_days_label), Modifier.weight(1f))
-        Box {
-            OutlinedButton(onClick = { expanded = true }) { Text(syncDays.toString()) }
-            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                for (days in SYNC_DAY_CHOICES) {
-                    DropdownMenuItem(text = { Text(days.toString()) }, onClick = { expanded = false; onDays(days) })
-                }
-            }
-        }
-    }
-}
-
-private val SYNC_DAY_CHOICES = listOf(1, 3, 7, 14, 30)

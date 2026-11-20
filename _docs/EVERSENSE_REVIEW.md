@@ -152,7 +152,10 @@ Bluetooth off and on; a lost answer; app restart.
       transmitter and its keys and keeps the login. `CgmDriver.attention` (not paired, sign-in failed) puts a "!" on
       the bottom bar's BG source button, and the status tab shows the reason and the button that fixes it; not on a
       client. Screens and view models in `commonMain`, behind a driver interface, so iOS can follow.
-   3. **Clean-up.** Connect, Disconnect, Change Transmitter and the Documentation button go: the link follows the
+   3. **Clean-up.** Done, except the wiki draft, which waits until the wizard was tried on a phone. Also removed as
+      dead: the "Default sync days" dropdown (the driver never read the value), the never-read
+      `EversenseCloudUploadToast` setting, `forceReconnect()`, `activeSessionStore()`, and 64 unused strings. As agreed:
+      Connect, Disconnect, Change Transmitter and the Documentation button go: the link follows the
       plugin, and the user documentation moves to the wiki (draft for AndroidAPSdocs once the wizard is final).
       `README.md` and its screenshots go; `TECHNICAL.md` stays.
 

@@ -58,7 +58,6 @@ class EversenseNavigationTest {
         onPair: () -> Unit = {},
         onSignInAgain: () -> Unit = {},
         onUnpair: () -> Unit = {},
-        onDays: (Int) -> Unit = {},
         onCalibrate: () -> Unit = {}
     ) {
         whenever(preferences.observe(StringKey.GeneralDarkMode)).thenReturn(mode)
@@ -66,14 +65,13 @@ class EversenseNavigationTest {
             CompositionLocalProvider(LocalPreferences provides preferences) {
                 AapsTheme {
                     EversenseStatusContent(
-                        state = EversenseStatusViewModel.UiState(lines = listOf("Status example"), connected = connected, syncDays = 14),
+                        state = EversenseStatusViewModel.UiState(lines = listOf("Status example"), connected = connected),
                         attention = attention,
                         account = EversenseAccount("user@example.com", EversenseModel.E365_OTHER),
                         transmitter = "T123456",
                         onPair = onPair,
                         onSignInAgain = onSignInAgain,
                         onUnpair = onUnpair,
-                        onDays = onDays,
                         onSync = {},
                         onCalibrate = onCalibrate,
                         onPlacement = {}
@@ -121,20 +119,10 @@ class EversenseNavigationTest {
         compose.runOnIdle { assertEquals(true, unpaired) }
     }
 
-    /** The link follows the plugin: there is no Connect or Disconnect to press, and Sync waits for the link. */
-    @Test fun disconnectedSyncIsDisabledAndNoConnectIsOffered() {
+    /** The link follows the plugin (no Connect or Disconnect); Sync waits for it. */
+    @Test fun disconnectedSyncIsDisabled() {
         show(connected = false)
         compose.onNodeWithText(text(R.string.eversense_information_last_sync)).assertIsNotEnabled()
-        compose.onNodeWithText(text(R.string.eversense_status_connect)).assertDoesNotExist()
-        compose.onNodeWithText(text(R.string.eversense_status_disconnect)).assertDoesNotExist()
-    }
-
-    @Test fun syncDaysSelectionKeepsExistingChoicesAndCallback() {
-        var selected = 0
-        show(onDays = { selected = it })
-        compose.onNodeWithText("14").performClick()
-        compose.onNodeWithText("30").performClick()
-        compose.runOnIdle { assertEquals(30, selected) }
     }
 
     /** Calibration goes through the AAPS calibration dialog, opened from here. */
