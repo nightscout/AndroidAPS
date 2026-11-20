@@ -1062,6 +1062,8 @@
     <string name="wiki_search_offline">Cần có Internet để tìm kiếm tài liệu</string>
     <string name="no_search_results">Không tìm thấy kết quả</string>
     <string name="search_plugin_disabled">Plugin %1$s đã bị tắt</string>
+    <string name="search_recent">Các tìm kiếm gần đây</string>
+    <string name="search_history_remove">Xóa khỏi danh sách tìm kiếm gần đây</string>
     <!--    Food Management -->
     <string name="food_management">Món ăn</string>
     <string name="food_deleted">Đã xóa món ăn</string>
