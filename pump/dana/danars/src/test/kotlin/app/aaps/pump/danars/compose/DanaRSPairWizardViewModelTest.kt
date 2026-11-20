@@ -1,5 +1,6 @@
 package app.aaps.pump.danars.compose
 
+import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpSync
@@ -23,11 +24,15 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.job
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -78,11 +83,27 @@ internal class DanaRSPairWizardViewModelTest {
         sut = createSut(CoroutineScope(Dispatchers.Unconfined)) // runs the finish work right away
     }
 
+    /** Every wizard a test made, so [tearDown] can stop its work. */
+    private val created = mutableListOf<DanaRSPairWizardViewModel>()
+
     private fun createSut(appScope: CoroutineScope) =
         DanaRSPairWizardViewModel(aapsLogger, rh, bleTransport, bleComm, danaRSPlugin, preferences, config, pumpSync, commandQueue, appScope)
+            .also { created += it }
 
+    /**
+     * Stops the work of every wizard before the test ends. `selectDevice` and `retry` pair on `Dispatchers.IO`, and
+     * the wait for the old bond to go runs for up to 5 s of real time. Left running, it called the adapter mock after
+     * the next test class had cleared all mocks (`TestBase` does that after each test). The exception then failed a
+     * test of that class with `UncaughtExceptionsBeforeTest`: `DanaRSServiceIntegrationTest` on CI.
+     */
     @AfterEach
-    fun tearDown() = Dispatchers.resetMain()
+    fun tearDown() {
+        val jobs = created.map { it.viewModelScope.coroutineContext.job }
+        jobs.forEach { it.cancel() }
+        runCurrent() // the collectors on the test Main end their cancellation here
+        runBlocking { withTimeout(STOP_TIMEOUT_MS) { jobs.joinAll() } }
+        Dispatchers.resetMain()
+    }
 
     /** Runs the init collectors and any tasks scheduled at the current virtual time — but not the
      *  pairing timeout's delay(), so a step assertion isn't clobbered by a fired timeout. */
@@ -439,5 +460,11 @@ internal class DanaRSPairWizardViewModelTest {
         runCurrent()
         pairingStateFlow.value = PairingState(step = step, errorMessage = message)
         runCurrent()
+    }
+
+    private companion object {
+
+        /** The work on `Dispatchers.IO` stops at its next wait, which is at most 0.5 s away. */
+        const val STOP_TIMEOUT_MS = 5_000L
     }
 }
