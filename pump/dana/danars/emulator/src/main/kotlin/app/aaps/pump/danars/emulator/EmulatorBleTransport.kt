@@ -295,11 +295,20 @@ class EmulatorBleTransport(
 
     private inner class EmulatorAdapter : BleAdapter {
 
+        /** Bonded from the start, as before. A removed bond stays removed until it is made again, as on a phone. */
+        @Volatile private var bonded = true
+
         override fun enable() {} // no-op
         override fun getDeviceName(address: String): String = currentDeviceName
-        override fun isDeviceBonded(address: String): Boolean = true
-        override fun createBond(address: String): Boolean = true
-        override fun removeBond(address: String) {}
+        override fun isDeviceBonded(address: String): Boolean = bonded
+        override fun createBond(address: String): Boolean {
+            bonded = true
+            return true
+        }
+
+        override fun removeBond(address: String) {
+            bonded = false
+        }
     }
 
     // --- BleScanner ---
