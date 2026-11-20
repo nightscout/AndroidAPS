@@ -124,8 +124,8 @@ class ClientControlReceiver(
     private val commandQueue: CommandQueue,
     private val rh: TextResolver,
     private val aapsLogger: AAPSLogger,
-    // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
-    // commonMain. AppCoroutineBindings.unqualifiedAppScope provides the same scope unqualified.
+    // Plain CoroutineScope, the same object as @ApplicationScope:
+    // AppCoroutineBindings.unqualifiedAppScope provides the same scope unqualified.
     private val appScope: CoroutineScope,
     private val clientTokens: ClientTokens,
     private val masterSigningKey: MasterSigningKey,

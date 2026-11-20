@@ -19,7 +19,8 @@ returning:
    set, one entry per real problem.
 
 On `:plugins:constraints/objectives` this went 88 errors -> 25, and the 25 were three root causes.
-Reporting the 88 would have been useless; reporting the 3 is a plan.
+Reporting the 88 would have been useless; reporting the 3 is a plan. (That cluster has since moved:
+each root cause was lifted behind an interface.)
 
 **Why:** an import grep both over- and under-reports. It flagged `androidx.compose` (fine) and
 `kotlinx.coroutines.Runnable` (fine), and it missed that `@JvmSuppressWildcards` fails in commonMain
@@ -36,11 +37,14 @@ deletes the pre-existing commonMain files too. This happened on 2026-08-30 probi
 `FILES="a.kt b.kt"` list, `cp` each to the backup, `mv` each, then `rm -f` each and `cp` each back.
 
 **How to apply:** back each file up with `cp` to the scratchpad first, restore with
-`rm -f` + `cp` from that backup, and finish the same call with
-`git -C E:/GitHub/AndroidAPS status --porcelain -- <module>` so the proof of revert is in the output.
+`rm -f` + `cp` from that backup, and finish the same call with plain
+`git status --porcelain -- <module>` (from the project root, never `git -C <path>`) so the proof of
+revert is in the output. Call Bash with `timeout: 600000`: a compile probe can take longer than the
+2-minute default, and a call that is cut off never moves the files back.
 A probe that also edits a `build.gradle.kts` must back that file up and `cp` it back too.
 Watch that output for files you did not touch: on 2026-08-30 a probe run surfaced an edit to
 `plugins/aps/.../LoopViewModel.kt` made by a concurrent process, and only the empty-status habit
 caught it. Never `git checkout .` to clean up - it would have swallowed that foreign work.
 
-Related: [[feedback-mutation-restore-proof]], [[constraints-objectives-move]]
+Related: the "Mutation must be atomic" section of the agent definition (same one-call rule),
+[[cmp-what-crosses-unchanged]]

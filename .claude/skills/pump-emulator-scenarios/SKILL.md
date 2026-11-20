@@ -115,8 +115,8 @@ The steps below are the order that worked for the Diaconn G8 (2026-11). The code
 Only on a temporary emulator: the tests clear the app's settings. For example
 `emulator -avd <avd> -read-only -no-snapshot -port 5590`, then point every `adb` call at that serial.
 
-- Build: `./gradlew.bat :app:assembleFullDebug :app:assembleFullDebugAndroidTest` (a 4.0.0 tree must be committed to
-  build the app).
+- Build: `./gradlew.bat :app:assembleFullDebug :app:assembleFullDebugAndroidTest` (`./gradlew` on macOS). When
+  `Versions.appVersion` has no `-`, as in a release, uncommitted changes stop the build.
 - Run: `adb -s <serial> shell am instrument -w -r -e class app.aaps.e2e.<Pump>ScenarioTest
   info.nightscout.androidaps.test/app.aaps.runners.AapsTestRunner`
 - At real speed: add `-e emulatorSpeed real`. Use it to look for timing faults.
@@ -190,7 +190,8 @@ Shard C's logcat can rotate before CI reads it, so the UI base adds the screen t
   A record it sets to 0 U counts as no record.
 - A pump clock can be a second or two behind the phone, so the record of the first command can be timed just before the
   first profile. AAPS once dropped it ("No profile running") and the first Dana temp basal failed now and then in CI;
-  now PumpSync gives such a record the first profile. `pair()` does not wait, so the scenarios keep checking that.
+  now PumpSync gives such a record the first profile. `pair()` adds no extra wait after the profile, so the scenarios
+  keep checking that.
 - A scenario checks the records as soon as the queue is idle. A driver that stores what a status read found from a
   launched coroutine can store it after the check: the Equil decision on an extended bolus whose answer was lost was
   right in the log and still failed the check. Store it before the read ends.
@@ -208,8 +209,9 @@ Shard C's logcat can rotate before CI reads it, so the UI base adds the screen t
   `isFakingTempsByExtendedBoluses` says.
 - An alarm reaches the user in two ways: from a background thread as the full-screen alarm notification, from the main
   thread as the alarm screen. `checkUrgentAlarmSince` accepts either.
-- A driver's own database, as the stored pump log of Aaruy, is a file. It outlives the test graph, so a test finds the
-  rows of the tests before it. A driver must not take an old row for a new event; Aaruy tells them apart by the row id.
+- A driver's own database, as the stored pump log of Aaruy (the driver lives on the `aaruy` branch, not on dev), is a
+  file. It outlives the test graph, so a test finds the rows of the tests before it. A driver must not take an old row
+  for a new event; Aaruy tells them apart by the row id.
 - After a profile write AAPS stores the switch with the basal the pump reports (`deliveredBasal`), not the asked one. A
   write the driver took as done by mistake therefore does not show as the new basal: AAPS runs the switch with the old
   basal. Check whether AAPS stored the switch (`profileWrittenOnce`), not its basal. A report further than

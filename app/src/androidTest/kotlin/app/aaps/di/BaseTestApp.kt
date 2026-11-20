@@ -141,11 +141,6 @@ open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFacto
 
     override val metroViewModelFactory: MetroViewModelFactory get() = metroGraphs.viewModelFactory
 
-    /**
-     * Keep in step with `MainApp.registerStringOwners`. Each of these modules generates its own name
-     * to `R.string` id map, and the registry is what a `TextRef.Named` is resolved through.
-     */
-
     private companion object {
 
         const val RESTART_DATABASE = "e2e-restart.db"

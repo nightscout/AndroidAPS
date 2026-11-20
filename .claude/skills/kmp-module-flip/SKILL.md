@@ -16,12 +16,13 @@ believed.
 
 ## The target state, and what a module arriving from elsewhere has to become
 
-`:plugins:calibration` is the closest thing to the finished shape: 9 files in commonMain, 1 in
-androidMain, 1 in iosMain, tests in androidHostTest. Aim at that.
+`:plugins:calibration` is the closest thing to the finished shape: most code in commonMain, one
+`expect` chart with an `actual` in androidMain, iosMain and jvmMain, and tests in androidHostTest.
+Aim at that.
 
 | | target |
 |---|---|
-| module type | `kotlin("multiplatform")` + `libs.plugins.android.kmp.library` |
+| module type | `id("kmp-android-library")`, which applies `kotlin("multiplatform")`, the AGP KMP library plugin and `kmp-test-defaults` |
 | flavours | none - only `:app`, `:wear` and `:wear:watchfacepush` have them |
 | DI | Metro only. `@Inject`, `@SingleIn(AppScope::class)`, `@ContributesBinding`; a plugin registers itself with `@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())` **from commonMain** |
 | UI | Compose Multiplatform in commonMain; `androidx.compose.*` package names are the same |
@@ -29,7 +30,7 @@ androidMain, 1 in iosMain, tests in androidHostTest. Aim at that.
 | platform work | behind an interface in commonMain, implemented in androidMain (and iosMain when it exists) |
 | source sets | `commonMain` holds the bulk; `androidMain` holds only ports and Android entry points |
 | tests | `androidHostTest`, run by `testAndroidHostTest`; instrumented in `androidDeviceTest` |
-| targets | `iosArm64()` and `iosSimulatorArm64()` declared from the start |
+| targets | `iosArm64()`, `iosSimulatorArm64()` and `jvm()` (desktop), all set by `kmp-android-library`. Every `expect` needs an `actual` in androidMain, iosMain and jvmMain |
 
 A module written against the old architecture - a pump driver from another fork, say - will arrive as
 `com.android.library` with an annotation-processor DI framework, XML layouts and ViewBinding,
@@ -47,9 +48,11 @@ step is green on its own and the DI stays working:
 5. **Flip the module type**, move the sources, add the iOS targets.
 6. **Move files to commonMain** and let the iOS compile tell you what is really left.
 
-Then wire it up: `include` in `settings.gradle`; add it to `:appshell` as `api(...)` if it has
-screens the navigation graph reaches; add it to `migratedModules` in `ios/shell/build.gradle.kts`
-once it builds for iOS; register its string owner in `MainApp` and `BaseTestApp`.
+Then wire it up: `include` in `settings.gradle`. A `:plugins:*` module reaches `:appshell` by
+itself; another module with screens the navigation graph reaches needs `api(project(...))` there.
+Add it to `migratedModules` in `ios/shell/build.gradle.kts` once it builds for iOS. If it has
+strings, add one line to `StringOwnerModules.ALL` and call `registerKeyStrings("xxx")` (see the
+strings section below). Nothing is registered by hand in the shells.
 
 ## The hard precondition: no annotation-processor DI in the module
 
@@ -77,16 +80,11 @@ with resources, Compose and Robolectric.
   The JaCoCo Robolectric setting and `jvmTarget` come from the root build file; do not restate them.
 - `androidResources { enable = true }` - off by default here, unlike a plain Android library.
 - There are **no product flavours and no build types**, so `debugImplementation` does not exist.
-- `ios/shell` must link every module that builds for iOS: `checkMigratedModules` fails the framework
-  link until the module is added to `migratedModules` there.
 
 ### Flavours are no longer a problem
 
-Older modules carry a `ProductFlavorAttr` pin to disambiguate a flavoured dependency. **Do not copy
-it into a new module.** Product flavours were removed from the library convention plugin, so only
-`:app`, `:wear` and `:wear:watchfacepush` have flavours now, and an unflavoured
-consumer resolves them without help. If you see the pin in an existing build file, it is left over
-and can go.
+Only `:app`, `:wear` and `:wear:watchfacepush` have product flavours, and an unflavoured consumer
+resolves them without help. A module from another fork may carry a `ProductFlavorAttr` pin; drop it.
 
 ### The dependency list the convention plugin used to supply
 
@@ -126,7 +124,7 @@ Three separate things all have to be restated:
    }
    ```
 
-Verify locally before pushing - none of this needs a device:
+Verify locally before pushing - none of this needs a device (`./gradlew` on macOS):
 
 ```
 ./gradlew.bat :module:compileAndroidDeviceTest :module:assembleAndroidDeviceTest --no-daemon
@@ -151,12 +149,15 @@ Task names change with the layout, and a wrong name **runs no tests and still ex
 |---|---|
 | `androidHostTest` | `testAndroidHostTest` |
 | `androidDeviceTest` | `connectedAndroidDeviceTest` |
+| `commonTest`, `jvmTest` | `jvmTest` |
+| `commonTest`, `iosTest` | `iosSimulatorArm64Test` (macOS only) |
 | plain Android library | `testDebugUnitTest` |
 | `:app` / `:wear` | `testFullDebugUnitTest` |
 
-`.circleci/config.yml` names all of them, and
-`buildSrc/src/main/kotlin/jacoco-aggregation.gradle.kts` picks the variant directory per module. If
-you change a module's shape, check both.
+CI finds the modules by itself: `.github/workflows/unit-tests.yml` runs the unit test tasks above by
+name, `.circleci/config.yml` runs the instrumented tests of every `androidTest` and
+`androidDeviceTest` folder, and `buildSrc/src/main/kotlin/jacoco-aggregation.gradle.kts` asks each
+module's plugin. Only a new task name or source-set name needs a change there.
 
 ## The Metro construction trap
 
@@ -169,7 +170,7 @@ Metro builds it for real in every graph test, with every dependency resolved for
 | `VersionCheckerUtilsImpl` | property init opens `definition.json` | infinite read loop, OOM - looks like a machine problem |
 | `OneTimePassword` | `init { configure() }` generates and persists an OTP secret | NPE, 11 graph tests |
 | `AuthFlowOut` | property init builds `AuthorizationService`, which inspects installed browsers | `ExceptionInInitializerError` |
-| `NotificationManagerImpl`, `FabricPrivacyImpl` | notification channel, Firebase flags, `while(true)` loop | not converted - see below |
+| `FabricPrivacyImpl` | `init` set the Firebase flags | done: the work moved to `start()`, which `MainApp.onCreate()` calls - see below |
 
 **Before adding `@ContributesBinding` to a class, read its property initializers and `init` block for
 I/O, sockets, or anything blocking.** Usually the fix is `by lazy { ... }`, which is better in
@@ -177,7 +178,7 @@ production too, since building the graph should not do file I/O.
 
 **Laziness is not always right.** Where the `init` work is a *startup obligation* - registering a
 receiver, setting analytics flags, starting a periodic loop - deferring it changes behaviour. Those
-need an explicit `start()` from `MainApp.onCreate()`, which is a real refactor.
+need an explicit `start()` from `MainApp.onCreate()`, as `FabricPrivacyImpl.start()` has now.
 
 **And an explicit `start()` has to be called by three shells, not one.** `MainApp.onCreate()` calls
 several; `desktop/shell/.../Main.kt` and `ios/shell/.../IosAppStartup.kt` call almost none. A missed
@@ -209,11 +210,12 @@ Anchor it as `^import android\.`.
 `R.string.x` cannot exist in commonMain. The fix is `GenerateKeyStringsTask`, which turns the
 module's `strings.xml` into a `XxxStrings` object of `TextRef.Named` (commonMain) plus a
 `XxxStringIds` map (androidMain). Add one line for the module to `StringOwnerModules.ALL` in
-buildSrc, then `val generateXxxStrings = registerKeyStrings("xxx")` in the module's build file. The
-build fails if the owner is not in the list. Then:
+buildSrc, then call `registerKeyStrings("xxx")` at the top of the module's build file. The build
+fails if the owner is not in the list. Then:
 
-1. Add `kotlin.srcDir(...)` for the common output to `commonMain` and the android output to
-   `androidMain`, and `implementation(project(":core:keys"))` to commonMain for `TextRef`.
+1. Nothing more in the build file. `registerKeyStrings` adds the generated code to `commonMain` and
+   `androidMain` by itself. `TextRef` comes from `:core:keys`, which `:core:interfaces` already
+   exports with `api`.
 2. Nothing to register by hand. Every shell (`:app`, its instrumented tests, desktop, iOS) generates
    `GeneratedStringOwners` from `StringOwnerModules.ALL`. Add one of the module's strings to
    `DesktopStringOwnersTest` and `IosStringOwnersTest`. A module the desktop shell does not link, as
@@ -221,8 +223,9 @@ build fails if the owner is not in the list. Then:
    cannot see; then its string goes in the iOS test only.
 3. Swap `R.string.foo` for `XxxStrings.foo`. The substitution is name-preserving, so a wrong mapping
    cannot happen silently - it fails to compile.
-4. In Composables import `app.aaps.core.ui.compose.stringResource` alongside the androidx one. Both
-   are called `stringResource`; Kotlin picks by parameter type.
+4. In Composables import `app.aaps.core.ui.compose.stringResource`. In androidMain it can sit next
+   to the androidx one: both are called `stringResource`, and Kotlin picks by parameter type.
+   commonMain has no androidx one.
 
 Sweep **every** receiver spelling, not just the obvious one: `rh.gs(R.string.x)`,
 `resourceHelper.gs(...)`, the fully qualified `app.aaps.plugins.foo.R.string.x`, and any aliased
@@ -233,16 +236,20 @@ After the swap, unwrap `TextRef.AndroidRes(XxxStrings.x)` - the argument is alre
 **Tests need the same swap**: `whenever(rh.gs(R.string.x))` becomes `whenever(rh.gs(XxxStrings.x))`,
 and a blanket `rh.gs(anyInt())` stub becomes `doAnswer { ... }.whenever(rh).gs(any<TextRef>())` -
 written that way round because `rh.gs(any<TextRef>())` on its own is ambiguous against the vararg
-overload. If the module's owner is not registered in `shared/tests/TextRefStubs.kt`, an unstubbed
-name resolves to itself, so expectations like `isNull()` become the string's own name. A Robolectric
-Compose test must call `TextRefIdRegistry.register(owner) { XxxStringIds.idOf(it) }` in its setup,
-exactly as `MainApp` does.
+overload. `stubTextRefResolution(rh)` in `shared/tests/TextRefStubs.kt` knows only five owners
+(`keys`, `coreUi`, `interfaces`, `implementation`, `aps`). For any other owner, a string that no
+test stubbed throws. Use `generatedTextResolver("xxx" to XxxStringsValues::textOf)` for the real
+English text, or stub the string. Do not add the module to `TextRefStubs`: that needs a new
+dependency. A Robolectric Compose test must call
+`TextRefIdRegistry.register(owner) { XxxStringIds.idOf(it) }` in its setup. In the app,
+`GeneratedStringOwners.registerAll()` does this for every owner.
 
 ### An `Int` in an interface is a hard stop
 
-`PumpEnactResult.comment(Int)` and `HardLimits.verifyHardLimits(..., valueName: Int, ...)` take a
-resource id in the **interface**. A `TextRef` overload exists for `comment`; where one does not, the
-implementation cannot move until the interface changes.
+A resource id (`Int`) in an **interface** blocks every caller in commonMain. The fix is a `TextRef`
+overload in the interface, as `PumpEnactResult.comment(TextRef)` and
+`HardLimits.verifyHardLimits(..., valueName: TextRef, ...)` have now. Until such an overload exists,
+the caller cannot move.
 
 ### Kotlin/Native rejects a comma in a backticked test name
 
@@ -343,8 +350,8 @@ Neither is a blocker, but both look like the obvious idiom and both fail:
 
 ### Other common blockers
 
-`javax.inject` (swap to `dev.zacsweers.metro.Inject` only for a class Metro already builds),
-`@Synchronized`, `org.json`, `java.util.Calendar`, and `System.currentTimeMillis()` - the last is
+`javax.inject` (in a module from another fork: replace it with `dev.zacsweers.metro.*` in step 1 -
+this repo has no javax.inject dependency), `@Synchronized`, `org.json`, `java.util.Calendar`, and `System.currentTimeMillis()` - the last is
 just `Clock.System.now().toEpochMilliseconds()`.
 
 Smaller ones: `Throwable.localizedMessage` is JVM only (use `message`); `@Synchronized` becomes
@@ -521,7 +528,7 @@ serialization and matching logic in shared code, and only the Bluetooth or locat
 platform-specific. Implement the Android side straight away; other platforms can follow later.
 
 A port must express *intent*, not steps. If the caller is coordinating platform timing on the
-implementation.s behalf, the port is drawn in the wrong place. `LocationServiceController` was
+implementation's behalf, the port is drawn in the wrong place. `LocationServiceController` was
 `startService(): Boolean` / `stopService()`, and `AutomationRuntime` wrapped it in a
 `DeferredForegroundStart` (Android 12 blocks `startForegroundService` from the background) plus its
 own latch to retry after a location permission grant - two Android rules living in the rule engine.
@@ -543,8 +550,8 @@ instead.
 ### Test libraries are JVM-only, so a fixtures module barely moves
 
 JUnit 5, Mockito and RxJava have no Kotlin/Native artifacts. Anything built on them is Android by
-nature, not by accident, and no amount of work moves it. In `:shared:tests` that left exactly one
-file in commonMain out of eleven:
+nature, not by accident, and no amount of work moves it. In `:shared:tests` almost everything stays
+in androidMain; only `AAPSLoggerTest` is in commonMain:
 
 | stays on Android | why |
 |---|---|
@@ -565,13 +572,7 @@ do not belong in the API Swift sees. There is a `filterNot` in `ios/shell/build.
 
 ## `:ios:shell:checkMigratedModules` will fail next
 
-Once a module builds for iOS, the ios-branch guard fails until it is listed. It names the module and
-what to do: add it to `migratedModules` in `ios/shell/build.gradle.kts` and bump
-`ShellInfo.LINKED_MODULES`. Expect this on every flip. Nothing checks the count: set it to the length of the list,
-do not add one to it. It was one behind (26 for 27 modules) until the Carelevo flip found it.
-
-## Do not run a javax-stripping sweep over `:app`'s DI files
-
-`AppRootGraph`, `MetroGraphs`, `AapsLeaves` and `CoreObjectsModule` legitimately import
-`javax.inject.Singleton` and `javax.inject.Inject`. A helper that strips javax while adding an import
-breaks them with `Unresolved reference 'Singleton'`. Edit those by hand.
+`ios/shell` must link every module that builds for iOS. Once a module does, `checkMigratedModules`
+fails the framework link until the module is listed. It names the module and what to do: add it to
+`migratedModules` in `ios/shell/build.gradle.kts`. Then update `ShellInfo.LINKED_MODULES`: nothing
+checks the count, so set it to the number of entries in `migratedModules`. Expect this on every flip.
