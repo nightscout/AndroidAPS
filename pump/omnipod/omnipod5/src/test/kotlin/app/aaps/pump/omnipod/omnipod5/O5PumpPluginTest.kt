@@ -464,13 +464,26 @@ class O5PumpPluginTest : TestBaseWithProfile() {
     @Test
     fun `isThisProfileSet is true before pairing - prevents premature basal-set attempts`() {
         whenever(podStateManager.ltk).thenReturn(null)
+        whenever(podStateManager.isActivationCompleted).thenReturn(false)
 
         assertThat(plugin.isThisProfileSet(mock())).isTrue()
     }
 
     @Test
+    fun `isThisProfileSet is true on a paired pod until the activation is complete - no basal write between the two steps`() {
+        whenever(podStateManager.ltk).thenReturn(byteArrayOf(1))
+        whenever(podStateManager.isActivationCompleted).thenReturn(false)
+        // What a paired pod has between the two steps: no confirmed program yet. Without the activation check this
+        // compares as "not set", and KeepAlive queues a write.
+        whenever(podStateManager.basalProgram).thenReturn(null)
+
+        assertThat(plugin.isThisProfileSet(flatProfile())).isTrue()
+    }
+
+    @Test
     fun `isThisProfileSet is false while delivery is suspended - a set is genuinely needed`() {
         whenever(podStateManager.ltk).thenReturn(byteArrayOf(1))
+        whenever(podStateManager.isActivationCompleted).thenReturn(true)
         whenever(podStateManager.deliverySuspended).thenReturn(true)
 
         assertThat(plugin.isThisProfileSet(mock())).isFalse()
@@ -1802,6 +1815,7 @@ class O5PumpPluginTest : TestBaseWithProfile() {
     fun `profile change disables the suspend alert even when it was previously disabled`() = runBlocking<Unit> {
         stubStopTempBasal()
         whenever(podStateManager.ltk).thenReturn(ByteArray(16))
+        whenever(podStateManager.isActivationCompleted).thenReturn(true)
         whenever(podStateManager.podId).thenReturn(12345L)
         whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.BASAL_ACTIVE)
         var suspendAlertsEnabled = false
@@ -1831,6 +1845,7 @@ class O5PumpPluginTest : TestBaseWithProfile() {
     fun `failed profile write keeps the suspend alert armed`() = runBlocking<Unit> {
         stubStopTempBasal()
         whenever(podStateManager.ltk).thenReturn(ByteArray(16))
+        whenever(podStateManager.isActivationCompleted).thenReturn(true)
         whenever(podStateManager.podId).thenReturn(12345L)
         whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.BASAL_ACTIVE)
         whenever(bleManager.sendCommand(any(), any())).thenReturn(Observable.empty())
@@ -1849,6 +1864,7 @@ class O5PumpPluginTest : TestBaseWithProfile() {
     fun `setting a basal profile records the suspend, then ends it, and posts no PROFILE_SET_OK itself`() = runBlocking<Unit> {
         stubStopTempBasal()
         whenever(podStateManager.ltk).thenReturn(ByteArray(16))
+        whenever(podStateManager.isActivationCompleted).thenReturn(true)
         whenever(podStateManager.podId).thenReturn(12345L)
         whenever(podStateManager.pendingDoseCommand).thenReturn(null)
         whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.BASAL_ACTIVE)
@@ -1870,6 +1886,7 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         stubStopTempBasal()
         val profile = flatProfile()
         whenever(podStateManager.ltk).thenReturn(ByteArray(16))
+        whenever(podStateManager.isActivationCompleted).thenReturn(true)
         whenever(podStateManager.podId).thenReturn(12345L)
         whenever(podStateManager.pendingDoseCommand).thenReturn(null)
         whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.SUSPENDED)
@@ -1886,12 +1903,33 @@ class O5PumpPluginTest : TestBaseWithProfile() {
     @Test
     fun `setting a basal profile before pairing is deferred, not reported as a write`() = runBlocking<Unit> {
         whenever(podStateManager.ltk).thenReturn(null)
+        whenever(podStateManager.isActivationCompleted).thenReturn(false)
 
         val result = plugin.setNewBasalProfile(flatProfile())
 
         assertThat(result.success).isTrue()
         assertThat(result.enacted).isFalse()
         verify(bleManager, never()).sendCommand(any(), any())
+    }
+
+    /**
+     * Seen on a real pod on 2026-11-16: KeepAlive queued a profile write during the first activation step, and it ran
+     * right after it, before the cannula step.
+     */
+    @Test
+    fun `setting a basal profile between the two activation steps is deferred and sends nothing to the pod`() = runBlocking<Unit> {
+        whenever(podStateManager.ltk).thenReturn(ByteArray(16))
+        whenever(podStateManager.podId).thenReturn(12345L)
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.PHASE_1_COMPLETED)
+        whenever(podStateManager.isActivationCompleted).thenReturn(false)
+        whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.SUSPENDED)
+
+        val result = plugin.setNewBasalProfile(flatProfile())
+
+        assertThat(result.success).isTrue()
+        assertThat(result.enacted).isFalse()
+        verify(bleManager, never()).sendCommand(any(), any())
+        verify(history, never()).createRecord(any(), any(), any(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
     }
 
     private fun verifyTextRefPosted(id: NotificationId, mode: VerificationMode = times(1)) {

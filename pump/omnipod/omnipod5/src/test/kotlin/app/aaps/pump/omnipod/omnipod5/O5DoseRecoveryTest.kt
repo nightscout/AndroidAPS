@@ -546,6 +546,7 @@ class O5DoseRecoveryTest : TestBaseWithProfile() {
 
     @Test
     fun `lost profile response restores exact program and ends suspension once`() = runBlocking<Unit> {
+        state.activationProgress = ActivationProgress.COMPLETED
         state.updateFromDefaultStatusResponse(status(0, DeliveryStatus.SUSPENDED))
         val profile = mock<PumpProfile>()
         whenever(profile.getBasalValues()).thenReturn(arrayOf(Profile.ProfileValue(0, 0.7), Profile.ProfileValue(43200, 1.2)))
@@ -1133,6 +1134,7 @@ class O5DoseRecoveryTest : TestBaseWithProfile() {
 
     @Test
     fun `normal temp and profile responses use the same confirmation state`() = runBlocking<Unit> {
+        state.activationProgress = ActivationProgress.COMPLETED
         whenever(ble.sendCommand(any(), any())).thenAnswer {
             val command = it.getArgument<Command>(0)
             val delivery = when (command) {
