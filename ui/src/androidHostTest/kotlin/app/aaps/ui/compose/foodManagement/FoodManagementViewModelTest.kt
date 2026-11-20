@@ -10,6 +10,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.foodManagement.book.EatenItem
 import app.aaps.ui.compose.foodManagement.book.EatenMeal
@@ -40,6 +42,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -65,6 +70,7 @@ internal class FoodManagementViewModelTest {
     @Mock private lateinit var rh: TextResolver
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var decimalFormatter: DecimalFormatter
+    @Mock private lateinit var preferences: Preferences
 
     private lateinit var sut: FoodManagementViewModel
     private val dispatcher = StandardTestDispatcher()
@@ -79,7 +85,7 @@ internal class FoodManagementViewModelTest {
         whenever(persistenceLayer.observeChanges(FD::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeChanges(BCR::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeChanges(CA::class)).thenReturn(emptyFlow())
-        sut = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(NoFoodImageStore(), openFoodFacts, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), aapsLogger))
+        sut = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(NoFoodImageStore(), openFoodFacts, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), aapsLogger), preferences)
     }
 
     @AfterEach
@@ -90,8 +96,9 @@ internal class FoodManagementViewModelTest {
         val state = sut.uiState.value
         assertThat(state.isLoading).isTrue()
         assertThat(state.searchQuery).isEmpty()
-        assertThat(state.filterCategory).isNull()
-        assertThat(state.filterSubCategory).isNull()
+        assertThat(state.filterCategory).isEqualTo(GroupFilter.All)
+        assertThat(state.filterSubCategory).isEqualTo(GroupFilter.All)
+        assertThat(state.sortFoodsByName).isFalse()
         assertThat(state.showEditor).isFalse()
     }
 
@@ -104,19 +111,19 @@ internal class FoodManagementViewModelTest {
 
     @Test
     fun `setFilterCategory sets category and clears subcategory`() {
-        sut.setFilterSubCategory("Sub")
-        sut.setFilterCategory("Fruit")
+        sut.setFilterSubCategory(GroupFilter.Named("Sub"))
+        sut.setFilterCategory(GroupFilter.Named("Fruit"))
 
         val state = sut.uiState.value
-        assertThat(state.filterCategory).isEqualTo("Fruit")
-        assertThat(state.filterSubCategory).isNull()
+        assertThat(state.filterCategory).isEqualTo(GroupFilter.Named("Fruit"))
+        assertThat(state.filterSubCategory).isEqualTo(GroupFilter.All)
     }
 
     @Test
     fun `setFilterSubCategory updates the state`() {
-        sut.setFilterSubCategory("Berries")
+        sut.setFilterSubCategory(GroupFilter.Named("Berries"))
 
-        assertThat(sut.uiState.value.filterSubCategory).isEqualTo("Berries")
+        assertThat(sut.uiState.value.filterSubCategory).isEqualTo(GroupFilter.Named("Berries"))
     }
 
     @Test
@@ -628,7 +635,7 @@ internal class FoodManagementViewModelTest {
     /** A screen on [book], with [foods] in the database. Runs the start of the screen. */
     private fun screenWith(book: FoodBookRepository, vararg foods: FD): FoodManagementViewModel {
         runBlocking { whenever(persistenceLayer.getFoods()).thenReturn(foods.toList()) }
-        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(NoFoodImageStore(), openFoodFacts, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), aapsLogger))
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(NoFoodImageStore(), openFoodFacts, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), aapsLogger), preferences)
         dispatcher.scheduler.runCurrent()
         return vm
     }
@@ -894,7 +901,7 @@ internal class FoodManagementViewModelTest {
         }
         whenever(dateUtil.now()).thenReturn(1_000_000)
         val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
-        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, files), files, FoodImages(NoFoodImageStore(), openFoodFacts, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), aapsLogger))
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, files), files, FoodImages(NoFoodImageStore(), openFoodFacts, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), aapsLogger), preferences)
         dispatcher.scheduler.runCurrent()
 
         vm.restore(ExportFile("backup", "ref"))
@@ -950,7 +957,7 @@ internal class FoodManagementViewModelTest {
         }
         val store = MemoryImageStore().also { it.files["3017620422003"] = offOnPhone }
         val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
-        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, files), files, FoodImages(store, openFoodFacts, book, aapsLogger))
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, files), files, FoodImages(store, openFoodFacts, book, aapsLogger), preferences)
         dispatcher.scheduler.runCurrent()
 
         vm.restore(ExportFile("2026-11-12_100000_" + FoodBackupMath.ARCHIVE_NAME, "ref"))
@@ -972,7 +979,7 @@ internal class FoodManagementViewModelTest {
         }
         val store = MemoryImageStore()
         val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
-        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(store, openFoodFacts, book, aapsLogger))
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(store, openFoodFacts, book, aapsLogger), preferences)
         dispatcher.scheduler.runCurrent()
         val photo = byteArrayOf(1, 2, 3)
 
@@ -1006,7 +1013,7 @@ internal class FoodManagementViewModelTest {
         val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
         runBlocking { book.saveRecipe(dish) }
         whenever(rh.gs(UiStrings.food_book_servings)).thenReturn("servings")
-        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(store, openFoodFacts, book, aapsLogger))
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(store, openFoodFacts, book, aapsLogger), preferences)
         runUntil { vm.uiState.value.recipes.isNotEmpty() }
         val first = byteArrayOf(1)
 
@@ -1052,7 +1059,7 @@ internal class FoodManagementViewModelTest {
         val store = MemoryImageStore().also { it.files["user_aaa"] = byteArrayOf(1) }
         val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
         runBlocking { book.saveRecipe(dish) }
-        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(store, openFoodFacts, book, aapsLogger))
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(store, openFoodFacts, book, aapsLogger), preferences)
         runUntil { vm.uiState.value.recipePhotos["user_aaa"] != null }
 
         vm.startEdit(vm.uiState.value.recipes.single())
@@ -1070,16 +1077,16 @@ internal class FoodManagementViewModelTest {
         whenever(persistenceLayer.observeChanges(FD::class)).thenReturn(changes)
         val cake = FD(id = 40, name = "Cake", category = "Bakery", subCategory = "Sweet", portion = 100.0, unit = "g", carbs = 50)
         val vm = screenWith(FoodBookRepository(MemoryFoodBookStore(), aapsLogger), cake, bread)
-        vm.setFilterCategory("Bakery")
-        vm.setFilterSubCategory("Sweet")
+        vm.setFilterCategory(GroupFilter.Named("Bakery"))
+        vm.setFilterSubCategory(GroupFilter.Named("Sweet"))
 
         runBlocking { whenever(persistenceLayer.getFoods()).thenReturn(listOf(cake.copy(category = "Dessert"), bread)) }
         changes.tryEmit(emptyList())
         dispatcher.scheduler.advanceTimeBy(1_100)
         dispatcher.scheduler.runCurrent()
 
-        assertThat(vm.uiState.value.filterCategory).isNull()
-        assertThat(vm.uiState.value.filterSubCategory).isNull()
+        assertThat(vm.uiState.value.filterCategory).isEqualTo(GroupFilter.All)
+        assertThat(vm.uiState.value.filterSubCategory).isEqualTo(GroupFilter.All)
         assertThat(vm.uiState.value.foods.map { it.name }).containsExactly("Cake", "Bread")
     }
 
@@ -1090,14 +1097,110 @@ internal class FoodManagementViewModelTest {
         val cake = FD(id = 40, name = "Cake", category = "Bakery", portion = 100.0, unit = "g", carbs = 50)
         val bun = FD(id = 41, name = "Bun", category = "Bakery", portion = 100.0, unit = "g", carbs = 55)
         val vm = screenWith(FoodBookRepository(MemoryFoodBookStore(), aapsLogger), cake, bun)
-        vm.setFilterCategory("Bakery")
+        vm.setFilterCategory(GroupFilter.Named("Bakery"))
 
         runBlocking { whenever(persistenceLayer.getFoods()).thenReturn(listOf(cake.copy(category = "Dessert"), bun)) }
         changes.tryEmit(emptyList())
         dispatcher.scheduler.advanceTimeBy(1_100)
         dispatcher.scheduler.runCurrent()
 
-        assertThat(vm.uiState.value.filterCategory).isEqualTo("Bakery")
+        assertThat(vm.uiState.value.filterCategory).isEqualTo(GroupFilter.Named("Bakery"))
+    }
+
+    // ---- Filters "All / None / a group" and the sort ----
+
+    /** Keeps [flow] collected, as the screen does: the derived lists are only computed while shown. */
+    private fun <T> shown(flow: StateFlow<T>): StateFlow<T> {
+        CoroutineScope(dispatcher).launch { flow.collect {} }
+        dispatcher.scheduler.runCurrent()
+        return flow
+    }
+
+    private val apple = FD(id = 50, name = "apple", category = "Fruit", subCategory = "Fresh", portion = 100.0, unit = "g", carbs = 12)
+    private val prune = FD(id = 51, name = "Prune", category = "Fruit", portion = 100.0, unit = "g", carbs = 60)
+    private val salt = FD(id = 52, name = "Écrou salé", portion = 100.0, unit = "g", carbs = 1)
+
+    @Test
+    fun `the None category shows only the foods without a category`() {
+        val vm = screenWith(FoodBookRepository(MemoryFoodBookStore(), aapsLogger), salt, prune, apple)
+        val foods = shown(vm.filteredFoods)
+
+        vm.setFilterCategory(GroupFilter.None)
+        dispatcher.scheduler.runCurrent()
+
+        assertThat(foods.value.map { it.name }).containsExactly("Écrou salé")
+        assertThat(shown(vm.foodCategoryChoices).value).isEqualTo(GroupChoices(listOf("Fruit"), hasNone = true))
+    }
+
+    @Test
+    fun `the None subcategory shows the foods of the category without a subcategory`() {
+        val vm = screenWith(FoodBookRepository(MemoryFoodBookStore(), aapsLogger), salt, prune, apple)
+        val foods = shown(vm.filteredFoods)
+        val subChoices = shown(vm.foodSubCategoryChoices)
+
+        vm.setFilterCategory(GroupFilter.Named("Fruit"))
+        dispatcher.scheduler.runCurrent()
+        assertThat(subChoices.value).isEqualTo(GroupChoices(listOf("Fresh"), hasNone = true))
+
+        vm.setFilterSubCategory(GroupFilter.None)
+        dispatcher.scheduler.runCurrent()
+        assertThat(foods.value.map { it.name }).containsExactly("Prune")
+    }
+
+    @Test
+    fun `the foods are newest first or A to Z, and the choice is kept`() {
+        // The database gives the newest first.
+        val vm = screenWith(FoodBookRepository(MemoryFoodBookStore(), aapsLogger), salt, prune, apple)
+        val foods = shown(vm.filteredFoods)
+        assertThat(foods.value.map { it.name }).containsExactly("Écrou salé", "Prune", "apple").inOrder()
+
+        vm.setSortFoodsByName(true)
+        dispatcher.scheduler.runCurrent()
+
+        assertThat(foods.value.map { it.name }).containsExactly("apple", "Écrou salé", "Prune").inOrder()
+        verify(preferences).put(BooleanNonKey.FoodSortByName, true)
+    }
+
+    @Test
+    fun `the sort chosen before is used when the screen opens`() {
+        whenever(preferences.get(BooleanNonKey.FoodSortByName)).thenReturn(true)
+
+        val vm = screenWith(FoodBookRepository(MemoryFoodBookStore(), aapsLogger), salt, prune, apple)
+
+        assertThat(vm.uiState.value.sortFoodsByName).isTrue()
+        assertThat(shown(vm.filteredFoods).value.map { it.name }).containsExactly("apple", "Écrou salé", "Prune").inOrder()
+    }
+
+    @Test
+    fun `a dish keeps its category and the dish list can be filtered on it`() {
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        val salad = Recipe(id = "s", name = "Fruit salad", kind = RecipeKind.DISH, items = listOf(RecipeItem("apple", 100.0, "g", foodId = 50)))
+        val soup = Recipe(id = "p", name = "Soup", kind = RecipeKind.DISH, items = listOf(RecipeItem("apple", 50.0, "g", foodId = 50)))
+        val lunch = Recipe(id = "m", name = "Lunch", kind = RecipeKind.MEAL, items = listOf(RecipeItem("apple", 50.0, "g", foodId = 50)))
+        runBlocking { book.saveRecipe(salad); book.saveRecipe(soup); book.saveRecipe(lunch) }
+        val vm = screenWith(book, apple)
+        runUntil { vm.uiState.value.recipes.size == 3 }
+
+        // The food category is proposed, so the dish can go with the foods it is close to.
+        vm.startEdit(vm.uiState.value.recipes.first { it.id == "s" })
+        assertThat(vm.dishCategorySuggestions()).containsExactly("Fruit")
+        vm.updateEditCategory("fruit")
+        vm.updateEditSubCategory("Home-made")
+        vm.saveEdit()
+        runUntil { book.book.value.recipes.first { it.id == "s" }.category != null }
+
+        val saved = book.book.value.recipes.first { it.id == "s" }
+        // Same letters as the food category: the group is not written twice in two ways.
+        assertThat(saved.category).isEqualTo("Fruit")
+        assertThat(saved.subCategory).isEqualTo("Home-made")
+
+        runUntil { vm.uiState.value.recipes.first { it.id == "s" }.category != null }
+        val recipes = shown(vm.filteredRecipes)
+        vm.setDishCategory(GroupFilter.None)
+        dispatcher.scheduler.runCurrent()
+        // The meals are never filtered.
+        assertThat(recipes.value.map { it.name }).containsExactly("Lunch", "Soup")
+        assertThat(shown(vm.dishCategoryChoices).value).isEqualTo(GroupChoices(listOf("Fruit"), hasNone = true))
     }
 
     @Test
@@ -1254,7 +1357,7 @@ internal class FoodManagementViewModelTest {
             whenever(openFoodFacts.lookup(any())).thenReturn(OffResult.NotFound)
             links.forEach { book.saveOffLink(it) }
         }
-        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(NoFoodImageStore(), openFoodFacts, book, aapsLogger))
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(NoFoodImageStore(), openFoodFacts, book, aapsLogger), preferences)
         dispatcher.scheduler.runCurrent()
         runUntil { !vm.uiState.value.isLoading && vm.uiState.value.foodBarcodes.size == links.size }
         return vm to book

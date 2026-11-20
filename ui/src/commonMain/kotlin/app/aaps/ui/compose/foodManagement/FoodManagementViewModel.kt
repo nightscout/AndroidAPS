@@ -18,6 +18,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.SelectableListToolbar
@@ -86,6 +88,7 @@ class FoodManagementViewModel(
     private val foodCsv: FoodCsv,
     private val exportFiles: FoodExportFiles,
     private val foodImages: FoodImages,
+    private val preferences: Preferences,
 ) : ViewModel() {
 
     // ---- Export, backup and restore (proof of concept, personal use) ----
@@ -253,29 +256,33 @@ class FoodManagementViewModel(
     /** Gives every meal item its own key, so the same food can be in the meal twice. */
     private var nextMealKey = 1L
 
-    private val _uiState = MutableStateFlow(FoodManagementUiState())
+    private val _uiState = MutableStateFlow(FoodManagementUiState(sortFoodsByName = preferences.get(BooleanNonKey.FoodSortByName)))
     val uiState: StateFlow<FoodManagementUiState> = _uiState.asStateFlow()
 
-    /** Derived: foods filtered by current search query and category/subcategory filters */
+    /**
+     * Derived: foods filtered by the search and by the category and subcategory filters. The newest
+     * come first (the order of the database), or the names from A to Z.
+     */
     val filteredFoods: StateFlow<List<FD>> = uiState
         .map { s ->
-            s.foods.filter { food ->
+            val shown = s.foods.filter { food ->
                 (s.searchQuery.isBlank() || food.name.contains(s.searchQuery, ignoreCase = true))
-                    && (s.filterCategory == null || food.category == s.filterCategory)
-                    && (s.filterSubCategory == null || food.subCategory == s.filterSubCategory)
+                    && s.filterCategory.matches(food.category)
+                    && s.filterSubCategory.matches(food.subCategory)
             }
+            if (s.sortFoodsByName) shown.sortedBy { nameSortKey(it.name) } else shown
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
-    /** Derived: subcategories available for the currently selected category filter */
-    val filteredSubCategories: StateFlow<List<String>> = uiState
-        .map { s ->
-            val foods = s.foods
-            val cat = s.filterCategory
-            val relevant = if (cat != null) foods.filter { it.category == cat } else foods
-            relevant.mapNotNull { it.subCategory }.filter { it.isNotBlank() }.distinct().sorted()
-        }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+    /** Derived: the choices of the category filter of the foods. */
+    val foodCategoryChoices: StateFlow<GroupChoices> = uiState
+        .map { s -> GroupChoices.of(s.foods.map { it.category }) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GroupChoices())
+
+    /** Derived: the choices of the subcategory filter of the foods, for the chosen category. */
+    val foodSubCategoryChoices: StateFlow<GroupChoices> = uiState
+        .map { s -> GroupChoices.of(s.foods.filter { s.filterCategory.matches(it.category) }.map { it.subCategory }) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GroupChoices())
 
     init {
         loadData()
@@ -314,13 +321,14 @@ class FoodManagementViewModel(
                 val subCategories = foods.mapNotNull { it.subCategory }.filter { it.isNotBlank() }.distinct().sorted()
                 _uiState.update {
                     // A filter on a group that no longer has any food (its last food was moved to
-                    // another group, or deleted) would hide every food, with no filter chip shown to
-                    // clear it. It is removed, so the whole list comes back.
-                    val category = it.filterCategory?.takeIf { c -> foods.any { f -> f.category == c } }
+                    // another group, or deleted) would hide every food. It is removed, so the whole
+                    // list comes back.
+                    val category = it.filterCategory.takeIf { c -> foods.any { f -> c.matches(f.category) } } ?: GroupFilter.All
                     // A subcategory belongs to its category: it goes with it.
                     val subCategory = it.filterSubCategory
-                        ?.takeIf { _ -> it.filterCategory == null || category != null }
-                        ?.takeIf { s -> foods.any { f -> f.subCategory == s && (category == null || f.category == category) } }
+                        .takeIf { _ -> category == it.filterCategory }
+                        ?.takeIf { sub -> foods.any { f -> category.matches(f.category) && sub.matches(f.subCategory) } }
+                        ?: GroupFilter.All
                     it.copy(
                         foods = foods,
                         foodImages = images,
@@ -352,13 +360,71 @@ class FoodManagementViewModel(
         _uiState.update { it.copy(searchQuery = query) }
     }
 
-    fun setFilterCategory(category: String?) {
-        _uiState.update { it.copy(filterCategory = category, filterSubCategory = null) }
+    /** A new category starts with all its subcategories. */
+    fun setFilterCategory(category: GroupFilter) {
+        _uiState.update { it.copy(filterCategory = category, filterSubCategory = GroupFilter.All) }
     }
 
-    fun setFilterSubCategory(subCategory: String?) {
+    fun setFilterSubCategory(subCategory: GroupFilter) {
         _uiState.update { it.copy(filterSubCategory = subCategory) }
     }
+
+    /** The newest foods first, or A to Z. Kept for the next time the screen is opened. */
+    fun setSortFoodsByName(byName: Boolean) {
+        preferences.put(BooleanNonKey.FoodSortByName, byName)
+        _uiState.update { it.copy(sortFoodsByName = byName) }
+    }
+
+    // ---- Category filters of the dishes ----
+
+    /** Derived: the dishes and meals, with the dishes that do not pass the filters of the dish tab left out. */
+    val filteredRecipes: StateFlow<List<Recipe>> = uiState
+        .map { s -> s.recipes.filter { it.kind != RecipeKind.DISH || (s.dishCategory.matches(it.category) && s.dishSubCategory.matches(it.subCategory)) } }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    val dishCategoryChoices: StateFlow<GroupChoices> = uiState
+        .map { s -> GroupChoices.of(s.recipes.filter { it.kind == RecipeKind.DISH }.map { it.category }) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GroupChoices())
+
+    val dishSubCategoryChoices: StateFlow<GroupChoices> = uiState
+        .map { s -> GroupChoices.of(s.recipes.filter { it.kind == RecipeKind.DISH && s.dishCategory.matches(it.category) }.map { it.subCategory }) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GroupChoices())
+
+    fun setDishCategory(category: GroupFilter) {
+        _uiState.update { it.copy(dishCategory = category, dishSubCategory = GroupFilter.All) }
+    }
+
+    fun setDishSubCategory(subCategory: GroupFilter) {
+        _uiState.update { it.copy(dishSubCategory = subCategory) }
+    }
+
+    /**
+     * The categories proposed in the dish editor: the ones of the foods and of the dishes, so a
+     * home-made dish can go in the same group as the foods it is close to.
+     */
+    fun dishCategorySuggestions(): List<String> {
+        val s = uiState.value
+        return (s.allCategories + s.recipes.mapNotNull { it.category?.trim() })
+            .filter { it.isNotEmpty() }
+            .distinctBy { it.lowercase() }
+            .sortedBy { nameSortKey(it) }
+    }
+
+    /** The subcategories already used with [category], by the foods and by the dishes. */
+    fun dishSubCategorySuggestions(category: String): List<String> {
+        val wanted = category.trim()
+        if (wanted.isEmpty()) return emptyList()
+        return (subCategoriesOf(wanted) + uiState.value.recipes
+            .filter { it.category?.trim().equals(wanted, ignoreCase = true) }
+            .mapNotNull { it.subCategory?.trim() })
+            .filter { it.isNotEmpty() }
+            .distinctBy { it.lowercase() }
+            .sortedBy { nameSortKey(it) }
+    }
+
+    fun updateEditCategory(v: String) = _uiState.update { it.copy(editCategory = v) }
+
+    fun updateEditSubCategory(v: String) = _uiState.update { it.copy(editSubCategory = v) }
 
     fun openEditor(food: FD? = null) {
         if (food != null) {
@@ -794,6 +860,8 @@ class FoodManagementViewModel(
                 editing = recipe,
                 editName = recipe.name,
                 editNote = recipe.note.orEmpty(),
+                editCategory = recipe.category.orEmpty(),
+                editSubCategory = recipe.subCategory.orEmpty(),
                 editPhoto = recipe.photo?.let { key -> it.recipePhotos[key] },
                 editPhotoChanged = false,
                 showEditCamera = false,
@@ -831,11 +899,14 @@ class FoodManagementViewModel(
         val photoChanged = state.editPhotoChanged
         val newPhoto = state.editPhoto
         val note = state.editNote.trim().ifBlank { null }
+        // The same letters as a group already used: the group is not written twice in two ways.
+        val category = sameAs(state.editCategory, dishCategorySuggestions())
+        val subCategory = category?.let { sameAs(state.editSubCategory, dishSubCategorySuggestions(it)) }
         viewModelScope.launch {
             val photo = if (!photoChanged) recipe.photo else newPhoto?.let { bytes ->
                 foodImages.savePhoto(bytes)?.also { key -> _uiState.update { it.copy(recipePhotos = it.recipePhotos + (key to bytes)) } }
             }
-            foodBook.saveRecipe(recipe.copy(name = name, items = items, photo = photo, note = note))
+            foodBook.saveRecipe(recipe.copy(name = name, items = items, photo = photo, note = note, category = category, subCategory = subCategory))
             // The old file stays while a meal of the history shows it.
             if (photoChanged) recipe.photo?.let { foodImages.deleteUnused(listOf(it)) }
         }
@@ -852,6 +923,8 @@ class FoodManagementViewModel(
             editing = null,
             editName = "",
             editNote = "",
+            editCategory = "",
+            editSubCategory = "",
             editPhoto = null,
             editPhotoChanged = false,
             showEditCamera = false,
@@ -1335,8 +1408,12 @@ data class FoodManagementUiState(
     val isLoading: Boolean = true,
     // Filters
     val searchQuery: String = "",
-    val filterCategory: String? = null,
-    val filterSubCategory: String? = null,
+    val filterCategory: GroupFilter = GroupFilter.All,
+    val filterSubCategory: GroupFilter = GroupFilter.All,
+    /** False: the newest foods first. True: the names from A to Z. */
+    val sortFoodsByName: Boolean = false,
+    val dishCategory: GroupFilter = GroupFilter.All,
+    val dishSubCategory: GroupFilter = GroupFilter.All,
     val allCategories: List<String> = emptyList(),
     val allSubCategories: List<String> = emptyList(),
     // Editor
@@ -1427,6 +1504,9 @@ data class FoodManagementUiState(
     val editName: String = "",
     /** The comment of the dish or meal being changed. Shown only in its pencil, never on the card. */
     val editNote: String = "",
+    /** The category and subcategory of the dish being changed, as typed. Empty: none. */
+    val editCategory: String = "",
+    val editSubCategory: String = "",
     /** The photo of the dish or meal being changed, and whether the user changed it. */
     val editPhoto: ByteArray? = null,
     val editPhotoChanged: Boolean = false,

@@ -93,6 +93,9 @@ data class Recipe(
     val photo: String? = null,
     /** A free comment on the dish or meal. Not copied into the meal history. */
     val note: String? = null,
+    /** The category and subcategory of a dish, as for a food, to filter the dish list. Not used for meals. */
+    val category: String? = null,
+    val subCategory: String? = null,
 )
 
 /**

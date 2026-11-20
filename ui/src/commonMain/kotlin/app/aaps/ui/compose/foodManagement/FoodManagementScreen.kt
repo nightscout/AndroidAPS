@@ -5,8 +5,6 @@ import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,7 +32,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -82,7 +79,7 @@ import app.aaps.ui.compose.foodManagement.book.Nutrition
 import app.aaps.ui.compose.foodManagement.book.RecipeKind
 import app.aaps.ui.compose.treatments.WizardInfoDialog
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoodManagementScreen(
     viewModel: FoodManagementViewModel,
@@ -92,7 +89,11 @@ fun FoodManagementScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val filteredFoods by viewModel.filteredFoods.collectAsStateWithLifecycle()
-    val filteredSubCategories by viewModel.filteredSubCategories.collectAsStateWithLifecycle()
+    val foodCategories by viewModel.foodCategoryChoices.collectAsStateWithLifecycle()
+    val foodSubCategories by viewModel.foodSubCategoryChoices.collectAsStateWithLifecycle()
+    val filteredRecipes by viewModel.filteredRecipes.collectAsStateWithLifecycle()
+    val dishCategories by viewModel.dishCategoryChoices.collectAsStateWithLifecycle()
+    val dishSubCategories by viewModel.dishSubCategoryChoices.collectAsStateWithLifecycle()
     val snackbarHostState = LocalSnackbarHostState.current
 
     // Messages of the dishes and meals POC
@@ -209,8 +210,17 @@ fun FoodManagementScreen(
                 FoodTab.DISHES,
                 FoodTab.MEALS   -> {
                     val kind = if (state.tab == FoodTab.DISHES) RecipeKind.DISH else RecipeKind.MEAL
+                    // Only the dishes have categories: the meals are few, the search is enough.
+                    if (kind == RecipeKind.DISH) GroupFilterRow(
+                        categories = dishCategories,
+                        subCategories = dishSubCategories,
+                        category = state.dishCategory,
+                        subCategory = state.dishSubCategory,
+                        onCategory = viewModel::setDishCategory,
+                        onSubCategory = viewModel::setDishSubCategory,
+                    )
                     RecipeList(
-                        recipes = state.recipes,
+                        recipes = filteredRecipes,
                         kind = kind,
                         editing = editing,
                         selecting = selecting,
@@ -241,43 +251,18 @@ fun FoodManagementScreen(
                     return@Column
                 }
             }
-            // Filter chips
-            if (state.allCategories.isNotEmpty()) {
-                FlowRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = AapsSpacing.extraLarge),
-                    horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
-                ) {
-                    state.allCategories.forEach { cat ->
-                        FilterChip(
-                            selected = state.filterCategory == cat,
-                            onClick = {
-                                viewModel.setFilterCategory(if (state.filterCategory == cat) null else cat)
-                            },
-                            label = { Text(cat) }
-                        )
-                    }
-                }
-                if (filteredSubCategories.isNotEmpty() && state.filterCategory != null) {
-                    FlowRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = AapsSpacing.extraLarge),
-                        horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
-                    ) {
-                        filteredSubCategories.forEach { sub ->
-                            FilterChip(
-                                selected = state.filterSubCategory == sub,
-                                onClick = {
-                                    viewModel.setFilterSubCategory(if (state.filterSubCategory == sub) null else sub)
-                                },
-                                label = { Text(sub) }
-                            )
-                        }
-                    }
-                }
-            }
+            // Category and subcategory filters, and the sort: one row of fixed height, whatever the
+            // number of groups.
+            GroupFilterRow(
+                categories = foodCategories,
+                subCategories = foodSubCategories,
+                category = state.filterCategory,
+                subCategory = state.filterSubCategory,
+                onCategory = viewModel::setFilterCategory,
+                onSubCategory = viewModel::setFilterSubCategory,
+                sortByName = state.sortFoodsByName,
+                onSortByName = viewModel::setSortFoodsByName,
+            )
 
             // Food list
             if (state.isLoading) {
@@ -406,6 +391,12 @@ fun FoodManagementScreen(
                         onNameChange = viewModel::updateEditName,
                         note = state.editNote,
                         onNoteChange = viewModel::updateEditNote,
+                        category = state.editCategory,
+                        subCategory = state.editSubCategory,
+                        categories = viewModel.dishCategorySuggestions(),
+                        subCategories = viewModel.dishSubCategorySuggestions(state.editCategory),
+                        onCategoryChange = viewModel::updateEditCategory,
+                        onSubCategoryChange = viewModel::updateEditSubCategory,
                         onEditLine = viewModel::editLine,
                         onRemove = viewModel::removeMealItem,
                         onAddFood = { viewModel.closeMeal(); viewModel.selectTab(FoodTab.FOODS) },
@@ -500,7 +491,7 @@ private fun FoodItem(
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SuggestionField(value: String, onValueChange: (String) -> Unit, label: String, suggestions: List<String>, modifier: Modifier = Modifier) {
+internal fun SuggestionField(value: String, onValueChange: (String) -> Unit, label: String, suggestions: List<String>, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
     // True once the user types in the field. A value set from outside (the "OFF" category of an
     // import) is not a search: it must not hide the other choices.

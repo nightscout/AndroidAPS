@@ -650,6 +650,12 @@ internal fun RecipeEditContent(
     onSave: () -> Unit,
     note: String = "",
     onNoteChange: (String) -> Unit = {},
+    category: String = "",
+    subCategory: String = "",
+    categories: List<String> = emptyList(),
+    subCategories: List<String> = emptyList(),
+    onCategoryChange: (String) -> Unit = {},
+    onSubCategoryChange: (String) -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -685,6 +691,23 @@ internal fun RecipeEditContent(
                 label = { Text(stringResource(CoreUiStrings.name)) },
                 singleLine = true,
                 isError = name.isBlank(),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+        // A dish is filed like a food, to find it in a long list. The meals are few: no category.
+        if (recipe.kind == RecipeKind.DISH) {
+            SuggestionField(
+                value = category,
+                onValueChange = onCategoryChange,
+                label = stringResource(CoreUiStrings.category),
+                suggestions = categories,
+                modifier = Modifier.fillMaxWidth()
+            )
+            SuggestionField(
+                value = subCategory,
+                onValueChange = onSubCategoryChange,
+                label = stringResource(CoreUiStrings.subcategory),
+                suggestions = subCategories,
                 modifier = Modifier.fillMaxWidth()
             )
         }

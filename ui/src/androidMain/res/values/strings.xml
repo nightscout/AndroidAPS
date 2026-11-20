@@ -404,6 +404,11 @@
     <string name="food_barcode_no_category">No category</string>
     <string name="food_barcode_in_list" comment="On a product found on Open Food Facts whose barcode is already in the food list. %1$s = name of the food in the list. Example: In your list: Nutella">In your list: %1$s</string>
     <string name="food_barcode_line" comment="At the bottom of the food editor. %1$s = barcode, digits only. Example: Barcode: 3017620422003">Barcode: %1$s</string>
+    <string name="food_filter_all" comment="Choice in the category or subcategory filter of the food list: no filter. Keep it short, the list is narrow.">All</string>
+    <string name="food_filter_none" comment="Choice in the category or subcategory filter of the food list: only the foods without a category (or subcategory). Keep it short, the list is narrow.">None</string>
+    <string name="food_sort_recent" comment="Sort button of the food list: the newest foods first. Keep it short.">Recent</string>
+    <string name="food_sort_name" comment="Sort button of the food list: sorted by name, from A to Z. Keep it short.">A–Z</string>
+    <string name="food_sort_description" comment="Read by a screen reader on the sort button of the food list. %1$s = the current order, Recent or A–Z">Sort order: %1$s</string>
     <string name="food_off_offline">No internet connection. You need internet to import a food.</string>
     <string name="food_off_failed">Open Food Facts did not answer. Try again in a minute.</string>
     <string name="food_off_rate_limited">Too many searches in a short time. Wait one minute, then try again.</string>
