@@ -95,6 +95,8 @@ data class GlucoseValue(
         GLUTEC,
         GLUPRO,
         EVERSENSE,
+        EVERSENSE_E3,
+        EVERSENSE_365,
         SYAI_TAG,
         INSTARA,
         RANDOM,

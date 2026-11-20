@@ -1,5 +1,8 @@
 package app.aaps.di.metro
 
+import app.aaps.plugins.source.activities.EversenseCalibrationActivity
+import app.aaps.plugins.source.activities.EversensePlacementActivity
+import app.aaps.plugins.source.activities.EversenseStatusActivity
 import app.aaps.plugins.source.AidexPlugin
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.GlimpPlugin
@@ -47,7 +50,7 @@ class SourceGraphTest {
     }
 
     @Test
-    fun `the notification reader service is the only member injection here`() {
-        assertThat(graph().memberInjectors.keys).containsExactly(NotificationCollectorService::class)
+    fun `source member injectors include the service and Eversense screens`() {
+        assertThat(graph().memberInjectors.keys).containsExactly(NotificationCollectorService::class, EversenseCalibrationActivity::class, EversensePlacementActivity::class, EversenseStatusActivity::class)
     }
 }

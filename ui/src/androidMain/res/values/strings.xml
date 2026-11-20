@@ -383,4 +383,14 @@
     <string name="cal_precheck_mark_sensor_change">Mark sensor change</string>
     <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
 
+<string name="eversense_calibration_in_progress" comment="%1$s=countdown timer, e.g. 14:32. Example: Calibration in progress (14:32)">Calibration in progress (%1$s)</string>
+
+
+
+<string name="eversense_calibration_not_connected">Not connected — reconnecting to the transmitter…</string>
+
+<string name="eversense_calibration_send_failed">Calibration failed — check the transmitter connection and try again</string>
+
+
+    <string name="eversense_calibration_rapid_change_warning">Glucose is changing rapidly. Calibration during a rapid rise or fall may be unreliable. Follow the Eversense calibration guidance. You can still submit this value.</string>
 </resources>

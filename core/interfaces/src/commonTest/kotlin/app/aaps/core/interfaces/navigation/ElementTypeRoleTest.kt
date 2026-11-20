@@ -20,7 +20,7 @@ class ElementTypeRoleTest {
     )
 
     private val caregiver = setOf(
-        ElementType.CALIBRATION,
+        ElementType.CALIBRATION, ElementType.EVERSENSE_CALIBRATION,
         ElementType.TEMP_TARGET_MANAGEMENT, ElementType.INSULIN_MANAGEMENT, ElementType.QUICK_WIZARD_MANAGEMENT, ElementType.FOOD_MANAGEMENT,
         ElementType.BG_CHECK, ElementType.NOTE, ElementType.EXERCISE, ElementType.QUESTION, ElementType.ANNOUNCEMENT,
         ElementType.SENSOR_INSERT, ElementType.BATTERY_CHANGE, ElementType.CANNULA_CHANGE, ElementType.FILL, ElementType.SITE_ROTATION,

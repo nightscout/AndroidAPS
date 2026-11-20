@@ -267,7 +267,14 @@ enum class NotificationId(
 
     // Every pump alert raised through PumpAlerts, one card each. The level is set per alert from its severity.
     // Appended at the END for the same reason as above.
-    PUMP_ALERT(URGENT, PUMP, allowMultiple = true);
+    PUMP_ALERT(URGENT, PUMP, allowMultiple = true),
+
+    // Appended to keep the stored ordinals of existing notifications stable.
+    EVERSENSE_RELEASE(NORMAL, CGM),
+    EVERSENSE_PLACEMENT(NORMAL, CGM),
+    EVERSENSE_CREDENTIALS(NORMAL, CGM),
+    EVERSENSE_FIRMWARE(INFO, CGM),
+    EVERSENSE_ALARM(NORMAL, CGM);
 
     companion object {
 
