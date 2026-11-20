@@ -29,8 +29,6 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.rawRes
 import app.aaps.implementation.R
 import app.aaps.implementation.alerts.EatReminderReceiver
-import app.aaps.implementation.androidNotification.AlarmNotificationManager.Companion.CHANNEL_SILENT
-import app.aaps.implementation.androidNotification.AlarmNotificationManager.Companion.CHANNEL_SILENT_URGENT
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -325,14 +323,6 @@ class AlarmNotificationManager(
             Intent(context, AlarmMuteReceiver::class.java),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        // Since Android 14 the user can swipe away even an ongoing notification (not on the lock
-        // screen). A swipe works like Mute. Before, the looping sound went on with nothing left on
-        // screen to stop it, and only a force stop of AAPS ended it (#5338).
-        val swipePendingIntent = PendingIntent.getBroadcast(
-            context, SWIPE_REQUEST_CODE,
-            Intent(context, AlarmMuteReceiver::class.java).putExtra(AlarmMuteReceiver.EXTRA_SWIPED, true),
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
 
         val notification = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(iconsProvider.getNotificationIcon())
@@ -344,7 +334,7 @@ class AlarmNotificationManager(
             .setOngoing(true)
             .setAutoCancel(false)
             .setContentIntent(pendingIntent)
-            .setDeleteIntent(swipePendingIntent)
+            .setDeleteIntent(swipePendingIntent())
             .addAction(0, rh.gs(app.aaps.core.ui.R.string.mute), mutePendingIntent)
             .apply {
                 // +5 min next to Mute, so the timer can be moved from the lock screen. Mute ends the timer, like
@@ -464,6 +454,7 @@ class AlarmNotificationManager(
             .setOngoing(true)
             .setAutoCancel(false)
             .setContentIntent(notificationHolderProvider().openAppIntent())
+            .setDeleteIntent(swipePendingIntent())
 
         val systemId = SOUND_ID_OFFSET + notificationKey
         try {
@@ -532,4 +523,12 @@ class AlarmNotificationManager(
         alarmSoundPlayer.stop(AlarmSoundPlayer.OWNER_FULLSCREEN)
         aapsLogger.debug(LTag.NOTIFICATION, "Cancelled all AAPS alarm notifications")
     }
+
+    // Since Android 14 the user can swipe away even an ongoing notification (not on the lock
+    // screen). A swipe works like Mute, on every alarm notification (#5338).
+    private fun swipePendingIntent(): PendingIntent = PendingIntent.getBroadcast(
+        context, SWIPE_REQUEST_CODE,
+        Intent(context, AlarmMuteReceiver::class.java).putExtra(AlarmMuteReceiver.EXTRA_SWIPED, true),
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+    )
 }
