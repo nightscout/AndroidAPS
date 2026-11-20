@@ -54,6 +54,7 @@ class PreferencePlatformRulesTest {
      * Each of these was checked the same way: find who reads the value, and confirm the platforms
      * left out genuinely cannot honour it rather than merely not having got round to it.
      * - the notification policy switch: iOS gives an app no say in whether an OS notification appears
+     * - lock-screen live updates: only Android has this ongoing notification
      * - allow roaming: iOS publishes no roaming state and desktop reports every link as wifi
      */
     @Test
@@ -62,6 +63,7 @@ class PreferencePlatformRulesTest {
 
         assertThat(restricted).containsExactly(
             "raise_urgent_alarms_as_android_notification", AppPlatform.ANDROID_ONLY,
+            "live_update_lock_screen_only", AppPlatform.ANDROID_ONLY,
             "keep_screen_on", setOf(AppPlatform.Android, AppPlatform.Ios),
             "ns_allow_roaming", AppPlatform.ANDROID_ONLY
         )

@@ -81,6 +81,12 @@ enum class BooleanKey(
         "raise_urgent_alarms_as_android_notification", true, KeysStrings.pref_title_alert_urgent_as_android_notification,
         platforms = AppPlatform.ANDROID_ONLY
     ),
+    // Android only: it decides whether the ongoing notification is an Android live update. iOS has no
+    // such notification, so the switch would do nothing there.
+    LiveUpdateLockScreenOnly(
+        "live_update_lock_screen_only", false, KeysStrings.pref_title_live_update_lock_screen_only, KeysStrings.pref_summary_live_update_lock_screen_only,
+        platforms = AppPlatform.ANDROID_ONLY
+    ),
     AlertIncreaseVolume("gradually_increase_notification_volume", true, KeysStrings.pref_title_alert_increase_volume),
     AlertOverrideDoNotDisturb("alert_override_dnd", true, KeysStrings.pref_title_alert_override_dnd, KeysStrings.pref_summary_alert_override_dnd, defaultedBySM = true),
 

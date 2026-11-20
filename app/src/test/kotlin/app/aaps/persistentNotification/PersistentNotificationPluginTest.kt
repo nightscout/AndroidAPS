@@ -25,7 +25,7 @@ class PersistentNotificationPluginTest : TestBase() {
     fun prepare() {
         sut = PersistentNotificationPlugin(
             aapsLogger, mock(), mock(), mock(), mock(), mock(), mock(), mock(), rxBus, mock(), mock(), mock(),
-            mock(), mock(), mock(), mock(), mock(), mock(), mock(), mock(), mock(), mock(), mock()
+            mock(), mock(), mock(), mock(), mock(), mock(), mock(), mock(), mock(), mock(), mock(), mock()
         )
     }
 
