@@ -35,5 +35,8 @@ data class ManageUiState(
 
     // Pump
     val pumpPlugin: PluginBase,
-    val customActions: List<CustomAction> = emptyList()
+    val customActions: List<CustomAction> = emptyList(),
+
+    // The CGM driver's plugin, next to the pump: null unless the BG source is a CgmDriver on this phone
+    val cgmPlugin: PluginBase? = null
 )

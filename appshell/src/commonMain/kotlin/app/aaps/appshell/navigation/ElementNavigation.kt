@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
+import app.aaps.core.interfaces.source.CgmDriver
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.compose.ScreenMode
@@ -150,8 +151,7 @@ class ElementNavigator(
             ElementType.CGM_XDRIP               -> onOpenCgmApp("com.eveningoutpost.dexdrip")
             ElementType.CGM_DEX                 -> dexcomBoyda.dexcomPackages().forEach { onOpenCgmApp(it) }
 
-            ElementType.EVERSENSE_CALIBRATION -> navController.navigate(AppRoute.EversenseCalibrationDialog.route)
-            ElementType.CALIBRATION             -> navController.navigate(AppRoute.CalibrationDialog.route)
+            ElementType.CALIBRATION            -> navController.navigate(AppRoute.CalibrationDialog.route)
 
             // Careportal
             ElementType.BG_CHECK                -> navController.navigate(AppRoute.CareDialog.createRoute(CareportalEventType.BGCHECK.ordinal))
@@ -173,6 +173,8 @@ class ElementNavigator(
             }
 
             ElementType.PUMP                    -> openPlugin(activePlugin.activePumpInternal as PluginBase, navController, activePlugin)
+            // Shown only while the BG source is a CgmDriver; anything else has nothing to open here.
+            ElementType.CGM                     -> (activePlugin.activeBgSource as? CgmDriver as? PluginBase)?.let { openPlugin(it, navController, activePlugin) }
 
             // Non-searchable types - listed explicitly so the compiler catches new enum values
             ElementType.QUICK_WIZARD,

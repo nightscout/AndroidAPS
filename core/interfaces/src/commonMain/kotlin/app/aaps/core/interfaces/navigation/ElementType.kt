@@ -39,11 +39,9 @@ enum class ElementType(
     CGM_XDRIP(category = ElementCategory.CGM, searchable = true),
     CGM_DEX(category = ElementCategory.CGM),
 
-    // On a client a calibration goes to the master as BatchAction.Calibration, which hands it to its CGM plugin.
+    // On a client a calibration goes to the master as BatchAction.Calibration, which hands it to its CGM plugin
+    // (or to its CGM driver, when that takes calibrations).
     CALIBRATION(category = ElementCategory.CGM, searchable = true, role = ClientRole.Caregiver),
-
-    // Sends calibration to the local Eversense transmitter.
-    EVERSENSE_CALIBRATION(category = ElementCategory.CGM, searchable = true, role = ClientRole.Caregiver),
 
     // Profile & Targets — minimum level is BOLUS; screen mode (PLAY/EDIT) determined by granted auth level.
     // Mutating editors whose writes ride Client-Control → CLIENT_PAIRED (hidden on an unpaired client).
@@ -84,6 +82,10 @@ enum class ElementType(
     // An aapsclient has no real pump (VirtualPump is hidden). NOT gated on pairing (a paired client still
     // has no pump), so this is plain !isClient, distinct from MASTER_OR_PAIRED_CLIENT.
     PUMP(category = ElementCategory.SYSTEM, visibility = ElementVisibility { !it.isClient }),
+
+    // The screen of a CGM driver (CgmDriver), next to the pump's. Same rule as PUMP: the driver runs where the
+    // sensor is read, never on a client. Shown only while the active BG source is a CgmDriver.
+    CGM(category = ElementCategory.SYSTEM, visibility = ElementVisibility { !it.isClient }),
     SETTINGS(category = ElementCategory.SYSTEM, protection = ProtectionCheck.Protection.PREFERENCES),
     QUICK_LAUNCH_CONFIG(category = ElementCategory.SYSTEM, searchable = true),
 

@@ -3,9 +3,10 @@ package app.aaps.ui.compose.navigation
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.source.CgmDriver
 import app.aaps.core.interfaces.source.DexcomBoyda
-import app.aaps.core.interfaces.source.EversenseCalibrationSource
 import app.aaps.core.interfaces.source.XDripSource
+import app.aaps.core.interfaces.source.calibratingCgmDriver
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -27,8 +28,8 @@ class ElementAvailability(
 ) {
 
     fun isAvailable(elementType: ElementType): Boolean = when (elementType) {
-        ElementType.EVERSENSE_CALIBRATION -> (activePlugin.activeBgSource as? EversenseCalibrationSource)?.isEnabled() == true
-        ElementType.CALIBRATION    -> xDripSource.isEnabled() || isCalibrationOverrideActive()
+        ElementType.CALIBRATION    -> xDripSource.isEnabled() || isCalibrationOverrideActive() || activePlugin.calibratingCgmDriver() != null
+        ElementType.CGM            -> activePlugin.activeBgSource is CgmDriver
         ElementType.CGM_XDRIP      -> xDripSource.isEnabled()
         ElementType.CGM_DEX        -> dexcomBoyda.isEnabled()
 

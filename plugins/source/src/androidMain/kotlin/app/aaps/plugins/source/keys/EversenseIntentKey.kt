@@ -19,26 +19,10 @@ enum class EversenseIntentKey(
     override val hideParentScreenIfHidden: Boolean = false,
     override val exportable: Boolean = false
 ) : IntentPreferenceKey {
-    EversenseStatus(
-        key = "eversense_status",
-        titleResId = R.string.eversense_status_title
-    ),
-    EversenseCalibration(
-        key = "eversense_calibration_launch",
-        titleResId = R.string.eversense_calibration_action
-    ),
-    EversensePlacement(
-        key = "eversense_placement_launch",
-        titleResId = R.string.eversense_placement_title
-    ),
+    // Status, calibration, placement and the documentation are on the plugin's own screen, not in the settings
     EversenseSignOut(
         key = "eversense_sign_out",
         titleResId = R.string.eversense_sign_out,
-        preferenceType = PreferenceType.CLICK
-    ),
-    EversenseDocumentation(
-        key = "eversense_documentation",
-        titleResId = R.string.eversense_documentation,
         preferenceType = PreferenceType.CLICK
     );
 

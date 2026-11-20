@@ -13,6 +13,8 @@ import app.aaps.core.interfaces.calibration.AddEntryResult
 import app.aaps.core.interfaces.calibration.Calibration
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.source.CgmCalibrationMode
+import app.aaps.core.interfaces.source.CgmDriver
 import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.Translator
@@ -26,6 +28,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -184,5 +187,57 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
 
         assertThat(failure?.comment).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_pair))
         verify(xDripBroadcast, never()).sendCalibration(any())
+    }
+
+    // ----- a CGM driver that takes calibrations -----
+
+    private fun cgmDriver(mode: CgmCalibrationMode): CgmDriver = mock<CgmDriver>().also {
+        whenever(it.calibrationMode).thenReturn(mode)
+        whenever(activePlugin.activeBgSource).thenReturn(it)
+    }
+
+    @Test
+    fun `a CGM driver that takes calibrations decides the refusal, not the calibration plugin`() = runTest {
+        val driver = cgmDriver(CgmCalibrationMode.DRIVER)
+        whenever(driver.calibrationRefusal()).thenReturn("transmitter busy")
+
+        assertThat(sut.calibrationRefusal()).isEqualTo("transmitter busy")
+        verify(calibration, never()).checkPreconditions()
+    }
+
+    @Test
+    fun `a calibration goes to the CGM driver that takes calibrations and is logged`() = runTest {
+        val driver = cgmDriver(CgmCalibrationMode.DRIVER)
+        whenever(driver.calibrate(120.0)).thenReturn(null)
+        var failure: MasterActionExecutor.Failure? = null
+
+        sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
+
+        assertThat(failure).isNull()
+        verify(driver).calibrate(120.0)
+        verify(calibration, never()).addEntry(any(), any())
+        verify(uel).log(eq(Action.CALIBRATION), eq(Sources.NSClient), anyOrNull(), any<ValueWithUnit>())
+    }
+
+    @Test
+    fun `a calibration the CGM driver refuses reports the driver's reason`() = runTest {
+        val driver = cgmDriver(CgmCalibrationMode.DRIVER)
+        whenever(driver.calibrate(120.0)).thenReturn("sensor refused")
+        var failure: MasterActionExecutor.Failure? = null
+
+        sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
+
+        assertThat(failure?.comment).isEqualTo("sensor refused")
+    }
+
+    @Test
+    fun `a factory-calibrated CGM driver leaves the calibration to the calibration plugin`() = runTest {
+        val driver = cgmDriver(CgmCalibrationMode.NONE)
+        whenever(calibration.addEntry(eq(120.0), any())).thenReturn(AddEntryResult.Accepted)
+
+        sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { }
+
+        verify(calibration).addEntry(eq(120.0), any())
+        verify(driver, never()).calibrate(any())
     }
 }

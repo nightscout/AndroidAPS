@@ -21,11 +21,14 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventCalibrationChanged
+import app.aaps.core.interfaces.source.calibratingCgmDriver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.icons.IcCalibration
 import app.aaps.plugins.calibration.compose.CalibrationComposeContent
@@ -57,14 +60,18 @@ class LinearCalibrationPlugin(
     notificationManager: NotificationManager,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val rxBus: RxBus,
-    private val config: Config
+    private val config: Config,
+    activePlugin: ActivePlugin
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CALIBRATION)
         .icon(IcCalibration)
         .pluginName(CalibrationStrings.linear_calibration_name)
         .description(CalibrationStrings.description_linear_calibration)
-        .composeContent { CalibrationComposeContent() },
+        .composeContent { CalibrationComposeContent() }
+        // Off while the BG source is a CGM driver that takes calibrations: its values are calibrated by the sensor
+        // already, and a fit on top would correct them twice. Reads the BG source, which never reads this plugin.
+        .enforce(EnforcedState.Disabled) { activePlugin.calibratingCgmDriver() != null },
     aapsLogger, rh, notificationManager
 ), Calibration {
 

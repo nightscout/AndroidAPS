@@ -1,7 +1,5 @@
 package app.aaps.ui.compose.quickLaunch
 
-import app.aaps.core.interfaces.navigation.ElementType
-
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Extension
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -100,7 +98,6 @@ class QuickLaunchResolver(
     }
 
     fun isValid(action: QuickLaunchAction): Boolean = when (action) {
-        QuickLaunchAction.EversenseCalibration -> true // Keep the saved action when another BG source is active.
         is QuickLaunchAction.QuickWizardAction -> quickWizard.get(action.guid) != null
 
         is QuickLaunchAction.AutomationAction  -> {
@@ -136,7 +133,6 @@ class QuickLaunchResolver(
      * entry is only hidden here, never removed from the saved toolbar like an [isValid] failure.
      */
     fun isShownNow(action: QuickLaunchAction): Boolean = when (action) {
-        QuickLaunchAction.EversenseCalibration -> elementAvailability.isAvailable(ElementType.EVERSENSE_CALIBRATION)
         is QuickLaunchAction.QuickWizardAction -> quickWizard.get(action.guid)?.isActive() == true
         else                                   -> true
     }

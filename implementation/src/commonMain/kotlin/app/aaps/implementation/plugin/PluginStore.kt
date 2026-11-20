@@ -153,6 +153,16 @@ class PluginStore(
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting SmoothingInterface")
         }
 
+        // PluginType.BGSOURCE - before CALIBRATION: the linear calibration is forced off while the BG source is a
+        // CGM driver that takes calibrations, so the calibration election must see this election's BG source.
+        pluginsInCategory = getSpecificPluginsList(PluginType.BGSOURCE)
+        activeBgSourceStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.BGSOURCE, jobs) as BgSource?
+        if (activeBgSourceStore == null) {
+            activeBgSourceStore = getDefaultPlugin(PluginType.BGSOURCE) as BgSource
+            (activeBgSourceStore as PluginBase).setPluginEnabled(PluginType.BGSOURCE, true)?.let(jobs::add)
+            aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting BgInterface")
+        }
+
         // PluginType.CALIBRATION
         pluginsInCategory = getSpecificPluginsList(PluginType.CALIBRATION)
         activeCalibrationStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.CALIBRATION, jobs) as Calibration?
@@ -160,15 +170,6 @@ class PluginStore(
             activeCalibrationStore = getDefaultPlugin(PluginType.CALIBRATION) as Calibration
             (activeCalibrationStore as PluginBase).setPluginEnabled(PluginType.CALIBRATION, true)?.let(jobs::add)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting CalibrationInterface")
-        }
-
-        // PluginType.BGSOURCE
-        pluginsInCategory = getSpecificPluginsList(PluginType.BGSOURCE)
-        activeBgSourceStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.BGSOURCE, jobs) as BgSource?
-        if (activeBgSourceStore == null) {
-            activeBgSourceStore = getDefaultPlugin(PluginType.BGSOURCE) as BgSource
-            (activeBgSourceStore as PluginBase).setPluginEnabled(PluginType.BGSOURCE, true)?.let(jobs::add)
-            aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting BgInterface")
         }
 
         // PluginType.PUMP

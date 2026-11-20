@@ -8,7 +8,8 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.source.BgSource
-import app.aaps.core.interfaces.source.EversenseCalibrationSource
+import app.aaps.core.interfaces.source.CgmCalibrationMode
+import app.aaps.core.interfaces.source.CgmDriver
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.shared.tests.TestBase
@@ -173,7 +174,7 @@ class ElementAvailabilityTest : TestBase() {
         // Every type except the CGM/calibration and pump entries falls through to `true`. Looping
         // catches the case where someone adds a new entry to the gating `when` without
         // intentional defaults — this test will start failing for the new type.
-        val gated = setOf(ElementType.CGM_XDRIP, ElementType.CGM_DEX, ElementType.CALIBRATION, ElementType.EVERSENSE_CALIBRATION, ElementType.FILL, ElementType.BATTERY_CHANGE)
+        val gated = setOf(ElementType.CGM_XDRIP, ElementType.CGM_DEX, ElementType.CALIBRATION, ElementType.CGM, ElementType.FILL, ElementType.BATTERY_CHANGE)
         ElementType.entries
             .filterNot { it in gated }
             .forEach { type ->
@@ -181,17 +182,29 @@ class ElementAvailabilityTest : TestBase() {
             }
     }
 
-    private interface EversenseSource : BgSource, EversenseCalibrationSource
+    // -------- CGM driver --------
 
-    @Test fun eversenseCalibrationRequiresAnActiveEversenseSource() {
-        val source: EversenseSource = mock()
-        whenever(activePlugin.activeBgSource).thenReturn(source)
-        whenever(source.isEnabled()).thenReturn(true)
-        assertThat(elementAvailability.isAvailable(ElementType.EVERSENSE_CALIBRATION)).isTrue()
-        whenever(source.isEnabled()).thenReturn(false)
-        assertThat(elementAvailability.isAvailable(ElementType.EVERSENSE_CALIBRATION)).isFalse()
-        whenever(activePlugin.activeBgSource).thenReturn(mock())
-        assertThat(elementAvailability.isAvailable(ElementType.EVERSENSE_CALIBRATION)).isFalse()
+    private fun cgmDriver(mode: CgmCalibrationMode): CgmDriver = mock<CgmDriver>().also {
+        whenever(it.calibrationMode).thenReturn(mode)
+        whenever(activePlugin.activeBgSource).thenReturn(it)
+    }
+
+    @Test fun cgm_isAvailable_onlyWhileTheBgSourceIsACgmDriver() {
+        whenever(activePlugin.activeBgSource).thenReturn(mock<BgSource>())
+        assertThat(elementAvailability.isAvailable(ElementType.CGM)).isFalse()
+
+        cgmDriver(CgmCalibrationMode.NONE)
+        assertThat(elementAvailability.isAvailable(ElementType.CGM)).isTrue()
+    }
+
+    @Test fun calibration_isAvailable_whenTheCgmDriverTakesCalibrations() {
+        cgmDriver(CgmCalibrationMode.DRIVER)
+        assertThat(elementAvailability.isAvailable(ElementType.CALIBRATION)).isTrue()
+    }
+
+    @Test fun calibration_isNotAvailable_forAFactoryCalibratedCgmDriver() {
+        cgmDriver(CgmCalibrationMode.NONE)
+        assertThat(elementAvailability.isAvailable(ElementType.CALIBRATION)).isFalse()
     }
 
     // -------- helpers --------

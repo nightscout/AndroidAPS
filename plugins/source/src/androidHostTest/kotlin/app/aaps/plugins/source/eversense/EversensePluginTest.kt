@@ -7,6 +7,9 @@ import app.aaps.core.keys.PreferenceType
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.source.CgmCalibrationMode
+import app.aaps.core.interfaces.source.CgmDriver
 import app.aaps.core.keys.LongNonKey
 import app.aaps.plugins.eversense.EversenseCGMPlugin
 import app.aaps.plugins.eversense.enums.EversenseType
@@ -24,12 +27,14 @@ import org.mockito.kotlin.whenever
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.source.EversensePlugin
+import app.aaps.plugins.source.R
 import app.aaps.plugins.source.keys.EversenseBooleanKey
 import app.aaps.plugins.source.keys.EversenseRuntimeKey
 import app.aaps.plugins.source.keys.EversenseIntentKey
 import app.aaps.plugins.source.keys.EversenseStringKey as CredentialsKey
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 
@@ -50,27 +55,54 @@ class EversensePluginTest {
         val credentials = screen.items.filterIsInstance<PreferenceSubScreenDef>().single()
         assertThat(credentials.items).containsAtLeast(CredentialsKey.EversenseUsername, CredentialsKey.EversensePassword)
     }
+    /** A ResourceHelper whose texts are their own resource id, so that a refusal is never null by accident. */
+    private fun texts(): ResourceHelper = mock<ResourceHelper>().also { whenever(it.gs(anyInt())).thenAnswer { invocation -> "text ${invocation.arguments[0]}" } }
+
+    private fun connectedBackend(accepts: Boolean = true): EversenseCGMPlugin = mock<EversenseCGMPlugin>().also {
+        whenever(it.isConnected()).thenReturn(true)
+        whenever(it.sendCalibration(any(), any())).thenReturn(accepts)
+    }
+
+    /** The user calibrates in the AAPS calibration dialog; the master hands the value to calibrate(). */
+    @Test fun isACgmDriverThatTakesCalibrations() {
+        val plugin = EversensePlugin(mock(), mock(), mock(), mock(), mock(), mock(), mock(), mock())
+        assertThat(plugin).isInstanceOf(CgmDriver::class.java)
+        assertThat(plugin.calibrationMode).isEqualTo(CgmCalibrationMode.DRIVER)
+    }
+
     @Test fun successfulCalibrationUpdatesCountdownAndRequestsSync() = runBlocking {
         val preferences: Preferences = mock()
-        val backend: EversenseCGMPlugin = mock()
-        whenever(backend.isConnected()).thenReturn(true)
-        whenever(backend.sendCalibration(any(), any())).thenReturn(true)
-        val plugin = EversensePlugin(mock(), mock(), mock(), preferences, mock(), mock(), { backend }, mock())
-        assertThat(plugin.calibrate(100)).isTrue()
+        val backend = connectedBackend()
+        val plugin = EversensePlugin(texts(), mock(), mock(), preferences, mock(), mock(), { backend }, mock())
+        assertThat(plugin.calibrate(100.0)).isNull()
         verify(backend).sendCalibration(eq(100), any())
         verify(backend).triggerFullSync(force = true)
         verify(preferences).put(eq(LongNonKey.EversenseLastCalibrationSubmittedAt), any())
     }
 
-    @Test fun failedCalibrationDoesNotStartCountdown() = runBlocking {
+    @Test fun failedCalibrationSaysSoAndDoesNotStartCountdown() = runBlocking {
         val preferences: Preferences = mock()
-        val backend: EversenseCGMPlugin = mock()
-        whenever(backend.isConnected()).thenReturn(true)
-        whenever(backend.sendCalibration(any(), any())).thenReturn(false)
-        val plugin = EversensePlugin(mock(), mock(), mock(), preferences, mock(), mock(), { backend }, mock())
-        assertThat(plugin.calibrate(100)).isFalse()
+        val backend = connectedBackend(accepts = false)
+        val plugin = EversensePlugin(texts(), mock(), mock(), preferences, mock(), mock(), { backend }, mock())
+        assertThat(plugin.calibrate(100.0)).isEqualTo("text ${R.string.eversense_calibration_failed}")
         verify(preferences, never()).put(eq(LongNonKey.EversenseLastCalibrationSubmittedAt), any())
         verify(backend, never()).triggerFullSync(any())
+    }
+
+    /** 2.2 mmol/L is 39.6 mg/dL: rounded to 40, not cut to 39, which the transmitter would refuse. */
+    @Test fun calibrationValueIsRoundedNotTruncated() = runBlocking {
+        val backend = connectedBackend()
+        val plugin = EversensePlugin(texts(), mock(), mock(), mock(), mock(), mock(), { backend }, mock())
+        assertThat(plugin.calibrate(39.6)).isNull()
+        verify(backend).sendCalibration(eq(40), any())
+    }
+
+    @Test fun calibrationOutsideTheTransmitterRangeIsRefusedWithoutSending() = runBlocking {
+        val backend = connectedBackend()
+        val plugin = EversensePlugin(texts(), mock(), mock(), mock(), mock(), mock(), { backend }, mock())
+        assertThat(plugin.calibrate(30.0)).isEqualTo("text ${R.string.eversense_calibration_invalid_value}")
+        assertThat(plugin.calibrate(401.0)).isEqualTo("text ${R.string.eversense_calibration_invalid_value}")
+        verify(backend, never()).sendCalibration(any(), any())
     }
 
     @Test fun readingsKeepValuesTimestampsTrendsAndModelWhenPassedToPersistence() = runBlocking {

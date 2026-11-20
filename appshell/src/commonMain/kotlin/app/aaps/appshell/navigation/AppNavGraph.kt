@@ -74,7 +74,6 @@ import app.aaps.plugins.main.MainStrings
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.compose.AuthorizedClientsScreen
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.compose.PairWithMasterScreen
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.compose.ScanMasterQrScreen
-import app.aaps.ui.compose.eversenseCalibrationDialog.EversenseCalibrationDialogScreen
 import app.aaps.ui.compose.calibrationDialog.CalibrationDialogScreen
 import app.aaps.ui.compose.carbsDialog.CarbsDialogScreen
 import app.aaps.ui.compose.careDialog.CareDialogScreen
@@ -354,10 +353,6 @@ fun NavGraphBuilder.appNavGraph(
                 onShowDeliveryError(comment, CoreUiStrings.treatmentdeliveryerror)
             }
         )
-    }
-
-    composable(route = AppRoute.EversenseCalibrationDialog.route) {
-        EversenseCalibrationDialogScreen(onNavigateBack = { navController.safePopBackStack() })
     }
 
     composable(route = AppRoute.CalibrationDialog.route) {

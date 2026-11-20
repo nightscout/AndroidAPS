@@ -17,23 +17,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -86,31 +78,6 @@ internal fun EversenseCard(content: @Composable ColumnScope.() -> Unit) {
     Card(Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
         Column(Modifier.padding(AapsSpacing.extraLarge), verticalArrangement = Arrangement.spacedBy(AapsSpacing.large), content = content)
     }
-}
-
-@Composable
-internal fun EversenseStatusContent(
-    labels: List<String>, connected: Boolean, syncDays: Int,
-    onConnect: () -> Unit, onChange: () -> Unit, onSync: () -> Unit, onDays: (Int) -> Unit
-) {
-    EversenseCard { labels.forEach { Text(it, style = MaterialTheme.typography.bodyLarge) } }
-    Button(onConnect, Modifier.fillMaxWidth()) {
-        Text(stringResource(if (connected) R.string.eversense_status_disconnect else R.string.eversense_status_connect))
-    }
-    OutlinedButton(onChange, Modifier.fillMaxWidth()) { Text(stringResource(R.string.eversense_change_transmitter)) }
-    var expanded by remember { mutableStateOf(false) }
-    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(stringResource(R.string.eversense_default_sync_days_label), Modifier.weight(1f))
-        Box {
-            OutlinedButton({ expanded = true }) { Text(syncDays.toString()) }
-            DropdownMenu(expanded, onDismissRequest = { expanded = false }) {
-                for (days in listOf(1, 3, 7, 14, 30)) {
-                    DropdownMenuItem(text = { Text(days.toString()) }, onClick = { expanded = false; onDays(days) })
-                }
-            }
-        }
-    }
-    Button(onSync, Modifier.fillMaxWidth(), enabled = connected) { Text(stringResource(R.string.eversense_information_last_sync)) }
 }
 
 @Composable

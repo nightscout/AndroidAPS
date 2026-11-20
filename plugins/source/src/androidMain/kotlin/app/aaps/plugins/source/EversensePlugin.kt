@@ -10,7 +10,6 @@ import app.aaps.plugins.eversense.storage.EversenseStore
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
-import androidx.core.net.toUri
 import androidx.core.content.ContextCompat
 import app.aaps.plugins.eversense.storage.edit
 import app.aaps.core.interfaces.configuration.Config
@@ -29,14 +28,14 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.source.BgSource
-import app.aaps.core.interfaces.source.EversenseCalibrationSource
+import app.aaps.core.interfaces.source.CgmCalibrationMode
+import app.aaps.core.interfaces.source.CgmDriver
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.eversense.EversenseCGMPlugin
 import app.aaps.plugins.eversense.callbacks.EversenseWatcher
-import app.aaps.plugins.source.compose.BgSourceComposeContent
+import app.aaps.plugins.source.eversense.compose.EversenseComposeContent
 import app.aaps.plugins.eversense.enums.EversenseAlarm
 import app.aaps.plugins.eversense.enums.EversenseType
 import app.aaps.plugins.eversense.models.EversenseCGMResult
@@ -52,19 +51,12 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.json.Json
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import app.aaps.core.keys.interfaces.withClick
-import app.aaps.plugins.source.activities.EversenseStatusActivity
-import app.aaps.plugins.source.activities.EversenseCalibrationActivity
-import app.aaps.plugins.source.activities.EversensePlacementActivity
 import app.aaps.plugins.source.keys.EversenseIntentKey
 import app.aaps.plugins.source.keys.EversenseStringKey
 import app.aaps.core.ui.compose.icons.IcPluginEversense
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.IntKey as MetroIntKey
@@ -75,12 +67,12 @@ import app.aaps.plugins.source.keys.EversenseBooleanKey
 import app.aaps.plugins.source.keys.EversenseRuntimeKey
 import app.aaps.plugins.source.eversense.EversenseStringKey as LegacyEversenseStringKey
 import kotlin.coroutines.resume
+import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
-@ContributesBinding(AppScope::class, binding = binding<EversenseCalibrationSource>())
 @MetroIntKey(415)
 @SingleIn(AppScope::class)
 @Inject
@@ -96,18 +88,14 @@ class EversensePlugin(
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
-        .composeContent { _ ->
-            BgSourceComposeContent(
-                title = rh.gs(R.string.source_eversense)
-            )
-        }
+        .composeContent { _ -> EversenseComposeContent(title = rh.gs(R.string.source_eversense)) }
         .icon(IcPluginEversense)
         .pluginName(TextRef.AndroidRes(R.string.source_eversense))
         .preferencesVisibleInSimpleMode(false)
         .description(TextRef.AndroidRes(R.string.description_source_eversense)),
     ownPreferences = EversenseStringKey.entries + EversenseBooleanKey.entries + EversenseIntentKey.entries + LegacyEversenseStringKey.entries + EversenseRuntimeKey.entries,
     aapsLogger, rh, preferences, config, notificationManager
-), BgSource, EversenseWatcher, EversenseCalibrationSource {
+), CgmDriver, EversenseWatcher {
 
     private val eversense get() = eversenseProvider()
 
@@ -119,6 +107,9 @@ class EversensePlugin(
         // genuinely-unrecognized alarm that happens to follow shortly after someone closes the
         // placement guide.
         private const val POST_EXIT_UNKNOWN_ALARM_SUPPRESS_WINDOW_MS = 5000L
+
+        /** The values the transmitter takes as a calibration, in mg/dL */
+        private val CALIBRATION_RANGE_MGDL = 40..400
     }
 
 
@@ -139,7 +130,6 @@ class EversensePlugin(
             }
         }
     }
-    private val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
     private val json = Json { ignoreUnknownKeys = true }
 
     private val securePrefs: EversenseStore get() = eversense.preferences
@@ -223,28 +213,30 @@ class EversensePlugin(
 
     fun syncCredentialsIfNeeded() = checkCredentialsNotification()
 
-    // ── EversenseCalibrationSource ── isEnabled() is inherited from PluginBase (true when
-    // Eversense is the currently active BG source), matching the XDripSource/DexcomBoyda pattern.
+    // ── CgmDriver ── The user enters the finger-stick value in the AAPS calibration dialog; the master's
+    // record writer hands it to calibrate() below.
 
-    override fun isConnected(): Boolean = eversense.isConnected()
+    override val calibrationMode = CgmCalibrationMode.DRIVER
 
-    override suspend fun calibrate(bgMgDl: Int): Boolean = withContext(Dispatchers.IO) {
+    override suspend fun calibrate(bgMgdl: Double): String? = withContext(Dispatchers.IO) {
+        // Rounded, not truncated: 2.2 mmol/L is 39.6 mg/dL and must not become 39
+        val value = bgMgdl.roundToInt()
+        if (value !in CALIBRATION_RANGE_MGDL) return@withContext rh.gs(R.string.eversense_calibration_invalid_value)
         if (!eversense.isConnected()) {
             aapsLogger.info(LTag.BGSOURCE, "Eversense calibration: not connected — reconnecting first")
             val reconnected = withTimeoutOrNull(CALIBRATION_RECONNECT_TIMEOUT_MS) { awaitTransmitterReady() }
             if (reconnected == null) {
                 aapsLogger.warn(LTag.BGSOURCE, "Eversense calibration: reconnect timed out")
-                return@withContext false
+                return@withContext rh.gs(R.string.eversense_calibration_failed)
             }
         }
-        val success = eversense.sendCalibration(bgMgDl)
+        val success = eversense.sendCalibration(value)
         aapsLogger.info(LTag.BGSOURCE, "Eversense calibration result: $success")
-        if (success) {
-            eversense.triggerFullSync(force = true)
-            // Drives the home-screen "Calibration in progress" countdown banner.
-            preferences.put(LongNonKey.EversenseLastCalibrationSubmittedAt, System.currentTimeMillis())
-        }
-        success
+        if (!success) return@withContext rh.gs(R.string.eversense_calibration_failed)
+        eversense.triggerFullSync(force = true)
+        // Drives the home-screen "Calibration in progress" countdown banner.
+        preferences.put(LongNonKey.EversenseLastCalibrationSubmittedAt, System.currentTimeMillis())
+        null
     }
 
     // Bridges EversenseWatcher's callback-based "connected" signal into a single-shot coroutine
@@ -286,11 +278,12 @@ class EversensePlugin(
         }
     }
 
+    // Status and connection, calibration, placement and the documentation are on the plugin's own screen
+    // (EversenseComposeContent), opened from Manage as a pump's screen is.
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "eversense_settings",
         title = TextRef.AndroidRes(R.string.source_eversense),
         items = listOf(
-            EversenseIntentKey.EversenseStatus.withClick { openActivity(EversenseStatusActivity::class.java) },
             EversenseBooleanKey.EversenseCloudUploadEnabled,
             EversenseBooleanKey.EversenseDiagnosticLogging,
             PreferenceSubScreenDef(
@@ -308,24 +301,10 @@ class EversensePlugin(
                         }
                     }
                 )
-            ),
-            EversenseIntentKey.EversenseDocumentation.withClick {
-                val intent = Intent(
-                    Intent.ACTION_VIEW,
-                    "https://github.com/BernhardRo/AndroidAPS/blob/dev_es365/plugins/eversense/README.md".toUri()
-                )
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(intent)
-            },
-            EversenseIntentKey.EversenseCalibration.withClick { openActivity(EversenseCalibrationActivity::class.java) },
-            EversenseIntentKey.EversensePlacement.withClick { openActivity(EversensePlacementActivity::class.java) }
+            )
         ),
         icon = pluginDescription.icon
     )
-
-    private fun openActivity(activity: Class<*>) {
-        context.startActivity(Intent(context, activity).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-    }
 
     private fun signalToLabel(strength: Int): String = when {
         strength >= 75 -> rh.gs(R.string.eversense_signal_excellent)

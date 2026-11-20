@@ -31,6 +31,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.source.XDripSource
+import app.aaps.core.interfaces.source.calibratingCgmDriver
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -358,9 +359,14 @@ class MasterRecordWriter(
 
     // ----- Calibration -----
 
-    /** Why the master cannot take a calibration now, or null when it can. Checked on the master's own data. */
-    suspend fun calibrationRefusal(): String? =
-        (activePlugin.activeCalibration.checkPreconditions() as? AddEntryResult.Rejected)?.let { rejectionMessage(it) }
+    /**
+     * Why the master cannot take a calibration now, or null when it can. Checked on the master's own data. A CGM
+     * driver that takes calibrations decides itself: the calibration plugin is off while it is active.
+     */
+    suspend fun calibrationRefusal(): String? {
+        activePlugin.calibratingCgmDriver()?.let { return it.calibrationRefusal() }
+        return (activePlugin.activeCalibration.checkPreconditions() as? AddEntryResult.Rejected)?.let { rejectionMessage(it) }
+    }
 
     /** The confirmation line for a calibration. */
     fun calibrationLine(calibration: BatchAction.Calibration): ConfirmationLine =
@@ -372,6 +378,16 @@ class MasterRecordWriter(
      */
     suspend fun addCalibration(calibration: BatchAction.Calibration, source: Sources, onError: (MasterActionExecutor.Failure) -> Unit) {
         val value = ValueWithUnit.fromGlucoseUnit(profileUtil.fromMgdlToUnits(calibration.glucoseMgdl), profileUtil.units)
+        // A CGM driver that takes calibrations sends it to the sensor; the calibration plugin is off meanwhile
+        activePlugin.calibratingCgmDriver()?.let { driver ->
+            val refusal = driver.calibrate(calibration.glucoseMgdl)
+            if (refusal == null) uel.log(action = Action.CALIBRATION, source = source, value = value)
+            else {
+                uel.log(action = Action.CALIBRATION, source = source, note = "rejected: $refusal", value = value)
+                onError(MasterActionExecutor.Failure(refusal))
+            }
+            return
+        }
         when (val result = activePlugin.activeCalibration.addEntry(calibration.glucoseMgdl, dateUtil.now())) {
             AddEntryResult.Accepted    -> {
                 uel.log(action = Action.CALIBRATION, source = source, value = value)

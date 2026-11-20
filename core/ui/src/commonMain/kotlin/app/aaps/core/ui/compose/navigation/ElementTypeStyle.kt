@@ -29,6 +29,7 @@ import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.icons.IcCgmInsert
 import app.aaps.core.ui.compose.icons.IcClinicalNotes
 import app.aaps.core.ui.compose.icons.IcExtendedBolus
+import app.aaps.core.ui.compose.icons.IcGenericCgm
 import app.aaps.core.ui.compose.icons.IcHistory
 import app.aaps.core.ui.compose.icons.IcLoopClosed
 import app.aaps.core.ui.compose.icons.IcNote
@@ -73,7 +74,6 @@ fun ElementType.color(): Color = when (this) {
     ElementType.CGM_XDRIP               -> AapsTheme.elementColors.cgmXdrip
     ElementType.CGM_DEX                 -> AapsTheme.elementColors.cgmDex
     ElementType.CALIBRATION             -> AapsTheme.elementColors.calibration
-    ElementType.EVERSENSE_CALIBRATION -> AapsTheme.elementColors.calibration
     ElementType.INSULIN_MANAGEMENT      -> AapsTheme.elementColors.insulin
 
     ElementType.PROFILE_MANAGEMENT      -> AapsTheme.elementColors.profileSwitch
@@ -97,6 +97,7 @@ fun ElementType.color(): Color = when (this) {
     ElementType.AUTOMATION_MANAGEMENT   -> AapsTheme.elementColors.automation
 
     ElementType.PUMP                    -> AapsTheme.elementColors.pump
+    ElementType.CGM                     -> AapsTheme.elementColors.cgmXdrip
     ElementType.SETTINGS,
     ElementType.QUICK_LAUNCH_CONFIG     -> AapsTheme.elementColors.settings
 
@@ -140,7 +141,6 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.CGM_XDRIP               -> IcXDrip
     ElementType.CGM_DEX                 -> IcByoda
     ElementType.CALIBRATION             -> IcCalibration
-    ElementType.EVERSENSE_CALIBRATION -> IcCalibration
     ElementType.INSULIN_MANAGEMENT      -> IcPluginInsulin
 
     ElementType.PROFILE_MANAGEMENT      -> IcProfile
@@ -163,6 +163,7 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.AUTOMATION_MANAGEMENT   -> IcPluginAutomation
 
     ElementType.PUMP                    -> Pump
+    ElementType.CGM                     -> IcGenericCgm
     ElementType.SETTINGS                -> Icons.Default.Settings
     ElementType.QUICK_LAUNCH_CONFIG     -> Icons.Default.Settings
     ElementType.TREATMENTS              -> IcClinicalNotes
@@ -212,7 +213,6 @@ fun ElementType.label(): TextRef? = when (this) {
     ElementType.CGM_XDRIP               -> CoreUiStrings.cgm
     ElementType.CGM_DEX                 -> CoreUiStrings.cgm
     ElementType.CALIBRATION             -> CoreUiStrings.calibration
-    ElementType.EVERSENSE_CALIBRATION -> CoreUiStrings.eversense_calibration_label
     ElementType.INSULIN_MANAGEMENT      -> CoreUiStrings.insulin_management
     ElementType.PROFILE_MANAGEMENT      -> CoreUiStrings.profile_management
     ElementType.TEMP_TARGET_MANAGEMENT  -> CoreUiStrings.temp_target_management
@@ -231,6 +231,7 @@ fun ElementType.label(): TextRef? = when (this) {
     ElementType.AUTOMATION              -> null // dynamic label
     ElementType.AUTOMATION_MANAGEMENT   -> CoreUiStrings.automation
     ElementType.PUMP                    -> CoreUiStrings.pump
+    ElementType.CGM                     -> CoreUiStrings.cgm
     ElementType.SETTINGS                -> CoreUiStrings.settings
     ElementType.QUICK_LAUNCH_CONFIG     -> CoreUiStrings.quick_launch_configure
     ElementType.TREATMENTS              -> CoreUiStrings.treatments_history
@@ -275,7 +276,6 @@ fun ElementType.description(): TextRef? = when (this) {
     ElementType.CGM_DEX                 -> CoreUiStrings.treatment_cgm_desc
 
     ElementType.CALIBRATION             -> CoreUiStrings.treatment_calibration_desc
-    ElementType.EVERSENSE_CALIBRATION -> CoreUiStrings.treatment_eversense_calibration_desc
     ElementType.BG_CHECK                -> CoreUiStrings.treatment_bg_check_desc
     ElementType.EXERCISE                -> CoreUiStrings.treatment_exercise_desc
     ElementType.ANNOUNCEMENT            -> CoreUiStrings.treatment_announcement_desc
@@ -302,6 +302,7 @@ fun ElementType.description(): TextRef? = when (this) {
     ElementType.QUICK_WIZARD,
     ElementType.AUTOMATION,
     ElementType.PUMP,
+    ElementType.CGM,
     ElementType.SETTINGS,
     ElementType.COB,
     ElementType.SENSITIVITY,

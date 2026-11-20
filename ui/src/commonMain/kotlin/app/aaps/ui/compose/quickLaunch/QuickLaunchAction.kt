@@ -83,7 +83,6 @@ sealed class QuickLaunchAction {
         val Treatment = StaticAction(ElementType.TREATMENT)
         val Cgm = StaticAction(ElementType.CGM_XDRIP)
         val Calibration = StaticAction(ElementType.CALIBRATION)
-        val EversenseCalibration = StaticAction(ElementType.EVERSENSE_CALIBRATION)
         val InsulinManagement = StaticAction(ElementType.INSULIN_MANAGEMENT)
         val ProfileSwitch = StaticAction(ElementType.PROFILE_MANAGEMENT)
         val TempTargetManagement = StaticAction(ElementType.TEMP_TARGET_MANAGEMENT)
@@ -116,7 +115,7 @@ sealed class QuickLaunchAction {
          * `PAIR_WITH_MASTER`, which is a one time setup step and not something to keep on a toolbar.
          */
         val staticActions: List<QuickLaunchAction> = listOf(
-            Insulin, Carbs, Wizard, Treatment, Cgm, Calibration, EversenseCalibration,
+            Insulin, Carbs, Wizard, Treatment, Cgm, Calibration,
             ProfileSwitch, InsulinManagement, TempTargetManagement, QuickWizardManagement,
             SceneManagement, AutomationManagement, FoodManagement, RunningMode,
             AuthorizedClients,
