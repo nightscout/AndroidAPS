@@ -91,6 +91,7 @@
     <string name="press_OK_to_return">Nhấn <b>ĐỒNG Ý</b> để quay về màn hình chính.</string>
     <string name="deactivate_sure">Bạn có chắc chắn muốn hủy kích hoạt Patch hiện tại không?</string>
     <string name="cancel_sure">Bạn có chắc chắn muốn hủy quá trình kích hoạt không?</string>
+    <string name="cancel_deactivation_sure">Bạn có chắc chắn muốn hủy việc ngừng hoạt động không? Miếng dán có thể vẫn tiếp tục hoạt động.</string>
     <string name="medtrum_deactivate_pump_confirm">Bạn có chắc chắn không? Hành động này không thể hoàn tác!!</string>
     <string name="press_next_or_cancel">Nhấn <b>Tiếp theo</b> để hủy kích hoạt hoặc <b>Hủy</b> để quay về màn hình chính.</string>
     <string name="deactivating_pump">Đang hủy kích hoạt Patch. Vui lòng chờ.</string>
