@@ -1065,6 +1065,8 @@
     <string name="wiki_search_offline">Søk i dokumentasjonen krever internettforbindelse</string>
     <string name="no_search_results">Ingen resultater funnet</string>
     <string name="search_plugin_disabled">Plugin %1$s deaktivert</string>
+    <string name="search_recent">Nylige søk</string>
+    <string name="search_history_remove">Fjern fra nylige søk</string>
     <!--    Food Management -->
     <string name="food_management">Mat</string>
     <string name="food_deleted">Mat slettet</string>
