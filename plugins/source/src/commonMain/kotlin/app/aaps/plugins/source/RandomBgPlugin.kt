@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -36,6 +37,7 @@ import dev.zacsweers.metro.binding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
@@ -132,7 +134,14 @@ class RandomBgPlugin(
                 updateInterval()
                 // Timed from before the work, so a slow insert does not push every later reading back.
                 val started = TimeSource.Monotonic.markNow()
-                handleNewData()
+                // appScope has no handler, so a throw here would end the app on Android, and the loop
+                // with it. One failed reading is logged instead, and the next interval tries again.
+                try {
+                    handleNewData()
+                } catch (e: Exception) {
+                    ensureActive() // stopped during the reading: leave the loop
+                    aapsLogger.error(LTag.BGSOURCE, "Random BG reading failed", e)
+                }
                 delay(T.mins(interval).msecs().milliseconds - started.elapsedNow())
             }
         }

@@ -184,6 +184,29 @@ class RandomBgPluginTest : TestBaseWithProfile() {
         }
     }
 
+    /**
+     * One reading that fails must not end the loop. The loop runs on the app scope, which has no handler: a
+     * throw there ends the app on Android, and without the loop no more readings come.
+     */
+    @Test
+    fun `a failed reading does not stop the loop`() {
+        runTest {
+            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))
+                .thenThrow(IllegalStateException("database is closed"))
+                .thenReturn(PersistenceLayer.TransactionResult())
+        }
+        enabled {
+            scope.testScheduler.advanceTimeBy((5.minutes + 2.seconds).inWholeMilliseconds)
+            scope.runCurrent()
+            insertsSoFar(1)
+
+            scope.testScheduler.advanceTimeBy(5.minutes.inWholeMilliseconds)
+            scope.runCurrent()
+            insertsSoFar(2)
+            assertThat(randomBgPlugin.job?.isActive).isTrue()
+        }
+    }
+
     @Test
     fun `unfinished mode leaves the choice to the user`() {
         whenever(config.isEnabled(ExternalOptions.UNFINISHED_MODE)).thenReturn(true)
