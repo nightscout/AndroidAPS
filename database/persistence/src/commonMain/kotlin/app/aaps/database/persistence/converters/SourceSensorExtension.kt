@@ -30,6 +30,8 @@ fun GlucoseValue.SourceSensor.fromDb(): SourceSensor =
         GlucoseValue.SourceSensor.ANYTIME           -> SourceSensor.ANYTIME
         GlucoseValue.SourceSensor.GLUTEC            -> SourceSensor.GLUTEC
         GlucoseValue.SourceSensor.GLUPRO            -> SourceSensor.GLUPRO
+        GlucoseValue.SourceSensor.EVERSENSE_E3 -> SourceSensor.EVERSENSE_E3
+        GlucoseValue.SourceSensor.EVERSENSE_365 -> SourceSensor.EVERSENSE_365
         GlucoseValue.SourceSensor.EVERSENSE         -> SourceSensor.EVERSENSE
         GlucoseValue.SourceSensor.SYAI_TAG          -> SourceSensor.SYAI_TAG
         GlucoseValue.SourceSensor.INSTARA           -> SourceSensor.INSTARA
@@ -70,6 +72,8 @@ fun SourceSensor.toDb(): GlucoseValue.SourceSensor =
         SourceSensor.ANYTIME           -> GlucoseValue.SourceSensor.ANYTIME
         SourceSensor.GLUTEC            -> GlucoseValue.SourceSensor.GLUTEC
         SourceSensor.GLUPRO            -> GlucoseValue.SourceSensor.GLUPRO
+        SourceSensor.EVERSENSE_E3 -> GlucoseValue.SourceSensor.EVERSENSE_E3
+        SourceSensor.EVERSENSE_365 -> GlucoseValue.SourceSensor.EVERSENSE_365
         SourceSensor.EVERSENSE         -> GlucoseValue.SourceSensor.EVERSENSE
         SourceSensor.SYAI_TAG          -> GlucoseValue.SourceSensor.SYAI_TAG
         SourceSensor.INSTARA           -> GlucoseValue.SourceSensor.INSTARA

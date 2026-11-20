@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.source.DexcomBoyda
+import app.aaps.core.interfaces.source.EversenseCalibrationSource
 import app.aaps.core.interfaces.source.XDripSource
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -26,6 +27,7 @@ class ElementAvailability(
 ) {
 
     fun isAvailable(elementType: ElementType): Boolean = when (elementType) {
+        ElementType.EVERSENSE_CALIBRATION -> (activePlugin.activeBgSource as? EversenseCalibrationSource)?.isEnabled() == true
         ElementType.CALIBRATION    -> xDripSource.isEnabled() || isCalibrationOverrideActive()
         ElementType.CGM_XDRIP      -> xDripSource.isEnabled()
         ElementType.CGM_DEX        -> dexcomBoyda.isEnabled()

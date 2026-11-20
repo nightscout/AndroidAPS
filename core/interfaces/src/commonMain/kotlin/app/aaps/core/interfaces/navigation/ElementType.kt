@@ -42,6 +42,9 @@ enum class ElementType(
     // On a client a calibration goes to the master as BatchAction.Calibration, which hands it to its CGM plugin.
     CALIBRATION(category = ElementCategory.CGM, searchable = true, role = ClientRole.Caregiver),
 
+    // Sends calibration to the local Eversense transmitter.
+    EVERSENSE_CALIBRATION(category = ElementCategory.CGM, searchable = true, role = ClientRole.Caregiver),
+
     // Profile & Targets — minimum level is BOLUS; screen mode (PLAY/EDIT) determined by granted auth level.
     // Mutating editors whose writes ride Client-Control → CLIENT_PAIRED (hidden on an unpaired client).
     // PROFILE_MANAGEMENT is the exception and stays visible: profiles are state an unpaired client still

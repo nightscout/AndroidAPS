@@ -32,12 +32,13 @@ import app.aaps.core.ui.compose.stringResource
 
 /**
  * Dialog for setting a new password or PIN.
- * Requires entering the password twice for confirmation.
+ * Asks for confirmation unless the preference opts out.
  *
  * @param title Dialog title
  * @param pinInput If true, shows numeric keyboard for PIN input
  * @param onConfirm Called with (password1, password2) when OK is clicked
  * @param onCancel Called when Cancel is clicked or dialog is dismissed
+ * @param requireConfirmation Whether to show a second field. When false, both callback values match.
  *
  * @see SetPasswordDialogPreview
  */
@@ -46,10 +47,12 @@ fun SetPasswordDialog(
     title: String,
     pinInput: Boolean,
     onConfirm: (String, String) -> Unit,
-    onCancel: () -> Unit
+    onCancel: () -> Unit,
+    requireConfirmation: Boolean = true
 ) {
     var password1 by remember { mutableStateOf("") }
     var password2 by remember { mutableStateOf("") }
+    val confirm = { onConfirm(password1, if (requireConfirmation) password2 else password1) }
     val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(Unit) {
@@ -85,15 +88,16 @@ fun SetPasswordDialog(
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = if (pinInput) KeyboardType.NumberPassword else KeyboardType.Password,
-                        imeAction = ImeAction.Next
+                        imeAction = if (requireConfirmation) ImeAction.Next else ImeAction.Done
                     ),
+                    keyboardActions = KeyboardActions(onDone = { if (!requireConfirmation) confirm() }),
                     singleLine = true,
                     modifier = Modifier
                         .fillMaxWidth()
                         .focusRequester(focusRequester)
                 )
 
-                OutlinedTextField(
+                if (requireConfirmation) OutlinedTextField(
                     value = password2,
                     onValueChange = { password2 = it },
                     label = {
@@ -105,7 +109,7 @@ fun SetPasswordDialog(
                         imeAction = ImeAction.Done
                     ),
                     keyboardActions = KeyboardActions(
-                        onDone = { onConfirm(password1, password2) }
+                        onDone = { confirm() }
                     ),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -113,7 +117,7 @@ fun SetPasswordDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = { onConfirm(password1, password2) }) {
+            TextButton(onClick = confirm) {
                 Text(stringResource(CoreUiStrings.ok))
             }
         },

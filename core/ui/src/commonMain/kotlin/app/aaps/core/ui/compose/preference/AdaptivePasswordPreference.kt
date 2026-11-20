@@ -91,6 +91,7 @@ fun AdaptivePasswordPreferenceItem(
         SetPasswordDialog(
             title = stringResource(effectiveTitle),
             pinInput = isPin,
+            requireConfirmation = stringKey.requiresPasswordConfirmation,
             onConfirm = { password1, password2 ->
                 when {
                     password1 != password2 -> {

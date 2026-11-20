@@ -3,10 +3,12 @@ package app.aaps.core.ui.compose.dialogs
 import android.content.Context
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.hasSetTextAction
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performImeAction
 import app.aaps.core.ui.R
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
@@ -36,14 +38,15 @@ class SetPasswordDialogTest {
         cancelLabel = context.getString(R.string.cancel)
     }
 
-    private fun show(onConfirm: (String, String) -> Unit = { _, _ -> }, onCancel: () -> Unit = {}) {
+    private fun show(onConfirm: (String, String) -> Unit = { _, _ -> }, onCancel: () -> Unit = {}, requireConfirmation: Boolean = true) {
         compose.setContent {
             MaterialTheme {
                 SetPasswordDialog(
                     title = "Set New Password",
                     pinInput = false,
                     onConfirm = onConfirm,
-                    onCancel = onCancel
+                    onCancel = onCancel,
+                    requireConfirmation = requireConfirmation
                 )
             }
         }
@@ -62,6 +65,19 @@ class SetPasswordDialogTest {
 
         assertThat(first).isEqualTo("alpha")
         assertThat(second).isEqualTo("beta")
+    }
+
+    @Test
+    fun singleEntry_submitsFromKeyboardWithoutConfirmationField() {
+        var submitted: Pair<String, String>? = null
+        show(onConfirm = { a, b -> submitted = a to b }, requireConfirmation = false)
+
+        val fields = compose.onAllNodes(hasSetTextAction())
+        fields.assertCountEquals(1)
+        fields[0].performTextInput("dms-password")
+        fields[0].performImeAction()
+
+        assertThat(submitted).isEqualTo("dms-password" to "dms-password")
     }
 
     @Test

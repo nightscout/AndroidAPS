@@ -50,6 +50,8 @@ enum class SourceSensor(val text: String, val aliases: Set<String> = emptySet())
     GLUTEC("Glutec", setOf("MQ")),
     GLUPRO("GluPro"),
     EVERSENSE("Eversense"),
+    EVERSENSE_E3("Eversense E3"),
+    EVERSENSE_365("Eversense 365"),
     // One sensor sold under two brands. AAPS already treats them as one: the broadcasts from both
     // apps go to the same worker, which has always stored this entry, and the plugin calls itself
     // "Syai/Ottai App". `Ottai` is only ever read, and is what Juggluco sends.
