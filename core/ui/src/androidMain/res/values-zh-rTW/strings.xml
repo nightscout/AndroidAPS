@@ -1064,6 +1064,8 @@
     <string name="wiki_search_offline">說明文件搜尋需要網際網路連線</string>
     <string name="no_search_results">找不到結果</string>
     <string name="search_plugin_disabled">外掛 %1$s 已停用</string>
+    <string name="search_recent">最近搜尋</string>
+    <string name="search_history_remove">從最近搜尋中移除</string>
     <!--    Food Management -->
     <string name="food_management">食物</string>
     <string name="food_deleted">食物已刪除</string>
