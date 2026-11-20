@@ -43,7 +43,7 @@ kotlin {
 
         androidMain {
             dependencies {
-                api(project(":plugins:eversense"))
+                api(project(":plugins:source:eversense"))
                 implementation(libs.androidx.appcompat)
                 implementation(project.dependencies.platform(libs.androidx.compose.bom))
                 implementation(libs.androidx.compose.material3)

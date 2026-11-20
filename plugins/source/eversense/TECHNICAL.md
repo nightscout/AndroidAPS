@@ -9,10 +9,10 @@ For setup and practical instructions, read the [user guide](README.md). Project:
 | Area | Responsibility | Entry points |
 | --- | --- | --- |
 | This module | Android BLE, connection lifecycle, commands, codecs, authentication and DMS clients | EversenseCGMPlugin, EversenseGattCallback |
-| [Source adapter](../source/src/androidMain/kotlin/app/aaps/plugins/source/EversensePlugin.kt) | AAPS source registration, preferences, persistence, cloud queue and notifications | EversensePlugin |
-| [Source integration helpers](../source/src/androidMain/kotlin/app/aaps/plugins/source/eversense/) | Driver storage adapter, cloud delivery, placement lifecycle | EversenseStateStore, EversenseCloudUploader, PositioningSession |
-| [Android activities](../source/src/androidMain/kotlin/app/aaps/plugins/source/activities/) | Status, calibration and placement screens | EversenseStatusActivity, EversenseCalibrationActivity, EversensePlacementActivity |
-| [Shared calibration UI](../../ui/src/commonMain/kotlin/app/aaps/ui/compose/eversenseCalibrationDialog/) | Overview calibration form and view model | EversenseCalibrationDialogViewModel |
+| [Source adapter](../src/androidMain/kotlin/app/aaps/plugins/source/EversensePlugin.kt) | AAPS source registration, preferences, persistence, cloud queue and notifications | EversensePlugin |
+| [Source integration helpers](../src/androidMain/kotlin/app/aaps/plugins/source/eversense/) | Driver storage adapter, cloud delivery, placement lifecycle | EversenseStateStore, EversenseCloudUploader, PositioningSession |
+| [Android activities](../src/androidMain/kotlin/app/aaps/plugins/source/activities/) | Status, calibration and placement screens | EversenseStatusActivity, EversenseCalibrationActivity, EversensePlacementActivity |
+| [Shared calibration UI](../../../ui/src/commonMain/kotlin/app/aaps/ui/compose/eversenseCalibrationDialog/) | Overview calibration form and view model | EversenseCalibrationDialogViewModel |
 | core/interfaces | Shared calibration contract | EversenseCalibrationSource |
 | core/keys and core/ui | Typed preference keys, password dialog and theme selection | StringPreferenceKey, SetPasswordDialog, UiMode |
 
@@ -260,7 +260,7 @@ The source observes the diagnostic switch and resets active diagnostic logging o
 From the repository root, use the supported JDK and ./gradlew.bat on Windows or ./gradlew on other hosts:
 
 ```text
-./gradlew.bat :plugins:eversense:testAndroidHostTest
+./gradlew.bat :plugins:source:eversense:testAndroidHostTest
 ./gradlew.bat :plugins:source:testAndroidHostTest --tests "*Eversense*Test" --tests "*PositioningSessionTest"
 ./gradlew.bat :core:ui:testAndroidHostTest --tests "*SetPasswordDialogTest"
 ./gradlew.bat :ui:testAndroidHostTest --tests "*EversenseCalibration*Test"

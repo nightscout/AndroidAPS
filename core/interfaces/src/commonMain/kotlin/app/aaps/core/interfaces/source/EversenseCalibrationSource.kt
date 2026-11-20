@@ -2,7 +2,7 @@ package app.aaps.core.interfaces.source
 
 /**
  * Abstraction over Eversense's BLE calibration flow, exposed to modules (e.g. `ui`) that must not
- * take a direct dependency on the `plugins:eversense`/`plugins:source` modules — same pattern as
+ * take a direct dependency on the `plugins:source:eversense`/`plugins:source` modules — same pattern as
  * [XDripSource]/[DexcomBoyda].
  */
 interface EversenseCalibrationSource {
