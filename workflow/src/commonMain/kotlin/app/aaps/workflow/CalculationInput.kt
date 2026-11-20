@@ -21,7 +21,9 @@ class PrepareGraphData(
     val bgDataReload: Boolean,
     val limitDataToOldestAvailable: Boolean,
     val triggeredByNewBG: Boolean,
-    val emitFinalProgress: Boolean
+    val emitFinalProgress: Boolean,
+    /** The live graph: its window follows the clock, see `moveLiveWindowTo`. False for the history browser. */
+    val liveWindow: Boolean
 )
 
 /** The input of the phase that runs after [PrepareGraphData]. */

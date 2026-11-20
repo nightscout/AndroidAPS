@@ -308,6 +308,28 @@ internal class SecondaryGraphScaleHelpersTest {
         fun `no values, no range`() {
             assertThat(axisRange(AxisRule.ZeroFloor, emptyList())).isNull()
         }
+
+        // #5525: min() and max() pass a NaN on, and the whole axis was NaN
+        @Test
+        fun `a value that is not a finite number does not count`() {
+            val withBadValues = listOf(62.0, Double.NaN, 118.0, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY)
+            assertThat(axisRange(axisRuleOf(SeriesType.HEART_RATE), withBadValues)).isEqualTo(AxisRange(60.0, 120.0, null))
+        }
+
+        @Test
+        fun `only values that are not finite, no range`() {
+            assertThat(axisRange(AxisRule.ZeroFloor, listOf(Double.NaN, Double.POSITIVE_INFINITY))).isNull()
+        }
+    }
+
+    @Nested
+    inner class FilterToRangeTest {
+
+        @Test
+        fun `a point whose value is not a finite number is dropped`() {
+            val points = listOf(0.0 to 1.0, 5.0 to Double.NaN, 10.0 to 2.0, 15.0 to Double.POSITIVE_INFINITY)
+            assertThat(filterToRange(points, 0.0, 20.0)).containsExactly(0.0 to 1.0, 10.0 to 2.0).inOrder()
+        }
     }
 
     @Nested

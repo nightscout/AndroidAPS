@@ -1007,7 +1007,7 @@ class DataHandlerMobile(
     private suspend fun handleFillPresetPreCheck(command: EventData.ActionFillPresetPreCheck) {
         if (rejectIfAapsClient()) return
         if (rejectIfPrimeNotAvailable()) return
-        runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS)?.let {
+        runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.PRIME)?.let {
             sendError(it)
             return
         }
@@ -1032,7 +1032,7 @@ class DataHandlerMobile(
     private suspend fun handleFillPreCheck(command: EventData.ActionFillPreCheck) {
         if (rejectIfAapsClient()) return
         if (rejectIfPrimeNotAvailable()) return
-        runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS)?.let {
+        runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.PRIME)?.let {
             sendError(it)
             return
         }

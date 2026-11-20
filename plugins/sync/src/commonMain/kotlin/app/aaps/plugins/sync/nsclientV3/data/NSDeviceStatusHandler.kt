@@ -94,7 +94,7 @@ class NSDeviceStatusHandler(
     private val overviewData: OverviewData,
     private val calculationWorkflow: CalculationWorkflow,
     private val rxBus: RxBus,
-    // Plain CoroutineScope: @ApplicationScope is a javax qualifier and cannot appear in commonMain.
+    // Plain CoroutineScope: AppCoroutineBindings binds the one application scope under this type too.
     private val appScope: CoroutineScope,
     private val nsClientV3Plugin: () -> NSClientV3Plugin,
     private val apsResultProvider: () -> APSResult,

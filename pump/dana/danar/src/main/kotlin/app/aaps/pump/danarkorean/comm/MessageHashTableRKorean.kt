@@ -89,6 +89,6 @@ class MessageHashTableRKorean(
     }
 
     override fun findMessage(command: Int): MessageBase {
-        return messages[command] ?: MessageBase(injector)
+        return messages[command] ?: MessageBase(injector).also { it.setCommand(command) }
     }
 }

@@ -1,5 +1,6 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.DanaRSTestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Assertions
@@ -45,5 +46,38 @@ class DanaRSPacketOptionSetUserOptionTest : DanaRSTestBase() {
         assertThat(on[13]).isEqualTo(100.toByte()) // target is still at its place
         assertThat(on[15]).isEqualTo(1.toByte())
         assertThat(off[15]).isEqualTo(0.toByte())
+    }
+
+    /**
+     * The options the screen saved go out, not those a settings read stored since: the read put the pump's old values
+     * where the screen had put the new ones, and the old values were written and shown as saved.
+     */
+    @Test
+    fun theSavedOptionsAreSentNotThoseOfALaterRead() {
+        danaPump.hwModel = 0x0B
+        val saved = DanaPump.UserOptions(
+            timeDisplayType24 = true, buttonScrollOnOff = true, beepAndAlarm = 6, lcdOnTimeSec = 30, backlightOnTimeSec = 20,
+            units = 1, shutdownHour = 5, lowReservoirRate = 30, autoLock = true
+        )
+        danaPump.userOptionsToWrite = saved
+        // A settings read after the save, with the pump's old values.
+        danaPump.beepAndAlarm = 1
+        danaPump.lcdOnTimeSec = 5
+        danaPump.lowReservoirRate = 10
+        danaPump.autoLock = false
+
+        val packet = DanaRSPacketOptionSetUserOption(aapsLogger, danaPump)
+        val params = packet.getRequestParams()
+
+        assertThat(params[2]).isEqualTo(6.toByte())
+        assertThat(params[3]).isEqualTo(30.toByte())
+        assertThat(params[8]).isEqualTo(30.toByte())
+        assertThat(params[15]).isEqualTo(1.toByte())
+        assertThat(packet.written).isEqualTo(saved)
+
+        // Taken by the pump: the saved options are the pump's now, and nothing is left to write.
+        danaPump.userOptionsWritten(saved)
+        assertThat(danaPump.beepAndAlarm).isEqualTo(6)
+        assertThat(danaPump.userOptionsToWrite).isNull()
     }
 }

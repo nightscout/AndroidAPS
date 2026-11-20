@@ -26,6 +26,8 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
     implementation(project(":pump:common"))
+    // The in-tree emulator, picked by the `emulate_diaconn` option (DiaconnTransportBindings).
+    implementation(project(":pump:diaconn:emulator"))
     implementation(project(":shared:impl"))
 
     api(libs.androidx.room.runtime)
@@ -36,5 +38,8 @@ dependencies {
     implementation(libs.com.squareup.retrofit2.converter.gson)
 
     testImplementation(project(":shared:tests"))
+    // The shared Bluetooth transport contract runs on Robolectric, a JUnit 4 runner.
+    testImplementation(libs.org.robolectric)
+    testRuntimeOnly(libs.org.junit.vintage.engine)
 
 }

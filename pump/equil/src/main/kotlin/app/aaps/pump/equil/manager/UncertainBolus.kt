@@ -77,10 +77,10 @@ internal class UncertainBolus(
         private const val LOG_SIZE = 2000
 
         /** See [notGivenAfter]. */
-        private const val ADVERTISEMENT_FRESH_MS = 30_000L
+        internal const val ADVERTISEMENT_FRESH_MS = 30_000L
 
-        private const val PORT_STATUS = 4
-        private const val TYPE_STATUS = 0
+        internal const val PORT_STATUS = 4
+        internal const val TYPE_STATUS = 0
 
         /** [index] was written after [before], also when the count started again at 1 in between. */
         fun isAfter(index: Int, before: Int): Boolean {

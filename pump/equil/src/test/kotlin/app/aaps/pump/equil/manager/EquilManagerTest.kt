@@ -120,6 +120,85 @@ class EquilManagerTest : TestBaseWithProfile() {
         )
     }
 
+    private fun runningExtendedBolus() = runBlocking {
+        val extended = PumpSync.PumpState.ExtendedBolus(1000L, 30 * 60_000L, 1.0, 2.0, PumpType.EQUIL, "7000F3")
+        whenever(pumpSync.expectedPumpState()).thenReturn(PumpSync.PumpState(null, extended, null, null, "7000F3"))
+    }
+
+    /** A stop for a reservoir change or a removal ends the extended bolus too, also of a pod that was not reached (D9). */
+    @Test
+    fun `stop ends a running extended bolus`() = runTest {
+        prepareRunMode(RunMode.RUN)
+        runningExtendedBolus()
+
+        equilManager.setRunMode(RunMode.STOP)
+
+        verify(pumpSync).syncStopExtendedBolusWithPumpId(any(), any(), eq(PumpType.EQUIL), eq("7000F3"))
+    }
+
+    /** Whether a suspend on the pump ends its extended bolus was never seen on a real pump, so AAPS leaves it alone. */
+    @Test
+    fun `suspend leaves the extended bolus alone`() = runTest {
+        prepareRunMode(RunMode.RUN)
+        runningExtendedBolus()
+
+        equilManager.setRunMode(RunMode.SUSPEND)
+
+        verify(pumpSync, never()).syncStopExtendedBolusWithPumpId(any(), any(), any(), any())
+    }
+
+    // --- a status read ends the temp basal the pump does not run (a lost cancel answer and a lost check) ---
+
+    @Test
+    fun `a status read ends the temp basal the pump does not run`() = runTest {
+        prepareRunMode(RunMode.RUN, runningTbrType = PumpSync.TemporaryBasalType.NORMAL)
+        equilManager.setTempBasal(EquilTempBasalRecord(30 * 60_000, 0.6, 1000L))
+        whenever(pumpSync.syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any())).thenReturn(true)
+
+        equilManager.endTempBasalWhenThePumpRunsNone(runsOnPump = false, since = 1000L)
+
+        verify(pumpSync).syncStopTemporaryBasalWithPumpId(any(), any(), eq(PumpType.EQUIL), eq("7000F3"), eq(false))
+        assertEquals(null, equilManager.getTempBasal())
+    }
+
+    @Test
+    fun `a status read keeps the temp basal the pump runs`() = runTest {
+        prepareRunMode(RunMode.RUN, runningTbrType = PumpSync.TemporaryBasalType.NORMAL)
+
+        equilManager.endTempBasalWhenThePumpRunsNone(runsOnPump = true, since = 1000L)
+
+        verify(pumpSync, never()).syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun `a status read decides nothing when the pump does not answer`() = runTest {
+        prepareRunMode(RunMode.RUN, runningTbrType = PumpSync.TemporaryBasalType.NORMAL)
+
+        equilManager.endTempBasalWhenThePumpRunsNone(runsOnPump = null, since = 1000L)
+
+        verify(pumpSync, never()).syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun `a status read does not ask the pump when AAPS has no temp basal`() = runTest {
+        prepareRunMode(RunMode.RUN)
+
+        equilManager.endTempBasalThePumpDoesNotRun()
+
+        verify(equilBLE, never()).writeCmd(any())
+        verify(pumpSync, never()).syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun `a status read leaves a suspend alone`() = runTest {
+        prepareRunMode(RunMode.SUSPEND, runningTbrType = PumpSync.TemporaryBasalType.PUMP_SUSPEND)
+
+        equilManager.endTempBasalThePumpDoesNotRun()
+
+        verify(equilBLE, never()).writeCmd(any())
+        verify(pumpSync, never()).syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any())
+    }
+
     @Test
     fun `resume ends the PUMP_SUSPEND temp basal`() = runTest {
         prepareRunMode(RunMode.SUSPEND, runningTbrType = PumpSync.TemporaryBasalType.PUMP_SUSPEND)

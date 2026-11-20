@@ -27,6 +27,7 @@ class MsgError(
         }
         if (errorCode < 8) { // bolus delivering stopped
             danaPump.bolusStopped = true
+            danaPump.bolusStoppedByPump = true
             val currentPercent = bolusProgressData.state.value?.percent ?: 0
             bolusProgressData.updateProgress(currentPercent, TextRef.Literal(errorString))
             // at least on Occlusion pump stops communication. Try to force reconnecting

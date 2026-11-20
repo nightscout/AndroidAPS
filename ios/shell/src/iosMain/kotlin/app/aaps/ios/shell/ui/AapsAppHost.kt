@@ -59,13 +59,16 @@ import app.aaps.core.utils.gitRemoteShort
 import app.aaps.implementation.lifecycle.IosProtectionLifecycle
 import app.aaps.implementation.receivers.IosTimeDateOrTZChangeWatcher
 import app.aaps.implementation.logging.AAPSLoggerIos
+import app.aaps.implementation.protection.IosBiometricPrompt
 import app.aaps.implementation.protection.KeychainUnavailableException
+import app.aaps.implementation.protection.LocalAuthenticationEvaluator
 import app.aaps.ios.shell.IosAppStartup
 import app.aaps.ios.shell.PluginStoreRegistry
 import app.aaps.ios.shell.di.IosAppGraph
 import app.aaps.ios.shell.platform.IosLanguage
 import app.aaps.ios.shell.platform.notOnThisPlatform
 import app.aaps.ios.shell.prefs.IosStorage
+import app.aaps.plugins.sync.nsclientV3.ws.IosForegroundWatcher
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.shared.clientbindings.ClientViewModelFactory
@@ -102,7 +105,7 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import platform.Foundation.NSNotificationCenter
 import platform.Foundation.NSOperationQueue
-import platform.UIKit.UIApplicationDidBecomeActiveNotification
+import platform.UIKit.UIApplicationWillEnterForegroundNotification
 import platform.UIKit.UIApplicationDidEnterBackgroundNotification
 import platform.UIKit.UIViewController
 
@@ -255,7 +258,25 @@ private fun startApp(nsSocketFactory: NsSocketFactory, crashReporter: CrashRepor
 
     // Before the composition, not beside it: the first view model built reads the active pump, and
     // an empty plugin list there throws from a coroutine and takes the process with it.
-    IosAppStartup(logger, PluginStoreRegistry(graph.pluginStore, graph.configBuilder), graph.contributedPlugins, graph.rxBus, graph.appScope) { graph.periodicMaintenance.start(graph.appScope) }.run()
+    IosAppStartup(
+        logger,
+        PluginStoreRegistry(graph.pluginStore, graph.configBuilder),
+        graph.contributedPlugins,
+        graph.rxBus,
+        graph.appScope,
+        startPeriodicWork = {
+            // Android does this in `MainApp`, next to scheduling `KeepAliveWorker`; this shell never
+            // did. `PeriodicMaintenance.start` runs its first pass straight away, and that pass asks
+            // whether the newest stored glucose value is stale. On a cold start it always is, by
+            // however long the app was not running - which on iOS is every launch, because the
+            // process is suspended rather than kept alive. The pre-snooze holds the alarm back for
+            // five minutes so the first Nightscout round can land first. Without it the app raises
+            // "BG readings missed" while Nightscout has the data (nightscout/AndroidAPS#5495).
+            graph.localAlertUtils.preSnoozeAlarms()
+            graph.periodicMaintenance.start(graph.appScope)
+        },
+        startAutomation = { graph.automationRuntime.start() }
+    ).run()
 
     // Attach to the notification centre. Registering a category only records it now, so that building
     // the graph does not need an app bundle - see `IosNotificationDelegate.install`. It is done here
@@ -306,6 +327,29 @@ private fun startApp(nsSocketFactory: NsSocketFactory, crashReporter: CrashRepor
         queue = NSOperationQueue.mainQueue,
         usingBlock = { store.flush() }
     )
+
+    // The other half of the same problem. iOS suspends the process, and the websocket comes back
+    // looking connected while delivering nothing, so no catch-up round is ever started and the
+    // screen keeps showing the glucose value from before the suspension. Replacing the connection
+    // is what starts that round. The pre-snooze goes first, so the maintenance pass that resumes
+    // with the app cannot raise "BG readings missed" in the seconds before the round lands - the
+    // same five minutes a cold start gets (nightscout/AndroidAPS#5495).
+    //
+    // Owned by the process and never stopped, like the observer above: it has to outlive a UI
+    // restart, which rebuilds everything inside the composition. "Try again" and "Start fresh" on
+    // the failure screen call `startApp` a second time, but cannot leave two watchers behind: every
+    // failure that screen handles is thrown while the store and the graph are built, far above this
+    // line, so a run that reaches here is the only run that registers anything.
+    IosForegroundWatcher(
+        aapsLogger = logger,
+        onResumeAfterGap = { awayMs ->
+            logger.debug(LTag.CORE, "Away for ${awayMs / 1000}s, replacing the Nightscout connection")
+            graph.localAlertUtils.preSnoozeAlarms()
+            graph.nsConnection.stop()
+            graph.nsConnection.start("resume")
+        }
+    ).start()
+
     return StartedApp(graph, viewModelFactory, appName, appIcon)
 }
 
@@ -335,6 +379,10 @@ private fun AapsApp(app: StartedApp) {
     // beside the language effect because both are app wide settings applied while it runs.
     KeepScreenOnEffect(graph.preferences)
 
+    // One prompt for the whole app, like the single `BiometricCheck` call Android makes. Held across
+    // recompositions because `LAContext` is built per evaluation inside it, not here.
+    val biometricPrompt = remember { IosBiometricPrompt(LocalAuthenticationEvaluator(), logger) }
+
     val restart by graph.uiRestart.signal.collectAsState()
     key(restart) {
     // iOS has no ambient application object, so the factory is provided here rather than found.
@@ -352,6 +400,19 @@ private fun AapsApp(app: StartedApp) {
             passwordHasher = graph.passwordHasher,
             passwordCheck = graph.passwordCheck,
             protectionCheck = graph.protectionCheck,
+            // The one platform-specific part of protection, exactly as `ComposeMainActivity` passes
+            // its `BiometricCheck` one. Without it the host falls back to its own default, which
+            // answers "use the password" at once, so Face ID was never shown and application
+            // protection could not be satisfied (nightscout/AndroidAPS#5520).
+            showBiometricSimple = { title, onSuccess, onFallback, onCancel ->
+                biometricPrompt.show(
+                    title = title,
+                    fallbackTitle = graph.textResolver.gs(CoreUiStrings.use_pin_password),
+                    onSuccess = onSuccess,
+                    onFallback = onFallback,
+                    onCancel = onCancel
+                )
+            },
             exportPasswordDataStore = graph.exportPasswordDataStore,
             visibilityContext = graph.visibilityContext,
             nsClient = graph.nsClient,
@@ -373,11 +434,21 @@ private fun AapsApp(app: StartedApp) {
             // has no request to render and a configured app-launch password never appears - the
             // setting looked saved and did nothing, which is how it was found.
             //
-            // Asked at launch **and every time the app comes back to the foreground**, which is
+            // Asked at launch **and every time the app comes back from the background**, which is
             // the case that matters: a phone handed to someone else while AAPS is backgrounded.
             // Android does the same from `onResume`. When protection is set to "No protection"
             // this costs nothing - `requestProtection` grants straight away without a dialog, so
             // the gate only appears for someone who asked for it.
+            //
+            // `WillEnterForeground` and **not** `DidBecomeActive`, which this used to listen to.
+            // `DidBecomeActive` also fires when a system sheet closes, and the Face ID sheet is a
+            // system sheet - so asking for Face ID re-locked the app the moment the scan succeeded
+            // and the sheet went away, for ever (nightscout/AndroidAPS#5520). Control centre and
+            // the notification shade did the same. Android does not see this because
+            // `BiometricPrompt` is an overlay that never pauses the activity, so `onResume` does
+            // not fire when it closes. `WillEnterForeground` fires only on a real return from the
+            // background, which is what `onResume` means here, and it pairs with
+            // `IosProtectionLifecycle`, which clears the authorization on `DidEnterBackground`.
             var unlocked by remember { mutableStateOf(false) }
             var asking by remember { mutableStateOf(false) }
             val requestUnlock = remember {
@@ -402,7 +473,7 @@ private fun AapsApp(app: StartedApp) {
             DisposableEffect(Unit) {
                 requestUnlock()
                 val observer = NSNotificationCenter.defaultCenter.addObserverForName(
-                    name = UIApplicationDidBecomeActiveNotification,
+                    name = UIApplicationWillEnterForegroundNotification,
                     `object` = null,
                     queue = NSOperationQueue.mainQueue,
                     usingBlock = { requestUnlock() }
@@ -526,11 +597,18 @@ private fun AapsApp(app: StartedApp) {
                     rxBus = graph.rxBus,
                     activePlugin = graph.activePlugin,
                     pluginPermissions = graph.pluginPermissions,
-                    // Passed so the rules can be read and edited here. The runtime is deliberately
-                    // NOT started on a client: `MainApp` calls `automationRuntime.start()`, this shell
-                    // does not, and that is the design - a follower edits definitions and the master
-                    // runs them. Do not "fix" the missing start() call; it would give a second machine
-                    // the power to fire the same rules.
+                    // Passed so the rules can be read and edited here. A follower edits definitions
+                    // and the master runs them - and `start()` is what the follower needs to do its
+                    // half: it loads the rules and keeps them in step with the master. `IosAppStartup`
+                    // calls it, as `MainApp` does on every flavour.
+                    //
+                    // This does not give this phone the power to fire anything. `start()` returns
+                    // before the processing loop when `config.APS` is false, and `runEvent` - the one
+                    // place in the runtime that runs an action - refuses on the same flag, which also
+                    // covers the wear tile, quick launch, scenes and run-now. `executionEnabled` hides
+                    // the Run button here as well. An earlier comment in this spot said the missing
+                    // `start()` was the design and warned against calling it; it was not - the rule
+                    // list was simply always empty on iOS and desktop.
                     automationRuntime = graph.automationRuntime,
                     preferences = graph.preferences,
                     rh = graph.textResolver,

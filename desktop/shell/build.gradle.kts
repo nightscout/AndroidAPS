@@ -289,6 +289,36 @@ compose.desktop {
     }
 }
 
+/**
+ * Packs the app image into a zip, for a machine where the installer cannot run.
+ *
+ * The MSI goes through Windows Installer, and a managed machine often forbids that: the user gets
+ * "The system administrator has set policies to prevent this installation" and there is nothing in
+ * the package that can change it. An installer in `.exe` form would not help either - jpackage
+ * builds that one by wrapping the same MSI. This zip holds what the installer would have laid down,
+ * the launcher and the bundled JRE, so the user unpacks it anywhere they may write and starts the
+ * `.exe`. No installer, no administrator.
+ *
+ * It takes the app image of `createDistributable`, the same one `packageMsi` packs, rather than the
+ * release one: the release build type runs ProGuard, and nothing here carries the keep rules that
+ * would need.
+ *
+ * The zip carries the `AAPSClient` folder itself, not its contents, so unpacking it cannot scatter
+ * a JRE over the user's Downloads. Settings are not inside it - they live in `~/.aaps` - so an
+ * update is "delete the folder, unpack the new one", and an installed client and an unpacked one
+ * share the same data.
+ */
+tasks.register<Zip>("zipDistributable") {
+    group = "compose desktop"
+    description = "Packs the app image into a zip that runs without an installer."
+    dependsOn("createDistributable")
+    // Where the Compose plugin leaves the app image. Its own task type is not part of the plugin's
+    // public API, so the path is written out rather than read from the task.
+    from(layout.buildDirectory.dir("compose/binaries/main/app"))
+    archiveFileName.set("$desktopPackageName-${Versions.appVersion.substringBefore('-')}-portable.zip")
+    destinationDirectory.set(layout.buildDirectory.dir("compose/binaries/main/zip"))
+}
+
 // Crockford's org.json comes in transitively with socket.io-client. It is excluded so that the
 // AOSP repack above is the only implementation on the classpath - two would make which one wins a
 // matter of ordering.

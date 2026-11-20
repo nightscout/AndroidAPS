@@ -1,0 +1,88 @@
+isf=85.794 ic=5.817
+basal[0]=0.692 untuned=0
+basal[1]=0.703 untuned=0
+basal[2]=0.987 untuned=0
+basal[3]=0.997 untuned=0
+basal[4]=0.986 untuned=0
+basal[5]=1.063 untuned=0
+basal[6]=1.014 untuned=0
+basal[7]=1.02 untuned=0
+basal[8]=0.95 untuned=0
+basal[9]=0.876 untuned=0
+basal[10]=0.844 untuned=0
+basal[11]=0.844 untuned=0
+basal[12]=0.657 untuned=0
+basal[13]=0.65 untuned=1
+basal[14]=0.65 untuned=1
+basal[15]=0.65 untuned=1
+basal[16]=0.65 untuned=1
+basal[17]=0.65 untuned=1
+basal[18]=0.65 untuned=1
+basal[19]=0.65 untuned=1
+basal[20]=0.65 untuned=1
+basal[21]=0.643 untuned=0
+basal[22]=0.633 untuned=0
+basal[23]=0.636 untuned=0
+== log
+[Core] crTotalCarbs: 200.0 crTotalInsulin: 32.861 totalCR: 6.086
+[Core] Hour 0 total deviations: -8.21 mg/dL
+[Core] Hour 0 basal adjustment needed: -0.02 U/hr
+[Core] Hour 1 total deviations: -12.17 mg/dL
+[Core] Hour 1 basal adjustment needed: -0.03 U/hr
+[Core] Hour 2 total deviations: 5.91 mg/dL
+[Core] Hour 2 basal adjustment needed: 0.01 U/hr
+[Core] Hour 3 total deviations: 0.0 mg/dL
+[Core] Hour 3 basal adjustment needed: 0.0 U/hr
+[Core] Hour 4 total deviations: 0.0 mg/dL
+[Core] Hour 4 basal adjustment needed: 0.0 U/hr
+[Core] Hour 5 total deviations: 47.05 mg/dL
+[Core] Hour 5 basal adjustment needed: 0.11 U/hr
+[Core] Hour 6 total deviations: 11.07 mg/dL
+[Core] Hour 6 basal adjustment needed: 0.03 U/hr
+[Core] Hour 7 total deviations: -13.78 mg/dL
+[Core] Hour 7 basal adjustment needed: -0.03 U/hr
+[Core] Hour 8 total deviations: 148.12 mg/dL
+[Core] Hour 8 basal adjustment needed: 0.34 U/hr
+[Core] Hour 9 total deviations: 79.29 mg/dL
+[Core] Hour 9 basal adjustment needed: 0.18 U/hr
+[Core] Hour 10 total deviations: 52.38 mg/dL
+[Core] Hour 10 basal adjustment needed: 0.12 U/hr
+[Core] Hour 11 total deviations: -1.84 mg/dL
+[Core] Hour 11 basal adjustment needed: 0.0 U/hr
+[Core] Hour 12 total deviations: -17.62 mg/dL
+[Core] Hour 12 basal adjustment needed: -0.04 U/hr
+[Core] Hour 13 total deviations: 9.11 mg/dL
+[Core] Hour 13 basal adjustment needed: 0.02 U/hr
+[Core] Hour 14 total deviations: 0.0 mg/dL
+[Core] Hour 14 basal adjustment needed: 0.0 U/hr
+[Core] Hour 15 total deviations: 0.0 mg/dL
+[Core] Hour 15 basal adjustment needed: 0.0 U/hr
+[Core] Hour 16 total deviations: 0.0 mg/dL
+[Core] Hour 16 basal adjustment needed: 0.0 U/hr
+[Core] Hour 17 total deviations: 0.0 mg/dL
+[Core] Hour 17 basal adjustment needed: 0.0 U/hr
+[Core] Hour 18 total deviations: 0.0 mg/dL
+[Core] Hour 18 basal adjustment needed: 0.0 U/hr
+[Core] Hour 19 total deviations: 0.0 mg/dL
+[Core] Hour 19 basal adjustment needed: 0.0 U/hr
+[Core] Hour 20 total deviations: 0.0 mg/dL
+[Core] Hour 20 basal adjustment needed: 0.0 U/hr
+[Core] Hour 21 total deviations: 0.0 mg/dL
+[Core] Hour 21 basal adjustment needed: 0.0 U/hr
+[Core] Hour 22 total deviations: 0.0 mg/dL
+[Core] Hour 22 basal adjustment needed: 0.0 U/hr
+[Core] Hour 23 total deviations: 0.0 mg/dL
+[Core] Hour 23 basal adjustment needed: 0.0 U/hr
+[Core] Limiting hour 7 basal to 1.02 (which is 1.2 * pump basal of 0.85)
+[Core] Adjusting hour 13 basal from 0.65 to 0.65 based on hour 12 = 0.657 and hour 21 = 0.643
+[Core] Adjusting hour 14 basal from 0.65 to 0.65 based on hour 12 = 0.657 and hour 21 = 0.643
+[Core] Adjusting hour 15 basal from 0.65 to 0.65 based on hour 12 = 0.657 and hour 21 = 0.643
+[Core] Adjusting hour 16 basal from 0.65 to 0.65 based on hour 12 = 0.657 and hour 21 = 0.643
+[Core] Adjusting hour 17 basal from 0.65 to 0.65 based on hour 12 = 0.657 and hour 21 = 0.643
+[Core] Adjusting hour 18 basal from 0.65 to 0.65 based on hour 12 = 0.657 and hour 21 = 0.643
+[Core] Adjusting hour 19 basal from 0.65 to 0.65 based on hour 12 = 0.657 and hour 21 = 0.643
+[Core] Adjusting hour 20 basal from 0.65 to 0.65 based on hour 12 = 0.657 and hour 21 = 0.643
+[Core] Limiting csf to 17.95 (which is 1.2* pump csf of 14.956521739130435)
+[Core] totalMealCarbs: 80 totalDeviations: 2646.32 oldCSF 14.957 fullNewCSF: 33.08 newCSF: 17.948
+[Core] oldCR: 5.75 fullNewCR: 6.086 newCR: 5.817
+[Core] p50deviation: 0.21 p50BGI -2.5 p50ratios: 0.988 Old isf: 86.0 fullNewISF: 84.968 adjustedISF: 84.968 newISF: 85.794

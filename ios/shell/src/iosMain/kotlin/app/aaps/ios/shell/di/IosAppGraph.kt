@@ -1,6 +1,7 @@
 package app.aaps.ios.shell.di
 
 import app.aaps.core.interfaces.alerts.EatReminder
+import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
@@ -48,6 +49,7 @@ import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.receivers.IosReceiverStatusStore
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
+import app.aaps.plugins.sync.nsclientV3.ws.NsConnection
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.shared.clientbindings.ClientHistoryWindowGraph
@@ -158,6 +160,20 @@ interface IosAppGraph : MetroViewModelMultibindings {
     val automationRuntime: AutomationRuntime
     // The periodic housekeeping shared with Android, and the scope the shell drives it on.
     val periodicMaintenance: PeriodicMaintenance
+
+    /**
+     * The local alarms, for one call Android makes and this shell has to make too:
+     * `preSnoozeAlarms` holds the stale-data alarm back for five minutes so the first Nightscout
+     * round can land before the database is judged out of date.
+     */
+    val localAlertUtils: LocalAlertUtils
+
+    /**
+     * The Nightscout websocket, so that coming back from a suspension can replace it. iOS freezes
+     * the socket with the process and no close event is ever seen, so nothing else notices it is
+     * dead - see `IosForegroundWatcher`.
+     */
+    val nsConnection: NsConnection
     // Turns a snackbar into a notification when no screen is up to show it. Shared with Android.
     val snackbarNotificationFallback: SnackbarNotificationFallback
     val eatReminder: EatReminder

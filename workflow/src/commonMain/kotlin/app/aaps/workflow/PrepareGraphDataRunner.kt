@@ -110,6 +110,9 @@ class PrepareGraphDataRunner(
         }
         if (isStopped()) return WorkOutcome.Stopped
 
+        // Before anything is picked with the window: the post pass moves it on only at the end of the run (#5614).
+        if (data.liveWindow) data.overviewData.moveLiveWindowTo(Instant.fromEpochMilliseconds(dateUtil.now()), SystemTimeZone.current())
+
         // ===== Phase 2: Bucketed data → cache (was PrepareBucketedDataWorker) =====
         prepareBucketedData(data)
         if (isStopped()) return WorkOutcome.Stopped

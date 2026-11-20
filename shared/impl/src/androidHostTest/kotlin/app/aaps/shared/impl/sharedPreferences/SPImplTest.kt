@@ -125,6 +125,61 @@ class SPImplTest {
         assertThat(sut.getDouble(someResource, 1.0)).isEqualTo(1.0)
     }
 
+    /**
+     * The crash in 4.0.0 (Crashlytics `SPImpl.getDouble`): an older file held an Int under a decimal
+     * setting. The read as a Float threw, and the fallback read it as text, which threw again inside
+     * the catch, where nothing caught it. Opening the settings killed the app.
+     */
+    @Test
+    fun aValueStoredAsAnotherTypeIsStillRead() {
+        sut.putInt("int_under_double", 7)
+        assertThat(sut.getDouble("int_under_double", 2.0)).isEqualTo(7.0)
+
+        sut.putLong("long_under_double", 7L)
+        assertThat(sut.getDouble("long_under_double", 2.0)).isEqualTo(7.0)
+
+        sut.putString("text_under_double", "7.5")
+        assertThat(sut.getDouble("text_under_double", 2.0)).isEqualTo(7.5)
+
+        sut.putInt("int_under_long", 7)
+        assertThat(sut.getLong("int_under_long", 2L)).isEqualTo(7L)
+
+        sut.putLong("long_under_int", 7L)
+        assertThat(sut.getInt("long_under_int", 2)).isEqualTo(7)
+
+        sut.putInt("int_under_string", 7)
+        assertThat(sut.getString("int_under_string", "x")).isEqualTo("7")
+    }
+
+    /**
+     * The second crash of the same kind (Crashlytics `SPImpl.getInt`): a Float under a whole-number
+     * setting. `putDouble` writes a Float, so every setting that was a decimal before and is a whole
+     * number now looks like this.
+     */
+    @Test
+    fun aDecimalUnderAWholeNumberIsRounded() {
+        sut.putDouble("float_under_int", 7.0)
+        assertThat(sut.getInt("float_under_int", 2)).isEqualTo(7)
+
+        sut.putDouble("rounded_under_int", 7.6)
+        assertThat(sut.getInt("rounded_under_int", 2)).isEqualTo(8)
+
+        sut.putDouble("float_under_long", 7.4)
+        assertThat(sut.getLong("float_under_long", 2L)).isEqualTo(7L)
+    }
+
+    @Test
+    fun aValueThatIsNoNumberGivesTheDefault() {
+        sut.putBoolean("flag", true)
+        assertThat(sut.getDouble("flag", 2.0)).isEqualTo(2.0)
+        assertThat(sut.getInt("flag", 2)).isEqualTo(2)
+        assertThat(sut.getLong("flag", 2L)).isEqualTo(2L)
+
+        // Too big for an Int, so the default is safer than a wrapped number.
+        sut.putLong("too_big_for_int", Long.MAX_VALUE)
+        assertThat(sut.getInt("too_big_for_int", 2)).isEqualTo(2)
+    }
+
     @Test
     fun getInt() {
         sut.putInt("test", 1)

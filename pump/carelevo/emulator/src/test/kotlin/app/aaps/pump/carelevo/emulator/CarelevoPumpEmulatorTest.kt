@@ -317,13 +317,14 @@ class CarelevoPumpEmulatorTest {
     }
 
     @Test
-    fun `safety check success moves the patch to RUNNING`() {
+    fun `safety check success leaves the pump state READY as a real patch does`() {
         state.pumpStateRaw = CarelevoPumpEmulator.PUMP_STATE_READY
         val cmd = SafetyCheckCommand()
 
-        cmd.decode(emulator.handle(cmd.encode()).last())
+        val decoded = cmd.decode(emulator.handle(cmd.encode()).last())
 
-        assertThat(state.pumpStateRaw).isEqualTo(CarelevoPumpEmulator.PUMP_STATE_RUNNING)
+        assertThat(decoded.resultCode).isEqualTo(CarelevoPumpState.RESULT_SUCCESS)
+        assertThat(state.pumpStateRaw).isEqualTo(CarelevoPumpEmulator.PUMP_STATE_READY)
     }
 
     @Test
@@ -519,7 +520,7 @@ class CarelevoPumpEmulatorTest {
         state.insulinRemaining = 187.65
         state.infusedTotalBasal = 12.34
         state.infusedTotalBolus = 5.5
-        state.pumpStateRaw = CarelevoPumpEmulator.PUMP_STATE_RUNNING
+        state.pumpStateRaw = 2 // not 0, so the test sees where the byte goes
         state.modeRaw = CarelevoPumpEmulator.MODE_BASAL
         val cmd = InfusionInfoCommand()
 

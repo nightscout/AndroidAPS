@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
+import app.aaps.pump.carelevo.ble.commands.InfusionInfoResponse
 import app.aaps.pump.carelevo.ble.commands.TempBasalCancelCommand
 import app.aaps.pump.carelevo.ble.commands.TempBasalCommand
 import app.aaps.pump.carelevo.common.CarelevoPatch
@@ -64,6 +65,35 @@ class CarelevoTempBasalCoordinator @Inject constructor(
             aapsLogger.error(LTag.PUMPCOMM, "newBle.readInfusionInfo after a temp basal failed error=$e")
             null
         }
+
+    /**
+     * Ends the temp basal that AAPS keeps when the patch runs none. A cancel whose answer is lost, and then a lost
+     * read of what the patch runs, leave AAPS with a temp basal the patch has ended, and nothing else corrects it.
+     * Only plain basal mode surely means no temp basal: during a bolus the mode shows the bolus. The pump state does not
+     * help, a real patch reports 0 (READY) also while it gives basal. A suspend is a PUMP_SUSPEND record that the resume
+     * ends, so it is left alone.
+     * The patch gives no end time, so the temp basal ends at this read.
+     * @param info a status read of the patch
+     */
+    suspend fun endTempBasalThePatchDoesNotRun(info: InfusionInfoResponse, serialNumber: String) {
+        if (info.modeRaw.codeToInfusionModeCommand() != InfusionModeResult.BASAL) return
+        val tempBasal = pumpSync.expectedPumpState().temporaryBasal ?: return
+        if (tempBasal.type == PumpSync.TemporaryBasalType.PUMP_SUSPEND) return
+        val now = dateUtil.now()
+        val ended = pumpSync.syncStopTemporaryBasalWithPumpId(
+            timestamp = now,
+            endPumpId = now,
+            pumpType = PumpType.CAREMEDI_CARELEVO,
+            pumpSerial = serialNumber
+        )
+        if (!ended) return
+        val persisted = cancelTempBasalInfusionUseCase.persistTempBasalCancelled()
+        aapsLogger.warn(
+            LTag.PUMPCOMM,
+            "newBle.status: the patch runs no temp basal, but AAPS had one since ${dateUtil.dateAndTimeString(tempBasal.timestamp)}. " +
+                "Ended it now. persisted=$persisted"
+        )
+    }
 
     /**
      * Set an absolute temp basal (**delivery-critical**). Discrete `TempBasalCommand.byUnit` (0x23→0x83)

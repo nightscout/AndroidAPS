@@ -1,0 +1,19 @@
+{
+    "aaps_command": "aaps-autotune -d=~/aaps -s=2022-06-24 -e=2022-06-26 -c=true ",
+    "categorize_uam_as_basal": true,
+    "curve": "ultra-rapid",
+    "datestring": "2022-06-27T19:40:22.000Z",
+    "dateutc": "2022-06-27T19:40:22.0000000Z",
+    "enddate": "2022-06-26",
+    "insulinPeakTime": 45,
+    "nbdays": 3,
+    "oref0_command": "oref0-autotune -d=~/aaps -n=https://my.nightscout/site -s=2022-06-24 -e=2022-06-26 -c=true ",
+    "startdate": "2022-06-24",
+    "timezone": "Europe/Prague",
+    "timezone_command": "sudo ln -sf /usr/share/zoneinfo/Europe/Prague /etc/localtime",
+    "tune_insulin_curve": false,
+    "units": "mg/dl",
+    "url_nightscout": "https://my.nightscout/site",
+    "useCustomPeakTime": true,
+    "utcOffset": 2
+}

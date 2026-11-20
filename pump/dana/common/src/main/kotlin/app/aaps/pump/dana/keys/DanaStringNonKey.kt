@@ -13,4 +13,6 @@ enum class DanaStringNonKey(
     MacAddress("danars_address", ""),
     Password("danars_password", ""),
     EmulatorDeviceName("danars_emulator_device_name", "", exportable = false),
+    /** The bolus a DanaR or a Korean DanaR is giving, see `BolusInProgress`. Not exported: it belongs to this phone's run. */
+    BolusInProgress("danar_bolus_in_progress", "", exportable = false),
 }

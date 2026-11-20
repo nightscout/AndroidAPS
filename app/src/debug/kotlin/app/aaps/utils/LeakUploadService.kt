@@ -14,6 +14,9 @@ import shark.LeakTrace
  * that can be recorded by Firebase Crashlytics. Each leak trace line is converted to a
  * StackTraceElement to avoid truncation in Firebase.
  *
+ * Library leaks, the ones LeakCanary matches to a known bug of the Android framework or of vendor
+ * code, are left out: they cannot be fixed here and they drown the leaks that can.
+ *
  * Based on: https://blog.ah.technology/upload-leakcanary-memory-leaks-to-firebase-f79c31615d76
  */
 class LeakUploadService(
@@ -24,9 +27,10 @@ class LeakUploadService(
         if (event is HeapAnalysisDone<*>) {
             val heapAnalysis = event.heapAnalysis
             if (heapAnalysis is HeapAnalysisSuccess) {
-                val allLeaks = heapAnalysis.allLeaks.toList()
-
-                allLeaks.forEach { leak ->
+                // Only the leaks of this app. LeakCanary keeps the known leaks of the Android framework
+                // and of vendor code apart as library leaks, and nothing here can fix those: two phones
+                // sent 265 reports of one AOSP leak that holds 461 bytes.
+                heapAnalysis.applicationLeaks.forEach { leak ->
                     leak.leakTraces.forEach { leakTrace ->
                         val throwable = leak.toThrowable(leakTrace)
                         fabricPrivacy.logException(throwable)

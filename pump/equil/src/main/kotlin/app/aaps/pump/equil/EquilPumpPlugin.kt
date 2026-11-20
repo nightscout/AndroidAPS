@@ -76,6 +76,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -243,9 +244,11 @@ class EquilPumpPlugin(
 
     override suspend fun getPumpStatus(reason: String) {
         if (equilManager.isActivationCompleted()) {
+            // Runs here, on the queue worker, as the commands of the driver do.
+            equilManager.endTempBasalThePumpDoesNotRun()
             // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
-            pluginScope.launch { commandQueue.customCommand(CmdModeAndHistoryGet()) }
-            pluginScope.launch { commandQueue.customCommand(CmdDevicesGet(aapsLogger, preferences, equilManager)) }
+            pluginScope.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.customCommand(CmdModeAndHistoryGet()) }
+            pluginScope.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.customCommand(CmdDevicesGet(aapsLogger, preferences, equilManager)) }
         }
     }
 

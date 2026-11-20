@@ -32,6 +32,7 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.UiStrings
 import kotlin.math.roundToInt
 
 /**
@@ -95,7 +96,7 @@ fun DexcomTirStatsCompose(
             // HbA1c
             val mean = dexcomTir.mean()
             val hba1cPercent = (10 * (mean + 46.7) / 28.7).roundToInt() / 10.0
-            val hba1cMmol = (((mean + 46.7) / 28.7 - 2.15) * 10.929).roundToInt()
+            val hba1cMmol = hba1cMmolMol((mean + 46.7) / 28.7)
 
             Text(
                 text = stringResource(
@@ -104,7 +105,7 @@ fun DexcomTirStatsCompose(
                     stringResource(
                         InterfacesStrings.value_with_detail,
                         stringResource(CoreUiStrings.units_format_percent_value, decimalFormatter.to1Decimal(hba1cPercent)),
-                        stringResource(CoreUiStrings.value_with_unit, hba1cMmol.toString(), "mmol/mol")
+                        stringResource(UiStrings.hba1c_mmol_mol, hba1cMmol)
                     )
                 ),
                 style = MaterialTheme.typography.bodyMedium,

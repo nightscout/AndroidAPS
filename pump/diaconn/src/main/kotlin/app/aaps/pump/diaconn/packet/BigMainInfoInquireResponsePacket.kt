@@ -8,11 +8,11 @@ import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import app.aaps.pump.diaconn.pumplog.PumpLogUtil
 import dev.zacsweers.metro.Inject
-import org.joda.time.DateTime
 import kotlin.math.floor
 
 /**
- * BigMainInfoInquireResponsePacket
+ * Answer to [BigMainInfoInquirePacket]: most of the pump status in one big packet.
+ * The values are stored in [DiaconnG8Pump].
  */
 @Suppress("SpellCheckingInspection")
 class BigMainInfoInquireResponsePacket(
@@ -37,31 +37,33 @@ class BigMainInfoInquireResponsePacket(
         } else failed = false
 
         val bufferData = prefixDecode(data)
-        val result2 = getByteToInt(bufferData)  // 결과비트 상위 4비트 제거
+        val result2 = getByteToInt(bufferData)  // result byte: 16 is a good answer to an inquiry
         if (!isSuccInquireResponseResult(result2)) {
             failed = true
             return
         }
         // 1. pump system setting info
-        diaconnG8Pump.systemRemainInsulin = floor(getShortToInt(bufferData) / 100.0)  // 인슐린 잔량
-        diaconnG8Pump.systemRemainBattery = getByteToInt(bufferData) // 베터리잔량(1~100%)
-        diaconnG8Pump.systemBasePattern = getByteToInt(bufferData) // 기저주입 패턴(0=없음, 1=기본, 2=생활1, 3=생활2, 4=생활3, 5=닥터1, 6=닥터2)
-        diaconnG8Pump.systemTbStatus = getByteToInt(bufferData)    // 임시기저 상태(1=임시기저 중, 2=임시기저 해제)
-        diaconnG8Pump.systemInjectionMealStatus = getByteToInt(bufferData) // 식사주입 상태(1=주입중, 2=주입상태아님)
-        diaconnG8Pump.systemInjectionSnackStatus = getByteToInt(bufferData) // 일반간식 주입 상태(1=주입중, 2=주입상태아님)
-        diaconnG8Pump.systemInjectionSquareStatue = getByteToInt(bufferData) // 스퀘어회식 주입 상태(1=주입중, 2=주입상태아님)
-        diaconnG8Pump.systemInjectionDualStatus = getByteToInt(bufferData) // 더블회식 주입 상태(1=주입중, 2=주입상태아님)
+        diaconnG8Pump.systemRemainInsulin = floor(getShortToInt(bufferData) / 100.0)  // insulin left in the reservoir
+        diaconnG8Pump.systemRemainBattery = getByteToInt(bufferData) // battery left (1~100%)
+        diaconnG8Pump.systemBasePattern = getByteToInt(bufferData) // basal pattern (0=none, 1=basic, 2=life 1, 3=life 2, 4=life 3, 5=doctor 1, 6=doctor 2)
+        diaconnG8Pump.systemTbStatus = getByteToInt(bufferData)    // temp basal state (1=running, 2=released)
+        diaconnG8Pump.systemInjectionMealStatus = getByteToInt(bufferData) // meal bolus state (1=delivering, 2=not delivering)
+        diaconnG8Pump.systemInjectionSnackStatus = getByteToInt(bufferData) // snack bolus state (1=delivering, 2=not delivering)
+        diaconnG8Pump.systemInjectionSquareStatue = getByteToInt(bufferData) // square (extended) bolus state (1=delivering, 2=not delivering)
+        diaconnG8Pump.systemInjectionDualStatus = getByteToInt(bufferData) // dual bolus state (1=delivering, 2=not delivering)
 
         // 2. basal injection suspend status (1:stop, 2:release)
-        diaconnG8Pump.basePauseStatus = getByteToInt(bufferData) // 상태(1=정지,2=해제)
+        diaconnG8Pump.basePauseStatus = getByteToInt(bufferData) // state (1=stopped, 2=released)
 
-        // 3. Pump time
-        diaconnG8Pump.year = getByteToInt(bufferData) + 2000   // 년 (18~99)
-        diaconnG8Pump.month = getByteToInt(bufferData)  // 월 (1~12)
-        diaconnG8Pump.day = getByteToInt(bufferData)    // 일 (1~31)
-        diaconnG8Pump.hour = getByteToInt(bufferData)   // 시 (0~23)
-        diaconnG8Pump.minute = getByteToInt(bufferData) // 분 (0~59)
-        diaconnG8Pump.second = getByteToInt(bufferData) // 초 (0~59)
+        // 3. Pump time: year (18~99), month, day, hour, minute, second
+        diaconnG8Pump.readPumpClock(
+            year = getByteToInt(bufferData) + 2000,
+            month = getByteToInt(bufferData),
+            day = getByteToInt(bufferData),
+            hour = getByteToInt(bufferData),
+            minute = getByteToInt(bufferData),
+            second = getByteToInt(bufferData)
+        )
 
         //4. pump system info
         diaconnG8Pump.country = Char(getByteToInt(bufferData)).toString().toInt() // ASCII
@@ -81,107 +83,104 @@ class BigMainInfoInquireResponsePacket(
         diaconnG8Pump.pumpWrappingCount = getByteToInt(bufferData) // wrapping count
 
         // 6. bolus speed status.
-        diaconnG8Pump.speed = getByteToInt(bufferData) // 식사주입속도
+        diaconnG8Pump.speed = getByteToInt(bufferData) // meal bolus speed
 
         // 7. Tempbasal status
-        diaconnG8Pump.tbStatus = getByteToInt(bufferData) // 임시기저 상태
-        diaconnG8Pump.tbTime = getByteToInt(bufferData)    // 임시기저시간
-        diaconnG8Pump.tbInjectRateRatio = getShortToInt(bufferData) //임시기저 주입량/률
-        diaconnG8Pump.tbElapsedTime = getShortToInt(bufferData) // 임시기저 경과시간
+        diaconnG8Pump.tbStatus = getByteToInt(bufferData) // temp basal state
+        diaconnG8Pump.tbTime = getByteToInt(bufferData)    // temp basal duration
+        diaconnG8Pump.tbInjectRateRatio = getShortToInt(bufferData) // temp basal amount or ratio
+        diaconnG8Pump.tbElapsedTime = getShortToInt(bufferData) // temp basal elapsed time
 
         // 8. Basal status
-        diaconnG8Pump.baseStatus = getByteToInt(bufferData) // 기저주입 상태
-        diaconnG8Pump.baseHour = getByteToInt(bufferData) // 현재 주입시간
-        diaconnG8Pump.baseAmount = getShortToInt(bufferData) / 100.0 // 주입설정량
-        diaconnG8Pump.baseInjAmount = getShortToInt(bufferData) / 100.0 // 현재 주입량
+        diaconnG8Pump.baseStatus = getByteToInt(bufferData) // basal delivery state
+        diaconnG8Pump.baseHour = getByteToInt(bufferData) // hour of the current delivery
+        diaconnG8Pump.baseAmount = getShortToInt(bufferData) / 100.0 // set amount
+        diaconnG8Pump.baseInjAmount = getShortToInt(bufferData) / 100.0 // amount delivered so far
 
         // 9. meal bolus status
-        diaconnG8Pump.mealKind = getByteToInt(bufferData) //식사주입 종류
-        diaconnG8Pump.mealStartTime = getIntToInt(bufferData) // 주입시작시간
-        diaconnG8Pump.mealStatus = getByteToInt(bufferData)  // 주입상태
-        diaconnG8Pump.mealAmount = getShortToInt(bufferData) / 100.0 // 주입설정량
-        diaconnG8Pump.mealInjAmount = getShortToInt(bufferData) / 100.0 // 주입량
-        diaconnG8Pump.mealSpeed = getByteToInt(bufferData) // 주입속도
+        diaconnG8Pump.mealKind = getByteToInt(bufferData) // meal kind
+        diaconnG8Pump.mealStartTime = getIntToInt(bufferData) // delivery start time
+        diaconnG8Pump.mealStatus = getByteToInt(bufferData)  // delivery state
+        diaconnG8Pump.mealAmount = getShortToInt(bufferData) / 100.0 // set amount
+        diaconnG8Pump.mealInjAmount = getShortToInt(bufferData) / 100.0 // amount delivered
+        diaconnG8Pump.mealSpeed = getByteToInt(bufferData) // delivery speed
 
         // 10. snack bolus status
-        diaconnG8Pump.snackStatus = getByteToInt(bufferData) //주입상태
-        diaconnG8Pump.snackAmount = getShortToInt(bufferData) / 100.0 // 주입설정량
-        diaconnG8Pump.snackInjAmount = getShortToInt(bufferData) / 100.0 // 현재주입량
-        diaconnG8Pump.snackSpeed = getByteToInt(bufferData) //주입속도
+        diaconnG8Pump.snackStatus = getByteToInt(bufferData) // delivery state
+        diaconnG8Pump.snackAmount = getShortToInt(bufferData) / 100.0 // set amount
+        diaconnG8Pump.snackInjAmount = getShortToInt(bufferData) / 100.0 // amount delivered so far
+        diaconnG8Pump.snackSpeed = getByteToInt(bufferData) // delivery speed
 
         // 11. square(extended) bolus status
-        diaconnG8Pump.squareStatus = getByteToInt(bufferData) // 주입상태
-        diaconnG8Pump.squareTime = getShortToInt(bufferData) // 설정 주입시간(10~300분)
-        diaconnG8Pump.squareInjTime = getShortToInt(bufferData) // 경과 주입시간(10~300분)
-        diaconnG8Pump.squareAmount = getShortToInt(bufferData) / 100.0  // 주입 설정량
-        diaconnG8Pump.squareInjAmount = getShortToInt(bufferData) / 100.0 // 현재 주입량
+        diaconnG8Pump.squareStatus = getByteToInt(bufferData) // delivery state
+        diaconnG8Pump.squareTime = getShortToInt(bufferData) // set duration (10~300 min)
+        diaconnG8Pump.squareInjTime = getShortToInt(bufferData) // elapsed time (10~300 min)
+        diaconnG8Pump.squareAmount = getShortToInt(bufferData) / 100.0  // set amount
+        diaconnG8Pump.squareInjAmount = getShortToInt(bufferData) / 100.0 // amount delivered so far
 
-        // 12. daul bolus status
-        diaconnG8Pump.dualStatus = getByteToInt(bufferData) // 주입상태
-        diaconnG8Pump.dualAmount = getShortToInt(bufferData) / 100.0 // 일반주입 설정량
-        diaconnG8Pump.dualInjAmount = getShortToInt(bufferData) / 100.0 // 일반주입량
-        diaconnG8Pump.dualSquareTime = getShortToInt(bufferData) // 스퀘어주입 설정시간(10~300분)
-        diaconnG8Pump.dualInjSquareTime = getShortToInt(bufferData) // 스퀘어주입 경과시간(10~300분)
-        diaconnG8Pump.dualSquareAmount = getShortToInt(bufferData) / 100.0 // 스퀘어주입 설정량
-        diaconnG8Pump.dualInjSquareAmount = getShortToInt(bufferData) / 100.0 // 스퀘어주입량
+        // 12. dual bolus status
+        diaconnG8Pump.dualStatus = getByteToInt(bufferData) // delivery state
+        diaconnG8Pump.dualAmount = getShortToInt(bufferData) / 100.0 // set amount of the normal part
+        diaconnG8Pump.dualInjAmount = getShortToInt(bufferData) / 100.0 // amount delivered of the normal part
+        diaconnG8Pump.dualSquareTime = getShortToInt(bufferData) // set duration of the square part (10~300 min)
+        diaconnG8Pump.dualInjSquareTime = getShortToInt(bufferData) // elapsed time of the square part (10~300 min)
+        diaconnG8Pump.dualSquareAmount = getShortToInt(bufferData) / 100.0 // set amount of the square part
+        diaconnG8Pump.dualInjSquareAmount = getShortToInt(bufferData) / 100.0 // amount delivered of the square part
 
         // 13. last injection  status
-        diaconnG8Pump.recentKind1 = getByteToInt(bufferData) // 최근-1 주입 종류(1=식사, 2=일반간식, 3=스퀘어회식, 4=더블회식)
-        diaconnG8Pump.recentTime1 = getIntToInt(bufferData) // 최근-1 주입 시간
-        diaconnG8Pump.recentAmount1 = getShortToInt(bufferData) / 100.0 // 최근-1 주입량
-        diaconnG8Pump.recentKind2 = getByteToInt(bufferData) // 최근-2 주입 종류(1=식사, 2=일반간식, 3=스퀘어회식, 4=더블회식)
-        diaconnG8Pump.recentTime2 = getIntToInt(bufferData) // 최근-2 주입 시간
-        diaconnG8Pump.recentAmount2 = getShortToInt(bufferData) / 100.0 // 최근-2 주입량
+        diaconnG8Pump.recentKind1 = getByteToInt(bufferData) // kind of the last bolus (1=meal, 2=snack, 3=square, 4=dual)
+        diaconnG8Pump.recentTime1 = getIntToInt(bufferData) // time of the last bolus
+        diaconnG8Pump.recentAmount1 = getShortToInt(bufferData) / 100.0 // amount of the last bolus
+        diaconnG8Pump.recentKind2 = getByteToInt(bufferData) // kind of the bolus before the last one (1=meal, 2=snack, 3=square, 4=dual)
+        diaconnG8Pump.recentTime2 = getIntToInt(bufferData) // time of the bolus before the last one
+        diaconnG8Pump.recentAmount2 = getShortToInt(bufferData) / 100.0 // amount of the bolus before the last one
 
         // 14. daily injection status
-        diaconnG8Pump.todayBaseAmount = getShortToInt(bufferData) / 100.0 // 기저주입 총량
-        diaconnG8Pump.todayMealAmount = getShortToInt(bufferData) / 100.0 // 식사주입 총량
-        diaconnG8Pump.todaySnackAmount = getShortToInt(bufferData) / 100.0  // 회식주입 총량
+        diaconnG8Pump.todayBaseAmount = getShortToInt(bufferData) / 100.0 // total basal today
+        diaconnG8Pump.todayMealAmount = getShortToInt(bufferData) / 100.0 // total meal bolus today
+        diaconnG8Pump.todaySnackAmount = getShortToInt(bufferData) / 100.0  // total of the other boluses today (snack, square, dual)
 
-        // 15. meat setting status
-        diaconnG8Pump.morningHour = getByteToInt(bufferData) // 아침 개시 시간(0~23)
-        diaconnG8Pump.morningAmount = getShortToInt(bufferData) / 100.0 // 아침 식전량
-        diaconnG8Pump.lunchHour = getByteToInt(bufferData) // 점심 개시 시간(0~23)
-        diaconnG8Pump.lunchAmount = getShortToInt(bufferData) / 100.0 // 점심 식전량
-        diaconnG8Pump.dinnerHour = getByteToInt(bufferData) // 저녁 개시 시간(0~23)
-        diaconnG8Pump.dinnerAmount = getShortToInt(bufferData) / 100.0 // 저녁 식전량
+        // 15. meal setting status
+        diaconnG8Pump.morningHour = getByteToInt(bufferData) // breakfast start hour (0~23)
+        diaconnG8Pump.morningAmount = getShortToInt(bufferData) / 100.0 // breakfast bolus amount
+        diaconnG8Pump.lunchHour = getByteToInt(bufferData) // lunch start hour (0~23)
+        diaconnG8Pump.lunchAmount = getShortToInt(bufferData) / 100.0 // lunch bolus amount
+        diaconnG8Pump.dinnerHour = getByteToInt(bufferData) // dinner start hour (0~23)
+        diaconnG8Pump.dinnerAmount = getShortToInt(bufferData) / 100.0 // dinner bolus amount
 
         // 16. basal injection status at this hour
-        diaconnG8Pump.currentBasePattern = getByteToInt(bufferData) // 패턴 종류 (1=기본, 2=생활1, 3=생활2, 4=생활3, 5=닥터1, 6=닥터2)
-        diaconnG8Pump.currentBaseHour = getByteToInt(bufferData) // 현재주입시간(0~23)
-        diaconnG8Pump.currentBaseTbBeforeAmount = getShortToInt(bufferData) / 100.0 // 해당시간의 임시기저 계산 전 기저주입량: 기저주입막힘 발생 시 기저주입 막힘량 제외, 기저정지로 인해 주입되지 않은 량 제외, 리셋으로 인해 주입되지 않은 량 제외(47.5=4750)
-        diaconnG8Pump.currentBaseTbAfterAmount = getShortToInt(bufferData) / 100.0 // 해당시간의 임시기저 계산 후 기저주입량: 기저주입막힘 발생 시 기저주입 막힘량 제외, 기저정지로 인해 주입되지 않은 량 제외, 리셋으로 인해 주입되지 않은 량 제외(47.5=4750)
+        diaconnG8Pump.currentBasePattern = getByteToInt(bufferData) // pattern kind (1=basic, 2=life 1, 3=life 2, 4=life 3, 5=doctor 1, 6=doctor 2)
+        diaconnG8Pump.currentBaseHour = getByteToInt(bufferData) // hour of the current delivery (0~23)
+        diaconnG8Pump.currentBaseTbBeforeAmount = getShortToInt(bufferData) / 100.0 // basal amount of this hour before the temp basal is applied. Not counted: the amount blocked by an occlusion, the amount not delivered while basal was stopped, the amount not delivered because of a reset (47.5=4750)
+        diaconnG8Pump.currentBaseTbAfterAmount = getShortToInt(bufferData) / 100.0 // basal amount of this hour after the temp basal is applied. Not counted: the amount blocked by an occlusion, the amount not delivered while basal was stopped, the amount not delivered because of a reset (47.5=4750)
 
         // 17. saved basal pattern status
-        diaconnG8Pump.baseAmount1 = getShortToInt(bufferData) / 100.0  // 주입량 1(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount2 = getShortToInt(bufferData) / 100.0  // 주입량 2(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount3 = getShortToInt(bufferData) / 100.0  // 주입량 3(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount4 = getShortToInt(bufferData) / 100.0  // 주입량 4(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount5 = getShortToInt(bufferData) / 100.0  // 주입량 5(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount6 = getShortToInt(bufferData) / 100.0  // 주입량 6(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount7 = getShortToInt(bufferData) / 100.0  // 주입량 7(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount8 = getShortToInt(bufferData) / 100.0  // 주입량 8(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount9 = getShortToInt(bufferData) / 100.0  // 주입량 9(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount10 = getShortToInt(bufferData) / 100.0  // 주입량 10(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount11 = getShortToInt(bufferData) / 100.0  // 주입량 11(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount12 = getShortToInt(bufferData) / 100.0  // 주입량 12(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount13 = getShortToInt(bufferData) / 100.0  // 주입량 13(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount14 = getShortToInt(bufferData) / 100.0  // 주입량 14(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount15 = getShortToInt(bufferData) / 100.0  // 주입량 15(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount16 = getShortToInt(bufferData) / 100.0  // 주입량 16(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount17 = getShortToInt(bufferData) / 100.0  // 주입량 17(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount18 = getShortToInt(bufferData) / 100.0  // 주입량 18(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount19 = getShortToInt(bufferData) / 100.0  // 주입량 19(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount20 = getShortToInt(bufferData) / 100.0  // 주입량 20(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount21 = getShortToInt(bufferData) / 100.0  // 주입량 21(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount22 = getShortToInt(bufferData) / 100.0  // 주입량 22(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount23 = getShortToInt(bufferData) / 100.0  // 주입량 23(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount24 = getShortToInt(bufferData) / 100.0  // 주입량 24(량*100, 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount1 = getShortToInt(bufferData) / 100.0  // basal amount 1 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount2 = getShortToInt(bufferData) / 100.0  // basal amount 2 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount3 = getShortToInt(bufferData) / 100.0  // basal amount 3 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount4 = getShortToInt(bufferData) / 100.0  // basal amount 4 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount5 = getShortToInt(bufferData) / 100.0  // basal amount 5 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount6 = getShortToInt(bufferData) / 100.0  // basal amount 6 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount7 = getShortToInt(bufferData) / 100.0  // basal amount 7 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount8 = getShortToInt(bufferData) / 100.0  // basal amount 8 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount9 = getShortToInt(bufferData) / 100.0  // basal amount 9 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount10 = getShortToInt(bufferData) / 100.0  // basal amount 10 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount11 = getShortToInt(bufferData) / 100.0  // basal amount 11 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount12 = getShortToInt(bufferData) / 100.0  // basal amount 12 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount13 = getShortToInt(bufferData) / 100.0  // basal amount 13 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount14 = getShortToInt(bufferData) / 100.0  // basal amount 14 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount15 = getShortToInt(bufferData) / 100.0  // basal amount 15 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount16 = getShortToInt(bufferData) / 100.0  // basal amount 16 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount17 = getShortToInt(bufferData) / 100.0  // basal amount 17 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount18 = getShortToInt(bufferData) / 100.0  // basal amount 18 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount19 = getShortToInt(bufferData) / 100.0  // basal amount 19 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount20 = getShortToInt(bufferData) / 100.0  // basal amount 20 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount21 = getShortToInt(bufferData) / 100.0  // basal amount 21 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount22 = getShortToInt(bufferData) / 100.0  // basal amount 22 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount23 = getShortToInt(bufferData) / 100.0  // basal amount 23 (pump sends amount*100: 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount24 = getShortToInt(bufferData) / 100.0  // basal amount 24 (pump sends amount*100: 23.25->2325, 15.2->1520)
 
-        // pump time setting 'yyyy-MM-dd'T'HH:mm:ssZ'	“2019-07-04T12:30:30+0530”
-        val time = DateTime(diaconnG8Pump.year, diaconnG8Pump.month, diaconnG8Pump.day, diaconnG8Pump.hour, diaconnG8Pump.minute, diaconnG8Pump.second)
-        diaconnG8Pump.setPumpTime(time.millis)
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump time " + dateUtil.dateAndTimeAndSecondsString(time.millis))
+        if (!diaconnG8Pump.pumpClockImpossible) aapsLogger.debug(LTag.PUMPCOMM, "Pump time " + dateUtil.dateAndTimeAndSecondsString(diaconnG8Pump.getPumpTime()))
 
         // basal pattern from pump
         diaconnG8Pump.pumpProfiles = Array(4) { Array(24) { 0.0 } }
@@ -210,7 +209,7 @@ class BigMainInfoInquireResponsePacket(
         diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][22] = diaconnG8Pump.baseAmount23
         diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][23] = diaconnG8Pump.baseAmount24
 
-        //incarnation no 처리
+        // incarnation number handling: which features this pump version has
         diaconnG8Pump.isPumpVersionGe2_63 = PumpLogUtil.isPumpVersionGe(preferences.get(DiaconnStringNonKey.PumpVersion), 2, 63)
         diaconnG8Pump.isPumpVersionGe3_53 = PumpLogUtil.isPumpVersionGe(preferences.get(DiaconnStringNonKey.PumpVersion), 3, 53)
         diaconnG8Pump.isPumpVersionGe3_58 = PumpLogUtil.isPumpVersionGe(preferences.get(DiaconnStringNonKey.PumpVersion), 3, 58)

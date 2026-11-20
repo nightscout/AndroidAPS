@@ -39,7 +39,7 @@ class ResourceHelperImpl(
      * late here and often not at all"). It also made the class impossible for Metro to own, because a
      * contributed class is constructed for real in the plain-JVM graph tests.
      *
-     * Must run before anything asks for text, so it belongs beside `registerStringOwners()` - the other
+     * Must run before anything asks for text, so it belongs beside `GeneratedStringOwners.registerAll()` - the other
      * twelve owners are registered there already.
      */
     fun start() {

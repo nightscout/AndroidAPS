@@ -3,6 +3,7 @@ package app.aaps.ui.compose.wizardDialog
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -67,10 +68,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.collapse
 import androidx.compose.ui.semantics.contentDescription
@@ -125,8 +129,7 @@ import kotlinx.coroutines.launch
 fun WizardDialogScreen(
     viewModel: WizardDialogViewModel = metroViewModel(),
     wizardSettingsDef: PreferenceSubScreenDef,
-    onNavigateBack: () -> Unit,
-    onShowDeliveryError: (String) -> Unit
+    onNavigateBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -134,17 +137,7 @@ fun WizardDialogScreen(
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collect { effect ->
             when (effect) {
-                is WizardDialogViewModel.SideEffect.ShowDeliveryError  -> {
-                    onShowDeliveryError(effect.comment)
-                }
-
-                is WizardDialogViewModel.SideEffect.ShowTempBasalError -> {
-                    onShowDeliveryError(effect.comment)
-                }
-
-                is WizardDialogViewModel.SideEffect.NavigateBack       -> {
-                    onNavigateBack()
-                }
+                is WizardDialogViewModel.SideEffect.NavigateBack -> onNavigateBack()
             }
         }
     }
@@ -258,6 +251,13 @@ internal fun WizardDialogContent(
     onSettingsClick: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
+    val scrollState = rememberScrollState()
+    val inputScrollAnchor = remember(scrollState) { WizardInputScrollAnchor(scrollState) }
+    LaunchedEffect(scrollState) {
+        snapshotFlow { scrollState.isScrollInProgress }.collect { scrolling ->
+            if (scrolling) inputScrollAnchor.clear()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -333,7 +333,15 @@ internal fun WizardDialogContent(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .consumeOverscroll()
-                .verticalScroll(rememberScrollState())
+                .layout { measurable, constraints ->
+                    val placeable = measurable.measure(constraints)
+                    // verticalScroll has updated its limits, but has not placed the content yet.
+                    inputScrollAnchor.restore()
+                    layout(placeable.width, placeable.height) {
+                        placeable.placeRelative(0, 0)
+                    }
+                }
+                .verticalScroll(scrollState)
                 .clearFocusOnTap(focusManager)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -343,7 +351,8 @@ internal fun WizardDialogContent(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .bringIntoViewRequester(calculationExpandRequester),
+                    .bringIntoViewRequester(calculationExpandRequester)
+                    .onSizeChanged { inputScrollAnchor.updateCalculationHeight(it.height) },
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
@@ -755,12 +764,17 @@ internal fun WizardDialogContent(
                     ExpandableNumberInputRow(
                         labelRef = CoreUiStrings.wizard_correction,
                         value = uiState.directCorrection,
-                        onValueChange = onDirectCorrectionChange,
+                        onValueChange = {
+                            inputScrollAnchor.capture(WizardInput.CORRECTION)
+                            onDirectCorrectionChange(it)
+                        },
                         valueRange = -uiState.maxBolus..uiState.maxBolus,
                         step = uiState.bolusStep,
                         unitLabel = CoreUiStrings.insulin_unit_shortname,
                         decimalPlaces = 2,
-                        modifier = itemModifier
+                        modifier = itemModifier.onSizeChanged {
+                            inputScrollAnchor.updateInputHeight(WizardInput.CORRECTION, it.height)
+                        }
                     )
 
                     // Carb Time (compact row with popup dialog)
@@ -823,14 +837,21 @@ internal fun WizardDialogContent(
                     ExpandableNumberInputRow(
                         labelRef = CoreUiStrings.wizard_use_percentage,
                         value = uiState.percentage.toDouble(),
-                        onValueChange = onPercentageChange,
+                        onValueChange = {
+                            inputScrollAnchor.capture(WizardInput.PERCENTAGE)
+                            onPercentageChange(it)
+                        },
                         valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
                         step = 5.0,
                         unitLabel = TextRef.Literal("%"),
                         decimalPlaces = 0,
                         expanded = percentageExpanded,
                         onExpandedChange = { percentageExpanded = it },
-                        modifier = itemModifier.bringIntoViewRequester(percentageExpandRequester),
+                        modifier = itemModifier
+                            .bringIntoViewRequester(percentageExpandRequester)
+                            .onSizeChanged {
+                                inputScrollAnchor.updateInputHeight(WizardInput.PERCENTAGE, it.height)
+                            },
                         // The percent sign sits in its own format resource here, not after the number.
                         valueContent = {
                             Text(
@@ -867,6 +888,46 @@ internal fun WizardDialogContent(
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
+}
+
+private enum class WizardInput { CORRECTION, PERCENTAGE }
+
+/** Restores the input position during measurement, before a changed calculation can be drawn. */
+private class WizardInputScrollAnchor(private val scrollState: ScrollState) {
+
+    private val inputHeights = mutableMapOf<WizardInput, Int>()
+    private var calculationHeight = 0
+    private var anchor: Anchor? = null
+
+    fun updateCalculationHeight(height: Int) {
+        calculationHeight = height
+    }
+
+    fun updateInputHeight(input: WizardInput, height: Int) {
+        inputHeights[input] = height
+    }
+
+    fun capture(input: WizardInput) {
+        val height = inputHeights[input] ?: return
+        anchor = Anchor(input, scrollState.value, calculationHeight, height)
+    }
+
+    fun restore() {
+        if (scrollState.isScrollInProgress) clear()
+        val saved = anchor ?: return
+        val height = inputHeights.getValue(saved.input)
+        // Include the centered buttons when the open field changes height as its label moves.
+        val target = saved.scrollOffset + calculationHeight - saved.calculationHeight +
+            (height - saved.inputHeight) / 2f
+        // Use the saved offset: shrinking content may already have clamped the current offset.
+        scrollState.dispatchRawDelta(target - scrollState.value)
+    }
+
+    fun clear() {
+        anchor = null
+    }
+
+    private data class Anchor(val input: WizardInput, val scrollOffset: Int, val calculationHeight: Int, val inputHeight: Int)
 }
 
 /** Colours the place where [part] is in [text]. Does nothing when it is not there. */

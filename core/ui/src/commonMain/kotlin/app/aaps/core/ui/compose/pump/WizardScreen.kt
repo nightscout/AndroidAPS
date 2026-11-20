@@ -17,6 +17,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigationevent.NavigationEventInfo
@@ -48,6 +49,9 @@ import app.aaps.core.ui.compose.stringResource
  * @param onBack Called when user confirms exit from the wizard
  * @param cancelDialogTitle Title for the cancel confirmation dialog
  * @param cancelDialogText Body text for the cancel confirmation dialog
+ * @param askBeforeLeaving Whether leaving on the current step asks [cancelDialogText] first. False on a
+ *   step where leaving loses nothing, for example the first screen of a deactivation, which says that
+ *   Cancel returns to the main screen: there Cancel, the back arrow and system back leave at once.
  * @param title Toolbar title shown during the wizard
  * @param setToolbarConfig Callback to configure the parent toolbar (hides back arrow)
  * @param stepContent Composable content for the current step
@@ -61,18 +65,23 @@ fun <S> WizardScreen(
     onBack: () -> Unit,
     cancelDialogTitle: String,
     cancelDialogText: String,
+    askBeforeLeaving: Boolean = true,
     title: String = "",
     setToolbarConfig: ((ToolbarConfig) -> Unit)? = null,
     stepContent: @Composable (step: S, onCancel: () -> Unit) -> Unit
 ) {
     var showCancelDialog by remember { mutableStateOf(false) }
 
+    // One stable callback for every way out (step Cancel button, back arrow, system back), so they
+    // cannot disagree. It reads the current step's values, not the ones it was created with.
+    val currentAskBeforeLeaving by rememberUpdatedState(askBeforeLeaving)
+    val currentOnBack by rememberUpdatedState(onBack)
+    val onRequestCancel = remember { { if (currentAskBeforeLeaving) showCancelDialog = true else currentOnBack() } }
+
     // Take over toolbar: back arrow shows confirmation dialog (hidden while canGoBack is false —
     // ViewModels compute per-step canGoBack precisely to lock the user in during irreversible
     // steps; this parameter used to be accepted but never wired, silently disabling that gating).
     if (setToolbarConfig != null) {
-        // Use a stable callback ref so toolbar icon can trigger dialog
-        val onRequestCancel = remember { { showCancelDialog = true } }
         DisposableEffect(title, onRequestCancel, canGoBack) {
             setToolbarConfig(
                 ToolbarConfig(
@@ -100,7 +109,7 @@ fun <S> WizardScreen(
     NavigationBackHandler(
         state = rememberNavigationEventState(NavigationEventInfo.None),
         isBackEnabled = true,
-        onBackCompleted = { if (canGoBack) showCancelDialog = true }
+        onBackCompleted = { if (canGoBack) onRequestCancel() }
     )
 
     if (showCancelDialog) {
@@ -134,7 +143,7 @@ fun <S> WizardScreen(
             label = "wizardStepTransition"
         ) { step ->
             if (step != null) {
-                stepContent(step) { showCancelDialog = true }
+                stepContent(step, onRequestCancel)
             }
         }
     }

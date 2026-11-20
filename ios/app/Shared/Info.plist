@@ -33,6 +33,15 @@
 	  location key below, and the same way it fails: the process dies, it is not refused. The client
 	  needs the camera only to read the set-up QR code a master shows.
 	-->
+	<!--
+	  Required before Face ID may be asked for anything. iOS terminates an app that evaluates a
+	  biometric policy without a usage description - the same rule as the camera and location keys
+	  here, and the same way it fails: the process dies, it is not refused. Touch ID does not need
+	  it, so a missing key passes on an older phone and kills the app on a Face ID one. Used only
+	  for the app and settings protection the user switches on themselves.
+	-->
+	<key>NSFaceIDUsageDescription</key>
+	<string>AAPS uses Face ID only to unlock the app and its protected settings, when you have switched that protection on.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>AAPS uses the camera only to read the set-up QR code shown by your master phone.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

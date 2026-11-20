@@ -144,6 +144,7 @@ current_sequence_number|MedtrumIntNonKey|true
 daily_max_insulin|MedtrumIntKey|true
 dana_ble5_pairingkey%s|DanaStringComposedKey|true
 dana_rs_bt_selector|DanaIntentKey|false
+danar_bolus_in_progress|DanaStringNonKey|false
 danar_bt_name|DanaStringNonKey|true
 danar_password|DanaIntNonKey|true
 danar_useextended|DanaBooleanKey|true

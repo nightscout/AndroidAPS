@@ -1,0 +1,588 @@
+== peak 75
+{
+  "autosens_max": 1.2,
+  "autosens_min": 0.7,
+  "basalprofile": [
+    {
+      "minutes": 0,
+      "rate": 0.725,
+      "start": "00:00:00"
+    },
+    {
+      "minutes": 60,
+      "rate": 0.725,
+      "start": "01:00:00"
+    },
+    {
+      "minutes": 120,
+      "rate": 0.725,
+      "start": "02:00:00"
+    },
+    {
+      "minutes": 180,
+      "rate": 0.725,
+      "start": "03:00:00"
+    },
+    {
+      "minutes": 240,
+      "rate": 0.725,
+      "start": "04:00:00"
+    },
+    {
+      "minutes": 300,
+      "rate": 0.725,
+      "start": "05:00:00"
+    },
+    {
+      "minutes": 360,
+      "rate": 1,
+      "start": "06:00:00"
+    },
+    {
+      "minutes": 420,
+      "rate": 1,
+      "start": "07:00:00"
+    },
+    {
+      "minutes": 480,
+      "rate": 1,
+      "start": "08:00:00"
+    },
+    {
+      "minutes": 540,
+      "rate": 1,
+      "start": "09:00:00"
+    },
+    {
+      "minutes": 600,
+      "rate": 1,
+      "start": "10:00:00"
+    },
+    {
+      "minutes": 660,
+      "rate": 1,
+      "start": "11:00:00"
+    },
+    {
+      "minutes": 720,
+      "rate": 0.85,
+      "start": "12:00:00"
+    },
+    {
+      "minutes": 780,
+      "rate": 0.85,
+      "start": "13:00:00"
+    },
+    {
+      "minutes": 840,
+      "rate": 0.85,
+      "start": "14:00:00"
+    },
+    {
+      "minutes": 900,
+      "rate": 0.85,
+      "start": "15:00:00"
+    },
+    {
+      "minutes": 960,
+      "rate": 0.85,
+      "start": "16:00:00"
+    },
+    {
+      "minutes": 1020,
+      "rate": 0.85,
+      "start": "17:00:00"
+    },
+    {
+      "minutes": 1080,
+      "rate": 0.85,
+      "start": "18:00:00"
+    },
+    {
+      "minutes": 1140,
+      "rate": 0.85,
+      "start": "19:00:00"
+    },
+    {
+      "minutes": 1200,
+      "rate": 0.85,
+      "start": "20:00:00"
+    },
+    {
+      "minutes": 1260,
+      "rate": 0.85,
+      "start": "21:00:00"
+    },
+    {
+      "minutes": 1320,
+      "rate": 0.85,
+      "start": "22:00:00"
+    },
+    {
+      "minutes": 1380,
+      "rate": 0.85,
+      "start": "23:00:00"
+    }
+  ],
+  "carb_ratio": 9.13,
+  "curve": "rapid-acting",
+  "dia": 6,
+  "isfProfile": {
+    "sensitivities": [
+      {
+        "endoffset": 1440,
+        "i": 0,
+        "offset": 0,
+        "sensitivity": 48.33,
+        "start": "00:00:00",
+        "x": 0
+      }
+    ]
+  },
+  "min_5m_carbimpact": 8,
+  "name": "My/profile",
+  "timezone": "Europe/Prague",
+  "units": "mg/dl"
+}
+== peak 55
+{
+  "autosens_max": 1.2,
+  "autosens_min": 0.7,
+  "basalprofile": [
+    {
+      "minutes": 0,
+      "rate": 0.725,
+      "start": "00:00:00"
+    },
+    {
+      "minutes": 60,
+      "rate": 0.725,
+      "start": "01:00:00"
+    },
+    {
+      "minutes": 120,
+      "rate": 0.725,
+      "start": "02:00:00"
+    },
+    {
+      "minutes": 180,
+      "rate": 0.725,
+      "start": "03:00:00"
+    },
+    {
+      "minutes": 240,
+      "rate": 0.725,
+      "start": "04:00:00"
+    },
+    {
+      "minutes": 300,
+      "rate": 0.725,
+      "start": "05:00:00"
+    },
+    {
+      "minutes": 360,
+      "rate": 1,
+      "start": "06:00:00"
+    },
+    {
+      "minutes": 420,
+      "rate": 1,
+      "start": "07:00:00"
+    },
+    {
+      "minutes": 480,
+      "rate": 1,
+      "start": "08:00:00"
+    },
+    {
+      "minutes": 540,
+      "rate": 1,
+      "start": "09:00:00"
+    },
+    {
+      "minutes": 600,
+      "rate": 1,
+      "start": "10:00:00"
+    },
+    {
+      "minutes": 660,
+      "rate": 1,
+      "start": "11:00:00"
+    },
+    {
+      "minutes": 720,
+      "rate": 0.85,
+      "start": "12:00:00"
+    },
+    {
+      "minutes": 780,
+      "rate": 0.85,
+      "start": "13:00:00"
+    },
+    {
+      "minutes": 840,
+      "rate": 0.85,
+      "start": "14:00:00"
+    },
+    {
+      "minutes": 900,
+      "rate": 0.85,
+      "start": "15:00:00"
+    },
+    {
+      "minutes": 960,
+      "rate": 0.85,
+      "start": "16:00:00"
+    },
+    {
+      "minutes": 1020,
+      "rate": 0.85,
+      "start": "17:00:00"
+    },
+    {
+      "minutes": 1080,
+      "rate": 0.85,
+      "start": "18:00:00"
+    },
+    {
+      "minutes": 1140,
+      "rate": 0.85,
+      "start": "19:00:00"
+    },
+    {
+      "minutes": 1200,
+      "rate": 0.85,
+      "start": "20:00:00"
+    },
+    {
+      "minutes": 1260,
+      "rate": 0.85,
+      "start": "21:00:00"
+    },
+    {
+      "minutes": 1320,
+      "rate": 0.85,
+      "start": "22:00:00"
+    },
+    {
+      "minutes": 1380,
+      "rate": 0.85,
+      "start": "23:00:00"
+    }
+  ],
+  "carb_ratio": 9.13,
+  "curve": "ultra-rapid",
+  "dia": 6,
+  "isfProfile": {
+    "sensitivities": [
+      {
+        "endoffset": 1440,
+        "i": 0,
+        "offset": 0,
+        "sensitivity": 48.33,
+        "start": "00:00:00",
+        "x": 0
+      }
+    ]
+  },
+  "min_5m_carbimpact": 8,
+  "name": "My/profile",
+  "timezone": "Europe/Prague",
+  "units": "mg/dl"
+}
+== peak 45
+{
+  "autosens_max": 1.2,
+  "autosens_min": 0.7,
+  "basalprofile": [
+    {
+      "minutes": 0,
+      "rate": 0.725,
+      "start": "00:00:00"
+    },
+    {
+      "minutes": 60,
+      "rate": 0.725,
+      "start": "01:00:00"
+    },
+    {
+      "minutes": 120,
+      "rate": 0.725,
+      "start": "02:00:00"
+    },
+    {
+      "minutes": 180,
+      "rate": 0.725,
+      "start": "03:00:00"
+    },
+    {
+      "minutes": 240,
+      "rate": 0.725,
+      "start": "04:00:00"
+    },
+    {
+      "minutes": 300,
+      "rate": 0.725,
+      "start": "05:00:00"
+    },
+    {
+      "minutes": 360,
+      "rate": 1,
+      "start": "06:00:00"
+    },
+    {
+      "minutes": 420,
+      "rate": 1,
+      "start": "07:00:00"
+    },
+    {
+      "minutes": 480,
+      "rate": 1,
+      "start": "08:00:00"
+    },
+    {
+      "minutes": 540,
+      "rate": 1,
+      "start": "09:00:00"
+    },
+    {
+      "minutes": 600,
+      "rate": 1,
+      "start": "10:00:00"
+    },
+    {
+      "minutes": 660,
+      "rate": 1,
+      "start": "11:00:00"
+    },
+    {
+      "minutes": 720,
+      "rate": 0.85,
+      "start": "12:00:00"
+    },
+    {
+      "minutes": 780,
+      "rate": 0.85,
+      "start": "13:00:00"
+    },
+    {
+      "minutes": 840,
+      "rate": 0.85,
+      "start": "14:00:00"
+    },
+    {
+      "minutes": 900,
+      "rate": 0.85,
+      "start": "15:00:00"
+    },
+    {
+      "minutes": 960,
+      "rate": 0.85,
+      "start": "16:00:00"
+    },
+    {
+      "minutes": 1020,
+      "rate": 0.85,
+      "start": "17:00:00"
+    },
+    {
+      "minutes": 1080,
+      "rate": 0.85,
+      "start": "18:00:00"
+    },
+    {
+      "minutes": 1140,
+      "rate": 0.85,
+      "start": "19:00:00"
+    },
+    {
+      "minutes": 1200,
+      "rate": 0.85,
+      "start": "20:00:00"
+    },
+    {
+      "minutes": 1260,
+      "rate": 0.85,
+      "start": "21:00:00"
+    },
+    {
+      "minutes": 1320,
+      "rate": 0.85,
+      "start": "22:00:00"
+    },
+    {
+      "minutes": 1380,
+      "rate": 0.85,
+      "start": "23:00:00"
+    }
+  ],
+  "carb_ratio": 9.13,
+  "curve": "ultra-rapid",
+  "dia": 6,
+  "insulinPeakTime": 45,
+  "isfProfile": {
+    "sensitivities": [
+      {
+        "endoffset": 1440,
+        "i": 0,
+        "offset": 0,
+        "sensitivity": 48.33,
+        "start": "00:00:00",
+        "x": 0
+      }
+    ]
+  },
+  "min_5m_carbimpact": 8,
+  "name": "My/profile",
+  "timezone": "Europe/Prague",
+  "units": "mg/dl",
+  "useCustomPeakTime": true
+}
+== peak 60
+{
+  "autosens_max": 1.2,
+  "autosens_min": 0.7,
+  "basalprofile": [
+    {
+      "minutes": 0,
+      "rate": 0.725,
+      "start": "00:00:00"
+    },
+    {
+      "minutes": 60,
+      "rate": 0.725,
+      "start": "01:00:00"
+    },
+    {
+      "minutes": 120,
+      "rate": 0.725,
+      "start": "02:00:00"
+    },
+    {
+      "minutes": 180,
+      "rate": 0.725,
+      "start": "03:00:00"
+    },
+    {
+      "minutes": 240,
+      "rate": 0.725,
+      "start": "04:00:00"
+    },
+    {
+      "minutes": 300,
+      "rate": 0.725,
+      "start": "05:00:00"
+    },
+    {
+      "minutes": 360,
+      "rate": 1,
+      "start": "06:00:00"
+    },
+    {
+      "minutes": 420,
+      "rate": 1,
+      "start": "07:00:00"
+    },
+    {
+      "minutes": 480,
+      "rate": 1,
+      "start": "08:00:00"
+    },
+    {
+      "minutes": 540,
+      "rate": 1,
+      "start": "09:00:00"
+    },
+    {
+      "minutes": 600,
+      "rate": 1,
+      "start": "10:00:00"
+    },
+    {
+      "minutes": 660,
+      "rate": 1,
+      "start": "11:00:00"
+    },
+    {
+      "minutes": 720,
+      "rate": 0.85,
+      "start": "12:00:00"
+    },
+    {
+      "minutes": 780,
+      "rate": 0.85,
+      "start": "13:00:00"
+    },
+    {
+      "minutes": 840,
+      "rate": 0.85,
+      "start": "14:00:00"
+    },
+    {
+      "minutes": 900,
+      "rate": 0.85,
+      "start": "15:00:00"
+    },
+    {
+      "minutes": 960,
+      "rate": 0.85,
+      "start": "16:00:00"
+    },
+    {
+      "minutes": 1020,
+      "rate": 0.85,
+      "start": "17:00:00"
+    },
+    {
+      "minutes": 1080,
+      "rate": 0.85,
+      "start": "18:00:00"
+    },
+    {
+      "minutes": 1140,
+      "rate": 0.85,
+      "start": "19:00:00"
+    },
+    {
+      "minutes": 1200,
+      "rate": 0.85,
+      "start": "20:00:00"
+    },
+    {
+      "minutes": 1260,
+      "rate": 0.85,
+      "start": "21:00:00"
+    },
+    {
+      "minutes": 1320,
+      "rate": 0.85,
+      "start": "22:00:00"
+    },
+    {
+      "minutes": 1380,
+      "rate": 0.85,
+      "start": "23:00:00"
+    }
+  ],
+  "carb_ratio": 9.13,
+  "curve": "rapid-acting",
+  "dia": 6,
+  "insulinPeakTime": 60,
+  "isfProfile": {
+    "sensitivities": [
+      {
+        "endoffset": 1440,
+        "i": 0,
+        "offset": 0,
+        "sensitivity": 48.33,
+        "start": "00:00:00",
+        "x": 0
+      }
+    ]
+  },
+  "min_5m_carbimpact": 8,
+  "name": "My/profile",
+  "timezone": "Europe/Prague",
+  "units": "mg/dl",
+  "useCustomPeakTime": true
+}
