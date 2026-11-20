@@ -102,6 +102,7 @@ sealed class QuickLaunchAction {
         val CannulaChange = StaticAction(ElementType.CANNULA_CHANGE)
         val Fill = StaticAction(ElementType.FILL)
         val SiteRotation = StaticAction(ElementType.SITE_ROTATION)
+        val TempBasal = StaticAction(ElementType.TEMP_BASAL)
         val QuickLaunchConfig = StaticAction(ElementType.QUICK_LAUNCH_CONFIG)
 
         /**
@@ -120,7 +121,7 @@ sealed class QuickLaunchAction {
             SceneManagement, AutomationManagement, FoodManagement, RunningMode,
             AuthorizedClients,
             BgCheck, Note, Exercise, Question, Announcement,
-            SensorInsert, BatteryChange, CannulaChange, Fill, SiteRotation
+            SensorInsert, BatteryChange, CannulaChange, Fill, SiteRotation, TempBasal
         )
 
         /** Default toolbar configuration */
