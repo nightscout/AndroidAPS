@@ -277,8 +277,8 @@ class OnePlusCgmDriverReal(
         val store = storeFor(platform, storeNamespace)
         sensorStore = store
         scanner = platform.scanner(hint = store.load(), slot = slot)
-        // The OEM profiles are tuned for phones. A watch takes the generic one.
-        profile = if (watchMode) DeviceProfileRegistry.GenericFallback else DeviceProfileRegistry.resolve()
+        // The OEM profiles are tuned for phones. A watch takes the generic one, with a longer autoConnect.
+        profile = if (watchMode) DeviceProfileRegistry.Watch else DeviceProfileRegistry.resolve()
     }
 
     private fun storeFor(platform: OnePlusPlatform, namespace: String?): OnePlusSensorStore =
@@ -761,6 +761,8 @@ class OnePlusCgmDriverReal(
                 }
             },
             warmupMs = { sensorWarmupMs() },
+            // A phone scans for the sensor between two readings. A watch has no battery for that.
+            standingConnectWait = watchMode,
         )
         return created
     }

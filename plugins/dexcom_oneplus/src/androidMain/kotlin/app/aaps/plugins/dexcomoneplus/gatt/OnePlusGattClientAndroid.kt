@@ -16,6 +16,7 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import android.os.SystemClock
 import app.aaps.plugins.dexcomoneplus.OnePlusLog
 import app.aaps.plugins.dexcomoneplus.OnePlusLogMarkers
@@ -66,6 +67,9 @@ class OnePlusGattClientAndroid(
 
     /** BALANCED requests sent on the current link by [OnePlusLinkParameterPolicy]; reset in connect(). */
     @Volatile private var normalRequestsThisLink = 0
+
+    /** The `autoConnect` flag of the connect that is running, see [holdAwakeAfterAutoConnect]. */
+    @Volatile private var connectingWithAutoConnect = false
 
     /** GATT status of the last STATE_DISCONNECTED of the current link; null after connect() starts. */
     @Volatile private var lastLinkDownStatus: Int? = null
@@ -134,6 +138,7 @@ class OnePlusGattClientAndroid(
             )
             if (newState == BluetoothProfile.STATE_CONNECTED && status == BluetoothGatt.GATT_SUCCESS) {
                 connected = true
+                holdAwakeAfterAutoConnect()
                 // Juggluco's Dex/ONE+ path lets the OS negotiate the interval. Forcing HIGH
                 // (7.5 ms) correlated with peer status 19 right after the post-auth 0x4E, so this
                 // is off by default (see [OemDeviceProfile.forceHighConnectionPriority]).
@@ -295,7 +300,28 @@ class OnePlusGattClientAndroid(
         }
     }
 
+    /**
+     * Keeps the processor awake for a moment after an `autoConnect` brought the link up.
+     *
+     * A watch waits for the sensor with a standing connect and no wake lock, so the device may be
+     * asleep when the sensor connects. The discovery and the notification setup that follow run on
+     * timers, and a suspended processor stretches those (a 500 ms wait took 27.7 s in a field log)
+     * until the sensor gives up. The session takes its own lock when [connect] returns; this one
+     * covers the seconds before that and ends by itself.
+     */
+    private fun holdAwakeAfterAutoConnect() {
+        if (!connectingWithAutoConnect) return
+        try {
+            val power = appContext.getSystemService(Context.POWER_SERVICE) as PowerManager
+            power.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS::DexcomOnePlusLinkUp")
+                .acquire(LINK_UP_WAKE_LOCK_MS)
+        } catch (t: Throwable) {
+            OnePlusLog.w("${OnePlusLogMarkers.SESSION}: link-up wakeLock ${t.message}")
+        }
+    }
+
     override fun connect(deviceAddress: String, autoConnect: Boolean) {
+        connectingWithAutoConnect = autoConnect
         // Close any prior GATT without poisoning queues — then clear. Previously
         // clear()+disconnectInternal() re-inserted empty sentinels so KEKS awaitNotify
         // returned immediately ("notify timeout step=0" in the same ms as Auth write).
@@ -1088,6 +1114,9 @@ class OnePlusGattClientAndroid(
 
     companion object {
         private const val GATT_OP_TIMEOUT_MS = 10_000L
+
+        /** Discovery and notification setup took 1.8 s on a Galaxy Watch 5. See [holdAwakeAfterAutoConnect]. */
+        private const val LINK_UP_WAKE_LOCK_MS = 6_000L
         private const val EXTRA_DATA_CHUNK = 20
         private const val EXTRA_DATA_CHUNK_GAP_MS = 40L
         private const val BOND_BONDING_WAIT_MS = 45_000L

@@ -111,6 +111,22 @@ object DeviceProfileRegistry {
         requireAdvBeforeConnect = true,
     )
 
+    /**
+     * A watch that reads the sensor itself (direct to watch): [GenericFallback], with an
+     * `autoConnect` that may wait for a whole sensor cycle.
+     *
+     * The watch waits for each cycle with one standing connect and does not scan (see
+     * `standingConnectWait` of `OnePlusBleSessionSkeleton`). The connect is placed about 10 s after
+     * a reading and the next one comes 5 min after it, so 150 s would end the wait too early, every
+     * time.
+     *
+     * 630 s is two cycles and half a minute. One cycle is not enough: a connect placed at any other
+     * moment (after an app start, after a missed reading) can miss the first wake-up of the sensor
+     * and must still be there for the second. On a Galaxy Watch 5 a connect placed 36 s before a
+     * wake-up missed it and caught the next one after 340 s.
+     */
+    val Watch: OemDeviceProfile = GenericFallback.copy(autoConnectTimeoutMs = 630_000L)
+
     fun byId(id: OemProfileId): OemDeviceProfile = when (id) {
         OemProfileId.PIXEL -> PixelDefault
         OemProfileId.SAMSUNG -> SamsungDefault

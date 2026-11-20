@@ -133,6 +133,35 @@ internal object OnePlusBleSessionCyclePolicy {
     const val ADV_WAIT_RESTART_DELAY_MS = 250L
 
     /**
+     * The least time between two standing connects of the watch (see `standingConnectWait` of
+     * [OnePlusBleSessionSkeleton]), counted from the start of the one before.
+     *
+     * A standing connect normally ends with the sensor, or after a whole cycle without it. One that
+     * fails at once (status 133 on a busy radio) must not be placed again at once: that is the burst
+     * of connects the rules above exist to stop, and each round would also scan.
+     */
+    const val STANDING_CONNECT_MIN_GAP_MS = 60_000L
+
+    /**
+     * The longest the watch scans for the sensor at the start of a session, before it falls back to
+     * standing connects: one sensor cycle and half a minute, so one wake-up of the sensor is inside
+     * it wherever in its cycle the session starts.
+     */
+    const val STANDING_CONNECT_STARTUP_SCAN_MS = 330_000L
+
+    /**
+     * How long the processor is kept awake to place a standing connect: the settle after the last
+     * link (up to 4 s), the handoff (0.5 s) and the connect call. Not longer, because the wait
+     * itself is the point: the Bluetooth chip waits for the sensor, and the watch sleeps. The lock
+     * cannot be released when the connect is placed, the call only returns with the sensor, so it
+     * runs to this limit every time. At 10 s, the two locks of a round were held 4 minutes an hour.
+     */
+    const val STANDING_CONNECT_PLACE_WAKE_LOCK_MS = 6_000L
+
+    /** Margin on the lock that covers the guard before a standing connect; the placing has its own. */
+    const val STANDING_CONNECT_GUARD_WAKE_LOCK_MARGIN_MS = 2_000L
+
+    /**
      * A cycle that proved the link works ends in the persistent ADV wait instead of the bounded
      * failure budget.
      *
@@ -396,6 +425,29 @@ class OnePlusBleSessionSkeleton(
     private val onSensorInfo: (OnePlusExtendedVersionRx) -> Unit = {},
     /** Warm-up length of this slot's sensor. */
     private val warmupMs: () -> Long = { OnePlusWarmupClock.DEFAULT_WARMUP_MS },
+    /**
+     * Wait for the sensor's next cycle with a standing connect (`autoConnect`), not with a scan.
+     * Only the watch passes true.
+     *
+     * The scan wait listens at full power for almost the whole 5 minutes between two readings. A
+     * phone can afford that, and it is what keeps the sensor in a car or a metro. A watch cannot:
+     * it scanned 34 minutes in an hour and used 18 % of its battery (Galaxy Watch 5), and a watch
+     * that never heard its sensor was empty in 6 hours. With this on:
+     * - after a cycle that reached the sensor, one standing connect is placed and nothing scans.
+     *   The Bluetooth chip waits for the sensor, and the processor may sleep;
+     * - after a standing connect that ended without the sensor, one scan window follows before the
+     *   next one. It keeps the stale address diagnosis and catches a sensor that is advertising now;
+     * - two standing connects are at least [standingConnectMinGapMs] apart;
+     * - until the sensor was reached once in this session, the watch scans as the phone does, for at
+     *   most [standingConnectStartupScanMs]. A standing connect placed at an unknown moment of the
+     *   sensor's cycle missed its next wake-up.
+     * Every other rule of [OnePlusBleSessionCyclePolicy] is unchanged.
+     */
+    private val standingConnectWait: Boolean = false,
+    /** [OnePlusBleSessionCyclePolicy.STANDING_CONNECT_MIN_GAP_MS]; a test shortens it, the app never does. */
+    private val standingConnectMinGapMs: Long = OnePlusBleSessionCyclePolicy.STANDING_CONNECT_MIN_GAP_MS,
+    /** [OnePlusBleSessionCyclePolicy.STANDING_CONNECT_STARTUP_SCAN_MS]; a test changes it, the app never does. */
+    private val standingConnectStartupScanMs: Long = OnePlusBleSessionCyclePolicy.STANDING_CONNECT_STARTUP_SCAN_MS,
 ) : OnePlusBleSession {
 
     @Volatile
@@ -453,6 +505,32 @@ class OnePlusBleSessionSkeleton(
 
     /** When the connect of the current cycle finished (link up, services found); 0 = not reached. */
     private var cycleLinkReadyAtMs = 0L
+
+    /** When the last standing connect was placed (see `standingConnectWait`); 0 = none yet. */
+    private var lastStandingConnectAtMs = 0L
+
+    /** True once a connect of this session reached the sensor: from then on its cycle is known. */
+    private var sensorReachedThisSession = false
+
+    /** When the watch's start-up scan began, see [startupScanRuns]; 0 = not yet. */
+    private var startupScanStartedAtMs = 0L
+
+    /**
+     * True while the watch still looks for the sensor by scanning, as the phone does, and places no
+     * standing connect: from the start of a session until the sensor was reached once, for at most
+     * [standingConnectStartupScanMs].
+     *
+     * A standing connect placed right after a reading catches the sensor's next wake-up. One placed
+     * at any other moment did not: on a Galaxy Watch 5 the first reading after each start of the
+     * watch app was missed, twice out of two. So the first reading is found by scanning. The time
+     * limit keeps a watch that never hears its sensor from scanning without end, which is how a
+     * watch battery went empty in 6 hours.
+     */
+    private fun startupScanRuns(nowMs: Long): Boolean {
+        if (sensorReachedThisSession) return false
+        if (startupScanStartedAtMs == 0L) startupScanStartedAtMs = nowMs
+        return nowMs - startupScanStartedAtMs < standingConnectStartupScanMs
+    }
 
     override fun startWithPairingCode(deviceAddress: String, pairingCode: String) {
         val codeError = OnePlusSessionStart.validationError(pairingCode)
@@ -720,7 +798,7 @@ class OnePlusBleSessionSkeleton(
             enterReconnecting("waiting_for_next_adv")
             return CycleOutcome.RetryableFailure
         }
-        if (prep.blindFallback) {
+        if (prep.blindFallback && !standingConnectWait) {
             OnePlusLog.w(
                 "${OnePlusLogMarkers.SESSION}: [$slot] blind connect — no ADV sighting, " +
                     "persistent wait escape (attempt=$attempt)",
@@ -746,7 +824,22 @@ class OnePlusBleSessionSkeleton(
         // showed a 500 ms handoff taking 27.7 s with the screen off, so the in-window connect
         // missed the ADV the wait had just caught. The lock used to start only after connect
         // returned, which was too late.
-        val wakeLock = cpuLease?.hold(AUTH_WAKE_LOCK_MS)
+        //
+        // A standing connect of the watch is the exception: it may wait for minutes, and holding the
+        // processor awake for that long would cost more than the scan it replaces. So the lock only
+        // covers placing the connect, and the full one is taken when the link is up. In between, the
+        // GATT client holds its own short lock from the moment the sensor connects.
+        val standingConnect = standingConnectWait && useAutoConnect
+        if (standingConnect) {
+            lastStandingConnectAtMs = nowMs()
+            OnePlusLog.i(
+                "${OnePlusLogMarkers.SESSION}: [$slot] standing connect — waiting for the sensor " +
+                    "without a scan (attempt=$attempt)",
+            )
+        }
+        var wakeLock = cpuLease?.hold(
+            if (standingConnect) OnePlusBleSessionCyclePolicy.STANDING_CONNECT_PLACE_WAKE_LOCK_MS else AUTH_WAKE_LOCK_MS,
+        )
         try {
             try {
                 gatt.connect(deviceAddress, autoConnect = useAutoConnect)
@@ -757,9 +850,14 @@ class OnePlusBleSessionSkeleton(
                 enterReconnecting(msg)
                 return if (running) CycleOutcome.RetryableFailure else CycleOutcome.Stopped
             }
+            if (standingConnect) {
+                wakeLock?.release()
+                wakeLock = cpuLease?.hold(AUTH_WAKE_LOCK_MS)
+            }
 
             if (!running) return CycleOutcome.Stopped
             cycleLinkReadyAtMs = Clock.System.now().toEpochMilliseconds()
+            sensorReachedThisSession = true
 
             val authResult = auth.authenticate(pairingCode, savedSharedKeyProvider())
             if (!running) return CycleOutcome.Stopped
@@ -906,15 +1004,18 @@ class OnePlusBleSessionSkeleton(
             staleMacReportedThisSilence = false
         }
         val linkDownStatus = gatt.lastLinkDownStatus()
-        return when (
-            OnePlusBleSessionCyclePolicy.retryAfterFailure(
-                sensorReached = sensorReachedAtMs != 0L,
-                linkDownStatus = linkDownStatus,
-                lastConnectUsedAutoConnect = lastConnectUsedAutoConnect,
-                nextAttempt = nextAttempt,
-                autoConnectFromAttempt = profile.autoConnectFromAttempt,
-            )
-        ) {
+        val retry = OnePlusBleSessionCyclePolicy.retryAfterFailure(
+            sensorReached = sensorReachedAtMs != 0L,
+            linkDownStatus = linkDownStatus,
+            lastConnectUsedAutoConnect = lastConnectUsedAutoConnect,
+            nextAttempt = nextAttempt,
+            autoConnectFromAttempt = profile.autoConnectFromAttempt,
+        )
+        // On the watch an autoConnect placed at once is a standing connect at an unknown moment of
+        // the sensor's cycle. Until the sensor was reached once, the watch scans for it instead.
+        val startupScan = standingConnectWait &&
+            retry == OnePlusBleSessionCyclePolicy.FailureRetry.IMMEDIATE_AUTO_CONNECT && startupScanRuns(nowMs())
+        return when (if (startupScan) OnePlusBleSessionCyclePolicy.FailureRetry.WAIT_FOR_ADV else retry) {
             OnePlusBleSessionCyclePolicy.FailureRetry.IMMEDIATE_AUTO_CONNECT -> {
                 OnePlusLog.i(
                     "${OnePlusLogMarkers.RECONNECT}: [$slot] skip ADV wait — previous was hard connect, " +
@@ -993,12 +1094,24 @@ class OnePlusBleSessionSkeleton(
         OnePlusLog.i(
             "${OnePlusLogMarkers.SESSION}: [$slot] cycle down reason=$reason — wait persistently for next ADV",
         )
+        // The guard is passed exactly when the sensor was reached a moment ago and closed the link
+        // itself. The watch then knows where the sensor is in its cycle and has nothing to scan for.
+        val sensorWasJustHere = postCycleQuietMs > 0L
+        // Awake through the guard, or a sleeping watch ends it late, places the connect late and
+        // misses the sensor. The placing takes its own lock. This one ends by itself: the wait that
+        // follows must not hold it.
+        if (standingConnectWait && sensorWasJustHere) {
+            cpuLease?.hold(postCycleQuietMs + OnePlusBleSessionCyclePolicy.STANDING_CONNECT_GUARD_WAKE_LOCK_MARGIN_MS)
+        }
         if (postCycleQuietMs > 0L) {
             OnePlusLog.i(
                 "${OnePlusLogMarkers.SCAN}: [$slot] post-cycle ADV guard ${postCycleQuietMs}ms — " +
                     "ignoring the residual advertising burst of the cycle that just closed",
             )
             if (!sleepWhileRunning(postCycleQuietMs)) return null
+        }
+        if (standingConnectWait && sensorWasJustHere) {
+            return OnePlusConnectPrep(advFresh = false, blindFallback = true)
         }
         return awaitFreshAdvertisement(deviceAddress)
     }
@@ -1025,6 +1138,17 @@ class OnePlusBleSessionSkeleton(
             advSilenceStartedMs = Clock.System.now().toEpochMilliseconds()
         }
         val silenceStartedMs = advSilenceStartedMs
+        if (standingConnectWait && lastStandingConnectAtMs != 0L) {
+            // A standing connect that failed at once: no new one, and no scan, before the gap is over.
+            val sinceLastMs = nowMs() - lastStandingConnectAtMs
+            if (sinceLastMs in 0 until standingConnectMinGapMs) {
+                OnePlusLog.i(
+                    "${OnePlusLogMarkers.RECONNECT}: [$slot] the standing connect ended after ${sinceLastMs}ms — " +
+                        "waiting ${standingConnectMinGapMs - sinceLastMs}ms before the next one",
+                )
+                if (!sleepWhileRunning(standingConnectMinGapMs - sinceLastMs)) return null
+            }
+        }
         var lastEmittedMinute = -1L
         var lastEmittedStale = false
         var foreignEverSeen: String? = null
@@ -1078,9 +1202,27 @@ class OnePlusBleSessionSkeleton(
                 }
             }
 
+            if (standingConnectWait && !startupScanRuns(nowMs)) {
+                // The watch scans one window, not without end: the sensor did not answer the standing
+                // connect and is not advertising now, so the next standing connect waits for it.
+                enterReconnecting(
+                    message = "waiting_for_adv",
+                    advSilenceMinutes = silenceMinutes,
+                    staleMacSuspected = staleMacReportedThisSilence,
+                )
+                if (!running) return null
+                OnePlusLog.i(
+                    "${OnePlusLogMarkers.SCAN}: [$slot] target ADV absent after one window — " +
+                        "standing connect silentMs=$silenceMs foreign=${foreignEverSeen ?: "-"}",
+                )
+                return prep.copy(blindFallback = true)
+            }
+
             val msSinceLastBlind =
                 if (lastBlindConnectAtMs == 0L) null else nowMs - lastBlindConnectAtMs
-            if (OnePlusBleSessionCyclePolicy.authorizeBlindConnect(silenceMs, msSinceLastBlind)) {
+            // Not during the watch's start-up scan: its blind connect is a standing connect, and one
+            // placed at an unknown moment is what the start-up scan is there to avoid.
+            if (!standingConnectWait && OnePlusBleSessionCyclePolicy.authorizeBlindConnect(silenceMs, msSinceLastBlind)) {
                 OnePlusLog.w(
                     "${OnePlusLogMarkers.SCAN}: [$slot] ADV silent ${silenceMinutes}min — " +
                         "authorising one blind connect (escape from persistent wait)",
