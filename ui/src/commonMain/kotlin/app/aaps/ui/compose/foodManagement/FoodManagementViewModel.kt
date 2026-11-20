@@ -10,6 +10,8 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.interfaces.logging.LTag
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -37,31 +39,36 @@ import kotlinx.coroutines.launch
 class FoodManagementViewModel(
     private val persistenceLayer: PersistenceLayer,
     private val aapsLogger: AAPSLogger,
+    private val preferences: Preferences,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(FoodManagementUiState())
+    private val _uiState = MutableStateFlow(FoodManagementUiState(sortFoodsByName = preferences.get(BooleanNonKey.FoodSortByName)))
     val uiState: StateFlow<FoodManagementUiState> = _uiState.asStateFlow()
 
-    /** Derived: foods filtered by current search query and category/subcategory filters */
+    /**
+     * Derived: foods filtered by the search and by the category and subcategory filters. The newest
+     * come first (the order of the database), or the names from A to Z.
+     */
     val filteredFoods: StateFlow<List<FD>> = uiState
         .map { s ->
-            s.foods.filter { food ->
+            val shown = s.foods.filter { food ->
                 (s.searchQuery.isBlank() || food.name.contains(s.searchQuery, ignoreCase = true))
-                    && (s.filterCategory == null || food.category == s.filterCategory)
-                    && (s.filterSubCategory == null || food.subCategory == s.filterSubCategory)
+                    && s.filterCategory.matches(food.category)
+                    && s.filterSubCategory.matches(food.subCategory)
             }
+            if (s.sortFoodsByName) shown.sortedBy { nameSortKey(it.name) } else shown
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
-    /** Derived: subcategories available for the currently selected category filter */
-    val filteredSubCategories: StateFlow<List<String>> = uiState
-        .map { s ->
-            val foods = s.foods
-            val cat = s.filterCategory
-            val relevant = if (cat != null) foods.filter { it.category == cat } else foods
-            relevant.mapNotNull { it.subCategory }.filter { it.isNotBlank() }.distinct().sorted()
-        }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+    /** Derived: the choices of the category filter. */
+    val categoryChoices: StateFlow<GroupChoices> = uiState
+        .map { s -> GroupChoices.of(s.foods.map { it.category }) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GroupChoices())
+
+    /** Derived: the choices of the subcategory filter, for the chosen category. */
+    val subCategoryChoices: StateFlow<GroupChoices> = uiState
+        .map { s -> GroupChoices.of(s.foods.filter { s.filterCategory.matches(it.category) }.map { it.subCategory }) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GroupChoices())
 
     init {
         loadData()
@@ -80,13 +87,20 @@ class FoodManagementViewModel(
         viewModelScope.launch {
             try {
                 val foods = persistenceLayer.getFoods()
-                val categories = foods.mapNotNull { it.category }.filter { it.isNotBlank() }.distinct().sorted()
-                val subCategories = foods.mapNotNull { it.subCategory }.filter { it.isNotBlank() }.distinct().sorted()
                 _uiState.update {
+                    // A filter on a group that no longer has any food (its last food was moved to
+                    // another group, or deleted) would hide every food. It is removed, so the whole
+                    // list comes back.
+                    val category = it.filterCategory.takeIf { c -> foods.any { f -> c.matches(f.category) } } ?: GroupFilter.All
+                    // A subcategory belongs to its category: it goes with it.
+                    val subCategory = it.filterSubCategory
+                        .takeIf { _ -> category == it.filterCategory }
+                        ?.takeIf { sub -> foods.any { f -> category.matches(f.category) && sub.matches(f.subCategory) } }
+                        ?: GroupFilter.All
                     it.copy(
                         foods = foods,
-                        allCategories = categories,
-                        allSubCategories = subCategories,
+                        filterCategory = category,
+                        filterSubCategory = subCategory,
                         isLoading = false
                     )
                 }
@@ -101,12 +115,19 @@ class FoodManagementViewModel(
         _uiState.update { it.copy(searchQuery = query) }
     }
 
-    fun setFilterCategory(category: String?) {
-        _uiState.update { it.copy(filterCategory = category, filterSubCategory = null) }
+    /** A new category starts with all its subcategories. */
+    fun setFilterCategory(category: GroupFilter) {
+        _uiState.update { it.copy(filterCategory = category, filterSubCategory = GroupFilter.All) }
     }
 
-    fun setFilterSubCategory(subCategory: String?) {
+    fun setFilterSubCategory(subCategory: GroupFilter) {
         _uiState.update { it.copy(filterSubCategory = subCategory) }
+    }
+
+    /** The newest foods first, or A to Z. Kept for the next time the screen is opened. */
+    fun setSortFoodsByName(byName: Boolean) {
+        preferences.put(BooleanNonKey.FoodSortByName, byName)
+        _uiState.update { it.copy(sortFoodsByName = byName) }
     }
 
     fun openEditor(food: FD? = null) {
@@ -241,10 +262,10 @@ data class FoodManagementUiState(
     val isLoading: Boolean = true,
     // Filters
     val searchQuery: String = "",
-    val filterCategory: String? = null,
-    val filterSubCategory: String? = null,
-    val allCategories: List<String> = emptyList(),
-    val allSubCategories: List<String> = emptyList(),
+    val filterCategory: GroupFilter = GroupFilter.All,
+    val filterSubCategory: GroupFilter = GroupFilter.All,
+    /** False: the newest foods first. True: the names from A to Z. */
+    val sortFoodsByName: Boolean = false,
     // Editor
     val showEditor: Boolean = false,
     val editorFood: FD? = null,

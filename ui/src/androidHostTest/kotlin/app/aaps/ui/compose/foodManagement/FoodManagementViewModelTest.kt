@@ -3,10 +3,18 @@ package app.aaps.ui.compose.foodManagement
 import app.aaps.core.data.model.FD
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -15,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -22,8 +31,10 @@ internal class FoodManagementViewModelTest {
 
     @Mock private lateinit var persistenceLayer: PersistenceLayer
     @Mock private lateinit var aapsLogger: AAPSLogger
+    @Mock private lateinit var preferences: Preferences
 
     private lateinit var sut: FoodManagementViewModel
+    private val dispatcher = StandardTestDispatcher()
 
     @BeforeEach
     fun setUp() {
@@ -31,9 +42,9 @@ internal class FoodManagementViewModelTest {
         // StandardTestDispatcher defers the init{} loadData() launch (no advanceUntilIdle), so construction
         // stays clean and we test the synchronous update methods against the default state. The observeChanges()
         // cold flow is still built synchronously during init, so it must be stubbed non-null.
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(dispatcher)
         whenever(persistenceLayer.observeChanges(FD::class)).thenReturn(emptyFlow())
-        sut = FoodManagementViewModel(persistenceLayer, aapsLogger)
+        sut = FoodManagementViewModel(persistenceLayer, aapsLogger, preferences)
     }
 
     @AfterEach
@@ -44,8 +55,9 @@ internal class FoodManagementViewModelTest {
         val state = sut.uiState.value
         assertThat(state.isLoading).isTrue()
         assertThat(state.searchQuery).isEmpty()
-        assertThat(state.filterCategory).isNull()
-        assertThat(state.filterSubCategory).isNull()
+        assertThat(state.filterCategory).isEqualTo(GroupFilter.All)
+        assertThat(state.filterSubCategory).isEqualTo(GroupFilter.All)
+        assertThat(state.sortFoodsByName).isFalse()
         assertThat(state.showEditor).isFalse()
     }
 
@@ -58,19 +70,19 @@ internal class FoodManagementViewModelTest {
 
     @Test
     fun `setFilterCategory sets category and clears subcategory`() {
-        sut.setFilterSubCategory("Sub")
-        sut.setFilterCategory("Fruit")
+        sut.setFilterSubCategory(GroupFilter.Named("Sub"))
+        sut.setFilterCategory(GroupFilter.Named("Fruit"))
 
         val state = sut.uiState.value
-        assertThat(state.filterCategory).isEqualTo("Fruit")
-        assertThat(state.filterSubCategory).isNull()
+        assertThat(state.filterCategory).isEqualTo(GroupFilter.Named("Fruit"))
+        assertThat(state.filterSubCategory).isEqualTo(GroupFilter.All)
     }
 
     @Test
     fun `setFilterSubCategory updates the state`() {
-        sut.setFilterSubCategory("Berries")
+        sut.setFilterSubCategory(GroupFilter.Named("Berries"))
 
-        assertThat(sut.uiState.value.filterSubCategory).isEqualTo("Berries")
+        assertThat(sut.uiState.value.filterSubCategory).isEqualTo(GroupFilter.Named("Berries"))
     }
 
     @Test
@@ -123,5 +135,110 @@ internal class FoodManagementViewModelTest {
         sut.clearUndo()
 
         assertThat(sut.uiState.value.undoFood).isNull()
+    }
+
+    // ---- Filters "All / None / a group", the sort, and a filter left on an empty group ----
+
+    private val apple = FD(id = 50, name = "apple", category = "Fruit", subCategory = "Fresh", portion = 100.0, unit = "g", carbs = 12)
+    private val prune = FD(id = 51, name = "Prune", category = "Fruit", portion = 100.0, unit = "g", carbs = 60)
+    private val nut = FD(id = 52, name = "Écrou salé", portion = 100.0, unit = "g", carbs = 1)
+
+    /** A screen that has loaded [foods] (the database gives the newest first). */
+    private fun screenWith(vararg foods: FD, changes: Flow<List<FD>> = emptyFlow()): FoodManagementViewModel {
+        runBlocking { whenever(persistenceLayer.getFoods()).thenReturn(foods.toList()) }
+        whenever(persistenceLayer.observeChanges(FD::class)).thenReturn(changes)
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, preferences)
+        dispatcher.scheduler.runCurrent()
+        return vm
+    }
+
+    /** Keeps [flow] collected, as the screen does: the derived lists are only computed while shown. */
+    private fun <T> shown(flow: StateFlow<T>): StateFlow<T> {
+        CoroutineScope(dispatcher).launch { flow.collect {} }
+        dispatcher.scheduler.runCurrent()
+        return flow
+    }
+
+    @Test
+    fun `the None category shows only the foods without a category`() {
+        val vm = screenWith(nut, prune, apple)
+        val foods = shown(vm.filteredFoods)
+
+        vm.setFilterCategory(GroupFilter.None)
+        dispatcher.scheduler.runCurrent()
+
+        assertThat(foods.value.map { it.name }).containsExactly("Écrou salé")
+        assertThat(shown(vm.categoryChoices).value).isEqualTo(GroupChoices(listOf("Fruit"), hasNone = true))
+    }
+
+    @Test
+    fun `the None subcategory shows the foods of the category without a subcategory`() {
+        val vm = screenWith(nut, prune, apple)
+        val foods = shown(vm.filteredFoods)
+        val subChoices = shown(vm.subCategoryChoices)
+
+        vm.setFilterCategory(GroupFilter.Named("Fruit"))
+        dispatcher.scheduler.runCurrent()
+        assertThat(subChoices.value).isEqualTo(GroupChoices(listOf("Fresh"), hasNone = true))
+
+        vm.setFilterSubCategory(GroupFilter.None)
+        dispatcher.scheduler.runCurrent()
+        assertThat(foods.value.map { it.name }).containsExactly("Prune")
+    }
+
+    @Test
+    fun `the foods are newest first or A to Z, and the choice is kept`() {
+        val vm = screenWith(nut, prune, apple)
+        val foods = shown(vm.filteredFoods)
+        assertThat(foods.value.map { it.name }).containsExactly("Écrou salé", "Prune", "apple").inOrder()
+
+        vm.setSortFoodsByName(true)
+        dispatcher.scheduler.runCurrent()
+
+        assertThat(foods.value.map { it.name }).containsExactly("apple", "Écrou salé", "Prune").inOrder()
+        verify(preferences).put(BooleanNonKey.FoodSortByName, true)
+    }
+
+    @Test
+    fun `the sort chosen before is used when the screen opens`() {
+        whenever(preferences.get(BooleanNonKey.FoodSortByName)).thenReturn(true)
+
+        val vm = screenWith(nut, prune, apple)
+
+        assertThat(vm.uiState.value.sortFoodsByName).isTrue()
+        assertThat(shown(vm.filteredFoods).value.map { it.name }).containsExactly("apple", "Écrou salé", "Prune").inOrder()
+    }
+
+    @Test
+    fun `a category filter is removed when its last food moves to another category`() {
+        val changes = MutableSharedFlow<List<FD>>(extraBufferCapacity = 1)
+        val cake = FD(id = 40, name = "Cake", category = "Bakery", subCategory = "Sweet", portion = 100.0, unit = "g", carbs = 50)
+        val vm = screenWith(cake, nut, changes = changes)
+        vm.setFilterCategory(GroupFilter.Named("Bakery"))
+        vm.setFilterSubCategory(GroupFilter.Named("Sweet"))
+
+        runBlocking { whenever(persistenceLayer.getFoods()).thenReturn(listOf(cake.copy(category = "Dessert"), nut)) }
+        changes.tryEmit(emptyList())
+        dispatcher.scheduler.advanceTimeBy(1_100)
+        dispatcher.scheduler.runCurrent()
+
+        assertThat(vm.uiState.value.filterCategory).isEqualTo(GroupFilter.All)
+        assertThat(vm.uiState.value.filterSubCategory).isEqualTo(GroupFilter.All)
+    }
+
+    @Test
+    fun `a category filter stays while it still has foods`() {
+        val changes = MutableSharedFlow<List<FD>>(extraBufferCapacity = 1)
+        val cake = FD(id = 40, name = "Cake", category = "Bakery", portion = 100.0, unit = "g", carbs = 50)
+        val bun = FD(id = 41, name = "Bun", category = "Bakery", portion = 100.0, unit = "g", carbs = 55)
+        val vm = screenWith(cake, bun, changes = changes)
+        vm.setFilterCategory(GroupFilter.Named("Bakery"))
+
+        runBlocking { whenever(persistenceLayer.getFoods()).thenReturn(listOf(cake.copy(category = "Dessert"), bun)) }
+        changes.tryEmit(emptyList())
+        dispatcher.scheduler.advanceTimeBy(1_100)
+        dispatcher.scheduler.runCurrent()
+
+        assertThat(vm.uiState.value.filterCategory).isEqualTo(GroupFilter.Named("Bakery"))
     }
 }
