@@ -197,7 +197,7 @@ org-skyscreamer-jsonassert = { group = "org.skyscreamer", name = "jsonassert", v
 # pulls in, so Android module tests are measured against this too. Never use it in main source.
 org-json-android = { group = "com.vaadin.external.google", name = "android-json", version = "0.0.20131108.vaadin1" }
 com-eatthepath-java-otp = { group = "com.eatthepath", name = "java-otp", version = "1.0.0" }
-com-github-bumptech-glide-compose = { group = "com.github.bumptech.glide", name = "compose", version = "1.0.0-beta10" } # do not update to 4.xx
+com-github-bumptech-glide-compose = { group = "com.github.bumptech.glide", name = "compose", version = "1.0.0-beta11" } # do not update to 4.xx
 com-github-kenglxn-qrgen-android = { group = "com.github.kenglxn.QRGen", name = "android", version = "3.0.1" }
 io-socket-client = { group = "io.socket", name = "socket.io-client", version = "2.1.2" }
 org-osmdroid = { group = "org.osmdroid", name = "osmdroid-android", version = "6.1.20" }
