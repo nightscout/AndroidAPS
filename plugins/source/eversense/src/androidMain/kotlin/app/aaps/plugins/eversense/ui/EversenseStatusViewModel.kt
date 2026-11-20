@@ -1,4 +1,4 @@
-package app.aaps.plugins.source.eversense.compose
+package app.aaps.plugins.eversense.ui
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
@@ -13,7 +13,7 @@ import app.aaps.plugins.eversense.models.ActiveAlarm
 import app.aaps.plugins.eversense.models.EversenseCGMResult
 import app.aaps.plugins.eversense.models.EversenseScanResult
 import app.aaps.plugins.eversense.models.EversenseState
-import app.aaps.plugins.source.R
+import app.aaps.plugins.eversense.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject

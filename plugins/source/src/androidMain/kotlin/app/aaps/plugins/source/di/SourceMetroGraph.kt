@@ -1,6 +1,5 @@
 package app.aaps.plugins.source.di
 
-import app.aaps.plugins.source.activities.EversensePlacementActivity
 import androidx.work.ListenableWorker
 import app.aaps.core.objects.workflow.MetroWorkerCreator
 import app.aaps.core.objects.workflow.WorkerKey
@@ -91,8 +90,4 @@ interface SourceMetroGraph {
     fun bindNotificationCollectorService(
         injector: MembersInjector<NotificationCollectorService>
     ): MembersInjector<*> = injector
-
-    @Provides @IntoMap @ClassKey(EversensePlacementActivity::class)
-    fun bindEversensePlacementActivity(injector: MembersInjector<EversensePlacementActivity>): MembersInjector<*> = injector
-
 }

@@ -1,10 +1,10 @@
-package app.aaps.plugins.source.eversense
+package app.aaps.plugins.eversense.storage
 
 import android.content.Context
 import android.content.SharedPreferences
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.eversense.storage.edit
-import app.aaps.plugins.source.keys.EversenseRuntimeKey
+import app.aaps.plugins.eversense.keys.EversenseRuntimeKey
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

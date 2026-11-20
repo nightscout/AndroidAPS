@@ -1,10 +1,10 @@
-package app.aaps.plugins.source.eversense
+package app.aaps.plugins.eversense.storage
 
 import android.content.Context
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.eversense.util.StorageKeys
 import app.aaps.plugins.eversense.storage.EversenseStore
-import app.aaps.plugins.source.keys.EversenseRuntimeKey
+import app.aaps.plugins.eversense.keys.EversenseRuntimeKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn

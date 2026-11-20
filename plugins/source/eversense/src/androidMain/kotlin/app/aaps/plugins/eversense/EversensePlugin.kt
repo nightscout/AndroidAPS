@@ -1,4 +1,4 @@
-package app.aaps.plugins.source
+package app.aaps.plugins.eversense
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
@@ -35,7 +35,7 @@ import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.eversense.EversenseCGMPlugin
 import app.aaps.plugins.eversense.callbacks.EversenseWatcher
-import app.aaps.plugins.source.eversense.compose.EversenseComposeContent
+import app.aaps.plugins.eversense.ui.EversenseComposeContent
 import app.aaps.plugins.eversense.enums.EversenseAlarm
 import app.aaps.plugins.eversense.enums.EversenseType
 import app.aaps.plugins.eversense.models.EversenseCGMResult
@@ -52,10 +52,11 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.json.Json
 import app.aaps.core.keys.interfaces.withClick
-import app.aaps.plugins.source.keys.EversenseIntentKey
-import app.aaps.plugins.source.keys.EversenseStringKey
+import app.aaps.plugins.eversense.keys.EversenseIntentKey
+import app.aaps.plugins.eversense.keys.EversenseStringKey
 import app.aaps.core.ui.compose.icons.IcPluginEversense
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.plugins.source.AbstractBgSourcePlugin
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -63,9 +64,8 @@ import dev.zacsweers.metro.IntKey as MetroIntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.plugins.source.keys.EversenseBooleanKey
-import app.aaps.plugins.source.keys.EversenseRuntimeKey
-import app.aaps.plugins.source.eversense.EversenseStringKey as LegacyEversenseStringKey
+import app.aaps.plugins.eversense.keys.EversenseBooleanKey
+import app.aaps.plugins.eversense.keys.EversenseRuntimeKey
 import kotlin.coroutines.resume
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.combine
@@ -93,7 +93,7 @@ class EversensePlugin(
         .pluginName(TextRef.AndroidRes(R.string.source_eversense))
         .preferencesVisibleInSimpleMode(false)
         .description(TextRef.AndroidRes(R.string.description_source_eversense)),
-    ownPreferences = EversenseStringKey.entries + EversenseBooleanKey.entries + EversenseIntentKey.entries + LegacyEversenseStringKey.entries + EversenseRuntimeKey.entries,
+    ownPreferences = EversenseStringKey.entries + EversenseBooleanKey.entries + EversenseIntentKey.entries + EversenseRuntimeKey.entries,
     aapsLogger, rh, preferences, config, notificationManager
 ), CgmDriver, EversenseWatcher {
 
@@ -197,7 +197,7 @@ class EversensePlugin(
     }
 
     private fun requestBluetoothPermissions() {
-        val intent = Intent(context, app.aaps.plugins.source.activities.RequestEversensePermissionActivity::class.java)
+        val intent = Intent(context, app.aaps.plugins.eversense.ui.RequestEversensePermissionActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }
@@ -546,7 +546,7 @@ class EversensePlugin(
     }
 
     private val cloudUploader by lazy {
-        app.aaps.plugins.source.eversense.EversenseCloudUploader(
+        app.aaps.plugins.eversense.cloud.EversenseCloudUploader(
             scope = { ioScope },
             store = { eversense.cloudStore() },
             enabled = ::cloudUploadEnabled,
@@ -563,7 +563,7 @@ class EversensePlugin(
         EversenseLogger.diagnostic { aapsLogger.error(LTag.BGSOURCE, message, error) }
     }
 
-    private suspend fun uploadCloudBatch(prefs: EversenseStore, batch: app.aaps.plugins.source.eversense.EversenseCloudUploader.PendingUpload): Boolean {
+    private suspend fun uploadCloudBatch(prefs: EversenseStore, batch: app.aaps.plugins.eversense.cloud.EversenseCloudUploader.PendingUpload): Boolean {
         val state = batch.state
         val readings = batch.readings
         val latest = readings.maxByOrNull { it.datetime } ?: return true

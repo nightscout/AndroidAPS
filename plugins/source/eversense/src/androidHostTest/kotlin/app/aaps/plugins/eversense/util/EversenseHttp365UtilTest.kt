@@ -3,8 +3,8 @@ package app.aaps.plugins.eversense.util
 import app.aaps.plugins.eversense.storage.EversenseStore
 import app.aaps.plugins.eversense.enums.EversenseTrendArrow
 import app.aaps.plugins.eversense.models.EversenseCGMResult
-import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
+import mockwebserver3.MockResponse
+import mockwebserver3.MockWebServer
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -57,7 +57,7 @@ class EversenseHttp365UtilTest {
 
     @AfterEach
     fun tearDown() {
-        mockWebServer.shutdown()
+        mockWebServer.close()
         // Restore production URLs
         EversenseHttp365Util.tokenBaseUrl = "https://usiamapi.eversensedms.com/"
         EversenseHttp365Util.uploadBaseUrl = "https://usmobileappmsprod.eversensedms.com/"
@@ -86,16 +86,16 @@ class EversenseHttp365UtilTest {
             """{"username":"user@example.com","password":"testpass"}"""
         )
 
-        mockWebServer.enqueue(MockResponse().setBody(validTokenJson).setResponseCode(200))
+        mockWebServer.enqueue(MockResponse.Builder().body(validTokenJson).code(200).build())
 
         val token = EversenseHttp365Util.getOrRefreshToken(prefs)
 
         assertEquals("test_access_token_abc123", token)
         assertEquals(1, mockWebServer.requestCount)
         val request = mockWebServer.takeRequest()
-        assertEquals("/connect/token", request.path)
+        assertEquals("/connect/token", request.target)
         assertEquals("POST", request.method)
-        assertTrue(request.body.readUtf8().contains("grant_type=password"))
+        assertTrue(request.body!!.utf8().contains("grant_type=password"))
     }
 
     @Test
@@ -103,7 +103,7 @@ class EversenseHttp365UtilTest {
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(0L)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn(null)
 
-        mockWebServer.enqueue(MockResponse().setResponseCode(401).setBody("""{"error":"invalid_client"}"""))
+        mockWebServer.enqueue(MockResponse.Builder().code(401).body("""{"error":"invalid_client"}""").build())
 
         val token = EversenseHttp365Util.getOrRefreshToken(prefs)
 
@@ -120,7 +120,7 @@ class EversenseHttp365UtilTest {
             """{"username":"user@example.com","password":"testpass"}"""
         )
 
-        mockWebServer.enqueue(MockResponse().setBody(validTokenJson).setResponseCode(200))
+        mockWebServer.enqueue(MockResponse.Builder().body(validTokenJson).code(200).build())
 
         val token = EversenseHttp365Util.getOrRefreshToken(prefs)
 
@@ -136,7 +136,7 @@ class EversenseHttp365UtilTest {
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("my_bearer_token")
 
-        mockWebServer.enqueue(MockResponse().setResponseCode(200).setBody("[]"))
+        mockWebServer.enqueue(MockResponse.Builder().code(200).body("[]").build())
 
         val readings = listOf(
             EversenseCGMResult(
@@ -155,10 +155,10 @@ class EversenseHttp365UtilTest {
         assertEquals(200, result.httpStatus)
         assertEquals(1, mockWebServer.requestCount)
         val request = mockWebServer.takeRequest()
-        assertEquals("/api/v1.0/DiagnosticLog/PostEssentialLogs", request.path)
+        assertEquals("/api/v1.0/DiagnosticLog/PostEssentialLogs", request.target)
         assertEquals("POST", request.method)
-        assertEquals("Bearer my_bearer_token", request.getHeader("Authorization"))
-        assertEquals("application/json", request.getHeader("Content-Type"))
+        assertEquals("Bearer my_bearer_token", request.headers["Authorization"])
+        assertEquals("application/json", request.headers["Content-Type"])
     }
 
     @Test
@@ -167,7 +167,7 @@ class EversenseHttp365UtilTest {
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("my_bearer_token")
 
-        mockWebServer.enqueue(MockResponse().setResponseCode(200).setBody("[]"))
+        mockWebServer.enqueue(MockResponse.Builder().code(200).body("[]").build())
 
         val readings = listOf(
             EversenseCGMResult(
@@ -181,7 +181,7 @@ class EversenseHttp365UtilTest {
 
         EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TXSERIAL", "2.0.1")
 
-        val body = mockWebServer.takeRequest().body.readUtf8()
+        val body = mockWebServer.takeRequest().body!!.utf8()
 
         assertTrue(body.startsWith("[") && body.endsWith("]"), "Body must be a bare JSON array")
         assertTrue(body.contains("\"SensorId\":\"23C1AB\""), "Missing SensorId")
@@ -199,7 +199,7 @@ class EversenseHttp365UtilTest {
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("token")
 
-        mockWebServer.enqueue(MockResponse().setResponseCode(200).setBody("[]"))
+        mockWebServer.enqueue(MockResponse.Builder().code(200).body("[]").build())
 
         val readings = listOf(
             EversenseCGMResult(100, 1700000000000L, EversenseTrendArrow.FLAT, "s1", "aa"),
@@ -210,7 +210,7 @@ class EversenseHttp365UtilTest {
         EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX99", "3.0")
 
         assertEquals(1, mockWebServer.requestCount)
-        val body = mockWebServer.takeRequest().body.readUtf8()
+        val body = mockWebServer.takeRequest().body!!.utf8()
         assertTrue(body.contains("\"CurrentGlucoseValue\":100"))
         assertTrue(body.contains("\"CurrentGlucoseValue\":110"))
         assertTrue(body.contains("\"CurrentGlucoseValue\":105"))
@@ -258,7 +258,7 @@ class EversenseHttp365UtilTest {
         val futureExpiry = System.currentTimeMillis() + 600_000L
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("token")
-        mockWebServer.enqueue(MockResponse().setResponseCode(200).setBody("[]"))
+        mockWebServer.enqueue(MockResponse.Builder().code(200).body("[]").build())
 
         val readings = listOf(
             EversenseCGMResult(120, 1700000000000L, EversenseTrendArrow.FLAT, "sensor_001", "deadbeef"),
@@ -278,7 +278,7 @@ class EversenseHttp365UtilTest {
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("token")
 
-        mockWebServer.enqueue(MockResponse().setResponseCode(400).setBody("""{"error":"bad request"}"""))
+        mockWebServer.enqueue(MockResponse.Builder().code(400).body("""{"error":"bad request"}""").build())
 
         val readings = listOf(
             EversenseCGMResult(120, System.currentTimeMillis(), EversenseTrendArrow.FLAT, "s1", "ff")
@@ -299,7 +299,7 @@ class EversenseHttp365UtilTest {
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("token")
 
-        mockWebServer.enqueue(MockResponse().setResponseCode(500).setBody("Internal Server Error"))
+        mockWebServer.enqueue(MockResponse.Builder().code(500).body("Internal Server Error").build())
 
         val readings = listOf(
             EversenseCGMResult(80, System.currentTimeMillis(), EversenseTrendArrow.FLAT, "s1", "01")
@@ -319,7 +319,7 @@ class EversenseHttp365UtilTest {
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(0L)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn(null)
 
-        mockWebServer.enqueue(MockResponse().setResponseCode(401).setBody("""{"error":"unauthorized"}"""))
+        mockWebServer.enqueue(MockResponse.Builder().code(401).body("""{"error":"unauthorized"}""").build())
 
         val readings = listOf(
             EversenseCGMResult(100, System.currentTimeMillis(), EversenseTrendArrow.FLAT, "s1", "ab")
@@ -329,7 +329,7 @@ class EversenseHttp365UtilTest {
 
         // Only the login attempt should have been made, not the upload
         assertEquals(1, mockWebServer.requestCount)
-        assertEquals("/connect/token", mockWebServer.takeRequest().path)
+        assertEquals("/connect/token", mockWebServer.takeRequest().target)
     }
 
     // ─── login ───────────────────────────────────────────────────────────────
@@ -340,7 +340,7 @@ class EversenseHttp365UtilTest {
             """{"username":"testuser@test.com","password":"secret123"}"""
         )
 
-        mockWebServer.enqueue(MockResponse().setBody(validTokenJson).setResponseCode(200))
+        mockWebServer.enqueue(MockResponse.Builder().body(validTokenJson).code(200).build())
 
         val result = EversenseHttp365Util.login(prefs)
 
@@ -349,7 +349,7 @@ class EversenseHttp365UtilTest {
         assertEquals(3600, result.expires_in)
 
         val request = mockWebServer.takeRequest()
-        val body = request.body.readUtf8()
+        val body = request.body!!.utf8()
         assertTrue(body.contains("grant_type=password"))
         assertTrue(body.contains("client_id=eversenseMMAAndroid"))
         assertTrue(body.contains("username=testuser%40test.com") || body.contains("username=testuser@test.com"))
@@ -361,7 +361,7 @@ class EversenseHttp365UtilTest {
             """{"username":"bad@user.com","password":"wrong"}"""
         )
 
-        mockWebServer.enqueue(MockResponse().setResponseCode(401).setBody("""{"error":"invalid_grant"}"""))
+        mockWebServer.enqueue(MockResponse.Builder().code(401).body("""{"error":"invalid_grant"}""").build())
 
         val result = EversenseHttp365Util.login(prefs)
 
@@ -376,7 +376,7 @@ class EversenseHttp365UtilTest {
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("token")
 
-        mockWebServer.enqueue(MockResponse().setResponseCode(200).setBody("[]"))
+        mockWebServer.enqueue(MockResponse.Builder().code(200).body("[]").build())
 
         // 1700000000000 ms == 2023-11-14T22:13:20 UTC. The formatter must emit UTC with
         // no offset, regardless of the machine's default time zone.
@@ -386,7 +386,7 @@ class EversenseHttp365UtilTest {
 
         EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX1", "1.0")
 
-        val body = mockWebServer.takeRequest().body.readUtf8()
+        val body = mockWebServer.takeRequest().body!!.utf8()
         assertTrue(
             body.contains("\"Timestamp\":\"2023-11-14T22:13:20\""),
             "Timestamp must be UTC in yyyy-MM-dd'T'HH:mm:ss; got: $body"

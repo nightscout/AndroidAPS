@@ -5,8 +5,8 @@ import java.time.Instant
 import java.time.ZoneOffset
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
-import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
+import mockwebserver3.MockResponse
+import mockwebserver3.MockWebServer
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.DynamicTest
@@ -102,7 +102,7 @@ class DmsHttpCompatibilityTest {
                 try {
                     original.route(server, generation)
                     rewritten.route(server, generation)
-                    repeat(2) { server.enqueue(MockResponse().setResponseCode(503)) }
+                    repeat(2) { server.enqueue(MockResponse.Builder().code(503).build()) }
                     for (token in listOf("offline-token", "")) {
                         for (gateway in listOf(original, rewritten)) {
                             gateway.values["eversense_access_token"] = token
@@ -140,7 +140,7 @@ class DmsHttpCompatibilityTest {
                 operation == "getFleetSecretV2" -> certificateJson
                 else -> "{\"ok\":true}"
             }
-            repeat(2) { server.enqueue(MockResponse().setResponseCode(status).setBody(body).addHeader("Content-Type", "application/json; charset=utf-8")) }
+            repeat(2) { server.enqueue(MockResponse.Builder().code(status).body(body).addHeader("Content-Type", "application/json; charset=utf-8").build()) }
             PacketTime.withClock(Clock.fixed(Instant.ofEpochMilli(fixedTime), ZoneOffset.UTC)) {
                 val expected = original.invoke(operation)
                 val actual = rewritten.invoke(operation)
@@ -151,14 +151,15 @@ class DmsHttpCompatibilityTest {
             val actualRequest = server.takeRequest(5, TimeUnit.SECONDS)
             assertNotNull(expectedRequest); assertNotNull(actualRequest)
             assertEquals(expectedRequest!!.method, actualRequest!!.method)
-            assertEquals(expectedRequest.path, actualRequest.path)
-            assertEquals(expectedRequest.getHeader("Content-Type"), actualRequest.getHeader("Content-Type"))
-            assertEquals(expectedRequest.getHeader("Authorization"), actualRequest.getHeader("Authorization"))
-            assertEquals(expectedRequest.body.readUtf8(), actualRequest.body.readUtf8(), "HTTP payload")
+            assertEquals(expectedRequest.target, actualRequest.target)
+            assertEquals(expectedRequest.headers["Content-Type"], actualRequest.headers["Content-Type"])
+            assertEquals(expectedRequest.headers["Authorization"], actualRequest.headers["Authorization"])
+            // null for a request without a body (a GET), as mockwebserver3 reports it
+            assertEquals(expectedRequest.body?.utf8(), actualRequest.body?.utf8(), "HTTP payload")
         } finally {
             original.close(); rewritten.close()
             TimeZone.setDefault(oldZone)
-            server.shutdown()
+            server.close()
         }
     }
 }

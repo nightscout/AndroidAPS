@@ -14,10 +14,6 @@
     </queries>
 
     <application>
-        <activity android:name=".activities.RequestEversensePermissionActivity" android:exported="false" />
-        <activity android:name=".activities.EversensePlacementActivity" android:exported="false" />
-
-
         <activity
             android:name=".activities.RequestDexcomPermissionActivity"
             android:exported="false" />

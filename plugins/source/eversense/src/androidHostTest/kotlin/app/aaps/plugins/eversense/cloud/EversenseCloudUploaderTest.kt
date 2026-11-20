@@ -1,4 +1,4 @@
-package app.aaps.plugins.source.eversense
+package app.aaps.plugins.eversense.cloud
 
 import app.aaps.plugins.eversense.enums.EversenseTrendArrow
 import app.aaps.plugins.eversense.enums.EversenseType

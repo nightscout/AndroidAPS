@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
 
     <application android:usesCleartextTraffic="false">
+        <activity android:name="app.aaps.plugins.eversense.ui.RequestEversensePermissionActivity" android:exported="false" />
+        <activity android:name="app.aaps.plugins.eversense.placement.EversensePlacementActivity" android:exported="false" />
     </application>
 
 </manifest>

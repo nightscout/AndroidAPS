@@ -1,4 +1,4 @@
-package app.aaps.plugins.source.eversense
+package app.aaps.plugins.eversense.placement
 
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.delay

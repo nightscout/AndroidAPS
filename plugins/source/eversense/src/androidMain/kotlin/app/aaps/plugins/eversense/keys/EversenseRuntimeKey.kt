@@ -1,4 +1,4 @@
-package app.aaps.plugins.source.keys
+package app.aaps.plugins.eversense.keys
 
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 

@@ -1,9 +1,9 @@
-package app.aaps.plugins.source.keys
+package app.aaps.plugins.eversense.keys
 
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
-import app.aaps.plugins.source.R
+import app.aaps.plugins.eversense.R
 import app.aaps.core.keys.interfaces.TextRef
 
 enum class EversenseIntentKey(

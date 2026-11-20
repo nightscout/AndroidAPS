@@ -1,4 +1,4 @@
-package app.aaps.plugins.source.eversense.compose
+package app.aaps.plugins.eversense.ui
 
 import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
@@ -43,8 +43,8 @@ import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.navigation.LocalPluginNavigationRequest
 import app.aaps.core.ui.compose.navigation.NavigationRequest
-import app.aaps.plugins.source.R
-import app.aaps.plugins.source.activities.EversensePlacementActivity
+import app.aaps.plugins.eversense.R
+import app.aaps.plugins.eversense.placement.EversensePlacementActivity
 import app.aaps.plugins.source.compose.BgSourceScreen
 import app.aaps.plugins.source.compose.BgSourceViewModel
 import app.aaps.core.ui.compose.stringResource

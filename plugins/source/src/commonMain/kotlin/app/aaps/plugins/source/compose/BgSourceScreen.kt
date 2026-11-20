@@ -55,9 +55,13 @@ import app.aaps.plugins.source.SourceStrings
 import app.aaps.ui.compose.components.ContentContainer
 import kotlinx.coroutines.flow.distinctUntilChanged
 
+/**
+ * The list of readings every BG source shows. Public because a CGM driver with a module of its own (Eversense) shows it
+ * on one tab of its screen.
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun BgSourceScreen(
+fun BgSourceScreen(
     viewModel: BgSourceViewModel,
     title: String,
     setToolbarConfig: (ToolbarConfig) -> Unit,

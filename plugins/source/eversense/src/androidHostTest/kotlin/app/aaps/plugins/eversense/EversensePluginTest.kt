@@ -1,4 +1,4 @@
-package app.aaps.plugins.source.eversense
+package app.aaps.plugins.eversense
 
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.model.GV
@@ -26,12 +26,12 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.whenever
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.plugins.source.EversensePlugin
-import app.aaps.plugins.source.R
-import app.aaps.plugins.source.keys.EversenseBooleanKey
-import app.aaps.plugins.source.keys.EversenseRuntimeKey
-import app.aaps.plugins.source.keys.EversenseIntentKey
-import app.aaps.plugins.source.keys.EversenseStringKey as CredentialsKey
+import app.aaps.plugins.eversense.EversensePlugin
+import app.aaps.plugins.eversense.R
+import app.aaps.plugins.eversense.keys.EversenseBooleanKey
+import app.aaps.plugins.eversense.keys.EversenseRuntimeKey
+import app.aaps.plugins.eversense.keys.EversenseIntentKey
+import app.aaps.plugins.eversense.keys.EversenseStringKey as CredentialsKey
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -42,7 +42,7 @@ class EversensePluginTest {
     @Test fun registersCredentialsAndCloudSettingsAndProvidesDeviceActions() {
         val preferences: Preferences = mock()
         val plugin = EversensePlugin(mock(), mock(), mock(), preferences, mock(), mock(), mock(), mock())
-        verify(preferences).registerPreferences(CredentialsKey.entries + EversenseBooleanKey.entries + EversenseIntentKey.entries + EversenseStringKey.entries + EversenseRuntimeKey.entries)
+        verify(preferences).registerPreferences(CredentialsKey.entries + EversenseBooleanKey.entries + EversenseIntentKey.entries + EversenseRuntimeKey.entries)
         assertThat(plugin.pluginDescription.mainType).isEqualTo(PluginType.BGSOURCE)
         assertThat(plugin.pluginDescription.composeContentProvider).isNotNull()
         assertThat(plugin.pluginDescription.defaultPlugin).isFalse()

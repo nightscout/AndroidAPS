@@ -1,4 +1,4 @@
-package app.aaps.plugins.source.eversense
+package app.aaps.plugins.eversense.ui
 
 import android.app.Application
 import androidx.compose.runtime.CompositionLocalProvider
@@ -12,11 +12,11 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalPreferences
-import app.aaps.plugins.source.R
-import app.aaps.plugins.source.activities.EversensePage
-import app.aaps.plugins.source.activities.EversensePlacementContent
-import app.aaps.plugins.source.eversense.compose.EversenseStatusContent
-import app.aaps.plugins.source.eversense.compose.EversenseStatusViewModel
+import app.aaps.plugins.eversense.R
+import app.aaps.plugins.eversense.placement.EversensePage
+import app.aaps.plugins.eversense.placement.EversensePlacementContent
+import app.aaps.plugins.eversense.ui.EversenseStatusContent
+import app.aaps.plugins.eversense.ui.EversenseStatusViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Assert.assertEquals
 import org.junit.Rule

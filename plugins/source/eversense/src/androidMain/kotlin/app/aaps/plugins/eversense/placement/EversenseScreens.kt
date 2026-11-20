@@ -1,4 +1,4 @@
-package app.aaps.plugins.source.activities
+package app.aaps.plugins.eversense.placement
 
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
@@ -35,7 +35,7 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.MetroAppCompatActivity
-import app.aaps.plugins.source.R
+import app.aaps.plugins.eversense.R
 import app.aaps.core.ui.R as CoreR
 
 /** The same theme, app bar and surface colors used by the AAPS settings. */

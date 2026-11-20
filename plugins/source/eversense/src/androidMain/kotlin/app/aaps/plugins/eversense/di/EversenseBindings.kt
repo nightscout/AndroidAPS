@@ -1,9 +1,9 @@
-package app.aaps.plugins.source.di
+package app.aaps.plugins.eversense.di
 
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import app.aaps.plugins.eversense.EversenseCGMPlugin
-import app.aaps.plugins.source.eversense.EversenseStateStore
+import app.aaps.plugins.eversense.storage.EversenseStateStore
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo

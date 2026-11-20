@@ -1,7 +1,7 @@
-﻿package app.aaps.plugins.source.keys
+package app.aaps.plugins.eversense.keys
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.StringPreferenceKey
-import app.aaps.plugins.source.R
+import app.aaps.plugins.eversense.R
 import app.aaps.core.keys.interfaces.TextRef
 enum class EversenseStringKey(
     override val key: String,

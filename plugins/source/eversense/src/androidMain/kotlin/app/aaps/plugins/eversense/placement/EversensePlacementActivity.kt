@@ -1,4 +1,4 @@
-package app.aaps.plugins.source.activities
+package app.aaps.plugins.eversense.placement
 
 import app.aaps.core.keys.interfaces.Preferences
 import androidx.compose.runtime.getValue
@@ -9,7 +9,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import app.aaps.core.ui.compose.MetroAppCompatActivity
-import app.aaps.plugins.source.R
+import app.aaps.plugins.eversense.R
 import app.aaps.plugins.eversense.EversenseCGMPlugin
 import app.aaps.plugins.eversense.callbacks.EversenseWatcher
 import app.aaps.plugins.eversense.enums.EversenseType
@@ -20,7 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.runInterruptible
-import app.aaps.plugins.source.eversense.PositioningSession
+import app.aaps.plugins.eversense.placement.PositioningSession
 import java.text.DateFormat
 import java.util.Date
 import dev.zacsweers.metro.Inject

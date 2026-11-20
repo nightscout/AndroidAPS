@@ -1,4 +1,4 @@
-﻿package app.aaps.plugins.source.activities
+package app.aaps.plugins.eversense.ui
 
 import android.Manifest
 import android.os.Build

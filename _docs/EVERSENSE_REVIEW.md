@@ -9,21 +9,25 @@ Working notes for bringing the Eversense E3 / 365 driver from PR #5536 into AAPS
 
 - Local branch `eversense` = `carelevo` + the latest `dev` + PR #5536 (author BernhardRo, fork branch `dev_es365`).
   The PR on GitHub targets the branch `eversense`, which on GitHub is still a plain copy of `dev`.
-- Driver module: `:plugins:source:eversense` (was `:plugins:eversense` in the PR). Source adapter, helpers and the
-  three Activities are in `:plugins:source` (`EversensePlugin`, `eversense/`, `activities/`). Calibration dialog in
-  `:ui` (`eversenseCalibrationDialog`). Author's notes: `plugins/source/eversense/TECHNICAL.md` and `README.md`.
+- Everything Eversense is in one module, `:plugins:source:eversense` (was `:plugins:eversense` in the PR), as a pump
+  driver has one: the transmitter driver and the AAPS plugin with its screens, keys, strings and tests
+  (`EversensePlugin`, `ui/`, `placement/`, `cloud/`, `storage/`, `keys/`, `di/`). It depends on `:plugins:source` for
+  the shared BG source base; `:plugins:source` does not depend on it. `:appshell` picks it up with the other
+  `:plugins:*` modules, and `ios/shell` lists it. Author's notes: `plugins/source/eversense/TECHNICAL.md` and
+  `README.md`.
 
 ## Findings
 
 ### Tests that fail today
 
-The PR's own CI on `dev` fails, and so does the full gate here.
+The PR's own CI on `dev` failed, and so did the full gate here.
 
-- `app`: `ContributedPluginsTest`, `GraphScopeStabilityTest`, `PluginLifetimeWorkScanTest`, `PumpDriverBucketTest`,
-  `ViewModelOwnershipTest` (`EversenseCalibrationDialogViewModel` injects `EversenseCalibrationDynamics`, which
-  nothing owns).
-- `plugins:source`: all `GlunovoPluginTest` and `IntelligoPluginTest`. With the Eversense module on the classpath,
-  `Uri.parse` returns null in the unit tests and `IntelligoPlugin.<init>` fails.
+- Fixed by moving the plugin into its own module: `GlunovoPluginTest`, `IntelligoPluginTest` and the `app` graph tests
+  (`ContributedPluginsTest`, `GraphScopeStabilityTest`, `PumpDriverBucketTest`). With the driver module on
+  `:plugins:source`'s classpath, `Uri.parse` returned null and `IntelligoPlugin.<init>` failed. `ContributedPluginsTest`
+  then also needed Eversense's order key 415.
+- Fixed earlier: `ViewModelOwnershipTest` (the PR's calibration dialog is gone).
+- Still open: `PluginLifetimeWorkScanTest`, for the `Handler` that `EversensePlugin` creates at construction (step 3a).
 
 ### Glucose data
 
@@ -123,10 +127,28 @@ Bluetooth off and on; a lost answer; app restart.
 
 ## Steps
 
-1. Module move to `:plugins:source:eversense`. Done.
+1. Module move to `:plugins:source:eversense`, then the plugin, screens, keys and strings into it too. Done.
 2. Install on the test phone, look at the UI, test with a real transmitter as the PR is, record frames.
-3. Cleanup and alignment with AAPS: the failing tests, the glucose-data findings, the effects on other features,
-   the rules, calibration through the AAPS paths, the missing tests.
+3. Cleanup and alignment with AAPS. Done so far: calibration through the AAPS paths (`CalibrationMode.SOURCE`), its own
+   screen opened from Manage (`CgmDriver`). Agreed next, each its own commit:
+   1. **Lifecycle.** `onStart` loads everything from storage (transmitter, keys, login) and connects; `onStop` closes
+      the link, stops the scan and cancels retries, deadline, watchdog, upload timer and handlers, so nothing is left
+      that the next start would trust. A reload test, as a pump's.
+   2. **Pairing wizard, like a pump's.** Before you start (the official app is set up and force stopped, Bluetooth
+      permission) - Account (username, password, region; "Sign in" makes a real DMS login; with a stored login it
+      shows "Signed in as ..." with Continue and Sign out) - Transmitter (10 s scan, pick one) - Connect
+      (authentication, "Registering online..." for a 365, done when the link is ready). The setup text of the README
+      goes into the steps, so Crowdin translates it. The login leaves the preferences for the driver's own storage and
+      is not exported; cloud upload and diagnostic logging stay preferences. Unpair on the status tab forgets the
+      transmitter and its keys and keeps the login. `CgmDriver.attention` (not paired, sign-in failed) puts a "!" on
+      the bottom bar's BG source button, and the status tab shows the reason and the button that fixes it; not on a
+      client. Screens and view models in `commonMain`, behind a driver interface, so iOS can follow.
+   3. **Clean-up.** Connect, Disconnect, Change Transmitter and the Documentation button go: the link follows the
+      plugin, and the user documentation moves to the wiki (draft for AndroidAPSdocs once the wizard is final).
+      `README.md` and its screenshots go; `TECHNICAL.md` stays.
+
+   Then the rest of the list above: the glucose-data findings, the effects on other features, the rules, the missing
+   tests.
 4. KMP: pure files, then crypto with our own CCM, logger, DMS on ktor, a common session on `BleCentral` (test on the
    real transmitter after this one).
 5. Emulator, fake DMS and the scenario tests.
@@ -134,7 +156,5 @@ Bluetooth off and on; a lost answer; app restart.
 
 ## Open decisions
 
-- Where the plugin lives: all of `EversensePlugin`, its helpers and screens in `:plugins:source:eversense`, as a pump
-  driver has one module, so that `plugins:source` no longer depends on it.
 - Advanced filtering for Eversense: remove or keep.
 - `protocol-reference.zip`: keep until step 4, then replace with fixtures.
