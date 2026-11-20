@@ -18,6 +18,13 @@ import app.aaps.plugins.eversense.placement.EversensePlacementContent
 import app.aaps.plugins.eversense.ui.EversenseStatusContent
 import app.aaps.plugins.eversense.ui.EversenseStatusViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
+import app.aaps.core.interfaces.source.CgmAttention
+import app.aaps.core.ui.CoreUiStringIds
+import app.aaps.plugins.eversense.EversenseStringIds
+import app.aaps.plugins.eversense.pairing.EversenseAccount
+import app.aaps.plugins.eversense.pairing.EversenseModel
+import org.junit.Before
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -40,9 +47,17 @@ class EversenseNavigationTest {
     private val mode = MutableStateFlow("dark")
     private val context get() = RuntimeEnvironment.getApplication()
 
+    @Before fun registerStrings() {
+        TextRefIdRegistry.register("eversense") { name -> EversenseStringIds.idOf(name) }
+        TextRefIdRegistry.register("coreUi") { name -> CoreUiStringIds.idOf(name) }
+    }
+
     private fun show(
         connected: Boolean = true,
-        onConnect: () -> Unit = {},
+        attention: CgmAttention? = null,
+        onPair: () -> Unit = {},
+        onSignInAgain: () -> Unit = {},
+        onUnpair: () -> Unit = {},
         onDays: (Int) -> Unit = {},
         onCalibrate: () -> Unit = {}
     ) {
@@ -52,31 +67,66 @@ class EversenseNavigationTest {
                 AapsTheme {
                     EversenseStatusContent(
                         state = EversenseStatusViewModel.UiState(lines = listOf("Status example"), connected = connected, syncDays = 14),
-                        onConnect = onConnect,
-                        onChangeTransmitter = {},
+                        attention = attention,
+                        account = EversenseAccount("user@example.com", EversenseModel.E365_OTHER),
+                        transmitter = "T123456",
+                        onPair = onPair,
+                        onSignInAgain = onSignInAgain,
+                        onUnpair = onUnpair,
                         onDays = onDays,
                         onSync = {},
                         onCalibrate = onCalibrate,
-                        onPlacement = {},
-                        onDocumentation = {}
+                        onPlacement = {}
                     )
                 }
             }
         }
     }
 
+    private fun text(id: Int, vararg args: Any) = context.getString(id, *args)
+
     @Test fun statusShowsWhatTheTransmitterReports() {
         show()
         compose.onNodeWithText("Status example").assertIsDisplayed()
-        compose.onNodeWithText(context.getString(R.string.eversense_status_disconnect)).assertIsDisplayed()
+        compose.onNodeWithText(text(R.string.eversense_paired_transmitter, "T123456")).assertIsDisplayed()
+        compose.onNodeWithText(text(R.string.eversense_signed_in_as, "user@example.com")).assertIsDisplayed()
     }
 
-    @Test fun disconnectedSyncIsDisabledAndConnectIsOffered() {
-        var connect = false
-        show(connected = false, onConnect = { connect = true })
-        compose.onNodeWithText(context.getString(R.string.eversense_information_last_sync)).assertIsNotEnabled()
-        compose.onNodeWithText(context.getString(R.string.eversense_status_connect)).performClick()
-        compose.runOnIdle { assertEquals(true, connect) }
+    /** Where the bottom bar's "!" leads: the reason, and the button that starts the wizard. */
+    @Test fun notPairedOffersPairingAndNothingElse() {
+        var pair = false
+        show(attention = CgmAttention.NOT_PAIRED, onPair = { pair = true })
+        compose.onNodeWithText(text(R.string.eversense_not_paired)).assertIsDisplayed()
+        compose.onNodeWithText("Status example").assertDoesNotExist()
+        compose.onNodeWithText(text(R.string.eversense_pair_title)).performClick()
+        compose.runOnIdle { assertEquals(true, pair) }
+    }
+
+    @Test fun refusedLoginOffersSigningInAgain() {
+        var signIn = false
+        show(attention = CgmAttention.SIGN_IN_FAILED, onSignInAgain = { signIn = true })
+        compose.onNodeWithText(text(R.string.eversense_sign_in_failed)).assertIsDisplayed()
+        compose.onNodeWithText(text(R.string.eversense_sign_in_again)).performClick()
+        compose.runOnIdle { assertEquals(true, signIn) }
+    }
+
+    /** Unpair forgets the transmitter: asked first. */
+    @Test fun unpairAsksFirst() {
+        var unpaired = false
+        show(onUnpair = { unpaired = true })
+        compose.onNodeWithText(text(R.string.eversense_unpair)).performScrollTo().performClick()
+        compose.onNodeWithText(text(R.string.eversense_unpair_confirm, "T123456")).assertIsDisplayed()
+        compose.runOnIdle { assertEquals(false, unpaired) }
+        compose.onNodeWithText(context.getString(app.aaps.core.ui.R.string.ok)).performClick()
+        compose.runOnIdle { assertEquals(true, unpaired) }
+    }
+
+    /** The link follows the plugin: there is no Connect or Disconnect to press, and Sync waits for the link. */
+    @Test fun disconnectedSyncIsDisabledAndNoConnectIsOffered() {
+        show(connected = false)
+        compose.onNodeWithText(text(R.string.eversense_information_last_sync)).assertIsNotEnabled()
+        compose.onNodeWithText(text(R.string.eversense_status_connect)).assertDoesNotExist()
+        compose.onNodeWithText(text(R.string.eversense_status_disconnect)).assertDoesNotExist()
     }
 
     @Test fun syncDaysSelectionKeepsExistingChoicesAndCallback() {
@@ -91,7 +141,7 @@ class EversenseNavigationTest {
     @Test fun calibrateOpensTheCalibration() {
         var calibrate = false
         show(onCalibrate = { calibrate = true })
-        compose.onNodeWithText(context.getString(R.string.eversense_calibration_action)).performScrollTo().performClick()
+        compose.onNodeWithText(text(R.string.eversense_calibration_action)).performScrollTo().performClick()
         compose.runOnIdle { assertEquals(true, calibrate) }
     }
 

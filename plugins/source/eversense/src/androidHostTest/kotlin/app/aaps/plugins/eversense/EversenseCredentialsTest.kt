@@ -72,4 +72,52 @@ class EversenseCredentialsTest {
         } finally { backend.stop() }
     }
 
+    /** The login is the driver's own now: a start reads it from the store, with nothing pushed in from the settings. */
+    @Test fun startReadsTheStoredLogin() {
+        val backend = backend()
+        backend.start()
+        try {
+            assertEquals("user", backend.username)
+            assertEquals("secret", backend.password)
+        } finally { backend.stop() }
+    }
+
+    /** Unpaired, a start waits for the pairing instead of trying every minute to reach a transmitter it does not have. */
+    @Test fun startWithoutATransmitterDoesNotConnect() {
+        val backend = backend()
+        backend.start()
+        try {
+            verifyNoInteractions(bluetooth)
+        } finally { backend.stop() }
+    }
+
+    /** Pairing stores the transmitter with its name and makes the next connection a full registration. */
+    @Test fun pairStoresTheTransmitterAndForcesRegistration() {
+        val backend = backend()
+        backend.pair("00:11:22:33:44:55", "T123456")
+        verify(editor).putString(StorageKeys.REMOTE_DEVICE_KEY, "00:11:22:33:44:55")
+        verify(editor).putString(StorageKeys.REMOTE_DEVICE_NAME, "T123456")
+        val state = argumentCaptor<String>()
+        verify(editor).putString(eq(StorageKeys.SECURE_STATE), state.capture())
+        assertFalse(json.decodeFromString<EversenseSecureState>(state.lastValue).canUseShortcut)
+    }
+
+    /** Unpair forgets the transmitter and its registration; the login stays for a replacement. */
+    @Test fun clearStoredDeviceForgetsTheTransmitterAndKeepsTheLogin() {
+        val backend = backend()
+        backend.clearStoredDevice()
+        verify(editor).remove(StorageKeys.REMOTE_DEVICE_KEY)
+        verify(editor).remove(StorageKeys.REMOTE_DEVICE_NAME)
+        val state = argumentCaptor<String>()
+        verify(editor).putString(eq(StorageKeys.SECURE_STATE), state.capture())
+        val saved = json.decodeFromString<EversenseSecureState>(state.lastValue)
+        assertFalse(saved.canUseShortcut)
+        assertEquals("user", saved.username)
+    }
+
+    /** Signing out also clears a refusal: the login it was about is gone. */
+    @Test fun clearCredentialsClearsARefusedLogin() {
+        backend().clearCredentials()
+        verify(editor).remove(StorageKeys.LOGIN_REFUSED)
+    }
 }

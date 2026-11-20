@@ -77,6 +77,7 @@ object StringOwnerModules {
         StringOwnerModule("sensitivity", "app.aaps.plugins.sensitivity"),
         StringOwnerModule("smoothing", "app.aaps.plugins.smoothing"),
         StringOwnerModule("source", "app.aaps.plugins.source"),
+        StringOwnerModule("eversense", "app.aaps.plugins.eversense"),
         StringOwnerModule("sync", "app.aaps.plugins.sync"),
         StringOwnerModule("virtual", "app.aaps.pump.virtual"),
         StringOwnerModule("carelevo", "app.aaps.pump.carelevo", onDesktop = false)

@@ -29,7 +29,10 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.CalibrationMode
+import app.aaps.core.interfaces.source.CgmAttention
 import app.aaps.core.interfaces.source.CgmDriver
+import app.aaps.plugins.eversense.pairing.EversensePairing
+import kotlinx.coroutines.flow.StateFlow
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -52,9 +55,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.json.Json
-import app.aaps.core.keys.interfaces.withClick
-import app.aaps.plugins.eversense.keys.EversenseIntentKey
-import app.aaps.plugins.eversense.keys.EversenseStringKey
 import app.aaps.core.ui.compose.icons.IcPluginEversense
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.source.AbstractBgSourcePlugin
@@ -69,7 +69,6 @@ import app.aaps.plugins.eversense.keys.EversenseBooleanKey
 import app.aaps.plugins.eversense.keys.EversenseRuntimeKey
 import kotlin.coroutines.resume
 import kotlin.math.roundToInt
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -85,7 +84,8 @@ class EversensePlugin(
     notificationManager: NotificationManager,
     private val eversenseProvider: () -> EversenseCGMPlugin,
     private val persistenceLayer: PersistenceLayer,
-    private val bleCentral: BleCentral
+    private val bleCentral: BleCentral,
+    private val pairing: EversensePairing
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -94,11 +94,15 @@ class EversensePlugin(
         .pluginName(TextRef.AndroidRes(R.string.source_eversense))
         .preferencesVisibleInSimpleMode(false)
         .description(TextRef.AndroidRes(R.string.description_source_eversense)),
-    ownPreferences = EversenseStringKey.entries + EversenseBooleanKey.entries + EversenseIntentKey.entries + EversenseRuntimeKey.entries,
+    // The login and the transmitter are not settings: the pairing wizard stores them with the driver, not exported
+    ownPreferences = EversenseBooleanKey.entries + EversenseRuntimeKey.entries,
     aapsLogger, rh, preferences, config, notificationManager
 ), CgmDriver, EversenseWatcher {
 
     private val eversense get() = eversenseProvider()
+
+    /** Not paired, or the login refused: the bottom bar's BG source button shows a "!" and this screen the fix. */
+    override val attention: StateFlow<CgmAttention?> get() = pairing.attention
 
     companion object {
 
@@ -156,9 +160,9 @@ class EversensePlugin(
     override fun requiredPermissions(): List<PermissionGroup> = listOfNotNull(bluetoothPermissionGroup())
 
     /**
-     * Loads everything from storage and connects: the login goes to the driver, which then finds the transmitter and
-     * its keys in its own store. A start after a stop is a fresh start: [Running] is new, and so are the driver's
-     * counters.
+     * Loads everything from storage and connects: the driver reads the login, the transmitter and its keys from its
+     * own store, and connects when a transmitter is paired. A start after a stop is a fresh start: [Running] is new,
+     * and so are the driver's counters.
      */
     override suspend fun onStart() {
         super.onStart()
@@ -169,9 +173,6 @@ class EversensePlugin(
             .onEach { EversenseLogger.setDiagnosticLogging(it) }
             .launchIn(scope)
         eversense.addWatcher(this)
-        // Always sync credentials on startup — eversense.is365() is false until first connect
-        // so we must set username/password unconditionally for new phone first-boot
-        checkCredentialsNotification()
         eversense.start()
         // Android can leave out the disconnect callback while Bluetooth is off: reconnect when it is back on. The
         // current state is skipped, the start above has just connected.
@@ -180,13 +181,6 @@ class EversensePlugin(
                 aapsLogger.info(LTag.BGSOURCE, "Bluetooth turned back on — forcing Eversense reconnect")
                 eversense.onBluetoothAvailable()
             }
-            .launchIn(scope)
-        combine(
-            preferences.observe(EversenseStringKey.EversenseUsername),
-            preferences.observe(EversenseStringKey.EversensePassword),
-            preferences.observe(EversenseBooleanKey.EversenseEuropeanRegion)
-        ) { user, password, region -> Triple(user, password, region) }
-            .onEach { checkCredentialsNotification() }
             .launchIn(scope)
     }
 
@@ -203,7 +197,6 @@ class EversensePlugin(
         eversense.stop()
         EversenseLogger.setDiagnosticLogging(false)
         sensorBatteryLevel = -1
-        notificationManager.dismiss(NotificationId.EVERSENSE_CREDENTIALS)
         notificationManager.dismiss(NotificationId.EVERSENSE_PLACEMENT)
     }
 
@@ -255,47 +248,14 @@ class EversensePlugin(
         eversense.connect(null)
     }
 
-    @Synchronized
-    private fun checkCredentialsNotification() {
-        val username = preferences.get(EversenseStringKey.EversenseUsername)
-        val password = preferences.get(EversenseStringKey.EversensePassword)
-        if (username.isEmpty() || password.isEmpty()) {
-            eversense.clearCredentials()
-            notificationManager.post(
-                NotificationId.EVERSENSE_CREDENTIALS,
-                rh.gs(R.string.eversense_credentials_missing),
-                level = NotificationLevel.URGENT
-            )
-        } else {
-            eversense.setCredentials(username, password, preferences.get(EversenseBooleanKey.EversenseEuropeanRegion))
-            notificationManager.dismiss(NotificationId.EVERSENSE_CREDENTIALS)
-        }
-    }
-
-    // Status and connection, calibration, placement and the documentation are on the plugin's own screen
-    // (EversenseComposeContent), opened from Manage as a pump's screen is.
+    // Pairing, status, calibration and placement are on the plugin's own screen (EversenseComposeContent), opened from
+    // Manage as a pump's screen is. The login is the pairing wizard's, not a setting.
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "eversense_settings",
         title = TextRef.AndroidRes(R.string.source_eversense),
         items = listOf(
             EversenseBooleanKey.EversenseCloudUploadEnabled,
-            EversenseBooleanKey.EversenseDiagnosticLogging,
-            PreferenceSubScreenDef(
-                key = "eversense_credentials_screen",
-                title = TextRef.AndroidRes(R.string.eversense_credentials_title),
-                items = listOf(
-                    EversenseStringKey.EversenseUsername,
-                    EversenseStringKey.EversensePassword,
-                    EversenseBooleanKey.EversenseEuropeanRegion,
-                    EversenseIntentKey.EversenseSignOut.withClick {
-                        synchronized(this) {
-                            preferences.put(EversenseStringKey.EversenseUsername, "")
-                            preferences.put(EversenseStringKey.EversensePassword, "")
-                            eversense.clearCredentials()
-                        }
-                    }
-                )
-            )
+            EversenseBooleanKey.EversenseDiagnosticLogging
         ),
         icon = pluginDescription.icon
     )

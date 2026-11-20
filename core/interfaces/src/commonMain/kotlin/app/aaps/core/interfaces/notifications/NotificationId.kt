@@ -272,7 +272,6 @@ enum class NotificationId(
     // Appended to keep the stored ordinals of existing notifications stable.
     EVERSENSE_RELEASE(NORMAL, CGM),
     EVERSENSE_PLACEMENT(NORMAL, CGM),
-    EVERSENSE_CREDENTIALS(NORMAL, CGM),
     EVERSENSE_FIRMWARE(INFO, CGM),
     EVERSENSE_ALARM(NORMAL, CGM);
 

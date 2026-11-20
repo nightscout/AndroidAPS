@@ -138,7 +138,12 @@ Bluetooth off and on; a lost answer; app restart.
       A late callback after the stop finds no `Running` and does nothing. Bluetooth back on comes from the shared
       `BleCentral.adapterState`, not an Android receiver; the permission is asked on the app's permission sheet
       (`bluetoothPermissionGroup()`, now public), not by an Activity at start. Reload test as a pump's.
-   2. **Pairing wizard, like a pump's.** Before you start (the official app is set up and force stopped, Bluetooth
+   2. **Pairing wizard, like a pump's.** Done. The account step asks which Eversense (E3, 365 USA, 365 other
+      countries) instead of a region switch: the E3 and the two 365 regions sign in at different servers, and the model
+      is known only after a connection that a 365 cannot make without the login. Later logins record a refusal
+      (`StorageKeys.LOGIN_REFUSED`), so a password changed on the Eversense side shows as "sign in again". The PR's
+      `requiresPasswordConfirmation` and the `EVERSENSE_CREDENTIALS` notification are gone with the login settings.
+      The plan as agreed: Before you start (the official app is set up and force stopped, Bluetooth
       permission) - Account (username, password, region; "Sign in" makes a real DMS login; with a stored login it
       shows "Signed in as ..." with Continue and Sign out) - Transmitter (10 s scan, pick one) - Connect
       (authentication, "Registering online..." for a 365, done when the link is ready). The setup text of the README

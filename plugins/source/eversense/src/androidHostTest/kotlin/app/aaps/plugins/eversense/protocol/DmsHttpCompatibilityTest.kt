@@ -1,5 +1,6 @@
 package app.aaps.plugins.eversense.protocol
 
+import app.aaps.plugins.eversense.util.StorageKeys
 import java.time.Clock
 import java.time.Instant
 import java.time.ZoneOffset
@@ -145,6 +146,10 @@ class DmsHttpCompatibilityTest {
                 val expected = original.invoke(operation)
                 val actual = rewritten.invoke(operation)
                 assertEquals(expected?.toString(), actual?.toString(), "result")
+                // The one change on purpose: a login the server refuses (401) is recorded, for the user's "sign in
+                // again". Everything else in the store stays byte for byte as the old implementation left it.
+                val refusedLogin = status == 401 && (operation == "login" || (operation == "getOrRefreshToken" && expired))
+                assertEquals(refusedLogin, rewritten.values.remove(StorageKeys.LOGIN_REFUSED) == true, "login refusal recorded")
                 assertEquals(original.values, rewritten.values, "credential/token store")
             }
             val expectedRequest = server.takeRequest(5, TimeUnit.SECONDS)

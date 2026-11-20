@@ -15,6 +15,7 @@ import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.plugins.main.MainStrings
 import app.aaps.plugins.sensitivity.SensitivityStrings
 import app.aaps.plugins.smoothing.SmoothingStrings
+import app.aaps.plugins.eversense.EversenseStrings
 import app.aaps.plugins.source.SourceStrings
 import app.aaps.plugins.sync.SyncStrings
 import app.aaps.pump.virtual.VirtualStrings
@@ -71,6 +72,7 @@ class DesktopStringOwnersTest {
             SensitivityStrings.sensitivity_oref1,
             SmoothingStrings.no_smoothing_name,
             SourceStrings.ns_client_bg,
+            EversenseStrings.source_eversense,
             SyncStrings.a11y_otp_qr_code,
             VirtualStrings.virtual_pump_type
         ).forEach { ref ->

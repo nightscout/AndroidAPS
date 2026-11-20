@@ -220,4 +220,36 @@
     <string name="eversense_diagnostic_logging_summary">Record detailed Bluetooth and sensor data. Turn off after troubleshooting.</string>
     <string name="eversense_disconnect_confirm">Disconnect from transmitter?</string>
     <string name="eversense_sign_out_confirmation">Signing out will delete the saved DMS username and password. Do you want to continue?</string>
+
+    <!-- Pairing wizard -->
+    <string name="eversense_pair_title">Pair transmitter</string>
+    <string name="eversense_pair_before_title">Before you start</string>
+    <string name="eversense_pair_before_official_app">Set up the sensor and the transmitter in the official Eversense app first. AAPS does not do the first setup.</string>
+    <string name="eversense_pair_before_force_stop">Then force stop the official app: Android settings, Apps, Eversense, Force stop. Only one app can be connected to the transmitter at a time.</string>
+    <string name="eversense_pair_before_nearby">Keep the phone near the transmitter, with Bluetooth on.</string>
+    <string name="eversense_pair_account_title">Eversense account</string>
+    <string name="eversense_pair_account_hint">AAPS signs in with your Eversense account: a 365 needs it to connect, and the cloud upload uses it. The login is not exported with the settings.</string>
+    <string name="eversense_pair_model">Which Eversense do you use?</string>
+    <string name="eversense_model_e3">Eversense E3</string>
+    <string name="eversense_model_365_usa">Eversense 365 (USA)</string>
+    <string name="eversense_model_365_other">Eversense 365 (other countries)</string>
+    <string name="eversense_sign_in">Sign in</string>
+    <string name="eversense_signed_in_as" comment="%1$s=the Eversense username, for example an e-mail address">Signed in as %1$s</string>
+    <string name="eversense_sign_in_refused">Eversense did not accept this username or password. Check them, and that the right Eversense is chosen.</string>
+    <string name="eversense_sign_in_no_connection">Cannot reach Eversense. Check the internet connection.</string>
+    <string name="eversense_sign_in_server_error">Eversense answered with an error. Try again later.</string>
+    <string name="eversense_pair_connecting" comment="%1$s=the transmitter name, for example T123456">Connecting to %1$s…</string>
+    <string name="eversense_pair_registering">A 365 registers with Eversense online the first time. This can take a minute.</string>
+    <string name="eversense_pair_timed_out">The transmitter did not answer. Keep it near the phone, check that the official app is force stopped, and try again.</string>
+    <string name="eversense_pair_not_started">Cannot connect. Eversense must be the active BG source, and Bluetooth must be on.</string>
+    <string name="eversense_pair_leave">Leave the pairing? What is done so far stays.</string>
+    <string name="eversense_pair_done" comment="%1$s=the transmitter name, for example T123456">Paired with %1$s. Readings follow.</string>
+
+    <!-- Pairing on the status tab -->
+    <string name="eversense_not_paired">No transmitter paired.</string>
+    <string name="eversense_sign_in_failed">Eversense refused the stored login. Sign in again.</string>
+    <string name="eversense_sign_in_again">Sign in again</string>
+    <string name="eversense_paired_transmitter" comment="%1$s=the transmitter name, for example T123456">Transmitter: %1$s</string>
+    <string name="eversense_unpair">Unpair</string>
+    <string name="eversense_unpair_confirm" comment="%1$s=the transmitter name, for example T123456">Forget transmitter %1$s? The login stays, so a replacement pairs without signing in again.</string>
 </resources>

@@ -4,23 +4,23 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.source.CgmAttention
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.plugins.eversense.EversenseCGMPlugin
-import app.aaps.plugins.eversense.callbacks.EversenseScanCallback
+import app.aaps.plugins.eversense.R
 import app.aaps.plugins.eversense.callbacks.EversenseWatcher
 import app.aaps.plugins.eversense.enums.EversenseType
 import app.aaps.plugins.eversense.models.ActiveAlarm
 import app.aaps.plugins.eversense.models.EversenseCGMResult
-import app.aaps.plugins.eversense.models.EversenseScanResult
 import app.aaps.plugins.eversense.models.EversenseState
-import app.aaps.plugins.eversense.R
+import app.aaps.plugins.eversense.pairing.EversenseAccount
+import app.aaps.plugins.eversense.pairing.EversensePairing
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,10 +29,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
- * The status and connection tab of the Eversense screen: what the transmitter reports, connect and disconnect, a
- * scan for a new transmitter, a full sync.
- *
- * It was `EversenseStatusActivity`, opened from the settings. The logic is the same; the timers are coroutines now.
+ * The status tab of the Eversense screen: the pairing (with what to fix), what the transmitter reports, and a full
+ * sync. The link itself follows the plugin: it is open while Eversense is the active BG source and a transmitter is
+ * paired, and the driver reconnects by itself.
  */
 // Registers itself: @ViewModelKey infers the key from the class. Unscoped, so each screen gets its own.
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
@@ -41,25 +40,23 @@ import kotlinx.coroutines.launch
 @Inject
 class EversenseStatusViewModel(
     private val eversense: EversenseCGMPlugin,
+    private val pairing: EversensePairing,
     val rh: ResourceHelper,
     private val dateUtil: DateUtil
 ) : ViewModel(), EversenseWatcher {
 
-    enum class Dialog { NONE, DISCONNECT, CHANGE, SCANNING, RESULTS }
-
     data class UiState(
         val lines: List<String> = emptyList(),
         val connected: Boolean = false,
-        val syncDays: Int = DEFAULT_SYNC_DAYS,
-        val dialog: Dialog = Dialog.NONE,
-        val found: List<EversenseScanResult> = emptyList()
+        val syncDays: Int = DEFAULT_SYNC_DAYS
     )
 
     private val _uiState = MutableStateFlow(UiState(syncDays = eversense.preferences.getInt(SYNC_DAYS_KEY, DEFAULT_SYNC_DAYS)))
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
-    private var scanSession: AutoCloseable? = null
-    private var scanJob: Job? = null
+    val attention: StateFlow<CgmAttention?> = pairing.attention
+    val account: StateFlow<EversenseAccount?> = pairing.account
+    val transmitter: StateFlow<String?> = pairing.transmitter
 
     init {
         eversense.addWatcher(this)
@@ -67,7 +64,6 @@ class EversenseStatusViewModel(
     }
 
     override fun onCleared() {
-        stopScan()
         eversense.removeWatcher(this)
         super.onCleared()
     }
@@ -116,36 +112,22 @@ class EversenseStatusViewModel(
         }
     )
 
-    /** Connected: ask before disconnecting. A known transmitter: connect to it. None yet: scan for one. */
-    fun onConnectClick() {
-        when {
-            eversense.isConnected()                                       -> _uiState.update { it.copy(dialog = Dialog.DISCONNECT) }
-            eversense.preferences.getString(REMOTE_DEVICE_KEY, null) != null -> inBackground(REFRESH_AFTER_CONNECT_MS) { eversense.forceReconnect() }
-            else                                                          -> startScan()
+    /** Forgets the transmitter; the login stays. */
+    fun unpair() {
+        viewModelScope.launch(Dispatchers.IO) {
+            pairing.unpair()
+            delay(REFRESH_AFTER_UNPAIR_MS)
+            refresh()
         }
     }
 
-    fun onChangeTransmitterClick() = _uiState.update { it.copy(dialog = Dialog.CHANGE) }
-
-    fun confirmDisconnect() {
-        dismissDialog()
-        inBackground(REFRESH_AFTER_DISCONNECT_MS) { eversense.disconnect() }
-    }
-
-    fun confirmChangeTransmitter() {
-        dismissDialog()
-        eversense.clearStoredDevice()
-        refresh()
-        startScan()
-    }
-
-    fun onDeviceClick(item: EversenseScanResult) {
-        dismissDialog()
-        inBackground(REFRESH_AFTER_CONNECT_MS) { eversense.connect(item.device) }
-    }
-
     fun onSyncClick() {
-        if (eversense.isConnected()) inBackground(REFRESH_AFTER_SYNC_MS) { eversense.triggerFullSync(force = true) }
+        if (!eversense.isConnected()) return
+        viewModelScope.launch(Dispatchers.IO) {
+            eversense.triggerFullSync(force = true)
+            delay(REFRESH_AFTER_SYNC_MS)
+            refresh()
+        }
     }
 
     fun setSyncDays(days: Int) {
@@ -153,57 +135,11 @@ class EversenseStatusViewModel(
         _uiState.update { it.copy(syncDays = days) }
     }
 
-    fun dismissDialog() {
-        stopScan()
-        _uiState.update { it.copy(dialog = Dialog.NONE) }
-    }
-
-    /** Runs a driver call off the main thread, then shows the state again once it had time to change. */
-    private fun inBackground(refreshAfterMs: Long, call: () -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
-            call()
-            delay(refreshAfterMs)
-            refresh()
-        }
-    }
-
-    private fun startScan() {
-        stopScan()
-        _uiState.update { it.copy(dialog = Dialog.SCANNING, found = emptyList()) }
-        scanSession = eversense.startScan(object : EversenseScanCallback {
-            override fun onResult(item: EversenseScanResult) {
-                _uiState.update { state ->
-                    val wanted = state.dialog == Dialog.SCANNING && TRANSMITTER_NAME.matches(item.name) && state.found.none { it.name == item.name }
-                    if (wanted) state.copy(found = state.found + item) else state
-                }
-            }
-        })
-        scanJob = viewModelScope.launch {
-            delay(SCAN_MS)
-            scanSession?.close()
-            scanSession = null
-            _uiState.update { if (it.dialog == Dialog.SCANNING) it.copy(dialog = Dialog.RESULTS) else it }
-        }
-    }
-
-    private fun stopScan() {
-        scanJob?.cancel()
-        scanJob = null
-        scanSession?.close()
-        scanSession = null
-    }
-
     private companion object {
 
         const val SYNC_DAYS_KEY = "eversense_sync_days"
         const val DEFAULT_SYNC_DAYS = 14
-        const val REMOTE_DEVICE_KEY = "eversense_remote_device"
-        const val SCAN_MS = 10_000L
-        const val REFRESH_AFTER_CONNECT_MS = 3_000L
-        const val REFRESH_AFTER_DISCONNECT_MS = 500L
+        const val REFRESH_AFTER_UNPAIR_MS = 500L
         const val REFRESH_AFTER_SYNC_MS = 5_000L
-
-        /** Eversense transmitters advertise as "T" and their serial number */
-        val TRANSMITTER_NAME = Regex("T\\d+.*")
     }
 }

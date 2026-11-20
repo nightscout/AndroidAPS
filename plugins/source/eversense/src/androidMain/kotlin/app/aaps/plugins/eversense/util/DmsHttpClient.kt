@@ -3,6 +3,7 @@ package app.aaps.plugins.eversense.util
 import app.aaps.plugins.eversense.protocol.PacketTime
 import app.aaps.plugins.eversense.storage.EversenseStore
 import app.aaps.plugins.eversense.storage.edit
+import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
@@ -47,6 +48,41 @@ internal object DmsHttpClient {
             }
             return Reply(status, text)
         } finally { connection.disconnect() }
+    }
+}
+
+/**
+ * What a password login says about the login itself. The wizard checks a login with it before storing it, and every
+ * later login records a refusal, so that a password changed on the Eversense side reaches the user as "sign in again"
+ * instead of uploads and registrations failing in silence.
+ */
+internal object DmsSignIn {
+
+    enum class Outcome { OK, REFUSED, NO_CONNECTION, SERVER_ERROR }
+
+    /** 401, or 400 with `invalid_grant`, is the server refusing the username or password. Any other error is not about the login. */
+    fun outcome(reply: DmsHttpClient.Reply): Outcome = when {
+        reply.status in 200..299                                                -> Outcome.OK
+        reply.status == 401 || (reply.status == 400 && "invalid_grant" in reply.body) -> Outcome.REFUSED
+        else                                                                    -> Outcome.SERVER_ERROR
+    }
+
+    /** Signs in once at [tokenBaseUrl] and stores nothing: the wizard's check of a login it has not stored yet. */
+    fun check(tokenBaseUrl: String, username: String, password: String): Outcome = try {
+        outcome(DmsHttpClient.post("${tokenBaseUrl}connect/token", DmsHttpClient.passwordGrant(username, password), form = true))
+    } catch (_: IOException) {
+        Outcome.NO_CONNECTION
+    } catch (_: Exception) {
+        Outcome.SERVER_ERROR
+    }
+
+    /** Records whether the server accepted or refused the stored login. A failure that is not about the login changes nothing. */
+    fun remember(store: EversenseStore, outcome: Outcome) {
+        when (outcome) {
+            Outcome.OK      -> if (store.contains(StorageKeys.LOGIN_REFUSED)) store.edit(commit = true) { remove(StorageKeys.LOGIN_REFUSED) }
+            Outcome.REFUSED -> store.edit(commit = true) { putBoolean(StorageKeys.LOGIN_REFUSED, true) }
+            else            -> Unit
+        }
     }
 }
 

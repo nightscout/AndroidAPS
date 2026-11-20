@@ -50,6 +50,7 @@ class EversenseHttpE3Util {
             val state = getState(preferences)
             return try {
                 val reply = DmsHttpClient.post("${tokenBaseUrl}connect/token", DmsHttpClient.passwordGrant(state.username, state.password), form = true)
+                DmsSignIn.remember(preferences, DmsSignIn.outcome(reply))
                 if (reply.status >= 400) {
                     EversenseLogger.error(TAG, "Login failed: HTTP ${reply.status}")
                     null

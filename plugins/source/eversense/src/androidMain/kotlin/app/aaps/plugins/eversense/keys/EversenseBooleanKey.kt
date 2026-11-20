@@ -14,8 +14,7 @@ enum class EversenseBooleanKey(
 ) : BooleanPreferenceKey {
     EversenseDiagnosticLogging("eversense_diagnostic_logging", false, R.string.eversense_diagnostic_logging, R.string.eversense_diagnostic_logging_summary, exportable = false),
     EversenseCloudUploadEnabled("eversense_cloud_upload_enabled", true, R.string.eversense_cloud_upload_enabled),
-    EversenseCloudUploadToast("eversense_notif_cloud_upload_toast", false, R.string.eversense_cloud_upload_toast),
-    EversenseEuropeanRegion("eversense_european_region", false, R.string.eversense_european_region, R.string.eversense_european_region_summary);
+    EversenseCloudUploadToast("eversense_notif_cloud_upload_toast", false, R.string.eversense_cloud_upload_toast);
 
     override val preferenceType = PreferenceType.SWITCH
     override val title = TextRef.AndroidRes(titleRes)

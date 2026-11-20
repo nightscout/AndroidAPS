@@ -106,7 +106,45 @@ class EversenseCGMPlugin(
         } else placementFailures = 0
     }
 
-    fun start() = connection.start(username.isNotEmpty() && password.isNotEmpty())
+    /**
+     * Reads the stored login and connects when a transmitter is paired too. Unpaired, it waits: [pair] connects then. It
+     * does not try every minute for a transmitter it does not have.
+     */
+    @Synchronized
+    fun start() {
+        val state = secureState()
+        username = state.username
+        password = state.password
+        connection.start(username.isNotEmpty() && password.isNotEmpty() && preferences.getString(StorageKeys.REMOTE_DEVICE_KEY, null) != null)
+    }
+
+    private fun secureState(): EversenseSecureState =
+        JSON.decodeFromString<EversenseSecureState>(preferences.getString(StorageKeys.SECURE_STATE, null) ?: "{}")
+
+    /**
+     * Pairs the transmitter at [address]: stores it with its [name], makes the next connection a full registration (a
+     * 365 registers this phone with the new transmitter), and connects.
+     *
+     * @return false when the link cannot be opened (not started, Bluetooth off, no login)
+     */
+    fun pair(address: String, name: String): Boolean {
+        preferences.edit(commit = true) {
+            putString(StorageKeys.REMOTE_DEVICE_KEY, address)
+            putString(StorageKeys.REMOTE_DEVICE_NAME, name)
+        }
+        EversenseCrypto365Util(preferences).disallowUseShortcut()
+        placementFailures = 0
+        return connection.connect(force = true)
+    }
+
+    /** Keeps the model chosen at sign-in with the login, to show it; the connection does not use it. */
+    @Synchronized
+    fun rememberModel(model: String) {
+        val state = secureState()
+        if (state.model == model) return
+        state.model = model
+        preferences.edit(commit = true) { putString(StorageKeys.SECURE_STATE, JSON.encodeToString(state)) }
+    }
 
     /**
      * Closes the link and drops what this object holds in memory: the scan, the retries and timers (the connection's
@@ -259,9 +297,11 @@ class EversenseCGMPlugin(
                 remove(StorageKeys.ACCESS_TOKEN)
                 remove(StorageKeys.ACCESS_TOKEN_EXPIRY)
                 remove(StorageKeys.CLOUD_QUEUE)
+                // A new login has not been refused yet
+                remove(StorageKeys.LOGIN_REFUSED)
             }
         }
-        if (username.isNotEmpty() && password.isNotEmpty()) connection.connect()
+        if (username.isNotEmpty() && password.isNotEmpty() && preferences.getString(StorageKeys.REMOTE_DEVICE_KEY, null) != null) connection.connect()
     }
 
     @Synchronized
@@ -272,19 +312,26 @@ class EversenseCGMPlugin(
         val state = JSON.decodeFromString<EversenseSecureState>(preferences.getString(StorageKeys.SECURE_STATE, null) ?: "{}")
         state.username = ""
         state.password = ""
+        state.model = ""
         state.canUseShortcut = false
         preferences.edit(commit = true) {
             putString(StorageKeys.SECURE_STATE, JSON.encodeToString(state))
             remove(StorageKeys.ACCESS_TOKEN)
             remove(StorageKeys.ACCESS_TOKEN_EXPIRY)
             remove(StorageKeys.CLOUD_QUEUE)
+            remove(StorageKeys.LOGIN_REFUSED)
         }
     }
 
+    /** Unpairs: closes the link and forgets the transmitter, so the next pairing is a full registration. The login stays. */
     fun clearStoredDevice() {
         disconnect()
         placementFailures = 0
-        preferences.edit { remove(StorageKeys.REMOTE_DEVICE_KEY) }
+        preferences.edit(commit = true) {
+            remove(StorageKeys.REMOTE_DEVICE_KEY)
+            remove(StorageKeys.REMOTE_DEVICE_NAME)
+        }
+        EversenseCrypto365Util(preferences).disallowUseShortcut()
         EversenseLogger.info(TAG, "Cleared stored device address")
     }
 

@@ -8,6 +8,9 @@ plugins {
     alias(libs.plugins.metro)
 }
 
+// The pairing wizard and the other shared screens are in commonMain and use the generated EversenseStrings
+registerKeyStrings("eversense")
+
 // The whole Eversense CGM in one module, as a pump driver has one: the transmitter driver and the AAPS plugin with its
 // screens. :plugins:source does not depend on it; it depends on :plugins:source for the shared BG source base.
 kotlin {

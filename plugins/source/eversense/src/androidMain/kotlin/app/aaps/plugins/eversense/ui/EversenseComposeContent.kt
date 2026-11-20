@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -18,7 +17,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,10 +26,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.interfaces.source.CgmAttention
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsSpacing
@@ -44,14 +42,19 @@ import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.navigation.LocalPluginNavigationRequest
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.plugins.eversense.R
+import app.aaps.plugins.eversense.pairing.EversenseAccount
+import app.aaps.plugins.eversense.pairing.EversensePairingCard
+import app.aaps.plugins.eversense.pairing.EversensePairingViewModel
+import app.aaps.plugins.eversense.pairing.EversensePairingWizard
 import app.aaps.plugins.eversense.placement.EversensePlacementActivity
 import app.aaps.plugins.source.compose.BgSourceScreen
 import app.aaps.plugins.source.compose.BgSourceViewModel
 import app.aaps.core.ui.compose.stringResource
 
 /**
- * The Eversense screen, opened from Manage (`ElementType.CGM`) as a pump's screen is: the transmitter's status and
- * controls on the first tab, the BG list on the second.
+ * The Eversense screen, opened from Manage (`ElementType.CGM`) as a pump's screen is, and from the bottom bar's "!"
+ * when it needs the user: the pairing and the transmitter's status on the first tab, the BG list on the second. The
+ * pairing wizard takes the whole screen while it runs.
  */
 internal class EversenseComposeContent(private val title: String) : ComposablePluginContent {
 
@@ -61,6 +64,19 @@ internal class EversenseComposeContent(private val title: String) : ComposablePl
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
+        val pairingViewModel = metroViewModel<EversensePairingViewModel>()
+        var wizardOpen by remember { mutableStateOf(false) }
+        // start() before the wizard is shown, so it never sees the "finished" of the last run
+        val openWizard = { signInOnly: Boolean ->
+            pairingViewModel.start(signInOnly)
+            wizardOpen = true
+        }
+
+        if (wizardOpen) {
+            EversensePairingWizard(viewModel = pairingViewModel, setToolbarConfig = setToolbarConfig, onClose = { wizardOpen = false })
+            return
+        }
+
         PluginTabsContent(
             tabs = listOf(
                 PluginTab(stringResource(R.string.eversense_status_title)) {
@@ -69,7 +85,9 @@ internal class EversenseComposeContent(private val title: String) : ComposablePl
                         title = title,
                         setToolbarConfig = setToolbarConfig,
                         onNavigateBack = onNavigateBack,
-                        onSettings = onSettings
+                        onSettings = onSettings,
+                        onPair = { openWizard(false) },
+                        onSignInAgain = { openWizard(true) }
                     )
                 },
                 PluginTab(stringResource(CoreUiStrings.glucose)) {
@@ -92,12 +110,16 @@ private fun EversenseStatusTab(
     title: String,
     setToolbarConfig: (ToolbarConfig) -> Unit,
     onNavigateBack: () -> Unit,
-    onSettings: (() -> Unit)?
+    onSettings: (() -> Unit)?,
+    onPair: () -> Unit,
+    onSignInAgain: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val attention by viewModel.attention.collectAsStateWithLifecycle()
+    val account by viewModel.account.collectAsStateWithLifecycle()
+    val transmitter by viewModel.transmitter.collectAsStateWithLifecycle()
     val navigate = LocalPluginNavigationRequest.current
     val context = LocalContext.current
-    val uriHandler = LocalUriHandler.current
 
     LaunchedEffect(Unit) {
         setToolbarConfig(
@@ -116,30 +138,34 @@ private fun EversenseStatusTab(
 
     EversenseStatusContent(
         state = state,
-        onConnect = viewModel::onConnectClick,
-        onChangeTransmitter = viewModel::onChangeTransmitterClick,
+        attention = attention,
+        account = account,
+        transmitter = transmitter,
+        onPair = onPair,
+        onSignInAgain = onSignInAgain,
+        onUnpair = viewModel::unpair,
         onDays = viewModel::setSyncDays,
         onSync = viewModel::onSyncClick,
         // The AAPS calibration dialog: the master hands the value to EversensePlugin.calibrate()
         onCalibrate = { navigate(NavigationRequest.Element(ElementType.CALIBRATION)) },
-        onPlacement = { context.startActivity(Intent(context, EversensePlacementActivity::class.java)) },
-        onDocumentation = { uriHandler.openUri(DOCUMENTATION_URL) }
+        onPlacement = { context.startActivity(Intent(context, EversensePlacementActivity::class.java)) }
     )
-
-    TransmitterDialog(state = state, viewModel = viewModel)
 }
 
 /** The status tab without its view model, so that a test can show it. */
 @Composable
 internal fun EversenseStatusContent(
     state: EversenseStatusViewModel.UiState,
-    onConnect: () -> Unit,
-    onChangeTransmitter: () -> Unit,
+    attention: CgmAttention?,
+    account: EversenseAccount?,
+    transmitter: String?,
+    onPair: () -> Unit,
+    onSignInAgain: () -> Unit,
+    onUnpair: () -> Unit,
     onDays: (Int) -> Unit,
     onSync: () -> Unit,
     onCalibrate: () -> Unit,
-    onPlacement: () -> Unit,
-    onDocumentation: () -> Unit
+    onPlacement: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -148,32 +174,34 @@ internal fun EversenseStatusContent(
             .padding(AapsSpacing.extraLarge),
         verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
     ) {
-        AapsCard(modifier = Modifier.fillMaxWidth()) {
-            Column(Modifier.padding(AapsSpacing.extraLarge), verticalArrangement = Arrangement.spacedBy(AapsSpacing.large)) {
-                state.lines.forEach { Text(it, style = MaterialTheme.typography.bodyLarge) }
+        EversensePairingCard(
+            attention = attention,
+            account = account,
+            transmitter = transmitter,
+            onPair = onPair,
+            onSignInAgain = onSignInAgain,
+            onUnpair = onUnpair
+        )
+        // What the transmitter reports means something only once one is paired
+        if (attention != CgmAttention.NOT_PAIRED) {
+            AapsCard(modifier = Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(AapsSpacing.extraLarge), verticalArrangement = Arrangement.spacedBy(AapsSpacing.large)) {
+                    state.lines.forEach { Text(it, style = MaterialTheme.typography.bodyLarge) }
+                }
             }
-        }
-        Button(onClick = onConnect, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(if (state.connected) R.string.eversense_status_disconnect else R.string.eversense_status_connect))
-        }
-        OutlinedButton(onClick = onChangeTransmitter, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(R.string.eversense_change_transmitter))
-        }
-        SyncDaysRow(syncDays = state.syncDays, onDays = onDays)
-        Button(onClick = onSync, modifier = Modifier.fillMaxWidth(), enabled = state.connected) {
-            Text(stringResource(R.string.eversense_information_last_sync))
-        }
+            SyncDaysRow(syncDays = state.syncDays, onDays = onDays)
+            Button(onClick = onSync, modifier = Modifier.fillMaxWidth(), enabled = state.connected) {
+                Text(stringResource(R.string.eversense_information_last_sync))
+            }
 
-        HorizontalDivider(Modifier.padding(vertical = AapsSpacing.medium))
+            HorizontalDivider(Modifier.padding(vertical = AapsSpacing.medium))
 
-        OutlinedButton(onClick = onCalibrate, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(R.string.eversense_calibration_action))
-        }
-        OutlinedButton(onClick = onPlacement, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(R.string.eversense_placement_title))
-        }
-        OutlinedButton(onClick = onDocumentation, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(R.string.eversense_documentation))
+            OutlinedButton(onClick = onCalibrate, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(R.string.eversense_calibration_action))
+            }
+            OutlinedButton(onClick = onPlacement, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(R.string.eversense_placement_title))
+            }
         }
     }
 }
@@ -194,51 +222,4 @@ private fun SyncDaysRow(syncDays: Int, onDays: (Int) -> Unit) {
     }
 }
 
-/** Disconnect and change-transmitter confirmations, and the scan with its results. */
-@Composable
-private fun TransmitterDialog(state: EversenseStatusViewModel.UiState, viewModel: EversenseStatusViewModel) {
-    val dialog = state.dialog
-    if (dialog == EversenseStatusViewModel.Dialog.NONE) return
-    val message = when (dialog) {
-        EversenseStatusViewModel.Dialog.DISCONNECT -> R.string.eversense_disconnect_confirm
-        EversenseStatusViewModel.Dialog.CHANGE     -> R.string.eversense_change_transmitter_confirm
-        EversenseStatusViewModel.Dialog.SCANNING   -> R.string.eversense_scan_in_progress
-        else                                       -> R.string.eversense_no_transmitters_found
-    }
-    AlertDialog(
-        onDismissRequest = viewModel::dismissDialog,
-        title = {
-            Text(stringResource(if (dialog == EversenseStatusViewModel.Dialog.CHANGE) R.string.eversense_change_transmitter else R.string.eversense_scan_title))
-        },
-        text = {
-            if (dialog == EversenseStatusViewModel.Dialog.RESULTS && state.found.isNotEmpty()) {
-                Column(Modifier.verticalScroll(rememberScrollState())) {
-                    state.found.forEach { item -> TextButton(onClick = { viewModel.onDeviceClick(item) }) { Text(item.name) } }
-                }
-            } else Text(stringResource(message))
-        },
-        confirmButton = {
-            when (dialog) {
-                EversenseStatusViewModel.Dialog.DISCONNECT -> TextButton(onClick = viewModel::confirmDisconnect) {
-                    Text(stringResource(R.string.eversense_status_disconnect))
-                }
-
-                EversenseStatusViewModel.Dialog.CHANGE     -> TextButton(onClick = viewModel::confirmChangeTransmitter) {
-                    Text(stringResource(R.string.eversense_change_transmitter))
-                }
-
-                EversenseStatusViewModel.Dialog.RESULTS    -> if (state.found.isEmpty()) TextButton(onClick = viewModel::dismissDialog) {
-                    Text(stringResource(CoreUiStrings.ok))
-                }
-
-                else                                       -> Unit
-            }
-        },
-        dismissButton = { TextButton(onClick = viewModel::dismissDialog) { Text(stringResource(R.string.eversense_scan_cancel)) } }
-    )
-}
-
 private val SYNC_DAY_CHOICES = listOf(1, 3, 7, 14, 30)
-
-/** The user guide in the repository; the AAPS documentation has no Eversense page yet. */
-private const val DOCUMENTATION_URL = "https://github.com/nightscout/AndroidAPS/blob/dev/plugins/source/eversense/README.md"
