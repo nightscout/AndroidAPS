@@ -91,6 +91,7 @@
     <string name="press_OK_to_return">按<b>OK</b>返回主屏幕。</string>
     <string name="deactivate_sure">您确定要停用当前贴片吗？</string>
     <string name="cancel_sure">您确定要取消激活吗？</string>
+    <string name="cancel_deactivation_sure">您确定要取消停用操作吗？贴片可能仍保持活动状态。</string>
     <string name="medtrum_deactivate_pump_confirm">你确定吗？此操作无法撤消！！</string>
     <string name="press_next_or_cancel">按<b>下一步</b>取消或按<b>取消</b>返回主屏幕。</string>
     <string name="deactivating_pump">正在停用贴片。请稍候。</string>
