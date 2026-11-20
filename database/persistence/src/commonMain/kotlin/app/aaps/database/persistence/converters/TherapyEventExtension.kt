@@ -14,6 +14,10 @@ fun TherapyEvent.Type.fromDb(): TE.Type = when (this) {
     TherapyEvent.Type.FINGER_STICK_BG_VALUE   -> TE.Type.FINGER_STICK_BG_VALUE
     TherapyEvent.Type.EXERCISE                -> TE.Type.EXERCISE
     TherapyEvent.Type.ANNOUNCEMENT            -> TE.Type.ANNOUNCEMENT
+    TherapyEvent.Type.PREDICTED_LOW           -> TE.Type.PREDICTED_LOW
+    TherapyEvent.Type.PREDICTED_HIGH          -> TE.Type.PREDICTED_HIGH
+    TherapyEvent.Type.LOW_GLUCOSE             -> TE.Type.LOW_GLUCOSE
+    TherapyEvent.Type.HIGH_GLUCOSE            -> TE.Type.HIGH_GLUCOSE
     TherapyEvent.Type.QUESTION                -> TE.Type.QUESTION
     TherapyEvent.Type.NOTE                    -> TE.Type.NOTE
     TherapyEvent.Type.APS_OFFLINE             -> TE.Type.APS_OFFLINE
@@ -62,6 +66,10 @@ fun TE.Type.toDb(): TherapyEvent.Type = when (this) {
     TE.Type.FINGER_STICK_BG_VALUE   -> TherapyEvent.Type.FINGER_STICK_BG_VALUE
     TE.Type.EXERCISE                -> TherapyEvent.Type.EXERCISE
     TE.Type.ANNOUNCEMENT            -> TherapyEvent.Type.ANNOUNCEMENT
+    TE.Type.PREDICTED_LOW           -> TherapyEvent.Type.PREDICTED_LOW
+    TE.Type.PREDICTED_HIGH          -> TherapyEvent.Type.PREDICTED_HIGH
+    TE.Type.LOW_GLUCOSE             -> TherapyEvent.Type.LOW_GLUCOSE
+    TE.Type.HIGH_GLUCOSE            -> TherapyEvent.Type.HIGH_GLUCOSE
     TE.Type.QUESTION                -> TherapyEvent.Type.QUESTION
     TE.Type.NOTE                    -> TherapyEvent.Type.NOTE
     TE.Type.APS_OFFLINE             -> TherapyEvent.Type.APS_OFFLINE
