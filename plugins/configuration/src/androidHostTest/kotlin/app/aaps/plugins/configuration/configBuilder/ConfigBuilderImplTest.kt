@@ -1,8 +1,14 @@
 package app.aaps.plugins.configuration.configBuilder
 
+import app.aaps.core.data.model.CAL
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.AppExit
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -12,6 +18,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
+import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -30,10 +37,15 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.after
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
+import org.mockito.kotlin.timeout
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import kotlin.time.Duration.Companion.seconds
 
@@ -54,6 +66,7 @@ internal class ConfigBuilderImplTest {
     @Mock private lateinit var pumpSync: PumpSync
     @Mock private lateinit var appExit: AppExit
     @Mock private lateinit var config: Config
+    @Mock private lateinit var persistenceLayer: PersistenceLayer
     @Mock private lateinit var sens2: PluginBase
     @Mock private lateinit var sens2Desc: PluginDescription
 
@@ -80,7 +93,59 @@ internal class ConfigBuilderImplTest {
         whenever(activePlugin.getSpecificPluginsList(any())).thenReturn(arrayListOf<PluginBase>(sens2))
         whenever(preferences.get(any<StringNonPreferenceKey>())).thenReturn("")
 
-        sut = ConfigBuilderImpl(aapsLogger, rh, preferences, rxBus, activePlugin, uel, pumpSync, appExit, config)
+        sut = ConfigBuilderImpl(aapsLogger, rh, preferences, rxBus, activePlugin, uel, pumpSync, appExit, config, persistenceLayer)
+    }
+
+    // ---- calibrations after a BG source switch ----
+
+    private val sessionStart = 1_000_000L
+    private val sessionCalibrations = listOf(
+        CAL(id = 7, timestamp = sessionStart + 10_000, fingerstickMgdl = 120.0, sensorMgdlAtPairing = 110.0),
+        CAL(id = 8, timestamp = sessionStart + 20_000, fingerstickMgdl = 90.0, sensorMgdlAtPairing = 95.0)
+    )
+
+    /** The active BG source before the switch, then after it. */
+    private fun bgSourceSwitch(before: BgSource, after: BgSource) {
+        whenever(activePlugin.activeBgSource).thenReturn(before, after)
+        runBlocking {
+            whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE))
+                .thenReturn(TE(timestamp = sessionStart, type = TE.Type.SENSOR_CHANGE, glucoseUnit = GlucoseUnit.MGDL))
+            whenever(persistenceLayer.getValidCalibrationEntriesSince(sessionStart)).thenReturn(sessionCalibrations)
+        }
+    }
+
+    /** The pairs were taken with the old source: they would correct the new one wrongly, so they are marked invalid. */
+    @Test
+    fun aBgSourceSwitchResetsTheCalibrationsOfTheSession() {
+        whenever(config.AAPSCLIENT).thenReturn(false)
+        bgSourceSwitch(before = mock(), after = mock())
+
+        sut.performPluginSwitch(sens2, true, PluginType.BGSOURCE)
+
+        for (entry in sessionCalibrations)
+            verifyBlocking(persistenceLayer, timeout(2_000)) { invalidateCalibrationEntry(eq(entry.id), eq(Action.CALIBRATION_REMOVED), eq(Sources.ConfigBuilder), anyOrNull(), any()) }
+    }
+
+    /** Selecting the source that is already active changes nothing. */
+    @Test
+    fun theSameBgSourceKeepsTheCalibrations() {
+        whenever(config.AAPSCLIENT).thenReturn(false)
+        val source: BgSource = mock()
+        bgSourceSwitch(before = source, after = source)
+
+        sut.performPluginSwitch(sens2, true, PluginType.BGSOURCE)
+
+        verifyBlocking(persistenceLayer, after(300).never()) { invalidateCalibrationEntry(any(), any(), any(), anyOrNull(), any()) }
+    }
+
+    /** The calibrations belong to the master's source. A client only receives them, invalid or not, through Nightscout. */
+    @Test
+    fun aClientDoesNotResetCalibrations() {
+        bgSourceSwitch(before = mock(), after = mock())
+
+        sut.performPluginSwitch(sens2, true, PluginType.BGSOURCE)
+
+        verifyBlocking(persistenceLayer, after(300).never()) { invalidateCalibrationEntry(any(), any(), any(), anyOrNull(), any()) }
     }
 
     /** A local plugin switch mirrors the new selection (by pluginId) into the synced ActivePlugin key. */

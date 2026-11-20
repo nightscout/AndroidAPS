@@ -1,5 +1,6 @@
 package app.aaps.plugins.configuration.configBuilder
 
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -11,6 +12,7 @@ import app.aaps.core.interfaces.configuration.AppExit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.configuration.PLUGIN_SETTLE_WAIT
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -25,6 +27,7 @@ import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.activeBgSourceOrNull
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanNonKey
@@ -61,7 +64,8 @@ class ConfigBuilderImpl(
     private val uel: UserEntryLogger,
     private val pumpSync: PumpSync,
     private val appExit: AppExit,
-    private val config: Config
+    private val config: Config,
+    private val persistenceLayer: PersistenceLayer
 ) : ConfigBuilder {
 
     private val scope = CoroutineScope(Dispatchers.Default + Job())
@@ -83,7 +87,9 @@ class ConfigBuilderImpl(
 
     override suspend fun applyConfiguration() {
         // Same three steps as initialize(), but the plugin jobs are collected and waited for.
+        val sourceBefore = activePlugin.activeBgSourceOrNull()
         val started = loadSettings() + applyEnforcedPluginStates()
+        resetCalibrationsIfSourceChanged(sourceBefore)   // an imported configuration can select another BG source
         if (!config.AAPSCLIENT) regenerateActivePluginKeys()
         startActivePluginObservers()
         // Bounded, because a plugin's onStop/onStart may itself wait on something - a pump driver
@@ -300,13 +306,38 @@ class ConfigBuilderImpl(
                 }
             }
         }
+        val sourceBefore = activePlugin.activeBgSourceOrNull()
         changedPlugin.setPluginEnabled(type, enabled)
         processOnEnabledCategoryChanged(changedPlugin, type)
+        resetCalibrationsIfSourceChanged(sourceBefore)
         storeSettings("RemoteConfiguration")
         syncActivePluginKey(type)   // mirror the new selection into the synced ActivePlugin key (echo-guarded)
         rxBus.send(EventConfigBuilderChange())
         _activeSelectionChanges.tryEmit(Unit)   // post-commit: refresh the Configuration screen after the switch is applied
         logPluginStatus()
+    }
+
+    /**
+     * A calibration pairs a finger stick with a reading of the BG source in use at that time. Another source gives
+     * other readings, so the pairs no longer fit it. When the active source really changed, the pairs of the current
+     * sensor session are marked invalid: the calibration plugin uses only those. Older ones it never uses again, and
+     * without a session start it corrects nothing.
+     *
+     * Master only. A client has no source the calibrations belong to; the invalid entries reach it through Nightscout.
+     * No confirmation: switching the source is the user's own decision, and the pairs are useless after it. Each
+     * entry is logged as removed, with the new source as the note.
+     */
+    private fun resetCalibrationsIfSourceChanged(sourceBefore: BgSource?) {
+        if (config.AAPSCLIENT) return
+        val sourceAfter = activePlugin.activeBgSourceOrNull()
+        if (sourceBefore == null || sourceAfter == null || sourceBefore === sourceAfter) return
+        val note = (sourceAfter as? PluginBase)?.let { plugin -> plugin.pluginDescription.pluginName?.let { rh.gsNotLocalised(it) } ?: plugin.pluginId }
+        scope.launch {
+            val sessionStart = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)?.timestamp ?: return@launch
+            val entries = persistenceLayer.getValidCalibrationEntriesSince(sessionStart)
+            if (entries.isNotEmpty()) aapsLogger.info(LTag.CONFIGBUILDER, "BG source changed to $note: ${entries.size} calibrations reset")
+            entries.forEach { persistenceLayer.invalidateCalibrationEntry(it.id, Action.CALIBRATION_REMOVED, Sources.ConfigBuilder, note, emptyList()) }
+        }
     }
 
     override fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType) {
