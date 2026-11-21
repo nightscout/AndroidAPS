@@ -352,7 +352,7 @@
     <string name="pref_title_high_mark">Øvre BS-grænse</string>
     <!-- UnitDoubleKey: APS preferences -->
     <string name="pref_title_lgs_threshold">LGS-grænse</string>
-    <string name="lgs_threshold_summary">BS værdi under hvilken insulin er suspenderet. Standard værdi bruger standard målmodel. Bruger kan indstille værdi mellem 60 mg/dl (3,3 mmol/l) og 100 mg/dl (5,5 mmol/l). Værdier under 65/3,6 resulterer i brug af standardmodel</string>
+    <string name="lgs_threshold_summary">BS-værdi, under hvilken insulin suspenderes. Standardværdien bruger standardmålmodellen. Brugeren kan indstille en værdi mellem 60 mg/dl (3,3 mmol/l) og 100 mg/dl (5,5 mmol/l). Værdier under 65/3,6 betyder, at standardmodellen bruges</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
 </resources>
