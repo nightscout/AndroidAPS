@@ -78,7 +78,7 @@ import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.shared.clientbindings.ClientViewModelFactory
 import app.aaps.shared.impl.sharedPreferences.StoreUnreadableException
-import app.aaps.ui.activities.PumpAlertScreen
+import app.aaps.ui.activities.AlertScreen
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.loopSheet.LoopActionViewModel
@@ -549,26 +549,26 @@ private fun AapsApp(app: StartedApp) {
             // The alarm screen of a pump alert, shown in place of the app while the alert rings.
             //
             // Android opens `ErrorActivity` for this, over whatever is on screen and over the lock
-            // screen. iOS cannot open a window from a background class, so `IosPumpAlertPlatform`
+            // screen. iOS cannot open a window from a background class, so `IosAlertPlatform`
             // only records which alert asked for the screen and this shows it. The alert that was
             // raised while the app was away therefore comes up the moment AAPS is opened. The ring
             // does not wait for that: the card carries the system sound in the background.
             //
             // In place of the app, not over it, because the content slot here is a single child and
             // the screen already draws its own scrim. The card is the same one Android shows -
-            // `PumpAlertScreen` is shared - and the same buttons do the same things.
+            // `AlertScreen` is shared - and the same buttons do the same things.
             //
             // Before the protection gate below, on purpose, for the same reason `ErrorActivity`
             // ignores application protection: an alarm the user cannot see is an alarm that did not
             // happen, and what it says is "the pump stopped", not anything about them.
-            val alarmScreen by graph.pumpAlertPlatform.alarmScreen.collectAsState()
+            val alarmScreen by graph.alertPlatform.alarmScreen.collectAsState()
             alarmScreen?.let { alert ->
-                PumpAlertScreen(
-                    pumpAlerts = graph.pumpAlerts,
+                AlertScreen(
+                    alerts = graph.alerts,
                     source = alert.source,
                     key = alert.key,
                     uel = graph.uel,
-                    onClose = { graph.pumpAlertPlatform.alarmScreenClosed(alert.source, alert.key) }
+                    onClose = { graph.alertPlatform.alarmScreenClosed(alert.source, alert.key) }
                 )
                 return@AapsAppRoot
             }

@@ -1,4 +1,4 @@
-package app.aaps.implementation.pump.alerts
+package app.aaps.implementation.alerts
 
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.concurrent.AapsLock
@@ -14,11 +14,11 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.alerts.PumpAlert
-import app.aaps.core.interfaces.pump.alerts.PumpAlertLifetime
-import app.aaps.core.interfaces.pump.alerts.PumpAlertPlatform
-import app.aaps.core.interfaces.pump.alerts.PumpAlertSeverity
-import app.aaps.core.interfaces.pump.alerts.PumpAlerts
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertLifetime
+import app.aaps.core.interfaces.alerts.AlertPlatform
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
@@ -48,20 +48,20 @@ import kotlinx.serialization.json.put
 import kotlin.coroutines.cancellation.CancellationException
 
 /**
- * The shared implementation of [PumpAlerts]. Each alert is one card in the notification list (`NotificationId.PUMP_ALERT`),
+ * The shared implementation of [Alerts]. Each alert is one card in the notification list (`NotificationId.ALERT`),
  * and that list is the only thing that plays alarm sound: a CRITICAL alert that rings is an URGENT card with a sound,
  * a silenced one is the same card without it. The alarm screen and the one-time sound of a WARNING come from
- * [PumpAlertPlatform]. See `_docs/PUMP_DESIGN.md`, section 2.
+ * [AlertPlatform]. See `_docs/PUMP_DESIGN.md`, section 2.
  *
- * Not contributed from shared code: each platform binds it once it has a [PumpAlertPlatform], so a platform without
+ * Not contributed from shared code: each platform binds it once it has a [AlertPlatform], so a platform without
  * one has no pump alerts rather than alerts that do nothing.
  */
 @SingleIn(AppScope::class)
 @Inject
-class PumpAlertsImpl(
+class AlertsImpl(
     private val aapsLogger: AAPSLogger,
     private val notificationManager: NotificationManager,
-    private val platform: PumpAlertPlatform,
+    private val platform: AlertPlatform,
     private val preferences: Preferences,
     private val pumpSync: PumpSync,
     private val activePlugin: ActivePlugin,
@@ -69,10 +69,10 @@ class PumpAlertsImpl(
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
     @ApplicationScope private val appScope: CoroutineScope
-) : PumpAlerts {
+) : Alerts {
 
     private class Entry(
-        var alert: PumpAlert,
+        var alert: Alert,
         /** The card shown for it, or null while it has none. */
         var card: NotificationHandle? = null,
         /** Epoch ms until when it does not ring; 0 when not silenced. */
@@ -88,19 +88,19 @@ class PumpAlertsImpl(
     private var silences: MutableList<Silence>? = null
     private var observing = false
 
-    private val _active = MutableStateFlow<List<PumpAlert>>(emptyList())
-    override val active: StateFlow<List<PumpAlert>> = _active.asStateFlow()
+    private val _active = MutableStateFlow<List<Alert>>(emptyList())
+    override val active: StateFlow<List<Alert>> = _active.asStateFlow()
 
-    override val sounding: PumpAlert?
+    override val sounding: Alert?
         get() = lock.withLock {
             val now = dateUtil.now()
             entries.values
-                .filter { it.card != null && it.silencedUntil <= now && it.alert.severity == PumpAlertSeverity.CRITICAL }
+                .filter { it.card != null && it.silencedUntil <= now && it.alert.severity == AlertSeverity.CRITICAL }
                 .maxByOrNull { it.alert.raisedAt }
                 ?.alert
         }
 
-    override fun raise(alert: PumpAlert) {
+    override fun raise(alert: Alert) {
         startObserving()
         lock.withLock {
             val id = alert.source to alert.key
@@ -117,7 +117,7 @@ class PumpAlertsImpl(
                 entries[id] = entry
                 publish()
                 showCard(entry, ring = true)
-                if (alert.severity != PumpAlertSeverity.INFO) announce(alert)
+                if (alert.severity != AlertSeverity.INFO) announce(alert)
             }
         }
     }
@@ -135,15 +135,15 @@ class PumpAlertsImpl(
     /**
      * What "the user dealt with the sound" means depends on who owns the alert.
      *
-     * A [PumpAlertLifetime.CONDITION] is the pump's, so silence only quiets it and it comes back in
-     * [PumpAlerts.SILENCE_MINUTES]. A [PumpAlertLifetime.EVENT] is the user's: answering it is the end of it, and a
+     * A [AlertLifetime.CONDITION] is the pump's, so silence only quiets it and it comes back in
+     * [Alerts.SILENCE_MINUTES]. A [AlertLifetime.EVENT] is the user's: answering it is the end of it, and a
      * bolus error that came back half an hour later would be telling them about something they have already read.
      */
     override fun silence(source: String, key: String) {
         val lifetime = lock.withLock { entries[source to key]?.alert?.lifetime } ?: return
         // Outside the lock: neither call may be made while holding it, it is not reentrant.
-        if (lifetime == PumpAlertLifetime.EVENT) resolve(source, key)
-        else snooze(source, key, PumpAlerts.SILENCE_MINUTES)
+        if (lifetime == AlertLifetime.EVENT) resolve(source, key)
+        else snooze(source, key, Alerts.SILENCE_MINUTES)
     }
 
     override fun snooze(source: String, key: String, minutes: Int) = lock.withLock {
@@ -154,8 +154,8 @@ class PumpAlertsImpl(
     /**
      * Runs the alert's own step.
      *
-     * A [PumpAlertLifetime.CONDITION] is silenced first, because the user is dealing with it and the pump will take
-     * its own time to confirm; the driver resolves it when that happens. A [PumpAlertLifetime.EVENT] is not silenced,
+     * A [AlertLifetime.CONDITION] is silenced first, because the user is dealing with it and the pump will take
+     * its own time to confirm; the driver resolves it when that happens. A [AlertLifetime.EVENT] is not silenced,
      * because its action *is* the answer: "+5 min" on the "time to eat" timer moves the timer and ends the alarm
      * itself, and when it fails the alarm has to go on ringing - the user still has to eat. So an event is resolved
      * when its action succeeds, and left exactly as it was when it does not.
@@ -163,7 +163,7 @@ class PumpAlertsImpl(
     override fun act(source: String, key: String) {
         val alert = lock.withLock {
             val entry = entries[source to key] ?: return
-            if (entry.alert.lifetime == PumpAlertLifetime.CONDITION) silenceEntry(entry, PumpAlerts.SILENCE_MINUTES)
+            if (entry.alert.lifetime == AlertLifetime.CONDITION) silenceEntry(entry, Alerts.SILENCE_MINUTES)
             entry.alert
         }
         val action = alert.action ?: return
@@ -181,7 +181,7 @@ class PumpAlertsImpl(
                 !done                                             ->
                     rxBus.send(EventShowSnackbar(rh.gs(CoreUiStrings.pump_alert_action_failed), EventShowSnackbar.Type.Error))
 
-                alert.lifetime == PumpAlertLifetime.EVENT -> resolve(source, key)
+                alert.lifetime == AlertLifetime.EVENT -> resolve(source, key)
             }
         }
     }
@@ -206,17 +206,17 @@ class PumpAlertsImpl(
         val alert = entry.alert
         val silenced = entry.silencedUntil > dateUtil.now()
         val level = when (alert.severity) {
-            PumpAlertSeverity.CRITICAL -> NotificationLevel.URGENT
-            PumpAlertSeverity.WARNING  -> NotificationLevel.IMPORTANT
-            PumpAlertSeverity.INFO     -> NotificationLevel.NORMAL
+            AlertSeverity.CRITICAL -> NotificationLevel.URGENT
+            AlertSeverity.WARNING  -> NotificationLevel.IMPORTANT
+            AlertSeverity.INFO     -> NotificationLevel.NORMAL
         }
         entry.card = notificationManager.post(
-            id = NotificationId.PUMP_ALERT,
+            id = NotificationId.ALERT,
             text = cardText(alert),
             level = level,
             date = alert.raisedAt,
             validTo = 0L,
-            sound = if (alert.severity == PumpAlertSeverity.CRITICAL && !silenced) alert.sound ?: AlarmSound.ALARM else null,
+            sound = if (alert.severity == AlertSeverity.CRITICAL && !silenced) alert.sound ?: AlarmSound.ALARM else null,
             actions = alert.action?.let { listOf(NotificationAction(it.label) { act(alert.source, alert.key) }) } ?: emptyList(),
             validityCheck = null,
             // What the system notification and the watch announce it as. A pump alert passes nothing and is named by
@@ -228,8 +228,8 @@ class PumpAlertsImpl(
         when {
             silenced                                                -> scheduleSilenceEnd(entry)
             !ring                                                   -> Unit
-            alert.severity == PumpAlertSeverity.CRITICAL -> platform.showAlarmScreen(alert)
-            alert.severity == PumpAlertSeverity.WARNING  -> platform.chime(alert)
+            alert.severity == AlertSeverity.CRITICAL -> platform.showAlarmScreen(alert)
+            alert.severity == AlertSeverity.WARNING  -> platform.chime(alert)
             else                                                    -> Unit
         }
     }
@@ -291,7 +291,7 @@ class PumpAlertsImpl(
      * otherwise lose which alert it is. An alarm that brought its own title does not need that: the title is already
      * on the card and on the watch, so repeating it in the body would say the same thing twice.
      */
-    private fun cardText(alert: PumpAlert): String {
+    private fun cardText(alert: Alert): String {
         val text = alert.text ?: return rh.gs(alert.title)
         return if (alert.notificationTitle != null) rh.gs(text)
         else rh.gs(CoreUiStrings.pump_alert_text, rh.gs(alert.title), rh.gs(text))
@@ -326,25 +326,25 @@ class PumpAlertsImpl(
             val alert = entry.alert
             when {
                 // The user answered it, however they did it, and an event is over once it is answered.
-                alert.lifetime == PumpAlertLifetime.EVENT                      -> {
+                alert.lifetime == AlertLifetime.EVENT                      -> {
                     aapsLogger.debug(LTag.PUMP, "Alert card removed, and it was the answer: ${alert.source}/${alert.key}")
                     entries.remove(alert.source to alert.key)?.let { end(it) }
                     ended = true
                 }
                 // Read, and nothing to do about it.
-                alert.severity == PumpAlertSeverity.INFO && alert.action == null -> Unit
+                alert.severity == AlertSeverity.INFO && alert.action == null -> Unit
 
                 else                                                             -> {
                     aapsLogger.debug(LTag.PUMP, "Pump alert card removed while active, shown again silenced: ${alert.source}/${alert.key}")
                     if (entry.silencedUntil > dateUtil.now()) showCard(entry, ring = false)
-                    else silenceEntry(entry, PumpAlerts.SILENCE_MINUTES)
+                    else silenceEntry(entry, Alerts.SILENCE_MINUTES)
                 }
             }
         }
         if (ended) publish()
     }
 
-    private fun announce(alert: PumpAlert) {
+    private fun announce(alert: Alert) {
         val note = cardText(alert)
         appScope.launch {
             try {
@@ -370,13 +370,13 @@ class PumpAlertsImpl(
     private fun storedSilences(): MutableList<Silence> = silences ?: loadSilences().also { silences = it }
 
     /** Caller holds [lock]. Until when this occurrence is silenced, or 0. */
-    private fun storedSilence(alert: PumpAlert): Long {
+    private fun storedSilence(alert: Alert): Long {
         val now = dateUtil.now()
         return storedSilences().firstOrNull { it.source == alert.source && it.key == alert.key && it.raisedAt == alert.raisedAt && it.until > now }?.until ?: 0L
     }
 
     /** Caller holds [lock]. */
-    private fun rememberSilence(alert: PumpAlert, until: Long) {
+    private fun rememberSilence(alert: Alert, until: Long) {
         val list = storedSilences()
         list.removeAll { it.source == alert.source && it.key == alert.key }
         list.add(Silence(alert.source, alert.key, alert.raisedAt, until))
@@ -384,7 +384,7 @@ class PumpAlertsImpl(
     }
 
     /** Caller holds [lock]. */
-    private fun forgetSilence(alert: PumpAlert) {
+    private fun forgetSilence(alert: Alert) {
         val list = storedSilences()
         if (list.removeAll { it.source == alert.source && it.key == alert.key }) saveSilences(list)
     }
@@ -392,7 +392,7 @@ class PumpAlertsImpl(
     private fun loadSilences(): MutableList<Silence> {
         val now = dateUtil.now()
         return try {
-            Json.parseToJsonElement(preferences.get(StringNonKey.PumpAlertSilences)).jsonArray.map { element ->
+            Json.parseToJsonElement(preferences.get(StringNonKey.AlertSilences)).jsonArray.map { element ->
                 val o = element.jsonObject
                 Silence(o.text("source"), o.text("key"), o.number("raisedAt"), o.number("until"))
             }.filter { it.until > now }.toMutableList()
@@ -414,7 +414,7 @@ class PumpAlertsImpl(
                 })
             }
         }
-        preferences.put(StringNonKey.PumpAlertSilences, json.toString())
+        preferences.put(StringNonKey.AlertSilences, json.toString())
     }
 
     private fun JsonObject.text(name: String): String = getValue(name).jsonPrimitive.content

@@ -14,7 +14,7 @@ import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoAlarmViewModel
 /**
  * Hosts the two UI requests [app.aaps.pump.carelevo.common.CarelevoAlarmActionHandler] cannot fulfill
  * itself: asking to turn Bluetooth on (or, where the platform cannot ask, saying it is off), and a failure
- * message. The alarms themselves are pump alerts ([app.aaps.core.interfaces.pump.alerts.PumpAlerts], raised by
+ * message. The alarms themselves are pump alerts ([app.aaps.core.interfaces.alerts.Alerts], raised by
  * `CarelevoAlarmNotifier.showAlerts`): the core shows the card and the alarm screen, both with the clear button —
  * this host renders nothing itself.
  */

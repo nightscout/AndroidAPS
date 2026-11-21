@@ -5,10 +5,10 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.pump.alerts.PumpAlert
-import app.aaps.core.interfaces.pump.alerts.PumpAlertLifetime
-import app.aaps.core.interfaces.pump.alerts.PumpAlertSeverity
-import app.aaps.core.interfaces.pump.alerts.PumpAlerts
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertLifetime
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAlarmDismissed
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -44,16 +44,16 @@ import org.mockito.kotlin.whenever
 class UiInteractionImplTest : TestBase() {
 
     /** Records what was raised and what was asked of the alerts, as the core would. */
-    private class RecordingAlerts : PumpAlerts {
+    private class RecordingAlerts : Alerts {
 
-        private val _active = MutableStateFlow<List<PumpAlert>>(emptyList())
-        override val active: StateFlow<List<PumpAlert>> = _active
-        override var sounding: PumpAlert? = null
-        val raised = mutableListOf<PumpAlert>()
+        private val _active = MutableStateFlow<List<Alert>>(emptyList())
+        override val active: StateFlow<List<Alert>> = _active
+        override var sounding: Alert? = null
+        val raised = mutableListOf<Alert>()
         val silenced = mutableListOf<Pair<String, String>>()
         val snoozed = mutableListOf<Triple<String, String, Int>>()
 
-        override fun raise(alert: PumpAlert) {
+        override fun raise(alert: Alert) {
             raised += alert
             _active.value = _active.value.filterNot { it.source == alert.source && it.key == alert.key } + alert
         }
@@ -95,7 +95,7 @@ class UiInteractionImplTest : TestBase() {
         sut = UiInteractionImpl(aapsLogger, alerts, { notificationManager }, persistenceLayer, config, dateUtil, eventBus, { eatReminder }, scope)
     }
 
-    private fun raised(): PumpAlert = alerts.raised.single()
+    private fun raised(): Alert = alerts.raised.single()
 
     // ---------------------------------------------------------------------------------------------
     // The alert an alarm becomes
@@ -107,8 +107,8 @@ class UiInteractionImplTest : TestBase() {
 
         assertThat(raised().source).isEqualTo(UiInteraction.SOURCE)
         assertThat(raised().key).isEqualTo("bolus")
-        assertThat(raised().severity).isEqualTo(PumpAlertSeverity.CRITICAL)
-        assertThat(raised().lifetime).isEqualTo(PumpAlertLifetime.EVENT)
+        assertThat(raised().severity).isEqualTo(AlertSeverity.CRITICAL)
+        assertThat(raised().lifetime).isEqualTo(AlertLifetime.EVENT)
     }
 
     /**
@@ -227,8 +227,8 @@ class UiInteractionImplTest : TestBase() {
     /** Mute is a snooze of the one alert that is ringing, so a second alarm goes on ringing. */
     @Test
     fun `muting snoozes the alert that is ringing`() {
-        alerts.sounding = PumpAlert(
-            source = "pump", key = "occlusion", severity = PumpAlertSeverity.CRITICAL,
+        alerts.sounding = Alert(
+            source = "pump", key = "occlusion", severity = AlertSeverity.CRITICAL,
             title = TextRef.Literal("Occlusion"), raisedAt = 500L
         )
 

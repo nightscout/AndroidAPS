@@ -12,11 +12,11 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.pump.alerts.PumpAlert
-import app.aaps.core.interfaces.pump.alerts.PumpAlertAction
-import app.aaps.core.interfaces.pump.alerts.PumpAlertLifetime
-import app.aaps.core.interfaces.pump.alerts.PumpAlertSeverity
-import app.aaps.core.interfaces.pump.alerts.PumpAlerts
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertAction
+import app.aaps.core.interfaces.alerts.AlertLifetime
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAlarmDismissed
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -32,10 +32,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
- * The app's own alarms, as [PumpAlerts] with [PumpAlertLifetime.EVENT].
+ * The app's own alarms, as [Alerts] with [AlertLifetime.EVENT].
  *
  * Shared code, because there is nothing platform specific left in it. The card, the sound, the alarm screen, the
- * silence and the re-ring all belong to [PumpAlerts] and its platform half, which Android and iOS both have. What
+ * silence and the re-ring all belong to [Alerts] and its platform half, which Android and iOS both have. What
  * this class adds is only the shape of an app alarm: the source, the severity, the announcement, and the "+5 min"
  * of the "time to eat" timer.
  *
@@ -44,14 +44,14 @@ import kotlinx.coroutines.launch
  * announced itself on Android and was silent on iOS, from the same shared caller
  * (`CommandQueueImplementation`). See `_docs/PUMP_DESIGN.md`, section 8.
  *
- * Not contributed from here: each platform binds it once it has a `PumpAlertPlatform`, the same rule
- * `PumpAlertsImpl` follows, so a platform without one has no alarms rather than alarms that do nothing.
+ * Not contributed from here: each platform binds it once it has a `AlertPlatform`, the same rule
+ * `AlertsImpl` follows, so a platform without one has no alarms rather than alarms that do nothing.
  */
 @SingleIn(AppScope::class)
 @Inject
 class UiInteractionImpl(
     private val aapsLogger: AAPSLogger,
-    private val alerts: PumpAlerts,
+    private val alerts: Alerts,
     // A provider: the registry builds the notification platform, which on Android reaches back here.
     private val notificationManager: () -> NotificationManager,
     private val persistenceLayer: PersistenceLayer,
@@ -80,7 +80,7 @@ class UiInteractionImpl(
             status = status,
             title = title,
             sound = AlarmSound.EAT_REMINDER,
-            action = PumpAlertAction(
+            action = AlertAction(
                 label = CoreUiStrings.eat_reminder_extend.withArgs(EatReminder.EXTEND_MINUTES)
             ) { eatReminder().extend() },
             // "+5 min" already is the delay, so a "Mute 5 min" beside it would be two buttons five minutes apart.
@@ -94,25 +94,25 @@ class UiInteractionImpl(
         status: String,
         title: String,
         sound: AlarmSound?,
-        action: PumpAlertAction?,
+        action: AlertAction?,
         canMute: Boolean,
         tellWatch: Boolean
     ) {
         aapsLogger.debug(LTag.CORE, "Alarm $key: $title - $status (sound=$sound)")
         alerts.raise(
-            PumpAlert(
+            Alert(
                 source = UiInteraction.SOURCE,
                 key = key,
                 // Always critical: every caller of runAlarm is telling the user that something they rely on did
                 // not happen, and the alarm screen and the ringing card are exactly what they always got.
-                severity = PumpAlertSeverity.CRITICAL,
+                severity = AlertSeverity.CRITICAL,
                 // The caller's title is the headline on the alarm screen and on the notification, and its status is
                 // the message under it - which is how this looked before every alarm became an alert.
                 title = TextRef.Literal(title),
                 text = TextRef.Literal(status),
                 raisedAt = dateUtil.now(),
                 action = action,
-                lifetime = PumpAlertLifetime.EVENT,
+                lifetime = AlertLifetime.EVENT,
                 notificationTitle = title,
                 canMute = canMute,
                 tellWatch = tellWatch,
@@ -129,7 +129,7 @@ class UiInteractionImpl(
      *
      * Here rather than on the alarm screen, so the record carries the true trigger time whatever the user does with
      * the alarm afterwards - answers it on the phone, on the watch, or never opens it at all. A re-ring writes
-     * nothing: [PumpAlerts] only announces an alert the first time its occurrence is raised, and a mute keeps the
+     * nothing: [Alerts] only announces an alert the first time its occurrence is raised, and a mute keeps the
      * same occurrence.
      */
     private fun announce(status: String) {
@@ -150,7 +150,7 @@ class UiInteractionImpl(
      *
      * Still the registry's `muteAllAlarms`, which is what this has always been, because the surfaces that reach here
      * - the watch, the Mute action, a swipe - cannot name an alarm. What is different is what happens to the alerts
-     * it takes off the screen: [PumpAlerts] reads a card of its own going away as the user's answer, so one of the
+     * it takes off the screen: [Alerts] reads a card of its own going away as the user's answer, so one of the
      * app's own alarms is over and a pump alert goes quiet for its silence window and comes back. Nothing has to be
      * told apart here.
      */

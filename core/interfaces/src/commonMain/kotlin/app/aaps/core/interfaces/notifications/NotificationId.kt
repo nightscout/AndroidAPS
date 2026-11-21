@@ -248,8 +248,9 @@ enum class NotificationId(
     // a bolus that fails because of it raises its own alarm.
     BLUETOOTH_PERMISSION_MISSING(IMPORTANT, PUMP),
 
-    // Every pump alert raised through PumpAlerts, one card each. The level is set per alert from its severity.
-    PUMP_ALERT(URGENT, PUMP, allowMultiple = true),
+    // Every alert raised through Alerts (a pump's, a CGM's, the app's own), one card each. The level is set per alert
+    // from its severity.
+    ALERT(URGENT, PUMP, allowMultiple = true),
 
     EVERSENSE_PLACEMENT(NORMAL, CGM),
     EVERSENSE_FIRMWARE(INFO, CGM),

@@ -2,7 +2,7 @@ package app.aaps.di.metro
 
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import app.aaps.implementation.alerts.EatReminderReceiver
-import app.aaps.implementation.pump.alerts.PumpAlertWakeReceiver
+import app.aaps.implementation.alerts.AlertWakeReceiver
 import app.aaps.implementation.receivers.BTReceiver
 import app.aaps.implementation.receivers.ChargingStateReceiver
 import app.aaps.implementation.receivers.NetworkChangeReceiver
@@ -41,8 +41,8 @@ object AppReceiversBindings {
     @Provides
     @FeatureMemberInjectors
     @IntoMap
-    @ClassKey(PumpAlertWakeReceiver::class)
-    fun bindPumpAlertWakeReceiver(injector: MembersInjector<PumpAlertWakeReceiver>): MembersInjector<*> = injector
+    @ClassKey(AlertWakeReceiver::class)
+    fun bindAlertWakeReceiver(injector: MembersInjector<AlertWakeReceiver>): MembersInjector<*> = injector
 
     // The "time to eat" alarm and its notification buttons - same story as the receiver above.
     @Provides

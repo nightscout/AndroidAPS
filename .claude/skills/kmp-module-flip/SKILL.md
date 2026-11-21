@@ -528,7 +528,7 @@ How the Carelevo plugin, its 6 view models and 15 screens went to commonMain whi
   foreground state (`CarelevoAppForeground`), the Bluetooth check before pairing (`CarelevoBleReadyCheck`, a
   `@Composable` member that wraps `BlePreCheckHost` on Android). The Bluetooth adapter state needs no port: read
   `BleCentral.adapterState` from the driver's own central, which also covers the emulated patch. Alarms and the phone
-  notification need no port either: they go through `PumpAlerts` (`_docs/PUMP_DESIGN.md`, section 2).
+  notification need no port either: they go through `Alerts` (`_docs/PUMP_DESIGN.md`, section 2).
 - **What failed to compile, and the fix:** `ResourceHelper` → `TextResolver` (also in view models and the notifier);
   `AnnotatedString.fromHtml` → `htmlToAnnotatedString()` from `:core:ui` (knows only `<b>` and `<br>`); `LiveData` →
   `StateFlow`; `java.util.concurrent.atomic.AtomicBoolean` → `kotlin.concurrent.atomics.AtomicBoolean` with

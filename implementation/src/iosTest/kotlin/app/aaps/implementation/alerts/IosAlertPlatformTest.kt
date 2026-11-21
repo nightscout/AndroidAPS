@@ -1,9 +1,9 @@
-package app.aaps.implementation.pump.alerts
+package app.aaps.implementation.alerts
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.pump.alerts.PumpAlert
-import app.aaps.core.interfaces.pump.alerts.PumpAlertSeverity
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
 import kotlinx.coroutines.CoroutineScope
@@ -24,7 +24,7 @@ import kotlin.test.assertTrue
  * matters: iOS cannot open a window from a background class, so this flow is the only thing that brings the alarm
  * screen up. Get it wrong and a CRITICAL alert rings with nothing on screen to silence or act on it.
  */
-class IosPumpAlertPlatformTest {
+class IosAlertPlatformTest {
 
     private object SilentLogger : AAPSLogger {
 
@@ -58,20 +58,20 @@ class IosPumpAlertPlatformTest {
     }
 
     /**
-     * The provider throws: building a real `PumpAlertsImpl` needs ten collaborators, none of which would be read
+     * The provider throws: building a real `AlertsImpl` needs ten collaborators, none of which would be read
      * here, and Kotlin/Native has no Mockito. It is only reached from the foreground observer, which does not run in
      * a test binary - the UIKit read behind it needs a main queue nobody drains - so this records a call that must
      * not happen rather than a value.
      */
-    private class PumpAlertsAsked : Exception("the platform asked for PumpAlertsImpl")
+    private class AlertsAsked : Exception("the platform asked for AlertsImpl")
 
     private val scope = CoroutineScope(StandardTestDispatcher() + SupervisorJob())
-    private val platform = IosPumpAlertPlatform(SilentLogger, LiteralResolver, { throw PumpAlertsAsked() }, scope)
+    private val platform = IosAlertPlatform(SilentLogger, LiteralResolver, { throw AlertsAsked() }, scope)
 
-    private fun alert(source: String = "carelevo", key: String = "occlusion") = PumpAlert(
+    private fun alert(source: String = "carelevo", key: String = "occlusion") = Alert(
         source = source,
         key = key,
-        severity = PumpAlertSeverity.CRITICAL,
+        severity = AlertSeverity.CRITICAL,
         title = TextRef.Literal("Occlusion"),
         text = TextRef.Literal("Replace the patch."),
         raisedAt = 1_700_000_000_000L
@@ -86,7 +86,7 @@ class IosPumpAlertPlatformTest {
     fun `a critical alert asks for the alarm screen`() {
         platform.showAlarmScreen(alert())
 
-        assertEquals(PumpAlertId("carelevo", "occlusion"), platform.alarmScreen.value)
+        assertEquals(AlertId("carelevo", "occlusion"), platform.alarmScreen.value)
     }
 
     /**
@@ -117,7 +117,7 @@ class IosPumpAlertPlatformTest {
         platform.showAlarmScreen(alert(key = "occlusion"))
         platform.alarmScreenClosed("carelevo", "empty-reservoir")
 
-        assertEquals(PumpAlertId("carelevo", "occlusion"), platform.alarmScreen.value)
+        assertEquals(AlertId("carelevo", "occlusion"), platform.alarmScreen.value)
     }
 
     /** A later alert replaces the one before it, as there is only one screen. */
@@ -126,7 +126,7 @@ class IosPumpAlertPlatformTest {
         platform.showAlarmScreen(alert(key = "occlusion"))
         platform.showAlarmScreen(alert(key = "empty-reservoir"))
 
-        assertEquals(PumpAlertId("carelevo", "empty-reservoir"), platform.alarmScreen.value)
+        assertEquals(AlertId("carelevo", "empty-reservoir"), platform.alarmScreen.value)
     }
 
     // ---------------------------------------------------------------------------------------------

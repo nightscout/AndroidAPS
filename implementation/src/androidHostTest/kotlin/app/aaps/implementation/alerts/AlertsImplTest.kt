@@ -1,4 +1,4 @@
-package app.aaps.implementation.pump.alerts
+package app.aaps.implementation.alerts
 
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
@@ -10,12 +10,12 @@ import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpWithConcentration
-import app.aaps.core.interfaces.pump.alerts.PumpAlert
-import app.aaps.core.interfaces.pump.alerts.PumpAlertAction
-import app.aaps.core.interfaces.pump.alerts.PumpAlertLifetime
-import app.aaps.core.interfaces.pump.alerts.PumpAlertPlatform
-import app.aaps.core.interfaces.pump.alerts.PumpAlertSeverity
-import app.aaps.core.interfaces.pump.alerts.PumpAlerts
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertAction
+import app.aaps.core.interfaces.alerts.AlertLifetime
+import app.aaps.core.interfaces.alerts.AlertPlatform
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
@@ -52,7 +52,7 @@ import org.mockito.kotlin.whenever
  * user would get. Never `advanceUntilIdle`: the list cleans up in a loop that re-arms itself.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-class PumpAlertsImplTest : TestBase() {
+class AlertsImplTest : TestBase() {
 
     /** What the notification list asks of the platform: which card owns the sound now. */
     private class RecordingSystemPlatform : SystemNotificationPlatform {
@@ -68,21 +68,21 @@ class PumpAlertsImplTest : TestBase() {
         override fun onDismissed(callback: (Int) -> Unit) {}
     }
 
-    private class RecordingAlertPlatform : PumpAlertPlatform {
+    private class RecordingAlertPlatform : AlertPlatform {
 
         val screens = mutableListOf<String>()
         val chimes = mutableListOf<String>()
         val snoozes = mutableListOf<Pair<String, Long>>()
         val withdrawals = mutableListOf<String>()
-        override fun showAlarmScreen(alert: PumpAlert) {
+        override fun showAlarmScreen(alert: Alert) {
             screens += alert.key
         }
 
-        override fun chime(alert: PumpAlert) {
+        override fun chime(alert: Alert) {
             chimes += alert.key
         }
 
-        override fun snoozed(alert: PumpAlert, until: Long) {
+        override fun snoozed(alert: Alert, until: Long) {
             snoozes += alert.key to until
         }
 
@@ -106,37 +106,37 @@ class PumpAlertsImplTest : TestBase() {
     private var storedSilences = "[]"
 
     private lateinit var notificationManager: CommonNotificationManager
-    private lateinit var sut: PumpAlertsImpl
+    private lateinit var sut: AlertsImpl
 
     @BeforeEach
     fun setUp() {
         whenever(dateUtil.now()).thenAnswer { now }
         doAnswer { (it.arguments[0] as? TextRef.Literal)?.text ?: "text" }.whenever(rh).gs(any<TextRef>())
         whenever(rh.gs(any<TextRef>(), anyVararg())).thenReturn("text")
-        whenever(preferences.get(StringNonKey.PumpAlertSilences)).thenAnswer { storedSilences }
-        doAnswer { storedSilences = it.arguments[1] as String; Unit }.whenever(preferences).put(eq(StringNonKey.PumpAlertSilences), any<String>())
+        whenever(preferences.get(StringNonKey.AlertSilences)).thenAnswer { storedSilences }
+        doAnswer { storedSilences = it.arguments[1] as String; Unit }.whenever(preferences).put(eq(StringNonKey.AlertSilences), any<String>())
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.model()).thenReturn(PumpType.GENERIC_AAPS)
         whenever(pump.serialNumber()).thenReturn("serial")
         notificationManager = CommonNotificationManager(aapsLogger, rh, systemPlatform, eventBus, scope)
-        sut = newPumpAlerts()
+        sut = newAlerts()
     }
 
-    private fun newPumpAlerts() = PumpAlertsImpl(aapsLogger, notificationManager, alertPlatform, preferences, pumpSync, activePlugin, rh, eventBus, dateUtil, scope)
+    private fun newAlerts() = AlertsImpl(aapsLogger, notificationManager, alertPlatform, preferences, pumpSync, activePlugin, rh, eventBus, dateUtil, scope)
 
     private fun alert(
         key: String = "occlusion",
-        severity: PumpAlertSeverity = PumpAlertSeverity.CRITICAL,
+        severity: AlertSeverity = AlertSeverity.CRITICAL,
         raisedAt: Long = 500L,
         source: String = "pump",
-        action: PumpAlertAction? = null,
-        lifetime: PumpAlertLifetime = PumpAlertLifetime.CONDITION
-    ) = PumpAlert(
+        action: AlertAction? = null,
+        lifetime: AlertLifetime = AlertLifetime.CONDITION
+    ) = Alert(
         source = source, key = key, severity = severity, title = TextRef.Literal(key), raisedAt = raisedAt,
         action = action, lifetime = lifetime
     )
 
-    private fun cards(): List<AapsNotification> = notificationManager.notifications.value.filter { it.id == NotificationId.PUMP_ALERT }
+    private fun cards(): List<AapsNotification> = notificationManager.notifications.value.filter { it.id == NotificationId.ALERT }
 
     private fun card(): AapsNotification = cards().single()
 
@@ -153,7 +153,7 @@ class PumpAlertsImplTest : TestBase() {
 
     @Test
     fun `a new alert is announced once with the time the pump raised it`() {
-        sut.raise(alert(severity = PumpAlertSeverity.WARNING))
+        sut.raise(alert(severity = AlertSeverity.WARNING))
         scope.runCurrent()
 
         verifyBlocking(pumpSync) {
@@ -163,7 +163,7 @@ class PumpAlertsImplTest : TestBase() {
 
     @Test
     fun `an info alert is not announced`() {
-        sut.raise(alert(severity = PumpAlertSeverity.INFO))
+        sut.raise(alert(severity = AlertSeverity.INFO))
         scope.runCurrent()
 
         verifyBlocking(pumpSync, never()) { insertTherapyEventIfNewWithTimestamp(any(), any(), anyOrNull(), anyOrNull(), any(), any()) }
@@ -196,7 +196,7 @@ class PumpAlertsImplTest : TestBase() {
         assertThat(card().sound).isNull()
         assertThat(card().level).isEqualTo(NotificationLevel.URGENT)
         assertThat(systemPlatform.soundingKey).isNull()
-        assertThat(alertPlatform.snoozes).containsExactly("occlusion" to now + PumpAlerts.SILENCE_MINUTES * 60_000L)
+        assertThat(alertPlatform.snoozes).containsExactly("occlusion" to now + Alerts.SILENCE_MINUTES * 60_000L)
         assertThat(sut.active.value).hasSize(1)
     }
 
@@ -205,8 +205,8 @@ class PumpAlertsImplTest : TestBase() {
         sut.raise(alert())
         sut.silence("pump", "occlusion")
 
-        now += PumpAlerts.SILENCE_MINUTES * 60_000L
-        scope.advanceTimeBy(PumpAlerts.SILENCE_MINUTES * 60_000L + 1)
+        now += Alerts.SILENCE_MINUTES * 60_000L
+        scope.advanceTimeBy(Alerts.SILENCE_MINUTES * 60_000L + 1)
 
         assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
         assertThat(systemPlatform.soundingKey).isEqualTo(card().instanceKey)
@@ -219,7 +219,7 @@ class PumpAlertsImplTest : TestBase() {
         sut.raise(alert())
         sut.silence("pump", "occlusion")
 
-        now += PumpAlerts.SILENCE_MINUTES * 60_000L
+        now += Alerts.SILENCE_MINUTES * 60_000L
         sut.checkSilences()
 
         assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
@@ -229,11 +229,11 @@ class PumpAlertsImplTest : TestBase() {
     fun `a silence survives a restart and holds for the same occurrence`() {
         sut.raise(alert(raisedAt = 500L))
         sut.silence("pump", "occlusion")
-        notificationManager.dismiss(NotificationId.PUMP_ALERT)
+        notificationManager.dismiss(NotificationId.ALERT)
 
         // A new process: a new instance, the same stored preferences.
         now += 60_000L
-        val restarted = newPumpAlerts()
+        val restarted = newAlerts()
         restarted.raise(alert(raisedAt = 500L))
 
         assertThat(card().sound).isNull()
@@ -244,9 +244,9 @@ class PumpAlertsImplTest : TestBase() {
     fun `a stored silence does not hold for a new occurrence`() {
         sut.raise(alert(raisedAt = 500L))
         sut.silence("pump", "occlusion")
-        notificationManager.dismiss(NotificationId.PUMP_ALERT)
+        notificationManager.dismiss(NotificationId.ALERT)
 
-        val restarted = newPumpAlerts()
+        val restarted = newAlerts()
         restarted.raise(alert(raisedAt = 900L))
 
         assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
@@ -294,10 +294,10 @@ class PumpAlertsImplTest : TestBase() {
 
     @Test
     fun `an info alert with no action that the user dismissed stays dismissed`() {
-        sut.raise(alert(severity = PumpAlertSeverity.INFO))
+        sut.raise(alert(severity = AlertSeverity.INFO))
         scope.runCurrent()
 
-        notificationManager.dismiss(NotificationId.PUMP_ALERT)
+        notificationManager.dismiss(NotificationId.ALERT)
         scope.runCurrent()
 
         assertThat(cards()).isEmpty()
@@ -306,7 +306,7 @@ class PumpAlertsImplTest : TestBase() {
 
     @Test
     fun `a warning is an important card with one sound and no alarm screen`() {
-        sut.raise(alert(severity = PumpAlertSeverity.WARNING))
+        sut.raise(alert(severity = AlertSeverity.WARNING))
 
         assertThat(card().level).isEqualTo(NotificationLevel.IMPORTANT)
         assertThat(card().sound).isNull()
@@ -316,7 +316,7 @@ class PumpAlertsImplTest : TestBase() {
 
     @Test
     fun `an info alert is a normal card with no sound`() {
-        sut.raise(alert(severity = PumpAlertSeverity.INFO))
+        sut.raise(alert(severity = AlertSeverity.INFO))
 
         assertThat(card().level).isEqualTo(NotificationLevel.NORMAL)
         assertThat(alertPlatform.chimes).isEmpty()
@@ -326,7 +326,7 @@ class PumpAlertsImplTest : TestBase() {
     @Test
     fun `the card button runs the action and silences the alert`() {
         var runs = 0
-        sut.raise(alert(action = PumpAlertAction(TextRef.Literal("Clear")) { runs++; true }))
+        sut.raise(alert(action = AlertAction(TextRef.Literal("Clear")) { runs++; true }))
 
         card().actions.single().action()
         scope.runCurrent()
@@ -338,7 +338,7 @@ class PumpAlertsImplTest : TestBase() {
 
     @Test
     fun `an action the pump did not confirm says so`() {
-        sut.raise(alert(action = PumpAlertAction(TextRef.Literal("Clear")) { false }))
+        sut.raise(alert(action = AlertAction(TextRef.Literal("Clear")) { false }))
 
         sut.act("pump", "occlusion")
         scope.runCurrent()
@@ -361,7 +361,7 @@ class PumpAlertsImplTest : TestBase() {
      */
     @Test
     fun `silencing an event alert ends it`() {
-        sut.raise(alert(key = "bolus-error", source = "aaps", lifetime = PumpAlertLifetime.EVENT))
+        sut.raise(alert(key = "bolus-error", source = "aaps", lifetime = AlertLifetime.EVENT))
 
         sut.silence("aaps", "bolus-error")
 
@@ -383,7 +383,7 @@ class PumpAlertsImplTest : TestBase() {
     /** Mute 5 min on an event alert is still a delay, not the end: that is what Silence is for. */
     @Test
     fun `snoozing an event alert keeps it and schedules the re-ring`() {
-        sut.raise(alert(key = "bolus-error", source = "aaps", lifetime = PumpAlertLifetime.EVENT))
+        sut.raise(alert(key = "bolus-error", source = "aaps", lifetime = AlertLifetime.EVENT))
 
         sut.snooze("aaps", "bolus-error", 5)
 
@@ -399,7 +399,7 @@ class PumpAlertsImplTest : TestBase() {
      */
     @Test
     fun `an event alert whose card is removed is over`() {
-        sut.raise(alert(key = "bolus-error", source = "aaps", lifetime = PumpAlertLifetime.EVENT))
+        sut.raise(alert(key = "bolus-error", source = "aaps", lifetime = AlertLifetime.EVENT))
         notificationManager.muteAllAlarms()
         scope.runCurrent()
 
@@ -425,7 +425,7 @@ class PumpAlertsImplTest : TestBase() {
      */
     @Test
     fun `an event action that succeeds ends the alert`() {
-        sut.raise(alert(key = "eat-reminder", source = "aaps", lifetime = PumpAlertLifetime.EVENT, action = PumpAlertAction(TextRef.Literal("+5 min")) { true }))
+        sut.raise(alert(key = "eat-reminder", source = "aaps", lifetime = AlertLifetime.EVENT, action = AlertAction(TextRef.Literal("+5 min")) { true }))
 
         sut.act("aaps", "eat-reminder")
         scope.runCurrent()
@@ -435,7 +435,7 @@ class PumpAlertsImplTest : TestBase() {
 
     @Test
     fun `an event action that fails leaves the alert ringing`() {
-        sut.raise(alert(key = "eat-reminder", source = "aaps", lifetime = PumpAlertLifetime.EVENT, action = PumpAlertAction(TextRef.Literal("+5 min")) { false }))
+        sut.raise(alert(key = "eat-reminder", source = "aaps", lifetime = AlertLifetime.EVENT, action = AlertAction(TextRef.Literal("+5 min")) { false }))
 
         sut.act("aaps", "eat-reminder")
         scope.runCurrent()
@@ -447,7 +447,7 @@ class PumpAlertsImplTest : TestBase() {
     /** A pump's alert is silenced while its step runs: the pump takes its time, and the driver resolves it. */
     @Test
     fun `a condition action silences the alert while it runs`() {
-        sut.raise(alert(action = PumpAlertAction(TextRef.Literal("Deactivate")) { true }))
+        sut.raise(alert(action = AlertAction(TextRef.Literal("Deactivate")) { true }))
 
         sut.act("pump", "occlusion")
         scope.runCurrent()

@@ -35,7 +35,7 @@ import app.aaps.core.ui.compose.stringResource
  * and close.
  *
  * Shared code, because iOS needs the same screen: `ErrorActivity` hosts it on Android, and the Compose host of the
- * iOS app shows it for a pump alert through [PumpAlertScreen]. Nothing in here is platform specific any more; the one
+ * iOS app shows it for a pump alert through [AlertScreen]. Nothing in here is platform specific any more; the one
  * thing that was - the app icon, which is a drawable id on Android - comes in as [badge] instead.
  *
  * It owns no audio. Every alarm is a card in the notification list and that list is the only sound owner, so this

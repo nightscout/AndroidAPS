@@ -550,12 +550,12 @@ class PumpScenario(private val pump: PumpUnderTest) {
     }
 
     /**
-     * The alarm is a pump alert of the core (acceptance A1): a `PumpAlerts` card at [NotificationLevel.URGENT] that rings,
+     * The alarm is a pump alert of the core (acceptance A1): a `Alerts` card at [NotificationLevel.URGENT] that rings,
      * at [since] or later - not an alarm the driver raises in its own way.
      */
-    fun checkPumpAlertSince(since: Long) {
+    fun checkAlertSince(since: Long) {
         fun ringing() = testGraphs.notificationManager.notifications.value.any {
-            it.id == NotificationId.PUMP_ALERT && it.level == NotificationLevel.URGENT && it.sound != null && it.date >= since
+            it.id == NotificationId.ALERT && it.level == NotificationLevel.URGENT && it.sound != null && it.date >= since
         }
         awaitValue(RECORD_TIMEOUT) { ringing().takeIf { it } }
         assertWithMessage("a ringing pump alert since the pump raised it, AAPS shows ${shownForAlarm()}").that(ringing()).isTrue()

@@ -37,7 +37,7 @@ says what has to pass, not how.
 
 How the core shows, rings and silences an alert is in `PUMP_DESIGN.md`, section 2.
 
-- **A1** Every alert the pump reports, and every delivery problem the user must act on, goes through `PumpAlerts`.
+- **A1** Every alert the pump reports, and every delivery problem the user must act on, goes through `Alerts`.
   Messages that are not pump alerts (wrong driver, wrong password, the time was updated) stay plain cards.
 - **A2** The driver plays no sound and has no notification channel, alarm screen or foreground check of its own.
 - **A3** The severity follows what the pump does: delivery stopped or not safe is CRITICAL, a problem the user must
@@ -95,7 +95,7 @@ A class `<Pump>ScenarioTest : AbstractPumpScenarioTest()` runs all of these. A s
 - **S8** What happens on the pump: `aSuspendOnThePumpIsRecorded`, `aBolusGivenOnThePumpIsImported`,
   `aBolusWithThePumpClockOffIsStoredAtItsTime`.
 - **S9** Alarms: `anOcclusionRaisesAnAlarm`, `anEmptyReservoirRaisesAnAlarm` (an alarm the user hears: an URGENT card
-  with a sound, or the full-screen alarm), and `anOcclusionIsARingingPumpAlert` (A1: it is a ringing pump alert).
+  with a sound, or the full-screen alarm), and `anOcclusionIsARingingAlert` (A1: it is a ringing pump alert).
 - **S10** App restart: `appKilledDuringABolus`, in its two runs (`killRestart 1` and `2`).
 - **S11** Pump-specific behaviour has a scenario of its own in the pump's class (for example a log that wraps, a
   setting the pump carries out later).
@@ -165,10 +165,10 @@ A requirement left out silently counts as not passed.
 
 Known exceptions in drivers that are in the tree now:
 
-- **Every driver but Carelevo, A1-A6:** they still raise alarms on their own. They move to `PumpAlerts` one at a time,
+- **Every driver but Carelevo, A1-A6:** they still raise alarms on their own. They move to `Alerts` one at a time,
   each with a real-pump test (`PUMP_DESIGN.md`, section 4).
 - **Every driver but Carelevo and the virtual pump, K1-K3:** Android only. Each moves when it is next reworked.
-- **Carelevo, R14:** not run yet; the patch raised no alarm since the move to `PumpAlerts`.
+- **Carelevo, R14:** not run yet; the patch raised no alarm since the move to `Alerts`.
 
 - **Omnipod Eros, D2:** the activation wizard calls the pod directly for "Initialize Pod" and "Insert Cannula", not
   through the queue. Left as it is until someone can test the change on an Eros pod with a RileyLink. The Dash and

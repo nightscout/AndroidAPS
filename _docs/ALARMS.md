@@ -13,7 +13,7 @@ How a pump alert works is in `PUMP_DESIGN.md` (sections 2 and 8). How a CGM rais
 | # | Kind | API | What the user gets | Sound | Platforms | Used by |
 |---|---|---|---|---|---|---|
 | 1 | **In-app notification card** | `NotificationManager.post(NotificationId, text, level, sound?)` | A card in the overview list. Levels: URGENT, IMPORTANT, NORMAL, LOW, INFO, ANNOUNCEMENT | Only URGENT **with** a sound: a rising volume and the alarm screen | Android, iOS, desktop | Most modules; on 2026-11-21 about 70 files in 28 modules, most of them in core, DanaR, DanaRS, sync and constraints |
-| 2 | **Pump alerts** | `PumpAlerts.raise(PumpAlert)`. Severity CRITICAL, WARNING or INFO; lifetime CONDITION or EVENT | A card. CRITICAL: the alarm screen. WARNING: one chime as an Android notification. Silence is a 30-minute snooze that survives a restart; the watch is told | CRITICAL rings until answered, WARNING once | Android, iOS | Carelevo, and the `runAlarm` shim (row 3) |
+| 2 | **Pump alerts** | `Alerts.raise(Alert)`. Severity CRITICAL, WARNING or INFO; lifetime CONDITION or EVENT | A card. CRITICAL: the alarm screen. WARNING: one chime as an Android notification. Silence is a 30-minute snooze that survives a restart; the watch is told | CRITICAL rings until answered, WARNING once | Android, iOS | Carelevo, and the `runAlarm` shim (row 3) |
 | 3 | **App alarms** | `UiInteraction.runAlarm(...)`. Now a shim: it raises an EVENT pump alert with the source `"aaps"` | As row 2: the alarm screen until it is answered | `BOLUS_ERROR`, `EAT_REMINDER`, `ALARM` | Android, iOS | A bolus error (command queue, overview, main activity), the eat reminder, the automation reminder, and the drivers' own alarms: DanaR v2, DanaRS, Diaconn, EOPatch, Medtronic, Omnipod Dash and Eros |
 | 4 | **Local alerts** | `LocalAlertUtils` | An URGENT card: **pump unreachable** (also a therapy event and an SMS), **missed BG readings** (off by default) | `ALARM` | Android, iOS (`IosMissedReadingAlarm`) | Core |
 | 5 | **Nightscout alarms** | `NsFrameHandler`, `NsIncomingDataProcessor` | Alarms and announcements from Nightscout as URGENT cards (the setting `ns_alarms`) | `ALARM`, `URGENT_ALARM` | Android, iOS | NS client |
@@ -58,7 +58,7 @@ only", but neither is true: the 2017 version sent only URGENT cards to the tray,
 | Class | What it does |
 |---|---|
 | `IosSystemNotificationPlatform` | Gives a card its sound while the app is in the background |
-| `IosPumpAlertPlatform` | Shows the alarm screen, chimes, and schedules the ring after a silence as a local notification, because a suspended app runs no timer |
+| `IosAlertPlatform` | Shows the alarm screen, chimes, and schedules the ring after a silence as a local notification, because a suspended app runs no timer |
 | `IosAlarmSoundPlayer` | Plays the alarm sounds |
 | `IosMissedReadingAlarm` | The missed BG readings alarm |
 | `IosEatReminderAlarm` | The eat reminder |
@@ -84,7 +84,7 @@ only", but neither is true: the 2017 version sent only URGENT cards to the tray,
 
 | Tier | For | API | Noise |
 |---|---|---|---|
-| **Alert** | The user must notice it and answer | `Alerts` (today `PumpAlerts`) | Yes. The raiser gives the severity and the lifetime; the core picks the sound, the alarm screen, the watch, the silence and the announcement |
+| **Alert** | The user must notice it and answer | `Alerts` (named `PumpAlerts` until 2026-11-21) | Yes. The raiser gives the severity and the lifetime; the core picks the sound, the alarm screen, the watch, the silence and the announcement |
 | **Card** | Information that stays until it is dismissed or ends | `NotificationManager.post`, without a sound | No |
 | **Snackbar** | Feedback on an action, in the screen that is open | Event hoisting (see CLAUDE.md) | No |
 
@@ -109,9 +109,10 @@ Alerts keep their three severities: CRITICAL, WARNING, INFO. The list of cards h
 
 ### The alert core
 
-- **One core, named `Alerts`.** `PumpAlerts` is renamed (`Alerts`, `Alert`, `AlertSeverity`, `AlertAction`,
-  `AlertPlatform`): it carries pumps, CGMs, BG alarms, core errors, the eat reminder and automation, not only pumps.
-  This reverses decision 4 of `PUMP_DESIGN.md`.
+- **One core, named `Alerts`.** `PumpAlerts` was renamed (`Alerts`, `Alert`, `AlertSeverity`, `AlertAction`,
+  `AlertPlatform`, in `core.interfaces.alerts` and `implementation.alerts`; done 2026-11-21): it carries pumps, CGMs,
+  BG alarms, core errors, the eat reminder and automation, not only pumps. This reverses decision 4 of
+  `PUMP_DESIGN.md`. The stored key of the silences keeps its first name, `pump_alert_silences`.
 - **A silence length per alert, and the user's choice of it.** A high can wait an hour or two, an urgent low 15
   minutes. The alert says its default and which lengths the alarm screen offers. Today it is a fixed 30 minutes.
 - **Scheduled alerts: ring at a time, unless cancelled before.** The platform books it in advance (a local
@@ -197,7 +198,7 @@ EVENT. **Removed** after the BG alarms: `NS_ALARM`, `NS_URGENT_ALARM`.
 | NORMAL | `WRONG_DRIVER`, `MINIMAL_BASAL_VALUE_REPLACED`, `MAXIMUM_BASAL_VALUE_REPLACED`, `BASAL_PROFILE_NOT_ALIGNED_TO_HOURS`, `BASAL_VALUE_BELOW_MINIMUM`, `WRONG_PUMP_DATA`, `SMB_FALLBACK`, `DYN_ISF_FALLBACK`, `NSCLIENT_VERSION_DOES_NOT_MATCH`, `NSCLIENT_PAIRING_ORPHAN`, `OPEN_HUMANS_SIGNED_OUT`, `INVALID_MESSAGE_BODY`, `GARMIN_NOT_ON_CLIENT`, `IDENTIFICATION_NOT_SET`, `AAPS_DIR_NOT_SELECTED`, `NEW_VERSION_DETECTED`, `SNACKBAR_FALLBACK`, `DST_IN_24H` (from LOW) |
 | INFO | `PROFILE_SET_OK`, `SENSOR_CHANGE_DETECTED` (from NORMAL), `SETTINGS_EXPORT_RESULT`, `SCENE_CHAINED`, `EVERSENSE_FIRMWARE` |
 
-`PUMP_ALERT` stays: it is the card of every alert (renamed with the core).
+`ALERT` stays: it is the card of every alert (renamed with the core).
 
 **No user left** (7): `CARELEVO_PATCH_ALERT`, `SHORT_DIA`, `OLD_NS`, `NSCLIENT_NO_WRITE_PERMISSION`, `NS_MALFUNCTION`,
 `SCENE_ENDED` (a test only), `SCENE_CHAIN_SKIPPED`. Each lost its last user in a change made on purpose (Nightscout
@@ -329,7 +330,7 @@ or after it. Until then they are the only glucose alarm its user has.
 ### Cards and short messages
 
 - **An URGENT card is always the card of a CRITICAL alert**, and only the alert core makes one. It works so already:
-  each alert is one card in the list (`NotificationId.PUMP_ALERT`), CRITICAL as an URGENT card with the alarm sound,
+  each alert is one card in the list (`NotificationId.ALERT`), CRITICAL as an URGENT card with the alarm sound,
   WARNING as IMPORTANT, INFO as NORMAL. No other code posts an URGENT card: what is urgent must be noticed, which is
   what an alert is for.
 - A card someone posts makes no sound, in the app and in the tray. The public `post` loses its `sound` parameter and
@@ -354,7 +355,7 @@ The order matters: step 3 must not come before step 2.
 0. At any time, on its own: delete the 7 unused `NotificationId`s, `fromOrdinal` and the out-of-date "append at the
    END" comments.
 
-1. The core: the rename to `Alerts`, the alert kinds (`AlertKind`, `CoreAlert`) with the user's Ring, Silent or Off
+1. The core: the rename to `Alerts` (done 2026-11-21), the alert kinds (`AlertKind`, `CoreAlert`) with the user's Ring, Silent or Off
    per phone and its settings screen, the silence length and its choice, the announcement under its own source, the
    scheduled alerts.
 2. The BG alarms, stale data included, on the master and the clients, with the shared silence. The escalation comes
@@ -397,7 +398,7 @@ Open, with a recommendation:
 
 ```text
 git grep -l -E "notificationManager\.post\(" -- "*.kt" ":!*/src/*[Tt]est*/**"   # cards (row 1)
-git grep -l "pumpAlerts.raise" -- "*.kt" ":!*/src/*[Tt]est*/**"                   # pump alerts (row 2)
+git grep -l "alerts.raise" -- "*.kt" ":!*/src/*[Tt]est*/**"                   # pump alerts (row 2)
 git grep -l "\.runAlarm(" -- "*.kt" ":!*/src/*[Tt]est*/**"                        # app alarms (row 3)
 git grep -l "createNotificationChannel(" -- "*.kt" ":!*/src/*[Tt]est*/**"         # Android channels (section 3)
 ```

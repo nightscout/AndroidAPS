@@ -571,21 +571,21 @@ abstract class AbstractPumpScenarioTest {
     open fun anEmptyReservoirRaisesAnAlarm() = pumpAlarmRaisesAnAlarm(EmulatedAlarm.EMPTY_RESERVOIR)
 
     /**
-     * Acceptance A1: the occlusion is a pump alert of the core (`PumpAlerts`), a critical card that rings - not an alarm
+     * Acceptance A1: the occlusion is a pump alert of the core (`Alerts`), a critical card that rings - not an alarm
      * the driver raises in its own way. A driver not on pump alerts yet skips this with the reason, so the gap stays
      * visible until it moves.
      */
     @Test
-    open fun anOcclusionIsARingingPumpAlert() = pumpAlarmRaisesAnAlarm(EmulatedAlarm.OCCLUSION, asPumpAlert = true)
+    open fun anOcclusionIsARingingAlert() = pumpAlarmRaisesAnAlarm(EmulatedAlarm.OCCLUSION, asAlert = true)
 
-    private fun pumpAlarmRaisesAnAlarm(alarm: EmulatedAlarm, asPumpAlert: Boolean = false) {
+    private fun pumpAlarmRaisesAnAlarm(alarm: EmulatedAlarm, asAlert: Boolean = false) {
         scenario.bringUp()
         scenario.pair()
         val raisedAt = System.currentTimeMillis()
         assertWithMessage("the pump raises $alarm").that(scenario.control.raise(alarm)).isTrue()
         // AAPS learns of it at the latest at its next connection to the pump.
         scenario.readStatusOnNewLink()
-        if (asPumpAlert) scenario.checkPumpAlertSince(raisedAt) else scenario.checkUrgentAlarmSince(raisedAt)
+        if (asAlert) scenario.checkAlertSince(raisedAt) else scenario.checkUrgentAlarmSince(raisedAt)
         // The alarm screen or its notification would stay into the next test.
         testGraphs.uiInteraction.stopAlarm("scenario end")
     }

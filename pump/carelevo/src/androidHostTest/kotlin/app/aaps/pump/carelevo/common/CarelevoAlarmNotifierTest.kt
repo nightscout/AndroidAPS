@@ -3,9 +3,9 @@ package app.aaps.pump.carelevo.common
 import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.pump.alerts.PumpAlert
-import app.aaps.core.interfaces.pump.alerts.PumpAlertSeverity
-import app.aaps.core.interfaces.pump.alerts.PumpAlerts
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ContextResourceHelper
@@ -41,8 +41,8 @@ import org.robolectric.annotation.Config
  * Robolectric unit tests for [CarelevoAlarmNotifier]: how each stored alarm becomes a pump alert.
  *
  * The strings come from a REAL application [Context] ([ContextResourceHelper]), so the texts are the real formatted
- * ones, with the pump values put in through the alert's text arguments. The alerts go to [RecordingPumpAlerts]; the
- * core side of pump alerts has its own tests (`PumpAlertsImplTest`).
+ * ones, with the pump values put in through the alert's text arguments. The alerts go to [RecordingAlerts]; the
+ * core side of pump alerts has its own tests (`AlertsImplTest`).
  *
  * The notifier's dispatcher is set to [Dispatchers.Unconfined], so every emission is handled synchronously on the
  * test thread.
@@ -52,15 +52,15 @@ import org.robolectric.annotation.Config
 class CarelevoAlarmNotifierTest {
 
     /** Keeps what was raised and resolved, as the core would. */
-    private class RecordingPumpAlerts : PumpAlerts {
+    private class RecordingAlerts : Alerts {
 
-        private val _active = MutableStateFlow<List<PumpAlert>>(emptyList())
-        override val active: StateFlow<List<PumpAlert>> = _active
-        override val sounding: PumpAlert? get() = _active.value.lastOrNull()
-        val raised = mutableListOf<PumpAlert>()
+        private val _active = MutableStateFlow<List<Alert>>(emptyList())
+        override val active: StateFlow<List<Alert>> = _active
+        override val sounding: Alert? get() = _active.value.lastOrNull()
+        val raised = mutableListOf<Alert>()
         val resolved = mutableListOf<String>()
 
-        override fun raise(alert: PumpAlert) {
+        override fun raise(alert: Alert) {
             raised += alert
             _active.value = _active.value.filterNot { it.source == alert.source && it.key == alert.key } + alert
         }
@@ -86,7 +86,7 @@ class CarelevoAlarmNotifierTest {
     private lateinit var aapsLogger: AAPSLogger
     private lateinit var preferences: Preferences
     private lateinit var alarmActionHandler: CarelevoAlarmActionHandler
-    private val pumpAlerts = RecordingPumpAlerts()
+    private val alerts = RecordingAlerts()
 
     private lateinit var sut: CarelevoAlarmNotifier
 
@@ -114,7 +114,7 @@ class CarelevoAlarmNotifierTest {
 
         sut = CarelevoAlarmNotifier(
             aapsLogger = aapsLogger,
-            pumpAlerts = pumpAlerts,
+            alerts = alerts,
             preferences = preferences,
             alarmActionHandler = alarmActionHandler,
             rh = rh
@@ -122,12 +122,12 @@ class CarelevoAlarmNotifierTest {
         sut.dispatcher = Dispatchers.Unconfined
     }
 
-    private fun shown(alarm: CarelevoAlarmInfo): PumpAlert {
+    private fun shown(alarm: CarelevoAlarmInfo): Alert {
         sut.showAlerts(listOf(alarm))
-        return pumpAlerts.raised.last()
+        return alerts.raised.last()
     }
 
-    private fun PumpAlert.textShown(): String = text?.let { rh.gs(it) } ?: ""
+    private fun Alert.textShown(): String = text?.let { rh.gs(it) } ?: ""
 
     // ---- simple state / accessors -------------------------------------------------------------
 
@@ -142,8 +142,8 @@ class CarelevoAlarmNotifierTest {
     fun `each stored alarm is one pump alert keyed by its id`() {
         sut.showAlerts(listOf(alarm(AlarmCause.ALARM_NOTICE_LGS_START, id = "a"), alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "b")))
 
-        assertThat(pumpAlerts.active.value.map { it.key }).containsExactly("a", "b")
-        assertThat(pumpAlerts.active.value.map { it.source }.toSet()).containsExactly(CarelevoAlarmNotifier.SOURCE)
+        assertThat(alerts.active.value.map { it.key }).containsExactly("a", "b")
+        assertThat(alerts.active.value.map { it.source }.toSet()).containsExactly(CarelevoAlarmNotifier.SOURCE)
     }
 
     @Test
@@ -152,8 +152,8 @@ class CarelevoAlarmNotifierTest {
 
         sut.showAlerts(listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "b")))
 
-        assertThat(pumpAlerts.resolved).containsExactly("a")
-        assertThat(pumpAlerts.active.value.map { it.key }).containsExactly("b")
+        assertThat(alerts.resolved).containsExactly("a")
+        assertThat(alerts.active.value.map { it.key }).containsExactly("b")
     }
 
     @Test
@@ -162,23 +162,23 @@ class CarelevoAlarmNotifierTest {
 
         sut.clearAlerts()
 
-        assertThat(pumpAlerts.active.value).isEmpty()
+        assertThat(alerts.active.value).isEmpty()
     }
 
     @Test
     fun `a WARNING alarm is a critical pump alert`() {
-        assertThat(shown(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED)).severity).isEqualTo(PumpAlertSeverity.CRITICAL)
+        assertThat(shown(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED)).severity).isEqualTo(AlertSeverity.CRITICAL)
     }
 
     @Test
     fun `an ALERT alarm is a critical pump alert`() {
         whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)).thenReturn(25)
-        assertThat(shown(alarm(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)).severity).isEqualTo(PumpAlertSeverity.CRITICAL)
+        assertThat(shown(alarm(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)).severity).isEqualTo(AlertSeverity.CRITICAL)
     }
 
     @Test
     fun `a NOTICE alarm is an info pump alert`() {
-        assertThat(shown(alarm(AlarmCause.ALARM_NOTICE_LGS_START)).severity).isEqualTo(PumpAlertSeverity.INFO)
+        assertThat(shown(alarm(AlarmCause.ALARM_NOTICE_LGS_START)).severity).isEqualTo(AlertSeverity.INFO)
     }
 
     /** The silence of the core holds for one occurrence, so the time must be the stored one, the same after a restart. */

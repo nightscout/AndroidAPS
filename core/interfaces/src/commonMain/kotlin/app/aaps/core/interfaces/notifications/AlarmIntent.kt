@@ -8,14 +8,14 @@ package app.aaps.core.interfaces.notifications
  *
  * It used to carry the alarm itself - its sound, its title, its message, when its notification was posted and
  * whether it was the "time to eat" timer - because `UiInteraction.runAlarm` built the screen from an intent. Every
- * alarm is an alert now and the screen reads it from `PumpAlerts.active`, so the intent only has to say **which**
+ * alarm is an alert now and the screen reads it from `Alerts.active`, so the intent only has to say **which**
  * alert. See `_docs/PUMP_DESIGN.md`, section 8.
  */
 object AlarmIntent {
 
     /** Which alert the alarm screen is for: its `source` and `key`. */
-    const val EXTRA_PUMP_ALERT_SOURCE = "pumpAlertSource"
-    const val EXTRA_PUMP_ALERT_KEY = "pumpAlertKey"
+    const val EXTRA_ALERT_SOURCE = "alertSource"
+    const val EXTRA_ALERT_KEY = "alertKey"
 
     /**
      * The alert's title and message as they read when the screen was asked for.

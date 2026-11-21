@@ -14,7 +14,7 @@ import kotlin.reflect.KClass
  *
  * This is all that is left of `UiInteractionImpl` here. The rest of it - 150 lines of activity starts, notification
  * channels, an in-process re-ring timer and the watch events - is `app.aaps.implementation.ui.UiInteractionImpl` in
- * shared code now, over `PumpAlerts`, so the same alarms work on iOS. See `_docs/PUMP_DESIGN.md`, section 8.
+ * shared code now, over `Alerts`, so the same alarms work on iOS. See `_docs/PUMP_DESIGN.md`, section 8.
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)

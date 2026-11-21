@@ -6,8 +6,8 @@ import app.aaps.core.interfaces.notifications.AlarmSound
  * The app's own alarms: the ones AAPS raises about itself rather than the ones a pump reports.
  *
  * A bolus that failed, the "time to eat" timer, an automation reminder. They are
- * [app.aaps.core.interfaces.pump.alerts.PumpAlert]s with
- * [app.aaps.core.interfaces.pump.alerts.PumpAlertLifetime.EVENT], raised under the source `aaps`, so they are one
+ * [app.aaps.core.interfaces.alerts.Alert]s with
+ * [app.aaps.core.interfaces.alerts.AlertLifetime.EVENT], raised under the source `aaps`, so they are one
  * card in the notification list with one sound owner, exactly like a pump's alert. See `_docs/PUMP_DESIGN.md`,
  * section 8.
  *

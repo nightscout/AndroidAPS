@@ -1,11 +1,11 @@
-package app.aaps.implementation.pump.alerts
+package app.aaps.implementation.alerts
 
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.pump.alerts.PumpAlert
-import app.aaps.core.interfaces.pump.alerts.PumpAlertPlatform
-import app.aaps.core.interfaces.pump.alerts.PumpAlerts
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertPlatform
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.implementation.lifecycle.observeAppForeground
@@ -34,16 +34,16 @@ import platform.UserNotifications.UNTimeIntervalNotificationTrigger
 import platform.UserNotifications.UNUserNotificationCenter
 
 /**
- * iOS binds the shared [PumpAlertsImpl], because it has a [PumpAlertPlatform]. The Android counterpart is
- * `PumpAlertsAndroidBindings`. Both exist so that a platform without a platform half has no pump alerts at all,
+ * iOS binds the shared [AlertsImpl], because it has a [AlertPlatform]. The Android counterpart is
+ * `AlertsAndroidBindings`. Both exist so that a platform without a platform half has no pump alerts at all,
  * rather than alerts that quietly do nothing.
  */
 @ContributesTo(AppScope::class)
 @BindingContainer
-object PumpAlertsIosBindings {
+object AlertsIosBindings {
 
     @Provides
-    fun pumpAlerts(impl: PumpAlertsImpl): PumpAlerts = impl
+    fun alerts(impl: AlertsImpl): Alerts = impl
 
     /** The app's own alarms are alerts too, and the shared implementation needs the same platform half. */
     @Provides
@@ -51,7 +51,7 @@ object PumpAlertsIosBindings {
 }
 
 /** Which alert the alarm screen should be showing. */
-data class PumpAlertId(val source: String, val key: String)
+data class AlertId(val source: String, val key: String)
 
 /**
  * The iOS side of pump alerts beyond the notification list, which already owns the card and the ramping sound.
@@ -66,13 +66,13 @@ data class PumpAlertId(val source: String, val key: String)
  *
  * ## Why the silence end is a notification and not a timer
  *
- * A silence lasts [PumpAlerts.SILENCE_MINUTES] and the alert rings again when it ends. On Android that is an exact
+ * A silence lasts [Alerts.SILENCE_MINUTES] and the alert rings again when it ends. On Android that is an exact
  * alarm, which wakes the phone and runs code. iOS gives an app no way to run at a chosen time: a suspended process has
- * no timers and cannot un-suspend itself, so the coroutine timer inside [PumpAlertsImpl] only fires if the app happens
+ * no timers and cannot un-suspend itself, so the coroutine timer inside [AlertsImpl] only fires if the app happens
  * to be alive. A local notification is the one primitive that is delivered on time whether or not the process is
  * running, so [snoozed] schedules one and it *is* the re-ring the user hears.
  *
- * What it cannot do is run [PumpAlertsImpl.checkSilences], because a delivered notification does not start the app. So
+ * What it cannot do is run [AlertsImpl.checkSilences], because a delivered notification does not start the app. So
  * the card in the list can still read as silenced for a while after the phone has already rung. [checkSilences] is
  * therefore called on every way back in - the app coming to the front, which includes a Bluetooth event that wakes it
  * - and brings the card in line then. The user hears the alarm on time either way, which is the part that matters.
@@ -86,21 +86,21 @@ data class PumpAlertId(val source: String, val key: String)
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 @Inject
-class IosPumpAlertPlatform(
+class IosAlertPlatform(
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     /**
-     * A provider, because [PumpAlertsImpl] takes this class: asking for it directly would be a dependency cycle. The
-     * same shape `AndroidPumpAlertPlatform` uses for its two Android collaborators.
+     * A provider, because [AlertsImpl] takes this class: asking for it directly would be a dependency cycle. The
+     * same shape `AndroidAlertPlatform` uses for its two Android collaborators.
      */
-    private val pumpAlerts: () -> PumpAlertsImpl,
+    private val alerts: () -> AlertsImpl,
     @ApplicationScope private val appScope: CoroutineScope
-) : PumpAlertPlatform {
+) : AlertPlatform {
 
-    private val _alarmScreen = MutableStateFlow<PumpAlertId?>(null)
+    private val _alarmScreen = MutableStateFlow<AlertId?>(null)
 
     /** The alert whose alarm screen should be up, or null. The app host shows it; nothing here draws anything. */
-    val alarmScreen: StateFlow<PumpAlertId?> = _alarmScreen.asStateFlow()
+    val alarmScreen: StateFlow<AlertId?> = _alarmScreen.asStateFlow()
 
     /**
      * Resolved on first use, never in the constructor.
@@ -115,23 +115,23 @@ class IosPumpAlertPlatform(
 
     init {
         observeAppForeground { inForeground ->
-            if (inForeground) appScope.launch { pumpAlerts().checkSilences() }
+            if (inForeground) appScope.launch { alerts().checkSilences() }
         }
     }
 
-    override fun showAlarmScreen(alert: PumpAlert) {
+    override fun showAlarmScreen(alert: Alert) {
         aapsLogger.debug(LTag.NOTIFICATION, "Pump alert screen asked for: ${alert.source}/${alert.key}")
-        _alarmScreen.value = PumpAlertId(alert.source, alert.key)
+        _alarmScreen.value = AlertId(alert.source, alert.key)
     }
 
     /** The alarm screen was closed by the user. The alert stays; only the request goes. */
     fun alarmScreenClosed(source: String, key: String) {
-        if (_alarmScreen.value == PumpAlertId(source, key)) _alarmScreen.value = null
+        if (_alarmScreen.value == AlertId(source, key)) _alarmScreen.value = null
     }
 
-    override fun chime(alert: PumpAlert) = post(chimeId(alert.source, alert.key), alert, trigger = null)
+    override fun chime(alert: Alert) = post(chimeId(alert.source, alert.key), alert, trigger = null)
 
-    override fun snoozed(alert: PumpAlert, until: Long) {
+    override fun snoozed(alert: Alert, until: Long) {
         val seconds = secondsFromNow(until)
         if (seconds < 1.0) {
             // Already over, or so close that iOS would refuse the trigger. checkSilences ends it the ordinary way.
@@ -158,11 +158,11 @@ class IosPumpAlertPlatform(
      * Critical alerts, which would also break through silent mode, need an entitlement from Apple that this project
      * does not have - a decision for the project rather than something to work around here.
      *
-     * Permission is not asked for here. Every alert posts its card first ([PumpAlertsImpl] shows the card before it
+     * Permission is not asked for here. Every alert posts its card first ([AlertsImpl] shows the card before it
      * calls this), and that goes through `IosSystemNotificationPlatform`, which asks once. If it was refused this
      * fails with the reason in the log rather than disappearing.
      */
-    private fun post(identifier: String, alert: PumpAlert, trigger: UNNotificationTrigger?) {
+    private fun post(identifier: String, alert: Alert, trigger: UNNotificationTrigger?) {
         val content = UNMutableNotificationContent().apply {
             setTitle(rh.gs(alert.title))
             alert.text?.let { setBody(rh.gs(it)) }

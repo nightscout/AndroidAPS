@@ -1,4 +1,4 @@
-package app.aaps.implementation.pump.alerts
+package app.aaps.implementation.alerts
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -11,9 +11,9 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmIntent
-import app.aaps.core.interfaces.pump.alerts.PumpAlert
-import app.aaps.core.interfaces.pump.alerts.PumpAlertPlatform
-import app.aaps.core.interfaces.pump.alerts.PumpAlerts
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertPlatform
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.ui.AndroidActivities
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -28,15 +28,15 @@ import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 
 /**
- * Android binds the shared [PumpAlertsImpl], because it has a [PumpAlertPlatform]. A platform without one has no pump
+ * Android binds the shared [AlertsImpl], because it has a [AlertPlatform]. A platform without one has no pump
  * alerts, and so no driver that needs them.
  */
 @ContributesTo(AppScope::class)
 @BindingContainer
-object PumpAlertsAndroidBindings {
+object AlertsAndroidBindings {
 
     @Provides
-    fun pumpAlerts(impl: PumpAlertsImpl): PumpAlerts = impl
+    fun alerts(impl: AlertsImpl): Alerts = impl
 
     /** The app's own alarms are alerts too, and the shared implementation needs the same platform half. */
     @Provides
@@ -48,20 +48,20 @@ object PumpAlertsAndroidBindings {
  * - the alarm screen is `ErrorActivity` showing the alert, started at once when AAPS is in front, and otherwise woken
  *   with the screen through [AlarmNotificationManager.scheduleScreenWakeAndLaunch], as every background alarm;
  * - a WARNING sounds once through [AlarmNotificationManager.postChime];
- * - the end of a silence is an exact alarm to [PumpAlertWakeReceiver], because a coroutine timer runs late while the
+ * - the end of a silence is an exact alarm to [AlertWakeReceiver], because a coroutine timer runs late while the
  *   phone sleeps.
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 @Inject
-class AndroidPumpAlertPlatform(
+class AndroidAlertPlatform(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     // Providers: both reach Android when they are built, which must not happen while the graph is built.
     private val androidActivities: () -> AndroidActivities,
     private val alarmNotificationManager: () -> AlarmNotificationManager
-) : PumpAlertPlatform {
+) : AlertPlatform {
 
     private val mainHandler by lazy { Handler(Looper.getMainLooper()) }
 
@@ -78,10 +78,10 @@ class AndroidPumpAlertPlatform(
      */
     @Volatile private var unanswered: Intent? = null
 
-    override fun showAlarmScreen(alert: PumpAlert) {
+    override fun showAlarmScreen(alert: Alert) {
         val intent = Intent(context, androidActivities().alarm.java).apply {
-            putExtra(AlarmIntent.EXTRA_PUMP_ALERT_SOURCE, alert.source)
-            putExtra(AlarmIntent.EXTRA_PUMP_ALERT_KEY, alert.key)
+            putExtra(AlarmIntent.EXTRA_ALERT_SOURCE, alert.source)
+            putExtra(AlarmIntent.EXTRA_ALERT_KEY, alert.key)
             putExtra(AlarmIntent.EXTRA_TITLE, rh.gs(alert.title))
             putExtra(AlarmIntent.EXTRA_STATUS, alert.text?.let { rh.gs(it) } ?: "")
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -109,7 +109,7 @@ class AndroidPumpAlertPlatform(
     /** A copy, so the caller starting it cannot change what is held here. Null when nothing is owed. */
     fun unansweredAlarmIntent(): Intent? = unanswered?.let { Intent(it) }
 
-    override fun chime(alert: PumpAlert) {
+    override fun chime(alert: Alert) {
         alarmNotificationManager().postChime(
             chimeKey = requestCode(alert.source, alert.key),
             title = rh.gs(alert.title),
@@ -117,7 +117,7 @@ class AndroidPumpAlertPlatform(
         )
     }
 
-    override fun snoozed(alert: PumpAlert, until: Long) {
+    override fun snoozed(alert: Alert, until: Long) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val wake = wakeIntent(alert.source, alert.key)
         try {
@@ -131,8 +131,8 @@ class AndroidPumpAlertPlatform(
 
     override fun withdrawn(source: String, key: String) {
         // Answered, resolved or silenced: whatever happened, its screen is no longer owed.
-        if (unanswered?.getStringExtra(AlarmIntent.EXTRA_PUMP_ALERT_KEY) == key &&
-            unanswered?.getStringExtra(AlarmIntent.EXTRA_PUMP_ALERT_SOURCE) == source
+        if (unanswered?.getStringExtra(AlarmIntent.EXTRA_ALERT_KEY) == key &&
+            unanswered?.getStringExtra(AlarmIntent.EXTRA_ALERT_SOURCE) == source
         ) unanswered = null
         alarmNotificationManager().cancelChime(requestCode(source, key))
         (context.getSystemService(Context.ALARM_SERVICE) as AlarmManager).cancel(wakeIntent(source, key))
@@ -140,7 +140,7 @@ class AndroidPumpAlertPlatform(
 
     private fun wakeIntent(source: String, key: String): PendingIntent = PendingIntent.getBroadcast(
         context, requestCode(source, key),
-        Intent(context, PumpAlertWakeReceiver::class.java),
+        Intent(context, AlertWakeReceiver::class.java),
         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     )
 

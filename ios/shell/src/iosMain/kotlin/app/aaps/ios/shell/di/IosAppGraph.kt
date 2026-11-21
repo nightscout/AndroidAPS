@@ -27,7 +27,7 @@ import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.PasswordHasher
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
-import app.aaps.core.interfaces.pump.alerts.PumpAlerts
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.TextResolver
@@ -51,7 +51,7 @@ import app.aaps.implementation.alerts.IosMissedReadingAlarm
 import app.aaps.implementation.maintenance.KeepAliveRunner
 import app.aaps.implementation.maintenance.cloud.AuthBrowser
 import app.aaps.implementation.plugin.IosPermissionStatus
-import app.aaps.implementation.pump.alerts.IosPumpAlertPlatform
+import app.aaps.implementation.alerts.IosAlertPlatform
 import app.aaps.implementation.receivers.IosReceiverStatusStore
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
@@ -267,12 +267,12 @@ interface IosAppGraph : MetroViewModelMultibindings {
      * Pump alerts, and the iOS half of them.
      *
      * The concrete class as well as the interface, because the alarm screen is not a window iOS can
-     * open: [IosPumpAlertPlatform.alarmScreen] says which alert wants it and `AapsAppHost` shows
-     * `PumpAlertScreen` for it. Everything else - the card, the sound, the silence, the re-ring -
-     * is the shared `PumpAlertsImpl` behind [pumpAlerts], the same as on Android.
+     * open: [IosAlertPlatform.alarmScreen] says which alert wants it and `AapsAppHost` shows
+     * `AlertScreen` for it. Everything else - the card, the sound, the silence, the re-ring -
+     * is the shared `AlertsImpl` behind [alerts], the same as on Android.
      */
-    val pumpAlerts: PumpAlerts
-    val pumpAlertPlatform: IosPumpAlertPlatform
+    val alerts: Alerts
+    val alertPlatform: IosAlertPlatform
 
     /**
      * The view model maps come from [MetroViewModelMultibindings], the same interface `AppRootGraph`

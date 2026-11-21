@@ -47,7 +47,7 @@ import dev.zacsweers.metro.SingleIn
  * There used to be a second one, `postFullScreenAlarm`, for `UiInteraction.runAlarm`: its own sound-bearing
  * channel, its own looping player under `OWNER_FULLSCREEN`, its own Mute action and its own record of an
  * unanswered alarm - a whole parallel alarm path that iOS had no answer to. `runAlarm` raises a
- * `PumpAlert` now, so there is one path on both platforms; see `_docs/PUMP_DESIGN.md`, section 8.
+ * `Alert` now, so there is one path on both platforms; see `_docs/PUMP_DESIGN.md`, section 8.
  *
  * Channels are created on the first post rather than at construction - see the `channels` field. Every posting
  * method touches it before building anything, so a post can never race their creation.

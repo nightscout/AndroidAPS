@@ -2,10 +2,10 @@ package app.aaps.pump.carelevo.common
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.pump.alerts.PumpAlert
-import app.aaps.core.interfaces.pump.alerts.PumpAlertAction
-import app.aaps.core.interfaces.pump.alerts.PumpAlertSeverity
-import app.aaps.core.interfaces.pump.alerts.PumpAlerts
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertAction
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
@@ -35,14 +35,14 @@ import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Presentation half of the alarm pipeline: observes the persisted active-alarm set (via [CarelevoAlarmActionHandler]),
- * keeps it in [alarms] for the Carelevo screen, and shows it through [PumpAlerts] ([showAlerts]). The core does the
+ * keeps it in [alarms] for the Carelevo screen, and shows it through [Alerts] ([showAlerts]). The core does the
  * rest - the card, the sound, the alarm screen, the system notification in the background, silencing - the same as for
  * every driver. See `_docs/PUMP_DESIGN.md`, section 2.
  */
 @SingleIn(AppScope::class)
 class CarelevoAlarmNotifier @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val pumpAlerts: PumpAlerts,
+    private val alerts: Alerts,
     private val preferences: Preferences,
     private val alarmActionHandler: CarelevoAlarmActionHandler,
     private val rh: TextResolver
@@ -97,27 +97,27 @@ class CarelevoAlarmNotifier @Inject constructor(
      */
     fun showAlerts(alarms: List<CarelevoAlarmInfo>) {
         val keys = alarms.map { it.alarmId }.toSet()
-        pumpAlerts.active.value.filter { it.source == SOURCE && it.key !in keys }.forEach { pumpAlerts.resolve(SOURCE, it.key) }
-        alarms.forEach { pumpAlerts.raise(toPumpAlert(it)) }
+        alerts.active.value.filter { it.source == SOURCE && it.key !in keys }.forEach { alerts.resolve(SOURCE, it.key) }
+        alarms.forEach { alerts.raise(toAlert(it)) }
     }
 
     /** The patch is gone or the driver stops: none of its alerts is left. */
-    fun clearAlerts() = pumpAlerts.resolveAll(SOURCE)
+    fun clearAlerts() = alerts.resolveAll(SOURCE)
 
-    internal fun toPumpAlert(alarm: CarelevoAlarmInfo): PumpAlert {
+    internal fun toAlert(alarm: CarelevoAlarmInfo): Alert {
         val (titleRes, descRes, btnRes) = alarm.cause.transformNotificationStringResources()
         val descArgs = buildDescArgsFor(alarm)
-        return PumpAlert(
+        return Alert(
             source = SOURCE,
             key = alarm.alarmId,
             // WARNING and ALERT stop the insulin or end the patch; a NOTICE only informs.
-            severity = if (alarm.alarmType.isCritical()) PumpAlertSeverity.CRITICAL else PumpAlertSeverity.INFO,
+            severity = if (alarm.alarmType.isCritical()) AlertSeverity.CRITICAL else AlertSeverity.INFO,
             title = titleRes,
             text = descRes?.let { if (descArgs.isEmpty()) it else it.withArgs(*descArgs.toTypedArray()) },
             raisedAt = raisedAt(alarm),
             // The clear runs the per-cause flow of the action handler, with its own fallbacks; the alert ends when that
             // flow removes the alarm from the store.
-            action = PumpAlertAction(btnRes) {
+            action = AlertAction(btnRes) {
                 alarmActionHandler.triggerEvent(AlarmEvent.ClearAlarm(info = alarm))
                 true
             }

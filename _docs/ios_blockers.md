@@ -509,7 +509,7 @@ again.
 | ~~`ExportPasswordDataStore`~~ | done | Shared `ExportPasswordDataStoreImpl` is in commonMain and the iOS half is `IosExportPasswordPlatform`. This section already says so further down ("`ExportPasswordDataStore` - iOS side done"); the table simply was not updated. Checked 2026-09-21. |
 | ~~`ImportExportPrefs`~~ | done | `LocalImportExportPrefs` in commonMain serves iOS and desktop; settings export and import were run end to end on the simulator, including Google Drive. A document picker is still missing, but that is a directory-chooser gap, not a missing binding. Checked 2026-09-21. |
 | ~~`IobCobCalculator`~~ | done | `IobCobCalculatorPlugin` is in `plugins/main/src/commonMain` now, and iOS builds it through `ClientHistoryWindowGraph` (shared with desktop). The "needs a home outside :app" problem is solved. Checked 2026-09-21. |
-| ~~`UiInteraction`~~ | done | There is no iOS implementation any more, and that is the fix rather than a gap. `runAlarm` raises a `PumpAlert` with `PumpAlertLifetime.EVENT`, so the app's own alarms are cards in the notification list like a pump's alert, and the one implementation - `app.aaps.implementation.ui.UiInteractionImpl` in commonMain - serves both platforms. `IosUiInteraction`, whose `runAlarm` only wrote a line in the log, is deleted. The two `KClass` members that had no iOS meaning are `AndroidActivities` now. Step 6 of `_docs/PUMP_DESIGN.md`, 2026-11-19. |
+| ~~`UiInteraction`~~ | done | There is no iOS implementation any more, and that is the fix rather than a gap. `runAlarm` raises a `Alert` with `AlertLifetime.EVENT`, so the app's own alarms are cards in the notification list like a pump's alert, and the one implementation - `app.aaps.implementation.ui.UiInteractionImpl` in commonMain - serves both platforms. `IosUiInteraction`, whose `runAlarm` only wrote a line in the log, is deleted. The two `KClass` members that had no iOS meaning are `AndroidActivities` now. Step 6 of `_docs/PUMP_DESIGN.md`, 2026-11-19. |
 | `NsSocketFactory` | ours, by design | Correct as written, and not a missing class: there is deliberately no `IosNsSocketFactory`. The implementation is Swift and enters as a factory parameter at start up. Checked 2026-09-21. |
 
 **Correction to what this section used to say.** It listed `BolusWizard`, `QuickWizard`,
@@ -1125,7 +1125,7 @@ pump serial number and a date helper, neither of which is security.
 
 Nothing on iOS ever played with `OWNER_FULLSCREEN`, and nothing anywhere does now: the tag is
 deleted. This was written as a warning for whoever wrote `UiInteraction.runAlarm` for iOS. Nobody
-had to in the end, because step 6 made `runAlarm` shared code over `PumpAlerts`.
+had to in the end, because step 6 made `runAlarm` shared code over `Alerts`.
 
 **This is history now, and the answer was route 1.** Step 6 of `_docs/PUMP_DESIGN.md` landed on
 2026-11-19: every alarm is a card, the registry under `OWNER_INTERNAL` is the only sound owner, and

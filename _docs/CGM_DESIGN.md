@@ -50,7 +50,7 @@ A CGM driver also has, as a pump driver does:
   - `BleCentral` (Bluetooth version 2). It has no Bluetooth code of its own.
   - `BleScanStep` and `WizardScan` for the scan.
   - `BleBonding` to remove the bond.
-  - `PumpAlerts` for its alarms (section 5). `NotificationManager` is only for plain cards that are not alarms.
+  - `Alerts` for its alarms (section 5). `NotificationManager` is only for plain cards that are not alarms.
   - Its own store for the login and the keys, not the AAPS preferences.
 
 ### Rules
@@ -125,7 +125,7 @@ transmitter refuses is a failed calibration, not a lost link.
 
 A CGM driver raises its transmitter's alarms through the alert core, as a pump driver does (`PUMP_DESIGN.md`, section
 2). The core then shows, rings, silences, raises again after a restart and tells the watch, with no code of the
-driver's own. The core is `PumpAlerts` today and is renamed `Alerts` (`ALARMS.md`, section 6); `source` is the
+driver's own. The core is `Alerts` (named `PumpAlerts` until 2026-11-21; `ALARMS.md`, section 6); `source` is the
 driver's id (`"eversense"`).
 
 **The driver raises its device and error states only:** sensor failed or expired, battery, calibration, transmitter
@@ -154,10 +154,10 @@ Until then they ring as they do now.
 
 What changes in core:
 
-1. `PumpAlertsImpl.announce` records each alert as an announcement through `PumpSync`, with the **active pump's**
+1. `AlertsImpl.announce` records each alert as an announcement through `PumpSync`, with the **active pump's**
    type and serial. A CGM alert would be filed under the pump. It needs its own way to record an announcement with no
    pump identity.
-2. The KDoc of `PumpAlertSeverity` and `PumpAlertAction` speaks of insulin and the command queue only; it gets the
+2. The KDoc of `AlertSeverity` and `AlertAction` speaks of insulin and the command queue only; it gets the
    CGM meaning above.
 3. Nothing else is known to depend on a pump; check this again when it is built.
 
@@ -224,8 +224,7 @@ See the `kmp-module-flip` skill.
 
 ## 9. Decisions (2026-11-21)
 
-1. **CGM alarms use the alert core** (`PumpAlerts`, to be renamed `Alerts`), not a second alert core and not plain
-   cards.
+1. **CGM alarms use the alert core** (`Alerts`), not a second alert core and not plain cards.
 2. **The acceptance file covers CGM drivers in full**, and has one section of reading rules for every BG source.
 3. **A CGM driver raises no glucose or missed-readings alarm.** The core's own BG alarms raise them for every source;
    the driver raises its device and error states. Until the BG alarms exist, the driver's glucose alarms keep ringing,

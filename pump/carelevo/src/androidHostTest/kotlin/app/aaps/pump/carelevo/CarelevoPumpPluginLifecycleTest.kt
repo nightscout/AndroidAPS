@@ -840,7 +840,7 @@ class CarelevoPumpPluginLifecycleTest {
     }
 
     // ---- handleAlarms ---------------------------------------------------------------------------
-    // How an alarm rings, and that one still active does not ring again, is the core's job (PumpAlertsImplTest).
+    // How an alarm rings, and that one still active does not ring again, is the core's job (AlertsImplTest).
 
     @Test
     fun `handleAlarms hands an empty alarm set to the pump alerts, so the ended ones are resolved`() {

@@ -11,7 +11,7 @@ import dev.zacsweers.metro.Inject
  * re-exposes the handler's UI-request stream (Bluetooth-enable intent, failure toast) so the host has
  * one ViewModel to collect from. The actual alarm state machine — including clearing an alarm — lives
  * entirely in [CarelevoAlarmActionHandler], driven directly from the action of each pump alert
- * ([app.aaps.pump.carelevo.common.CarelevoAlarmNotifier.toPumpAlert]); this shell does not sit in that path.
+ * ([app.aaps.pump.carelevo.common.CarelevoAlarmNotifier.toAlert]); this shell does not sit in that path.
  */
 class CarelevoAlarmViewModel @Inject constructor(
     alarmActionHandler: CarelevoAlarmActionHandler,

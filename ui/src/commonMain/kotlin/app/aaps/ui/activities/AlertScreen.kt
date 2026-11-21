@@ -7,8 +7,8 @@ import androidx.compose.runtime.getValue
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.pump.alerts.PumpAlertLifetime
-import app.aaps.core.interfaces.pump.alerts.PumpAlerts
+import app.aaps.core.interfaces.alerts.AlertLifetime
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.ui.compose.stringResource
 import kotlinx.coroutines.flow.first
@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.first
  *
  * ## What it reads and what it does not
  *
- * The title, the text and the action label come from the live alert in [PumpAlerts.active], not from arguments, so an
+ * The title, the text and the action label come from the live alert in [Alerts.active], not from arguments, so an
  * alert the driver raises again with a new text - the same `key`, the same occurrence - shows the new text while the
  * screen is open. When the alert leaves `active`, because the pump dropped it or its action cleared it, there is
  * nothing left to show and [onClose] is called.
@@ -35,19 +35,19 @@ import kotlinx.coroutines.flow.first
  *   user chooses silence-and-close and when the alert ends on its own.
  */
 @Composable
-fun PumpAlertScreen(
-    pumpAlerts: PumpAlerts,
+fun AlertScreen(
+    alerts: Alerts,
     source: String,
     key: String,
     uel: UserEntryLogger,
     onClose: () -> Unit,
     badge: (@Composable () -> Unit)? = null
 ) {
-    val active by pumpAlerts.active.collectAsState()
+    val active by alerts.active.collectAsState()
     val alert = active.firstOrNull { it.source == source && it.key == key }
 
     LaunchedEffect(source, key) {
-        pumpAlerts.active.first { list -> list.none { it.source == source && it.key == key } }
+        alerts.active.first { list -> list.none { it.source == source && it.key == key } }
         onClose()
     }
 
@@ -59,25 +59,25 @@ fun PumpAlertScreen(
         status = alert.text?.let { stringResource(it) } ?: "",
         onOk = {
             uel.log(Action.ERROR_DIALOG_OK, Sources.Unknown)
-            pumpAlerts.silence(source, key)
+            alerts.silence(source, key)
             onClose()
         },
         onMute = {
             uel.log(Action.ERROR_DIALOG_MUTE, Sources.Unknown)
-            pumpAlerts.silence(source, key)
+            alerts.silence(source, key)
         },
         onMute5Min = {
             uel.log(Action.ERROR_DIALOG_MUTE_5MIN, Sources.Unknown)
-            pumpAlerts.snooze(source, key, UiInteraction.MUTE_MINUTES)
+            alerts.snooze(source, key, UiInteraction.MUTE_MINUTES)
         },
         // Not offered when the alert's own action is already the delay, which is the "time to eat" timer.
         showMute5Min = alert.canMute,
         actionLabel = alert.action?.let { stringResource(it.label) },
         // The screen stays until the alert ends, so a failure of the action shows here.
-        onAction = { pumpAlerts.act(source, key) },
+        onAction = { alerts.act(source, key) },
         // "Silence for 30 min" is a promise, and only a pump's alert keeps it: one of the app's own is over when
         // it is answered, so its buttons say plain Silence rather than naming a time it will not come back after.
-        silenceMinutes = if (alert.lifetime == PumpAlertLifetime.CONDITION) PumpAlerts.SILENCE_MINUTES else null,
+        silenceMinutes = if (alert.lifetime == AlertLifetime.CONDITION) Alerts.SILENCE_MINUTES else null,
         badge = badge
     )
 }

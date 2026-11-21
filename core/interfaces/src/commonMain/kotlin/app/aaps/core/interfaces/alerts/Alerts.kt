@@ -1,19 +1,23 @@
-package app.aaps.core.interfaces.pump.alerts
+package app.aaps.core.interfaces.alerts
 
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.keys.interfaces.TextRef
 import kotlinx.coroutines.flow.StateFlow
 
 /**
- * How bad a pump alert is. The driver picks it; the core picks the sound, the card level and whether the alarm screen
- * opens. A driver never passes a sound or a notification level. See `_docs/PUMP_DESIGN.md`, section 2.
+ * How bad an alert is. The raiser picks it; the core picks the sound, the card level and whether the alarm screen
+ * opens. A raiser never passes a notification level, and a driver never a sound. See `_docs/PUMP_DESIGN.md`, section 2,
+ * and `_docs/ALARMS.md`, section 6.
  */
-enum class PumpAlertSeverity {
+enum class AlertSeverity {
 
-    /** Insulin delivery has stopped or is not safe. Rings and opens the alarm screen until the user acts. */
+    /**
+     * Insulin delivery has stopped or is not safe, a CGM gives no readings, or the glucose is urgent. Rings and opens
+     * the alarm screen until the user acts.
+     */
     CRITICAL,
 
-    /** The user must act soon: low reservoir, low battery, the pump or patch expires. A card and one sound. */
+    /** The user must act soon: low reservoir, low battery, the pump, patch or sensor expires. A card and one sound. */
     WARNING,
 
     /** For information only. A card, no sound. */
@@ -24,7 +28,7 @@ enum class PumpAlertSeverity {
  * How an alert ends. The one real difference between a pump's alert and the app's own, and the reason both can use
  * this one path. See `_docs/PUMP_DESIGN.md`, section 8.
  */
-enum class PumpAlertLifetime {
+enum class AlertLifetime {
 
     /**
      * The raiser owns it: it lasts until the pump drops it or its action clears it. Removing its card - a swipe,
@@ -36,25 +40,28 @@ enum class PumpAlertLifetime {
     /**
      * The user owns it: answering it ends it. A swipe, Mute, or Silence-and-close resolves it and it does not come
      * back. A bolus error is one of these - nobody will ever resolve it from the pump side - and so is the "time to
-     * eat" timer. [PumpAlerts.silence] resolves it rather than quieting it; [PumpAlerts.snooze] still delays it, which
+     * eat" timer. [Alerts.silence] resolves it rather than quieting it; [Alerts.snooze] still delays it, which
      * is what "Mute 5 min" is.
      */
     EVENT
 }
 
-/** A step on the pump that the user can start from the alert, for example "clear the alarm on the patch". */
-class PumpAlertAction(
+/** A step the user can start from the alert, for example "clear the alarm on the patch" or "+5 min". */
+class AlertAction(
     val label: TextRef,
-    /** Runs through the command queue. Returns true when the step was done (or started, for a driver that ends the alert itself). */
+    /**
+     * A pump driver runs it through the command queue, a CGM driver on its own thread. Returns true when the step was
+     * done (or started, for a raiser that ends the alert itself).
+     */
     val run: suspend () -> Boolean
 )
 
-class PumpAlert(
-    /** The driver that raised it, for example "carelevo". */
+class Alert(
+    /** Who raised it: a driver ("carelevo", "eversense"), or "aaps" for the app's own alarms. */
     val source: String,
     /** Stable id inside [source]. Raising the same key again updates the alert; it does not ring again. */
     val key: String,
-    val severity: PumpAlertSeverity,
+    val severity: AlertSeverity,
     /** Resources, not resolved text, so the core resolves them when it shows them. A pump value goes in as an argument. */
     val title: TextRef,
     val text: TextRef? = null,
@@ -64,9 +71,9 @@ class PumpAlert(
      * occurrence of the same condition has a new time and rings at once.
      */
     val raisedAt: Long,
-    val action: PumpAlertAction? = null,
-    /** Default [PumpAlertLifetime.CONDITION], because a pump driver always raises one. */
-    val lifetime: PumpAlertLifetime = PumpAlertLifetime.CONDITION,
+    val action: AlertAction? = null,
+    /** Default [AlertLifetime.CONDITION], because a pump driver always raises one. */
+    val lifetime: AlertLifetime = AlertLifetime.CONDITION,
     /**
      * Shown on the card and sent to the watch. A pump alert leaves it null and the card is titled by its severity, as
      * every other notification is; the app's own alarms pass the title their caller gave, which the watch shows.
@@ -97,13 +104,14 @@ class PumpAlert(
 )
 
 /**
- * The one way a pump driver tells the user about an alert of its pump. The core shows it, rings, silences, writes the
+ * The one way to tell the user about something that needs an answer: a pump's alert, a CGM's, or the app's own. It
+ * was named `PumpAlerts` while only pumps used it (renamed 2026-11-21). The core shows it, rings, silences, writes the
  * announcement and tells the watch, the same for every driver and every platform.
  */
-interface PumpAlerts {
+interface Alerts {
 
     /** Every alert raised and not resolved yet, in the order they were raised. */
-    val active: StateFlow<List<PumpAlert>>
+    val active: StateFlow<List<Alert>>
 
     /**
      * The alert whose card is ringing now, or null.
@@ -114,10 +122,10 @@ interface PumpAlerts {
      * sound. A sounding card that is not an alert, which a driver still posting its own alarm can leave, is not seen
      * here; `UiInteraction.stopAlarm` falls back to silencing everything in that case.
      */
-    val sounding: PumpAlert?
+    val sounding: Alert?
 
     /** The pump reports this alert. */
-    fun raise(alert: PumpAlert)
+    fun raise(alert: Alert)
 
     /** The pump says it is gone, or the user's action cleared it. Stops the sound, removes the card. */
     fun resolve(source: String, key: String)
@@ -142,21 +150,21 @@ interface PumpAlerts {
 }
 
 /**
- * What a platform does for pump alerts beyond the notification list, which already owns the card and the sound.
+ * What a platform does for alerts beyond the notification list, which already owns the card and the sound.
  */
-interface PumpAlertPlatform {
+interface AlertPlatform {
 
     /** A CRITICAL alert rings: bring up the alarm screen for it, also when the app is in the background. */
-    fun showAlarmScreen(alert: PumpAlert)
+    fun showAlarmScreen(alert: Alert)
 
     /** A WARNING alert: show it as a system notification with one sound. */
-    fun chime(alert: PumpAlert)
+    fun chime(alert: Alert)
 
     /**
      * The alert is silenced until [until] (epoch ms). The core rings it again itself when the time comes, but only
      * while its process runs: a platform that cannot run a timer in the background (iOS) schedules the ring here.
      */
-    fun snoozed(alert: PumpAlert, until: Long)
+    fun snoozed(alert: Alert, until: Long)
 
     /** The alert ended, or rings again now: take back whatever [chime] or [snoozed] left for it. */
     fun withdrawn(source: String, key: String)

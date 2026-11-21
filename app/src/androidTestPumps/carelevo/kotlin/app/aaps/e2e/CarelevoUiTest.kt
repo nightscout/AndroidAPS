@@ -23,7 +23,7 @@ class CarelevoUiTest : AbstractPumpUiTest() {
     override fun screens(): PumpScreens = CarelevoScreens
 
     /**
-     * A patch alarm is a pump alert (`PumpAlerts`): the alarm screen opens with the patch's own step, Silence takes the
+     * A patch alarm is a pump alert (`Alerts`): the alarm screen opens with the patch's own step, Silence takes the
      * sound from the card but keeps the card, and the step - here the discard an occlusion asks for - ends the alarm,
      * which closes the screen.
      */
@@ -61,7 +61,7 @@ class CarelevoUiTest : AbstractPumpUiTest() {
         }
     }
 
-    private fun alertCards() = testGraphs.notificationManager.notifications.value.filter { it.id == NotificationId.PUMP_ALERT }
+    private fun alertCards() = testGraphs.notificationManager.notifications.value.filter { it.id == NotificationId.ALERT }
 
     private val device: UiDevice get() = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 

@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
  * Android only, and that is the point of it being its own interface. These were members of [UiInteraction], which is
  * shared code, so every platform had to answer them: the desktop implementation pointed both at a class that is not
  * an activity at all, purely to compile. Every real reader is Android - `UiInteractionImpl`,
- * `AlarmNotificationManager`, `NotificationHolderImpl` and `AndroidPumpAlertPlatform`.
+ * `AlarmNotificationManager`, `NotificationHolderImpl` and `AndroidAlertPlatform`.
  *
  * Usage: `startActivity(Intent(context, androidActivities.main.java))`.
  */

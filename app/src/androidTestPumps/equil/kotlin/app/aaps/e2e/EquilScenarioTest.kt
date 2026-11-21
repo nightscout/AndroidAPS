@@ -30,6 +30,6 @@ class EquilScenarioTest : AbstractPumpScenarioTest() {
 
     @Ignore("Acceptance A1: Equil alarms are not pump alerts yet; it moves with acceptance v2")
     @Test
-    override fun anOcclusionIsARingingPumpAlert() {
+    override fun anOcclusionIsARingingAlert() {
     }
 }

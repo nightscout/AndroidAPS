@@ -30,6 +30,6 @@ class DanaRSScenarioTest : AbstractPumpScenarioTest() {
 
     @Ignore("Acceptance A1: Dana RS alarms are not pump alerts yet; it moves with acceptance v2 (and its emulator sends none)")
     @Test
-    override fun anOcclusionIsARingingPumpAlert() {
+    override fun anOcclusionIsARingingAlert() {
     }
 }

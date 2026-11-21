@@ -28,7 +28,7 @@ device, and the iOS side and the other drivers are not built. The decisions are 
 - `PumpSync`: records what the pump did, and `connectNewPump` when the pump is removed (D9). `PumpSuspendSync` records
   a stop the user made on the pump.
 - `DetailedBolusInfoStorage` and `TemporaryBasalStorage`: match a record from the pump history to what AAPS asked for.
-- `PumpAlerts` for every pump alert (section 2). `NotificationManager` only for plain cards that are not alerts.
+- `Alerts` for every pump alert (section 2). `NotificationManager` only for plain cards that are not alerts.
 - `BleCentral` with `QueuedBleLink` for Bluetooth. `BleTransport` is version 1 and is deleted when the last driver
   has moved.
 - `BlePreCheck` with `BlePreCheckHost` before the driver talks to the pump: Bluetooth there, on and allowed. When it is
@@ -89,15 +89,15 @@ What is the same in every driver: ring, show, silence, cancel, tap opens the app
 announcement. What is the driver's own: how an alert is identified, its text, how bad it is, the pump-side step
 (clear, confirm, silence, resume, discard), and when the pump says it is gone.
 
-### Design: `PumpAlerts` in core
+### Design: `Alerts` in core
 
 The driver says **what** is wrong and **how bad** it is. The core decides how it is shown, how it sounds, and how it
 is silenced. A driver never passes a notification level or a sound.
 
 ```kotlin
-// core/interfaces commonMain, package app.aaps.core.interfaces.pump.alerts
+// core/interfaces commonMain, package app.aaps.core.interfaces.alerts
 
-enum class PumpAlertSeverity {
+enum class AlertSeverity {
     /** Insulin delivery has stopped or is not safe. Rings and opens the alarm screen until the user acts. */
     CRITICAL,
     /** The user must act soon: low reservoir, low battery, the pump or patch expires. A card and one sound. */
@@ -107,31 +107,31 @@ enum class PumpAlertSeverity {
 }
 
 /** A step on the pump that the user can start from the alert, for example "clear the alarm on the patch". */
-class PumpAlertAction(
+class AlertAction(
     val label: TextRef,
     /** Runs through the command queue. Returns true when the pump confirmed it. */
     val run: suspend () -> Boolean
 )
 
-class PumpAlert(
+class Alert(
     /** The driver that raised it, for example "carelevo". */
     val source: String,
     /** Stable id inside the source. Raising the same key again updates the alert; it does not ring again. */
     val key: String,
-    val severity: PumpAlertSeverity,
+    val severity: AlertSeverity,
     /** Resources, not resolved text, so the core resolves them when it shows them. A pump value goes in as an argument. */
     val title: TextRef,
     val text: TextRef? = null,
     /** When the pump raised it. A driver that raises it again after a restart passes the same time. */
     val raisedAt: Long,
-    val action: PumpAlertAction? = null
+    val action: AlertAction? = null
 )
 
-interface PumpAlerts {
-    val active: StateFlow<List<PumpAlert>>
+interface Alerts {
+    val active: StateFlow<List<Alert>>
 
     /** The pump reports this alert. */
-    fun raise(alert: PumpAlert)
+    fun raise(alert: Alert)
 
     /** The pump says it is gone, or the user's action cleared it. Stops the sound, removes the card. */
     fun resolve(source: String, key: String)
@@ -148,18 +148,18 @@ interface PumpAlerts {
 }
 
 /** What a platform does beyond the notification list, which already owns the card and the sound. */
-interface PumpAlertPlatform {
-    fun showAlarmScreen(alert: PumpAlert)      // CRITICAL rings: the alarm screen, also from the background
-    fun chime(alert: PumpAlert)                // WARNING: a system notification with one sound
-    fun snoozed(alert: PumpAlert, until: Long) // a platform that cannot run a timer in the background schedules the ring
+interface AlertPlatform {
+    fun showAlarmScreen(alert: Alert)      // CRITICAL rings: the alarm screen, also from the background
+    fun chime(alert: Alert)                // WARNING: a system notification with one sound
+    fun snoozed(alert: Alert, until: Long) // a platform that cannot run a timer in the background schedules the ring
     fun withdrawn(source: String, key: String) // the alert ended or rings again: take back what chime/snoozed left
 }
 ```
 
-`PumpAlertsImpl` (`:implementation` commonMain) is not contributed from shared code: a platform binds it once it has a
-`PumpAlertPlatform` (Android: `PumpAlertsAndroidBindings`). The end of a silence is checked against the clock
+`AlertsImpl` (`:implementation` commonMain) is not contributed from shared code: a platform binds it once it has a
+`AlertPlatform` (Android: `AlertsAndroidBindings`). The end of a silence is checked against the clock
 (`checkSilences`), by a timer while the app runs and by the platform's wake (Android: an exact alarm to
-`PumpAlertWakeReceiver`; iOS: a scheduled local notification).
+`AlertWakeReceiver`; iOS: a scheduled local notification).
 
 **Why not `UiInteraction`.** Pump alerts have an identity, a pump-side action that must go through the queue, a
 lifetime tied to the pump (removal, discard, restart) and a test seam for the scenario suite. `UiInteraction` has none
@@ -220,7 +220,7 @@ How to move a module is in the `kmp-module-flip` skill. The pump-specific rules,
   cannot ask (section 1).
 - Images are Compose Multiplatform resources. The iOS app build must copy them into the app bundle, or the screen
   that uses one fails when it opens.
-- No foreground check and no notification port for alerts: that is `PumpAlerts`.
+- No foreground check and no notification port for alerts: that is `Alerts`.
 
 ## 4. What each driver changes for pump alerts
 
@@ -240,14 +240,14 @@ How to move a module is in the `kmp-module-flip` skill. The pump-specific rules,
 
 ## 5. Order of work
 
-1. Core: `PumpAlerts`, its shared implementation, the notification list changes (a title on the card, silence and
+1. Core: `Alerts`, its shared implementation, the notification list changes (a title on the card, silence and
    snooze for one card, pump alerts never removed by `muteAllAlarms`), the Android alarm screen as a view of the card,
    the iOS alarm screen and background sound. Tests.
 2. Carelevo, because it is shared code already and iOS needs it first. Real-patch test.
 3. The other drivers, one change each, each with a real-pump test (see the `pump-emulator-scenarios` skill). Not a
    task of its own (decided 2026-11-19): a driver moves to pump alerts, to Bluetooth version 2 and to shared code
    when it is brought to the acceptance file's current requirements (A1-A6, T2, K1-K3).
-4. The scenario check for an alarm (`PumpScenario.checkUrgentAlarmSince`) reads `PumpAlerts.active` instead of any
+4. The scenario check for an alarm (`PumpScenario.checkUrgentAlarmSince`) reads `Alerts.active` instead of any
    URGENT card.
 5. Add the requirements below to `PUMP_DRIVER_ACCEPTANCE.md`.
 6. **Done (2026-11-19).** Not pumps: the other `runAlarm` callers moved to the same sound owner, and the two
@@ -258,7 +258,7 @@ How to move a module is in the `kmp-module-flip` skill. The pump-specific rules,
 Added to `PUMP_DRIVER_ACCEPTANCE.md` on 2026-11-19 (sections A and K, and R14 for the real pump); kept here as the short
 form.
 
-- **A1** Every alert the pump reports, and every delivery problem the user must act on, goes through `PumpAlerts`.
+- **A1** Every alert the pump reports, and every delivery problem the user must act on, goes through `Alerts`.
 - **A2** The driver plays no sound and has no notification channel, alarm screen or foreground check of its own.
 - **A3** The severity follows what the pump does: delivery stopped or not safe is CRITICAL.
 - **A4** `onStart` raises again what the pump still holds, with the same key and `raisedAt`.
@@ -277,8 +277,8 @@ form.
 3. **Silence is a snooze of 30 minutes, and it survives a restart.** When the window ends and the alert is still
    active, it rings again. Not chosen: silence until the alert ends (an occlusion could stay unheard for hours), and
    a silence that a restart forgets (a restart would ring an alert the user had just silenced).
-4. **The name is `PumpAlerts`.** Reversed on 2026-11-21: it is to be renamed `Alerts`, because CGMs, AAPS's own BG
-   alarms and the core's alarms raise through it too (`ALARMS.md`, section 6).
+4. **The name was `PumpAlerts`.** Reversed on 2026-11-21: renamed `Alerts`, because CGMs, AAPS's own BG alarms and
+   the core's alarms raise through it too (`ALARMS.md`, section 6).
 
 ## 8. Step 6: the alarms that are not pump alerts
 
@@ -332,7 +332,7 @@ coroutine; `stopEatReminderAlarm` cancels the full-screen alarm alone.
 The same card model as pump alerts, because it already answers every one of those points on both platforms. One alert
 path, not two.
 
-1. **Widen the core.** `PumpAlert` gains a lifetime, which is the one real difference between the two kinds:
+1. **Widen the core.** `Alert` gains a lifetime, which is the one real difference between the two kinds:
    - `CONDITION` - today's pump behaviour. The raiser resolves it; a card removed while it is still active counts as a
      30-minute silence and comes back.
    - `EVENT` - the user's acknowledgement ends it. Silence-and-close, a swipe or Mute **resolves** it, and it does not
@@ -342,7 +342,7 @@ path, not two.
 2. **`runAlarm` becomes a shim.** `runAlarm(status, title, sound)` raises an `EVENT` alert with `source = "aaps"`.
    `stopAlarm` resolves, `dismissAlarm` resolves and closes the screen, `muteAlarm(minutes)` is `snooze(..., minutes)`,
    `stopEatReminderAlarm` resolves the eat alert alone.
-3. **The eat reminder's `+5 min` becomes an alert action.** `PumpAlertAction(label = "+5 min") { eatReminder.extend() }`
+3. **The eat reminder's `+5 min` becomes an alert action.** `AlertAction(label = "+5 min") { eatReminder.extend() }`
    - the model already carries exactly this, so the special case in `ErrorScreen` and in the notification goes away.
 4. **Restore Mute and swipe on the sounding card.** `AlarmNotificationManager.postSilentAlarmNotification`, which is
    what the registry posts for an URGENT card with a sound, has no Mute action and no delete intent;
@@ -353,13 +353,13 @@ path, not two.
    watch says what it says today.
 6. **Move the Android-only members out of `UiInteraction`.** `mainActivity` and `errorHelperActivity` are `KClass`.
    Every real reader is androidMain (`UiInteractionImpl`, `AlarmNotificationManager`, `NotificationHolderImpl`,
-   `AndroidPumpAlertPlatform`); the only other implementation is the desktop stub, which exists solely to satisfy the
+   `AndroidAlertPlatform`); the only other implementation is the desktop stub, which exists solely to satisfy the
    interface and points both at a class that is not an activity. That is the proof they do not belong in shared code.
 
-iOS needed no new mechanism at all: `IosPumpAlertPlatform` already shows the alarm screen, chimes, schedules the
+iOS needed no new mechanism at all: `IosAlertPlatform` already shows the alarm screen, chimes, schedules the
 re-ring as a local notification and withdraws it, and `IosSystemNotificationPlatform` already gives a background card
 its sound. `IosUiInteraction` is deleted - there is one shared `UiInteractionImpl` in `:implementation` commonMain,
-bound by each platform beside `PumpAlerts`, and the desktop keeps its own honest stub because it has no alert
+bound by each platform beside `Alerts`, and the desktop keeps its own honest stub because it has no alert
 platform.
 
 ### What was deleted
@@ -373,11 +373,11 @@ A whole parallel alarm path, which is the point of the step:
   already reported, and dismissing one card acts on one alert.
 - `UiInteractionImpl` in `:app`, 150 lines of activity starts, watch events, an announcement and an in-process
   re-ring timer. What is left of it there is `AndroidActivitiesImpl`, two lines naming two activities.
-- `ErrorActivity`'s own `MediaPlayer`, its five intent extras and its non-pump branch: it shows `PumpAlertScreen` and
+- `ErrorActivity`'s own `MediaPlayer`, its five intent extras and its non-pump branch: it shows `AlertScreen` and
   nothing else.
 - `IosUiInteraction`, whose `runAlarm` only wrote a line in the log.
 
-`unansweredAlarmIntent` moved rather than went: it is `AndroidPumpAlertPlatform` now, set when the alarm screen
+`unansweredAlarmIntent` moved rather than went: it is `AndroidAlertPlatform` now, set when the alarm screen
 could not be shown and cleared when the alert is answered, and `ComposeMainActivity` reads it on the way in (#5338).
 
 ### What must not change on Android

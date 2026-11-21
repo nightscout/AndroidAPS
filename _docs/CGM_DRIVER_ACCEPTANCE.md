@@ -51,8 +51,8 @@ what has to pass, not how.
 How the core shows, rings and silences an alert is in `PUMP_DESIGN.md`, section 2; what is different for a CGM is in
 `CGM_DESIGN.md`, section 5.
 
-- **A1** Every device or error alarm the transmitter raises goes through the alert core (`PumpAlerts`, to be renamed
-  `Alerts`). Messages that are not alarms stay plain cards.
+- **A1** Every device or error alarm the transmitter raises goes through the alert core (`Alerts`). Messages that are
+  not alarms stay plain cards.
 - **A1b** The driver raises no glucose alarm (low, high, falling or rising fast, predictive) and no missed-readings
   alarm: the core's BG alarms raise those for every source (`ALARMS.md`, section 6). Until the core BG alarms exist,
   the driver keeps its transmitter's glucose alarms ringing, so the user is never without one.

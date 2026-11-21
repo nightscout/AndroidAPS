@@ -10,7 +10,7 @@ import dev.zacsweers.metro.ContributesTo
  *
  * - `IosCarelevoAppForeground` on the UIKit application state,
  * - `IosCarelevoBleReadyCheck` on the CoreBluetooth adapter state,
- * - `PumpAlerts`, bound by `PumpAlertsIosBindings` on `IosPumpAlertPlatform`.
+ * - `Alerts`, bound by `AlertsIosBindings` on `IosAlertPlatform`.
  *
  * There used to be a third CareLevo port here, `IosCarelevoSystemNotifier`, which put a patch alarm
  * in the phone's notification list. Pump alerts are one path in the core now, the same for every

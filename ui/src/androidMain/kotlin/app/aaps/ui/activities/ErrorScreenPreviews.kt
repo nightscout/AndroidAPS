@@ -52,7 +52,7 @@ internal fun ErrorScreenShortPreview() {
 /** The pump-alert shape of the same screen: an action button first, and the two silence buttons naming the time. */
 @Preview(showBackground = true, widthDp = 360, heightDp = 720)
 @Composable
-internal fun ErrorScreenPumpAlertPreview() {
+internal fun ErrorScreenAlertPreview() {
     MaterialTheme {
         ErrorScreen(
             title = "Occlusion",

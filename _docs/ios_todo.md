@@ -22,9 +22,9 @@ that need a decision.
 This entry used to say `IosUiInteraction.runAlarm` only logs, and that the full-screen alarm surface
 was still missing. Both are wrong now, and reading them as current would mean redoing finished work.
 
-`IosUiInteraction` is deleted. `runAlarm` raises a `PumpAlert` with `PumpAlertLifetime.EVENT` through
+`IosUiInteraction` is deleted. `runAlarm` raises a `Alert` with `AlertLifetime.EVENT` through
 the one shared `UiInteractionImpl` in commonMain, so the app's own alarms are cards in the
-notification list exactly like a pump's alert. The screen is `PumpAlertScreen` in `ui/commonMain`,
+notification list exactly like a pump's alert. The screen is `AlertScreen` in `ui/commonMain`,
 hosted on iOS as an overlay in `AapsAppHost` ahead of the protection gate - the same way
 `ErrorActivity` ignores application protection on Android. Step 6 of `_docs/PUMP_DESIGN.md`,
 2026-11-19.

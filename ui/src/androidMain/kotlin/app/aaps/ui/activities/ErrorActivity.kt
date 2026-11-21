@@ -27,7 +27,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.AlarmIntent
-import app.aaps.core.interfaces.pump.alerts.PumpAlerts
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAlarmDismissed
 import app.aaps.core.interfaces.ui.IconsProvider
@@ -55,9 +55,9 @@ import kotlinx.coroutines.flow.first
  * It used to own a `MediaPlayer` under `OWNER_FULLSCREEN` for the alarms that came through
  * `UiInteraction.runAlarm`, and carried the title, the message, the sound and the eat-reminder flag in its intent.
  * All of that is gone with the second alarm path: the screen is told which alert to show and reads the rest from
- * [PumpAlerts.active], so an alert whose text changes while the screen is open shows the new text.
+ * [Alerts.active], so an alert whose text changes while the screen is open shows the new text.
  *
- * The screen itself is shared code ([PumpAlertScreen]), so iOS shows the same one.
+ * The screen itself is shared code ([AlertScreen]), so iOS shows the same one.
  */
 class ErrorActivity : MetroAppCompatActivity() {
 
@@ -69,7 +69,7 @@ class ErrorActivity : MetroAppCompatActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var iconsProvider: IconsProvider
-    @Inject lateinit var pumpAlerts: PumpAlerts
+    @Inject lateinit var alerts: Alerts
 
     /** Which alert is shown. Mutable because [onNewIntent] replaces it when a second alarm takes the screen. */
     private var alertSource by mutableStateOf<String?>(null)
@@ -121,8 +121,8 @@ class ErrorActivity : MetroAppCompatActivity() {
                             modifier = Modifier.fillMaxSize(),
                             color = Color.Transparent
                         ) {
-                            if (source != null && key != null) PumpAlertScreen(
-                                pumpAlerts = pumpAlerts,
+                            if (source != null && key != null) AlertScreen(
+                                alerts = alerts,
                                 source = source,
                                 key = key,
                                 uel = uel,
@@ -153,8 +153,8 @@ class ErrorActivity : MetroAppCompatActivity() {
      * standing there empty - it can only happen if something other than the alert platform started it.
      */
     private fun readAlert(intent: Intent) {
-        alertSource = intent.getStringExtra(AlarmIntent.EXTRA_PUMP_ALERT_SOURCE)
-        alertKey = intent.getStringExtra(AlarmIntent.EXTRA_PUMP_ALERT_KEY)
+        alertSource = intent.getStringExtra(AlarmIntent.EXTRA_ALERT_SOURCE)
+        alertKey = intent.getStringExtra(AlarmIntent.EXTRA_ALERT_KEY)
         if (alertSource == null || alertKey == null) {
             aapsLogger.error(LTag.CORE, "Alarm screen started without an alert, closing")
             finish()

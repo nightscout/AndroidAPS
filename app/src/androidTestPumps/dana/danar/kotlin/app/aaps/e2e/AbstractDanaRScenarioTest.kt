@@ -44,7 +44,7 @@ abstract class AbstractDanaRScenarioTest : AbstractPumpScenarioTest() {
 
     @Ignore("Acceptance A1: DanaR alarms are not pump alerts yet; they move with acceptance v2 (and the emulator sends none)")
     @Test
-    override fun anOcclusionIsARingingPumpAlert() {
+    override fun anOcclusionIsARingingAlert() {
     }
 
     /** The driver writes the user options to the pump. The Korean DanaR driver does not. */

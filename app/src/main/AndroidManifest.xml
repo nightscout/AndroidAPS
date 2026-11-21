@@ -91,9 +91,9 @@
             android:name="app.aaps.implementation.androidNotification.AlarmScreenWakeReceiver"
             android:exported="false" />
 
-        <!-- The silence of a pump alert has ended: it rings again if still active (AndroidPumpAlertPlatform). -->
+        <!-- The silence of a pump alert has ended: it rings again if still active (AndroidAlertPlatform). -->
         <receiver
-            android:name="app.aaps.implementation.pump.alerts.PumpAlertWakeReceiver"
+            android:name="app.aaps.implementation.alerts.AlertWakeReceiver"
             android:exported="false" />
 
         <!-- "Time to eat" timer: its alarm (setAlarmClock) and the Stop / +5 min notification buttons. -->
