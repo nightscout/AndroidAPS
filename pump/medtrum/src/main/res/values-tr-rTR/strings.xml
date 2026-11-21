@@ -91,6 +91,7 @@
     <string name="press_OK_to_return">Ana ekrana dönmek için <b>Tamam</b>\'a basın.</string>
     <string name="deactivate_sure">Mevcut patch\'i devre dışı bırakmak istediğinizden emin misiniz?</string>
     <string name="cancel_sure">Etkinleştirmeyi iptal etmek istediğinizden emin misiniz?</string>
+    <string name="cancel_deactivation_sure">Devre dışı bırakma işlemini iptal etmek istediğinizden emin misiniz? Patch etkin kalabilir.</string>
     <string name="medtrum_deactivate_pump_confirm">Emin misiniz? Bu işlem geri alınamaz!!</string>
     <string name="press_next_or_cancel">Devre dışı bırakmak için <b>İleri</b>\'ye veya ana ekrana dönmek için <b>Vazgeç</b>\'e basın.</string>
     <string name="deactivating_pump">Patch devre dışı bırakılıyor. Lütfen bekleyin.</string>
