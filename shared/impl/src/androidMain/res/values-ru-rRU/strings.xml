@@ -3,6 +3,7 @@
     <string name="cwf_comment_background">Фоновое изображение</string>
     <string name="cwf_comment_chart">Графики (ГК, базал, линии прогнозов...)</string>
     <string name="cwf_comment_cover_chart">Изображение перед графиком и за текстовыми полями</string>
+    <string name="cwf_comment_complication">Контейнер для дополнений</string>
     <string name="cwf_comment_freetext1">Свободный текст 1</string>
     <string name="cwf_comment_freetext2">Свободный текст 2</string>
     <string name="cwf_comment_freetext3">Свободный текст 3</string>
@@ -11,8 +12,8 @@
     <string name="cwf_comment_iob1_ext">Подпись IOB или сумма IOB если подробнее (из AAPSClient или AAPSClient2)</string>
     <string name="cwf_comment_iob2_ext">Сумма IOB или (болюсный_IOB|базальный_IOB) в подробном виде (из AAPSClient или AAPSClient2)</string>
     <string name="cwf_comment_cob2_ext">Значение COB (из AAPSClient или AAPSClient2)</string>
-    <string name="cwf_comment_delta_ext">Короткая дельта СК (из AAPSClient или AAPSClient2)</string>
-    <string name="cwf_comment_avg_delta_ext">Средняя дельта СК (15 мин) (из AAPSClient или AAPSClient2)</string>
+    <string name="cwf_comment_delta_ext">Короткая дельта ГК (из AAPSClient или AAPSClient2)</string>
+    <string name="cwf_comment_avg_delta_ext">Средняя дельта ГК (15 мин) (из AAPSClient или AAPSClient2)</string>
     <string name="cwf_comment_temp_target_ext">Временная цель или ее диапазон (из AAPSClient или AAPSClient2)</string>
     <string name="cwf_comment_reservoir_ext">Уровень резервуара (из AAPSClient или AAPSClient2)</string>
     <string name="cwf_comment_rig_battery_ext">Общий уровень заряда (%) (из AAPSClient или AAPSClient2)</string>
@@ -48,6 +49,7 @@
     <string name="cwf_comment_month">Название месяца (краткое)</string>
     <string name="cwf_comment_loop">Статус цикла и история</string>
     <string name="cwf_comment_direction">Стрелка тренда</string>
+    <string name="cwf_comment_timestamp">Сколько минут назад получено последнее значение ГК</string>
     <string name="cwf_comment_sgv">Значение ГК</string>
     <string name="cwf_comment_cover_plate">Изображение перед текстом (циферблаты…)</string>
     <string name="cwf_comment_hour_hand">Изображение для часовой стрелки (Аналоговые часы)</string>
