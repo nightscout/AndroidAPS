@@ -127,6 +127,7 @@
     <string name="carelevo_toast_msg_needle_check_failed">Ο έλεγχος της βελόνας απέτυχε.</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">Η απόρριψη του Patch απέτυχε. Προσπαθήστε ξανά.</string>
+    <string name="carelevo_discarded_not_reached">Δεν ήταν δυνατή η επικοινωνία με το patch. Αφαιρέθηκε από το AAPS αλλά δεν σταμάτησε, και μπορεί ακόμα να χορηγεί ινσουλίνη. Αφαιρέστε το από το σώμα σας.</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">Το αίτημα χορήγησης βασικού ρυθμού απέτυχε. Προσπαθήστε ξανά.</string>
     <!-- Delivery Resume/Suspend -->
@@ -180,7 +181,7 @@
     <string name="alarm_notification_desc_warning_low_insulin">Απομένουν λιγότερες από 10 U ινσουλίνης· η χορήγηση ινσουλίνης σταμάτησε. Πατήστε το κουμπί [Απενεργοποίηση Patch] και αλλάξτε το Patch τώρα.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Το Patch έληξε· η χορήγηση ινσουλίνης σταμάτησε. Πατήστε το κουμπί [Απενεργοποίηση Patch] και αλλάξτε το Patch τώρα.</string>
     <string name="alarm_notification_desc_warning_low_battery">Χαμηλή μπαταρία· η χορήγηση ινσουλίνης σταμάτησε. Πατήστε το κουμπί [Απόρριψη Patch] και αλλάξτε το Patch τώρα.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">Η χορήγηση ινσουλίνης σταμάτησε. Μετακινηθείτε τώρα σε κατάλληλη θερμοκρασία (40℉ ~ 99℉).</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">Η χορήγηση ινσουλίνης σταμάτησε. Μετακινηθείτε τώρα σε κατάλληλη θερμοκρασία (40℉–99℉).</string>
     <string name="alarm_notification_desc_warning_not_used_app">Η χορήγηση ινσουλίνης σταμάτησε. Πατήστε το κουμπί [Έναρξη ινσουλίνης] και ξεκινήστε ξανά τη χορήγηση βασικού ρυθμού.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">Ο χρόνος εφαρμογής του Patch τελείωσε. Πατήστε το κουμπί [Απενεργοποίηση Patch] και αλλάξτε το Patch τώρα.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">Ο αυτοέλεγχος απέτυχε. Πατήστε το κουμπί [Απενεργοποίηση Patch] και αλλάξτε το Patch τώρα.</string>
@@ -211,5 +212,7 @@
     <string name="carelevo_profile_update_skip_comment">Παραλείφθηκε: πολύ σύντομα μετά την προηγούμενη ενημέρωση.</string>
     <string name="carelevo_bolus_stop_not_confirmed">Το Patch δεν επιβεβαίωσε τη διακοπή. Αναμονή για το τέλος του bolus…</string>
     <string name="carelevo_bolus_rejected_missed_bolus_recorded">Ένα bolus που δεν είχε καταγραφεί προστέθηκε τώρα. Ελέγξτε το IOB και δοκιμάστε ξανά.</string>
+    <string name="carelevo_bolus_outcome_unknown">Το patch δεν απάντησε στο bolus. Ολόκληρο το bolus υπολογίζεται μέχρι το patch να αναφέρει πόσο χορήγησε.</string>
     <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Το Patch δεν επιβεβαίωσε τη διακοπή. Καταγράφεται ολόκληρο το bolus των %1$s.</string>
+    <string name="carelevo_bolus_stopped_by_patch" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The patch stopped the bolus. Given: 0.50 U of 2.00 U">Το patch σταμάτησε το bolus. Χορηγήθηκαν: %1$s από %2$s</string>
 </resources>
