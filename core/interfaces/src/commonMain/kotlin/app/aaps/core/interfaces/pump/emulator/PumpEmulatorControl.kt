@@ -62,6 +62,13 @@ interface PumpEmulatorControl {
      */
     fun suspendOnPump(suspended: Boolean): Boolean = false
 
+    /**
+     * The user removed this pump because it did not answer, and pairs the next one, which is in range. A patch or a pod is
+     * new: a new serial, nothing activated, nothing running. A pump that is kept (a Dana, a Diaconn) is the same pump back
+     * after a new battery: no temp basal and no extended bolus runs. False for an emulator that cannot.
+     */
+    fun replaceWithNewPump(): Boolean = false
+
     /** What the emulated pump holds now. */
     fun state(): EmulatedPumpState
 

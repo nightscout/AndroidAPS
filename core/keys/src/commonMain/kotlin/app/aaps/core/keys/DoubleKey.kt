@@ -74,7 +74,16 @@ enum class DoubleKey(
         key = "fill_button3", defaultValue = 0.0, min = 0.0, max = 20.0, title = KeysStrings.pref_title_fill_button_3, defaultedBySM = true,
         unitType = UnitType.INSULIN, visibility = ElementVisibility.REFILLING_CAPABLE
     ),
-    SafetyMaxBolus(key = "treatmentssafety_maxbolus", defaultValue = 3.0, min = 0.1, max = 60.0, title = KeysStrings.pref_title_max_bolus, unitType = UnitType.INSULIN, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    SafetyMaxBolus(
+        key = "treatmentssafety_maxbolus",
+        defaultValue = 3.0,
+        min = 0.1,
+        max = 60.0,
+        title = KeysStrings.pref_title_max_bolus,
+        summary = KeysStrings.treatmentssafety_maxbolus_summary,
+        unitType = UnitType.INSULIN,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
     ApsMaxBasal(
         key = "openapsma_max_basal",
         defaultValue = 1.0,

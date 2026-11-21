@@ -92,14 +92,14 @@ fun TriggerEditor(
             is TriggerPodChange          -> TriggerPodChangeEditor()
             is TriggerPumpLastConnection -> TriggerPumpLastConnectionEditor(trigger, onChange, tick)
             is TriggerProfilePercent     -> TriggerProfilePercentEditor(trigger, onChange, tick)
-            is TriggerTempTarget         -> TriggerTempTargetEditor(trigger, onChange)
+            is TriggerTempTarget         -> TriggerTempTargetEditor(trigger, onChange, tick)
             is TriggerTempTargetValue    -> TriggerTempTargetValueEditor(trigger, onChange, tick)
             is TriggerStepsCount         -> TriggerStepsCountEditor(trigger, onChange, tick)
-            is TriggerTime               -> TriggerTimeEditor(trigger, onChange)
+            is TriggerTime               -> TriggerTimeEditor(trigger, onChange, tick)
             is TriggerRecurringTime      -> TriggerRecurringTimeEditor(trigger, onChange)
             is TriggerTimeRange          -> TriggerTimeRangeEditor(trigger, onChange)
-            is TriggerWifiSsid           -> TriggerWifiSsidEditor(trigger, onChange)
-            is TriggerBTDevice           -> TriggerBTDeviceEditor(trigger, bondedDevices, onChange)
+            is TriggerWifiSsid           -> TriggerWifiSsidEditor(trigger, onChange, tick)
+            is TriggerBTDevice           -> TriggerBTDeviceEditor(trigger, bondedDevices, onChange, tick)
             is TriggerLocation           -> TriggerLocationEditor(trigger, onChange, tick, onUseCurrentLocation, onPickLocationFromMap)
             is TriggerConnector          -> Text("Connector")
             is TriggerUnknown            -> Text(trigger.friendlyDescription())
@@ -437,7 +437,8 @@ fun TriggerProfilePercentEditor(t: TriggerProfilePercent, onChange: () -> Unit, 
 }
 
 @Composable
-fun TriggerTempTargetEditor(t: TriggerTempTarget, onChange: () -> Unit) {
+fun TriggerTempTargetEditor(t: TriggerTempTarget, onChange: () -> Unit, tick: Int = 0) {
+    @Suppress("UNUSED_EXPRESSION") tick
     ComparatorExistsEditor(t.comparator.value, onValueChange = { t.comparator.value = it; onChange() })
 }
 
@@ -495,7 +496,8 @@ fun TriggerStepsCountEditor(t: TriggerStepsCount, onChange: () -> Unit, tick: In
 }
 
 @Composable
-fun TriggerTimeEditor(t: TriggerTime, onChange: () -> Unit) {
+fun TriggerTimeEditor(t: TriggerTime, onChange: () -> Unit, tick: Int = 0) {
+    @Suppress("UNUSED_EXPRESSION") tick
     InputDateTimeEditor(timeMillis = t.time.value, onChange = { t.time.value = it; onChange() })
 }
 
@@ -519,22 +521,29 @@ fun TriggerTimeRangeEditor(t: TriggerTimeRange, onChange: () -> Unit) {
 }
 
 @Composable
-fun TriggerWifiSsidEditor(t: TriggerWifiSsid, onChange: () -> Unit) = CompareRow(
-    comparator = t.comparator.value,
-    onComparatorChange = { t.comparator.value = it; onChange() },
-    label = ""
-) {
-    InputStringEditor(value = t.ssid.value, onValueChange = { t.ssid.value = it; onChange() })
+fun TriggerWifiSsidEditor(t: TriggerWifiSsid, onChange: () -> Unit, tick: Int = 0) {
+    @Suppress("UNUSED_EXPRESSION") tick
+    CompareRow(
+        comparator = t.comparator.value,
+        onComparatorChange = { t.comparator.value = it; onChange() },
+        label = ""
+    ) {
+        InputStringEditor(value = t.ssid.value, onValueChange = { t.ssid.value = it; onChange() })
+    }
 }
 
 @Composable
 fun TriggerBTDeviceEditor(
     t: TriggerBTDevice,
     bondedDevices: List<String>,
-    onChange: () -> Unit
+    onChange: () -> Unit,
+    tick: Int = 0
 ) {
+    @Suppress("UNUSED_EXPRESSION") tick
+    // No fallback to the first paired device: the field must show what is stored. An empty field
+    // tells the user that no device is picked yet.
     AutomationDropdown(
-        value = t.btDevice.value.ifEmpty { bondedDevices.firstOrNull() ?: "" },
+        value = t.btDevice.value,
         options = bondedDevices,
         onValueChange = { t.btDevice.setValue(it); onChange() }
     )

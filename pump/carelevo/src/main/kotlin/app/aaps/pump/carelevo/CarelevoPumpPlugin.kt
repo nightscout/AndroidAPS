@@ -94,6 +94,7 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -749,7 +750,7 @@ class CarelevoPumpPlugin @Inject constructor(
             serialNumber = serialNumber(),
             onLastDataUpdated = { _lastDataTime.value = System.currentTimeMillis() },
             onStatusRefreshRequested = {
-                scope?.launch { commandQueue.readStatus("Carelevo bolus completion") }
+                scope?.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.readStatus("Carelevo bolus completion") }
             },
             pluginDisposable = pluginDisposable,
             onAlarmsRefreshRequested = ::refreshActiveAlarmSnapshots
@@ -762,7 +763,7 @@ class CarelevoPumpPlugin @Inject constructor(
             serialNumber = serialNumber(),
             onLastDataUpdated = { _lastDataTime.value = System.currentTimeMillis() },
             onStatusRefreshRequested = {
-                scope?.launch { commandQueue.readStatus("Carelevo bolus cancel") }
+                scope?.launch(start = CoroutineStart.UNDISPATCHED) { commandQueue.readStatus("Carelevo bolus cancel") }
             }
         )
     }

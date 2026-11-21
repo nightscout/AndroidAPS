@@ -121,6 +121,23 @@ class DanaRPluginTest : TestBaseWithProfile() {
         assertThat(result.enacted).isFalse()
     }
 
+    /**
+     * A bolus the pump stopped itself (an occlusion, a shutdown, a battery error: MsgError) is not given. It was counted
+     * as given, as a stop by the user is, and the user was not told.
+     */
+    @Test
+    fun aBolusThePumpStoppedIsNotGiven() {
+        whenever(rh.gs(eq(app.aaps.core.interfaces.R.string.format_insulin_units), anyOrNull())).thenReturn("0.40 U")
+        whenever(rh.gs(eq(app.aaps.core.ui.R.string.pump_stopped_bolus), anyOrNull())).thenReturn("stopped by the pump")
+        danaPump.bolusStopped = true
+        danaPump.bolusStoppedByPump = true
+        bindBolusService(connectionOk = true, delivered = 0.4)
+        val result = runBlocking { danaRPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 }) }
+        assertThat(result.success).isFalse()
+        assertThat(result.bolusDelivered).isWithin(0.001).of(0.4)
+        assertThat(result.comment).isEqualTo("stopped by the pump")
+    }
+
     // ---- #946: the description has the steps the pump is set to, once they were read ----
 
     @Test

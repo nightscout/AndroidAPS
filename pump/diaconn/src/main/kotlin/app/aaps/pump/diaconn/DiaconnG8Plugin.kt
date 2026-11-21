@@ -324,7 +324,7 @@ class DiaconnG8Plugin(
         if (result.success) result.enacted = true
         if (!result.success) {
             if (diaconnG8Pump.bolusStoppedByPump)
-                result.comment = rh.gs(R.string.diaconn_g8_bolus_stopped_by_pump, rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, diaconnG8Pump.lastBolusAmount))
+                result.comment = rh.gs(app.aaps.core.ui.R.string.pump_stopped_bolus, rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, diaconnG8Pump.lastBolusAmount))
             else setErrorMsg(diaconnG8Pump.resultErrorCode, result)
         } else result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)

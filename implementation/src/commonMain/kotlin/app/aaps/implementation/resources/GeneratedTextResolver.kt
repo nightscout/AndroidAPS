@@ -16,7 +16,7 @@ import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
  * it as a `name -> text` map beside the `TextRef` names it always generated.
  *
  * Each shell registers the modules it depends on with [TextRefValueRegistry] before any text is
- * asked for, the same way `MainApp.registerStringOwners()` registers id maps on Android.
+ * asked for, the same way `GeneratedStringOwners.registerAll()` registers id maps on Android.
  *
  * ## What it does not do
  *

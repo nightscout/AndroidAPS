@@ -25,10 +25,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
+import org.mockito.kotlin.after
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.timeout
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -40,8 +43,30 @@ class DanaRSPluginTest : DanaRSTestBase() {
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
     @Mock lateinit var danaHistoryDatabase: DanaHistoryDatabase
     @Mock lateinit var blePreCheck: BlePreCheck
+    @Mock lateinit var pumpSync: PumpSync
 
     private lateinit var danaRSPlugin: DanaRSPlugin
+
+    /** An unpair ends the records of the removed pump (D9), also when the pump was not reached. */
+    @Test
+    fun unpairEndsTheRecordsOfThePump() {
+        whenever(preferences.get(DanaStringNonKey.RsName)).thenReturn("UHH98953TI")
+        whenever(preferences.get(DanaStringNonKey.MacAddress)).thenReturn("00:11:22:33:44:55")
+        danaRSPlugin.changePump()
+        whenever(preferences.get(DanaStringNonKey.RsName)).thenReturn("")
+        whenever(preferences.get(DanaStringNonKey.MacAddress)).thenReturn("")
+
+        danaRSPlugin.changePump()
+
+        verify(pumpSync, timeout(TIMEOUT_MS)).connectNewPump(true)
+    }
+
+    /** No pump before and none now, as at a start with no pump paired: nothing to end. */
+    @Test
+    fun changePumpWithNoPumpBeforeEndsNothing() {
+        danaRSPlugin.changePump()
+        verify(pumpSync, after(TIMEOUT_MS).never()).connectNewPump(any())
+    }
 
     @Test
     fun basalRateShouldBeLimited() {
@@ -421,8 +446,14 @@ class DanaRSPluginTest : DanaRSTestBase() {
         danaRSPlugin =
             DanaRSPlugin(
                 aapsLogger, rh, preferences, commandQueue, rxBus, context, danaPump, detailedBolusInfoStorage, temporaryBasalStorage,
-                dateUtil, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider, blePreCheck, bolusProgressData, mock()
+                dateUtil, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider, blePreCheck, bolusProgressData, pumpSync, mock()
             )
+    }
+
+    private companion object {
+
+        /** connectNewPump runs on the plugin's scope, off the calling thread. */
+        const val TIMEOUT_MS = 1000L
     }
 
 }

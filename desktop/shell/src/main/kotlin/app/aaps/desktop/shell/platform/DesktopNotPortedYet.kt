@@ -1,6 +1,5 @@
 package app.aaps.desktop.shell.platform
 
-import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -22,35 +21,6 @@ import java.io.File
  * a JVM and has simply not been moved. They are grouped so the size of what is left is visible in
  * one place, and each says what it would take.
  */
-
-/**
- * Autotune, which is arithmetic sitting in the wrong source set.
- *
- * `AutotunePlugin` is about 2,700 lines over treatment history and nothing in it is really Android -
- * the blockers are `Calendar`/`TimeZone` and a file dump. It should be **ported rather than written
- * again**, and the date maths deserves golden vectors first, because what it computes is basal, ISF
- * and ICR.
- *
- * A run reports failure rather than doing nothing quietly. "Autotune did not work" is recoverable;
- * "autotune finished and changed nothing" would be a lie about insulin settings.
- */
-@ContributesBinding(AppScope::class)
-@SingleIn(AppScope::class)
-@Inject
-class DesktopAutotune(
-    private val aapsLogger: AAPSLogger
-) : Autotune {
-
-    override var lastRunSuccess: Boolean = false
-    override var calculationRunning: Boolean = false
-
-    override suspend fun aapsAutotune(daysBack: Int, autoSwitch: Boolean, profileToTune: String, weekDays: BooleanArray?) {
-        lastRunSuccess = false
-        aapsLogger.notOnDesktopYet("Autotune.aapsAutotune")
-    }
-
-    override fun atLog(message: String) = aapsLogger.notOnDesktopYet("Autotune.atLog: $message")
-}
 
 /**
  * Glucose data quality, which the overview shows as a chip and the loop reads.

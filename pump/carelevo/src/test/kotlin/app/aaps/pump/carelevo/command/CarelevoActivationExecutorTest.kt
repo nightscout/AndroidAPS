@@ -1,11 +1,13 @@
 package app.aaps.pump.carelevo.command
 
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CustomCommand
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.ble.BleCommand
 import app.aaps.pump.carelevo.ble.BleResponse
@@ -19,6 +21,9 @@ import app.aaps.pump.carelevo.ble.commands.SafetyCheckResponse
 import app.aaps.pump.carelevo.ble.commands.SimpleResultResponse
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.domain.model.ResponseResult
+import app.aaps.pump.carelevo.domain.model.infusion.CarelevoExtendBolusInfusionInfoDomainModel
+import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
+import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.SafetyProgress
@@ -50,6 +55,7 @@ import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -83,6 +89,7 @@ internal class CarelevoActivationExecutorTest {
     @Mock lateinit var patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase
     @Mock lateinit var bleSession: CarelevoBleSession
     @Mock lateinit var pumpSync: PumpSync
+    @Mock lateinit var dateUtil: DateUtil
 
     private val pumpEnactResultProvider = Provider<PumpEnactResult> { FakePumpEnactResult() }
 
@@ -105,8 +112,13 @@ internal class CarelevoActivationExecutorTest {
             alarmClearPatchDiscardUseCase = alarmClearPatchDiscardUseCase,
             patchForceDiscardUseCase = patchForceDiscardUseCase,
             bleSession = bleSession,
-            pumpSync = pumpSync
+            pumpSync = pumpSync,
+            dateUtil = dateUtil
         )
+        whenever(dateUtil.now()).thenReturn(NOW)
+        // Nothing runs and no patch report came, unless a test says so.
+        whenever(carelevoPatch.infusionInfo).thenReturn(BehaviorSubject.createDefault(Optional.empty<CarelevoInfusionInfoDomainModel>()))
+        whenever(carelevoPatch.patchInfo).thenReturn(BehaviorSubject.createDefault(Optional.empty<CarelevoPatchInfoDomainModel>()))
         // No profile switch requested, unless a test asks for one.
         whenever { pumpSync.expectedPumpState() }.thenReturn(pumpState(profile = null))
         whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.just<ResponseResult<CarelevoUseCaseResponse>>(ResponseResult.Success(ResultSuccess)))
@@ -315,6 +327,81 @@ internal class CarelevoActivationExecutorTest {
         assertThat(result?.success).isFalse()
         assertThat(result?.comment).isEqualTo("resume result 5")
         verify(pumpResumeUseCase, never()).persistResumed()
+    }
+
+    // ---- the stop record: written by the command, so it does not depend on the screen that asked for the stop ----
+
+    @Test fun `pumpStop records the stop with one instant and the patch serial`() {
+        val patch = mock<CarelevoPatchInfoDomainModel>()
+        whenever(patch.manufactureNumber).thenReturn("SN-0001")
+        whenever(carelevoPatch.patchInfo).thenReturn(BehaviorSubject.createDefault(Optional.of(patch)))
+        stubRunSingle(SimpleResultResponse(resultCode = 0))
+        whenever(pumpStopUseCase.persistStopped(any())).thenReturn(true)
+
+        sut.execute(CmdPumpStop(durationMin = 30))
+
+        val duration = argumentCaptor<Long>()
+        verifyBlocking(pumpSync) {
+            syncTemporaryBasalWithPumpId(
+                eq(NOW), any(), duration.capture(), eq(true), eq(PumpSync.TemporaryBasalType.PUMP_SUSPEND), eq(NOW),
+                eq(PumpType.CAREMEDI_CARELEVO), eq("SN-0001")
+            )
+        }
+        assertThat(duration.firstValue).isEqualTo(30 * 60_000L)
+        verifyBlocking(pumpSync, never()) { syncStopExtendedBolusWithPumpId(any(), any(), any(), any()) }
+    }
+
+    @Test fun `pumpStop ends an extended bolus that ran and gives an empty serial when no patch report came`() {
+        whenever(carelevoPatch.infusionInfo).thenReturn(
+            BehaviorSubject.createDefault(Optional.of(CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = mock<CarelevoExtendBolusInfusionInfoDomainModel>())))
+        )
+        stubRunSingle(SimpleResultResponse(resultCode = 0))
+        whenever(pumpStopUseCase.persistStopped(any())).thenReturn(true)
+
+        sut.execute(CmdPumpStop(durationMin = 30))
+
+        verifyBlocking(pumpSync) { syncStopExtendedBolusWithPumpId(eq(NOW), eq(NOW), eq(PumpType.CAREMEDI_CARELEVO), eq("")) }
+    }
+
+    @Test fun `pumpStop the patch refused records nothing`() {
+        stubRunSingle(SimpleResultResponse(resultCode = 1))
+
+        sut.execute(CmdPumpStop(durationMin = 30))
+
+        verifyBlocking(pumpSync, never()) { syncTemporaryBasalWithPumpId(any(), any(), any(), any(), anyOrNull(), any(), any(), any()) }
+    }
+
+    @Test fun `pumpResume ends the stop record when AAPS has a temp basal`() {
+        val stop = PumpSync.PumpState.TemporaryBasal(
+            timestamp = 0L, duration = 60_000L, rate = 0.0, isAbsolute = true, type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+            id = 1L, pumpId = 0L, pumpType = PumpType.CAREMEDI_CARELEVO, pumpSerial = "SN"
+        )
+        whenever { pumpSync.expectedPumpState() }.thenReturn(
+            PumpSync.PumpState(temporaryBasal = stop, extendedBolus = null, bolus = null, profile = null, serialNumber = "SN")
+        )
+        stubRunSingle(PumpResumeResponse(resultCode = 0, mode = 1, subId = 0))
+        whenever(pumpResumeUseCase.persistResumed()).thenReturn(true)
+
+        sut.execute(CmdPumpResume())
+
+        verifyBlocking(pumpSync) { syncStopTemporaryBasalWithPumpId(eq(NOW), eq(NOW), eq(PumpType.CAREMEDI_CARELEVO), any(), any()) }
+    }
+
+    @Test fun `pumpResume writes no end when AAPS has no temp basal`() {
+        stubRunSingle(PumpResumeResponse(resultCode = 0, mode = 1, subId = 0))
+        whenever(pumpResumeUseCase.persistResumed()).thenReturn(true)
+
+        sut.execute(CmdPumpResume())
+
+        verifyBlocking(pumpSync, never()) { syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any()) }
+    }
+
+    @Test fun `pumpResume the patch refused ends nothing`() {
+        stubRunSingle(PumpResumeResponse(resultCode = 1, mode = 1, subId = 0))
+
+        sut.execute(CmdPumpResume())
+
+        verifyBlocking(pumpSync, never()) { syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any()) }
     }
 
     @Test fun `pumpResume success when accepted and persisted`() {
@@ -847,6 +934,7 @@ internal class CarelevoActivationExecutorTest {
         private const val ADDRESS = "aa:bb:cc:dd:ee:ff"
         private const val ALARM_ID = "alarm-1"
         private const val BOOM = "boom"
+        private const val NOW = 1_000_000L
     }
 
     /** Minimal [PumpEnactResult] so the provider returns a fresh, real result object per op. */

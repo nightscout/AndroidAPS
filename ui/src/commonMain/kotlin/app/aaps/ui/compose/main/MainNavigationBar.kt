@@ -41,12 +41,9 @@ fun MainNavigationBar(
     modifier: Modifier = Modifier,
     /** On a client, hide the mutating nav buttons (Treatments + Scenes) until paired. Always true on master. */
     masterOrPairedClient: Boolean = true,
-    quickWizardCount: Int = 0,
     onAutomationClick: () -> Unit = {},
     /** Total scenes + automation items defined — drives whether the nav button is shown at all. */
     automationTotal: Int = 0,
-    /** Subset of [automationTotal] that the user can activate right now — drives the badge. */
-    automationCount: Int = 0,
     pumpSetupPlugin: PluginBase? = null,
     bgSetupPlugin: PluginBase? = null,
     bgQualityBadgeIcon: ImageVector? = null,
@@ -84,29 +81,17 @@ fun MainNavigationBar(
     ) {
         // Treatment action button (opens bottom sheet) — hidden on an unpaired client (its bolus/carbs
         // ride the Client-Control channel and would be dropped); always shown on a master.
+        // No badge: a count of the QuickWizard entries was shown here, and users did not want it.
         if (masterOrPairedClient && role.allows(ElementType.TREATMENT.role)) {
             NavigationBarItem(
                 selected = false,
-                modifier = Modifier.badgeState(
-                    if (quickWizardCount > 0) stringResource(UiStrings.a11y_badge_available, quickWizardCount) else null
-                ),
                 onClick = onTreatmentClick,
                 icon = {
-                    BadgedBox(
-                        badge = {
-                            if (quickWizardCount > 0) {
-                                Badge(containerColor = AapsTheme.generalColors.statusNormal, contentColor = Color.Black) {
-                                    Text(text = quickWizardCount.toString())
-                                }
-                            }
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Fastfood,
-                            contentDescription = stringResource(CoreUiStrings.treatments),
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Default.Fastfood,
+                        contentDescription = stringResource(CoreUiStrings.treatments),
+                        modifier = Modifier.size(24.dp)
+                    )
                 },
                 label = { Text(text = stringResource(CoreUiStrings.treatments), textAlign = TextAlign.Center) },
                 colors = navColors
@@ -114,31 +99,18 @@ fun MainNavigationBar(
         }
 
         // Scenes/automation button — visible whenever scenes or automation items exist on a paired
-        // client (regardless of pump/loop/profile state). The badge counts only items the user can act
-        // on right now; gated items are visible inside the sheet, dimmed with reason.
+        // client (regardless of pump/loop/profile state). Items that cannot start now are shown inside
+        // the sheet, dimmed with the reason. No badge, for the same reason as Treatments.
         if (masterOrPairedClient && role.allows(ElementType.SCENE.role) && automationTotal > 0) {
             NavigationBarItem(
                 selected = false,
-                modifier = Modifier.badgeState(
-                    if (automationCount > 0) stringResource(UiStrings.a11y_badge_available, automationCount) else null
-                ),
                 onClick = onAutomationClick,
                 icon = {
-                    BadgedBox(
-                        badge = {
-                            if (automationCount > 0) {
-                                Badge(containerColor = AapsTheme.generalColors.statusNormal, contentColor = Color.Black) {
-                                    Text(text = automationCount.toString())
-                                }
-                            }
-                        }
-                    ) {
-                        Icon(
-                            imageVector = IcAutomation,
-                            contentDescription = stringResource(CoreUiStrings.scenes),
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
+                    Icon(
+                        imageVector = IcAutomation,
+                        contentDescription = stringResource(CoreUiStrings.scenes),
+                        modifier = Modifier.size(24.dp)
+                    )
                 },
                 label = { Text(text = stringResource(CoreUiStrings.scenes), textAlign = TextAlign.Center) },
                 colors = navColors
@@ -264,16 +236,12 @@ fun MainNavigationBar(
         if (loopActionAvailable) {
             NavigationBarItem(
                 selected = false,
-                // The badge is a constant "1": one suggestion is waiting. Spoken so it matches.
-                modifier = Modifier.badgeState(stringResource(UiStrings.a11y_badge_available, 1)),
+                // A green dot: a suggestion is waiting. It used to be a "1", which counted nothing.
+                modifier = Modifier.badgeState(stringResource(UiStrings.a11y_badge_attention)),
                 onClick = onLoopActionClick,
                 icon = {
                     BadgedBox(
-                        badge = {
-                            Badge(containerColor = AapsTheme.generalColors.statusNormal, contentColor = Color.Black) {
-                                Text(text = "1")
-                            }
-                        }
+                        badge = { Badge(containerColor = AapsTheme.generalColors.statusNormal) }
                     ) {
                         Icon(
                             imageVector = Icons.Default.PlayCircle,
@@ -317,7 +285,7 @@ fun MainNavigationBar(
  *
  * None of the badges in this bar can be read by a screen reader. Material3's `NavigationBarItem`
  * wraps its whole icon slot in `clearAndSetSemantics {}` whenever a label is shown, and every item
- * here has a label, so the badge - the count, the progress, the dot - is dropped from the semantics
+ * here has a label, so the badge - the progress, the dot - is dropped from the semantics
  * tree before it ever reaches the user. A blind user heard "Objectives" with no idea why it was
  * there, and the quality badge beside the glucose source was silent in the same way even though
  * someone had already given it a description.

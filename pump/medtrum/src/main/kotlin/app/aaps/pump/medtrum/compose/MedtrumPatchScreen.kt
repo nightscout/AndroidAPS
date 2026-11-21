@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.pump.ProfileGateWizardStep
 import app.aaps.core.ui.compose.pump.WizardScreen
 import app.aaps.pump.medtrum.R
@@ -24,7 +25,7 @@ import app.aaps.pump.medtrum.compose.steps.SiteLocationStep
 @Composable
 fun MedtrumPatchScreen(
     viewModel: MedtrumPatchViewModel,
-    setToolbarConfig: ((app.aaps.core.ui.compose.ToolbarConfig) -> Unit)? = null
+    setToolbarConfig: ((ToolbarConfig) -> Unit)? = null
 ) {
     val patchStep by viewModel.patchStep.collectAsStateWithLifecycle()
     val totalSteps by viewModel.totalSteps.collectAsStateWithLifecycle()
@@ -32,6 +33,8 @@ fun MedtrumPatchScreen(
     val canGoBack by viewModel.canGoBack.collectAsStateWithLifecycle()
 
     val titleResId by viewModel.title.collectAsStateWithLifecycle()
+    val leaveQuestion = patchStep?.let { leaveQuestionFor(it) } ?: LeaveQuestion.ACTIVATION
+    val deactivation = leaveQuestion == LeaveQuestion.DEACTIVATION
 
     WizardScreen(
         currentStep = patchStep,
@@ -39,8 +42,9 @@ fun MedtrumPatchScreen(
         currentStepIndex = currentStepIndex,
         canGoBack = canGoBack,
         onBack = { viewModel.handleBack() },
-        cancelDialogTitle = stringResource(R.string.change_patch_label),
-        cancelDialogText = stringResource(R.string.cancel_sure),
+        cancelDialogTitle = stringResource(if (deactivation) R.string.step_deactivate else R.string.change_patch_label),
+        cancelDialogText = stringResource(if (deactivation) R.string.cancel_deactivation_sure else R.string.cancel_sure),
+        askBeforeLeaving = leaveQuestion != LeaveQuestion.NONE,
         title = stringResource(titleResId),
         setToolbarConfig = setToolbarConfig,
         stepContent = { step, onCancel ->

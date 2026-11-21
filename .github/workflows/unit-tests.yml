@@ -27,6 +27,8 @@ on:
     branches:
       - dev
       - master
+      # The incubation branch for new pump work. Fork PRs into it get no CircleCI, so this is their only unit run.
+      - o5
 
 # A newer push to the same branch makes an in-flight run pointless.
 concurrency:

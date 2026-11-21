@@ -100,6 +100,8 @@ fun MainScreen(
     onSearchClear: () -> Unit,
     onSearchActiveChange: (Boolean) -> Unit,
     onSearchResultClick: (SearchIndexEntry) -> Unit,
+    onSearchHistoryClick: (String) -> Unit,
+    onSearchHistoryRemove: (String) -> Unit,
     onSearchPluginToggle: (PluginBase) -> Unit,
     onConfirmSearchPluginSwitch: () -> Unit,
     onDismissSearchPluginSwitch: () -> Unit,
@@ -332,6 +334,10 @@ fun MainScreen(
                             revision = searchUiState.revision,
                             onResultClick = onSearchResultClick,
                             onPluginToggle = onSearchPluginToggle,
+                            query = searchUiState.query,
+                            history = searchUiState.history,
+                            onHistoryClick = onSearchHistoryClick,
+                            onHistoryRemove = onSearchHistoryRemove,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(contentPadding)
@@ -438,17 +444,13 @@ fun MainScreen(
                                 showTreatmentSheet = true
                             },
                             masterOrPairedClient = masterOrPairedClient,
-                            quickWizardCount = uiState.quickWizardItems.size,
                             onAutomationClick = {
                                 scenesViewModel.refreshState()
                                 showAutomationSheet = true
                             },
                             // Total drives nav-button visibility (button stays visible whenever
                             // scenes/automation exist, even if currently un-activatable).
-                            // Count drives the badge — only items the user can act on right now.
                             automationTotal = automationState.items.size + automationState.sceneItems.size,
-                            automationCount = automationState.items.count { it.activationReason == null } +
-                                automationState.sceneItems.count { it.activationReason == null },
                             pumpSetupPlugin = pumpSetupPlugin,
                             bgSetupPlugin = bgSetupPlugin,
                             bgQualityBadgeIcon = bgQualityBadgeIcon,

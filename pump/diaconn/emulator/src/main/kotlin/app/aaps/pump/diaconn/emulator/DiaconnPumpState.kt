@@ -1,6 +1,10 @@
 package app.aaps.pump.diaconn.emulator
 
 import java.io.Serializable
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
 
 /**
  * All a Diaconn G8 holds. Plain fields, so a test can set up any pump before it starts. [DiaconnPumpEmulator] changes it
@@ -153,12 +157,31 @@ class DiaconnPumpState : Serializable {
     /** Up to when the basal, the temp basal end and the extended bolus end were counted. 0 = not yet. */
     var lastSettleAt: Long = 0
 
-    private companion object {
+    companion object {
 
         private const val serialVersionUID = 1L
 
         /** Serial numbers for emulated pumps. Not 64004, the real G8 whose answers these tests copy. */
-        val EMULATED_SERIALS = 10000..19999
+        private val EMULATED_SERIALS = 10000..19999
+
+        /** The reason of a reset before the pump was shipped, as the driver names it. */
+        private const val RESET_BEFORE_SHIPMENT = 5
+
+        /**
+         * A pump as it reaches its user, with a record in its log. A real pump never has an empty log: a real G8
+         * (2026-11-11) had 4054 as its newest record. At the first pairing the driver reads only the newest record and
+         * then goes on after it, so an empty log is a pump no user has, and the scenarios failed now and then on it
+         * (CircleCI 42473). The plain constructor keeps an empty log, for tests that count the records.
+         * UNVERIFIED: that the first record of a new pump is a reset before shipment, and its values.
+         */
+        fun newPump(): DiaconnPumpState = DiaconnPumpState().apply {
+            val clock = LocalDateTime.ofInstant(Instant.ofEpochMilli(poweredOnAt / 1000 * 1000), ZoneId.systemDefault())
+            val record = DiaconnLog.record(clock.toEpochSecond(ZoneOffset.UTC), DiaconnLog.RESET_SYS) {
+                u8(battery).u8(RESET_BEFORE_SHIPMENT).u16(0).u16(0)
+            }
+            log.add(LogRecord(0, wrappingCount, record))
+            nextLogNumber = 1
+        }
     }
 }
 

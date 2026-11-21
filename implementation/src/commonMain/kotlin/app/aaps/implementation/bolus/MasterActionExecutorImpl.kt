@@ -102,8 +102,8 @@ class MasterActionExecutorImpl(
     private val automation: Automation,
     private val notificationManager: NotificationManager,
     private val bolusProgressData: BolusProgressData,
-    // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
-    // commonMain. AppCoroutineBindings.unqualifiedAppScope binds the very same scope without it.
+    // Plain CoroutineScope, the same object as @ApplicationScope:
+    // AppCoroutineBindings.unqualifiedAppScope binds the very same scope without it.
     private val appScope: CoroutineScope,
     private val masterRecordWriter: MasterRecordWriter,
     private val smbPause: SmbPause,

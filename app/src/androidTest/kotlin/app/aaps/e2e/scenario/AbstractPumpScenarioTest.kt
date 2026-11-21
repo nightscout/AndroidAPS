@@ -271,6 +271,30 @@ abstract class AbstractPumpScenarioTest {
         scenario.checkNoBurst()
     }
 
+    /**
+     * The user selects another pump and then this one again while a temp basal runs. The pump goes on with the temp
+     * basal the whole time, so after the switch back and a status read AAPS must count it again, and only once. Found by
+     * hand on an Omnipod 5: after a switch away and back the pod ran a temp basal that AAPS no longer counted.
+     *
+     * A low temp: a DanaR gives a high one as an extended bolus, and the pump would run no temp basal at all.
+     */
+    @Test
+    fun aPumpSwitchedAwayAndBackKeepsItsTempBasal() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("temp basal").that(scenario.tempBasal(LOW_TEMP_BASAL_RATE, TEMP_BASAL_MINUTES).success).isTrue()
+        assertWithMessage("the pump runs the temp basal").that(scenario.control.state().tempBasal).isNotNull()
+        scenario.checkTempBasal()
+
+        scenario.switchPumpAwayAndBack()
+
+        assertWithMessage("the pump still runs the temp basal").that(scenario.control.state().tempBasal).isNotNull()
+        assertWithMessage("status read after the switch back").that(scenario.readStatus().success).isTrue()
+        scenario.checkTempBasal()
+        if (scenario.canGiveExtendedBolus) scenario.checkExtendedBolus()
+        scenario.checkNoBurst()
+    }
+
     // ---- Broken communication ------------------------------------------------------------------------------------
 
     /**
@@ -316,6 +340,36 @@ abstract class AbstractPumpScenarioTest {
         assertWithMessage("status read").that(scenario.readStatus().success).isTrue()
         scenario.checkBolusRecords()
         scenario.checkTempBasal()
+    }
+
+    /**
+     * A pump that does not answer any more, as one with a dead battery, can still be removed: the removal tries the pump,
+     * and when the queue gives up on the link it removes the pump from AAPS anyway. A user who cannot remove it cannot
+     * pair a new one. AAPS then counts nothing more from the removed pump, see [PumpScenario.checkNothingCountedFromRemovedPump].
+     */
+    @Test
+    fun aDeadPumpCanBeRemoved() {
+        scenario.bringUp()
+        scenario.pair()
+        assertWithMessage("temp basal").that(scenario.tempBasal(TEMP_BASAL_RATE, TEMP_BASAL_MINUTES).success).isTrue()
+        if (scenario.canGiveExtendedBolus) {
+            assertWithMessage("extended bolus").that(scenario.extendedBolus(EXTENDED_BOLUS, EXTENDED_MINUTES).success).isTrue()
+        }
+        scenario.checkLinkClosed()
+        assertWithMessage("fault").that(scenario.control.setOutOfRange(true)).isTrue()
+        scenario.shortenQueueConnectionLimit()
+
+        scenario.unpair()
+
+        scenario.checkNothingCountedFromRemovedPump()
+
+        // Nothing of the removed pump stands in the way of the next one. The emulator stands for it: back in range, it
+        // is paired as a new pump, and what AAPS has matches what it runs.
+        assertWithMessage("a new pump").that(scenario.control.replaceWithNewPump()).isTrue()
+        scenario.pair()
+        assertWithMessage("status read of the new pump").that(scenario.readStatus().success).isTrue()
+        scenario.checkTempBasal()
+        scenario.checkExtendedBolus()
     }
 
     /** The pump stops the bolus, and its answer to the stop is lost. AAPS must count what the pump gave, once. */

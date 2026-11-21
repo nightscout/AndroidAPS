@@ -816,6 +816,7 @@
     <string name="wizard_set_alarm">Set alarm</string>
     <string name="eat_reminder_title">Time to eat</string>
     <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Rings at %1$s</string>
     <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Total wait: %1$s</string>
     <string name="eat_reminder_rung">The time is up</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
@@ -1125,6 +1126,8 @@
     <string name="wiki_search_offline">Documentation search requires internet connection</string>
     <string name="no_search_results">No results found</string>
     <string name="search_plugin_disabled">Plugin %1$s disabled</string>
+    <string name="search_recent">Recent searches</string>
+    <string name="search_history_remove">Remove from recent searches</string>
 
     <!--    Food Management -->
     <string name="food_management">Food</string>
@@ -1276,5 +1279,6 @@
     <string name="units_sec">sec</string>
     <string name="units_years">y</string>
     <string name="prefs_range_title">Range for visualization</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">The pump stopped the bolus after %1$s. Check the pump before the next bolus.</string>
     <string name="secrets_not_protected">No system key store was found on this computer. The keys that protect your settings and the pairing with the master are kept in files next to the data, so anyone who gets a copy of your files gets them too. On Linux, install and start a keyring (for example GNOME Keyring or KWallet), then start AAPS again.</string>
 </resources>

@@ -85,6 +85,16 @@ class EmulatorRfcommTransport(
         return true
     }
 
+    /**
+     * A Dana is kept: the same pump, back after a new battery and in range. UNVERIFIED: that a temp basal and an extended
+     * bolus do not run on after a battery change, and that the pump logs their ends as a cancel does.
+     */
+    override fun replaceWithNewPump(): Boolean {
+        emulator.stopTempBasalOnPump()
+        emulator.stopExtendedBolusOnPump()
+        return setOutOfRange(false)
+    }
+
     override fun setOutOfRange(outOfRange: Boolean): Boolean {
         this.outOfRange = outOfRange
         if (outOfRange) socket?.close()
