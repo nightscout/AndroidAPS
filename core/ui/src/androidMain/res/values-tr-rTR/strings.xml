@@ -1065,6 +1065,8 @@
     <string name="wiki_search_offline">Dokümantasyonda arama yapmak için internet bağlantısı gerekir</string>
     <string name="no_search_results">Hiçbir sonuç bulunamadı</string>
     <string name="search_plugin_disabled">%1$s eklentisi devre dışı</string>
+    <string name="search_recent">Son aramalar</string>
+    <string name="search_history_remove">Son aramalardan kaldır</string>
     <!--    Food Management -->
     <string name="food_management">Yiyecek</string>
     <string name="food_deleted">Yiyecek silindi</string>
