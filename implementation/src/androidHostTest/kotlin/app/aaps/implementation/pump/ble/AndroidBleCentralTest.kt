@@ -307,6 +307,48 @@ class AndroidBleCentralTest {
         assertThat(failureOf(result.await()).kind).isEqualTo(BleFailure.Kind.REFUSED)
     }
 
+    /** Aaruy: the PIN comes from the device name, and the user is not asked for it. The answer ends with the bond. */
+    @Test
+    fun aBondWithAPinAnswersThePinRequest() = runBlocking {
+        shadowOf(remote).setBondState(BluetoothDevice.BOND_NONE)
+        shadowOf(remote).setCreatedBond(true)
+        val result = scope.async { central.bonding.createBond(DEVICE, 5.seconds, pin = "123456") }
+        awaitBondReceiver()
+        assertExported(BluetoothDevice.ACTION_PAIRING_REQUEST)
+
+        pairingRequest(BluetoothDevice.PAIRING_VARIANT_PIN)
+        assertThat(shadowOf(remote).pin).isEqualTo("123456".encodeToByteArray())
+        bondBroadcast(BluetoothDevice.BOND_BONDED)
+
+        assertThat(result.await()).isEqualTo(BleResult.Ok(Unit))
+        assertThat(shadowOf(context).registeredReceivers.none { it.intentFilter.hasAction(BluetoothDevice.ACTION_PAIRING_REQUEST) }).isTrue()
+    }
+
+    /** A request for something other than a PIN is left to the system's dialog. */
+    @Test
+    fun aPinIsGivenOnlyForAPinRequest() = runBlocking {
+        shadowOf(remote).setBondState(BluetoothDevice.BOND_NONE)
+        shadowOf(remote).setCreatedBond(true)
+        val result = scope.async { central.bonding.createBond(DEVICE, 5.seconds, pin = "123456") }
+        awaitBondReceiver()
+
+        pairingRequest(BluetoothDevice.PAIRING_VARIANT_PASSKEY_CONFIRMATION)
+        assertThat(shadowOf(remote).pin).isNull()
+        bondBroadcast(BluetoothDevice.BOND_NONE)
+        assertThat(failureOf(result.await()).kind).isEqualTo(BleFailure.Kind.REFUSED)
+    }
+
+    private fun pairingRequest(variant: Int) {
+        context.sendOrderedBroadcast(
+            Intent(BluetoothDevice.ACTION_PAIRING_REQUEST)
+                .putExtra(BluetoothDevice.EXTRA_DEVICE, remote)
+                .putExtra(BluetoothDevice.EXTRA_PAIRING_VARIANT, variant),
+            null
+        )
+        shadowOf(Looper.getMainLooper()).idleFor(JavaDuration.ofMillis(50))
+        Thread.sleep(50)
+    }
+
     /** Carelevo accepts the bond only between the connect and the discovery. */
     @Test
     fun aConnectThatBondsFirstWaitsForBondedBeforeTheDiscovery() = runBlocking {

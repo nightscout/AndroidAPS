@@ -44,6 +44,12 @@ interface EmulatedPeripheral {
     /** The phone bonds with the device. Ok: bonded. Null: the bond never ends, as a device that does not answer. */
     suspend fun onBond(): BleResult<Unit>? = BleResult.Ok(Unit)
 
+    /**
+     * As [onBond], with the PIN the phone gave (`BleBonding.createBond`), null when it gave none. A device that needs a
+     * PIN checks it here and refuses a wrong one; any other device keeps [onBond].
+     */
+    suspend fun onBond(pin: String?): BleResult<Unit>? = onBond()
+
     /** Ok makes the characteristic subscribed: [PeripheralLink.send] works on it from then on. */
     suspend fun onSubscribe(link: PeripheralLink, characteristic: CharacteristicId): BleResult<Unit>? = BleResult.Ok(Unit)
 
@@ -221,19 +227,19 @@ class EmulatedBleCentral(
 
         override fun bondState(device: DeviceId): Flow<BondState> = states.map { it[device] ?: BondState.NONE }.distinctUntilChanged()
 
-        override suspend fun createBond(device: DeviceId, timeout: Duration): BleResult<Unit> {
+        override suspend fun createBond(device: DeviceId, timeout: Duration, pin: String?): BleResult<Unit> {
             val peripheral = peripherals.value[device] ?: return BleResult.Failed(BleFailure(BleFailure.Kind.REFUSED, message = "no device $device"))
-            return withTimeoutOrNull(timeout) { bond(peripheral) ?: awaitCancellation() }
+            return withTimeoutOrNull(timeout) { bond(peripheral, pin) ?: awaitCancellation() }
                 ?: BleResult.Failed(BleFailure(BleFailure.Kind.TIMEOUT, message = "not bonded in $timeout"))
         }
 
         /** Bonds with [peripheral] unless it is bonded. Null when the device never ends the bond. */
-        suspend fun bond(peripheral: EmulatedPeripheral): BleResult<Unit>? {
+        suspend fun bond(peripheral: EmulatedPeripheral, pin: String? = null): BleResult<Unit>? {
             val device = peripheral.device
             if (states.value[device] == BondState.BONDED) return BleResult.Ok(Unit)
             set(device, BondState.BONDING)
             delay(BOND_TIME)
-            val result = peripheral.onBond()
+            val result = peripheral.onBond(pin)
             set(device, if (result is BleResult.Ok) BondState.BONDED else BondState.NONE)
             return result
         }

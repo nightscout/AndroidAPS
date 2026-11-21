@@ -597,3 +597,9 @@ do not belong in the API Swift sees. There is a `filterNot` in `ios/shell/build.
 fails the framework link until the module is listed. It names the module and what to do: add it to
 `migratedModules` in `ios/shell/build.gradle.kts`. Then update `ShellInfo.LINKED_MODULES`: nothing
 checks the count, so set it to the number of entries in `migratedModules`. Expect this on every flip.
+
+## Do not run a javax-stripping sweep over `:app`'s DI files
+
+`AppRootGraph`, `MetroGraphs`, `AapsLeaves` and `CoreObjectsModule` legitimately import
+`javax.inject.Singleton` and `javax.inject.Inject`. A helper that strips javax while adding an import
+breaks them with `Unresolved reference 'Singleton'`. Edit those by hand.

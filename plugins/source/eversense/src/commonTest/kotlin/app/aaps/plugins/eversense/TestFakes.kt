@@ -171,7 +171,7 @@ internal class FakeBleBonding(private val central: FakeBleCentral) : BleBonding 
     val removed = mutableListOf<Pair<DeviceId, Boolean>>()
 
     override fun bondState(device: DeviceId): Flow<BondState> = emptyFlow()
-    override suspend fun createBond(device: DeviceId, timeout: Duration): BleResult<Unit> = BleResult.Ok(Unit)
+    override suspend fun createBond(device: DeviceId, timeout: Duration, pin: String?): BleResult<Unit> = BleResult.Ok(Unit)
 
     override suspend fun removeBond(device: DeviceId): BleResult<Unit> {
         removed += device to central.links.any { it.device == device && it.isUp }

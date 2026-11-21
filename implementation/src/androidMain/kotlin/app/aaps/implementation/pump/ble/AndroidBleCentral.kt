@@ -476,9 +476,49 @@ class AndroidBleCentral(
             awaitClose { context.unregisterReceiver(receiver) }
         }
 
-        override suspend fun createBond(device: DeviceId, timeout: Duration): BleResult<Unit> {
+        override suspend fun createBond(device: DeviceId, timeout: Duration, pin: String?): BleResult<Unit> {
             unavailable(scan = false)?.let { return BleResult.Failed(it) }
             val remote = remote(device) ?: return notAnAddress(device)
+            // Before createBond(): the request can come at once.
+            val pinAnswer = pin?.let { answerPinRequests(remote, it) }
+            try {
+                return bond(remote, device, timeout)
+            } finally {
+                pinAnswer?.let { context.unregisterReceiver(it) }
+            }
+        }
+
+        /**
+         * Answers the system's pairing request for [remote] with [pin], so the user sees no PIN dialog. Only a request for
+         * a PIN: one that asks for something else gets the system dialog. The request is an ordered broadcast, and the high
+         * priority lets this answer come before the dialog. Seen on a real Aaruy pump (2026-11-04): a PIN request
+         * (variant 0) about 8 s after createBond().
+         */
+        private fun answerPinRequests(remote: BluetoothDevice, pin: String): BroadcastReceiver {
+            val receiver = object : BroadcastReceiver() {
+                override fun onReceive(context: Context, intent: Intent) {
+                    if (deviceOf(intent)?.address != remote.address) return
+                    val variant = intent.getIntExtra(BluetoothDevice.EXTRA_PAIRING_VARIANT, BluetoothDevice.ERROR)
+                    if (variant != BluetoothDevice.PAIRING_VARIANT_PIN) {
+                        aapsLogger.debug(LTag.PUMPBTCOMM, "BLE ${remote.address}: pairing request $variant, left to the system")
+                        return
+                    }
+                    val given = try {
+                        remote.setPin(pin.encodeToByteArray())
+                    } catch (e: SecurityException) {
+                        aapsLogger.error(LTag.PUMPBTCOMM, "BLE ${remote.address}: the PIN was not allowed", e)
+                        false
+                    }
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "BLE ${remote.address}: PIN given: $given")
+                    if (given) abortBroadcast()
+                }
+            }
+            val filter = IntentFilter(BluetoothDevice.ACTION_PAIRING_REQUEST).apply { priority = IntentFilter.SYSTEM_HIGH_PRIORITY - 1 }
+            ContextCompat.registerReceiver(context, receiver, filter, ContextCompat.RECEIVER_EXPORTED)
+            return receiver
+        }
+
+        private suspend fun bond(remote: BluetoothDevice, device: DeviceId, timeout: Duration): BleResult<Unit> {
             var refused = false
             var first = true
             val end = withTimeoutOrNull(timeout) {
