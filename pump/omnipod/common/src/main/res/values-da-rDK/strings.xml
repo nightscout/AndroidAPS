@@ -26,6 +26,7 @@
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Kunne ikke bekræfte aktiveringsforløb. Prøv igen.</string>
     <string name="omnipod_common_error_pod_suspended">Pod er pauset</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Kunne ikke afspille test bip</string>
+    <string name="omnipod_common_error_time_out_of_sync">Tiden på poden er ikke synkroniseret. Opdater tiden på pumpeskærmen.</string>
     <string name="omnipod_common_error_unexpected_exception">Der opstod en uventet fejl. Rapporter venligst! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Alarm konfiguration er blevet opdateret i Pod.</string>
@@ -48,6 +49,7 @@
     <string name="omnipod_common_overview_pod_active_alerts">Aktive pod alarmer</string>
     <string name="omnipod_common_overview_firmware_version">Firmwareversion</string>
     <string name="omnipod_common_overview_time_on_pod">Tid på Pod</string>
+    <string name="omnipod_common_uncertain">usikker</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">Deaktivér Pod</string>
     <string name="omnipod_common_wizard_exit_confirmation_text">Du har ikke gennemført alle trin endnu. Er du sikker på, at du vil afslutte?</string>
@@ -65,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Deaktiver Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Tryk på <b>Næste</b> for at deaktivere Pod.\n\n<b>Bemærk:</b> Dette vil suspendere al insulin levering og deaktivere Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">En deaktiveret Pod kan ikke bruges igen. Deaktiver denne Pod nu?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Deaktiverer Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Deaktiverer Pod.\n\nNår deaktiveringen er fuldført, kan du trykke på <b>Næste</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod deaktiveret</string>
@@ -78,6 +81,7 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">Basal bip aktiveret</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">SMB bip aktiveret</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">TBR bip aktiveret</string>
+    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Vis knappen Pause tilførsel på pumpeskærmen</string>
     <string name="omnipod_common_preferences_time_change_enabled">Automatisk tidszone og sommer/vintertid aktiveret</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Udløbspåmindelse aktiveret</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Efter den er aktiveret, vil podden bippe når den specificerede mængde tid er gået</string>
@@ -93,7 +97,11 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Bekræftelsesbip</string>
     <string name="omnipod_common_preferences_category_notifications">Notifikationer</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Lyd for usikre TBR-meddelelser aktiveret</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Lyd for notifikationer om usikker SMB aktiveret</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Lyd for usikre bolus notifikationer aktiveret</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Lyd for notifikation om stoppet tilførsel aktiveret</string>
+    <string name="omnipod_dash_use_bonding">Bluetooth-bonding</string>
+    <string name="omnipod_dash_use_bonding_summary">Prøv kun dette, hvis poden ikke kan holde en stabil forbindelse. Telefonen viser anmodninger om parring, som du skal acceptere. Lad den være slået fra, hvis poden forbinder fint. Har ingen virkning under Android 15.</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Ingen aktiv pod</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Opsætning i gang (venter på Pod aktivering)</string>
@@ -104,9 +112,21 @@
     <string name="omnipod_common_pod_status_inactive">Inaktiv</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod fejl: %1$03d %2$s</string>
     <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">PDM-notifikation</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Ref: %1$s</string>
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Tomt reservoir</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">Insulintilførsel stoppet. Skift Pod nu.</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">Automatisk slukning</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">Insulintilførsel stoppet. Din PDM og Pod har ikke kommunikeret de sidste 4 timer. Skift Pod nu for at genoptage insulintilførslen.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">Pod udløbet</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">Insulintilførsel stoppet. Skift Pod nu.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Okklusion registreret</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">Insulintilførsel stoppet. Skift Pod nu. Tjek dit BS</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Pod-fejl</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">Insulintilførsel stoppet. Skift Pod nu.</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod udløber snart</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod udløber snart</string>
@@ -120,6 +140,8 @@
     <string name="omnipod_common_cmd_set_basal_schedule">Angiv Basal plan</string>
     <string name="omnipod_common_cmd_set_bolus">Indstil Bolus</string>
     <string name="omnipod_common_cmd_cancel_bolus">Annuller bolus</string>
+    <string name="omnipod_common_cmd_set_tbr">Sæt TBR</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Annuller TBR</string>
     <string name="omnipod_common_cmd_discard_pod">Kassér Pod</string>
     <string name="omnipod_common_cmd_get_pod_status">Pod status</string>
     <string name="omnipod_common_cmd_set_time">Indstil Tidspunkt</string>
@@ -128,10 +150,17 @@
     <string name="omnipod_common_cmd_read_pulse_log">Læs Pulslog</string>
     <string name="omnipod_common_cmd_suspend_delivery">Pause Indgivelse</string>
     <string name="omnipod_common_cmd_resume_delivery">Genoptag insulinafgivelse</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Annuller TBR (af bruger)</string>
     <string name="omnipod_common_cmd_get_pod_info">Pod Info</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Sæt falsk suspenderet TBR</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Annuller falsk suspenderet TBR</string>
+    <string name="omnipod_common_cmd_split_tbr">Opdel TBR</string>
     <string name="omnipod_common_cmd_play_test_beep">Afspil test bip</string>
     <string name="omnipod_common_cmd_unknown_entry">Ukendt værdi</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Deaktiver suspenderingsadvarsler</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Påmindelse om at fuldføre parring</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Påmindelse om at fuldføre opsætning</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Øjeblikke siden</string>
@@ -154,7 +183,18 @@
         <item quantity="one">Pod advarsel: %1$s</item>
         <item quantity="other">Pod advarsler: %1$s</item>
     </plurals>
+    <string name="omnipod_common_overview_pod_hard_end_date">Pod stopper endeligt</string>
+    <string name="omnipod_common_overview_pod_hard_end_value" comment="%1$s=date and time when the pod stops delivering insulin, %2$s=time left until then. Example: 21.10.2026 18:34 (17m remaining)">%1$s (%2$s)</string>
     <!-- Omnipod - History -->
+    <string name="omnipod_common_history_tbr_value">%1$.2f E/t, %2$d minutter</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f IE</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Basalkorrektion</string>
+    <string name="omnipod_common_bolus_type_priming">Klargøring</string>
     <string name="omnipod_common_history_total_delivered">Levering i alt: %1$.2f IE</string>
+    <string name="omnipod_common_failed_to_send">Kunne ikke sende kommandoen</string>
+    <string name="omnipod_common_command_not_sent">Kommando ikke sendt</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">Kommando ikke modtaget af poden</string>
+    <string name="omnipod_common_unknown">Ukendt status for kommandoen</string>
 </resources>
