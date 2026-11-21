@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="combov2_plugin_name">Accu Chek Combo</string>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
     <string name="combov2_plugin_description">Нативная интеграция с помпами Accu-Chek Combo</string>
     <string name="combov2_could_not_connect">Не удалось подключиться к помпе</string>
     <string name="combov2_not_paired">Нет сопряжения с помпой</string>
@@ -19,6 +19,7 @@
     <string name="combov2_error_10">Ошибка резервуара</string>
     <string name="combov2_error_11">Инфузионный набор не заполнен</string>
     <string name="combov2_extended_bolus_not_supported">Пролонгированный болюс не поддерживается</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Сопряжение с помпой</string>
     <string name="combov2_unpair_pump_title">Разорвать сопряжение с помпой</string>
     <string name="combov2_driver_state_label">Статус драйвера помпы</string>
@@ -30,10 +31,16 @@
 2. Проверьте, есть ли здесь ранее сопряженное устройство; если да, то перейдите на экран «Удалить устройство» и удалите его\n
 3. Перейдите на экран помпы «Добавить устройство» и запустите процесс сопряжение\n
 4. Нажмите на кнопку «Начать подключение» ниже, чтобы начать сопряжение в AndroidAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Через некоторое время на экране помпы появится имя телефона; нажмите CHECK для подтверждения.\n\n
+Когда сопряжение успешно завершится, подтвердите его на помпе и вернитесь на главный экран помпы, дважды нажав кнопку CHECK.\n\n
+Если соединение не установлено более чем через ~5 минут:\n\n
+1. Нажмите «Назад» или кнопку \"Отменить сопряжение\"\n
+2. Отмените сопряжение на Combo (одновременно нажмите кнопки UP и MENU)\n
+3. Попробуйте выполнить сопряжение снова</string>
     <string name="combov2_enter_pin">Введите PIN-код</string>
     <string name="combov2_cancel_pairing">Отменить сопряжение</string>
     <string name="combov2_confirm_cancel_pairing_message">Вы действительно хотите отменить сопряжение?</string>
-    <string name="combov2_confirm_unpair_message">Вы действительно хотите удалить сопряжение с помпой?</string>
+    <string name="combov2_confirm_unpair_message">Вы действительно хотите разорвать сопряжение с помпой?</string>
     <string name="combov2_pin_hint">10-значный PIN-код</string>
     <string name="combov2_pairing_finished_successfully">Сопряжение с Combo завершено успешно</string>
     <string name="combov2_pairing_cancelled">Сопряжение с Combo отменено пользователем</string>
@@ -75,6 +82,12 @@
     <string name="combov2_bolus_delivery_failed">Подача болюса не состоялась. Чтобы удостовериться, проверьте помпу во избежание двойного болюса и повторите подачу. Для защиты от ложных срабатываний болюсы не повторяются автоматически.</string>
     <string name="combov2_bolus_not_delivered">Болюс не подан</string>
     <string name="combov2_cannot_access_pump_data">Не удается получить данные с помпы; следует заново выполнить сопряжение</string>
+    <string name="combov2_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Связь с помпой была потеряна во время болюса. К этому моменту помпа ввела %1$s и может еще ввести остаток. Не вводите болюс повторно. AAPS прочитает реальное количество с помпы при следующем подключении.</string>
+    <string name="combov2_bolus_stopped_history_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Помпа остановила болюс после %1$s. Затем связь была потеряна, поэтому AAPS не смог прочитать историю помпы. AAPS прочитает реальное количество при следующем подключении. Проверьте помпу перед следующим болюсом.</string>
+    <string name="combov2_bolus_stopped_after_error" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Болюс был остановлен ошибкой после %1$s. Проверьте помпу перед следующим болюсом.</string>
+    <string name="combov2_bolus_request_outcome_unknown">Связь с помпой была потеряна, пока AAPS отправлял болюс, поэтому неизвестно, получила ли его помпа. Проверьте историю болюсов на помпе перед следующим болюсом. AAPS прочитает реальное количество с помпы при следующем подключении.</string>
+    <string name="combov2_unknown_bolus_in_history">В истории помпы есть болюс, о котором AAPS не знал. Запрошенный болюс не введен, потому что он был рассчитан без этого инсулина. Проверьте историю болюсов на помпе и IOB в AAPS. Если болюс все еще нужен, рассчитайте его заново.</string>
+    <string name="combov2_bolus_given_other_boluses_found">Болюс введен, но в истории помпы были и другие болюсы, о которых AAPS не знал. Теперь они записаны. Проверьте IOB перед следующим болюсом.</string>
     <string name="combov2_incorrect_active_basal_profile">Некорректный активный базальный профиль; должен быть активным профиль 1, а не %1$d</string>
     <string name="combov2_unrecognized_alert">Неопознанное оповещение Combo</string>
     <string name="combov2_combo_alert">Оповещение Combo</string>
@@ -94,6 +107,7 @@
     <string name="combov2_ignoring_redundant_100_tbr">Игнорирование избыточного запроса на 100% TBR</string>
     <string name="combov2_hit_unexpected_tbr_limit">При настройке ВБС: обнаружен непредвиденный предел: целевой процент %1$d%%, достиг предела %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Невозможно установить абсолютный TBR, если базовая скорость равна нулю</string>
+    <string name="combov2_unpair_pump_summary">Разорвать сопряжение AAPS и Android с текущей помпой Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Обнаружена и остановлена неизвестная временная базальная скоростьTBR; в процентах: %1$d%%; оставшаяся продолжительность: %2$s</string>
     <string name="combov2_connection_error">Ошибка соединения: %1$s</string>
     <string name="combov2_short_status_alert">Предупреждение: %s</string>
