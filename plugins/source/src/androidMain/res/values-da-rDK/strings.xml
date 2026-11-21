@@ -4,6 +4,7 @@
     <string name="ns_client_bg">NSClient BS</string>
     <string name="description_source_ns_client">Downloader BG data fra Nightscout</string>
     <string name="source_xdrip">xDrip+ BS</string>
+    <string name="description_source_xdrip">Modtag BS-værdier fra xDrip+ og kompatible apps (Juggluco osv.).</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="description_source_dexcom">Modtag BS-værdier fra \'Byg din egen Dexcom App\'.</string>
     <string name="glimp">Glimp</string>
@@ -21,10 +22,34 @@
     <string name="random_bg">Tilfældigt BS</string>
     <string name="description_source_random_bg">Generér tilfældig BS-data (kun demotilstand)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
+    <string name="description_source_patched_syai_tag_app">Modtag glukosedata fra Syai/Ottai-appen.</string>
     <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">Modtag glukosedata fra den modificerede Sibionic SI App eller fra Sibionics-appen.</string>
     <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">Modtag glukosedata fra den modificerede Sino App.</string>
     <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Modtag BS-værdier fra Instara-appen.</string>
     <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Hent historiske data fra Instara</string>
+    <string name="pref_summary_instara_history_request">Hent eventuelle manglende historiske data i baggrunden</string>
     <!-- Notification Reader -->
+    <string name="notification_reader">Notifikationslæser</string>
+    <string name="description_source_notification_reader">Læs glukoseværdier fra notifikationer fra officielle CGM-apps (Dexcom, Medtronic, Eversense osv.).</string>
     <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Appen skal have tilladelse til at modtage CGM-data fra Dexcom-appen</string>
+    <string name="permission_notification_listener_title">Adgang til notifikationer</string>
+    <string name="permission_notification_listener_description">Påkrævet for at læse glukoseværdier fra notifikationer fra CGM-apps</string>
+    <string name="aidex">MicroTech CGM-app</string>
+    <string name="description_source_aidex">Modtag CGM-værdier fra LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 osv.</string>
+    <string name="aidex_sensor_expired">Sensor udløbet, udskift med en ny sensor</string>
+    <string name="aidex_sensor_error">Sensorfejl, tjek venligst sensorstatus</string>
+    <string name="aidex_sensor_stabilizing">Sensoren stabiliseres, vent venligst…</string>
+    <string name="aidex_sensor_replace">Sensorskift påkrævet, udskift med en ny sensor så hurtigt som muligt</string>
+    <string name="aidex_signal_lost">Sensorsignal tabt, tjek forbindelsen</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">duplikeret måling</string>
 </resources>
