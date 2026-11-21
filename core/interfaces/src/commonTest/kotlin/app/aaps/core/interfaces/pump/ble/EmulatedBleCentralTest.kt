@@ -145,6 +145,34 @@ class EmulatedBleCentralTest {
         assertEquals(BleFailure.Kind.BLUETOOTH_OFF, assertIs<BleResult.Failed>(central.connect(pump.device)).failure.kind)
     }
 
+    /** A device that bonds with a PIN gets the one the phone gave, and can refuse a wrong one. */
+    @Test
+    fun theBondPinReachesTheDevice() = runTest {
+        val central = central()
+        val pump = PinPump(DeviceId("PUMP"), wantedPin = "1234")
+        central.add(pump)
+
+        assertIs<BleResult.Failed>(central.bonding.createBond(pump.device, 5.seconds, pin = "9999"))
+        assertEquals(BondState.NONE, central.bonding.bondState(pump.device).first())
+        assertIs<BleResult.Ok<Unit>>(central.bonding.createBond(pump.device, 5.seconds, pin = "1234"))
+        assertEquals(listOf<String?>("9999", "1234"), pump.pins)
+    }
+
+    /** Only `onBond` with the PIN: a device that needs one. */
+    private inner class PinPump(override val device: DeviceId, private val wantedPin: String) : EmulatedPeripheral {
+
+        val pins = mutableListOf<String?>()
+        override val services = GattServices(mapOf(notify to setOf(CharacteristicProperty.NOTIFY)))
+        override fun advertisement(): Advertisement = Advertisement(device, "PIN-PUMP", -50, emptyList(), emptyMap(), emptyMap())
+        override suspend fun onConnect(link: PeripheralLink): Boolean = true
+        override suspend fun onWrite(link: PeripheralLink, characteristic: CharacteristicId, data: ByteArray, type: WriteType): BleResult<Unit>? = BleResult.Ok(Unit)
+
+        override suspend fun onBond(pin: String?): BleResult<Unit>? {
+            pins += pin
+            return if (pin == wantedPin) BleResult.Ok(Unit) else BleResult.Failed(BleFailure(BleFailure.Kind.REFUSED, message = "wrong PIN"))
+        }
+    }
+
     @Test
     fun bondingEndsBondedAndCanBeRemoved() = runTest {
         val central = central()
