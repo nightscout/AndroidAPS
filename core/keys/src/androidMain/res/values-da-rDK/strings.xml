@@ -1,73 +1,357 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">Simpel tilstand</string>
+    <string name="pref_title_insulin_concentration">Understøttelse af insulinkoncentration</string>
+    <string name="pref_summary_insulin_concentration">Aktiver understøttelse af forskellige insulinkoncentrationer (U50, U200 osv.)</string>
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Hold skærmen tændt</string>
+    <string name="pref_summary_keep_screen_on">Forhindrer Android i at slukke skærmen. Det bruger meget strøm, når telefonen ikke er tilsluttet en stikkontakt.</string>
+    <string name="pref_title_show_treatment_button">Vis behandlingsknap</string>
+    <string name="pref_title_show_wizard_button">Vis beregnerknap</string>
+    <string name="pref_title_show_insulin_button">Vis insulinknap</string>
+    <string name="pref_title_show_carbs_button">Vis kulhydratknap</string>
+    <string name="pref_title_show_cgm_button">Vis CGM-knap</string>
+    <string name="pref_summary_show_cgm_button">Åbner xDrip+ eller Dexcom-appen (brug tilbage-knappen for at vende tilbage til AAPS).</string>
+    <string name="pref_title_show_calibration_button">Vis kalibreringsknap</string>
+    <string name="pref_summary_show_calibration_button">Sender en kalibrering til xDrip+ (sørg for, at \'Accept Calibrations\' er aktiveret i xDrip+ under Inter-App settings).</string>
+    <string name="pref_title_show_notes_in_dialogs">Vis notater i dialoger</string>
+    <string name="pref_title_use_bolus_advisor">Brug bolusrådgiver</string>
+    <string name="pref_summary_use_bolus_advisor">Aktiver bolusrådgiveren, som hjælper med bolusberegning ved højere blodsukker.</string>
+    <string name="pref_title_use_bolus_reminder">Brug boluspåmindelse</string>
+    <string name="pref_summary_use_bolus_reminder">Aktiver notifikationer med boluspåmindelser, som hjælper dig med at holde styr på insulintilførslen.</string>
+    <string name="pref_title_use_super_bolus">Brug Superbolus</string>
+    <string name="pref_summary_use_super_bolus">Aktiver Superbolus, som låner insulin fra basalen og giver den med det samme.</string>
     <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">BT Watchdog</string>
+    <string name="pref_summary_bt_watchdog">Slår telefonens Bluetooth fra i ét sekund, hvis der ikke kan oprettes forbindelse til pumpen. Det kan hjælpe på nogle telefoner, hvor Bluetooth-stakken fryser.</string>
     <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">Advar, hvis der ikke modtages BS-data</string>
+    <string name="pref_title_alert_pump_unreachable">Advar, hvis pumpen er utilgængelig</string>
+    <string name="pref_title_alert_carbs_required">Advar, når der kræves kulhydrater</string>
+    <string name="pref_title_alert_urgent_as_android_notification">Vis akutte alarmer som Android-notifikationer</string>
+    <string name="pref_title_alert_increase_volume">Øg lydstyrken for notifikationer gradvist</string>
+    <string name="pref_title_alert_override_dnd">Tilsidesæt Forstyr ikke-tilstand</string>
+    <string name="pref_summary_alert_override_dnd">Til: Alarmer ringer, også når telefonen er på lydløs eller i Forstyr ikke. Fra: Alarmer ringer ikke i de tilfælde. I Forstyr ikke vibrerer de kun.</string>
     <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">Upload BS-data til NS</string>
+    <string name="pref_title_bg_source_create_sensor_change">Registrer sensorskift</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Opret en behandlingshændelse for sensorskift, når en sensor sættes i.</string>
     <!-- APS preferences -->
+    <string name="pref_title_aps_use_dynamic_sensitivity">Brug dynamisk følsomhed</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">Brug DynamicISF til justering af følsomhed i stedet for Autosens.</string>
+    <string name="pref_title_aps_use_autosens">Brug Autosens</string>
+    <string name="pref_title_aps_use_smb">Aktiver SMB</string>
+    <string name="pref_summary_aps_use_smb">Aktiver Super Micro Bolus. SMB giver insulin med det samme for at reagere på stigende blodsukker.</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">Aktiver SMB ved højt midlertidigt mål</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">Tillad SMB, når et højt midlertidigt mål er aktivt.</string>
+    <string name="pref_title_aps_use_smb_always">Aktiver SMB altid</string>
+    <string name="pref_summary_aps_use_smb_always">Aktiver SMB under alle forhold, uanset bolus eller COB.</string>
+    <string name="pref_title_aps_use_smb_with_cob">Aktiver SMB med COB</string>
+    <string name="pref_summary_aps_use_smb_with_cob">Tillad SMB, når der er kulhydrater om bord.</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">Aktiver SMB ved lavt midlertidigt mål</string>
+    <string name="pref_summary_aps_use_smb_with_low_tt">Tillad SMB, når et lavt midlertidigt mål er aktivt.</string>
+    <string name="pref_title_aps_use_smb_after_carbs">Aktiver SMB efter kulhydrater</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">Tillad SMB i en periode efter, at der er indtastet kulhydrater.</string>
+    <string name="pref_title_aps_use_uam">Aktiver UAM</string>
+    <string name="pref_summary_aps_use_uam">Aktiver genkendelse og behandling af uanmeldte måltider.</string>
+    <string name="pref_title_aps_sensitivity_raises_target">Følsomhed hæver målværdi</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">Hæv målværdien for glukose, når der registreres følsomhed.</string>
+    <string name="pref_title_aps_resistance_lowers_target">Resistens sænker målværdi</string>
+    <string name="pref_summary_aps_resistance_lowers_target">Sænk målværdien for glukose, når der registreres resistens.</string>
+    <string name="pref_title_aps_always_use_short_deltas">Brug altid kort gns. delta</string>
+    <string name="pref_summary_aps_always_use_short_deltas">Brug altid kort gennemsnitlig delta i stedet for simpel delta ved beregning af BS-ændringer.</string>
+    <string name="pref_title_aps_dynisf_adjust_sensitivity">DynamicISF justerer følsomhed</string>
+    <string name="pref_summary_aps_dynisf_adjust_sensitivity">Juster følsomhedsberegninger, når DynamicISF bruges.</string>
+    <string name="pref_title_aps_autosens_adjust_targets">Autosens justerer målværdier</string>
+    <string name="pref_summary_aps_autosens_adjust_targets">Tillad Autosens at justere målværdien for glukose ud over basal og ISF.</string>
+    <string name="pref_title_aps_high_tt_raises_sensitivity">Højt midlertidigt mål hæver følsomheden</string>
+    <string name="pref_summary_aps_high_tt_raises_sensitivity">Høje midlertidige mål øger insulinfølsomheden.</string>
+    <string name="pref_title_aps_low_tt_lowers_sensitivity">Lavt midlertidigt mål sænker følsomheden</string>
+    <string name="pref_summary_aps_low_tt_lowers_sensitivity">Lave midlertidige mål mindsker insulinfølsomheden.</string>
+    <string name="pref_title_aps_use_autoisf_weights">Aktiver AutoISF</string>
+    <string name="pref_summary_aps_use_autoisf_weights">Aktiver AutoISF-justering af ISF baseret på vægte.</string>
+    <string name="pref_title_aps_smb_on_even_target">Aktiver SMB ved lige målværdi</string>
+    <string name="pref_summary_aps_smb_on_even_target">Alternativ aktivering af SMB altid, baseret på målværdien for glukose.</string>
     <!-- Maintenance preferences -->
+    <string name="pref_title_maintenance_enable_fabric">Aktiver Fabric-nedbrudsrapportering</string>
+    <string name="pref_title_maintenance_enable_export_automation">Aktiver automatisk eksport af indstillinger</string>
     <!-- Autotune preferences -->
+    <string name="pref_title_autotune_auto_switch_profile">Skift profil automatisk</string>
+    <string name="pref_summary_autotune_auto_switch_profile">Skift automatisk til den profil, som Autotune har lavet, efter beregningen.</string>
+    <string name="pref_title_autotune_categorize_uam_as_basal">Kategoriser UAM som basal</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">Behandl uanmeldte måltider som basalinsulinbehov i Autotune-beregninger.</string>
+    <string name="pref_title_autotune_tune_insulin_curve">Juster insulinkurve</string>
+    <string name="pref_title_autotune_circadian_ic_isf">Brug døgnvarierende IC/ISF</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">Anvend døgnvariation på IC og ISF i Autotune-beregninger.</string>
+    <string name="pref_title_autotune_additional_log">Ekstra logning</string>
     <!-- SMS preferences -->
+    <string name="pref_title_sms_allow_remote_commands">Tillad fjernkommandoer via SMS</string>
+    <string name="pref_title_sms_report_pump_unreachable">Rapporter utilgængelig pumpe via SMS</string>
+    <string name="pref_summary_sms_report_pump_unreachable">Send en SMS-notifikation, når pumpen bliver utilgængelig.</string>
     <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">Upload pumpestatus til NS</string>
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_upload_data">Upload data til NS</string>
+    <string name="pref_summary_ns_upload_data">Upload behandlinger, midlertidige basaler og andre data til Nightscout.</string>
+    <string name="pref_title_ns_receive_cgm">Modtag CGM-data fra NS</string>
+    <string name="pref_summary_ns_receive_cgm">Accepter CGM-målinger fra Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_store">Modtag profillager fra NS</string>
+    <string name="pref_summary_ns_receive_profile_store">Accepter opdateringer af profillageret fra Nightscout.</string>
+    <string name="pref_title_ns_receive_temp_target">Modtag midlertidige mål fra NS</string>
+    <string name="pref_summary_ns_receive_temp_target">Accepter ændringer af midlertidige mål fra Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_switch">Modtag profilskift fra NS</string>
+    <string name="pref_summary_ns_receive_profile_switch">Accepter profilskift fra Nightscout.</string>
+    <string name="pref_title_ns_receive_insulin">Modtag insulin fra NS</string>
+    <string name="pref_summary_ns_receive_insulin">Accepter insulinbehandlinger fra Nightscout.</string>
+    <string name="pref_title_ns_receive_carbs">Modtag kulhydrater fra NS</string>
+    <string name="pref_summary_ns_receive_carbs">Accepter kulhydratregistreringer fra Nightscout.</string>
+    <string name="pref_title_ns_receive_therapy_event">Modtag behandlingshændelser fra NS</string>
+    <string name="pref_summary_ns_receive_therapy_event">Accepter behandlingshændelser fra Nightscout.</string>
+    <string name="pref_title_ns_receive_running_mode">Modtag loop-tilstand fra NS</string>
+    <string name="pref_summary_ns_receive_running_mode">Accepter ændringer af loop-tilstand fra Nightscout.</string>
+    <string name="pref_title_ns_receive_tbr_eb">Modtag TBR/EB fra NS</string>
+    <string name="pref_summary_ns_receive_tbr_eb">Accepter midlertidige basalrater og forlængede boluser fra Nightscout.</string>
+    <string name="pref_title_ns_notifications_from_alarms">NS-alarmer</string>
+    <string name="pref_title_ns_notifications_from_announcements">NS-meddelelser</string>
+    <string name="pref_title_ns_use_cellular">Brug mobildata</string>
+    <string name="pref_title_ns_use_roaming">Brug roaming</string>
+    <string name="pref_title_ns_use_wifi">Brug WiFi</string>
+    <string name="pref_title_ns_use_on_battery">Synkroniser på batteri</string>
+    <string name="pref_title_ns_use_on_charging">Synkroniser under opladning</string>
+    <string name="pref_title_ns_log_app_start">Registrer start af appen</string>
+    <string name="pref_title_ns_create_announcements_from_errors">Opret meddelelser fra fejl</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">Opret meddelelser ved behov for kulhydrater</string>
+    <string name="pref_title_ns_slow_sync">Brug langsom synkronisering</string>
+    <string name="pref_title_ns_use_ws">Brug websockets</string>
+    <string name="pref_summary_ns_use_ws">Brug websockets til kommunikation med Nightscout i realtid.</string>
+    <string name="pref_title_ns_allow_client_control">Tillad styring fra klienter</string>
+    <string name="pref_summary_ns_allow_client_control">Lad parrede klientenheder sende signerede kommandoer (f.eks. start/stop af scener) via Nightscout. Det slår også hærdet tilstand til: Ændringer, der er lavet direkte i Nightscout, bliver ikke længere accepteret.</string>
     <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">Kun WiFi</string>
+    <string name="pref_title_openhumans_charging_only">Kun under opladning</string>
     <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_status">Send status til xDrip+</string>
+    <string name="pref_title_xdrip_send_detailed_iob">Send detaljeret IOB</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">Send detaljeret IOB-information til xDrip+, så den kan vises på urskiver.</string>
+    <string name="pref_title_xdrip_send_bgi">Vis BSI</string>
+    <string name="pref_summary_xdrip_send_bgi">Vis blodsukkerpåvirkning (BSI) i statuslinjen i xDrip+.</string>
     <!-- Wear preferences -->
+    <string name="pref_title_wear_control">Styring fra ur</string>
+    <string name="pref_summary_wear_control">Styr AAPS fra et Android Wear-ur.</string>
+    <string name="pref_title_wear_wizard_bg">Medtag BS i beregner</string>
+    <string name="pref_title_wear_wizard_tt">Medtag midlertidigt mål i beregner</string>
+    <string name="pref_title_wear_wizard_trend">Medtag trend i beregner</string>
+    <string name="pref_title_wear_wizard_cob">Medtag COB i beregner</string>
+    <string name="pref_title_wear_wizard_iob">Medtag IOB i beregner</string>
+    <string name="pref_title_wear_custom_watchface_authorization">Godkend brugerdefinerede urskiver</string>
+    <string name="pref_title_wear_pushed_watchface">Urskive installeret på uret</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Urskive med komplikationer</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Brugerdefineret urskive</string>
+    <string name="pref_title_wear_notify_on_smb">Giv besked ved SMB</string>
+    <string name="pref_summary_wear_notify_on_smb">Send notifikationer til uret, når der er givet SMB.</string>
+    <string name="pref_title_wear_broadcast_data">Udsend data til ur</string>
+    <string name="pref_summary_wear_broadcast_data">Udsend AAPS-data til ur-apps fra tredjepart via intent.</string>
     <!-- Site rotation preferences -->
+    <string name="pref_title_site_rotation_manage_pump">Administrer rotation af indstikssted for pumpe</string>
+    <string name="pref_title_site_rotation_manage_cgm">Administrer rotation af indstikssted for CGM</string>
     <!-- IntKey: Overview preferences -->
+    <string name="pref_title_carbs_button_increment_1">Kulhydratknap, trin 1</string>
+    <string name="pref_title_carbs_button_increment_2">Kulhydratknap, trin 2</string>
+    <string name="pref_title_carbs_button_increment_3">Kulhydratknap, trin 3</string>
     <string name="carb_increment_button_message">Antal kulhydrater der skal tilføjes når der trykkes på knappen</string>
+    <string name="pref_title_cage_warning">Advarselsgrænse for kanylealder</string>
+    <string name="pref_title_cage_critical">Kritisk grænse for kanylealder</string>
+    <string name="pref_title_iage_warning">Advarselsgrænse for insulinalder</string>
+    <string name="pref_title_iage_critical">Kritisk grænse for insulinalder</string>
+    <string name="pref_title_sage_warning">Advarselsgrænse for sensoralder</string>
+    <string name="pref_title_sage_critical">Kritisk grænse for sensoralder</string>
+    <string name="pref_title_sbat_warning">Advarselsgrænse for sensorens batteriniveau</string>
+    <string name="pref_title_sbat_critical">Kritisk grænse for sensorens batteriniveau</string>
+    <string name="pref_title_bage_warning">Advarselsgrænse for pumpebatteriets alder</string>
+    <string name="pref_title_bage_critical">Kritisk grænse for pumpebatteriets alder</string>
+    <string name="pref_title_res_warning">Advarselsgrænse for reservoirniveau</string>
+    <string name="pref_title_res_critical">Kritisk grænse for reservoirniveau</string>
+    <string name="pref_title_batt_warning">Advarselsgrænse for pumpebatteriets niveau</string>
+    <string name="pref_title_batt_critical">Kritisk grænse for pumpebatteriets niveau</string>
+    <string name="pref_title_bolus_percentage">Bolusprocent</string>
+    <string name="deliverpartofboluswizard">Anvend denne værdi på BS- og kulhydratkorrektion i bolusberegnerens resultat</string>
+    <string name="pref_title_reset_bolus_percentage_time">Tid for nulstilling af bolusprocent</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Giv fuld bolus (100%), hvis BS-målingen er ældre end</string>
     <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">Timeout for beskyttelse</string>
+    <string name="pref_title_protection_type_application">Niveau 0: Appbeskyttelse</string>
+    <string name="pref_summary_protection_type_application">Når appen startes, og når du vender tilbage til appen. Uafhængig af andre niveauer</string>
+    <string name="pref_title_protection_type_bolus">Niveau 1: Bolusbeskyttelse</string>
+    <string name="pref_summary_protection_type_bolus">Behandlinger, aktivering af profil. Kræver niveau 2</string>
+    <string name="pref_title_protection_type_settings">Niveau 2: Beskyttelse af indstillinger</string>
+    <string name="pref_summary_protection_type_settings">Redigering af profiler og indstillinger</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">Ingen beskyttelse</string>
     <string name="biometric">Biometrisk</string>
     <string name="master_password">Hovedadgangskode</string>
     <string name="custom_password">Brugerdefineret adgangskode</string>
     <string name="custom_pin">Brugerdefineret PIN</string>
     <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">Maks. tilladte kulhydrater</string>
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">Mindste ændring i åbent loop</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Åben Loop vil kun foreslå ny ændringsanmodning, hvis ændringen er større end denne værdi i %. Standardværdien er 20%</string>
     <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">SMB-interval</string>
+    <string name="pref_title_smb_max_minutes">Maks. minutter basal til begrænsning af SMB</string>
+    <string name="pref_title_uam_smb_max_minutes">UAM maks. minutter basal til begrænsning af SMB</string>
     <string name="uam_smb_max_minutes">UAM SMB maks minutter</string>
+    <string name="pref_title_carbs_request_threshold">Grænse for kulhydratbehov</string>
     <string name="carbs_req_threshold_summary">Minimum gram kulhydrater til at vise kulhydrat forslags advarsel. Kulhydrat forslag under dette tal vil ikke udløse en notifikaton.</string>
+    <string name="pref_title_half_basal_exercise_target">Mål for halv basal ved motion</string>
+    <string name="half_basal_exercise_target_summary">Angiv et tal, f.eks. 160. Det betyder: Når det midlertidige mål er 160 mg/dl, og Højt midlertidigt mål hæver følsomheden=true, køres 50%% basal ved dette niveau (120 = 75%%; 140 = 60%%).</string>
+    <string name="pref_title_iob_threshold_percent">IOB-grænse i procent</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Procentdel af maxIOB, over hvilken SMB er slået fra.\nStandardværdi: 100%\nMed 100% er denne funktion reelt slået fra.</string>
+    <string name="pref_title_dynisf_adjustment_factor">DynamicISF-justeringsfaktor</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Justeringsfaktor for DynamicISF. Sæt over 100% for mere aggressive korrektionsdoser og under 100% for mindre aggressive korrektioner.</string>
+    <string name="pref_title_autosens_period">Autosens-periode</string>
     <string name="openapsama_autosens_period_summary">Antal af tidligere timer for sensitivitets opdagelse (Kulhydraters abosorberingstid er ekskluderet)</string>
     <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">Antal logfiler, der skal sendes</string>
     <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">Grænse for forældede data</string>
+    <string name="pref_title_pump_unreachable_threshold">Grænse for utilgængelig pumpe</string>
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">Standardantal dage til beregning</string>
     <string name="autotune_default_tune_days_summary">Standard antal dage data der skal behandles af Autotune (op til 30)</string>
     <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">Min. tid mellem fjernboluser</string>
     <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">Interval for tilfældigt BS</string>
+    <string name="pref_title_random_bg_randomize">Gør BS-data tilfældige</string>
+    <string name="pref_summary_random_bg_randomize">Tilføj støj, forskyd tidsstempler tilfældigt, gør trendpile tilfældige, og indsæt af og til tilfældige kulhydrater. Deaktiver for en ren, forudsigelig sinusbølge, hvor trendpilen beregnes ud fra sinuskurvens hældning.</string>
     <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">Grænse for alarm om forældede data</string>
+    <string name="pref_title_urgent_alarm_stale_data">Grænse for akut alarm om forældede data</string>
     <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">Brugerprofil til rotation af indstikssted</string>
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
+    <string name="site_rotation_profile_man">Mand</string>
+    <string name="site_rotation_profile_woman">Kvinde</string>
+    <string name="site_rotation_profile_child">Barn</string>
     <!-- StringKey: General preferences -->
+    <string name="pref_title_units">Enheder</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="lang_default">Systemstandard</string>
+    <string name="pref_title_patient_name">Navn på instans</string>
+    <string name="pref_summary_patient_name">Navnet på den person, der bruger denne telefon. Det adskiller denne AAPS-instans fra andre i rapporter og synkronisering.</string>
     <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">AAPS-mappe</string>
     <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">Hovedadgangskode</string>
+    <string name="pref_title_settings_password">Adgangskode til indstillinger</string>
+    <string name="pref_title_settings_pin">PIN til indstillinger</string>
+    <string name="pref_title_application_password">Adgangskode til app</string>
+    <string name="pref_title_application_pin">PIN til app</string>
+    <string name="pref_title_bolus_password">Adgangskode til bolus</string>
+    <string name="pref_title_bolus_pin">PIN til bolus</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="pref_summary_theme_switcher">Vælg mørkt eller lyst tema, eller følg systemets tema</string>
+    <string name="pref_title_app_color_scheme">Farveskema for appen</string>
+    <string name="pref_dark_theme">Mørkt tema</string>
+    <string name="pref_light_theme">Lyst tema</string>
+    <string name="pref_follow_system_theme">Brug enhedens tema</string>
     <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">Patientens alder</string>
     <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">E-mailmodtager</string>
+    <string name="pref_title_identification">Identifikation til nedbrudsrapporter</string>
     <!-- StringKey: Automation preferences -->
+    <string name="pref_title_automation_location">Placeringstjeneste</string>
+    <string name="automation_location_passive">Brug passiv placering</string>
+    <string name="automation_location_network">Brug netværksplacering</string>
+    <string name="automation_location_gps">Brug GPS-placering</string>
     <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers">Tilladte telefonnumre</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYY</string>
     <string name="smscommunicator_otp_pin">Yderligere obligatorisk pinkode i slutningen</string>
+    <string name="smscommunicator_otp_pin_summary">Yderligere cifre, der skal huskes og påsættes i slutningen af hver genereret engangsadgangskode</string>
     <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">Pumpetype</string>
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">Nightscout URL</string>
+    <string name="ns_client_url_summary">Indtast din Nightscout-URL (f.eks. https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_secret_title">Nightscout API secret</string>
+    <string name="ns_client_secret_summary">Indtast din Nightscout API secret (min. 12 tegn)</string>
+    <string name="nsclient_token_title">Nightscout-adgangstoken</string>
+    <string name="nsclient_token_summary">Indtast dit Nightscout-adgangstoken (min. 17 tegn)</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_wifi_ssids_summary">Tilladte SSID\'er (adskilt med semikolon)</string>
     <!-- DoubleKey: Overview preferences -->
+    <string name="pref_title_insulin_button_increment_1">Insulinknap, trin 1</string>
+    <string name="pref_title_insulin_button_increment_2">Insulinknap, trin 2</string>
+    <string name="pref_title_insulin_button_increment_3">Insulinknap, trin 3</string>
     <string name="insulin_increment_button_message">Mængde insulin der skal tilføjes når der trykkes på knappen</string>
     <!-- DoubleKey: Actions preferences -->
+    <string name="pref_title_fill_button_1">Fyld-knap 1</string>
+    <string name="pref_title_fill_button_2">Fyld-knap 2</string>
+    <string name="pref_title_fill_button_3">Fyld-knap 3</string>
     <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">Maks. bolus</string>
+    <string name="treatmentssafety_maxbolus_summary">Den valgte patientalder begrænser denne værdi. En højere værdi her har ingen effekt.</string>
     <!-- DoubleKey: APS preferences -->
+    <string name="pref_title_max_basal">Maks. basalrate</string>
+    <string name="openapsma_max_basal_summary">Denne værdi kaldes max basal i OpenAPS\nDen valgte patientalder begrænser denne værdi. En højere værdi her har ingen effekt.</string>
+    <string name="pref_title_smb_max_iob">Maks. IOB for SMB</string>
+    <string name="openapssmb_max_iob_summary">Denne værdi kaldes Max IOB i OpenAPS\nOpenAPS tilføjer ikke mere insulin, hvis den aktuelle IOB er større end denne værdi.\nDen valgte patientalder begrænser denne værdi. En højere værdi her har ingen effekt.</string>
+    <string name="pref_title_ama_max_iob">Maks. IOB for AMA</string>
+    <string name="openapsma_max_iob_summary">Denne værdi kaldes Max IOB i OpenAPS\nDette er den maksimale mængde insulin i [IE], som APS kan give på én gang.\nDen valgte patientalder begrænser denne værdi. En højere værdi her har ingen effekt.</string>
+    <string name="pref_title_max_daily_multiplier">Maks. daglig sikkerhedsmultiplikator</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Standardværdi: 3. Dette er en vigtig sikkerhedsgrænse i OpenAPS. Den begrænser dine basaler til højst 3x din største basalrate. Du behøver sandsynligvis ikke ændre dette, men du skal vide, at det er det, der menes med “3x maks. daglig; 4x aktuel” for sikkerhedsgrænser.</string>
+    <string name="pref_title_current_basal_multiplier">Sikkerhedsmultiplikator for aktuel basal</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardværdi: 4 Dette er den anden halvdel af de vigtigste OpenAPS-sikkerhedsforanstaltninger, og den anden halvdel af \"3x maks. daglig, 4x aktuel\" i sikkerhedsforanstaltningerme. Det betyder, at din basal, uanset maks. basalrate på din pumpe, ikke kan være højere end dette antal gange det aktuelle niveau af din basal. Det er for at forhindre folk i at komme ind på et farligt område ved at opstille for høje maks basaler, før man forstår, hvordan algoritmen fungerer. Igen er standardværdien 4x; de fleste mennesker behøver aldrig at rette dette og i stedet være mere tilbøjelige til at tilpasse andre indstillinger, hvis de føler, at de er \"ved at løbe ind i\" denne sikkerhedsforanstaltning.</string>
+    <string name="pref_title_bolus_snooze_divisor">Bolus snooze DIA-divisor</string>
     <string name="openapsama_bolus_snooze_dia_divisor_summary">Standardværdi: 2\nBolus snooze starter efter du har lavet et måltid bolus, så loop ikke modvirker lave midlertidige mål, når du lige har spist. Eksemplet her og standard er 2; så en 3 timers DIA betyder, at bolus snooze gradvist udfases over 1,5 timer (3DIA/2).</string>
+    <string name="pref_title_ama_min_5m_carbs_impact">AMA min. kulhydratpåvirkning pr. 5 min</string>
+    <string name="pref_title_smb_min_5m_carbs_impact">SMB min. kulhydratpåvirkning pr. 5 min</string>
     <string name="openapsama_min_5m_carb_impact_summary">Standardværdi: 3.0 (AMA) eller 8.0 (SMB). Dette er en indstilling for standardindvirkningen af kulhydrater pr. 5 minutter. Standardværdien er en forventet 3mg/dl/5min. Det påvirker, hvor hurtigt COB er faldet, og hvor meget kulhydrat absorbering forudsættes ved beregning af forudsagt BG, når BG falder mere end forventet, eller ikke stiger så meget som forventet.</string>
+    <string name="pref_title_absorption_cutoff">Absorptionsgrænse</string>
     <string name="absorption_cutoff_summary">Tid hvor ethvert måltid betragtes som absorberet. Resterende kulhydrater vil blive afskåret.</string>
+    <string name="pref_title_absorption_maxtime">Maks. absorptionstid</string>
+    <string name="absorption_max_time_summary">Tid i timer, hvor alle kulhydrater fra et måltid forventes at være absorberet</string>
+    <string name="pref_title_autosens_min">Autosens min.</string>
     <string name="openapsama_autosens_min_summary">Standardværdi: 0,7\nDen anden side af autosens sikkerhedsgrænser, idet den sætter en begrænsning på, hvor lavt autosen kan justere basalerne, og hvor høj den kan justere ISF-og BG-målene.</string>
+    <string name="pref_title_autosens_max">Autosens maks.</string>
     <string name="openapsama_autosens_max_summary">Standardværdi: 1.2\nDette er en multiplikator top for autosens (og snart autotune) for at angive en 20%% maks. grænse for, hvor høj autosens kan være, hvilket til gengæld bestemmer, hvor høj autosens kan tilpasse sig, hvor lav den kan justere ISF, og hvor lav den kan angive BG-målet.</string>
+    <string name="pref_title_autoisf_min">AutoISF min.</string>
+    <string name="openapsama_autoISF_min_summary">Ligesom autosens_min angiver dette, hvor svag ISF kan blive.\n\nStandardværdien 1,0 slår reelt denne effekt fra.</string>
+    <string name="pref_title_autoisf_max">AutoISF maks.</string>
+    <string name="openapsama_autoISF_max_summary">Ligesom autosens_max angiver dette, hvor stærk ISF kan blive.\n\nStandardværdien 1,0 slår reelt denne effekt fra.\n\nADVARSEL: Vær meget forsigtig med værdier over 2,5</string>
+    <string name="pref_title_bg_accel_weight">ISF-vægt for BS-acceleration</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Denne vægt bruges, mens glukose stiger hurtigere og hurtigere. Den styrker ISF og kan dermed øge insulintilførslen.\n\nStandardværdien 0,0 slår reelt denne effekt fra.</string>
+    <string name="pref_title_bg_brake_weight">ISF-vægt for BS-opbremsning</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Denne vægt bruges, mens glukose bremser op. Den svækker ISF og kan dermed mindske insulintilførslen.\n\nStandardværdien 0,0 slår reelt denne effekt fra.</string>
+    <string name="pref_title_low_bg_weight">Vægt for lavt BS-område</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Denne vægt bruges, mens glukose er under målværdien. Den svækker ISF og kan dermed mindske insulintilførslen.\n\nStandardværdien 0,0 slår reelt denne effekt fra.</string>
+    <string name="pref_title_high_bg_weight">Vægt for højt BS-område</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Denne vægt bruges, mens glukose er over målværdien. Den styrker ISF og kan dermed øge insulintilførslen.\n\nStandardværdien 0,0 slår reelt denne effekt fra.</string>
+    <string name="pref_title_smb_delivery_ratio_bg_range">BS-område for SMB-leveringsforhold</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Standardværdi: 0. Det lineært stigende SMB-leveringsforhold fordeles over glukoseområdet [target_bg, target_bg+bg_range].\nVed target_bg er SMB-forholdet smb_delivery_ratio_min, ved target_bg+bg_range er det smb_delivery_ratio_max\nMed 0 er det lineært stigende SMB-forhold slået fra, og det faste smb_delivery_ratio bruges.</string>
+    <string name="pref_title_pp_weight">ISF-vægt efter måltid</string>
+    <string name="openapsama_pp_ISF_weight_summary">Denne vægt bruges, mens glukose stiger. Den styrker ISF og kan dermed øge insulintilførslen.\n\nStandardværdien 0,0 slår reelt denne effekt fra.</string>
+    <string name="pref_title_dura_weight">ISF-vægt for varighed</string>
+    <string name="openapsama_dura_ISF_weight_summary">Denne vægt bruges under længerevarende, forhøjede glukoseplateauer. Den styrker ISF og kan dermed øge insulintilførslen.\n\nStandardværdien 0,0 slår reelt denne effekt fra.</string>
+    <string name="pref_title_smb_delivery_ratio">SMB-leveringsforhold</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Standardværdi: 0,5. Dette er endnu en vigtig sikkerhedsgrænse i OpenAPS. Den angiver, hvor stor en del af det samlede insulinbehov der kan gives som SMB. Det skal forhindre, at man kommer i farlige situationer ved at sende SMB-anmodninger fra omsorgspersonens telefon samtidig. Øg denne eksperimentelle værdi langsomt og forsigtigt.</string>
+    <string name="pref_title_smb_delivery_ratio_min">SMB-leveringsforhold min.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Standardværdi: 0,5. Dette er den nedre ende af et lineært stigende forhold i stedet for den faste værdi ovenfor.</string>
+    <string name="pref_title_smb_delivery_ratio_max">SMB-leveringsforhold maks.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Standardværdi: 0,5. Dette er den øvre ende af et lineært stigende forhold i stedet for den faste værdi ovenfor.</string>
+    <string name="pref_title_smb_max_range_extension">SMB maks. udvidelse af område</string>
+    <string name="openapsama_smb_max_range_extension_summary">Standardværdi: 1. Dette er endnu en vigtig sikkerhedsgrænse i OpenAPS. Den angiver, med hvilken faktor du kan overskride de normale 120 maxSMB/maxUAM-minutter. Øg denne eksperimentelle værdi langsomt og forsigtigt.</string>
     <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_low_mark">Nedre BS-grænse</string>
+    <string name="pref_title_high_mark">Øvre BS-grænse</string>
     <!-- UnitDoubleKey: APS preferences -->
+    <string name="pref_title_lgs_threshold">LGS-grænse</string>
     <string name="lgs_threshold_summary">BS værdi under hvilken insulin er suspenderet. Standard værdi bruger standard målmodel. Bruger kan indstille værdi mellem 60 mg/dl (3,3 mmol/l) og 100 mg/dl (5,5 mmol/l). Værdier under 65/3,6 resulterer i brug af standardmodel</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
