@@ -3,6 +3,9 @@
     <string name="executing_right_now">הפקודה מבוצעת כעת</string>
     <string name="smb_being_delivered">SMB מוזרק כעת. נא לנסות שוב לאחר סיום ההזרקה.</string>
     <string name="basal_value_below_minimum">ערך הבזאלי מתחת למינימום. הפרופיל לא הוגדר!</string>
+    <string name="concentration_change_failed_title">החלפת האינסולין נכשלה</string>
+    <string name="concentration_change_failed">האינסולין החדש נמצא במשאבה, אבל AAPS לא הצליח לכתוב אליה את הפרופיל. המשאבה נותנת כמות שגויה של אינסולין. יש לנתק או להסיר את המשאבה עכשיו, לבדוק את רמת הסוכר ולתת אינסולין בדרך אחרת אם צריך. יש לחבר את המשאבה שוב רק אחרי שהפרופיל נכתב.</string>
+    <string name="concentration_change_pending">הפרופיל עם האינסולין החדש עדיין לא נכתב למשאבה. לא ניתן לתת אינסולין עד שהוא ייכתב.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">פרופיל הבזאלי במשאבה עודכן. המשאבה מעגלת את הבזאלי לצעד שלה: היא נותנת %1$s ליום במקום %2$s.</string>
     <string name="basal_reported_far_from_profile">המשאבה מדווחת על בזאלי רחוק מהפרופיל. AAPS שומר על הבזאלי של הפרופיל. יש לבדוק את המינונים הבזאליים במשאבה.</string>
     <!--       Stats -->
