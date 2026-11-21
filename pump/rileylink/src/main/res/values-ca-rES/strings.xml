@@ -60,7 +60,7 @@
     <string name="rileylink_target_device_medtronic">Bomba Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Mostrar nivell de batería reportat per OrangeLink/EmaLink/DiaLink</string>
+    <string name="riley_link_show_battery_level">Mostrar nivell de bateria reportat per OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">NO funciona amb el RileyLink original. Pot ser que no funcioni amb alternatives a RileyLink.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dia</item>
