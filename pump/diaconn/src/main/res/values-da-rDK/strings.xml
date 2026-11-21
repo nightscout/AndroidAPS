@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="resetpairing">Nulstil parringsinformation?</string>
     <string name="diaconn_pairing">Diaconn Pumpe Parring</string>
     <string name="diaconn_g8_history_alarm">Alarmer</string>
     <string name="diaconn_g8_history_basalhours">Basal Timer</string>
@@ -10,8 +11,11 @@
     <string name="gettingpumpsettings">Henter pumpeindstillinger</string>
     <string name="gettingpumptime">Henter pumpetid</string>
     <string name="largetimediff">Stor tidsforskel:\nTid i pumpen varierer med mere end 1,5 time.\nJustér venligst tiden manuelt på pumpen og sørg for, at læsning af historikken fra pumpen ikke forårsager uventet adfærd.\nHvis det er muligt; fjern historik fra pumpen før du ændrer tiden eller deaktiverer closed loop i én DIA efter den sidste forkerte historik post, men minimum én DIA fra nu.</string>
+    <string name="largetimedifftitle">Stor tidsforskel</string>
     <string name="approachingdailylimit">Nærmer sig daglig insulingrænse</string>
     <string name="startingbolus">Starter bolus afgivelse</string>
+    <string name="waitingforbolusend">Venter på forventet afslutning af bolus</string>
+    <string name="gettingbolusstatus">Henter bolusstatus</string>
     <string name="stoppingtempbasal">Stopper midlertidig basal</string>
     <string name="settingtempbasal">Indstiller midlertidig basal</string>
     <string name="settingextendedbolus">Indstiller forlænget bolus</string>
@@ -27,6 +31,7 @@
     <string name="bolus_step">Bolus Trin</string>
     <string name="basal_step">Basal Trin</string>
     <string name="pairfirst">Par venligst din pumpe med din telefon!</string>
+    <string name="processinghistory">Behandler begivenhed</string>
     <string name="diaconn_g8_history_tempbasal">Midlertidig basal</string>
     <string name="diaconng8_pump_settings">Diaconn pumpe indstillinger</string>
     <string name="diaconn_g8_pumpalarm">Lyd</string>
@@ -39,6 +44,7 @@
     <string name="diaconn_g8_screentimeout">LCD tændt tid [second]</string>
     <string name="diaconn_g8_language">Sprog</string>
     <string name="diaconn_g8_bolus_speed">Bolus hastighed</string>
+    <string name="diaconn_g8_pumplang_chiness">Kinesisk</string>
     <string name="diaconn_g8_pumplang_korean">Koreansk</string>
     <string name="diaconn_g8_pumplang_english">Engelsk</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -56,6 +62,7 @@
     <string name="diaconn_g8_logbatterychange_summary">Tilføj \"Batteri skift\" begivenhed til careportal, når det registreres i historik</string>
     <string name="diaconn_g8_logbatterychange_title">Log skift af batteri</string>
     <string name="diaconn_g8_logsyncinprogress">Synkronisering af log i gang</string>
+    <string name="diaconn_g8_loginsulinshorage">Insulinmangel</string>
     <string name="diaconn_g8_logbatteryshorage">Lavt batteriniveau</string>
     <string name="diaconn_g8_logneedleprime">Nåle fyldning: %1$.2fIE</string>
     <string name="diaconn_g8_loginjectorprime">Forfyldning: %1$.2fIE</string>
@@ -69,6 +76,7 @@
     <string name="diaconn_g8_reasoncomplete">Fuldført</string>
     <string name="diaconn_g8_reasoninjectonblock">Injektion blokkeret</string>
     <string name="diaconn_g8_reasonbatteryshortage">Lavt batteriniveau</string>
+    <string name="diaconn_g8_reasoninsulinshortage">Insulinmangel</string>
     <string name="diaconn_g8_reasonuserstop">Stoppet af bruger</string>
     <string name="diaconn_g8_reasonsystemreset">Nulstil system</string>
     <string name="diaconn_g8_reasonother">Andet</string>
@@ -84,6 +92,7 @@
     <string name="diaconn_g8_logalarmblock">Injektion blokkeret (%s)</string>
     <string name="diaconn_g8_lgorelease">basal afgivelse (%s)</string>
     <string name="diaconn_g8_lgosuspend">basal suspendering (%s)</string>
+    <string name="diaconn_g8_logdualnormalsuccess">Kombineret bolus (normal) vellykket</string>
     <string name="diaconn_g8_logdualsquarestart">Kombineret bolus startet</string>
     <string name="diaconn_g8_logdualsquaresuccess">Kombineret bolus vellykket</string>
     <string name="diaconn_g8_logsquarestart">Forlænget bolus startet</string>
@@ -92,6 +101,8 @@
     <string name="diaconn_g8_logsuccess">Succes</string>
     <string name="diaconn_g8_logmealsuccess">Måltid Gennemført</string>
     <string name="diaconn_g8_errorcode_1">Kan ikke kontrollere pga. pakke CRC fejl.</string>
+    <string name="diaconn_g8_errorcode_2">Kan ikke indstilles: fejl i inputparameter.</string>
+    <string name="diaconn_g8_errorcode_3">Kan ikke indstilles: fejl i protokolspecifikation.</string>
     <string name="diaconn_g8_errorcode_4">Måltid registreret, kan ikke afgive.</string>
     <string name="diaconn_g8_errorcode_6">Annulleret af pumpen</string>
     <string name="diaconn_g8_errorcode_7">Tager andre handlinger, begrænser app-indstillinger.</string>
@@ -101,6 +112,7 @@
     <string name="diaconn_g8_errorcode_11">Injektion er ikke mulig pga. lavt batteri.</string>
     <string name="diaconn_g8_errorcode_12">Insulinmangel, kan ikke afgives.</string>
     <string name="diaconn_g8_errorcode_13">Du kan ikke afgive, da det overskrider grænsen.</string>
+    <string name="diaconn_g8_errorcode_14">Kan ikke injicere, fordi det overskrider dagens injektionsmængde.</string>
     <string name="diaconn_g8_errorcode_15">Efter basal opsætning er færdig, kan basal injektion udføres.</string>
     <string name="diaconn_g8_logtubechange_title">Log skift af slange</string>
     <string name="diaconn_g8_logtubechange_summary">Tilføj \"Slange skift\" begivenhed til careportal, når de registreres i historik</string>
@@ -108,6 +120,19 @@
     <string name="diaconn_g8_errorcode_32">Under LGS er injektionen begrænset</string>
     <string name="diaconn_g8_errorcode_33">LGS-status er allerede TIL, kommando afvist.</string>
     <string name="diaconn_g8_errorcode_34">LGS-status er allerede FRA, kommando afvist.</string>
+    <string name="diaconn_g8_errorcode_35">Start af midlertidig basal afvises, når en midlertidig basal kører</string>
+    <string name="diaconn_g8_errorcode_36">Stop af midlertidig basal afvises, når ingen midlertidig basal kører</string>
     <string name="diaconn_g8_cloudsend_summary">Send pumpelogs til Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn Cloud Synkronisering</string>
+    <string name="bolus_speed_1">1 E/min</string>
+    <string name="bolus_speed_2">2 E/min</string>
+    <string name="bolus_speed_3">3 E/min</string>
+    <string name="bolus_speed_4">4 E/min</string>
+    <string name="bolus_speed_5">5 E/min</string>
+    <string name="bolus_speed_6">6 E/min</string>
+    <string name="bolus_speed_7">7 E/min</string>
+    <string name="bolus_speed_8">8 E/min</string>
+    <string name="diaconn_pairing_successful">Parring lykkedes!</string>
+    <string name="diaconn_pairing_successful_message">Din pumpe er nu forbundet og klar til brug.</string>
+    <string name="diaconn_g8_cloud_sync_progress" comment="Pump status while AAPS sends the pump log to the Diaconn cloud. %1$d=parts sent, %2$d=all parts. Example: Cloud sync: 3 / 10">Skysynkronisering: %1$d / %2$d</string>
 </resources>
