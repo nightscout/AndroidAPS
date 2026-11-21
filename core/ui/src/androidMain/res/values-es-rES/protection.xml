@@ -5,12 +5,6 @@
     <string name="settings_protection">Protección de ajustes</string>
     <string name="application_protection">Protección de aplicación</string>
     <string name="bolus_protection">Protección de bolo</string>
-    <string name="settings_password">Contraseña de configuración</string>
-    <string name="settings_pin">Configuración de PIN</string>
-    <string name="application_password">Contraseña de aplicación</string>
-    <string name="application_pin">PIN para la aplicación</string>
-    <string name="bolus_password">Contraseña de Bolus</string>
-    <string name="bolus_pin">PIN para bolos</string>
     <string name="protection_timeout_title">Contraseña y retención de PIN [s]</string>
     <string name="protection_timeout_summary">Tiempo previo a que se introduzca el PIN o la password</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->

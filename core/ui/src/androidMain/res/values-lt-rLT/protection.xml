@@ -5,12 +5,6 @@
     <string name="settings_protection">Nustatymų apsauga</string>
     <string name="application_protection">Programos apsauga</string>
     <string name="bolus_protection">Bolusų apsauga</string>
-    <string name="settings_password">Nustatymų slaptažodis</string>
-    <string name="settings_pin">Nustatymų PIN</string>
-    <string name="application_password">Programos slaptažodis</string>
-    <string name="application_pin">Programėlės PIN</string>
-    <string name="bolus_password">Bolusų slaptažodis</string>
-    <string name="bolus_pin">Boluso PIN</string>
     <string name="protection_timeout_title">Slaptažodžio ir PIN įsiminimo trukmė [s]</string>
     <string name="protection_timeout_summary">Laikas, per kurį turi būti įvestas slaptažodis ar PIN kodas</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->

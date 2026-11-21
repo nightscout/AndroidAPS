@@ -5,12 +5,6 @@
     <string name="settings_protection">Skydd för inställningar</string>
     <string name="application_protection">Skydd för app</string>
     <string name="bolus_protection">Bolusskydd</string>
-    <string name="settings_password">Lösenord för inställningar</string>
-    <string name="settings_pin">Inställningar PIN-kod</string>
-    <string name="application_password">Lösenord för app</string>
-    <string name="application_pin">PIN-kod för appen</string>
-    <string name="bolus_password">Lösenord för bolus</string>
-    <string name="bolus_pin">PIN-kod för bolus</string>
     <string name="protection_timeout_title">Lösenord och PIN-lagring [s]</string>
     <string name="protection_timeout_summary">Tid innan lösenord eller PIN-kod måste anges</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->

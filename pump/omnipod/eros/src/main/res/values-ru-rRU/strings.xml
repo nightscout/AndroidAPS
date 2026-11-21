@@ -12,7 +12,7 @@
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f ед</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f ед, гу =%2$.1f г</string>
-    <string name="omnipod_eros_history_tbr_value">Баз Скорость: %1$.2f ед, Продолжительность: %2$d мин</string>
+    <string name="omnipod_eros_history_tbr_value">Скорость: %1$.2f ед/ч, длительность: %2$d мин</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">Ошибка связи: не удалось проверить целостность сообщения</string>
     <string name="omnipod_eros_error_invalid_packet_type">Ошибка связи: получен недопустимый пакет от Pod</string>
@@ -29,16 +29,16 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Нет ответа от RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink прерван</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Нет ответа от Pod</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Не удалось задать базовый профиль. Подача инсулина может быть приостановлена! Обновите вручную состояние Pod на вкладке Omnipod и при необходимости возобновите процесс подачи.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Возможно не удалось задать базовый профиль. Подача инсулина может быть приостановлена! Обновите вручную состояние Pod на вкладке Omnipod и при необходимости возобновите процесс подачи.</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Не удалось задать базовый профиль. Подача инсулина приостановлена! Вручную возобновите подачу с вкладки Omnipod.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Возможно, отмена временного базала завершилась неудачно. Обновите вручную состояние Pod на вкладке Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Не удалось задать временный базал. Если ранее был запущен временный базал, он мог быть отменен. Обновите вручную состояние Pod на вкладке Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Установка врем базала могла иметь сбой. Если tврем базал запущен, ранее, он был отменен. Вручную обновите статус Pod из вкладки Omnipod.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Не удалось установить базальный профиль. Подача может быть приостановлена! Обновите вручную статус Pod на экране помпы и при необходимости возобновите подачу.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Возможно, не удалось установить базальный профиль. Подача может быть приостановлена! Обновите вручную статус Pod на экране помпы и при необходимости возобновите подачу.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Не удалось установить базальный профиль. Подача приостановлена! Возобновите подачу вручную на экране помпы.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Возможно, не удалось отменить временный базал. Обновите вручную статус Pod на экране помпы.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Не удалось установить временный базал. Если до этого работал временный базал, он мог быть отменен. Обновите вручную статус Pod на экране помпы.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Возможно, не удалось установить временный базал. Если до этого работал временный базал, он отменен. Обновите вручную статус Pod на экране помпы.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">Продолжительность TBR должна быть больше нуля и кратной %1$s минутам.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Возможно, не удалось задать время. Подача инсулина может быть приостановлена! Обновите вручную состояние Pod на вкладке Omnipod и при необходимости возобновите подачу.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Не удалось задать время. Подача инсулина приостановлена! Вручную возобновите подачу с вкладки Omnipod.</string>
-    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Не удалось автоматически изменить время в Pod. Следует вручную синхронизировать время на вкладке Omnipod.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Возможно, не удалось установить время. Подача может быть приостановлена! Обновите вручную статус Pod на экране помпы и при необходимости возобновите подачу.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Не удалось установить время. Подача приостановлена! Возобновите подачу вручную на экране помпы.</string>
+    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Не удалось автоматически изменить время на Pod. Синхронизируйте время вручную на экране помпы.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Не удалось проверить, подан ли болюс. Проверьте, издаются ли звуки подачи болюса. <b>Если вы уверены, что болюс не подан, следует вручную удалить запись болюса из Treatments, даже если вы нажмете \'Cancel bolus\' сейчас!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Не удалось проверить, успешно ли подан микроболюс SMB (%1$.2f ед). <b>Если вы уверены, что болюс не подан, следует вручную удалить запись SMB из Назначений.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">На Поде работает временный базал, но ААПС ничего не знает об этом временном базале. Отмените временный базал вручную.</string>
@@ -48,6 +48,6 @@
     <string name="omnipod_eros_pod_management_pulse_log">Журнал Pulse </string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Журнал отладки из буфера обмена</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
-    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Заполните новый Pod инсулином на 3 дня.\n\nПоступят два звуковых сигнала от помпы во время заправки. Это означает, что минимальное количество 80U заправлено. Не забудьте опустошить заправочный шприц даже после того, как услышите два звуковых сигнала.\n\nПосле заполнения Pod нажмите <b>Next</b>.\n\n<b>Примечание:</b> Пока не снимайте с помпы колпачок с иглой.\n<b>Примечание:</b>поставьте RileyLink вертикально рядом с Pod.</string>
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Заполните новый Pod инсулином на 3 дня.\n\nПоступят два звуковых сигнала от Pod во время заправки. Это означает, что минимальное количество 80 ед заправлено. Не забудьте опустошить заправочный шприц даже после того, как услышите два звуковых сигнала.\n\nПосле заполнения Pod нажмите <b>Далее</b>.\n\n<b>Примечание:</b> Пока не снимайте с Pod колпачок с иглой.\n<b>Примечание:</b> поставьте RileyLink вертикально рядом с Pod.</string>
     <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Попытка сопряжения с новым Podом и первичного заполнения инфузионного отсека..\n\n После успешного процесса инициализации можно нажать <b>Далее</b>.\n\n<b>Примечание:</b> В это время RileyLink должен находиться в вертикальном положении рядом с Pod.</string>
 </resources>

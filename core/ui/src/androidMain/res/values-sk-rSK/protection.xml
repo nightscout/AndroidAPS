@@ -5,12 +5,6 @@
     <string name="settings_protection">Ochrana nastavení</string>
     <string name="application_protection">Ochrana aplikácie</string>
     <string name="bolus_protection">Ochrana bolusu</string>
-    <string name="settings_password">Heslo pre nastavenia</string>
-    <string name="settings_pin">PIN pre nastavenia</string>
-    <string name="application_password">Heslo aplikácie</string>
-    <string name="application_pin">PIN pre aplikáciu</string>
-    <string name="bolus_password">Heslo pre bolus</string>
-    <string name="bolus_pin">PIN pre bolus</string>
     <string name="protection_timeout_title">Zachovanie hesla a PIN [s]</string>
     <string name="protection_timeout_summary">Čas, po ktorom je potrebné znova zadať heslo alebo PIN</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->

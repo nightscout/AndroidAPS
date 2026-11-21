@@ -82,7 +82,7 @@
     <string name="update_askfriend">Jei kyla sunkumų kuriant apk failą, galite instaliuoti apk failą, kurį sukūrė draugas.</string>
     <string name="update_hint1">https://wiki.aaps.app/lt/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Trikčių šalinimas</string>
-    <string name="troubleshooting_wheretoask">Kur galima ieškoti pagalbos su AAPS?</string>
+    <string name="troubleshooting_wheretoask">Kur galima ieškoti pagalbos dėl AAPS?</string>
     <string name="troubleshooting_fb">Galima kreiptis patarimo AAPS Users Facebook grupėje.</string>
     <string name="troubleshooting_wiki">Būtina skaityti (ir pakartotinai skaityti) AAPS dokumentaciją.</string>
     <string name="troubleshooting_discord">Galima prašyti patarimo, aptarti ar registruoti techninę problemą ar funkciją AAPS Discord kanale.</string>
@@ -152,7 +152,7 @@
     <string name="nsclient_label">Nuotolinis stebėjimas ir valdymas</string>
     <string name="nsclient_howcanyou">Kaip galite stebėti ir valdyti AAPS nuotoliniu būdu (pavyzdžiui, kai ją naudoja jūsų vaikas)?</string>
     <string name="nsclient_nightscout">Nuotoliniu būdu stebėti AAPS galima per AAPSClient, Nightscout programėlę bei Nightscout svetainę.</string>
-    <string name="nsclient_dexcomfollow">Kitos programėlės (pavyzdžiui, Dexcom Follow arba xDrip+ sekėjo režimu) leidžia nuotoliniu būdu stebėti kai kuriuos duomenis, pvz. gliukozę. Jos gali nerodyti AIO ar AAO arba apskaičiuoti juos kitaip.</string>
+    <string name="nsclient_dexcomfollow">Kitos programėlės (pavyzdžiui, Dexcom Follow arba xDrip+ follow) leidžia nuotoliniu būdu stebėti kai kuriuos duomenis, pvz. gliukozę. Jos gali nerodyti AIO ar AAO arba apskaičiuoti juos kitaip.</string>
     <string name="nsclient_data">Norint stebėti ar valdyti AAPS nuotoliniu būdu, abiejuose telefonuose reikia interneto ryšio (per Wi-Fi arba mobiliuosius duomenis).</string>
     <string name="nsclient_fullcontrol">Kai AAPSClient susieta su pagrindiniu telefonu, galite nuotoliniu būdu valdyti AAPS: suleisti bolusą, įvesti angliavandenius, nustatyti laikinus tikslus, keisti profilį ir ciklo režimą.</string>
     <string name="nsclient_hint1">https://wiki.aaps.app/lt/latest/RemoteFeatures/RemoteMonitoring.html</string>
@@ -195,8 +195,7 @@
     <string name="profileswitch4_sufficient">Užtenka tik redaguoti profilius, kad įsigaliotų visi atlikti pakeitimai.</string>
     <string name="profileswitch4_multi">Galima nustatyti ir pasirinkti kelis profilius, kad jie atitiktų besikeičiančias aplinkybes (pvz., hormoninius pokyčius, pamaininį darbą, darbo dienų/savaitgalių gyvenimo būdą).</string>
     <string name="other_medication_label">Kiti vaistai. Prašome perskaityti toliau pateiktą pranešimą ir pažymėti langelį, kad patvirtintumėte sutikimą.</string>
-    <string name="other_medication_text">AAPS sumažina bazę ar sustabdo insulino tiekimą, kad neištiktų hipoglikemija. SGLT2 inhibitorių grupės vaistai (gliflozinai) gali neleisti glikemijai padidėti, todėl dėl sistemos veiksmų gali atsirasti pavojingas insulino trūkumas ir diabetinė ketoacidozė.
- \nPrekių ženklų pavadinimai apima: „Invokana®“, „Forxiga®“, „Jardiance®“, „Steglatro®“, „Suglat®“, „Apleway®“, „Deberza®“, „Synjardy®“, „Vokanamet®“, „Xigduo®“.\n\n Pažadu nevartoti tokių vaistų naudodamas AAPS, arba prieš vartojant juos, išjungti uždarą ciklą.</string>
+    <string name="other_medication_text">AAPS sumažina valandinę bazę arba sustabdo insulino tiekimą, kad pakeltų gliukozės kiekį kraujyje. SGLT2 inhibitorių grupės vaistai (gliflozinai) gali neleisti gliukozės kiekiui kraujyje padidėti, todėl gali atsirasti pavojingas insulino trūkumas ir diabetinė ketoacidozė (DKA).\nDažniausi prekiniai pavadinimai: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nPažadu nevartoti tokių vaistų, kol naudoju AAPS, arba prieš juos vartojant išjungti ciklą.</string>
     <string name="concentration_feature_label">Insulino koncentracijos nustatymas</string>
     <string name="u200_with_profile">Kol AAPS nepalaikė skirtingų insulino koncentracijų, naudotojai U200 naudojo nustatę 50 % profilį, kad visos reikšmės būtų sumažintos perpus. Kurie teiginiai apie tokį nustatymą yra teisingi?</string>
     <string name="u200_with_profile_reports">AAPS duomenų bazėje ir Nightscout ataskaitose rodomos reikšmės tampa neteisingos – norint matyti tikrąsias dozes, visas reikšmes (bolusus, bazę dozes, BPD) reikės dauginti iš 2. Tai ypač svarbu gydytojams ir kitai gydymo komandai.</string>

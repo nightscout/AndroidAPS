@@ -5,7 +5,7 @@
     <string name="medtrum_pump_description">Pumpintegration för Medtrum Nano och Medtrum 300U</string>
     <string name="medtrum_pump_setting">Inställningar för Medtrum-pump</string>
     <string name="pump_error">Pumpfel: %1$s !! </string>
-    <string name="pump_warning">Pumpvarning: %1$s </string>
+    <string name="pump_warning">Pumpvarning: %1$s</string>
     <string name="pump_is_suspended">Pumpen är pausad</string>
     <string name="pump_is_suspended_hour_max">Pumpen är pausad på grund av att din maximala dos per timme är överskriden</string>
     <string name="pump_is_suspended_day_max">Pumpen är pausad på grund av att din maximala dos per dygn är överskriden</string>
@@ -91,6 +91,7 @@
     <string name="press_OK_to_return">Tryck på <b>OK</b> för att återgå till huvudskärmen.</string>
     <string name="deactivate_sure">Är du säker på att du vill inaktivera nuvarande pod?</string>
     <string name="cancel_sure">Är du säker på att du vill avbryta aktiveringen?</string>
+    <string name="cancel_deactivation_sure">Är du säker på att du vill avbryta inaktiveringen? Podden kan förbli aktiv.</string>
     <string name="medtrum_deactivate_pump_confirm">Är du säker? Denna åtgärd kan inte ångras!!</string>
     <string name="press_next_or_cancel">Tryck på <b>Nästa</b> för att inaktivera eller <b>Avbryt</b> för att återgå till huvudskärmen.</string>
     <string name="deactivating_pump">Inaktiverar pod. Vänligen vänta.</string>

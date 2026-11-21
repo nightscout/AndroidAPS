@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="alert_r1_title">Isporuči bolus</string>
+    <string name="alert_r2_title">Propušteni bolus</string>
+    <string name="alert_r3_title">Budilica</string>
+    <string name="alert_r4_title">Zamijenite infuzijski set</string>
+    <string name="alert_r7_title">Privremeni bazal završen</string>
+    <string name="alert_w31_title">Spremnik pri kraju</string>
+    <string name="alert_w32_title">Slaba baterija</string>
+    <string name="alert_w33_title">Neispravno vrijeme/datum</string>
+    <string name="alert_w34_title">Istek jamstva</string>
+    <string name="alert_w36_title">Privremeni bazal otkazan</string>
+    <string name="alert_w38_title">Bolus otkazan</string>
+    <string name="alert_w39_title">Upozorenje o isteku najma</string>
+    <string name="alert_m20_title">Spremnik nije umetnut</string>
+    <string name="alert_m21_title">Spremnik je prazan</string>
     <string name="alert_m22_title">Baterija prazna</string>
+    <string name="alert_m23_title">Automatsko isključivanje - pumpa zaustavljena</string>
     <string name="alert_m24_title">Začepljenje</string>
+    <string name="alert_m25_title">Razdoblje najma isteklo - kraj rada</string>
+    <string name="alert_m26_title">Zamjena spremnika nije dovršena</string>
+    <string name="alert_m27_title">Preuzimanje podataka nije uspjelo</string>
+    <string name="alert_m28_title">Istek vremena pauze</string>
+    <string name="alert_m29_title">Vrsta baterije nije postavljena</string>
+    <string name="alert_m30_title">Vrsta spremnika nije postavljena</string>
     <string name="alert_e6_title">Mehanička greška</string>
+    <string name="alert_e10_title">Greška pri vraćanju klipa</string>
+    <string name="alert_e13_title">Greška jezika</string>
 </resources>

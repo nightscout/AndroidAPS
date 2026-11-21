@@ -1,14 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="units">Jedinice</string>
+    <string name="setupwizard_units_prompt">Odaberite jedinice u kojima želite prikazivati vrijednosti</string>
     <string name="next_button">Sljedeći</string>
+    <string name="previous_button">Prethodni</string>
+    <string name="setupwizard_finish">ZAVRŠI</string>
+    <string name="welcome">Dobrodošli</string>
+    <string name="welcometosetupwizard">Dobrodošli u čarobnjak za postavljanje. Vodit će vas kroz postupak postavljanja.</string>
+    <string name="end_user_license_agreement">Licencni ugovor s krajnjim korisnikom</string>
+    <string name="end_user_license_agreement_text">NE SMIJE SE KORISTITI ZA DONOŠENJE MEDICINSKIH ODLUKA. ZA PROGRAM NE POSTOJI JAMSTVO U MJERI U KOJOJ TO DOPUŠTA VAŽEĆI ZAKON. OSIM AKO JE DRUKČIJE NAVEDENO U PISANOM OBLIKU, NOSITELJI AUTORSKIH PRAVA I/ILI DRUGE STRANE DAJU PROGRAM „KAKAV JEST“, BEZ IKAKVOG JAMSTVA, IZRIČITOG ILI PREŠUTNOG, UKLJUČUJUĆI, ALI NE OGRANIČAVAJUĆI SE NA, PREŠUTNA JAMSTVA PRIKLADNOSTI ZA PRODAJU I PRIKLADNOSTI ZA ODREĐENU NAMJENU. CJELOKUPAN RIZIK U POGLEDU KVALITETE I RADA PROGRAMA SNOSITE VI. AKO SE PROGRAM POKAŽE NEISPRAVNIM, SNOSITE TROŠKOVE SVIH POTREBNIH SERVISA, POPRAVAKA ILI ISPRAVAKA.</string>
+    <string name="end_user_license_agreement_i_understand">RAZUMIJEM I PRIHVAĆAM</string>
+    <string name="display_settings">Postavke prikaza</string>
+    <string name="low_mark">Oznaka NISKO</string>
+    <string name="high_mark">Oznaka VISOKO</string>
+    <string name="low_mark_comment">Donja granica raspona (samo za prikaz)</string>
+    <string name="high_mark_comment">Gornja granica raspona (samo za prikaz)</string>
+    <string name="storedsettingsfound">Pronađene su spremljene postavke</string>
+    <string name="master_password_summary">Glavna lozinka koristi se za šifriranje sigurnosne kopije i za zaobilaženje zaštite u aplikaciji. Zapamtite je ili je spremite na sigurno mjesto.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="common_values">Koristite vrijednosti za najveći obrok koji obično jedete\n</string>
+    <string name="syncinfotext">Sinkronizirajte podatke u oblak. Ovaj dio sada možete preskočiti, ali nećete moći proći ciljeve dok ne postavite klijent za Nightscout ili Tidepool.</string>
+    <string name="status_label">Status:</string>
+    <string name="diawarning">Zapamtite: novi profili inzulina zahtijevaju DIA od najmanje 5 h. DIA od 5–6 h na novom profilu jednak je DIA od 3 h na starim profilima inzulina.</string>
     <string name="profile">Profil</string>
+    <string name="doprofileswitch">Zamijeni profil</string>
+    <string name="exitwizard">Preskoči čarobnjak za postavljanje</string>
+    <string name="setupwizard_sensitivity_description">Dodatak za osjetljivost koristi se za otkrivanje osjetljivosti i izračun aktivnih ugljikohidrata (COB). Za više informacija posjetite:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Odaberite jedan od dostupnih algoritama. Poredani su od najstarijeg do najnovijeg. Noviji algoritam obično je snažniji. Ne zaboravite pročitati dokumentaciju OpenAPS i konfigurirati algoritam prije upotrebe.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Konfigurirajte svoj RileyLink ispod. Nakon odabira RileyLinka postavljanje ćete moći nastaviti kada status RileyLinka bude „Povezano“. To može potrajati minutu.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Napomena:</b> Postavljanje možete nastaviti kada pumpa bude postavljena.\n</string>
+    <string name="startobjective">Započnite svoj prvi cilj</string>
+    <string name="open_objectives">Otvori ciljeve</string>
+    <string name="setupwizard_permissions">Dopuštenja</string>
+    <string name="setupwizard_profile_info">Izradite profil sa svojim bazalnim stopama, IC, ISF i ciljnim vrijednostima. Kasnije možete dodati više profila.</string>
+    <string name="setupwizard_permissions_info">Za ispravan rad AAPS treba pristup pohrani i dopuštenja. Dajte potrebna dopuštenja ispod.</string>
+    <string name="setupwizard_pump_riley_link_status">Status RileyLinka:</string>
+    <string name="setupwizard_client_control_title">Upravljanje s klijenta</string>
+    <string name="setupwizard_client_control_info">Uparite klijentske uređaje kako bi mogli slati potpisane naredbe ovom glavnom uređaju preko Nightscouta. To je novi preporučeni način daljinskog upravljanja AAPS-om.</string>
+    <string name="setupwizard_ns_receive_info">Prihvaćanje tretmana i podataka izravno iz Nightscouta (manje siguran način) sada je zadano isključeno. Otvorite postavke ispod samo ako vam to još treba. Potrebno je ako podatke unosite preko NS-a ili aplikacija trećih strana.</string>
+    <string name="setupwizard_open_ns_receive_settings">Prihvaćanje podataka iz Nightscouta</string>
+    <string name="setupwizard_pair_with_master_info">Uparite ovaj klijent sa svojim glavnim AAPS-om kako bi mogao slati naredbe preko sigurnog kanala. Nakon uparivanja postavljanje je završeno.</string>
+    <string name="setupwizard_setup_from_master_title">Postavljanje s glavnog uređaja</string>
+    <string name="setupwizard_setup_from_master_info">Na glavnom uređaju otvorite Ovlašteni klijenti i dodajte ovaj telefon QR kodom. Skeniranje postavlja Nightscout s vlastitim tokenom, a može i upariti telefon. Nakon skeniranja postavljanje je završeno. Ako nemate QR kod, preskočite ovaj korak i sami postavite Nightscout.</string>
+    <string name="setupwizard_scan_master_qr">Skeniraj QR kod</string>
+    <string name="setupwizard_pairing_ws_warning">Za uparivanje je potrebna WebSocket veza s Nightscoutom. Vratite se na prethodni korak i najprije je omogućite.</string>
+    <string name="setupwizard_pairing_status_master">Upareni klijenti: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Još nema uparenih klijenata</string>
+    <string name="setupwizard_pairing_status_client_paired">Uparen s glavnim uređajem</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Još nije uparen</string>
+    <string name="setupwizard_instance_name_title">Tko koristi ovaj telefon?</string>
+    <string name="readstatus">Pročitaj status</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Čini se da ovaj uređaj ne podržava stavljanje na popis dopuštenih za optimizaciju baterije - mogli biste imati problema s performansama.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Koju pumpu želite koristiti s AndroidAPS-om?</string>
-    <string name="configbuilder_bgsource_description">Odakle bi AAPS trebao dobiti svoje podatke?</string>
+    <string name="configbuilder_aps_description">Koji APS algoritam treba prilagođavati terapiju?</string>
+    <string name="configbuilder_sync_description">Dodaci za prijenos podataka, sinkronizaciju i komunikaciju.</string>
+    <string name="configbuilder_bgsource_description">Odakle AAPS treba dobivati podatke?</string>
+    <string name="configbuilder_sensitivity_description">Koji algoritam osjetljivosti treba koristiti?</string>
     <string name="allow_hardware_pump_text">Pažnja: ako aktivirate i povežete se s hardverskom pumpom, AAPS će kopirati bazalne postavke iz profila na pumpu, prebrišući postojeću bazalnu dozu pohranjenu na pumpi. Provjerite imate li ispravnu bazalnu postavku u AAPS-u. Ako niste sigurni ili ne želite prebrisati bazalne postavke na pumpi, pritisnite Odustani i ponovite prebacivanje na pumpu kasnije.</string>
     <string name="nsclient_version_does_not_match">Verzija AAPS klijenta ne odgovara verziji AAPS. Molimo ažurirajte.</string>
     <!--ImportExport-->
@@ -21,6 +71,9 @@
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
+    <string name="loading">Učitavanje…</string>
+    <string name="warning_wrong_directory_selected">Odabrana je pogrešna mapa</string>
+    <string name="warning_wrong_directory_message">Odabrali ste podmapu „%1$s“ umjesto glavne mape AAPS. Odaberite nadređenu mapu AAPS. Aplikacija će sama izraditi podmape i upravljati njima.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <!-- Provider-agnostic cloud storage strings -->
     <!-- Authorization status strings -->

@@ -5,12 +5,6 @@
     <string name="settings_protection">Protection des paramètres</string>
     <string name="application_protection">Protection de l\'Application</string>
     <string name="bolus_protection">Protection des bolus</string>
-    <string name="settings_password">Mot de passe des paramètres</string>
-    <string name="settings_pin">Paramètres PIN</string>
-    <string name="application_password">Mot de passe de l\'application</string>
-    <string name="application_pin">PIN de l\'application</string>
-    <string name="bolus_password">Mot de passe des bolus</string>
-    <string name="bolus_pin">Bolus PIN</string>
     <string name="protection_timeout_title">Rétention du mot de passe et du PIN [s]</string>
     <string name="protection_timeout_summary">Durée pour la saisie du mot de passe ou du code PIN</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->

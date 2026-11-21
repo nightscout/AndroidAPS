@@ -3,7 +3,7 @@
     <string name="label_watchface_circle">AAPS(Circle)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Personalizzato)</string>
-    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (Custom) sempre attivo</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(Personalizzato) sempre attivo</string>
     <string name="label_actions_tile">Azioni</string>
     <string name="label_temp_target_tile">Target Temporaneo</string>
     <string name="label_quick_wizard_tile">Assistente Rapido</string>
@@ -60,9 +60,9 @@
     <string name="pref_wizard_in_menu">Calcolatore nel menu</string>
     <string name="pref_prime_in_menu">Carica in Menu</string>
     <string name="pref_single_target">Target singolo</string>
-    <string name="pref_wizard_percentage">Calcolatore percentuale</string>
-    <string name="pref_wizard_carbs_type">Calcolatore Tipo Di Pasto</string>
-    <string name="pref_wizard_carb_time">Calcolatore Tempo Del Pasto</string>
+    <string name="pref_wizard_percentage">Percentuale del calcolatore</string>
+    <string name="pref_wizard_carbs_type">Tipo di pasto del calcolatore</string>
+    <string name="pref_wizard_carb_time">Tempo carboidrati del calcolatore</string>
     <string name="pref_complication_tap_action">Azione al tocco della complicazione</string>
     <string name="pref_complication_bg_graph_hours">Intervallo orario grafico glicemia</string>
     <string name="duration_1_hour">1 ora</string>
@@ -288,7 +288,7 @@
     <string name="wizard_carbs_type_bread">Pane</string>
     <string name="wizard_carbs_type_cake">Dolce</string>
     <string name="wizard_carbs_type_pizza">Pizza</string>
-    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">Tempo dei carbo\n[min]</string>
+    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">Tempo carboidrati\n[min]</string>
     <string name="wizard_carb_time_now">Adesso</string>
     <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
     <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d min</string>
@@ -309,7 +309,7 @@
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
     <string name="wizard_confirmation_sent">Inviato</string>
-    <string name="contacting_master">Contatto master…</string>
+    <string name="contacting_master">Contatto con il master…</string>
     <string name="contacting_master_unknown">Stato sconosciuto — controlla il telefono</string>
     <string name="tile_settings">Impostazioni dei tile</string>
     <string name="loop_status_error">Impossibile caricare lo stato</string>
@@ -322,7 +322,7 @@
     <string name="loop_status_no_last_run">N/D</string>
     <string name="loop_status_closed">Loop chiuso</string>
     <string name="loop_status_open">Loop aperto</string>
-    <string name="loop_status_lgs">Sospensione per glucosio basso</string>
+    <string name="loop_status_lgs">Sospensione a glicemia bassa</string>
     <string name="loop_status_disabled">Loop disabilitato</string>
     <string name="loop_status_suspended">Loop sospeso</string>
     <string name="loop_status_pump_suspended">Micro sospeso</string>

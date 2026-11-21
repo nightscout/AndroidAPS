@@ -5,12 +5,6 @@
     <string name="settings_protection">Захист налаштувань</string>
     <string name="application_protection">Захист застосунку</string>
     <string name="bolus_protection">Захист болюсу</string>
-    <string name="settings_password">Пароль налаштувань</string>
-    <string name="settings_pin">PIN-код налаштувань</string>
-    <string name="application_password">Пароль застосунку</string>
-    <string name="application_pin">PIN-код застосунку</string>
-    <string name="bolus_password">Пароль для болюсів</string>
-    <string name="bolus_pin">PIN-код для болюсів</string>
     <string name="protection_timeout_title">Час збереження пароля та PIN-коду [с]</string>
     <string name="protection_timeout_summary">Час, після якого потрібно знову ввести пароль або PIN-код</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->

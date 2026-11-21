@@ -88,7 +88,7 @@
     <string name="add_short">添加</string>
     <string name="temptargetcompared">临时目标 %1$s</string>
     <string name="btdevicecompared">蓝牙连接设备 %1$s %2$s</string>
-    <string name="btdevice">连接到蓝牙设备 </string>
+    <string name="btdevice">连接到蓝牙设备</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">自动传感器 %1$s %2$s %%</string>
     <string name="autosenslabel">自动传感器 %</string>

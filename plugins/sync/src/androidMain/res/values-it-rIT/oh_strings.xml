@@ -40,7 +40,7 @@
     <string name="nightscout_api_secret">API Secret di Nightscout</string>
     <string name="free_text_fields">Campi di testo libero</string>
     <string name="agree">Comprendo e accetto.</string>
-    <string name="login_open_humans">Accesso a Open Humans</string>
+    <string name="login_open_humans">Accedi a Open Humans</string>
     <string name="final_touches">Tocchi finali</string>
     <string name="uploading_proceed">Sei a solo un passo dal caricare i tuoi dati su Open Humans. Vuoi procedere?</string>
     <string name="cancel">Annulla</string>

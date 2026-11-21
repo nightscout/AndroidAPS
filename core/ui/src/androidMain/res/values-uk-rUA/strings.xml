@@ -136,7 +136,7 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Інсулін не було змінено: %1$s Ваш попередній інсулін і далі використовується.</string>
     <string name="insulin_activation_unconfirmed">Не вдалося підтвердити зміну інсуліну. Перед введенням дози перевірте, який інсулін активний у вашому профілі.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Інсулін не було змінено. Ваш попередній інсулін і далі використовується.\n\n%1$s</string>
-    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nІнсулін також не було змінено.</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nІнсулін також не було змінено. Якщо новий інсулін уже в помпі, не підключайте помпу і знову запустіть заміну інсуліну.</string>
     <string name="active"><![CDATA[<Активно>]]></string>
     <string name="date">Дата</string>
     <string name="insulin_nickname_label">Псевдонім інсуліну</string>
@@ -226,11 +226,11 @@
     <string name="pump_wizard_profile_gate_pick">Виберіть профіль, який буде застосовано під час активації.</string>
     <string name="pump_wizard_profile_gate_no_store">Профіль не визначено. Відкрийте керування профілями, щоб створити його, потім знову почніть активацію.</string>
     <string name="reset">Скинути</string>
-    <string name="profileswitch_ismissing">Немає перемикання профілю. Будь ласка, перемкніть профіль або натисніть \"Активувати профіль\" у LocalProfile.</string>
+    <string name="profileswitch_ismissing">Немає перемикання профілю. Перемкніть профіль або натисніть «Активувати профіль» у LocalProfile.</string>
     <string name="profile">Профіль</string>
     <string name="percentage_label">Відсоток</string>
     <string name="timeshift_label">Зсув часу</string>
-    <string name="confirm_remove_multiple_items">Ви впевнені, що хочете видалити %1$d елементів</string>
+    <string name="confirm_remove_multiple_items">Ви впевнені, що хочете видалити елементи (%1$d)?</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Записів, яких немає на основному пристрої: %1$d. Їх не видалено.</string>
     <string name="overview_treatment_label">Терапія</string>
     <string name="copytolocalprofile">Створити новий профіль з цього профілю?</string>
@@ -342,9 +342,9 @@
     <string name="careportal_note">Примітка</string>
     <string name="careportal_question">Питання</string>
     <string name="careportal_exercise">Тренування</string>
-    <string name="careportal_announcement_message">Оголошення : %1$s</string>
+    <string name="careportal_announcement_message">Оголошення: %1$s</string>
     <string name="careportal_note_message">Примітка: %1$s</string>
-    <string name="careportal_question_message">Питання : %1$s</string>
+    <string name="careportal_question_message">Питання: %1$s</string>
     <string name="careportal_exercise_message">Тренування: %1$s</string>
     <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Заміна канюлі : %1$s</string>
     <string name="careportal_pump_site_change">Заміна канюлі</string>
@@ -726,7 +726,7 @@
     <string name="error_in_isf_values">Помилка у значеннях ISF</string>
     <string name="error_in_basal_values">Помилка у значеннях базалу</string>
     <string name="error_in_target_values">Помилка у значеннях цілей</string>
-    <string name="profile_name_contains_dot">Деякі назви профілів містять крапки.\nNS це не підтримує.\nПрофілі не буде вивантажено до NS.</string>
+    <string name="profile_name_contains_dot">Деякі назви профілів містять крапки.\nNS це не підтримує.\nПрофілі не буде вивантажено в NS.</string>
     <string name="invalid_profile_not_accepted">Недійсний профіль %1$s не прийнято з NS</string>
     <string name="errors">Помилки</string>
     <!-- Command Queue + readStatus reasons -->
@@ -789,6 +789,7 @@
     <string name="wizard_set_alarm">Встановити сигнал</string>
     <string name="eat_reminder_title">Час їсти</string>
     <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Задзвонить о %1$s</string>
     <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Загальне очікування: %1$s</string>
     <string name="eat_reminder_rung">Час минув</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d хв</string>
@@ -891,7 +892,7 @@
     <string name="export_result_message_exported">Налаштування експортовано</string>
     <string name="export_result_message_failed">Експорт налаштувань НЕ ВДАВСЯ!</string>
     <string name="export_result_message_about_to_expire">Налаштування експортовано: термін дії пароля скоро спливає. Експортуйте вручну та повторно введіть пароль.</string>
-    <string name="export_result_message_expired">Експорт налаштувань скасовано: термін дії пароля сплив. Експортуйте вручну та повторно введіть пароль!</string>
+    <string name="export_result_message_expired">Експорт налаштувань скасовано: термін дії пароля минув. Експортуйте вручну і введіть пароль знову!</string>
     <string name="export_result_message_disabled">Попередження (автоматизація): експорт налаштувань не ввімкнено!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Експорт у хмару виконано</string>
@@ -996,9 +997,9 @@
     <string name="insulin_label">Інсулін</string>
     <string name="pb_label">Батарея помпи</string>
     <string name="cannula">Канюля</string>
-    <string name="patch_pump">Patch-помпа</string>
+    <string name="patch_pump">Патч-помпа</string>
     <!-- Site Rotation -->
-    <string name="select_location">Натисніть нижче, щоб вибрати місце введення</string>
+    <string name="select_location">Торкніться нижче, щоб вибрати місце введення</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Не закривати мій застосунок?</string>
     <string name="fabric_upload_disabled">Вивантаження журналів збоїв вимкнено!</string>
@@ -1053,7 +1054,7 @@
     <string name="unsaved_changes">Незбережені зміни</string>
     <string name="unsaved_changes_message">У вас є незбережені зміни. Що ви хочете зробити?</string>
     <string name="discard">Відкинути</string>
-    <string name="ic_dynamic_label_warning">Ваш алгоритм може динамічно розраховувати IC. Значення нижче можуть бути використані лише як резервні або довідкові.</string>
+    <string name="ic_dynamic_label_warning">Ваш алгоритм може динамічно розраховувати IC. Значення нижче можна використовувати лише як резервні, коли даних немає, або лише як довідкові</string>
     <string name="isf_dynamic_label_warning">Ваш алгоритм може динамічно розраховувати ISF. Значення нижче можуть бути використані лише як резервні або довідкові.</string>
     <string name="add_time_block">Додати часовий блок</string>
     <string name="remove_entry">Видалити запис</string>
@@ -1070,6 +1071,8 @@
     <string name="wiki_search_offline">Для пошуку в документації потрібне підключення до інтернету</string>
     <string name="no_search_results">Нічого не знайдено</string>
     <string name="search_plugin_disabled">Плагін %1$s вимкнено</string>
+    <string name="search_recent">Нещодавні пошуки</string>
+    <string name="search_history_remove">Видалити з нещодавніх пошуків</string>
     <!--    Food Management -->
     <string name="food_management">Їжа</string>
     <string name="food_deleted">Їжу видалено</string>
@@ -1116,6 +1119,7 @@
     <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Налаштувань для зміни: %1$d. Плагіни, які змінилися, буде перезапущено.</string>
     <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Налаштувань для зміни: %1$d. Налаштувань помпи збережено: %2$d, тому ваша помпа працюватиме далі.</string>
     <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Імпортовані налаштування не вибрали жодної помпи, яка є на цьому телефоні. Зараз активний драйвер %1$s — перевірте налаштування помпи.</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">Додано до вашого списку інсулінів із резервної копії: %1$s. Поки не використовується: виберіть потрібний інсулін під час активації профілю і зробіть це до того, як Nightscout завантажить ваші старіші записи терапії.</string>
     <string name="import_applying">Застосування налаштувань…</string>
     <string name="import_replace_pump_settings">Також замінити налаштування помпи</string>
     <string name="import_replace_pump_settings_summary">Залиште вимкненим, щоб зберегти помпу, спарену з цим телефоном. Увімкніть, коли відновлюєте налаштування на новому телефоні з тією самою помпою.</string>
@@ -1212,5 +1216,6 @@
     <string name="units_sec">с</string>
     <string name="units_years">р.</string>
     <string name="prefs_range_title">Діапазон для візуалізації</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">Помпа зупинила болюс після %1$s. Перевірте помпу перед наступним болюсом.</string>
     <string name="secrets_not_protected">На цьому комп’ютері не знайдено системного сховища ключів. Ключі, що захищають ваші налаштування та спарювання з основним пристроєм, зберігаються у файлах поруч із даними, тому кожен, хто отримає копію ваших файлів, отримає і ці ключі. На Linux встановіть і запустіть сховище ключів (наприклад, GNOME Keyring або KWallet), а потім знову запустіть AAPS.</string>
 </resources>

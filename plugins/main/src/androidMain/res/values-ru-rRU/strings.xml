@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_history_browser">История</string>
+    <string name="nav_history_browser">Просмотр журнала</string>
     <string name="sensor_label">Сенсор</string>
     <string name="insulin_label">Инсулин</string>
     <string name="pb_label">Батарея помпы</string>

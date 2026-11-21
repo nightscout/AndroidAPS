@@ -1,22 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">Trieu un punt de partida. Les plantilles ja porten les accions recomanades per a situacions habituals — podeu ajustar-ho tot als passos següents.</string>
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">Esport</string>
+    <string name="scene_wizard_exercise_desc">Pujar l\'objectiu, reduir el perfil al 70% i desactivar SMB per evitar hipoglucèmies durant l\'esport.</string>
+    <string name="scene_wizard_info_exercise">Durant l\'activitat física, els músculs consumeixen glucosa més ràpidament i la sensibilitat a la insulina augmenta. Si pugeu l\'objectiu temporal abans de començar, l\'algoritme pot actuar amb antelació — començarà a reduir el lliurament d\'insulina aviat i crearà un marge contra les hipoglucèmies causades per l\'esport. També es recomana desactivar SMB, perquè els bolus de correcció durant l\'esport poden provocar baixades ràpides. Per obtenir millors resultats, activeu aquesta escena 1–2 hores abans de començar l\'esport, perquè l\'algoritme tingui temps de reduir la vostra IOB (insulina a bord).</string>
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <string name="scene_template_sick_day">Dia de malaltia</string>
+    <string name="scene_wizard_sick_day_desc">Perfil més fort (150%) per compensar l\'augment de la resistència a la insulina durant la malaltia.</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">La malaltia, la febre i les hormones de l\'estrès poden augmentar molt la resistència a la insulina — de vegades un 50% o més. Un perfil més fort (p. ex. 150%) indica a l\'algoritme que lliuri més insulina en tots els càlculs — taxes basals, suggeriments de bolus i factors de correcció. Als passos següents també podeu afegir un objectiu temporal o ajustar el mode de funcionament. Controleu-vos de prop i feu ajustos a mesura que el cos es recuperi.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_template_sick_day_vomiting">Dia de malaltia — Vòmits</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">Perfil reduït amb LGS — al contrari del dia de malaltia habitual, quan no podeu absorbir el menjar.</string>
+    <string name="scene_wizard_info_sick_day_vomiting">Quan no podeu retenir el menjar, l\'enfocament habitual del dia de malaltia, que augmenta la insulina, pot ser perillós. Si vomiteu, els carbohidrats no s\'absorbeixen, i la glucèmia pot baixar en lloc de pujar. Un perfil reduït (60%) disminueix el lliurament d\'insulina, i el mode LGS afegeix una protecció extra perquè suspèn la insulina si la glucèmia baixa. Desactivar SMB evita qualsevol bolus extra. Controleu-vos sovint — comproveu la glucèmia cada 1–2 hores i les cetones cada 2–4 hores. Busqueu ajuda mèdica si els vòmits duren més d\'unes quantes hores o si les cetones pugen per sobre d\'1,5 mmol/l.</string>
     <!-- Sleep: no default actions — 8h -->
+    <string name="scene_template_sleep">Dormir</string>
+    <string name="scene_wizard_sleep_desc">Objectiu més ajustat per a un millor control durant la nit.</string>
+    <string name="scene_wizard_info_sleep">La nit és el moment en què moltes persones tenen hiperglucèmies o hipoglucèmies que no detecten. Un objectiu una mica més ajustat mentre dormiu permet a l\'algoritme fer correccions més fines durant tota la nit. Per obtenir millors resultats, combineu-ho amb un perfil que reflecteixi les vostres necessitats de basal nocturna.</string>
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <string name="scene_template_post_exercise_night">Nit després de l\'esport</string>
+    <string name="scene_wizard_post_exercise_night_desc">Perfil reduït, objectiu més alt, SMB desactivat — protegeix contra hipoglucèmies nocturnes tardanes després de l\'activitat.</string>
+    <string name="scene_wizard_info_post_exercise_night">Després de l\'activitat física, els músculs continuen omplint les reserves de glucogen durant moltes hores — la sensibilitat a la insulina pot seguir alta durant 24–48 h, i el risc més alt d\'hipoglucèmia nocturna és 6–12 h després de l\'esport. Un perfil reduït disminueix el lliurament de basal durant tota la nit, un objectiu temporal més alt dona a l\'algoritme un marge de seguretat, i desactivar SMB evita que l\'algoritme corregeixi en excés pujades breus. Activeu aquesta escena a l\'hora d\'anar a dormir els dies que hàgiu fet esport, sobretot després de sessions més llargues o quan hàgiu afegit activitats noves. Tingueu carbohidrats ràpids al costat del llit i penseu a posar una alarma per fer un control a mitja nit.</string>
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
+    <string name="scene_template_pre_meal">Abans de menjar</string>
+    <string name="scene_wizard_pre_meal_desc">Objectiu més baix per anticipar-se al pic després de l\'àpat.</string>
+    <string name="scene_wizard_info_pre_meal">Posar un objectiu més baix 30–60 minuts abans de menjar indica a l\'algoritme que comenci a acumular IOB (insulina a bord) abans que arribin els carbohidrats. Això ajuda a reduir el pic després de l\'àpat, que passa quan el menjar arriba a la sang més ràpid del que la insulina pot actuar. És més útil quan sabeu que menjareu aviat.</string>
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_template_alcohol">Alcohol</string>
+    <string name="scene_wizard_alcohol_desc">Mode LGS, perfil reduït, SMB desactivat — protegeix contra hipoglucèmies tardanes causades per l\'alcohol.</string>
+    <string name="scene_wizard_info_alcohol">L\'alcohol és una de les situacions més perilloses per a les persones amb diabetis tipus 1. El fetge dona prioritat a processar l\'alcohol per davant d\'alliberar glucosa, i això pot causar una hipoglucèmia tardana 6–24 hores després — sovint de nit, mentre dormiu. El mode LGS evita l\'acumulació d\'insulina perquè només redueix el lliurament quan la glucèmia baixa. Un perfil reduït i SMB desactivat limiten encara més la IOB (insulina a bord). Comproveu sempre la glucèmia abans d\'anar a dormir i penseu a posar una alarma per fer un control a mitja nit.</string>
     <!-- Driving: TT 108 (Hypo) — 1h -->
+    <string name="scene_template_driving">Conduir</string>
+    <string name="scene_wizard_driving_desc">Objectiu una mica més alt per conduir amb seguretat.</string>
+    <string name="scene_wizard_info_driving">Per conduir amb seguretat cal una glucèmia estable per sobre de 5,0 mmol/l (90 mg/dl). En alguns països, comprovar-la abans i durant els trajectes llargs és obligatori per llei. Un objectiu una mica més alt dona a l\'algoritme un marge de seguretat — treballarà per mantenir-vos per sobre del nivell en què la concentració i el temps de reacció comencen a empitjorar. Si teniu una hipoglucèmia mentre conduïu, atureu-vos de seguida en un lloc segur, tracteu la hipo i espereu almenys 45 minuts després que la glucèmia torni a la normalitat abans de continuar.</string>
     <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <string name="scene_template_bathing">Bany</string>
+    <string name="scene_wizard_bathing_desc">Desconnectar la bomba per dutxar-se, nedar, banyar-se o fer qualsevol activitat a l\'aigua.</string>
+    <string name="scene_wizard_info_bathing">Quan desconnecteu la bomba, el lliurament d\'insulina s\'atura del tot — sense basal, sense bolus, sense correccions. L\'algoritme passa al mode desconnectat i deixa de fer ajustos. Això és normal durant períodes curts, com una dutxa, un bany o nedar. Quan l\'escena acaba, la bomba es torna a connectar i l\'algoritme es reprèn automàticament. Feu desconnexions curtes — sense insulina basal, la glucèmia començarà a pujar en 1–2 hores.</string>
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
+    <string name="scene_template_luteal_phase">Fase lútia</string>
+    <string name="scene_wizard_luteal_phase_desc">Perfil augmentat per compensar la resistència a la insulina abans de la menstruació.</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">Moltes dones tenen més resistència a la insulina durant la fase lútia (aproximadament 1–2 setmanes abans de la menstruació). La causa és l\'augment dels nivells de progesterona, que redueix la sensibilitat a la insulina. L\'efecte varia molt entre persones — algunes noten un augment del 10–30% en les necessitats d\'insulina, altres gairebé no noten cap canvi. Comenceu amb un augment prudent (115%) i ajusteu-lo segons els vostres patrons durant uns quants cicles. Registrar-ho al Portal de cures ajuda a identificar el vostre ritme personal.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
+    <string name="scene_template_hot_weather">Temps calorós</string>
+    <string name="scene_wizard_hot_weather_desc">Perfil reduït — la calor accelera l\'absorció de la insulina.</string>
+    <string name="scene_wizard_info_hot_weather">Les temperatures altes fan que els vasos sanguinis es dilatin, i això accelera l\'absorció de la insulina — la mateixa dosi actua més ràpid i amb més força. Això pot causar hipoglucèmies inesperades, sobretot durant activitats a l\'aire lliure. Una reducció moderada del perfil (85%) compensa l\'absorció més ràpida. Hidrateu-vos, controleu-vos més sovint i tingueu en compte que la insulina guardada en una bomba o un bolígraf calents es pot fer malbé. Si també feu esport amb calor, podeu combinar-ho amb l\'escena d\'esport per tenir més protecció.</string>
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_template_medical_procedure">Procediment mèdic</string>
+    <string name="scene_wizard_medical_procedure_desc">Llaç obert amb SMB desactivat per a cirurgia o procediments mèdics.</string>
+    <string name="scene_wizard_info_medical_procedure">Durant una cirurgia o un procediment mèdic, l\'anestèsia i les hormones de l\'estrès fan que la glucèmia sigui imprevisible. Es recomana el mode de llaç obert perquè l\'algoritme no pot predir de manera fiable què farà el vostre cos en aquestes condicions. Un objectiu més alt (150 mg/dl) dona un marge de seguretat contra la hipoglucèmia durant l\'operació. Desactivar SMB evita lliuraments d\'insulina inesperats durant el procediment. Informeu sempre el personal mèdic que porteu una bomba d\'insulina i un CGM. En procediments de més de 3 hores, l\'equip mèdic pot passar a insulina intravenosa.</string>
     <!-- Blank: no actions — 1h -->
+    <string name="scene_template_blank">En blanc</string>
+    <string name="scene_wizard_blank_desc">Començar de zero, sense accions preseleccionades.</string>
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info" formatted="false">Un canvi de perfil canvia alhora les taxes basals, el factor de sensibilitat a la insulina (ISF) i les ràtios insulina:carbohidrats (IC). Podeu escalar-ho tot per percentatge — per exemple, 110% augmenta el lliurament de basal, els càlculs de bolus i les taxes d\'absorció de carbohidrats aproximadament un 10%. També podeu canviar a un altre perfil si en teniu un de configurat per a situacions concretes.</string>
+    <string name="scene_wizard_tt_info">Un objectiu temporal indica a l\'algoritme que busqui un nivell de glucèmia diferent durant un temps determinat. Amb un objectiu més alt, l\'algoritme reacciona més lentament quan la glucèmia puja i apunta a un valor més alt en general — això redueix el lliurament d\'insulina i ajuda a evitar hipoglucèmies durant l\'esport. Amb un objectiu més baix, l\'algoritme respon abans i lliura més insulina — útil per anticipar-se a un àpat. Trieu un dels vostres valors predefinits a continuació — el valor de l\'objectiu i el motiu ja hi estan configurats.</string>
+    <string name="scene_wizard_smb_info">Els Super Micro Bolus (SMB) permeten a l\'algoritme lliurar insulina per avançat en petits bolus, mentre atura temporalment el lliurament de basal per compensar-ho — de fet, agafa insulina del futur per respondre més ràpid. Desactivar SMB ho evita i limita l\'algoritme a ajustar només les taxes basals. La resposta es fa més lenta i gradual, cosa que sovint es prefereix durant l\'esport o el son.</string>
+    <string name="scene_wizard_loop_mode_info">El mode de funcionament determina quanta autonomia té l\'algoritme. En llaç tancat, ajusta el lliurament d\'insulina automàticament. LGS (Low Glucose Suspend, suspensió per glucèmia baixa) només redueix o atura la insulina quan la glucèmia baixa cap a una hipoglucèmia — no augmentarà el lliurament. El llaç obert calcula suggeriments, però espera que confirmeu cadascun.</string>
+    <string name="scene_wizard_careportal_info">Un esdeveniment del Portal de cures és una entrada de registre — no canvia el lliurament d\'insulina ni el comportament de l\'algoritme. Feu-lo servir per marcar activitats, situacions o notes a la cronologia dels vostres tractaments. Podeu revisar aquests registres a Tractaments - Portal de cures i a Nightscout, i això us ajuda a vosaltres i al vostre metge a detectar patrons a les dades.</string>
+    <string name="scene_wizard_duration_info">La durada indica quant de temps es manté activa aquesta escena. Quan s\'acaba el temps, les accions amb durada (objectiu temporal, canvi de perfil, mode de funcionament) caduquen soles, mentre que els canvis permanents (com l\'interruptor de SMB) tornen automàticament als valors anteriors. Si poseu la durada a 0, l\'escena no té límit — totes les accions es mantenen actives fins que acabeu l\'escena manualment.</string>
+    <string name="scene_wizard_name_info">Trieu un nom i una icona que facin aquesta escena fàcil de reconèixer d\'un cop d\'ull. Els veureu al botó d\'activació i al bàner de l\'escena activa a la pantalla de resum.</string>
     <!-- Scene wizard: UI labels -->
+    <string name="scene_wizard_include_action">Incloure %1$s a l\'escena</string>
+    <string name="scene_wizard_finish">Finalitzar</string>
     <!-- Scene wizard: chain step -->
+    <string name="scene_wizard_chain_title">Escena següent</string>
+    <string name="scene_wizard_chain_info">Opcionalment, podeu encadenar una altra escena perquè s\'activi automàticament quan aquesta caduqui. També hi podeu saltar si acabeu aquesta abans d\'hora. L\'escena següent només s\'inicia si la destinació està activada i la bomba està disponible; si no, el bàner de l\'escena acabada en diu el motiu.</string>
+    <string name="scene_chain_none">Cap</string>
+    <string name="scene_skip_to_format">Saltar a %1$s</string>
     <!-- Scene list: chain indicator -->
+    <string name="scene_chain_indicator">→ %1$s</string>
+    <string name="scene_chain_target_missing">L\'escena encadenada s\'ha eliminat</string>
     <!-- Scene expiry: what the banner says, and the chain error notification -->
+    <string name="scene_chain_skipped_line" comment="Shown on the banner of a scene that has ended. %1$s=why the next scene did not start. Example: Follow-up did not start: target scene was deleted">L\'escena següent no s\'ha iniciat: %1$s</string>
+    <string name="scene_chain_skipped_deleted">l\'escena de destinació s\'ha eliminat</string>
+    <string name="scene_chain_skipped_disabled">\"%1$s\" està desactivada</string>
+    <string name="scene_chain_error_summary">%1$s → %2$s: han fallat %3$d de %4$d accions</string>
 </resources>

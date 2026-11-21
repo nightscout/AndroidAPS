@@ -3,6 +3,9 @@
     <string name="executing_right_now">Se execută comanda chiar acum</string>
     <string name="smb_being_delivered">Chiar acum se administrează un SMB. Încercați din nou după ce s-a terminat.</string>
     <string name="basal_value_below_minimum">Valoarea bazalei este sub minimul permis. Profilul nu este setat!</string>
+    <string name="concentration_change_failed_title">Schimbarea insulinei a eșuat</string>
+    <string name="concentration_change_failed">Noua insulină este în pompă, dar AAPS nu a putut scrie profilul în pompă. Pompa administrează o cantitate greșită de insulină. Deconectați sau scoateți pompa acum, verificați-vă glicemia și, dacă este nevoie, administrați insulină în alt mod. Conectați din nou pompa numai după ce profilul a fost scris.</string>
+    <string name="concentration_change_pending">Profilul cu noua insulină nu a fost încă scris în pompă. Nu se poate administra insulină până când profilul nu este scris.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Profilul bazal din pompă a fost actualizat. Pompa rotunjește bazala la pasul ei: administrează %1$s pe zi în loc de %2$s.</string>
     <string name="basal_reported_far_from_profile">Pompa raportează o bazală mult diferită de profil. AAPS păstrează bazala din profil. Verificați ratele bazale din pompă.</string>
     <!--       Stats -->

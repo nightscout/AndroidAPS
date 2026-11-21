@@ -3,6 +3,9 @@
     <string name="executing_right_now">El comando se está ejecutando en este momento</string>
     <string name="smb_being_delivered">Se está administrando un microbolo (SMB) en este momento. Inténtalo de nuevo cuando haya finalizado</string>
     <string name="basal_value_below_minimum">Valor basal por debajo del mínimo. Perfil no establecido.</string>
+    <string name="concentration_change_failed_title">Fallo en el cambio de insulina</string>
+    <string name="concentration_change_failed">La nueva insulina está en la bomba, pero AAPS no ha podido escribir el perfil en ella. La bomba está administrando una cantidad incorrecta de insulina. Desconecte o retire la bomba ahora, compruebe su glucemia y administre insulina de otra forma si lo necesita. Conecte la bomba de nuevo solo después de que se haya escrito el perfil</string>
+    <string name="concentration_change_pending">El perfil con la nueva insulina aún no se ha escrito en la bomba. No se puede administrar insulina hasta que se haya escrito</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Perfil basal actualizado en la bomba. La bomba redondea la basal a su propio incremento: administra %1$s al día en lugar de %2$s</string>
     <string name="basal_reported_far_from_profile">La bomba informa de una basal muy alejada del perfil. AAPS mantiene la basal del perfil. Comprueba las tasas basales en la bomba</string>
     <!--       Stats -->
@@ -60,7 +63,7 @@
     <string name="exported_less_than_hour_ago">exportado hace menos de una hora</string>
     <string name="metadata_warning_different_flavour">Las preferencias se crearon con una variante diferente de AAPS (%1$s), mientras que tú tienes: %2$s.\n\nEs posible que falten algunos ajustes o que no sean válidos; tras la importación, por favor, comprueba y actualiza tus preferencias.</string>
     <string name="metadata_warning_different_device">Las preferencias se crearon en un dispositivo diferente. No hay problema si las estás importando desde un teléfono antiguo o diferente, ¡pero asegúrate de que las preferencias importadas sean correctas!</string>
-    <string name="metadata_warning_old_export">¡Las preferencias importadas ya tienen %1$s días de antigüedad! ¿Tal vez tengas preferencias más actualizadas o hayas elegido el archivo equivocado? ¡Recuerda exportar tus preferencias regularmente!</string>
+    <string name="metadata_warning_old_export">¡Las preferencias importadas ya tienen %1$s días! ¿Quizás tenga preferencias más actualizadas o haya elegido el archivo incorrecto? ¡Recuerde exportar las preferencias con regularidad!</string>
     <string name="metadata_warning_date_format">¡Formato de fecha y hora no válido!</string>
     <string name="metadata_warning_different_version">Las preferencias proceden de una versión secundaria diferente de la aplicación. No hay problema si estás importando después de una actualización, ¡pero comprueba tras la importación si las preferencias siguen siendo correctas!</string>
     <string name="metadata_urgent_different_version">Las preferencias proceden de una versión principal diferente de la aplicación. Las versiones principales difieren significativamente y pueden tener preferencias incompatibles. ¡Asegúrate de que las preferencias sean correctas tras la importación!</string>

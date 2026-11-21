@@ -88,7 +88,7 @@
     <string name="add_short">EKLE</string>
     <string name="temptargetcompared">Geçici hedef %1$s</string>
     <string name="btdevicecompared">%1$s cihazına Bluetooth bağlantısı: %2$s</string>
-    <string name="btdevice">Bluetooth cihazına bağlantı </string>
+    <string name="btdevice">Bluetooth cihazına bağlantı</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Otoduyarlılık %1$s %2$s %%</string>
     <string name="autosenslabel">Otoduyarlılık %</string>

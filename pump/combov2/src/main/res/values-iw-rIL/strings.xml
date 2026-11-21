@@ -19,7 +19,7 @@
     <string name="combov2_error_10">שגיאת מכל</string>
     <string name="combov2_error_11">הצינורית אינה מתוחלת</string>
     <string name="combov2_extended_bolus_not_supported">בולוס ממושך אינו נתמך</string>
-    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">צימוד משאבה</string>
     <string name="combov2_unpair_pump_title">ביטול צימוד משאבה</string>
     <string name="combov2_driver_state_label">מצב מנהל התקן</string>
@@ -27,10 +27,11 @@
     <string name="combov2_start_pairing">התחלת צימוד</string>
     <string name="combov2_pairing_in_progress">צימוד קומבו בביצוע</string>
     <string name="combov2_pairing_start_steps">צעדים לביצוע צימוד משאבת קומבו:\n\n1. במשאבה, נווטו להגדרות בלוטות\'\n2. בדקו האם מכשיר הטלפון מוצג כבר כמצומד; אם כן, נווטו ל-\"מחיקת מכשיר\" במשאבה כדי למחוק את הצימוד\n3. נווטו \"הוספת מכשיר\" במשאבה והתחילו את צימוד המשאבה\n4. לחצו על \"התחלת צימוד\" מטה כדי להתחיל את הצימוד עם AAPS\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">לאחר זמן מה, שם הטלפון יוצג על מסך המשאבה; לחצו על V כדי לאשר.\n\nכאשר הצימוד יושלם בהצלחה, אשרו את הצימוד במשאבה וחזרו למסך המשאבה הראשי על ידי לחיצה על כפתור V פעמיים.\n\nאם לא נוצר חיבור לאחר יותר מ-5 דקות:\n\n
+    <string name="combov2_steps_if_no_connection_during_pairing">לאחר זמן מה, שם הטלפון יוצג על מסך המשאבה; לחצו על CHECK כדי לאשר.\n\n
+כאשר הצימוד יושלם בהצלחה, אשרו את סיום הצימוד במשאבה וחזרו למסך הראשי של המשאבה על ידי לחיצה כפולה על הלחצן CHECK.\n\n
+אם לא נוצר חיבור לאחר יותר מ-5 דקות בערך:\n\n
 1. לחצו על \'הקודם\' או על הלחצן \"ביטול צימוד\"\n
-2. בטלו את הצימוד במשאבה (לחצו גם על ↑ וגם על MENU
-בו-זמנית לביטול הצימוד)\n
+2. בטלו את הצימוד ב-Combo (לחצו על UP ועל MENU בו-זמנית כדי לבטל את הצימוד)\n
 3. נסו לצמד שוב</string>
     <string name="combov2_enter_pin">הזינו קוד PIN</string>
     <string name="combov2_cancel_pairing">ביטול צימוד</string>

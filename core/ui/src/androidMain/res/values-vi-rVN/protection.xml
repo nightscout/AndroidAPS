@@ -5,12 +5,6 @@
     <string name="settings_protection">Thiết lập bảo mật</string>
     <string name="application_protection">Bảo mật ứng dụng</string>
     <string name="bolus_protection">Bảo mật liều Bolus</string>
-    <string name="settings_password">Cài đặt mật khẩu</string>
-    <string name="settings_pin">Cài đặt mã PIN</string>
-    <string name="application_password">Mật khẩu ứng dụng</string>
-    <string name="application_pin">Mã PIN ứng dụng</string>
-    <string name="bolus_password">Mật khẩu liều Bolus</string>
-    <string name="bolus_pin">Mã PIN liều Bolus</string>
     <string name="protection_timeout_title">Thời gian lưu mật khẩu và mã PIN [giây]</string>
     <string name="protection_timeout_summary">Thời gian trước khi phải nhập mật khẩu hoặc mã PIN</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->

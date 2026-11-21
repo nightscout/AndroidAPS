@@ -8,7 +8,7 @@
     <string name="commanderror">Komandos klaida</string>
     <string name="speederror">Greičio klaida</string>
     <string name="insulinlimitviolation">Pažeistas insulino dozės limitas</string>
-    <string name="boluserrorcode">Įvesta: %1$.2fV Suleista: %2$.2fV. Klaidos kodas: %3$s</string>
+    <string name="boluserrorcode">Įvesta: %1$.2f V Suleista: %2$.2f V Klaidos kodas: %3$s</string>
     <string name="danai2_bolus_error_no_prime">Pompa neužpildyta</string>
     <string name="danai2_bolus_error_not_enough_insulin">Rezervuare nepakanka insulino</string>
     <string name="danai2_bolus_error_easy_sleep">Pompoje įjungtas supaprastintas miego režimas</string>

@@ -5,12 +5,6 @@
     <string name="settings_protection">Защита на настройките</string>
     <string name="application_protection">Защита на приложението</string>
     <string name="bolus_protection">Защита от болус</string>
-    <string name="settings_password">Парола за настройки</string>
-    <string name="settings_pin">PIN за настройки</string>
-    <string name="application_password">Парола за приложението</string>
-    <string name="application_pin">PIN за приложението</string>
-    <string name="bolus_password">Парола за болус</string>
-    <string name="bolus_pin">PIN за болус</string>
     <string name="protection_timeout_title">Валидност на паролата и PIN кода [сек]</string>
     <string name="protection_timeout_summary">Времето, за което паролата или PIN трябва да бъдат въведени</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->

@@ -3,13 +3,20 @@
     <string name="label_watchface_circle">AAPS(Cirkel)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStil)</string>
     <string name="label_watchface_custom">AAPS(Brugerdefineret)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(Custom) altid tændt</string>
+    <string name="label_actions_tile">Handlinger</string>
+    <string name="label_temp_target_tile">Midlertidigt mål</string>
+    <string name="label_quick_wizard_tile">Hurtigbolus</string>
+    <string name="label_user_action_tile">Brugerhandling</string>
+    <string name="label_scene_tile">Scene</string>
     <string name="msg_warning_sync">Ingen data modtaget siden %1$s! Tjek om AAPS på telefonen sender data til uret</string>
     <string name="msg_warning_old">AAPS data er %1$s gammel! Tjek din sensor, xDrip+, NS, AAPS config eller lign.!</string>
-    <string name="pref_vibrate_on_bolus">Vibrér ved bolus</string>
+    <string name="pref_vibrate_on_bolus">Vibrer ved bolus</string>
     <string name="units_short">IE</string>
     <string name="pref_display_settings">Display</string>
     <string name="pref_graph_settings">Graf</string>
     <string name="pref_interface_settings">Interface</string>
+    <string name="pref_tile_settings">Felter</string>
     <string name="pref_others_settings">Øvrige</string>
     <string name="pref_complication_settings">Komplikation</string>
     <string name="pref_show_date">Vis dato</string>
@@ -18,16 +25,20 @@
     <string name="pref_show_cob">Vis COB</string>
     <string name="pref_show_delta">Vis Delta</string>
     <string name="pref_show_detailed_delta">Vis detaljeret Delta</string>
-    <string name="pref_show_avgdelta">Show GnsDelta</string>
+    <string name="pref_show_avgdelta">Vis GnsDelta</string>
     <string name="pref_show_phone_battery">Vis Telefonbatteri</string>
-    <string name="pref_show_rig_battery">Vis Rig Batteri</string>
-    <string name="pref_show_basal_rate">Vis Basal Rate</string>
-    <string name="pref_show_loop_status">Vis Loop Status</string>
+    <string name="pref_show_rig_battery">Vis Rig-batteri</string>
+    <string name="pref_show_basal_rate">Vis basalrate</string>
+    <string name="pref_show_temp_target">Vis midlertidigt mål</string>
+    <string name="pref_show_reservoir_level">Vis reservoirniveau</string>
+    <string name="pref_show_loop_status">Vis Loop-status</string>
     <string name="pref_show_bg">Vis BG</string>
     <string name="pref_show_bgi">Vis BSI</string>
     <string name="pref_show_direction_arrow">Vis Retningspil</string>
-    <string name="pref_show_ago">Vis Siden</string>
-    <string name="pref_show_grid">Vis Gitter</string>
+    <string name="pref_show_ago">Vis siden</string>
+    <string name="pref_show_temp_basal">Vis TBR</string>
+    <string name="pref_show_bolus">Vis bolus &amp; SMB</string>
+    <string name="pref_show_grid">Vis gitter</string>
     <string name="pref_dark" comment="Enables dark visual theme">Mørk</string>
     <string name="pref_highlight_basals">Fremhæv Basaler</string>
     <string name="pref_prediction_lines">Vis forudsigelser</string>
@@ -38,20 +49,31 @@
     <string name="pref_3_hours">3 timer</string>
     <string name="pref_4_hours">4 timer</string>
     <string name="pref_5_hours">5 timer</string>
-    <string name="pref_big_numbers">Store Tal</string>
+    <string name="pref_1_min">deaktiveret</string>
+    <string name="pref_5_min">5 min</string>
+    <string name="pref_10_min">10 min</string>
+    <string name="pref_15_min">15 min</string>
+    <string name="pref_big_numbers">Store tal</string>
     <string name="pref_ring_history">Ring Historik</string>
     <string name="pref_light_ring_history">Lys Ring Historik</string>
     <string name="pref_animations">Animationer</string>
-    <string name="pref_wizard_in_menu">Beregner i Menu</string>
-    <string name="pref_prime_in_menu">Prime i menuen</string>
-    <string name="pref_single_target">Enkelt Mål</string>
-    <string name="pref_wizard_percentage">Beregner Procent</string>
-    <string name="pref_complication_tap_action">Complication handling ved tryk</string>
+    <string name="pref_wizard_in_menu">Beregner i menu</string>
+    <string name="pref_prime_in_menu">Klargør i menuen</string>
+    <string name="pref_single_target">Enkelt mål</string>
+    <string name="pref_wizard_percentage">Beregnerprocent</string>
+    <string name="pref_wizard_carbs_type">Måltidstype i beregner</string>
+    <string name="pref_wizard_carb_time">Kulhydrattid i beregner</string>
+    <string name="pref_complication_tap_action">Komplikation: handling ved tryk</string>
+    <string name="pref_complication_bg_graph_hours">Tidsinterval for BS-graf</string>
+    <string name="duration_1_hour">1 time</string>
+    <string name="duration_3_hours">3 timer</string>
+    <string name="duration_6_hours">6 timer</string>
     <string name="pref_unicode_in_complications">Unicode i komplikationer</string>
     <string name="pref_version">Version:</string>
     <string name="pref_moreWatchfaceSettings">Flere urskive indstillinger</string>
-    <string name="pref_lookInYourWatchfaceConfiguration">Se venligst på Watchface-konfigurationen.</string>
-    <string name="menu_tempt">MidlertidigMål</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Se i urskivens konfiguration.</string>
+    <string name="menu_tempt">Midl. mål</string>
+    <string name="menu_tempt_long">Midlertidigt mål</string>
     <string name="menu_wizard">Beregner</string>
     <string name="menu_wizard_short">Beregn</string>
     <string name="menu_treatment">Behandling</string>
@@ -61,28 +83,53 @@
     <string name="menu_ecarb">Forlængede kulhydrater</string>
     <string name="menu_settings">Indstillinger</string>
     <string name="menu_status">Status</string>
+    <string name="menu_bg_graph">BS-graf</string>
     <string name="menu_resync">Gensynkronisering</string>
-    <string name="menu_prime_fill">Prime / Fyld</string>
+    <string name="menu_prime_fill">Klargør/Fyld</string>
+    <string name="menu_install_watchface">Installer urskive</string>
+    <string name="menu_installing_watchface">Installerer urskive…</string>
+    <string name="watchface_installed_active">Urskive installeret og sat som aktiv</string>
+    <string name="watchface_installed_select">Urskive installeret, vælg den i urskivevælgeren</string>
+    <string name="watchface_install_failed">Installation af urskive mislykkedes</string>
     <string name="menu_none">Ingen</string>
     <string name="menu_default">Standard</string>
     <string name="menu_menu">Menu</string>
-    <string name="action_tempt_confirmation">Midlertidig Mål Anmodet</string>
-    <string name="action_quick_wizard_confirmation">Hurtig Guide Anmodet</string>
-    <string name="action_treatment_confirmation">Behandling Anmodet</string>
-    <string name="action_bolus_confirmation">Bolus Anmodet</string>
-    <string name="action_wizard_confirmation">Beregning Anmodet</string>
-    <string name="action_fill_confirmation">Fyldning Anmodet</string>
-    <string name="action_ecarb_confirmation">Kulhydrater Anmodet</string>
+    <string name="action_tempt_confirmation">Midlertidigt mål anmodet</string>
+    <string name="action_quick_wizard_confirmation">Hurtigbolus anmodet</string>
+    <string name="action_user_action_confirmation">Brugerhandling anmodet</string>
+    <string name="action_scene_confirmation">Scene anmodet</string>
+    <string name="scene_end">Afslut</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Spring over</string>
+    <string name="action_treatment_confirmation">Behandling anmodet</string>
+    <string name="action_bolus_confirmation">Bolus anmodet</string>
+    <string name="action_wizard_confirmation">Beregning anmodet</string>
+    <string name="action_fill_confirmation">Fyldning anmodet</string>
+    <string name="action_ecarb_confirmation">Kulhydrater anmodet</string>
     <string name="action_profile_switch_confirmation">Profilskift anmodet</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Mål [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Nedre [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Øvre [%s]</string>
     <string name="action_carbs">Kulhydrater</string>
+    <string name="action_carbs_gram">Kulhydrater [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Maks. fjernelse: %1$d g (COB)</string>
     <string name="action_ecarbs">Forlængede kulhydrater</string>
+    <string name="action_percentage">Procent\n[%]</string>
+    <string name="action_start_minutes">Start\n[minutter]</string>
+    <string name="action_duration_hours">Varighed\n[timer]</string>
+    <string name="action_duration_hours_format">%1$d t</string>
+    <string name="action_duration_hours_minutes_format">%1$d t %2$d min</string>
+    <string name="action_minutes_format">%1$d min</string>
+    <string name="ecarbs_start_format">%1$d min</string>
+    <string name="action_confirm_timeshift">Tidsforskydning: %1$s</string>
     <string name="action_insulin">Insulin</string>
+    <string name="action_insulin_units">Insulin [IE]</string>
     <string name="action_preset_1">Forvalg 1</string>
     <string name="action_preset_2">Forvalg 2</string>
     <string name="action_preset_3">Forvalg 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Fri mængde</string>
     <string name="action_confirm">BEKRÆFT</string>
-    <string name="bolus_progress">Bolus Fremskridt</string>
+    <string name="action_timeshift_hours">Tidsforskydning\n[timer]</string>
+    <string name="bolus_progress">Bolusfremskridt</string>
     <string name="press_to_cancel">tryk for at annullere</string>
     <string name="cancel_bolus">ANNULLER BOLUS</string>
     <string name="status_pump">Pumpe</string>
@@ -113,22 +160,45 @@
     <string name="color_name_bluegray">blå grå</string>
     <string name="color_name_white">hvid</string>
     <string name="color_name_multicolor">multifarvet</string>
-    <string name="pref_simplify_ui">Forenklet Brugerflade</string>
-    <string name="pref_vibrate_hourly">Vibrér hver time</string>
+    <string name="pref_simplify_ui">Forenklet brugerflade</string>
+    <string name="pref_vibrate_hourly">Vibrer hver time</string>
     <string name="pref_show_weeknumber">Vis ugenummer</string>
+    <string name="pref_complication_1">Komplikation 1</string>
+    <string name="pref_complication_2">Komplikation 2</string>
+    <string name="pref_complication_3">Komplikation 3</string>
+    <string name="pref_complication_4">Komplikation 4</string>
+    <string name="pref_complication_5">Komplikation 5</string>
+    <string name="complication_summary_none">Tryk for at vælge en datakilde</string>
+    <string name="pref_complication_type_priority">Prioritet for komplikationstype</string>
+    <string name="pref_complication_type_priority_all">Standard for alle pladser</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">En ændring her gælder næste gang, du vælger en datakilde. Det er ikke nok at vælge den samme igen: vælg først en anden datakilde, og vælg derefter den, du vil have.</string>
+    <string name="complication_type_priority_value">Værdi eller måler</string>
+    <string name="complication_type_priority_text">Tekst</string>
+    <string name="complication_type_priority_icon">Ikon</string>
+    <string name="complication_type_priority_use_default">Brug standard</string>
+    <string name="cwf_complication_layout">Komplikationslayout</string>
+    <string name="cwf_complication_layout_description">Placering og størrelse af komplikationerne, hentet fra den indlæste brugerdefinerede urskive.</string>
+    <string name="pref_include_external">Medtag eksterne visninger i skabelonen</string>
+    <string name="pref_switch_external">Skift eksterne data på urskiven</string>
     <string name="custom_pref_show_seconds">Vis sekunder</string>
+    <string name="digitalstyle_pref_your_style">Din stil</string>
     <string name="digitalstyle_style_none">ingen stil</string>
     <string name="digitalstyle_style_minimal">minimalistisk stil</string>
     <string name="digitalstyle_style_shape">form stil</string>
     <string name="digitalstyle_style_full">fuld stil</string>
-    <string name="bolus_progress_channel_name">AAPS Bolus Fremskridt</string>
-    <string name="bolus_progress_silent_channel_name">AAPS Bolus Fremskridt Lydløs</string>
+    <string name="digitalstyle_pref_your_color">Din farve</string>
+    <string name="digitalstyle_pref_your_color_saturation">Din farvemætning</string>
+    <string name="digitalstyle_pref_your_color_opacity">Din farves uigennemsigtighed</string>
+    <string name="bolus_progress_channel_name">AAPS-bolusfremskridt</string>
+    <string name="bolus_progress_silent_channel_name">AAPS-bolusfremskridt (lydløs)</string>
     <string name="bolus_progress_channel_description">Bolus fremskridt og annullering</string>
     <string name="bolus_progress_silent_channel_description">Bolus fremskridt og annullering med færre vibrationer</string>
+    <string name="open_loop_channel_name">AAPS åbent loop</string>
+    <string name="open_loop_channel_description">Notifikation om anmodning i åbent loop</string>
     <string name="simple_ui_off">Fra</string>
-    <string name="simple_ui_charging">Under Opladning</string>
-    <string name="simple_ui_always_on">Altid Tændt Tilstand</string>
-    <string name="simple_ui_always_on_charging">Altid Tændt ved opladning</string>
+    <string name="simple_ui_charging">Under opladning</string>
+    <string name="simple_ui_always_on">Altid tændt-tilstand</string>
+    <string name="simple_ui_always_on_charging">Altid tændt og under opladning</string>
     <string name="temp_target_eating_soon">Spiser</string>
     <string name="temp_target_hypo">Hypo</string>
     <string name="temp_target_activity">Aktivitet</string>
@@ -150,7 +220,161 @@
     <string name="week_short">u</string>
     <string name="day_short">d</string>
     <string name="hour_short">t</string>
+    <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s %2$s %3$s</string>
+    <string name="error">Fejl</string>
     <string name="pref_heartRateSampling">Puls</string>
+    <string name="pref_heartRateSmoothing">Pulsudjævning</string>
+    <string name="pref_stepsSampling">Aktiver skridttæller</string>
+    <string name="tile_tempt_1">Midlertidigt mål 1</string>
+    <string name="tile_tempt_2">Midlertidigt mål 2</string>
+    <string name="tile_tempt_3">Midlertidigt mål 3</string>
+    <string name="tile_tempt_4">Midlertidigt mål 4</string>
+    <string name="tile_action_1">Handling 1</string>
+    <string name="tile_action_2">Handling 2</string>
+    <string name="tile_action_3">Handling 3</string>
+    <string name="tile_action_4">Handling 4</string>
+    <string name="tile_scene_1">Scene 1</string>
+    <string name="tile_scene_2">Scene 2</string>
+    <string name="tile_scene_3">Scene 3</string>
+    <string name="tile_scene_4">Scene 4</string>
+    <string name="tile_scene_auto">Automatisk</string>
+    <string name="tile_scene_unavailable">Ikke tilgængelig</string>
+    <string name="datalayer_notification_title">Data Layer-forgrundstjeneste</string>
+    <string name="datalayer_notification_text">AAPS kører i forgrunden. For at skjule notifikationen skal du gå til Udviklerindstillinger, App-notifikationer, Tilladte ur-apps, vælge AAPS og slå notifikationen for kanalen Data Layer-forgrundstjeneste fra.</string>
+    <string name="on">TIL</string>
+    <string name="off">FRA</string>
+    <string name="complication_full_status">Fuld status</string>
+    <string name="complication_full_status_flipped">Fuld status (vendt)</string>
+    <string name="complication_blood_glucose">Blodsukker</string>
+    <string name="complication_blood_glucose_large">Blodsukker (stor)</string>
+    <string name="complication_blood_glucose_ext1">Blodsukker Ext1</string>
+    <string name="complication_blood_glucose_ext2">Blodsukker Ext2</string>
+    <string name="complication_bg_graph">BS-graf</string>
+    <string name="complication_cwf_image">Brugerdefineret urskive</string>
+    <string name="complication_cwf_ambient_bg">Brugerdefineret urskive, glukose (altid tændt)</string>
+    <string name="complication_cwf_ambient_status">Brugerdefineret urskive, status (altid tændt)</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Brugerdefineret urskive, baggrund</string>
+    <string name="complication_cwf_upper">Brugerdefineret urskive, ur</string>
+    <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
+    <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
+    <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
+    <string name="complication_br_iob">BR &amp; IoB</string>
+    <string name="complication_br">Basalrate</string>
+    <string name="complication_br_tt">BR &amp; mål</string>
+    <string name="complication_target">Målværdi</string>
+    <string name="complication_cob_iob">CoB &amp; IoB</string>
+    <string name="complication_cob_icon">CoB-ikon</string>
+    <string name="complication_cob_detailed">CoB detaljeret</string>
+    <string name="complication_iob_icon">IoB-ikon</string>
+    <string name="complication_iob_detailed">IoB detaljeret</string>
+    <string name="complication_uploader_phone_battery">Uploader-/telefonbatteri</string>
+    <string name="running_mode_resume">Genoptag loop</string>
+    <string name="running_mode_reconnect">Genforbind pumpe</string>
+    <string name="label_running_mode_title">Loop-tilstand</string>
+    <string name="label_bg_graph_tile">BS-graf</string>
+    <string name="tile_tap_action">Handling ved tryk</string>
+    <string name="tile_graph_time_range">Tidsinterval</string>
+    <string name="tile_tap_bg_graph">BS-graf</string>
+    <string name="tile_tap_main_menu">Hovedmenu</string>
+    <string name="tile_tap_loop_status">Loop-status</string>
+    <string name="action_running_mode_selected">Loop-tilstand anmodet</string>
+    <string name="title_activity_disconnect_pump">Afbryd pumpe</string>
+    <string name="title_activity_suspend_loop">Suspender loop</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="wizard_carbs_type">Måltidstype</string>
+    <string name="wizard_carbs_type_bread">Brød</string>
+    <string name="wizard_carbs_type_cake">Kage</string>
+    <string name="wizard_carbs_type_pizza">Pizza</string>
+    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">KH-tid\n[min]</string>
+    <string name="wizard_carb_time_now">Nu</string>
+    <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
+    <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d min</string>
+    <string name="wizard_set_alarm">Indstil alarm</string>
+    <string name="eat_reminder_title">Tid til at spise</string>
+    <string name="eat_reminder_silence">Lydløs</string>
+    <string name="eat_reminder_stop">Stop</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Ringer kl. %1$s</string>
+    <string name="eat_reminder_countdown_channel">Tid til at spise, kører</string>
+    <string name="eat_reminder_channel_silent">Tid til at spise under Forstyr ikke</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="phone_alarm_channel">Alarmer fra telefonen</string>
+    <string name="phone_alarm_channel_silent">Alarmer fra telefonen under Forstyr ikke</string>
+    <string name="phone_alarm_silence">Slå lyd fra</string>
+    <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">Lydløs %1$d min</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
+    <string name="insulin_unit_short">IE</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f IE</string>
+    <string name="wizard_confirmation_sent">Sendt</string>
+    <string name="contacting_master">Kontakter hovedenhed…</string>
+    <string name="contacting_master_unknown">Status ukendt — tjek telefonen</string>
+    <string name="tile_settings">Feltindstillinger</string>
+    <string name="loop_status_error">Kunne ikke indlæse status</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
+    <string name="loop_status_tbr_rate">%1$.2f E/t (%2$d%%)</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">%1$s tilbage</string>
+    <string name="loop_status_tbr_continues">Midlertidig basal fortsætter</string>
+    <string name="loop_status_tbr_cancel">Sætter normal basal</string>
+    <string name="loop_status_smb">%1$.2f IE</string>
+    <string name="loop_status_no_last_run">Ikke tilgængelig</string>
+    <string name="loop_status_closed">Lukket loop</string>
+    <string name="loop_status_open">Åbent loop</string>
+    <string name="loop_status_lgs">Stop ved lavt BS</string>
+    <string name="loop_status_disabled">Loop deaktiveret</string>
+    <string name="loop_status_suspended">Loop suspenderet</string>
+    <string name="loop_status_pump_suspended">Pumpe sat på pause</string>
+    <string name="loop_status_dst_suspended">Suspenderet pga. sommertid</string>
+    <string name="loop_status_disconnected">Pumpe afbrudt</string>
+    <string name="loop_status_superbolus">Superbolus</string>
+    <string name="loop_status_unknown">Ukendt</string>
+    <string name="loop_status_result">Loop-resultat</string>
+    <string name="loop_status_last_run_enact">Sidst kørt &amp; udført</string>
+    <string name="loop_status_last_run">Sidst kørt</string>
+    <string name="loop_status_last_enact">Sidst udført</string>
+    <string name="loop_status_smb_text">SMB</string>
+    <string name="loop_status_basal_rate">Rate</string>
+    <string name="loop_status_duration">Varighed</string>
+    <string name="loop_status_oaps_reason">OpenAPS-årsag</string>
+    <string name="loop_status_targets">Mål</string>
+    <string name="loop_status_temp_target">Midlertidigt mål</string>
+    <string name="loop_status_target_range">Område</string>
+    <string name="loop_status_target">Målværdi</string>
+    <string name="loop_status_adjusted_target">Justeret mål</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Indtil den afsluttes</string>
+    <string name="loop_status_scene_ended">Afsluttet</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Derefter</string>
+    <string name="loop_status_profile">Profil</string>
+    <string name="loop_status_no_profile">Ingen profil valgt</string>
+    <string name="loop_status_profile_percentage">Procent</string>
+    <string name="loop_status_profile_timeshift">Tidsforskydning</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Vender tilbage til</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dt</string>
+    <string name="loop_status_sensitivity">Følsomhed</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Sat af den aktive scene</string>
+    <string name="loop_status">Loop-status</string>
+    <string name="loop_status_refresh">Opdater</string>
+    <string name="confirm">Bekræft</string>
+    <string name="request">Anmod</string>
+    <string name="constraint_applied">Begrænsning anvendt!</string>
+    <string name="wizard_total_insulin">Insulin i alt</string>
+    <string name="wizard_calculation">Beregning</string>
+    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
+    <string name="wizard_result_bg">BS</string>
+    <string name="wizard_result_bg_tt">BS (TT: %1$s)</string>
+    <string name="wizard_result_trend">15 min tendens</string>
+    <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">Ny IOB: %1$s IE</string>
+    <string name="wizard_result_cob">COB (%1$.1f g)</string>
+    <string name="wizard_result_carbs">Kulhydrater (%1$d g)</string>
+    <string name="wizard_result_subtotal">Deltotal</string>
+    <string name="wizard_result_correction">Korrektion</string>
+    <string name="wizard_result_total">Total</string>
+    <string name="wizard_insulin_format">%1$s IE</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d t (+%3$d min)</string>
 </resources>

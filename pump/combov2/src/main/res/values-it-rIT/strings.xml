@@ -19,7 +19,7 @@
     <string name="combov2_error_10">Errore serbatoio</string>
     <string name="combov2_error_11">Set di infusione non caricato</string>
     <string name="combov2_extended_bolus_not_supported">Il bolo esteso non è supportato</string>
-    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Associa micro</string>
     <string name="combov2_unpair_pump_title">Disaccoppia micro</string>
     <string name="combov2_driver_state_label">Stato driver</string>

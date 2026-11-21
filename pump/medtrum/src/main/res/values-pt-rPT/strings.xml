@@ -5,7 +5,7 @@
     <string name="medtrum_pump_description">Integração com a bomba Medtrum Nano e Medtrum 300U</string>
     <string name="medtrum_pump_setting">Definições da bomba Medtrum</string>
     <string name="pump_error">Erro da bomba: %1$s !! </string>
-    <string name="pump_warning">Aviso da bomba: %1$s </string>
+    <string name="pump_warning">Aviso da bomba: %1$s</string>
     <string name="pump_is_suspended">A bomba está suspensa</string>
     <string name="pump_is_suspended_hour_max">A bomba está suspensa porque o máximo horário de insulina foi excedido</string>
     <string name="pump_is_suspended_day_max">A bomba está suspensa porque o máximo diário de insulina foi excedido</string>
@@ -91,6 +91,7 @@
     <string name="press_OK_to_return">Prima <b>OK</b> para voltar ao ecrã principal.</string>
     <string name="deactivate_sure">Tem a certeza de que quer desativar o patch atual?</string>
     <string name="cancel_sure">Tem a certeza de que quer cancelar a ativação?</string>
+    <string name="cancel_deactivation_sure">Tem a certeza de que quer cancelar a desativação? O patch pode continuar ativo.</string>
     <string name="medtrum_deactivate_pump_confirm">Tem a certeza? Esta ação não pode ser revertida!!</string>
     <string name="press_next_or_cancel">Prima <b>Seguinte</b> para desativar ou <b>Cancelar</b> para voltar ao ecrã principal.</string>
     <string name="deactivating_pump">A desativar o patch. Aguarde.</string>

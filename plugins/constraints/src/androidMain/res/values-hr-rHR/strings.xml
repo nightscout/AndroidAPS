@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Promjena računanja vremena za 24 sata ili manje</string>
+    <string name="dst_loop_disabled_warning">Promjena računanja vremena prije manje od 3 sata - zatvorena petlja onemogućena</string>
     <!-- Storage constraint -->
+    <string name="disk_full">Oslobodite najmanje %1$d MB iz interne pohrane! Petlja onemogućena!</string>
     <!-- Version Checker -->
+    <string name="application_expired">Aplikacija je istekla</string>
+    <string name="running_invalid_version">Otkrili smo da koristite nevažeću verziju. Petlja onemogućena!</string>
+    <string name="versionavailable">Dostupna je verzija %1$s</string>
+    <string name="version_expire">Verzija %1$s istječe %2$s i prijeći će u način LGS</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Korišteni preračunati podaci</string>
+    <string name="bg_too_close">GUK preblizu:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">preračunato</string>
+    <string name="a11y_bg_quality_doubles">dvostruki unosi</string>
+    <string name="a11y_bg_quality_flat">Ravni podaci. Smatraju se pogrešnima</string>
     <!-- Safety -->
+    <string name="limitingextendedbolus">Ograničavanje produženog bolusa na %1$.1f J zbog: %2$s</string>
+    <string name="limitingcarbs">Ograničavanje ugljikohidrata na %1$d g zbog: %2$s</string>
+    <string name="safety">Sigurnost</string>
+    <string name="pumpisnottempbasalcapable">Pumpa ne podržava privremeni bazal</string>
+    <string name="closed_loop_disabled_on_dev_branch">Koristi se razvojna (dev) verzija. Zatvorena petlja je onemogućena.</string>
+    <string name="closed_loop_disabled_with_eb">Zatvorena petlja onemogućena zbog aktivnog produženog bolusa</string>
+    <string name="smbalwaysdisabled">SMB uvijek i SMB nakon ugljikohidrata onemogućeni su jer aktivni izvor GUK-a ne podržava napredno filtriranje</string>
+    <string name="smbnotallowedinopenloopmode">SMB nije dopušten u načinu otvorene petlje</string>
+    <string name="maxvalueinpreferences">maks. vrijednost u postavkama</string>
+    <string name="hardlimit">čvrsta granica</string>
     <!-- Objectives -->
     <string name="completed_well_done">Dovršeno, bravo!</string>
     <string name="not_completed_yet">Nije još dovršeno</string>
     <string name="time_elapsed">Prošlo vrijeme</string>
+    <string name="hasbgdata">GUK dostupan iz odabranog izvora</string>
+    <string name="synchaswritepermission">Usluga sinkronizacije ima dopuštenje za pisanje</string>
+    <string name="loopenabled">Petlja omogućena</string>
+    <string name="apsselected">APS odabran</string>
+    <string name="closedmodeenabled">Način zatvorene petlje omogućen</string>
     <string name="description_objectives">Program učenja</string>
+    <string name="doyouwantresetstart">Želite li poništiti početak cilja? Možete izgubiti svoj napredak.</string>
+    <string name="objectives_button_unfinish">Poništi završetak</string>
+    <string name="objectives_button_unstart">Poništi početak</string>
+    <string name="bg_doubled_lgs">Način LGS zbog dvostrukih vrijednosti u izvoru GUK-a</string>
 </resources>

@@ -4,7 +4,7 @@
     <string name="error_mustbe4hexadidits">Måste vara 4 tecken från ABCDEF0123456789</string>
     <string name="authorized_clients_manage_label">Auktoriserade klienter</string>
     <string name="authorized_clients_manage_desc">Hantera parkopplade klientenheter som styr denna huvudenhet.</string>
-    <string name="pair_with_master_manage_label">Parkoppla med huvudenhet</string>
+    <string name="pair_with_master_manage_label">Parkoppla med huvudenheten</string>
     <string name="pair_with_master_manage_desc">Ange huvudenhetens PIN för parkoppling för att låta denna klient skicka signerade kommandon.</string>
     <!--    General-->
     <string name="treatments">Behandlingar</string>
@@ -136,7 +136,7 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Insulinet byttes inte: %1$s Ditt tidigare insulin används fortfarande.</string>
     <string name="insulin_activation_unconfirmed">Insulinbytet kunde inte bekräftas. Kontrollera vilket insulin som är aktivt i din profil innan dosering.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Insulinet har inte bytts. Ditt tidigare insulin används fortfarande.\n\n%1$s</string>
-    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulinet har inte heller bytts.</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulinet byttes inte heller ut. Om det nya insulinet redan finns i pumpen ska du inte ansluta pumpen; utför istället insulinbytet på nytt.</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Datum</string>
     <string name="insulin_nickname_label">Insulinets smeknamn</string>
@@ -226,11 +226,11 @@
     <string name="pump_wizard_profile_gate_pick">Välj den profil som ska användas vid aktivering.</string>
     <string name="pump_wizard_profile_gate_no_store">Ingen profil angiven. Öppna profilhanteringen för att skapa en, starta sedan aktiveringen igen.</string>
     <string name="reset">Återställ</string>
-    <string name="profileswitch_ismissing">Profilbyte saknas. Vänligen gör ett profilbyte eller tryck Aktivera profil under Lokal Profil.</string>
+    <string name="profileswitch_ismissing">Profilbyte saknas. Gör ett profilbyte eller tryck på \"Aktivera profil\" i Lokal profil.</string>
     <string name="profile">Profil</string>
     <string name="percentage_label">Procent</string>
     <string name="timeshift_label">Tidsförskjutning</string>
-    <string name="confirm_remove_multiple_items">Är du säker på att du vill ta bort %1$d objekt</string>
+    <string name="confirm_remove_multiple_items">Är du säker på att du vill ta bort %1$d objekt?</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Huvudenheten har inte %1$d av dessa poster. De tas inte bort.</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="copytolocalprofile">Skapa kopia av denna profil?</string>
@@ -269,7 +269,7 @@
     <string name="canceling_tbr_failed">Det gick inte att avbryta den tillfälliga basalen</string>
     <string name="canceling_eb_failed">Det gick inte att avbryta förlängd bolus</string>
     <string name="virtualpump_uploadstatus_title">Ladda upp pumpstatus till Nightscout eller Tidepool</string>
-    <string name="iob_label">Aktivt Insulin (IOB)</string>
+    <string name="iob_label">Aktivt insulin (IOB)</string>
     <string name="loopstatus_targets">MÅL:</string>
     <string name="loopstatus_OAPS_result">OAPS RESULTAT:</string>
     <string name="extended_bolus_data_point_graph">%1$.2f U ( %2$.2f U/h )</string>
@@ -423,7 +423,7 @@
     <string name="scene_profile_not_found">Profil \"%1$s\" hittades inte</string>
     <string name="scene_lock_banner_master_offline">Huvudenheten är inte nåbar. Scenkontroller blir tillgängliga igen när anslutningen har återställts.</string>
     <string name="scene_lock_banner_control_disabled">Huvudenheten har stängt av fjärrstyrning. Scenkontroller blir tillgängliga igen när fjärrstyrning har aktiverats på huvudenheten.</string>
-    <string name="master_offline_banner">Huvudenhet kan inte nås. Redigering är inaktiverad tills anslutningen är återställd.</string>
+    <string name="master_offline_banner">Huvudenheten kan inte nås. Redigering är inaktiverad tills anslutningen är återställd.</string>
     <string name="master_control_disabled_banner">Huvudenheten har stängt av fjärrstyrning. Redigering är inaktiverad tills den har aktiverats igen på huvudenheten.</string>
     <string name="hardened_mode_on">Härdat läge på</string>
     <string name="hardened_mode_title">Härdat läge</string>
@@ -470,7 +470,7 @@
     <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">En SMB levereras. Du kan bekräfta när den är färdig.</string>
     <string name="clientcontrol_fail_control_disabled">Fjärrstyrning är inaktiverad på huvudenheten.</string>
     <string name="clientcontrol_fail_not_allowed_for_role">Den här telefonens roll på huvudenheten tillåter inte detta.</string>
-    <string name="clientcontrol_fail_other_token">Huvudenheten avvisade förfrågan: den här telefonen skriver till Nightscout med en annan token än sin egen. Ta bort denna telefonen från huvudenheten och lägg till den igen.</string>
+    <string name="clientcontrol_fail_other_token">Huvudenheten avvisade förfrågan: den här telefonen skriver till Nightscout med en annan token än sin egen. Ta bort den här telefonen på huvudenheten och lägg till den igen.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Den inlagda bolusen har löpt ut eller ersatts. Tryck på knappen igen.</string>
     <string name="clientcontrol_fail_bolus_compute">Huvudenheten kunde inte beräkna bolusdosen (saknar BG-värde/profil, eller så var pumpen inte redo).</string>
     <string name="clientcontrol_fail_internal">Något gick fel.</string>
@@ -661,7 +661,7 @@
     <string name="uel_ns_queue_cleared">NS KÖ TÖMD</string>
     <string name="uel_ns_settings_copied">NS INSTÄLLNINGAR KOPIERADE</string>
     <string name="uel_error_dialog_ok">FELDIALOG OK</string>
-    <string name="uel_error_dialog_mute">FELDIALOG SNOOZAD </string>
+    <string name="uel_error_dialog_mute">FELDIALOG TYST</string>
     <string name="uel_error_dialog_mute_5min">FELDIALOG SNOOZAD 5 MIN</string>
     <string name="uel_objective_started">MÅL STARTAT</string>
     <string name="uel_objective_unstarted">MÅL EJ STARTAT</string>
@@ -726,7 +726,7 @@
     <string name="error_in_isf_values">Fel i ISF-värden</string>
     <string name="error_in_basal_values">Fel i basaldoser</string>
     <string name="error_in_target_values">Fel i målvärden</string>
-    <string name="profile_name_contains_dot">Vissa profilnamn innehåller punkter.\nDetta stöds inte av Nightscout.\nProfiler kommer inte överföras till NS.</string>
+    <string name="profile_name_contains_dot">Vissa profilnamn innehåller punkter.\nDetta stöds inte av NS.\nProfiler kommer inte att överföras till NS.</string>
     <string name="invalid_profile_not_accepted">Ogiltig profil %1$s från NS accepteras inte</string>
     <string name="errors">Fel</string>
     <!-- Command Queue + readStatus reasons -->
@@ -789,6 +789,7 @@
     <string name="wizard_set_alarm">Ställ in alarm</string>
     <string name="eat_reminder_title">Dags att äta</string>
     <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Ringer vid %1$s</string>
     <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Total väntan: %1$s</string>
     <string name="eat_reminder_rung">Tiden är ute</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
@@ -891,7 +892,7 @@
     <string name="export_result_message_exported">Inställningar exporterade</string>
     <string name="export_result_message_failed">Export av inställningar MISSLYCKADES!</string>
     <string name="export_result_message_about_to_expire">Inställningar exporterade: lösenordet går snart ut. Exportera manuellt och ange lösenordet (igen).</string>
-    <string name="export_result_message_expired">Export av inställningar avbruten: lösenordet har gått ut. Exportera manuellt och ange lösenordet (igen)!</string>
+    <string name="export_result_message_expired">Export av inställningar avbruten: lösenordet har gått ut. Exportera manuellt och ange lösenordet igen!</string>
     <string name="export_result_message_disabled">Varning (automatisering): Export av inställningar är inte aktiverad!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Molnexport lyckades</string>
@@ -926,7 +927,7 @@
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Välj lagringstyp</string>
     <string name="clear_cloud_action">Rensa inställningar</string>
-    <string name="clear_cloud_settings">Rensa moln-inställningar</string>
+    <string name="clear_cloud_settings">Rensa molninställningar</string>
     <string name="clear_cloud_settings_message">Detta kommer att växla till lokal lagring och autentiseringen tas bort. Vill du fortsätta?</string>
     <string name="cloud_revoke_incomplete">Molninställningarna har rensats på den här enheten, men det gick inte att nå kontot för att fullständigt återkalla åtkomsten. Du kan behöva ta bort den manuellt i dina kontoinställningar.</string>
     <string name="cloud_connection_failed">Anslutning till molnlagring misslyckades</string>
@@ -998,7 +999,7 @@
     <string name="cannula">Kanyl</string>
     <string name="patch_pump">Slanglös pump</string>
     <!-- Site Rotation -->
-    <string name="select_location">Klicka nedan för att välja plats</string>
+    <string name="select_location">Tryck nedan för att välja plats</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Döda inte min app?</string>
     <string name="fabric_upload_disabled">Uppladdning av kraschloggar inaktiverad!</string>
@@ -1047,7 +1048,7 @@
     <string name="unsaved_changes">Osparade ändringar</string>
     <string name="unsaved_changes_message">Du har osparade ändringar. Vad vill du göra?</string>
     <string name="discard">Kassera</string>
-    <string name="ic_dynamic_label_warning">Din algoritm erbjuder dynamisk beräkning av KH-kvot. Värden nedan används endast som reservlösning vid avsaknad av data eller som referensvärde</string>
+    <string name="ic_dynamic_label_warning">Din algoritm kan beräkna IC dynamiskt. Värdena nedan används endast som reserv om data saknas eller endast som referensvärde</string>
     <string name="isf_dynamic_label_warning">Din algoritm erbjuder dynamisk beräkning av ISF. Värden nedan används endast som reservlösning vid avsaknad av data eller som referensvärde</string>
     <string name="add_time_block">Lägg till tidsblock</string>
     <string name="remove_entry">Ta bort post</string>
@@ -1064,6 +1065,8 @@
     <string name="wiki_search_offline">Dokumentationssökning kräver internetanslutning</string>
     <string name="no_search_results">Inga resultat hittades</string>
     <string name="search_plugin_disabled">Insticksprogram %1$s inaktiverat</string>
+    <string name="search_recent">Senaste sökningar</string>
+    <string name="search_history_remove">Ta bort från senaste sökningar</string>
     <!--    Food Management -->
     <string name="food_management">Matdatabas</string>
     <string name="food_deleted">Matvara borttagen</string>
@@ -1110,6 +1113,7 @@
     <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Inställningar som ändras: %1$d. Insticksprogram som ändras kommer att startas om.</string>
     <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Inställningar som ändras: %1$d. Pumpinställningar som behålls: %2$d, så att din pump fortsätter att fungera.</string>
     <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">De importerade inställningarna valde en pump som den här telefonen inte har. %1$s är nu aktiv - kontrollera dina pumpinställningar.</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">Från säkerhetskopian har detta lagts till i din insulinlista: %1$s. Används inte än: välj rätt insulin när du aktiverar din profil, och gör det innan Nightscout laddar ner dina äldre behandlingar.</string>
     <string name="import_applying">Tillämpar inställningar...</string>
     <string name="import_replace_pump_settings">Byt även pumpinställningar</string>
     <string name="import_replace_pump_settings_summary">Låt detta vara avstängt för att behålla pumpen som telefonen är parkopplad med. Slå på det när du återställer till en ny telefon med samma pump.</string>
@@ -1206,5 +1210,6 @@
     <string name="units_sec">sek</string>
     <string name="units_years">år</string>
     <string name="prefs_range_title">Gränsvärden för visualisering</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">Pumpen avbröt bolusdosen efter %1$s. Kontrollera pumpen före nästa bolusdos.</string>
     <string name="secrets_not_protected">Det finns ingen systemnyckellagring på den här datorn. Nycklarna som skyddar dina inställningar och parkopplingen med huvudenheten sparas i filer bredvid dina data, så den som får en kopia av dina filer får även nycklarna. På Linux, installera och starta en nyckelring (till exempel GNOME Keyring eller KWallet) och starta sedan AAPS igen.</string>
 </resources>

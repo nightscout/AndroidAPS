@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Команда выполняется</string>
+    <string name="smb_being_delivered">Сейчас подается SMB. Повторите попытку, когда подача закончится.</string>
     <string name="basal_value_below_minimum">значение базала ниже минимума. профиль не создан!</string>
+    <string name="concentration_change_failed_title">Ошибка замены инсулина</string>
+    <string name="concentration_change_failed">Новый инсулин в помпе, но AAPS не смог записать в нее профиль. Помпа подает неправильное количество инсулина. Сейчас же отключите или снимите помпу, проверьте ГК и при необходимости введите инсулин другим способом. Подключайте помпу снова только после того, как профиль будет записан.</string>
+    <string name="concentration_change_pending">Профиль с новым инсулином еще не записан в помпу. Пока он не записан, инсулин подать нельзя.</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Базальный профиль в помпе обновлен. Помпа округляет базал до своего шага: она подает %1$s в сутки вместо %2$s.</string>
+    <string name="basal_reported_far_from_profile">Помпа сообщает базал, сильно отличающийся от профиля. AAPS сохраняет базал профиля. Проверьте базальные скорости в помпе.</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">Угли</string>
     <!--    PumpStatusGenerator-->
@@ -11,9 +17,41 @@
     <string name="short_status_battery">Бат: %1$d%%</string>
     <string name="short_status_not_initialized">Помпа не иниц</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">Оптимизация батареи</string>
+    <string name="permission_battery_description">Приложение нужно исключить из оптимизации батареи, чтобы оно надежно работало в фоне</string>
+    <string name="permission_directory_title">Папка AAPS</string>
+    <string name="permission_directory_description">Выберите папку для настроек приложения и файлов журналов</string>
+    <string name="permission_notifications_title">Уведомления</string>
+    <string name="permission_notifications_description">Нужно для показа оповещений, сигналов тревоги и обновлений статуса помпы</string>
+    <string name="permission_schedule_exact_alarm_title">Будильники и напоминания</string>
+    <string name="permission_schedule_exact_alarm_description">Нужно, чтобы сигналы тревоги могли включать экран, когда AAPS работает в фоне, и чтобы напоминания срабатывали вовремя</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">Сигналы тревоги AAPS</string>
+    <string name="alarm_channel_standard">Обычный сигнал тревоги</string>
+    <string name="alarm_channel_bolus_error">Ошибка болюса</string>
+    <string name="alarm_channel_error">Общая ошибка</string>
+    <string name="alarm_channel_urgent">Срочный сигнал тревоги</string>
+    <string name="alarm_channel_eat_reminder">Пора поесть</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (игнорирует режим «Не беспокоить»)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (учитывает режим «Не беспокоить»)</string>
+    <string name="alarm_channel_silent_urgent">Срочный сигнал тревоги (нарастающая громкость)</string>
+    <string name="alarm_channel_silent">Сигнал тревоги (нарастающая громкость)</string>
+    <string name="alarm_channel_silent_description">Используется, когда включено «Постепенно увеличивать громкость уведомлений». Звук воспроизводит экран сигнала тревоги.</string>
+    <string name="ongoing_channel_name">Текущий статус</string>
+    <string name="eat_reminder_channel">Отсчет до приема пищи</string>
+    <string name="eat_reminder_channel_description">Показывает, сколько времени осталось до приема пищи. Без звука; в конце звучит сигнал тревоги.</string>
+    <string name="notifications_channel_name">Уведомления AAPS</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0ед (%2$.1f\u00a0мкл)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/ч</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Настройки успешно экспортированы в облачное хранилище</string>
     <string name="export_to_cloud_failed">Не удалось экспортировать в облачное хранилище</string>
     <string name="csv_uploaded_to_cloud">Записи пользователя успешно загружены в облачное хранилище в формате CSV</string>
     <string name="exported">Настройки экспортированы</string>
@@ -25,7 +63,7 @@
     <string name="exported_less_than_hour_ago">экспортировано менее часа назад</string>
     <string name="metadata_warning_different_flavour">Параметры были созданы с другим вариантом AAPS (%1$s) в то время как у вас: %2$s.\n\nНекоторые параметры могут отсутствать или быть недопустимы-после импорта проверьте и обновите параметры.</string>
     <string name="metadata_warning_different_device">Параметры созданы на другом устройстве. Это нормально, если вы импортируете из старого/другого телефона, но убедитесь, что импортированные параметры - верные!</string>
-    <string name="metadata_warning_old_export">Импортируемым параметрам уже %1$s дней! Может быть у вас есть более актуальные параметры или вы выбрали неправильный файл? Не забудьте регулярно экспортировать параметры!</string>
+    <string name="metadata_warning_old_export">Импортируемым настройкам уже %1$s дн.! Возможно, у вас есть более свежие настройки или вы выбрали не тот файл? Не забывайте регулярно экспортировать настройки!</string>
     <string name="metadata_warning_date_format">Недопустимый формат даты и времени!</string>
     <string name="metadata_warning_different_version">Параметры из другой вспомогательной версии приложения. Если импортируете после обновления, это нормально но после импорта проверьте, все ли предпочтения по-прежнему верны!</string>
     <string name="metadata_urgent_different_version">Параметры из другой основной версии приложения. Основные версии существенно различаются и могут иметь несовместимые настройки! После импорта убедитесь, что параметры все еще верны!</string>
@@ -56,7 +94,8 @@
     <string name="csv_upload_error">Произошла ошибка при загрузке CSV в облако</string>
     <string name="uploading_to_cloud">Загрузка в облако...</string>
     <string name="cloud_directory_path">Облачная директория: %1$s</string>
-    <string name="google_drive_token_refresh_error">Не удалось обновить ключ доступа Google Drive: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Не удалось обновить токен доступа Google Drive</string>
+    <string name="google_drive_token_refresh_error">Не удалось обновить токен доступа Google Drive: %1$s</string>
     <string name="google_drive_connection_test_failed">Проверка соединения с Google Drive не состоялась</string>
     <string name="google_drive_connect_error">Не удалось подключиться к Google Drive: %1$s</string>
     <string name="google_drive_list_folders_failed">Не удалось получить список папок Google Drive</string>

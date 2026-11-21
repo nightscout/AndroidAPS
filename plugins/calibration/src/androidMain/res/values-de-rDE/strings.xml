@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_calibration_name">Keine Kalibrierung</string>
+    <string name="description_no_calibration">"Keine Kalibrierungsanpassung. Die Sensorwerte werden unverändert übernommen. Verwende diese Einstellung, wenn der Sensor werkseitig kalibriert ist und genaue Messwerte liefert."</string>
+    <string name="linear_calibration_name">Lineare Kalibrierung</string>
+    <string name="description_linear_calibration">"Lineare Kalibrierungsanpassung pro Sensor (Steigung und Offset), berechnet anhand der eingegebenen Blutzuckermesswerte. Neuere Einträge werden stärker gewichtet. Die Kalibrierungsanpassung wird auf Werte nach dem Start der aktuellen Sensorsitzung angewendet; die ersten 2 Stunden werden als Aufwärmphase ausgeschlossen."</string>
+    <string name="sensor_change_detected_text">Möglichen Sensorwechsel erkannt: %1$s. Als neuen Sensor protokollieren?</string>
+    <string name="sensor_change_detected_action">Sensorwechsel markieren</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Sensorwechsel protokollieren, um die Kalibrierung zu ermöglichen.</string>
+    <string name="cal_status_warmup">Sensor Aufwärmphase, Kalibrierung möglich nach %1$s.</string>
+    <string name="cal_status_need_more_entries">Mindestens 2 Blutzuckermessungen nötig (momentan %1$d).</string>
+    <string name="cal_status_unsafe_fit">Berechnete Anpassung außerhalb des sicheren Bereichs - Kalibrierung nicht berücksichtigt.</string>
+    <string name="cal_status_applied">Kalibrierung angewendet.</string>
+    <string name="cal_status_applied_offset_only">Nur Offset-Kalibrierung angewendet. Messbereich des Sensors zu gering für die Berechnung der Steigung.</string>
+    <string name="cal_status_applied_slope_clamped">Kalibrierung angewendet. Steigung auf sicheren Bereich begrenzt. Weitere Messwerte eingeben, um die Begrenzung zu reduzieren.</string>
+    <string name="cal_slope_offset">Steigung %1$.2f, Korrektur im mittleren Messbereich %2$s</string>
+    <string name="cal_session_started">Sensor gestartet: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Sensorwechsel protokollieren</string>
+    <string name="cal_add_calibration">Kalibrieren</string>
+    <string name="cal_entries_header">Eingegebene BZ-Messwerte (%1$d)</string>
+    <string name="cal_no_entries">Bisher keine eingegebenen BZ-Messwerte.</string>
+    <string name="cal_entry_pair">BZ-Messwert %1$s → Sensorwert %2$s (Δ %3$s)</string>
+    <string name="cal_chart_entry_readout">Eintrag %1$d/%2$d · %3$s · Sensorwert %4$s → Blutzuckerwert %5$s</string>
 </resources>

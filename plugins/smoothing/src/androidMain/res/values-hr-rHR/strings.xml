@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="exponential_smoothing_name">Eksponencijalno zaglađivanje</string>
+    <string name="description_exponential_smoothing">"Algoritam eksponencijalnog zaglađivanja drugog reda"</string>
+    <string name="avg_smoothing_name">Prosječno zaglađivanje</string>
+    <string name="description_avg_smoothing">"Algoritam prosječnog zaglađivanja, najnovija vrijednost se ne mijenja"</string>
+    <string name="no_smoothing_name">Bez zaglađivanja</string>
+    <string name="description_no_smoothing">"Koristite ovo kada već imate filtrirane podatke, npr. iz sustava BYODA G6."</string>
+    <string name="UKF_name">Unscented Kalman Filter</string>
+    <string name="description_UKF">"Napredni algoritam s automatskim podešavanjem šuma i RTS zaglađivanjem."</string>
+</resources>

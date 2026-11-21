@@ -3,6 +3,9 @@
     <string name="executing_right_now">Η εντολή εκτελείται τώρα</string>
     <string name="smb_being_delivered">Χορηγείται τώρα ένα SMB. Δοκιμάστε ξανά όταν τελειώσει.</string>
     <string name="basal_value_below_minimum">Τιμή βασικού κάτω από το ελάχιστο. Δεν έχει ρυθμιστεί το προφίλ!</string>
+    <string name="concentration_change_failed_title">Η αλλαγή ινσουλίνης απέτυχε</string>
+    <string name="concentration_change_failed">Η νέα ινσουλίνη είναι στην αντλία, αλλά το AAPS δεν μπόρεσε να γράψει το προφίλ σε αυτήν. Η αντλία χορηγεί λάθος ποσότητα ινσουλίνης. Αποσυνδέστε ή αφαιρέστε την αντλία τώρα, ελέγξτε τη γλυκόζη αίματός σας και χορηγήστε ινσουλίνη με άλλο τρόπο αν χρειάζεται. Συνδέστε ξανά την αντλία μόνο αφού γραφτεί το προφίλ.</string>
+    <string name="concentration_change_pending">Το προφίλ με τη νέα ινσουλίνη δεν έχει γραφτεί ακόμα στην αντλία. Δεν μπορεί να χορηγηθεί ινσουλίνη μέχρι να γραφτεί.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Το βασικό προφίλ στην αντλία ενημερώθηκε. Η αντλία στρογγυλοποιεί τον βασικό ρυθμό στο δικό της βήμα: δίνει %1$s την ημέρα αντί για %2$s.</string>
     <string name="basal_reported_far_from_profile">Η αντλία αναφέρει βασικό ρυθμό πολύ διαφορετικό από το προφίλ. Το AAPS κρατά τον βασικό ρυθμό του προφίλ. Ελέγξτε τους βασικούς ρυθμούς στην αντλία.</string>
     <!--       Stats -->
@@ -57,10 +60,10 @@
     <string name="ue_exported">Καταχωρήσεις χρηστών που εξάγονται</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">εξήχθη πριν από %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">εξαγωγή στις %1$s</string>
-    <string name="exported_less_than_hour_ago">η εξαγωγή έγινε από λιγότερο από μία ώρα πριν</string>
+    <string name="exported_less_than_hour_ago">η εξαγωγή έγινε πριν από λιγότερο από μία ώρα</string>
     <string name="metadata_warning_different_flavour">Οι προτιμήσεις δημιουργήθηκαν με διαφορετική έκδοση του AAPS (%1$s) ενώ έχετε: %2$s.\n\nΟρισμένες ρυθμίσεις ενδέχεται να λείπουν ή να μην είναι έγκυρες - μετά την εισαγωγή παρακαλώ ελέγξτε και ενημερώστε τις προτιμήσεις σας.</string>
     <string name="metadata_warning_different_device">Οι προτιμήσεις δημιουργήθηκαν σε διαφορετική συσκευή. Είναι εντάξει αν κάνετε εισαγωγή από παλαιότερο/διαφορετικό τηλέφωνο, αλλά βεβαιωθείτε ότι οι εισαγόμενες προτιμήσεις είναι σωστές!</string>
-    <string name="metadata_warning_old_export">Οι εισαγόμενες προτιμήσεις είναι ήδη %1$s ημέρών! Ίσως έχετε πιο πρόσφατες-ενημερωμένες προτιμήσεις ή επιλέξατε λάθος αρχείο; Θυμηθείτε να εξάγετε τακτικά τις προτιμήσεις σας!</string>
+    <string name="metadata_warning_old_export">Οι ρυθμίσεις που εισάγετε είναι ήδη %1$s ημερών! Ίσως έχετε πιο πρόσφατες ρυθμίσεις ή επιλέξατε λάθος αρχείο; Θυμηθείτε να εξάγετε τακτικά τις ρυθμίσεις σας!</string>
     <string name="metadata_warning_date_format">Μη έγκυρη μορφή ημερομηνίας-ώρας!</string>
     <string name="metadata_warning_different_version">Προτιμήσεις από διαφορετική δευτερεύουσα έκδοση της εφαρμογής. Είναι εντάξει αν εισάγετε μετά από αναβάθμιση, αλλά ελέγξτε μετά την εισαγωγή αν οι προτιμήσεις είναι ακόμα σωστές!</string>
     <string name="metadata_urgent_different_version">Προτιμήσεις από διαφορετική σημαντική έκδοση της εφαρμογής. Οι μεγάλες εκδόσεις διαφέρουν σημαντικά και μπορεί να έχουν μη-συμβατές προτιμήσεις! Βεβαιωθείτε μετά την εισαγωγή ότι οι προτιμήσεις είναι ακόμα σωστές!</string>

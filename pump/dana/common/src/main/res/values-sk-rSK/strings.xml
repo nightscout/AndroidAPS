@@ -8,7 +8,7 @@
     <string name="commanderror">Chyba príkazu</string>
     <string name="speederror">Chyba rýchlosti</string>
     <string name="insulinlimitviolation">Prekročený limit inzulínu</string>
-    <string name="boluserrorcode">Požadované: %1$.2fU Podané: %2$.2fU Chyba: %3$s</string>
+    <string name="boluserrorcode">Požadované: %1$.2f U Podané: %2$.2f U Kód chyby: %3$s</string>
     <string name="danai2_bolus_error_no_prime">Pumpa nie je naplnená</string>
     <string name="danai2_bolus_error_not_enough_insulin">V zásobníku nie je dostatok inzulínu</string>
     <string name="danai2_bolus_error_easy_sleep">V pumpe je zapnutý režim Easy sleep</string>

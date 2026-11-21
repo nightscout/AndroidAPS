@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_history_browser">Istorija</string>
-    <string name="sensor_label">Sensorius</string>
+    <string name="sensor_label">Jutiklis</string>
     <string name="insulin_label">Insulinas</string>
     <string name="pb_label">Pompos baterija</string>
     <string name="cannula">Kaniulė</string>

@@ -3,6 +3,9 @@
     <string name="executing_right_now">Kommandoen utføres akkurat nå</string>
     <string name="smb_being_delivered">En SMB leveres akkurat nå. Prøv igjen når den er ferdig.</string>
     <string name="basal_value_below_minimum">Basalverdi under minimum. Profilen settes ikke!</string>
+    <string name="concentration_change_failed_title">Insulinbyttet mislyktes</string>
+    <string name="concentration_change_failed">Det nye insulinet er i pumpen, men AAPS kunne ikke skrive profilen til den. Pumpen gir feil mengde insulin. Koble fra eller fjern pumpen nå, kontroller blodsukkeret, og gi insulin på en annen måte hvis du trenger det. Koble til pumpen igjen først etter at profilen er skrevet.</string>
+    <string name="concentration_change_pending">Profilen med det nye insulinet er ikke skrevet til pumpen ennå. Insulin kan ikke gis før den er skrevet.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Basalprofilen i pumpen er oppdatert. Pumpen runder basalen til sitt eget trinn: den gir %1$s per dag i stedet for %2$s.</string>
     <string name="basal_reported_far_from_profile">Pumpen rapporterer en basaldose langt fra profilen. AAPS beholder profilbasalen. Sjekk basaldosene i pumpen.</string>
     <!--       Stats -->
@@ -14,7 +17,7 @@
     <string name="short_status_battery">Batt: %1$d%%</string>
     <string name="short_status_not_initialized">Pumpen er ikke initialisert</string>
     <!--    Permissions-->
-    <string name="permission_battery_title">Batterioptimisering</string>
+    <string name="permission_battery_title">Batterioptimalisering</string>
     <string name="permission_battery_description">Appen må ekskluderes fra batterioptimalisering for å kjøre pålitelig i bakgrunnen</string>
     <string name="permission_directory_title">AAPS-mappe</string>
     <string name="permission_directory_description">Velg en mappe for appinnstillinger og loggfiler</string>
@@ -40,7 +43,7 @@
     <string name="notifications_channel_name">AAPS-varsler</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0E (%2$.1f\u00a0µl)</string>
-    <string name="insulin_concentration">E%1$d</string>
+    <string name="insulin_concentration">U%1$d</string>
     <string name="concentration_format">%1$s (%2$s)</string>
     <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
     <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
@@ -61,15 +64,15 @@
     <string name="metadata_warning_different_flavour">Innstillingene ble opprettet med en annen variant av AAPS (%1$s) mens du har: %2$s.\n\nNoen innstillinger kan mangle eller være ugyldige – sjekk og oppdater innstillingene dine etter importering.</string>
     <string name="metadata_warning_different_device">Innstillingene ble opprettet på en annen enhet. Det er greit om du importerer fra en eldre/annen telefon, men sørg for at de importerte innstillingene er riktige!</string>
     <string name="metadata_warning_old_export">Importerte innstillinger er allerede %1$s dager gamle! Kanskje du har mer oppdaterte innstillinger, eller kanskje du har valgt feil fil? Husk å eksportere innstillinger regelmessig!</string>
-    <string name="metadata_warning_date_format">Ugyldig dato-tidsformat!</string>
-    <string name="metadata_warning_different_version">Innstillinger fra en annen mindre versjon av appen. Det er greit om du importerer etter oppgradering, men sjekk etter import om innstillingene fortsatt er riktige!</string>
+    <string name="metadata_warning_date_format">Ugyldig dato- og tidsformat!</string>
+    <string name="metadata_warning_different_version">Innstillinger fra en annen underversjon av appen. Det er greit om du importerer etter oppgradering, men sjekk etter import om innstillingene fortsatt er riktige!</string>
     <string name="metadata_urgent_different_version">Innstillinger fra forskjellige hovedversjoner av appen. Hovedversjonene er betydelig forskjellige og kan ha inkompatible innstillinger! Sørg for at innstillingene fortsatt er korrekte etter import!</string>
     <string name="prefdecrypt_settings_tampered">Innstillingsfil manipulert</string>
     <string name="prefdecrypt_settings_secure">Innstillingsfilen er sikker</string>
     <string name="prefdecrypt_settings_unencrypted">Bruker ikke sikkert, ukryptert innstillingsformat</string>
     <string name="prefdecrypt_wrong_json">JSON-formatfeil, manglende obligatorisk felt (format, innhold, metadata eller sikkerhet)</string>
     <string name="prefdecrypt_wrong_password">Dekrypteringsfeil, det oppgitte passordet kan ikke dekryptere filen</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Filens checksum(hash) mangler, kan ikke bekrefte ektheten av innstillingene!</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Filens kontrollsum (hash) mangler, kan ikke bekrefte ektheten av innstillingene!</string>
     <string name="prefdecrypt_issue_modified">Filen ble endret etter eksport!</string>
     <string name="prefdecrypt_issue_parsing">Dekrypteringsfeil, kunne ikke tolke innstillinger!</string>
     <string name="prefdecrypt_issue_wrong_pass">Dekrypteringsfeil, det oppgitte passordet er ugyldig, eller innstillingsfilen ble endret! Det kan hende at den importerte filen ble eksportert med et annet hovedpassord.</string>
@@ -79,8 +82,8 @@
     <string name="metadata_label_created_at">Opprettet den</string>
     <string name="metadata_label_aaps_version">AAPS-versjon</string>
     <string name="metadata_label_aaps_flavour">Byggevariant</string>
-    <string name="metadata_label_device_name">Eksporterer enhetens pasientnavn</string>
-    <string name="metadata_label_device_model">Eksporterer enhetsmodell</string>
+    <string name="metadata_label_device_name">Pasientnavn på eksporterende enhet</string>
+    <string name="metadata_label_device_model">Modell på eksporterende enhet</string>
     <string name="metadata_label_encryption">Filkryptering</string>
     <string name="metadata_format_new">Nytt kryptert format</string>
     <string name="metadata_format_other">Ukjent eksportformat</string>

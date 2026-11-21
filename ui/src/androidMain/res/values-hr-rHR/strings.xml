@@ -1,12 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="start_activity_tt">Započni aktivnost TT</string>
-    <string name="start_eating_soon_tt">Započnite uskoro počnite jesti TT</string>
-    <string name="start_hypo_tt">Pokrenite Hypo TT</string>
+    <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
+    <string name="no_temp_basal_running">Nema aktivnog privremenog bazala</string>
+    <string name="start_activity_tt">Pokreni TT Aktivnost</string>
+    <string name="start_eating_soon_tt">Pokreni TT Prije obroka</string>
+    <string name="start_hypo_tt">Pokreni Hipo TT</string>
     <string name="time_offset">Vremenski odmak</string>
+    <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
+    <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dd%2$dh</string>
+    <string name="status_age_short_hours" comment="Age of a sensor, cannula or battery, short, used on the first day when there are no full days yet. h=hours. %1$d=hours. Example: 5h">%1$dh</string>
     <!--    Widget-->
+    <string name="configure">Podesi prozirnost</string>
     <string name="widget_description">AAPS widget</string>
+    <string name="widget_bg_graph_description">AAPS GUK graf</string>
+    <string name="widget_glucose_circle_description">AAPS krug glukoze</string>
+    <string name="widget_compact_bg_description">AAPS GUK + IOB + COB (kompaktno)</string>
+    <string name="widget_small_description">AAPS mali</string>
     <!--     Activities-->
+    <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="agp" comment="Section title: Ambulatory Glucose Profile">AGP</string>
+    <string name="agp_title">Ambulantni profil glukoze</string>
+    <string name="agp_glycemic_overview">Glikemijski pregled</string>
+    <string name="agp_today">Danas</string>
+    <string name="agp_hours" comment="%1$d=number of hours. Example: 24h">%1$dh</string>
+    <string name="agp_days" comment="%1$d=number of days. Example: 7d">%1$dd</string>
+    <string name="agp_no_data">Za ovaj raspon nema podataka o glukozi.</string>
+    <string name="agp_load_failed">Nije moguće učitati AGP statistiku. Pokušajte ponovno.</string>
+    <string name="agp_chart_description">Grafikon percentila glukoze</string>
+    <string name="agp_tir_chart">Grafikon vremena u rasponu</string>
+    <string name="agp_percentile_10_90" comment="Glucose percentile band from the 10th to the 90th percentile">10–90%</string>
+    <string name="agp_percentile_25_75" comment="Glucose percentile band from the 25th to the 75th percentile">25–75%</string>
+    <string name="agp_percent" comment="%1$.1f=percentage value. Example: 72.4%">%1$.1f%%</string>
+    <string name="agp_range" comment="%1$s=lower glucose value, %2$s=upper glucose value. Example: 3.9–10.0">%1$s–%2$s</string>
+    <string name="agp_above" comment="%1$s=upper glucose limit. Example: &gt; 10.0">&gt; %1$s</string>
+    <string name="agp_below" comment="%1$s=lower glucose limit. Example: &lt; 3.9">&lt; %1$s</string>
+    <string name="agp_average">Prosjek</string>
+    <string name="agp_median">Medijan</string>
+    <string name="agp_ea1c" comment="Estimated HbA1c">eA1c</string>
+    <string name="agp_gmi" comment="Glucose management indicator">GMI</string>
+    <string name="agp_standard_deviation" comment="Standard deviation of glucose values">SD</string>
+    <string name="agp_cv" comment="Coefficient of variation of glucose values">CV</string>
+    <string name="agp_available_days">Dani</string>
+    <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as days of glucose data. Example: 13.8">%1$.1f</string>
+    <string name="hba1c_mmol_mol" comment="%1$d=HbA1c (or eA1c, GMI) in the IFCC unit mmol/mol, a whole number. Shown under the same value in percent. Example: 48 mmol/mol">%1$d mmol/mol</string>
+    <string name="cgp_title">Glukozni pentagon (CGP) — 14 dana</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hipo</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Hiper</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Prosjek</string>
+    <string name="cgp_reference">Zdrava osoba</string>
+    <string name="cgp_patient">Pacijent</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">Vrlo nizak rizik</string>
+    <string name="cgp_pgr_low">Nizak rizik</string>
+    <string name="cgp_pgr_moderate">Umjeren rizik</string>
+    <string name="cgp_pgr_high">Visok rizik</string>
+    <string name="cgp_pgr_extremely_high">Iznimno visok rizik</string>
+    <string name="do_you_want_recalculate_tdd_stats">Želite li ponovno izračunati TDD statistiku?</string>
+    <string name="calculation_in_progress">Izračun u tijeku</string>
+    <string name="age">Dob</string>
     <string name="weight_label">Težina</string>
     <string name="glucose_type">Vrsta glukoze</string>
     <string name="bg_other">Ostalo</string>
@@ -14,15 +67,135 @@
     <string name="bg_sensor">Senzor</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
+    <string name="edit_site">Uredi</string>
+    <string name="record_site_location">Mjesto primjene: %1$s</string>
+    <string name="record_site_arrow">Strelica mjesta: %1$s</string>
+    <string name="record_site_note">Bilješka: %1$s</string>
+    <string name="delete_site_note">Bilješka izbrisana</string>
     <!-- FillDialog -->
+    <string name="fill_warning">Provjerite odgovara li količina specifikaciji vašeg infuzijskog seta!</string>
+    <string name="record_pump_site_change">Zabilježi promjenu mjesta primjene</string>
+    <string name="record_insulin_cartridge_change">Zabilježi zamjenu spremnika inzulina</string>
+    <string name="fill_prime_amount">Količina punjenja</string>
+    <string name="fill_pump_units_note">Količina punjenja je u jedinicama pumpe</string>
+    <string name="fill_insulin_change">Promijeni inzulin u: %1$s (primijenit će se zamjena profila)</string>
     <!-- Scene -->
+    <string name="scene_cat_aaps">AAPS</string>
+    <string name="scene_cat_activity">Aktivnost</string>
+    <string name="scene_cat_health">Zdravlje</string>
+    <string name="scene_cat_food">Hrana</string>
+    <string name="scene_cat_sleep">Spavanje</string>
+    <string name="scene_cat_dailylife">Svakodnevni život</string>
+    <string name="scene_cat_wellness">Dobrobit</string>
+    <string name="scene_cat_general">Općenito</string>
+    <string name="aaps_tt_high_icon_label">Privremeni cilj</string>
+    <string name="aaps_tt_activity_icon_label">TT Aktivnost</string>
+    <string name="aaps_tt_eating_icon_label">TT Prije obroka</string>
+    <string name="aaps_tt_hypo_icon_label">TT Hipo</string>
+    <string name="aaps_tt_manual_icon_label">TT Ručno</string>
+    <string name="aaps_profile_icon_label">Profil</string>
+    <string name="aaps_loop_icon_label">Petlja</string>
+    <string name="aaps_smb_icon_label">SMB</string>
+    <string name="aaps_bolus_icon_label">Bolus</string>
+    <string name="aaps_carbs_icon_label">UH</string>
+    <string name="aaps_tbr_icon_label">Privremeni bazal</string>
+    <string name="aaps_note_icon_label">Bilješka</string>
+    <string name="aaps_automation_icon_label">Automatizacija</string>
+    <string name="aaps_calibration_icon_label">Kalibracija</string>
+    <string name="exercise_icon_label">Trčanje</string>
+    <string name="fitness_icon_label">Fitness</string>
+    <string name="swim_icon_label">Plivanje</string>
+    <string name="hiking_icon_label">Planinarenje</string>
+    <string name="bike_icon_label">Bicikl</string>
+    <string name="skateboard_icon_label">Skateboard</string>
+    <string name="tennis_icon_label">Tenis</string>
+    <string name="soccer_icon_label">Nogomet</string>
+    <string name="baseball_icon_label">Ragbi</string>
+    <string name="basketball_icon_label">Rukomet</string>
+    <string name="volleyball_icon_label">Gimnastika</string>
+    <string name="golf_icon_label">Golf</string>
+    <string name="scubadiving_icon_label">Ronjenje</string>
+    <string name="rowing_icon_label">Veslanje</string>
+    <string name="surfing_icon_label">Surfanje</string>
+    <string name="hospital_icon_label">Bolnica</string>
+    <string name="medication_icon_label">Lijekovi</string>
+    <string name="monitor_heart_icon_label">Monitor</string>
+    <string name="thermostat_icon_label">Termostat</string>
+    <string name="blood_type_icon_label">Krv</string>
+    <string name="health_safety_icon_label">Zdravlje</string>
+    <string name="healing_icon_label">Oporavak</string>
+    <string name="meal_icon_label">Restoran</string>
+    <string name="cafe_icon_label">Kava</string>
+    <string name="lunch_icon_label">Ručak</string>
+    <string name="bakery_icon_label">Pekarnica</string>
+    <string name="sleep_icon_label">Spavanje</string>
+    <string name="night_icon_label">Noć</string>
+    <string name="nights_stay_icon_label">Noćenje</string>
+    <string name="hotel_icon_label">Hotel</string>
+    <string name="seat_flat_icon_label">Odmor</string>
+    <string name="work_icon_label">Posao</string>
+    <string name="school_icon_label">Škola</string>
+    <string name="home_icon_label">Dom</string>
+    <string name="car_icon_label">Vožnja</string>
+    <string name="flight_icon_label">Let</string>
+    <string name="shopping_icon_label">Kupovina</string>
+    <string name="relax_icon_label">Meditacija</string>
+    <string name="spa_icon_label">Spa</string>
+    <string name="heart_icon_label">Srce</string>
+    <string name="psychology_icon_label">Um</string>
+    <string name="star_icon_label">Zvijezda</string>
+    <string name="speed_icon_label">Brzina</string>
+    <string name="alarm_icon_label">Alarm</string>
+    <string name="event_icon_label">Događaj</string>
+    <string name="flag_icon_label">Zastavica</string>
+    <string name="bookmark_icon_label">Oznaka</string>
+    <string name="label_icon_label">Natpis</string>
     <!-- Insulin Management -->
+    <string name="missing_insulin_name">Nedostaje naziv inzulina</string>
+    <string name="insulin_name_exists">Naziv inzulina %1$s već postoji, odaberite novi naziv</string>
+    <string name="insulin_external_update_title">Konfiguracija inzulina je promijenjena</string>
+    <string name="insulin_external_update_message">Upareni klijent promijenio je konfiguraciju inzulina. Dodirnite U redu da učitate njegove promjene i odbacite svoje nespremljene izmjene ili Otkaži da nastavite s uređivanjem (vaše sljedeće spremanje prebrisat će njegove promjene).</string>
+    <string name="insulin_edit_target_gone">Ovaj inzulin je uklonjen na drugom mjestu pa vaša izmjena nije spremljena. Popis je ponovno učitan.</string>
+    <string name="insulin_activation_applied">Aktivacija inzulina primijenjena</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">Primjena…</string>
+    <string name="clientcontrol_pending_working_text">Čekanje na potvrdu glavnog uređaja…</string>
+    <string name="clientcontrol_pending_rejected_title">Nije primijenjeno</string>
+    <string name="clientcontrol_pending_failed_format">%1$s nije bilo moguće izvršiti.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Djelomično primijenjeno</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s je primijenjeno, ali neke radnje nisu izvršene.\nProvjerite aktivno stanje.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">Nije moguće potvrditi</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s je poslano, ali potvrda nije stigla.\n%2$s\nPojavit će se ovdje ako i kada to glavni uređaj primijeni.</string>
+    <string name="clientcontrol_pending_stop_waiting">Prestani čekati</string>
+    <string name="a11y_add_new_insulin">Dodaj novi inzulin</string>
+    <string name="a11y_delete_current_insulin">Izbriši trenutačni inzulin</string>
+    <string name="load_peak_from">Učitaj vrh djelovanja iz</string>
+    <string name="cannot_delete_last_insulin">Nije moguće izbrisati posljednji inzulin</string>
+    <string name="cannot_delete_active_insulin">Nije moguće izbrisati aktivni inzulin</string>
+    <string name="reuse_profile_pct_hours">Ponovno koristi %1$d%% %2$dh</string>
+    <string name="percentage_label">Postotak</string>
     <!-- LoopDialog -->
+    <string name="disconnectpump">Odspoji pumpu</string>
+    <string name="resume">Nastavi</string>
+    <string name="reconnect">Ponovno spoji pumpu</string>
+    <string name="duration15m">15 minuta</string>
+    <string name="duration30m">30 minuta</string>
+    <string name="duration1h">1 sat</string>
+    <string name="duration2h">2 sata</string>
+    <string name="duration3h">3 sata</string>
+    <string name="duration10h">10 sati</string>
     <!-- WizardDialog -->
+    <string name="missing_carbs">Nedostaje %1$d g</string>
+    <string name="wizard_percentage_and_correction" comment="Bolus wizard result, shown after the amounts when both are changed. %1$s=percentage, %2$s=correction with its sign and unit. Example: 71% +1.00 U">%1$s %2$s</string>
+    <string name="wizard_calc_with_isf" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin sensitivity factor used. Example: BG (ISF: 3.0)">%1$s (ISF: %2$s)</string>
+    <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
+    <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IC: %3$s)</string>
+    <string name="wizard_carbs_type_bread_desc">100% ugljikohidrata odmah, bez e-ugljikohidrata</string>
+    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Ugljikohidrati smanjeni za %1$d%%, dodano %2$d%% eUH s odgodom %3$d min, tijekom %4$d h</string>
+    <string name="wizard_include_info">Dodirnite za uključivanje/isključivanje iz izračuna:\n• GUK — glukoza u krvi (uključeno na početku)\n• TT — privremeni cilj (uključeno na početku)\n• Trend — trend GUK-a (pamti zadnje stanje)\n• Aktivni inzulin — IOB (uključeno na početku)\n• Aktivni UGH — aktivni ugljikohidrati, COB (pamti zadnje stanje)</string>
     <!-- Treatments -->
     <string name="no_records_available">Nema dostupnih zapisa</string>
     <string name="treatments_iob_label_string">Aktivni inzulin:</string>
@@ -32,17 +205,155 @@
     <string name="careportal_remove_started_events">Uklonite započete unose AAPS-a</string>
     <string name="user_entry">Unos korisnika</string>
     <string name="clone_label">Kloniraj</string>
+    <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Graf glukoze. Nedavne vrijednosti %1$s. %2$s. %3$s</string>
+    <string name="a11y_show_controls" comment="Screen-reader name of the invisible area that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">Prikaži kontrole</string>
+    <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Obavijesti: %1$d</string>
+    <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">nema privremenog cilja, cilj profila</string>
+    <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">prilagodila petlja</string>
+    <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s u %2$s</string>
+    <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">delta %1$s</string>
+    <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">staro očitanje</string>
+    <string name="a11y_bg_age_old" comment="Screen-reader text for the age of a glucose reading that is too old to trust. %1$s=the age, %2$s=a11y_bg_old_reading. Example: (12 min), old reading">%1$s, %2$s</string>
+    <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Graf glukoze. Nedavne vrijednosti %1$s</string>
+    <string name="a11y_predictions" comment="Screen-reader description of the predicted glucose curves, which are drawn on the graph and cannot be read otherwise. %1$s=one sentence per prediction, already joined. Example: Predictions. COB prediction rises to 11.2 mmol/l. IOB prediction falls to 4.8 mmol/l.">Predviđanja. %1$s</string>
+    <string name="a11y_prediction_rises" comment="One predicted curve that ends higher than the current glucose. %1$s=the name of the prediction, %2$s=the highest value it reaches, with its unit. Example: COB prediction rises to 11.2 mmol/l">%1$s raste do %2$s.</string>
+    <string name="a11y_prediction_falls" comment="One predicted curve that ends lower than the current glucose. %1$s=the name of the prediction, %2$s=the lowest value it reaches, with its unit. Example: IOB prediction falls to 4.8 mmol/l">%1$s pada do %2$s.</string>
+    <string name="a11y_prediction_flat" comment="One predicted curve that stays level. %1$s=the name of the prediction, %2$s=the value it holds, with its unit. Example: Zero temp prediction stays at 6.1 mmol/l">%1$s ostaje na %2$s.</string>
+    <string name="a11y_prediction_name_iob" comment="Spoken name of the prediction from insulin on board. IOB is the term AAPS users know.">IOB predviđanje</string>
+    <string name="a11y_prediction_name_cob" comment="Spoken name of the prediction from carbs on board. COB is the term AAPS users know.">COB predviđanje</string>
+    <string name="a11y_prediction_name_acob" comment="Spoken name of the prediction from already absorbed carbs, shown by the AMA algorithm only.">Predviđanje apsorbiranog COB-a</string>
+    <string name="a11y_prediction_name_uam" comment="Spoken name of the prediction for a meal the user did not enter. UAM is the term AAPS users know.">UAM predviđanje</string>
+    <string name="a11y_prediction_name_zt" comment="Spoken name of the prediction for what happens with no insulin at all, the zero-temp curve.">Predviđanje s nultim privremenim bazalom</string>
+    <string name="a11y_badge_attention" comment="Screen-reader state of a navigation button that carries a warning badge. On screen the badge is a dot or an exclamation mark, which a screen reader cannot see at all.">potrebna radnja</string>
+    <string name="a11y_objectives_progress" comment="Screen-reader state of the Objectives navigation button, whose badge shows progress. %1$d=objectives finished, %2$d=objectives in total. Example: 9 of 10 done">%1$d od %2$d završeno</string>
+    <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Izvrši</string>
+    <string name="add_new_profile">Dodaj novi profil</string>
+    <string name="edit_label">Uredi</string>
+    <string name="activate_label">Aktiviraj</string>
     <string name="activate_profile">Aktiviraj profil</string>
+    <string name="remove_label">Ukloni</string>
+    <string name="active_profile_indicator">AKTIVAN</string>
+    <string name="confirm_remove_profile">Ukloniti profil „%1$s“?</string>
+    <string name="confirm_clone_profile">Klonirati profil „%1$s“?</string>
+    <string name="profile_no_longer_exists">Popis profila se u međuvremenu promijenio — pokušajte ponovno</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile_switches">Prekidači profila</string>
+    <string name="profile_type">Vrsta profila</string>
+    <string name="profile_parameters">Parametri profila</string>
+    <string name="active_profile">Aktivni profil</string>
+    <string name="available_profiles">Dostupni profili</string>
+    <string name="profile_switches">Zamjene profila</string>
+    <string name="basal_pct_from_tdd_label">% bazala</string>
     <string name="selected_profile">Odabrano:</string>
+    <string name="comparation">Usporedba</string>
+    <string name="profile_tab_1">Profil 1</string>
+    <string name="profile_tab_2">Profil 2</string>
+    <string name="motol_default_profile">Zadani profil</string>
+    <string name="current_profile">Trenutačni profil</string>
+    <string name="available_profile">Dostupan profil</string>
+    <string name="format_with_tdd">Dob: %1$d TDD: %2$.0f J</string>
+    <string name="format_with_tdd_and_pct">Dob: %1$d TDD: %2$.0f J %3$d%%</string>
+    <string name="format_with_weight">Dob: %1$d Težina: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV zadani profil</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
+    <string name="overview_edit_quickwizard_button_text">Tekst gumba</string>
+    <string name="quick_wizard_mode_wizard">Kalkulator</string>
+    <string name="quick_wizard_mode_insulin">Inzulin</string>
+    <string name="quick_wizard_mode_carbs">Ugljikohidrati</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Samo pozitivni aktivni inzulin</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <!--    History browser-->
+    <string name="history_now">Sada</string>
+    <string name="a11y_history_previous_window">Prethodni prozor</string>
+    <string name="a11y_history_next_window">Sljedeći prozor</string>
+    <string name="additional_ecarbs">Dodaj eUH</string>
+    <string name="calculator_options">Opcije kalkulatora</string>
+    <string name="use_bg">Koristi GUK</string>
+    <string name="use_cob">Koristi aktivne ugljikohidrate</string>
+    <string name="use_iob">Koristi aktivni inzulin</string>
+    <string name="use_trend">Koristi trend</string>
+    <string name="trend_all">Sve</string>
+    <string name="trend_positive_only">Samo pozitivni</string>
+    <string name="trend_negative_only">Samo negativni</string>
+    <string name="use_temp_target">Koristi privremeni cilj</string>
+    <string name="use_alarm">Koristi alarm</string>
+    <string name="device_selection">Odabir uređaja</string>
+    <string name="show_on_phone">Prikaži na telefonu</string>
+    <string name="show_on_watch">Prikaži na satu</string>
+    <string name="ecarbs_additional">Dodatni ugljikohidrati</string>
+    <string name="valid_from_to">Vremenski raspon valjanosti</string>
+    <string name="carb_time">Vrijeme ugljikohidrata</string>
+    <string name="save_changes_question">Spremiti promjene ovog unosa?</string>
+    <string name="wizard_no_insulin_required">Inzulin nije potreban</string>
+    <string name="carbs_constraint_violation">Ugljikohidrati su ograničeni zbog ograničenja</string>
+    <string name="insulin_constraint_violation">Inzulin je ograničen zbog ograničenja</string>
+    <string name="confirm_treatment">Potvrdite tretman</string>
+    <string name="recalculate">Ponovno izračunaj</string>
     <!--    Widget-->
+    <string name="use_black_color">Koristi crnu boju</string>
+    <string name="widget_configuration">Konfiguracija widgeta</string>
+    <string name="until_changed">Do promjene</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">Potrebna dopuštenja</string>
+    <string name="permission_sheet_subtitle">Neka dopuštenja potrebna su za ispravan rad aplikacije</string>
+    <string name="permission_grant">Odobri</string>
+    <string name="permission_change">Promijeni</string>
+    <string name="permission_denied_go_to_settings">Dopuštenje je trajno odbijeno. Omogućite ga u postavkama aplikacije.</string>
+    <string name="permission_open_settings">Postavke</string>
+    <string name="permission_directory_picker_error">Nije moguće pokrenuti odabir mape. Obično je to problem Androida ili Family Linka.</string>
+    <string name="permission_nav_label">Dopuštenja</string>
     <!--    TDD Cycle Pattern -->
+    <string name="stats_tab_cycle" comment="Short tab label on the Statistics screen. The tab shows daily insulin totals laid over 28-day cycles (TDD Cycle Pattern).">Ciklus</string>
+    <string name="cycle_offset">Pomak ciklusa</string>
+    <string name="raw_tdd">Sirovi TDD</string>
+    <string name="cleaned_tdd">Očišćeni TDD</string>
+    <string name="cleaned_tdd_explanation">TDD umanjen za inzulin za ugljikohidrate.</string>
+    <string name="cycle_lines_legend">Pojedinačni ciklusi</string>
+    <string name="cycles_found">Ciklusi: %1$d (dana: %2$d)</string>
+    <string name="cycle_day1_date">1. dan = %1$s</string>
+    <string name="calculation_in_progress_percent">Izračun… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">Nema dovoljno podataka (potrebno je najmanje 56 dana za 2 ciklusa)</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Oboje</item>
+        <item>Samo pozitivni</item>
+        <item>Samo negativni</item>
+    </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Odabrane radnje</string>
+    <string name="a11y_quick_launch_add" comment="Screen-reader label of the button that adds an action to the QuickLaunch bar. %1$s=the action name. Example: Add Bolus wizard">Dodaj %1$s</string>
+    <string name="a11y_quick_launch_remove" comment="Screen-reader label of the button that removes an action from the QuickLaunch bar. %1$s=the action name. Example: Remove Bolus wizard">Ukloni %1$s</string>
+    <string name="quick_launch_no_dynamic_items">Nema dostupnih stavki</string>
+    <string name="quick_launch_category_treatment">Tretman</string>
+    <string name="quick_launch_category_care">Careportal</string>
+    <string name="quick_launch_category_profile">Profil</string>
+    <string name="quick_launch_category_temp_target">Predlošci privremenih ciljeva</string>
+    <string name="quick_launch_category_quick_wizard">Brzi kalkulator</string>
+    <string name="quick_launch_category_automation">Automatizacija</string>
+    <string name="quick_launch_all_selected">Sve stavke su odabrane</string>
+    <string name="quick_launch_no_quick_wizard">Dodajte unose Brzog kalkulatora da biste ih koristili ovdje</string>
+    <string name="quick_launch_no_automation">Izradite korisničke radnje automatizacije da biste ih koristili ovdje</string>
+    <string name="quick_launch_no_tt_presets">Dodajte predloške privremenih ciljeva da biste ih koristili ovdje</string>
+    <string name="quick_launch_no_profiles">Izradite profile u lokalnom profilu da biste ih koristili ovdje</string>
+    <string name="quick_launch_edit_profile_preset">Uredi predložak profila</string>
+    <string name="quick_launch_profile_permanent">Trajno</string>
+    <string name="select_arrow">Odaberi strelicu</string>
+    <string name="loop_accept_nav_label">Petlja</string>
+    <string name="loop_accept_set_basal_question">Prihvati novi privremeni bazal:</string>
+    <string name="loop_accept_perform">Izvrši</string>
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">Onemogućeno</string>
+    <string name="widget_rm_suspended">Suspendirano</string>
+    <string name="widget_rm_resume">Nastavi</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">Senzor se još zagrijava. Kalibracija je dostupna u %1$s.</string>
+    <string name="cal_precheck_no_session">Nema aktivne sesije senzora.</string>
+    <string name="cal_precheck_no_pair">Nema očitanja CGM-a u zadnjih 10 minuta. Provjerite vezu sa senzorom.</string>
+    <string name="cal_precheck_delta_too_high">Glukoza se mijenja prebrzo (Δ %1$s %3$s u 5 min, granica %2$s). Pričekajte da se stabilizira.</string>
+    <string name="cal_precheck_mark_sensor_change">Označi promjenu senzora</string>
+    <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
 </resources>

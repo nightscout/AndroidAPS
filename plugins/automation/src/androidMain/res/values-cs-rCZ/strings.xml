@@ -88,7 +88,7 @@
     <string name="add_short">PŘIDAT</string>
     <string name="temptargetcompared">Dočasný cíl %1$s</string>
     <string name="btdevicecompared">Připojení Bluetooth k zařízení %1$s %2$s</string>
-    <string name="btdevice">Připojení k zařízení Bluetooth </string>
+    <string name="btdevice">Připojení k zařízení Bluetooth</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>

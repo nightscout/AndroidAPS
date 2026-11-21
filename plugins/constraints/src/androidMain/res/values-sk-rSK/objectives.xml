@@ -17,7 +17,7 @@
     <string name="objectives_maxbasal_learned">Dávajte pozor na bezpečnostné prvky a nastavte bezpečnostné parametre, pokiaľ je to potrebné.</string>
     <string name="objectives_maxiobzero_objective">Spustiť uzavretý okruh s ochranou pred nízkou glykémiou (LGS)</string>
     <string name="objectives_maxiobzero_gate">Niekoľko dní používať uzavretý okruh v režime Ochrana pred nízkou glykémiou (LGS) (t. j. max. IOB = 0 sa nastaví automaticky) bez príliš veľa udalostí LGS.</string>
-    <string name="objectives_maxiobzero_learned">Nastavením MaxIOB na nulu predídete hypoglykémii a nebude pridávaný inzulín nad štandardnú bazálnu dávku (s výnimkou situácií, kedy je IOB negatívne)</string>
+    <string name="objectives_maxiobzero_learned">Nastavenie MaxIOB na nulu pomáha predchádzať hypoglykémii a nepridá viac inzulínu nad bazálnu dávku (s výnimkou situácie so záporným IOB)</string>
     <string name="objectives_maxiob_objective">Ladiť uzavretý okruh, zvyšovať max IOB nad 0 a postupne znižovať cieľovú glykémiu</string>
     <string name="objectives_maxiob_gate">Používať uzavretý okruh niekoľko dní a aspoň jednu noc bez alarmov nízkej glykémie, až potom znížiť cieľovú glykémiu</string>
     <string name="objectives_maxiob_learned">Aktualizujte MaxIOB počas rastu dieťaťa. Nedovoľte systému, aby podal viac inzulínu, ako ste v skutočnosti schopní pokryť jedlom = skutočne vysoká hodnota je zlý nápad. Maximálne IOB sa v jednoduchom móde počíta automaticky.</string>
@@ -64,9 +64,9 @@
     <string name="objectives_exam_learned_sensitivity">Detekcia citlivosti je časť algoritmu, ktorá dovoľuje prispôsobovať dávkovanie inzulínu rôznym situáciam.</string>
     <string name="objectives_exam_learned_objectives">Váš pokrok v cieľoch je ukladaný spolu s ostatnými nastaveniami a mal by sa pravidelne zálohovať.</string>
     <string name="objectives_exam_learned_objectives2">Vždy majte exportované nastavenia aj vygenerovaný APK uložené aj mimo telefónu. Telefón sa môže stratiť, poškodiť atď. Dobré miesto môže byť akýkoľvek cloud prístupný z telefónu. V takom prípade môžete AAPS obnoviť na inom zariadení za pár minút. Dobrým zvykom je uložiť na bezpečnom mieste aj použité hlavné heslo. Bez neho je vaša záloha nepoužiteľná. To isté platí aj pre podpisové kľúče (súbor .jks) a heslá použité na zostavenie AAPS. Zvyšok nie je dôležitý - dá sa kedykoľvek znova stiahnuť z internetu.</string>
-    <string name="objectives_exam_learned_wrongcarbs">Ak ste do AAPS niečo zadali nesprávne alebo sa to nezhoduje so skutočnosťou, vyriešte to čo najskôr. Mohlo by to viesť k predávkovaniu. AAPS by malo byť vždy čo najlepšie informované o sacharidoch, inzulíne atď.</string>
-    <string name="objectives_exam_learned_iob">Sledovanie grafu IOB (aktívneho inzulínu) vám poskytne cenné informácie o tom, či AAPS funguje správne.</string>
-    <string name="objectives_exam_learned_cob">Výpočet COB závisí od vzťahu medzi ISF a IC. Zvýšenie ISF, alebo zníženie IC vedie k dlhším časom vstrebávania. Ale percentuálne prepnutie profilu zmení obe tieto hodnoty v rovnakom čase a doba vstrebávania sa nemení.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Ak ste do AAPS niečo zadali nesprávne alebo sa to nezhoduje so skutočnosťou, opravte to čo najskôr. Mohlo by to viesť k predávkovaniu. AAPS by malo byť vždy čo najlepšie informované o sacharidoch, inzulíne atď.</string>
+    <string name="objectives_exam_learned_iob">Ak chcete skontrolovať, či vám AAPS funguje dobre, sledovanie grafu IOB vám môže poskytnúť veľa užitočných informácií.</string>
+    <string name="objectives_exam_learned_cob">Výpočet COB závisí od vzťahu medzi ISF a IC. Zvýšenie ISF alebo zníženie IC vedie k dlhším časom vstrebávania. Ale prepnutie profilu s percentami zmení obe hodnoty v rovnakom čase a doba vstrebávania sa nezmení.</string>
     <string name="objectives_exam_learned_breadgrams">Pri zadávaní sacharidov sú povolené iba gramy.</string>
     <string name="objectives_exam_learned_ecarbs">E-Carbs je náhrada za predĺžený bolus vo svete pumpy.</string>
     <string name="objectives_exam_learned_nsclient">AAPS môžete vzdialene sledovať pomocou AAPSClienta alebo Nightscoutu. Keď je AAPSClient spárovaný s hlavným telefónom (master), môžete AAPS aj vzdialene ovládať.</string>

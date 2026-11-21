@@ -15,6 +15,8 @@
     <string name="sec_plus">(+%1$d сек)</string>
     <string name="minago_long">%1$d минут назад</string>
     <string name="hoursago">%1$.1fч назад</string>
+    <string name="days_ago">%1$.1f дн назад</string>
+    <string name="days_ago_round">%1$.0f дн назад</string>
     <plurals name="plurals_day_hour_ago">
         <item quantity="one">%1$s день %2$s час назад</item>
         <item quantity="few">%1$s дня %2$s часа назад</item>
@@ -28,7 +30,7 @@
         <item quantity="other">%1$s часов назад</item>
     </plurals>
     <plurals name="plurals_minute_ago">
-        <item quantity="one">только что</item>
+        <item quantity="one">%1$s минуту назад</item>
         <item quantity="few">%1$s минуты назад</item>
         <item quantity="many">%1$s минут назад</item>
         <item quantity="other">%1$s минут назад</item>
@@ -39,16 +41,7 @@
     <string name="shorthour">ч</string>
     <string name="days">дн</string>
     <string name="hours">час</string>
-    <string name="unit_second">сек</string>
-    <string name="unit_minute">мин</string>
-    <string name="unit_hour">час</string>
-    <string name="unit_day">дн</string>
-    <string name="unit_week">нед</string>
-    <string name="unit_seconds">сек</string>
     <string name="unit_minutes">мин</string>
-    <string name="unit_hours">час</string>
-    <string name="unit_days">дн</string>
-    <string name="unit_weeks">нед</string>
     <string name="shortminute">м</string>
     <string name="time_remaining_h_m">%1$d ч %2$d мин осталось</string>
     <string name="time_remaining_m">%1$d мин осталось</string>
@@ -56,8 +49,15 @@
     <string name="tomorrow">Завтра</string>
     <string name="today">Сегодня</string>
     <string name="yesterday">Вчера</string>
+    <string name="values_with_dash" comment="Two values with a dash between them, for a range or a day and its date. Example: 6:00 - 10:00, or Today - 10/23/2026">%1$s - %2$s</string>
+    <string name="values_with_comma" comment="Two parts of one text with a comma between them. Example: BG: 7.5, Delta: +0.3">%1$s, %2$s</string>
+    <string name="values_with_slash" comment="Two values with a slash between them. Example: 0.01 / 0.05">%1$s / %2$s</string>
+    <string name="value_with_detail" comment="A value and a detail about it in brackets. Example: 0.85 U/h (STD), or 20 g (-15 min)">%1$s (%2$s)</string>
+    <string name="time_frame_hours_minutes" comment="A duration, short. h=hours, the mark after the minutes means minutes. %1$d=hours, %2$d=minutes. Example: 1h 30'">%1$d ч %2$d\'</string>
+    <string name="time_frame_minutes" comment="A duration in minutes, short. The mark after the number means minutes. %1$d=minutes. Example: 30'">%1$d\'</string>
+    <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
     <!-- Rx -->
-    <string name="connecting_for">Связь установлена за %1$d сек</string>
+    <string name="connecting_for">Подключение %1$d сек</string>
     <string name="handshaking">Подтверждение связи</string>
     <string name="connected">Подключено</string>
     <string name="authorized">Авторизовано</string>
@@ -90,7 +90,12 @@
     <string name="pref_show_week_number">Показывать номер недели</string>
     <string name="pref_show_date">Показать дату</string>
     <string name="pref_show_seconds">Показывать секунды</string>
-    <string name="default_custom_watchface_comment">Циферблат по умолчанию, вы можете нажать на EXPORT WATCHFACE чтобы создать шаблон</string>
+    <string name="pref_show_complication1">Показывать дополнение 1</string>
+    <string name="pref_show_complication2">Показывать дополнение 2</string>
+    <string name="pref_show_complication3">Показывать дополнение 3</string>
+    <string name="pref_show_complication4">Показывать дополнение 4</string>
+    <string name="pref_show_complication5">Показывать дополнение 5</string>
+    <string name="default_custom_watchface_comment">Циферблат по умолчанию, вы можете нажать кнопку «Экспортировать шаблон», чтобы создать шаблон</string>
     <string name="default_custom_watchface_external_comment">Циферблат по умолчанию, включающий в себя компоненты для фолловеров, вы можете нажать на ЭКСПОРТ ЦИФЕРБЛАТА для генерации шаблона</string>
     <string name="wear_default_watchface">Циферблат по умолчанию</string>
     <string name="wear_more_watchfaces">Еще циферблаты</string>
@@ -110,15 +115,19 @@
     <string name="ultra_fast_acting_insulin_comment">Фиасп</string>
     <string name="insulin_peak_time">Время пика [min]</string>
     <!-- Concentration -->
-    <string name="u10">10 ед</string>
-    <string name="u40">40 ед</string>
-    <string name="u50">50 ед</string>
-    <string name="u100">100 ед</string>
-    <string name="u200">200 ед</string>
-    <string name="u300">300 ед</string>
-    <string name="u500">500 ед</string>
+    <string name="u10">U10</string>
+    <string name="u20">U20</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">мг/дл/ед</string>
+    <string name="profile_isf_units_mmol">ммоль/л/ед</string>
     <string name="formatsignedinsulinunits">%1$+.2f ед</string>
-    <string name="format_carbs">%1$d гр</string>
+    <string name="format_carbs">%1$d г</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="carbs">Углеводы</string>
     <string name="alarminxmin">Напомнить через %1$d мин</string>
     <string name="pumpsuspended">Работа помпы остановлена</string>
@@ -129,9 +138,11 @@
     <string name="maximumbasalvaluereplaced">Значение базала заменено максимальной поддерживаемой величиной: %1$s</string>
     <string name="profile_ins_units_per_hour">ед/ч</string>
     <string name="profile_carbs_per_unit">г/ед</string>
+    <string name="mins">%1$d мин</string>
     <string name="record">Запись</string>
     <string name="bolus">Болюс</string>
     <string name="uel_extended_carbs">ПРОЛОНГИРОВАННЫЕ УГЛЕВОДЫ</string>
+    <string name="profile_low_target">Нижнее целевое значение профиля</string>
     <string name="profile_high_target">Верхнее целевое значение профиля</string>
     <string name="profile_dia">Значение длительности действия инсулина DIA в профиле</string>
     <string name="profile_sensitivity_value">Значение чувствительности в профиле</string>
@@ -139,8 +150,14 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f за пределами жестких ограничений</string>
     <string name="basal_value">Величина базала</string>
     <string name="cobvsiob">угл COB к инс IOB</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Обнаружено медленное усвоение углеводов: %1$d%% времени. Перепроверьте расчет. COB может быть завышен, поэтому может быть подано больше инсулина !!!!!</string>
     <string name="bolus_constraint_applied_warn">Применено ограничение болюса: %1$.2f ед. до %2$.2f ед.</string>
     <string name="bolus_recorded_only">Болюс будет только записан (без подачи помпой)</string>
-    <string name="advisoralarm">Напомнить о еде</string>
+    <string name="advisoralarm">Подать сигнал, когда пора есть</string>
+    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eCarbs %1$d г / %2$d ч (+%3$d мин)</string>
     <string name="format_insulin_units">%1$.2f ед</string>
+    <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
+    <string name="carbs_with_time_later" comment="Carbs eaten later. %1$s=carbs with unit, %2$s=minutes from now, with unit. Example: 20 g (+15 min)">%1$s (+%2$s)</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Модуль %1$s не смог запуститься и может не работать. Перезапустите AAPS.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">В модуле %1$s произошла ошибка, и часть его работы остановлена. Перезапустите AAPS.</string>
 </resources>

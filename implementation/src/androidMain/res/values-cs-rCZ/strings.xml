@@ -3,6 +3,9 @@
     <string name="executing_right_now">Příkaz je právě prováděn</string>
     <string name="smb_being_delivered">Právě nyní se vydává SMB. Zkuste to znovu po dokončení výdeje.</string>
     <string name="basal_value_below_minimum">Hodnota bazálu pod povoleným minimem. Nenastaveno!</string>
+    <string name="concentration_change_failed_title">Změna inzulínu se nezdařila</string>
+    <string name="concentration_change_failed">Nový inzulín je v pumpě, ale aplikace AAPS do ní nemohla zapsat profil. Pumpa podává nesprávné množství inzulínu. Ihned pumpu odpojte nebo sejměte, zkontrolujte glykémii a v případě potřeby si podejte inzulín jinak. Pumpu znovu připojte až po zapsání profilu.</string>
+    <string name="concentration_change_pending">Profil s novým inzulínem zatím není zapsán do pumpy. Dokud nebude zapsán, nelze podat inzulín.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Bazální profil v pumpě aktualizován. Pumpa zaokrouhluje bazál na svůj krok: podává %1$s denně místo %2$s.</string>
     <string name="basal_reported_far_from_profile">Pumpa nahlásí bazál daleko od profilu. AAPS udržuje bazální dávku. Zkontrolujte bazál v pumpě.</string>
     <!--       Stats -->
@@ -60,7 +63,7 @@
     <string name="exported_less_than_hour_ago">exportováno před méně než hodinou</string>
     <string name="metadata_warning_different_flavour">Předvolby byly vytvořeny v jiné variantě AAPS (%1$s), zatímco vy máte: %2$s.\n\nNěkterá nastavení mohou chybět nebo být neplatná – po importu prosím zkontrolujte a aktualizujte své předvolby.</string>
     <string name="metadata_warning_different_device">Předvolby byly vytvořeny na jiném zařízení. Je to v pořádku, pokud importujete ze staršího/jiného telefonu, ale ujistěte se, že importované předvolby jsou správné!</string>
-    <string name="metadata_warning_old_export">Importované předvolby jsou již %1$s dnů staré! Možná máte aktuálnější předvolby nebo jste zvolili nesprávný soubor? Nezapomeňte předvolby pravidelně exportovat!</string>
+    <string name="metadata_warning_old_export">Importované předvolby jsou již %1$s dní staré! Možná máte aktuálnější předvolby nebo jste vybrali špatný soubor? Nezapomeňte předvolby pravidelně exportovat!</string>
     <string name="metadata_warning_date_format">Neplatný formát data a času!</string>
     <string name="metadata_warning_different_version">Předvolby z jiné vedlejší verze aplikace. Je to v pořádku, pokud importujete po aktualizaci, ale po importu zkontrolujte, zda jsou předvolby stále správné!</string>
     <string name="metadata_urgent_different_version">Předvolby z jiné hlavní verze aplikace. Hlavní verze se výrazně liší a mohou mít nekompatibilní předvolby! Po importu se ujistěte, že předvolby jsou stále správné!</string>

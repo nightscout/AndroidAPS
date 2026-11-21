@@ -12,7 +12,7 @@
     <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b codering</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b codering</string>
     <string name="medtronic_pump_frequency_us_ca">VS &amp; Canada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Wereldwijd (868 Mhz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Wereldwijd (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Aan het scannen</string>
     <string name="riley_link_ble_config_connected_never">Nooit</string>
@@ -40,12 +40,12 @@
     <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Bluetooth initialiseren…</string>
-    <string name="rileylink_state_bt_error">Bluetooth fout</string>
-    <string name="rileylink_state_bt_ready">Bluetooth gekoppeld</string>
+    <string name="rileylink_state_bt_error">Bluetooth-fout</string>
+    <string name="rileylink_state_bt_ready">Bluetooth gereed</string>
     <string name="rileylink_state_not_started">Niet gestart</string>
     <string name="rileylink_state_rl_init">RileyLink initialiseren…</string>
-    <string name="rileylink_state_rl_error">RileyLink fout</string>
-    <string name="rileylink_state_pc_tune_up">Tuning van RileyLink en Pomp</string>
+    <string name="rileylink_state_rl_error">RileyLink-fout</string>
+    <string name="rileylink_state_pc_tune_up">RileyLink en pomp op elkaar afstemmen</string>
     <string name="rileylink_state_pc_error">Probleem tijdens verbinden met de pomp</string>
     <string name="rileylink_state_connected">Verbonden</string>
     <string name="rileylink_state_rl_ready">RileyLink gereed</string>
@@ -53,11 +53,11 @@
     <string name="rileylink_error_not_rl">Apparaat is geen RileyLink</string>
     <string name="rileylink_error_unreachable">RileyLink onbereikbaar</string>
     <string name="rileylink_error_bt_disabled">Bluetooth is uitgeschakeld</string>
-    <string name="rileylink_error_no_bt_adapter">Geen Bluetooth Adapter</string>
+    <string name="rileylink_error_no_bt_adapter">Geen Bluetooth-adapter</string>
     <string name="rileylink_error_tuneup_failed">Verbinding maken mislukt</string>
     <string name="rileylink_error_pod_unreachable">Pod niet bereikbaar</string>
     <!-- RileyLink - Common -->
-    <string name="rileylink_target_device_medtronic">Medtronic Pomp</string>
+    <string name="rileylink_target_device_medtronic">Medtronic-pomp</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Toon batterijniveau van OrangeLink/EmaLink/DiaLink</string>
@@ -68,11 +68,11 @@
     </plurals>
     <plurals name="duration_hours">
         <item quantity="one">%1$d uur</item>
-        <item quantity="other">%1$d uren</item>
+        <item quantity="other">%1$d uur</item>
     </plurals>
     <string name="orange_use_scanning_level">Gebruik scannen</string>
-    <string name="orange_use_scanning_level_summary">Scan voordat u verbinding maakt met OrangeLink, het zou de verbindingen moeten verbeteren (kan ook worden gebruikt met andere RileyLink klonen, indien nodig)</string>
+    <string name="orange_use_scanning_level_summary">Scan vóór het verbinden met OrangeLink; dit zou de verbinding moeten verbeteren (kan indien nodig ook worden gebruikt met andere RileyLink-klonen)</string>
     <string name="rileylink_pair">Koppel RileyLink</string>
     <string name="rileylink_pair_success">RileyLink succesvol gekoppeld</string>
-    <string name="rileylink_config_reset">Reset RileyLink configuratie</string>
+    <string name="rileylink_config_reset">RileyLink-configuratie gereset</string>
 </resources>

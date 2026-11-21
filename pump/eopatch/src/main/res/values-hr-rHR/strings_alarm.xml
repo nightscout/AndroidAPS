@@ -1,2 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<resources></resources>
+<resources>
+    <string name="string_a002">Prazan spremnik\nPatch je deaktiviran i isporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_a003">Patch je istekao\nPatch je deaktiviran i isporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_a004">Začepljenje\nPatch je deaktiviran i isporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_a005">Samotestiranje pri uključivanju nije uspjelo\nPatch je deaktiviran. Odmah zamijenite Patch.</string>
+    <string name="string_a007">Neodgovarajuća temperatura\nIsporuka inzulina ili postupak „Aktiviraj Patch“ je zaustavljen. Odmah izbjegavajte ekstremne temperature.</string>
+    <string name="string_a016">Greška umetanja igle\nProvjerite položaj ručice i dodirnite „Pokušaj ponovno“.</string>
+    <string name="string_a018">Greška baterije Patch-a\nPatch je deaktiviran i\nisporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_a019">Greška baterije Patch-a\nPatch je deaktiviran i isporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_a020">Greška aktivacije Patch-a\nPostupak „Aktiviraj Patch“ je istekao. Dodirnite „Potvrdi“ za deaktivaciju trenutnog Patch-a. Odmah zamijenite Patch.</string>
+    <string name="string_a022">Greška Patch-a\nPatch je deaktiviran i isporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_a023">Greška Patch-a\nPatch je deaktiviran i\nisporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_a034">Greška Patch-a\nPatch je deaktiviran i isporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_a041">Greška Patch-a\nPatch je deaktiviran i isporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_a042">Greška Patch-a\nPatch je deaktiviran i isporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_a043">Greška Patch-a\nPatch je deaktiviran i isporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_a044">Greška Patch-a\nPatch je deaktiviran i isporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_a106">Greška Patch-a\nPatch je deaktiviran i isporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_a107">Greška Patch-a\nPatch je deaktiviran i isporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_a108">Greška Patch-a\nPatch je deaktiviran i isporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_a116">Greška Patch-a\nPatch je deaktiviran i isporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_a117">Greška Patch-a\nPatch je deaktiviran i isporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_a118">Greška Patch-a\nPatch je deaktiviran i isporuka inzulina je zaustavljena. Odmah zamijenite Patch.</string>
+    <string name="string_b000">Radni vijek Patch-a istječe %s. Pripremite se za zamjenu Patch-a.</string>
+    <string name="string_b001">Kraj obustave inzulina\nDodirnite „Nastavi“ za ponovno pokretanje isporuke inzulina.</string>
+    <string name="string_b003">Niska razina u spremniku\nUskoro zamijenite Patch.</string>
+    <string name="string_b005">Radni vijek Patch-a je istekao\nOdmah zamijenite Patch.</string>
+    <string name="string_b006">Patch uskoro istječe\nOdmah zamijenite Patch.</string>
+    <string name="string_b012">Nedovršena aktivacija Patch-a\nDovršite postupak „Aktiviraj Patch“.</string>
+    <string name="string_b018">Slaba baterija Patch-a\nPripremite se za zamjenu Patch-a.</string>
+</resources>

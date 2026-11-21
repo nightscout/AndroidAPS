@@ -38,7 +38,7 @@
     <string name="apsselected">Επιλέχθηκε APS</string>
     <string name="closedmodeenabled">Ενεργοποιήθηκε η κλειστή λειτουργία</string>
     <string name="description_objectives">Πρόγραμμα εκμάθησης</string>
-    <string name="doyouwantresetstart">Θέλετε έναρξη επαναφοράς στόχου? Μπορεί να χάσετε την πρόοδό σας.</string>
+    <string name="doyouwantresetstart">Θέλετε να επαναφέρετε την έναρξη του βήματος; Μπορεί να χάσετε την πρόοδό σας.</string>
     <string name="objectives_button_unfinish">Επαναφορά ολοκληρωμένης κατάστασης</string>
     <string name="objectives_button_unstart">Επαναφορά κατάστασης εκκίνησης</string>
     <string name="bg_doubled_lgs">Λειτουργία LGS λόγω διπλών τιμών στην πηγή γλυκόζης</string>

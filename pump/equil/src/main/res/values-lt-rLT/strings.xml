@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="equil_name">Equil</string>
-    <string name="equil_pump_description">Equil 5.3 ar naujesnė patch pompa </string>
+    <string name="equil_pump_description">Equil 5.3 ar naujesnė patch pompa</string>
     <!--  start  -->
     <string name="equil_basal_speed">Bazinis insulinas</string>
     <string name="equil_dressing">Rezervuaro keitimas</string>
@@ -53,6 +53,9 @@
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Senka baterija: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Rezervuare nepakanka insulino: %1$s</string>
     <string name="equil_reservoir_empty">Rezervuaras tuščias. Insulinas netiekiamas.</string>
+    <string name="equil_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Boluso komanda pasiekė pompą, bet pompa neatsakė. Ji dar gali suleisti %1$s. Papildomo boluso neleiskite. AAPS įskaičiuoja visą kiekį.</string>
+    <string name="equil_stop_not_answered" comment="%1$s=insulin amount with unit. Example: 2.00 U, or for U200 insulin 2.00 U (1.00 CU)">Sustabdymo komanda nepasiekė pompos arba pompos atsakymas dingo. AAPS įskaičiuoja visą %1$s bolusą, kol pompos istorija parodys, kiek buvo suleista.</string>
+    <string name="equil_bolus_not_given" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Pompos istorija rodo, kad %1$s bolusas nebuvo suleistas. AAPS jo neįskaičiuoja.</string>
     <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Pompa sustojo boluso leidimo metu. Suleista: %1$s iš %2$s</string>
     <string name="equil_pump_not_run">Pompa neaktyvi</string>
     <string name="equil_pair">Susieti</string>
