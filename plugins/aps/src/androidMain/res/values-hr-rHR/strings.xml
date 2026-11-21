@@ -1,30 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Autotune-->
+    <string name="dyn_isf_adjust_title" formatted="false">Faktor prilagodbe dinamičkog ISF-a %</string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Dinamički ISF</string>
+    <string name="openaps_auto_isf">Auto ISF</string>
+    <string name="openapsma_disabled">Dodatak je onemogućen</string>
     <string name="openapsma_no_glucose_data">Nema dostupnih podataka o glukozi</string>
+    <string name="openaps_no_as_data">Nema dostupnih podataka Autosensa</string>
+    <string name="dynisf_shortname">DYNISF</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">Niz od %1$d elemenata.\nStvarna vrijednost:</string>
     <string name="description_ama">Stanje algoritma iz 2017.</string>
     <string name="description_smb">Najnoviji algoritam za napredne korisnike</string>
     <string name="description_smb_dynamic_isf">Najnoviji algoritam za napredne korisnike s dinamičkim/automatskim ISF-om</string>
+    <string name="description_auto_isf">Eksperimentalni algoritam za napredne korisnike, s proširenjima AutoISF</string>
     <string name="openapsma_last_run_label">Zadnje pokretanje</string>
     <string name="openapsma_input_parameters_label">Ulazni parametri</string>
     <string name="openapsma_glucose_status_label">Stanje glukoze</string>
+    <string name="openapsma_current_temp_label">Trenutni privremeni bazal</string>
     <string name="openapsma_iob_data_label">IOB podaci</string>
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_meal_data_label">Podaci o obroku</string>
     <string name="openapsma_request_label">Zahtjev</string>
+    <string name="constraints">Ograničenja</string>
+    <string name="openapsma_autosensdata_label">Podaci Autosensa</string>
+    <string name="openapsma_script_debug_data_label">Otklanjanje grešaka skripte</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Pažnja!\nObično ne trebate mijenjati vrijednosti ispod. KLIKNITE OVDJE, PROČITAJTE tekst i budite sigurni da ga RAZUMIJETE prije nego promijenite bilo koju od ovih vrijednosti.</string>
+    <string name="increasing_max_basal">Vrijednost maksimalnog bazala se povećava jer je postavka niža od maksimalnog bazala u vašem profilu</string>
+    <string name="max_basal_multiplier">množitelj maksimalnog bazala</string>
+    <string name="max_daily_basal_multiplier">množitelj maksimalnog dnevnog bazala</string>
+    <string name="smb_disabled_in_preferences">SMB je onemogućen u postavkama</string>
+    <string name="uam_disabled_in_preferences">UAM je onemogućen u postavkama</string>
+    <string name="autosens_disabled_in_preferences">Autosens je onemogućen u postavkama</string>
     <!--    Verify if needed in safety-->
+    <string name="limiting_iob">Aktivni inzulin ograničen je na %1$.1f J. Razlog: %2$s</string>
+    <string name="maxvalueinpreferences">maksimalna vrijednost u postavkama</string>
+    <string name="hardlimit">čvrsta granica</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">Vrh</string>
     <!--    Loop -->
-    <string name="description_loop">Aktiviraj ili deaktiviraj implementaciju koja pokreće loop.</string>
+    <string name="smb_frequency_exceeded">Bolus je isporučen u zadnje 3 minute, SMB se preskače</string>
+    <string name="pump_not_initialized">Pumpa nije inicijalizirana!</string>
+    <string name="zero_basal_not_set">Pumpa nije prihvatila nulti privremeni bazal. Možda još uvijek daje bazalni inzulin. Provjerite pumpu.</string>
+    <string name="description_loop">Aktiviraj ili deaktiviraj implementaciju koja pokreće petlju.</string>
+    <string name="no_aps_selected">APS NIJE ODABRAN ILI NIJE DAO REZULTAT</string>
+    <string name="ignore5m">Zanemari 5 min</string>
+    <string name="ignore15m">Zanemari 15 min</string>
+    <string name="ignore30m">Zanemari 30 min</string>
+    <string name="carbs_suggestion">Prijedlog ugljikohidrata</string>
+    <string name="open_loop_new_suggestion">Dostupan je novi prijedlog</string>
+    <string name="loop_notification_channel_name">Prijedlozi petlje</string>
+    <string name="loop_notification_channel_silent_name">Prijedlozi petlje u načinu Ne ometaj</string>
+    <string name="open_loop_suggestion_too_old">Ovaj prijedlog je prestar. Ništa nije poslano na pumpu. Pričekajte sljedeći.</string>
+    <string name="basal_set_correctly">Bazal je ispravno postavljen</string>
+    <string name="last_run_label">Zadnje pokretanje</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">Zahtjev</string>
+    <string name="loop_constraints_processed_label">Nakon primjene ograničenja</string>
+    <string name="loop_tbr_request_time_label">Vrijeme zahtjeva za privremeni bazal</string>
+    <string name="loop_tbr_execution_time_label">Vrijeme izvršenja privremenog bazala</string>
+    <string name="loop_tbr_set_by_pump_label">Privremeni bazal koji je postavila pumpa</string>
+    <string name="loop_smb_request_time_label">Vrijeme zahtjeva za SMB</string>
+    <string name="loop_smb_execution_time_label">Vrijeme izvršenja SMB-a</string>
+    <string name="loop_smb_set_by_pump_label">SMB koji je postavila pumpa</string>
+    <string name="fallback_smb_no_tdd">Povratak na SMB. Nema dovoljno podataka o TDD-u.</string>
+    <string name="fallback_to_isf_no_tdd">Povratak na osjetljivost iz profila. Nema dovoljno podataka. Razlog: %1$s</string>
     <!-- Autotune -->
+    <string name="autotune_description">Pomoć za moguće prilagodbe profila (ISF, omjer ugljikohidrata i bazalne stope)</string>
     <string name="autotune_default_tune_days_title">Broj dana podataka</string>
     <string name="autotune_tunedprofile_name">Ugođen</string>
-    <string name="autotune_profile">Profile :</string>
+    <string name="autotune_profile">Profil:</string>
     <string name="autotune_last_run">Zadnje izvođenje:</string>
     <string name="autotune_warning">Upozorenje:</string>
     <string name="autotune_ic_warning">Odabrani profil ima %1$d IC vrijednosti. Autotune će koristiti %2$.2f g/U</string>
     <string name="autotune_isf_warning">Odabrani profil ima %1$d ISF vrijednosti. Autotune će koristiti %2$.1f %3$s/U</string>
-    <string name="autotune_error">Pogreška u unosu podataka, pokušajte ponovno pokrenuti automatsko podešavanje ili smanjite broj dana</string>
+    <string name="autotune_error">Pogreška u ulaznim podacima, pokušajte ponovno pokrenuti Autotune ili smanjite broj dana</string>
+    <string name="autotune_error_more_days">Greška u ulaznim podacima, povećajte broj dana</string>
     <string name="autotune_warning_during_run">Autotune izračun je započeo, molimo za strpljenje</string>
     <string name="autotune_warning_after_run">Prije uporabe pažljivo provjerite rezultate!</string>
     <string name="autotune_partial_result">Djelomični rezultat dan %1$d / %2$d podešeno</string>
@@ -32,15 +84,18 @@
     <string name="autotune_param">Param</string>
     <string name="autotune_percent">%</string>
     <string name="autotune_missing">Nedostaje</string>
-    <string name="autotune_run">Pokrenite Autotune</string>
-    <string name="autotune_check_input_profile_button">Provjerite ulazni profil</string>
-    <string name="autotune_compare_profile">Usporedite profile</string>
+    <string name="autotune_run">Pokreni Autotune</string>
+    <string name="autotune_check_input_profile_button">Provjeri ulazni profil</string>
+    <string name="autotune_compare_profile">Usporedi profile</string>
     <string name="autotune_copy_localprofile_button">Kopiraj na lokalni profil</string>
-    <string name="autotune_update_input_profile_button">Ažurirajte ulazni profil</string>
-    <string name="autotune_revert_input_profile_button">Vrati profil unosa</string>
+    <string name="autotune_update_input_profile_button">Ažuriraj ulazni profil</string>
+    <string name="autotune_revert_input_profile_button">Vrati ulazni profil</string>
     <string name="autotune_copy_local_profile_message">Napraviti novi lokalni profil iz ovog Autotune profila?</string>
     <string name="autotune_update_local_profile_message">Želite li ažurirati %1$s profil pomoću Autotune profila?</string>
-    <string name="autotune_revert_local_profile_message">Vratiti profil %1$s s profilom unosa?</string>
+    <string name="autotune_revert_local_profile_message">Vratiti profil %1$s na ulazni profil?</string>
     <string name="autotune_profile_invalid">Profil nije valjan</string>
+    <string name="pump_disconnected">Pumpa odspojena</string>
     <!--    autoISF -->
+    <string name="autoISF_settings_title">Postavke AutoISF</string>
+    <string name="smb_delivery_settings_title">Postavke isporuke SMB-a</string>
 </resources>
