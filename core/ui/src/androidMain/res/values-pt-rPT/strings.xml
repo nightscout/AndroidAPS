@@ -660,9 +660,9 @@
     <string name="uel_ns_resume">RETOMAR NS</string>
     <string name="uel_ns_queue_cleared">FILA DO NS LIMPA</string>
     <string name="uel_ns_settings_copied">DEFINIÇÕES DO NS COPIADAS</string>
-    <string name="uel_error_dialog_ok">CAIXA DE DIÁLOGO OK</string>
+    <string name="uel_error_dialog_ok">CAIXA DE DIÁLOGO DE ERRO OK</string>
     <string name="uel_error_dialog_mute">CAIXA DE DIÁLOGO DE ERRO SILENCIAR</string>
-    <string name="uel_error_dialog_mute_5min">CAIXA DE DIÁLOGO SILENCIAR 5MIN</string>
+    <string name="uel_error_dialog_mute_5min">CAIXA DE DIÁLOGO DE ERRO SILENCIAR 5MIN</string>
     <string name="uel_objective_started">OBJETIVO INICIADO</string>
     <string name="uel_objective_unstarted">OBJETIVO NÃO INICIADO</string>
     <string name="uel_objectives_skipped">OBJETIVOS IGNORADOS</string>
