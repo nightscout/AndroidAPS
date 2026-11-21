@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_calibration_name">Sense calibració</string>
+    <string name="description_no_calibration">"No s'aplica cap correcció de calibració. Els valors del sensor es fan servir tal qual. Feu-ho servir quan el sensor ja està calibrat de fàbrica i és precís."</string>
+    <string name="linear_calibration_name">Calibració lineal</string>
+    <string name="description_linear_calibration">"Correcció de calibració lineal per sensor (pendent i desplaçament) calculada a partir de les vostres glucèmies manuals. Les entrades recents tenen més pes. La correcció s'aplica després de l'inici de la sessió actual del sensor; les 2 primeres hores s'ometen com a escalfament."</string>
+    <string name="sensor_change_detected_text">S\'ha detectat un possible canvi de sensor (%1$s). Marcar-lo com a sensor nou?</string>
+    <string name="sensor_change_detected_action">Marcar canvi de sensor</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Registreu un canvi de sensor per activar la calibració.</string>
+    <string name="cal_status_warmup">Escalfament del sensor — calibració activa després de %1$s.</string>
+    <string name="cal_status_need_more_entries">Calen almenys 2 glucèmies manuals (ara n\'hi ha %1$d).</string>
+    <string name="cal_status_unsafe_fit">Ajust fora del rang segur — calibració no aplicada.</string>
+    <string name="cal_status_applied">Calibració aplicada.</string>
+    <string name="cal_status_applied_offset_only">Calibració només de desplaçament aplicada — rang del sensor massa estret per calcular el pendent.</string>
+    <string name="cal_status_applied_slope_clamped">Calibració aplicada — pendent limitat al rang segur. Afegiu més entrades per treure el límit.</string>
+    <string name="cal_slope_offset">Pendent %1$.2f, correcció al mig del rang %2$s</string>
+    <string name="cal_session_started">Sessió iniciada: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Registrar canvi de sensor</string>
+    <string name="cal_add_calibration">Afegir calibració</string>
+    <string name="cal_entries_header">Glucèmies manuals (%1$d)</string>
+    <string name="cal_no_entries">Encara no hi ha glucèmies manuals.</string>
+    <string name="cal_entry_pair">Glucèmia manual %1$s → sensor %2$s (Δ %3$s)</string>
+    <string name="cal_chart_entry_readout">Entrada %1$d/%2$d · %3$s · sensor %4$s → glucèmia %5$s</string>
 </resources>

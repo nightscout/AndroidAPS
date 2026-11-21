@@ -27,7 +27,6 @@
     <string name="commanderror">Erro no comando</string>
     <string name="speederror">Erro velocidade</string>
     <string name="insulinlimitviolation">Transgressão limite insulina</string>
-    <string name="boluserrorcode">Pedido: %1$.2fU Administrado: %2$.2fU Código Erro: %3$s</string>
     <string name="selectedpump">Bomba selecionada</string>
     <string name="bolus_step">Incremento Bólus</string>
     <string name="basal_step">Incremento Basal</string>
@@ -102,8 +101,8 @@
     <string name="diaconn_g8_logsuccess">Sucesso</string>
     <string name="diaconn_g8_logmealsuccess">Refeição com sucesso</string>
     <string name="diaconn_g8_errorcode_1">Não é possível consultar devido a um erro de CRC no pacote.</string>
-    <string name="diaconn_g8_errorcode_2">Não é possível definir devido a um erro nos parâmetros de entrada.</string>
-    <string name="diaconn_g8_errorcode_3">Não é possível definir devido a um erro na especificação do protocolo.</string>
+    <string name="diaconn_g8_errorcode_2">Não é possível definir: erro nos parâmetros de entrada.</string>
+    <string name="diaconn_g8_errorcode_3">Não é possível definir: erro na especificação do protocolo.</string>
     <string name="diaconn_g8_errorcode_4">Hora de refeição definida, não é possível injetar.</string>
     <string name="diaconn_g8_errorcode_6">Cancelado pela bomba</string>
     <string name="diaconn_g8_errorcode_7">A bomba está a executar outra ação, as definições pela app estão limitadas.</string>
@@ -113,7 +112,7 @@
     <string name="diaconn_g8_errorcode_11">Não é possível injetar porque a bateria está fraca.</string>
     <string name="diaconn_g8_errorcode_12">Não é possível injetar porque não há insulina suficiente.</string>
     <string name="diaconn_g8_errorcode_13">Não é possível injetar porque excede o limite por injeção.</string>
-    <string name="diaconn_g8_errorcode_14">Não é possível injetar porque excede o limite diário de injeção.</string>
+    <string name="diaconn_g8_errorcode_14">Não é possível injetar porque excede o volume de injeção de hoje.</string>
     <string name="diaconn_g8_errorcode_15">A injeção basal só é possível depois de concluída a configuração da basal.</string>
     <string name="diaconn_g8_logtubechange_title">Registar mudança de tubo</string>
     <string name="diaconn_g8_logtubechange_summary">Adicionar o evento «Mudança de tubo» como nota quando for detetado no histórico</string>
@@ -135,4 +134,5 @@
     <string name="bolus_speed_8">8 U/min</string>
     <string name="diaconn_pairing_successful">Emparelhamento bem-sucedido!</string>
     <string name="diaconn_pairing_successful_message">A bomba está agora ligada e pronta a usar.</string>
+    <string name="diaconn_g8_cloud_sync_progress" comment="Pump status while AAPS sends the pump log to the Diaconn cloud. %1$d=parts sent, %2$d=all parts. Example: Cloud sync: 3 / 10">Sincronização com a nuvem: %1$d / %2$d</string>
 </resources>

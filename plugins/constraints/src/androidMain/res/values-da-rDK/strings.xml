@@ -9,6 +9,7 @@
     <string name="application_expired">Applikationen er udløbet</string>
     <string name="running_invalid_version">Vi har opdaget, at du kører en ugyldig version. Loop deaktiveret!</string>
     <string name="versionavailable">Version %1$s tilgængelig</string>
+    <string name="version_expire">Version %1$s udløber %2$s og skifter til LGS-tilstand</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Genberegnede data anvendt</string>
@@ -17,12 +18,13 @@
     <string name="a11y_bg_quality_doubles">dobbelpostering</string>
     <string name="a11y_bg_quality_flat">Flad data. Anses for at være forkert</string>
     <!-- Safety -->
-    <string name="limitingextendedbolus">Begrænser udvidet bolus til %1$.1f IE på grund af %2$s</string>
+    <string name="limitingextendedbolus">Begrænser forlænget bolus til %1$.1f IE på grund af %2$s</string>
     <string name="limitingcarbs">Begrænser kulhydrater til %1$d g på grund af %2$s</string>
+    <string name="safety">Sikkerhed</string>
     <string name="pumpisnottempbasalcapable">Pumpe er ikke egnet til midlertidig basal</string>
     <string name="closed_loop_disabled_on_dev_branch">Kører dev version. Lukket loop er deaktiveret.</string>
     <string name="closed_loop_disabled_with_eb">Lukket loop deaktiveret på grund af kørsel af forlænget bolus</string>
-    <string name="smbalwaysdisabled">SMB altid og efter kulhydrater deaktiveret, fordi den aktive BS kilde ikke understøtter avanceret filtrering</string>
+    <string name="smbalwaysdisabled">SMB altid og efter kulhydrater deaktiveret, fordi den aktive BS-kilde ikke understøtter avanceret filtrering</string>
     <string name="smbnotallowedinopenloopmode">SMB er ikke tilladt i åben loop mode</string>
     <string name="maxvalueinpreferences">max værdi i præferencer</string>
     <string name="hardlimit">hård grænse</string>
@@ -36,7 +38,8 @@
     <string name="apsselected">APS valgt</string>
     <string name="closedmodeenabled">Lukket tilstand aktiveret</string>
     <string name="description_objectives">Oplæringsprogram</string>
-    <string name="doyouwantresetstart">Vil du nulstille objektiv start? Du kan miste dine fremskridt.</string>
+    <string name="doyouwantresetstart">Vil du nulstille starten af læringsmålet? Du kan miste dine fremskridt.</string>
     <string name="objectives_button_unfinish">Nulstil færdig tilstand</string>
     <string name="objectives_button_unstart">Nulstil startet tilstand</string>
+    <string name="bg_doubled_lgs">LGS-tilstand på grund af dobbelte værdier i BS-kilden</string>
 </resources>

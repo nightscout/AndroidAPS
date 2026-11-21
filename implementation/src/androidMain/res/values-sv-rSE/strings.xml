@@ -3,6 +3,9 @@
     <string name="executing_right_now">Kommando körs just nu</string>
     <string name="smb_being_delivered">En SMB levereras just nu. Försök igen när den är färdig.</string>
     <string name="basal_value_below_minimum">Basal understiger miniminivå. Profilen sattes inte.</string>
+    <string name="concentration_change_failed_title">Insulinbyte misslyckades</string>
+    <string name="concentration_change_failed">Det nya insulinet finns i pumpen, men AAPS kunde inte föra över profilen till den. Pumpen levererar fel mängd insulin. Koppla bort eller ta av pumpen omedelbart, kontrollera ditt blodsocker och tillför insulin på annat sätt om det behövs. Anslut inte pumpen igen förrän den nya profilen har förts över utan problem.</string>
+    <string name="concentration_change_pending">Profilen med det nya insulinet har inte skrivits till pumpen än. Insulin kan inte ges innan detta är genomfört.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Basalprofilen i pumpen är uppdaterad. Pumpen rundar av basalen till sin egna skala: den ger %1$s per dag istället för %2$s.</string>
     <string name="basal_reported_far_from_profile">Pumpen rapporterar en basal som avviker kraftigt från profilen. AAPS behåller profilens basal. Kontrollera basaldoserna i pumpen.</string>
     <!--       Stats -->
@@ -34,8 +37,8 @@
     <string name="alarm_channel_silent_urgent">Brådskande larm (gradvis ökande volym)</string>
     <string name="alarm_channel_silent">Larm (gradvis ökande volym)</string>
     <string name="alarm_channel_silent_description">Används när \"Öka aviseringsvolymen gradvis\" är påslaget. Larmskärmen spelar upp ljudet.</string>
-    <string name="ongoing_channel_name">Status pågående</string>
-    <string name="eat_reminder_channel">Nedräkning till ätpåminnelse</string>
+    <string name="ongoing_channel_name">Pågående status</string>
+    <string name="eat_reminder_channel">Nedräkning till matpåminnelse</string>
     <string name="eat_reminder_channel_description">Visar tiden som återstår tills det är dags att äta. Nedräkningen är ljudlös, men alarmet på slutet ger ljud.</string>
     <string name="notifications_channel_name">AAPS-aviseringar</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
@@ -60,7 +63,7 @@
     <string name="exported_less_than_hour_ago">exporterades för mindre än en timme sedan</string>
     <string name="metadata_warning_different_flavour">Inställningarna skapades med en annan variant av AAPS (%1$s). Du kör nu: %2$s.\n\nVissa inställningar kan saknas eller vara ogiltiga. Efter att du importerat bör du kontrollera och uppdatera inställningarna.</string>
     <string name="metadata_warning_different_device">Inställningar skapades på en annan enhet. Det är OK om du importerar från en äldre eller en annan telefon, men se till att importerade inställningar är korrekta!</string>
-    <string name="metadata_warning_old_export">Importerade inställningar är %1$s dagar gamla. Du kanske har mer aktuella inställningar eller valde du fel fil? Kom ihåg att exportera dina inställningar regelbundet!</string>
+    <string name="metadata_warning_old_export">Importerade inställningar är redan %1$s dagar gamla! Du kanske har mer aktuella inställningar, eller valde du fel fil? Kom ihåg att exportera inställningarna regelbundet!</string>
     <string name="metadata_warning_date_format">Ogiltigt datumformat!</string>
     <string name="metadata_warning_different_version">Inställningarna är sparade i en annan delversion av appen. Det är OK om du importerar efter uppgradering, men kontrollera att inställningarna fortfarande är korrekta efter import!</string>
     <string name="metadata_urgent_different_version">Inställningarna är sparade i en annan huvudversion av appen. Olika huvudversioner kan ha helt olika struktur vilket kan göra dem inkompatibla. Kontrollera inställningarna noggrant efter import!</string>

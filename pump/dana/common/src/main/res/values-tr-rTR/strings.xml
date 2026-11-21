@@ -8,7 +8,7 @@
     <string name="commanderror">Komut hatası</string>
     <string name="speederror">Hız hatası</string>
     <string name="insulinlimitviolation">İnsülin sınırı ihlali</string>
-    <string name="boluserrorcode">İstenen: %1$.2fÜ İletilen: %2$.2fÜ Hata kodu: %3$s</string>
+    <string name="boluserrorcode">İstenen: %1$.2f Ü İletilen: %2$.2f Ü Hata kodu: %3$s</string>
     <string name="danai2_bolus_error_no_prime">Pompa hazırlanmamış</string>
     <string name="danai2_bolus_error_not_enough_insulin">Rezervuarda yeterli insülin yok</string>
     <string name="danai2_bolus_error_easy_sleep">Pompada Easy sleep modu açık</string>

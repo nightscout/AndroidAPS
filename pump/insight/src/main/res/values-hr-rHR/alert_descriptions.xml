@@ -1,2 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r7_description"><![CDATA[Količina: <b>%1$d%%</b>\nTrajanje: <b>%2$s h</b>]]></string>
+    <string name="alert_w31_description"><![CDATA[Sadržaj spremnika: <b>%1$s J</b>]]></string>
+    <string name="alert_w32_description">Zamijenite bateriju.</string>
+    <string name="alert_w33_description">Postavite vrijeme/datum.</string>
+    <string name="alert_w34_description">Obratite se podršci za Accu-Chek.</string>
+    <string name="alert_w36_description"><![CDATA[Količina: <b>%1$d%%</b><br/>Trajanje: <b>%2$s h</b>]]></string>
+    <string name="alert_w38_description"><![CDATA[Programirano: <b>%1$s J</b><br/>Isporučeno: <b>%2$s J</b>]]></string>
+    <string name="alert_m20_description">Umetnite spremnik.</string>
+    <string name="alert_m21_description">Zamijenite spremnik.</string>
+    <string name="alert_m22_description">Zamijenite bateriju.</string>
+    <string name="alert_m23_description">Provjerite status pumpe.</string>
+    <string name="alert_m24_description">Zamijenite infuzijski set.</string>
+    <string name="alert_m25_description">Obratite se podršci za Accu-Chek.</string>
+    <string name="alert_m26_description">Zamijenite spremnik.</string>
+    <string name="alert_m27_description">Ponovno pokrenite preuzimanje podataka.</string>
+    <string name="alert_m28_description">Provjerite status pumpe.</string>
+    <string name="alert_m29_description">Postavite vrstu baterije.</string>
+    <string name="alert_m30_description">Postavite vrstu spremnika.</string>
+    <string name="alert_e6_description">Zamijenite bateriju i spremnik.</string>
+    <string name="alert_e10_description">Zamijenite spremnik.</string>
+    <string name="alert_e13_description">Promijenite jezik.</string>
+</resources>

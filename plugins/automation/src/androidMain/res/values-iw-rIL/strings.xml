@@ -88,7 +88,7 @@
     <string name="add_short">הוספה</string>
     <string name="temptargetcompared">יעד זמני %1$s</string>
     <string name="btdevicecompared">חיבור בלוטות\' להתקן %1$s %2$s</string>
-    <string name="btdevice">‏התחברות למכשיר בלוטות\' </string>
+    <string name="btdevice">התחברות למכשיר בלוטות\'</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>

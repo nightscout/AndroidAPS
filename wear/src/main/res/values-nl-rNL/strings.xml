@@ -6,11 +6,11 @@
     <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(Aangepast) altijd aan</string>
     <string name="label_actions_tile">Acties</string>
     <string name="label_temp_target_tile">Tijdelijk Streefdoel</string>
-    <string name="label_quick_wizard_tile">Quick Wizard</string>
+    <string name="label_quick_wizard_tile">QuickWizard</string>
     <string name="label_user_action_tile">Gebruikersactie</string>
     <string name="label_scene_tile">Scène</string>
-    <string name="msg_warning_sync">Geen gegevens ontvangen sinds %1$s! Controleer of AAPS op de telefoon gegevens verstuurt naar horloge</string>
-    <string name="msg_warning_old">AAPS gegevens zijn %1$s oud! Controleer je sensor, xDrip+, NS, AAPS instellingen of andere!</string>
+    <string name="msg_warning_sync">Geen gegevens ontvangen sinds %1$s! Controleer of AAPS op de telefoon gegevens naar het horloge verstuurt</string>
+    <string name="msg_warning_old">AAPS-gegevens zijn %1$s oud! Controleer de sensor, xDrip+, NS, AAPS-instellingen of andere mogelijke oorzaken!</string>
     <string name="pref_vibrate_on_bolus">Trillen bij bolus</string>
     <string name="units_short">E</string>
     <string name="pref_display_settings">Scherm</string>
@@ -23,15 +23,15 @@
     <string name="pref_show_iob">Toon IOB</string>
     <string name="pref_show_detailed_iob">Toon gedetailleerde IOB</string>
     <string name="pref_show_cob">Toon COB</string>
-    <string name="pref_show_delta">Toon Delta</string>
-    <string name="pref_show_detailed_delta">Toon gedetailleerde Delta</string>
+    <string name="pref_show_delta">Toon delta</string>
+    <string name="pref_show_detailed_delta">Toon gedetailleerde delta</string>
     <string name="pref_show_avgdelta">Toon gemiddelde delta</string>
     <string name="pref_show_phone_battery">Toon telefoonbatterij</string>
-    <string name="pref_show_rig_battery">Toon rig batterij</string>
-    <string name="pref_show_basal_rate">Toon basaal</string>
+    <string name="pref_show_rig_battery">Toon rigbatterij</string>
+    <string name="pref_show_basal_rate">Toon basaalstand</string>
     <string name="pref_show_temp_target">Toon tijdelijk doel</string>
-    <string name="pref_show_reservoir_level">Toon reservoir niveau</string>
-    <string name="pref_show_loop_status">Toon loop status</string>
+    <string name="pref_show_reservoir_level">Toon reservoirniveau</string>
+    <string name="pref_show_loop_status">Toon loopstatus</string>
     <string name="pref_show_bg">Toon BG</string>
     <string name="pref_show_bgi">Toon BGI</string>
     <string name="pref_show_direction_arrow">Toon richtingspijl</string>
@@ -45,33 +45,33 @@
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Bijpassende verdeler</string>
     <string name="pref_chart_timeframe">Tijdsschaal grafiek</string>
     <string name="pref_1_hour">1 uur</string>
-    <string name="pref_2_hours">2 uren</string>
-    <string name="pref_3_hours">3 uren</string>
-    <string name="pref_4_hours">4 uren</string>
-    <string name="pref_5_hours">5 uren</string>
+    <string name="pref_2_hours">2 uur</string>
+    <string name="pref_3_hours">3 uur</string>
+    <string name="pref_4_hours">4 uur</string>
+    <string name="pref_5_hours">5 uur</string>
     <string name="pref_1_min">uitgeschakeld</string>
     <string name="pref_5_min">5 min</string>
     <string name="pref_10_min">10 min</string>
     <string name="pref_15_min">15 min</string>
-    <string name="pref_big_numbers">Grote nummers</string>
-    <string name="pref_ring_history">Ring geschiedenis</string>
-    <string name="pref_light_ring_history">Lichte ring geschiedenis</string>
+    <string name="pref_big_numbers">Grote cijfers</string>
+    <string name="pref_ring_history">Ringgeschiedenis</string>
+    <string name="pref_light_ring_history">Lichte ringgeschiedenis</string>
     <string name="pref_animations">Animaties</string>
     <string name="pref_wizard_in_menu">Calculator in Menu</string>
     <string name="pref_prime_in_menu">Ontlucht/vul in menu</string>
     <string name="pref_single_target">Enkel streefdoel</string>
-    <string name="pref_wizard_percentage">Calculator percentage</string>
-    <string name="pref_wizard_carbs_type">Rekenmachine Maaltijd Type</string>
-    <string name="pref_wizard_carb_time">Koolhydraten tijd calculator</string>
-    <string name="pref_complication_tap_action">Complicatie tik voor actie</string>
-    <string name="pref_complication_bg_graph_hours">BG grafiek tijdbereik</string>
+    <string name="pref_wizard_percentage">Calculatorpercentage</string>
+    <string name="pref_wizard_carbs_type">Maaltijdtype in calculator</string>
+    <string name="pref_wizard_carb_time">Koolhydratentijd in calculator</string>
+    <string name="pref_complication_tap_action">Tikactie voor complicatie</string>
+    <string name="pref_complication_bg_graph_hours">Tijdbereik van BG-grafiek</string>
     <string name="duration_1_hour">1 uur</string>
     <string name="duration_3_hours">3 uur</string>
-    <string name="duration_6_hours">6 uren</string>
+    <string name="duration_6_hours">6 uur</string>
     <string name="pref_unicode_in_complications">Unicode in complicaties</string>
     <string name="pref_version">Versie:</string>
-    <string name="pref_moreWatchfaceSettings">Meer Watchface instellingen</string>
-    <string name="pref_lookInYourWatchfaceConfiguration">Kijk naar de Watchface configuratie, alsjeblieft.</string>
+    <string name="pref_moreWatchfaceSettings">Meer wijzerplaatinstellingen</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Bekijk de wijzerplaatinstellingen.</string>
     <string name="menu_tempt">TijdStreefd</string>
     <string name="menu_tempt_long">Tijdelijk streefdoel</string>
     <string name="menu_wizard">Calculator</string>
@@ -83,7 +83,7 @@
     <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Instellingen</string>
     <string name="menu_status">Status</string>
-    <string name="menu_bg_graph">BG Grafiek</string>
+    <string name="menu_bg_graph">BG-grafiek</string>
     <string name="menu_resync">Opnieuw synchroniseren</string>
     <string name="menu_prime_fill">Ontlucht/vul</string>
     <string name="menu_install_watchface">Installeer de wijzerplaat</string>
@@ -96,8 +96,8 @@
     <string name="menu_menu">Menu</string>
     <string name="action_tempt_confirmation">Tijdelijk streefdoel aangevraagd</string>
     <string name="action_quick_wizard_confirmation">QuickWizard aangevraagd</string>
-    <string name="action_user_action_confirmation">Gebruiker actie aangevraagd</string>
-    <string name="action_scene_confirmation">Gevraagde scène</string>
+    <string name="action_user_action_confirmation">Gebruikersactie aangevraagd</string>
+    <string name="action_scene_confirmation">Scène aangevraagd</string>
     <string name="scene_end">Einde</string>
     <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Overslaan</string>
     <string name="action_treatment_confirmation">Behandeling aangevraagd</string>
@@ -105,13 +105,13 @@
     <string name="action_wizard_confirmation">Berekening aangevraagd</string>
     <string name="action_fill_confirmation">Vullen aangevraagd</string>
     <string name="action_ecarb_confirmation">Koolhydraten aangevraagd</string>
-    <string name="action_profile_switch_confirmation">Profiel wisselen aangevraagd</string>
+    <string name="action_profile_switch_confirmation">Profielwissel aangevraagd</string>
     <string name="action_target_unit" comment="In temp target menu, single target value">Streefdoel [%s]</string>
     <string name="action_low_unit" comment="In temp target menu, lower value from range">Laag [%s]</string>
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Hoog [%s]</string>
     <string name="action_carbs">Koolhydraten</string>
     <string name="action_carbs_gram">Koolhydraten [g]</string>
-    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Max te verwijderen %1$d g (COB)</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Max. te verwijderen: %1$d g (COB)</string>
     <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Percentage\n[%]</string>
     <string name="action_start_minutes">Start\n[minuten]</string>
@@ -129,12 +129,12 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Vrije hoeveelheid</string>
     <string name="action_confirm">BEVESTIGEN</string>
     <string name="action_timeshift_hours">Tijdsverschuiving\n[uren]</string>
-    <string name="bolus_progress">Bolus voortgang</string>
+    <string name="bolus_progress">Bolusvoortgang</string>
     <string name="press_to_cancel">druk om te annuleren</string>
     <string name="cancel_bolus">BOLUS ANNULEREN</string>
     <string name="status_pump">Pomp</string>
     <string name="status_loop">Loop</string>
-    <string name="status_profile_switch">Profiel wissel</string>
+    <string name="status_profile_switch">Profielwissel</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Khd</string>
     <string name="activity_IOB">IOB</string>
@@ -152,7 +152,7 @@
     <string name="color_name_lightgreen">lichtgroen</string>
     <string name="color_name_lime">lichtgroen</string>
     <string name="color_name_yellow">geel</string>
-    <string name="color_name_amber">geelbruin</string>
+    <string name="color_name_amber">amberkleurig</string>
     <string name="color_name_orange">oranje</string>
     <string name="color_name_deeporange">diep oranje</string>
     <string name="color_name_brown">bruin</string>
@@ -162,42 +162,42 @@
     <string name="color_name_multicolor">multicolor</string>
     <string name="pref_simplify_ui">Versimpel interface</string>
     <string name="pref_vibrate_hourly">Tril ieder uur</string>
-    <string name="pref_show_weeknumber">Weeknummer weergeven</string>
+    <string name="pref_show_weeknumber">Toon weeknummer</string>
     <string name="pref_complication_1">Complicatie 1</string>
     <string name="pref_complication_2">Complicatie 2</string>
     <string name="pref_complication_3">Complicatie 3</string>
     <string name="pref_complication_4">Complicatie 4</string>
     <string name="pref_complication_5">Complicatie 5</string>
     <string name="complication_summary_none">Tik om een gegevensbron te selecteren</string>
-    <string name="pref_complication_type_priority">Complicatietype prioriteit</string>
+    <string name="pref_complication_type_priority">Prioriteit van complicatietype</string>
     <string name="pref_complication_type_priority_all">Standaard voor alle slots</string>
-    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Een verandering hier wordt de volgende keer dat u een databron kiest toegepast. Dezelfde kiezen is niet genoeg; kies een andere bron eerst, kies daarna degene die u wilt.</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Een wijziging hier wordt toegepast bij de volgende keuze van een gegevensbron. Opnieuw dezelfde gegevensbron selecteren is niet voldoende: selecteer eerst een andere gegevensbron en kies daarna de gewenste gegevensbron.</string>
     <string name="complication_type_priority_value">Waarde of wijzer</string>
     <string name="complication_type_priority_text">Tekst</string>
     <string name="complication_type_priority_icon">Icoon</string>
     <string name="complication_type_priority_use_default">Standaard gebruiken</string>
-    <string name="cwf_complication_layout">Complicatie indeling</string>
-    <string name="cwf_complication_layout_description">Positie en grootte van de complicaties, gebruikt van de geladen horloge wijzerplaat.</string>
+    <string name="cwf_complication_layout">Complicatie-indeling</string>
+    <string name="cwf_complication_layout_description">Positie en grootte van de complicaties, overgenomen van de geladen aangepaste wijzerplaat.</string>
     <string name="pref_include_external">Externe weergaven opnemen in sjabloon</string>
-    <string name="pref_switch_external">Externe data wijzigen in watchface</string>
+    <string name="pref_switch_external">Externe gegevens in wijzerplaat wisselen</string>
     <string name="custom_pref_show_seconds">Toon seconden</string>
-    <string name="digitalstyle_pref_your_style">Jouw stijl</string>
+    <string name="digitalstyle_pref_your_style">Stijl</string>
     <string name="digitalstyle_style_none">geen stijl</string>
     <string name="digitalstyle_style_minimal">minimale stijl</string>
     <string name="digitalstyle_style_shape">vormstijl</string>
     <string name="digitalstyle_style_full">volledige stijl</string>
-    <string name="digitalstyle_pref_your_color">Jouw kleur</string>
-    <string name="digitalstyle_pref_your_color_saturation">Jouw kleurverzadiging</string>
-    <string name="digitalstyle_pref_your_color_opacity">Jouw kleurentransparantie</string>
-    <string name="bolus_progress_channel_name">AAPS Bolus Voortgang</string>
-    <string name="bolus_progress_silent_channel_name">AAPS Bolus Voortgang Stil</string>
-    <string name="bolus_progress_channel_description">Bolus voortgang en annuleer</string>
-    <string name="bolus_progress_silent_channel_description">Bolus voortgang en annuleer met minder trillingen</string>
+    <string name="digitalstyle_pref_your_color">Kleur</string>
+    <string name="digitalstyle_pref_your_color_saturation">Kleurverzadiging</string>
+    <string name="digitalstyle_pref_your_color_opacity">Kleurdekking</string>
+    <string name="bolus_progress_channel_name">AAPS-bolusvoortgang</string>
+    <string name="bolus_progress_silent_channel_name">AAPS-bolusvoortgang stil</string>
+    <string name="bolus_progress_channel_description">Bolusvoortgang en annuleren</string>
+    <string name="bolus_progress_silent_channel_description">Bolusvoortgang en annuleren met minder trillingen</string>
     <string name="open_loop_channel_name">AAPS Open Loop</string>
-    <string name="open_loop_channel_description">Melding van Open Loop verzoek</string>
+    <string name="open_loop_channel_description">Melding van open-loopverzoek</string>
     <string name="simple_ui_off">Uit</string>
     <string name="simple_ui_charging">Tijdens Opladen</string>
-    <string name="simple_ui_always_on">Altijd Aan modus</string>
+    <string name="simple_ui_always_on">Altijd-aanmodus</string>
     <string name="simple_ui_always_on_charging">Altijd Aan en Opladen</string>
     <string name="temp_target_eating_soon">Eten</string>
     <string name="temp_target_hypo">Hypo</string>
@@ -206,7 +206,7 @@
     <string name="temp_target_cancel">Afbreken</string>
     <string name="tile_none">Geen</string>
     <string name="tile_no_config">Geen configuratie beschikbaar</string>
-    <string name="wear_control_not_enabled">Wear OS besturing uitgeschakeld</string>
+    <string name="wear_control_not_enabled">Wear OS-besturing uitgeschakeld</string>
     <string name="wear_control_no_data">Geen data beschikbaar</string>
     <string name="abbreviation_average">gem</string>
     <string name="no_iob_u">--E</string>
@@ -215,7 +215,7 @@
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00E</string>
-    <string name="snooze_alert">AAPS Sluimer Alarm</string>
+    <string name="snooze_alert">AAPS-sluimeralarm</string>
     <string name="sending_snooze">Snooze versturen naar AAPS</string>
     <string name="week_short">w</string>
     <string name="day_short">d</string>
@@ -225,7 +225,7 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="error">Fout</string>
     <string name="pref_heartRateSampling">Hartslag</string>
-    <string name="pref_heartRateSmoothing">HR Vloeiend maken</string>
+    <string name="pref_heartRateSmoothing">Hartslag vloeiend maken</string>
     <string name="pref_stepsSampling">Stappenteller inschakelen</string>
     <string name="tile_tempt_1">Tijdelijk Streefdoel 1</string>
     <string name="tile_tempt_2">Tijdelijk Streefdoel 2</string>
@@ -241,46 +241,46 @@
     <string name="tile_scene_4">Scène 4</string>
     <string name="tile_scene_auto">Automatisch</string>
     <string name="tile_scene_unavailable">Niet beschikbaar</string>
-    <string name="datalayer_notification_title">Data Layer Voorgrond Service</string>
-    <string name="datalayer_notification_text">AAPS draait op de voorgrond. Om meldingen te verbergen ga je naar de ontwikkelaarsopties, App meldingen, Toegestane horloge apps, selecteer AAPS, schakel Data Layer Voorgrond Service Kanaal melding uit.</string>
+    <string name="datalayer_notification_title">Data Layer-voorgrondservice</string>
+    <string name="datalayer_notification_text">AAPS draait op de voorgrond. Ga om de melding te verbergen naar Ontwikkelaarsopties, App-meldingen, Toegestane horloge-apps, selecteer AAPS en schakel de kanaalmelding voor Data Layer-voorgrondservice uit.</string>
     <string name="on">AAN</string>
     <string name="off">UIT</string>
     <string name="complication_full_status">Volledige status</string>
     <string name="complication_full_status_flipped">Volledige status (omgedraaid)</string>
-    <string name="complication_blood_glucose">Bloed glucose</string>
+    <string name="complication_blood_glucose">Bloedglucose</string>
     <string name="complication_blood_glucose_large">Bloedglucose (groot)</string>
-    <string name="complication_blood_glucose_ext1">Bloed glucose Ex1</string>
-    <string name="complication_blood_glucose_ext2">Bloed glucose Ex2</string>
-    <string name="complication_bg_graph">BG Grafiek</string>
+    <string name="complication_blood_glucose_ext1">Bloedglucose Ext1</string>
+    <string name="complication_blood_glucose_ext2">Bloedglucose Ext2</string>
+    <string name="complication_bg_graph">BG-grafiek</string>
     <string name="complication_cwf_image">Aangepaste wijzerplaat</string>
-    <string name="complication_cwf_ambient_bg">Aangepaste wijzerplaat op basis van glucose waarde</string>
-    <string name="complication_cwf_ambient_status">Aangepaste wijzerplaat op basis van status</string>
+    <string name="complication_cwf_ambient_bg">Aangepaste wijzerplaat: glucose in altijd-aanmodus</string>
+    <string name="complication_cwf_ambient_status">Aangepaste wijzerplaat: status in altijd-aanmodus</string>
     <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
-    <string name="complication_cwf_lower">Aangepaste wijzerplaat achtergrond</string>
-    <string name="complication_cwf_upper">Aangepaste wijzerplaat klok</string>
+    <string name="complication_cwf_lower">Achtergrond van aangepaste wijzerplaat</string>
+    <string name="complication_cwf_upper">Klok van aangepaste wijzerplaat</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
     <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
     <string name="complication_br_iob">BR &amp; IOB</string>
-    <string name="complication_br">Basaal snelheid</string>
+    <string name="complication_br">Basaalstand</string>
     <string name="complication_br_tt">BR &amp; Streefdoel</string>
     <string name="complication_target">Streefdoel</string>
     <string name="complication_cob_iob">CoB &amp; IoB</string>
-    <string name="complication_cob_icon">CoB icoon</string>
+    <string name="complication_cob_icon">COB-icoon</string>
     <string name="complication_cob_detailed">Gedetailleerde CoB</string>
-    <string name="complication_iob_icon">IoB icoon</string>
+    <string name="complication_iob_icon">IOB-icoon</string>
     <string name="complication_iob_detailed">Gedetailleerde IoB</string>
-    <string name="complication_uploader_phone_battery">Uploader/Telefoon Batterij</string>
+    <string name="complication_uploader_phone_battery">Uploader-/telefoonbatterij</string>
     <string name="running_mode_resume">Hervat loop</string>
     <string name="running_mode_reconnect">Pomp opnieuw verbinden</string>
-    <string name="label_running_mode_title">Bedrijfsmodus</string>
-    <string name="label_bg_graph_tile">BG Grafiek</string>
-    <string name="tile_tap_action">Tik actie</string>
+    <string name="label_running_mode_title">Loopmodus</string>
+    <string name="label_bg_graph_tile">BG-grafiek</string>
+    <string name="tile_tap_action">Tikactie</string>
     <string name="tile_graph_time_range">Tijdsinterval</string>
-    <string name="tile_tap_bg_graph">BG Grafiek</string>
+    <string name="tile_tap_bg_graph">BG-grafiek</string>
     <string name="tile_tap_main_menu">Hoofdmenu</string>
-    <string name="tile_tap_loop_status">Loop status</string>
-    <string name="action_running_mode_selected">Bedrijfsmodus aangevraagd</string>
+    <string name="tile_tap_loop_status">Loopstatus</string>
+    <string name="action_running_mode_selected">Loopmodus aangevraagd</string>
     <string name="title_activity_disconnect_pump">Verbreek verbinding met de pomp</string>
     <string name="title_activity_suspend_loop">Onderbreek loop</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
@@ -288,21 +288,21 @@
     <string name="wizard_carbs_type_bread">Brood</string>
     <string name="wizard_carbs_type_cake">Cake</string>
     <string name="wizard_carbs_type_pizza">Pizza</string>
-    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">Koolhydraten tijd\n[min]</string>
+    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">Koolhydratentijd\n[min]</string>
     <string name="wizard_carb_time_now">Nu</string>
     <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
     <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d min</string>
     <string name="wizard_set_alarm">Alarm instellen</string>
     <string name="eat_reminder_title">Tijd om te eten</string>
-    <string name="eat_reminder_silence">Stil</string>
+    <string name="eat_reminder_silence">Dempen</string>
     <string name="eat_reminder_stop">Stop</string>
     <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Gaat af om %1$s</string>
     <string name="eat_reminder_countdown_channel">Tijd om te eten, actief</string>
     <string name="eat_reminder_channel_silent">Tijd om te eten tijdens \'niet storen\'</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
-    <string name="phone_alarm_channel">Alarm van de telefoon</string>
+    <string name="phone_alarm_channel">Alarmen van de telefoon</string>
     <string name="phone_alarm_channel_silent">Alarmen van de telefoon tijdens \'niet storen\'</string>
-    <string name="phone_alarm_silence">Stil</string>
+    <string name="phone_alarm_silence">Dempen</string>
     <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">Demp %1$d min</string>
     <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">E</string>
@@ -311,13 +311,13 @@
     <string name="wizard_confirmation_sent">Verzonden</string>
     <string name="contacting_master">Maakt verbinding met master…</string>
     <string name="contacting_master_unknown">Status onbekend - controleer telefoon</string>
-    <string name="tile_settings">Tegel instellingen</string>
+    <string name="tile_settings">Tegelinstellingen</string>
     <string name="loop_status_error">Status kon niet geladen worden</string>
     <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f E/uur (%2$d%%)</string>
     <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">nog %1$s</string>
-    <string name="loop_status_tbr_continues">Tijdelijk basaal blijft actief</string>
-    <string name="loop_status_tbr_cancel">Instellen tijdelijk basaal</string>
+    <string name="loop_status_tbr_continues">Tijdelijke basaalstand blijft actief</string>
+    <string name="loop_status_tbr_cancel">Reguliere basaalstand instellen</string>
     <string name="loop_status_smb">%1$.2f E</string>
     <string name="loop_status_no_last_run">N.v.t.</string>
     <string name="loop_status_closed">Gesloten loop</string>
@@ -325,23 +325,23 @@
     <string name="loop_status_lgs">Gestopt voor lage glucose</string>
     <string name="loop_status_disabled">Loop gedeactiveerd</string>
     <string name="loop_status_suspended">Loop onderbroken</string>
-    <string name="loop_status_pump_suspended">Pomp is onderbroken</string>
+    <string name="loop_status_pump_suspended">Pomp onderbroken</string>
     <string name="loop_status_dst_suspended">Onderbroken voor zomer/wintertijd (DST)</string>
     <string name="loop_status_disconnected">Pomp ontkoppeld</string>
     <string name="loop_status_superbolus">Superbolus</string>
     <string name="loop_status_unknown">Onbekend</string>
-    <string name="loop_status_result">Loop resultaat</string>
-    <string name="loop_status_last_run_enact">Laatste uitvoering &amp; toepassen</string>
+    <string name="loop_status_result">Loopresultaat</string>
+    <string name="loop_status_last_run_enact">Laatste uitvoering &amp; toepassing</string>
     <string name="loop_status_last_run">Laatst uitgevoerd</string>
     <string name="loop_status_last_enact">Laatst toegepast</string>
     <string name="loop_status_smb_text">SMB</string>
-    <string name="loop_status_basal_rate">Dosis</string>
+    <string name="loop_status_basal_rate">Basaalstand</string>
     <string name="loop_status_duration">Tijdsduur</string>
-    <string name="loop_status_oaps_reason">OpenAPS reden</string>
+    <string name="loop_status_oaps_reason">OpenAPS-reden</string>
     <string name="loop_status_targets">Streefdoelen</string>
     <string name="loop_status_temp_target">Tijdelijk streefdoel</string>
     <string name="loop_status_target_range">Interval</string>
-    <string name="loop_status_target">Streefwaarde</string>
+    <string name="loop_status_target">Streefdoel</string>
     <string name="loop_status_adjusted_target">Aangepast streefdoel</string>
     <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Tot einde</string>
     <string name="loop_status_scene_ended">Geëindigd</string>
@@ -354,15 +354,15 @@
     <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
     <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+du</string>
     <string name="loop_status_sensitivity">Gevoeligheid</string>
-    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Veranderd door de actieve scène</string>
-    <string name="loop_status">Loop status</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Ingesteld door de actieve scène</string>
+    <string name="loop_status">Loopstatus</string>
     <string name="loop_status_refresh">Vernieuwen</string>
     <string name="confirm">Bevestigen</string>
     <string name="request">Aanvraag</string>
     <string name="constraint_applied">Beperking toegepast!</string>
-    <string name="wizard_total_insulin">Totaal Insuline</string>
+    <string name="wizard_total_insulin">Totale insuline</string>
     <string name="wizard_calculation">Berekening</string>
-    <string name="wizard_settings_format">Kh/I:%1$s | ISF %2$s</string>
+    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
     <string name="wizard_result_bg">BG</string>
     <string name="wizard_result_bg_tt">BG (TT: %1$s)</string>
     <string name="wizard_result_trend">15 min trend</string>
@@ -376,5 +376,5 @@
     <string name="wizard_insulin_format">%1$s E</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
-    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g /%2$d u(+%3$d min)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d u (+%3$d min)</string>
 </resources>

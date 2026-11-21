@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="equil_name">Equil</string>
-    <string name="equil_pump_description">Equil 5.3 veya daha yeni Patch Pompa </string>
+    <string name="equil_pump_description">Equil 5.3 veya daha yeni Patch Pompa</string>
     <!--  start  -->
     <string name="equil_basal_speed">Temel Bazal</string>
     <string name="equil_dressing">Rezervuarı Değiştir</string>
@@ -53,6 +53,9 @@
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Düşük pil: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Rezervuarda yeterli insülin kalmadı: %1$s</string>
     <string name="equil_reservoir_empty">Rezervuar boş. Pompa artık insülin iletmiyor.</string>
+    <string name="equil_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Bolus komutu pompaya ulaştı ancak pompadan yanıt gelmedi. Pompa yine de %1$s verebilir. Tekrar bolus yapmayın. AAPS, toplam miktarı hesaba katar.</string>
+    <string name="equil_stop_not_answered" comment="%1$s=insulin amount with unit. Example: 2.00 U, or for U200 insulin 2.00 U (1.00 CU)">Durdurma komutu pompaya ulaşmadı ya da buna dair yanıt kayboldu. AAPS, pompa günlüğünde ne kadar verildiği görünene dek %1$s değerindeki bolusun tamamını hesaba katar.</string>
+    <string name="equil_bolus_not_given" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Pompa kaydı, %1$s değerindeki bolusun verilmediğini gösteriyor. AAPS bunu hesaba katmıyor.</string>
     <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Bolus sırasında pompa durdu. Verilen: %1$s / %2$s</string>
     <string name="equil_pump_not_run">Pompa çalışmıyor</string>
     <string name="equil_pair">Eşleştir</string>
@@ -93,9 +96,9 @@
     <string name="equil_command_connect_error">Pompa bağlantı hatası</string>
     <string name="equil_command_connect_no_response">Pompa Yanıt vermiyor</string>
     <string name="equil_command__unknown">Bilinmeyen komut durumu</string>
-    <string name="equil_install">Pompayı vücuda yerleştirin</string>
+    <string name="equil_install">Pompayı vücudunuza takın</string>
     <string name="equil_settings_alarm_battery">Düşük pil uyarısı</string>
-    <string name="equil_settings_alarm_insulin">Düşük rezervuar uyarısı</string>
+    <string name="equil_settings_alarm_insulin">Düşük rezervuar alarmı</string>
     <string name="equil_init_insulin_error">Rezervuarın başlatılması tamamlanmadı</string>
     <string name="equil_history_group_all">Tümü</string>
     <string name="equil_history_group_pair">Eşleştir</string>
