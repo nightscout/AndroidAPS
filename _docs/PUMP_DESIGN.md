@@ -277,7 +277,8 @@ form.
 3. **Silence is a snooze of 30 minutes, and it survives a restart.** When the window ends and the alert is still
    active, it rings again. Not chosen: silence until the alert ends (an occlusion could stay unheard for hours), and
    a silence that a restart forgets (a restart would ring an alert the user had just silenced).
-4. **The name is `PumpAlerts`.**
+4. **The name is `PumpAlerts`.** Reversed on 2026-11-21: it is to be renamed `Alerts`, because CGMs, AAPS's own BG
+   alarms and the core's alarms raise through it too (`ALARMS.md`, section 6).
 
 ## 8. Step 6: the alarms that are not pump alerts
 

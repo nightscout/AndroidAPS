@@ -121,25 +121,28 @@ transmitter refuses is a failed calibration, not a lost link.
 - A registration that needs the vendor server (the first pairing of a 365) sends nothing while offline, neither to
   the server nor over Bluetooth.
 
-## 5. CGM alarms through `PumpAlerts` (decided 2026-11-21, not built)
+## 5. CGM alarms through the alert core (decided 2026-11-21, not built)
 
-A CGM driver raises its transmitter's alarms through `PumpAlerts`, as a pump driver does (`PUMP_DESIGN.md`, section
+A CGM driver raises its transmitter's alarms through the alert core, as a pump driver does (`PUMP_DESIGN.md`, section
 2). The core then shows, rings, silences, raises again after a restart and tells the watch, with no code of the
-driver's own. The name stays `PumpAlerts` (`PUMP_DESIGN.md`, decision 4); `source` is the driver's id
-(`"eversense"`).
+driver's own. The core is `PumpAlerts` today and is renamed `Alerts` (`ALARMS.md`, section 6); `source` is the
+driver's id (`"eversense"`).
 
-**Every alarm the transmitter raises goes through it, glucose alarms too.** AAPS has no low or high glucose alarm of
-its own. It has only the missed-readings alarm (off by default) and the Nightscout alarms (off by default). The
-vendor app is stopped while AAPS holds the link. A glucose alarm the driver drops is not heard anywhere.
+**The driver raises its device and error states only:** sensor failed or expired, battery, calibration, transmitter
+off the sensor. **It raises no glucose alarm** (low, high, falling or rising fast, predictive) **and no
+missed-readings alarm.** AAPS's own BG alarms raise those in the core, from the stored readings, for every source
+(`ALARMS.md`, section 6). Where the two overlap (the transmitter says there is no glucose), the driver's alert says
+why, and the core's stale-data rule rings for the missing readings.
+
+**No gap.** Today AAPS has no glucose alarm of its own, and the vendor app is stopped while AAPS holds the link. So a
+driver drops its transmitter's glucose alarms only in the same change that brings the core BG alarms, or after it.
+Until then they ring as they do now.
 
 - **Severity.**
-  - CRITICAL: a glucose alarm the transmitter marks as urgent (seriously low or high), and a fault after which no
-    reading comes.
-  - WARNING: the user must act soon (calibration due, battery low, the sensor ends soon), and a glucose alarm that is
-    not urgent.
+  - CRITICAL: a fault after which no reading comes (sensor failed, battery empty).
+  - WARNING: the user must act soon (calibration due, battery low, the sensor ends soon, transmitter off the sensor).
   - INFO: the rest.
-  - Where the transmitter has its own classes (Eversense: warning and info), they decide. A glucose alarm is never
-    INFO.
+  - Where the transmitter has its own classes (Eversense: warning and info), they decide.
 - **`raisedAt`** is the transmitter's time of the alarm, or the time the driver stored when it first saw it, never
   the time of the call.
 - **Lifetime.** CONDITION when the driver can read the transmitter's active alarms (the 365 can), so the alert ends
@@ -210,8 +213,9 @@ See the `kmp-module-flip` skill.
 ## 8. Order of work
 
 1. The reading checks of section 3, in storage with tests.
-2. `PumpAlerts` for CGM: the announcement without a pump (section 5), then Eversense moves its cards to alerts, with a
-   test on a real transmitter.
+2. The alert core for CGM: the announcement without a pump (section 5), then Eversense moves its device alarms to
+   alerts, with a test on a real transmitter. Its glucose alarms stop only when the core BG alarms exist (`ALARMS.md`,
+   section 6, order of work).
 3. `CgmEmulatorControl` and the Eversense hooks.
 4. `AbstractCgmScenarioTest`, the Eversense class, and its CI shard.
 5. Real frames recorded from a transmitter with a sensor: parsing tests with the real bytes, and the emulator
@@ -220,14 +224,15 @@ See the `kmp-module-flip` skill.
 
 ## 9. Decisions (2026-11-21)
 
-1. **CGM alarms use `PumpAlerts`**, not a second alert core and not plain cards.
+1. **CGM alarms use the alert core** (`PumpAlerts`, to be renamed `Alerts`), not a second alert core and not plain
+   cards.
 2. **The acceptance file covers CGM drivers in full**, and has one section of reading rules for every BG source.
-3. **Transmitter glucose alarms ring through `PumpAlerts`.** The first proposal said AAPS's own alarms cover them;
-   a check of the code the same day showed AAPS has none, so dropping them would leave the user with no glucose
-   alarm.
+3. **A CGM driver raises no glucose or missed-readings alarm.** The core's own BG alarms raise them for every source;
+   the driver raises its device and error states. Until the BG alarms exist, the driver's glucose alarms keep ringing,
+   because AAPS has no other. (This replaces the first version of this decision, which had the transmitter's glucose
+   alarms ring through the alert core for good.)
 4. **The reading checks every source needs are in storage** (section 3), once for every source, not in each source.
 
 Open:
 
 - Whether 2 minutes is right for every receiver.
-- A name for `PumpAlerts` that covers both pumps and CGMs, or keep it.

@@ -51,11 +51,13 @@ what has to pass, not how.
 How the core shows, rings and silences an alert is in `PUMP_DESIGN.md`, section 2; what is different for a CGM is in
 `CGM_DESIGN.md`, section 5.
 
-- **A1** Every alarm the transmitter raises goes through `PumpAlerts`, the glucose alarms too: AAPS has no glucose
-  alarm of its own, and the vendor app is stopped. Messages that are not alarms stay plain cards.
+- **A1** Every device or error alarm the transmitter raises goes through the alert core (`PumpAlerts`, to be renamed
+  `Alerts`). Messages that are not alarms stay plain cards.
+- **A1b** The driver raises no glucose alarm (low, high, falling or rising fast, predictive) and no missed-readings
+  alarm: the core's BG alarms raise those for every source (`ALARMS.md`, section 6). Until the core BG alarms exist,
+  the driver keeps its transmitter's glucose alarms ringing, so the user is never without one.
 - **A2** The driver plays no sound and has no notification channel, alarm screen or foreground check of its own.
-- **A3** The severity follows the transmitter. An urgent glucose alarm, and a fault after which no reading comes, are
-  CRITICAL. A glucose alarm is never INFO.
+- **A3** The severity follows the transmitter. A fault after which no reading comes is CRITICAL.
 - **A4** The start raises again what the transmitter still holds, with the same key and `raisedAt`. `raisedAt` comes
   from the transmitter or the driver's store, never from the time of the call.
 - **A5** The step on the transmitter (confirm the alarm), where there is one, is the alert's action.
@@ -96,7 +98,8 @@ A class `<Cgm>ScenarioTest : AbstractCgmScenarioTest()` runs all of these. A sce
 - **S4** The link: `aLostAnswerKeepsTheLink`, `outOfRangeAndBack`, `bluetoothOffAndOn`,
   `aTransmitterThatForgotThePhoneIsPairedAgain`.
 - **S5** The driver itself: `aDriverReloadKeepsTheTransmitter`, `aSourceSwitchedAwayAndBackKeepsTheTransmitter`.
-- **S6** Alarms: `aLowGlucoseAlarmRings`, `aDroppedAlarmIsResolved`, `aStopResolvesAllAlarms`.
+- **S6** Alarms: `aSensorFaultRaisesAnAlert`, `aDroppedAlarmIsResolved`, `aStopResolvesAllAlarms`, and
+  `aLowGlucoseIsTheCoresAlarm` (a low reading rings once, from the core's BG alarm, not from the driver).
 - **S7** Calibration: `aCalibrationReachesTheTransmitter`, `aRefusedCalibrationIsReportedAndKeepsTheLink`.
 - **S8** App restart: the app killed and started again keeps the transmitter and stores no reading twice.
 - **S9** Transmitter-specific behaviour has a scenario of its own (Eversense: the placement guide, the 365
@@ -159,7 +162,8 @@ Known exceptions on 2026-11-21:
 - **Every receiver, B1 and B5:** only Glunovo and Intelligo refuse a reading from the future; storage checks neither
   time. Decided: one check in storage for every source (`CGM_DESIGN.md`, section 3), not built yet.
 - **Eversense, A1-A6:** one plain card per alarm, with the alarm sound for the critical ones; nothing removes a card
-  when the alarm ends. Waits for `PumpAlerts` for CGM (`CGM_DESIGN.md`, section 5).
+  when the alarm ends. Waits for the alert core for CGM (`CGM_DESIGN.md`, section 5). A1b: its glucose alarms ring
+  until the core BG alarms exist, on purpose.
 - **Eversense, E1 and E4:** the emulator has no `CgmEmulatorControl` and no saved state. E2: it is built from the
   driver's code, so all of it is `UNVERIFIED`.
 - **Eversense, S1-S9 and C1:** there is no `AbstractCgmScenarioTest` yet. The host tests cover part of S2, S4, S6 and
