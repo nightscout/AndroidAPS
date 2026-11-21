@@ -91,6 +91,7 @@
     <string name="press_OK_to_return">Натиснете <b>ОК</b>, за да се върнете на главния екран.</string>
     <string name="deactivate_sure">Сигурни ли сте, че искате да деактивирате текущата пач помпа?</string>
     <string name="cancel_sure">Сигурни ли сте, че искате да прекратите активацията?</string>
+    <string name="cancel_deactivation_sure">Сигурни ли сте, че искате да прекратите деактивирането? Пачът може да остане активен.</string>
     <string name="medtrum_deactivate_pump_confirm">Сигурни ли сте? Това действие не може да бъде отменено!!</string>
     <string name="press_next_or_cancel">Натиснете <b>Напред</b>, за да деактивирате или <b>Откажи</b>, за да се върнете на главния екран.</string>
     <string name="deactivating_pump">Деактивиране на пач помпа. Моля, изчакайте.</string>
