@@ -127,6 +127,7 @@
     <string name="carelevo_toast_msg_needle_check_failed">Kontrola ihly zlyhala.</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">Zahodenie náplasťovej pumpy zlyhalo. Skúste to znova.</string>
+    <string name="carelevo_discarded_not_reached">S pumpou sa nepodarilo nadviazať spojenie. Bola odstránená z AAPS, ale jej činnosť nebola zastavená a môže naďalej podávať inzulín. Odstráňte ju z tela.</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">Požiadavka na podávanie bazálu zlyhala. Skúste to znova.</string>
     <!-- Delivery Resume/Suspend -->
