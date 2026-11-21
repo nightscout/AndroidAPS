@@ -134,4 +134,5 @@
     <string name="bolus_speed_8">8 יחידות/דקה</string>
     <string name="diaconn_pairing_successful">הצימוד בוצע בהצלחה!</string>
     <string name="diaconn_pairing_successful_message">המשאבה מחוברת ומוכנה לשימוש.</string>
+    <string name="diaconn_g8_cloud_sync_progress" comment="Pump status while AAPS sends the pump log to the Diaconn cloud. %1$d=parts sent, %2$d=all parts. Example: Cloud sync: 3 / 10">סנכרון לענן: %1$d / %2$d</string>
 </resources>
