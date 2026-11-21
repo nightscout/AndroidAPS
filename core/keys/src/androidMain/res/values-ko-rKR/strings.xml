@@ -296,10 +296,14 @@
     <string name="pref_title_fill_button_3">채우기 버튼 3</string>
     <!-- DoubleKey: Safety preferences -->
     <string name="pref_title_max_bolus">최대 볼러스</string>
+    <string name="treatmentssafety_maxbolus_summary">선택한 환자 나이가 이 값을 제한합니다. 여기서 더 높은 값을 설정해도 효과가 없습니다.</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">최대 기저 주입량</string>
+    <string name="openapsma_max_basal_summary">이 값은 OpenAPS에서 max basal(최대 기저)이라고 합니다\n선택한 환자 나이가 이 값을 제한합니다. 여기서 더 높은 값을 설정해도 효과가 없습니다.</string>
     <string name="pref_title_smb_max_iob">SMB 최대 IOB</string>
+    <string name="openapssmb_max_iob_summary">이 값은 OpenAPS에서 Max IOB라고 합니다\n현재 IOB가 이 값보다 크면 OpenAPS는 인슐린을 더 추가하지 않습니다.\n선택한 환자 나이가 이 값을 제한합니다. 여기서 더 높은 값을 설정해도 효과가 없습니다.</string>
     <string name="pref_title_ama_max_iob">AMA용 Max IOB</string>
+    <string name="openapsma_max_iob_summary">이 값은 OpenAPS에서 Max IOB라고 합니다\nAPS가 한 번에 주입할 수 있는 최대 인슐린 [U]입니다.\n선택한 환자 나이가 이 값을 제한합니다. 여기서 더 높은 값을 설정해도 효과가 없습니다.</string>
     <string name="pref_title_max_daily_multiplier">최대 일일 안전 승수</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">기본값: 3. 이 값은 중요한 OpenAPS 안전 한도입니다. 기저를 가장 큰 기저 주입량의 3배까지로 제한합니다. 이 값을 바꿀 필요는 거의 없지만, 안전 한도에서 말하는 “3x max daily; 4x current”가 이것이라는 점을 알아 두십시오.</string>
     <string name="pref_title_current_basal_multiplier">현재 기저 안전 배수</string>
