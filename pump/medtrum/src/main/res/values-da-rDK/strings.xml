@@ -5,11 +5,14 @@
     <string name="medtrum_pump_description">Pumpeintegration for Medtrum Nano og Medtrum 300IE</string>
     <string name="medtrum_pump_setting">Medtrum pumpeindstillinger</string>
     <string name="pump_error">Pumpefejl: %1$s!! </string>
+    <string name="pump_warning">Pumpeadvarsel: %1$s</string>
     <string name="pump_is_suspended">Pumpe er pauseret</string>
     <string name="pump_is_suspended_hour_max">Pumpen er pauseret på grund af overskredet insulin pr. time</string>
     <string name="pump_is_suspended_day_max">Pumpen er pauseret på grund af overskredet insulin pr. dag</string>
     <string name="patch_not_active">Patch ikke aktiveret</string>
     <string name="pump_setting_failed">Indstilling af brugerindstillinger til pumpe mislykkedes!</string>
+    <string name="pump_sync_error">Fejl ved synkronisering af historik fra pumpen, en post er sprunget over. Tjek fanen Behandlinger for at se, om bolussen er synkroniseret korrekt. Udsæt, og hvis fejlen bliver ved med at komme igen, så skift patch eller pumpebase.</string>
+    <string name="patch_reset_after_primed_error">Patchen genstartede af sig selv og mistede sin session. Den kan ikke længere give insulin. Fjern patchen, og start en ny.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Aktiv bolus</string>
     <string name="pump_state_label">Pumpe tilstand</string>
@@ -19,6 +22,7 @@
     <string name="fw_version_label">Firmwareversion</string>
     <string name="patch_no_label">Patch nr.</string>
     <string name="patch_expiry_label">Patch udløber</string>
+    <string name="patch_activation_time_label">Aktivering</string>
     <string name="reset_alarms_label">Nulstil alarmer</string>
     <string name="change_patch_label">Skift Patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Anmodet af bruger</string>
@@ -43,11 +47,21 @@
     <string name="alarm_battery_out">Batteri udløbet</string>
     <string name="alarm_no_calibration">Ingen kalibrering</string>
     <string name="pump_time_update_failed">Mislykkedes i at opdatere pumpetidszone, udskyd beskeden og opdatér manuelt.</string>
+    <string name="bolus_error">Bolusfejl</string>
     <!-- Status strings -->
+    <string name="status_idle">Inaktiv</string>
+    <string name="status_filled">Fyldt</string>
+    <string name="status_priming">Klargører</string>
+    <string name="status_primed">Klargjort</string>
+    <string name="status_ejecting">Skubber ud</string>
+    <string name="status_ejected">Skubbet ud</string>
+    <string name="status_active">Aktiv</string>
+    <string name="status_stopped">Stoppet</string>
     <!-- wizard-->
     <string name="retry">Forsøg igen</string>
     <string name="step_prepare_patch">Aktivér Patch</string>
     <string name="step_prepare_patch_connect">Forbind og fyld</string>
+    <string name="step_select_insulin">Vælg insulin</string>
     <string name="step_prime">Klargør</string>
     <string name="step_priming">Klargører</string>
     <string name="step_priming_complete">Klargøring afsluttet</string>
@@ -57,10 +71,14 @@
     <string name="step_deactivate">Deaktivér Patch</string>
     <string name="step_deactivating">Deaktiverer...</string>
     <string name="step_deactivate_complete">Patch deaktiveret</string>
+    <string name="unpair_confirm_message">Dette sletter det gemte serienummer for pumpen og afbryder forbindelsen. Aktiver en ny patch for at scanne efter en pumpe.</string>
     <string name="step_retry_activation">Aktivering i gang</string>
     <string name="unexpected_state">Uventet status: %1$s</string>
+    <string name="ble_scan_connect_pump_base_first">Sæt pumpebasen på en ny patch for at tænde den, og vælg den derefter på listen nedenfor.</string>
     <string name="patch_begin_activation">Ingen aktiv patch. Tryk på <b>Næste</b> for at starte aktiveringsprocessen.</string>
+    <string name="connect_pump_base">Sørg for, at pumpebasen er sat på patchen, fjern resterende luft, og fyld med insulin. Tryk derefter på <b>Næste</b>.</string>
     <string name="note_min_70_units">Bemærk: Der kræves mindst 70 enheder til aktivering.</string>
+    <string name="reservoir_text_and_level">Reservoir: %.2f IE</string>
     <string name="do_not_attach_to_body">Sæt ikke Patchen på kroppen endnu.</string>
     <string name="half_press_needle">Halvtryk på nåleknappen. Tryk derefter på <b>Næste</b> for at starte klargøring.</string>
     <string name="wait_for_priming">Vent venligst til klargøringen er færdig.</string>
@@ -69,9 +87,11 @@
     <string name="remove_safety_lock">Fjern sikkerhedslåsen. Sæt pumpen på kroppen. Tryk på nåleknappen.</string>
     <string name="activating_pump">Aktiverer pumpen og indstiller den oprindelige basalrate. Vent venligst.</string>
     <string name="activating_complete">Ny patch aktiveret. %.2f Enheder tilbage.</string>
+    <string name="can_export_settings">Du kan eksportere indstillingerne, så du senere kan gendanne denne patch-session.</string>
     <string name="press_OK_to_return">Tryk <b>OK</b> for at vende tilbage til hovedskærmen.</string>
     <string name="deactivate_sure">Er du sikker på, at du vil deaktivere den aktuelle Patch?</string>
     <string name="cancel_sure">Er du sikker på, at du vil annullere aktiveringen?</string>
+    <string name="cancel_deactivation_sure">Er du sikker på, at du vil annullere deaktiveringen? Patchen kan forblive aktiv.</string>
     <string name="medtrum_deactivate_pump_confirm">Er du sikker? Denne handling kan ikke fortrydes!!</string>
     <string name="press_next_or_cancel">Tryk på <b>Næste</b> for at deaktivere eller <b>Annullér</b> for at vende tilbage til hovedskærmen.</string>
     <string name="deactivating_pump">Deaktiverer Patch. Vent venligst.</string>
@@ -85,14 +105,37 @@
     <!-- settings-->
     <string name="alarm_setting_title">Alarmindstillinger</string>
     <string name="alarm_setting_summary">Vælg dine fortrukne pumpealarmindstillinger.</string>
+    <string name="alarm_setting_light_vibrate_beep">Lys, vibration og bip</string>
+    <string name="alarm_setting_light_vibrate">Lys og vibration</string>
+    <string name="alarm_setting_light_beep">Lys og bip</string>
+    <string name="alarm_setting_light">Lys</string>
+    <string name="alarm_setting_vibrate_beep">Vibration og bip</string>
+    <string name="alarm_setting_vibrate">Vibration</string>
+    <string name="alarm_setting_beep">Bip</string>
+    <string name="alarm_setting_silent">Lydløs</string>
+    <string name="pump_warning_notification_title">Notifikation ved pumpeadvarsel</string>
+    <string name="pump_warning_notification_summary">Vis notifikation ved ikke-kritiske pumpeadvarsler: lavt batteri, lavt reservoir (20 enheder) og udløber snart. Det anbefales at lade den være slået til, når pumpealarmer er sat til lydløs.</string>
+    <string name="pump_warning_expiry_hour_title">Advarsel om pumpeudløb [timer]</string>
+    <string name="pump_warning_expiry_hour_summary">Vis notifikation den angivne time efter aktivering.</string>
     <string name="patch_expiration_title">Patch Udløber</string>
     <string name="patch_expiration_summary">Efter aktivering udløber patchen efter 3 dage med en nådeperiode på 8 timer herefter.</string>
+    <string name="hourly_max_insulin_title">Maks. insulin pr. time [IE]</string>
     <string name="hourly_max_insulin_summary">Specificér det maksimale tilladte antal enheder insulin per time. Hvis denne overskrides, pauseres pumpen.</string>
+    <string name="daily_max_insulin_title">Maks. insulin pr. dag [IE]</string>
     <string name="daily_max_insulin_summary">Specificér det maksimale tilladte antal enheder insulin per Dag. Hvis denne overskrides, pauseres pumpen.</string>
+    <string name="scan_on_connection_error_title">Scan ved forbindelsesfejl</string>
+    <string name="scan_on_connection_error_summary">ADVARSEL: Aktiver kun, hvis du har problemer med forbindelsen. Når den er aktiveret, scanner driveren efter pumpen igen, før den prøver at genoprette forbindelsen til pumpen. Sørg for, at tilladelsen Placering er sat til \"Tillad altid\" </string>
     <!-- treatment state-->
     <string name="getting_pump_status">Henter pumpestatus</string>
+    <string name="syncing_records">Synkroniserer poster, %1$d tilbage</string>
     <string name="getting_bolus_status">Henter bolusstatus</string>
     <string name="getting_temp_basal_status">Henter midlertidig basalstatus</string>
     <string name="setting_pump_settings">Indstiller brugerindstillinger</string>
     <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolus annulleret af brugeren</string>
+    <string name="bolus_error_reason_not_connected">Pumpen er ikke forbundet</string>
+    <string name="bolus_error_reason_already_in_progress">Bolus er allerede i gang</string>
+    <string name="bolus_error_reason_unable_to_send_command">Kunne ikke sende boluskommando</string>
+    <string name="bolus_error_reason_communication_lost">Timeout ved hentning af bolusstatus</string>
+    <string name="bolus_error_reason_pump_error">Pumpefejl</string>
 </resources>
