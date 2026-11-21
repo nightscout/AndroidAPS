@@ -2,9 +2,9 @@
 <resources>
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
     <string name="no_temp_basal_running">Ingen midlertidig basal kører</string>
-    <string name="start_activity_tt">Start Aktivitets mål</string>
+    <string name="start_activity_tt">Start \"Aktivitet\" mål</string>
     <string name="start_eating_soon_tt">Start \"Spiser snart\" mål</string>
-    <string name="start_hypo_tt">Begynd Hypo mål</string>
+    <string name="start_hypo_tt">Start \"Hypo\" mål</string>
     <string name="time_offset">Tidsforskydning</string>
     <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
     <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dd%2$dt</string>
@@ -159,7 +159,7 @@
     <string name="insulin_activation_applied">Insulinaktivering udført</string>
     <!-- Client→master round-trip pending dialog -->
     <string name="clientcontrol_pending_working_title">Udfører…</string>
-    <string name="clientcontrol_pending_working_text">Venter på bekræftelse fra hovedtelefonen…</string>
+    <string name="clientcontrol_pending_working_text">Venter på bekræftelse fra hovedenheden…</string>
     <string name="clientcontrol_pending_rejected_title">Ikke udført</string>
     <string name="clientcontrol_pending_failed_format">%1$s kunne ikke udføres.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
@@ -168,7 +168,7 @@
     <string name="clientcontrol_pending_partial_format">%1$s blev udført, men nogle handlinger kunne ikke udføres.\nTjek den aktive tilstand.</string>
     <string name="clientcontrol_pending_unconfirmed_title">Kunne ikke bekræfte</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
-    <string name="clientcontrol_pending_unconfirmed_format">%1$s blev sendt, men der kom ingen bekræftelse.\n%2$s\nDet vises her, hvis/når hovedtelefonen udfører det.</string>
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s blev sendt, men der kom ingen bekræftelse.\n%2$s\nDet vises her, hvis/når hovedenheden udfører det.</string>
     <string name="clientcontrol_pending_stop_waiting">Stop med at vente</string>
     <string name="a11y_add_new_insulin">Tilføj ny insulin</string>
     <string name="a11y_delete_current_insulin">Slet nuværende insulin</string>
@@ -180,7 +180,7 @@
     <!-- LoopDialog -->
     <string name="disconnectpump">Afbryd pumpe</string>
     <string name="resume">Genoptag</string>
-    <string name="reconnect">Genforbind Pumpe</string>
+    <string name="reconnect">Genforbind pumpe</string>
     <string name="duration15m">15 minutter</string>
     <string name="duration30m">30 minutter</string>
     <string name="duration1h">1 time</string>
@@ -203,7 +203,7 @@
     <string name="show_invalidated">Vis ugyldige</string>
     <string name="hide_invalidated">Skjul ugyldige</string>
     <string name="careportal_remove_started_events">Fjern AAPS startede poster</string>
-    <string name="user_entry">Bruger indtastning</string>
+    <string name="user_entry">Brugerindtastning</string>
     <string name="clone_label">Klon</string>
     <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Glukosegraf. Seneste værdier %1$s. %2$s. %3$s</string>
     <string name="a11y_show_controls" comment="Screen-reader name of the invisible area that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">Vis knapper</string>
@@ -230,7 +230,7 @@
     <string name="add_new_profile">Tilføj ny profil</string>
     <string name="edit_label">Rediger</string>
     <string name="activate_label">Aktiver</string>
-    <string name="activate_profile">Aktivér profil</string>
+    <string name="activate_profile">Aktiver profil</string>
     <string name="remove_label">Fjern</string>
     <string name="active_profile_indicator">AKTIV</string>
     <string name="confirm_remove_profile">Fjern profilen \"%1$s\"?</string>
@@ -241,7 +241,7 @@
     <string name="tbr_type_flag_emulated_suspended">ES</string>
     <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile_type">Profil type</string>
+    <string name="profile_type">Profiltype</string>
     <string name="profile_parameters">Profilparametre</string>
     <string name="active_profile">Aktiv profil</string>
     <string name="available_profiles">Tilgængelige profiler</string>
@@ -251,7 +251,7 @@
     <string name="comparation">Sammenligning</string>
     <string name="profile_tab_1">Profil 1</string>
     <string name="profile_tab_2">Profil 2</string>
-    <string name="motol_default_profile">Standard profil</string>
+    <string name="motol_default_profile">Standardprofil</string>
     <string name="current_profile">Nuværende profil</string>
     <string name="available_profile">Tilgængelig profil</string>
     <string name="format_with_tdd">Alder: %1$d TDD: %2$.0f IE</string>
