@@ -5,12 +5,6 @@
     <string name="settings_protection">設定保護</string>
     <string name="application_protection">應用程式保護</string>
     <string name="bolus_protection">注射保護</string>
-    <string name="settings_password">設定密碼</string>
-    <string name="settings_pin">設定 PIN 碼</string>
-    <string name="application_password">應用程式密碼</string>
-    <string name="application_pin">應用程式 PIN 碼</string>
-    <string name="bolus_password">注射密碼</string>
-    <string name="bolus_pin">注射 PIN 碼</string>
     <string name="protection_timeout_title">密碼和 PIN 碼保持時間 [秒]</string>
     <string name="protection_timeout_summary">密碼或 PIN 碼需要重新輸入的時間</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->
