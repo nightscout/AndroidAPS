@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -43,11 +44,11 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.IosNotificationDelegate
+import app.aaps.core.interfaces.plugin.IosPermission
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.resources.TextRefValueRegistry
 import app.aaps.core.interfaces.utils.fabric.CrashReporter
-import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.ui.CoreUiStrings
@@ -59,11 +60,12 @@ import app.aaps.core.ui.compose.rememberOwnViewModelStoreOwner
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.utils.gitRemoteShort
 import app.aaps.implementation.lifecycle.IosProtectionLifecycle
-import app.aaps.implementation.receivers.IosTimeDateOrTZChangeWatcher
 import app.aaps.implementation.logging.AAPSLoggerIos
+import app.aaps.implementation.plugin.IosPermissionState
 import app.aaps.implementation.protection.IosBiometricPrompt
 import app.aaps.implementation.protection.KeychainUnavailableException
 import app.aaps.implementation.protection.LocalAuthenticationEvaluator
+import app.aaps.implementation.receivers.IosTimeDateOrTZChangeWatcher
 import app.aaps.ios.shell.di.GeneratedStringOwners
 import app.aaps.ios.shell.di.IosAppGraph
 import app.aaps.ios.shell.platform.IosLanguage
@@ -75,6 +77,7 @@ import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.shared.clientbindings.ClientViewModelFactory
 import app.aaps.shared.impl.sharedPreferences.StoreUnreadableException
+import app.aaps.ui.activities.PumpAlertScreen
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.loopSheet.LoopActionViewModel
@@ -86,6 +89,7 @@ import app.aaps.ui.compose.manageSheet.ManageViewModel
 import app.aaps.ui.compose.overview.chips.ChipsViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.compose.overview.statusLights.StatusViewModel
+import app.aaps.ui.compose.permissionsSheet.PermissionsSheet
 import app.aaps.ui.compose.permissionsSheet.PermissionsViewModel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileEditorViewModel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileHelperViewModel
@@ -98,7 +102,6 @@ import app.aaps.ui.compose.stats.viewmodels.StatsViewModel
 import app.aaps.ui.compose.tempTarget.TempTargetManagementViewModel
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentsViewModel
 import app.aaps.ui.compose.treatmentsSheet.TreatmentViewModel
-import app.aaps.ui.activities.PumpAlertScreen
 import app.aaps.ui.search.SearchViewModel
 import dev.zacsweers.metro.createGraphFactory
 import kotlin.experimental.ExperimentalNativeApi
@@ -108,8 +111,9 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import platform.Foundation.NSNotificationCenter
 import platform.Foundation.NSOperationQueue
-import platform.UIKit.UIApplicationWillEnterForegroundNotification
+import platform.UIKit.UIApplicationDidBecomeActiveNotification
 import platform.UIKit.UIApplicationDidEnterBackgroundNotification
+import platform.UIKit.UIApplicationWillEnterForegroundNotification
 import platform.UIKit.UIViewController
 
 /**
@@ -136,8 +140,8 @@ import platform.UIKit.UIViewController
  * needs an iOS answer of its own rather than a shared one.
  */
 fun aapsAppViewController(nsSocketFactory: NsSocketFactory, crashReporter: CrashReporter): UIViewController {
-    installCrashLogging()
-    val startup = runCatching { startApp(nsSocketFactory, crashReporter) }
+    // Normally started already, by `App.init` through [startAapsApp]. This only starts it when nothing did.
+    val startup = processStart(nsSocketFactory, crashReporter)
     return ComposeUIViewController {
         // State, because "Start fresh" and "Try again" on the failure screen start the app a second time
         // in place. iOS gives an app no way to restart itself.
@@ -165,7 +169,7 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory, crashReporter: Crash
     }
 }
 
-/** Set once. [aapsAppViewController] is called once by Swift, but a second call must not add a second hook. */
+/** Set once. [startAapsApp] runs once per process, but a second call must not add a second hook. */
 private var crashLoggingInstalled = false
 
 /**
@@ -232,6 +236,31 @@ private class StartedApp(
     val appIcon: ImageBitmap?
 )
 
+/** The first start of this process, kept for the first screen. Null until [startAapsApp] runs. */
+private var firstStart: Result<StartedApp>? = null
+
+/**
+ * Starts AAPS once for the whole process. Swift calls it from `App.init`, before any window exists.
+ *
+ * iOS can start the app in the background with no window at all: after it ended the app to free
+ * memory, it starts it again to hand over a Bluetooth event from the pump. SwiftUI then builds no
+ * screen. The start used to be made by the first screen, so in that case it never came - no pump
+ * driver, no loop, no alarms until the user opened the app. Starting here runs the graph and the start
+ * sequence in that case too.
+ *
+ * A failed start is kept as well, and the first screen shows it with its "Try again" or "Start fresh".
+ * Main thread only, as `App.init` is. A second call does nothing.
+ */
+fun startAapsApp(nsSocketFactory: NsSocketFactory, crashReporter: CrashReporter) {
+    processStart(nsSocketFactory, crashReporter)
+}
+
+private fun processStart(nsSocketFactory: NsSocketFactory, crashReporter: CrashReporter): Result<StartedApp> =
+    firstStart ?: run {
+        installCrashLogging()
+        runCatching { startApp(nsSocketFactory, crashReporter) }.also { firstStart = it }
+    }
+
 /**
  * Opens the settings store, then builds the graph on top of it and starts what has to run before the
  * first screen.
@@ -278,6 +307,10 @@ private fun startApp(nsSocketFactory: NsSocketFactory, crashReporter: CrashRepor
     // snackbar fallback, which posts through this delegate. Installed later, every message the start
     // itself sends would be lost.
     IosNotificationDelegate.install()
+
+    // Books the missed readings alarm with iOS after each reading, so it rings when the app cannot
+    // run. Here for the same reason as the delegate: `UNUserNotificationCenter` needs an app bundle.
+    graph.missedReadingAlarm.start()
 
     // Same placement and the same reason: this touches UIKit, so it cannot live in the graph or in
     // shared code. Until this ran, Nightscout sync was blocked forever - see `startBatteryWatch`.
@@ -373,7 +406,7 @@ private fun startApp(nsSocketFactory: NsSocketFactory, crashReporter: CrashRepor
         }
         val (plugins, problems) = mergePlugins(sources)
         problems.forEach { graph.logger.error(LTag.CORE, "Plugin list problem: $it") }
-        graph.appStartSequence.run(plugins, IosStartPlatform(graph.config, graph.periodicMaintenance, graph.appScope))
+        graph.appStartSequence.run(plugins, IosStartPlatform(graph.config, graph.keepAliveRunner, graph.logger, graph.appScope, graph.clock))
     }
 
     return StartedApp(graph, viewModelFactory, appName, appIcon)
@@ -591,6 +624,41 @@ private fun AapsApp(app: StartedApp) {
             )
             val mainViewModel = metroViewModel<MainViewModel>()
 
+            // The permission sheet `ComposeMainActivity` shows, here too. Until it was wired, a user
+            // who refused notifications got silent alarms and nothing ever said so. iOS asks the user
+            // itself, so "grant" asks once and after a refusal opens the app's page in Settings.
+            val permissionsViewModel = metroViewModel<PermissionsViewModel>()
+            val readPermissions: () -> Unit = { graph.permissionStatus.refresh { permissionsViewModel.refresh() } }
+            DisposableEffect(Unit) {
+                // Notifications are asked for at the first start, not at the first alarm: an alarm
+                // that comes while the app is in the background cannot show the question, so it would
+                // never be posted at all.
+                graph.permissionStatus.refresh {
+                    if (graph.permissionStatus.state(IosPermission.NOTIFICATIONS) == IosPermissionState.NOT_ASKED)
+                        graph.permissionStatus.ask(IosPermission.NOTIFICATIONS) { permissionsViewModel.refresh() }
+                    else permissionsViewModel.refresh()
+                }
+                // Read again each time the app comes to the front, as Android does in onResume: the
+                // user may have changed something in Settings, or just answered an iOS question.
+                val center = NSNotificationCenter.defaultCenter
+                val observer = center.addObserverForName(UIApplicationDidBecomeActiveNotification, `object` = null, queue = NSOperationQueue.mainQueue) { _ ->
+                    readPermissions()
+                }
+                onDispose { center.removeObserver(observer) }
+            }
+            val permissionsState by permissionsViewModel.uiState.collectAsState()
+            val permissionsSnackbarHostState = remember { SnackbarHostState() }
+            if (permissionsState.showSheet) {
+                PermissionsSheet(
+                    items = permissionsState.items,
+                    snackbarHostState = permissionsSnackbarHostState,
+                    onRequestPermission = { group ->
+                        group.permissions.firstOrNull()?.let { graph.permissionStatus.ask(it, readPermissions) }
+                    },
+                    onDismiss = { permissionsViewModel.dismissSheet() }
+                )
+            }
+
             // The shared navigator: every route a tap can lead to is mapped in :appshell, so the
             // only per-platform parts are the four actions below. iOS can honour one of them.
             val navigator = ElementNavigator(
@@ -616,17 +684,10 @@ private fun AapsApp(app: StartedApp) {
             // The overview is the start destination, the same as Android and desktop. Settings
             // used to be, which left its back arrow inert - there was nothing behind it - and
             // left every other screen unreachable, since they are all reached from the overview.
-            // First run opens the setup wizard, as `ComposeMainActivity` does on Android. The
-            // route and the screen are already shared through `appNavGraph`; only the trigger
-            // was Android's, so a new iOS user landed on an empty overview with nothing to
-            // follow and no hint that a wizard existed. Reported from TestFlight.
-            LaunchedEffect(Unit) {
-                if (!graph.preferences.get(BooleanNonKey.GeneralSetupWizardProcessed)) {
-                    graph.protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
-                        if (result == ProtectionResult.GRANTED) navController.navigate(AppRoute.SetupWizard.route)
-                    }
-                }
-            }
+            //
+            // The first run setup wizard is opened by `AapsAppRoot`, for every shell. Do not open
+            // it here as well: this shell had its own trigger from before the shared one, and a
+            // new install got the wizard twice - Finish closed one and showed the other.
 
             NavHost(navController = navController, startDestination = AppRoute.Main.route) {
                 appNavGraph(
@@ -685,10 +746,10 @@ private fun AapsApp(app: StartedApp) {
                             if (result.grantedLevel != null) onGranted()
                         }
                     },
-                    onRefreshPermissions = { reportNotAvailable("permission refresh") },
+                    onRefreshPermissions = readPermissions,
                     onExecuteQuickWizard = { guid -> reportNotReady("quick wizard $guid") },
                     onRequestDirectoryAccess = { reportNotReady("directory access - iOS needs a document picker") },
-                    onRequestPermission = { group -> reportNotAvailable("permission request $group") },
+                    onRequestPermission = { group -> group.permissions.firstOrNull()?.let { graph.permissionStatus.ask(it, readPermissions) } },
                     overview = {
                         OverviewScreen(
                             mainViewModel = mainViewModel,
@@ -699,7 +760,7 @@ private fun AapsApp(app: StartedApp) {
                             scenesViewModel = metroViewModel<ScenesViewModel>(),
                             loopActionViewModel = metroViewModel<LoopActionViewModel>(),
                             searchViewModel = metroViewModel<SearchViewModel>(),
-                            permissionsViewModel = metroViewModel<PermissionsViewModel>(),
+                            permissionsViewModel = permissionsViewModel,
                             graphViewModel = graphs,
                             chipsViewModel = chips,
                             activePlugin = graph.activePlugin,

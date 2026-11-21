@@ -20,6 +20,7 @@ import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
+import kotlin.time.Clock
 
 /**
  * The bindings every iOS graph needs, in one place.
@@ -54,6 +55,10 @@ object IosPlatformBindings {
     @Provides
     @SingleIn(AppScope::class)
     fun keyValueStore(): KeyValueStore = IosStorage.open()
+
+    /** The wall clock, for timers that wait for a time of day (`delayUntil`). */
+    @Provides
+    fun clock(): Clock = Clock.System
 
     /** Dates through the iOS formatter, so this is the production class rather than a stand-in. */
     @Provides

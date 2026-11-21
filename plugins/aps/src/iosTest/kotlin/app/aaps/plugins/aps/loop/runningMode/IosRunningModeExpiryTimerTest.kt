@@ -2,14 +2,16 @@ package app.aaps.plugins.aps.loop.runningMode
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.time.Clock
+import kotlin.time.Instant
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 /**
  * When [IosRunningModeExpiryTimer] asks for the job - which is the whole of what it decides.
@@ -55,6 +57,11 @@ class IosRunningModeExpiryTimerTest {
 
         val dispatcher = StandardTestDispatcher()
         var asked = 0
+        /** The wall clock: the scheduler's time, which is the time the phone is awake, plus what it slept. */
+        var sleptMs = 0L
+        val clock = object : Clock {
+            override fun now(): Instant = Instant.fromEpochMilliseconds(1_790_000_000_000L + dispatcher.scheduler.currentTime + sleptMs)
+        }
         val caught = mutableListOf<Throwable>()
 
         /** A supervisor and a handler of its own: the marker must not take the test down with it. */
@@ -66,7 +73,8 @@ class IosRunningModeExpiryTimerTest {
                 asked++
                 throw JobAsked()
             },
-            scope = scope
+            scope = scope,
+            clock = clock
         )
 
         fun advance(byMs: Long) {
@@ -120,6 +128,19 @@ class IosRunningModeExpiryTimerTest {
 
         f.advance(60 * 60_000)
         assertEquals(0, f.asked)
+    }
+
+    /** A delay counts only the time the phone is awake. The end must follow the wall clock instead. */
+    @Test
+    fun `after the phone slept the end runs within half a minute of the real time`() {
+        val f = Fixture()
+        f.timer.schedule(30 * 60_000)
+
+        f.advance(5 * 60_000)
+        f.sleptMs = 60 * 60_000 // the phone was locked for an hour
+
+        f.advance(30_000)
+        assertEquals(1, f.asked, "the mode ended half an hour ago on the wall clock")
     }
 
     @Test

@@ -13,6 +13,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.metroViewModel
+import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
 import app.aaps.core.ui.compose.pump.ProfileGateWizardStep
 import app.aaps.core.ui.compose.pump.WizardScreen
 import app.aaps.core.ui.compose.siteRotation.SiteLocationWizardStep
@@ -35,6 +36,9 @@ internal fun CarelevoPatchFlowScreen(
     snackbarHostState: SnackbarHostState,
     onExitFlow: () -> Unit
 ) {
+    // As the other pumps' wizards do. A phone that locks itself here, for example while the user reads
+    // the needle insertion step, leaves the session to background Bluetooth.
+    KeepScreenOnEffect()
     CarelevoPatchConnectionFlowScreen(
         screenType = screenType,
         setToolbarConfig = setToolbarConfig,

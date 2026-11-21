@@ -108,7 +108,9 @@ class UserDefaultsMigrationTest {
             putString("units", "mgdl")
             flush()
         }
-        // A start that was cut short after the store was written but before the defaults were cleared.
+        // A start that was cut short after the store was written but before the defaults were cleared,
+        // so it never got as far as marking the move done.
+        defaults.removeObjectForKey(UserDefaultsMigration.MOVE_DONE_KEY)
         defaults.setObject("mmol", forKey = "units")
         defaults.setInteger(5, forKey = "dia")
 
@@ -122,5 +124,41 @@ class UserDefaultsMigrationTest {
     @Test
     fun `nothing in NSUserDefaults opens an empty store`() {
         assertEquals(emptyMap<String, Any>(), open().getAll())
+    }
+
+    /** Firebase writes its own values into the same defaults. They must stay where Firebase reads them. */
+    @Test
+    fun `after one move nothing written later moves`() {
+        defaults.setObject("mmol", forKey = "units")
+        open()
+        defaults.setBool(false, forKey = "com.crashlytics.data_collection")
+
+        val store = open()
+
+        assertFalse(store.contains("com.crashlytics.data_collection"))
+        assertNotNull(defaults.objectForKey("com.crashlytics.data_collection"))
+        assertEquals("mmol", store.getString("units", ""))
+    }
+
+    /** A new install has no old settings, so the first open closes the move for good. */
+    @Test
+    fun `a first open with nothing to move never moves later`() {
+        open()
+        defaults.setObject("written later by an SDK", forKey = "foreign")
+
+        val store = open()
+
+        assertFalse(store.contains("foreign"))
+        assertNotNull(defaults.objectForKey("foreign"))
+    }
+
+    @Test
+    fun `the done mark is not moved as a setting`() {
+        defaults.setObject("mmol", forKey = "units")
+
+        val store = open()
+
+        assertFalse(store.contains(UserDefaultsMigration.MOVE_DONE_KEY))
+        assertTrue(defaults.boolForKey(UserDefaultsMigration.MOVE_DONE_KEY))
     }
 }
