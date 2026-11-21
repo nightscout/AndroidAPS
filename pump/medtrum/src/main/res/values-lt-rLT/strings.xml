@@ -91,6 +91,7 @@
     <string name="press_OK_to_return">Norėdami grįžti į pradžios ekraną, spauskite <b>OK</b>.</string>
     <string name="deactivate_sure">Ar tikrai norite išjungti pompą?</string>
     <string name="cancel_sure">Ar tikrai norite nutraukti įjungimą?</string>
+    <string name="cancel_deactivation_sure">Ar tikrai norite nutraukti išjungimą? Pompa gali likti aktyvi.</string>
     <string name="medtrum_deactivate_pump_confirm">Ar tikrai norite tęsti? Veiksmo nebus galima atšaukti!</string>
     <string name="press_next_or_cancel">Norėdami išjungti, spauskite <b>Toliau</b>; norėdami grįžti į pradžios ekraną, spauskite <b>Atšaukti</b>.</string>
     <string name="deactivating_pump">Išjungiama. Palaukite.</string>
