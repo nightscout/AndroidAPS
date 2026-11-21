@@ -124,8 +124,11 @@ interface BleBonding {
      * Starts bonding and waits until the system reports [BondState.BONDED]. Ok then; a failure when the bond ends in
      * [BondState.NONE] or [timeout] passes. [BondState.BONDING] is not bonded: a pump that needs an encrypted link must
      * not get a command while bonding still runs.
+     *
+     * [pin] answers the system's PIN request for this device, so the user sees no PIN dialog (Aaruy: the PIN comes from
+     * the device name). Null: the system asks the user, if the device wants a PIN at all.
      */
-    suspend fun createBond(device: DeviceId, timeout: Duration): BleResult<Unit>
+    suspend fun createBond(device: DeviceId, timeout: Duration, pin: String? = null): BleResult<Unit>
 
     suspend fun removeBond(device: DeviceId): BleResult<Unit>
 }
