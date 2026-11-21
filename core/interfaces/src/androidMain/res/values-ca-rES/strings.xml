@@ -17,6 +17,18 @@
     <string name="hoursago">fa %1$.1fh</string>
     <string name="days_ago">fa %1$.1f dies</string>
     <string name="days_ago_round">fa %1$.0f dies</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">fa %1$s dia i %2$s h</item>
+        <item quantity="other">fa %1$s dies i %2$s h</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">fa %1$s hora</item>
+        <item quantity="other">fa %1$s hores</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">fa un moment</item>
+        <item quantity="other">fa %1$s minuts</item>
+    </plurals>
     <string name="seconds_ago">fa uns segons</string>
     <string name="in_days">d\'aquí a %1$.0f dies</string>
     <string name="in_days_round">d\'aquí a %1$.0f dies</string>
@@ -58,7 +70,7 @@
     <string name="pref_show_cob">Mostrar COB</string>
     <string name="pref_show_delta">Mostrar delta</string>
     <string name="pref_show_detailed_delta">Mostrar delta detallada</string>
-    <string name="pref_show_avgdelta">Mostrar delta promig</string>
+    <string name="pref_show_avgdelta">Mostrar delta mitjana</string>
     <string name="pref_show_tempTarget">Mostrar objectiu temporal</string>
     <string name="pref_show_reservoir_level">Mostrar nivell del reservori</string>
     <string name="pref_show_phone_battery">Mostrar bateria telèfon</string>
@@ -68,7 +80,7 @@
     <string name="pref_show_bg">Mostrar glucèmia</string>
     <string name="pref_show_bgi">Mostrar BGI</string>
     <string name="pref_show_direction_arrow">Mostrar fletxa direcció</string>
-    <string name="pref_show_ago">Mostrar històric</string>
+    <string name="pref_show_ago">Mostrar temps des de l\'última lectura</string>
     <string name="pref_show_week_number">Mostrar nr. de setmana</string>
     <string name="pref_show_date">Mostrar data</string>
     <string name="pref_show_seconds">Mostrar segons</string>
@@ -112,8 +124,8 @@
     <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="carbs">Carbs</string>
     <string name="alarminxmin">Executar alarma en %1$d min</string>
-    <string name="pumpsuspended">Bomba aturada</string>
-    <string name="loopsuspended">Llaç aturat</string>
+    <string name="pumpsuspended">Bomba suspesa</string>
+    <string name="loopsuspended">Llaç suspès</string>
     <string name="pump_disconnected">Bomba desconnectada</string>
     <string name="basalprofilenotaligned">Valors de basal no alineats a hores en punt: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valor de basal substituït pel valor mínim compatible: %1$s</string>
