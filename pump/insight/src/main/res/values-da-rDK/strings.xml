@@ -4,6 +4,7 @@
     <string name="disable_tbr_over_notification">Deaktiver notifikation af MBR afslutning\n(pump setting)</string>
     <string name="not_paired">Ikke parret</string>
     <string name="recovering">Gendanner</string>
+    <string name="insight_status">Status</string>
     <string name="recovery_duration">Varighed for gendannelse</string>
     <string name="last_connected">Seneste forbindelse</string>
     <string name="start_pump">Start pumpe</string>
@@ -13,11 +14,15 @@
     <string name="operating_mode">Driftstilstand</string>
     <string name="description_pump_insight_local">Pumpeintegration til Accu-Chek Insight pumper</string>
     <string name="not_inserted">Ikke sat i</string>
+    <string name="tdd_bolus">TDD bolus</string>
+    <string name="tdd_basal">TDD basal</string>
     <string name="multiwave_bolus">Kombineret bolus</string>
     <string name="searching_for_devices">Søger efter apparater…</string>
     <string name="pairing_completed">Parring fuldført</string>
     <string name="code_compare">Stemmer de viste koder overens mellem dette apparat og din pumpe?</string>
     <string name="insight_pairing">Insight parring</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Slange skiftet</string>
     <string name="insight_alert_notification_channel">Insight Pumpe Advarsler</string>
     <string name="disable_vibration">Deaktivér vibrationer ved manuel boluslevering</string>
@@ -27,6 +32,7 @@
     <string name="timeout_during_handshake">En timeout opstod i parringsprosessen - genstart Bluetooth</string>
     <string name="pump_stopped">Pumpe stoppet</string>
     <string name="pump_started">Pumpe startet</string>
+    <string name="release_software_version">Softwareversion (release)</string>
     <string name="bluetooth_address">Bluetooth adresse</string>
     <string name="manufacturing_date">Produktionsdato</string>
     <string name="log_site_changes">Log skift af kanyle</string>
@@ -41,4 +47,8 @@
     <string name="max_recovery_duration">Max pause mellem forbindelsesforsøg [s]</string>
     <string name="min_recovery_duration">Min pause mellem forbindelsesforsøg [s]</string>
     <string name="pump_alert">Pumpe advarsel</string>
+    <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">Ophæv parring</string>
+    <string name="reset_pairing">Nulstil parringsoplysninger?</string>
+    <string name="reservoir_level">Reservoirniveau</string>
 </resources>
