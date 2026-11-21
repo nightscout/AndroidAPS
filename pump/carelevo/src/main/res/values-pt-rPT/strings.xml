@@ -83,6 +83,7 @@
     <string name="carelevo_patch_connect_step_1_title">Retirar a tampa da agulha</string>
     <string name="carelevo_patch_connect_step_1_desc">Retire o patch da embalagem blister e retire a tampa da agulha.</string>
     <string name="carelevo_patch_connect_step_2_title">Ligar e conectar</string>
+    <string name="carelevo_patch_connect_step_2_desc">Pressione o botão de ligar durante mais de 1 segundo. Depois do sinal sonoro, toque no botão [Procurar patch] abaixo.</string>
     <string name="carelevo_patch_safety_check_start_title">Verificação de segurança</string>
     <string name="carelevo_patch_safety_check_end_title">Verificação de segurança concluída</string>
     <string name="carelevo_patch_safety_check_start_desc">O patch foi ligado com sucesso.\nPressione o botão [Verificação de segurança].</string>
@@ -112,6 +113,7 @@
     <string name="carelevo_dialog_patch_connect_message_title">Se o patch encontrado abaixo estiver correto, toque no botão Confirmar.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">Inserção da agulha concluída e aplicador removido</string>
     <string name="carelevo_dialog_connect_detached">Aplicador removido</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">Pressione as pegas dos dois lados do aplicador para o separar do patch,\ne depois pressione o botão `Aplicador removido`. A administração de insulina vai começar.</string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">O Bluetooth não está ativado. Verifique.</string>
     <string name="carelevo_toast_msg_patch_not_connected">Nenhum patch ligado.</string>
@@ -125,6 +127,7 @@
     <string name="carelevo_toast_msg_needle_check_failed">A verificação da agulha falhou.</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">Falha ao descartar o patch. Tente novamente.</string>
+    <string name="carelevo_discarded_not_reached">Não foi possível contactar o patch. Foi removido do AAPS, mas não foi parado, e pode continuar a administrar insulina. Retire-o do corpo.</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">O pedido de administração da basal falhou. Tente novamente.</string>
     <!-- Delivery Resume/Suspend -->
@@ -178,6 +181,7 @@
     <string name="alarm_notification_desc_warning_low_insulin">Restam menos de 10 U de insulina; a administração de insulina parou. Toque no botão [Desativar patch] e mude o patch agora.</string>
     <string name="alarm_notification_desc_warning_expired_patch">O patch expirou; a administração de insulina parou. Toque no botão [Desativar patch] e mude o patch agora.</string>
     <string name="alarm_notification_desc_warning_low_battery">Bateria fraca; a administração de insulina parou. Toque no botão [Descartar patch] e mude o patch agora.</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">A administração de insulina parou. Vá agora para um local com temperatura adequada (40℉–99℉).</string>
     <string name="alarm_notification_desc_warning_not_used_app">A administração de insulina parou. Toque no botão [Iniciar insulina] e reinicie a administração da basal.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">O tempo para aplicar o patch esgotou-se. Toque no botão [Desativar patch] e mude o patch agora.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">O autodiagnóstico falhou. Toque no botão [Desativar patch] e mude o patch agora.</string>
@@ -208,5 +212,7 @@
     <string name="carelevo_profile_update_skip_comment">Ignorado: atualização demasiado cedo.</string>
     <string name="carelevo_bolus_stop_not_confirmed">O patch não confirmou a paragem. A aguardar o fim do bólus…</string>
     <string name="carelevo_bolus_rejected_missed_bolus_recorded">Foi agora adicionado um bólus que não estava registado. Verifique a IA e tente novamente.</string>
+    <string name="carelevo_bolus_outcome_unknown">O patch não respondeu ao bólus. O bólus completo é contado até o patch indicar quanto administrou.</string>
     <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">O patch não confirmou a paragem. Foi registado o bólus completo de %1$s.</string>
+    <string name="carelevo_bolus_stopped_by_patch" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The patch stopped the bolus. Given: 0.50 U of 2.00 U">O patch parou o bólus. Administrado: %1$s de %2$s</string>
 </resources>
