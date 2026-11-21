@@ -8,8 +8,18 @@
     <string name="optimizing_database">Оптимизация БД...</string>
     <string name="initializing_plugins">Инициализация плагинов…</string>
     <string name="initializing">Инициализация…</string>
-    <string name="migrating_profile_switches">Перенос переключателей профиля…</string>
-    <string name="migrating_effective_profile_switches">Перенос эффективных переключателей профиля…</string>
+    <string name="migrating_profile_switches">Перенос переключений профиля…</string>
+    <string name="migrating_effective_profile_switches">Перенос эффективных переключений профиля…</string>
     <string name="migrating_boluses">Перенос болюсов…</string>
     <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">У старых записей нет настроек инсулина, и профиль не был активен, поэтому для них использовался %1$s. Проверьте настройки инсулина — перенесенные записи уже не обновятся.</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">В старых записях не было длительности действия инсулина, поэтому для %2$s использовано %1$.1f ч. Проверьте настройки инсулина — уже перенесенные записи потом не обновляются.</string>
+    <string name="settings_unreadable_title">Не удается прочитать настройки AAPS</string>
+    <string name="settings_unreadable_key_explanation">Ваши настройки на этом телефоне зашифрованы ключом, который Android хранит для AAPS, и этот ключ больше их не открывает. Так бывает после сброса хранилища ключей телефона.</string>
+    <string name="settings_unreadable_keystore_explanation">Хранилище ключей телефона не ответило, поэтому AAPS не смог открыть свои настройки.</string>
+    <string name="settings_unreadable_not_running">AAPS не работает и не управляет помпой. Работающий временный базал закончится в свое время, а затем помпа будет подавать свой базал.</string>
+    <string name="settings_unreadable_what_to_do">«Повторить» закрывает AAPS и запускает его снова. Если это не помогает, перезапустите телефон. Выбирайте «Начать заново», только если ничего другое не помогает: нечитаемые настройки откладываются в сторону, и AAPS запускается с пустыми настройками. Затем импортируйте последний экспорт настроек в мастере установки.</string>
+    <string name="settings_unreadable_start_fresh">Начать заново</string>
+    <string name="settings_unreadable_confirm_title">Начать с пустыми настройками?</string>
+    <string name="settings_unreadable_confirm_text">Нечитаемый файл настроек переименовывается и сохраняется. Все настройки начинаются со значений по умолчанию. Затем вы снова настраиваете AAPS или импортируете экспорт настроек.</string>
+    <string name="settings_unreadable_notification">AAPS не работает. Откройте AAPS, чтобы узнать, что делать.</string>
 </resources>
