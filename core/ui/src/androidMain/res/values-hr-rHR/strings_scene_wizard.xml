@@ -1,22 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">Odaberite početnu točku. Predlošci unaprijed popunjavaju preporučene radnje za česte situacije — sve možete prilagoditi u sljedećim koracima.</string>
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">Tjelovježba</string>
+    <string name="scene_wizard_exercise_desc">Podignite cilj, smanjite profil na 70 % i onemogućite SMB kako biste spriječili niske vrijednosti tijekom tjelovježbe.</string>
+    <string name="scene_wizard_info_exercise">Tijekom tjelesne aktivnosti mišići brže troše glukozu, a osjetljivost na inzulin raste. Ako unaprijed podignete privremeni cilj, algoritam dobiva prednost — ranije počinje smanjivati isporuku inzulina i stvara zalihu protiv niskih vrijednosti zbog tjelovježbe. Preporučuje se i onemogućiti SMB jer korekcijski bolusi tijekom tjelovježbe mogu uzrokovati brz pad. Za najbolje rezultate aktivirajte ovu scenu 1–2 sata prije početka tjelovježbe kako bi algoritam imao vremena smanjiti aktivni inzulin.</string>
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <string name="scene_template_sick_day">Dan bolesti</string>
+    <string name="scene_wizard_sick_day_desc">Jači profil (150 %) za povećanu inzulinsku rezistenciju tijekom bolesti.</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">Bolest, vrućica i hormoni stresa mogu jako povećati inzulinsku rezistenciju — ponekad za 50 % ili više. Jači profil (npr. 150 %) govori algoritmu da isporučuje više inzulina u svim izračunima — bazalnim stopama, prijedlozima bolusa i korekcijskim faktorima. U sljedećim koracima možete dodati i privremeni cilj ili promijeniti način rada. Pažljivo pratite vrijednosti i prilagođavajte postavke kako se tijelo oporavlja.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_template_sick_day_vomiting">Dan bolesti — povraćanje</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">Smanjeni profil s LGS-om — suprotno od uobičajenog dana bolesti, kada tijelo ne može apsorbirati hranu.</string>
+    <string name="scene_wizard_info_sick_day_vomiting">Kada ne možete zadržati hranu, uobičajeni pristup za dan bolesti (više inzulina) može biti opasan. Povraćanje znači da se ugljikohidrati ne apsorbiraju pa GUK može pasti umjesto da raste. Smanjeni profil (60 %) smanjuje isporuku inzulina, a način LGS dodaje još jednu zaštitu jer obustavlja inzulin ako glukoza pada. Onemogućavanje SMB-a sprječava dodatne boluse. Često mjerite — GUK svakih 1–2 sata, a ketone svakih 2–4 sata. Potražite liječničku pomoć ako povraćanje traje dulje od nekoliko sati ili ako ketoni porastu iznad 1,5 mmol/L.</string>
     <!-- Sleep: no default actions — 8h -->
+    <string name="scene_template_sleep">Spavanje</string>
+    <string name="scene_wizard_sleep_desc">Stroži cilj za bolju kontrolu preko noći.</string>
+    <string name="scene_wizard_info_sleep">Noću mnogi ljudi imaju neprimijećene visoke ili niske vrijednosti. Malo stroži cilj tijekom spavanja omogućuje algoritmu finije korekcije tijekom cijele noći. Za najbolje rezultate uz ovo koristite profil koji odgovara vašim noćnim potrebama za bazalom.</string>
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <string name="scene_template_post_exercise_night">Noć nakon tjelovježbe</string>
+    <string name="scene_wizard_post_exercise_night_desc">Smanjeni profil, viši cilj, SMB isključen — štiti od kasnih noćnih niskih vrijednosti nakon aktivnosti.</string>
+    <string name="scene_wizard_info_post_exercise_night">Nakon tjelesne aktivnosti mišići još mnogo sati obnavljaju zalihe glikogena — osjetljivost na inzulin može ostati povišena 24–48 h, a rizik od noćne hipoglikemije najveći je 6–12 h nakon tjelovježbe. Smanjeni profil smanjuje isporuku bazala tijekom cijele noći, viši privremeni cilj daje algoritmu sigurnosnu zalihu, a onemogućavanje SMB-a sprječava da algoritam previše korigira kratke poraste. Aktivirajte ovu scenu prije spavanja u dane kada ste vježbali, osobito nakon dužih treninga ili novih aktivnosti. Držite brze ugljikohidrate pokraj kreveta i razmislite o alarmu za provjeru usred noći.</string>
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
+    <string name="scene_template_pre_meal">Prije obroka</string>
+    <string name="scene_wizard_pre_meal_desc">Niži cilj kako biste preduhitrili skok nakon obroka.</string>
+    <string name="scene_wizard_info_pre_meal">Niži cilj postavljen 30–60 minuta prije jela govori algoritmu da počne povećavati aktivni inzulin prije nego što stignu ugljikohidrati. To pomaže ublažiti skok nakon obroka koji nastaje kada hrana uđe u krv brže nego što inzulin može djelovati. Najbolje je koristiti kada znate da uskoro jedete.</string>
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_template_alcohol">Alkohol</string>
+    <string name="scene_wizard_alcohol_desc">Način LGS, smanjeni profil, SMB isključen — štiti od kasnih hipoglikemija zbog alkohola.</string>
+    <string name="scene_wizard_info_alcohol">Alkohol je jedna od najopasnijih situacija za osobe s dijabetesom tipa 1. Jetra najprije razgrađuje alkohol, a tek onda otpušta glukozu, što može uzrokovati kasnu hipoglikemiju 6–24 sata poslije — često noću dok spavate. Način LGS sprječava nakupljanje inzulina jer samo smanjuje isporuku kada glukoza pada. Smanjeni profil i onemogućeni SMB dodatno ograničavaju aktivni inzulin. Uvijek provjerite GUK prije spavanja i razmislite o alarmu za provjeru usred noći.</string>
     <!-- Driving: TT 108 (Hypo) — 1h -->
+    <string name="scene_template_driving">Vožnja</string>
+    <string name="scene_wizard_driving_desc">Malo viši cilj za sigurnu vožnju.</string>
+    <string name="scene_wizard_info_driving">Za sigurnu vožnju potreban je stabilan GUK iznad 5,0 mmol/L (90 mg/dL). U nekim je zemljama provjera prije i tijekom dužih vožnji zakonska obveza. Malo viši cilj daje algoritmu sigurnosnu zalihu — nastojat će vas održati iznad razine na kojoj koncentracija i vrijeme reakcije počinju slabiti. Ako vam GUK padne tijekom vožnje, odmah se zaustavite, liječite hipoglikemiju i pričekajte najmanje 45 minuta nakon što se glukoza vrati u normalu prije nego što nastavite.</string>
     <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <string name="scene_template_bathing">Kupanje</string>
+    <string name="scene_wizard_bathing_desc">Odspojite pumpu za tuširanje, plivanje, kupanje ili bilo koju aktivnost u vodi.</string>
+    <string name="scene_wizard_info_bathing">Kada odspojite pumpu, isporuka inzulina potpuno prestaje — nema bazala, bolusa ni korekcija. Algoritam prelazi u način rada s odspojenom pumpom i ne radi prilagodbe. To je uobičajeno za kratka razdoblja poput tuširanja, kupanja ili plivanja. Kada scena završi, pumpa se ponovno spaja i algoritam automatski nastavlja s radom. Neka odspajanja budu kratka — bez bazalnog inzulina GUK počinje rasti unutar 1–2 sata.</string>
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
+    <string name="scene_template_luteal_phase">Lutealna faza</string>
+    <string name="scene_wizard_luteal_phase_desc">Povećani profil za inzulinsku rezistenciju prije menstruacije.</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">Mnoge žene imaju povećanu inzulinsku rezistenciju tijekom lutealne faze (otprilike 1–2 tjedna prije menstruacije). Uzrok je porast razine progesterona, koji smanjuje osjetljivost na inzulin. Učinak se jako razlikuje od osobe do osobe — neke primijete porast potrebe za inzulinom od 10–30 %, druge gotovo nikakvu promjenu. Počnite s opreznim povećanjem (115 %) i prilagodite ga prema vlastitim obrascima kroz nekoliko ciklusa. Bilježenje u Careportalu pomaže prepoznati vaš osobni ritam.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
+    <string name="scene_template_hot_weather">Vruće vrijeme</string>
+    <string name="scene_wizard_hot_weather_desc">Smanjeni profil — vrućina ubrzava apsorpciju inzulina.</string>
+    <string name="scene_wizard_info_hot_weather">Visoke temperature šire krvne žile, što ubrzava apsorpciju inzulina — ista doza djeluje brže i jače. To može dovesti do neočekivanih niskih vrijednosti, osobito tijekom aktivnosti na otvorenom. Umjereno smanjenje profila (85 %) nadoknađuje bržu apsorpciju. Pijte dovoljno tekućine, češće mjerite i imajte na umu da se inzulin u toploj pumpi ili inzulinskoj olovci može pokvariti. Ako vježbate i na vrućini, razmislite o kombiniranju sa scenom za tjelovježbu za dodatnu zaštitu.</string>
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_template_medical_procedure">Medicinski zahvat</string>
+    <string name="scene_wizard_medical_procedure_desc">Otvorena petlja s isključenim SMB-om za operaciju ili medicinske zahvate.</string>
+    <string name="scene_wizard_info_medical_procedure">Tijekom operacije ili medicinskih zahvata anestezija i hormoni stresa čine GUK nepredvidivim. Preporučuje se otvorena petlja jer algoritam u tim uvjetima ne može pouzdano predvidjeti što će tijelo učiniti. Viši cilj (150 mg/dL) daje sigurnosnu zalihu protiv hipoglikemije tijekom operacije. Onemogućavanje SMB-a sprječava neočekivanu isporuku inzulina tijekom zahvata. Uvijek obavijestite medicinsko osoblje da nosite inzulinsku pumpu i CGM. Za zahvate dulje od 3 sata vaš tim može prijeći na intravenski inzulin.</string>
     <!-- Blank: no actions — 1h -->
+    <string name="scene_template_blank">Prazno</string>
+    <string name="scene_wizard_blank_desc">Počnite od nule, bez unaprijed odabranih radnji.</string>
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info" formatted="false">Zamjena profila odjednom mijenja bazalne stope, faktor osjetljivosti na inzulin (ISF) i omjere inzulina i ugljikohidrata (IC). Sve možete skalirati postotkom — na primjer, 110 % povećava isporuku bazala, izračune bolusa i brzinu apsorpcije ugljikohidrata za oko 10 %. Možete se i prebaciti na sasvim drugi profil ako ga imate postavljenog za posebne situacije.</string>
+    <string name="scene_wizard_tt_info">Privremeni cilj govori algoritmu da tijekom zadanog razdoblja cilja drugu razinu GUK-a. S višim ciljem algoritam sporije reagira na rast glukoze i općenito cilja višu vrijednost — to smanjuje isporuku inzulina i pomaže spriječiti niske vrijednosti tijekom tjelovježbe. S nižim ciljem algoritam reagira ranije i isporučuje više inzulina — korisno prije obroka. Odaberite jedan od svojih predložaka ispod — ciljna vrijednost i razlog već su ondje postavljeni.</string>
+    <string name="scene_wizard_smb_info">Super mikro bolusi (SMB) omogućuju algoritmu da inzulin isporuči unaprijed kao male boluse, a kao naknadu privremeno zaustavi isporuku bazala — tako zapravo posuđuje inzulin iz budućnosti za brži odgovor. Onemogućavanje SMB-a to sprječava i algoritam tada mijenja samo bazalne stope. Odgovor postaje sporiji i postupniji, što se često želi tijekom tjelovježbe ili spavanja.</string>
+    <string name="scene_wizard_loop_mode_info">Način rada određuje koliko samostalno algoritam radi. U zatvorenoj petlji automatski prilagođava isporuku inzulina. LGS (zaštita od niske razine glukoze) samo smanjuje ili zaustavlja inzulin kada glukoza pada prema niskoj vrijednosti — neće povećati isporuku. Otvorena petlja izračunava prijedloge, ali čeka da svaki od njih potvrdite.</string>
+    <string name="scene_wizard_careportal_info">Događaj u Careportalu je zapis u dnevniku — ne mijenja isporuku inzulina ni ponašanje algoritma. Koristite ga za označavanje aktivnosti, situacija ili bilješki na vremenskoj crti tretmana. Te zapise možete pregledati u Tretmani - Careportal i u Nightscoutu, što vama i vašem liječniku pomaže uočiti obrasce u podacima.</string>
+    <string name="scene_wizard_duration_info">Trajanje određuje koliko dugo scena ostaje aktivna. Kada vrijeme istekne, radnje s trajanjem (privremeni cilj, zamjena profila, način rada) same završavaju, a trajne promjene (npr. prekidač SMB) automatski se vraćaju na prethodne vrijednosti. Trajanje 0 znači da scena nema kraja — sve radnje ostaju aktivne dok scenu ručno ne završite.</string>
+    <string name="scene_wizard_name_info">Odaberite naziv i ikonu po kojima ćete scenu lako prepoznati na prvi pogled. Vidjet ćete ih na gumbu za aktivaciju i na traci aktivne scene na zaslonu pregleda.</string>
     <!-- Scene wizard: UI labels -->
+    <string name="scene_wizard_include_action">Uključi u scenu: %1$s</string>
+    <string name="scene_wizard_finish">Završi</string>
     <!-- Scene wizard: chain step -->
+    <string name="scene_wizard_chain_title">Sljedeća scena</string>
+    <string name="scene_wizard_chain_info">Po želji povežite drugu scenu koja se automatski aktivira kada ova istekne. Na nju možete i preskočiti kada scenu završite ranije. Sljedeća scena pokreće se samo ako je omogućena i ako je pumpa dostupna; inače traka završene scene navodi zašto nije pokrenuta.</string>
+    <string name="scene_chain_none">Nijedna</string>
+    <string name="scene_skip_to_format">Preskoči na %1$s</string>
     <!-- Scene list: chain indicator -->
+    <string name="scene_chain_indicator">→ %1$s</string>
+    <string name="scene_chain_target_missing">Povezana scena je izbrisana</string>
     <!-- Scene expiry: what the banner says, and the chain error notification -->
+    <string name="scene_chain_skipped_line" comment="Shown on the banner of a scene that has ended. %1$s=why the next scene did not start. Example: Follow-up did not start: target scene was deleted">Sljedeća scena nije pokrenuta: %1$s</string>
+    <string name="scene_chain_skipped_deleted">ciljna scena je izbrisana</string>
+    <string name="scene_chain_skipped_disabled">„%1$s“ je onemogućena</string>
+    <string name="scene_chain_error_summary">%1$s → %2$s: %3$d od %4$d radnji nije uspjelo</string>
 </resources>
