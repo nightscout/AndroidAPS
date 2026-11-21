@@ -14,17 +14,17 @@
     <string name="omnipod_common_error_failed_to_set_profile_empty_profile">Error en establir perfil basal: s\'ha rebut un perfil buit. Assegureu-vos d\'activar el vostre perfil basal.</string>
     <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Cap perfil basal actiu. Assegureu-vos d\'activar el vostre perfil basal.</string>
     <string name="omnipod_common_error_unsupported_custom_command">Comanda personalitzada no permesa: %1$s</string>
-    <string name="omnipod_common_error_failed_to_refresh_status">Error en actualizar estat</string>
+    <string name="omnipod_common_error_failed_to_refresh_status">Error en actualitzar l\'estat</string>
     <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Error en refrescar estat a l\'iniciar</string>
     <string name="omnipod_common_error_failed_to_silence_alerts">Error en silenciar alertes</string>
-    <string name="omnipod_common_error_failed_to_suspend_delivery">Error en aturar lliurament</string>
+    <string name="omnipod_common_error_failed_to_suspend_delivery">Error en suspendre el lliurament</string>
     <string name="omnipod_common_error_failed_to_set_time">Error en establir hora</string>
     <string name="omnipod_common_error_failed_to_resume_delivery">Error en reprendre lliurament</string>
     <string name="omnipod_common_error_failed_to_initialize_pod">Error en inicialitzar el pod</string>
     <string name="omnipod_common_error_failed_to_insert_cannula">Error en inserir cànula</string>
     <string name="omnipod_common_error_pod_fault_activation_time_exceeded">S\'ha excedit el temps d\'activació del pod. Aquest pod ja no es pot activar.</string>
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Error en verificar el progrés del procés d\'activació. Torneu a intentar-ho si us plau.</string>
-    <string name="omnipod_common_error_pod_suspended">Pod en pausa</string>
+    <string name="omnipod_common_error_pod_suspended">Pod suspès</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Error en fer sonar bip de prova</string>
     <string name="omnipod_common_error_time_out_of_sync">L\'hora del pod no està sincronitzada. Actualitzeu l\'hora a la pantalla de la bomba.</string>
     <string name="omnipod_common_error_unexpected_exception">Error inesperat. Si us plau, informeu! (%1$s: %2$s).</string>
@@ -66,20 +66,20 @@
     <string name="omnipod_common_pod_activation_wizard_pod_activated_text">El nou pod ja està actiu.\n\nLa vostra basal ha estat programada i la cànula inserida.\n\nComproveu que la cànula ha estat inserida correctament i canvieu el pod en cas contrari.</string>
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Desactivar pod</string>
-    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Premeu <b>Següent</b> per desactivar el pod.\n\n<b>Nota:</b> Això aturarà tot lliurament d\'insulina i desactivarà el pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Premeu <b>Següent</b> per desactivar el pod.\n\n<b>Nota:</b> Això suspendrà tot el lliurament d\'insulina i desactivarà el pod.</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">Un pod desactivat no es pot tornar a fer servir. Voleu desactivar aquest pod ara?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Desactivant pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Desactivant pod.\n\nQuan la desactivació s\'hagi completat amb èxit, podeu prémer <b>Següent</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod desactivat</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">El vostre pod ha estat desactivat.\n\nSi us plau retireu el pod del vostre cos i recicleu-lo.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Pod descartat</string>
-    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">L\'estat del pod ha estat descartat. El lliurament d\'insulina no ha estat aturat perquè el pod no ha estat desactivat correctament!\n\nSi us plau retireu el pod del vostre cos i recicleu-lo.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">L\'estat del pod ha estat descartat. El lliurament d\'insulina no ha estat suspès perquè el pod no ha estat desactivat correctament!\n\nSi us plau retireu el pod del vostre cos i recicleu-lo.</string>
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Si descarteu el pod, no us podreu comunicar més amb ell. Només haurieu de descartar-lo quan tota comunicació amb el pod falli definitivament. Esteu segurs que voleu descartar el pod?</string>
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Descartar pod</string>
     <!-- Omnipod - Preferences -->
     <string name="omnipod_common_preferences_bolus_beeps_enabled">Bips de bolus activats</string>
     <string name="omnipod_common_preferences_basal_beeps_enabled">Bips de basal activats</string>
-    <string name="omnipod_common_preferences_smb_beeps_enabled">Bips d\'SMS activats</string>
+    <string name="omnipod_common_preferences_smb_beeps_enabled">Bips d\'SMB activats</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">Bips de basals temporals activats</string>
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Mostrar el botó Suspendre a la pantalla de la bomba</string>
     <string name="omnipod_common_preferences_time_change_enabled">Detecció d\'horari d\'estiu/hivern activada</string>
@@ -107,7 +107,7 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">Configuració en curs (esperant activació de pod)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Configuració en curs (esperant inserció de cànula)</string>
     <string name="omnipod_common_pod_status_running">Funcionant</string>
-    <string name="omnipod_common_pod_status_suspended">En pausa</string>
+    <string name="omnipod_common_pod_status_suspended">Suspès</string>
     <string name="omnipod_common_pod_status_pod_fault">Error del pod</string>
     <string name="omnipod_common_pod_status_inactive">Inactiu</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Error del pod: %1$03d %2$s</string>
@@ -130,7 +130,7 @@
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">El pod està a punt de caducar</string>
     <string name="omnipod_common_alert_expiration_advisory">El pod està a punt de caducar</string>
-    <string name="omnipod_common_alert_shutdown_imminent">L\'apagada és inminent</string>
+    <string name="omnipod_common_alert_shutdown_imminent">L\'apagada és imminent</string>
     <string name="omnipod_common_alert_low_reservoir">Reservori baix</string>
     <string name="omnipod_common_alert_unknown_alert">Alerta desconeguda</string>
     <!-- Omnipod - Commands -->
@@ -148,7 +148,7 @@
     <string name="omnipod_common_cmd_configure_alerts">Configurar alertes</string>
     <string name="omnipod_common_cmd_silence_alerts">Silenciar alertes</string>
     <string name="omnipod_common_cmd_read_pulse_log">Llegir registre pols</string>
-    <string name="omnipod_common_cmd_suspend_delivery">Aturar lliuraments</string>
+    <string name="omnipod_common_cmd_suspend_delivery">Suspendre lliurament</string>
     <string name="omnipod_common_cmd_resume_delivery">Reprendre lliurament</string>
     <string name="omnipod_common_cmd_cancel_tbr">Cancel·lar TBR (per l\'usuari)</string>
     <string name="omnipod_common_cmd_get_pod_info">Obtenir info pod</string>
@@ -164,7 +164,7 @@
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Fa un moment</string>
-    <string name="omnipod_common_less_than_a_minute_ago">Fa menys d`un minut</string>
+    <string name="omnipod_common_less_than_a_minute_ago">Fa menys d\'un minut</string>
     <string name="omnipod_common_composite_time">%1$s i %2$s</string>
     <string name="omnipod_common_time_ago">Fa %1$s</string>
     <plurals name="omnipod_common_minutes">
