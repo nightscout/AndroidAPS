@@ -28,6 +28,8 @@ on:
     branches:
       - dev
       - master
+      # The 4.1 integration branch (dev, ios, Carelevo and Eversense).
+      - dev41
     paths:
       - 'core/**'
       - 'database/**'
