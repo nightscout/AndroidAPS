@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.notifications.NotificationCategory.PROFILE
 import app.aaps.core.interfaces.notifications.NotificationCategory.PUMP
 import app.aaps.core.interfaces.notifications.NotificationCategory.SYNC
 import app.aaps.core.interfaces.notifications.NotificationCategory.SYSTEM
-import app.aaps.core.interfaces.notifications.NotificationId.Companion.fromOrdinal
 import app.aaps.core.interfaces.notifications.NotificationLevel.ANNOUNCEMENT
 import app.aaps.core.interfaces.notifications.NotificationLevel.IMPORTANT
 import app.aaps.core.interfaces.notifications.NotificationLevel.INFO
@@ -23,9 +22,9 @@ import app.aaps.core.interfaces.notifications.NotificationLevel.URGENT
  * full-screen) and is reserved for acute insulin-delivery failures, critical BG, and
  * user-configured alarms.
  *
- * The system-notification id is derived from [Enum.ordinal] (see [fromOrdinal]); there is no
- * hand-assigned integer id anymore (the old pre-enum `legacyId` was a fossil with no external
- * consumer).
+ * The Android number of a single card is its [Enum.ordinal], only while the app runs: nothing stores it, so
+ * an entry can go anywhere, and one that is no longer used is deleted. A reordering changes the numbers once,
+ * after the update, for a card left in the tray from before; nothing rings because of it.
  */
 @Suppress("unused")
 enum class NotificationId(
@@ -126,10 +125,6 @@ enum class NotificationId(
     // Pump — Dana emulator
     PUMP_EMULATOR_DISPLAY(INFO, PUMP),
 
-    // Pump — Carelevo
-    // No longer posted: Carelevo alarms are PUMP_ALERT cards now. Kept, because the ordinal is the system notification id.
-    CARELEVO_PATCH_ALERT(URGENT, PUMP, allowMultiple = true),
-
     // CGM
     BG_READINGS_MISSED(URGENT, CGM),
     SENSOR_CHANGE_DETECTED(NORMAL, CGM),
@@ -144,18 +139,14 @@ enum class NotificationId(
     // Loop / APS
     EASY_MODE_ENABLED(IMPORTANT, LOOP),
     UD_MODE_ENABLED(IMPORTANT, LOOP),
-    SHORT_DIA(IMPORTANT, LOOP),
     CARBS_REQUIRED(NORMAL, LOOP),
     SMB_FALLBACK(NORMAL, LOOP),
     DYN_ISF_FALLBACK(NORMAL, LOOP),
 
     // Sync — Nightscout
-    OLD_NS(IMPORTANT, SYNC),
-    NSCLIENT_NO_WRITE_PERMISSION(NORMAL, SYNC),
     NS_ANNOUNCEMENT(ANNOUNCEMENT, SYNC),
     NS_ALARM(URGENT, SYNC),
     NS_URGENT_ALARM(URGENT, SYNC),
-    NS_MALFUNCTION(IMPORTANT, SYNC),
     NSCLIENT_VERSION_DOES_NOT_MATCH(NORMAL, SYNC),
     NSCLIENT_PAIRING_ORPHAN(NORMAL, SYNC),
     OPEN_HUMANS_SIGNED_OUT(NORMAL, SYNC),
@@ -201,9 +192,7 @@ enum class NotificationId(
     AUTOMATION_MESSAGE(IMPORTANT, AUTOMATION, allowMultiple = true),
 
     // Scenes
-    SCENE_ENDED(INFO, AUTOMATION, allowMultiple = true),
     SCENE_CHAINED(INFO, AUTOMATION, allowMultiple = true),
-    SCENE_CHAIN_SKIPPED(NORMAL, AUTOMATION, allowMultiple = true),
     SCENE_CHAIN_ERROR(IMPORTANT, AUTOMATION, allowMultiple = true),
 
     /** Bolus succeeded but the accompanying carbs could not be persisted — the user must re-enter them. */
@@ -211,8 +200,7 @@ enum class NotificationId(
 
     // A plugin's onStart threw. It stays ENABLED on purpose - disabling a failed pump driver makes
     // ActivePlugin.activePumpInternal throw "No pump selected" - so this alarm is how the user finds out
-    // that a plugin is running only half built. Appended at the END: [fromOrdinal] maps a stored ordinal
-    // back to an id, so inserting in the middle would renumber every id after it.
+    // that a plugin is running only half built.
     //
     // allowMultiple, because one id is shared by every plugin. Without it a second failing plugin would
     // replace the first one's card, and one plugin starting cleanly would dismiss the card of another that
@@ -227,49 +215,42 @@ enum class NotificationId(
 
     // The pump is disconnected (or a super bolus runs) in AAPS, but the zero temp basal that stops the
     // insulin is not on the pump, and sending it again did not help. The pump may still give basal
-    // while the user believes it does not. Appended at the END for the same reason as above.
+    // while the user believes it does not.
     ZERO_DELIVERY_NOT_SET(URGENT, PUMP),
 
     // One command has been running in the queue for too long, so nothing else reaches the pump (#5209).
-    // Appended at the END for the same reason as above.
     PUMP_DRIVER_NOT_RESPONDING(URGENT, PUMP),
 
     // The Combo reported an error, so the driver does not connect until the user has handled it. Its own
     // id, so that this hint does not replace the card that names the error (COMBO_PUMP_ALARM) (#5263).
-    // Appended at the END for the same reason as above.
     COMBO_PUMP_ERROR_LOCKOUT(NORMAL, PUMP),
 
     // A scene ended, but its profile switch could not be undone, so the scene's percentage is still in force.
     // The End Scene dialog does not show the result, so without this nothing said so. IMPORTANT: it changes
     // insulin delivery until the user activates a profile, but nothing is delivered wrongly now.
-    // Appended at the END for the same reason as above.
     SCENE_PROFILE_NOT_RESTORED(IMPORTANT, AUTOMATION),
 
     // A Garmin watch connected to a client sent carbs or a pump disconnect. A client does not store them, because
-    // they would never reach the master, and the watch cannot show why. Appended at the END for the same reason as above.
+    // they would never reach the master, and the watch cannot show why.
     GARMIN_NOT_ON_CLIENT(NORMAL, SYNC),
 
     // The Combo gave the bolus, but its history also had boluses that AAPS did not know about. Its own id,
     // so that it does not replace the low reservoir warning of the same bolus on COMBO_PUMP_ALARM (#5379).
-    // Appended at the END for the same reason as above.
     COMBO_UNKNOWN_BOLUS(URGENT, PUMP),
 
     // Desktop only: no OS key store was found (Linux without a keyring), so the keys that protect the settings
     // and the pairing secrets are plain files next to the data. IMPORTANT, not URGENT: nothing is wrong with
-    // therapy, but a copy of the folder gives everything away, and the user can fix it. Appended at the END for
-    // the same reason as above.
+    // therapy, but a copy of the folder gives everything away, and the user can fix it.
     SECRETS_NOT_PROTECTED(IMPORTANT, SYSTEM),
 
     // A real pump is selected, but AAPS has no Bluetooth (Nearby devices) permission, so no command can reach the
     // pump and the queue fails them (#5440). It removes itself once the permission is back. IMPORTANT, not URGENT:
-    // a bolus that fails because of it raises its own alarm. Appended at the END for the same reason as above.
+    // a bolus that fails because of it raises its own alarm.
     BLUETOOTH_PERMISSION_MISSING(IMPORTANT, PUMP),
 
     // Every pump alert raised through PumpAlerts, one card each. The level is set per alert from its severity.
-    // Appended at the END for the same reason as above.
     PUMP_ALERT(URGENT, PUMP, allowMultiple = true),
 
-    // Appended to keep the stored ordinals of existing notifications stable.
     EVERSENSE_PLACEMENT(NORMAL, CGM),
     EVERSENSE_FIRMWARE(INFO, CGM),
 
@@ -278,10 +259,5 @@ enum class NotificationId(
     EVERSENSE_ALARM(NORMAL, CGM, allowMultiple = true),
     EVERSENSE_SENSOR_EXPIRY(NORMAL, CGM),
     EVERSENSE_BATTERY_LOW(NORMAL, CGM),
-    EVERSENSE_CALIBRATION_DUE(NORMAL, CGM);
-
-    companion object {
-
-        fun fromOrdinal(ordinal: Int): NotificationId? = entries.getOrNull(ordinal)
-    }
+    EVERSENSE_CALIBRATION_DUE(NORMAL, CGM)
 }
