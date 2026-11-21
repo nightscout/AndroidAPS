@@ -127,6 +127,7 @@
     <string name="carelevo_toast_msg_needle_check_failed">바늘 삽입에 실패했습니다.</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">패치 사용 종료에 실패했습니다. 다시 시도해 주세요.</string>
+    <string name="carelevo_discarded_not_reached">패치에 연결할 수 없었습니다. 패치는 AAPS에서 제거되었지만 중지되지 않았으며, 아직 인슐린을 주입할 수 있습니다. 패치를 떼어 내십시오.</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">기저 주입 요청에 실패했습니다. 다시 시도해 주세요.</string>
     <!-- Delivery Resume/Suspend -->
@@ -211,5 +212,7 @@
     <string name="carelevo_profile_update_skip_comment">업데이트 요청 간격이 짧아 실행되지 않았습니다.</string>
     <string name="carelevo_bolus_stop_not_confirmed">패치에서 정지가 확인되지 않았습니다. 볼러스 종료를 기다리는 중…</string>
     <string name="carelevo_bolus_rejected_missed_bolus_recorded">기록되지 않은 볼러스를 방금 추가했습니다. IOB를 확인한 후 다시 시도하십시오.</string>
+    <string name="carelevo_bolus_outcome_unknown">패치가 볼러스에 응답하지 않았습니다. 패치가 실제 주입량을 알려줄 때까지 볼러스 전체를 계산에 넣습니다.</string>
     <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">패치에서 정지가 확인되지 않아 볼러스 전체(%1$s)를 기록했습니다.</string>
+    <string name="carelevo_bolus_stopped_by_patch" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The patch stopped the bolus. Given: 0.50 U of 2.00 U">패치가 볼러스를 중지했습니다. 주입량: %1$s / %2$s</string>
 </resources>
