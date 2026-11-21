@@ -1,9 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation">Automatització</string>
+    <string name="automation_enabled">Activat</string>
+    <string name="automation_read_only">Només lectura</string>
+    <string name="automation_new_rule">Nova tasca</string>
+    <string name="automation_empty_desc">Creeu una tasca per automatitzar accions a partir d\'activadors.</string>
+    <string name="automation_edit_rule">Editar tasca</string>
+    <string name="automation_discard_title">Descartar els canvis?</string>
+    <string name="automation_discard_message">La tasca està incompleta i no es pot desar. Voleu descartar els canvis?</string>
+    <string name="automation_discard_confirm">Descartar</string>
+    <string name="automation_category_time">Hora i programació</string>
+    <string name="automation_category_glucose">Glucèmia i tractaments</string>
+    <string name="automation_category_device">Estat del dispositiu</string>
+    <string name="automation_category_sensors">Sensors i connectivitat</string>
+    <string name="automation_category_other">Altres</string>
+    <string name="automation_choose_trigger">Afegir activador</string>
+    <string name="automation_add_group">Grup</string>
+    <string name="automation_choose_action">Afegir acció</string>
+    <string name="automation_category_targets">Objectius</string>
+    <string name="automation_category_profile">Perfil</string>
+    <string name="automation_category_loop">Llaç i insulina</string>
+    <string name="automation_category_alerts">Alertes</string>
+    <string name="automation_category_system">Sistema</string>
+    <string name="automation_category_scenes">Escenes</string>
+    <string name="action_run_scene">Executar escena</string>
+    <string name="action_run_scene_short">Executar escena: %1$s</string>
+    <string name="action_enable_scene">Activar escena</string>
+    <string name="action_enable_scene_short">Activar escena: %1$s</string>
+    <string name="action_disable_scene">Desactivar escena</string>
+    <string name="action_disable_scene_short">Desactivar escena: %1$s</string>
+    <string name="action_scene_label">Escena</string>
+    <string name="trigger_scene_active">Escena</string>
+    <string name="trigger_scene_active_compared">Escena %1$s</string>
+    <string name="action_scene_not_found">No s\'ha trobat l\'escena</string>
+    <string name="action_scene_disabled">L\'escena està desactivada</string>
+    <string name="automation_unit_meters">m</string>
+    <string name="automation_unit_bpm">bpm</string>
     <string name="automation_missing_task_name">Introduïu un nom de tasca.</string>
     <string name="automation_missing_trigger">Especifiqueu almenys un activador.</string>
     <string name="automation_missing_action">Especifiqueu almenys una acció.</string>
+    <string name="exportsettings_message">Exportació de configuració: %1$s</string>
+    <string name="export_settings_short">Text als tractaments:</string>
     <string name="alarm_message">Alarma: %1$s</string>
     <string name="alarm_short">Alarma:</string>
     <string name="message_short">Msstg:</string>
@@ -19,6 +56,8 @@
     <string name="sendsmsactiondescription">Enviar SMS a tots els números</string>
     <string name="sendsmsactiontext">Enviar SMS amb text</string>
     <string name="starttemptarget">Iniciar objectiu temporal</string>
+    <string name="islesser">és més petit que</string>
+    <string name="isequalorlesser">és igual o més petit que</string>
     <string name="isequal">és igual a</string>
     <string name="isequalorgreater">és igual o més gran que</string>
     <string name="isgreater">és més gran que</string>
@@ -49,6 +88,7 @@
     <string name="add_short">AFEGR</string>
     <string name="temptargetcompared">Objectiu temporal %1$s</string>
     <string name="btdevicecompared">Connexió Bluetooth a dispositiu %1$s %2$s</string>
+    <string name="btdevice">Connexió a dispositiu Bluetooth</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
@@ -60,6 +100,24 @@
     <string name="lastboluscompared">Darrer bolus fa %1$s %2$s min</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="triggerHeartRate">Freqüència cardíaca</string>
+    <string name="triggerHeartRateDesc">FC %1$s %2$.0f</string>
+    <string name="triggerSensorAgeLabel">Edat del sensor</string>
+    <string name="triggerSensorAgeDesc">Edat del sensor %1$s %2$.1f hores</string>
+    <string name="triggerCannulaAgeLabel">Edat de la cànula</string>
+    <string name="triggerCannulaAgeDesc">Edat de la cànula %1$s %2$.1f hores</string>
+    <string name="triggerPodChangeLabel">Activació del pod</string>
+    <string name="triggerPodChangeDesc">Pod activat</string>
+    <string name="triggerUnknownLabel">Activador desconegut</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Activador desconegut %1$s - no es compleix mai</string>
+    <string name="triggerInsulinAgeLabel">Edat de la insulina</string>
+    <string name="triggerInsulinAgeDesc">Edat de la insulina %1$s %2$.1f hores</string>
+    <string name="triggerPumpBatteryAgeLabel">Edat de la pila de la bomba</string>
+    <string name="triggerPumpBatteryAgeDesc">Edat de la pila de la bomba %1$s %2$.1f hores</string>
+    <string name="triggerReservoirLevelLabel">Nivell del reservori</string>
+    <string name="triggerReservoirLevelDesc">Nivell del reservori %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">Nivell de la pila de la bomba</string>
+    <string name="triggerPumpBatteryLevelDesc">Nivell de la pila de la bomba %1$s %2$.0f</string>
     <string name="recurringTime">Temps recurrent</string>
     <string name="every">Cada</string>
     <string name="never">Mai</string>
@@ -69,12 +127,44 @@
     <string name="edit_short">EDIT</string>
     <string name="preconditions">Precondicions:</string>
     <string name="user_action">Acció de l’usuari</string>
+    <string name="system_automation">Automatització del sistema</string>
+    <string name="run_automations">Executar automatitzacions</string>
+    <string name="add_automation">Afegir tasca</string>
+    <string name="stop_processing">Aturar el processament</string>
     <!--    Reminders-->
+    <string name="time_to_eat">Hora de menjar!\nObriu la calculadora de bolus i torneu a fer el càlcul.</string>
     <string name="time_to_bolus">Hora d’aplicar bolus!\nExecuteu l\'assistent de bolus i torneu a fer els càlculs.</string>
+    <string name="error_setting_reminder">Error en programar l\'alarma futura</string>
     <!--    Autotune-->
+    <string name="autotune_profile_name">Perfil Autotune %1$s</string>
+    <string name="autotune_run">Executar Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune executat sense canvi de perfil</string>
+    <string name="autotune_run_with_autoswitch">Autotune executat i perfil canviat automàticament</string>
+    <string name="autotune_run_with_error">Error en la darrera execució d\'Autotune</string>
+    <string name="autotune_run_cancelled">S\'ha detectat una altra execució d\'Autotune, execució cancel·lada</string>
     <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Nombre de passos</string>
+    <string name="triggerStepsCountDesc">Nombre de passos per %1$s minuts %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">Durada del mesurament</string>
+    <string name="automation_log_entry" comment="One line of the automation run log. %1$s=time, %2$s=a symbol for success or failure, %3$s=rule name (bold), %4$s=what the action did, %5$s=its result. Example: 21:15 ☺ Night low: Start temp target: 8.0mmol/L@60 min(Automation): OK">%1$s %2$s %3$s: %4$s: %5$s</string>
     <!--    SMB mode-->
+    <string name="changeSmbState">Activar/desactivar SMB</string>
+    <string name="changeSmbTo">Canviar SMB a %1$s</string>
+    <string name="newSmbMode">Nou mode SMB:</string>
+    <string name="on">ACTIVAT</string>
+    <string name="off">DESACTIVAT</string>
     <!--    Smoothing-->
+    <string name="change_smoothing">Canviar el suavitzat</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">Canviar el suavitzat a %1$s</string>
+    <string name="smoothing_label">Suavitzat</string>
+    <string name="precondition_smoothing_not_active_name">Suavitzat no actiu</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">El suavitzat %1$s no està actiu</string>
     <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Triar al mapa</string>
+    <string name="tap_to_select_location">Toqueu el mapa per seleccionar una ubicació</string>
+    <string name="selected_coords">Seleccionat: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
+    <string name="permission_location_title">Ubicació</string>
+    <string name="permission_location_description">Necessari per als activadors d\'automatització basats en la ubicació i per identificar la xarxa WiFi</string>
+    <string name="permission_background_location_description">Necessari perquè els activadors d\'automatització funcionin quan l\'aplicació és en segon pla</string>
 </resources>
