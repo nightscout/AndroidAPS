@@ -160,10 +160,10 @@
         <item quantity="other">%1$d д</item>
     </plurals>
     <plurals name="omnipod_common_pod_alerts">
-        <item quantity="one">Оповещений Pod: %1$s</item>
-        <item quantity="few">Оповещений Pod: %1$s</item>
-        <item quantity="many">Оповещений Pod: %1$s</item>
-        <item quantity="other">Оповещений Pod: %1$s</item>
+        <item quantity="one">Оповещение Pod: %1$s</item>
+        <item quantity="few">Оповещения Pod: %1$s</item>
+        <item quantity="many">Оповещения Pod: %1$s</item>
+        <item quantity="other">Оповещения Pod: %1$s</item>
     </plurals>
     <!-- Omnipod - History -->
     <string name="omnipod_common_history_bolus_value">%1$.2f ед</string>
