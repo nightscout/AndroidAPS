@@ -10,18 +10,26 @@ import AapsShared
 @main
 struct ClientApp: App {
 
-    /// Firebase is started here, before SwiftUI builds anything.
+    /// Firebase is started here, before SwiftUI builds anything, and then AAPS itself.
     ///
     /// Crashlytics does not need an `AppDelegate` - an `init()` on the `App` is early enough, and
     /// early is the point: its signal handlers have to be installed before there is anything to
     /// crash. It also puts Kotlin's own terminate handler on top of Crashlytics', because the Kotlin
-    /// runtime does not start until the first call into the framework, which happens later in
-    /// `AapsAppView.makeUIViewController`. That ordering is what keeps a Kotlin crash readable.
+    /// runtime does not start until the first call into the framework, which is the start just
+    /// below. That ordering is what keeps a Kotlin crash readable, so Crashlytics stays first.
     ///
     /// `start()` never raises. A missing or broken `GoogleService-Info.plist` means no crash
     /// reporting, not no app.
+    ///
+    /// AAPS starts here, not when the first screen is built. iOS can start the app in the background
+    /// with no window - to hand over a Bluetooth event after it ended the app for memory - and then
+    /// SwiftUI builds no screen at all. See `startAapsApp`.
     init() {
         CrashlyticsCrashReporter.start()
+        AapsAppHostKt.startAapsApp(
+            nsSocketFactory: SwiftNsSocketFactory(),
+            crashReporter: CrashlyticsCrashReporter.shared
+        )
     }
 
     var body: some SwiftUI.Scene {
@@ -40,6 +48,9 @@ struct ClientApp: App {
 struct AapsAppView: UIViewControllerRepresentable {
 
     func makeUIViewController(context: Context) -> UIViewController {
+        // AAPS was started by `ClientApp.init`; this only hands over its screen. The two arguments
+        // are used only if nothing started it before.
+        //
         // The Nightscout socket is handed to the Kotlin graph from here, because it is written in
         // Swift and cannot carry a Kotlin annotation. Android and desktop contribute their own
         // socket.io client automatically; this is the same project's Swift client, so both platforms

@@ -47,8 +47,10 @@ import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.database.AppRepository
 import app.aaps.database.di.IosAppDatabaseBuilder
-import app.aaps.implementation.maintenance.PeriodicMaintenance
+import app.aaps.implementation.alerts.IosMissedReadingAlarm
+import app.aaps.implementation.maintenance.KeepAliveRunner
 import app.aaps.implementation.maintenance.cloud.AuthBrowser
+import app.aaps.implementation.plugin.IosPermissionStatus
 import app.aaps.implementation.pump.alerts.IosPumpAlertPlatform
 import app.aaps.implementation.receivers.IosReceiverStatusStore
 import app.aaps.plugins.automation.AutomationRuntime
@@ -67,6 +69,7 @@ import dev.zacsweers.metro.Multibinds
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
+import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -202,8 +205,14 @@ interface IosAppGraph : MetroViewModelMultibindings {
     @APS
     val contributedApsPlugins: Map<Int, PluginBase>
     val automationRuntime: AutomationRuntime
-    // The periodic housekeeping shared with Android, and the scope the shell drives it on.
-    val periodicMaintenance: PeriodicMaintenance
+    /** The 5-minute checks shared with Android, run by `IosStartPlatform.startKeepAlive` on [appScope]. */
+    val keepAliveRunner: KeepAliveRunner
+
+    /** The wall clock, for waits that have to follow the time of day. */
+    val clock: Clock
+
+    /** Started by the app, as it needs an app bundle. See `IosMissedReadingAlarm`. */
+    val missedReadingAlarm: IosMissedReadingAlarm
 
     /**
      * The local alarms, for one call Android makes and this shell has to make too:
@@ -241,6 +250,9 @@ interface IosAppGraph : MetroViewModelMultibindings {
     val pumpCommunicationStatus: PumpCommunicationStatus
     /** Concrete, not the interface: the app has to start the battery watch, which is iOS-only. */
     val receiverStatusStore: IosReceiverStatusStore
+
+    /** What iOS says about notifications, Bluetooth and location, for the permission sheet. */
+    val permissionStatus: IosPermissionStatus
 
     val urlOpener: UrlOpener
 

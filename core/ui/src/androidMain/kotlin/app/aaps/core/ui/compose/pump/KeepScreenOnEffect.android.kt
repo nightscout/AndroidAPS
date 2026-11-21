@@ -6,14 +6,9 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 
-/**
- * Keeps the screen on and locks orientation while this composable is in the composition.
- * Restores previous state on disposal.
- *
- * Use in pump wizard workflows to prevent screen timeout during activation.
- */
+/** Android also locks the orientation, so a turn of the phone does not rebuild the wizard mid step. */
 @Composable
-fun KeepScreenOnEffect() {
+actual fun KeepScreenOnEffect() {
     // LocalActivity, not a cast of LocalContext: that context is usually a ContextWrapper, where
     // `as? Activity` is null and the screen would quietly time out mid pump activation.
     val activity = LocalActivity.current

@@ -78,6 +78,17 @@ things help and neither is a product decision: cover the window on `willResignAc
 app-switcher snapshot does not hold the PIN, and show the warning the screen can already render
 (`screenshotsBlocked` in `AuthorizedClientsScreen`) when the value is false.
 
+### Time Sensitive alarms need the capability on each App ID
+Phone builds sign with `Device.entitlements` (`AAPS_DEVICE_ENTITLEMENTS` in `Signing.xcconfig`), which
+asks for Time Sensitive notifications so alarms come through Focus and Sleep. Without it iOS quietly
+posts them as normal notifications. A wildcard development profile cannot carry the capability, so each
+bundle id needs an explicit App ID with it. Automatic signing does that by itself - from Xcode with the
+account signed in, or from `xcodebuild` with `-authenticationKeyPath/-ID/-IssuerID` and the App Store
+Connect key - once the account holder has accepted the current Program License Agreement (on
+2026-11-20 Apple refused with "PLA Update available"). Until then a local
+`AAPS_DEVICE_ENTITLEMENTS =` in `Signing.local.xcconfig` builds without it. A command-line override
+of that setting is not enough: the signing check does not see it.
+
 ---
 
 ## 2. Features not built yet
@@ -106,6 +117,18 @@ A Debug build of the full app may close the loop only in engineering mode, the s
 emulated patch instead of a real one. With no Nightscout there is no glucose, so pick **Random BG** as
 the source - it is shared code now, on every platform. It is offered only on the virtual pump in
 engineering mode, or with an `unfinished_mode` file, so with the emulated patch add that file too.
+
+Seen on the simulator on 2026-11-19, with Random BG and the emulated patch: the wizard runs to the end,
+objective 1 starts against `time.google.com`, and after switching to open loop OpenAPS SMB runs on each
+reading. Accepting its suggestion sent a zero temp basal through the command queue to the patch, and the
+patch reported it enacted. Not yet seen: closed loop (objective 6 and engineering mode), SMB, a bolus.
+Two things to know when setting it up again:
+
+- A fresh install starts with the loop **disabled** (`RM.DEFAULT_MODE`), as on Android. Choose open
+  loop from the loop icon on the overview after objective 1 is started.
+- A first run used to open the setup wizard **twice** on iOS: `AapsAppHost` had its own trigger from
+  before `AapsAppRoot` opened the wizard on every platform. That trigger was removed on 2026-11-20, so
+  `AapsAppRoot` is the only one now, as on Android and the desktop.
 
 | What | Where | Note |
 |---|---|---|

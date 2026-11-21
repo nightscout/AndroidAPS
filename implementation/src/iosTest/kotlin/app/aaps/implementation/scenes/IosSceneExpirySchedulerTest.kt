@@ -2,14 +2,16 @@ package app.aaps.implementation.scenes
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.time.Clock
+import kotlin.time.Instant
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 /**
  * When [IosSceneExpiryScheduler] asks for the runner, which is the whole of what it decides.
@@ -68,6 +70,11 @@ class IosSceneExpirySchedulerTest {
 
         val dispatcher = StandardTestDispatcher()
         var asked = 0
+        /** The wall clock: the scheduler's time, which is the time the phone is awake, plus what it slept. */
+        var sleptMs = 0L
+        val clock = object : Clock {
+            override fun now(): Instant = Instant.fromEpochMilliseconds(1_790_000_000_000L + dispatcher.scheduler.currentTime + sleptMs)
+        }
         val caught = mutableListOf<Throwable>()
 
         /** A supervisor and a handler of its own: the marker must not take the test down with it. */
@@ -79,7 +86,8 @@ class IosSceneExpirySchedulerTest {
                 asked++
                 throw RunnerAsked()
             },
-            scope = scope
+            scope = scope,
+            clock = clock
         )
 
         fun advance(byMs: Long) {
@@ -135,6 +143,19 @@ class IosSceneExpirySchedulerTest {
         assertEquals(0, f.asked)
     }
 
+    /** A delay counts only the time the phone is awake. The end must follow the wall clock instead. */
+    @Test
+    fun `after the phone slept the scene ends within half a minute of the real time`() {
+        val f = Fixture()
+        f.scheduler.schedule("Exercise", 60 * 60_000)
+
+        f.advance(10 * 60_000)
+        f.sleptMs = 2 * 60 * 60_000 // the phone was locked for two hours
+
+        f.advance(30_000)
+        assertEquals(1, f.asked, "the scene ended an hour ago on the wall clock")
+    }
+
     @Test
     fun `a scene that is already over ends at the first chance`() {
         // What a restored or re-read scene looks like: the end has passed, so the delay is none at all.
@@ -157,7 +178,7 @@ class IosSceneExpirySchedulerTest {
         }
         val dispatcher = StandardTestDispatcher()
         val scope = CoroutineScope(dispatcher + SupervisorJob() + CoroutineExceptionHandler { _, _ -> })
-        val scheduler = IosSceneExpiryScheduler(recording, { throw RunnerAsked() }, scope)
+        val scheduler = IosSceneExpiryScheduler(recording, { throw RunnerAsked() }, scope, Clock.System)
 
         scheduler.schedule("Exercise", 60 * 60_000)
 

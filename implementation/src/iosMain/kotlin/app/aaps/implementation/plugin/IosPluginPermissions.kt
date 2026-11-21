@@ -3,31 +3,31 @@ package app.aaps.implementation.plugin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.IosPermission
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.PluginPermissions
+import app.aaps.implementation.ImplementationStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 
 /**
- * No permission groups, because on iOS there is nothing to put in one.
+ * The permissions the app needs on iOS, as iOS reports them, so a refused one is shown.
  *
- * `PermissionGroup.permissions` holds platform permission strings, which are Android
- * `Manifest.permission` constants. iOS has no list to enumerate and no way to ask whether something
- * was granted ahead of time: an app requests access at the point of use and the system decides when
- * to show the prompt. So a permissions screen has nothing to show, and that is the true answer
- * rather than a missing one.
+ * iOS has no list of permissions like Android's `Manifest.permission`, and it asks the user itself the
+ * first time an app uses something. But the answer can be read at any time, and a refusal is silent:
+ * a refused notification permission means alarms that never show, a refused Bluetooth means a pump that
+ * cannot be reached. So the permission screen shows them, as on Android:
  *
- * It is also the answer every source already gives. `bluetoothPermissionGroup()` is null on iOS,
- * `IosLocationPermissions` returns an empty list, and every other place that builds a group -
- * `DexcomPlugin`, `AndroidLocationPermissions`, the global battery and notification groups - is
- * Android only.
+ * - **Notifications**, always. Alarms reach the user through them, on the master and on a client.
+ * - **Bluetooth**, from every enabled pump (`PumpPluginBase.requiredPermissions`).
+ * - **Location**, from automation, only while a rule uses a location trigger.
  *
- * Rather than return a hard coded empty list, this asks the plugins anyway and complains if one ever
- * answers. That keeps the class honest: the emptiness above is a fact about today's code, not a rule
- * of the platform, and the day someone adds an iOS group this says so instead of dropping it.
+ * Groups carry the ids in [IosPermission]. A group with any other id cannot be checked on iOS, so it is
+ * left out and logged as an error: listing it as missing would send the user looking for a switch iOS
+ * does not have, and listing it as granted would claim a check that never happened.
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
@@ -35,30 +35,43 @@ import dev.zacsweers.metro.SingleIn
 class IosPluginPermissions(
     private val aapsLogger: AAPSLogger,
     private val activePlugin: ActivePlugin,
+    private val status: IosPermissionStatus,
     private val permissionProviders: () -> Set<PermissionProvider>
 ) : PluginPermissions {
 
-    override fun collectMissingPermissions(): List<PermissionGroup> = noneAndSayIfWrong()
+    override fun collectMissingPermissions(): List<PermissionGroup> =
+        collectAllPermissions().filter { group -> group.permissions.any { isMissing(it) } }
 
-    override fun collectAllPermissions(): List<PermissionGroup> = noneAndSayIfWrong()
+    /** Each group once, even when several pumps or plugins declare the same one. */
+    override fun collectAllPermissions(): List<PermissionGroup> =
+        (listOf(notifications) + declaredGroups()).distinctBy { it.permissions.toSet() }
 
-    /**
-     * Always empty, but looks first.
-     *
-     * The check is the point. Reporting a group as missing would send the user hunting for a switch
-     * iOS does not have, and reporting one as granted would claim a check that never happened -
-     * so neither list may carry a group while there is no way to ask the system about it.
-     */
-    private fun noneAndSayIfWrong(): List<PermissionGroup> {
+    private fun isMissing(permission: String): Boolean = when (status.state(permission)) {
+        IosPermissionState.DENIED, IosPermissionState.NOT_ASKED -> true
+        IosPermissionState.GRANTED, IosPermissionState.UNKNOWN  -> false
+    }
+
+    private fun declaredGroups(): List<PermissionGroup> {
         val declared = activePlugin.getPluginsList().filter { it.isEnabled() }.flatMap { it.requiredPermissions() } +
             permissionProviders().flatMap { it.requiredPermissions() }
-        if (declared.isNotEmpty()) {
+        val (checkable, unknown) = declared.partition { group -> group.permissions.isNotEmpty() && group.permissions.all { it in KNOWN } }
+        if (unknown.isNotEmpty()) {
             aapsLogger.error(
                 LTag.CORE,
-                "A plugin declares permissions on iOS, which nothing can grant or check: " +
-                    declared.flatMap { it.permissions }.distinct().joinToString()
+                "A plugin declares permissions iOS cannot check: " + unknown.flatMap { it.permissions }.distinct().joinToString()
             )
         }
-        return emptyList()
+        return checkable
+    }
+
+    private companion object {
+
+        val KNOWN = setOf(IosPermission.BLUETOOTH, IosPermission.NOTIFICATIONS, IosPermission.LOCATION)
+
+        val notifications = PermissionGroup(
+            permissions = listOf(IosPermission.NOTIFICATIONS),
+            rationaleTitle = ImplementationStrings.permission_notifications_title,
+            rationaleDescription = ImplementationStrings.permission_notifications_description
+        )
     }
 }
