@@ -17,6 +17,24 @@
     <string name="hoursago">%1$.1f год тому</string>
     <string name="days_ago">%1$.1f днів тому</string>
     <string name="days_ago_round">%1$.0f днів тому</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">%1$s день %2$s год тому</item>
+        <item quantity="few">%1$s дні %2$s год тому</item>
+        <item quantity="many">%1$s днів %2$s год тому</item>
+        <item quantity="other">%1$s днів %2$s год тому</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">%1$s годину тому</item>
+        <item quantity="few">%1$s години тому</item>
+        <item quantity="many">%1$s годин тому</item>
+        <item quantity="other">%1$s годин тому</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">%1$s хвилину тому</item>
+        <item quantity="few">%1$s хвилини тому</item>
+        <item quantity="many">%1$s хвилин тому</item>
+        <item quantity="other">%1$s хвилин тому</item>
+    </plurals>
     <string name="seconds_ago">кілька секунд тому</string>
     <string name="in_days">через %1$.0f днів</string>
     <string name="in_days_round">через %1$.0f днів</string>
