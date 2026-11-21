@@ -115,10 +115,12 @@
     <string name="status_label">État :</string>
     <string name="clear_log">Effacer le journal</string>
     <string name="full_sync">Synchronisation complète</string>
+    <string name="full_sync_comment">Synchronisation complète ? Cela peut prendre plusieurs heures et, tant qu\'elle n\'est pas terminée, vous ne verrez pas de nouvelles données dans NS.</string>
     <string name="ns_sync_options">Synchronisation</string>
     <string name="ns_alarm_options">Options d\'alarme</string>
     <string name="ns_remote_control_options">Contrôle à distance</string>
     <!-- Tidepool -->
+    <string name="summary_tidepool_dev_servers">Si activé, les envois iront vers les serveurs de test au lieu des serveurs habituels</string>
     <string name="title_tidepool_dev_servers">Utiliser les serveurs d\'Intégration (test)</string>
     <string name="title_tidepool_use_ns_connection">Utiliser les paramètres de connexion de Nightscout</string>
     <string name="summary_tidepool_use_ns_connection">Désactiver pour définir des paramètres de connexion séparés pour Tidepool</string>
@@ -227,13 +229,16 @@
     <string name="smscommunicator_tab_otp_label">Configuration de l\'Authentificateur</string>
     <string name="smscommunicator_code_verify_label">Code à vérifier :</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">Le code de vérification est composé des 6 chiffres affichés par l\'application Authenticator (appelés OTP), suivis du code PIN obligatoire de 3 chiffres ou plus.</string>
     <string name="smscommunicator_otp_reset_btn">Réinitialiser les authentificateurs</string>
     <string name="smscommunicator_otp_reset_title">Réinitialiser la clé de l\'Authentificateur</string>
+    <string name="smscommunicator_otp_reset_prompt">Voulez-vous vraiment réinitialiser la clé de l\'Authentificateur ? Tous les authentificateurs configurés deviendront invalides et vous devrez les configurer à nouveau.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installer l\'Authentificateur</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scannez le code pour configurer les codes OTP AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test Mot-de-Passe-Unique (OTP)</string>
     <string name="smscommunicator_otp_reset_header">Réinitialiser les authentificateurs</string>
     <string name="smscommunicator_otp_install_info">Sur chaque téléphone suiveur, installez une appli. Authentificateur qui prend en charge les jetons RFC 6238 TOTP. Les applications libres populaires sont:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">En réinitialisant l\'Authentificateur, vous invalidez tous les authentificateurs déjà configurés. Vous devrez les configurer à nouveau !</string>
     <string name="smscommunicator_otp_verification_ok">Ok</string>
     <string name="smscommunicator_otp_verification_ivalid_size">TAILLE INVALIDE !</string>
     <string name="smscommunicator_otp_verification_wrong_pin">MAUVAIS CODE PIN</string>
@@ -244,6 +249,7 @@
     <string name="smscommunicator_meal_bolus_reply_with_code">Pour injecter le bolus repas de %1$.2f U, renvoyez le code %2$s</string>
     <string name="smscommunicator_temptarget_with_code">Pour définir la cible temp %1$s, renvoyez le code %2$s</string>
     <string name="smscommunicator_temptarget_cancel">Pour annuler la cible temp, renvoyez le code %1$s</string>
+    <string name="smscommunicator_stops_ns_with_code">Pour désactiver le service de commande à distance SMS, répondez avec le code %1$s.\n\nGardez à l\'esprit que vous ne pourrez le réactiver que directement depuis le smartphone maître AAPS.</string>
     <string name="smscommunicator_stopped_sms">Service de commande à distance SMS arrêté. Pour le réactiver, utilisez AAPS sur le smartphone maître.</string>
     <string name="smscommunicator_calibration_reply_with_code">Pour envoyer la calibration %1$.2f, renvoyez le code %2$s</string>
     <string name="smscommunicator_bolus_failed">Le bolus a échoué. Vérifiez l\'état réel avant d\'envoyer une autre commande !</string>
@@ -274,6 +280,7 @@
     <string name="smscommunicator_restarting">AAPS redémarre</string>
     <string name="smscommunicator_tempbasal_set">Démarrage réussi pour %1$.2fU/h de basal temp pour %2$d min</string>
     <string name="smscommunicator_extended_set">Le Bolus étendu %1$.2fU pendant %2$d min a commencé avec succès</string>
+    <string name="smscommunicator_carbs_set">%1$d g de glucides saisis avec succès</string>
     <string name="smscommunicator_carbs_failed">L\'entrée de %1$dg de glucides a échoué</string>
     <string name="smscommunicator_tempbasal_set_percent">Démarrage réussi pour %1$d%% de Basal temporaire pour %2$d min</string>
     <string name="smscommunicator_tempbasal_failed">Le démarrage du basal temporaire a échoué</string>
