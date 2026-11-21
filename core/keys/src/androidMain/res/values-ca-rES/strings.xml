@@ -125,7 +125,7 @@
     <string name="pref_title_ns_slow_sync">Utilitzar sincronització lenta</string>
     <string name="pref_title_ns_use_ws">Utilitzar websockets</string>
     <string name="pref_summary_ns_use_ws">Utilitzar websockets per a la comunicació en temps real amb Nightscout.</string>
-    <string name="pref_title_ns_allow_client_control">Permetre el control des del client</string>
+    <string name="pref_title_ns_allow_client_control">Permetre el control des dels clients</string>
     <string name="pref_summary_ns_allow_client_control">Permet que els dispositius client emparellats enviïn ordres signades (p. ex. iniciar/aturar escenes) a través de Nightscout. També activa el mode reforçat: ja no s\'accepten els canvis fets directament a Nightscout.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Només WiFi</string>
@@ -203,7 +203,7 @@
     <string name="pref_title_uam_smb_max_minutes">Màxim de minuts de basal per limitar l\'SMB amb UAM</string>
     <string name="uam_smb_max_minutes">Max. minuts d\'UAM SMB</string>
     <string name="pref_title_carbs_request_threshold">Llindar de carbohidrats necessaris</string>
-    <string name="carbs_req_threshold_summary">Minim grs. de carbohidrats per mostrar alerta carbohidrats recomanats. Recomanacions d\'hidrats per sota d\'aquest llindar no generaran avís.</string>
+    <string name="carbs_req_threshold_summary">Mínim de grams de carbohidrats per mostrar una alerta de carbohidrats recomanats. Les recomanacions de carbohidrats per sota d\'aquest llindar no generaran cap avís.</string>
     <string name="pref_title_half_basal_exercise_target">Objectiu d\'esport amb meitat de basal</string>
     <string name="half_basal_exercise_target_summary">Indiqueu un número, p. ex. 160: quan l\'objectiu temporal és 160 mg/dL i \'Un objectiu temporal alt puja la sensibilitat\' està activat, s\'aplica el 50%% de la basal en aquest nivell (120 = 75%%; 140 = 60%%).</string>
     <string name="pref_title_iob_threshold_percent">Percentatge del llindar d\'IOB</string>
@@ -314,7 +314,7 @@
     <string name="pref_title_smb_min_5m_carbs_impact">Impacte mínim de carbohidrats en 5 min per a SMB</string>
     <string name="openapsama_min_5m_carb_impact_summary">Valor per defecte: 3 (AMA) o 8.0 (SMB). Aquest paràmetre indica el valor per defecte d\'absorció de carbohidrats en 5 minuts, quan diem 3 volem dir 3mg/dl/5min. Afecta a com de ràpid decauen els COB i quina absorció de carbohidrats es considera al calcular la predicció de glucèmia futura, quan la glucèmia cau més ràpid de l\'esperat o no puja tant com era de preveure.</string>
     <string name="pref_title_absorption_cutoff">Límit d\'absorció</string>
-    <string name="absorption_cutoff_summary">Temps en que qualsevol àpat es considera absorvit. Els carbohidrats que quedin seran descartats.</string>
+    <string name="absorption_cutoff_summary">Temps en què qualsevol àpat es considera absorbit. Els carbohidrats que quedin seran descartats.</string>
     <string name="pref_title_absorption_maxtime">Temps màxim d\'absorció</string>
     <string name="absorption_max_time_summary">Temps en hores en què s\'espera que s\'hagin absorbit tots els carbohidrats d\'un àpat</string>
     <string name="pref_title_autosens_min">Autosens mín.</string>
