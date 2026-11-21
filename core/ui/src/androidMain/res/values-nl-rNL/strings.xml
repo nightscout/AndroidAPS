@@ -1065,6 +1065,8 @@
     <string name="wiki_search_offline">Voor zoeken in de documentatie is een internetverbinding vereist</string>
     <string name="no_search_results">Geen resultaten gevonden</string>
     <string name="search_plugin_disabled">Plug-in %1$s gedeactiveerd</string>
+    <string name="search_recent">Recente zoekopdrachten</string>
+    <string name="search_history_remove">Verwijder uit recente zoekopdrachten</string>
     <!--    Food Management -->
     <string name="food_management">Voeding</string>
     <string name="food_deleted">Voedingsmiddel verwijderd</string>
