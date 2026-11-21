@@ -44,6 +44,7 @@
     <string name="diaconn_g8_screentimeout">Tempo de LCD ligado [segundos]</string>
     <string name="diaconn_g8_language">Idioma</string>
     <string name="diaconn_g8_bolus_speed">Velocidade do bólus</string>
+    <string name="diaconn_g8_pumplang_chiness">Chinês</string>
     <string name="diaconn_g8_pumplang_korean">Coreano</string>
     <string name="diaconn_g8_pumplang_english">Inglês</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -61,6 +62,7 @@
     <string name="diaconn_g8_logbatterychange_summary">Adicionar evento \"Mudança de bateria\" ao portal de cuidados, quando detectado no histórico</string>
     <string name="diaconn_g8_logbatterychange_title">Registrar troca de bateria</string>
     <string name="diaconn_g8_logsyncinprogress">Log de sincronização em andamento</string>
+    <string name="diaconn_g8_loginsulinshorage">Falta de insulina</string>
     <string name="diaconn_g8_logbatteryshorage">Pouca bateria</string>
     <string name="diaconn_g8_logneedleprime">Purgar cateter: %1$.2fU</string>
     <string name="diaconn_g8_loginjectorprime">Purgar cânula: %1$.2fU</string>
@@ -74,6 +76,7 @@
     <string name="diaconn_g8_reasoncomplete">Completo</string>
     <string name="diaconn_g8_reasoninjectonblock">Injeção bloqueada</string>
     <string name="diaconn_g8_reasonbatteryshortage">Pouca bateria</string>
+    <string name="diaconn_g8_reasoninsulinshortage">Falta de insulina</string>
     <string name="diaconn_g8_reasonuserstop">Parada de usuário</string>
     <string name="diaconn_g8_reasonsystemreset">Redefinição de sistema</string>
     <string name="diaconn_g8_reasonother">Outro</string>
@@ -89,6 +92,7 @@
     <string name="diaconn_g8_logalarmblock">Injeção Bloqueada (%s)</string>
     <string name="diaconn_g8_lgorelease">autorização da basal (%s)</string>
     <string name="diaconn_g8_lgosuspend">basal suspensa (%s)</string>
+    <string name="diaconn_g8_logdualnormalsuccess">Bólus duplo (parte normal) concluído</string>
     <string name="diaconn_g8_logdualsquarestart">Bólus duplo (parte estendida) iniciado</string>
     <string name="diaconn_g8_logdualsquaresuccess">Bólus duplo (parte estendida) aplicado com sucesso</string>
     <string name="diaconn_g8_logsquarestart">Bólus estendido iniciado</string>
@@ -97,6 +101,8 @@
     <string name="diaconn_g8_logsuccess">Sucesso</string>
     <string name="diaconn_g8_logmealsuccess">Refeição: ok</string>
     <string name="diaconn_g8_errorcode_1">Não foi possível pesquisar pacote devido a erro CRC</string>
+    <string name="diaconn_g8_errorcode_2">Não pode ser definido: erro em parâmetro de entrada.</string>
+    <string name="diaconn_g8_errorcode_3">Não pode ser definido: erro de especificação do protocolo.</string>
     <string name="diaconn_g8_errorcode_4">Hora de comer, não pode ser injetado.</string>
     <string name="diaconn_g8_errorcode_6">Cancelado pela bomba</string>
     <string name="diaconn_g8_errorcode_7">Tomando outras ações, limitando as configurações do aplicativo.</string>
@@ -106,6 +112,7 @@
     <string name="diaconn_g8_errorcode_11">Aplicação não é possível devido à bateria fraca.</string>
     <string name="diaconn_g8_errorcode_12">Insulina insuficiente. Não pode ser aplicada.</string>
     <string name="diaconn_g8_errorcode_13">Você não pode aplicar porque excede o limite.</string>
+    <string name="diaconn_g8_errorcode_14">Não é possível aplicar porque excede o volume de aplicação de hoje.</string>
     <string name="diaconn_g8_errorcode_15">Após completar configuração da basal, a aplicação da basal pode ser realizada.</string>
     <string name="diaconn_g8_logtubechange_title">Registrar troca de tubo</string>
     <string name="diaconn_g8_logtubechange_summary">Adicionar evento \"Mudança de cartucho\" ao portal de cuidados, quando detectado no histórico</string>
@@ -113,6 +120,8 @@
     <string name="diaconn_g8_errorcode_32">Durante a suspensão por hipoglicemia, há restrição da injeção</string>
     <string name="diaconn_g8_errorcode_33">Suspensão por hipoglicemia está ligada, o comando ON é recusado.</string>
     <string name="diaconn_g8_errorcode_34">Suspensão por hipoglicemia está desligada, o comando OFF é recusado.</string>
+    <string name="diaconn_g8_errorcode_35">O início da basal temporária é recusado quando uma basal temporária está em execução</string>
+    <string name="diaconn_g8_errorcode_36">A parada da basal temporária é recusada quando nenhuma basal temporária está em execução</string>
     <string name="diaconn_g8_cloudsend_summary">Enviar logs da bomba para a Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn Cloud sincronizada</string>
     <string name="bolus_speed_1">1 U/min</string>
@@ -125,4 +134,5 @@
     <string name="bolus_speed_8">8 U/min</string>
     <string name="diaconn_pairing_successful">Pareamento concluído!</string>
     <string name="diaconn_pairing_successful_message">Sua bomba está conectada e pronta para uso.</string>
+    <string name="diaconn_g8_cloud_sync_progress" comment="Pump status while AAPS sends the pump log to the Diaconn cloud. %1$d=parts sent, %2$d=all parts. Example: Cloud sync: 3 / 10">Sincronização com a nuvem: %1$d / %2$d</string>
 </resources>
