@@ -30,7 +30,7 @@
         <item quantity="other">Prieš %1$s val.</item>
     </plurals>
     <plurals name="plurals_minute_ago">
-        <item quantity="one">ką tik</item>
+        <item quantity="one">prieš %1$s min</item>
         <item quantity="few">prieš %1$s min</item>
         <item quantity="many">prieš %1$s min</item>
         <item quantity="other">prieš %1$s min</item>
