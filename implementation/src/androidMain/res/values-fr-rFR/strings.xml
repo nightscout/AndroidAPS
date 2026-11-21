@@ -3,6 +3,9 @@
     <string name="executing_right_now">Commande exécutée à l\'instant</string>
     <string name="smb_being_delivered">Un SMB est actuellement en cours d\'injection. Réessayez quand il sera terminé.</string>
     <string name="basal_value_below_minimum">Le débit Basal est inférieur au minimum autorisé. Profil non accepté !</string>
+    <string name="concentration_change_failed_title">Échec du changement d\'insuline</string>
+    <string name="concentration_change_failed">La nouvelle insuline est dans la pompe, mais AAPS n\'a pas pu lui enregistrer le profil. La pompe donne une mauvaise quantité d\'insuline. Déconnectez ou retirez la pompe maintenant, vérifiez votre glycémie et injectez l\'insuline par un autre moyen si vous en avez besoin. Rebranchez la pompe uniquement après que le profil a été enregistré.</string>
+    <string name="concentration_change_pending">Le profil avec la nouvelle insuline n\'est pas encore enregistré dans la pompe. Aucune insuline ne peut être injectée tant qu\'il n\'est pas enregistré.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Profil basal de la pompe a été mis à jour. La pompe arrondit le débit basal à son propre palier : elle injecte %1$s par jour au lieu de %2$s.</string>
     <string name="basal_reported_far_from_profile">La pompe signale une basale loin du profil. AAPS conserve la basale du profil. Vérifiez les débits de base dans la pompe.</string>
     <!--       Stats -->
@@ -57,8 +60,10 @@
     <string name="ue_exported">Entrées utilisateur exportées</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exporté il y a %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exporté le %1$s</string>
+    <string name="exported_less_than_hour_ago">exporté il y a moins d\'une heure</string>
     <string name="metadata_warning_different_flavour">Les préférences ont été créées avec différentes variantes d\'AAPS (%1$s) alors que vous avez: %2$s.\n\nCertains paramètres peuvent être manquants ou invalides - après avoir importé veuillez vérifier et mettre à jour vos préférences.</string>
     <string name="metadata_warning_different_device">Les préférences ont été créées sur un autre périphérique. C\'est OK si vous importez à partir d\'un téléphone ancien/différent, mais vérifiez que les préférences importées sont correctes !</string>
+    <string name="metadata_warning_old_export">Les préférences importées ont déjà %1$s jours ! Vous avez peut-être des préférences plus récentes ou vous avez choisi le mauvais fichier ? N\'oubliez pas d\'exporter vos préférences régulièrement !</string>
     <string name="metadata_warning_date_format">Format date et heure non valide !</string>
     <string name="metadata_warning_different_version">Préférences d\'une autre version mineure, différente de l\'application. C\'est OK si vous importez après la mise à jour, mais vérifiez après l\'importation si les préférences sont toujours correctes !</string>
     <string name="metadata_urgent_different_version">Préférences d\'une autre version majeure, différente de l\'application. Les versions majeures diffèrent significativement et peuvent avoir des préférences incompatibles ! Vérifiez bien après l\'import que les préférences sont toujours correctes !</string>
