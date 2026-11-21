@@ -7,26 +7,99 @@
     <string name="objectivenotfinished">Objectiu %1$d no acabat</string>
     <string name="objectives_0_objective">Configuració de visualització i monitorització, així com anàlisi de basals i ràtios</string>
     <string name="objectives_0_gate">Comprovar que la glucèmia està disponible a Nightscout i les dades d\'insulina de la bomba s\'estan enviant</string>
+    <string name="objectives_0_learned">Heu fet la configuració bàsica de l\'ecosistema AAPS. Nightscout no és necessari perquè AAPS funcioni, però és molt útil per als informes o per al seguiment d\'altres pacients. No cal estar connectat a NS tot el temps si feu servir NS només per a vosaltres. Podeu configurar, per exemple, l\'enviament només amb la wifi de casa i estalviar bateria.</string>
     <string name="objectives_openloop_objective">Iniciant llaç obert</string>
     <string name="objectives_openloop_gate">Funcionar en mode llaç obert uns quants dies i acceptar manualment múltiples basals temporals. Configurar i utilitzar objectius temporals i objectius temporals per defecte (p.ex. esport o carbs per tractament d\'hipo)</string>
+    <string name="objectives_openloop_learned">El llaç obert es pot fer servir per obtenir recomanacions si no teniu una bomba compatible o encara no esteu preparats per tancar el llaç.</string>
     <string name="objectives_maxbasal_objective">Entendre el vostre llaç obert, recomanacions de basals temporals incloses</string>
     <string name="objectives_maxbasal_gate">D\'acord amb aquesta experiència, decidiu quina hauria de ser la basal màxima i configureu-la a la bomba i la configuració</string>
+    <string name="objectives_maxbasal">Fer l\'acció per complir la recomanació</string>
+    <string name="objectives_maxbasal_learned">Tingueu cura de les funcions de seguretat i ajusteu els paràmetres de seguretat quan calgui.</string>
     <string name="objectives_maxiobzero_objective">Començant a tancar el llaç amb LGS (Suspensió per glucèmia baixa)</string>
+    <string name="objectives_maxiobzero_gate">Fer funcionar el llaç tancat en mode LGS (suspensió per glucèmia baixa, és a dir, la IOB màxima = 0 s\'estableix automàticament) durant uns quants dies sense gaires episodis LGS.</string>
+    <string name="objectives_maxiobzero_learned">Posar la IOB màxima a zero ajuda a evitar hipos i no afegirà més insulina per sobre de la taxa basal (excepte en situacions amb IOB negativa)</string>
     <string name="objectives_maxiob_objective">Ajustant el llaç tancat, augmentant la IOB màxima per sobre de 0 i baixant gradualment els objectius de glucèmia</string>
+    <string name="objectives_maxiob_gate">Fer funcionar uns quants dies, i com a mínim una nit sense alarmes de glucèmia baixa, abans de baixar l\'objectiu de glucèmia</string>
+    <string name="objectives_maxiob_learned">Actualitzeu la IOB màxima a mesura que l\'infant creix. No permeteu que el sistema us doni més insulina de la que podeu cobrir amb menjar = un valor molt alt és mala idea. En mode simple la IOB màxima es calcula automàticament</string>
+    <string name="maxiobset">IOB màxima configurada correctament (no cal en mode simple)</string>
     <string name="objectives_autosens_objective">Ajustar basals i ràtios si cal, i després activar auto-sens</string>
     <string name="objectives_autosens_gate">1 setmana d\'èxit en mode llaç tancat durant el dia, amb introducció regular de carbohidrats</string>
+    <string name="objectives_autosens_learned">Si el resultat d\'autosens no oscil·la al voltant del 100%, probablement el perfil és incorrecte.</string>
     <string name="objectives_smb_objective">Activant funcions addicionals d\'ús diurn, com l\'SMB (super micro bolus)</string>
+    <string name="objectives_smb_gate">Heu de llegir la wiki i augmentar la IOB màxima perquè els SMB funcionin bé! Un bon inici és IOB màxima = bolus d\'àpat mitjà + 3 x basal diària màxima. En mode simple aquest valor es calcula segons la recomanació de la wiki i no cal configurar-lo.</string>
+    <string name="objectives_smb_learned">El vostre objectiu és fer servir SMB. L\'algoritme Oref1 també es va dissenyar per ajudar-vos amb els bolus. No hauríeu de fer el bolus complet per l\'àpat, sinó només una part, i deixar que AAPS us doni la resta si cal. Així teniu més marge per als carbohidrats mal calculats. Sabíeu que podeu configurar un percentatge del resultat de la calculadora de bolus per reduir la mida del bolus?</string>
     <string name="objectives_auto_objective">Activant l\'automatització</string>
+    <string name="objectives_auto_gate">Llegiu la documentació sobre com funciona l\'automatització. Configureu les vostres primeres regles senzilles. En lloc d\'una acció, deixeu que AAPS només mostri un avís. Quan estigueu segurs que l\'automatització s\'activa en el moment correcte, substituïu l\'avís per l\'acció real. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
+    <string name="objectives_auto_learned">L\'automatització pot ser un bon servent però un mal amo. No n\'abuseu. No intenteu substituir l\'algoritme principal. Proveu la regla només amb un missatge abans de fer-la servir. Depèn de l\'ordre.</string>
+    <string name="objectives_bgavailableinns">Glucèmia disponible a NS o Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">Estat de la bomba disponible a NS o Tidepool</string>
     <string name="objectives_manualenacts">Activació manual</string>
     <string name="accomplished">Completat: %1$s</string>
+    <string name="objectives_usage_objective">Aprendre a controlar AAPS</string>
+    <string name="objectives_usage_gate">Fer diferents accions a AAPS</string>
+    <string name="objectives_usage_learned">Heu après els conceptes bàsics d\'AAPS. La majoria de controls són a la pantalla Resum. Hi ha més accions als menús Tractaments i Gestionar a la part inferior de la pantalla, i al menú lateral.</string>
+    <string name="objectives_useprofileswitch">Establir el perfil al 90% durant 10 min</string>
+    <string name="objectives_usedisconnectpump">Simular una dutxa. Desconnectar la bomba durant 1 h</string>
     <string name="objectives_usereconnectpump">... i torneu a connectar de la mateixa manera</string>
+    <string name="objectives_usetemptarget">Crear un objectiu temporal personalitzat de 10 min de durada</string>
     <string name="objectives_useloop">Mostreu el contingut del plugin Loop (llaç)</string>
+    <string name="objectives_usescale">Fer servir el desplaçament o el zoom al gràfic de glucèmia</string>
     <string name="objectives_exam_objective">Demostreu els vostres coneixements</string>
+    <string name="objectives_exam_gate">Estudieu les preguntes. Cada pregunta té diverses respostes possibles, i pot haver-hi més d\'una resposta correcta. Marqueu totes les respostes correctes i seleccioneu VERIFICAR.</string>
+    <string name="objectives_exam_learned_prerequisites">No cal ser desenvolupador. Necessiteu Nightscout o Tidepool per superar els Objectius, una bomba compatible i una manera de compilar AAPS (en un navegador web o amb Android Studio) per a la primera instal·lació i per a cada actualització.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS pot funcionar sense connexió.</string>
+    <string name="objectives_exam_learned_basaltest">Cal revisar i actualitzar el perfil. Millor perfil = millors resultats.</string>
+    <string name="objectives_exam_learned_dia">La DIA en el llaç té un significat diferent (temps fins que s\'absorbeix tota la insulina) que en la teràpia clàssica amb bomba (temps fins que s\'absorbeix la major part de la insulina).</string>
+    <string name="objectives_exam_learned_isf">Heu après el significat del valor ISF i com afecta la quantitat d\'insulina utilitzada per corregir la glucèmia.</string>
+    <string name="objectives_exam_learned_ic">Heu après el significat del valor IC i com afecta la quantitat d\'insulina necessària per cobrir els carbohidrats.</string>
+    <string name="objectives_exam_learned_hypott">L\'objectiu temporal d\'hipoglucèmia només s\'utilitza per evitar una sobrecorrecció després d\'una hipo, quan normalment hi ha IOB negativa acumulada. Caldria avaluar altres accions per evitar que aquesta situació es repeteixi en el futur.</string>
+    <string name="objectives_exam_learned_profileswitch" formatted="false">Fer servir el percentatge no afecta els objectius de glucèmia, però la basal, l\'ISF i l\'IC s\'ajusten per donar més insulina (per sobre del 100%) o menys insulina (per sota del 100%).</string>
+    <string name="objectives_exam_learned_profileswitchtime">Fent servir el desplaçament horari en el canvi de perfil podeu adaptar el perfil circadiari a irregularitats com llevar-se tard.</string>
+    <string name="objectives_exam_learned_profileswitch4">Editar el perfil no és suficient per aplicar un canvi. Encara cal fer un canvi de perfil per activar els canvis.</string>
+    <string name="objectives_exam_learned_exercise">Hauríeu de reduir la quantitat d\'insulina al cos com a mínim 1 hora abans de començar l\'esport seleccionant un perfil per sota del 100%.</string>
+    <string name="objectives_exam_learned_exercise2">Establir un objectiu temporal més alt com a mínim 1 hora abans de l\'esport també ajuda a reduir la quantitat d\'insulina al cos.</string>
+    <string name="objectives_exam_learned_noisycgm">Quan no us podeu fiar dels valors del CGM, no hauríeu de fer servir el llaç sense supervisió.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS ha de saber que la bomba no està connectada per calcular la IOB correctament.</string>
+    <string name="objectives_exam_learned_insulin">AAPS ha de saber quina insulina hi ha a la bomba, perquè afecta el càlcul de la IOB.</string>
+    <string name="objectives_exam_learned_sensitivity">La detecció de sensibilitat és part de l\'algoritme i permet adaptar la dosificació d\'insulina a diferents situacions.</string>
+    <string name="objectives_exam_learned_objectives">El vostre progrés als Objectius es desa amb la resta de la configuració i se n\'ha de fer còpia de seguretat.</string>
+    <string name="objectives_exam_learned_objectives2">Guardeu sempre la configuració exportada i l\'APK generat també fora del telèfon. El telèfon es pot perdre, fer malbé, etc. Un bon lloc pot ser qualsevol núvol accessible des del telèfon. Així podeu restaurar AAPS en un altre dispositiu en pocs minuts. També és bona pràctica guardar la clau mestra en un lloc segur. Sense ella, la vostra còpia de seguretat és inútil. El mateix val per a les claus de signatura (fitxer .jks) i les contrasenyes utilitzades per compilar AAPS. La resta no és important: es pot tornar a descarregar d\'internet en qualsevol moment.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Si heu introduït una dada errònia a AAPS o no coincideix amb la realitat, corregiu-la com més aviat millor. Podria provocar una sobredosi. AAPS ha d\'estar sempre informat de la millor manera possible sobre els carbohidrats, la insulina, etc.</string>
+    <string name="objectives_exam_learned_iob">Si voleu comprovar si AAPS us funciona bé, observar el gràfic d\'IOB us pot donar molta informació útil.</string>
+    <string name="objectives_exam_learned_cob">El càlcul de COB depèn de la relació entre ISF i IC. Augmentar l\'ISF o reduir l\'IC allargarà els temps d\'absorció. Però un canvi de perfil amb percentatge canvia els dos valors alhora i el temps d\'absorció no es veu afectat.</string>
+    <string name="objectives_exam_learned_breadgrams">Per introduir carbohidrats només es permeten grams.</string>
+    <string name="objectives_exam_learned_ecarbs">Els e-carbs són un substitut del bolus estès del món de les bombes.</string>
+    <string name="objectives_exam_learned_nsclient">Podeu seguir AAPS a distància amb AAPSClient o Nightscout. Quan AAPSClient està emparellat amb el telèfon principal, també podeu controlar AAPS a distància.</string>
+    <string name="objectives_exam_learned_concentration1">Fer servir insulina U200 amb un perfil al 50% requerirà una conversió permanent: per als bolus externs amb bolígrafs, i tots els informes estàndard d\'AAPS o NS seran incorrectes i s\'hauran de convertir a U per a l\'equip mèdic.</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">Passar d\'U200 amb un perfil al 50% a U200 amb la funció de concentració d\'insulina requerirà crear un perfil nou més fort, desactivar DynISF durant una setmana i entrenar el cervell a pensar en unitats internacionals.</string>
+    <string name="objectives_exam_learned_concentration3">La concentració d\'insulina només es pot canviar quan es canvia la insulina o el patch. Però el més important, especialment per a les bombes amb tub, és no fer servir mai la interfície de la bomba per lliurar bolus directament des de la bomba.</string>
     <string name="answerdisabledto">Resposta deshabilitada fins: %1$s</string>
     <string name="wronganswer">Resposta incorrecta!</string>
     <string name="unfinshed_button">Següent no finalitzada</string>
     <string name="requestcode">Sol·licitar codi: %1$s</string>
     <string name="objectives_hint">(marqueu totes les respostes correctes)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">No hi ha connexió a internet</string>
+    <string name="failedretrievetime">No s\'ha pogut obtenir l\'hora</string>
     <string name="requirementnotmet">No es compleixen els requeriments de l\'objectiu</string>
+    <string name="what_i_ve_learned">Què he après:</string>
+    <string name="verify_master_password">Comprovar que coneixeu la clau mestra</string>
+    <string name="objectives_collapse">Menys</string>
+    <string name="objectives_expand">Més</string>
+    <string name="objectives_no_learned">No hi ha lliçons registrades per a aquest objectiu.</string>
+    <string name="objectives_open_exam">Obrir examen</string>
+    <string name="objectives_exam_question_progress">Pregunta %1$d de %2$d</string>
+    <string name="objectives_exam_reset">Restablir</string>
+    <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Fet</string>
+    <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">En curs</string>
+    <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">No iniciat</string>
+    <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">Bloquejat</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">resposta correcta</string>
+    <string name="objectives_exam_previous">Anterior</string>
+    <string name="objectives_exam_next">Següent</string>
+    <string name="objectives_exam_next_unanswered">Següent sense resposta</string>
+    <string name="objectives_show_hint">Pista</string>
 </resources>
