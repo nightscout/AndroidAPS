@@ -143,6 +143,11 @@ class EversenseDriver internal constructor(
     /** A 365, from the link when there is one, else from the model chosen at sign-in. */
     fun transmitterIs365(): Boolean = security.value?.let { it == EversenseSecurityType.SecureV2 } ?: secureState().model.startsWith("E365")
 
+    /** Days the sensor lasts: a 365 a year, an E3 180 days. Null while neither a link nor a sign-in has told the model. */
+    fun sensorLifetimeDays(): Int? =
+        if (security.value == null && secureState().model.isEmpty()) null
+        else if (transmitterIs365()) LIFETIME_365_DAYS else LIFETIME_E3_DAYS
+
     fun hasInternet(): Boolean = receiverStatusStore.isConnected
 
     fun getCurrentState(): EversenseState = JSON.decodeFromString<EversenseState>(preferences.getString(StorageKeys.STATE, null) ?: "{}")
@@ -639,5 +644,9 @@ class EversenseDriver internal constructor(
 
         /** A calibration, a signal read or a mode change, with the wait for its turn on the link */
         val OPERATION_TIMEOUT = 20.seconds
+
+        /** How long a sensor lasts, in days */
+        const val LIFETIME_365_DAYS = 365
+        const val LIFETIME_E3_DAYS = 180
     }
 }

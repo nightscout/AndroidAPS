@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.BooleanComposedKey
+import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
@@ -151,6 +152,42 @@ internal class ConfigBuilderImplTest {
         sut.performPluginSwitch(sens2, true, PluginType.BGSOURCE)
 
         verifyBlocking(persistenceLayer, after(300).never()) { invalidateCalibrationEntry(any(), any(), any(), anyOrNull(), any()) }
+    }
+
+    // ---- sensor lifetime after a BG source switch ----
+
+    /** The new source's sensor lifetime replaces the old one, so the old sensor's limits do not stay. */
+    @Test
+    fun aBgSourceSwitchTakesTheNewSourcesSensorLifetime() {
+        whenever(config.AAPSCLIENT).thenReturn(false)
+        val knowsItsSensor: BgSource = mock()
+        whenever(knowsItsSensor.sensorLifetimeHours).thenReturn(365 * 24)
+        bgSourceSwitch(before = mock(), after = knowsItsSensor)
+
+        sut.performPluginSwitch(sens2, true, PluginType.BGSOURCE)
+
+        verify(preferences).put(IntNonKey.SensorLifetimeHours, 365 * 24)
+    }
+
+    /** A source that does not know its sensor clears the lifetime: the user's own limits apply again. */
+    @Test
+    fun aSourceThatDoesNotKnowItsSensorClearsTheLifetime() {
+        whenever(config.AAPSCLIENT).thenReturn(false)
+        bgSourceSwitch(before = mock(), after = mock())
+
+        sut.performPluginSwitch(sens2, true, PluginType.BGSOURCE)
+
+        verify(preferences).put(IntNonKey.SensorLifetimeHours, 0)
+    }
+
+    /** The lifetime is the master's: a client gets it with the synced settings and never writes it. */
+    @Test
+    fun aClientDoesNotWriteTheSensorLifetime() {
+        bgSourceSwitch(before = mock(), after = mock())
+
+        sut.performPluginSwitch(sens2, true, PluginType.BGSOURCE)
+
+        verify(preferences, never()).put(eq(IntNonKey.SensorLifetimeHours), any<Int>())
     }
 
     /** A local plugin switch mirrors the new selection (by pluginId) into the synced ActivePlugin key. */

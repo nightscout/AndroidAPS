@@ -43,6 +43,7 @@ class EversenseStatusViewModelTest {
         whenever(it.getCurrentState()).thenAnswer { state }
         whenever(it.isConnected()).thenAnswer { connection.value == ConnectionState.READY }
         whenever(it.transmitterIs365()).thenReturn(true)
+        whenever(it.sensorLifetimeDays()).thenReturn(365)
     }
     private val attention = MutableStateFlow<CgmAttention?>(null)
     private val account = MutableStateFlow<EversenseAccount?>(null)
@@ -140,19 +141,26 @@ class EversenseStatusViewModelTest {
 
     /** An E3 sensor lasts 180 days, a 365 sensor 365. */
     @Test fun theSensorEndFollowsTheModel() {
-        whenever(driver.transmitterIs365()).thenReturn(false)
+        whenever(driver.sensorLifetimeDays()).thenReturn(180)
         state = EversenseState().apply { insertionDate = 2_000L }
         assertThat(viewModel().rows()).contains("eversense_sensor_end=day ${2_000L + 180 * DAY}")
     }
 
-    /** The rows that need a look are coloured: a low battery, a weak signal, a due calibration, a sensor near its end. */
+    /** Before the model is known there is no lifetime, so no end date either. */
+    @Test fun noSensorEndBeforeTheModelIsKnown() {
+        whenever(driver.sensorLifetimeDays()).thenReturn(null)
+        state = EversenseState().apply { insertionDate = 2_000L }
+        assertThat(viewModel().uiState.value.rows.map { it.label }).doesNotContain("eversense_sensor_end")
+    }
+
+    /** The rows that need a look are coloured: a low battery, a weak signal, a due calibration, an ended sensor. */
     @Test fun rowsThatNeedALookAreColoured() {
         now = 1_000L * DAY
         state = EversenseState().apply {
             lastSync = now
             batteryPercentage = 8
             sensorSignalStrength = 28
-            insertionDate = now - 360 * DAY
+            insertionDate = now - 366 * DAY
             nextCalibrationDate = now - 1
             activeAlarms = listOf(ActiveAlarm(EversenseAlarm.LOW_GLUCOSE, EversenseAlarm.LOW_GLUCOSE.code, 0, 0))
         }
@@ -162,6 +170,13 @@ class EversenseStatusViewModelTest {
         assertThat(viewModel.row("eversense_next_calibration").level).isEqualTo(StatusLevel.WARNING)
         assertThat(viewModel.row("eversense_sensor_end").level).isEqualTo(StatusLevel.CRITICAL)
         assertThat(viewModel.row("alarm").level).isEqualTo(StatusLevel.CRITICAL)
+    }
+
+    /** The overview's rule: a 365 sensor turns orange in its last 30 days, and red once it has ended. */
+    @Test fun aSensorInItsLastMonthIsAWarning() {
+        now = 1_000L * DAY
+        state = EversenseState().apply { insertionDate = now - 340 * DAY }
+        assertThat(viewModel().row("eversense_sensor_end").level).isEqualTo(StatusLevel.WARNING)
     }
 
     @Test fun rowsThatAreFineAreNotColoured() {

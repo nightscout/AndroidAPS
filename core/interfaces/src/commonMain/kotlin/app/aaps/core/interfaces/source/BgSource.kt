@@ -20,6 +20,14 @@ interface BgSource {
     fun hasSensorError(): Boolean = false
 
     /**
+     * How long the sensor in use lasts, in hours, when this source knows it (a CGM driver that knows its sensor model),
+     * or 0. The master keeps it in `IntNonKey.SensorLifetimeHours`: the sensor age limits follow it ([SensorLifetime]),
+     * on every phone, and the manual limits are hidden. A source whose value changes writes the key itself.
+     */
+    val sensorLifetimeHours: Int
+        get() = 0
+
+    /**
      * The Android packages of the vendor app this source takes its readings from, as the CGM app catalog lists
      * them: what the CGM button opens. Empty when the source has no such app, and on platforms with no packages.
      */

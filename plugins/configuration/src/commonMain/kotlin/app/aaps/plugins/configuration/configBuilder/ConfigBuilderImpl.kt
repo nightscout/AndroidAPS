@@ -31,6 +31,7 @@ import app.aaps.core.interfaces.source.activeBgSourceOrNull
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.CoreUiStrings
@@ -89,7 +90,7 @@ class ConfigBuilderImpl(
         // Same three steps as initialize(), but the plugin jobs are collected and waited for.
         val sourceBefore = activePlugin.activeBgSourceOrNull()
         val started = loadSettings() + applyEnforcedPluginStates()
-        resetCalibrationsIfSourceChanged(sourceBefore)   // an imported configuration can select another BG source
+        onBgSourceChanged(sourceBefore)   // an imported configuration can select another BG source
         if (!config.AAPSCLIENT) regenerateActivePluginKeys()
         startActivePluginObservers()
         // Bounded, because a plugin's onStop/onStart may itself wait on something - a pump driver
@@ -310,7 +311,7 @@ class ConfigBuilderImpl(
         changedPlugin.setPluginEnabled(type, enabled)
         processOnEnabledCategoryChanged(changedPlugin, type)
         storeSettings("RemoteConfiguration")
-        resetCalibrationsIfSourceChanged(sourceBefore)   // after storeSettings: the new source is active only once the selection is verified
+        onBgSourceChanged(sourceBefore)   // after storeSettings: the new source is active only once the selection is verified
         syncActivePluginKey(type)   // mirror the new selection into the synced ActivePlugin key (echo-guarded)
         rxBus.send(EventConfigBuilderChange())
         _activeSelectionChanges.tryEmit(Unit)   // post-commit: refresh the Configuration screen after the switch is applied
@@ -318,19 +319,24 @@ class ConfigBuilderImpl(
     }
 
     /**
-     * A calibration pairs a finger stick with a reading of the BG source in use at that time. Another source gives
-     * other readings, so the pairs no longer fit it. When the active source really changed, the pairs of the current
-     * sensor session are marked invalid: the calibration plugin uses only those. Older ones it never uses again, and
-     * without a session start it corrects nothing.
+     * What belongs to the BG source in use, when the active source really changed.
      *
-     * Master only. A client has no source the calibrations belong to; the invalid entries reach it through Nightscout.
-     * No confirmation: switching the source is the user's own decision, and the pairs are useless after it. Each
-     * entry is logged as removed, with the new source as the note.
+     * - The sensor lifetime becomes the new source's ([BgSource.sensorLifetimeHours], 0 when it does not know it), so
+     *   the sensor age limits of the old sensor do not stay.
+     * - A calibration pairs a finger stick with a reading of the BG source in use at that time. Another source gives
+     *   other readings, so the pairs no longer fit it. The pairs of the current sensor session are marked invalid: the
+     *   calibration plugin uses only those. Older ones it never uses again, and without a session start it corrects
+     *   nothing.
+     *
+     * Master only. A client has no source of its own: the lifetime reaches it with the synced settings, the invalid
+     * entries through Nightscout. No confirmation: switching the source is the user's own decision, and the pairs are
+     * useless after it. Each entry is logged as removed, with the new source as the note.
      */
-    private fun resetCalibrationsIfSourceChanged(sourceBefore: BgSource?) {
+    private fun onBgSourceChanged(sourceBefore: BgSource?) {
         if (config.AAPSCLIENT) return
         val sourceAfter = activePlugin.activeBgSourceOrNull()
         if (sourceBefore == null || sourceAfter == null || sourceBefore === sourceAfter) return
+        preferences.put(IntNonKey.SensorLifetimeHours, sourceAfter.sensorLifetimeHours)
         val note = (sourceAfter as? PluginBase)?.let { plugin -> plugin.pluginDescription.pluginName?.let { rh.gsNotLocalised(it) } ?: plugin.pluginId }
         scope.launch {
             val sessionStart = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)?.timestamp ?: return@launch

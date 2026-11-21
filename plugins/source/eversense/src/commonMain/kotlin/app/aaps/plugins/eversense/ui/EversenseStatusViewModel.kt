@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.source.CgmAttention
+import app.aaps.core.interfaces.source.SensorLifetime
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.StatusLevel
@@ -13,8 +14,6 @@ import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.plugins.eversense.EversenseDriver
 import app.aaps.plugins.eversense.EversenseDriver.ConnectionState
 import app.aaps.plugins.eversense.EversensePlugin.Companion.BATTERY_LOW_PERCENT
-import app.aaps.plugins.eversense.EversensePlugin.Companion.SENSOR_END_CRITICAL_DAYS
-import app.aaps.plugins.eversense.EversensePlugin.Companion.SENSOR_END_WARNING_DAYS
 import app.aaps.plugins.eversense.EversenseStrings
 import app.aaps.plugins.eversense.callbacks.EversenseWatcher
 import app.aaps.plugins.eversense.enums.EversenseType
@@ -144,17 +143,17 @@ class EversenseStatusViewModel(
                 )
             )
             add(row(rh.gs(EversenseStrings.eversense_sensor_inserted), date(state.insertionDate)))
-            if (state.insertionDate > 0) {
-                val lifetimeDays = if (eversense.transmitterIs365()) 365 else 180
-                val end = state.insertionDate + lifetimeDays * DAY_MS
-                val daysLeft = (end - now) / DAY_MS
-                // The same days as the sensor age colours of the overview
+            val lifetimeDays = eversense.sensorLifetimeDays()
+            if (state.insertionDate > 0 && lifetimeDays != null) {
+                val lifetimeHours = lifetimeDays * 24
+                val ageHours = (now - state.insertionDate) / HOUR_MS
+                // The same rule as the sensor age of the overview
                 val level = when {
-                    daysLeft <= SENSOR_END_CRITICAL_DAYS -> StatusLevel.CRITICAL
-                    daysLeft <= SENSOR_END_WARNING_DAYS  -> StatusLevel.WARNING
-                    else                                 -> StatusLevel.UNSPECIFIED
+                    ageHours >= SensorLifetime.criticalHours(lifetimeHours) -> StatusLevel.CRITICAL
+                    ageHours >= SensorLifetime.warningHours(lifetimeHours)  -> StatusLevel.WARNING
+                    else                                                    -> StatusLevel.UNSPECIFIED
                 }
-                add(row(rh.gs(EversenseStrings.eversense_sensor_end), dateUtil.dateString(end), level))
+                add(row(rh.gs(EversenseStrings.eversense_sensor_end), dateUtil.dateString(state.insertionDate + lifetimeHours * HOUR_MS), level))
             }
             add(row(rh.gs(EversenseStrings.eversense_calibration_phase), if (synced) rh.gs(state.calibrationPhase.label) else NO_VALUE))
             add(row(rh.gs(EversenseStrings.eversense_last_calibration), date(state.lastCalibrationDate)))
@@ -187,7 +186,7 @@ class EversenseStatusViewModel(
 
         /** A value not known yet */
         const val NO_VALUE = "–"
-        const val DAY_MS = 24 * 60 * 60 * 1000L
+        const val HOUR_MS = 60 * 60 * 1000L
         const val REFRESH_AFTER_UNPAIR_MS = 500L
         const val REFRESH_AFTER_SYNC_MS = 5_000L
     }

@@ -433,6 +433,7 @@ scan_on_connection_error|MedtrumBooleanKey|true
 scene_definitions|StringNonKey|true
 search_history|StringNonKey|false
 sensitivity_raises_target|BooleanKey|true
+sensor_lifetime_hours|IntNonKey|false
 set_neutral_temps|MedtronicBooleanPreferenceKey|true
 settings_password|StringKey|true
 settings_pin|StringKey|true

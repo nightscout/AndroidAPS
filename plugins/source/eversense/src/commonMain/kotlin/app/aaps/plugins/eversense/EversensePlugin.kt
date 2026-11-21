@@ -24,7 +24,7 @@ import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.source.CgmAttention
 import app.aaps.core.interfaces.source.CgmDriver
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
@@ -119,14 +119,13 @@ class EversensePlugin(
         internal const val BATTERY_LOW_PERCENT = 10
         private const val BATTERY_REARM_PERCENT = 20
 
-        /** The sensor age turns orange this many days before the sensor ends, and red at [SENSOR_END_CRITICAL_DAYS]. */
-        internal const val SENSOR_END_WARNING_DAYS = 30
-        internal const val SENSOR_END_CRITICAL_DAYS = 10
-
     }
 
 
     override var sensorBatteryLevel = -1
+
+    override val sensorLifetimeHours: Int
+        get() = eversense.sensorLifetimeDays()?.let { it * 24 } ?: 0
 
     /**
      * What one start of the plugin owns: its coroutines, the cloud upload in progress and the counters in memory.
@@ -322,14 +321,8 @@ class EversensePlugin(
             }
         }
 
-        // Sync SAGE color thresholds to match Eversense sensor lifetime and notification days
-        if (state.insertionDate > 0) {
-            val lifetimeDays = if (eversense.is365()) 365 else 180
-            val warnHours = (lifetimeDays - SENSOR_END_WARNING_DAYS) * 24
-            val urgentHours = (lifetimeDays - SENSOR_END_CRITICAL_DAYS) * 24
-            preferences.put(IntKey.OverviewSageWarning, warnHours)
-            preferences.put(IntKey.OverviewSageCritical, urgentHours)
-        }
+        // The sensor's lifetime sets the sensor age limits on every phone. Written only when it changes: it syncs out.
+        sensorLifetimeHours.let { hours -> if (preferences.get(IntNonKey.SensorLifetimeHours) != hours) preferences.put(IntNonKey.SensorLifetimeHours, hours) }
 
         // Check for persistent no-signal — indicates transmitter not placed over sensor
         if (state.sensorSignalStrength == 0) {
