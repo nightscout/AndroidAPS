@@ -3,6 +3,9 @@
     <string name="executing_right_now">명령을 지금 실행합니다.</string>
     <string name="smb_being_delivered">지금 SMB를 주입하고 있습니다. 주입이 끝나면 다시 시도하십시오.</string>
     <string name="basal_value_below_minimum">기저 값이 최소값보다 낮습니다. 프로파일이 설정되지 않았습니다!</string>
+    <string name="concentration_change_failed_title">인슐린 교체 실패</string>
+    <string name="concentration_change_failed">새 인슐린이 펌프에 들어 있지만, AAPS가 프로파일을 펌프에 쓰지 못했습니다. 펌프가 잘못된 양의 인슐린을 주입하고 있습니다. 지금 펌프를 분리하거나 제거하고, 혈당을 확인하고, 필요하면 다른 방법으로 인슐린을 투여하십시오. 프로파일이 쓰인 후에만 펌프를 다시 연결하십시오.</string>
+    <string name="concentration_change_pending">새 인슐린의 프로파일이 아직 펌프에 쓰이지 않았습니다. 프로파일이 쓰일 때까지 인슐린을 주입할 수 없습니다.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">펌프의 기저 프로파일이 업데이트되었습니다. 펌프는 기저를 자체 단위로 반올림합니다: 하루에 %2$s 대신 %1$s를 주입합니다.</string>
     <string name="basal_reported_far_from_profile">펌프가 프로파일과 크게 다른 기저를 보고합니다. AAPS는 프로파일의 기저를 유지합니다. 펌프의 기저 주입량을 확인하십시오.</string>
     <!--       Stats -->
