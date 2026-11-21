@@ -5,7 +5,8 @@
     <string name="next_button">Següent</string>
     <string name="previous_button">Previ</string>
     <string name="setupwizard_finish">FINALITZAR</string>
-    <string name="welcometosetupwizard">Benvinguts a l\'assistent de configuració. Us guiarà durant tot el procés\n</string>
+    <string name="welcome">Benvinguts</string>
+    <string name="welcometosetupwizard">Benvinguts a l\'assistent de configuració. Us guiarà durant el procés de configuració.</string>
     <string name="end_user_license_agreement">Acord de llicència per a l\'usuari final</string>
     <string name="end_user_license_agreement_text">NO S\'HA D\'UTILITZAR PER A PRENDRE DECISIONS MÈDIQUES. EL PROGRAMA NO TÉ GARANTIA, EN LA MESURA QUE HO PERMET LA LLEI APLICABLE. EXCEPTE QUAN S\'INDIQUI EL CONTRARI PER ESCRIT, ELS PROPIETARIS DEL COPYRIGHT I/O ALTRES PARTS PROPORCIONEN EL PROGRAMA \"TAL QUAL\" SENSE CAP MENA DE GARANTIA, NI IMPLÍCITA NI EXPLÍCITA, INCLOENT, PERÒ SENSE ESTAR LIMITADES A, LES GARANTIES IMPLÍCITES DE COMERCIALITZACIÓ I ADEQUACIÓ A UN OBJECTIU PARTICULAR. US FEU RESPONSABLES TOTALMENT DELS RISCOS EN QUANT A LA QUALITAT I EL RENDIMENT DEL PROGRAMA. SI EL PROGRAMA FOS DEFECTUÓS, VOSALTRES ASSUMIU EL COST DE TOT SERVEI, REPARACIÓ O CORRECCIÓ.</string>
     <string name="end_user_license_agreement_i_understand">ENTENC I ACCEPTO</string>
@@ -18,21 +19,48 @@
     <string name="master_password_summary">La clau mestra es fa servir per encriptar la còpia de seguretat i per editar la seguretat a l\'aplicació. Recordeu-la o emmagatzemeu-la en un lloc segur.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Utilitzeu valors del vostre àpat més gros habitualment\n</string>
+    <string name="syncinfotext">Sincronitzeu les dades al núvol. Podeu ometre aquest pas ara, però no podreu superar els objectius fins que no configureu el client de Nightscout o de Tidepool.</string>
+    <string name="status_label">Estat:</string>
     <string name="diawarning">Si us plau recordeu: els nous perfils d\'insulina requereixen una DIA de al menys 5h. Una DIA de 5-6h a un perfil nou és equivalent a DIA de 3h d\'un perfil antic.</string>
     <string name="profile">Perfil</string>
     <string name="doprofileswitch">Canviar de perfil</string>
     <string name="exitwizard">Ometre assistent de configuració</string>
     <string name="setupwizard_sensitivity_description">El plugin de sensibilitat s\'utilitza per detectar la sensibilitat i calcular els COB. Per més informació:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Seleccioneu un dels algoritmes disponibles. Estan ordenats del més antic al més nou. Un algoritme més nou sol ser més potent. No oblideu llegir la documentació d\'OpenAPS i configurar-lo abans de fer-lo servir.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Configureu el vostre RileyLink a continuació. Un cop seleccionat, serà possible continuar configurant-lo un cop l\'estatus del RileyLink sigui \"Connectat\". Pot trigar un minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Podeu continuar amb la configuració un cop la bomba estigui configurada.\n</string>
     <string name="startobjective">Iniciar primer objectiu</string>
+    <string name="open_objectives">Obrir Objectius</string>
+    <string name="setupwizard_permissions">Permisos</string>
+    <string name="setupwizard_profile_info">Creeu un perfil amb les vostres taxes basals, ràtio I:C, ISF i valors objectiu. Més endavant podeu afegir més perfils.</string>
+    <string name="setupwizard_permissions_info">AAPS necessita accés a l\'emmagatzematge i permisos per funcionar correctament. Concediu els permisos necessaris a continuació.</string>
     <string name="setupwizard_pump_riley_link_status">Estat RileyLink:</string>
+    <string name="setupwizard_client_control_title">Control des de clients</string>
+    <string name="setupwizard_client_control_info">Emparelleu dispositius client perquè puguin enviar ordres signades a aquest dispositiu principal a través de Nightscout. Aquesta és la nova manera recomanada de controlar AAPS a distància.</string>
+    <string name="setupwizard_ns_receive_info">Acceptar tractaments i dades directament de Nightscout (manera menys segura) ara està desactivat per defecte. Obriu la configuració següent només si encara ho necessiteu. Cal si heu d\'introduir dades a través de NS o d\'apps de tercers.</string>
+    <string name="setupwizard_open_ns_receive_settings">Acceptació de dades de Nightscout</string>
+    <string name="setupwizard_pair_with_master_info">Emparelleu aquest client amb el vostre AAPS principal perquè pugui enviar ordres per un canal segur. Després de l\'emparellament, la configuració s\'ha acabat.</string>
+    <string name="setupwizard_setup_from_master_title">Configurar des del dispositiu principal</string>
+    <string name="setupwizard_setup_from_master_info">Al dispositiu principal, obriu Clients autoritzats i afegiu aquest telèfon amb un codi QR. En escanejar-lo es configura Nightscout amb un token propi, i també es pot emparellar el telèfon. Després de l\'escaneig, la configuració s\'ha acabat. Sense codi QR, ometeu aquest pas i configureu Nightscout vosaltres mateixos.</string>
+    <string name="setupwizard_scan_master_qr">Escanejar el codi QR</string>
+    <string name="setupwizard_pairing_ws_warning">Per emparellar cal la connexió WebSocket de Nightscout. Torneu al pas anterior i activeu-la primer.</string>
+    <string name="setupwizard_pairing_status_master">Clients emparellats: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Encara no hi ha cap client emparellat</string>
+    <string name="setupwizard_pairing_status_client_paired">Emparellat amb un dispositiu principal</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Encara no emparellat</string>
+    <string name="setupwizard_instance_name_title">Qui fa servir aquest telèfon?</string>
     <string name="readstatus">Estat lectura</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Sembla que aquest dispositiu no permet optimitzar la bateria amb llistes blanques, això pot provocar problemes de rendiment.</string>
     <!--    ConfigBuilder-->
+    <string name="configbuilder_pump_description">Quina bomba voleu fer servir amb AAPS?</string>
     <string name="configbuilder_aps_description">Quin algoritme APS ha d\'anar fent ajustos de teràpia?</string>
+    <string name="configbuilder_sync_description">Plugins d\'enviament de dades, sincronització i comunicació.</string>
+    <string name="configbuilder_bgsource_description">D\'on ha d\'obtenir AAPS les dades?</string>
     <string name="configbuilder_sensitivity_description">Quin algoritme de sensibilitat voleu utilitzar?</string>
+    <string name="allow_hardware_pump_text">Atenció: si activeu i connecteu una bomba física, AAPS copiarà la configuració basal del perfil a la bomba i sobreescriurà la taxa basal desada a la bomba. Assegureu-vos que teniu la configuració basal correcta a AAPS. Si no n\'esteu segurs o no voleu sobreescriure la configuració basal de la bomba, premeu Cancel·lar i torneu a canviar a la bomba més tard.</string>
+    <string name="nsclient_version_does_not_match">La versió d\'AAPSClient no coincideix amb la versió d\'AAPS. Actualitzeu-la.</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
@@ -43,6 +71,9 @@
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
+    <string name="loading">Carregant…</string>
+    <string name="warning_wrong_directory_selected">Directori incorrecte seleccionat</string>
+    <string name="warning_wrong_directory_message">Heu seleccionat el subdirectori \"%1$s\" en lloc del directori arrel d\'AAPS. Seleccioneu el directori AAPS superior. L\'aplicació crearà i gestionarà els subdirectoris automàticament.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <!-- Provider-agnostic cloud storage strings -->
     <!-- Authorization status strings -->
