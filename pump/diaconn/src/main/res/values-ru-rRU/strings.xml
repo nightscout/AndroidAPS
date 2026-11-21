@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="diaconn_pairing">Сопражение с помпой Diaconn</string>
+    <string name="resetpairing">Сбросить информацию о сопряжении?</string>
+    <string name="diaconn_pairing">Сопряжение с помпой Diaconn</string>
     <string name="diaconn_g8_history_alarm">Оповещения</string>
     <string name="diaconn_g8_history_basalhours">Почасовой базал</string>
     <string name="diaconn_g8_history_bolus">Болюсы</string>
@@ -10,8 +11,11 @@
     <string name="gettingpumpsettings">Получение настроек помпы</string>
     <string name="gettingpumptime">Получение времени помпы</string>
     <string name="largetimediff">Большая разница во времени: \n Время в помпе расходится более чем 1,5 ч. \n. Установите время на помпе вручную и убедитесь, что чтение истории помпы не вызывает неожиданное поведение.\n если возможно, удалите историю из помпы перед изменением времени или отключите замкнутый цикл на один DIA после последней неверной записи в журнале, и как минимум на один DIA с настоящего момента.</string>
+    <string name="largetimedifftitle">Большая разница во времени</string>
     <string name="approachingdailylimit">Приближается суточный лимит инсулина</string>
     <string name="startingbolus">Начало подачи болюса</string>
+    <string name="waitingforbolusend">Ожидание расчетного окончания болюса</string>
+    <string name="gettingbolusstatus">Получение статуса болюса</string>
     <string name="stoppingtempbasal">Остановка врем базала</string>
     <string name="settingtempbasal">Установка врем базала</string>
     <string name="settingextendedbolus">Установка пролонгированного болюса</string>
@@ -27,6 +31,7 @@
     <string name="bolus_step">Шаг болюса</string>
     <string name="basal_step">Шаг базала</string>
     <string name="pairfirst">Пожалуйста, выполните сопряжение помпы с телефоном!</string>
+    <string name="processinghistory">Обработка события</string>
     <string name="diaconn_g8_history_tempbasal">Временный базал</string>
     <string name="diaconng8_pump_settings">Настройки помпы Diaconn</string>
     <string name="diaconn_g8_pumpalarm">Звуковое оповещение</string>
@@ -39,6 +44,7 @@
     <string name="diaconn_g8_screentimeout">Таймаут LCD экрана [second]</string>
     <string name="diaconn_g8_language">Язык</string>
     <string name="diaconn_g8_bolus_speed">Скорость болюса</string>
+    <string name="diaconn_g8_pumplang_chiness">Китайский</string>
     <string name="diaconn_g8_pumplang_korean">Корейский</string>
     <string name="diaconn_g8_pumplang_english">Английский</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -56,6 +62,7 @@
     <string name="diaconn_g8_logbatterychange_summary">Добавить событие \"Замена батареи\" в портал терапии при обнаружении в хронологии</string>
     <string name="diaconn_g8_logbatterychange_title">Отслеживать замены батареи</string>
     <string name="diaconn_g8_logsyncinprogress">Отслеживать процесс синхронизации</string>
+    <string name="diaconn_g8_loginsulinshorage">Недостаточно инсулина</string>
     <string name="diaconn_g8_logbatteryshorage">Нехватка заряда батареи</string>
     <string name="diaconn_g8_logneedleprime">Заполнение катетера %1$.2f ед</string>
     <string name="diaconn_g8_loginjectorprime">Заполнение инжектора %1$.2f ед</string>
@@ -69,6 +76,7 @@
     <string name="diaconn_g8_reasoncomplete">Завершено</string>
     <string name="diaconn_g8_reasoninjectonblock">Подача заблокирована</string>
     <string name="diaconn_g8_reasonbatteryshortage">Нехватка заряда батареи</string>
+    <string name="diaconn_g8_reasoninsulinshortage">Недостаточно инсулина</string>
     <string name="diaconn_g8_reasonuserstop">Остановлено пользователем</string>
     <string name="diaconn_g8_reasonsystemreset">Сброс системы</string>
     <string name="diaconn_g8_reasonother">Другое</string>
@@ -84,6 +92,7 @@
     <string name="diaconn_g8_logalarmblock">Подача заблокирована (%s)</string>
     <string name="diaconn_g8_lgorelease">подача базала (%s)</string>
     <string name="diaconn_g8_lgosuspend">базал остановлен (%s)</string>
+    <string name="diaconn_g8_logdualnormalsuccess">Двойной нормальный подан успешно</string>
     <string name="diaconn_g8_logdualsquarestart">Начало подачи двойного квадратного</string>
     <string name="diaconn_g8_logdualsquaresuccess">Двойной квадратный подан успешно</string>
     <string name="diaconn_g8_logsquarestart">Начало подачи квадратного</string>
@@ -92,6 +101,8 @@
     <string name="diaconn_g8_logsuccess">Успешно</string>
     <string name="diaconn_g8_logmealsuccess">Прием пиши записан</string>
     <string name="diaconn_g8_errorcode_1">Не удается найти из-за ошибки пакета CRC.</string>
+    <string name="diaconn_g8_errorcode_2">Невозможно установить: ошибка входного параметра.</string>
+    <string name="diaconn_g8_errorcode_3">Невозможно установить: ошибка спецификации протокола.</string>
     <string name="diaconn_g8_errorcode_4">Ошибка подачи по времени еды.</string>
     <string name="diaconn_g8_errorcode_6">Отменено помпой</string>
     <string name="diaconn_g8_errorcode_7">Принимаются другие действия, ограничивая настройки приложений.</string>
@@ -101,6 +112,7 @@
     <string name="diaconn_g8_errorcode_11">Подача невозможна из-за низкого заряда батареи.</string>
     <string name="diaconn_g8_errorcode_12">Нехватка инсулина, подача невозможна.</string>
     <string name="diaconn_g8_errorcode_13">Подача невозможнаб превышен лимит.</string>
+    <string name="diaconn_g8_errorcode_14">Ввод невозможен: превышен объем ввода на сегодня.</string>
     <string name="diaconn_g8_errorcode_15">По завершении настройки базала возможна подача базального инсулина.</string>
     <string name="diaconn_g8_logtubechange_title">Внести запись о замене катетера</string>
     <string name="diaconn_g8_logtubechange_summary">Добавить событие \"Замена катетера\" в портал терапии при обнаружении в журнале</string>
@@ -108,6 +120,19 @@
     <string name="diaconn_g8_errorcode_32">Во время приостановки на низких подача инсулина невозможна</string>
     <string name="diaconn_g8_errorcode_33">Работает Приостановка на низких, команда ВКЛ отклонена.</string>
     <string name="diaconn_g8_errorcode_34">Приостановка на низких отключена, команда ВЫКЛ отклонена.</string>
+    <string name="diaconn_g8_errorcode_35">Запуск временного базала отклонен: временный базал уже работает</string>
+    <string name="diaconn_g8_errorcode_36">Остановка временного базала отклонена: временный базал не работает</string>
     <string name="diaconn_g8_cloudsend_summary">Отправить лог помпы в Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Синхронизация с Diaconn Cloud</string>
+    <string name="bolus_speed_1">1 ед/мин</string>
+    <string name="bolus_speed_2">2 ед/мин</string>
+    <string name="bolus_speed_3">3 ед/мин</string>
+    <string name="bolus_speed_4">4 ед/мин</string>
+    <string name="bolus_speed_5">5 ед/мин</string>
+    <string name="bolus_speed_6">6 ед/мин</string>
+    <string name="bolus_speed_7">7 ед/мин</string>
+    <string name="bolus_speed_8">8 ед/мин</string>
+    <string name="diaconn_pairing_successful">Сопряжение выполнено успешно!</string>
+    <string name="diaconn_pairing_successful_message">Теперь ваша помпа подключена и готова к использованию.</string>
+    <string name="diaconn_g8_cloud_sync_progress" comment="Pump status while AAPS sends the pump log to the Diaconn cloud. %1$d=parts sent, %2$d=all parts. Example: Cloud sync: 3 / 10">Синхронизация с облаком: %1$d / %2$d</string>
 </resources>
