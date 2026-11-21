@@ -18,27 +18,27 @@
     <string name="combov2_error_9">Afslutning af lånepumpeoperation</string>
     <string name="combov2_error_10">Reservoir-fejl</string>
     <string name="combov2_error_11">Infusionssæt ikke klargjort</string>
-    <string name="combov2_extended_bolus_not_supported">Udvidet bolus understøttes ikke</string>
+    <string name="combov2_extended_bolus_not_supported">Forlænget bolus understøttes ikke</string>
     <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Par med pumpe</string>
-    <string name="combov2_unpair_pump_title">Upar pumpe</string>
+    <string name="combov2_unpair_pump_title">Ophæv parring af pumpe</string>
     <string name="combov2_driver_state_label">Driver-status</string>
-    <string name="bluetooth_address">Bluetooth adresse</string>
+    <string name="bluetooth_address">Bluetooth-adresse</string>
     <string name="combov2_start_pairing">Start parring</string>
     <string name="combov2_pairing_in_progress">Combo-parring i gang</string>
     <string name="combov2_pairing_start_steps">Skridt til at udføre parring med din Combo:\n\n
-1. Navigér til Bluetooth-indstillingerne på din pumpe\n
+1. Naviger til Bluetooth-indstillingerne på din pumpe\n
 2. Tjek om en enhed allerede er vist som parret. I så fald, gå til pumpeskærmen \"Slet enhed\" for at slette/fjerne enheden\n
 3. Gå til skærmen med \"Tilføj enhed\" og start parring på pumpen\n
 4. Klik på knappen \"Start parring\" nedenfor for at starte parring i AndroidAPS\n</string>
     <string name="combov2_steps_if_no_connection_during_pairing">Efter et stykke tid vises telefonens navn på pumpens skærm; tryk på CHECK for at bekræfte.\n\n
 Når parringen er gennemført, skal du bekræfte den færdige parring på pumpen og vende tilbage til pumpens hovedskærm ved at trykke to gange på CHECK-knappen.\n\n
 Hvis der ikke er oprettet forbindelse efter mere end ~5 minutter:\n\n
-1. Tryk på Tilbage eller på knappen \"Annullér parring\"\n
+1. Tryk på Tilbage eller på knappen \"Annuller parring\"\n
 2. Annuller parringen på Comboen (tryk på både UP- og MENU-knappen samtidig for at annullere parringen)\n
 3. Prøv at parre igen</string>
     <string name="combov2_enter_pin">Indtast PIN</string>
-    <string name="combov2_cancel_pairing">Annullér parring</string>
+    <string name="combov2_cancel_pairing">Annuller parring</string>
     <string name="combov2_confirm_cancel_pairing_message">Vil du virkelig annullere parringen?</string>
     <string name="combov2_confirm_unpair_message">Vil du virkelig ophæve parringen med pumpen?</string>
     <string name="combov2_pin_hint">10-cifret PIN</string>
@@ -52,7 +52,7 @@ Hvis der ikke er oprettet forbindelse efter mere end ~5 minutter:\n\n
     <string name="combov2_pairing_performing_handshake">Udfører håndtryk med pumpe</string>
     <string name="combov2_pairing_pump_requests_pin">Pumpe anmoder om 10-cifret PIN</string>
     <string name="combov2_pairing_finishing">Færdiggør parring</string>
-    <string name="combov2_no_connection_for_n_mins">Inen forbindelse i %1$d minutter</string>
+    <string name="combov2_no_connection_for_n_mins">Ingen forbindelse i %1$d minutter</string>
     <string name="combov2_less_than_one_minute_ago">Mindre end 1 minut siden</string>
     <string name="combov2_setting_current_pump_time">Indstiller aktuel pumpetid</string>
     <string name="combov2_setting_current_pump_date">Indstiller aktuel pumpedato</string>
@@ -61,24 +61,24 @@ Hvis der ikke er oprettet forbindelse efter mere end ~5 minutter:\n\n
     <string name="combov2_ready">Klar</string>
     <string name="combov2_suspended">Sat på pause</string>
     <string name="combov2_pump_is_suspended">Pumpe er suspenderet</string>
-    <string name="combov2_executing_command">Udfører Kommando</string>
+    <string name="combov2_executing_command">Udfører kommando</string>
     <string name="combov2_getting_basal_profile_cmddesc">Læser basalprofil</string>
-    <string name="combov2_setting_basal_profile_cmddesc">Indstiller basal profil</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Indstiller basalprofil</string>
     <string name="combov2_setting_tbr_cmddesc">Indstiller %1$d%% TBR i %2$d minutter</string>
     <string name="combov2_cancelling_tbr">Annullerer igangværende TBR</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Henter TDD-historik</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Opdaterer pumpetid</string>
     <string name="combov2_updating_pump_status_cmddesc">Opdaterer pumpestatus</string>
-    <string name="combov2_pairing_pin_failure">PIN virkede ikke. Tjek om der var en tastefejl. Hvis dette bliver ved med at ske, annullér og prøv at parre igen.</string>
+    <string name="combov2_pairing_pin_failure">PIN virkede ikke. Tjek om der var en tastefejl. Hvis dette bliver ved med at ske, annuller og prøv at parre igen.</string>
     <string name="combov2_discovery_duration">Opdagelsesvarighed (i sekunder)</string>
-    <string name="combov2_verbose_logging">Aktivér detaljeret Combo-logning</string>
+    <string name="combov2_verbose_logging">Aktiver detaljeret Combo-logning</string>
     <string name="combov2_getting_basal_profile">Henter basalprofil; %1$d faktor(er) læst</string>
     <string name="combov2_setting_basal_profile">Indstiller basalprofil; %1$d faktor(er) skrevet</string>
     <string name="combov2_delivering_bolus">Leverer bolus (%1$.1f af %2$.1f IE leveret)</string>
     <string name="combov2_cannot_deliver_pump_suspended">Kan ikke levere behandling - pumpen er pauseret</string>
     <string name="combov2_insufficient_insulin_in_reservoir">Utilstrækkelig insulin i reservoir</string>
     <string name="combov2_bolus_cancelled">Bolus annulleret</string>
-    <string name="combov2_bolus_delivery_failed">Bolus levering mislykkedes. Det ser ud til at ingen bolus blev leveret. Kontroller venligst pumpen for at undgå en dobbelt bolus og derefter bolus igen. For at beskytte mod fejl hentes bolusser ikke automatisk.</string>
+    <string name="combov2_bolus_delivery_failed">Levering af bolus mislykkedes. Det ser ud til, at der ikke blev leveret nogen bolus. Kontroller pumpen for at undgå en dobbelt bolus, og giv derefter bolus igen. For at beskytte mod fejl bliver boluser ikke automatisk forsøgt igen.</string>
     <string name="combov2_bolus_not_delivered">Bolus ikke leveret</string>
     <string name="combov2_cannot_access_pump_data">Kan ikke få adgang til pumpedata; pumpen skal parres igen</string>
     <string name="combov2_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Forbindelsen til pumpen blev afbrudt under bolussen. Pumpen havde givet %1$s indtil da, og den giver måske stadig resten. Giv ikke bolus igen. AAPS læser den rigtige mængde fra pumpen ved næste forbindelse.</string>
@@ -110,8 +110,8 @@ Hvis der ikke er oprettet forbindelse efter mere end ~5 minutter:\n\n
     <string name="combov2_unknown_tbr_detected">Ukendt TBR blev fundet og stoppet; procent: %1$d%%; resterende varighed: %2$s</string>
     <string name="combov2_connection_error">Forbindelsesfejl: %1$s</string>
     <string name="combov2_short_status_alert">Alarm %s</string>
-    <string name="combov2_automatic_reservoir_entry">Detektér automatisk og indtast automatisk ændring af insulinreservoirændringer</string>
-    <string name="combov2_automatic_battery_entry">Detektér automatisk og indtast automatisk ændring af batteriskift</string>
+    <string name="combov2_automatic_reservoir_entry">Registrer skift af insulinreservoir automatisk</string>
+    <string name="combov2_automatic_battery_entry">Registrer batteriskift automatisk</string>
     <string name="combov2_timezone_changed">Tidszone ændret</string>
     <string name="combov2_datetime_changed">Dato og/eller klokkeslæt ændret</string>
     <string name="combov2_dst_started">Sommertid startet</string>
