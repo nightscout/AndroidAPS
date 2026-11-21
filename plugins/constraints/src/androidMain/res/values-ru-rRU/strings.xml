@@ -9,7 +9,7 @@
     <string name="application_expired">Истек срок действия приложения</string>
     <string name="running_invalid_version">Мы обнаружили, что вы используете недопустимую версию. Цикл отключен!</string>
     <string name="versionavailable">Доступна версия %1$s</string>
-    <string name="version_expire">Версия %1$s истекает %2$s и переходит в режим приостановки на низких</string>
+    <string name="version_expire">Срок действия версии %1$s истекает %2$s, после этого она перейдет в режим LGS</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Используются пересчитанные данные</string>
@@ -20,6 +20,7 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Ограничиваю пролонгированный болюс до %1$.1f ед. из-за %2$s</string>
     <string name="limitingcarbs">Ограничение углеводов до %1$d г из-за %2$s</string>
+    <string name="safety">Безопасность</string>
     <string name="pumpisnottempbasalcapable">Помпа не рассчитана на подачу временного базала</string>
     <string name="closed_loop_disabled_on_dev_branch">Работает версия разработчика. Замкнутый цикл отключен.</string>
     <string name="closed_loop_disabled_with_eb">Замкнутый цикл отключен из-за работы Пролонгированного Болюса</string>
@@ -37,7 +38,8 @@
     <string name="apsselected">Выбран APS</string>
     <string name="closedmodeenabled">Режим замкнутого цикла включен</string>
     <string name="description_objectives">Обучающая программа</string>
-    <string name="doyouwantresetstart">Хотите сбросить начатую цель? Вы можете потерять весь прогресс по ней.</string>
+    <string name="doyouwantresetstart">Сбросить начало цели? Вы можете потерять свой прогресс.</string>
     <string name="objectives_button_unfinish">Сбросить пройденные</string>
     <string name="objectives_button_unstart">Сбросить начатые</string>
+    <string name="bg_doubled_lgs">Режим LGS из-за повторяющихся значений в источнике ГК</string>
 </resources>

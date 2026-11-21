@@ -5,7 +5,7 @@
     <string name="medtrum_pump_description">Integrarea pompei pentru Medtrum Nano și Medtrum 300U</string>
     <string name="medtrum_pump_setting">Setări pompă Medtrum</string>
     <string name="pump_error">Eroare pompă: %1$s!! </string>
-    <string name="pump_warning">Avertizare pompă: %1$s </string>
+    <string name="pump_warning">Avertizare pompă: %1$s</string>
     <string name="pump_is_suspended">Pompă suspendată</string>
     <string name="pump_is_suspended_hour_max">Pompă suspendată din cauza depășirii valorii maxime a insulinei pe oră</string>
     <string name="pump_is_suspended_day_max">Pompă suspendată din cauza depășirii valorii maxime zilnice a insulinei</string>
@@ -91,6 +91,7 @@
     <string name="press_OK_to_return">Apăsați <b>OK</b> pentru a reveni la ecranul principal.</string>
     <string name="deactivate_sure">Sigur doriți să dezactivați plasturele curent?</string>
     <string name="cancel_sure">Sigur doriți să anulați activarea?</string>
+    <string name="cancel_deactivation_sure">Sigur doriți să anulați dezactivarea? Plasturele poate rămâne activ.</string>
     <string name="medtrum_deactivate_pump_confirm">Sunteți sigur? Această acțiune nu este reversibilă!!</string>
     <string name="press_next_or_cancel">Apăsați <b>Următor</b> pentru a dezactiva sau <b>Renunțați</b> pentru a reveni la ecranul principal.</string>
     <string name="deactivating_pump">Se dezactivează plasturele. Vă rugăm să așteptați.</string>

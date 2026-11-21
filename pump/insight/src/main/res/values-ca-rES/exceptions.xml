@@ -2,7 +2,7 @@
 <resources>
     <string name="connection_failed">Ha fallat la connexió</string>
     <string name="connection_lost">S\'ha perdut la connexió</string>
-    <string name="pairing_rejected">Sincronització rebutjada</string>
+    <string name="pairing_rejected">Emparellament rebutjat</string>
     <string name="socket_creation_failed">Ha fallat la creació del socket</string>
     <string name="timeout">Temps d\'espera exhaurit</string>
     <string name="maximum_number_of_bolus_type_already_running">Màxim nr. de tipus de bolus ja en execució</string>

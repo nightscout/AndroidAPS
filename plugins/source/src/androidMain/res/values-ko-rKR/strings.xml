@@ -3,7 +3,7 @@
     <!-- Source -->
     <string name="ns_client_bg">NSClient 혈당</string>
     <string name="description_source_ns_client">Nightscout에서 혈당 데이터를 다운로드합니다</string>
-    <string name="source_xdrip">xDrip+ BG</string>
+    <string name="source_xdrip">xDrip+ 혈당</string>
     <string name="description_source_xdrip">xDrip+ 및 호환 앱(Juggluco 등)에서 혈당 값을 받습니다.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="description_source_dexcom">\'Build Your Own Dexcom App\'(BYODA)에서 혈당 값을 받습니다.</string>

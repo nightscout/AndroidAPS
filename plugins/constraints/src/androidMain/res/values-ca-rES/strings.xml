@@ -1,26 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Canvi d\'horari d\'estiu en 24 h o menys</string>
+    <string name="dst_loop_disabled_warning">Canvi d\'horari d\'estiu fa menys de 3 hores - Llaç tancat desactivat</string>
     <!-- Storage constraint -->
+    <string name="disk_full">Allibereu almenys %1$d MB de l\'emmagatzematge intern! Llaç desactivat!</string>
     <!-- Version Checker -->
+    <string name="application_expired">Aplicació expirada</string>
+    <string name="running_invalid_version">Hem detectat que esteu executant una versió no vàlida. Llaç desactivat!</string>
+    <string name="versionavailable">Versió %1$s disponible</string>
+    <string name="version_expire">La versió %1$s caduca el %2$s i passarà a mode LGS</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Dades recalculades utilitzades</string>
+    <string name="bg_too_close">Glucèmies massa properes:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">recalculat</string>
+    <string name="a11y_bg_quality_doubles">entrades duplicades</string>
+    <string name="a11y_bg_quality_flat">Dades planes. Es consideren errònies</string>
     <!-- Safety -->
+    <string name="limitingextendedbolus">Limitant el bolus estès a %1$.1f U a causa de %2$s</string>
     <string name="limitingcarbs">Limitant carbs a %1$d g a causa de %2$s</string>
+    <string name="safety">Seguretat</string>
     <string name="pumpisnottempbasalcapable">La bomba no té la funcionalitat de basals temporals</string>
     <string name="closed_loop_disabled_on_dev_branch">Executant versió de desenvolupament. Llaç tancat no disponible.</string>
     <string name="closed_loop_disabled_with_eb">Llaç tancat desactivat degut a bolus estès actiu</string>
-    <string name="smbalwaysdisabled">Les funcions \"SMB sempre\" i \"SMB després de carbohidrats\" estan desactivades pq la font de glucèmia no fa filtrat avançat</string>
+    <string name="smbalwaysdisabled">Les funcions \"SMB sempre\" i \"SMB després de carbohidrats\" estan desactivades perquè la font de glucèmia no fa filtrat avançat</string>
     <string name="smbnotallowedinopenloopmode">SMB no permès en mode llaç obert</string>
     <string name="maxvalueinpreferences">valor màxim a la configuració</string>
     <string name="hardlimit">límit estricte</string>
     <!-- Objectives -->
+    <string name="completed_well_done">Completat, ben fet!</string>
     <string name="not_completed_yet">No finalitzat encara</string>
     <string name="time_elapsed">Temps transcorregut</string>
     <string name="hasbgdata">Glucèmia disponible des de la font seleccionada</string>
+    <string name="synchaswritepermission">El servei de sincronització té permís d\'escriptura</string>
     <string name="loopenabled">Llaç activat</string>
     <string name="apsselected">APS seleccionat</string>
     <string name="closedmodeenabled">Llaç tancat activat</string>
     <string name="description_objectives">Programa d\'aprenentatge</string>
-    <string name="doyouwantresetstart">Voleu reiniciar l\'objectiu? Podeu perdre el vostre progrés.</string>
+    <string name="doyouwantresetstart">Voleu restablir l\'inici de l\'objectiu? Podeu perdre el vostre progrés.</string>
+    <string name="objectives_button_unfinish">Restablir estat finalitzat</string>
+    <string name="objectives_button_unstart">Restablir estat iniciat</string>
+    <string name="bg_doubled_lgs">Mode LGS per valors duplicats a l\'origen de glucèmia</string>
 </resources>

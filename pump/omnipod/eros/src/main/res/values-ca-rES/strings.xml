@@ -9,7 +9,10 @@
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Mostrar botó \"Registre de pols\" al menú de gestió del pod</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Mostrar botó \"Estadístiques RileyLink\" al menú de gestió del pod</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Activar registre de canvi de pila a Accions</string>
-    <string name="omnipod_eros_history_tbr_value">Basal: %1$.2f U, durada: %2$d minuts</string>
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
+    <string name="omnipod_eros_history_tbr_value">Taxa: %1$.2f U/h, durada: %2$d minuts</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">Error de comunicació: ha fallat la verificació de la integritat del missatge</string>
     <string name="omnipod_eros_error_invalid_packet_type">Error de comunicació: s\'ha rebut del pod un paquet no vàlid</string>
@@ -26,24 +29,25 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">RileyLink no respon</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink interromput</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">El pod no respon</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Error en configurar el perfil basal. El lliurament d\'insulina podria suspendre\'s! Actualitzeu manualment l\'estat del pod des de la pestanya Ominipod i repreneu el lliurament si cal.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Possible error en configurar el perfil basal. El lliurament d\'insulina podria suspendre\'s! Actualitzeu l\'estat del pod des de la pestanya Omnipod i repreneu el lliurament si cal.</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Error en configurar el perfil basal. S\'ha aturat el lliurament d\'insulina! Repreneu-lo manualment des de la pestanya Omnipod.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Possible error en cancel·lar basal temporal. Actualitzeu manualment l\'estat del pod des de la pestanya Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Possible error en establir basal temporal. Si hi havia una basal temporal activa, pot haver estat cancel·lada. Actualitzeu manualment l\'estat del pod des de la pestanya Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Possible error en establir basal temporal. Si hi havia una basal temporal activa, pot haver estat cancel·lada. Actualitzeu manualment l\'estat del pod des de la pestanya Omnipod.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Error en establir el perfil basal. El lliurament podria estar suspès! Actualitzeu manualment l\'estat del pod a la pantalla de la bomba i repreneu el lliurament si cal.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Possible error en establir el perfil basal. El lliurament podria estar suspès! Actualitzeu manualment l\'estat del pod a la pantalla de la bomba i repreneu el lliurament si cal.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Error en establir el perfil basal. El lliurament està suspès! Repreneu manualment el lliurament a la pantalla de la bomba.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Possible error en cancel·lar la basal temporal. Actualitzeu manualment l\'estat del pod a la pantalla de la bomba.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Error en establir la basal temporal. Si hi havia una basal temporal activa, pot haver-se cancel·lat. Actualitzeu manualment l\'estat del pod a la pantalla de la bomba.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Possible error en establir la basal temporal. Si hi havia una basal temporal activa, s\'ha cancel·lat. Actualitzeu manualment l\'estat del pod a la pantalla de la bomba.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">La durada de la TBR ha de ser major que zero i múltiple de %1$s minuts.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Error en configurar la hora. El lliurament d\'insulina podria suspendre\'s! Actualitzeu manualment l\'estat del pod des de la pestanya Ominipod i repreneu el lliurament si cal.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Error en configurar la hora. S\'ha aturat el lliurament d\'insulina! Repreneu-lo manualment des de la pestanya Omnipod.</string>
-    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Error en el canvi d\'hora automàtic al pod. Haurieu de sincronitzar l\'hora a la pestanya Omnipod.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Possible error en establir l\'hora. El lliurament podria estar suspès! Actualitzeu manualment l\'estat del pod a la pantalla de la bomba i repreneu el lliurament si cal.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Error en establir l\'hora. El lliurament està suspès! Repreneu manualment el lliurament a la pantalla de la bomba.</string>
+    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">No s\'ha pogut canviar automàticament l\'hora del pod. Hauríeu de sincronitzar l\'hora manualment a la pantalla de la bomba.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">No s\'ha pogut verificar si el bolus ha estat lliurat. Verifiqueu manualment que el pod està lliurant bolus escoltant els clics. <b>Si esteu segurs que el bolus no s\'ha lliurat, haurieu d\'eliminar manualment el registre de bolus a Tractaments, fins i tot si ara feu \'Cancel·lar bolus\'!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">No s\'ha pogut verificar si el bolus SMB (%1$.2f U) ha estat lliurat. <b>Si esteu segurs que el bolus no s\'ha lliurat, haurieu d\'eliminar manualment el registre de SMB a Tractaments</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Hi ha una basal temporal en curs al pod, però AAPS no n\'és conscient. Si us plau cancel·leu la basal temporal manualment.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Estadístiques RileyLink</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Restablir RileyLink</string>
     <string name="omnipod_eros_pod_management_pulse_log">Registre de pols</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Registre de pols (copiat al porta-retalls)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
-    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Empleneu un nou pod amb prou insulina per 3 dies.\n\nDurant el procés d\'emplenament el pod hauria de pitar dues vegades. Això indica que s\'ha inserit la quantitat mínima de 80U. Assegureu-vos de buidar completament la jeringa, fins i tot després d\'haver escoltat els dos bips.\n\nDesprés d\'emplenar el pod, premeu <b>Següent</b>.\n\n<b>Nota:</b>no retireu el tap de l\'agulla en aquest moment.\n<b>Nota:</b>poseu el RileyLink en posició vertical i a prop del pod.</string>
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Empleneu un nou pod amb prou insulina per 3 dies.\n\nDurant el procés d\'emplenament el pod hauria de pitar dues vegades. Això indica que s\'ha inserit la quantitat mínima de 80U. Assegureu-vos de buidar completament la xeringa, fins i tot després d\'haver escoltat els dos bips.\n\nDesprés d\'emplenar el pod, premeu <b>Següent</b>.\n\n<b>Nota:</b>no retireu el tap de l\'agulla en aquest moment.\n<b>Nota:</b>poseu el RileyLink en posició vertical i a prop del pod.</string>
     <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Intentant emparellar amb el nou pod i encebar-lo.\n\nUn cop finalitzi el procés d\'inicialització, podeu prémer <b>Següent</b>\n\n<b>Nota:</b>poseu el RileyLink en posició vertical i situeu-hi el pod a pocs centímetres.</string>
 </resources>

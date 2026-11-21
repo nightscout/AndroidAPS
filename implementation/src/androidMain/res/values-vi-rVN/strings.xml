@@ -3,6 +3,9 @@
     <string name="executing_right_now">Đang xử lý lệch</string>
     <string name="smb_being_delivered">SMB đang được tiêm. Vui lòng thử lại sau khi hoàn tất.</string>
     <string name="basal_value_below_minimum">Giá trị liều nền thấp hơn mức tối thiểu. Cấu hình chưa được thiết lập!</string>
+    <string name="concentration_change_failed_title">Thay đổi insulin không thành công</string>
+    <string name="concentration_change_failed">Insulin mới đã có trong bơm, nhưng AAPS không thể ghi cấu hình vào bơm. Bơm đang phân phối lượng insulin không chính xác. Hãy ngắt kết nối hoặc tháo bơm ngay, kiểm tra đường huyết và sử dụng phương pháp khác để bổ sung insulin nếu cần. Chỉ kết nối lại bơm sau khi cấu hình đã được ghi thành công vào bơm.</string>
+    <string name="concentration_change_pending">Cấu hình sử dụng insulin mới vẫn chưa được ghi vào bơm. Không thể phân phối insulin cho đến khi cấu hình được ghi thành công vào bơm.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Đã cập nhật cấu hình liều nền trong bơm. Bơm làm tròn liều nền theo bước điều chỉnh riêng: lượng insulin được phân phối là %1$s mỗi ngày thay vì %2$s.</string>
     <string name="basal_reported_far_from_profile">Bơm báo tốc độ liều nền khác xa so với cấu hình. AAPS vẫn giữ nguyên tốc độ liều nền trong cấu hình. Hãy kiểm tra tốc độ liều nền trong bơm.</string>
     <!--       Stats -->
@@ -57,10 +60,10 @@
     <string name="ue_exported">Dữ liệu người dùng đã được xuất</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">đã xuất dữ liệu cách đây %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">đã xuất dữ liệu vào lúc %1$s</string>
-    <string name="exported_less_than_hour_ago">đã xuất dưới 1 giờ trước</string>
+    <string name="exported_less_than_hour_ago">đã xuất cách đây chưa đầy một giờ</string>
     <string name="metadata_warning_different_flavour">Các tùy chọn cài đặt được tạo bằng phiên bản AAPS khác (%1$s), trong khi bạn đang dùng: %2$s.\n\nMột số cài đặt có thể bị thiếu hoặc không hợp lệ – sau khi nhập, vui lòng kiểm tra và cập nhật lại tùy chọn của bạn.</string>
     <string name="metadata_warning_different_device">Các tùy chọn cài đặt được tạo trên thiết bị khác. Điều này không sao nếu bạn đang nhập từ điện thoại cũ hoặc thiết bị khác, nhưng hãy chắc chắn rằng các tùy chọn được nhập là chính xác!</string>
-    <string name="metadata_warning_old_export">Các tùy chọn cài đặt nhập vào đã cũ %1$s ngày! Có thể bạn có các tùy chọn mới hơn hoặc đã chọn nhầm tệp? Hãy nhớ xuất tùy chọn đều đặn!</string>
+    <string name="metadata_warning_old_export">Các tùy chọn đã nhập đã cũ %1$s ngày! Có thể bạn đang có bản tùy chọn mới hơn hoặc đã chọn nhầm tệp. Hãy nhớ xuất các tùy chọn thường xuyên!</string>
     <string name="metadata_warning_date_format">Định dạng ngày-giờ không hợp lệ!</string>
     <string name="metadata_warning_different_version">Các tùy chọn cài đặt từ phiên bản nhỏ khác của ứng dụng. Điều này không sao nếu bạn đang nhập sau khi nâng cấp, nhưng hãy kiểm tra sau khi nhập xem các tùy chọn có vẫn chính xác không!</string>
     <string name="metadata_urgent_different_version">Các tùy chọn cài đặt từ phiên bản chính khác của ứng dụng. Các phiên bản chính khác nhau đáng kể và có thể không tương thích với nhau! Hãy chắc chắn rằng các tùy chọn vẫn chính xác sau khi nhập!</string>
