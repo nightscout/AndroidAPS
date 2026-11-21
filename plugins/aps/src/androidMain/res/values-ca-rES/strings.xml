@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Autotune-->
+    <string name="dyn_isf_adjust_title" formatted="false">Factor d\'ajust ISF dinàmic %</string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">ISF dinàmic</string>
+    <string name="openaps_auto_isf">Auto ISF</string>
     <string name="openapsma_disabled">Plugin desactivat</string>
     <string name="openapsma_no_glucose_data">Dades de glucèmia no disponibles</string>
     <string name="openaps_no_as_data">Dades d\'autosens no disponibles</string>
+    <string name="dynisf_shortname">DYNISF</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array de %1$d elements.\nValor actual:</string>
     <string name="description_ama">Estat de l\'algoritme el 2017</string>
     <string name="description_smb">Algoritme més nou per usuaris avançats</string>
+    <string name="description_smb_dynamic_isf">Algoritme més recent per a usuaris avançats amb ISF dinàmic/automàtic</string>
+    <string name="description_auto_isf">Algoritme experimental per a usuaris avançats amb extensions AutoISF</string>
     <string name="openapsma_last_run_label">Última execució</string>
     <string name="openapsma_input_parameters_label">Paràmetres d\'entrada</string>
     <string name="openapsma_glucose_status_label">Estat glucèmia</string>
@@ -20,6 +26,7 @@
     <string name="constraints">Restriccions</string>
     <string name="openapsma_autosensdata_label">Dades autosens</string>
     <string name="openapsma_script_debug_data_label">Depurar script</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Atenció!\nNormalment no cal canviar els valors següents. FEU CLIC AQUÍ i LLEGIU el text, i assegureu-vos que l\'ENTENEU abans de canviar cap d\'aquests valors.</string>
     <string name="increasing_max_basal">Augmentant basal màxima perquè està configurada més baixa que la basal màxima del perfil</string>
     <string name="max_basal_multiplier">màxim multiplicador de basal</string>
     <string name="max_daily_basal_multiplier">màxim multiplicador de basal diaria</string>
@@ -31,16 +38,64 @@
     <string name="maxvalueinpreferences">valor màxim a la configuració</string>
     <string name="hardlimit">límit estricte</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">Pic</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">S\'ha lliurat un bolus els darrers 3 minuts, ignorant SMB</string>
+    <string name="pump_not_initialized">Bomba no iniciada!</string>
+    <string name="zero_basal_not_set">La bomba no ha acceptat la basal temporal zero. Potser encara està lliurant insulina basal. Comproveu la bomba.</string>
     <string name="description_loop">Activar o desactivar la implementació que activa el llaç.</string>
+    <string name="no_aps_selected">CAP APS SELECCIONAT O CAP RESULTAT PROPORCIONAT</string>
     <string name="ignore5m">Ignorar 5m</string>
     <string name="ignore15m">Ignorar 15m</string>
     <string name="ignore30m">Ignorar 30m</string>
+    <string name="carbs_suggestion">Recomanació de carbohidrats</string>
+    <string name="open_loop_new_suggestion">Nova recomanació disponible</string>
+    <string name="loop_notification_channel_name">Recomanacions del llaç</string>
+    <string name="loop_notification_channel_silent_name">Recomanacions del llaç durant No molestis</string>
+    <string name="open_loop_suggestion_too_old">Aquesta recomanació és massa antiga. No s\'ha enviat res a la bomba. Espereu la següent.</string>
     <string name="basal_set_correctly">Basal configurada ok</string>
+    <string name="last_run_label">Última execució</string>
     <string name="loop_aps_label">APS</string>
+    <string name="request_label">Petició</string>
+    <string name="loop_constraints_processed_label">Després d\'aplicar les restriccions</string>
+    <string name="loop_tbr_request_time_label">Hora de petició de la basal temporal</string>
+    <string name="loop_tbr_execution_time_label">Hora d\'execució de la basal temporal</string>
+    <string name="loop_tbr_set_by_pump_label">Basal temporal establerta per la bomba</string>
+    <string name="loop_smb_request_time_label">Hora de petició de l\'SMB</string>
+    <string name="loop_smb_execution_time_label">Hora d\'execució de l\'SMB</string>
+    <string name="loop_smb_set_by_pump_label">SMB establert per la bomba</string>
+    <string name="fallback_smb_no_tdd">Es torna a SMB. No hi ha prou dades de TDD.</string>
+    <string name="fallback_to_isf_no_tdd">Es torna a la sensibilitat del perfil. No hi ha prou dades. Motiu: %1$s</string>
     <!-- Autotune -->
+    <string name="autotune_description">Ajuda per a possibles ajustos del perfil (ISF, ràtio de carbohidrats i taxes basals)</string>
+    <string name="autotune_default_tune_days_title">Nombre de dies de dades</string>
+    <string name="autotune_tunedprofile_name">Ajustat</string>
+    <string name="autotune_profile">Perfil :</string>
+    <string name="autotune_last_run">Última execució :</string>
+    <string name="autotune_warning">Avís :</string>
+    <string name="autotune_ic_warning">El perfil seleccionat té %1$d valors d\'IC. Autotune farà servir %2$.2f g/U</string>
+    <string name="autotune_isf_warning">El perfil seleccionat té %1$d valors d\'ISF. Autotune farà servir %2$.1f %3$s/U</string>
+    <string name="autotune_error">Error a les dades d\'entrada, proveu de tornar a executar Autotune o reduïu el nombre de dies</string>
+    <string name="autotune_error_more_days">Error a les dades d\'entrada, augmenteu el nombre de dies</string>
+    <string name="autotune_warning_during_run">S\'ha iniciat el càlcul d\'Autotune, tingueu paciència</string>
+    <string name="autotune_warning_after_run">Comproveu els resultats amb atenció abans de fer-los servir!</string>
+    <string name="autotune_partial_result">Resultat parcial: dia %1$d / %2$d ajustat</string>
     <string name="autotune_result">Resultat: %1$s</string>
+    <string name="autotune_param">Paràm</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Falta</string>
+    <string name="autotune_run">Executar Autotune</string>
+    <string name="autotune_check_input_profile_button">Comprovar perfil d\'entrada</string>
     <string name="autotune_compare_profile">Comparar perfils</string>
+    <string name="autotune_copy_localprofile_button">Copiar a perfil local</string>
+    <string name="autotune_update_input_profile_button">Actualitzar perfil d\'entrada</string>
+    <string name="autotune_revert_input_profile_button">Restaurar perfil d\'entrada</string>
+    <string name="autotune_copy_local_profile_message">Voleu crear un perfil local nou a partir d\'aquest perfil d\'Autotune?</string>
+    <string name="autotune_update_local_profile_message">Voleu actualitzar el perfil %1$s amb el perfil d\'Autotune?</string>
+    <string name="autotune_revert_local_profile_message">Voleu restaurar el perfil %1$s amb el perfil d\'entrada?</string>
+    <string name="autotune_profile_invalid">Perfil no vàlid</string>
+    <string name="pump_disconnected">Bomba desconnectada</string>
     <!--    autoISF -->
+    <string name="autoISF_settings_title">Configuració AutoISF</string>
+    <string name="smb_delivery_settings_title">Configuració del lliurament d\'SMB</string>
 </resources>
