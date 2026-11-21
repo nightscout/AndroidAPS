@@ -237,6 +237,8 @@ class EversenseDriver internal constructor(
         preferences.edit(commit = true) {
             putString(StorageKeys.REMOTE_DEVICE_KEY, address)
             putString(StorageKeys.REMOTE_DEVICE_NAME, name)
+            // Paired again: the hint to forget the old bond is done
+            remove(StorageKeys.BOND_LEFT_NAME)
         }
         EversenseCrypto365Util(preferences, aapsLogger).disallowUseShortcut()
         placementFailures = 0
@@ -313,6 +315,7 @@ class EversenseDriver internal constructor(
     /** Unpairs: closes the link and forgets the transmitter, so the next pairing is a full registration. The login stays. */
     suspend fun clearStoredDevice() {
         val address = preferences.getString(StorageKeys.REMOTE_DEVICE_KEY, null)
+        val name = preferences.getString(StorageKeys.REMOTE_DEVICE_NAME, null) ?: address
         disconnect()
         withContext(dispatcher) { placementFailures = 0 }
         preferences.edit(commit = true) {
@@ -322,10 +325,13 @@ class EversenseDriver internal constructor(
         EversenseCrypto365Util(preferences, aapsLogger).disallowUseShortcut()
         aapsLogger.info(LTag.BGSOURCE, "Cleared stored device address")
         // The phone's bond goes too, after the link is closed: a bond the phone keeps while the transmitter has
-        // forgotten it can stop the next pairing on this phone. Only Android has one to remove (no bonding on iOS).
-        if (address != null) central.bonding?.let { bonding ->
-            val removed = bonding.removeBond(DeviceId(address))
-            aapsLogger.info(LTag.BGSOURCE, "Bond of the transmitter removed: ${removed is BleResult.Ok}")
+        // forgotten it can stop the next pairing on this phone. Only Android lets an app remove one; on iOS, or when
+        // the removal fails, the user is told to forget the transmitter in the phone's settings (BOND_LEFT_NAME).
+        if (address == null) return
+        val removed = central.bonding?.removeBond(DeviceId(address)) is BleResult.Ok
+        aapsLogger.info(LTag.BGSOURCE, "Bond of the transmitter removed: $removed")
+        preferences.edit(commit = true) {
+            if (removed) remove(StorageKeys.BOND_LEFT_NAME) else putString(StorageKeys.BOND_LEFT_NAME, name)
         }
     }
 

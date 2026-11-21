@@ -79,6 +79,7 @@ class EversensePairingImpl(
     override val account: StateFlow<EversenseAccount?> by lazy { snapshot.derived { it.account } }
     override val withoutSignIn: StateFlow<Boolean> by lazy { snapshot.derived { it.withoutSignIn } }
     override val transmitter: StateFlow<String?> by lazy { snapshot.derived { it.transmitter } }
+    override val bondLeft: StateFlow<String?> by lazy { snapshot.derived { it.bondLeft } }
     override val attention: StateFlow<CgmAttention?> by lazy {
         snapshot.derived { cgmAttention(it.account, it.transmitter, it.loginRefused, it.withoutSignIn) }
     }
@@ -182,7 +183,8 @@ internal data class PairingSnapshot(
     val account: EversenseAccount?,
     val transmitter: String?,
     val loginRefused: Boolean,
-    val withoutSignIn: Boolean = false
+    val withoutSignIn: Boolean = false,
+    val bondLeft: String? = null
 ) {
 
     companion object {
@@ -203,7 +205,8 @@ internal data class PairingSnapshot(
                 account = account,
                 transmitter = address?.let { string(StorageKeys.REMOTE_DEVICE_NAME) ?: it },
                 loginRefused = store[StorageKeys.LOGIN_REFUSED]?.jsonPrimitive?.booleanOrNull == true,
-                withoutSignIn = account == null && secure.model == EversenseModel.E3.name
+                withoutSignIn = account == null && secure.model == EversenseModel.E3.name,
+                bondLeft = string(StorageKeys.BOND_LEFT_NAME)
             )
         }
     }

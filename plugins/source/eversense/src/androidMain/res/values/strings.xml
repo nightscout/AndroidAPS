@@ -133,6 +133,7 @@
 
     <!-- Pairing on the status tab -->
     <string name="eversense_not_paired">No transmitter paired.</string>
+    <string name="eversense_not_paired_forget_bond" comment="%1$s=the transmitter name, for example T123456">No transmitter paired. Before you pair %1$s again on this phone, forget it in the phone\'s Bluetooth settings.</string>
     <string name="eversense_sign_in_failed">Eversense refused the stored login. Sign in again.</string>
     <string name="eversense_sign_in_again">Sign in again</string>
     <string name="eversense_unpair">Unpair</string>

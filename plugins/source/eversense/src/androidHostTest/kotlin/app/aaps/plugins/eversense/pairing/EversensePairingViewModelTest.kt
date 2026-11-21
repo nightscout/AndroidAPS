@@ -30,6 +30,7 @@ class EversensePairingViewModelTest {
         override val withoutSignIn = MutableStateFlow(false)
         override val transmitter = MutableStateFlow<String?>(null)
         override val attention = MutableStateFlow<CgmAttention?>(CgmAttention.NOT_PAIRED)
+        override val bondLeft = MutableStateFlow<String?>(null)
         var signInAnswer = SignInResult.OK
         val signIns = mutableListOf<Triple<String, String, EversenseModel>>()
         var pairAnswer = CompletableDeferred(PairResult.READY)

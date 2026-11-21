@@ -153,6 +153,8 @@ class EversenseCredentialsTest {
         driver.clearStoredDevice()
 
         assertThat(bonding.removed).containsExactly(DeviceId(ADDRESS) to false)
+        // Removed: nothing for the user to do
+        assertThat(store.contains(StorageKeys.BOND_LEFT_NAME)).isFalse()
     }
 
     /** With no transmitter stored there is no bond to remove. */
@@ -164,6 +166,19 @@ class EversenseCredentialsTest {
         driver.clearStoredDevice()
 
         assertThat(bonding.removed).isEmpty()
+        assertThat(store.contains(StorageKeys.BOND_LEFT_NAME)).isFalse()
+    }
+
+    /** iOS: an app cannot remove the bond, so the transmitter is remembered for the hint until the next pairing. */
+    @Test fun aBondThePhoneCannotRemoveIsRememberedUntilTheNextPairing(): Unit = harness.run { driver ->
+        harness.storeLogin(USERNAME, PASSWORD, model = "E3")
+        harness.storeTransmitter()
+
+        driver.clearStoredDevice()
+        assertThat(store.getString(StorageKeys.BOND_LEFT_NAME, null)).isEqualTo(NAME)
+
+        driver.pair(ADDRESS, NAME)
+        assertThat(store.contains(StorageKeys.BOND_LEFT_NAME)).isFalse()
     }
 
     /** An E3 used without a login: the stored login and its cloud queue go, and the paired transmitter connects. */

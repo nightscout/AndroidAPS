@@ -64,7 +64,7 @@ class EversenseStatusViewModel(
     init {
         eversense.addWatcher(this)
         // Connected, ready and lost come as states, with no watcher call for each step; the pairing as its own flows
-        merge(eversense.connectionState, pairing.attention, pairing.account, pairing.transmitter)
+        merge(eversense.connectionState, pairing.attention, pairing.account, pairing.transmitter, pairing.bondLeft)
             .onEach { refresh() }
             .launchIn(viewModelScope)
     }
@@ -87,7 +87,11 @@ class EversenseStatusViewModel(
         val account = pairing.account.value
         val transmitter = pairing.transmitter.value
         val banner = when (attention) {
-            CgmAttention.NOT_PAIRED     -> StatusBanner(rh.gs(EversenseStrings.eversense_not_paired), StatusLevel.WARNING)
+            // A bond the phone could not remove (iOS) stops the next pairing of that transmitter here: say so
+            CgmAttention.NOT_PAIRED     -> StatusBanner(
+                pairing.bondLeft.value?.let { rh.gs(EversenseStrings.eversense_not_paired_forget_bond, it) } ?: rh.gs(EversenseStrings.eversense_not_paired),
+                StatusLevel.WARNING
+            )
             CgmAttention.SIGN_IN_FAILED -> StatusBanner(rh.gs(EversenseStrings.eversense_sign_in_failed), StatusLevel.CRITICAL)
             null                        -> when (eversense.connectionState.value) {
                 ConnectionState.READY      -> StatusBanner(rh.gs(EversenseStrings.eversense_connected), StatusLevel.NORMAL)

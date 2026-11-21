@@ -29,6 +29,13 @@ interface EversensePairing {
     val attention: StateFlow<CgmAttention?>
 
     /**
+     * The name of an unpaired transmitter whose Bluetooth bond the phone still keeps (on iOS an app cannot remove it),
+     * until the next pairing; null otherwise. The user forgets it in the phone's Bluetooth settings before pairing it
+     * again on this phone.
+     */
+    val bondLeft: StateFlow<String?>
+
+    /**
      * Signs in to the Eversense server that [model] uses. The login is stored only when the server accepts it, so a
      * mistyped password never replaces a working one.
      */

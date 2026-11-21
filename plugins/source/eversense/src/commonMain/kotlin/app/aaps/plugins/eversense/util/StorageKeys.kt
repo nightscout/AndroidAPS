@@ -15,5 +15,12 @@ class StorageKeys {
 
         /** True after the Eversense server refused the stored login, until a login is accepted or the user signs out */
         const val LOGIN_REFUSED = "eversense_login_refused"
+
+        /**
+         * The name of a transmitter that was unpaired while the phone kept its Bluetooth bond (iOS, where an app cannot
+         * remove one, or a failed removal on Android), until the next pairing: the user is told to forget it in the
+         * phone's Bluetooth settings.
+         */
+        const val BOND_LEFT_NAME = "eversense_bond_left_name"
     }
 }

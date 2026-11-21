@@ -47,9 +47,11 @@ class EversenseStatusViewModelTest {
     }
     private val attention = MutableStateFlow<CgmAttention?>(null)
     private val account = MutableStateFlow<EversenseAccount?>(null)
+    private val bondLeft = MutableStateFlow<String?>(null)
     private val pairing: EversensePairing = mock<EversensePairing>().also {
         whenever(it.attention).thenReturn(attention)
         whenever(it.account).thenReturn(account)
+        whenever(it.bondLeft).thenReturn(bondLeft)
         whenever(it.transmitter).thenReturn(MutableStateFlow<String?>("D313640"))
     }
     private val dateUtil: DateUtil = mock<DateUtil>().also {
@@ -137,6 +139,15 @@ class EversenseStatusViewModelTest {
         assertThat(viewModel.uiState.value.banner?.text).isEqualTo("eversense_sign_in_failed")
         assertThat(viewModel.uiState.value.banner?.level).isEqualTo(StatusLevel.CRITICAL)
         assertThat(viewModel.uiState.value.rows).isNotEmpty()
+    }
+
+    /** A bond the phone could not remove (iOS) would stop pairing that transmitter again: the banner says to forget it. */
+    @Test fun anUnpairedTransmitterWithABondLeftAsksToForgetIt() {
+        val viewModel = viewModel()
+        attention.value = CgmAttention.NOT_PAIRED
+        bondLeft.value = "D313640"
+        assertThat(viewModel.uiState.value.banner?.text).isEqualTo("eversense_not_paired_forget_bond(D313640)")
+        assertThat(viewModel.uiState.value.banner?.level).isEqualTo(StatusLevel.WARNING)
     }
 
     /** An E3 sensor lasts 180 days, a 365 sensor 365. */
