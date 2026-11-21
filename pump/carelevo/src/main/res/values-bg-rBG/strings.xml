@@ -127,6 +127,7 @@
     <string name="carelevo_toast_msg_needle_check_failed">Проверката на иглата е неуспешна.</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">Изхвърлянето на пача е неуспешно. Моля, опитайте отново.</string>
+    <string name="carelevo_discarded_not_reached">Няма връзка с пача. Той е премахнат от AAPS, но не е спрян и може все още да доставя инсулин. Свалете го.</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">Заявката за базално подаване е неуспешна. Моля, опитайте отново.</string>
     <!-- Delivery Resume/Suspend -->
@@ -211,5 +212,7 @@
     <string name="carelevo_profile_update_skip_comment">Пропуснато: твърде скорошна актуализация.</string>
     <string name="carelevo_bolus_stop_not_confirmed">Пачът не потвърди спирането. Изчакване болусът да приключи…</string>
     <string name="carelevo_bolus_rejected_missed_bolus_recorded">Току-що е добавен незаписан болус. Проверете IOB и опитайте отново.</string>
+    <string name="carelevo_bolus_outcome_unknown">Пачът не отговори на болуса. Целият болус се отчита, докато пачът не съобщи колко е доставил.</string>
     <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Пачът не потвърди спирането. Целият болус от %1$s е записан.</string>
+    <string name="carelevo_bolus_stopped_by_patch" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The patch stopped the bolus. Given: 0.50 U of 2.00 U">Пачът спря болуса. Доставени: %1$s от %2$s</string>
 </resources>
