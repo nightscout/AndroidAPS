@@ -29,7 +29,7 @@ class CgmAppCatalog(
         get() = loaded ?: load().also { loaded = it }
 
     private fun load(): CgmApps {
-        val stored = preferences.get(StringNonKey.CgmAppCatalog).takeIf { it.isNotEmpty() }?.let { parse(it, "stored") }
+        val stored = preferences.get(StringNonKey.CgmAppCatalog).takeIf { it.isNotEmpty() }?.let { parseFetched(it, "stored") }
         val bundled = try {
             context.assets.open(ASSET).bufferedReader().use { it.readText() }.let { parse(it, "bundled") }
         } catch (e: Exception) {
@@ -89,7 +89,7 @@ class CgmAppCatalog(
     fun updateFromRemote() {
         try {
             val text = URL(REMOTE_URL).readText()
-            val remote = parse(text, "remote") ?: return
+            val remote = parseFetched(text, "remote") ?: return
             if (remote.version > apps.version) {
                 aapsLogger.info(LTag.BGSOURCE, "CGM app catalog: v${apps.version} -> v${remote.version}")
                 preferences.put(StringNonKey.CgmAppCatalog, text)
@@ -99,6 +99,14 @@ class CgmAppCatalog(
             aapsLogger.debug(LTag.BGSOURCE, "CGM app catalog: no update (${e.message})")
         }
     }
+
+    /** A catalog from the `versions` branch: used only when it has every app the code asks for ([CgmApps.missingIds]). */
+    private fun parseFetched(text: String, what: String): CgmApps? =
+        parse(text, what)?.takeIf { fetched ->
+            val missing = fetched.missingIds()
+            if (missing.isNotEmpty()) aapsLogger.error(LTag.BGSOURCE, "CGM app catalog: the $what one has no $missing, not used")
+            missing.isEmpty()
+        }
 
     private fun parse(text: String, what: String): CgmApps? =
         try {

@@ -309,8 +309,8 @@ class ConfigBuilderImpl(
         val sourceBefore = activePlugin.activeBgSourceOrNull()
         changedPlugin.setPluginEnabled(type, enabled)
         processOnEnabledCategoryChanged(changedPlugin, type)
-        resetCalibrationsIfSourceChanged(sourceBefore)
         storeSettings("RemoteConfiguration")
+        resetCalibrationsIfSourceChanged(sourceBefore)   // after storeSettings: the new source is active only once the selection is verified
         syncActivePluginKey(type)   // mirror the new selection into the synced ActivePlugin key (echo-guarded)
         rxBus.send(EventConfigBuilderChange())
         _activeSelectionChanges.tryEmit(Unit)   // post-commit: refresh the Configuration screen after the switch is applied

@@ -11,6 +11,7 @@ import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.calibration.AddEntryResult
+import app.aaps.core.interfaces.calibration.calibrationRange
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.clientcontrol.isNotDeliveryError
@@ -101,7 +102,7 @@ class CalibrationDialogViewModel(
             CalibrationDialogUiState(
                 bg = currentBg,
                 units = units,
-                bgRange = if (isMmol) 2.0..30.0 else 36.0..500.0,
+                bgRange = calibrationRange(units),
                 bgStep = if (isMmol) 0.1 else 1.0,
                 bgDecimalPlaces = if (isMmol) 1 else 0
             )

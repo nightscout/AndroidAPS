@@ -6,7 +6,6 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.plugins.source.notificationreader.PackageConfig
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import com.google.common.truth.Truth.assertWithMessage
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
@@ -30,6 +29,11 @@ class CgmAppCatalogTest : TestBaseWithProfile() {
 
     private fun catalog() = CgmAppCatalog(context, preferences, aapsLogger)
 
+    /** A fetched catalog with every app the code asks for, and no others. */
+    private fun complete(version: Int, without: String? = null): String =
+        CgmApps.USED_IDS.filter { it != without }
+            .joinToString(",", prefix = "{\"version\":$version,\"apps\":[", postfix = "]}") { "{\"id\":\"$it\",\"name\":\"$it\",\"packages\":[\"$it\"]}" }
+
     @Test
     fun `the bundled catalog is used when nothing was fetched`() {
         stored("")
@@ -39,7 +43,7 @@ class CgmAppCatalogTest : TestBaseWithProfile() {
     /** A catalog fetched from the versions branch is newer than the one in the app, until the next release. */
     @Test
     fun `a newer fetched catalog is kept`() {
-        stored("""{"version":3,"apps":[]}""")
+        stored(complete(version = 3))
         assertThat(catalog().apps.version).isEqualTo(3)
         verify(preferences, never()).remove(StringNonKey.CgmAppCatalog)
     }
@@ -47,9 +51,19 @@ class CgmAppCatalogTest : TestBaseWithProfile() {
     /** After an app update the bundled one can be newer: the old fetched one is dropped. */
     @Test
     fun `an older fetched catalog gives way to the bundled one and is dropped`() {
-        stored("""{"version":1,"apps":[]}""")
+        stored(complete(version = 1))
         assertThat(catalog().apps.version).isEqualTo(2)
         verify(preferences).remove(StringNonKey.CgmAppCatalog)
+    }
+
+    /**
+     * A newer catalog that lost an app the code asks for is not used: the app would no longer be found, and with it
+     * where its sensor is calibrated. A broken file on the versions branch must not reach every phone.
+     */
+    @Test
+    fun `a fetched catalog without an app the code asks for is not used`() {
+        stored(complete(version = 3, without = CgmApps.DEXCOM_G6))
+        assertThat(catalog().apps.version).isEqualTo(2)
     }
 
     @Test
@@ -79,11 +93,15 @@ class CgmAppCatalogTest : TestBaseWithProfile() {
         assertThat(apps.byId("unknown").calibrationMode()).isEqualTo(CalibrationMode.AAPS)
     }
 
-    /** A newer file may name a place this version does not know: the app is read, as one AAPS does not calibrate for. */
+    /**
+     * A newer file may name a place this version does not know. The catalog still reads, and the sensor still counts
+     * as calibrated somewhere: read as "no calibration", AAPS would correct values that are calibrated already.
+     */
     @Test
-    fun `an unknown calibration place does not break the catalog`() {
+    fun `an unknown calibration place does not break the catalog and keeps AAPS from calibrating`() {
         val apps = CgmApps.fromJson("""{"version":5,"apps":[{"id":"x","name":"X","packages":["p"],"calibration":"watch"}]}""")
-        assertThat(apps.byId("x")?.calibration).isNull()
+        assertThat(apps.byId("x")?.calibration).isEqualTo(Calibration.OTHER)
+        assertThat(apps.byId("x").calibrationMode()).isNotEqualTo(CalibrationMode.AAPS)
     }
 
     @Test
@@ -101,7 +119,9 @@ class CgmAppCatalogTest : TestBaseWithProfile() {
 
         assertThat(apps.apps.map { it.id }).containsNoDuplicates()
         assertThat(apps.apps.flatMap { it.packages }).containsNoDuplicates()
-        for (id in CgmApps.USED_IDS) assertWithMessage(id).that(apps.byId(id)).isNotNull()
+        assertThat(apps.missingIds()).isEmpty()
+        // The old DexcomPlugin knew this one; the catalog had lost it once
+        assertThat(apps.byPackage("com.dexcom.g6.region3.mmol")?.id).isEqualTo(CgmApps.DEXCOM_G6)
         // xDrip broadcasts its readings; the notification reader must not read them a second time
         assertThat(PackageConfig.fromCatalog(apps).isSupportedPackage("com.eveningoutpost.dexdrip")).isFalse()
         assertThat(PackageConfig.fromCatalog(apps).isSupportedPackage("com.dexcom.g7")).isTrue()

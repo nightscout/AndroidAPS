@@ -71,6 +71,7 @@ import kotlin.coroutines.resume
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.util.Calendar
 
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @MetroIntKey(415)
@@ -205,7 +206,13 @@ class EversensePlugin(
 
     override val calibrationMode = CalibrationMode.SOURCE
 
+    // Without a transmitter there is nothing to send to. Said before the confirmation, not after a wait for a link
+    // that cannot come. A refused login does not stop it: the value goes to the transmitter over Bluetooth.
+    override suspend fun calibrationRefusal(): String? =
+        if (pairing.attention.value == CgmAttention.NOT_PAIRED) rh.gs(R.string.eversense_not_paired) else null
+
     override suspend fun calibrate(bgMgdl: Double): String? = withContext(Dispatchers.IO) {
+        calibrationRefusal()?.let { return@withContext it }
         // Rounded, not truncated: 2.2 mmol/L is 39.6 mg/dL and must not become 39
         val value = bgMgdl.roundToInt()
         if (value !in CALIBRATION_RANGE_MGDL) return@withContext rh.gs(R.string.eversense_calibration_invalid_value)
@@ -314,7 +321,7 @@ class EversensePlugin(
             val sensorLifetimeMs = if (eversense.is365()) 365L * 24 * 60 * 60 * 1000 else 180L * 24 * 60 * 60 * 1000
             val expiryMs = state.insertionDate + sensorLifetimeMs
             val daysRemaining = ((expiryMs - System.currentTimeMillis()) / (24 * 60 * 60 * 1000)).toInt()
-            val isAfterNoon = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY) >= 12
+            val isAfterNoon = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 12
 
             if (isAfterNoon && daysRemaining in 31..60 && !isSensorExpiryDismissed(state.insertionDate, 60)) {
                 setSensorExpiryDismissed(state.insertionDate, 60)
@@ -341,7 +348,7 @@ class EversensePlugin(
         }
 
         // Battery low notification — fires once at noon when battery < 11%
-        val isAfterNoonBattery = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY) >= 12
+        val isAfterNoonBattery = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 12
         if (isAfterNoonBattery && state.batteryPercentage in 1..10 && !isBatteryLowDismissed()) {
             setBatteryLowDismissed()
             notificationManager.post(

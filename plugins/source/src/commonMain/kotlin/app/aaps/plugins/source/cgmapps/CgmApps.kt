@@ -1,8 +1,13 @@
 package app.aaps.plugins.source.cgmapps
 
 import app.aaps.core.interfaces.source.CalibrationMode
-import kotlinx.serialization.SerialName
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
 
 /**
@@ -25,9 +30,16 @@ data class CgmApps(val version: Int = 0, val apps: List<CgmApp> = emptyList()) {
     /** The packages of the apps with these [ids], in this order. An unknown id adds nothing. */
     fun packagesOf(vararg ids: String): List<String> = ids.flatMap { byId(it)?.packages.orEmpty() }
 
+    /**
+     * The ids of [USED_IDS] this catalog does not have. A fetched catalog that misses one is not used: that app would
+     * no longer be found, and with it where its sensor is calibrated.
+     */
+    fun missingIds(): List<String> = USED_IDS.filter { byId(it) == null }
+
     companion object {
 
-        // coerceInputValues: a value this version does not know (a newer `calibration`) reads as the default
+        // coerceInputValues: a value of the wrong kind reads as the default. A `calibration` name this version does not
+        // know is not one of them: CalibrationSerializer reads it as Calibration.OTHER.
         private val json = Json {
             ignoreUnknownKeys = true
             coerceInputValues = true
@@ -51,7 +63,7 @@ data class CgmApps(val version: Int = 0, val apps: List<CgmApp> = emptyList()) {
         const val POCTECH = "poctech"
         const val INSTARA = "instara"
 
-        /** Every id the code asks for: the shipped catalog must have each one. */
+        /** Every id the code asks for: the shipped catalog must have each one, and a fetched one too (see [missingIds]). */
         val USED_IDS = listOf(
             XDRIP, JUGGLUCO, GLIMP, MEDTRONIC_600_UPLOADER, DEXCOM_G6, DEXCOM_G7, AIDEX, OTTAI, SYAI, SIBIONICS, SINOCARE, POCTECH, INSTARA
         )
@@ -78,21 +90,40 @@ data class CgmApp(
 )
 
 /** Where the user calibrates a sensor that is not calibrated by AAPS. */
-@Serializable
-enum class Calibration {
+@Serializable(with = CalibrationSerializer::class)
+enum class Calibration(val json: String) {
 
     /** In the vendor app (or its receiver): the calibrate button opens the app. */
-    @SerialName("app") APP,
+    APP("app"),
 
     /** On the insulin pump the sensor sends to. No phone app takes it. */
-    @SerialName("pump") PUMP
+    PUMP("pump"),
+
+    /**
+     * A place a newer catalog names and this version does not know. It still says the sensor is calibrated somewhere,
+     * so AAPS must not fit on top of it. Read as the app, the nearest place this version knows.
+     */
+    OTHER("other")
+}
+
+/**
+ * Reads [Calibration] by its [Calibration.json] name. A name this version does not know is [Calibration.OTHER], not
+ * null: null means the sensor cannot be calibrated, and AAPS would then correct values that are calibrated already.
+ */
+internal object CalibrationSerializer : KSerializer<Calibration> {
+
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("app.aaps.plugins.source.cgmapps.Calibration", PrimitiveKind.STRING)
+
+    override fun deserialize(decoder: Decoder): Calibration = decoder.decodeString().let { name -> Calibration.entries.firstOrNull { it.json == name } ?: Calibration.OTHER }
+
+    override fun serialize(encoder: Encoder, value: Calibration) = encoder.encodeString(value.json)
 }
 
 /** How AAPS handles a calibration for readings from this app. An unknown app is not calibrated elsewhere. */
 fun CgmApp?.calibrationMode(): CalibrationMode = when (this?.calibration) {
-    Calibration.APP  -> CalibrationMode.OWN_APP
-    Calibration.PUMP -> CalibrationMode.PUMP
-    null             -> CalibrationMode.AAPS
+    Calibration.APP, Calibration.OTHER -> CalibrationMode.OWN_APP
+    Calibration.PUMP                   -> CalibrationMode.PUMP
+    null                               -> CalibrationMode.AAPS
 }
 
 /**

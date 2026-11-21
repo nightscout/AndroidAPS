@@ -13,8 +13,8 @@ Working notes for bringing the Eversense E3 / 365 driver from PR #5536 into AAPS
   driver has one: the transmitter driver and the AAPS plugin with its screens, keys, strings and tests
   (`EversensePlugin`, `ui/`, `placement/`, `cloud/`, `storage/`, `keys/`, `di/`). It depends on `:plugins:source` for
   the shared BG source base; `:plugins:source` does not depend on it. `:appshell` picks it up with the other
-  `:plugins:*` modules, and `ios/shell` lists it. Author's notes: `plugins/source/eversense/TECHNICAL.md` and
-  `README.md`.
+  `:plugins:*` modules, and `ios/shell` lists it. Author's notes: `plugins/source/eversense/TECHNICAL.md`; the user
+  guide moves to the wiki.
 
 ## Findings
 
@@ -158,6 +158,25 @@ Bluetooth off and on; a lost answer; app restart.
       Connect, Disconnect, Change Transmitter and the Documentation button go: the link follows the
       plugin, and the user documentation moves to the wiki (draft for AndroidAPSdocs once the wizard is final).
       `README.md` and its screenshots go; `TECHNICAL.md` stays.
+
+   Review of the branch after 3.3 (calibration work included), fixed:
+   - The calibration reset on a BG source switch never ran from the Configuration screen: it compared the sources
+     before `storeSettings` made the new one active. The test now changes the source the way `PluginStore` does.
+   - The Linear calibration was switched off only at an election. A source that learns its mode later (the
+     notification reader at its first reading, a vendor app installed) left it fitting calibrated values; `calibrate()`
+     now checks the rule too.
+   - `com.dexcom.g6.region3.mmol` was missing from the catalog (bundled one and the `versions` copy now version 2).
+   - A `calibration` place unknown to an older AAPS read as "AAPS may calibrate"; it now reads as `OTHER` (calibrated
+     elsewhere). A fetched catalog without an id the code asks for is not used.
+   - The Manage sheet's "not on a client" check for the CGM screen had become empty.
+   - Eversense refuses a calibration with no transmitter before the confirmation, instead of waiting 30 s.
+   - The master refuses a calibration outside the dialog's range (an SMS `CAL 100` with mmol/L).
+   - Four `EversensePluginTest` tests had never run (JUnit 5 skips a test that returns a value).
+
+   - The SMS reply for an xDrip calibration had lost the "xDrip+ must accept calibrations" hint. A BG source now has a
+     `calibrationNote()`; the master shows it in the confirmation and the SMS reply repeats it.
+
+   Known: with xDrip+ and Juggluco both installed the calibration goes to xDrip+ (as before this branch).
 
    Then the rest of the list above: the glucose-data findings, the effects on other features, the rules, the missing
    tests.

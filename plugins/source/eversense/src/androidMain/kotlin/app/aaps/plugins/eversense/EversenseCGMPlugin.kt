@@ -1,5 +1,7 @@
 package app.aaps.plugins.eversense
 
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
@@ -29,6 +31,8 @@ import app.aaps.plugins.eversense.util.StorageKeys
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.util.concurrent.CopyOnWriteArrayList
+import java.util.concurrent.Future
+import java.util.concurrent.TimeUnit
 import app.aaps.plugins.eversense.connection.EversenseConnectionController
 import app.aaps.plugins.eversense.connection.HandlerConnectionScheduler
 import app.aaps.plugins.eversense.connection.SessionStore
@@ -127,6 +131,7 @@ class EversenseCGMPlugin(
      *
      * @return false when the link cannot be opened (not started, Bluetooth off, no login)
      */
+    @Synchronized
     fun pair(address: String, name: String): Boolean {
         preferences.edit(commit = true) {
             putString(StorageKeys.REMOTE_DEVICE_KEY, address)
@@ -208,10 +213,10 @@ class EversenseCGMPlugin(
     fun cloudStore(): EversenseStore? = connection.cloudStore(preferences)
 
     fun hasInternet(): Boolean {
-        val connectivity = context.getSystemService(android.net.ConnectivityManager::class.java) ?: return false
+        val connectivity = context.getSystemService(ConnectivityManager::class.java) ?: return false
         val capabilities = connectivity.getNetworkCapabilities(connectivity.activeNetwork) ?: return false
-        return capabilities.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
-            capabilities.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
     }
 
     fun isConnected(): Boolean = activeCallback?.isConnected() == true
@@ -315,6 +320,7 @@ class EversenseCGMPlugin(
     }
 
     /** Unpairs: closes the link and forgets the transmitter, so the next pairing is a full registration. The login stays. */
+    @Synchronized
     fun clearStoredDevice() {
         disconnect()
         placementFailures = 0
@@ -553,8 +559,8 @@ class EversenseCGMPlugin(
         }
     }
 
-    private fun <T> await(future: java.util.concurrent.Future<T>, timeoutMs: Long): T = try {
-        future.get(timeoutMs, java.util.concurrent.TimeUnit.MILLISECONDS)
+    private fun <T> await(future: Future<T>, timeoutMs: Long): T = try {
+        future.get(timeoutMs, TimeUnit.MILLISECONDS)
     } catch (e: Exception) {
         future.cancel(true)
         if (e is InterruptedException) Thread.currentThread().interrupt()

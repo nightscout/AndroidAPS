@@ -202,9 +202,9 @@ class ManageViewModel(
                     isPatchPump = pumpDescription.isPatchPump,
                     pumpPlugin = activePlugin.activePumpInternal as PluginBase,
                     customActions = customActions,
-                    // Same visibility as the pump (never on a client), and only while the BG source is a CgmDriver
+                    // Only while the BG source is a CgmDriver, and never on a client: the driver runs on the master's phone
                     cgmPlugin = (activePlugin.activeBgSource as? CgmDriver as? PluginBase)
-                        ?.takeIf { ElementType.CGM.isAvailable(visibilityContext) }
+                        ?.takeIf { !config.AAPSCLIENT }
                 )
             }
         }

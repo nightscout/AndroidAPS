@@ -112,6 +112,9 @@ class XdripSourcePlugin(
         if (xDripBroadcast().sendCalibration(profileUtil.fromMgdlToUnits(bgMgdl))) null
         else rh.gs(SourceStrings.xdrip_calibration_not_sent)
 
+    /** The broadcast reaches xDrip+ also when it ignores it: it uses a calibration only with a setting on. */
+    override fun calibrationNote(): String = rh.gs(SourceStrings.xdrip_calibration_accept_note)
+
     // cannot be inner class because of needed injection
 
     @AssistedInject

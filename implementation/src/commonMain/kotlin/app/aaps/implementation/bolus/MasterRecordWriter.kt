@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.calibration.AddEntryResult
+import app.aaps.core.interfaces.calibration.calibrationRange
 import app.aaps.core.interfaces.calibration.isCalibrationPluginActive
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -362,7 +363,8 @@ class MasterRecordWriter(
      * BG source's calibration mode: a source that takes calibrations decides itself, a sensor calibrated in its own
      * app or on the pump takes none from AAPS, and otherwise the calibration plugin decides - when there is one.
      */
-    suspend fun calibrationRefusal(): String? {
+    suspend fun calibrationRefusal(calibration: BatchAction.Calibration): String? {
+        rangeRefusal(calibration.glucoseMgdl)?.let { return it }
         val bgSource = activePlugin.activeBgSourceOrNull()
         return when (bgSource?.calibrationMode) {
             CalibrationMode.SOURCE  -> bgSource.calibrationRefusal()
@@ -375,9 +377,15 @@ class MasterRecordWriter(
         }
     }
 
-    /** The confirmation line for a calibration. */
-    fun calibrationLine(calibration: BatchAction.Calibration): ConfirmationLine =
-        ConfirmationLine(ConfirmationRole.PRIMARY, line(CoreUiStrings.calibration, profileUtil.fromMgdlToStringWithUnits(calibration.glucoseMgdl)))
+    /** The confirmation lines for a calibration: the value, and the BG source's note when it takes the calibration itself. */
+    fun calibrationLines(calibration: BatchAction.Calibration): List<ConfirmationLine> {
+        val bgSource = activePlugin.activeBgSourceOrNull()
+        val note = bgSource?.takeIf { it.calibrationMode == CalibrationMode.SOURCE }?.calibrationNote()
+        return listOfNotNull(
+            ConfirmationLine(ConfirmationRole.PRIMARY, line(CoreUiStrings.calibration, profileUtil.fromMgdlToStringWithUnits(calibration.glucoseMgdl))),
+            note?.let { ConfirmationLine(ConfirmationRole.INFO, it) }
+        )
+    }
 
     /**
      * Store a calibration on the master, paired with its own latest sensor reading. The conditions are checked
@@ -385,6 +393,7 @@ class MasterRecordWriter(
      */
     suspend fun addCalibration(calibration: BatchAction.Calibration, source: Sources, onError: (MasterActionExecutor.Failure) -> Unit) {
         val value = ValueWithUnit.fromGlucoseUnit(profileUtil.fromMgdlToUnits(calibration.glucoseMgdl), profileUtil.units)
+        rangeRefusal(calibration.glucoseMgdl)?.let { return refuseCalibration(it, value, source, onError) }
         val bgSource = activePlugin.activeBgSourceOrNull()
         when (bgSource?.calibrationMode) {
             // The source passes it on (a CGM driver to the sensor, xDrip by broadcast); the calibration plugin is off
@@ -422,6 +431,23 @@ class MasterRecordWriter(
         }
     }
 
+    /**
+     * A value outside what the calibration dialog offers ([calibrationRange], in the master's units). The dialog cannot
+     * give one; an SMS can ("CAL 100" with mmol/L is 1800 mg/dL), and so can a client with other units.
+     */
+    private fun rangeRefusal(mgdl: Double): String? {
+        val units = profileUtil.units
+        val range = calibrationRange(units)
+        // A small margin: the value made the trip units -> mg/dL -> units, and 2.0 must not come back as 1.9999
+        if (profileUtil.fromMgdlToUnits(mgdl) in (range.start - RANGE_MARGIN)..(range.endInclusive + RANGE_MARGIN)) return null
+        return rh.gs(
+            CoreUiStrings.cal_reject_out_of_range,
+            profileUtil.fromMgdlToStringWithUnits(mgdl),
+            profileUtil.fromMgdlToStringWithUnits(profileUtil.convertToMgdl(range.start, units)),
+            profileUtil.fromMgdlToStringWithUnits(profileUtil.convertToMgdl(range.endInclusive, units))
+        )
+    }
+
     private fun refuseCalibration(message: String, value: ValueWithUnit, source: Sources, onError: (MasterActionExecutor.Failure) -> Unit) {
         uel.log(action = Action.CALIBRATION, source = source, note = "rejected: $message", value = value)
         onError(MasterActionExecutor.Failure(message))
@@ -450,5 +476,8 @@ class MasterRecordWriter(
 
         /** Up to this many records are listed one by one in the confirmation; more are shown as a count. */
         const val MAX_LISTED = 5
+
+        /** In the user's units: far below one step of the dialog (0.1 mmol/L, 1 mg/dL). */
+        const val RANGE_MARGIN = 0.01
     }
 }

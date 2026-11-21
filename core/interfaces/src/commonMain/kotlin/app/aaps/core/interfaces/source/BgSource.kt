@@ -37,6 +37,12 @@ interface BgSource {
     suspend fun calibrationRefusal(): String? = null
 
     /**
+     * A short note for the user with a calibration this source takes, for example what the receiving app must allow,
+     * or null. Shown in the confirmation and in the SMS reply. Only asked in [CalibrationMode.SOURCE].
+     */
+    fun calibrationNote(): String? = null
+
+    /**
      * Passes a finger-stick value on: to the sensor (a CGM driver) or to the app the readings come from (xDrip).
      * Only called in [CalibrationMode.SOURCE].
      *

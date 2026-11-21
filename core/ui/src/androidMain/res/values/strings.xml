@@ -194,6 +194,7 @@
     <string name="cal_reject_in_cgm_app">Calibration not saved: this sensor is calibrated in its own app. Calibrate it there.</string>
     <string name="cal_reject_on_pump">Calibration not saved: this sensor is calibrated on the pump. Calibrate it there.</string>
     <string name="cal_reject_no_plugin">Calibration not saved: no calibration plugin is enabled.</string>
+    <string name="cal_reject_out_of_range" comment="%1$s=the value entered, %2$s=the lowest value, %3$s=the highest value, each with its unit. Example: 1800 mg/dL, 36 mg/dL, 500 mg/dL">Calibration not saved: %1$s is outside %2$s – %3$s.</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Bolus reported an error. Manually check real delivered insulin and carb amount</string>
     <string name="bolus_reminder">Remind for bolus when BG recovers</string>

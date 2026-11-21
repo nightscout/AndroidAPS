@@ -20,6 +20,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.CalibrationMode
+import app.aaps.core.interfaces.source.CgmAttention
 import app.aaps.core.interfaces.source.CgmDriver
 import app.aaps.core.keys.LongNonKey
 import app.aaps.plugins.eversense.EversenseCGMPlugin
@@ -83,7 +84,7 @@ class EversensePluginTest {
         assertThat(plugin.calibrationMode).isEqualTo(CalibrationMode.SOURCE)
     }
 
-    @Test fun successfulCalibrationUpdatesCountdownAndRequestsSync() = runBlocking {
+    @Test fun successfulCalibrationUpdatesCountdownAndRequestsSync(): Unit = runBlocking {
         val preferences: Preferences = mock()
         val backend = connectedBackend()
         val plugin = EversensePlugin(texts(), mock(), preferences, mock(), mock(), { backend }, mock(), bleCentral, pairing)
@@ -93,7 +94,7 @@ class EversensePluginTest {
         verify(preferences).put(eq(LongNonKey.EversenseLastCalibrationSubmittedAt), any())
     }
 
-    @Test fun failedCalibrationSaysSoAndDoesNotStartCountdown() = runBlocking {
+    @Test fun failedCalibrationSaysSoAndDoesNotStartCountdown(): Unit = runBlocking {
         val preferences: Preferences = mock()
         val backend = connectedBackend(accepts = false)
         val plugin = EversensePlugin(texts(), mock(), preferences, mock(), mock(), { backend }, mock(), bleCentral, pairing)
@@ -103,14 +104,31 @@ class EversensePluginTest {
     }
 
     /** 2.2 mmol/L is 39.6 mg/dL: rounded to 40, not cut to 39, which the transmitter would refuse. */
-    @Test fun calibrationValueIsRoundedNotTruncated() = runBlocking {
+    @Test fun calibrationValueIsRoundedNotTruncated(): Unit = runBlocking {
         val backend = connectedBackend()
         val plugin = EversensePlugin(texts(), mock(), mock(), mock(), mock(), { backend }, mock(), bleCentral, pairing)
         assertThat(plugin.calibrate(39.6)).isNull()
         verify(backend).sendCalibration(eq(40), any())
     }
 
-    @Test fun calibrationOutsideTheTransmitterRangeIsRefusedWithoutSending() = runBlocking {
+    /** No transmitter: said before the confirmation, and calibrate() does not wait for a link that cannot come. */
+    @Test fun calibrationWithoutATransmitterIsRefusedAtOnce(): Unit = runBlocking {
+        val backend = connectedBackend()
+        val notPaired: EversensePairing = mock<EversensePairing>().also { whenever(it.attention).thenReturn(MutableStateFlow(CgmAttention.NOT_PAIRED)) }
+        val plugin = EversensePlugin(texts(), mock(), mock(), mock(), mock(), { backend }, mock(), bleCentral, notPaired)
+        assertThat(plugin.calibrationRefusal()).isEqualTo("text ${R.string.eversense_not_paired}")
+        assertThat(plugin.calibrate(100.0)).isEqualTo("text ${R.string.eversense_not_paired}")
+        verify(backend, never()).sendCalibration(any(), any())
+    }
+
+    /** A refused login is no reason to refuse: the value goes to the transmitter over Bluetooth. */
+    @Test fun aRefusedLoginDoesNotStopACalibration(): Unit = runBlocking {
+        val signedOut: EversensePairing = mock<EversensePairing>().also { whenever(it.attention).thenReturn(MutableStateFlow(CgmAttention.SIGN_IN_FAILED)) }
+        val plugin = EversensePlugin(texts(), mock(), mock(), mock(), mock(), { connectedBackend() }, mock(), bleCentral, signedOut)
+        assertThat(plugin.calibrationRefusal()).isNull()
+    }
+
+    @Test fun calibrationOutsideTheTransmitterRangeIsRefusedWithoutSending(): Unit = runBlocking {
         val backend = connectedBackend()
         val plugin = EversensePlugin(texts(), mock(), mock(), mock(), mock(), { backend }, mock(), bleCentral, pairing)
         assertThat(plugin.calibrate(30.0)).isEqualTo("text ${R.string.eversense_calibration_invalid_value}")
@@ -118,7 +136,7 @@ class EversensePluginTest {
         verify(backend, never()).sendCalibration(any(), any())
     }
 
-    @Test fun readingsKeepValuesTimestampsTrendsAndModelWhenPassedToPersistence() = runBlocking {
+    @Test fun readingsKeepValuesTimestampsTrendsAndModelWhenPassedToPersistence(): Unit = runBlocking {
         for ((type, sensor) in listOf(EversenseType.EVERSENSE_E3 to SourceSensor.EVERSENSE_E3, EversenseType.EVERSENSE_365 to SourceSensor.EVERSENSE_365)) {
             val backend: EversenseCGMPlugin = mock()
             whenever(backend.getCurrentState()).thenReturn(EversenseState())
@@ -149,7 +167,7 @@ class EversensePluginTest {
         verify(preferences, never()).put(eq(EversenseRuntimeKey.DeviceState), any<String>())
     }
 
-    @Test fun stoppingSourceAlsoStopsBackendAndRemovesWatcher() = runBlocking {
+    @Test fun stoppingSourceAlsoStopsBackendAndRemovesWatcher(): Unit = runBlocking {
         val backend: EversenseCGMPlugin = mock()
         val plugin = EversensePlugin(mock(), mock(), mock(), mock(), mock(), { backend }, mock(), bleCentral, pairing)
         plugin.onStop()
@@ -174,7 +192,7 @@ class EversensePluginTest {
      * After a stop nothing of the run is left: the link is closed, a late reading is not stored, and the notices this
      * plugin clears itself when their condition ends are gone, because a stopped plugin no longer could.
      */
-    @Test fun aStopDropsWhatTheStartBuilt() = runBlocking {
+    @Test fun aStopDropsWhatTheStartBuilt(): Unit = runBlocking {
         val backend: EversenseCGMPlugin = mock()
         val persistence: PersistenceLayer = mock()
         val notifications: NotificationManager = mock()
@@ -193,7 +211,7 @@ class EversensePluginTest {
     }
 
     /** A reload, as a settings import does it, gives the same transmitter: the second start reads the login again. */
-    @Test fun aStartAfterAStopStartsAgainFromStorage() = runBlocking {
+    @Test fun aStartAfterAStopStartsAgainFromStorage(): Unit = runBlocking {
         val backend: EversenseCGMPlugin = mock()
         whenever(backend.getCurrentState()).thenReturn(EversenseState())
         val persistence: PersistenceLayer = mock()
@@ -216,7 +234,7 @@ class EversensePluginTest {
     }
 
     /** Android can leave out the disconnect while Bluetooth is off: when it is back on, the driver reconnects. */
-    @Test fun bluetoothBackOnReconnectsButTheStateAtStartDoesNot() = runBlocking {
+    @Test fun bluetoothBackOnReconnectsButTheStateAtStartDoesNot(): Unit = runBlocking {
         adapter.value = AdapterState.OFF   // Bluetooth is off when the plugin starts
         val backend: EversenseCGMPlugin = mock()
         val plugin = EversensePlugin(mock(), mock(), storedLogin(), mock(), mock(), { backend }, mock(), bleCentral, pairing)
@@ -243,7 +261,7 @@ class EversensePluginTest {
             .containsAtLeast(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN)
     }
 
-    @Test fun localGlucosePersistenceContinuesWhenCloudQueueFails() = runBlocking {
+    @Test fun localGlucosePersistenceContinuesWhenCloudQueueFails(): Unit = runBlocking {
         val backend: EversenseCGMPlugin = mock()
         val preferences: Preferences = storedLogin(cloudUpload = true)
         whenever(backend.getCurrentState()).thenReturn(EversenseState())

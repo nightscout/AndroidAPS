@@ -113,6 +113,24 @@ class LinearCalibrationPluginTest : TestBase() {
 
     // ------------ calibrate() ------------
 
+    /**
+     * The plugin was elected while the source left calibration to AAPS. Then the source learned it calibrates itself
+     * (the notification reader at its first reading). No fit on top, even before the next election.
+     */
+    @Test
+    fun calibrate_sourceThatCalibratesItself_returnsIdentity() = runTest {
+        bgSource(CalibrationMode.OWN_APP)
+        whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenReturn(
+            listOf(
+                entry(sensor = 100.0, fs = 110.0, ageDays = 1L),
+                entry(sensor = 200.0, fs = 220.0, ageDays = 1L)
+            )
+        )
+        val data = bucketed(listOf(now to 150.0))
+        plugin.calibrate(data, CalibrationContext.NONE)
+        assertThat(data[0].calibrated).isNull()
+    }
+
     @Test
     fun calibrate_emptyData_returnsEmpty() = runTest {
         val data = mutableListOf<InMemoryGlucoseValue>()

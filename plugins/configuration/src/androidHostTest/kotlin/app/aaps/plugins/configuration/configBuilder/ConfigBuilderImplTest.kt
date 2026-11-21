@@ -104,9 +104,14 @@ internal class ConfigBuilderImplTest {
         CAL(id = 8, timestamp = sessionStart + 20_000, fingerstickMgdl = 90.0, sensorMgdlAtPairing = 95.0)
     )
 
-    /** The active BG source before the switch, then after it. */
+    /**
+     * The active BG source before the switch, then after it. As in `PluginStore`, the active source changes only when
+     * the selection is verified, not when a plugin is enabled. A check made before that sees the old source.
+     */
     private fun bgSourceSwitch(before: BgSource, after: BgSource) {
-        whenever(activePlugin.activeBgSource).thenReturn(before, after)
+        var active = before
+        whenever(activePlugin.activeBgSource).thenAnswer { active }
+        whenever(activePlugin.verifySelectionInCategories()).thenAnswer { active = after; emptyList<Job>() }
         runBlocking {
             whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE))
                 .thenReturn(TE(timestamp = sessionStart, type = TE.Type.SENSOR_CHANGE, glucoseUnit = GlucoseUnit.MGDL))

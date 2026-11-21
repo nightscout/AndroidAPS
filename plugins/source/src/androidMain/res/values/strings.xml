@@ -59,4 +59,5 @@
     <string name="aidex_signal_lost">Sensor signal lost, please check the connection</string>
     <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">duplicate reading</string>
     <string name="xdrip_calibration_not_sent">Calibration not sent: xDrip+ is not installed.</string>
+    <string name="xdrip_calibration_accept_note">xDrip+ uses a calibration only when \'Accept Calibrations\' is on in its Inter-App settings.</string>
 </resources>

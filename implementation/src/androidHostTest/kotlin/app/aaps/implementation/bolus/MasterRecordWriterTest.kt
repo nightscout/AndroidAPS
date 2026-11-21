@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -170,7 +171,7 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
         bgSource(CalibrationMode.AAPS)
         whenever(calibration.checkPreconditions()).thenReturn(AddEntryResult.Rejected.NoSession)
 
-        assertThat(sut.calibrationRefusal()).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_session))
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(120.0))).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_session))
     }
 
     @Test
@@ -178,7 +179,7 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
         bgSource(CalibrationMode.AAPS)
         whenever(calibration.checkPreconditions()).thenReturn(AddEntryResult.Accepted)
 
-        assertThat(sut.calibrationRefusal()).isNull()
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(120.0))).isNull()
     }
 
     @Test
@@ -216,12 +217,47 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
         whenever(activePlugin.activeCalibration).thenReturn(noCalibration)
         var failure: MasterActionExecutor.Failure? = null
 
-        assertThat(sut.calibrationRefusal()).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_plugin))
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(120.0))).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_plugin))
         sut.addCalibration(BatchAction.Calibration(120.0), Sources.SMS) { failure = it }
 
         assertThat(failure?.comment).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_plugin))
         verify(noCalibration, never()).addEntry(any(), any())
         verify(uel).log(eq(Action.CALIBRATION), eq(Sources.SMS), anyOrNull(), any<ValueWithUnit>())
+    }
+
+    // ----- calibration: the value -----
+
+    /** "CAL 100" sent by SMS with mmol/L is 1800 mg/dL: a typo, refused before it can bend the fit or reach a sensor. */
+    @Test
+    fun `a calibration outside what the dialog offers is refused before it goes anywhere`() = runTest {
+        val source = bgSource(CalibrationMode.SOURCE)
+        doReturn("mg/dL").whenever(rh).gs(CoreUiStrings.bg_mgdl)
+        val typo = BatchAction.Calibration(1800.0)
+        val expected = baseText.gs(
+            CoreUiStrings.cal_reject_out_of_range,
+            profileUtil.fromMgdlToStringWithUnits(1800.0), profileUtil.fromMgdlToStringWithUnits(36.0), profileUtil.fromMgdlToStringWithUnits(500.0)
+        )
+        var failure: MasterActionExecutor.Failure? = null
+
+        assertThat(sut.calibrationRefusal(typo)).isEqualTo(expected)
+        sut.addCalibration(typo, Sources.SMS) { failure = it }
+
+        assertThat(failure?.comment).isEqualTo(expected)
+        verify(source, never()).calibrationRefusal()
+        verify(source, never()).calibrate(any())
+        verify(calibration, never()).addEntry(any(), any())
+    }
+
+    /** The ends of the range are what the dialog offers, so they are taken. */
+    @Test
+    fun `the ends of the range are taken`() = runTest {
+        bgSource(CalibrationMode.AAPS)
+        doReturn("mg/dL").whenever(rh).gs(CoreUiStrings.bg_mgdl)
+        whenever(calibration.checkPreconditions()).thenReturn(AddEntryResult.Accepted)
+
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(36.0))).isNull()
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(500.0))).isNull()
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(35.0))).isNotNull()
     }
 
     // ----- calibration: SOURCE, a CGM driver or xDrip takes it -----
@@ -231,7 +267,7 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
         val source = bgSource(CalibrationMode.SOURCE)
         whenever(source.calibrationRefusal()).thenReturn("transmitter busy")
 
-        assertThat(sut.calibrationRefusal()).isEqualTo("transmitter busy")
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(120.0))).isEqualTo("transmitter busy")
         verify(calibration, never()).checkPreconditions()
     }
 
@@ -247,6 +283,28 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
         verify(source).calibrate(120.0)
         verify(calibration, never()).addEntry(any(), any())
         verify(uel).log(eq(Action.CALIBRATION), eq(Sources.NSClient), anyOrNull(), any<ValueWithUnit>())
+    }
+
+    /** xDrip+ gets the broadcast also when it ignores it, so the user reads what it needs before and after. */
+    @Test
+    fun `the confirmation of a calibration the source takes carries the source's note`() {
+        val source = bgSource(CalibrationMode.SOURCE)
+        whenever(source.calibrationNote()).thenReturn("turn it on")
+        doReturn("mg/dL").whenever(rh).gs(CoreUiStrings.bg_mgdl)
+
+        val lines = sut.calibrationLines(BatchAction.Calibration(120.0))
+
+        assertThat(lines.map { it.role }).containsExactly(ConfirmationRole.PRIMARY, ConfirmationRole.INFO).inOrder()
+        assertThat(lines.last().text).isEqualTo("turn it on")
+    }
+
+    @Test
+    fun `the note of a source that does not take the calibration is not shown`() {
+        val source = bgSource(CalibrationMode.AAPS)
+        whenever(source.calibrationNote()).thenReturn("turn it on")
+        doReturn("mg/dL").whenever(rh).gs(CoreUiStrings.bg_mgdl)
+
+        assertThat(sut.calibrationLines(BatchAction.Calibration(120.0)).map { it.role }).containsExactly(ConfirmationRole.PRIMARY)
     }
 
     @Test
@@ -268,7 +326,7 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
         val source = bgSource(CalibrationMode.OWN_APP)
         var failure: MasterActionExecutor.Failure? = null
 
-        assertThat(sut.calibrationRefusal()).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_in_cgm_app))
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(120.0))).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_in_cgm_app))
         sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
 
         assertThat(failure?.comment).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_in_cgm_app))
@@ -284,7 +342,7 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
         val source = bgSource(CalibrationMode.PUMP)
         var failure: MasterActionExecutor.Failure? = null
 
-        assertThat(sut.calibrationRefusal()).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_on_pump))
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(120.0))).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_on_pump))
         sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
 
         assertThat(failure?.comment).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_on_pump))

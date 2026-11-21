@@ -110,6 +110,13 @@ class LinearCalibrationPlugin(
         context: CalibrationContext
     ): MutableList<InMemoryGlucoseValue> {
         if (data.isEmpty()) return data
+        // The rule above is applied when the plugins are elected, but some sources learn their mode later: the
+        // notification reader at its first reading, a source whose vendor app is installed or removed. Checked here
+        // too, so an election made before that never fits values that are calibrated already.
+        if (enforcedState() == EnforcedState.Disabled) {
+            aapsLogger.debug(LTag.GLUCOSE) { "LinearCalibration: the BG source calibrates its sensor itself, identity" }
+            return data
+        }
 
         val now = dateUtil.now()
         val sessionStart = context.sensorSessionStart

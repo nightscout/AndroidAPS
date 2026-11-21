@@ -167,10 +167,10 @@ fun OverviewScreen(
         else                                                    -> Color.Unspecified
     }
     val bgQualityBadgeDescription = when {
-        !showBgSetup                                    -> null
+        !showBgSetup                                -> null
         cgmAttention == CgmAttention.NOT_PAIRED     -> stringResource(UiStrings.cgm_attention_not_paired)
         cgmAttention == CgmAttention.SIGN_IN_FAILED -> stringResource(UiStrings.cgm_attention_sign_in_failed)
-        else                                            -> bgQualityCheck.stateDescription()
+        else                                        -> bgQualityCheck.stateDescription()
     }
 
     val manageSheetState = ManageSheetHost(

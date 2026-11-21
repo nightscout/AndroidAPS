@@ -1,11 +1,11 @@
 {
-  "version": 1,
+  "version": 2,
   "apps": [
     {"id":"xdrip","name":"xDrip+","packages":["com.eveningoutpost.dexdrip"]},
     {"id":"juggluco","name":"Juggluco","packages":["tk.glucodata"],"calibration":"app"},
     {"id":"glimp","name":"Glimp","packages":["it.ct.glicemia"],"calibration":"app"},
     {"id":"600-series-uploader","name":"600 Series Uploader","packages":["info.nightscout.android"],"calibration":"pump"},
-    {"id":"dexcom-g6","name":"Dexcom G6","packages":["com.dexcom.g6","com.dexcom.g6.region1.mmol","com.dexcom.g6.region2.mgdl","com.dexcom.g6.region3.mgdl","com.dexcom.g6.region4.mmol","com.dexcom.g6.region5.mmol","com.dexcom.g6.region6.mgdl","com.dexcom.g6.region7.mmol","com.dexcom.g6.region8.mmol","com.dexcom.g6.region9.mgdl","com.dexcom.g6.region10.mgdl","com.dexcom.g6.region11.mmol"],"notification":{"sensor":"AAPS-DexcomG6","intervalMinutes":5},"calibration":"app"},
+    {"id":"dexcom-g6","name":"Dexcom G6","packages":["com.dexcom.g6","com.dexcom.g6.region1.mmol","com.dexcom.g6.region2.mgdl","com.dexcom.g6.region3.mgdl","com.dexcom.g6.region3.mmol","com.dexcom.g6.region4.mmol","com.dexcom.g6.region5.mmol","com.dexcom.g6.region6.mgdl","com.dexcom.g6.region7.mmol","com.dexcom.g6.region8.mmol","com.dexcom.g6.region9.mgdl","com.dexcom.g6.region10.mgdl","com.dexcom.g6.region11.mmol"],"notification":{"sensor":"AAPS-DexcomG6","intervalMinutes":5},"calibration":"app"},
     {"id":"dexcom-g7","name":"Dexcom G7","packages":["com.dexcom.g7"],"notification":{"sensor":"AAPS-DexcomG7","intervalMinutes":5},"calibration":"app"},
     {"id":"dexcom-one","name":"Dexcom ONE","packages":["com.dexcom.dexcomone","com.dexcom.d1plus"],"notification":{"sensor":"AAPS-Dexcom","intervalMinutes":5},"calibration":"app"},
     {"id":"dexcom-stelo","name":"Dexcom Stelo","packages":["com.dexcom.stelo"],"notification":{"sensor":"AAPS-Dexcom","intervalMinutes":5}},

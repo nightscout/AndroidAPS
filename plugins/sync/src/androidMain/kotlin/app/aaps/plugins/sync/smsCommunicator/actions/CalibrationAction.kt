@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.smsCommunicator.actions
 
+import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.resources.TextResolver
@@ -26,8 +27,12 @@ class CalibrationAction(
 
     override suspend fun run() {
         when (val result = masterActionExecutor.runSmsBatch(listOf(BatchAction.Calibration(bgMgdl)))) {
-            is SmsBatchResult.Done    ->
-                sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_calibration_accepted)))
+            // With the BG source's note from the confirmation, as "xDrip+ must accept calibrations"
+            is SmsBatchResult.Done    -> {
+                val notes = result.preview.lines.filter { it.role == ConfirmationRole.INFO }.map { it.text }
+                val reply = (listOf(rh.gs(SyncStrings.smscommunicator_calibration_accepted)) + notes).joinToString("\n")
+                sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, reply))
+            }
 
             is SmsBatchResult.NotDone ->
                 smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, result.reply(rh.gs(SyncStrings.smscommunicator_calibration_not_accepted))))

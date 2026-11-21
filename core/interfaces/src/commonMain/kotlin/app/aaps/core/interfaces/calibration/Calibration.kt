@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.calibration
 
 import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 
@@ -57,3 +58,9 @@ interface Calibration {
  * hands it one must check this first, or the calibration is lost while it looks done.
  */
 fun ActivePlugin.isCalibrationPluginActive(): Boolean = (activeCalibration as? PluginBase)?.pluginDescription?.defaultPlugin == false
+
+/**
+ * The finger-stick values a calibration may have, in these [units]: what the calibration dialog offers, and all the
+ * master takes from an SMS or a client. A value outside is a typo, and a pair made from it would bend the fit.
+ */
+fun calibrationRange(units: GlucoseUnit): ClosedFloatingPointRange<Double> = if (units == GlucoseUnit.MMOL) 2.0..30.0 else 36.0..500.0

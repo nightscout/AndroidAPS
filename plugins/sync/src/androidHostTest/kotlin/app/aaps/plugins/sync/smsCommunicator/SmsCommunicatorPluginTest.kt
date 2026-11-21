@@ -13,6 +13,8 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ui.ConfirmationLine
+import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.bolus.BatchAction
@@ -1200,6 +1202,24 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         // BG source's decision, covered by the executor's own tests.
         assertThat(lastAction()).isEqualTo(BatchAction.Calibration(100.0))
         verify(masterActionExecutor).confirm(eq(42L), eq(Sources.SMS), anyOrNull(), anyBoolean(), anyDouble(), isNull(), anyOrNull())
+    }
+
+    /** The BG source's note from the master's confirmation goes into the reply, as what xDrip+ must allow. */
+    @Test fun processCalWithTheSourcesNoteTest() = runTest {
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
+        val lines = listOf(
+            ConfirmationLine(ConfirmationRole.PRIMARY, "Calibration: 100 mg/dL"),
+            ConfirmationLine(ConfirmationRole.INFO, "Accept Calibrations must be on")
+        )
+        whenever(masterActionExecutor.prepareBatch(anyOrNull(), isNull()))
+            .thenReturn(MasterActionExecutor.PrepareResult.Preview(insulin = 0.0, carbs = 0, bolusId = 42L, lines = lines))
+
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(Sms("1234", "CAL 100"))
+        val passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
+        smsCommunicatorPlugin.processSms(Sms("1234", passCode))
+
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Calibration accepted\nAccept Calibrations must be on")
     }
 
     /** The master refuses it, for example the sensor is calibrated in its own app: the reason goes back, nothing is confirmed. */
