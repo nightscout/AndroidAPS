@@ -3,58 +3,140 @@
     <!--    Dialogs-->
     <string name="confirmation">Confirmació</string>
     <!--    Events-->
+    <string name="bolus_delivering">Lliurant %1$.2fU</string>
+    <string name="bolus_delivered_so_far">Lliurat: %1$.2fU / %2$.2fU</string>
+    <string name="bolus_delivered_successfully">Bolus %1$.2fU lliurat correctament</string>
     <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Controlador bomba canviat.</string>
     <!--    DateUtil-->
+    <string name="minago">fa %1$dm</string>
+    <string name="secago">fa %1$ds</string>
+    <string name="min_plus">(+%1$dm)</string>
+    <string name="sec_plus">(+%1$ds)</string>
+    <string name="minago_long">fa %1$d minuts</string>
+    <string name="hoursago">fa %1$.1fh</string>
+    <string name="days_ago">fa %1$.1f dies</string>
+    <string name="days_ago_round">fa %1$.0f dies</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">fa %1$s dia i %2$s h</item>
+        <item quantity="other">fa %1$s dies i %2$s h</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">fa %1$s hora</item>
+        <item quantity="other">fa %1$s hores</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">fa un moment</item>
+        <item quantity="other">fa %1$s minuts</item>
+    </plurals>
+    <string name="seconds_ago">fa uns segons</string>
+    <string name="in_days">d\'aquí a %1$.0f dies</string>
+    <string name="in_days_round">d\'aquí a %1$.0f dies</string>
     <string name="shorthour">h</string>
     <string name="days">dies</string>
     <string name="hours">hores</string>
-    <string name="unit_second">segon</string>
-    <string name="unit_minute">minut</string>
-    <string name="unit_hour">hora</string>
-    <string name="unit_day">dia</string>
-    <string name="unit_week">setmana</string>
-    <string name="unit_seconds">segons</string>
     <string name="unit_minutes">minuts</string>
-    <string name="unit_hours">hores</string>
-    <string name="unit_days">dies</string>
-    <string name="unit_weeks">setmanes</string>
     <string name="shortminute">m</string>
+    <string name="time_remaining_h_m">queden %1$dh %2$dm</string>
+    <string name="time_remaining_m">queden %1$dm</string>
+    <string name="later_today">Més tard avui</string>
+    <string name="tomorrow">Demà</string>
+    <string name="today">Avui</string>
+    <string name="yesterday">Ahir</string>
+    <string name="values_with_dash" comment="Two values with a dash between them, for a range or a day and its date. Example: 6:00 - 10:00, or Today - 10/23/2026">%1$s - %2$s</string>
+    <string name="values_with_comma" comment="Two parts of one text with a comma between them. Example: BG: 7.5, Delta: +0.3">%1$s, %2$s</string>
+    <string name="values_with_slash" comment="Two values with a slash between them. Example: 0.01 / 0.05">%1$s / %2$s</string>
+    <string name="value_with_detail" comment="A value and a detail about it in brackets. Example: 0.85 U/h (STD), or 20 g (-15 min)">%1$s (%2$s)</string>
+    <string name="time_frame_hours_minutes" comment="A duration, short. h=hours, the mark after the minutes means minutes. %1$d=hours, %2$d=minutes. Example: 1h 30'">%1$dh %2$d\'</string>
+    <string name="time_frame_minutes" comment="A duration in minutes, short. The mark after the number means minutes. %1$d=minutes. Example: 30'">%1$d\'</string>
+    <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
     <!-- Rx -->
     <string name="connecting_for">Connectant %1$d s</string>
     <string name="handshaking">Establint comunicació</string>
     <string name="connected">Connectat</string>
+    <string name="authorized">Autoritzat</string>
     <string name="disconnecting">Desconnectant</string>
     <string name="waiting_for_disconnection">S\'està esperant la desconnexió</string>
     <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Creat: %1$s</string>
+    <string name="metadata_label_watchface_author">Autor: %1$s</string>
+    <string name="metadata_label_watchface_name">Nom: %1$s</string>
+    <string name="metadata_wear_import_filename">Nom del fitxer: %1$s</string>
+    <string name="metadata_label_plugin_version">Versió del plugin: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Nom: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Info: %1$s</string>
     <string name="pref_show_iob">Mostrar IOB</string>
+    <string name="pref_show_detailed_iob">Mostrar IOB detallada</string>
     <string name="pref_show_cob">Mostrar COB</string>
     <string name="pref_show_delta">Mostrar delta</string>
-    <string name="pref_show_avgdelta">Mostrar delta promig</string>
+    <string name="pref_show_detailed_delta">Mostrar delta detallada</string>
+    <string name="pref_show_avgdelta">Mostrar delta mitjana</string>
+    <string name="pref_show_tempTarget">Mostrar objectiu temporal</string>
+    <string name="pref_show_reservoir_level">Mostrar nivell del reservori</string>
     <string name="pref_show_phone_battery">Mostrar bateria telèfon</string>
     <string name="pref_show_rig_battery">Mostrar bateria rig</string>
     <string name="pref_show_basal_rate">Mostrar basal</string>
     <string name="pref_show_loop_status">Mostrar estat llaç</string>
     <string name="pref_show_bg">Mostrar glucèmia</string>
+    <string name="pref_show_bgi">Mostrar BGI</string>
     <string name="pref_show_direction_arrow">Mostrar fletxa direcció</string>
-    <string name="pref_show_ago">Mostrar històric</string>
+    <string name="pref_show_ago">Mostrar temps des de l\'última lectura</string>
+    <string name="pref_show_week_number">Mostrar nr. de setmana</string>
     <string name="pref_show_date">Mostrar data</string>
+    <string name="pref_show_seconds">Mostrar segons</string>
+    <string name="pref_show_complication1">Mostrar complicació 1</string>
+    <string name="pref_show_complication2">Mostrar complicació 2</string>
+    <string name="pref_show_complication3">Mostrar complicació 3</string>
+    <string name="pref_show_complication4">Mostrar complicació 4</string>
+    <string name="pref_show_complication5">Mostrar complicació 5</string>
+    <string name="default_custom_watchface_comment">Watchface per defecte, podeu prémer el botó EXPORTAR PLANTILLA per generar una plantilla</string>
+    <string name="default_custom_watchface_external_comment">Watchface per defecte amb vistes externes per a seguidors, podeu prémer el botó EXPORTAR PLANTILLA per generar una plantilla</string>
+    <string name="wear_default_watchface">Watchface per defecte</string>
+    <string name="wear_more_watchfaces">Més watchfaces</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">L\'aplicació necessita el permís de Bluetooth per comunicar-se amb la bomba</string>
     <!-- Insulin -->
+    <string name="unknown">Desconegut</string>
+    <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
     <string name="free_peak_oref">Oref sense pic</string>
+    <string name="ultra_rapid_oref">Fiasp</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <string name="insulin_peak_time">Temps del pic [min]</string>
     <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u20">U20</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">mg/dL/U</string>
+    <string name="profile_isf_units_mmol">mmol/L/U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="carbs">Carbs</string>
     <string name="alarminxmin">Executar alarma en %1$d min</string>
-    <string name="pumpsuspended">Bomba aturada</string>
-    <string name="loopsuspended">Llaç aturat</string>
+    <string name="pumpsuspended">Bomba suspesa</string>
+    <string name="loopsuspended">Llaç suspès</string>
+    <string name="pump_disconnected">Bomba desconnectada</string>
+    <string name="basalprofilenotaligned">Valors de basal no alineats a hores en punt: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Valor de basal substituït pel valor mínim compatible: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valor basal reemplaçat pel màxim valor acceptat: %1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min</string>
     <string name="record">Registre</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">CARBS ESTESOS</string>
+    <string name="profile_low_target">Objectiu baix del perfil</string>
     <string name="profile_high_target">Objectiu alt del perfil</string>
     <string name="profile_dia">Valor DIA del perfil</string>
     <string name="profile_sensitivity_value">Valor sensibilitat del perfil</string>
@@ -62,5 +144,14 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f està fora dels límits estrictes</string>
     <string name="basal_value">Valor basal</string>
     <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected_plain">!!!!! S\'ha detectat una absorció lenta de carbohidrats: %1$d%% del temps. Reviseu el càlcul. Els COB poden estar sobreestimats i es podria donar més insulina !!!!!</string>
+    <string name="bolus_constraint_applied_warn">Restricció de bolus aplicada: de %1$.2f U a %2$.2f U</string>
+    <string name="bolus_recorded_only">El bolus només es registrarà (la bomba no el lliurarà)</string>
     <string name="advisoralarm">Executar alarma quan sigui hora de menjar</string>
+    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">e-carbs %1$d g / %2$d h (+%3$d min)</string>
+    <string name="format_insulin_units">%1$.2f U</string>
+    <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
+    <string name="carbs_with_time_later" comment="Carbs eaten later. %1$s=carbs with unit, %2$s=minutes from now, with unit. Example: 20 g (+15 min)">%1$s (+%2$s)</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">El plugin %1$s no s\'ha pogut iniciar i pot ser que no funcioni. Reinicieu AAPS.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">El plugin %1$s ha tingut un error i una part s\'ha aturat. Reinicieu AAPS.</string>
 </resources>
