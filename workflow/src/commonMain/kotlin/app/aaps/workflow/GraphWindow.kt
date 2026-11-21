@@ -2,6 +2,11 @@ package app.aaps.workflow
 
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.overview.OverviewData
+import app.aaps.core.interfaces.overview.liveGraphWindowEnd
+import kotlinx.datetime.TimeZone
+import kotlin.math.max
+import kotlin.time.Instant
 
 /**
  * Where the graph window ends, and which phase may change it.
@@ -18,7 +23,32 @@ import app.aaps.core.data.time.T
  *   stopped at the next full hour while the axis went on to the newest prediction.
  *
  * Keeping the two apart is what [keptEndTime] is for.
+ *
+ * `toTime` follows the clock, so a live run moves it first, before it picks anything with it, see
+ * [moveLiveWindowTo].
  */
+
+/**
+ * Moves the window of the live graph on to [now], at the start of a live run (#5614).
+ *
+ * The prepare pass picks the readings, the 5 minute values and the IOB series with `toTime`, and only the post
+ * pass at the end of the run moved it on. So the first run after the clock passed the old `toTime` drew with the
+ * window of the run before: everything after it was missing until the next reading. That is once an hour, and
+ * after a gap in the readings also the readings filled in for the gap. A loop change hid it often, because it
+ * starts another run at once.
+ *
+ * Only forwards: moving it back, after a clock or time zone change, is left to the post pass, as before. The
+ * width the post pass gave the window is kept, and `endTime` is only widened to the new `toTime`, never
+ * narrowed (see [keptEndTime]). Not for the history browser, which sets its own window.
+ */
+internal fun OverviewData.moveLiveWindowTo(now: Instant, zone: TimeZone) {
+    val newToTime = liveGraphWindowEnd(now, zone)
+    if (newToTime <= toTime) return
+    val width = toTime - fromTime
+    toTime = newToTime
+    fromTime = newToTime - width
+    endTime = max(endTime, newToTime)
+}
 
 /**
  * How many of the window's [Constants.GRAPH_TIME_RANGE_HOURS] hours are given to the future.

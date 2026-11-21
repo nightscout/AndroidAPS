@@ -9,7 +9,7 @@ import app.aaps.core.keys.interfaces.TextRef
  * Compose text on the desktop JVM, read from the generated English string maps.
  *
  * The shell registers each module it depends on with [TextRefValueRegistry] before anything is
- * drawn, exactly as `MainApp.registerStringOwners()` registers id maps on Android.
+ * drawn, exactly as `GeneratedStringOwners.registerAll()` registers id maps on Android.
  *
  * Falls back to the name when a lookup fails, which happens when the shell has not registered the
  * owning module or when a `TextRef.Named` was built by hand instead of taken from the generated

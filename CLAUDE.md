@@ -4,7 +4,8 @@
 
 - **NEVER use `cd && command` or `cd; command` in Bash calls** — triggers security approval prompts
   on Windows. Use absolute paths or `git -C` instead:
-    - ✅ `git -C E:/GitHub/AndroidAPS diff HEAD -- path/to/file`
+    - ✅ `git -C <root of the checkout you work in> diff HEAD -- path/to/file` (a git worktree has
+      its own root, so do not copy a fixed path)
     - ✅ `git diff HEAD -- path/to/file` (CWD is already project root)
     - ❌ `cd E:/GitHub/AndroidAPS && git diff HEAD`
     - ❌ `cd /path; git status`
@@ -27,7 +28,23 @@
   `echo`, `head`, `tail`, `sed`, `rm`, `del`, `ls`, `wc`, `tee`, `xargs`, `cat`, `mkdir`, `cp`,
   `mv`, `touch`, `unzip`, `jar`, `export`
 - When spawning agents that use Bash, ALWAYS include this rule in the agent prompt
-- See `.claude/CLAUDE_COMMANDS.md` for platform-specific working commands
+
+### Gradle commands
+
+- Run Gradle from the root of the checkout you work in. The shell already starts there. A git
+  worktree has its own root, so a fixed path such as `E:\GitHub\AndroidAPS` would build the main
+  checkout instead of the worktree you are editing.
+- The compile task depends on the module type, and a wrong name fails with "task not found":
+    - `:app`, `:wear` and `:wear:watchfacepush` have flavours: `:app:compileFullDebugKotlin`
+    - an Android library: `:<lib>:compileDebugKotlin`
+    - a Kotlin Multiplatform module: `:<kmp>:compileAndroidMain`
+- Write the output to a log and grep it; see "Suppress verbose Bash output" below for why a pipe
+  hides a failure. `*.log` in the root is ignored by git.
+  ```
+  ./gradlew.bat :module:compileDebugKotlin --no-daemon > build.log 2>&1
+  grep -E "^e: |BUILD FAILED|BUILD SUCCESSFUL" build.log
+  ```
+- If Bash runs into file locks on Windows, run the same command through PowerShell.
 
 ## macOS Machine (used for iOS builds)
 
@@ -43,15 +60,19 @@ machine you are on. On macOS these rules replace the Windows ones:
   already has the exec bit.
 - **Use the scratchpad directory for screenshots and temporary files**, not `%TEMP%`.
 - The pipe-hides-the-exit-code warning still holds. Redirect to a log file and grep it.
-- Do not install Xcode, Homebrew or CocoaPods. The Mac is already set up (Xcode 26.6, iOS SDK and
+- Do not install Xcode, Homebrew or CocoaPods. The Mac is already set up (Xcode 27, iOS SDK and
   simulator runtime, JDK 21, Android SDK, Kotlin/Native in `~/.konan`). No module uses a
   `cocoapods` block, so CocoaPods is not needed at all.
+- Xcode updates itself. After an update every build fails until the new licence is accepted by
+  hand (`sudo xcodebuild -license accept`). That is a user action - ask the user, do not work
+  around it.
 
 ### What each machine can run
 
 Kotlin/Native cross compiles klibs for every target from either host, so `compileKotlinIosArm64`
-and `compileKotlinMingwX64` both work everywhere. Only the tests are limited, and the two hosts
-are exact mirrors of each other:
+works on Windows too. There is no Windows native target any more (the mingw target was dropped on
+2026-09-01); desktop code runs as `jvmTest`. Only the tests are limited, and the two hosts are
+exact mirrors of each other:
 
 | Test task | Windows | macOS |
 |---|---|---|
@@ -68,19 +89,23 @@ Useful commands on the Mac:
 
 **A real body of tests runs on the simulator** - `iosTest` and `commonTest` source sets both execute
 under `iosSimulatorArm64Test`, so a change to shared code is genuinely run on Apple, not merely
-cross-compiled to a klib. Measured on 2026-09-21 at `7e303d9bb5`: **714 tests, 0 failures, across all
-14 modules below** (4m 11s). There are 18 populated test source sets in those 14 modules:
+cross-compiled to a klib. Last full run on the Mac: 2026-09-21 at `7e303d9bb5`, **714 tests, 0
+failures** (4m 11s), in the 14 modules that had tests then.
 
-- `commonTest`: `core/data`, `core/interfaces`, `core/nssdk`, `core/objects`, `core/utils`,
-  `database/persistence`, `implementation`, `plugins/aps`, `plugins/sync`, `shared/clientbindings`,
-  `shared/impl`, `ui`
+On 2026-11-19 there were 21 populated test source sets in 17 modules:
+
+- `commonTest`: `core/data`, `core/interfaces`, `core/nssdk`, `core/objects`, `core/ui`,
+  `core/utils`, `database/impl`, `database/persistence`, `implementation`, `plugins/aps`,
+  `plugins/sync`, `shared/clientbindings`, `shared/impl`, `ui`, `workflow`
 - `iosTest`: `core/interfaces`, `implementation`, `ios/shell`, `plugins/aps`, `plugins/automation`,
   `plugins/sync`
 
-`.github/workflows/ios-ci.yml` already runs five of them explicitly. Re-derive the list rather than
-trusting this one when it matters:
-`find . -maxdepth 4 -type d \( -name commonTest -o -name iosTest \) -not -path "*/build/*"` - and
-check each for `.kt` files, because an empty source-set directory still exists for `core/ui`.
+`.github/workflows/ios-ci.yml` runs the simulator tests of 8 of these modules: the six `iosTest`
+modules plus `core/data` and `core/nssdk`. The other 9 have only `commonTest`, and their tests run
+on Apple only when you run them on the Mac. Re-derive the list rather than trusting this one when
+it matters:
+`find . -maxdepth 5 -type d \( -name commonTest -o -name iosTest \) -not -path "*/build/*"` - and
+check each for `.kt` files, because a source-set directory can exist with no tests in it.
 
 (This paragraph used to say only `:core:data` had a `commonTest` source set and that everything else
 reported `NO-SOURCE`. That was wrong by the time anyone read it, and it caused work to be shipped as
@@ -88,8 +113,8 @@ reported `NO-SOURCE`. That was wrong by the time anyone read it, and it caused w
 
 ## Token Usage Reduction (Delay Conversation Compaction)
 
-- **Use Task agents for exploration instead of direct Glob/Grep:**
-    - `Task tool with subagent_type=Explore` summarizes findings
+- **Use agents for exploration instead of direct Glob/Grep:**
+    - `Agent tool with subagent_type=Explore` summarizes findings
     - Direct Glob/Grep returns raw content which consumes more tokens
 - **Limit file reads:**
     - Use `limit` parameter (100-200 lines) for large files
@@ -101,7 +126,7 @@ reported `NO-SOURCE`. That was wrong by the time anyone read it, and it caused w
     - Only use `"content"` when you need actual line content
     - Use `head_limit` to cap number of results
 - **Suppress verbose Bash output:**
-    - Use `--quiet` flag for gradle: `.\gradlew.bat assembleFullDebug --quiet --no-daemon`
+    - Use `--quiet` flag for gradle: `./gradlew.bat assembleFullDebug --quiet --no-daemon`
     - Pipe to `tail -50` only when you just need to *read* output — ⚠️ a pipe makes the reported exit
       code the **pipe's** (e.g. `tail`'s), NOT gradle's, so a FAILED build/test looks like it passed.
       For pass/fail, redirect instead: `./gradlew.bat … --no-daemon > build.log 2>&1` then grep the log
@@ -220,7 +245,7 @@ reported `NO-SOURCE`. That was wrong by the time anyone read it, and it caused w
 - **NEVER use Android attrs in Compose code:**
     - ❌ BAD: `rh.gac(context, R.attr.highColor)` - Android attribute resolution doesn't work well
       with Compose
-    - ✅ GOOD: Define colors in Compose theme and use them (e.g., `AapsTheme.colors.bgHigh`)
+    - ✅ GOOD: Define colors in Compose theme and use them (e.g., `AapsTheme.generalColors.bgHigh`)
     - Domain models should NOT contain `@ColorInt` - use enums/sealed classes for classification
     - Map classification to theme colors in UI layer (Composables)
 - **Type safety principles:**
@@ -236,21 +261,22 @@ reported `NO-SOURCE`. That was wrong by the time anyone read it, and it caused w
   consumes it lands.
     - **But check first whether the dead code is hiding a bug.** A private function with no callers,
       or a parameter that is always the default, can mean a caller was lost rather than that the code
-      is obsolete. `TriggerBTDevice.devicesPaired()` looked like dead code and was in fact a
-      user-facing regression: the Compose migration dropped its caller, so the Bluetooth device
-      picker was permanently empty. Compare against `master` before deleting.
+      is obsolete. `TriggerBTDevice.devicesPaired()` (now `PairedBtDevices`) looked like dead code
+      and was in fact a user-facing regression: the Compose migration dropped its caller, so the
+      Bluetooth device picker was permanently empty. Compare against `master` before deleting.
 - **Use TodoWrite for complex multi-step work:**
     - Create specific, actionable todo items (not vague descriptions)
     - Mark todos in_progress before starting, completed immediately after finishing
     - Keep exactly ONE todo in_progress at a time
     - Break down large tasks into smaller items for tracking
 - On KSP error during compilation just compile again. Do not clean build.
-- On file locked error stop gradle daemons (`gradlew.bat --stop`)
+- On file locked error stop gradle daemons (`./gradlew.bat --stop`)
 - Never install app automatically
 - **NEVER run Android instrumented tests (connectedAndroidTest) without explicit user permission** —
   they uninstall the app from the device
 - Use %TEMP% directory for screenshots
-- Can edit files and run commands freely without asking for permission
+- Tool calls (editing files, running commands) need no permission prompt. A code change itself still
+  needs the user's OK, see "NEVER make code changes without user confirmation" above.
 - Can use internet/web search as needed
 - For compilation do not use gradle daemon
 - Do not decompile libraries, look for sources locally or ask first (especially Vico lib)
@@ -278,8 +304,7 @@ reported `NO-SOURCE`. That was wrong by the time anyone read it, and it caused w
       where `confirmation_line` is `"%1$s: %2$s"` — and prefer value+unit templates
       (`format_insulin_units`, `format_carbs`, `pump_base_basal_rate`, `format_mins`,
       `ProfileUtil.fromMgdlToStringWithUnits`) over a bare number. Most such templates already exist
-      in
-      `:core:ui`; reuse them before adding a new one.
+      in `:core:ui` and `:core:interfaces`; reuse them before adding a new one.
 - **Add a `comment="..."` translator note ONLY when a new string genuinely needs it for correct
   translation** — i.e. it has placeholders, is short/ambiguous out of context, carries units, or has
   order-sensitive parts. Do NOT add comments blanket to every string; a plain, self-explanatory
@@ -292,6 +317,8 @@ reported `NO-SOURCE`. That was wrong by the time anyone read it, and it caused w
 - **In Compose code, use `stringResource()` not `ResourceHelper`** - Compose has built-in
   `stringResource(R.string.xyz)` function. Only use `ResourceHelper` (rh) in non-Composable contexts
   (ViewModels, regular functions). This keeps Compose code cleaner and more idiomatic.
+  In `commonMain` there is no `R`: import `app.aaps.core.ui.compose.stringResource` and pass the
+  generated key from an `XxxStrings` object, e.g. `stringResource(CoreUiStrings.ok)`.
 - **Clear focus on tap outside text fields** - Compose does NOT auto-clear focus like Android Views.
   For screens with text fields, use the shared `clearFocusOnTap` modifier:
   ```kotlin
