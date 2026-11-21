@@ -9,6 +9,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
+import app.aaps.core.interfaces.pump.ble.AdapterState
+import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -70,6 +72,7 @@ internal class MedtrumPatchViewModelTest {
     private val medtrumPlugin: MedtrumPlugin = mock()
     private val medtrumPump: MedtrumPump = mock()
     private val bleTransport: MedtrumBleTransport = mock()
+    private val bleCentral: BleCentral = mock<BleCentral>().also { whenever(it.adapterState).thenReturn(MutableStateFlow(AdapterState.ON)) }
     private val mainDispatcher = StandardTestDispatcher()
 
     private lateinit var sut: MedtrumPatchViewModel
@@ -86,7 +89,7 @@ internal class MedtrumPatchViewModelTest {
 
         sut = MedtrumPatchViewModel(
             aapsLogger, medtrumPlugin, commandQueue, medtrumPump, insulinManager,
-            profileFunction, profileRepository, preferences, persistenceLayer, bleTransport, rh, rxBus
+            profileFunction, profileRepository, preferences, persistenceLayer, bleTransport, rh, rxBus, bleCentral
         )
     }
 

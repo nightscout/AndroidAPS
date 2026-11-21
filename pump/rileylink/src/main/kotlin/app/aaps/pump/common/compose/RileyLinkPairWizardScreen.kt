@@ -31,6 +31,7 @@ fun RileyLinkPairWizardScreen(
     onCancel: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val scanState by viewModel.scanState.collectAsStateWithLifecycle()
 
     WizardScreen(
         currentStep = state.step,
@@ -53,7 +54,10 @@ fun RileyLinkPairWizardScreen(
                     onStopScan = viewModel::stopScan,
                     onCancel = wizardCancel,
                     title = stringResource(R.string.rileylink_pair),
-                    subtitle = stringResource(R.string.riley_link_ble_config_scan_scanning)
+                    subtitle = stringResource(R.string.riley_link_ble_config_scan_scanning),
+                    scanning = scanState.scanning,
+                    onScanAgain = viewModel::startScan,
+                    problem = scanState.problem
                 )
             }
 

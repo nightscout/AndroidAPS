@@ -2,13 +2,14 @@ package app.aaps.plugins.eversense.pairing
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.pump.ble.AdapterState
 import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.core.interfaces.pump.ble.BleException
 import app.aaps.core.interfaces.pump.ble.ScanFilter
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.source.CgmAttention
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.pump.ScanProblem
+import app.aaps.core.ui.compose.pump.scanProblem
 import app.aaps.plugins.eversense.EversenseDriver
 import app.aaps.plugins.eversense.callbacks.EversenseWatcher
 import app.aaps.plugins.eversense.connection.EversenseSession
@@ -138,11 +139,7 @@ class EversensePairingImpl(
         }
     }
 
-    override fun scanProblem(): ScanProblem? = when (central.adapterState.value) {
-        AdapterState.OFF, AdapterState.UNSUPPORTED -> ScanProblem.BLUETOOTH_OFF
-        AdapterState.UNAUTHORIZED                  -> ScanProblem.NOT_ALLOWED
-        AdapterState.ON, AdapterState.UNKNOWN      -> null
-    }
+    override fun scanProblem(): ScanProblem? = central.adapterState.value.scanProblem
 
     override suspend fun pair(transmitter: ScannedDevice): PairResult {
         val ready = CompletableDeferred<Unit>()

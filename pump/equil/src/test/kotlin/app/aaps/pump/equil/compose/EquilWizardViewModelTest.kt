@@ -14,6 +14,8 @@ import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.ble.AdapterState
+import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -80,6 +82,7 @@ internal class EquilWizardViewModelTest {
     private val equilManager: EquilManager = mock()
     private val equilHistoryRecordDao: EquilHistoryRecordDao = mock()
     private val bleTransport: EquilBleTransport = mock()
+    private val bleCentral: BleCentral = mock<BleCentral>().also { whenever(it.adapterState).thenReturn(MutableStateFlow(AdapterState.ON)) }
 
     private lateinit var sut: EquilWizardViewModel
     private val mainDispatcher = StandardTestDispatcher()
@@ -94,7 +97,7 @@ internal class EquilWizardViewModelTest {
         sut = EquilWizardViewModel(
             context, rh, aapsLogger, preferences, commandQueue, equilPumpPlugin, equilManager,
             pumpSync, persistenceLayer, equilHistoryRecordDao, constraintsChecker, ch, profileFunction,
-            profileRepository, rxBus, insulinManager, bleTransport, hardLimits
+            profileRepository, rxBus, insulinManager, bleTransport, hardLimits, bleCentral
         )
     }
 

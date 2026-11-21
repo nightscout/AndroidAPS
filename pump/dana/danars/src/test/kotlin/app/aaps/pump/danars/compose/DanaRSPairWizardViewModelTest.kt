@@ -4,7 +4,9 @@ import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.ble.AdapterState
 import app.aaps.core.interfaces.pump.ble.BleAdapter
+import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.core.interfaces.pump.ble.BleScanner
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.ble.BondState
@@ -14,6 +16,8 @@ import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.pump.ScanProblem
+import app.aaps.core.ui.compose.pump.WizardScan
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.services.BLEComm
@@ -61,6 +65,8 @@ internal class DanaRSPairWizardViewModelTest {
     private val commandQueue: CommandQueue = mock()
     private val bleComm: BLEComm = mock()
     private val danaRSPlugin: DanaRSPlugin = mock()
+    private val adapterState = MutableStateFlow(AdapterState.ON)
+    private val bleCentral: BleCentral = mock<BleCentral>().also { whenever(it.adapterState).thenReturn(adapterState) }
 
     // Real flows so the two init collectors can be driven; the pairing state machine is only
     // reachable by emitting onto pairingState (see onPairingStateChanged).
@@ -87,7 +93,7 @@ internal class DanaRSPairWizardViewModelTest {
     private val created = mutableListOf<DanaRSPairWizardViewModel>()
 
     private fun createSut(appScope: CoroutineScope) =
-        DanaRSPairWizardViewModel(aapsLogger, rh, bleTransport, bleComm, danaRSPlugin, preferences, config, pumpSync, commandQueue, appScope)
+        DanaRSPairWizardViewModel(aapsLogger, rh, bleTransport, bleComm, danaRSPlugin, preferences, config, pumpSync, commandQueue, appScope, bleCentral)
             .also { created += it }
 
     /**
@@ -167,7 +173,30 @@ internal class DanaRSPairWizardViewModelTest {
 
         assertThat(sut.uiState.value.step).isEqualTo(WizardStep.BLE_SCAN)
         assertThat(sut.uiState.value.devices).isEmpty()
+        assertThat(sut.scanState.value.scanning).isTrue()
         verify(scanner).startScan()
+    }
+
+    /** The scan ends by itself, so the step can say what it found and offer "Scan again". */
+    @Test
+    fun `the scan stops by itself after its time`() {
+        sut.startScan()
+        testDispatcher.scheduler.advanceTimeBy(WizardScan.DEFAULT_DURATION.inWholeMilliseconds + 1)
+
+        assertThat(sut.scanState.value.scanning).isFalse()
+        assertThat(sut.scanState.value.problem).isNull()
+        verify(scanner).stopScan()
+    }
+
+    /** With Bluetooth off nothing can be found: the step says so at once, instead of "Scanning…" for ever. */
+    @Test
+    fun `with Bluetooth off the scan ends at once and says why`() {
+        adapterState.value = AdapterState.OFF
+        sut.startScan()
+
+        assertThat(sut.scanState.value.scanning).isFalse()
+        assertThat(sut.scanState.value.problem).isEqualTo(ScanProblem.BLUETOOTH_OFF)
+        verify(scanner, never()).startScan()
     }
 
     @Test

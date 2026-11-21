@@ -2,6 +2,7 @@ package app.aaps.plugins.eversense.pairing
 
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.source.CgmAttention
+import app.aaps.core.ui.compose.pump.ScanProblem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -57,9 +58,6 @@ interface EversensePairing {
     /** Forgets the transmitter and closes the link; the login stays, so a replacement pairs without signing in. */
     fun unpair()
 }
-
-/** Why a scan cannot run. */
-enum class ScanProblem { BLUETOOTH_OFF, NOT_ALLOWED }
 
 /**
  * Which Eversense, and so which Eversense server the login belongs to. The E3 and the 365 sign in at different places,

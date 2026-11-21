@@ -1,18 +1,23 @@
 package app.aaps.pump.diaconn.compose
 
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.pump.ble.AdapterState
 import app.aaps.core.interfaces.pump.ble.BleAdapter
+import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.core.interfaces.pump.ble.BleScanner
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.pump.ScanProblem
+import app.aaps.core.ui.compose.pump.WizardScan
 import app.aaps.pump.diaconn.events.EventDiaconnG8DeviceChange
 import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -23,6 +28,8 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -41,6 +48,8 @@ internal class DiaconnPairWizardViewModelTest {
     @Mock private lateinit var scanner: BleScanner
 
     private val scanned = MutableSharedFlow<ScannedDevice>(extraBufferCapacity = 10)
+    private val adapterState = MutableStateFlow(AdapterState.ON)
+    private val bleCentral: BleCentral = mock<BleCentral>().also { whenever(it.adapterState).thenReturn(adapterState) }
     private lateinit var dispatcher: TestDispatcher
     private lateinit var sut: DiaconnPairWizardViewModel
 
@@ -52,7 +61,7 @@ internal class DiaconnPairWizardViewModelTest {
         whenever(bleTransport.adapter).thenReturn(adapter)
         whenever(bleTransport.scanner).thenReturn(scanner)
         whenever(scanner.scannedDevices).thenReturn(scanned)
-        sut = DiaconnPairWizardViewModel(aapsLogger, preferences, rxBus, bleTransport)
+        sut = DiaconnPairWizardViewModel(aapsLogger, preferences, rxBus, bleTransport, bleCentral)
         dispatcher.scheduler.runCurrent()
     }
 
@@ -88,6 +97,28 @@ internal class DiaconnPairWizardViewModelTest {
         sut.startScan()
 
         verify(scanner).startScan()
+        assertThat(sut.scanState.value.scanning).isTrue()
+    }
+
+    // The scan ends by itself, so the step can say what it found and offer "Scan again".
+    @Test
+    fun theScanStopsByItselfAfterItsTime() {
+        sut.startScan()
+        dispatcher.scheduler.advanceTimeBy(WizardScan.DEFAULT_DURATION.inWholeMilliseconds + 1)
+
+        assertThat(sut.scanState.value.scanning).isFalse()
+        verify(scanner).stopScan()
+    }
+
+    // A scan that is not allowed says so at once, instead of "Scanning…" for ever.
+    @Test
+    fun aScanThatIsNotAllowedEndsAtOnceAndSaysWhy() {
+        adapterState.value = AdapterState.UNAUTHORIZED
+        sut.startScan()
+
+        assertThat(sut.scanState.value.scanning).isFalse()
+        assertThat(sut.scanState.value.problem).isEqualTo(ScanProblem.NOT_ALLOWED)
+        verify(scanner, never()).startScan()
     }
 
     // A pump seen twice in one scan is listed once.

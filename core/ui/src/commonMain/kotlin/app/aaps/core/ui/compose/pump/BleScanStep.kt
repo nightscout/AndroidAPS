@@ -40,6 +40,8 @@ import app.aaps.core.ui.compose.stringResource
  * @param scanning false once the scan has ended: the step then says what it found, or why it found nothing
  * @param onScanAgain when given, a "Scan again" button is shown once the scan has ended
  * @param problem why the scan could not run (Bluetooth off, not allowed), shown instead of "nothing found"
+ *
+ * [WizardScan] gives a scan its end and the [problem].
  */
 @Composable
 fun BleScanStep(
@@ -53,7 +55,7 @@ fun BleScanStep(
     subtitle: String = stringResource(CoreUiStrings.ble_scan_scanning),
     scanning: Boolean = true,
     onScanAgain: (() -> Unit)? = null,
-    problem: String? = null
+    problem: ScanProblem? = null
 ) {
     DisposableEffect(Unit) {
         onStartScan()
@@ -79,15 +81,18 @@ fun BleScanStep(
             style = MaterialTheme.typography.bodyLarge
         )
 
+        // A device found before Bluetooth went off can still be chosen: "finished" then, not the problem
+        val nothingFound = !scanning && filteredDevices.isEmpty()
         Text(
             text = when {
-                scanning                 -> subtitle
-                problem != null          -> problem
-                filteredDevices.isEmpty() -> stringResource(CoreUiStrings.ble_scan_nothing_found)
-                else                     -> stringResource(CoreUiStrings.ble_scan_finished)
+                scanning                          -> subtitle
+                !nothingFound                     -> stringResource(CoreUiStrings.ble_scan_finished)
+                problem == ScanProblem.BLUETOOTH_OFF -> stringResource(CoreUiStrings.ble_scan_bluetooth_off)
+                problem == ScanProblem.NOT_ALLOWED -> stringResource(CoreUiStrings.ble_scan_not_allowed)
+                else                              -> stringResource(CoreUiStrings.ble_scan_nothing_found)
             },
             style = MaterialTheme.typography.bodyMedium,
-            color = if (!scanning && (problem != null || filteredDevices.isEmpty())) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+            color = if (nothingFound) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         LazyColumn(modifier = Modifier.weight(1f)) {

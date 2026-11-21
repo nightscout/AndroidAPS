@@ -13,11 +13,14 @@ import android.os.ParcelUuid
 import androidx.compose.runtime.Stable
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.pump.WizardScan
 import app.aaps.pump.common.hw.rileylink.RileyLinkConst
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.ble.data.GattAttributes
@@ -58,7 +61,8 @@ class RileyLinkPairWizardViewModel(
     private val preferences: Preferences,
     private val activePlugin: ActivePlugin,
     private val rileyLinkUtil: RileyLinkUtil,
-    private val context: Context
+    private val context: Context,
+    bleCentral: BleCentral
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RileyLinkPairWizardUiState())
@@ -66,6 +70,16 @@ class RileyLinkPairWizardViewModel(
 
     private val _events = MutableSharedFlow<RileyLinkPairWizardEvent>(extraBufferCapacity = 5)
     val events: SharedFlow<RileyLinkPairWizardEvent> = _events
+
+    private val scan = WizardScan(
+        scope = viewModelScope,
+        adapterState = bleCentral.adapterState,
+        onStart = ::startPlatformScan,
+        onStop = ::stopPlatformScan
+    )
+
+    /** Whether the scan runs, and why it found nothing when it has ended */
+    val scanState: StateFlow<WizardScan.State> = scan.state
 
     private val bluetoothAdapter get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private val bluetoothLeScanner get() = bluetoothAdapter?.bluetoothLeScanner
@@ -83,8 +97,12 @@ class RileyLinkPairWizardViewModel(
         }
     }
 
+    fun startScan() = scan.start()
+
+    fun stopScan() = scan.stop()
+
     @SuppressLint("MissingPermission")
-    fun startScan() {
+    private fun startPlatformScan() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLinkPairWizard: startScan")
         // Without the permission Android throws a SecurityException, and the app ends.
         // Check it first, so the RileyLink in use is not disconnected for a scan that cannot run.
@@ -109,7 +127,7 @@ class RileyLinkPairWizardViewModel(
     }
 
     @SuppressLint("MissingPermission")
-    fun stopScan() {
+    private fun stopPlatformScan() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLinkPairWizard: stopScan")
         try {
             bluetoothLeScanner?.stopScan(scanCallback)

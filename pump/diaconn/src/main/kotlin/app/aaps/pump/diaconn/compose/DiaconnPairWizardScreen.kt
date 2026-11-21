@@ -30,6 +30,7 @@ fun DiaconnPairWizardScreen(
     onCancel: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val scanState by viewModel.scanState.collectAsStateWithLifecycle()
 
     WizardScreen(
         currentStep = state.step,
@@ -47,7 +48,10 @@ fun DiaconnPairWizardScreen(
                     onSelectDevice = viewModel::selectDevice,
                     onStartScan = viewModel::startScan,
                     onStopScan = viewModel::stopScan,
-                    onCancel = wizardCancel
+                    onCancel = wizardCancel,
+                    scanning = scanState.scanning,
+                    onScanAgain = viewModel::startScan,
+                    problem = scanState.problem
                 )
             }
 

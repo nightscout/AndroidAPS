@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.ble.BondState
 import app.aaps.core.interfaces.pump.ble.PairingState
@@ -18,6 +19,7 @@ import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.pump.WizardScan
 import app.aaps.core.utils.hexStringToByteArray
 import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
@@ -80,7 +82,8 @@ class DanaRSPairWizardViewModel(
     private val config: Config,
     private val pumpSync: PumpSync,
     private val commandQueue: CommandQueue,
-    @ApplicationScope private val appScope: CoroutineScope
+    @ApplicationScope private val appScope: CoroutineScope,
+    bleCentral: BleCentral
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PairWizardUiState())
@@ -88,6 +91,16 @@ class DanaRSPairWizardViewModel(
 
     private val _events = MutableSharedFlow<PairWizardEvent>(extraBufferCapacity = 5)
     val events: SharedFlow<PairWizardEvent> = _events
+
+    private val scan = WizardScan(
+        scope = viewModelScope,
+        adapterState = bleCentral.adapterState,
+        onStart = { bleTransport.scanner.startScan() },
+        onStop = { bleTransport.scanner.stopScan() }
+    )
+
+    /** Whether the scan runs, and why it found nothing when it has ended */
+    val scanState: StateFlow<WizardScan.State> = scan.state
 
     companion object {
 
@@ -145,12 +158,10 @@ class DanaRSPairWizardViewModel(
     fun startScan() {
         aapsLogger.debug(LTag.PUMP, "PairWizard: startScan()")
         _uiState.update { it.copy(devices = emptyList(), step = WizardStep.BLE_SCAN) }
-        bleTransport.scanner.startScan()
+        scan.start()
     }
 
-    fun stopScan() {
-        bleTransport.scanner.stopScan()
-    }
+    fun stopScan() = scan.stop()
 
     fun selectDevice(device: ScannedDevice) {
         stopScan()

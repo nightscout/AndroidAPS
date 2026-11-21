@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -23,6 +24,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.pump.ProfileGateStepHost
+import app.aaps.core.ui.compose.pump.WizardScan
 import app.aaps.core.ui.compose.pump.activateProfileFromGate
 import app.aaps.core.ui.compose.pump.switchToWizardInsulin
 import app.aaps.core.ui.compose.siteRotation.BodyType
@@ -84,10 +86,21 @@ class MedtrumPatchViewModel(
     private val persistenceLayer: PersistenceLayer,
     private val bleTransport: MedtrumBleTransport,
     private val rh: ResourceHelper,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    bleCentral: BleCentral
 ) : ViewModel(), SiteLocationStepHost, ProfileGateStepHost {
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+
+    private val deviceScan = WizardScan(
+        scope = viewModelScope,
+        adapterState = bleCentral.adapterState,
+        onStart = ::beginDeviceScan,
+        onStop = ::endDeviceScan
+    )
+
+    /** The scan step's scan: whether it runs, and why it found nothing when it has ended */
+    val deviceScanState: StateFlow<WizardScan.State> = deviceScan.state
     val concentrationEnabled: Boolean
         get() = preferences.get(BooleanKey.GeneralInsulinConcentration)
     private val medtrumService: MedtrumService?
@@ -543,7 +556,11 @@ class MedtrumPatchViewModel(
 
     // endregion
 
-    fun startDeviceScan() {
+    fun startDeviceScan() = deviceScan.start()
+
+    fun stopDeviceScan() = deviceScan.stop()
+
+    private fun beginDeviceScan() {
         _scannedDevices.value = emptyList()
         bleTransport.scanner.startScan()
         scanJob = viewModelScope.launch {
@@ -556,7 +573,7 @@ class MedtrumPatchViewModel(
         }
     }
 
-    fun stopDeviceScan() {
+    private fun endDeviceScan() {
         bleTransport.scanner.stopScan()
         scanJob?.cancel()
         scanJob = null

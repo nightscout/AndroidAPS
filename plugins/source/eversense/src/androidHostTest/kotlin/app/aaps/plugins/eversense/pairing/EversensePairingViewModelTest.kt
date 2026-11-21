@@ -2,6 +2,7 @@ package app.aaps.plugins.eversense.pairing
 
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.source.CgmAttention
+import app.aaps.core.ui.compose.pump.ScanProblem
 import app.aaps.plugins.eversense.pairing.EversensePairingViewModel.Step
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CompletableDeferred
