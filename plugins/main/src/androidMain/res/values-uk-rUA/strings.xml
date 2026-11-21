@@ -5,7 +5,7 @@
     <string name="insulin_label">Інсулін</string>
     <string name="pb_label">Батарея помпи</string>
     <string name="cannula">Канюля</string>
-    <string name="patch_pump">Patch-помпа</string>
+    <string name="patch_pump">Патч-помпа</string>
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
