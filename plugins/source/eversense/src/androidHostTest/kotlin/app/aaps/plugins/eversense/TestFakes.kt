@@ -39,7 +39,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlin.time.Duration
 
@@ -141,7 +141,10 @@ internal class FakeBleCentral : BleCentral {
     /** The answer to a connect: by default a link from [newLink]. */
     var answer: suspend (DeviceId) -> BleResult<BleLink> = { device -> BleResult.Ok(newLink(device).also { links += it }) }
 
-    override fun scan(filter: ScanFilter): Flow<Advertisement> = emptyFlow()
+    /** What a scan finds, before the scan's filter */
+    val advertisements = mutableListOf<Advertisement>()
+
+    override fun scan(filter: ScanFilter): Flow<Advertisement> = advertisements.filter(filter::matches).asFlow()
 
     override suspend fun connect(device: DeviceId, options: ConnectOptions): BleResult<BleLink> {
         connects += options

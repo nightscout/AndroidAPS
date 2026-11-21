@@ -103,6 +103,7 @@
     <string name="eversense_pair_before_title">Before you start</string>
     <string name="eversense_pair_before_official_app">Set up the sensor and the transmitter in the official Eversense app first. AAPS does not do the first setup.</string>
     <string name="eversense_pair_before_force_stop">Then force stop the official app: Android settings, Apps, Eversense, Force stop. Only one app can be connected to the transmitter at a time.</string>
+    <string name="eversense_pair_before_pairing_mode">Put the transmitter in pairing mode: press its button three times, until the light blinks.</string>
     <string name="eversense_pair_before_nearby">Keep the phone near the transmitter, with Bluetooth on.</string>
     <string name="eversense_pair_account_title">Eversense account</string>
     <string name="eversense_pair_account_hint">AAPS signs in with your Eversense account: a 365 needs it to connect, and the cloud upload uses it. The login is not exported with the settings.</string>

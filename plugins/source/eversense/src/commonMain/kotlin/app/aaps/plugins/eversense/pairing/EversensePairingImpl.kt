@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.source.CgmAttention
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.eversense.EversenseDriver
 import app.aaps.plugins.eversense.callbacks.EversenseWatcher
+import app.aaps.plugins.eversense.connection.EversenseSession
 import app.aaps.plugins.eversense.enums.EversenseType
 import app.aaps.plugins.eversense.keys.EversenseRuntimeKey
 import app.aaps.plugins.eversense.models.ActiveAlarm
@@ -115,14 +116,19 @@ class EversensePairingImpl(
         scope.launch { eversense.useWithoutLogin() }
     }
 
-    /** The transmitters around, for [SCAN_TIME]; then the flow ends. A scan that cannot run ends it at once. */
+    /**
+     * The transmitters around, for [SCAN_TIME]; then the flow ends. A scan that cannot run ends it at once.
+     *
+     * A transmitter is known by its Bluetooth service, not by its name: E3 names start with "T", but a test transmitter
+     * showed "D313640". Trio's Eversense driver scans the same way. A device with no name is left out: the list would
+     * have nothing to show for it.
+     */
     override fun scan(): Flow<List<ScannedDevice>> = channelFlow {
         val found = LinkedHashMap<String, ScannedDevice>()
         try {
             withTimeoutOrNull(SCAN_TIME) {
-                central.scan(ScanFilter(namePrefix = "T")).collect { advertisement ->
+                central.scan(ScanFilter(services = listOf(EversenseSession.SERVICE))).collect { advertisement ->
                     val name = advertisement.name ?: return@collect
-                    if (!TRANSMITTER_NAME.matches(name)) return@collect
                     found[advertisement.device.value] = ScannedDevice(name = name, address = advertisement.device.value, rssi = advertisement.rssi)
                     send(found.values.toList())
                 }
@@ -165,9 +171,6 @@ class EversensePairingImpl(
     }
 
     private companion object {
-
-        /** Eversense transmitters advertise as "T" and their serial number */
-        val TRANSMITTER_NAME = Regex("T\\d+.*")
 
         /** As long as the driver gives a connection attempt; a 365 registration makes two server calls on top. */
         val PAIR_TIMEOUT = 3.minutes

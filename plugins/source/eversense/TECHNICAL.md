@@ -100,7 +100,9 @@ flight.
 ## Pairing, login and authentication
 
 The wizard asks for the model (E3, 365 USA, 365 other countries), checks the login with that model's server, scans
-for transmitters (names `T` and digits) for 10 seconds and connects. A scan that found nothing says so, and why when
+for transmitters for 10 seconds and connects. The scan looks for the Eversense Bluetooth service, as Trio does, not
+for a name: E3 names start with `T`, but a test transmitter showed `D313640`. A device with no name is left out. The
+transmitter is found only in its pairing mode (its button pressed three times). A scan that found nothing says so, and why when
 Bluetooth is off or not allowed, with "Scan again". The login is stored by the driver: it is not a setting and is not
 exported, so a new phone pairs again. Unpair forgets the transmitter and keeps the login; sign out is only in the
 wizard.

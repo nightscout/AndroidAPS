@@ -101,6 +101,7 @@ private fun BeforeYouStart(onNext: () -> Unit, onCancel: () -> Unit) {
         Text(stringResource(EversenseStrings.eversense_pair_before_title), style = MaterialTheme.typography.titleMedium)
         Text(stringResource(EversenseStrings.eversense_pair_before_official_app), style = MaterialTheme.typography.bodyLarge)
         Text(stringResource(EversenseStrings.eversense_pair_before_force_stop), style = MaterialTheme.typography.bodyLarge)
+        Text(stringResource(EversenseStrings.eversense_pair_before_pairing_mode), style = MaterialTheme.typography.bodyLarge)
         Text(stringResource(EversenseStrings.eversense_pair_before_nearby), style = MaterialTheme.typography.bodyLarge)
     }
 }
