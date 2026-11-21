@@ -92,7 +92,7 @@
     <string name="diaconn_g8_logalarmblock">Αποκλεισμός έγχυσης (%s)</string>
     <string name="diaconn_g8_lgorelease">απελευθέρωση βασικού (%s)</string>
     <string name="diaconn_g8_lgosuspend">αναστολή βασικού (%s)</string>
-    <string name="diaconn_g8_logdualnormalsuccess">Επιτυχία Dual Normal</string>
+    <string name="diaconn_g8_logdualnormalsuccess">Επιτυχία Διπλής Κανονικής</string>
     <string name="diaconn_g8_logdualsquarestart">Έναρξη Διπλής Τετραγωνικής</string>
     <string name="diaconn_g8_logdualsquaresuccess">Επιτυχία Διπλής Τετραγωνικής</string>
     <string name="diaconn_g8_logsquarestart">Έναρξη Τετραγωνικής</string>
