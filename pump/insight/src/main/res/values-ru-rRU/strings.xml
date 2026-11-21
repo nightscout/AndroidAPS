@@ -27,7 +27,7 @@
     <string name="insight_alert_notification_channel">Оповещения помпы Insight</string>
     <string name="disable_vibration">Отключение вибраций при ручном болюсе</string>
     <string name="disable_vibration_summary">Для болюса и пролонгированного болюса (доступно только для Insight прошивки 3.х)</string>
-    <string name="disable_vibration_auto">Отключение вибрации при ручном болюсе</string>
+    <string name="disable_vibration_auto">Отключение вибрации при автоматическом болюсе</string>
     <string name="disable_vibration_auto_summary">Для микроболюсов SMB и временных базалов с эмуляцией TBR (доступно только для Insight с прошивкой версии 3.x)</string>
     <string name="timeout_during_handshake">Тайм-аут сопряжения - сбросьте bluetooth</string>
     <string name="pump_stopped">Помпа остановлена</string>
@@ -48,7 +48,7 @@
     <string name="min_recovery_duration">Мин. продолжительность восстановления [s]</string>
     <string name="pump_alert">Оповещение помпы</string>
     <string name="last_connection">%1$s (%2$s)</string>
-    <string name="unpair">Разъединение</string>
+    <string name="unpair">Разорвать сопряжение</string>
     <string name="reset_pairing">Сбросить информацию о сопряжении?</string>
     <string name="reservoir_level">Уровень резервуара</string>
 </resources>
