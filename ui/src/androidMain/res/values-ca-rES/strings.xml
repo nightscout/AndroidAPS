@@ -60,7 +60,7 @@
     <string name="do_you_want_recalculate_tdd_stats">Voleu recalcular les estadístiques de TDD?</string>
     <string name="calculation_in_progress">Càlculs en procés</string>
     <string name="age">Edat</string>
-    <string name="weight_label">Ponderació</string>
+    <string name="weight_label">Pes</string>
     <string name="glucose_type">Tipus de glucèmia</string>
     <string name="bg_other">Altres</string>
     <string name="bg_meter">Glucòmetre</string>
@@ -256,7 +256,7 @@
     <string name="available_profile">Perfil disponible</string>
     <string name="format_with_tdd">Edat: %1$d TDD: %2$.0f U</string>
     <string name="format_with_tdd_and_pct">Edat: %1$d TDD: %2$.0f U %3$d%%</string>
-    <string name="format_with_weight">Edat: %1$d Weight: %2$.0f kg</string>
+    <string name="format_with_weight">Edat: %1$d Pes: %2$.0f kg</string>
     <string name="dpv_default_profile">Perfil DPV per defecte</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
