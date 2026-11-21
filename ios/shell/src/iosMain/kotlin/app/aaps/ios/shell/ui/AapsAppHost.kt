@@ -286,6 +286,10 @@ private fun startApp(nsSocketFactory: NsSocketFactory, crashReporter: CrashRepor
     // not wait for them.
     graph.receiverStatusStore.startBatteryWatch()
 
+    // The network half, for the same reason: Android knows the network from its first moment, and iOS
+    // has to be asked. Started on first use, the first question got "unknown" - see `startNetworkWatch`.
+    graph.receiverStatusStore.startNetworkWatch()
+
     // Clears a granted PIN or biometric session when the app is backgrounded, which is what Android
     // gets from `ProcessLifecycleListener.onPause`. Same placement and the same UIKit reason.
     IosProtectionLifecycle(logger, graph.protectionCheck).start()
