@@ -127,6 +127,7 @@
     <string name="carelevo_toast_msg_needle_check_failed">Nepavyko patikrinti adatos.</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">Nepavyko pašalinti. Bandykite dar kartą.</string>
+    <string name="carelevo_discarded_not_reached">Nepavyko susisiekti su pompa. Ji pašalinta iš AAPS, bet nesustabdyta ir dar gali tiekti insuliną. Nuimkite ją nuo kūno.</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">Nepavyko pateikti bazės tiekimo užklausos. Bandykite dar kartą.</string>
     <!-- Delivery Resume/Suspend -->
@@ -211,5 +212,7 @@
     <string name="carelevo_profile_update_skip_comment">Praleista: nuo ankstesnio naujinimo praėjo per mažai laiko.</string>
     <string name="carelevo_bolus_stop_not_confirmed">Pompa nepatvirtino sustabdymo. Laukiama boluso pabaigos…</string>
     <string name="carelevo_bolus_rejected_missed_bolus_recorded">Anksčiau neužregistruotas bolusas dabar pridėtas. Patikrinkite AIO ir bandykite dar kartą.</string>
+    <string name="carelevo_bolus_outcome_unknown">Pompa neatsakė į boluso komandą. Visas bolusas įskaičiuojamas, kol pompa praneš, kiek suleido.</string>
     <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Pompa nepatvirtino sustabdymo. Įrašytas pilnas %1$s bolusas.</string>
+    <string name="carelevo_bolus_stopped_by_patch" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The patch stopped the bolus. Given: 0.50 U of 2.00 U">Pompa sustabdė bolusą. Suleista: %1$s iš %2$s</string>
 </resources>
