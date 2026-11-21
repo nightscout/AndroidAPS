@@ -1,43 +1,34 @@
 package app.aaps.implementation.ui
 
-import app.aaps.core.data.model.TE
-import app.aaps.core.data.ue.Action
-import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertAction
+import app.aaps.core.interfaces.alerts.AlertLifetime
+import app.aaps.core.interfaces.alerts.AlertOrigin
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.EatReminder
-import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.alerts.Alert
-import app.aaps.core.interfaces.alerts.AlertAction
-import app.aaps.core.interfaces.alerts.AlertLifetime
-import app.aaps.core.interfaces.alerts.AlertSeverity
-import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAlarmDismissed
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
-import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 /**
  * The app's own alarms, as [Alerts] with [AlertLifetime.EVENT].
  *
  * Shared code, because there is nothing platform specific left in it. The card, the sound, the alarm screen, the
- * silence and the re-ring all belong to [Alerts] and its platform half, which Android and iOS both have. What
- * this class adds is only the shape of an app alarm: the source, the severity, the announcement, and the "+5 min"
- * of the "time to eat" timer.
+ * silence, the re-ring and the announcement all belong to [Alerts] and its platform half, which Android and iOS both
+ * have. What this class adds is only the shape of an app alarm: the source, the severity, and the "+5 min" of the
+ * "time to eat" timer.
  *
  * Before this, `runAlarm` was Android-only, 150 lines of activity starts, notification channels and an in-process
  * re-ring timer, and `IosUiInteraction.runAlarm` wrote a line in the log and did nothing. So a bolus failure
@@ -54,13 +45,10 @@ class UiInteractionImpl(
     private val alerts: Alerts,
     // A provider: the registry builds the notification platform, which on Android reaches back here.
     private val notificationManager: () -> NotificationManager,
-    private val persistenceLayer: PersistenceLayer,
-    private val config: Config,
     private val dateUtil: DateUtil,
     private val rxBus: RxBus,
     // A provider: EatReminder needs UiInteraction back, to silence its own alarm.
-    private val eatReminder: () -> EatReminder,
-    @ApplicationScope private val appScope: CoroutineScope
+    private val eatReminder: () -> EatReminder
 ) : UiInteraction {
 
     override fun runAlarm(key: String, status: String, title: String, sound: AlarmSound?) =
@@ -102,6 +90,8 @@ class UiInteractionImpl(
         alerts.raise(
             Alert(
                 source = UiInteraction.SOURCE,
+                // The app's own alarm: its announcement is not filed under the pump.
+                origin = AlertOrigin.APP,
                 key = key,
                 // Always critical: every caller of runAlarm is telling the user that something they rely on did
                 // not happen, and the alarm screen and the ringing card are exactly what they always got.
@@ -121,28 +111,6 @@ class UiInteractionImpl(
                 sound = sound ?: AlarmSound.ERROR
             )
         )
-        announce(status)
-    }
-
-    /**
-     * The alarm as an announcement, written when it rings.
-     *
-     * Here rather than on the alarm screen, so the record carries the true trigger time whatever the user does with
-     * the alarm afterwards - answers it on the phone, on the watch, or never opens it at all. A re-ring writes
-     * nothing: [Alerts] only announces an alert the first time its occurrence is raised, and a mute keeps the
-     * same occurrence.
-     */
-    private fun announce(status: String) {
-        if (!config.APS) return
-        appScope.launch {
-            persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-                therapyEvent = TE.asAnnouncement(status),
-                action = Action.CAREPORTAL,
-                source = Sources.Aaps,
-                note = status,
-                listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
-            )
-        }
     }
 
     /**

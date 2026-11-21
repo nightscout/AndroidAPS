@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertAction
+import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.resources.TextResolver
@@ -109,6 +110,7 @@ class CarelevoAlarmNotifier @Inject constructor(
         val descArgs = buildDescArgsFor(alarm)
         return Alert(
             source = SOURCE,
+            origin = AlertOrigin.PUMP,
             key = alarm.alarmId,
             // WARNING and ALERT stop the insulin or end the patch; a NOTICE only informs.
             severity = if (alarm.alarmType.isCritical()) AlertSeverity.CRITICAL else AlertSeverity.INFO,

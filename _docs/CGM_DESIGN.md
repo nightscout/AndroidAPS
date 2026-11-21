@@ -154,11 +154,9 @@ Until then they ring as they do now.
 
 What changes in core:
 
-1. `AlertsImpl.announce` records each alert as an announcement through `PumpSync`, with the **active pump's**
-   type and serial. A CGM alert would be filed under the pump. It needs its own way to record an announcement with no
-   pump identity.
-2. The KDoc of `AlertSeverity` and `AlertAction` speaks of insulin and the command queue only; it gets the
-   CGM meaning above.
+1. Done 2026-11-22: an alert carries its `AlertOrigin`, and only a pump's alert is filed under the active pump; the
+   app's own is written with no pump identity. A CGM driver adds `AlertOrigin.CGM` when it moves to alerts.
+2. Done 2026-11-21: the KDoc of `AlertSeverity` and `AlertAction` covers CGMs too.
 3. Nothing else is known to depend on a pump; check this again when it is built.
 
 Today Eversense posts one plain card per alarm, with the alarm sound for the critical ones, and nothing removes a

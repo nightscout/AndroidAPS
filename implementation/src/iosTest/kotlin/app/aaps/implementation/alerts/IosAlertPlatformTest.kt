@@ -3,6 +3,7 @@ package app.aaps.implementation.alerts
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
@@ -70,6 +71,7 @@ class IosAlertPlatformTest {
 
     private fun alert(source: String = "carelevo", key: String = "occlusion") = Alert(
         source = source,
+        origin = AlertOrigin.PUMP,
         key = key,
         severity = AlertSeverity.CRITICAL,
         title = TextRef.Literal("Occlusion"),

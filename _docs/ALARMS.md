@@ -355,7 +355,8 @@ The order matters: step 3 must not come before step 2.
 0. At any time, on its own: delete the 7 unused `NotificationId`s, `fromOrdinal` and the out-of-date "append at the
    END" comments.
 
-1. The core: the rename to `Alerts` (done 2026-11-21), the alert kinds (`AlertKind`, `CoreAlert`) with the user's Ring, Silent or Off
+1. The core: the rename to `Alerts` (done 2026-11-21), the announcement under its own source (done 2026-11-22:
+   `AlertOrigin`, one announcement per alert, on the master only), the alert kinds (`AlertKind`, `CoreAlert`) with the user's Ring, Silent or Off
    per phone and its settings screen, the silence length and its choice, the announcement under its own source, the
    scheduled alerts.
 2. The BG alarms, stale data included, on the master and the clients, with the shared silence. The escalation comes

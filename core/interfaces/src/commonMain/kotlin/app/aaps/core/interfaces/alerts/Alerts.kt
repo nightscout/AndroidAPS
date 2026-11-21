@@ -46,6 +46,19 @@ enum class AlertLifetime {
     EVENT
 }
 
+/**
+ * What raised an alert, which decides how its announcement is written (`_docs/ALARMS.md`, section 6). The core writes
+ * one announcement per alert, on the master only.
+ */
+enum class AlertOrigin {
+
+    /** A pump driver: the announcement is filed under the active pump, with its type and serial. */
+    PUMP,
+
+    /** The app itself (`"aaps"`): the announcement is the app's own, with no pump identity. */
+    APP
+}
+
 /** A step the user can start from the alert, for example "clear the alarm on the patch" or "+5 min". */
 class AlertAction(
     val label: TextRef,
@@ -59,6 +72,8 @@ class AlertAction(
 class Alert(
     /** Who raised it: a driver ("carelevo", "eversense"), or "aaps" for the app's own alarms. */
     val source: String,
+    /** What kind of raiser that is; it decides how the announcement is written. */
+    val origin: AlertOrigin,
     /** Stable id inside [source]. Raising the same key again updates the alert; it does not ring again. */
     val key: String,
     val severity: AlertSeverity,

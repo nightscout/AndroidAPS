@@ -1,14 +1,13 @@
 package app.aaps.implementation.ui
 
-import app.aaps.core.interfaces.alerts.EatReminder
-import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.notifications.AlarmSound
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertLifetime
+import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.EatReminder
+import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAlarmDismissed
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -16,20 +15,14 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.runCurrent
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 
 /**
@@ -40,7 +33,6 @@ import org.mockito.kotlin.whenever
  * screen and the notification say, and the two watch flags decide what the watch shows. All of it used to be spread
  * across 150 lines of Android-only code in `:app`; see `_docs/PUMP_DESIGN.md`, section 8.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
 class UiInteractionImplTest : TestBase() {
 
     /** Records what was raised and what was asked of the alerts, as the core would. */
@@ -77,11 +69,8 @@ class UiInteractionImplTest : TestBase() {
         override fun act(source: String, key: String) {}
     }
 
-    private val scope = TestScope(StandardTestDispatcher())
     private val alerts = RecordingAlerts()
     private val notificationManager: NotificationManager = mock()
-    private val persistenceLayer: PersistenceLayer = mock()
-    private val config: Config = mock()
     private val dateUtil: DateUtil = mock()
     private val eventBus: RxBus = mock()
     private val eatReminder: EatReminder = mock()
@@ -91,8 +80,7 @@ class UiInteractionImplTest : TestBase() {
     @BeforeEach
     fun setUp() {
         whenever(dateUtil.now()).thenReturn(1_000L)
-        whenever(config.APS).thenReturn(true)
-        sut = UiInteractionImpl(aapsLogger, alerts, { notificationManager }, persistenceLayer, config, dateUtil, eventBus, { eatReminder }, scope)
+        sut = UiInteractionImpl(aapsLogger, alerts, { notificationManager }, dateUtil, eventBus, { eatReminder })
     }
 
     private fun raised(): Alert = alerts.raised.single()
@@ -147,27 +135,13 @@ class UiInteractionImplTest : TestBase() {
         assertThat(raised().tellWatch).isTrue()
     }
 
+    /** The app's own alarm: [Alerts] writes its announcement as the app's, not under the pump (see `AlertsImplTest`). */
     @Test
-    fun `an alarm is written as an announcement on a loop build`() {
+    fun `an alarm is an alert of the app`() {
         sut.runAlarm("bolus", "Bolus failed", "AAPS")
-        scope.runCurrent()
 
-        verifyBlocking(persistenceLayer) {
-            insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), anyOrNull(), anyOrNull(), any())
-        }
-    }
-
-    /** A follower records nothing: the announcement belongs to the phone that runs the loop. */
-    @Test
-    fun `a follower writes no announcement`() {
-        whenever(config.APS).thenReturn(false)
-
-        sut.runAlarm("bolus", "Bolus failed", "AAPS")
-        scope.runCurrent()
-
-        verifyBlocking(persistenceLayer, never()) {
-            insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), anyOrNull(), anyOrNull(), any())
-        }
+        assertThat(raised().source).isEqualTo(UiInteraction.SOURCE)
+        assertThat(raised().origin).isEqualTo(AlertOrigin.APP)
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -228,7 +202,7 @@ class UiInteractionImplTest : TestBase() {
     @Test
     fun `muting snoozes the alert that is ringing`() {
         alerts.sounding = Alert(
-            source = "pump", key = "occlusion", severity = AlertSeverity.CRITICAL,
+            source = "pump", origin = AlertOrigin.PUMP, key = "occlusion", severity = AlertSeverity.CRITICAL,
             title = TextRef.Literal("Occlusion"), raisedAt = 500L
         )
 

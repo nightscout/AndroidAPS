@@ -1,8 +1,19 @@
 package app.aaps.implementation.alerts
 
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertLifetime
+import app.aaps.core.interfaces.alerts.AlertOrigin
+import app.aaps.core.interfaces.alerts.AlertPlatform
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.concurrent.withLock
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -14,17 +25,13 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.alerts.Alert
-import app.aaps.core.interfaces.alerts.AlertLifetime
-import app.aaps.core.interfaces.alerts.AlertPlatform
-import app.aaps.core.interfaces.alerts.AlertSeverity
-import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -64,6 +71,8 @@ class AlertsImpl(
     private val platform: AlertPlatform,
     private val preferences: Preferences,
     private val pumpSync: PumpSync,
+    private val persistenceLayer: PersistenceLayer,
+    private val config: Config,
     private val activePlugin: ActivePlugin,
     private val rh: TextResolver,
     private val rxBus: RxBus,
@@ -344,22 +353,46 @@ class AlertsImpl(
         if (ended) publish()
     }
 
+    /**
+     * The alert as an announcement: the one record of it, written by the core for every raiser.
+     *
+     * Written when it is raised, with [Alert.raisedAt], so the record carries the true time whatever the user does
+     * with the alert afterwards: answers it on the phone, on the watch, or never at all. A re-ring writes nothing, as
+     * only the first raise of an occurrence comes here.
+     *
+     * Only on the master: an announcement a client wrote would reach Nightscout and come back to the master as a
+     * second one. A pump's alert is filed under the active pump, with its type and serial; any other one is the app's
+     * own, with no pump identity (`_docs/ALARMS.md`, section 6).
+     */
     private fun announce(alert: Alert) {
+        if (!config.APS) return
         val note = cardText(alert)
         appScope.launch {
             try {
-                val pump = activePlugin.activePump
-                pumpSync.insertTherapyEventIfNewWithTimestamp(
-                    timestamp = alert.raisedAt,
-                    type = TE.Type.ANNOUNCEMENT,
-                    note = note,
-                    pumpType = pump.model(),
-                    pumpSerial = pump.serialNumber()
-                )
+                when (alert.origin) {
+                    AlertOrigin.PUMP -> {
+                        val pump = activePlugin.activePump
+                        pumpSync.insertTherapyEventIfNewWithTimestamp(
+                            timestamp = alert.raisedAt,
+                            type = TE.Type.ANNOUNCEMENT,
+                            note = note,
+                            pumpType = pump.model(),
+                            pumpSerial = pump.serialNumber()
+                        )
+                    }
+
+                    AlertOrigin.APP  -> persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                        therapyEvent = TE.asAnnouncement(note).copy(timestamp = alert.raisedAt),
+                        action = Action.CAREPORTAL,
+                        source = Sources.Aaps,
+                        note = note,
+                        listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
+                    )
+                }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                aapsLogger.error(LTag.PUMP, "Pump alert announcement failed", e)
+                aapsLogger.error(LTag.NOTIFICATION, "Alert announcement failed", e)
             }
         }
     }

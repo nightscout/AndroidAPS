@@ -2,6 +2,16 @@ package app.aaps.implementation.alerts
 
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertAction
+import app.aaps.core.interfaces.alerts.AlertLifetime
+import app.aaps.core.interfaces.alerts.AlertOrigin
+import app.aaps.core.interfaces.alerts.AlertPlatform
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -10,12 +20,6 @@ import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpWithConcentration
-import app.aaps.core.interfaces.alerts.Alert
-import app.aaps.core.interfaces.alerts.AlertAction
-import app.aaps.core.interfaces.alerts.AlertLifetime
-import app.aaps.core.interfaces.alerts.AlertPlatform
-import app.aaps.core.interfaces.alerts.AlertSeverity
-import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
@@ -99,6 +103,8 @@ class AlertsImplTest : TestBase() {
     private val dateUtil: DateUtil = mock()
     private val preferences: Preferences = mock()
     private val pumpSync: PumpSync = mock()
+    private val persistenceLayer: PersistenceLayer = mock()
+    private val config: Config = mock()
     private val activePlugin: ActivePlugin = mock()
     private val pump: PumpWithConcentration = mock()
 
@@ -118,23 +124,35 @@ class AlertsImplTest : TestBase() {
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.model()).thenReturn(PumpType.GENERIC_AAPS)
         whenever(pump.serialNumber()).thenReturn("serial")
+        // The phone that runs the loop; a client is the exception, set in its own test
+        whenever(config.APS).thenReturn(true)
         notificationManager = CommonNotificationManager(aapsLogger, rh, systemPlatform, eventBus, scope)
         sut = newAlerts()
     }
 
-    private fun newAlerts() = AlertsImpl(aapsLogger, notificationManager, alertPlatform, preferences, pumpSync, activePlugin, rh, eventBus, dateUtil, scope)
+    private fun newAlerts() =
+        AlertsImpl(aapsLogger, notificationManager, alertPlatform, preferences, pumpSync, persistenceLayer, config, activePlugin, rh, eventBus, dateUtil, scope)
 
     private fun alert(
         key: String = "occlusion",
         severity: AlertSeverity = AlertSeverity.CRITICAL,
         raisedAt: Long = 500L,
         source: String = "pump",
+        origin: AlertOrigin = AlertOrigin.PUMP,
         action: AlertAction? = null,
         lifetime: AlertLifetime = AlertLifetime.CONDITION
     ) = Alert(
-        source = source, key = key, severity = severity, title = TextRef.Literal(key), raisedAt = raisedAt,
+        source = source, origin = origin, key = key, severity = severity, title = TextRef.Literal(key), raisedAt = raisedAt,
         action = action, lifetime = lifetime
     )
+
+    private fun verifyNoAppAnnouncement() = verifyBlocking(persistenceLayer, never()) {
+        insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), any(), anyOrNull(), any())
+    }
+
+    private fun verifyNoPumpAnnouncement() = verifyBlocking(pumpSync, never()) {
+        insertTherapyEventIfNewWithTimestamp(any(), any(), anyOrNull(), anyOrNull(), any(), any())
+    }
 
     private fun cards(): List<AapsNotification> = notificationManager.notifications.value.filter { it.id == NotificationId.ALERT }
 
@@ -159,6 +177,35 @@ class AlertsImplTest : TestBase() {
         verifyBlocking(pumpSync) {
             insertTherapyEventIfNewWithTimestamp(eq(500L), eq(TE.Type.ANNOUNCEMENT), anyOrNull(), anyOrNull(), eq(PumpType.GENERIC_AAPS), eq("serial"))
         }
+        verifyNoAppAnnouncement()
+    }
+
+    /** The app's own alarm is the app's record, with its own time: not filed under the pump (`_docs/ALARMS.md`). */
+    @Test
+    fun `an alert of the app is announced as the app's own, not under the pump`() {
+        sut.raise(alert(source = "aaps", origin = AlertOrigin.APP, key = "bolus", lifetime = AlertLifetime.EVENT))
+        scope.runCurrent()
+
+        val written = argumentCaptor<TE>()
+        verifyBlocking(persistenceLayer) {
+            insertPumpTherapyEventIfNewByTimestamp(written.capture(), any(), any(), eq(Sources.Aaps), anyOrNull(), any())
+        }
+        assertThat(written.firstValue.type).isEqualTo(TE.Type.ANNOUNCEMENT)
+        assertThat(written.firstValue.timestamp).isEqualTo(500L)
+        verifyNoPumpAnnouncement()
+    }
+
+    /** A client writes none: it would reach Nightscout and come back to the master as a second announcement. */
+    @Test
+    fun `a client writes no announcement`() {
+        whenever(config.APS).thenReturn(false)
+
+        sut.raise(alert(severity = AlertSeverity.WARNING))
+        sut.raise(alert(source = "aaps", origin = AlertOrigin.APP, key = "bolus", lifetime = AlertLifetime.EVENT))
+        scope.runCurrent()
+
+        verifyNoPumpAnnouncement()
+        verifyNoAppAnnouncement()
     }
 
     @Test
@@ -166,7 +213,8 @@ class AlertsImplTest : TestBase() {
         sut.raise(alert(severity = AlertSeverity.INFO))
         scope.runCurrent()
 
-        verifyBlocking(pumpSync, never()) { insertTherapyEventIfNewWithTimestamp(any(), any(), anyOrNull(), anyOrNull(), any(), any()) }
+        verifyNoPumpAnnouncement()
+        verifyNoAppAnnouncement()
     }
 
     @Test
