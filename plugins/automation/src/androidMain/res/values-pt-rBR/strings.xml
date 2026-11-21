@@ -88,7 +88,7 @@
     <string name="add_short">ADICIONAR</string>
     <string name="temptargetcompared">Alvo Temp %1$s</string>
     <string name="btdevicecompared">Conexão Bluetooth com o dispositivo %1$s %2$s</string>
-    <string name="btdevice">Conexão com o dispositivo Bluetooth </string>
+    <string name="btdevice">Conexão com dispositivo Bluetooth</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
