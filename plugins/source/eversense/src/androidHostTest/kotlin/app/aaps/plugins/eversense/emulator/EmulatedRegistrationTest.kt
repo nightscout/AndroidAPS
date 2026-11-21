@@ -1,9 +1,9 @@
 package app.aaps.plugins.eversense.emulator
 
 import app.aaps.core.interfaces.pump.ble.EmulatedBleCentral
-import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.plugins.eversense.EversenseDriver
 import app.aaps.plugins.eversense.EversenseDriver.ConnectionState
+import app.aaps.plugins.eversense.FakeNetwork
 import app.aaps.plugins.eversense.MemoryStore
 import app.aaps.plugins.eversense.models.EversenseSecureState
 import app.aaps.plugins.eversense.util.EversenseCrypto365Util
@@ -21,8 +21,6 @@ import mockwebserver3.MockWebServer
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import java.util.concurrent.TimeUnit
 
 /**
@@ -33,11 +31,10 @@ import java.util.concurrent.TimeUnit
 class EmulatedRegistrationTest {
 
     private val store = MemoryStore()
-    private val network: ReceiverStatusStore = mock<ReceiverStatusStore>().also { whenever(it.isConnected).thenReturn(true) }
     private val server = MockWebServer()
     private val transmitter = EversenseTransmitterEmulator(name = "D3650002", address = "00:EE:00:36:50:02")
     private val peripheral = Eversense365Peripheral(transmitter)
-    private val driver = EversenseDriver(EmulatedBleCentral().also { it.add(peripheral) }, store, AAPSLoggerTest(), network)
+    private val driver = EversenseDriver(EmulatedBleCentral().also { it.add(peripheral) }, store, AAPSLoggerTest(), FakeNetwork())
     private val urls = with(EversenseHttp365Util) { listOf(tokenBaseUrl, uploadBaseUrl, careBaseUrl, vaultBaseUrl) }
 
     @BeforeEach fun setUp() {

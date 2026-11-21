@@ -77,7 +77,8 @@ Still missing: the other communicator rules (duplicate readings, backfill window
    first registration against a fake server); the `emulate_eversense` option file runs an emulated E3 in the app. Not
    done: an instrumented scenario class in the app tests, and the scenarios "transmitter forgot the client" and "app
    restart".
-6. iOS: registered (`EversenseIosRegistration`). A device test and the tests in `ios-ci.yml` are to come.
+6. iOS: registered (`EversenseIosRegistration`). The driver, session and emulator tests and two protocol tests (78)
+   are in `commonTest` and run on the iOS simulator in `ios-ci.yml`. A device test is to come.
 
 ## Emulator
 

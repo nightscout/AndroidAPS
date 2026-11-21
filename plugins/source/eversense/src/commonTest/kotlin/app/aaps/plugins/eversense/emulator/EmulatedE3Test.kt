@@ -2,9 +2,9 @@ package app.aaps.plugins.eversense.emulator
 
 import app.aaps.core.interfaces.pump.ble.AdapterState
 import app.aaps.core.interfaces.pump.ble.EmulatedBleCentral
-import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.plugins.eversense.EversenseDriver
 import app.aaps.plugins.eversense.EversenseDriver.ConnectionState
+import app.aaps.plugins.eversense.FakeNetwork
 import app.aaps.plugins.eversense.MemoryStore
 import app.aaps.plugins.eversense.RecordingWatcher
 import app.aaps.plugins.eversense.advance
@@ -13,15 +13,17 @@ import app.aaps.plugins.eversense.protocol.BinaryFields
 import app.aaps.plugins.eversense.protocol.PacketTime
 import app.aaps.plugins.eversense.util.StorageKeys
 import app.aaps.shared.tests.AAPSLoggerTest
-import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
-import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
+import kotlin.math.abs
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
@@ -35,7 +37,6 @@ class EmulatedE3Test {
 
     private val store = MemoryStore()
     private val watcher = RecordingWatcher()
-    private val network: ReceiverStatusStore = mock<ReceiverStatusStore>().also { whenever(it.isConnected).thenReturn(true) }
 
     private class Rig(val driver: EversenseDriver, val transmitter: EversenseTransmitterEmulator, val peripheral: EversenseE3Peripheral, val central: EmulatedBleCentral)
 
@@ -50,7 +51,7 @@ class EmulatedE3Test {
                 store.values[StorageKeys.SECURE_STATE] = Json.encodeToString(EversenseSecureState().apply { model = "E3" })
                 store.values[StorageKeys.REMOTE_DEVICE_KEY] = transmitter.address
                 store.values[StorageKeys.REMOTE_DEVICE_NAME] = transmitter.name
-                val driver = EversenseDriver(central, store, AAPSLoggerTest(), network, dispatcher)
+                val driver = EversenseDriver(central, store, AAPSLoggerTest(), FakeNetwork(), dispatcher)
                 driver.addWatcher(watcher)
                 try {
                     body(Rig(driver, transmitter, peripheral, central))
@@ -67,13 +68,13 @@ class EmulatedE3Test {
         rig.driver.start()
         advance(5_000)
 
-        assertThat(rig.driver.connectionState.value).isEqualTo(ConnectionState.READY)
-        assertThat(readings().map { it.glucoseInMgDl }).containsExactly(rig.transmitter.latestReading().glucoseMgDl)
-        assertThat(readings().single().datetime).isEqualTo(rig.transmitter.latestReading().timestamp)
+        assertEquals(ConnectionState.READY, rig.driver.connectionState.value)
+        assertEquals(listOf(rig.transmitter.latestReading().glucoseMgDl), readings().map { it.glucoseInMgDl })
+        assertEquals(rig.transmitter.latestReading().timestamp, readings().single().datetime)
         // The full sync read what the transmitter knows
         val state = rig.driver.getCurrentState()
-        assertThat(state.batteryPercentage).isEqualTo(85)
-        assertThat(state.firmwareVersion).isNotEmpty()
+        assertEquals(85, state.batteryPercentage)
+        assertTrue(state.firmwareVersion.isNotEmpty())
     }
 
     @Test fun aNewReadingEveryFiveMinutes() = run { rig ->
@@ -83,9 +84,9 @@ class EmulatedE3Test {
         advance(5.minutes.inWholeMilliseconds)
 
         val times = readings().map { it.datetime }
-        assertThat(times).hasSize(3)
-        assertThat(times).isInStrictOrder()
-        assertThat(rig.driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        assertEquals(3, times.size)
+        assertTrue(times.zipWithNext().all { (a, b) -> a < b }, "not in strict order: $times")
+        assertEquals(ConnectionState.READY, rig.driver.connectionState.value)
     }
 
     /** The full sync sets the transmitter's clock and zone when they differ from the phone's, as with a real E3. */
@@ -93,23 +94,23 @@ class EmulatedE3Test {
         rig.driver.start()
         advance(5_000)
 
-        assertThat(rig.transmitter.zoneOffsetMillis()).isEqualTo(BinaryFields.zoneOffsetMillis(PacketTime.nowMillis()).toLong())
-        assertThat(rig.transmitter.clock()).isWithin(2_000L).of(PacketTime.nowMillis())
+        assertEquals(BinaryFields.zoneOffsetMillis(PacketTime.nowMillis()).toLong(), rig.transmitter.zoneOffsetMillis())
+        assertTrue(abs(rig.transmitter.clock() - PacketTime.nowMillis()) <= 2_000L, "clock ${rig.transmitter.clock()}, phone ${PacketTime.nowMillis()}")
     }
 
     @Test fun aCalibrationReachesTheTransmitter() = run { rig ->
         rig.driver.start()
         advance(5_000)
 
-        assertThat(rig.driver.sendCalibration(105)).isTrue()
-        assertThat(rig.transmitter.calibrations).containsExactly(105)
+        assertTrue(rig.driver.sendCalibration(105))
+        assertEquals(listOf(105), rig.transmitter.calibrations)
     }
 
     @Test fun theSignalIsReadForThePlacementGuide() = run { rig ->
         rig.driver.start()
         advance(5_000)
 
-        assertThat(rig.driver.readSignalStrength()).isNotNull()
+        assertNotNull(rig.driver.readSignalStrength())
     }
 
     /** Bluetooth off drops the link; on again, the driver connects and signs in by itself. */
@@ -119,12 +120,12 @@ class EmulatedE3Test {
 
         rig.central.setAdapterState(AdapterState.OFF)
         advance(1_000)
-        assertThat(rig.driver.connectionState.value).isNotEqualTo(ConnectionState.READY)
+        assertNotEquals(ConnectionState.READY, rig.driver.connectionState.value)
 
         rig.central.setAdapterState(AdapterState.ON)
         rig.driver.onBluetoothAvailable()
         advance(2.minutes.inWholeMilliseconds)
-        assertThat(rig.driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        assertEquals(ConnectionState.READY, rig.driver.connectionState.value)
     }
 
     private companion object {

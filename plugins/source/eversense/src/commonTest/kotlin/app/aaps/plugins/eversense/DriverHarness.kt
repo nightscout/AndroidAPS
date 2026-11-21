@@ -1,20 +1,14 @@
 package app.aaps.plugins.eversense
 
-import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.plugins.eversense.models.EversenseSecureState
 import app.aaps.plugins.eversense.protocol.PacketTime
 import app.aaps.plugins.eversense.util.EversenseCrypto365Util
 import app.aaps.plugins.eversense.util.StorageKeys
 import app.aaps.shared.tests.AAPSLoggerTest
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.advanceTimeBy
-import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 /**
  * A real [EversenseDriver] on a [FakeBleCentral] and an in-memory store, in virtual time: the driver's thread is the
@@ -24,8 +18,12 @@ internal class DriverHarness {
 
     val store = MemoryStore()
     val central = FakeBleCentral()
-    var online = true
-    val network: ReceiverStatusStore = mock<ReceiverStatusStore>().also { whenever(it.isConnected).thenAnswer { online } }
+    val network = FakeNetwork()
+    var online: Boolean
+        get() = network.online
+        set(value) {
+            network.online = value
+        }
     val watcher = RecordingWatcher()
 
     /** The iOS rule: a lost link waits for the transmitter in a pending connect, not on a timer */
@@ -72,7 +70,10 @@ internal class DriverHarness {
         val dispatcher = StandardTestDispatcher()
         PacketTime.withClock({ START + dispatcher.scheduler.currentTime }) {
             runTest(dispatcher) {
-                val driver = EversenseDriver(central, store, AAPSLoggerTest(), network, dispatcher, reconnectWithoutTimers)
+                val driver = EversenseDriver(
+                    central, store, AAPSLoggerTest(), network, dispatcher, reconnectWithoutTimers,
+                    isClosedByTransmitter = { it.platformStatus == CLOSED_BY_TRANSMITTER }
+                )
                 driver.addWatcher(watcher)
                 try {
                     body(driver)
@@ -93,12 +94,11 @@ internal class DriverHarness {
 
         /** The wall clock at virtual time 0 */
         const val START = 1_800_000_000_000L
-    }
-}
 
-/** Moves virtual time on by [millis] and runs what is due at the new time too. */
-@OptIn(ExperimentalCoroutinesApi::class)
-internal fun TestScope.advance(millis: Long) {
-    advanceTimeBy(millis)
-    runCurrent()
+        /**
+         * The status of a link the transmitter closed, on every platform in these tests: Android's 19. Each platform
+         * has its own code (`closedByTransmitter`: 7 on iOS, none on the desktop); the tests check the rules after it.
+         */
+        const val CLOSED_BY_TRANSMITTER = 19
+    }
 }

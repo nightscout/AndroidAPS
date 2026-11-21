@@ -159,6 +159,23 @@ name, `.circleci/config.yml` runs the instrumented tests of every `androidTest` 
 `androidDeviceTest` folder, and `buildSrc/src/main/kotlin/jacoco-aggregation.gradle.kts` asks each
 module's plugin. Only a new task name or source-set name needs a change there.
 
+**The iOS CI does not find modules by itself.** A module's first `commonTest` or `iosTest` file
+needs its `iosSimulatorArm64Test` in the run step of `.github/workflows/ios-ci.yml`, a `check()`
+line, and a path in the upload step. Without them, the job's guard fails the iOS CI.
+
+On Windows, `:module:compileTestKotlinIosSimulatorArm64` compiles the shared tests for iOS. It
+catches Native-only errors, such as a comma in a test name, before the Mac or CI runs them. A
+`commonTest` has only `kotlin.test` and multiplatform code: Truth, Mockito, JUnit `Assertions` and
+`java.*` (a `ConcurrentHashMap` too) stay in `androidHostTest`.
+
+Moving a test from `androidHostTest` to `commonTest` also runs it under `jvmTest`, so a test that
+leans on an Android `actual` fails there - and would on iOS. Eversense's driver tests used Android's
+GATT status 19 for "closed by the transmitter", which is 7 on iOS and nothing on the desktop. Pass
+the platform rule into the class as a parameter with the `actual` as default, and give the tests one
+value. A class a test replaces with Mockito gets `@OpenForTesting` and a small fake subclass instead.
+Truth's `isEmpty()`, `hasSize()` and `isEqualTo()` accept maps and arrays; `assertEquals` needs
+`emptyMap()` for a map and `assertContentEquals` for an array.
+
 ## The Metro construction trap
 
 This is the worst one, and it has happened four times. A class that nothing contributes is **never**

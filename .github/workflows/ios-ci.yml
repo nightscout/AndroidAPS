@@ -196,6 +196,7 @@ jobs:
             :implementation:iosSimulatorArm64Test :ios:shell:iosSimulatorArm64Test \
             :plugins:sync:iosSimulatorArm64Test :plugins:aps:iosSimulatorArm64Test \
             :plugins:automation:iosSimulatorArm64Test :plugins:constraints:iosSimulatorArm64Test \
+            :plugins:source:eversense:iosSimulatorArm64Test \
             :pump:carelevo:iosSimulatorArm64Test :pump:carelevo:protocol:iosSimulatorArm64Test \
             :shared:clientbindings:iosSimulatorArm64Test :shared:impl:iosSimulatorArm64Test \
             :ui:iosSimulatorArm64Test :workflow:iosSimulatorArm64Test \
@@ -242,6 +243,7 @@ jobs:
           check ":plugins:aps" plugins/aps
           check ":plugins:automation" plugins/automation
           check ":plugins:constraints" plugins/constraints
+          check ":plugins:source:eversense" plugins/source/eversense
           check ":pump:carelevo" pump/carelevo
           check ":pump:carelevo:protocol" pump/carelevo/protocol
           check ":shared:clientbindings" shared/clientbindings
@@ -296,6 +298,7 @@ jobs:
             implementation/build/test-results/iosSimulatorArm64Test/**
             ios/shell/build/test-results/iosSimulatorArm64Test/**
             plugins/*/build/test-results/iosSimulatorArm64Test/**
+            plugins/source/eversense/build/test-results/iosSimulatorArm64Test/**
             pump/carelevo/build/test-results/iosSimulatorArm64Test/**
             pump/carelevo/protocol/build/test-results/iosSimulatorArm64Test/**
             shared/*/build/test-results/iosSimulatorArm64Test/**

@@ -1,12 +1,15 @@
 package app.aaps.plugins.eversense
 
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.plugins.eversense.storage.EversenseStore
-import java.util.concurrent.ConcurrentHashMap
+import kotlin.concurrent.Volatile
 
 /** The driver's store, in memory. A commit writes the changes of one editor in the order they were made. */
 internal class MemoryStore : EversenseStore {
 
-    val values: MutableMap<String, Any> = ConcurrentHashMap()
+    /** What is stored, by key. Safe from several threads: a test in real time writes it while the driver reads. */
+    val values: MutableMap<String, Any> = LockedMap()
 
     /** How many edits were committed, for a test that checks that nothing was written. */
     @Volatile var commits = 0
@@ -34,5 +37,26 @@ internal class MemoryStore : EversenseStore {
         override fun apply() {
             commit()
         }
+    }
+
+    /** A map behind one lock; the views it hands out are copies, so a reader never sees a change half done. */
+    private class LockedMap : MutableMap<String, Any> {
+
+        private val lock = AapsLock()
+        private val map = HashMap<String, Any>()
+
+        override val size: Int get() = lock.withLock { map.size }
+        override fun isEmpty(): Boolean = lock.withLock { map.isEmpty() }
+        override fun containsKey(key: String): Boolean = lock.withLock { map.containsKey(key) }
+        override fun containsValue(value: Any): Boolean = lock.withLock { map.containsValue(value) }
+        override fun get(key: String): Any? = lock.withLock { map[key] }
+        override val keys: MutableSet<String> get() = lock.withLock { map.keys.toMutableSet() }
+        override val values: MutableCollection<Any> get() = lock.withLock { map.values.toMutableList() }
+        override val entries: MutableSet<MutableMap.MutableEntry<String, Any>> get() = lock.withLock { HashMap(map).entries }
+        override fun put(key: String, value: Any): Any? = lock.withLock { map.put(key, value) }
+        override fun remove(key: String): Any? = lock.withLock { map.remove(key) }
+        override fun putAll(from: Map<out String, Any>) = lock.withLock { map.putAll(from) }
+        override fun clear() = lock.withLock { map.clear() }
+        override fun toString(): String = lock.withLock { map.toString() }
     }
 }

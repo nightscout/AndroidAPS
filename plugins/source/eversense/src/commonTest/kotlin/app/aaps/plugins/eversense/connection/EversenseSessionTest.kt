@@ -26,7 +26,6 @@ import app.aaps.plugins.eversense.protocol.PacketTime
 import app.aaps.plugins.eversense.util.EversenseCrypto365Util
 import app.aaps.plugins.eversense.util.StorageKeys
 import app.aaps.shared.tests.AAPSLoggerTest
-import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -40,13 +39,11 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.currentTime
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
-import org.mockito.kotlin.doThrow
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertIs
+import kotlin.test.assertTrue
 
 /**
  * One connection to a transmitter: the frames it receives, the packets it sends and the sign-in. The test plays the
@@ -107,7 +104,7 @@ class EversenseSessionTest {
             link.subscribeResult = BleResult.Failed(BleFailure(BleFailure.Kind.REFUSED))
             backgroundScope.async { session.start() }
             runCurrent()
-            assertThat(host.closes).containsExactly("notifications refused")
+            assertEquals(listOf("notifications refused"), host.closes)
             host.closes.clear()
             link.subscribeResult = BleResult.Ok(Unit)
         }
@@ -124,11 +121,45 @@ class EversenseSessionTest {
         body(Setup(link, session, host, store, linkScope))
     }
 
-    /** A crypto whose encrypt and decrypt the test decides; the real one needs a session key. */
-    private fun crypto(decrypted: List<ByteArray> = emptyList()): EversenseCrypto365Util = mock<EversenseCrypto365Util>().also {
-        whenever(it.encrypt(any())).thenReturn(byteArrayOf(3, 14))
-        if (decrypted.isNotEmpty()) whenever(it.decrypt(any())).thenReturn(decrypted.first(), *decrypted.drop(1).toTypedArray())
+    /**
+     * A crypto whose answers the test decides; the real one needs a session key. Decrypt gives [decrypted] in turn, and
+     * the last one again after that. The sign-in steps answer what the test set, and count their calls.
+     */
+    private class FakeCrypto(decrypted: List<ByteArray> = emptyList()) : EversenseCrypto365Util(MemoryStore(), AAPSLoggerTest()) {
+
+        private val answers = ArrayDeque(decrypted)
+        private var last: ByteArray? = null
+        var shortcut = false
+        var keyPairMade = false
+        var ephem: ByteArray? = null
+        var startSecret = byteArrayOf()
+        var sessionKeyFailure: Exception? = null
+        var decrypts = 0
+        var shortcutsDisallowed = 0
+        var sessionKeys = 0
+
+        override fun encrypt(data: ByteArray): ByteArray = byteArrayOf(3, 14)
+        override fun decrypt(response: ByteArray): ByteArray {
+            decrypts++
+            last = answers.removeFirstOrNull() ?: last
+            return last ?: error("no decrypt answer prepared")
+        }
+
+        override fun canUseShortcut(): Boolean = shortcut
+        override fun disallowUseShortcut() {
+            shortcutsDisallowed++
+        }
+
+        override fun generateKeyPairIfNotExists(): Boolean = keyPairMade
+        override fun generateEphem(): ByteArray? = ephem
+        override fun getStartSecret(signature: ByteArray): ByteArray = startSecret
+        override fun generateSessionKey(encodedPublicKey: ByteArray) {
+            sessionKeys++
+            sessionKeyFailure?.let { throw it }
+        }
     }
+
+    private fun crypto(decrypted: List<ByteArray> = emptyList()) = FakeCrypto(decrypted)
 
     /** The E3 answer to [GetSignalStrengthRawPacket]: the raw value little endian at bytes 4 and 5. */
     private fun signalAnswer(raw: Int) =
@@ -141,9 +172,9 @@ class EversenseSessionTest {
             receiveOnly()
             link.onWrite = { send(signalAnswer(903)) }
             val response = session.writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket(), 100)
-            assertThat(response.rawValue).isEqualTo(903)
-            assertThat(response.signalStrength).isEqualTo(80)
-            assertThat(host.closes).isEmpty()
+            assertEquals(903, response.rawValue)
+            assertEquals(80, response.signalStrength)
+            assertEquals(emptyList(), host.closes)
         }
     }
 
@@ -152,9 +183,9 @@ class EversenseSessionTest {
         with(setup) {
             receiveOnly()
             val error = runCatching { session.writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket(), 100) }.exceptionOrNull()
-            assertThat(error).isInstanceOf(EversenseWriteException::class.java)
-            assertThat(host.closes).containsExactly("no answer in 100 ms")
-            assertThat(currentTime).isEqualTo(100)
+            assertIs<EversenseWriteException>(error)
+            assertEquals(listOf("no answer in 100 ms"), host.closes)
+            assertEquals(100, currentTime)
         }
     }
 
@@ -166,7 +197,7 @@ class EversenseSessionTest {
             runCurrent()
             link.onWrite = { send(signalAnswer(500)) }
             val next = session.writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket(), 100)
-            assertThat(next.rawValue).isEqualTo(500)
+            assertEquals(500, next.rawValue)
         }
     }
 
@@ -175,9 +206,9 @@ class EversenseSessionTest {
             receiveOnly()
             link.writeResult = BleResult.Failed(BleFailure(BleFailure.Kind.REFUSED, platformStatus = 133))
             val error = runCatching { session.writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket(), 100) }.exceptionOrNull()
-            assertThat(error).isInstanceOf(EversenseWriteException::class.java)
-            assertThat(currentTime).isEqualTo(0)
-            assertThat(host.closes).isEmpty()
+            assertIs<EversenseWriteException>(error)
+            assertEquals(0, currentTime)
+            assertEquals(emptyList(), host.closes)
         }
     }
 
@@ -186,8 +217,8 @@ class EversenseSessionTest {
             receiveOnly()
             link.close()
             val error = runCatching { session.writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket(), 100) }.exceptionOrNull()
-            assertThat(error).isInstanceOf(EversenseWriteException::class.java)
-            assertThat(link.writes).isEmpty()
+            assertIs<EversenseWriteException>(error)
+            assertEquals(emptyList(), link.writes)
         }
     }
 
@@ -196,10 +227,10 @@ class EversenseSessionTest {
             receiveOnly()
             link.onWrite = { frame -> send(e3Frame(EversenseE3Packets.ErrorResponseId, frame[0], 5)) }
             val error = runCatching { session.writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket(), 100) }.exceptionOrNull()
-            assertThat(error).isInstanceOf(EversenseWriteException::class.java)
-            assertThat(error?.message).isEqualTo("Transmitter rejected the packet")
-            assertThat(host.closes).isEmpty()
-            assertThat(currentTime).isEqualTo(0)
+            assertIs<EversenseWriteException>(error)
+            assertEquals("Transmitter rejected the packet", error?.message)
+            assertEquals(emptyList(), host.closes)
+            assertEquals(0, currentTime)
         }
     }
 
@@ -211,7 +242,7 @@ class EversenseSessionTest {
                 send(signalAnswer(903))
             }
             val response = session.writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket(), 100)
-            assertThat(response.rawValue).isEqualTo(903)
+            assertEquals(903, response.rawValue)
         }
     }
 
@@ -222,8 +253,8 @@ class EversenseSessionTest {
             receiveOnly()
             link.onWrite = { send(byteArrayOf(1, 1, 1, 0x42, 1)) }
             val error = runCatching { session.writePacket<SetAppVersion365Packet.Response>(SetAppVersion365Packet(), 100) }.exceptionOrNull()
-            assertThat(error?.message).isEqualTo("Transmitter rejected the packet")
-            assertThat(host.closes).isEmpty()
+            assertEquals("Transmitter rejected the packet", error?.message)
+            assertEquals(emptyList(), host.closes)
         }
     }
 
@@ -242,8 +273,8 @@ class EversenseSessionTest {
                 send(byteArrayOf(1, 1, 1, 0x42, 2))
             }
             val error = runCatching { session.writePacket<Ping365Packet.Response>(Ping365Packet(), 100) }.exceptionOrNull()
-            assertThat(error).isInstanceOf(EversenseWriteException::class.java)
-            assertThat(host.closes).containsExactly("no answer in 100 ms")
+            assertIs<EversenseWriteException>(error)
+            assertEquals(listOf("no answer in 100 ms"), host.closes)
         }
     }
 
@@ -256,10 +287,10 @@ class EversenseSessionTest {
                 runCatching { session.perform { writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket(), 60_000) } }
             }
             runCurrent()
-            assertThat(link.writes).hasSize(1)
+            assertEquals(1, link.writes.size)
             linkScope.cancel()
-            assertThat(result.await().exceptionOrNull()).isInstanceOf(EversenseWriteException::class.java)
-            assertThat(currentTime).isLessThan(60_000)
+            assertIs<EversenseWriteException>(result.await().exceptionOrNull())
+            assertTrue(currentTime < 60_000)
         }
     }
 
@@ -272,11 +303,11 @@ class EversenseSessionTest {
             val queued = async { runCatching { session.perform { ran = true } } }
             runCurrent()
             linkScope.cancel()
-            assertThat(queued.await().exceptionOrNull()).isInstanceOf(EversenseWriteException::class.java)
-            assertThat(first.await().exceptionOrNull()).isInstanceOf(EversenseWriteException::class.java)
-            assertThat(ran).isFalse()
+            assertIs<EversenseWriteException>(queued.await().exceptionOrNull())
+            assertIs<EversenseWriteException>(first.await().exceptionOrNull())
+            assertFalse(ran)
             // New work for an ended link is refused, and the caller gets an answer, not a hang
-            assertThat(runCatching { session.perform { 42 } }.exceptionOrNull()).isInstanceOf(EversenseWriteException::class.java)
+            assertIs<EversenseWriteException>(runCatching { session.perform { 42 } }.exceptionOrNull())
             release.complete(Unit)
         }
     }
@@ -294,7 +325,7 @@ class EversenseSessionTest {
                 }
             }
             tasks.forEach { it.await() }
-            assertThat(events).containsExactly("start 1", "end 1", "start 2", "end 2", "start 3", "end 3").inOrder()
+            assertEquals(listOf("start 1", "end 1", "start 2", "end 2", "start 3", "end 3"), events)
         }
     }
 
@@ -304,11 +335,11 @@ class EversenseSessionTest {
             receiveOnly()
             link.onWrite = { frame -> send(e3Frame(EversenseE3Packets.ErrorResponseId, frame[0], 5)) }
             val error = runCatching { session.perform { writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket(), 100) } }.exceptionOrNull()
-            assertThat(error).isInstanceOf(EversenseWriteException::class.java)
+            assertIs<EversenseWriteException>(error)
             runCurrent()
-            assertThat(linkScope.isActive).isTrue()
+            assertTrue(linkScope.isActive)
             link.onWrite = { send(signalAnswer(903)) }
-            assertThat(session.perform { writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket(), 100) }.rawValue).isEqualTo(903)
+            assertEquals(903, session.perform { writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket(), 100) }.rawValue)
         }
     }
 
@@ -318,9 +349,9 @@ class EversenseSessionTest {
             receiveOnly()
             session.launchTask { throw EversenseWriteException("refused") }
             runCurrent()
-            assertThat(linkScope.isActive).isTrue()
+            assertTrue(linkScope.isActive)
             link.onWrite = { send(signalAnswer(903)) }
-            assertThat(session.perform { writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket(), 100) }.rawValue).isEqualTo(903)
+            assertEquals(903, session.perform { writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket(), 100) }.rawValue)
         }
     }
 
@@ -334,9 +365,9 @@ class EversenseSessionTest {
             link.onWrite = { send(byteArrayOf(1, 1, 1, 0x44, 2)) }
             link.send(byteArrayOf(1, 1, 1, 0x44, 1))
             runCurrent()
-            assertThat(link.writes).hasSize(1)
-            assertThat(linkScope.isActive).isTrue()
-            assertThat(host.closes).isEmpty()
+            assertEquals(1, link.writes.size)
+            assertTrue(linkScope.isActive)
+            assertEquals(emptyList(), host.closes)
         }
     }
 
@@ -351,8 +382,8 @@ class EversenseSessionTest {
             link.send(byteArrayOf(1, 1, 1, 0x44, 1))
             link.send(byteArrayOf(1, 1, 1, 0x44, 2))
             runCurrent()
-            assertThat(linkScope.isActive).isTrue()
-            assertThat(host.watcher.alarms.map { it.code }).containsExactly(EversenseAlarm.LOW_GLUCOSE)
+            assertTrue(linkScope.isActive)
+            assertEquals(listOf(EversenseAlarm.LOW_GLUCOSE), host.watcher.alarms.map { it.code })
         }
     }
 
@@ -367,8 +398,8 @@ class EversenseSessionTest {
             receiveOnly()
             link.send(byteArrayOf(1, 1, 1, 0x42, 1))
             runCurrent()
-            verify(crypto).disallowUseShortcut()
-            assertThat(host.closes).containsExactly("decrypt failed")
+            assertEquals(1, crypto.shortcutsDisallowed)
+            assertEquals(listOf("decrypt failed"), host.closes)
         }
     }
 
@@ -381,9 +412,9 @@ class EversenseSessionTest {
             receiveOnly()
             link.send(byteArrayOf(1, 1, 1, 0x42, 1))
             runCurrent()
-            verify(crypto).decrypt(any())
-            verify(crypto, never()).disallowUseShortcut()
-            assertThat(host.closes).containsExactly("decrypt failed")
+            assertEquals(1, crypto.decrypts)
+            assertEquals(0, crypto.shortcutsDisallowed)
+            assertEquals(listOf("decrypt failed"), host.closes)
         }
     }
 
@@ -396,8 +427,8 @@ class EversenseSessionTest {
             link.send(byteArrayOf(1, 1, 1, 0x44, 2))
             link.send(byteArrayOf(1, 1, 1, 0x44, 3))
             runCurrent()
-            assertThat(host.watcher.alarms.map { it.code }).containsExactly(EversenseAlarm.LOW_GLUCOSE)
-            assertThat(host.closes).isEmpty()
+            assertEquals(listOf(EversenseAlarm.LOW_GLUCOSE), host.watcher.alarms.map { it.code })
+            assertEquals(emptyList(), host.closes)
         }
     }
 
@@ -406,9 +437,9 @@ class EversenseSessionTest {
             receiveOnly()
             link.send(e3Frame(EversenseE3Packets.KeepAlivePush))
             runCurrent()
-            assertThat(host.data).isEqualTo(1)
+            assertEquals(1, host.data)
             // The clock first, so the reading has phone time
-            assertThat(link.writes.first()[0]).isEqualTo(GetCurrentDatetimePacket().spec.requestId)
+            assertEquals(GetCurrentDatetimePacket().spec.requestId, link.writes.first()[0])
         }
     }
 
@@ -422,13 +453,13 @@ class EversenseSessionTest {
             receiveOnly()
             link.send(byteArrayOf(1, 1, 1, 0x44, 1))
             runCurrent()
-            assertThat(host.data).isEqualTo(1)
-            assertThat(link.writes).isEmpty()
+            assertEquals(1, host.data)
+            assertEquals(emptyList(), link.writes)
 
             link.send(byteArrayOf(1, 1, 1, 0x44, 2))
             runCurrent()
-            assertThat(host.data).isEqualTo(2)
-            assertThat(link.writes).hasSize(1)
+            assertEquals(2, host.data)
+            assertEquals(1, link.writes.size)
         }
     }
 
@@ -437,8 +468,8 @@ class EversenseSessionTest {
             receiveOnly()
             link.send(e3Frame(EversenseE3Packets.KeepAlivePush), characteristic = link.request)
             runCurrent()
-            assertThat(host.data).isEqualTo(0)
-            assertThat(link.writes).isEmpty()
+            assertEquals(0, host.data)
+            assertEquals(emptyList(), link.writes)
         }
     }
 
@@ -449,12 +480,12 @@ class EversenseSessionTest {
             link.actAsE3()
             session.start()
             runCurrent()
-            assertThat(host.ready).isEqualTo(1)
-            assertThat(host.watcher.ready).isEqualTo(1)
-            assertThat(link.writes[0][0]).isEqualTo(SaveBondingInformationPacket().spec.requestId)
+            assertEquals(1, host.ready)
+            assertEquals(1, host.watcher.ready)
+            assertEquals(SaveBondingInformationPacket().spec.requestId, link.writes[0][0])
             // The full sync starts with a ping
-            assertThat(link.writes[1][0]).isEqualTo(PingPacket().spec.requestId)
-            assertThat(host.closes).isEmpty()
+            assertEquals(PingPacket().spec.requestId, link.writes[1][0])
+            assertEquals(emptyList(), host.closes)
         }
     }
 
@@ -464,10 +495,10 @@ class EversenseSessionTest {
             link.actAsE3(acceptBonding = false)
             session.start()
             runCurrent()
-            assertThat(host.ready).isEqualTo(0)
-            assertThat(host.watcher.ready).isEqualTo(0)
-            assertThat(link.writes).hasSize(1)
-            assertThat(host.closes).isEmpty()
+            assertEquals(0, host.ready)
+            assertEquals(0, host.watcher.ready)
+            assertEquals(1, link.writes.size)
+            assertEquals(emptyList(), host.closes)
         }
     }
 
@@ -478,7 +509,7 @@ class EversenseSessionTest {
             link.actAsE3()
             session.start()
             runCurrent()
-            assertThat(link.writes[1][0]).isEqualTo(EnterDiagnosticModePacket().spec.requestId)
+            assertEquals(EnterDiagnosticModePacket().spec.requestId, link.writes[1][0])
         }
     }
 
@@ -486,54 +517,57 @@ class EversenseSessionTest {
         with(setup) {
             link.subscribeResult = BleResult.Failed(BleFailure(BleFailure.Kind.REFUSED))
             session.start()
-            assertThat(host.closes).containsExactly("notifications refused")
-            assertThat(link.writes).isEmpty()
+            assertEquals(listOf("notifications refused"), host.closes)
+            assertEquals(emptyList(), link.writes)
         }
     }
 
     /** A 365 with no login stored (an E3 was chosen without one) cannot register: said as a refused login, nothing sent. */
     @Test fun a365WithoutALoginRecordsARefusedLoginAndSendsNothing(): Unit = sessionTest(is365 = true) { setup ->
         with(setup) {
-            val crypto = crypto()
-            whenever(crypto.canUseShortcut()).thenReturn(false)
-            whenever(crypto.generateKeyPairIfNotExists()).thenReturn(true)
+            val crypto = crypto().apply {
+                shortcut = false
+                keyPairMade = true
+            }
             session.cryptoUtil = crypto
             session.start()
             runCurrent()
-            assertThat(store.getBoolean(StorageKeys.LOGIN_REFUSED, false)).isTrue()
-            assertThat(host.closes).containsExactly("no login for the registration")
-            assertThat(link.writes).isEmpty()
+            assertTrue(store.getBoolean(StorageKeys.LOGIN_REFUSED, false))
+            assertEquals(listOf("no login for the registration"), host.closes)
+            assertEquals(emptyList(), link.writes)
         }
     }
 
     /** The registration signs in at the Eversense server: offline nothing is sent, neither to the server nor over Bluetooth. */
     @Test fun a365RegistrationOfflineSendsNothing(): Unit = sessionTest(is365 = true) { setup ->
         with(setup) {
-            val crypto = crypto()
-            whenever(crypto.canUseShortcut()).thenReturn(false)
-            whenever(crypto.generateKeyPairIfNotExists()).thenReturn(true)
+            val crypto = crypto().apply {
+                shortcut = false
+                keyPairMade = true
+            }
             session.cryptoUtil = crypto
             host.username = "user"
             host.password = "secret"
             host.online = false
             session.start()
             runCurrent()
-            assertThat(host.closes).containsExactly("no internet for the registration")
-            assertThat(link.writes).isEmpty()
-            assertThat(store.contains(StorageKeys.LOGIN_REFUSED)).isFalse()
+            assertEquals(listOf("no internet for the registration"), host.closes)
+            assertEquals(emptyList(), link.writes)
+            assertFalse(store.contains(StorageKeys.LOGIN_REFUSED))
         }
     }
 
     /** A registered 365 signs in with AuthStart over Bluetooth alone: no internet is needed or asked for. */
     @Test fun aRegistered365SignsInOverBluetoothWithoutInternet(): Unit = sessionTest(is365 = true) { setup ->
         with(setup) {
-            val crypto = crypto()
-            whenever(crypto.canUseShortcut()).thenReturn(true)
-            whenever(crypto.generateKeyPairIfNotExists()).thenReturn(true)
-            whenever(crypto.generateEphem()).thenReturn(byteArrayOf(1))
-            whenever(crypto.getStartSecret(any())).thenReturn(byteArrayOf(1))
-            // Stops the sign-in where the session key is made, so the test ends there
-            doThrow(IllegalStateException("Authentication reached session-key derivation")).whenever(crypto).generateSessionKey(any())
+            val crypto = crypto().apply {
+                shortcut = true
+                keyPairMade = true
+                ephem = byteArrayOf(1)
+                startSecret = byteArrayOf(1)
+                // Stops the sign-in where the session key is made, so the test ends there
+                sessionKeyFailure = IllegalStateException("Authentication reached session-key derivation")
+            }
             session.cryptoUtil = crypto
             host.online = false
             link.onWrite = {
@@ -541,12 +575,12 @@ class EversenseSessionTest {
             }
             session.start()
             runCurrent()
-            verify(crypto).generateSessionKey(any())
-            assertThat(host.internetAsked).isEqualTo(0)
-            assertThat(link.writes).hasSize(1)
+            assertEquals(1, crypto.sessionKeys)
+            assertEquals(0, host.internetAsked)
+            assertEquals(1, link.writes.size)
             // The forced failure counts as a failed shortcut, and closes the link
-            assertThat(host.failures).containsExactly(true)
-            assertThat(host.closes).containsExactly("sign-in failed")
+            assertEquals(listOf(true), host.failures)
+            assertEquals(listOf("sign-in failed"), host.closes)
         }
     }
 }

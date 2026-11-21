@@ -1,9 +1,9 @@
 package app.aaps.plugins.eversense.emulator
 
 import app.aaps.core.interfaces.pump.ble.EmulatedBleCentral
-import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.plugins.eversense.EversenseDriver
 import app.aaps.plugins.eversense.EversenseDriver.ConnectionState
+import app.aaps.plugins.eversense.FakeNetwork
 import app.aaps.plugins.eversense.MemoryStore
 import app.aaps.plugins.eversense.RecordingWatcher
 import app.aaps.plugins.eversense.advance
@@ -13,28 +13,28 @@ import app.aaps.plugins.eversense.protocol.PacketTime
 import app.aaps.plugins.eversense.util.EversenseCrypto365Util
 import app.aaps.plugins.eversense.util.StorageKeys
 import app.aaps.shared.tests.AAPSLoggerTest
-import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
-import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
+import kotlin.math.abs
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.minutes
 
 /**
  * The real driver against the emulated 365, over the emulated Bluetooth, in virtual time. The phone is registered with
  * the transmitter already (the sign-in shortcut), so no Eversense server is needed: the sign-in is the start alone,
- * and everything after it is encrypted with the session key both sides agreed.
+ * and everything after it is encrypted with the session key both sides agreed. On iOS this runs the platform's own
+ * crypto (ECDH, HKDF, AES) against the emulator's.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class Emulated365Test {
 
     private val store = MemoryStore()
     private val watcher = RecordingWatcher()
-    private val network: ReceiverStatusStore = mock<ReceiverStatusStore>().also { whenever(it.isConnected).thenReturn(true) }
 
     private class Rig(val driver: EversenseDriver, val transmitter: EversenseTransmitterEmulator, val peripheral: Eversense365Peripheral)
 
@@ -47,7 +47,7 @@ class Emulated365Test {
                 val peripheral = Eversense365Peripheral(transmitter, scope = backgroundScope, keepAliveInterval = 5.minutes)
                 val central = EmulatedBleCentral(scope = backgroundScope).also { it.add(peripheral) }
                 registeredPhone(transmitter)
-                val driver = EversenseDriver(central, store, AAPSLoggerTest(), network, dispatcher)
+                val driver = EversenseDriver(central, store, AAPSLoggerTest(), FakeNetwork(), dispatcher)
                 driver.addWatcher(watcher)
                 try {
                     body(Rig(driver, transmitter, peripheral))
@@ -77,14 +77,14 @@ class Emulated365Test {
         rig.driver.start()
         advance(10_000)
 
-        assertThat(rig.driver.connectionState.value).isEqualTo(ConnectionState.READY)
-        assertThat(rig.peripheral.signedIn).isTrue()
+        assertEquals(ConnectionState.READY, rig.driver.connectionState.value)
+        assertTrue(rig.peripheral.signedIn)
         val newest = readings().maxBy { it.datetime }
-        assertThat(newest.datetime).isEqualTo(rig.transmitter.latestReading().timestamp)
-        assertThat(newest.glucoseInMgDl).isEqualTo(rig.transmitter.latestReading().glucoseMgDl)
+        assertEquals(rig.transmitter.latestReading().timestamp, newest.datetime)
+        assertEquals(rig.transmitter.latestReading().glucoseMgDl, newest.glucoseInMgDl)
         val state = rig.driver.getCurrentState()
-        assertThat(state.batteryPercentage).isEqualTo(85)
-        assertThat(state.transmitterName).isEqualTo("D3650001")
+        assertEquals(85, state.batteryPercentage)
+        assertEquals("D3650001", state.transmitterName)
     }
 
     /** The keep-alive the transmitter pushes every five minutes brings the next reading. */
@@ -95,8 +95,8 @@ class Emulated365Test {
 
         advance(5.minutes.inWholeMilliseconds)
 
-        assertThat(readings().maxOf { it.datetime }).isGreaterThan(first)
-        assertThat(rig.driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        assertTrue(readings().maxOf { it.datetime } > first)
+        assertEquals(ConnectionState.READY, rig.driver.connectionState.value)
     }
 
     /** After half an hour without a link, the readings of the gap come from the history log, each once. */
@@ -111,8 +111,8 @@ class Emulated365Test {
         advance(10_000)
 
         val gap = readings().map { it.datetime }.filter { it > before }
-        assertThat(gap.size).isAtLeast(5)
-        assertThat(gap).containsNoDuplicates()
+        assertTrue(gap.size >= 5, "only ${gap.size} readings of the gap")
+        assertEquals(gap.size, gap.toSet().size, "duplicates in $gap")
     }
 
     /** A transmitter clock a minute off is set at the full sync, to the second the 365 keeps. */
@@ -120,22 +120,22 @@ class Emulated365Test {
         rig.driver.start()
         advance(10_000)
 
-        assertThat(rig.transmitter.clock()).isWithin(1_000L).of(PacketTime.nowMillis())
+        assertTrue(abs(rig.transmitter.clock() - PacketTime.nowMillis()) <= 1_000L, "clock ${rig.transmitter.clock()}, phone ${PacketTime.nowMillis()}")
     }
 
     @Test fun aCalibrationReachesTheTransmitter() = run { rig ->
         rig.driver.start()
         advance(10_000)
 
-        assertThat(rig.driver.sendCalibration(110)).isTrue()
-        assertThat(rig.transmitter.calibrations).containsExactly(110)
+        assertTrue(rig.driver.sendCalibration(110))
+        assertEquals(listOf(110), rig.transmitter.calibrations)
     }
 
     @Test fun theSignalIsReadForThePlacementGuide() = run { rig ->
         rig.driver.start()
         advance(10_000)
 
-        assertThat(rig.driver.readSignalStrength()).isEqualTo(60)
+        assertEquals(60, rig.driver.readSignalStrength())
     }
 
     @Test fun anAlarmTheTransmitterPushesReachesThePlugin() = run { rig ->
@@ -145,7 +145,7 @@ class Emulated365Test {
         rig.peripheral.pushAlarm(rig.peripheral.link!!, EversenseAlarm.LOW_GLUCOSE.code)
         advance(1_000)
 
-        assertThat(watcher.alarms.map { it.code }).contains(EversenseAlarm.LOW_GLUCOSE)
+        assertTrue(EversenseAlarm.LOW_GLUCOSE in watcher.alarms.map { it.code })
     }
 
     private companion object {

@@ -231,12 +231,26 @@ frame is logged; logs can still hold glucose and device data.
 ## Tests
 
 ```text
-./gradlew.bat :plugins:source:eversense:testAndroidHostTest
+./gradlew.bat :plugins:source:eversense:testAndroidHostTest :plugins:source:eversense:jvmTest
+./gradlew.bat :plugins:source:eversense:compileTestKotlinIosSimulatorArm64
+./gradlew :plugins:source:eversense:iosSimulatorArm64Test        (on the Mac; also run by ios-ci.yml)
 ./gradlew.bat :app:testFullDebugUnitTest --tests "*SourceGraphTest" --tests "*PreferenceKeySnapshotTest"
 ```
 
-The host tests run on the JVM against the shared code; the session and the driver are tested with a fake
-`BleLink` and `BleCentral`, the communicators with a fake `EversenseLink`.
+Two source sets:
+
+- `commonTest` runs on every target, iOS too: the driver's connection rules (`EversenseDriverTest`, with the iOS rule
+  of no timers in the background), the session (`EversenseSessionTest`, `GuardedStoreTest`), the emulator tests (the
+  whole driver and, for the 365, the platform's crypto against the emulator's), the future-reading check and the 365
+  dates. The driver and the session run on a fake `BleLink` and `BleCentral` (`TestFakes.kt`); the 365 crypto is a
+  fake subclass (`EversenseCrypto365Util` is `@OpenForTesting`). Only `kotlin.test` and multiplatform code here: no
+  Truth, Mockito or `java.*`. The iOS test compile works on Windows; running it needs the Mac.
+- The status of a link the transmitter closed differs per platform (`closedByTransmitter`: 19 on Android, 7 on iOS,
+  none on the desktop). The driver takes the rule as a parameter, and `DriverHarness` gives every platform one code,
+  so the rules after such a close are tested everywhere; the mapping itself is one line per platform.
+- `androidHostTest` runs on the JVM only: the tests that need Mockito, Robolectric, a local HTTP server
+  (`mockwebserver3`) or JVM resources, which are the golden tests, the Eversense server tests, the plugin and the
+  screen tests. The communicators are tested there with a fake `EversenseLink`.
 
 The golden tests (`ProtocolGoldenTest`, `BinaryGoldenTest`, `SecureChannelGoldenTest`, `NotificationGoldenTest`) run
 large input sets through the protocol code: every command's request, framing at several MTUs and decoding of many

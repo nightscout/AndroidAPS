@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.pump.ble.AdapterState
 import app.aaps.core.interfaces.pump.ble.BleResult
 import app.aaps.core.interfaces.pump.ble.DeviceId
 import app.aaps.plugins.eversense.DriverHarness.Companion.ADDRESS
+import app.aaps.plugins.eversense.DriverHarness.Companion.CLOSED_BY_TRANSMITTER
 import app.aaps.plugins.eversense.DriverHarness.Companion.NAME
 import app.aaps.plugins.eversense.DriverHarness.Companion.START
 import app.aaps.plugins.eversense.EversenseDriver.ConnectionState
@@ -11,14 +12,18 @@ import app.aaps.plugins.eversense.packets.e3.EnterDiagnosticModePacket
 import app.aaps.plugins.eversense.packets.e3.EversenseE3Packets
 import app.aaps.plugins.eversense.packets.e3.PingPacket
 import app.aaps.plugins.eversense.util.StorageKeys
-import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.currentTime
 import kotlinx.coroutines.test.runCurrent
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
+import kotlin.test.assertContains
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 import kotlin.time.Duration
 
 /**
@@ -41,26 +46,26 @@ class EversenseDriverTest {
         central.refuseConnects(status = 133)
         driver.start()
         runCurrent()
-        assertThat(central.connects).hasSize(1)
+        assertEquals(1, central.connects.size)
         for (wait in listOf(5_000L, 10_000L, 20_000L, 40_000L, 60_000L, 60_000L)) {
             val before = central.connects.size
             advance(wait - 1)
-            assertThat(central.connects).hasSize(before)
+            assertEquals(before, central.connects.size)
             advance(1)
-            assertThat(central.connects).hasSize(before + 1)
+            assertEquals(before + 1, central.connects.size)
         }
 
         // A ready link starts the count again
         central.acceptConnects()
         advance(minute)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
         central.links.last().lose(status = 8)
         runCurrent()
         val before = central.connects.size
         advance(4_999)
-        assertThat(central.connects).hasSize(before)
+        assertEquals(before, central.connects.size)
         advance(1)
-        assertThat(central.connects).hasSize(before + 1)
+        assertEquals(before + 1, central.connects.size)
     }
 
     /** An E3 that closed the link itself is lifted off the sensor: tried again after 30 s, not at once. */
@@ -68,39 +73,39 @@ class EversenseDriverTest {
         harness.pairedE3()
         driver.start()
         runCurrent()
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
-        central.links[0].lose(status = 19)
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
+        central.links[0].lose(status = CLOSED_BY_TRANSMITTER)
         runCurrent()
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.DISCONNECTED)
+        assertEquals(ConnectionState.DISCONNECTED, driver.connectionState.value)
         advance(29_999)
-        assertThat(central.connects).hasSize(1)
+        assertEquals(1, central.connects.size)
         advance(1)
-        assertThat(central.connects).hasSize(2)
-        assertThat(central.connects[1].androidAutoConnect).isFalse()
+        assertEquals(2, central.connects.size)
+        assertFalse(central.connects[1].androidAutoConnect)
     }
 
     @Test fun threeE3ClosesInARowTellTheUserTheTransmitterIsNotPlaced(): Unit = harness.run { driver ->
         harness.pairedE3()
-        central.refuseConnects(status = 19)
+        central.refuseConnects(status = CLOSED_BY_TRANSMITTER)
         driver.start()
         runCurrent()
         advance(30_000)
-        assertThat(watcher.notPlaced).isEqualTo(0)
+        assertEquals(0, watcher.notPlaced)
         advance(30_000)
-        assertThat(central.connects).hasSize(3)
-        assertThat(watcher.notPlaced).isEqualTo(1)
+        assertEquals(3, central.connects.size)
+        assertEquals(1, watcher.notPlaced)
 
         // A ready link starts the count again: two closes after it are not three in a row
         central.acceptConnects()
         advance(30_000)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
-        central.links.last().lose(status = 19)
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
+        central.links.last().lose(status = CLOSED_BY_TRANSMITTER)
         runCurrent()
-        central.refuseConnects(status = 19)
+        central.refuseConnects(status = CLOSED_BY_TRANSMITTER)
         advance(30_000)
-        assertThat(watcher.notPlaced).isEqualTo(1)
+        assertEquals(1, watcher.notPlaced)
         advance(30_000)
-        assertThat(watcher.notPlaced).isEqualTo(2)
+        assertEquals(2, watcher.notPlaced)
     }
 
     /** A 365 closes the link as its usual cycle: the next connect waits in the background for it to come back. */
@@ -109,26 +114,26 @@ class EversenseDriverTest {
         central.newLink = { device -> FakeBleLink(device, is365 = true) }
         driver.start()
         runCurrent()
-        assertThat(central.connects.single().androidAutoConnect).isFalse()
-        assertThat(central.connects.single().timeout).isEqualTo(EversenseDriver.CONNECT_TIMEOUT)
+        assertFalse(central.connects.single().androidAutoConnect)
+        assertEquals(EversenseDriver.CONNECT_TIMEOUT, central.connects.single().timeout)
 
-        central.links[0].lose(status = 19)
+        central.links[0].lose(status = CLOSED_BY_TRANSMITTER)
         runCurrent()
         advance(4_999)
-        assertThat(central.connects).hasSize(1)
+        assertEquals(1, central.connects.size)
         advance(1)
-        assertThat(central.connects).hasSize(2)
-        assertThat(central.connects[1].androidAutoConnect).isTrue()
-        assertThat(central.connects[1].timeout).isEqualTo(EversenseDriver.ATTEMPT_DEADLINE)
+        assertEquals(2, central.connects.size)
+        assertTrue(central.connects[1].androidAutoConnect)
+        assertEquals(EversenseDriver.ATTEMPT_DEADLINE, central.connects[1].timeout)
 
         // Lost by the radio: the next connect is a direct one again
         central.links[1].lose(status = 8)
         runCurrent()
         advance(10_000)
-        assertThat(central.connects).hasSize(3)
-        assertThat(central.connects[2].androidAutoConnect).isFalse()
+        assertEquals(3, central.connects.size)
+        assertFalse(central.connects[2].androidAutoConnect)
         // A 365 that closes the link is never "not placed"
-        assertThat(watcher.notPlaced).isEqualTo(0)
+        assertEquals(0, watcher.notPlaced)
     }
 
     /** No Bluetooth: nothing is opened, and the driver looks again after a minute, also without being told. */
@@ -137,14 +142,14 @@ class EversenseDriverTest {
         central.adapterState.value = AdapterState.OFF
         driver.start()
         runCurrent()
-        assertThat(central.connects).isEmpty()
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.DISCONNECTED)
+        assertEquals(emptyList(), central.connects)
+        assertEquals(ConnectionState.DISCONNECTED, driver.connectionState.value)
         central.adapterState.value = AdapterState.ON
         advance(minute - 1)
-        assertThat(central.connects).isEmpty()
+        assertEquals(emptyList(), central.connects)
         advance(1)
-        assertThat(central.connects).hasSize(1)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        assertEquals(1, central.connects.size)
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
     }
 
     /** A transmitter that never signs in does not leave the driver connecting for ever. */
@@ -153,15 +158,15 @@ class EversenseDriverTest {
         central.newLink = { device -> FakeBleLink(device, is365 = false).also { it.actAsE3(acceptBonding = false) } }
         driver.start()
         runCurrent()
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.CONNECTING)
+        assertEquals(ConnectionState.CONNECTING, driver.connectionState.value)
         advance(EversenseDriver.ATTEMPT_DEADLINE.inWholeMilliseconds - 1)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.CONNECTING)
-        assertThat(central.links[0].isUp).isTrue()
+        assertEquals(ConnectionState.CONNECTING, driver.connectionState.value)
+        assertTrue(central.links[0].isUp)
         advance(1)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.DISCONNECTED)
-        assertThat(central.links[0].isUp).isFalse()
+        assertEquals(ConnectionState.DISCONNECTED, driver.connectionState.value)
+        assertFalse(central.links[0].isUp)
         advance(5_000)
-        assertThat(central.connects).hasSize(2)
+        assertEquals(2, central.connects.size)
     }
 
     /** Only a ready link that brings nothing is replaced: a keep alive counts as data. */
@@ -169,17 +174,17 @@ class EversenseDriverTest {
         harness.pairedE3()
         driver.start()
         runCurrent()
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
         advance(6 * minute)
         central.links[0].send(e3Frame(EversenseE3Packets.KeepAlivePush))
         runCurrent()
         advance(7 * minute)
-        assertThat(central.connects).hasSize(1)
-        assertThat(central.links[0].isUp).isTrue()
+        assertEquals(1, central.connects.size)
+        assertTrue(central.links[0].isUp)
         advance(minute)
-        assertThat(central.connects).hasSize(2)
-        assertThat(central.links[0].isUp).isFalse()
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        assertEquals(2, central.connects.size)
+        assertFalse(central.links[0].isUp)
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
     }
 
     @Test fun aLostLinkIsReplacedOnceAndTheOldOneIsClosed(): Unit = harness.run { driver ->
@@ -188,14 +193,14 @@ class EversenseDriverTest {
         runCurrent()
         central.links[0].lose(status = 133)
         runCurrent()
-        assertThat(central.links[0].closes).isEqualTo(1)
-        assertThat(watcher.connections).containsExactly(true, false).inOrder()
+        assertEquals(1, central.links[0].closes)
+        assertEquals(listOf(true, false), watcher.connections)
         advance(5_000)
-        assertThat(central.connects).hasSize(2)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        assertEquals(2, central.connects.size)
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
         advance(6 * minute)
-        assertThat(central.connects).hasSize(2)
-        assertThat(watcher.ready).isEqualTo(2)
+        assertEquals(2, central.connects.size)
+        assertEquals(2, watcher.ready)
     }
 
     // ----- start, connect, disconnect, stop -----
@@ -205,15 +210,15 @@ class EversenseDriverTest {
         harness.storeLogin(model = "E3")
         driver.start()
         runCurrent()
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.PAUSED)
+        assertEquals(ConnectionState.PAUSED, driver.connectionState.value)
         driver.onBluetoothAvailable()
         advance(1_000 * minute)
-        assertThat(central.connects).isEmpty()
+        assertEquals(emptyList(), central.connects)
 
-        assertThat(driver.pair(ADDRESS, NAME)).isTrue()
+        assertTrue(driver.pair(ADDRESS, NAME))
         runCurrent()
-        assertThat(central.connects).hasSize(1)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        assertEquals(1, central.connects.size)
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
     }
 
     /** A 365 registers this phone with the Eversense server: with no login it is not connected at all. */
@@ -222,10 +227,10 @@ class EversenseDriverTest {
         harness.storeTransmitter()
         driver.start()
         runCurrent()
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.PAUSED)
-        assertThat(driver.connect()).isFalse()
+        assertEquals(ConnectionState.PAUSED, driver.connectionState.value)
+        assertFalse(driver.connect())
         advance(10 * minute)
-        assertThat(central.connects).isEmpty()
+        assertEquals(emptyList(), central.connects)
     }
 
     @Test fun stopClosesTheLinkAndNothingRunsAfterIt(): Unit = harness.run { driver ->
@@ -233,14 +238,14 @@ class EversenseDriverTest {
         driver.start()
         runCurrent()
         driver.stop()
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.STOPPED)
-        assertThat(central.links[0].isUp).isFalse()
+        assertEquals(ConnectionState.STOPPED, driver.connectionState.value)
+        assertFalse(central.links[0].isUp)
         driver.onBluetoothAvailable()
         advance(1_000 * minute)
-        assertThat(central.connects).hasSize(1)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.STOPPED)
-        assertThat(driver.connect()).isFalse()
-        assertThat(driver.cloudStore()).isNull()
+        assertEquals(1, central.connects.size)
+        assertEquals(ConnectionState.STOPPED, driver.connectionState.value)
+        assertFalse(driver.connect())
+        assertNull(driver.cloudStore())
     }
 
     /** A stop while the driver waits to try again: the wait ends, and the state stays stopped. */
@@ -252,8 +257,8 @@ class EversenseDriverTest {
         advance(2_000)
         driver.stop()
         advance(10 * minute)
-        assertThat(central.connects).hasSize(1)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.STOPPED)
+        assertEquals(1, central.connects.size)
+        assertEquals(ConnectionState.STOPPED, driver.connectionState.value)
     }
 
     @Test fun disconnectStaysPausedUntilConnect(): Unit = harness.run { driver ->
@@ -261,17 +266,17 @@ class EversenseDriverTest {
         driver.start()
         runCurrent()
         driver.disconnect()
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.PAUSED)
-        assertThat(central.links[0].isUp).isFalse()
+        assertEquals(ConnectionState.PAUSED, driver.connectionState.value)
+        assertFalse(central.links[0].isUp)
         driver.onBluetoothAvailable()
         advance(1_000 * minute)
-        assertThat(central.connects).hasSize(1)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.PAUSED)
+        assertEquals(1, central.connects.size)
+        assertEquals(ConnectionState.PAUSED, driver.connectionState.value)
 
-        assertThat(driver.connect()).isTrue()
+        assertTrue(driver.connect())
         runCurrent()
-        assertThat(central.connects).hasSize(2)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        assertEquals(2, central.connects.size)
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
     }
 
     @Test fun connectOpensNoSecondLink(): Unit = harness.run { driver ->
@@ -280,18 +285,18 @@ class EversenseDriverTest {
         driver.start()
         runCurrent()
         // On its way: not ready yet, and not opened again
-        assertThat(driver.connect()).isFalse()
+        assertFalse(driver.connect())
         runCurrent()
-        assertThat(central.connects).hasSize(1)
+        assertEquals(1, central.connects.size)
 
         central.newLink = { device -> FakeBleLink(device, is365 = false).also { it.actAsE3() } }
         advance(EversenseDriver.ATTEMPT_DEADLINE.inWholeMilliseconds + 5_000)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
         val connects = central.connects.size
         // Ready: nothing to do
-        assertThat(driver.connect()).isTrue()
+        assertTrue(driver.connect())
         runCurrent()
-        assertThat(central.connects).hasSize(connects)
+        assertEquals(connects, central.connects.size)
     }
 
     /** Bluetooth on again: Android can leave out the disconnect while it was off, so the driver connects at once. */
@@ -303,8 +308,8 @@ class EversenseDriverTest {
         central.acceptConnects()
         driver.onBluetoothAvailable()
         runCurrent()
-        assertThat(central.connects).hasSize(2)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        assertEquals(2, central.connects.size)
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
     }
 
     // ----- the cloud store -----
@@ -315,7 +320,7 @@ class EversenseDriverTest {
      */
     @Test fun theCloudStoreEndsWithADisconnectANewLoginAndAStop(): Unit = harness.run { driver ->
         harness.pairedE3()
-        assertThat(driver.cloudStore()).isNull()
+        assertNull(driver.cloudStore())
         driver.start()
         runCurrent()
         val cloud = driver.cloudStore()!!
@@ -323,25 +328,25 @@ class EversenseDriverTest {
         central.links[0].lose(status = 133)
         runCurrent()
         advance(5_000)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
         cloud.edit().putString("token", "still valid").apply()
-        assertThat(harness.store.getString("token", null)).isEqualTo("still valid")
+        assertEquals("still valid", harness.store.getString("token", null))
 
         driver.disconnect()
-        assertThrows(CancellationException::class.java) { cloud.edit() }
-        assertThat(driver.cloudStore()).isNull()
+        assertFailsWith<CancellationException> { cloud.edit() }
+        assertNull(driver.cloudStore())
 
         driver.connect()
         runCurrent()
         val next = driver.cloudStore()!!
-        assertThat(next.getString("token", null)).isEqualTo("still valid")
+        assertEquals("still valid", next.getString("token", null))
         driver.setCredentials("other@example.com", "other", europeanRegion = false)
-        assertThrows(CancellationException::class.java) { next.edit() }
+        assertFailsWith<CancellationException> { next.edit() }
 
         val last = driver.cloudStore()!!
         driver.stop()
-        assertThrows(CancellationException::class.java) { last.edit() }
-        assertThat(driver.cloudStore()).isNull()
+        assertFailsWith<CancellationException> { last.edit() }
+        assertNull(driver.cloudStore())
     }
 
     // ----- work on the ready link -----
@@ -352,16 +357,16 @@ class EversenseDriverTest {
         driver.start()
         runCurrent()
         // The fake E3 refuses every command but the bonding
-        assertThat(driver.sendCalibration(100)).isFalse()
+        assertFalse(driver.sendCalibration(100))
         runCurrent()
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
-        assertThat(central.links[0].isUp).isTrue()
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
+        assertTrue(central.links[0].isUp)
         // And the driver still reconnects after a loss
         central.links[0].lose(status = 133)
         runCurrent()
         advance(5_000)
-        assertThat(central.connects).hasSize(2)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        assertEquals(2, central.connects.size)
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
     }
 
     /** Work that needs a ready link is refused while the transmitter signs in: nothing is sent for it. */
@@ -370,37 +375,37 @@ class EversenseDriverTest {
         central.newLink = { device -> FakeBleLink(device, is365 = false).also { it.actAsE3(acceptBonding = false) } }
         driver.start()
         runCurrent()
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.CONNECTING)
+        assertEquals(ConnectionState.CONNECTING, driver.connectionState.value)
         val written = central.links[0].writes.size
-        assertThat(driver.sendCalibration(100)).isFalse()
-        assertThat(driver.readSignalStrength()).isNull()
+        assertFalse(driver.sendCalibration(100))
+        assertNull(driver.readSignalStrength())
         runCurrent()
-        assertThat(central.links[0].writes).hasSize(written)
+        assertEquals(written, central.links[0].writes.size)
     }
 
     @Test fun aSignalThatCannotBeReadKeepsTheLink(): Unit = harness.run { driver ->
         harness.pairedE3()
-        assertThat(driver.readSignalStrength()).isNull()
+        assertNull(driver.readSignalStrength())
         driver.start()
         runCurrent()
-        assertThat(driver.readSignalStrength()).isNull()
+        assertNull(driver.readSignalStrength())
         runCurrent()
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
-        assertThat(central.links[0].isUp).isTrue()
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
+        assertTrue(central.links[0].isUp)
     }
 
     @Test fun aSyncRunsOnlyOnAReadyLink(): Unit = harness.run { driver ->
         harness.pairedE3()
         driver.triggerFullSync(force = true)
         runCurrent()
-        assertThat(central.connects).isEmpty()
+        assertEquals(emptyList(), central.connects)
         driver.start()
         runCurrent()
         val written = central.links[0].writes.size
         driver.triggerFullSync(force = true)
         runCurrent()
-        assertThat(central.links[0].writes.drop(written).first()[0]).isEqualTo(PingPacket().spec.requestId)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        assertEquals(PingPacket().spec.requestId, central.links[0].writes.drop(written).first()[0])
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
     }
 
     /** The placement guide keeps the transmitter in diagnostic mode, also over a reconnect. */
@@ -410,29 +415,29 @@ class EversenseDriverTest {
         runCurrent()
         val enter = EnterDiagnosticModePacket().spec.requestId
         driver.enterPositioningMode()
-        assertThat(driver.isPositioningMode).isTrue()
-        assertThat(central.links[0].writes.map { it[0] }).contains(enter)
+        assertTrue(driver.isPositioningMode)
+        assertContains(central.links[0].writes.map { it[0] }, enter)
 
         central.links[0].lose(status = 133)
         runCurrent()
         advance(5_000)
-        assertThat(central.links[1].writes.map { it[0] }).contains(enter)
+        assertContains(central.links[1].writes.map { it[0] }, enter)
 
         advance(1_000)
         driver.exitPositioningMode()
-        assertThat(driver.isPositioningMode).isFalse()
-        assertThat(driver.lastPositioningModeExitAt).isEqualTo(START + currentTime)
+        assertFalse(driver.isPositioningMode)
+        assertEquals(START + currentTime, driver.lastPositioningModeExitAt)
     }
 
     @Test fun pairStoresTheTransmitterAndConnectsToIt(): Unit = harness.run { driver ->
         harness.storeLogin(model = "E3")
         driver.start()
-        assertThat(driver.pair("AA:BB:CC:DD:EE:FF", "T654321")).isTrue()
+        assertTrue(driver.pair("AA:BB:CC:DD:EE:FF", "T654321"))
         runCurrent()
-        assertThat(harness.store.getString(StorageKeys.REMOTE_DEVICE_KEY, null)).isEqualTo("AA:BB:CC:DD:EE:FF")
-        assertThat(harness.store.getString(StorageKeys.REMOTE_DEVICE_NAME, null)).isEqualTo("T654321")
-        assertThat(central.links.single().device).isEqualTo(DeviceId("AA:BB:CC:DD:EE:FF"))
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        assertEquals("AA:BB:CC:DD:EE:FF", harness.store.getString(StorageKeys.REMOTE_DEVICE_KEY, null))
+        assertEquals("T654321", harness.store.getString(StorageKeys.REMOTE_DEVICE_NAME, null))
+        assertEquals(DeviceId("AA:BB:CC:DD:EE:FF"), central.links.single().device)
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
     }
 
     // ----- iOS: no timers in the background -----
@@ -442,14 +447,14 @@ class EversenseDriverTest {
         harness.pairedE3()
         driver.start()
         runCurrent()
-        assertThat(central.connects.single().timeout).isEqualTo(EversenseDriver.CONNECT_TIMEOUT)
+        assertEquals(EversenseDriver.CONNECT_TIMEOUT, central.connects.single().timeout)
 
         central.links[0].lose(status = 8)
         runCurrent()
-        assertThat(central.connects).hasSize(2)
-        assertThat(central.connects[1].androidAutoConnect).isTrue()
-        assertThat(central.connects[1].timeout).isEqualTo(Duration.INFINITE)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        assertEquals(2, central.connects.size)
+        assertTrue(central.connects[1].androidAutoConnect)
+        assertEquals(Duration.INFINITE, central.connects[1].timeout)
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
     }
 
     /** A link the session gave up on is not a radio loss: at once it would only fail again, so it waits on the backoff. */
@@ -459,12 +464,12 @@ class EversenseDriverTest {
         driver.start()
         runCurrent()
         advance(EversenseDriver.ATTEMPT_DEADLINE.inWholeMilliseconds)
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.DISCONNECTED)
+        assertEquals(ConnectionState.DISCONNECTED, driver.connectionState.value)
         advance(4_999)
-        assertThat(central.connects).hasSize(1)
+        assertEquals(1, central.connects.size)
         advance(1)
-        assertThat(central.connects).hasSize(2)
-        assertThat(central.connects[1].timeout).isEqualTo(EversenseDriver.CONNECT_TIMEOUT)
+        assertEquals(2, central.connects.size)
+        assertEquals(EversenseDriver.CONNECT_TIMEOUT, central.connects[1].timeout)
     }
 
     /** A connect that waited long for the transmitter does not eat the time the sign-in has. */
@@ -480,11 +485,11 @@ class EversenseDriverTest {
         central.links[0].lose(status = 8)
         runCurrent()
         advance(10 * minute)
-        assertThat(central.links).hasSize(2)
+        assertEquals(2, central.links.size)
         advance(EversenseDriver.ATTEMPT_DEADLINE.inWholeMilliseconds - 1)
-        assertThat(central.links[1].isUp).isTrue()
-        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.CONNECTING)
+        assertTrue(central.links[1].isUp)
+        assertEquals(ConnectionState.CONNECTING, driver.connectionState.value)
         advance(1)
-        assertThat(central.links[1].isUp).isFalse()
+        assertFalse(central.links[1].isUp)
     }
 }

@@ -88,7 +88,12 @@ class EversenseDriver internal constructor(
     private val receiverStatusStore: ReceiverStatusStore,
     private val dispatcher: CoroutineDispatcher,
     /** The platform's choice ([reconnectWithoutTimers]); a test sets it to run the iOS rules on the JVM. */
-    private val waitInBackgroundAfterLoss: Boolean = reconnectWithoutTimers
+    private val waitInBackgroundAfterLoss: Boolean = reconnectWithoutTimers,
+    /**
+     * The platform's reading of a lost link ([closedByTransmitter]: its own status code, none on the desktop). A test
+     * gives one code for every platform, so the rules after such a close run the same on each.
+     */
+    private val isClosedByTransmitter: (BleFailure) -> Boolean = ::closedByTransmitter
 ) {
 
     @Inject
@@ -590,7 +595,7 @@ class EversenseDriver internal constructor(
     }
 
     private fun lost(failure: BleFailure, is365: Boolean): LinkEnd {
-        val byTransmitter = closedByTransmitter(failure)
+        val byTransmitter = isClosedByTransmitter(failure)
         // An E3 that closes the link three times in a row is not over its sensor
         if (byTransmitter && !is365) {
             if (++placementFailures >= 3) watchers.value.forEach { it.onTransmitterNotPlaced() }

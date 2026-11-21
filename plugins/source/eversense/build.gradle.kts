@@ -1,6 +1,8 @@
 plugins {
     id("kmp-android-library")
     id("kotlinx-serialization")
+    // @OpenForTesting: the session tests replace the 365 crypto with a fake, also on iOS
+    id("all-open-dependencies")
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.metro)
@@ -57,6 +59,12 @@ kotlin {
         }
         iosMain.dependencies {
             implementation(libs.io.ktor.client.darwin)
+        }
+        // Tests that run on every target, iOS too: kotlin.test and small fakes, no Truth, Mockito or JVM classes
+        commonTest.dependencies {
+            implementation(project(":shared:tests"))
+            implementation(kotlin("test"))
+            implementation(libs.kotlinx.coroutines.test)
         }
         // Hand written: the test convention plugins apply com.android.library, which a multiplatform module cannot.
         getByName("androidHostTest").dependencies {
