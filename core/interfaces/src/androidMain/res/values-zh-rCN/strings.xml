@@ -32,16 +32,7 @@
     <string name="shorthour">h</string>
     <string name="days">天</string>
     <string name="hours">小时</string>
-    <string name="unit_second">秒</string>
-    <string name="unit_minute">分钟</string>
-    <string name="unit_hour">小时</string>
-    <string name="unit_day">天</string>
-    <string name="unit_week">周</string>
-    <string name="unit_seconds">秒</string>
     <string name="unit_minutes">分钟</string>
-    <string name="unit_hours">小时</string>
-    <string name="unit_days">天</string>
-    <string name="unit_weeks">周</string>
     <string name="shortminute">m</string>
     <string name="time_remaining_h_m">剩余 %1$dh %2$dm</string>
     <string name="time_remaining_m">剩余 %1$dm</string>
@@ -56,7 +47,6 @@
     <string name="time_frame_hours_minutes" comment="A duration, short. h=hours, the mark after the minutes means minutes. %1$d=hours, %2$d=minutes. Example: 1h 30'">%1$dh %2$d\'</string>
     <string name="time_frame_minutes" comment="A duration in minutes, short. The mark after the number means minutes. %1$d=minutes. Example: 30'">%1$d\'</string>
     <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
-    <string name="time_value_with_unit" comment="%1$s=a number, %2$s=the time unit, like minutes or days. Example: 5 minutes">%1$s %2$s</string>
     <!-- Rx -->
     <string name="connecting_for">正在连接 %1$d s</string>
     <string name="handshaking">握手</string>
@@ -154,7 +144,7 @@
     <string name="slowabsorptiondetected_plain">!!!!!检测到碳水化合物吸收缓慢：%1$d%%的时间。仔细检查你的计算。COB可能被高估，因此可能注射过多的胰岛素！！！！！</string>
     <string name="bolus_constraint_applied_warn">已应用推注限制： %1$.2f U 到 %2$.2f U</string>
     <string name="bolus_recorded_only">仅记录大剂量数值(泵不会输注)</string>
-    <string name="advisoralarm">在应当吃饭时提醒</string>
+    <string name="advisoralarm">到进餐时间时发出警报</string>
     <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eCarbs %1$d g / %2$d h (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f U</string>
     <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
