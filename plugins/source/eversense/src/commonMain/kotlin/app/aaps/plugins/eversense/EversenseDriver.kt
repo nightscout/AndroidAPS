@@ -312,6 +312,7 @@ class EversenseDriver internal constructor(
 
     /** Unpairs: closes the link and forgets the transmitter, so the next pairing is a full registration. The login stays. */
     suspend fun clearStoredDevice() {
+        val address = preferences.getString(StorageKeys.REMOTE_DEVICE_KEY, null)
         disconnect()
         withContext(dispatcher) { placementFailures = 0 }
         preferences.edit(commit = true) {
@@ -320,6 +321,12 @@ class EversenseDriver internal constructor(
         }
         EversenseCrypto365Util(preferences, aapsLogger).disallowUseShortcut()
         aapsLogger.info(LTag.BGSOURCE, "Cleared stored device address")
+        // The phone's bond goes too, after the link is closed: a bond the phone keeps while the transmitter has
+        // forgotten it can stop the next pairing on this phone. Only Android has one to remove (no bonding on iOS).
+        if (address != null) central.bonding?.let { bonding ->
+            val removed = bonding.removeBond(DeviceId(address))
+            aapsLogger.info(LTag.BGSOURCE, "Bond of the transmitter removed: ${removed is BleResult.Ok}")
+        }
     }
 
     // ── Work on the ready link ──

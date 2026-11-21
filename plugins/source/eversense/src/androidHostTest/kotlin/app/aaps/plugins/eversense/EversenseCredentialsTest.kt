@@ -1,5 +1,6 @@
 package app.aaps.plugins.eversense
 
+import app.aaps.core.interfaces.pump.ble.DeviceId
 import app.aaps.plugins.eversense.DriverHarness.Companion.ADDRESS
 import app.aaps.plugins.eversense.DriverHarness.Companion.NAME
 import app.aaps.plugins.eversense.DriverHarness.Companion.PASSWORD
@@ -134,6 +135,35 @@ class EversenseCredentialsTest {
         assertThat(saved.username).isEqualTo(USERNAME)
         assertThat(driver.connectionState.value).isEqualTo(ConnectionState.PAUSED)
         assertThat(harness.central.links[0].isUp).isFalse()
+    }
+
+    /**
+     * Unpair removes the phone's bond too, once the link is closed: a bond the phone keeps while the transmitter has
+     * forgotten it can stop the next pairing on this phone.
+     */
+    @Test fun clearStoredDeviceRemovesTheBondAfterTheLinkIsClosed(): Unit = harness.run { driver ->
+        val bonding = FakeBleBonding(harness.central)
+        harness.central.bonding = bonding
+        harness.storeLogin(USERNAME, PASSWORD, model = "E3", shortcut = true)
+        harness.storeTransmitter()
+        driver.start()
+        runCurrent()
+        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+
+        driver.clearStoredDevice()
+
+        assertThat(bonding.removed).containsExactly(DeviceId(ADDRESS) to false)
+    }
+
+    /** With no transmitter stored there is no bond to remove. */
+    @Test fun clearStoredDeviceWithNoTransmitterRemovesNoBond(): Unit = harness.run { driver ->
+        val bonding = FakeBleBonding(harness.central)
+        harness.central.bonding = bonding
+        harness.storeLogin(USERNAME, PASSWORD, model = "E3")
+
+        driver.clearStoredDevice()
+
+        assertThat(bonding.removed).isEmpty()
     }
 
     /** An E3 used without a login: the stored login and its cloud queue go, and the paired transmitter connects. */

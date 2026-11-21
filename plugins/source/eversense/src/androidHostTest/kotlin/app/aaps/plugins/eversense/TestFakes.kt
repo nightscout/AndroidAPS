@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.core.interfaces.pump.ble.BleFailure
 import app.aaps.core.interfaces.pump.ble.BleLink
 import app.aaps.core.interfaces.pump.ble.BleResult
+import app.aaps.core.interfaces.pump.ble.BondState
 import app.aaps.core.interfaces.pump.ble.CharacteristicId
 import app.aaps.core.interfaces.pump.ble.CharacteristicProperty
 import app.aaps.core.interfaces.pump.ble.ConnectOptions
@@ -40,6 +41,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlin.time.Duration
 
@@ -127,7 +129,9 @@ internal fun e3Frame(responseId: Byte, vararg payload: Byte): ByteArray = WireEn
 internal class FakeBleCentral : BleCentral {
 
     override val adapterState = MutableStateFlow(AdapterState.ON)
-    override val bonding: BleBonding? = null
+
+    /** Null as on iOS; a [FakeBleBonding] as on Android */
+    override var bonding: BleBonding? = null
 
     /** The options of each connect, in order. */
     val connects = mutableListOf<ConnectOptions>()
@@ -157,6 +161,21 @@ internal class FakeBleCentral : BleCentral {
 
     fun acceptConnects() {
         answer = { device -> BleResult.Ok(newLink(device).also { links += it }) }
+    }
+}
+
+/** Android's bonding, recording what the driver removes and whether the link was still up then. */
+internal class FakeBleBonding(private val central: FakeBleCentral) : BleBonding {
+
+    /** Each removed device, with true when a link to it was still up at that moment */
+    val removed = mutableListOf<Pair<DeviceId, Boolean>>()
+
+    override fun bondState(device: DeviceId): Flow<BondState> = emptyFlow()
+    override suspend fun createBond(device: DeviceId, timeout: Duration): BleResult<Unit> = BleResult.Ok(Unit)
+
+    override suspend fun removeBond(device: DeviceId): BleResult<Unit> {
+        removed += device to central.links.any { it.device == device && it.isUp }
+        return BleResult.Ok(Unit)
     }
 }
 
