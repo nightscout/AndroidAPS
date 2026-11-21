@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="biometric_title">Godkendelse påkrævet</string>
-    <string name="biometric_description">Placér fingeren på fingeraftrykslæseren for at bekræfte din identitet</string>
-    <string name="settings_protection">Indstillinger beskyttelse</string>
-    <string name="application_protection">Applikation beskyttelse</string>
-    <string name="bolus_protection">Bolus beskyttelse</string>
+    <string name="biometric_description">Placer fingeren på fingeraftrykslæseren for at bekræfte din identitet</string>
+    <string name="settings_protection">Beskyttelse af indstillinger</string>
+    <string name="application_protection">Beskyttelse af appen</string>
+    <string name="bolus_protection">Bolusbeskyttelse</string>
     <string name="protection_timeout_title">Adgangskode og PIN-fastholdelse [s]</string>
     <string name="protection_timeout_summary">Tid før adgangskoden eller PIN skal indtastes</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->
-    <string name="unsecure_fallback_biometric">Usikkert Tilbagefald</string>
-    <string name="unsecure_fallback_descriotion_biometric">For at være effektiv har biometrisk beskyttelse brug for en primær adgangskode i tilfælde af tilbagefald.\n\nAngiv venligst en primær adgangskode!</string>
+    <string name="unsecure_fallback_biometric">Usikkert tilbagefald</string>
+    <string name="unsecure_fallback_descriotion_biometric">For at være effektiv har biometrisk beskyttelse brug for en hovedadgangskode i tilfælde af tilbagefald.\n\nAngiv venligst en hovedadgangskode!</string>
     <string name="password_set">Adgangskode angivet!</string>
     <string name="datastore_password_cleared">Gemt eksportadgangskode slettet!</string>
     <string name="pin_set">PIN angivet!</string>
