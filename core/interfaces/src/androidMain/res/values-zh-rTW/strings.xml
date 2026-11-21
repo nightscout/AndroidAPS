@@ -18,25 +18,13 @@
     <string name="days_ago">%1$.1f 天前</string>
     <string name="days_ago_round">%1$.0f 天前</string>
     <plurals name="plurals_day_hour_ago">
-        <item quantity="other">One
-%1$s 天 %2$s 小時前
-Other
-
-%1$s 天 %2$s 小時前</item>
+        <item quantity="other">%1$s 天 %2$s 小時前</item>
     </plurals>
     <plurals name="plurals_hour_ago">
-        <item quantity="other">One
-%1$s 小時前
-
-Other
-%1$s 小時前</item>
+        <item quantity="other">%1$s 小時前</item>
     </plurals>
     <plurals name="plurals_minute_ago">
-        <item quantity="other">One
-剛剛
-
-Other
-%1$s 分鐘前</item>
+        <item quantity="other">%1$s 分鐘前</item>
     </plurals>
     <string name="seconds_ago">幾秒前</string>
     <string name="in_days">%1$.0f 天內</string>
