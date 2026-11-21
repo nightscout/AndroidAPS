@@ -3,6 +3,9 @@
     <string name="executing_right_now">Командата се изпълнява в момента</string>
     <string name="smb_being_delivered">В момента се доставя SMB. Опитайте отново, когато приключи.</string>
     <string name="basal_value_below_minimum">Базалните стойности са под минимума. Не е зададен профил!</string>
+    <string name="concentration_change_failed_title">Смяната на инсулина е неуспешна</string>
+    <string name="concentration_change_failed">Новият инсулин е в помпата, но AAPS не успя да запише профила в нея. Помпата доставя грешно количество инсулин. Разкачете или свалете помпата сега, проверете КЗ и при нужда поставете инсулин по друг начин. Свържете помпата отново едва след като профилът е записан.</string>
+    <string name="concentration_change_pending">Профилът с новия инсулин все още не е записан в помпата. Не може да се доставя инсулин, докато профилът не бъде записан.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Базалният профил в помпата е обновен. Помпата закръглява базала до собствената си стъпка: подава %1$s на ден вместо %2$s.</string>
     <string name="basal_reported_far_from_profile">Помпата отчита базал, който е далеч от профила. AAPS запазва базала от профила. Проверете базалните стойности в помпата.</string>
     <!--       Stats -->
