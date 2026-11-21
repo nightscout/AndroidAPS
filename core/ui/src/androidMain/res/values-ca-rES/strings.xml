@@ -121,7 +121,7 @@
     <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">Objectius</string>
     <string name="please_wait">Espereu si us plau…</string>
-    <string name="stop">Stop</string>
+    <string name="stop">Aturar</string>
     <string name="stop_pressed">STOP PREMUT</string>
     <string name="invalid_profile">Perfil no vàlid!</string>
     <string name="no_profile_set">CAP PERFIL DEFINIT</string>
@@ -150,7 +150,7 @@
     <string name="dia_long_label">Durada de l\'acció de la insulina</string>
     <string name="ic_long_label">Ràtio insulina:carbohidrats</string>
     <string name="isf_long_label">Factor de sensibilitat a la insulina</string>
-    <string name="basal_long_label">Ràtio de basal</string>
+    <string name="basal_long_label">Taxa basal</string>
     <string name="target_long_label">Objectiu de glucèmia</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
@@ -164,7 +164,7 @@
     <string name="disableloop">Desactivar llaç</string>
     <string name="disabled_loop">Llaç desactivat</string>
     <string name="resumeloop">Reprendre llaç</string>
-    <string name="suspendloop">Aturar el llaç</string>
+    <string name="suspendloop">Suspendre el llaç</string>
     <string name="notification">Avís</string>
     <string name="noprofile">Encara cap perfil carregat des de NS</string>
     <string name="exists">existeix</string>
@@ -315,7 +315,7 @@
     <string name="selected_insulin">Insulina seleccionada: %1$s</string>
     <string name="record_insulin_hint">Si introduïu insulina administrada amb ploma, seleccioneu a continuació el tipus d\'insulina correcte. La dosi sempre és en unitats internacionals.</string>
     <!--       Stats -->
-    <string name="average">Mitja</string>
+    <string name="average">Mitjana</string>
     <string name="tir">Temps en rang</string>
     <string name="below" comment="below &quot;in range&quot;">Per sota</string>
     <string name="in_range">En rang</string>
@@ -345,7 +345,7 @@
     <string name="careportal_announcement_message">Avís: %1$s</string>
     <string name="careportal_note_message">Nota : %1$s</string>
     <string name="careportal_question_message">Pregunta: %1$s</string>
-    <string name="careportal_exercise_message">Exercici : %1$s</string>
+    <string name="careportal_exercise_message">Esport : %1$s</string>
     <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Canvi de cànula : %1$s</string>
     <string name="careportal_pump_site_change">Canvi de cànula</string>
     <string name="cgm_sensor_insert">Inserció del sensor</string>
@@ -600,8 +600,8 @@
     <string name="timedetection">Detecció de temps</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
-    <string name="uel_bolus_calculator">Calculador de bolus</string>
-    <string name="uel_bolus_advisor">CALCULADORA DE BOLUS</string>
+    <string name="uel_bolus_calculator">CALCULADORA DE BOLUS</string>
+    <string name="uel_bolus_advisor">ASSESSOR DE BOLUS</string>
     <string name="uel_extended_bolus">BOLUS ESTÈS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
     <string name="uel_carbs">CARBS</string>
@@ -621,9 +621,9 @@
     <string name="uel_reconnect">RECONNECTAR</string>
     <string name="uel_disconnect">DESCONNECTAR</string>
     <string name="uel_resume">REPRENDRE</string>
-    <string name="uel_suspend">ATURAR</string>
+    <string name="uel_suspend">SUSPENDRE</string>
     <string name="uel_hw_pump_allowed">BOMBA HW PERMESA</string>
-    <string name="uel_clear_pairing_keys">ESBORRAR CLAUS DE SINCRONITZACIÓ</string>
+    <string name="uel_clear_pairing_keys">ESBORRAR CLAUS D\'EMPARELLAMENT</string>
     <string name="uel_accepts_temp_basal">ACCEPTA BASAL TEMP</string>
     <string name="uel_cancel_temp_basal">CANCEL·LAR BASAL TEMP</string>
     <string name="uel_cancel_bolus">CANCEL·LAR BOLUS</string>
@@ -653,7 +653,7 @@
     <string name="uel_food_removed">ÀPAT ELIMINAT</string>
     <string name="uel_profile_removed">PERFIL ELIMINAT</string>
     <string name="uel_profile_switch_removed">CANVI PERFIL ELIMINAT</string>
-    <string name="uel_restart_events_removed">EVENTS DE REINICI ELIMINATS</string>
+    <string name="uel_restart_events_removed">ESDEVENIMENTS DE REINICI ELIMINATS</string>
     <string name="uel_treatment_removed">TRACTAMENT ELIMINAT</string>
     <string name="uel_tt_removed">OBJECTIU TEMP ELIMINAT</string>
     <string name="uel_ns_paused">NS EN PAUSA</string>
@@ -681,7 +681,7 @@
     <string name="uel_otp_reset">RESTABLIR OTP</string>
     <string name="uel_stop_sms">ATURAR SMS</string>
     <string name="uel_export_csv">EXPORTAR ENTRADES USUARI</string>
-    <string name="uel_start_aaps">INICIAR SMS</string>
+    <string name="uel_start_aaps">INICIAR AAPS</string>
     <string name="uel_exit_aaps">SORTIR</string>
     <string name="uel_plugin_enabled">PLUGIN ACTIVAT</string>
     <string name="uel_plugin_disabled">PLUGIN DESACTIVAT</string>
@@ -731,13 +731,13 @@
     <string name="errors">Errors</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
-    <string name="carbs_g">HIDRATS DE CARBONI %1$d g</string>
+    <string name="carbs_g">CARBS %1$d g</string>
     <string name="extended_bolus_u_min">BOLUS ESTÈS %1$.2f U %2$d min</string>
-    <string name="load_events">CARREGAR EVENTS</string>
+    <string name="load_events">CARREGAR ESDEVENIMENTS</string>
     <string name="clear_alarms">ESBORRAR ALARMES</string>
     <string name="deactivate">DESACTIVAR</string>
     <string name="update_time">ACTUALITZAR HORA</string>
-    <string name="load_history">CARREGAR HITORIAL %1$d</string>
+    <string name="load_history">CARREGAR HISTORIAL %1$d</string>
     <string name="load_tdds">CARREGAR TDDs</string>
     <string name="set_profile">ESTABLIR PERFIL</string>
     <string name="set_user_settings">ESTABLIR CONFIGURACIÓ DE L\'USUARI</string>
@@ -828,7 +828,7 @@
     <string name="reservoir_label">Reservori</string>
     <string name="last_connection_label">Última connexió</string>
     <string name="last_bolus_label">Darrer bolus</string>
-    <string name="base_basal_rate_label">Ràtio de basal base</string>
+    <string name="base_basal_rate_label">Taxa basal base</string>
     <string name="tempbasal_label">Basal temporal</string>
     <string name="extended_bolus_label">Bolus estès</string>
     <string name="serial_number">Nr. de sèrie</string>
@@ -847,7 +847,7 @@
     <string name="connection_error">Error de connexió de la bomba</string>
     <string name="reading_pump_history">Llegint històric bomba</string>
     <string name="password_cleared">Contrasenya esborrada!</string>
-    <string name="pairing">Sincronitzant</string>
+    <string name="pairing">Emparellament</string>
     <string name="initializing">Inicialitzant…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Advertència</string>
@@ -860,7 +860,7 @@
     <string name="history" comment="Tab/screen title for viewing past events">Historial</string>
     <string name="overview_reservoir_concentration_value_over">Queden més de %1$s</string>
     <!--    Constraints-->
-    <string name="limitingbasalratio">Limitant màx ràtio basal a %1$.2f U a causa de %2$s</string>
+    <string name="limitingbasalratio">Limitant la taxa basal màxima a %1$.2f U/h a causa de %2$s</string>
     <string name="pumplimit">límit de la bomba</string>
     <string name="limitingpercentrate">Limitant percentatge màx a %1$d%% a causa de %2$s</string>
     <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Taxa percentual %1$d%% recalculada a %2$s U/h amb la basal actual de %3$s U/h</string>
@@ -940,7 +940,7 @@
     <!-- datetime layout -->
     <string name="event_time_label">Hora de l\'esdeveniment</string>
     <!-- BluetoothDevicePreference -->
-    <string name="need_connect_permission">L\'aplicació necessita el permís del bluethoot</string>
+    <string name="need_connect_permission">L\'aplicació necessita el permís de Bluetooth</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Petició de l\'usuari</string>
     <!--    Pump pair/unpair (shared) -->
