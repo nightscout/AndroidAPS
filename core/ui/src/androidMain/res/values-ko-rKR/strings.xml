@@ -136,6 +136,7 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">인슐린이 전환되지 않았습니다: %1$s 이전 인슐린을 계속 사용합니다.</string>
     <string name="insulin_activation_unconfirmed">인슐린 전환을 확인할 수 없습니다. 주입하기 전에 프로파일에서 어떤 인슐린이 활성화되어 있는지 확인하십시오.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">인슐린이 전환되지 않았습니다. 이전 인슐린을 계속 사용합니다.\n\n%1$s</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n인슐린도 전환되지 않았습니다. 새 인슐린이 이미 펌프에 들어 있으면 펌프를 연결하지 말고 인슐린 교체를 다시 실행하십시오.</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">날짜</string>
     <string name="insulin_nickname_label">인슐린 별명</string>
@@ -1061,6 +1062,8 @@
     <string name="wiki_search_offline">문서를 검색하려면 인터넷 연결이 필요합니다</string>
     <string name="no_search_results">검색 결과가 없습니다</string>
     <string name="search_plugin_disabled">플러그인 %1$s 비활성화됨</string>
+    <string name="search_recent">최근 검색</string>
+    <string name="search_history_remove">최근 검색에서 삭제</string>
     <!--    Food Management -->
     <string name="food_management">음식</string>
     <string name="food_deleted">음식이 삭제되었습니다</string>
@@ -1107,6 +1110,7 @@
     <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">변경할 설정: %1$d. 변경된 플러그인은 다시 시작됩니다.</string>
     <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">변경할 설정: %1$d. 유지되는 펌프 설정: %2$d. 펌프는 계속 작동합니다.</string>
     <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">가져온 설정에서 이 휴대폰에 있는 펌프가 선택되지 않았습니다. 이제 %1$s이(가) 활성화되었습니다 — 펌프 설정을 확인하십시오.</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">백업에서 인슐린 목록에 추가됨: %1$s. 아직 사용되지 않습니다. 프로파일을 활성화할 때 올바른 인슐린을 선택하십시오. Nightscout가 이전 처치를 다운로드하기 전에 이 작업을 하십시오.</string>
     <string name="import_applying">설정 적용 중…</string>
     <string name="import_replace_pump_settings">펌프 설정도 교체</string>
     <string name="import_replace_pump_settings_summary">이 휴대폰과 페어링된 펌프를 유지하려면 꺼 두십시오. 같은 펌프로 새 휴대폰에 복원할 때 켜십시오.</string>
@@ -1203,5 +1207,6 @@
     <string name="units_sec">초</string>
     <string name="units_years">년</string>
     <string name="prefs_range_title">차트 표시 범위</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">펌프가 %1$s 주입 후 볼러스를 중지했습니다. 다음 볼러스 전에 펌프를 확인하십시오.</string>
     <string name="secrets_not_protected">이 컴퓨터에서 시스템 키 저장소를 찾을 수 없습니다. 설정과 마스터와의 페어링을 보호하는 키가 데이터 옆의 파일에 보관되므로, 파일 사본을 얻은 사람은 누구나 키도 얻게 됩니다. Linux에서는 키링(예: GNOME Keyring 또는 KWallet)을 설치하고 실행한 다음 AAPS를 다시 시작하십시오.</string>
 </resources>
