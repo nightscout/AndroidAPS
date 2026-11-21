@@ -17,6 +17,15 @@
     <string name="hoursago">%1$.1f시간 전</string>
     <string name="days_ago">%1$.1f일 전</string>
     <string name="days_ago_round">%1$.0f일 전</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="other">%1$s일 %2$s시간 전</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="other">%1$s시간 전</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="other">%1$s분 전</item>
+    </plurals>
     <string name="seconds_ago">몇 초 전</string>
     <string name="in_days">%1$.0f일 후</string>
     <string name="in_days_round">%1$.0f일 후</string>
