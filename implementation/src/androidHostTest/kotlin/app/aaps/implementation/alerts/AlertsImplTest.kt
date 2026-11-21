@@ -5,6 +5,8 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertAction
+import app.aaps.core.interfaces.alerts.AlertChoice
+import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertLifetime
 import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.AlertPlatform
@@ -110,6 +112,7 @@ class AlertsImplTest : TestBase() {
 
     private var now = 1_000_000_000L
     private var storedSilences = "[]"
+    private var storedChoices = "{}"
 
     private lateinit var notificationManager: CommonNotificationManager
     private lateinit var sut: AlertsImpl
@@ -121,6 +124,8 @@ class AlertsImplTest : TestBase() {
         whenever(rh.gs(any<TextRef>(), anyVararg())).thenReturn("text")
         whenever(preferences.get(StringNonKey.AlertSilences)).thenAnswer { storedSilences }
         doAnswer { storedSilences = it.arguments[1] as String; Unit }.whenever(preferences).put(eq(StringNonKey.AlertSilences), any<String>())
+        whenever(preferences.get(StringNonKey.AlertChoices)).thenAnswer { storedChoices }
+        doAnswer { storedChoices = it.arguments[1] as String; Unit }.whenever(preferences).put(eq(StringNonKey.AlertChoices), any<String>())
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.model()).thenReturn(PumpType.GENERIC_AAPS)
         whenever(pump.serialNumber()).thenReturn("serial")
@@ -133,6 +138,18 @@ class AlertsImplTest : TestBase() {
     private fun newAlerts() =
         AlertsImpl(aapsLogger, notificationManager, alertPlatform, preferences, pumpSync, persistenceLayer, config, activePlugin, rh, eventBus, dateUtil, scope)
 
+    /** A kind for the tests, named after the alert's key unless a test gives its own. */
+    private data class TestKind(
+        override val source: String,
+        override val origin: AlertOrigin,
+        val name: String,
+        override val isProtected: Boolean = false
+    ) : AlertKind {
+
+        override val id: String get() = "$source.$name"
+        override val title: TextRef get() = TextRef.Literal(name)
+    }
+
     private fun alert(
         key: String = "occlusion",
         severity: AlertSeverity = AlertSeverity.CRITICAL,
@@ -140,9 +157,10 @@ class AlertsImplTest : TestBase() {
         source: String = "pump",
         origin: AlertOrigin = AlertOrigin.PUMP,
         action: AlertAction? = null,
-        lifetime: AlertLifetime = AlertLifetime.CONDITION
+        lifetime: AlertLifetime = AlertLifetime.CONDITION,
+        kind: AlertKind = TestKind(source, origin, key)
     ) = Alert(
-        source = source, origin = origin, key = key, severity = severity, title = TextRef.Literal(key), raisedAt = raisedAt,
+        kind = kind, key = key, severity = severity, title = TextRef.Literal(key), raisedAt = raisedAt,
         action = action, lifetime = lifetime
     )
 
@@ -206,6 +224,79 @@ class AlertsImplTest : TestBase() {
 
         verifyNoPumpAnnouncement()
         verifyNoAppAnnouncement()
+    }
+
+    // ---- the user's choice per kind (`_docs/ALARMS.md`, section 6) ------------------------------
+
+    private val occlusion = TestKind("pump", AlertOrigin.PUMP, "occlusion")
+
+    private fun verifyPumpAnnouncement() = verifyBlocking(pumpSync) {
+        insertTherapyEventIfNewWithTimestamp(eq(500L), eq(TE.Type.ANNOUNCEMENT), anyOrNull(), anyOrNull(), any(), any())
+    }
+
+    @Test
+    fun `a silent kind shows a card with no sound and no alarm screen, and is still announced`() {
+        sut.setChoice(occlusion, AlertChoice.SILENT)
+
+        sut.raise(alert(kind = occlusion))
+        scope.runCurrent()
+
+        // Not the alarm tier: an URGENT card is only the card of an alert that rings
+        assertThat(card().level).isEqualTo(NotificationLevel.IMPORTANT)
+        assertThat(card().sound).isNull()
+        assertThat(alertPlatform.screens).isEmpty()
+        assertThat(sut.sounding).isNull()
+        verifyPumpAnnouncement()
+    }
+
+    @Test
+    fun `an alert of a kind that is off shows nothing, but stays active and is announced`() {
+        sut.setChoice(occlusion, AlertChoice.OFF)
+
+        sut.raise(alert(kind = occlusion))
+        scope.runCurrent()
+
+        assertThat(cards()).isEmpty()
+        assertThat(alertPlatform.screens).isEmpty()
+        // Its raiser still sees it, and resolves it as any other
+        assertThat(sut.active.value.map { it.key }).containsExactly("occlusion")
+        verifyPumpAnnouncement()
+    }
+
+    @Test
+    fun `a protected kind rings whatever was chosen`() {
+        val stopped = TestKind("pump", AlertOrigin.PUMP, "occlusion", isProtected = true)
+        sut.setChoice(stopped, AlertChoice.OFF)
+
+        sut.raise(alert(kind = stopped))
+
+        assertThat(sut.choices.value).isEmpty()
+        assertThat(card().level).isEqualTo(NotificationLevel.URGENT)
+        assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
+        assertThat(alertPlatform.screens).containsExactly("occlusion")
+    }
+
+    @Test
+    fun `a choice changed while the alert is active applies at once`() {
+        sut.raise(alert(kind = occlusion))
+        assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
+
+        sut.setChoice(occlusion, AlertChoice.OFF)
+        assertThat(cards()).isEmpty()
+
+        sut.setChoice(occlusion, AlertChoice.RING)
+        assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
+        assertThat(sut.choices.value).isEmpty()
+    }
+
+    @Test
+    fun `the choices are kept for the next start`() {
+        sut.setChoice(occlusion, AlertChoice.SILENT)
+
+        val restarted = newAlerts()
+        assertThat(restarted.choices.value).containsExactly(occlusion.id, AlertChoice.SILENT)
+        restarted.raise(alert(kind = occlusion))
+        assertThat(card().sound).isNull()
     }
 
     @Test

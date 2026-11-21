@@ -1,10 +1,13 @@
 package app.aaps.implementation.ui
 
 import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertChoice
+import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertLifetime
 import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -41,6 +44,8 @@ class UiInteractionImplTest : TestBase() {
         private val _active = MutableStateFlow<List<Alert>>(emptyList())
         override val active: StateFlow<List<Alert>> = _active
         override var sounding: Alert? = null
+        override val choices: StateFlow<Map<String, AlertChoice>> = MutableStateFlow(emptyMap())
+        override fun setChoice(kind: AlertKind, choice: AlertChoice) {}
         val raised = mutableListOf<Alert>()
         val silenced = mutableListOf<Pair<String, String>>()
         val snoozed = mutableListOf<Triple<String, String, Int>>()
@@ -137,11 +142,30 @@ class UiInteractionImplTest : TestBase() {
 
     /** The app's own alarm: [Alerts] writes its announcement as the app's, not under the pump (see `AlertsImplTest`). */
     @Test
-    fun `an alarm is an alert of the app`() {
-        sut.runAlarm("bolus", "Bolus failed", "AAPS")
+    fun `an alarm is an alert of the app, of the kind its key names`() {
+        sut.runAlarm(UiInteraction.KEY_COMMAND_FAILED, "Bolus failed", "AAPS")
 
+        assertThat(raised().kind).isEqualTo(CoreAlert.COMMAND_FAILED)
         assertThat(raised().source).isEqualTo(UiInteraction.SOURCE)
         assertThat(raised().origin).isEqualTo(AlertOrigin.APP)
+    }
+
+    /** The user can silence a failed command, but not an insulin change that left the wrong basal running. */
+    @Test
+    fun `an insulin change that failed is a protected kind`() {
+        sut.runAlarm(UiInteraction.KEY_INSULIN_CHANGE_FAILED, "Insulin change failed", "AAPS")
+
+        assertThat(raised().kind).isEqualTo(CoreAlert.INSULIN_CHANGE_FAILED)
+        assertThat(raised().kind.isProtected).isTrue()
+    }
+
+    /** A pump driver that has no kinds of its own yet: the app cannot tell which of its alarms are safe to silence. */
+    @Test
+    fun `an alarm of a driver without kinds is protected`() {
+        sut.runAlarm("danars-time-diff", "Time differs", "Dana-i/RS")
+
+        assertThat(raised().kind).isEqualTo(CoreAlert.PUMP_DRIVER_ALARM)
+        assertThat(raised().kind.isProtected).isTrue()
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -202,13 +226,13 @@ class UiInteractionImplTest : TestBase() {
     @Test
     fun `muting snoozes the alert that is ringing`() {
         alerts.sounding = Alert(
-            source = "pump", origin = AlertOrigin.PUMP, key = "occlusion", severity = AlertSeverity.CRITICAL,
+            kind = CoreAlert.PUMP_DRIVER_ALARM, key = "occlusion", severity = AlertSeverity.CRITICAL,
             title = TextRef.Literal("Occlusion"), raisedAt = 500L
         )
 
         sut.muteAlarm(5, "Mute 5 min")
 
-        assertThat(alerts.snoozed).containsExactly(Triple("pump", "occlusion", 5))
+        assertThat(alerts.snoozed).containsExactly(Triple(UiInteraction.SOURCE, "occlusion", 5))
         verify(notificationManager, never()).muteAllAlarms()
     }
 

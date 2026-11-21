@@ -3,9 +3,9 @@ package app.aaps.implementation.ui
 import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertAction
 import app.aaps.core.interfaces.alerts.AlertLifetime
-import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -89,9 +89,8 @@ class UiInteractionImpl(
         aapsLogger.debug(LTag.CORE, "Alarm $key: $title - $status (sound=$sound)")
         alerts.raise(
             Alert(
-                source = UiInteraction.SOURCE,
-                // The app's own alarm: its announcement is not filed under the pump.
-                origin = AlertOrigin.APP,
+                // The app's own kind for this alarm; it is filed as the app's, not under the pump
+                kind = CoreAlert.ofRunAlarmKey(key),
                 key = key,
                 // Always critical: every caller of runAlarm is telling the user that something they rely on did
                 // not happen, and the alarm screen and the ringing card are exactly what they always got.

@@ -130,5 +130,8 @@ enum class StringNonKey(
     // The alerts the user silenced, and until when (Alerts). The key keeps its first name. Kept so a restart does not ring them before
     // the silence ends. Not exportable: the alerts belong to this install and its pump.
     AlertSilences(key = "pump_alert_silences", defaultValue = "[]", exportable = false),
+    // What the user chose for each kind of alert on this phone (Alerts): Silent or Off by kind id, Ring is not stored.
+    // Exported with this phone's settings; not synced, because each phone decides whether it rings.
+    AlertChoices(key = "alert_choices", defaultValue = "{}", exportable = true),
 
 }

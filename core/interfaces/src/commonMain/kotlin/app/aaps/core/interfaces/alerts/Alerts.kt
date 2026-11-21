@@ -59,6 +59,44 @@ enum class AlertOrigin {
     APP
 }
 
+/**
+ * A kind of alert, as the user sees it in the alert settings. On each phone the user chooses [AlertChoice] per kind
+ * (`_docs/ALARMS.md`, section 6). Each raiser has its own catalogue: [CoreAlert] for the app, one for each driver.
+ */
+interface AlertKind {
+
+    /** Unique in the whole app and stable: the user's choice is stored under it. Never change it. */
+    val id: String
+
+    /** Who raises alerts of this kind: "aaps", or a driver's id ("carelevo"). */
+    val source: String
+
+    /** What kind of raiser that is; it decides how the announcement is written. */
+    val origin: AlertOrigin
+
+    /** Its name in the alert settings. */
+    val title: TextRef
+
+    /**
+     * A safety kind: urgent low, or insulin delivery stopped or not safe. It always rings: the user cannot set it to
+     * Silent or Off. A ringing one is still silenced for a while, as every alert.
+     */
+    val isProtected: Boolean
+}
+
+/** What the user chose for a kind of alert, on this phone only. */
+enum class AlertChoice {
+
+    /** The default: as its severity says. */
+    RING,
+
+    /** A card only: no sound, no alarm screen, and the watch is not told. */
+    SILENT,
+
+    /** Not shown. It is still written to the log and the history. */
+    OFF
+}
+
 /** A step the user can start from the alert, for example "clear the alarm on the patch" or "+5 min". */
 class AlertAction(
     val label: TextRef,
@@ -70,10 +108,8 @@ class AlertAction(
 )
 
 class Alert(
-    /** Who raised it: a driver ("carelevo", "eversense"), or "aaps" for the app's own alarms. */
-    val source: String,
-    /** What kind of raiser that is; it decides how the announcement is written. */
-    val origin: AlertOrigin,
+    /** Which kind it is: the user's choice for that kind decides whether it rings, and it names the raiser. */
+    val kind: AlertKind,
     /** Stable id inside [source]. Raising the same key again updates the alert; it does not ring again. */
     val key: String,
     val severity: AlertSeverity,
@@ -116,7 +152,14 @@ class Alert(
      * error, the eat reminder and the plain alarm, and would otherwise all sound the same.
      */
     val sound: AlarmSound? = null
-)
+) {
+
+    /** Who raised it: a driver ("carelevo", "eversense"), or "aaps" for the app's own alarms. */
+    val source: String get() = kind.source
+
+    /** What kind of raiser that is; it decides how the announcement is written. */
+    val origin: AlertOrigin get() = kind.origin
+}
 
 /**
  * The one way to tell the user about something that needs an answer: a pump's alert, a CGM's, or the app's own. It
@@ -125,8 +168,20 @@ class Alert(
  */
 interface Alerts {
 
-    /** Every alert raised and not resolved yet, in the order they were raised. */
+    /**
+     * Every alert raised and not resolved yet, in the order they were raised. Also one the user turned off
+     * ([AlertChoice.OFF]): it is still there, only not shown, so its raiser resolves it as any other.
+     */
     val active: StateFlow<List<Alert>>
+
+    /** The user's choices on this phone, by [AlertKind.id]. A kind that is not in it rings. */
+    val choices: StateFlow<Map<String, AlertChoice>>
+
+    /**
+     * Sets what this phone does with alerts of [kind], and applies it at once to the ones that are active. A protected
+     * kind always rings, so the call is ignored for it.
+     */
+    fun setChoice(kind: AlertKind, choice: AlertChoice)
 
     /**
      * The alert whose card is ringing now, or null.

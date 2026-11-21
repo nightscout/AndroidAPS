@@ -76,10 +76,16 @@ interface UiInteraction {
         /** The source every alarm of the app's own is raised under, as a pump driver uses its own name. */
         const val SOURCE = "aaps"
 
-        /** A command the pump did not carry out - a bolus, an insulin change. */
+        /** A command the user started that the pump did not carry out, for example a bolus. */
         const val KEY_COMMAND_FAILED = "command-failed"
+
+        /** A new insulin is in the pump, but its basal program could not be written ([app.aaps.core.interfaces.alerts.CoreAlert.INSULIN_CHANGE_FAILED]). */
+        const val KEY_INSULIN_CHANGE_FAILED = "insulin-change-failed"
 
         /** The "time to eat" timer. */
         const val KEY_EAT_REMINDER = "eat-reminder"
+
+        /** The Alarm action of an automation rule. */
+        const val KEY_AUTOMATION_ALARM = "automation-timer"
     }
 }

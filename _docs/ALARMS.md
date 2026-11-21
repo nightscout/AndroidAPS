@@ -127,13 +127,24 @@ Alerts keep their three severities: CRITICAL, WARNING, INFO. The list of cards h
 The user can make a kind of alert silent, or turn it off. Example: a Combo profile update takes minutes, and a try
 that fails rings before the next try succeeds.
 
-- **A catalogue of alert kinds.** Each kind has a stable id, a title, its severity and what the user may change. The
-  kinds are enums that implement one small interface (`AlertKind`): `CoreAlert` in core for the core, `"bg"` and
-  `"nightscout"`, and one enum per driver (`CarelevoAlert`, `EversenseAlert`). Core does not list the drivers' kinds:
-  `NotificationId` shows what that costs (119 entries in one core enum, many of them for one driver). An alert
-  carries its kind, not a free string.
+- **A catalogue of alert kinds.** Each kind (`AlertKind`) has a stable id, its source and origin, a title, and whether
+  it is protected; the severity stays on each alert. Each module has its own catalogue: `CoreAlert` in core for the
+  core, `"bg"` and `"nightscout"`, and one per driver. Core does not list the drivers' kinds: `NotificationId` shows
+  what that costs (119 entries in one core enum, many of them for one driver). An alert carries its kind, and its
+  source and origin come from it. Built 2026-11-22:
+  - `CoreAlert` has only the kinds that are alerts today (command failed, insulin change failed, the eat reminder,
+    the automation alarm). The core's other alarms join it as they move to alerts. A pump driver that still rings
+    through `runAlarm` with its own key gets one protected kind, "pump driver alarm", because the app cannot tell
+    which of its alarms are safe to silence.
+  - Carelevo has one kind per title the user sees, not per alarm cause: several causes share a title, and two rows
+    of the same name, one of them silenced, would only confuse. Its id is the title's string name. A kind is protected
+    when one of its causes is of the WARNING or ALERT tier, which the driver treats as "the insulin stops or the patch
+    ends"; so only its NOTICE kinds can be made silent or turned off.
+  - The ids are pinned by tests (`CoreAlertTest`, `CarelevoAlertKindTest`): a renamed id would drop what users chose.
 - **Three choices per kind:** Ring (the default), Silent (a card, no sound, no alarm screen, the watch not told), Off
-  (not shown).
+  (not shown). A silent card is IMPORTANT at most, never URGENT. An alert that is off stays in `Alerts.active`, so its
+  raiser resolves it as any other. A choice changed while the alert is active applies at once. Stored in
+  `alert_choices` (exported with the phone's settings, never synced).
 - **Per phone.** Each phone chooses for itself; the choice is not synced. For the BG alarms, "each phone decides
   whether it rings" is this same choice.
 - **The safety kinds are protected.** Urgent low, and insulin delivery stopped or not safe (occlusion, empty
@@ -356,7 +367,8 @@ The order matters: step 3 must not come before step 2.
    END" comments.
 
 1. The core: the rename to `Alerts` (done 2026-11-21), the announcement under its own source (done 2026-11-22:
-   `AlertOrigin`, one announcement per alert, on the master only), the alert kinds (`AlertKind`, `CoreAlert`) with the user's Ring, Silent or Off
+   `AlertOrigin`, one announcement per alert, on the master only), the alert kinds and the choices (done 2026-11-22;
+   the settings screen and the overview mark are next) (`AlertKind`, `CoreAlert`) with the user's Ring, Silent or Off
    per phone and its settings screen, the silence length and its choice, the announcement under its own source, the
    scheduled alerts.
 2. The BG alarms, stale data included, on the master and the clients, with the shared silence. The escalation comes

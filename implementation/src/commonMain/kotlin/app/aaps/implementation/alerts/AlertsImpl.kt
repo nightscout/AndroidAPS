@@ -5,6 +5,8 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertChoice
+import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertLifetime
 import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.AlertPlatform
@@ -95,19 +97,47 @@ class AlertsImpl(
     private val lock = AapsLock()
     private val entries = LinkedHashMap<Pair<String, String>, Entry>()
     private var silences: MutableList<Silence>? = null
+    private var choiceMap: MutableMap<String, AlertChoice>? = null
     private var observing = false
 
     private val _active = MutableStateFlow<List<Alert>>(emptyList())
     override val active: StateFlow<List<Alert>> = _active.asStateFlow()
 
+    private val _choices = MutableStateFlow<Map<String, AlertChoice>>(emptyMap())
+    private val choicesView = _choices.asStateFlow()
+    override val choices: StateFlow<Map<String, AlertChoice>>
+        get() {
+            lock.withLock { storedChoices() }
+            return choicesView
+        }
+
     override val sounding: Alert?
         get() = lock.withLock {
             val now = dateUtil.now()
             entries.values
-                .filter { it.card != null && it.silencedUntil <= now && it.alert.severity == AlertSeverity.CRITICAL }
+                .filter {
+                    it.card != null && it.silencedUntil <= now && it.alert.severity == AlertSeverity.CRITICAL &&
+                        choiceFor(it.alert) == AlertChoice.RING
+                }
                 .maxByOrNull { it.alert.raisedAt }
                 ?.alert
         }
+
+    override fun setChoice(kind: AlertKind, choice: AlertChoice) {
+        if (kind.isProtected) {
+            aapsLogger.warn(LTag.NOTIFICATION, "Alert kind ${kind.id} is protected, it always rings: $choice ignored")
+            return
+        }
+        lock.withLock {
+            val map = storedChoices()
+            if (choice == AlertChoice.RING) map.remove(kind.id) else map[kind.id] = choice
+            saveChoices(map)
+            _choices.value = map.toMap()
+            aapsLogger.info(LTag.NOTIFICATION, "Alert kind ${kind.id} is now $choice on this phone")
+            // At once for what is active now; a kind set back to Ring rings again, without opening the alarm screen
+            entries.values.filter { it.alert.kind.id == kind.id }.forEach { showCard(it, ring = false) }
+        }
+    }
 
     override fun raise(alert: Alert) {
         startObserving()
@@ -213,11 +243,22 @@ class AlertsImpl(
             notificationManager.dismiss(old)
         }
         val alert = entry.alert
+        val choice = choiceFor(alert)
+        if (choice == AlertChoice.OFF) {
+            // Not shown on this phone; the announcement still records it, and its raiser still resolves it
+            if (ring) aapsLogger.info(LTag.NOTIFICATION, "Alert ${alert.source}/${alert.key} not shown: ${alert.kind.id} is off on this phone")
+            entry.silenceEnd?.cancel()
+            entry.silenceEnd = null
+            return
+        }
+        val quiet = choice == AlertChoice.SILENT
         val silenced = entry.silencedUntil > dateUtil.now()
-        val level = when (alert.severity) {
-            AlertSeverity.CRITICAL -> NotificationLevel.URGENT
-            AlertSeverity.WARNING  -> NotificationLevel.IMPORTANT
-            AlertSeverity.INFO     -> NotificationLevel.NORMAL
+        val level = when {
+            // A silent kind is never the alarm tier: an URGENT card is only the card of an alert that rings
+            quiet && alert.severity != AlertSeverity.INFO -> NotificationLevel.IMPORTANT
+            alert.severity == AlertSeverity.CRITICAL      -> NotificationLevel.URGENT
+            alert.severity == AlertSeverity.WARNING       -> NotificationLevel.IMPORTANT
+            else                                          -> NotificationLevel.NORMAL
         }
         entry.card = notificationManager.post(
             id = NotificationId.ALERT,
@@ -225,7 +266,7 @@ class AlertsImpl(
             level = level,
             date = alert.raisedAt,
             validTo = 0L,
-            sound = if (alert.severity == AlertSeverity.CRITICAL && !silenced) alert.sound ?: AlarmSound.ALARM else null,
+            sound = if (alert.severity == AlertSeverity.CRITICAL && !silenced && !quiet) alert.sound ?: AlarmSound.ALARM else null,
             actions = alert.action?.let { listOf(NotificationAction(it.label) { act(alert.source, alert.key) }) } ?: emptyList(),
             validityCheck = null,
             // What the system notification and the watch announce it as. A pump alert passes nothing and is named by
@@ -235,6 +276,7 @@ class AlertsImpl(
             tellWatch = alert.tellWatch
         )
         when {
+            quiet                                                   -> Unit
             silenced                                                -> scheduleSilenceEnd(entry)
             !ring                                                   -> Unit
             alert.severity == AlertSeverity.CRITICAL -> platform.showAlarmScreen(alert)
@@ -406,6 +448,34 @@ class AlertsImpl(
     private fun storedSilence(alert: Alert): Long {
         val now = dateUtil.now()
         return storedSilences().firstOrNull { it.source == alert.source && it.key == alert.key && it.raisedAt == alert.raisedAt && it.until > now }?.until ?: 0L
+    }
+
+    // ---- the user's choices ---------------------------------------------------------------------
+
+    /** Caller holds [lock]. The stored choices, read on first use: building the object graph reads nothing. */
+    private fun storedChoices(): MutableMap<String, AlertChoice> =
+        choiceMap ?: loadChoices().also {
+            choiceMap = it
+            _choices.value = it.toMap()
+        }
+
+    /** Caller holds [lock]. What this phone does with [alert]; a protected kind always rings. */
+    private fun choiceFor(alert: Alert): AlertChoice =
+        if (alert.kind.isProtected) AlertChoice.RING else storedChoices()[alert.kind.id] ?: AlertChoice.RING
+
+    private fun loadChoices(): MutableMap<String, AlertChoice> = try {
+        Json.parseToJsonElement(preferences.get(StringNonKey.AlertChoices)).jsonObject
+            .mapNotNull { (id, value) -> AlertChoice.entries.firstOrNull { it.name == value.jsonPrimitive.content }?.let { id to it } }
+            .filter { it.second != AlertChoice.RING }
+            .toMap(mutableMapOf())
+    } catch (e: Exception) {
+        aapsLogger.error(LTag.NOTIFICATION, "Stored alert choices unreadable, every kind rings", e)
+        mutableMapOf()
+    }
+
+    private fun saveChoices(map: Map<String, AlertChoice>) {
+        val json = buildJsonObject { map.forEach { (id, choice) -> put(id, choice.name) } }
+        preferences.put(StringNonKey.AlertChoices, json.toString())
     }
 
     /** Caller holds [lock]. */

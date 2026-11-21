@@ -3,6 +3,7 @@ package app.aaps.implementation.alerts
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.resources.TextResolver
@@ -69,9 +70,17 @@ class IosAlertPlatformTest {
     private val scope = CoroutineScope(StandardTestDispatcher() + SupervisorJob())
     private val platform = IosAlertPlatform(SilentLogger, LiteralResolver, { throw AlertsAsked() }, scope)
 
+    /** A pump's kind of alert, under [source]. */
+    private class PumpKind(override val source: String) : AlertKind {
+
+        override val id: String = "$source.occlusion"
+        override val origin: AlertOrigin = AlertOrigin.PUMP
+        override val title: TextRef = TextRef.Literal("Occlusion")
+        override val isProtected: Boolean = false
+    }
+
     private fun alert(source: String = "carelevo", key: String = "occlusion") = Alert(
-        source = source,
-        origin = AlertOrigin.PUMP,
+        kind = PumpKind(source),
         key = key,
         severity = AlertSeverity.CRITICAL,
         title = TextRef.Literal("Occlusion"),

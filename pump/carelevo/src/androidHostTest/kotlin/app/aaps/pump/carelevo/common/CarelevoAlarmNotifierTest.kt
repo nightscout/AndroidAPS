@@ -4,6 +4,8 @@ import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertChoice
+import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.keys.interfaces.IntPreferenceKey
@@ -57,6 +59,8 @@ class CarelevoAlarmNotifierTest {
         private val _active = MutableStateFlow<List<Alert>>(emptyList())
         override val active: StateFlow<List<Alert>> = _active
         override val sounding: Alert? get() = _active.value.lastOrNull()
+        override val choices: StateFlow<Map<String, AlertChoice>> = MutableStateFlow(emptyMap())
+        override fun setChoice(kind: AlertKind, choice: AlertChoice) {}
         val raised = mutableListOf<Alert>()
         val resolved = mutableListOf<String>()
 

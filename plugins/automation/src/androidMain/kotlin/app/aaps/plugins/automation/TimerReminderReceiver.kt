@@ -46,6 +46,6 @@ class TimerReminderReceiver : MetroBroadcastReceiver() {
          * it rather than stacking a card the user has to answer twice. They all say the same thing - "the timer you
          * set has run out" - and only the text differs.
          */
-        const val KEY = "automation-timer"
+        const val KEY = UiInteraction.KEY_AUTOMATION_ALARM
     }
 }
