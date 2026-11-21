@@ -6,6 +6,7 @@
     <string name="previous_button">Назад</string>
     <string name="setupwizard_finish">ГОТОВО</string>
     <string name="welcome">Добро пожаловать</string>
+    <string name="welcometosetupwizard">Добро пожаловать в мастер установки. Он проведет вас через весь процесс настройки.</string>
     <string name="end_user_license_agreement">лицензионное соглашение с пользователем</string>
     <string name="end_user_license_agreement_text">НЕ ДОЛЖНО ИСПОЛЬЗОВАТЬСЯ ДЛЯ ПРИНЯТИЯ МЕДИЦИНСКИХ РЕШЕНИЙ. ПРОГРАММА НЕ ДАЕТ ГАРАНТИЙ В РАМКАХ СУЩЕСТВУЮЩЕГО ЗАКОНОДАТЕЛЬСТВА. ПРЕДОСТАВЛЯЕТСЯ \"КАК ЕСТЬ\" БЕЗ ЯВНЫХ ИЛИ СКРЫТЫХ ГАРАНТИЙ ВКЛЮЧАЯ НО НЕ ОГРАНИЧИВАЯСЬ ВОЗМОЖНОСТЬЮ КОММЕРЧЕСКОГО ИСПОЛЬЗОВАНИ ИЛИ СООТВЕТСТВИЯ КАКИМ-ЛИБО ЦЕЛЯМ. ВСЕ РИСКИ ЛОЖАТСЯ НА ВАС. В СЛУЧАЕ НЕРАБОТОСПОСОБНОСТИ ПРОГРАММЫ ВЫ НЕСЕТЕ ВСЕ РАСХОДЫ СВЯЗАННЫЕ С ОБСЛУЖИВАНИЕМ РЕМОНТОМ ИЛИ КОРРЕКТИРОВКОЙ.  </string>
     <string name="end_user_license_agreement_i_understand">я понимаю и принимаю</string>
@@ -19,12 +20,14 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Введите максимальные значения вашего приема пищи \n</string>
     <string name="syncinfotext">Синхронизировать данные в облако. Сейчас можно пропустить эту часть, но без клиента Nightscout или Tidepool не получится пройти все цели.</string>
+    <string name="status_label">Статус:</string>
     <string name="diawarning">Напоминание: новые профили инсулина требуют как минимум 5 часов длительности действия DIA. 5-6 часовая DIA эквивалентна трехчасовой на старых профилях.</string>
     <string name="profile">Профиль</string>
     <string name="doprofileswitch">Переключить профиль</string>
-    <string name="exitwizard">Пропустить Мастер настройки</string>
+    <string name="exitwizard">Пропустить мастер установки</string>
     <string name="setupwizard_sensitivity_description">Плагин чувствительности Sensitivity применяется для определения чувствительности к инсулину и вычисления активных углеводов COB. Дополнительная информация:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/ru/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Выберите один из доступных алгоритмов. Они расположены от старого к новому. Более новый алгоритм обычно более мощный. Не забудьте прочитать документацию OpenAPS и настроить алгоритм перед использованием.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Сконфигурируйте RileyLink. После выбора RileyLink можно будет продолжить установку если состояние RileyLink \"Соединено\". Это может занять минуту.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Примечание:</b> После инициализации помпы можно продолжить настройку\n</string>
     <string name="startobjective">Начните первую Цель</string>
@@ -33,6 +36,20 @@
     <string name="setupwizard_profile_info">Создайте профиль с указанием БС, УК, ФЧИ и целевой ГК. Вы сможете добавить дополнительные профили позднее.</string>
     <string name="setupwizard_permissions_info">Для корректной работы AAPS требуется доступ к хранилищу и разрешения. Пожалуйста, предоставьте необходимые разрешения ниже.</string>
     <string name="setupwizard_pump_riley_link_status">Статус RileyLink:</string>
+    <string name="setupwizard_client_control_title">Управление с клиента</string>
+    <string name="setupwizard_client_control_info">Выполните сопряжение клиентских устройств, чтобы они могли отправлять подписанные команды на этот основной телефон через Nightscout. Это новый рекомендуемый способ удаленного управления AAPS.</string>
+    <string name="setupwizard_ns_receive_info">Прием терапии и данных напрямую из Nightscout (менее безопасный способ) теперь по умолчанию выключен. Откройте настройки ниже, только если он вам все еще нужен. Он необходим, если вы вводите данные через NS или сторонние приложения.</string>
+    <string name="setupwizard_open_ns_receive_settings">Прием данных из Nightscout</string>
+    <string name="setupwizard_pair_with_master_info">Выполните сопряжение этого клиента с основным AAPS, чтобы он мог отправлять команды по защищенному каналу. После сопряжения настройка завершена.</string>
+    <string name="setupwizard_setup_from_master_title">Настройка с основного телефона</string>
+    <string name="setupwizard_setup_from_master_info">На основном телефоне откройте «Авторизованные клиенты» и добавьте этот телефон с помощью QR-кода. Сканирование настроит Nightscout с отдельным токеном и может также выполнить сопряжение телефона. После сканирования настройка завершена. Если QR-кода нет, пропустите этот шаг и настройте Nightscout сами.</string>
+    <string name="setupwizard_scan_master_qr">Сканировать QR-код</string>
+    <string name="setupwizard_pairing_ws_warning">Для сопряжения нужно соединение Nightscout WebSocket. Вернитесь к предыдущему шагу и сначала включите его.</string>
+    <string name="setupwizard_pairing_status_master">Сопряженные клиенты: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Сопряженных клиентов пока нет</string>
+    <string name="setupwizard_pairing_status_client_paired">Сопряжено с основным телефоном</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Сопряжение еще не выполнено</string>
+    <string name="setupwizard_instance_name_title">Кто пользуется этим телефоном?</string>
     <string name="readstatus">Статус \'чтение\'</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Это устройство не поддерживает меню оптимизации батареи - могут быть проблемы с производительностью.</string>
@@ -40,6 +57,7 @@
     <string name="configbuilder_pump_description">Какой помпой вы хотели бы пользоваться с AAPS?</string>
     <string name="configbuilder_aps_description">Какой алгоритм ИПЖ должен выполнять подстройку терапии?</string>
     <string name="configbuilder_sync_description">Плагины загрузки данных, синхронизации и коммуникации.</string>
+    <string name="configbuilder_bgsource_description">Откуда AAPS должен получать данные?</string>
     <string name="configbuilder_sensitivity_description">Какой алгоритм чувствительности следует использовать?</string>
     <string name="allow_hardware_pump_text">Внимание: Если вы активируете подключение к невиртуальной помпе, AAPS скопирует настройки базала в профиль помпы, перезаписывая существующие настройки, хранящиеся в ней. Убедитесь, что настройки базала в AAPS корректны. Если вы не уверены или не хотите перезаписать настройки базала на помпу, нажмите отменить и повторите подключение в другое время.</string>
     <string name="nsclient_version_does_not_match">Версия AAPSClient не совпадает с версией AAPS. Обновите версию.</string>
