@@ -296,10 +296,14 @@
     <string name="pref_title_fill_button_3">Tlačidlo plnenia 3</string>
     <!-- DoubleKey: Safety preferences -->
     <string name="pref_title_max_bolus">Maximálny bolus</string>
+    <string name="treatmentssafety_maxbolus_summary">Zvolený vek pacienta obmedzuje túto hodnotu. Nastavenie vyššej hodnoty tu nemá žiadny účinok.</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Maximálna bazálna dávka</string>
+    <string name="openapsma_max_basal_summary">Táto hodnota sa v OpenAPS označuje ako maximálny bazál (max-basal)\nZvolený vek pacienta obmedzuje túto hodnotu. Nastavenie vyššej hodnoty nemá žiadny účinok.</string>
     <string name="pref_title_smb_max_iob">Max IOB pre SMB</string>
+    <string name="openapssmb_max_iob_summary">Táto hodnota sa v OpenAPS označuje ako Max IOB\nOpenAPS nebude podávať ďalší inzulín, ak je aktuálna hodnota IOB vyššia ako táto hodnota.\nZvolený vek pacienta obmedzuje túto hodnotu. Nastavenie vyššej hodnoty nemá žiadny účinok.</string>
     <string name="pref_title_ama_max_iob">Max IOB pre AMA</string>
+    <string name="openapsma_max_iob_summary">Táto hodnota sa v OpenAPS označuje ako Max IOB\nToto je maximálne množstvo inzulínu v [U], ktoré môže APS podať naraz.\nZvolený vek pacienta obmedzuje túto hodnotu. Nastavenie vyššej hodnoty nemá žiadny účinok.</string>
     <string name="pref_title_max_daily_multiplier">Maximálny bezpečnostný násobiteľ najvyššieho denného bazálu</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Štandardná hodnota: 3. Toto je kľúčový bezpečnostný limit OpenAPS. Obmedzuje vaše bazály na 3-násobok vašej najvyššej bazálnej dávky. Pravdepodobne to nebudete musieť meniť, ale mali by ste vedieť, že práve o tom hovorí pravidlo bezpečnostných limitov „3x max denný; 4x aktuálny“.</string>
     <string name="pref_title_current_basal_multiplier">Bezpečnostný násobiteľ aktuálneho bazálu</string>
