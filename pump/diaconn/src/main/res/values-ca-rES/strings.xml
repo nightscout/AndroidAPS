@@ -30,8 +30,8 @@
     <string name="selectedpump">Bomba seleccionada</string>
     <string name="bolus_step">Increment bolus</string>
     <string name="basal_step">Increment basal</string>
-    <string name="pairfirst">Sincronitzeu la bomba amb el telèfon!</string>
-    <string name="processinghistory">Processant event</string>
+    <string name="pairfirst">Emparelleu la bomba amb el telèfon!</string>
+    <string name="processinghistory">Processant esdeveniment</string>
     <string name="diaconn_g8_history_tempbasal">Basal temporal</string>
     <string name="diaconng8_pump_settings">Configuració bomba Diaconn</string>
     <string name="diaconn_g8_pumpalarm">So</string>
@@ -41,7 +41,7 @@
     <string name="diaconn_g8_pumpalarm_intensity_low">baix</string>
     <string name="diaconn_g8_pumpalarm_intensity_middle">mitjà</string>
     <string name="diaconn_g8_pumpalarm_intensity_high">alt</string>
-    <string name="diaconn_g8_screentimeout">Temps pantalla LCD encesa [second]</string>
+    <string name="diaconn_g8_screentimeout">Temps pantalla LCD encesa [segons]</string>
     <string name="diaconn_g8_language">Idioma</string>
     <string name="diaconn_g8_bolus_speed">Velocitat bolus</string>
     <string name="diaconn_g8_pumplang_chiness">Xinès</string>
@@ -56,10 +56,10 @@
     <string name="needbatteryreplace">Cal canviar la pila</string>
     <string name="needinsullinreplace">Cal canviar la insulina</string>
     <string name="diaconn_g8_loginsulinchange_title">Enregistrar canvi de reservori</string>
-    <string name="diaconn_g8_loginsulinchange_summary">Afegir event \"Canvi d\'insulina\" al portal de cures quan es detecti a l\'historial</string>
+    <string name="diaconn_g8_loginsulinchange_summary">Afegir l\'esdeveniment \"Canvi d\'insulina\" al portal de cures quan es detecti a l\'historial</string>
     <string name="diaconn_g8_logcanulachange_title">Enregistrar canvi d\'agulla</string>
-    <string name="diaconn_g8_logcanulachange_summary">Afegir event \"Canvi de cànula\" al portal de cures quan es detecti a l\'historial</string>
-    <string name="diaconn_g8_logbatterychange_summary">Afegir event \"Canvi de pila\" al portal de cures quan es detecti a l\'historial</string>
+    <string name="diaconn_g8_logcanulachange_summary">Afegir l\'esdeveniment \"Canvi de cànula\" al portal de cures quan es detecti a l\'historial</string>
+    <string name="diaconn_g8_logbatterychange_summary">Afegir l\'esdeveniment \"Canvi de pila\" al portal de cures quan es detecti a l\'historial</string>
     <string name="diaconn_g8_logbatterychange_title">Enregistrar canvi de pila</string>
     <string name="diaconn_g8_logsyncinprogress">Sincronització del registre en curs</string>
     <string name="diaconn_g8_loginsulinshorage">Manca d\'insulina</string>
@@ -115,7 +115,7 @@
     <string name="diaconn_g8_errorcode_14">No es pot injectar perquè supera la quantitat d\'injecció màxima d\'avui.</string>
     <string name="diaconn_g8_errorcode_15">La injecció basal es pot fer quan s\'hagi completat la configuració de la basal.</string>
     <string name="diaconn_g8_logtubechange_title">Enregistrar canvi de tub</string>
-    <string name="diaconn_g8_logtubechange_summary">Afegir event \"Canvi de tub\" com a nota quan es detecti a l\'historial</string>
+    <string name="diaconn_g8_logtubechange_summary">Afegir l\'esdeveniment \"Canvi de tub\" com a nota quan es detecti a l\'historial</string>
     <string name="diaconn_g8_logtempstart">Inici basal temporal</string>
     <string name="diaconn_g8_errorcode_32">Mentre l\'LGS està en marxa, la injecció està restringida</string>
     <string name="diaconn_g8_errorcode_33">L\'estat LGS és ON, l\'ordre ON es rebutja.</string>
