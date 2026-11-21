@@ -28,7 +28,7 @@
         <item quantity="other">%1$s часов назад</item>
     </plurals>
     <plurals name="plurals_minute_ago">
-        <item quantity="one">только что</item>
+        <item quantity="one">%1$s минуту назад</item>
         <item quantity="few">%1$s минуты назад</item>
         <item quantity="many">%1$s минут назад</item>
         <item quantity="other">%1$s минут назад</item>
