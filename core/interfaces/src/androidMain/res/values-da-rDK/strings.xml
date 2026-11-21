@@ -7,7 +7,7 @@
     <string name="bolus_delivered_so_far">%1$.2f IE / %2$.2f IE leveret</string>
     <string name="bolus_delivered_successfully">Bolus på %1$.2f IE er leveret</string>
     <!-- PumpPluginBase -->
-    <string name="pump_driver_changed" comment="26 characters max for translation">Pumpe driver ændret.</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pumpedriver ændret.</string>
     <!--    DateUtil-->
     <string name="minago">%1$d min siden</string>
     <string name="secago">%1$d sek siden</string>
@@ -17,6 +17,18 @@
     <string name="hoursago">%1$.1f t siden</string>
     <string name="days_ago">%1$.1f dage siden</string>
     <string name="days_ago_round">%1$.0f dage siden</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">%1$s dag %2$s timer siden</item>
+        <item quantity="other">%1$s dage %2$s timer siden</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">%1$s time siden</item>
+        <item quantity="other">%1$s timer siden</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">for et øjeblik siden</item>
+        <item quantity="other">%1$s minutter siden</item>
+    </plurals>
     <string name="seconds_ago">sekunder siden</string>
     <string name="in_days">om %1$.0f dage</string>
     <string name="in_days_round">om %1$.0f dage</string>
@@ -41,7 +53,7 @@
     <!-- Rx -->
     <string name="connecting_for">Opretter forbindelse i %1$d s</string>
     <string name="handshaking">Forbindelse verificeres</string>
-    <string name="connected">Tilsuttet</string>
+    <string name="connected">Tilsluttet</string>
     <string name="authorized">Godkendt</string>
     <string name="disconnecting">Afbryder</string>
     <string name="waiting_for_disconnection">Venter på afbrydelse</string>
@@ -58,7 +70,7 @@
     <string name="pref_show_cob">Vis COB</string>
     <string name="pref_show_delta">Vis Delta</string>
     <string name="pref_show_detailed_delta">Vis detaljeret Delta</string>
-    <string name="pref_show_avgdelta">Show GnsDelta</string>
+    <string name="pref_show_avgdelta">Vis GnsDelta</string>
     <string name="pref_show_tempTarget">Vis midlertidigt mål</string>
     <string name="pref_show_reservoir_level">Vis reservoirniveau</string>
     <string name="pref_show_phone_battery">Vis Telefonbatteri</string>
@@ -79,7 +91,7 @@
     <string name="pref_show_complication5">Vis komplikation 5</string>
     <string name="default_custom_watchface_comment">Standard urskive, du kan klikke på EKSPORTÉR URSKIVE-knappen for at generere en skabelon</string>
     <string name="default_custom_watchface_external_comment">Standardurskive med eksterne visninger til følgere. Du kan klikke på knappen EKSPORTÉR URSKIVE for at lave en skabelon</string>
-    <string name="wear_default_watchface">Standard Urskive</string>
+    <string name="wear_default_watchface">Standardurskive</string>
     <string name="wear_more_watchfaces">Flere urskiver</string>
     <string name="temp_basal_absolute_rate">%1$.2f E/t @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
@@ -112,7 +124,7 @@
     <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="carbs">Kulhydrater</string>
     <string name="alarminxmin">Kør alarm om %1$d min</string>
-    <string name="pumpsuspended">Pumpe er afbrudt</string>
+    <string name="pumpsuspended">Pumpe sat på pause</string>
     <string name="loopsuspended">Loop suspenderet</string>
     <string name="pump_disconnected">Pumpe afbrudt</string>
     <string name="basalprofilenotaligned">Basalværdier er ikke tilpasset hele timer: %1$s</string>
@@ -121,7 +133,7 @@
     <string name="profile_ins_units_per_hour">E/t</string>
     <string name="profile_carbs_per_unit">g/E</string>
     <string name="mins">%1$d min</string>
-    <string name="record">Registrér</string>
+    <string name="record">Registrer</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">FORLÆNGET KH</string>
     <string name="profile_low_target">Nedre målværdi for profilen</string>
