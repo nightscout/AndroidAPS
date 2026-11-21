@@ -1,6 +1,7 @@
 package app.aaps.desktop.shell.di
 
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
@@ -16,11 +17,16 @@ import app.aaps.desktop.shell.secure.KeyVault
 import app.aaps.implementation.logging.AAPSLoggerDesktop
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.impl.utils.JvmDateFormatPlatform
+import app.aaps.workflow.CalculationExecutor
+import app.aaps.workflow.LazyCalculationExecutor
+import app.aaps.workflow.PostCalculationRunner
+import app.aaps.workflow.PrepareGraphDataRunner
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * The bindings the desktop graph needs that only a desktop can supply.
@@ -64,6 +70,21 @@ object DesktopPlatformBindings {
     @Provides
     @SingleIn(AppScope::class)
     fun config(): Config = DesktopClientConfig()
+
+    /**
+     * The calculation executor, deferred so the graph accepts the runner cycle - see
+     * [LazyCalculationExecutor].
+     *
+     * No wake lock: a desktop does not freeze a running app the way a locked phone does.
+     */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun calculationExecutor(
+        @ApplicationScope scope: CoroutineScope,
+        aapsLogger: AAPSLogger,
+        prepare: () -> PrepareGraphDataRunner,
+        post: () -> PostCalculationRunner
+    ): CalculationExecutor = LazyCalculationExecutor(scope, aapsLogger, { prepare() }, { post() }, wakeLock = null)
 
     @Provides
     @SingleIn(AppScope::class)

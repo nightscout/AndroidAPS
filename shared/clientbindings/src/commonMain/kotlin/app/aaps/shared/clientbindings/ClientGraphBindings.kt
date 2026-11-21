@@ -49,10 +49,6 @@ import app.aaps.plugins.sync.nsclientV3.ws.SocketNsConnection
 import app.aaps.shared.impl.logging.LImpl
 import app.aaps.shared.impl.rx.bus.RxBusImpl
 import app.aaps.ui.compose.history.HistoryScope
-import app.aaps.workflow.CalculationExecutor
-import app.aaps.workflow.LazyCalculationExecutor
-import app.aaps.workflow.PostCalculationRunner
-import app.aaps.workflow.PrepareGraphDataRunner
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.IntKey
@@ -282,23 +278,6 @@ object ClientGraphBindings {
     @Provides
     @SingleIn(AppScope::class)
     fun nsConnection(connection: SocketNsConnection): NsConnection = connection
-
-    /**
-     * The calculation executor, deferred so the graph accepts the runner cycle - see
-     * [LazyCalculationExecutor].
-     *
-     * No wake lock. Desktop has none, and on iOS the closest thing only holds off idle sleep, which
-     * does not keep a suspended app running. That is a question for the iOS background work as a
-     * whole, not for this executor.
-     */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun calculationExecutor(
-        @ApplicationScope scope: CoroutineScope,
-        aapsLogger: AAPSLogger,
-        prepare: () -> PrepareGraphDataRunner,
-        post: () -> PostCalculationRunner
-    ): CalculationExecutor = LazyCalculationExecutor(scope, aapsLogger, { prepare() }, { post() }, wakeLock = null)
 
     /** Bolus progress. Stated rather than annotated, for the same reason as the calculator. */
     @Provides

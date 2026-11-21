@@ -59,6 +59,7 @@ import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.rememberOwnViewModelStoreOwner
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.utils.gitRemoteShort
+import app.aaps.implementation.lifecycle.IosBackgroundTime
 import app.aaps.implementation.lifecycle.IosProtectionLifecycle
 import app.aaps.implementation.logging.AAPSLoggerIos
 import app.aaps.implementation.plugin.IosPermissionState
@@ -287,6 +288,11 @@ private fun startApp(nsSocketFactory: NsSocketFactory, crashReporter: CrashRepor
     // collection on for precisely the users whose settings screen never shows them the row.
     crashReporter.setCollectionEnabled(graph.fabricPrivacy.fabricEnabled())
     setBuildIdentityKeys(crashReporter, graph.config)
+
+    // Lets the calculation and the pump queue ask iOS for background time, so a run that a Bluetooth
+    // wake started on a locked phone is not frozen half way. Before the start sequence, which can
+    // start both; here because only the real app has a `UIApplication` - see `IosBackgroundTime`.
+    IosBackgroundTime.install(logger)
 
     // Before anything can render: a screen composed before this shows string names rather than
     // words, and the plugin descriptions the start sequence builds carry names. The desktop does the

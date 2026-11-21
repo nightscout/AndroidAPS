@@ -1,6 +1,7 @@
 package app.aaps.ios.shell.di
 
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
@@ -9,18 +10,24 @@ import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.implementation.lifecycle.IosCalculationWakeLock
 import app.aaps.implementation.logging.AAPSLoggerIos
 import app.aaps.implementation.notifications.IosSystemNotificationPlatform
 import app.aaps.ios.shell.config.IosClientConfig
 import app.aaps.ios.shell.prefs.IosStorage
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.impl.utils.IosDateFormatPlatform
+import app.aaps.workflow.CalculationExecutor
+import app.aaps.workflow.LazyCalculationExecutor
+import app.aaps.workflow.PostCalculationRunner
+import app.aaps.workflow.PrepareGraphDataRunner
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import kotlin.time.Clock
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * The bindings every iOS graph needs, in one place.
@@ -59,6 +66,23 @@ object IosPlatformBindings {
     /** The wall clock, for timers that wait for a time of day (`delayUntil`). */
     @Provides
     fun clock(): Clock = Clock.System
+
+    /**
+     * The calculation executor, deferred so the graph accepts the runner cycle - see
+     * [LazyCalculationExecutor].
+     *
+     * With background time from iOS ([IosCalculationWakeLock]): the loop runs at the end of a
+     * calculation, and on a locked phone iOS froze the run about 10 seconds after the reading that
+     * started it.
+     */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun calculationExecutor(
+        @ApplicationScope scope: CoroutineScope,
+        aapsLogger: AAPSLogger,
+        prepare: () -> PrepareGraphDataRunner,
+        post: () -> PostCalculationRunner
+    ): CalculationExecutor = LazyCalculationExecutor(scope, aapsLogger, { prepare() }, { post() }, IosCalculationWakeLock())
 
     /** Dates through the iOS formatter, so this is the production class rather than a stand-in. */
     @Provides
