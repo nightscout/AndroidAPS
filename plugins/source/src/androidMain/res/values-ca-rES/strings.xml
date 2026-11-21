@@ -1,22 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
+    <string name="ns_client_bg">Glucèmia NSClient</string>
     <string name="description_source_ns_client">Descarrega dades de glucèmia des de Nightscout</string>
+    <string name="source_xdrip">Glucèmia xDrip+</string>
+    <string name="description_source_xdrip">Rebre valors de glucèmia de xDrip+ i apps compatibles (Juggluco, etc.).</string>
     <string name="dexcom_app_patched">Dexcom (BYODA)</string>
     <string name="description_source_dexcom">Rebre els valors de glucosa de l\'aplicació Dexcom \'Build Your Own Device\'.</string>
+    <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Rebre valors de glucèmia de Glimp.</string>
+    <string name="mm640g">MM640g</string>
     <string name="description_source_mm640g">Rebre valors de glucèmia del 600SeriesAndroidUploader.</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Rebre valors de glucèmia de l\'app Poctech</string>
     <string name="glunovo">Glunovo</string>
     <string name="description_source_glunovo">Rebre valors de l\'app Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Rebre valors de l\'app Intelligo</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="description_source_tomato">Rebre valors de glucèmia de l\'app Tomato (dispositiu MiaoMiao)</string>
+    <string name="random_bg">Glucèmia aleatòria</string>
+    <string name="description_source_random_bg">Generar dades de glucèmia aleatòries (només mode demo)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
+    <string name="description_source_patched_syai_tag_app">Rebre dades de glucèmia de l\'app Syai/Ottai.</string>
     <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">Rebre dades de glucèmia de l\'app Sibionic SI modificada o de l\'app Sibionics.</string>
     <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">Rebre dades de glucèmia de l\'app Sino modificada.</string>
     <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Rebre valors de glucèmia de l\'app Instara.</string>
     <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Sol·licitud de dades històriques d\'Instara</string>
+    <string name="pref_summary_instara_history_request">Sol·licitar en segon pla les dades històriques que puguin faltar</string>
     <!-- Notification Reader -->
+    <string name="notification_reader">Lector de notificacions</string>
+    <string name="description_source_notification_reader">Llegir valors de glucèmia de les notificacions de les apps oficials de CGM (Dexcom, Medtronic, Eversense, etc.).</string>
     <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">L\'aplicació necessita permís per rebre dades de CGM de l\'app Dexcom</string>
+    <string name="permission_notification_listener_title">Accés a les notificacions</string>
+    <string name="permission_notification_listener_description">Necessari per llegir valors de glucèmia de les notificacions de l\'app del CGM</string>
+    <string name="aidex">App de CGM MicroTech</string>
+    <string name="description_source_aidex">Rebre valors de CGM de LinX, LinX vista, Equil G. Smart 2, Diaexpert 2, etc.</string>
+    <string name="aidex_sensor_expired">Sensor caducat, substituïu-lo per un sensor nou</string>
+    <string name="aidex_sensor_error">Error del sensor, comproveu l\'estat del sensor</string>
+    <string name="aidex_sensor_stabilizing">El sensor s\'està estabilitzant, espereu…</string>
+    <string name="aidex_sensor_replace">Cal substituir el sensor, canvieu-lo per un sensor nou com més aviat millor</string>
+    <string name="aidex_signal_lost">S\'ha perdut el senyal del sensor, comproveu la connexió</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">lectura duplicada</string>
 </resources>
