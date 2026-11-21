@@ -4,11 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,9 +16,7 @@ import kotlinx.coroutines.launch
  * The Eversense pairing wizard, as a pump's: before you start, the account, the transmitter, the connection. Opened
  * at the account step alone to sign in again after the server refused the stored login.
  */
-// Registers itself: @ViewModelKey infers the key from the class. Unscoped, so each wizard gets its own.
-@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
-@ViewModelKey
+// Registered in EversenseRegistration. Unscoped, so each wizard gets its own.
 @Stable
 @Inject
 class EversensePairingViewModel(private val pairing: EversensePairing) : ViewModel() {
@@ -43,6 +37,10 @@ class EversensePairingViewModel(private val pairing: EversensePairing) : ViewMod
         val busy: Boolean = false,
         val signInError: SignInResult? = null,
         val devices: List<ScannedDevice> = emptyList(),
+        /** The scan runs; false once its ten seconds are over */
+        val scanning: Boolean = false,
+        /** Why the ended scan could find nothing, when it is known */
+        val scanProblem: ScanProblem? = null,
         val transmitter: ScannedDevice? = null,
         val pairResult: PairResult? = null,
         val finished: Boolean = false
@@ -141,13 +139,18 @@ class EversensePairingViewModel(private val pairing: EversensePairing) : ViewMod
 
     fun startScan() {
         stopScan()
-        _state.update { it.copy(devices = emptyList()) }
-        scanJob = viewModelScope.launch { pairing.scan().collect { found -> _state.update { it.copy(devices = found) } } }
+        _state.update { it.copy(devices = emptyList(), scanning = true, scanProblem = null) }
+        scanJob = viewModelScope.launch {
+            pairing.scan().collect { found -> _state.update { it.copy(devices = found) } }
+            // The scan ended by itself (a stopped one ends by cancellation and never gets here)
+            _state.update { it.copy(scanning = false, scanProblem = if (it.devices.isEmpty()) pairing.scanProblem() else null) }
+        }
     }
 
     fun stopScan() {
         scanJob?.cancel()
         scanJob = null
+        _state.update { it.copy(scanning = false) }
     }
 
     fun select(transmitter: ScannedDevice) {

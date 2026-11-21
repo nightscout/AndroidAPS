@@ -1,10 +1,11 @@
 package app.aaps.plugins.eversense.util
 
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.plugins.eversense.storage.EversenseStore
+import app.aaps.plugins.eversense.MemoryStore
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mockingDetails
 import org.mockito.kotlin.mock
@@ -18,13 +19,12 @@ class SessionKeyNotLoggedTest {
 
     @Test fun derivingTheSessionKeyDoesNotLogIt() {
         val logger = mock<AAPSLogger>()
-        val generator = KeyPairGenerator.getInstance("EC").apply { initialize(ECGenParameterSpec("secp256r1")) }
-        val local = generator.generateKeyPair()
-        val remote = generator.generateKeyPair().public as ECPublicKey
-        val crypto = EversenseCrypto365Util(mock<EversenseStore>(), logger)
-        EversenseCrypto365Util::class.java.getDeclaredField("ephemPrivate").apply { isAccessible = true; set(crypto, local.private) }
-        EversenseCrypto365Util::class.java.getDeclaredField("ephemSalt").apply { isAccessible = true; set(crypto, ByteArray(8) { 1 }) }
+        // The transmitter's side of the key agreement, as X || Y
+        val remote = KeyPairGenerator.getInstance("EC").apply { initialize(ECGenParameterSpec("secp256r1")) }.generateKeyPair().public as ECPublicKey
         fun coordinate(value: BigInteger) = value.toByteArray().takeLast(32).toByteArray().let { ByteArray(32 - it.size) + it }
+        val crypto = EversenseCrypto365Util(MemoryStore(), logger)
+        assertTrue(crypto.generateKeyPairIfNotExists())
+        assertNotNull(crypto.generateEphem())
 
         crypto.generateSessionKey(coordinate(remote.w.affineX) + coordinate(remote.w.affineY))
 

@@ -7,25 +7,38 @@ The user guide is the AndroidAPS wiki. Setup is the pairing wizard on the plugin
 
 ## Module
 
-Everything Eversense is in this module, as a pump driver has its own.
+Everything Eversense is in this module, as a pump driver has its own. All of it is in commonMain and runs on Android
+and iOS; the platforms add only small parts.
 
 | Part | What it does | Entry points |
 | --- | --- | --- |
-| AAPS plugin (androidMain) | BG source, readings into AAPS, notices, cloud queue, calibration | `EversensePlugin` |
-| Driver (androidMain) | Bluetooth link, connection control, packets, 365 authentication, Eversense cloud (DMS) clients | `EversenseCGMPlugin`, `EversenseGattCallback`, `EversenseConnectionController` |
-| Pairing (commonMain) | The pairing wizard, the pairing card, what the user has to fix | `EversensePairing`, `EversensePairingViewModel`, `cgmAttention` |
-| Screens (androidMain) | Status and calibration tabs, placement guide | `EversenseComposeContent`, `EversensePlacementActivity` |
-| Shared AAPS code | Calibration routing and the CGM driver contract | `BgSource`, `CgmDriver`, `MasterRecordWriter` |
+| AAPS plugin | BG source, readings into AAPS, notices, cloud queue, calibration | `EversensePlugin` |
+| Driver | Connection control, one session per Bluetooth link, packets, 365 authentication | `EversenseDriver`, `EversenseSession` |
+| Eversense cloud (DMS) | Sign-in, 365 registration, upload; ktor | `DmsHttpClient`, `EversenseHttp365Util`, `EversenseHttpE3Util` |
+| Pairing | The pairing wizard, the pairing card, what the user has to fix | `EversensePairing`, `EversensePairingViewModel`, `cgmAttention` |
+| Screens | Status and Glucose tabs; pairing wizard and placement guide inside the same screen | `EversenseComposeContent`, `EversensePlacementScreen` |
+| Shared AAPS code | Bluetooth, calibration routing and the CGM driver contract | `BleCentral`, `BgSource`, `CgmDriver`, `MasterRecordWriter` |
+
+| Platform part | Android | iOS |
+| --- | --- | --- |
+| Bluetooth | `AndroidBleCentral` (in `:implementation`) | `IosBleCentral` (in `:implementation`) |
+| HTTP engine (`dmsHttpEngine`) | OkHttp | Darwin (NSURLSession) |
+| Crypto (cryptography-kotlin) | JCA | CryptoKit and CommonCrypto |
+| Link closed by the transmitter (`closedByTransmitter`) | GATT status 19 | `CBError.peripheralDisconnected` (7) |
+| Store of the first driver to import (`EversenseLegacyStore`) | SharedPreferences `EversenseCGMManager` | none |
+| Registration | `EversenseAndroidRegistration` | `EversenseIosRegistration` |
+
+Both registrations include `EversenseRegistration` (plugin, pairing, store, ViewModels). The desktop includes neither,
+so it has no Eversense at all rather than one that cannot work.
 
 The driver reads and writes `EversenseStore`, not the AAPS preferences directly; `EversenseStateStore` maps it to one
-stored JSON object. The pairing code is shared so that an iOS driver would only implement `EversensePairing`; on iOS
-and desktop `NoEversenseDriver` stands in, and the plugin is Android only.
+stored JSON object.
 
 ## Reading flow
 
 ```mermaid
 flowchart TD
-    T[Transmitter] --> G[Gatt callback and packets]
+    T[Transmitter] --> G[Session and packets]
     G --> C[Model communicator]
     C --> W[Watchers]
     W --> S[EversensePlugin]
@@ -43,8 +56,11 @@ value would add a sensor change.
 
 ## Connection control
 
-`EversenseConnectionController` owns whether a link is wanted and when to retry; `EversenseGattCallback` owns the
-Android link. The plugin's start and stop are the only user-facing control: there are no Connect or Disconnect buttons.
+`EversenseDriver` owns whether a link is wanted and when to retry; an `EversenseSession` owns one `BleLink`. The
+plugin's start and stop are the only user-facing control: there are no Connect or Disconnect buttons.
+
+All driver state is changed on one thread (a dispatcher with parallelism 1), so it needs no locks. Work that sends
+packets (sign-in, a sync, a calibration, a signal read) runs as a task of the session, one at a time.
 
 | State | Meaning |
 | --- | --- |
@@ -55,12 +71,21 @@ Android link. The plugin's start and stop are the only user-facing control: ther
 | READY | Usable; the data watchdog runs. |
 
 A start connects when a transmitter is paired and the link may be opened (see below). Pairing in the wizard connects.
-Retries back off through 5, 10, 20, 40 and 60 seconds; failing to open the link retries after 60 seconds; an E3
-status 19 waits 30 seconds; a 365 status 19 may reuse the GATT handle. The reconnect uses `autoConnect = false` and
-timers, which can run late while the phone sleeps (to check on a device).
+Retries back off through 5, 10, 20, 40 and 60 seconds; failing to open the link retries after 60 seconds. When the
+transmitter closes the link itself: an E3 is tried again after 30 seconds (three in a row tell the user it is not over
+the sensor); a 365 (its usual cycle) is waited for in the background (`autoConnect` on Android; iOS always waits so).
+Other connects are direct, with timers, which can run late while the phone sleeps (to check on a device).
 
-Each GATT client gets a session token, and a reused 365 handle a link generation. Late callbacks and results of an
-earlier link are dropped, and cloud work has its own generation, so a Bluetooth reconnect does not cancel an upload.
+On iOS a suspended app runs no timers, so a link lost by radio (or gone silent) is connected again at once with a
+connect that has no time limit: iOS keeps it open and wakes the app when the transmitter is back. A link the session
+closed itself (no internet for a 365 registration, a failed sign-in) waits on the timers as on Android; at once it
+would only fail again. A connect that waited for the transmitter gives the sign-in its full 3 minutes from the moment
+the link is up (`reconnectWithoutTimers`).
+
+Each link's work runs in the link's own coroutine scope, which ends with the link: nothing of an old link reaches the
+next one, and a sync cut off by a lost link stores nothing. The cloud upload gets a guarded store
+(`GuardedStore`) that closes when the driver stops or disconnects, so a sign-out cannot be undone by an upload in
+flight.
 
 | Operation | Limit |
 | --- | --- |
@@ -75,7 +100,8 @@ earlier link are dropped, and cloud work has its own generation, so a Bluetooth 
 ## Pairing, login and authentication
 
 The wizard asks for the model (E3, 365 USA, 365 other countries), checks the login with that model's server, scans
-for transmitters (names `T` and digits) and connects. The login is stored by the driver: it is not a setting and is not
+for transmitters (names `T` and digits) for 10 seconds and connects. A scan that found nothing says so, and why when
+Bluetooth is off or not allowed, with "Scan again". The login is stored by the driver: it is not a setting and is not
 exported, so a new phone pairs again. Unpair forgets the transmitter and keeps the login; sign out is only in the
 wizard.
 
@@ -116,7 +142,7 @@ sends are in six files: E3 session, register, history and calibration commands; 
 | `CalibrationPayload` | E3 and 365 calibration layouts |
 | `GlucoseDecoders` | Offsets, validity limits, trend map |
 | `NotificationAssembler` | SecureV2 fragment order and duplicates |
-| `SecureV2Cipher` | Stateless AES-CCM |
+| `SecureV2Cipher` | Stateless AES-CCM, built from the AES block (no platform offers CCM on both) |
 | `PacketTime` | System time, a fixed clock in tests |
 
 Glucose limits: E3 takes 20 to 450 mg/dL; a 365 reading and a 365 history entry 20 to 449. A 365 reading whose
@@ -145,8 +171,10 @@ The master hands the value to `EversensePlugin.calibrate` (calibration mode `SOU
 - Refused before the confirmation: no transmitter paired, or an E3 that is not ready (glucose changing too fast, too
   soon after the last one, not enough data, sensor or transmitter problem). Not known yet is left to the transmitter.
   A 365 always reads as ready.
-- The transmitter takes 40 to 400 mg/dL; the value is rounded, not truncated.
-- Not connected: reconnects first and waits up to 30 seconds.
+- The dialog starts empty for a source that calibrates itself: the sensor's own reading is no finger stick.
+- The transmitter takes 40 to 400 mg/dL (`calibrationRangeMgdl`): the dialog offers only these, and the master refuses
+  an SMS or client value outside them before the confirmation. The value is rounded, not truncated.
+- Not connected: the confirmation says so; the plugin reconnects first and waits up to 30 seconds.
 - After a calibration the overview shows a 15-minute countdown (`EversenseCalibrationBanner`). It shows that a
   calibration was sent; it is not a clinical rule.
 
@@ -164,8 +192,9 @@ minutes later.
 | Transmitter not placed | `EVERSENSE_PLACEMENT` | Three readings without signal |
 | New firmware | `EVERSENSE_FIRMWARE` | Once per version |
 
-Each has its own card, so a reminder never replaces an open alarm. An unknown alarm code right after the placement
-guide closes is dropped (a mode change, not a fault).
+Each has its own card, so a reminder never replaces an open alarm. Each transmitter alarm has its own card too: a
+repeat replaces the card of the same alarm, and a second alarm does not remove or silence the first. Alarm names are
+translated. An unknown alarm code right after the placement guide closes is dropped (a mode change, not a fault).
 
 ## Cloud upload
 
@@ -204,10 +233,12 @@ frame is logged; logs can still hold glucose and device data.
 ./gradlew.bat :app:testFullDebugUnitTest --tests "*SourceGraphTest" --tests "*PreferenceKeySnapshotTest"
 ```
 
-`src/androidHostTest/resources/protocol-reference.zip` freezes the driver of commit
+The host tests run on the JVM against the shared code; the session and the driver are tested with a fake
+`BleLink` and `BleCentral`. `src/androidHostTest/resources/protocol-reference.zip` freezes the driver of commit
 `bb0b0373cd6ccf6b935a63783cb5fcf29468e317` (156 files with pinned hashes, 109 commands). Its sources are compiled into
 the host tests only, in their own package, and `ProtocolCompatibilityTest` compares requests, frames and decoding with
-the live code. 44 commands are compared; the 65 the driver never sent are listed in `protocol-commands-removed.txt`.
+the live code, and the crypto and HTTP tests compare the 365 session (AES-CCM, ECDH, HKDF, ECDSA) and the cloud
+requests byte for byte. 44 commands are compared; the 65 the driver never sent are listed in `protocol-commands-removed.txt`.
 Decoding changed on purpose is listed in `ProtocolCompatibilityTest.decodingChangedOnPurpose` and tested in
 `DecodingFixesTest`. Never regenerate the zip from changed code to make a comparison pass. The comparison proves "same
 as before", not "right".
@@ -219,3 +250,7 @@ as before", not "right".
 - The 365 "glucose unavailable" reason field.
 - The E3 calibration time zone: sent in UTC; another implementation's note says the iOS app uses local time.
 - First registration, Bluetooth off and on, airplane mode, calibration results, placement guide, battery use.
+- The rewrite onto the shared Bluetooth layer: the write type (Android chose "without response" when the request
+  characteristic offers it; the session does the same), the MTU and the 365 reconnect in the background.
+- iOS: all of the above, never run on a transmitter yet. iOS ends a link in the background unless the app is woken by
+  Bluetooth; that needs state restoration in `IosBleCentral`, which is not there yet.

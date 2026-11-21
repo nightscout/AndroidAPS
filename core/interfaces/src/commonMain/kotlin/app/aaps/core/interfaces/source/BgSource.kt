@@ -31,6 +31,14 @@ interface BgSource {
         get() = CalibrationMode.AAPS
 
     /**
+     * The finger-stick values this source takes, in mg/dL, when it takes fewer than the calibration dialog offers, or
+     * null. The dialog and the master's check then offer only these, so a value the sensor would refuse is refused
+     * before the confirmation. Only asked in [CalibrationMode.SOURCE].
+     */
+    val calibrationRangeMgdl: ClosedFloatingPointRange<Double>?
+        get() = null
+
+    /**
      * Why a calibration cannot be taken now, or null when it can. Asked before the confirmation, so the user hears it
      * early; [calibrate] checks again. Only asked in [CalibrationMode.SOURCE].
      */

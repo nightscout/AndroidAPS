@@ -45,6 +45,9 @@ interface EversensePairing {
     /** Eversense transmitters in range, as they are found, for about ten seconds. */
     fun scan(): Flow<List<ScannedDevice>>
 
+    /** Why a scan cannot find anything now, or null: asked when a scan has ended with nothing. */
+    fun scanProblem(): ScanProblem? = null
+
     /**
      * Pairs [transmitter]: stores it, connects and waits until the link is ready - for a 365 after its online
      * registration. A transmitter paired before is forgotten.
@@ -54,6 +57,9 @@ interface EversensePairing {
     /** Forgets the transmitter and closes the link; the login stays, so a replacement pairs without signing in. */
     fun unpair()
 }
+
+/** Why a scan cannot run. */
+enum class ScanProblem { BLUETOOTH_OFF, NOT_ALLOWED }
 
 /**
  * Which Eversense, and so which Eversense server the login belongs to. The E3 and the 365 sign in at different places,

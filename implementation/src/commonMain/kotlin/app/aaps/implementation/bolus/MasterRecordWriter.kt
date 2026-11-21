@@ -432,12 +432,13 @@ class MasterRecordWriter(
     }
 
     /**
-     * A value outside what the calibration dialog offers ([calibrationRange], in the master's units). The dialog cannot
-     * give one; an SMS can ("CAL 100" with mmol/L is 1800 mg/dL), and so can a client with other units.
+     * A value outside what the calibration dialog offers ([calibrationRange], in the master's units, narrowed to what a
+     * self-calibrating source takes). The dialog cannot give one; an SMS can ("CAL 100" with mmol/L is 1800 mg/dL), and
+     * so can a client with other units.
      */
     private fun rangeRefusal(mgdl: Double): String? {
         val units = profileUtil.units
-        val range = calibrationRange(units)
+        val range = calibrationRange(units, activePlugin.activeBgSource)
         // A small margin: the value made the trip units -> mg/dL -> units, and 2.0 must not come back as 1.9999
         if (profileUtil.fromMgdlToUnits(mgdl) in (range.start - RANGE_MARGIN)..(range.endInclusive + RANGE_MARGIN)) return null
         return rh.gs(

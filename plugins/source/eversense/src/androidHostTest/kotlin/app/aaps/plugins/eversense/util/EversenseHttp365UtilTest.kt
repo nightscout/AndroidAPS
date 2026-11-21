@@ -4,6 +4,7 @@ import app.aaps.plugins.eversense.storage.EversenseStore
 import app.aaps.plugins.eversense.enums.EversenseTrendArrow
 import app.aaps.plugins.eversense.models.EversenseCGMResult
 import app.aaps.shared.tests.AAPSLoggerTest
+import kotlinx.coroutines.runBlocking
 import mockwebserver3.MockResponse
 import mockwebserver3.MockWebServer
 import org.junit.jupiter.api.AfterEach
@@ -68,7 +69,7 @@ class EversenseHttp365UtilTest {
     // ─── getOrRefreshToken ────────────────────────────────────────────────────
 
     @Test
-    fun `getOrRefreshToken returns cached token when not expired`() {
+    fun `getOrRefreshToken returns cached token when not expired`(): Unit = runBlocking {
         val futureExpiry = System.currentTimeMillis() + 600_000L // 10 minutes from now
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("cached_token_xyz")
@@ -81,7 +82,7 @@ class EversenseHttp365UtilTest {
     }
 
     @Test
-    fun `getOrRefreshToken fetches new token when cache is expired`() {
+    fun `getOrRefreshToken fetches new token when cache is expired`(): Unit = runBlocking {
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(0L)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn(null)
         whenever(prefs.getString(StorageKeys.SECURE_STATE, null)).thenReturn(
@@ -101,7 +102,7 @@ class EversenseHttp365UtilTest {
     }
 
     @Test
-    fun `getOrRefreshToken returns null when login fails`() {
+    fun `getOrRefreshToken returns null when login fails`(): Unit = runBlocking {
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(0L)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn(null)
 
@@ -113,7 +114,7 @@ class EversenseHttp365UtilTest {
     }
 
     @Test
-    fun `getOrRefreshToken refreshes token within 5 minutes of expiry`() {
+    fun `getOrRefreshToken refreshes token within 5 minutes of expiry`(): Unit = runBlocking {
         // Token expires in 4 minutes — within the 5-minute refresh window
         val nearExpiryMs = System.currentTimeMillis() + 240_000L
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(nearExpiryMs)
@@ -133,7 +134,7 @@ class EversenseHttp365UtilTest {
     // ─── uploadGlucoseReadings ────────────────────────────────────────────────
 
     @Test
-    fun `uploadGlucoseReadings posts to correct endpoint with bearer token`() {
+    fun `uploadGlucoseReadings posts to correct endpoint with bearer token`(): Unit = runBlocking {
         val futureExpiry = System.currentTimeMillis() + 600_000L
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("my_bearer_token")
@@ -164,7 +165,7 @@ class EversenseHttp365UtilTest {
     }
 
     @Test
-    fun `uploadGlucoseReadings sends correct JSON body fields`() {
+    fun `uploadGlucoseReadings sends correct JSON body fields`(): Unit = runBlocking {
         val futureExpiry = System.currentTimeMillis() + 600_000L
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("my_bearer_token")
@@ -196,7 +197,7 @@ class EversenseHttp365UtilTest {
     }
 
     @Test
-    fun `uploadGlucoseReadings sends multiple readings in one request`() {
+    fun `uploadGlucoseReadings sends multiple readings in one request`(): Unit = runBlocking {
         val futureExpiry = System.currentTimeMillis() + 600_000L
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("token")
@@ -219,7 +220,7 @@ class EversenseHttp365UtilTest {
     }
 
     @Test
-    fun `uploadGlucoseReadings does nothing when readings list is empty`() {
+    fun `uploadGlucoseReadings does nothing when readings list is empty`(): Unit = runBlocking {
         EversenseHttp365Util.uploadGlucoseReadings(aapsLogger, prefs, emptyList(), "TX99", "1.0")
 
         assertEquals(0, mockWebServer.requestCount)
@@ -232,7 +233,7 @@ class EversenseHttp365UtilTest {
      * phone. It must report failure and say how many were skipped.
      */
     @Test
-    fun `uploadGlucoseReadings reports a skip, not a success, when no reading carries raw BLE data`() {
+    fun `uploadGlucoseReadings reports a skip and not a success when no reading carries raw BLE data`(): Unit = runBlocking {
         val futureExpiry = System.currentTimeMillis() + 600_000L
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("token")
@@ -256,7 +257,7 @@ class EversenseHttp365UtilTest {
     }
 
     @Test
-    fun `uploadGlucoseReadings counts only readings that carry raw BLE data as sent`() {
+    fun `uploadGlucoseReadings counts only readings that carry raw BLE data as sent`(): Unit = runBlocking {
         val futureExpiry = System.currentTimeMillis() + 600_000L
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("token")
@@ -275,7 +276,7 @@ class EversenseHttp365UtilTest {
     }
 
     @Test
-    fun `uploadGlucoseReadings does not throw on 4xx server error`() {
+    fun `uploadGlucoseReadings does not throw on 4xx server error`(): Unit = runBlocking {
         val futureExpiry = System.currentTimeMillis() + 600_000L
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("token")
@@ -296,7 +297,7 @@ class EversenseHttp365UtilTest {
     }
 
     @Test
-    fun `uploadGlucoseReadings does not throw on 5xx server error`() {
+    fun `uploadGlucoseReadings does not throw on 5xx server error`(): Unit = runBlocking {
         val futureExpiry = System.currentTimeMillis() + 600_000L
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("token")
@@ -316,7 +317,7 @@ class EversenseHttp365UtilTest {
     }
 
     @Test
-    fun `uploadGlucoseReadings skips upload when no valid token available`() {
+    fun `uploadGlucoseReadings skips upload when no valid token available`(): Unit = runBlocking {
         // Token expired and login fails
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(0L)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn(null)
@@ -337,7 +338,7 @@ class EversenseHttp365UtilTest {
     // ─── login ───────────────────────────────────────────────────────────────
 
     @Test
-    fun `login sends correct form-encoded body`() {
+    fun `login sends correct form-encoded body`(): Unit = runBlocking {
         whenever(prefs.getString(StorageKeys.SECURE_STATE, null)).thenReturn(
             """{"username":"testuser@test.com","password":"secret123"}"""
         )
@@ -358,7 +359,7 @@ class EversenseHttp365UtilTest {
     }
 
     @Test
-    fun `login returns null on 401 response`() {
+    fun `login returns null on 401 response`(): Unit = runBlocking {
         whenever(prefs.getString(StorageKeys.SECURE_STATE, null)).thenReturn(
             """{"username":"bad@user.com","password":"wrong"}"""
         )
@@ -373,7 +374,7 @@ class EversenseHttp365UtilTest {
     // ─── timestamp formatting (guards the thread-safe ThreadLocal change) ──────
 
     @Test
-    fun `uploadGlucoseReadings formats timestamp as UTC in the expected pattern`() {
+    fun `uploadGlucoseReadings formats timestamp as UTC in the expected pattern`(): Unit = runBlocking {
         val futureExpiry = System.currentTimeMillis() + 600_000L
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("token")

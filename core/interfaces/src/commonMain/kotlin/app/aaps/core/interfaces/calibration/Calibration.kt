@@ -1,9 +1,13 @@
 package app.aaps.core.interfaces.calibration
 
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.CalibrationMode
+import kotlin.math.roundToInt
 
 interface Calibration {
 
@@ -64,3 +68,15 @@ fun ActivePlugin.isCalibrationPluginActive(): Boolean = (activeCalibration as? P
  * master takes from an SMS or a client. A value outside is a typo, and a pair made from it would bend the fit.
  */
 fun calibrationRange(units: GlucoseUnit): ClosedFloatingPointRange<Double> = if (units == GlucoseUnit.MMOL) 2.0..30.0 else 36.0..500.0
+
+/**
+ * [calibrationRange] narrowed to what [source] takes ([BgSource.calibrationRangeMgdl]) when it calibrates itself. In
+ * mmol/L the ends are rounded to the dialog's step of 0.1: the source rounds the mg/dL value it gets, so 2.2 mmol/L
+ * (39.6 mg/dL) reaches a source that takes 40 mg/dL as 40.
+ */
+fun calibrationRange(units: GlucoseUnit, source: BgSource): ClosedFloatingPointRange<Double> {
+    val all = calibrationRange(units)
+    val own = source.calibrationRangeMgdl?.takeIf { source.calibrationMode == CalibrationMode.SOURCE } ?: return all
+    fun inUnits(mgdl: Double) = if (units == GlucoseUnit.MMOL) (mgdl * Constants.MGDL_TO_MMOLL * 10).roundToInt() / 10.0 else mgdl
+    return maxOf(all.start, inUnits(own.start))..minOf(all.endInclusive, inUnits(own.endInclusive))
+}

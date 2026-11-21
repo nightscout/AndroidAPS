@@ -20,7 +20,7 @@ class PushAlarmWithDataPacketTest {
     }
 
     @Test
-    fun `alarm code comes from byte index 2, not the reserved byte at index 3`() {
+    fun `alarm code comes from byte index 2 and not the reserved byte at index 3`() {
         // [0]=0x44 header, [1]=0x03 type, [2]=14 (LOW_GLUCOSE, the real alarm code),
         // [3]=reserved (nonzero on purpose - must NOT be read as the code; empirically confirmed
         // constant/0 on real devices, but a nonzero value here proves this test doesn't pass by

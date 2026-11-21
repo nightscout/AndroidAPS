@@ -273,8 +273,9 @@ enum class NotificationId(
     EVERSENSE_PLACEMENT(NORMAL, CGM),
     EVERSENSE_FIRMWARE(INFO, CGM),
 
-    // An alarm the transmitter raised. Its own card, so a reminder below never replaces it; the level is set per alarm.
-    EVERSENSE_ALARM(NORMAL, CGM),
+    // An alarm the transmitter raised, one card per alarm: the plugin replaces only the card of the same alarm, so a
+    // second alarm never removes or silences the first. The level is set per alarm.
+    EVERSENSE_ALARM(NORMAL, CGM, allowMultiple = true),
     EVERSENSE_SENSOR_EXPIRY(NORMAL, CGM),
     EVERSENSE_BATTERY_LOW(NORMAL, CGM),
     EVERSENSE_CALIBRATION_DUE(NORMAL, CGM);

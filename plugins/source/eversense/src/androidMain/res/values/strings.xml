@@ -3,7 +3,7 @@
     <string name="source_eversense">Eversense</string>
     <string name="description_source_eversense">Eversense E3/365 driver</string>
 
-<string name="eversense_information_last_sync">START SYNC</string>
+<string name="eversense_information_last_sync">Sync now</string>
 
 <string name="eversense_calibration_action">Calibrate transmitter</string>
 
@@ -82,7 +82,7 @@
 
 <string name="eversense_status_connected_label">Connected: %1$s</string>
 
-<string name="eversense_status_battery_label">Battery: %1$d%%</string>
+<string name="eversense_status_battery" comment="%1$s=the battery level, for example 85 %, or a dash before the first sync">Battery: %1$s</string>
 
 <string name="eversense_status_insertion_label">Insertion date: %1$s</string>
 
@@ -132,4 +132,61 @@
     <string name="eversense_paired_transmitter" comment="%1$s=the transmitter name, for example T123456">Transmitter: %1$s</string>
     <string name="eversense_unpair">Unpair</string>
     <string name="eversense_unpair_confirm" comment="%1$s=the transmitter name, for example T123456">Forget transmitter %1$s? The login stays, so a replacement pairs without signing in again.</string>
+
+    <!-- Status tab -->
+    <string name="eversense_status_sensor_end" comment="%1$s=the date the sensor ends">Sensor ends: %1$s</string>
+    <string name="eversense_status_firmware" comment="%1$s=the transmitter firmware version, for example 6.03.13">Firmware: %1$s</string>
+    <string name="eversense_status_alarm" comment="%1$s=the name of an active transmitter alarm, for example Low Glucose">Alarm: %1$s</string>
+    <string name="eversense_signal_value" comment="%1$s=the signal in words, for example Good; %2$s=the signal in percent, for example 63 %">%1$s (%2$s)</string>
+    <string name="eversense_signal_none">No signal</string>
+    <string name="eversense_placement_bars" comment="For screen readers. %1$d=how many of the 5 signal bars are lit, 0 to 5">%1$d of 5 signal bars</string>
+    <string name="eversense_calibration_note_reconnect">The transmitter is not connected now. AAPS connects it first, which can take up to 30 seconds.</string>
+
+    <!-- Calibration phases -->
+    <string name="eversense_phase_warming_up">Warm-up</string>
+    <string name="eversense_phase_initialization">Initialization</string>
+    <string name="eversense_phase_daily">Daily calibration</string>
+    <string name="eversense_phase_weekly">Weekly calibration</string>
+    <string name="eversense_phase_suspicious">Calibration questionable</string>
+    <string name="eversense_phase_unknown">Unknown</string>
+    <string name="eversense_phase_debug">Debug</string>
+    <string name="eversense_phase_dropout">Sensor dropout</string>
+
+    <!-- Transmitter alarms, as the official app names them -->
+    <string name="eversense_alarm_transmitter_error">Transmitter error</string>
+    <string name="eversense_alarm_sensor_replacement">Sensor replacement</string>
+    <string name="eversense_alarm_battery_empty">Battery empty</string>
+    <string name="eversense_alarm_sensor_temperature_high">High sensor temperature</string>
+    <string name="eversense_alarm_sensor_temperature_low">Low sensor temperature</string>
+    <string name="eversense_alarm_transmitter_temperature_high">High transmitter temperature</string>
+    <string name="eversense_alarm_no_sensor">No sensor detected</string>
+    <string name="eversense_alarm_new_sensor">New sensor detected</string>
+    <string name="eversense_alarm_calibrate_now">Calibrate now</string>
+    <string name="eversense_alarm_out_of_range_low">Out of range low glucose</string>
+    <string name="eversense_alarm_out_of_range_high">Out of range high glucose</string>
+    <string name="eversense_alarm_low_glucose">Low glucose</string>
+    <string name="eversense_alarm_high_glucose">High glucose</string>
+    <string name="eversense_alarm_predicted_low">Predicted low glucose</string>
+    <string name="eversense_alarm_predicted_high">Predicted high glucose</string>
+    <string name="eversense_alarm_rate_falling">Glucose falling fast</string>
+    <string name="eversense_alarm_rate_rising">Glucose rising fast</string>
+    <string name="eversense_alarm_calibration_past_due">Calibration past due</string>
+    <string name="eversense_alarm_calibration_expired">Calibration expired</string>
+    <string name="eversense_alarm_low_battery">Low battery</string>
+    <string name="eversense_alarm_invalid_time">Invalid transmitter time</string>
+    <string name="eversense_alarm_transmitter_disconnected">Transmitter disconnected</string>
+    <string name="eversense_alarm_vibration_motor">Vibration motor</string>
+    <string name="eversense_alarm_calibrate_again">Calibrate again</string>
+    <string name="eversense_alarm_new_calibration_needed">New calibration needed</string>
+    <string name="eversense_alarm_transmitter_replacement">Transmitter replacement</string>
+    <string name="eversense_alarm_battery_error">Battery error</string>
+    <string name="eversense_alarm_one_calibration_phase">One calibration a week</string>
+    <string name="eversense_alarm_two_calibration_phase">Two calibrations a day</string>
+    <string name="eversense_alarm_battery_status">Battery status</string>
+    <string name="eversense_alarm_sensor_connection">Sensor connection</string>
+    <string name="eversense_alarm_sensor_retirement_area">Sensor near its end</string>
+    <string name="eversense_alarm_glucose_suspend">Glucose suspended</string>
+    <string name="eversense_alarm_sensor_sync_confirmed">Sensor sync confirmed</string>
+    <string name="eversense_alarm_sensor_stability">Sensor stability</string>
+    <string name="eversense_alarm_unknown">Unknown transmitter error</string>
 </resources>

@@ -53,8 +53,8 @@ class RawPreferenceStoreScanTest {
         "implementation/src/commonMain/kotlin/app/aaps/implementation/sharedPreferences/PreferencesImpl.kt" to "Preferences itself, which is what everything else is supposed to use",
         "shared/tests/src/androidMain/kotlin/app/aaps/shared/tests/SharedPreferencesMock.kt" to "the test double for the store; it lives in a main source set so tests in other modules can use it",
 
-        "plugins/source/eversense/src/androidMain/kotlin/app/aaps/plugins/eversense/storage/EversenseStateStore.kt" to
-            "imports the whole legacy Eversense device store once; new state is a registered, non-exported preference",
+        "plugins/source/eversense/src/androidMain/kotlin/app/aaps/plugins/eversense/di/EversenseAndroidRegistration.kt" to
+            "reads the whole legacy Eversense device store, which EversenseStateStore imports once; new state is a registered, non-exported preference",
 
         // --- Moves the whole store, not a setting ---
         // These are the import, the export and the cloud copies of them. They are SUPPOSED to see every

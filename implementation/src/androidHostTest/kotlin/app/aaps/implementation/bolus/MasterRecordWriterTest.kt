@@ -248,6 +248,23 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
         verify(calibration, never()).addEntry(any(), any())
     }
 
+    /** A sensor that takes 40 to 400 mg/dL (an Eversense): a value it would refuse is refused before the confirmation. */
+    @Test
+    fun `a self-calibrating source narrows the range to what it takes`() = runTest {
+        val source = bgSource(CalibrationMode.SOURCE)
+        whenever(source.calibrationRangeMgdl).thenReturn(40.0..400.0)
+        doReturn("mg/dL").whenever(rh).gs(CoreUiStrings.bg_mgdl)
+        val expected = baseText.gs(
+            CoreUiStrings.cal_reject_out_of_range,
+            profileUtil.fromMgdlToStringWithUnits(39.0), profileUtil.fromMgdlToStringWithUnits(40.0), profileUtil.fromMgdlToStringWithUnits(400.0)
+        )
+
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(39.0))).isEqualTo(expected)
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(401.0))).isNotNull()
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(40.0))).isNull()
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(400.0))).isNull()
+    }
+
     /** The ends of the range are what the dialog offers, so they are taken. */
     @Test
     fun `the ends of the range are taken`() = runTest {

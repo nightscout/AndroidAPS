@@ -1,124 +1,193 @@
 package app.aaps.plugins.eversense
 
-import android.bluetooth.BluetoothManager
-import android.content.Context
-import app.aaps.plugins.eversense.models.EversenseSecureState
-import app.aaps.shared.tests.AAPSLoggerTest
-import app.aaps.plugins.eversense.storage.EversenseStore
+import app.aaps.plugins.eversense.DriverHarness.Companion.ADDRESS
+import app.aaps.plugins.eversense.DriverHarness.Companion.NAME
+import app.aaps.plugins.eversense.DriverHarness.Companion.PASSWORD
+import app.aaps.plugins.eversense.DriverHarness.Companion.USERNAME
+import app.aaps.plugins.eversense.EversenseDriver.ConnectionState
+import app.aaps.plugins.eversense.packets.e365.Eversense365Packets
 import app.aaps.plugins.eversense.util.StorageKeys
-import kotlinx.serialization.json.Json
-import org.junit.jupiter.api.Assertions.*
+import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runCurrent
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.*
 
+/** The login the driver keeps in its own store: what a sign-in, a sign-out, a pairing and an unpairing leave there. */
+@OptIn(ExperimentalCoroutinesApi::class)
 class EversenseCredentialsTest {
-    private val store: EversenseStore = mock()
-    private val editor: EversenseStore.Editor = mock()
-    private val context: Context = mock()
-    private val bluetooth: BluetoothManager = mock()
-    private val json = Json { ignoreUnknownKeys = true }
-    private fun backend(): EversenseCGMPlugin {
-        whenever(store.edit()).thenReturn(editor)
-        whenever(editor.commit()).thenReturn(true)
-        whenever(store.getString(StorageKeys.SECURE_STATE, null)).thenReturn(
-            json.encodeToString(EversenseSecureState().apply { username = "user"; password = "secret"; canUseShortcut = true }))
-        return EversenseCGMPlugin(context, bluetooth, store, AAPSLoggerTest())
-    }
-    @Test fun clearCredentialsRemovesCachedLoginAndDisablesShortcut() {
-        val backend = backend()
-        backend.clearCredentials()
-        val state = argumentCaptor<String>()
-        verify(editor).putString(eq(StorageKeys.SECURE_STATE), state.capture())
-        val saved = json.decodeFromString<EversenseSecureState>(state.firstValue)
-        assertEquals("", saved.username)
-        assertEquals("", saved.password)
-        assertFalse(saved.canUseShortcut)
-        assertEquals("", backend.username)
-        assertEquals("", backend.password)
-        verify(editor).remove(StorageKeys.ACCESS_TOKEN)
-        verify(editor).remove(StorageKeys.ACCESS_TOKEN_EXPIRY)
-        verify(editor).commit()
-        verifyNoInteractions(bluetooth)
-    }
-    @Test fun regionChangeInvalidatesTokenAndShortcutBeforeDriverIsStarted() {
-        val backend = backend()
-        backend.setCredentials("user", "secret", europeanRegion = true)
-        val state = argumentCaptor<String>()
-        verify(editor).putString(eq(StorageKeys.SECURE_STATE), state.capture())
-        val saved = json.decodeFromString<EversenseSecureState>(state.firstValue)
-        assertTrue(saved.isEuropeanRegion)
-        assertFalse(saved.canUseShortcut)
-        verify(editor).remove(StorageKeys.ACCESS_TOKEN)
-        verify(editor).remove(StorageKeys.ACCESS_TOKEN_EXPIRY)
-        verifyNoInteractions(bluetooth)
-    }
-    @Test fun repeatedOfflineShortcutFailuresRetainRegisteredIdentity() {
-        val backend = backend()
-        val adapter: android.bluetooth.BluetoothAdapter = mock()
-        val device: android.bluetooth.BluetoothDevice = mock()
-        val gatt: android.bluetooth.BluetoothGatt = mock()
-        whenever(bluetooth.adapter).thenReturn(adapter)
-        whenever(adapter.isEnabled).thenReturn(true)
-        whenever(store.getString(StorageKeys.REMOTE_DEVICE_KEY, null)).thenReturn("00:11:22:33:44:55")
-        whenever(adapter.getRemoteDevice(any<String>())).thenReturn(device)
-        whenever(device.connectGatt(eq(context), eq(false), any(), eq(android.bluetooth.BluetoothDevice.TRANSPORT_LE))).thenReturn(gatt)
-        backend.setCredentials("user", "secret", false)
-        backend.start()
-        try {
-            val callback = argumentCaptor<android.bluetooth.BluetoothGattCallback>()
-            verify(device).connectGatt(eq(context), eq(false), callback.capture(), eq(android.bluetooth.BluetoothDevice.TRANSPORT_LE))
-            val session = (callback.firstValue as EversenseGattCallback).session
-            repeat(10) { backend.authenticationFailed(session, shortcut = true) }
-            verify(editor, never()).putString(eq(StorageKeys.SECURE_STATE), anyOrNull())
-        } finally { backend.stop() }
+
+    private val harness = DriverHarness()
+    private val store get() = harness.store
+
+    private fun storeToken() {
+        store.values[StorageKeys.ACCESS_TOKEN] = "token"
+        store.values[StorageKeys.ACCESS_TOKEN_EXPIRY] = Long.MAX_VALUE
+        store.values[StorageKeys.CLOUD_QUEUE] = "[]"
+        store.values[StorageKeys.LOGIN_REFUSED] = true
     }
 
-    /** The login is the driver's own now: a start reads it from the store, with nothing pushed in from the settings. */
-    @Test fun startReadsTheStoredLogin() {
-        val backend = backend()
-        backend.start()
-        try {
-            assertEquals("user", backend.username)
-            assertEquals("secret", backend.password)
-        } finally { backend.stop() }
+    @Test fun clearCredentialsRemovesTheLoginItsTokenAndTheShortcut(): Unit = harness.run { driver ->
+        harness.storeLogin(USERNAME, PASSWORD, model = "E365_USA", shortcut = true)
+        storeToken()
+        driver.start()
+        driver.clearCredentials()
+        val saved = harness.secureState()
+        assertThat(saved.username).isEmpty()
+        assertThat(saved.password).isEmpty()
+        assertThat(saved.model).isEmpty()
+        assertThat(saved.canUseShortcut).isFalse()
+        assertThat(driver.username).isEmpty()
+        assertThat(driver.password).isEmpty()
+        assertThat(store.contains(StorageKeys.ACCESS_TOKEN)).isFalse()
+        assertThat(store.contains(StorageKeys.ACCESS_TOKEN_EXPIRY)).isFalse()
+        assertThat(store.contains(StorageKeys.CLOUD_QUEUE)).isFalse()
+        // Signing out also clears a refusal: the login it was about is gone
+        assertThat(store.contains(StorageKeys.LOGIN_REFUSED)).isFalse()
+        assertThat(harness.central.connects).isEmpty()
     }
 
-    /** Unpaired, a start waits for the pairing instead of trying every minute to reach a transmitter it does not have. */
-    @Test fun startWithoutATransmitterDoesNotConnect() {
-        val backend = backend()
-        backend.start()
-        try {
-            verifyNoInteractions(bluetooth)
-        } finally { backend.stop() }
+    /** The region picks the server: a token or a registration of the other region is no good. */
+    @Test fun aRegionChangeDropsTheTokenAndTheShortcutBeforeTheStart(): Unit = harness.run { driver ->
+        harness.storeLogin(USERNAME, PASSWORD, shortcut = true)
+        storeToken()
+        driver.setCredentials(USERNAME, PASSWORD, europeanRegion = true)
+        val saved = harness.secureState()
+        assertThat(saved.isEuropeanRegion).isTrue()
+        assertThat(saved.canUseShortcut).isFalse()
+        assertThat(store.contains(StorageKeys.ACCESS_TOKEN)).isFalse()
+        assertThat(store.contains(StorageKeys.ACCESS_TOKEN_EXPIRY)).isFalse()
+        assertThat(store.contains(StorageKeys.LOGIN_REFUSED)).isFalse()
+        assertThat(harness.central.connects).isEmpty()
+    }
+
+    /** The same login again changes nothing stored: the registration and the token stay. */
+    @Test fun theSameLoginAgainKeepsTheRegistration(): Unit = harness.run { driver ->
+        harness.storeLogin(USERNAME, PASSWORD, shortcut = true)
+        store.values[StorageKeys.ACCESS_TOKEN] = "token"
+        driver.start()
+        val before = store.getString(StorageKeys.SECURE_STATE, null)
+        driver.setCredentials(USERNAME, PASSWORD, europeanRegion = false)
+        assertThat(store.getString(StorageKeys.SECURE_STATE, null)).isEqualTo(before)
+        assertThat(store.getString(StorageKeys.ACCESS_TOKEN, null)).isEqualTo("token")
+    }
+
+    /** A new login with a paired transmitter connects with it. */
+    @Test fun aNewLoginConnectsAPairedTransmitter(): Unit = harness.run { driver ->
+        harness.storeLogin(model = "E3")
+        harness.storeTransmitter()
+        harness.central.refuseConnects(status = 133)
+        driver.start()
+        runCurrent()
+        harness.central.acceptConnects()
+        driver.setCredentials(USERNAME, PASSWORD, europeanRegion = false)
+        runCurrent()
+        assertThat(driver.username).isEqualTo(USERNAME)
+        assertThat(harness.central.connects).hasSize(2)
+        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+    }
+
+    /** The login is the driver's own: a start reads it from the store, a stop forgets it in memory only. */
+    @Test fun aStartReadsTheStoredLoginAndAStopForgetsItInMemory(): Unit = harness.run { driver ->
+        harness.storeLogin(USERNAME, PASSWORD)
+        driver.start()
+        assertThat(driver.username).isEqualTo(USERNAME)
+        assertThat(driver.password).isEqualTo(PASSWORD)
+        driver.stop()
+        assertThat(driver.username).isEmpty()
+        assertThat(driver.password).isEmpty()
+        assertThat(harness.secureState().username).isEqualTo(USERNAME)
+        driver.start()
+        assertThat(driver.username).isEqualTo(USERNAME)
+    }
+
+    @Test fun aStartWithoutATransmitterDoesNotConnect(): Unit = harness.run { driver ->
+        harness.storeLogin(USERNAME, PASSWORD)
+        driver.start()
+        runCurrent()
+        assertThat(harness.central.connects).isEmpty()
+        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.PAUSED)
     }
 
     /** Pairing stores the transmitter with its name and makes the next connection a full registration. */
-    @Test fun pairStoresTheTransmitterAndForcesRegistration() {
-        val backend = backend()
-        backend.pair("00:11:22:33:44:55", "T123456")
-        verify(editor).putString(StorageKeys.REMOTE_DEVICE_KEY, "00:11:22:33:44:55")
-        verify(editor).putString(StorageKeys.REMOTE_DEVICE_NAME, "T123456")
-        val state = argumentCaptor<String>()
-        verify(editor).putString(eq(StorageKeys.SECURE_STATE), state.capture())
-        assertFalse(json.decodeFromString<EversenseSecureState>(state.lastValue).canUseShortcut)
+    @Test fun pairStoresTheTransmitterAndForcesRegistration(): Unit = harness.run { driver ->
+        harness.storeLogin(USERNAME, PASSWORD, shortcut = true)
+        // Not started: stored, but not connected
+        assertThat(driver.pair(ADDRESS, NAME)).isFalse()
+        assertThat(store.getString(StorageKeys.REMOTE_DEVICE_KEY, null)).isEqualTo(ADDRESS)
+        assertThat(store.getString(StorageKeys.REMOTE_DEVICE_NAME, null)).isEqualTo(NAME)
+        assertThat(harness.secureState().canUseShortcut).isFalse()
+        assertThat(harness.central.connects).isEmpty()
     }
 
     /** Unpair forgets the transmitter and its registration; the login stays for a replacement. */
-    @Test fun clearStoredDeviceForgetsTheTransmitterAndKeepsTheLogin() {
-        val backend = backend()
-        backend.clearStoredDevice()
-        verify(editor).remove(StorageKeys.REMOTE_DEVICE_KEY)
-        verify(editor).remove(StorageKeys.REMOTE_DEVICE_NAME)
-        val state = argumentCaptor<String>()
-        verify(editor).putString(eq(StorageKeys.SECURE_STATE), state.capture())
-        val saved = json.decodeFromString<EversenseSecureState>(state.lastValue)
-        assertFalse(saved.canUseShortcut)
-        assertEquals("user", saved.username)
+    @Test fun clearStoredDeviceForgetsTheTransmitterAndKeepsTheLogin(): Unit = harness.run { driver ->
+        harness.storeLogin(USERNAME, PASSWORD, model = "E3", shortcut = true)
+        harness.storeTransmitter()
+        driver.start()
+        runCurrent()
+        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+        driver.clearStoredDevice()
+        assertThat(store.contains(StorageKeys.REMOTE_DEVICE_KEY)).isFalse()
+        assertThat(store.contains(StorageKeys.REMOTE_DEVICE_NAME)).isFalse()
+        val saved = harness.secureState()
+        assertThat(saved.canUseShortcut).isFalse()
+        assertThat(saved.username).isEqualTo(USERNAME)
+        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.PAUSED)
+        assertThat(harness.central.links[0].isUp).isFalse()
     }
 
-    /** Signing out also clears a refusal: the login it was about is gone. */
-    @Test fun clearCredentialsClearsARefusedLogin() {
-        backend().clearCredentials()
-        verify(editor).remove(StorageKeys.LOGIN_REFUSED)
+    /** An E3 used without a login: the stored login and its cloud queue go, and the paired transmitter connects. */
+    @Test fun useWithoutLoginForgetsTheLoginAndConnectsAnE3(): Unit = harness.run { driver ->
+        harness.storeLogin(USERNAME, PASSWORD, model = "E365_USA")
+        harness.storeTransmitter()
+        storeToken()
+        harness.central.newLink = { device -> FakeBleLink(device, is365 = false).also { it.actAsE3() } }
+        driver.start()
+        runCurrent()
+        driver.useWithoutLogin()
+        runCurrent()
+        val saved = harness.secureState()
+        assertThat(saved.username).isEmpty()
+        assertThat(saved.model).isEqualTo("E3")
+        assertThat(store.contains(StorageKeys.CLOUD_QUEUE)).isFalse()
+        assertThat(driver.connectionState.value).isEqualTo(ConnectionState.READY)
+    }
+
+    // ----- failed sign-ins of a registered 365 -----
+
+    /** A registered 365 whose AuthStart answer cannot be read: every sign-in fails on the shortcut. */
+    private fun aTransmitterThatFailsTheShortcut() {
+        harness.registered365()
+        harness.central.newLink = { device ->
+            FakeBleLink(device, is365 = true).also { link ->
+                link.onWrite = { send(byteArrayOf(1, 1, 1, Eversense365Packets.AuthenticateResponseId, Eversense365Packets.AuthenticateStart)) }
+            }
+        }
+    }
+
+    /** Offline a full sign-in cannot run: failed shortcuts must not throw away the registration the phone has. */
+    @Test fun repeatedOfflineShortcutFailuresKeepTheRegisteredIdentity(): Unit = harness.run { driver ->
+        aTransmitterThatFailsTheShortcut()
+        harness.online = false
+        val registered = store.getString(StorageKeys.SECURE_STATE, null)
+        driver.start()
+        runCurrent()
+        advance(400_000)
+        assertThat(harness.central.connects.size).isAtLeast(10)
+        assertThat(store.getString(StorageKeys.SECURE_STATE, null)).isEqualTo(registered)
+        assertThat(harness.secureState().canUseShortcut).isTrue()
+    }
+
+    /** Online, three failed shortcuts in a row make the next sign-in a full one. */
+    @Test fun threeShortcutFailuresOnlineAskForAFullSignIn(): Unit = harness.run { driver ->
+        aTransmitterThatFailsTheShortcut()
+        driver.start()
+        runCurrent()
+        advance(5_000)
+        assertThat(harness.central.connects).hasSize(2)
+        assertThat(harness.secureState().canUseShortcut).isTrue()
+        advance(10_000)
+        assertThat(harness.central.connects).hasSize(3)
+        assertThat(harness.secureState().canUseShortcut).isFalse()
     }
 }

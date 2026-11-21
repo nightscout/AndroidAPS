@@ -17,6 +17,8 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.shared.tests.generatedTextResolver
@@ -60,6 +62,7 @@ internal class CalibrationDialogViewModelTest {
     @Mock private lateinit var batchExecutor: BatchExecutor
     @Mock private lateinit var config: Config
     @Mock private lateinit var calibration: Calibration
+    @Mock private lateinit var bgSource: BgSource
 
     private lateinit var dispatcher: TestDispatcher
     private lateinit var sut: CalibrationDialogViewModel
@@ -76,11 +79,15 @@ internal class CalibrationDialogViewModelTest {
         whenever(persistenceLayer.observeChanges(TE::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeChanges(CAL::class)).thenReturn(emptyFlow())
         whenever(activePlugin.activeCalibration).thenReturn(calibration)
+        whenever(activePlugin.activeBgSource).thenReturn(bgSource)
+        whenever(bgSource.calibrationMode).thenReturn(CalibrationMode.AAPS)
         runBlocking { whenever(calibration.checkPreconditions()).thenReturn(AddEntryResult.Accepted) }
-        sut = CalibrationDialogViewModel(
-            profileUtil, glucoseStatusProvider, activePlugin, persistenceLayer, dateUtil, generatedTextResolver(), decimalFormatter, batchExecutor, config
-        )
+        sut = newViewModel()
     }
+
+    private fun newViewModel() = CalibrationDialogViewModel(
+        profileUtil, glucoseStatusProvider, activePlugin, persistenceLayer, dateUtil, generatedTextResolver(), decimalFormatter, batchExecutor, config
+    )
 
     @AfterEach
     fun tearDown() = Dispatchers.resetMain()
@@ -89,6 +96,42 @@ internal class CalibrationDialogViewModelTest {
     fun `no action when bg is zero`() {
         assertThat(sut.uiState.value.bg).isEqualTo(0.0)
         assertThat(sut.hasAction()).isFalse()
+    }
+
+    @Test
+    fun `the field starts with the sensor reading for the AAPS calibration`() {
+        whenever(profileUtil.fromMgdlToUnits(any(), any())).thenReturn(123.0)
+
+        assertThat(newViewModel().uiState.value.bg).isEqualTo(123.0)
+    }
+
+    @Test
+    fun `the field starts empty when the source calibrates itself`() {
+        // One tap on OK would send the sensor its own reading as a finger stick
+        whenever(profileUtil.fromMgdlToUnits(any(), any())).thenReturn(123.0)
+        whenever(bgSource.calibrationMode).thenReturn(CalibrationMode.SOURCE)
+
+        val viewModel = newViewModel()
+
+        assertThat(viewModel.uiState.value.bg).isEqualTo(0.0)
+        assertThat(viewModel.hasAction()).isFalse()
+    }
+
+    @Test
+    fun `the dialog offers only what a self-calibrating source takes`() {
+        whenever(bgSource.calibrationMode).thenReturn(CalibrationMode.SOURCE)
+        whenever(bgSource.calibrationRangeMgdl).thenReturn(40.0..400.0)
+
+        assertThat(newViewModel().uiState.value.bgRange).isEqualTo(40.0..400.0)
+
+        // In mmol/L rounded to the step: 2.2 mmol/L is 39.6 mg/dL, which the source rounds to 40
+        whenever(profileUtil.units).thenReturn(GlucoseUnit.MMOL)
+        assertThat(newViewModel().uiState.value.bgRange).isEqualTo(2.2..22.2)
+    }
+
+    @Test
+    fun `the full range when the source takes every value`() {
+        assertThat(newViewModel().uiState.value.bgRange).isEqualTo(36.0..500.0)
     }
 
     @Test

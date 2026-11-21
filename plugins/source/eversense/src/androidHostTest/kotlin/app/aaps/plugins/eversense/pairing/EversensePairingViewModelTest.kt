@@ -10,6 +10,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -51,7 +52,11 @@ class EversensePairingViewModelTest {
             withoutSignIn.value = true
         }
 
-        override fun scan(): Flow<List<ScannedDevice>> = scanResults
+        /** A scan that ends by itself, as the real one does after ten seconds; null: the running [scanResults] */
+        var endingScan: Flow<List<ScannedDevice>>? = null
+        var problem: ScanProblem? = null
+        override fun scan(): Flow<List<ScannedDevice>> = endingScan ?: scanResults
+        override fun scanProblem(): ScanProblem? = problem
         override suspend fun pair(transmitter: ScannedDevice): PairResult {
             paired += transmitter
             return pairAnswer.await()
@@ -102,6 +107,32 @@ class EversensePairingViewModelTest {
 
         viewModel.finish()
         assertThat(state.finished).isTrue()
+    }
+
+    /** A scan that ends with nothing says so, and why when Bluetooth is off; "scan again" starts a new one. */
+    @Test fun `an ended scan with nothing found says why and can run again`() {
+        pairing.endingScan = flowOf(emptyList())
+        pairing.problem = ScanProblem.BLUETOOTH_OFF
+
+        viewModel.startScan()
+        assertThat(state.scanning).isFalse()
+        assertThat(state.scanProblem).isEqualTo(ScanProblem.BLUETOOTH_OFF)
+
+        pairing.endingScan = null
+        viewModel.startScan()
+        assertThat(state.scanning).isTrue()
+        assertThat(state.scanProblem).isNull()
+    }
+
+    @Test fun `a scan that found a transmitter names no problem`() {
+        pairing.endingScan = flowOf(listOf(transmitter))
+        pairing.problem = ScanProblem.BLUETOOTH_OFF
+
+        viewModel.startScan()
+
+        assertThat(state.scanning).isFalse()
+        assertThat(state.devices).containsExactly(transmitter)
+        assertThat(state.scanProblem).isNull()
     }
 
     /** Only the model, a username and a password make a sign-in possible: the model decides the server. */

@@ -5,25 +5,26 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
-import app.aaps.core.keys.StringKey
-import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.compose.AapsTheme
-import app.aaps.core.ui.compose.LocalPreferences
-import app.aaps.plugins.eversense.R
-import app.aaps.plugins.eversense.placement.EversensePage
-import app.aaps.plugins.eversense.placement.EversensePlacementContent
-import app.aaps.plugins.eversense.ui.EversenseStatusContent
-import app.aaps.plugins.eversense.ui.EversenseStatusViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.interfaces.source.CgmAttention
+import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.CoreUiStringIds
+import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.plugins.eversense.EversenseStringIds
+import app.aaps.plugins.eversense.R
+import app.aaps.plugins.eversense.enums.SignalStrength
 import app.aaps.plugins.eversense.pairing.EversenseAccount
 import app.aaps.plugins.eversense.pairing.EversenseModel
+import app.aaps.plugins.eversense.placement.EversensePlacementContent
+import app.aaps.plugins.eversense.placement.EversensePlacementViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import app.aaps.core.ui.R as CoreUiR
 import org.junit.Before
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -115,7 +116,7 @@ class EversenseNavigationTest {
         compose.onNodeWithText(text(R.string.eversense_unpair)).performScrollTo().performClick()
         compose.onNodeWithText(text(R.string.eversense_unpair_confirm, "T123456")).assertIsDisplayed()
         compose.runOnIdle { assertEquals(false, unpaired) }
-        compose.onNodeWithText(context.getString(app.aaps.core.ui.R.string.ok)).performClick()
+        compose.onNodeWithText(context.getString(CoreUiR.string.ok)).performClick()
         compose.runOnIdle { assertEquals(true, unpaired) }
     }
 
@@ -133,19 +134,31 @@ class EversenseNavigationTest {
         compose.runOnIdle { assertEquals(true, calibrate) }
     }
 
-    @Test fun placementShowsLiveValuesAndInstructionsInsideTheSamePage() {
+    private fun showPlacement(state: EversensePlacementViewModel.UiState) {
         whenever(preferences.observe(StringKey.GeneralDarkMode)).thenReturn(mode)
         compose.setContent {
             CompositionLocalProvider(LocalPreferences provides preferences) {
                 AapsTheme {
-                    EversensePage(R.string.eversense_placement_title, {}) {
-                        EversensePlacementContent("Good", "60%", "Keep position", "Updated now", 4)
-                    }
+                    EversensePlacementContent(state = state, timeString = { "12:00:05" })
                 }
             }
         }
-        compose.onNodeWithText("Good").assertIsDisplayed()
-        compose.onNodeWithText("60%").assertIsDisplayed()
-        compose.onNodeWithText("Keep position").performScrollTo().assertIsDisplayed()
+    }
+
+    @Test fun placementShowsLiveValuesAndInstructions() {
+        showPlacement(EversensePlacementViewModel.UiState.Signal(60, SignalStrength.from365(60), readAt = 1L))
+        compose.onNodeWithText(text(R.string.eversense_signal_good)).assertIsDisplayed()
+        compose.onNodeWithText(context.getString(CoreUiR.string.units_format_percent, 60)).assertIsDisplayed()
+        compose.onNodeWithText(text(R.string.eversense_placement_last_update, "12:00:05")).assertIsDisplayed()
+        compose.onNodeWithText(text(R.string.eversense_placement_instruction_good)).performScrollTo().assertIsDisplayed()
+        compose.onNodeWithContentDescription(text(R.string.eversense_placement_bars, SignalStrength.GOOD.ordinal)).assertExists()
+    }
+
+    /** Without a link there is nothing to read: the guide says so, and lights no bar. */
+    @Test fun placementWithoutALinkSaysNotConnected() {
+        showPlacement(EversensePlacementViewModel.UiState.NotConnected)
+        compose.onNodeWithText(text(R.string.eversense_not_connected)).assertIsDisplayed()
+        compose.onNodeWithText(text(R.string.eversense_placement_instruction_not_connected)).assertIsDisplayed()
+        compose.onNodeWithContentDescription(text(R.string.eversense_placement_bars, 0)).assertExists()
     }
 }

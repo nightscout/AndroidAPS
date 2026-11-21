@@ -74,7 +74,14 @@ fun EversensePairingWizard(
                 onStopScan = viewModel::stopScan,
                 onCancel = viewModel::back,
                 title = stringResource(EversenseStrings.eversense_scan_title),
-                subtitle = stringResource(EversenseStrings.eversense_scan_in_progress)
+                subtitle = stringResource(EversenseStrings.eversense_scan_in_progress),
+                scanning = state.scanning,
+                onScanAgain = viewModel::startScan,
+                problem = when (state.scanProblem) {
+                    ScanProblem.BLUETOOTH_OFF -> stringResource(CoreUiStrings.ble_scan_bluetooth_off)
+                    ScanProblem.NOT_ALLOWED   -> stringResource(CoreUiStrings.ble_scan_not_allowed)
+                    null                      -> null
+                }
             )
 
             Step.CONNECT     -> ConnectStep(state = state, onRetry = viewModel::retry, onBack = viewModel::back)

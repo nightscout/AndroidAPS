@@ -1211,6 +1211,11 @@
     <string name="step_ble_scan">Find Pump</string>
     <string name="ble_scan_select_pump">Select your pump from the list below</string>
     <string name="ble_scan_scanning">Scanning for devices…</string>
+    <string name="ble_scan_nothing_found">No device found. Keep it near the phone and scan again.</string>
+    <string name="ble_scan_finished">Scan finished. Tap your device in the list.</string>
+    <string name="ble_scan_again">Scan again</string>
+    <string name="ble_scan_bluetooth_off">Bluetooth is off. Turn it on and scan again.</string>
+    <string name="ble_scan_not_allowed">AAPS may not use Bluetooth. Allow it in the phone settings and scan again.</string>
 
     <!-- Graph configuration -->
     <string name="graph_add">Add graph</string>

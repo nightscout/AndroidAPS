@@ -36,13 +36,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 private const val CALIBRATION_COUNTDOWN_MS = 15 * 60 * 1000L
 
 /**
- * Home-screen banner mirroring the official Eversense app's post-calibration countdown bar (see
- * the feature request's reference screenshot). Renders nothing once [submittedAtMs] is more than
- * 15 minutes old, or is 0 (the never-submitted default) — callers don't need a separate "is
- * Eversense in use" gate: EversenseLastCalibrationSubmittedAt is only ever written on a successful
- * calibration submission (both the Settings -> Eversense -> Calibration screen and the
- * quick-launch "Eversense Calibration" dialog write it), so a fresh value already implies
- * Eversense is the one in use.
+ * Home-screen banner like the official Eversense app's countdown bar after a calibration. Renders nothing once
+ * [submittedAtMs] is more than 15 minutes old, or is 0 (never sent). Callers need no separate "is Eversense in use"
+ * check: `EversenseLastCalibrationSubmittedAt` is written only when the Eversense plugin sent a calibration to the
+ * transmitter (from the AAPS calibration dialog, an SMS or a client, all through the master), so a fresh value already
+ * means Eversense is the source.
  */
 @Composable
 fun EversenseCalibrationBanner(

@@ -29,6 +29,15 @@ kotlin {
             implementation(project(":core:utils"))
             implementation(project(":plugins:source"))
 
+            api(project.dependencies.platform(libs.kotlinx.serialization.bom))
+            api(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.datetime)
+            // P-256 keys, ECDSA, ECDH, HMAC and the AES block of the 365 session: JCA on Android, CryptoKit and
+            // CommonCrypto on iOS
+            implementation(libs.cryptography.core)
+            implementation(libs.cryptography.provider.optimal)
+            // The Eversense cloud (DMS): sign-in, registration of a 365 and the upload
+            implementation(libs.io.ktor.client.core)
             api(libs.jetbrains.compose.runtime)
             api(libs.jetbrains.compose.foundation)
             api(libs.jetbrains.compose.ui)
@@ -38,15 +47,18 @@ kotlin {
         }
         androidMain.dependencies {
             api(libs.androidx.core)
-            api(project.dependencies.platform(libs.kotlinx.serialization.bom))
-            api(libs.kotlinx.serialization.json)
-            implementation("org.bouncycastle:bcpkix-jdk18on:1.81")
-            implementation("org.bouncycastle:bcprov-jdk18on:1.81")
+            implementation(libs.io.ktor.client.okhttp)
             implementation(libs.androidx.appcompat)
             implementation(project.dependencies.platform(libs.androidx.compose.bom))
             implementation(libs.androidx.compose.material3)
             implementation(libs.androidx.compose.runtime)
             implementation(libs.androidx.lifecycle.runtime.compose)
+        }
+        jvmMain.dependencies {
+            implementation(libs.io.ktor.client.okhttp)
+        }
+        iosMain.dependencies {
+            implementation(libs.io.ktor.client.darwin)
         }
         // Hand written: the test convention plugins apply com.android.library, which a multiplatform module cannot.
         getByName("androidHostTest").dependencies {
@@ -65,6 +77,8 @@ kotlin {
             implementation(libs.androidx.compose.ui.test.junit4)
             implementation(libs.androidx.compose.ui.test.manifest)
             implementation(libs.com.squareup.okhttp3.mockwebserver)
+            // The frozen first version in protocol-reference.zip uses BouncyCastle for its crypto
+            implementation("org.bouncycastle:bcprov-jdk18on:1.81")
             runtimeOnly(libs.org.junit.vintage.engine)
             runtimeOnly(libs.org.junit.platform.launcher)
         }

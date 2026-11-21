@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
@@ -95,14 +96,18 @@ class CalibrationDialogViewModel(
 
     init {
         val units = profileUtil.units
-        val currentBg = profileUtil.fromMgdlToUnits(glucoseStatusProvider.glucoseStatusData?.glucose ?: 0.0)
+        // A source that calibrates itself (an Eversense, xDrip) would take its own reading as the finger stick with one
+        // tap on OK, and that is no calibration: the field starts empty there. For AAPS's own calibration the reading
+        // is a useful start.
+        val selfCalibrating = activePlugin.activeBgSource.calibrationMode == CalibrationMode.SOURCE
+        val currentBg = if (selfCalibrating) 0.0 else profileUtil.fromMgdlToUnits(glucoseStatusProvider.glucoseStatusData?.glucose ?: 0.0)
         val isMmol = units == GlucoseUnit.MMOL
 
         _uiState.update {
             CalibrationDialogUiState(
                 bg = currentBg,
                 units = units,
-                bgRange = calibrationRange(units),
+                bgRange = calibrationRange(units, activePlugin.activeBgSource),
                 bgStep = if (isMmol) 0.1 else 1.0,
                 bgDecimalPlaces = if (isMmol) 1 else 0
             )

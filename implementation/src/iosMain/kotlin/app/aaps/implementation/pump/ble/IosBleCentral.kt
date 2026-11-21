@@ -80,8 +80,11 @@ import kotlin.time.Duration.Companion.seconds
  * What iOS does differently, as the API says: the device id is the peripheral's identifier (another one on another
  * phone), the system pairs by itself ([bonding] is null), and the MTU is the system's choice.
  *
- * Not yet: state restoration, which lets iOS start the app again for its pump. It comes with the first driver on iOS,
- * together with `NSBluetoothAlwaysUsageDescription` in the app, without which iOS ends the app at the first use.
+ * State restoration is on (see [manager] and [restored]): iOS starts a terminated app again for a Bluetooth event on a
+ * connection it held, and the driver connects again. The app declares the `bluetooth-central` background mode and
+ * `NSBluetoothAlwaysUsageDescription` (`ios/app/Shared/Info.plist`); without the second, iOS ends the app at the first
+ * use. A suspended app runs no timers: a driver that must reconnect in the background connects with no time limit
+ * ([ConnectOptions.timeout] infinite), which iOS keeps open at no cost and completes when the device is back.
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)

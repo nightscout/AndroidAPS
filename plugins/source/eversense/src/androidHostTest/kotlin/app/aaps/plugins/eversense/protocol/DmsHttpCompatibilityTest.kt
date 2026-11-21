@@ -8,6 +8,9 @@ import java.time.Instant
 import java.time.ZoneOffset
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.intrinsics.suspendCoroutineUninterceptedOrReturn
+import kotlinx.coroutines.runBlocking
 import mockwebserver3.MockResponse
 import mockwebserver3.MockWebServer
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -78,13 +81,15 @@ class DmsHttpCompatibilityTest {
                 "getFleetSecretV2" -> arrayOf(store, "test-token", byteArrayOf(1,2,3), byteArrayOf(4,5,6), true, ByteArray(91) { it.toByte() })
                 else -> error(operation)
             }
-            // The live helpers take the AAPS logger first; the frozen ones had their own logger
+            // The live helpers take the AAPS logger first and are suspend functions, which take a continuation last; the
+            // frozen ones had their own logger and blocked
             val method = owner.javaClass.methods.single {
                 it.name == operation && (it.parameterCount == args.size ||
-                    it.parameterCount == args.size + 1 && it.parameterTypes[0] == AAPSLogger::class.java)
+                    it.parameterCount == args.size + 2 && it.parameterTypes[0] == AAPSLogger::class.java && it.parameterTypes.last() == Continuation::class.java)
             }
-            val callArgs = if (method.parameterCount == args.size) args else arrayOf<Any>(AAPSLoggerTest(), *args)
-            return method.invoke(owner, *callArgs)
+            if (method.parameterCount == args.size) return method.invoke(owner, *args)
+            val callArgs = arrayOf<Any>(AAPSLoggerTest(), *args)
+            return runBlocking { suspendCoroutineUninterceptedOrReturn<Any?> { continuation -> method.invoke(owner, *callArgs, continuation) } }
         }
     }
 

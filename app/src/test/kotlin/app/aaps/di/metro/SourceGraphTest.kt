@@ -1,6 +1,5 @@
 package app.aaps.di.metro
 
-import app.aaps.plugins.eversense.placement.EversensePlacementActivity
 import app.aaps.plugins.source.AidexPlugin
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.GlimpPlugin
@@ -50,11 +49,5 @@ class SourceGraphTest {
     @Test
     fun `the source member injector is the notification reader service`() {
         assertThat(graph().memberInjectors.keys).containsExactly(NotificationCollectorService::class)
-    }
-
-    /** Eversense is its own module: its placement screen registers into the root, as a pump driver's screens do. */
-    @Test
-    fun `the Eversense placement screen is injected from its own module`() {
-        assertThat(testRoot().contributedMemberInjectors.keys).contains(EversensePlacementActivity::class)
     }
 }

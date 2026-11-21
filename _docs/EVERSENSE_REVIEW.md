@@ -37,13 +37,14 @@ The PR's own CI on `dev` failed, and so did the full gate here.
   readings are then refused as "still recent" until the clock passes that time.
 - Fixed: the 365 decoder had no lower bound. Now 20..449 for the reading and the history, and a reading with a
   "glucose unavailable" reason is not taken (`GlucoseDecoders.v2`, `DecodingFixesTest`).
-- `recentGlucoseDatetime` is saved before the reading is delivered (`EversenseCGMPlugin.watchersFor` posts it only
-  while the session is active). A link drop in between loses that reading; E3 has no backfill and the 365 backfill
-  window starts after it.
+- Fixed: `recentGlucoseDatetime` was saved before the reading was delivered, and a link drop in between lost the
+  reading. The shared driver saves the state and calls the watchers in one step on its own thread, with no wait
+  between them.
 - `SourceSensorExtensions.ADVANCED_FILTERING_SENSORS` gains `EVERSENSE_E3` and `EVERSENSE_365`, with no reason given.
   This changes which loop features Eversense users get.
-- The state JSON is read, changed and written from several threads (`onRssiRead`, `readSignalStrength`,
-  `sendCalibration`, `fullSync`). An old write can move `recentGlucoseDatetime` back and give duplicates.
+- Fixed: the state JSON was read, changed and written from several threads, and an old write could move
+  `recentGlucoseDatetime` back. The shared driver changes it on one thread, the RSSI write is gone, and the store lets
+  one write through at a time.
 - The data watchdog counts only new readings, so a sensor with no new value for 7 minutes is reconnected every cycle.
 
 ### Effects on other features
