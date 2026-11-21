@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.ble.AdapterState
 import app.aaps.core.interfaces.pump.ble.BleCentral
+import app.aaps.plugins.eversense.di.EversenseCentral
 import app.aaps.core.interfaces.pump.ble.BleFailure
 import app.aaps.core.interfaces.pump.ble.BleLink
 import app.aaps.core.interfaces.pump.ble.BleResult
@@ -91,7 +92,7 @@ class EversenseDriver internal constructor(
 ) {
 
     @Inject
-    constructor(central: BleCentral, preferences: EversenseStore, aapsLogger: AAPSLogger, receiverStatusStore: ReceiverStatusStore) :
+    constructor(@EversenseCentral central: BleCentral, preferences: EversenseStore, aapsLogger: AAPSLogger, receiverStatusStore: ReceiverStatusStore) :
         this(central, preferences, aapsLogger, receiverStatusStore, Dispatchers.Default.limitedParallelism(1))
 
     enum class ConnectionState { STOPPED, PAUSED, DISCONNECTED, CONNECTING, READY }

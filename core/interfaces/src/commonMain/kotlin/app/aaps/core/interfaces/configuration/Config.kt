@@ -82,6 +82,8 @@ enum class ExternalOptions(val filename: String) {
     // Advisory tier — resolves to the ALERT-severity cause of the same condition, a plain user-clearable alarm.
     EMULATE_CARELEVO_LOW_BATTERY_ALERT("emulate_carelevo_low_battery_alert"),
     EMULATE_CARELEVO_INVALID_TEMPERATURE("emulate_carelevo_invalid_temperature"),
+    // An emulated Eversense transmitter instead of the phone's Bluetooth, for the Eversense driver only
+    EMULATE_EVERSENSE("emulate_eversense"),
 }
 
 @Suppress("PropertyName")

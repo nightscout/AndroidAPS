@@ -73,21 +73,21 @@ Still missing: the other communicator rules (duplicate readings, backfill window
    like a pump's, dead code and settings out, the review fixes above, and what was learned from PR #4869. Done.
 4. Shared code: all in `commonMain` on `BleCentral`, cryptography-kotlin with AES-CCM built here, ktor and
    `AAPSLogger`. Done.
-5. Emulator, fake Eversense server and scenario tests. Next.
+5. Emulator, fake Eversense server and scenario tests. Done in host tests (E3 and 365 against the real driver, a
+   first registration against a fake server); the `emulate_eversense` option file runs an emulated E3 in the app. Not
+   done: an instrumented scenario class in the app tests, and the scenarios "transmitter forgot the client" and "app
+   restart".
 6. iOS: registered (`EversenseIosRegistration`). A device test and the tests in `ios-ci.yml` are to come.
 
 ## Emulator
 
-An `EversenseTransmitterPeripheral : EmulatedPeripheral`, switched on by an `EMULATE_EVERSENSE` option file, as
-Carelevo. E3: CRC16-CCITT frames, about 45 commands, a register map. 365: chunked frames, WhoAmI, identity, the
-ECDH start and AES-CCM after it. A fake Eversense server (ktor `MockEngine`) for registration and upload. The pump
-scenario classes are built around the command queue, so this needs its own small CGM scenario class.
+Built (see "Emulator" in `TECHNICAL.md`): an emulated E3 and 365 for the shared emulated Bluetooth, switched on in
+the app by the `emulate_eversense` option file (E3 only, as a 365's first registration needs the real server). Built
+from the code and not from captures, so it is `UNVERIFIED` until real frames are recorded.
 
-Built from the code and not from captures, so it is `UNVERIFIED` until real frames are recorded.
-
-First scenarios: a reading every 5 minutes (limits, trend, time); 365 gap and backfill; registration, offline
-reconnect, transmitter forgot the client; calibration accepted and refused; push alarm; link drop and back-off;
-Bluetooth off and on; a lost answer; app restart.
+Scenarios covered by host tests: sign-in, a reading every 5 minutes, the keep-alive, a 365 gap filled from the
+history, the clock set, calibration, the signal read, a pushed alarm, Bluetooth off and on, a first registration
+against a fake server, a refused login. Still to add: the transmitter forgot the client, a lost answer, app restart.
 
 ## To check on a device
 

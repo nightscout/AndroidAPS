@@ -249,6 +249,23 @@ version text): `DecodingFixesTest` explains them, and their digests pin today's 
 digest to `build/golden-actual/`; copy it over the recorded one only for a change made on purpose and checked on a real
 transmitter. The digests prove "same as before", not "right".
 
+## Emulator
+
+`emulator/` holds an emulated transmitter for the shared emulated Bluetooth (`EmulatedBleCentral`), as the pump
+emulators have: `EversenseTransmitterEmulator` (clock, readings, battery, calibrations), `EversenseE3Peripheral`
+(CRC frames, register reads, keep-alive pushes) and `Eversense365Peripheral` (the sign-in, AES-CCM both ways,
+fragmented notifications, the history log for a backfill, keep-alives and pushed alarms). Its frames use the driver's
+own encoders, and the 365 side agrees its session key with its own ECDH and HKDF. Built from the driver's code, not
+from captured frames: UNVERIFIED until real frames are recorded.
+
+- Tests: `EmulatedE3Test` and `Emulated365Test` run the real driver against it in virtual time (sign-in, readings,
+  keep-alive, backfill of a gap, clock, calibration, signal, alarm, Bluetooth off and on). `EmulatedRegistrationTest`
+  runs a 365's first registration against a fake Eversense server on the machine (real time, a few seconds).
+- In the app: the `emulate_eversense` option file gives Eversense an emulated E3 (`EversenseCentral`) instead of the
+  phone's Bluetooth. Pair it in the wizard with "Continue without signing in". The cloud upload is off while it is
+  emulated, so no emulated reading reaches a real Eversense account. A 365 is not offered in the app: its first
+  registration needs the real Eversense server.
+
 ## To check on a device
 
 - 365 Bluetooth disconnect timeout: 300 seconds or 0, per firmware and region.
