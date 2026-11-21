@@ -136,6 +136,7 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Η ινσουλίνη δεν άλλαξε: %1$s Η προηγούμενη ινσουλίνη σας χρησιμοποιείται ακόμα.</string>
     <string name="insulin_activation_unconfirmed">Η αλλαγή ινσουλίνης δεν επιβεβαιώθηκε. Ελέγξτε ποια ινσουλίνη είναι ενεργή στο προφίλ σας πριν δώσετε δόση.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Η ινσουλίνη δεν άλλαξε. Η προηγούμενη ινσουλίνη σας χρησιμοποιείται ακόμα.\n\n%1$s</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nΕπίσης, η ινσουλίνη δεν άλλαξε. Αν η νέα ινσουλίνη είναι ήδη στην αντλία, μη συνδέσετε την αντλία και κάντε ξανά την αλλαγή ινσουλίνης.</string>
     <string name="active"><![CDATA[<Ενεργό>]]></string>
     <string name="date">Ημερομηνία</string>
     <string name="insulin_nickname_label">Ψευδώνυμο ινσουλίνης</string>
@@ -167,6 +168,7 @@
     <string name="notification">Ειδοποίηση</string>
     <string name="noprofile">Δεν φορτώθηκε προφίλ από το NS ακόμα</string>
     <string name="exists">υπάρχει</string>
+    <string name="notexists">δεν υπάρχει</string>
     <string name="glucose">Γλυκόζη</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -224,9 +226,11 @@
     <string name="pump_wizard_profile_gate_pick">Επιλέξτε το προφίλ που θα εφαρμοστεί κατά την ενεργοποίηση.</string>
     <string name="pump_wizard_profile_gate_no_store">Δεν έχει οριστεί προφίλ. Ανοίξτε τη Διαχείριση προφίλ για να δημιουργήσετε ένα και ξεκινήστε ξανά την ενεργοποίηση.</string>
     <string name="reset">Επαναφορά</string>
+    <string name="profileswitch_ismissing">Λείπει αλλαγή προφίλ. Κάντε αλλαγή προφίλ ή πατήστε \"Ενεργοποίηση προφίλ\" στο Τοπικό Προφίλ.</string>
     <string name="profile">Προφίλ</string>
     <string name="percentage_label">Ποσοστό</string>
     <string name="timeshift_label">Χρονική μετατόπιση</string>
+    <string name="confirm_remove_multiple_items">Είστε σίγουροι ότι θέλετε να αφαιρέσετε %1$d στοιχεία;</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Η κύρια συσκευή δεν έχει %1$d από αυτές τις εγγραφές. Αυτές δεν αφαιρούνται.</string>
     <string name="overview_treatment_label">Θεραπεία</string>
     <string name="copytolocalprofile">Δημιουργία νέου προφίλ από αυτό το προφίλ;</string>
@@ -338,7 +342,9 @@
     <string name="careportal_note">Σημείωση</string>
     <string name="careportal_question">Ερώτηση</string>
     <string name="careportal_exercise">Άσκηση</string>
+    <string name="careportal_announcement_message">Ανακοίνωση: %1$s</string>
     <string name="careportal_note_message">Σημείωση: %1$s</string>
+    <string name="careportal_question_message">Ερώτηση: %1$s</string>
     <string name="careportal_exercise_message">Άσκηση : %1$s</string>
     <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Αλλαγή σημείου αντλίας : %1$s</string>
     <string name="careportal_pump_site_change">Αλλαγή σημείου αντλίας</string>
@@ -655,6 +661,7 @@
     <string name="uel_ns_queue_cleared">ΕΚΚΑΘΑΡΙΣΗ ΟΥΡΑΣ NS</string>
     <string name="uel_ns_settings_copied">ΑΝΤΙΓΡΑΦΗ ΡΥΘΜΙΣΕΩΝ NS</string>
     <string name="uel_error_dialog_ok">ΠΑΡΑΘΥΡΟ ΣΦΑΛΜΑΤΟΣ ΟΚ</string>
+    <string name="uel_error_dialog_mute">ΠΑΡΑΘΥΡΟ ΣΦΑΛΜΑΤΟΣ ΣΙΓΑΣΗ</string>
     <string name="uel_error_dialog_mute_5min">ΠΑΡΑΘΥΡΟ ΣΦΑΛΜΑΤΟΣ ΣΙΓΑΣΗ 5ΛΕΠΤΑ</string>
     <string name="uel_objective_started">ΕΝΑΡΞΗ ΣΤΟΧΟΥ</string>
     <string name="uel_objective_unstarted">Ο ΣΤΟΧΟΣ ΔΕΝ ΕΧΕΙ ΞΕΚΙΝΗΣΕΙ</string>
@@ -719,6 +726,7 @@
     <string name="error_in_isf_values">Σφάλμα στις τιμές ISF</string>
     <string name="error_in_basal_values">Σφάλμα στις τιμές βασικού ρυθμού</string>
     <string name="error_in_target_values">Σφάλμα στις τιμές στόχου</string>
+    <string name="profile_name_contains_dot">Μερικά ονόματα προφίλ περιέχουν τελείες.\nΑυτό δεν υποστηρίζεται από το NS.\nΤα προφίλ δεν θα ανέβουν στο NS.</string>
     <string name="invalid_profile_not_accepted">Μη έγκυρο προφίλ %1$s δεν είναι αποδεκτό από το NS</string>
     <string name="errors">Σφάλματα</string>
     <!-- Command Queue + readStatus reasons -->
@@ -884,6 +892,7 @@
     <string name="export_result_message_exported">Έγινε εξαγωγή ρυθμίσεων</string>
     <string name="export_result_message_failed">ΑΠΟΤΥΧΙΑ εξαγωγής ρυθμίσεων!</string>
     <string name="export_result_message_about_to_expire">Έγινε εξαγωγή ρυθμίσεων: ο κωδικός λήγει σύντομα. Κάντε χειροκίνητη εξαγωγή και εισάγετε (ξανά) τον κωδικό.</string>
+    <string name="export_result_message_expired">Η εξαγωγή ρυθμίσεων ακυρώθηκε: ο κωδικός έληξε. Κάντε εξαγωγή χειροκίνητα και εισάγετε ξανά τον κωδικό!</string>
     <string name="export_result_message_disabled">Προειδοποίηση (αυτοματισμός): Η εξαγωγή ρυθμίσεων είναι απενεργοποιημένη!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Η εξαγωγή στο cloud έγινε με επιτυχία</string>
@@ -990,6 +999,7 @@
     <string name="cannula">Καθετήρας</string>
     <string name="patch_pump">Αυτοκόλλητη αντλία</string>
     <!-- Site Rotation -->
+    <string name="select_location">Πατήστε παρακάτω για να επιλέξετε το σημείο</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Μην σκοτώσεις την εφαρμογή μου;</string>
     <string name="fabric_upload_disabled">Η μεταφόρτωση των αρχείων καταγραφής σφαλμάτων απενεργοποιήθηκε!</string>
@@ -1038,6 +1048,7 @@
     <string name="unsaved_changes">Μη αποθηκευμένες αλλαγές</string>
     <string name="unsaved_changes_message">Έχετε αλλαγές που δεν αποθηκεύτηκαν. Τι θέλετε να κάνετε;</string>
     <string name="discard">Απόρριψη</string>
+    <string name="ic_dynamic_label_warning">Ο αλγόριθμός σας μπορεί να υπολογίζει δυναμικά το IC. Οι παρακάτω τιμές μπορούν να χρησιμοποιηθούν μόνο ως εφεδρικές, αν λείπουν δεδομένα, ή μόνο ως τιμή αναφοράς</string>
     <string name="isf_dynamic_label_warning">Ο αλγόριθμός σας μπορεί να υπολογίζει δυναμικά το ISF. Οι παρακάτω τιμές μπορούν να χρησιμοποιηθούν μόνο ως εφεδρικές, αν λείπουν δεδομένα, ή μόνο ως τιμή αναφοράς</string>
     <string name="add_time_block">Προσθήκη χρονικού διαστήματος</string>
     <string name="remove_entry">Αφαίρεση εγγραφής</string>
@@ -1054,6 +1065,8 @@
     <string name="wiki_search_offline">Η αναζήτηση στην τεκμηρίωση χρειάζεται σύνδεση στο διαδίκτυο</string>
     <string name="no_search_results">Δεν βρέθηκαν αποτελέσματα</string>
     <string name="search_plugin_disabled">Το πρόσθετο %1$s είναι απενεργοποιημένο</string>
+    <string name="search_recent">Πρόσφατες αναζητήσεις</string>
+    <string name="search_history_remove">Αφαίρεση από τις πρόσφατες αναζητήσεις</string>
     <!--    Food Management -->
     <string name="food_management">Τρόφιμα</string>
     <string name="food_deleted">Το τρόφιμο διαγράφηκε</string>
@@ -1100,6 +1113,7 @@
     <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Ρυθμίσεις προς αλλαγή: %1$d. Τα πρόσθετα που άλλαξαν θα επανεκκινηθούν.</string>
     <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Ρυθμίσεις προς αλλαγή: %1$d. Ρυθμίσεις αντλίας που διατηρούνται: %2$d, ώστε η αντλία σας να συνεχίσει να λειτουργεί.</string>
     <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Οι ρυθμίσεις που εισήχθησαν επέλεξαν αντλία που δεν υπάρχει σε αυτό το τηλέφωνο. Το %1$s είναι τώρα ενεργό — ελέγξτε τις ρυθμίσεις της αντλίας σας.</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">Προστέθηκε στη λίστα ινσουλινών σας από το αντίγραφο ασφαλείας: %1$s. Δεν χρησιμοποιείται ακόμα: επιλέξτε τη σωστή όταν ενεργοποιήσετε το προφίλ σας, και κάντε το πριν το Nightscout κατεβάσει τις παλαιότερες θεραπείες σας.</string>
     <string name="import_applying">Εφαρμογή ρυθμίσεων…</string>
     <string name="import_replace_pump_settings">Αντικατάσταση και των ρυθμίσεων αντλίας</string>
     <string name="import_replace_pump_settings_summary">Αφήστε το απενεργοποιημένο για να κρατήσετε την αντλία με την οποία είναι συζευγμένο αυτό το τηλέφωνο. Ενεργοποιήστε το όταν κάνετε επαναφορά σε νέο τηλέφωνο με την ίδια αντλία.</string>
@@ -1196,5 +1210,6 @@
     <string name="units_sec">δευτ.</string>
     <string name="units_years">έτη</string>
     <string name="prefs_range_title">Εύρος εμφάνισης</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">Η αντλία σταμάτησε το bolus μετά από %1$s. Ελέγξτε την αντλία πριν από το επόμενο bolus.</string>
     <string name="secrets_not_protected">Δεν βρέθηκε αποθήκη κλειδιών συστήματος σε αυτόν τον υπολογιστή. Τα κλειδιά που προστατεύουν τις ρυθμίσεις σας και τη σύζευξη με την κύρια συσκευή φυλάσσονται σε αρχεία δίπλα στα δεδομένα, οπότε όποιος πάρει αντίγραφο των αρχείων σας παίρνει και αυτά. Σε Linux, εγκαταστήστε και ξεκινήστε ένα keyring (για παράδειγμα GNOME Keyring ή KWallet) και μετά ξεκινήστε ξανά το AAPS.</string>
 </resources>
