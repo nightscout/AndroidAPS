@@ -296,10 +296,14 @@
     <string name="pref_title_fill_button_3">3-ias užpildymo mygtukas</string>
     <!-- DoubleKey: Safety preferences -->
     <string name="pref_title_max_bolus">Didžiausias bolusas</string>
+    <string name="treatmentssafety_maxbolus_summary">Šią reikšmę riboja pasirinktas naudotojo amžius. Didesnė reikšmė čia neturi jokio poveikio.</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Didžiausia valandinė bazė</string>
+    <string name="openapsma_max_basal_summary">Šis skaičius OpenAPS kontekste vadinamas maks. valandine baze\nŠią reikšmę riboja pasirinktas naudotojo amžius. Didesnė reikšmė čia neturi jokio poveikio.</string>
     <string name="pref_title_smb_max_iob">Didžiausias AIO naudojant SMB</string>
+    <string name="openapssmb_max_iob_summary">OpenAPS kontekste ši reikšmė vadinama maks. AIO\nOpenAPS neskirs papildomai insulino, jei dabartinis aktyvus insulinas (AIO) yra didesnis už šią reikšmę.\nŠią reikšmę riboja pasirinktas naudotojo amžius. Didesnė reikšmė čia neturi jokio poveikio.</string>
     <string name="pref_title_ama_max_iob">Didžiausias AIO naudojant AMA</string>
+    <string name="openapsma_max_iob_summary">OpenAPS kontekste ši reikšmė vadinama maks. AIO\nTai didžiausias insulino kiekis [V], kurį APS gali suleisti vienu metu.\nŠią reikšmę riboja pasirinktas naudotojo amžius. Didesnė reikšmė čia neturi jokio poveikio.</string>
     <string name="pref_title_max_daily_multiplier">Didžiausias paros saugos daugiklis</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Numatytoji reikšmė: 3. Tai pagrindinis OpenAPS saugiklis. Jis apriboja jūsų valandinę bazę iki 3 kartų didžiausios jūsų valandinės bazės. Greičiausiai šios reikšmės keisti nereikės, tačiau turėtumėte žinoti, kad tai yra saugiklis, aptariamas kaip „3x max daily; 4x current“.</string>
     <string name="pref_title_current_basal_multiplier">Dabartinės bazės saugos daugiklis</string>
