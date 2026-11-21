@@ -519,6 +519,27 @@ How the Carelevo plugin, its 6 view models and 15 screens went to commonMain whi
   each accessor (`Res.drawable.x`) needs its own import. Android vector XML with `aapt:attr` gradients renders.
 - **The module also builds for `jvm()`**, so every `expect` needs a `jvmMain` actual, even though desktop links no pump.
 
+#### What the Aaruy move added
+
+`:pump:aaruy` (on the `aaruy` branch) moved with its protocol and emulator modules. What Carelevo did not show:
+
+- **Move the driver to Bluetooth v2 (`BleCentral`) before the flip.** The old `BleTransport` is Android only. With
+  `BleCentral` the emulator becomes an `EmulatedPeripheral` on an `EmulatedBleCentral`, which runs on every target, so
+  the emulator module can flip too. Give the driver its own qualified central (`@AaruyCentral`), as Carelevo.
+- **iOS pairs by itself.** There `BleCentral.bonding` is null: the app cannot give a PIN, the system asks the user. A
+  pump with a PIN must show it in the pairing screen on that platform (`AaruyBLE.userTypesPin`).
+- **A driver's own Room database:** only suspend DAOs, `@ConstructedBy` with an `expect object` constructor, KSP for
+  each target (`kspAndroid`, `kspIosArm64`, `kspIosSimulatorArm64`, `kspJvm`), migrations on `SQLiteConnection`. Common
+  code has no `clearAllTables`; use a `deleteAll` in each DAO. The builder is platform code (Android: the same file name
+  with `BundledSQLiteDriver`; iOS: Application Support), provided by the platform registration container. The DAO
+  providers go in the common one.
+- **Mockito returns null for an unstubbed suspend function**, also when it returns `Int`. The caller then fails with
+  an NPE far from the cause. Stub each one with `wheneverBlocking`, check with `verifyBlocking`.
+- **JUnit and kotlin.test put the message on different ends of `assertEquals`.** JUnit 4 has it first, kotlin.test last.
+  A test moved to commonTest fails to compile, which is the good case. When all three arguments are strings it
+  compiles and compares the wrong values, so check every `assertEquals` with a message by hand.
+- **`HashMap.merge` and `synchronized` are JVM only.** Write the merge out; use `AapsLock`.
+
 ### Lift the platform call out, keep the rule
 
 When a class is blocked by one platform call, put that call behind an interface in commonMain and

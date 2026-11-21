@@ -120,6 +120,12 @@ Only on a temporary emulator: the tests clear the app's settings. For example
 - Run: `adb -s <serial> shell am instrument -w -r -e class app.aaps.e2e.<Pump>ScenarioTest
   info.nightscout.androidaps.test/app.aaps.runners.AapsTestRunner`
 - At real speed: add `-e emulatorSpeed real`. Use it to look for timing faults.
+- On an emulator that has just booted, the first run can end at once with `shortMsg=Process crashed.` and no test. It
+  is not a crash: the app ran out of Android's 20 s start limit while it was still checking the dex files of the large
+  debug APK (dropbox `data_app_anr`: "failed to complete startup", main thread in `DexFileVerifier`). Check them once
+  after each install, then run: `adb -s <serial> shell cmd package compile -m verify -f info.nightscout.androidaps`,
+  and the same for `info.nightscout.androidaps.test`. Run `adb shell` from PowerShell; Git Bash turns a device path
+  such as `/data/...` into a Windows path.
 
 ### App restart (`appKilledDuringABolus`)
 
