@@ -68,7 +68,7 @@
     <string name="patch_communication_failed">Erro de Comunicação</string>
     <string name="patch_communication_succeed">Sucesso na comunicação</string>
     <string name="patch_communication_succeed_message">Conectado com o patch.</string>
-    <string name="patch_cancel_pairing">Pareamento cancelado</string>
+    <string name="patch_cancel_pairing">Cancelar pareamento</string>
     <string name="insulin_suspend_msg1">Ao suspender, o bólus e a basal temporária em andamento serão cancelados.\n\nTaxa: %1$s U/h\nTempo restante: %2$s\nInsulina restante: %3$.2f U</string>
     <string name="insulin_suspend_msg2">Ao suspender, o bólus em andamento será cancelado.\n\nInsulina restante: %1$.2f U</string>
     <string name="insulin_suspend_msg3">Ao suspender, a basal temporária em andamento será cancelada.\n\nTaxa: %1$s U/h\nTempo restante: %2$s</string>
