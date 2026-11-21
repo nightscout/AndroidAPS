@@ -2,4 +2,24 @@
 <resources>
     <string name="authorizationfailed">L\'autorització ha fallat</string>
     <string name="identification_not_set">Identificació no establerta al mode de desenvolupament</string>
+    <string name="select">Seleccionar</string>
+    <string name="set">Establir</string>
+    <string name="migrating_preferences">Migrant la configuració…</string>
+    <string name="optimizing_database">Optimitzant la base de dades…</string>
+    <string name="initializing_plugins">Inicialitzant plugins…</string>
+    <string name="initializing">Inicialitzant…</string>
+    <string name="migrating_profile_switches">Migrant canvis de perfil…</string>
+    <string name="migrating_effective_profile_switches">Migrant canvis de perfil efectius…</string>
+    <string name="migrating_boluses">Migrant bolus…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Els registres antics no tenien configuració d\'insulina i no hi havia cap perfil actiu, per això s\'hi ha fet servir %1$s. Comproveu la configuració de la insulina — els registres ja migrats no s\'actualitzen després.</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">Els registres antics no tenien durada de la insulina, per això s\'han fet servir %1$.1f hores per a %2$s. Comproveu la configuració de la insulina — els registres ja migrats no s\'actualitzen després.</string>
+    <string name="settings_unreadable_title">No es pot llegir la configuració d\'AAPS</string>
+    <string name="settings_unreadable_key_explanation">La configuració d\'aquest telèfon està encriptada amb una clau que Android guarda per a AAPS, i aquesta clau ja no l\'obre. Això pot passar després que s\'hagi restablert el magatzem de claus del telèfon.</string>
+    <string name="settings_unreadable_keystore_explanation">El magatzem de claus del telèfon no ha respost, i AAPS no ha pogut obrir la seva configuració.</string>
+    <string name="settings_unreadable_not_running">AAPS no s\'està executant i no controla la bomba. Una basal temporal activa acaba a la seva hora, i després la bomba fa servir la seva pròpia basal.</string>
+    <string name="settings_unreadable_what_to_do">Reintentar tanca AAPS i el torna a iniciar. Si això no ajuda, reinicieu el telèfon. Trieu Començar de nou només quan res més no ajudi: aparta la configuració il·legible, i AAPS s\'inicia amb la configuració buida. Després importeu la vostra última exportació de configuració a l\'assistent de configuració.</string>
+    <string name="settings_unreadable_start_fresh">Començar de nou</string>
+    <string name="settings_unreadable_confirm_title">Començar amb la configuració buida?</string>
+    <string name="settings_unreadable_confirm_text">L\'arxiu de configuració il·legible es canvia de nom i es conserva. Tota la configuració torna als valors per defecte. Després torneu a configurar AAPS o importeu una exportació de configuració.</string>
+    <string name="settings_unreadable_notification">AAPS no s\'està executant. Obriu AAPS per veure què cal fer.</string>
 </resources>
