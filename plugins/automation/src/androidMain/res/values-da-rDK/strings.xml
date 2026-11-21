@@ -50,12 +50,12 @@
     <string name="automation_trigger_pump_last_connection_label">Sidste forbindelse til pumpe</string>
     <string name="automation_trigger_pump_last_connection_compared">Sidste forbindelse til pumpe %1$s %2$s min siden</string>
     <string name="alreadyset">Allerede sat</string>
-    <string name="profilepercentage">Profil procent</string>
+    <string name="profilepercentage">Profilprocent</string>
     <string name="startprofileforever">Start profil %1$d%%</string>
     <string name="sendsmsactionlabel">Send SMS: %1$s</string>
     <string name="sendsmsactiondescription">Send SMS til alle numre</string>
     <string name="sendsmsactiontext">Send SMS med tekst</string>
-    <string name="starttemptarget">Start midlertidig mål</string>
+    <string name="starttemptarget">Start midlertidigt mål</string>
     <string name="islesser">er mindre end</string>
     <string name="isequalorlesser">er lig med eller mindre end</string>
     <string name="isequal">er lig med</string>
@@ -65,9 +65,9 @@
     <string name="glucoseisnotavailable">Blodsukker data ikke tilgængelig</string>
     <string name="glucosecomparedmgdl">Glukose %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glukose %1$s %2$.1f %3$s</string>
-    <string name="notemptarget">Midlertidig mål findes ikke</string>
-    <string name="temptargetcomparedmgdl">Midlertidig mål %1$s %2$.0f %3$s</string>
-    <string name="temptargetcomparedmmol">Midlertidig mål %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">Midlertidigt mål findes ikke</string>
+    <string name="temptargetcomparedmgdl">Midlertidigt mål %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Midlertidigt mål %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profil pct %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="or">Eller</string>
@@ -86,7 +86,7 @@
     <string name="time_range">Tidsinterval</string>
     <string name="timerange_value">Tid er mellem%1$s og %2$s</string>
     <string name="add_short">TILFØJ</string>
-    <string name="temptargetcompared">Midlertidig mål %1$s</string>
+    <string name="temptargetcompared">Midlertidigt mål %1$s</string>
     <string name="btdevicecompared">Bluetooth-forbindelse til enheden %1$s %2$s</string>
     <string name="btdevice">Forbindelse til Bluetooth-enhed</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
