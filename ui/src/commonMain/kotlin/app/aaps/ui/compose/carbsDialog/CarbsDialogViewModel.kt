@@ -70,8 +70,8 @@ class CarbsDialogViewModel(
     val rh: TextResolver,
     val dateUtil: DateUtil,
     private val rxBus: RxBus,
-    // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
-    // binds the same instance under both, so this is the same application scope.
+    // Unqualified: the graph binds the one application scope with and without @ApplicationScope
+    // (AppCoroutineBindings), so this is the same instance.
     private val appScope: CoroutineScope,
     private val nsClient: NsClient
 ) : ViewModel() {

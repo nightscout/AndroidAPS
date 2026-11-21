@@ -91,8 +91,8 @@ class WizardDialogViewModel(
     private val automation: Automation,
     private val wizardExecutor: WizardExecutor,
     private val rxBus: RxBus,
-    // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
-    // binds the same instance under both names.
+    // Unqualified: the graph binds the one application scope with and without @ApplicationScope
+    // (AppCoroutineBindings), so this is the same instance.
     private val appScope: CoroutineScope,
     private val commandQueue: CommandQueue
 ) : ViewModel() {

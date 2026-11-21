@@ -51,8 +51,8 @@ class ProfileSwitchScheduler(
     private val dateUtil: DateUtil,
     private val config: Config,
     private val aapsLogger: AAPSLogger,
-    // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
-    // commonMain. AppCoroutineBindings.unqualifiedAppScope binds the very same scope without it.
+    // Plain CoroutineScope, the same object as @ApplicationScope:
+    // AppCoroutineBindings.unqualifiedAppScope binds the very same scope without it.
     private val appScope: CoroutineScope
 ) {
 

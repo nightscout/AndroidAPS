@@ -62,8 +62,8 @@ class CareDialogViewModel(
     val rh: TextResolver,
     val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
-    // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
-    // binds the same instance under both names.
+    // Unqualified: the graph binds the one application scope with and without @ApplicationScope
+    // (AppCoroutineBindings), so this is the same instance.
     private val appScope: CoroutineScope
 ) : ViewModel() {
 

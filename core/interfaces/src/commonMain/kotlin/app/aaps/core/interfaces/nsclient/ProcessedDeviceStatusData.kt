@@ -42,7 +42,14 @@ interface ProcessedDeviceStatusData {
         var isCharging: Boolean? = null
     }
 
+    /** Every uploader seen, with its newest report. A phone that stopped uploading stays in here. */
     val uploaderMap: HashMap<String, Uploader>
+
+    /**
+     * The uploaders that still report: [uploaderMap] without the phones whose last report is much older than
+     * the newest report of any phone. Use this, not [uploaderMap], for anything shown to the user (#5547).
+     */
+    val activeUploaders: Map<String, Uploader>
 
     class OpenAPSData {
 

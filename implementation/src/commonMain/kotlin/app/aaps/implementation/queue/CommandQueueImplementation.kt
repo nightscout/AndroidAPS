@@ -130,8 +130,8 @@ class CommandQueueImplementation(
     private val localAlertUtils: () -> LocalAlertUtils,
     private val smsCommunicator: () -> SmsCommunicator,
     private val commandExecutor: () -> CommandExecutor,
-    // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
-    // commonMain. AppCoroutineBindings.unqualifiedAppScope binds the very same scope without it.
+    // Plain CoroutineScope, the same object as @ApplicationScope:
+    // AppCoroutineBindings.unqualifiedAppScope binds the very same scope without it.
     private val appScope: CoroutineScope,
     private val bolusProgressData: BolusProgressData,
     private val smbPause: SmbPause,
