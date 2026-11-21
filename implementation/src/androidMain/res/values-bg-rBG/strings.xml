@@ -90,7 +90,7 @@
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Грешка при достъп до директория. Изберете правилната AAPS директория.</string>
     <string name="storage_google_drive">Google Drive</string>
     <string name="backup_to_google_drive">Архивиране в Google Drive</string>
-    <string name="csv_upload_failed">Неуспешно експортиране в клауда</string>
+    <string name="csv_upload_failed">Неуспешно качване на CSV с потребителските данни в клауда</string>
     <string name="csv_upload_error">Грешка при експорта на CSV в клауда</string>
     <string name="uploading_to_cloud">Качване в клауда...</string>
     <string name="cloud_directory_path">Клауд директория: %1$s</string>
