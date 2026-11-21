@@ -91,6 +91,7 @@
     <string name="press_OK_to_return">לחצו על <b>OK</b> כדי לחזור למסך הראשי.</string>
     <string name="deactivate_sure">האם אתם בטוחים שברצונכם להשבית את הפאץ\' הנוכחי?</string>
     <string name="cancel_sure">האם אתם בטוחים שברצונכם לבטל את ההפעלה?</string>
+    <string name="cancel_deactivation_sure">האם אתם בטוחים שברצונכם לבטל את ההשבתה? ייתכן שהפאץ\' יישאר פעיל.</string>
     <string name="medtrum_deactivate_pump_confirm">האם אתם בטוחים? לא ניתן לבטל פעולה זו!!</string>
     <string name="press_next_or_cancel">לחצו על <b>הבא</b> כדי להשבית או על <b>ביטול</b> כדי לחזור למסך הראשי.</string>
     <string name="deactivating_pump">משבית את הפאץ\'. נא להמתין.</string>
