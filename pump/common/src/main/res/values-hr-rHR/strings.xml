@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Pumpa i/ili upravljački program ne podržavaju ovu radnju.</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Nije inicijalizirano</string>
     <string name="pump_status_initialized">Inicijalizirano</string>
@@ -10,10 +11,35 @@
     <string name="pump_status_suspended">Suspendiran</string>
     <string name="pump_status_executing_command">Izvršavanje naredbe</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Dohvati postavke</string>
+    <string name="pump_cmd_desc_get_firmware">Dohvati firmware pumpe</string>
+    <string name="pump_cmd_desc_get_basal_profile">Dohvati bazalni profil</string>
+    <string name="pump_cmd_desc_set_basal_profile">Postavi bazalni profil</string>
+    <string name="pump_cmd_desc_get_tbr">Dohvati privremeni bazal</string>
+    <string name="pump_cmd_desc_cancel_tbr">Otkaži privremeni bazal</string>
+    <string name="pump_cmd_desc_set_tbr">Postavi privremeni bazal</string>
+    <string name="pump_cmd_desc_set_bolus">Postavi bolus</string>
+    <string name="pump_cmd_desc_get_bolus">Dohvati bolus</string>
+    <string name="pump_cmd_desc_cancel_bolus">Otkaži bolus</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Dohvati preostali inzulin</string>
+    <string name="pump_cmd_desc_get_battery_status">Dohvati status baterije</string>
+    <string name="pump_cmd_desc_get_time">Dohvati vrijeme</string>
+    <string name="pump_cmd_desc_set_time">Postavi vrijeme</string>
+    <string name="pump_cmd_desc_get_pump_status">Dohvati status pumpe</string>
+    <string name="pump_cmd_desc_get_history">Dohvati povijest</string>
+    <string name="pump_cmd_desc_get_history_params">Dohvati povijest %s</string>
+    <string name="pump_cmd_desc_custom">Prilagođena naredba</string>
     <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Bazali</string>
+    <string name="history_group_configuration">Konfiguracija</string>
+    <string name="history_group_notification">Obavijesti</string>
+    <string name="history_group_statistic">Statistika</string>
+    <string name="history_group_unknown">Nepoznato</string>
     <string name="history_group_all">Svi</string>
     <string name="history_group_bolus">Bolusi</string>
     <string name="history_group_prime">Punjenje katetera</string>
+    <string name="history_group_alarm">Alarmi</string>
+    <string name="history_group_glucose">Glukoza</string>
     <string name="history_group_base">Osnova</string>
     <string name="history_group_other">Ostalo</string>
     <string name="history_group_events">Svi događaji</string>
@@ -24,6 +50,7 @@
     <string name="time_last_3_hours">Zadnja 3 sata</string>
     <string name="time_last_6_hours">Zadnjih 6 sati</string>
     <string name="time_last_12_hours">Zadnjih 12 sati</string>
+    <string name="time_last_24_hours">Zadnja 24 sata</string>
     <string name="time_last_2_days">Zadnja 2 dana</string>
     <string name="time_last_4_days">Zadnja 4 dana</string>
     <string name="time_last_week">Prošli tjedan</string>
