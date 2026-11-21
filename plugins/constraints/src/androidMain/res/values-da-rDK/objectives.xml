@@ -15,14 +15,14 @@
     <string name="objectives_maxbasal_gate">Baseret på denne erfaring, beslut hvad max basal skal være og indstil det både på pumpen og i indstillinger</string>
     <string name="objectives_maxbasal">Udfør handling for at opfylde anbefalingen</string>
     <string name="objectives_maxbasal_learned">Vær opmærksom på sikkerhedsfunktionerne og juster sikkerhedsparametre, når det er nødvendigt.</string>
-    <string name="objectives_maxiobzero_objective">Begynde at bruge lukket loop med lav glukose suspendering</string>
+    <string name="objectives_maxiobzero_objective">Begynde at bruge lukket loop med Stop ved lavt BS (LGS)</string>
     <string name="objectives_maxiobzero_gate">Kør i lukket loop i tilstanden Stop ved lavt BS (dvs. maks. IOB = 0 sættes automatisk) i et par dage uden for mange LGS-hændelser.</string>
     <string name="objectives_maxiobzero_learned">Når maks. IOB sættes til nul, hjælper det med at undgå hypoer, og der gives ikke mere insulin end basalraten (undtagen ved negativ IOB)</string>
     <string name="objectives_maxiob_objective">Tuning af lukket loop, hæv max IOB over 0 og sænk gradvist BG målet</string>
     <string name="objectives_maxiob_gate">Kør i et par dage, og mindst én nat uden alarmer for lavt BS, før du sænker BS-målet</string>
     <string name="objectives_maxiob_learned">Opdater maks. IOB, når et barn vokser. Lad ikke systemet give dig mere insulin, end du kan dække med mad = en meget høj værdi er en dårlig idé. Maks. IOB beregnes automatisk i simpel tilstand</string>
     <string name="maxiobset">Maks. IOB indstillet korrekt (ikke nødvendigt i simpel tilstand)</string>
-    <string name="objectives_autosens_objective">Justér om nødvendigt basaler og forhold og aktivér derefter auto-sens</string>
+    <string name="objectives_autosens_objective">Juster om nødvendigt basaler og forhold og aktiver derefter auto-sens</string>
     <string name="objectives_autosens_gate">1 uges vellykket looping i dagtimerne med alle måltider tastet ind</string>
     <string name="objectives_autosens_learned">Hvis dit autosens-resultat ikke svinger omkring 100%, er din profil sandsynligvis forkert.</string>
     <string name="objectives_smb_objective">Aktivering af yderligere funktioner til brug i dagtimerne, såsom SMB</string>
@@ -68,8 +68,8 @@
     <string name="objectives_exam_learned_iob">Hvis du vil tjekke, om AAPS fungerer godt for dig, kan IOB-grafen give dig mange nyttige oplysninger.</string>
     <string name="objectives_exam_learned_cob">COB-beregningen afhænger af forholdet mellem ISF og IC. Hvis ISF øges eller IC sænkes, bliver absorptionstiderne længere. Men et profilskift med procent ændrer begge værdier på samme tid, og absorptionstiden påvirkes ikke.</string>
     <string name="objectives_exam_learned_breadgrams">Kun gram er tilladt ved indtastning af kulhydrater.</string>
-    <string name="objectives_exam_learned_ecarbs">E-kulhydrater er en erstatning for udvidet bolus i pumpeverdenen.</string>
-    <string name="objectives_exam_learned_nsclient">Du kan følge AAPS på afstand med AAPSClient eller Nightscout. Når AAPSClient er parret med hovedtelefonen, kan du også fjernstyre AAPS.</string>
+    <string name="objectives_exam_learned_ecarbs">E-kulhydrater er en erstatning for forlænget bolus i pumpeverdenen.</string>
+    <string name="objectives_exam_learned_nsclient">Du kan følge AAPS på afstand med AAPSClient eller Nightscout. Når AAPSClient er parret med hovedenheden, kan du også fjernstyre AAPS.</string>
     <string name="objectives_exam_learned_concentration1">Brug af U200-insulin med en profil på 50% kræver konstant omregning: for eksterne boluser med pen, og alle standardrapporter fra AAPS eller NS bliver forkerte og skal omregnes til IE for behandlerteamet.</string>
     <string name="objectives_exam_learned_concentration2" formatted="false">Skift fra U200 med en profil på 50% til U200 med funktionen insulinkoncentration kræver, at du opretter en ny, stærkere profil, slår DynISF fra i en uge og træner hjernen i at tænke i internationale enheder.</string>
     <string name="objectives_exam_learned_concentration3">Insulinkoncentrationen kan kun ændres, når insulinen eller patchen skiftes. Men vigtigst af alt, især for slangepumper: brug aldrig pumpens egen brugerflade til at give boluser direkte fra pumpen.</string>
