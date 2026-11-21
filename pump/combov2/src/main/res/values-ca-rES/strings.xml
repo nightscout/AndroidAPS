@@ -59,7 +59,7 @@ Si no s\'estableix connexió al cap de més de ~5 minuts:\n\n
     <string name="combov2_not_initialized">No inicialitzat</string>
     <string name="combov2_checking_pump">Comprovant la bomba</string>
     <string name="combov2_ready">A punt</string>
-    <string name="combov2_suspended">En pausa</string>
+    <string name="combov2_suspended">Suspesa</string>
     <string name="combov2_pump_is_suspended">La bomba està suspesa</string>
     <string name="combov2_executing_command">Executant ordre</string>
     <string name="combov2_getting_basal_profile_cmddesc">Obtenint perfil basal</string>
@@ -78,7 +78,7 @@ Si no s\'estableix connexió al cap de més de ~5 minuts:\n\n
     <string name="combov2_cannot_deliver_pump_suspended">No es pot lliurar el tractament - la bomba està suspesa</string>
     <string name="combov2_insufficient_insulin_in_reservoir">Insulina insuficient al reservori</string>
     <string name="combov2_bolus_cancelled">Bolus cancel·lat</string>
-    <string name="combov2_bolus_delivery_failed">Error en lliurar bolus. Sembla que no s\'ha lliurat cap bolus. Per estar segurs, comproveu-ho a la bomba, i així evitareu un possible bolus doble. Per raons de seguretat, els bolus no es reintenten automàticament.</string>
+    <string name="combov2_bolus_delivery_failed">Error en lliurar el bolus. Sembla que no s\'ha lliurat cap bolus. Per estar segurs, comproveu la bomba per evitar un bolus doble i després torneu a fer el bolus. Per protegir-vos d\'errors, els bolus no es tornen a intentar automàticament.</string>
     <string name="combov2_bolus_not_delivered">Bolus no lliurat</string>
     <string name="combov2_cannot_access_pump_data">No es pot accedir a les dades de la bomba; cal tornar a emparellar la bomba</string>
     <string name="combov2_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">S\'ha perdut la connexió amb la bomba durant el bolus. Fins aleshores la bomba havia lliurat %1$s, i encara pot lliurar la resta. No torneu a posar un bolus. AAPS llegirà la quantitat real de la bomba a la propera connexió.</string>
@@ -97,7 +97,7 @@ Si no s\'estableix connexió al cap de més de ~5 minuts:\n\n
     <string name="combov2_battery_empty">Buida</string>
     <string name="combov2_battery_low">Baixa</string>
     <string name="combov2_battery_full">Plena</string>
-    <string name="combov2_battery_low_warning">Bateria baixa</string>
+    <string name="combov2_battery_low_warning">Pila de la bomba baixa</string>
     <string name="combov2_reservoir_low_warning">Nivell baix del reservori de la bomba</string>
     <string name="combov2_setting_tbr_succeeded">TBR establerta correctament</string>
     <string name="combov2_setting_tbr_failed">Error en establir la TBR</string>
