@@ -3,34 +3,143 @@
     <!-- AAPSClient -->
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Параметры подключения</string>
+    <string name="description_ns_client_v3">Синхронизирует ваши данные с Nightscout через API v3</string>
     <string name="blocked_by_charging">Заблокировано опциями зарядки</string>
     <string name="blocked_by_connectivity">Заблокировано настройками подключения</string>
     <string name="no_connectivity">Нет подключения</string>
     <string name="unsupported_ns_version">Неподдерживаемая версия Nightscout</string>
     <!-- AAPSClient -->
     <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <string name="authorized_clients_title">Авторизованные клиенты</string>
+    <string name="authorized_clients_add">Добавить клиента</string>
+    <string name="authorized_clients_comm_switch_title">Разрешить управление с клиентов</string>
+    <string name="authorized_clients_comm_switch_summary">Сопряженные клиенты могут отправлять подписанные команды через Nightscout. Выключите, чтобы остановить связь, не удаляя клиентов.</string>
+    <string name="authorized_clients_state_active">Активен</string>
+    <string name="authorized_clients_state_pending">Ожидание</string>
+    <string name="authorized_clients_last_seen">Последняя активность: %1$s</string>
+    <string name="authorized_clients_never_seen">Не использовался</string>
+    <string name="authorized_clients_pending_expires_in">Сопряжение истекает через %1$s с</string>
+    <string name="authorized_clients_empty_title">Нет авторизованных клиентов</string>
+    <string name="authorized_clients_empty_subtitle">Выполните сопряжение с клиентским устройством, чтобы оно могло отправлять подписанные команды на этот основной телефон.</string>
+    <string name="authorized_clients_name_dialog_title">Новый клиент</string>
+    <string name="authorized_clients_name_placeholder">Название устройства</string>
+    <string name="authorized_clients_delete_dialog_title">Отозвать доступ?</string>
+    <string name="authorized_clients_delete_dialog_message">%1$s больше не сможет отправлять команды.</string>
+    <string name="authorized_clients_pin_dialog_title">Сопряжение клиента</string>
+    <string name="authorized_clients_pin_instructions">Введите этот PIN-код на клиентском устройстве. Код действует только для одного сопряжения.</string>
+    <string name="authorized_clients_pin_expires_in">Истекает через %1$s с</string>
+    <string name="authorized_clients_pin_done">Готово</string>
+    <string name="authorized_clients_pin_publishing">Отправка предложения сопряжения в Nightscout…</string>
+    <string name="authorized_clients_pin_published">Предложение сопряжения готово в Nightscout.</string>
+    <string name="authorized_clients_pin_publish_failed">Не удалось загрузить предложение сопряжения в Nightscout.</string>
+    <string name="authorized_clients_pin_retry">Повторить</string>
+    <string name="authorized_clients_method_title">Как настроить телефон?</string>
+    <string name="authorized_clients_method_qr_pair">QR-код: Nightscout и сопряжение</string>
+    <string name="authorized_clients_method_qr_pair_summary">Отсканируйте один раз на новом телефоне. Он получит собственный токен Nightscout, и сопряжение будет выполнено.</string>
+    <string name="authorized_clients_method_qr_ns">QR-код: только Nightscout</string>
+    <string name="authorized_clients_method_qr_ns_summary">Телефон получит собственный токен Nightscout и сможет читать данные. Сопряжение не выполняется, и телефон не может отправлять команды.</string>
+    <string name="authorized_clients_method_pin">PIN-код</string>
+    <string name="authorized_clients_method_pin_summary">Для телефона без камеры. Он уже должен быть подключен к Nightscout.</string>
+    <string name="authorized_clients_qr_working">Создание токена Nightscout…</string>
+    <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Настройка: %1$s</string>
+    <string name="authorized_clients_qr_pair_instructions">Отсканируйте этот код на новом телефоне в мастере установки или в разделе «Сопряжение с основным телефоном». Код настроит Nightscout и выполнит сопряжение телефона.</string>
+    <string name="authorized_clients_qr_ns_instructions">Отсканируйте этот код на новом телефоне в мастере установки или в разделе «Сопряжение с основным телефоном». Код настроит Nightscout. Сопряжение телефона не выполняется.</string>
+    <string name="authorized_clients_qr_keep_private">Любой, кто увидит этот код, сможет читать ваш Nightscout. Показывайте его только новому телефону.</string>
+    <string name="authorized_clients_token_problem_title">Нет QR-кода</string>
+    <string name="authorized_clients_not_added_title">Клиент не добавлен</string>
+    <string name="authorized_clients_token_problem_not_connected">Этот телефон не подключен к Nightscout, поэтому не может создать токен для клиента.</string>
+    <string name="authorized_clients_token_problem_not_allowed">Токен Nightscout этого телефона не является токеном администратора, поэтому он не может создать токен для клиента. Используйте здесь токен администратора или добавьте клиента с помощью PIN-кода.</string>
+    <string name="authorized_clients_token_problem_name_taken">В Nightscout уже есть токен с этим именем и другими правами. Выберите другое имя.</string>
+    <string name="authorized_clients_token_problem_name_in_use">Клиент с этим именем уже есть в списке. Выберите другое имя или сначала удалите этого клиента.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout не показал новый токен в списке, поэтому токен снова удален. Ничего не осталось. Повторите попытку.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout не показал новый токен в списке, и его не удалось удалить. Удалите токен %1$s в Nightscout и повторите попытку.</string>
+    <string name="authorized_clients_tokens_header">Только чтение Nightscout</string>
+    <string name="authorized_clients_token_unpaired">Собственный токен Nightscout, без сопряжения</string>
+    <string name="authorized_clients_token_show_qr">Показать QR-код</string>
+    <string name="authorized_clients_token_delete_title">Удалить токен?</string>
+    <string name="authorized_clients_token_delete_message" comment="%1$s = the name of the client, for example Tablet">%1$s больше не сможет читать Nightscout.</string>
+    <string name="authorized_clients_delete_dialog_token">Его токен Nightscout тоже будет удален, поэтому он больше не сможет читать Nightscout.</string>
+    <string name="authorized_clients_uses_client_token">Собственный токен Nightscout</string>
+    <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Использует токен Nightscout %1$s, у которого больше прав, чем нужно клиенту</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Использует токен Nightscout %1$s, а не собственный: его команды отклоняются. Удалите клиента и добавьте его снова.</string>
     <!-- Pair with master (client side PIN entry) -->
+    <string name="pair_with_master_title">Сопряжение с основным телефоном</string>
+    <string name="pair_with_master_pin_entry_title">Введите PIN-код сопряжения</string>
+    <string name="pair_with_master_pin_entry_message">На основном телефоне откройте «Авторизованные клиенты» и добавьте этот клиент. Введите 8-значный PIN-код, который там показан.</string>
+    <string name="pair_with_master_pin_entry_label">8-значный PIN-код</string>
+    <string name="pair_with_master_pin_entry_submit">Выполнить сопряжение</string>
+    <string name="pair_with_master_fetching">Поиск сопряжения…</string>
+    <string name="pair_with_master_confirm_title">Выполнить сопряжение с этим основным телефоном?</string>
+    <string name="pair_with_master_confirm_master">Основной телефон: %1$s</string>
+    <string name="pair_with_master_confirm_warning">После сопряжения это устройство сможет отправлять подписанные команды на этот основной телефон.</string>
+    <string name="pair_with_master_confirm_pair">Выполнить сопряжение</string>
+    <string name="pair_with_master_error_title">Сопряжение невозможно</string>
+    <string name="pair_with_master_error_wrong_pin">Сопряжение для этого PIN-кода не найдено. Проверьте PIN-код на основном телефоне и повторите попытку.</string>
+    <string name="pair_with_master_error_ambiguous_pin">Этому PIN-коду соответствует несколько сопряжений. Создайте новый PIN-код на основном телефоне и повторите попытку.</string>
+    <string name="pair_with_master_error_expired">Срок действия этого сопряжения истек. Создайте новый PIN-код на основном телефоне.</string>
+    <string name="pair_with_master_error_network">Нет связи с Nightscout. Проверьте подключение и повторите попытку.</string>
+    <string name="pair_with_master_error_secret_store">Не удалось сохранить секретный ключ сопряжения, поэтому сопряжение отменено. Ничего не изменено. Повторите попытку, а если ошибка повторяется, перезапустите приложение.</string>
+    <string name="pair_with_master_retry">Повторить попытку</string>
+    <string name="pair_with_master_already_paired_title">Сопряжение уже выполнено</string>
+    <string name="pair_with_master_already_paired_master">Сейчас установлено сопряжение с основным телефоном %1$s. Чтобы ввести новый PIN-код, сначала разорвите сопряжение.</string>
+    <string name="pair_with_master_unpair">Разорвать сопряжение</string>
+    <string name="pair_with_master_sending">Отправка сообщения сопряжения…</string>
     <!-- Client set-up from the master's QR code -->
+    <string name="client_setup_scan_button">Сканировать QR-код</string>
+    <string name="client_setup_scan_title">Отсканируйте QR-код основного телефона</string>
+    <string name="client_setup_scan_instructions">На основном телефоне откройте «Авторизованные клиенты» и добавьте этот телефон с помощью QR-кода. Наведите камеру на код.</string>
+    <string name="client_setup_scan_camera_refused">Для чтения QR-кода нужна камера. Разрешите доступ к ней или выполните сопряжение с помощью PIN-кода.</string>
+    <string name="client_setup_scan_camera_denied">Доступ к камере для AAPS выключен. Включите его в системных настройках или выполните сопряжение с помощью PIN-кода.</string>
+    <string name="client_setup_scan_camera_blocked">Доступ к камере на этом устройстве запрещен. Выполните сопряжение с помощью PIN-кода.</string>
+    <string name="client_setup_scan_camera_unavailable">Камеру нельзя использовать на этом устройстве. Выполните сопряжение с помощью PIN-кода.</string>
+    <string name="client_setup_scan_open_settings">Открыть настройки</string>
+    <string name="client_setup_scan_not_a_code">Это не QR-код из AAPS.</string>
+    <string name="client_setup_scan_other_version">Этот код из другой версии AAPS. На основном телефоне и на этом телефоне должна быть одна и та же версия.</string>
+    <string name="client_setup_scan_expired">Срок действия этого кода истек. Создайте новый на основном телефоне.</string>
+    <string name="client_setup_scan_already_paired">Этот телефон уже сопряжен. Чтобы использовать код с сопряжением, сначала разорвите сопряжение.</string>
+    <string name="client_setup_confirm_title">Использовать этот код?</string>
+    <string name="client_setup_confirm_nightscout" comment="%1$s = the Nightscout address, for example https://my.nightscout.host">Nightscout: %1$s</string>
+    <string name="client_setup_confirm_pairs" comment="%1$s = the id of the master phone">Также будет выполнено сопряжение этого телефона с основным телефоном %1$s.</string>
+    <string name="client_setup_confirm_replaces">Адрес и токен Nightscout на этом телефоне будут заменены.</string>
+    <string name="client_setup_confirm_apply">Использовать</string>
+    <string name="client_setup_done_title">Готово</string>
+    <string name="client_setup_done_paired">Nightscout настроен, сопряжение телефона выполнено. Основной телефон покажет его как активный после подключения.</string>
+    <string name="client_setup_done_ns_only">Nightscout настроен. Чтобы управлять основным телефоном с этого телефона, выполните также сопряжение.</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
+    <string name="clientcontrol_orphan_notification">Основной AAPS больше не распознает это устройство. Откройте меню «Управление» → «Сопряжение с основным телефоном», чтобы выполнить сопряжение снова.</string>
     <string name="ns_client">клиент NS</string>
     <string name="ns_client_url">Адрес URL:</string>
     <string name="ns_client_v3_title">NSClientV3</string>
     <string name="deliver_now">Подать сейчас</string>
     <string name="queue">очередь</string>
-    <string name="clear_log">очистка лога</string>
+    <string name="status_label">Статус:</string>
+    <string name="clear_log">Очистить журнал</string>
     <string name="full_sync">Полная синхронизация</string>
+    <string name="full_sync_comment">Полная синхронизация? Это может занять много часов, и до ее завершения вы не увидите новых данных в NS.</string>
     <string name="ns_sync_options">Синхронизация</string>
     <string name="ns_alarm_options">опции оповещения</string>
+    <string name="ns_remote_control_options">Удаленное управление</string>
     <!-- Tidepool -->
+    <string name="summary_tidepool_dev_servers">Если включено, данные будут загружаться на тестовые серверы вместо обычных</string>
     <string name="title_tidepool_dev_servers">Использовать серверы интеграции (тест)</string>
+    <string name="title_tidepool_use_ns_connection">Использовать настройки подключения Nightscout</string>
+    <string name="summary_tidepool_use_ns_connection">Выключите, чтобы задать отдельные настройки подключения для Tidepool</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Загружает данные в Tidepool</string>
     <string name="upload_now">Выгрузить (передать данные) сейчас</string>
+    <string name="tidepool_purge_data">Удалить все данные</string>
+    <string name="tidepool_purge_data_confirm">Удалить ВСЕ данные, которые AAPS загрузил в Tidepool? Это нельзя отменить. Используйте это, чтобы удалить данные, испорченные старой версией, а затем запустите \"Полная синхронизация\" для повторной загрузки.</string>
+    <string name="tidepool_full_sync_comment">Полная синхронизация? AAPS снова загрузит все данные в Tidepool. Это может занять некоторое время.</string>
+    <string name="tidepool_logout_confirm">Выйти из Tidepool? Загрузка данных остановится, пока вы снова не войдете.</string>
+    <string name="tidepool_status_not_logged_in">Вход не выполнен</string>
+    <string name="tidepool_status_no_session">Вход выполнен, подключения еще нет</string>
+    <string name="tidepool_status_blocked">Заблокировано настройками подключения</string>
+    <string name="tidepool_status_failed">Ошибка. См. журнал ниже.</string>
     <string name="not_connected">Нет подключения</string>
     <string name="read_only">Только чтение</string>
     <string name="working">Обработка</string>
     <!-- Xdrip StatusLine -->
-    <string name="xdrip">xDrip +</string>
+    <string name="xdrip">xDrip+</string>
     <string name="description_xdrip">Отправить данные ГК на xDrip+</string>
     <string name="xdrip_status_settings">Строка состояния xDrip+ подробно</string>
     <string name="xdrip_not_installed">xDrip+ не установлен</string>
@@ -38,17 +147,25 @@
     <string name="xdrip_local_broadcasts_summary">Отправлять данные о глюкозе и терапии на xDrip+. Источником данных должен быть выбран \"xDrip+ Sync Follower\" а в настройках между приложениями надо включить - Принимать глюкозу/терапию</string>
     <string name="xdrip_local_broadcasts_title">Включить трансляции для xDrip+.</string>
     <!--    DataBroadcast-->
+    <string name="tizen">Внешние приложения-компаньоны</string>
+    <string name="tizen_description">Включает трансляцию данных в различные внешние приложения-компаньоны</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Подключение к устройству Garmin (Fenix, Edge, …)</string>
     <string name="garmin_local_http_server_port">Порт локального HTTP сервера</string>
     <string name="garmin_local_http_server">Локальный HTTP сервер</string>
+    <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">Часы Garmin отправили %1$s углеводов. Этот телефон — клиент, поэтому углеводы не введены. Введите их в AAPS.</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">Часы Garmin запросили подключение или отключение помпы. Этот телефон — клиент, поэтому ничего не изменено. Сделайте это в AAPS.</string>
     <!--    Wear-->
     <string name="description_wear">Мониторить и контролировать AAPS при помощи часов WearOS.</string>
     <string name="no_watch_connected">(Часы не подключены)</string>
     <string name="pump_status">Статус помпы</string>
     <string name="loop_status">Статус цикла</string>
     <string name="user_action_not_available">Выбранное пользовательское действие %1$s более недоступно, пожалуйста, обновите плитку</string>
+    <string name="scene_not_available">Сценарий %1$s больше недоступен, обновите плитку</string>
+    <string name="wear_remote_insulin_not_allowed_in_client">Удаленные команды инсулина отключены в режиме клиента</string>
+    <string name="wear_phone_not_ready">Телефон еще запускается или применяет настройки. Повторите попытку чуть позже.</string>
+    <string name="wear_control_disabled">Управление с часов выключено в настройках Wear на телефоне.</string>
     <string name="wear_action_tempt_unit_error">На часах и телефоне различные единицы измерения!</string>
     <string name="wear_action_tempt_min_bg_error">Мин ГК вне диапазона!</string>
     <string name="wear_action_tempt_max_bg_error">Макс ГК вне диапазона!</string>
@@ -57,6 +174,11 @@
     <string name="wear_general_settings">Общие настройки</string>
     <string name="wear_custom_watchface_settings">Настройка циферблатов</string>
     <string name="wear_custom_watchface">Пользовательский циферблат %1$s</string>
+    <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Установка…</string>
+    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">На часах выбран циферблат с дополнениями. Выберите пользовательский циферблат, чтобы увидеть %1$s на часах.</string>
+    <string name="wear_pushed_watchface_confirm_title">Сменить циферблат на часах?</string>
+    <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s заменит на часах текущий циферблат (%2$s).</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s заменит на часах текущий циферблат (%2$s). Дополнения, которые вы изменили в редакторе циферблата, вернутся к значениям по умолчанию.</string>
     <string name="wear_load_watchface">Загрузить циферблат</string>
     <string name="wear_infos_watchface">Циферблат Infos</string>
     <string name="wear_export_watchface">Экспортировать шаблон</string>
@@ -64,9 +186,12 @@
     <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/ru/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Повторить отправку всех данных</string>
     <string name="open_settings_on_wear">Открыть настройки на часах</string>
+    <string name="wear_import_custom_watchface_title">Выберите пользовательский циферблат</string>
     <string name="cwf_infos_pref_locked">Список настроек, блокируемых циферблатом</string>
     <string name="cwf_infos_pref_required">Список настроек, требующихся для циферблата</string>
     <string name="cwf_infos_view_title">Список полей, входящих в циферблат</string>
+    <string name="enabled">Включено</string>
+    <string name="disabled">Отключено</string>
     <string name="pump_fetching_data">пытаюсь получить данные с помпы.</string>
     <string name="pump_old_data">TDD: До сих пор старые данные! Невозможно загрузить с помпы.</string>
     <string name="units_short">ед</string>
@@ -84,7 +209,7 @@
     <string name="last_aps_result_na">Последний результат недоступен!</string>
     <string name="loop_status_closed">ЗАМКНУТЫЙ ЦИКЛ</string>
     <string name="loop_status_open">ОТКРЫТЫЙ ЦИКЛ</string>
-    <string name="loop_status_lgs">Приостановка на Низких</string>
+    <string name="loop_status_lgs">Приостановка на низкой ГК</string>
     <string name="loop_status_disabled">ЦИКЛ ВЫКЛЮЧЕН</string>
     <string name="aps">APS</string>
     <string name="last_run">Предыдущее выполнение</string>
@@ -95,6 +220,7 @@
     <string name="full_xdrip_sync_comment">Полная синхронизация? Это может занять длительное время и до завершения вы не увидите новые данные в xDrip+.</string>
     <string name="wear_action_loop_state_unauthorized">Повторите попытку.</string>
     <string name="wear_action_loop_state_invalid">Запрошено неверное состояние цикла</string>
+    <string name="wear_action_running_mode_title">Режим работы</string>
     <string name="garmin_request_key">Ключ запроса</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS коммуникатор</string>
@@ -103,13 +229,16 @@
     <string name="smscommunicator_tab_otp_label">Настройка аутентификации</string>
     <string name="smscommunicator_code_verify_label">Код для проверки:</string>
     <string name="smscommunicator_code_verify_hint">OTP + ПИН-код</string>
+    <string name="smscommunicator_code_verify_info">Код подтверждения состоит из 6 цифр из приложения Authenticator (так называемый OTP), за которыми следуют 3 или более цифр обязательного PIN-кода.</string>
     <string name="smscommunicator_otp_reset_btn">Сбросить аутентификаторы</string>
     <string name="smscommunicator_otp_reset_title">Сбросить ключ идентификации</string>
+    <string name="smscommunicator_otp_reset_prompt">Вы действительно хотите сбросить ключ Authenticator? Все настроенные сейчас приложения Authenticator станут недействительными, и их нужно будет настроить заново.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Установить Аутентификатор</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Сканируйте код для настройки OTP кодов AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Проверьте одноразовый пароль</string>
     <string name="smscommunicator_otp_reset_header">Сбросить авторизацию</string>
     <string name="smscommunicator_otp_install_info">На каждом отслеживающем телефоне установите приложение Authenticator, поддерживающее маркеры TOTP RFC 6238. Популярные бесплатные приложения: \n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Сброс ключа сделает все уже настроенные приложения Authenticator недействительными. Их нужно будет настроить заново!</string>
     <string name="smscommunicator_otp_verification_ok">OK</string>
     <string name="smscommunicator_otp_verification_ivalid_size">НЕВЕРНЫЙ РАЗМЕР!</string>
     <string name="smscommunicator_otp_verification_wrong_pin">НЕВЕРНЫЙ PIN-КОД</string>
@@ -120,7 +249,8 @@
     <string name="smscommunicator_meal_bolus_reply_with_code">Для подачи болюса %1$.2fед ответьте кодом %2$s</string>
     <string name="smscommunicator_temptarget_with_code">Чтобы установить временную цель %1$s ответьте кодом %2$s</string>
     <string name="smscommunicator_temptarget_cancel">Чтобы отменить временную цель ответьте кодом %1$s</string>
-    <string name="smscommunicator_stopped_sms">Удаленная служба SMS остановлена. Для ее реактивации используйте AAPS на главном смартфоне.</string>
+    <string name="smscommunicator_stops_ns_with_code">Чтобы отключить удаленную службу SMS, ответьте кодом %1$s.\n\nПомните, что снова включить ее можно будет только в AAPS на основном телефоне.</string>
+    <string name="smscommunicator_stopped_sms">Удаленная служба SMS остановлена. Чтобы снова включить ее, используйте AAPS на основном телефоне.</string>
     <string name="smscommunicator_calibration_reply_with_code">Чтобы отправить калибровку %1$.2f ответьте кодом %2$s</string>
     <string name="smscommunicator_bolus_failed">Ошибка болюса. Проверьте его реальное состояние перед отправкой следующей команды.</string>
     <string name="smscommunicator_bolus_delivered">Болюс %1$.2f ед. подан успешно</string>
@@ -128,8 +258,8 @@
     <string name="smscommunicator_meal_bolus_delivered_tt">Цель %1$s на %2$d минут</string>
     <string name="smscommunicator_tt_set">Цель %1$s на %2$d минут установлена успешно</string>
     <string name="smscommunicator_tt_canceled">Временная цель успешно отменена</string>
-    <string name="smscommunicator_loop_has_been_disabled">Зцикл остановлен</string>
-    <string name="smscommunicator_loop_is_enabled">Зцикл работает</string>
+    <string name="smscommunicator_loop_has_been_disabled">Цикл отключен</string>
+    <string name="smscommunicator_loop_is_enabled">Цикл включен</string>
     <string name="smscommunicator_pump_connect_with_code">Чтобы подсоединить помпу ответьте кодом %1$s</string>
     <string name="smscommunicator_pump_connect_fail">Ошибка подключения к помпе</string>
     <string name="smscommunicator_pump_disconnect_with_code">Для разъединения с помпой на %1$d мин ответьте кодом %2$s</string>
@@ -150,6 +280,7 @@
     <string name="smscommunicator_restarting">AAPS перезапускается</string>
     <string name="smscommunicator_tempbasal_set">Врем. базал %1$.2f%% на %2$d мин. начат успешно</string>
     <string name="smscommunicator_extended_set">Пролонгированный болюс %1$.2fед. на %2$d мин. начат успешно</string>
+    <string name="smscommunicator_carbs_set">Углеводы %1$d г успешно введены</string>
     <string name="smscommunicator_carbs_failed">Не удалось ввести %1$d г углеводов</string>
     <string name="smscommunicator_tempbasal_set_percent">Врем. базал %1$d%% на %2$d мин. начат успешно</string>
     <string name="smscommunicator_tempbasal_failed">Не удалось запустить временный базал</string>
@@ -163,22 +294,30 @@
     <string name="smscommunicator_unknown_command">Неизвестная команда или неверный ответ</string>
     <string name="smscommunicator_another_bolus_in_queue">В очереди есть еще один болюс. Повторите попытку позже.</string>
     <string name="smscommunicator_wrong_duration">Неверное значение длительности</string>
-    <string name="smscommunicator_loop_suspended">ЗЦикл остановлен</string>
-    <string name="smscommunicator_loop_resumed">ЗЦикл возобновлен</string>
+    <string name="smscommunicator_loop_suspended">Цикл приостановлен</string>
+    <string name="smscommunicator_loop_resumed">Цикл возобновлен</string>
     <string name="smscommunicator_invalid_phone_number">Неверный номер телефона для смс</string>
     <string name="smscommunicator_calibration_sent">Калибровка отправлена. В xDrip+ должна быть включена возможность приема.</string>
     <string name="smscommunicator_calibration_failed">xDrip + не получает калибровки</string>
     <string name="smscommunicator_message_body">Недопустимое тело сообщения</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Чтобы переключиться в режим LGS (Low Glucose Suspend, приостановка цикла при низкой гликемии) ответьте кодом %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Чтобы переключиться на замкнутый цикл, ответьте кодом %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Текущий режим работы: %1$s</string>
     <string name="wrong_format">Неверный формат</string>
     <string name="sms_actual_bg">ГК:</string>
+    <string name="sms_last_bg">Последняя ГК:</string>
     <string name="sms_delta">Дельта:</string>
+    <string name="sms_iob">IOB:</string>
     <string name="sms_bolus">Болюс:</string>
+    <string name="sms_basal">Базал:</string>
     <string name="sms_min_ago">%1$dмин. назад</string>
     <string name="sms_loop_suspended_for">Остановлен (на %1$d мин)</string>
     <string name="sms_read_status_failed">Статус чтения: неудача</string>
-    <string name="sms_profile_switch_created">Переключатель профиля создан</string>
+    <string name="sms_profile_switch_created">Переключение профиля создано</string>
     <string name="sms_wrong_tbr_duration">Длительность временного базала TBR должна быть кратной %1$d минутам и больше 0.</string>
+    <string name="sms_tbr_percent_only">Эта помпа принимает временный базал только в процентах, не в ед/ч.</string>
+    <string name="sms_tbr_absolute_only">Эта помпа принимает временный базал только в ед/ч, не в процентах.</string>
     <string name="a11y_otp_qr_code">QR код для создания одноразового пароля</string>
+    <string name="permission_sms_title">SMS</string>
+    <string name="permission_sms_description">Приложению требуется разрешение SMS для удаленного управления через текстовые сообщения</string>
 </resources>
