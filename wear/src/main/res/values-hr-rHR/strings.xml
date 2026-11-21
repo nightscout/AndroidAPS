@@ -211,10 +211,10 @@
     <string name="abbreviation_average">prosječno</string>
     <string name="no_iob_u">U</string>
     <string name="no_cob_g">--g</string>
-    <string name="no_tmp_basal_u_h">-.--U/h</string>
+    <string name="no_tmp_basal_u_h">-.--J/h</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
-    <string name="iob_0_00u">0,00U</string>
+    <string name="iob_0_00u">0,00J</string>
     <string name="snooze_alert">AAPS odgoda upozorenja</string>
     <string name="sending_snooze">Slanje odgode na AAPS</string>
     <string name="week_short">t</string>
@@ -298,10 +298,10 @@
     <string name="eat_reminder_stop">Zaustavi</string>
     <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Zvoni u %1$s</string>
     <string name="eat_reminder_countdown_channel">Vrijeme za jelo, u tijeku</string>
-    <string name="eat_reminder_channel_silent">Vrijeme za jelo tijekom načina rada Ne uznemiravaj</string>
+    <string name="eat_reminder_channel_silent">Vrijeme za jelo tijekom načina rada „Ne ometaj“</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
     <string name="phone_alarm_channel">Alarmi s telefona</string>
-    <string name="phone_alarm_channel_silent">Alarmi s telefona tijekom načina rada Ne uznemiravaj</string>
+    <string name="phone_alarm_channel_silent">Alarmi s telefona tijekom načina rada „Ne ometaj“</string>
     <string name="phone_alarm_silence">Utišaj</string>
     <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">Utišaj %1$d min</string>
     <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
@@ -359,7 +359,7 @@
     <string name="loop_status_refresh">Osvježi</string>
     <string name="confirm">Potvrdi</string>
     <string name="request">Zahtjev</string>
-    <string name="constraint_applied">Ograničenje primijenjeno!</string>
+    <string name="constraint_applied">Primijenjeno ograničenje!</string>
     <string name="wizard_total_insulin">Ukupni inzulin</string>
     <string name="wizard_calculation">Izračun</string>
     <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
