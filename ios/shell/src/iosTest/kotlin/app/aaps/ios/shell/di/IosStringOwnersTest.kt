@@ -17,6 +17,7 @@ import app.aaps.plugins.smoothing.SmoothingStrings
 import app.aaps.plugins.eversense.EversenseStrings
 import app.aaps.plugins.source.SourceStrings
 import app.aaps.plugins.sync.SyncStrings
+import app.aaps.pump.aaruy.AaruyStrings
 import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.virtual.VirtualStrings
 import app.aaps.ui.UiStrings
@@ -96,7 +97,8 @@ class IosStringOwnersTest {
             EversenseStrings.source_eversense,
             SyncStrings.a11y_otp_qr_code,
             VirtualStrings.virtual_pump_type,
-            CarelevoStrings.carelevo_description
+            CarelevoStrings.carelevo_description,
+            AaruyStrings.aaruy_pump
         ).forEach { ref ->
             val named = ref as TextRef.Named
             assertNotNull(TextRefValueRegistry.textOf(named), "owner '${named.owner}' has no text, so it is not registered")

@@ -5,7 +5,7 @@ import app.aaps.e2e.scenario.PumpScenario
 import app.aaps.e2e.scenario.PumpUnderTest
 import app.aaps.e2e.ui.AbstractPumpUiTest
 import app.aaps.e2e.ui.PumpScreens
-import app.aaps.pump.aaruy.emulator.AaruyEmulatorBleTransport
+import app.aaps.pump.aaruy.emulator.AaruyEmulatorPeripheral
 import com.google.common.truth.Truth.assertWithMessage
 
 /** The Aaruy screens, see [AbstractPumpUiTest]. */
@@ -31,8 +31,8 @@ object AaruyScreens : PumpScreens {
 
     override fun pair(screen: ScreenDriver, scenario: PumpScenario) {
         // The scan starts by itself and shows the emulated pump.
-        screen.openVia(unpairedMark, expect = AaruyEmulatorBleTransport.DEVICE_NAME)
-        screen.click(AaruyEmulatorBleTransport.DEVICE_NAME)                 // pairs
+        screen.openVia(unpairedMark, expect = AaruyEmulatorPeripheral.DEVICE_NAME)
+        screen.click(AaruyEmulatorPeripheral.DEVICE_NAME)                 // pairs
         screen.waitForVisibleOrThrow("Pump paired", COMMAND_TIMEOUT)        // COMPLETE
         screen.clickButton("OK")
     }

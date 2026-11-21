@@ -165,9 +165,9 @@ A requirement left out silently counts as not passed.
 
 Known exceptions in drivers that are in the tree now:
 
-- **Every driver but Carelevo, A1-A6:** they still raise alarms on their own. They move to `PumpAlerts` one at a time,
-  each with a real-pump test (`PUMP_DESIGN.md`, section 4).
-- **Every driver but Carelevo and the virtual pump, K1-K3:** Android only. Each moves when it is next reworked.
+- **Every driver but Carelevo and Aaruy, A1-A6:** they still raise alarms on their own. They move to `PumpAlerts` one
+  at a time, each with a real-pump test (`PUMP_DESIGN.md`, section 4).
+- **Every driver but Carelevo, Aaruy and the virtual pump, K1-K3:** Android only. Each moves when it is next reworked.
 - **Carelevo, R14:** not run yet; the patch raised no alarm since the move to `PumpAlerts`.
 
 - **Omnipod Eros, D2:** the activation wizard calls the pod directly for "Initialize Pod" and "Insert Cannula", not

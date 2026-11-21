@@ -31,7 +31,7 @@ object ShellInfo {
     const val NAME: String = "AapsShared"
 
     /** How many migrated modules this framework links. Kept in step with `ios/shell/build.gradle.kts`. */
-    const val LINKED_MODULES: Int = 31
+    const val LINKED_MODULES: Int = 34
 
     /**
      * The current local time, formatted by Kotlin.

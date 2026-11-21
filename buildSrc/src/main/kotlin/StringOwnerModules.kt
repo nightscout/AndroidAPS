@@ -80,7 +80,8 @@ object StringOwnerModules {
         StringOwnerModule("eversense", "app.aaps.plugins.eversense"),
         StringOwnerModule("sync", "app.aaps.plugins.sync"),
         StringOwnerModule("virtual", "app.aaps.pump.virtual"),
-        StringOwnerModule("carelevo", "app.aaps.pump.carelevo", onDesktop = false)
+        StringOwnerModule("carelevo", "app.aaps.pump.carelevo", onDesktop = false),
+        StringOwnerModule("aaruy", "app.aaps.pump.aaruy", onDesktop = false)
     )
 }
 

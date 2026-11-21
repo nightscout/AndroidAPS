@@ -14,7 +14,6 @@ import app.aaps.pump.aaruy.compose.AaruyPairStep
 import app.aaps.pump.aaruy.compose.AaruyPairWizardViewModel
 import app.aaps.pump.aaruy.di.AaruyAccessors
 import app.aaps.pump.aaruy.emulator.AaruyPumpEmulator
-import app.aaps.pump.aaruy.services.AaruyUnpairCommand
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -34,12 +33,12 @@ class AaruyPumpUnderTest : PumpUnderTest {
 
     private val accessors get() = testGraphs.rootGraph as AaruyAccessors
 
-    override fun control(): PumpEmulatorControl = checkNotNull(accessors.aaruyBle.emulatorTransport) { "The Aaruy emulator is not active" }
+    override fun control(): PumpEmulatorControl = checkNotNull(accessors.aaruyBle.emulator) { "The Aaruy emulator is not active" }
 
-    /** The plugin's start binds its service, which every queue command needs. Private, so it is read as the plugin tests do. */
+    /** The plugin's start sets up its scope, which the queue commands after it use. Private, so it is read as the plugin tests do. */
     override fun awaitStarted(scenario: PumpScenario) {
-        val field = AaruyPlugin::class.java.getDeclaredField("aaruyService").apply { isAccessible = true }
-        scenario.awaitTrue("the Aaruy service is bound") { field.get(accessors.aaruyPlugin) != null }
+        val field = AaruyPlugin::class.java.getDeclaredField("scope").apply { isAccessible = true }
+        scenario.awaitTrue("the Aaruy plugin is started") { field.get(accessors.aaruyPlugin) != null }
     }
 
     override fun pair(scenario: PumpScenario) {
@@ -60,10 +59,9 @@ class AaruyPumpUnderTest : PumpUnderTest {
         }
     }
 
-    /** As the overview's unpair: through the queue, then the pump is forgotten. */
+    /** As the overview's unpair: the pump is told through the queue, and removed also when it is not reached (D9). */
     override fun unpair(scenario: PumpScenario) {
-        val result = runBlocking { scenario.commandQueue.customCommand(AaruyUnpairCommand()) }
-        check(result.success) { "Unpair failed: ${result.comment}" }
+        runBlocking { accessors.aaruyUnpair.unpair() }
         scenario.awaitQueueIdle()
         scenario.awaitTrue("no pump is paired") { !accessors.aaruyPlugin.isConfigured() }
     }

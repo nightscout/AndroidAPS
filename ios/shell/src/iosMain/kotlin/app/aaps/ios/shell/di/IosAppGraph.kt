@@ -165,8 +165,8 @@ interface IosAppGraph : MetroViewModelMultibindings {
     val contributedPlugins: Map<Int, PluginBase>
 
     /**
-     * The pump drivers, keyed by their order. CareLevo registers here through
-     * `CarelevoIosRegistration`.
+     * The pump drivers, keyed by their order. CareLevo and Aaruy register here through
+     * `CarelevoIosRegistration` and `AaruyIosRegistration`.
      *
      * `@Multibinds(allowEmpty = true)` for the reason `AppRootGraph` gives: a map with no
      * contributions has no binding at all, and Metro reports "no binding found" rather than an empty

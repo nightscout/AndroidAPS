@@ -1,20 +1,17 @@
 plugins {
-    alias(libs.plugins.android.library)
+    id("kmp-android-library")
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.ksp)
+    // Metro builds this module's classes into the graph.
     alias(libs.plugins.metro)
-    id("android-module-dependencies")
-    id("test-module-dependencies")
-    id("compose-test-module-dependencies")
-    id("jacoco-module-dependencies")
 }
 
-android {
-    namespace = "app.aaps.pump.aaruy"
+registerKeyStrings("aaruy")
 
-    buildFeatures {
-        compose = true
-    }
+compose.resources {
+    packageOfResClass = "app.aaps.pump.aaruy.resources"
+    publicResClass = false
 }
 
 ksp {
@@ -22,24 +19,98 @@ ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
 }
 
+kotlin {
+    android {
+        namespace = "app.aaps.pump.aaruy"
+        androidResources { enable = true }
+        // isIncludeAndroidResources is what makes Robolectric work - see :core:ui for the detail.
+        withHostTest {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+    }
+
+    sourceSets {
+        commonMain {
+            dependencies {
+                api(project(":pump:aaruy:protocol"))
+                implementation(project(":pump:aaruy:emulator"))
+                implementation(project(":core:data"))
+                implementation(project(":core:interfaces"))
+                implementation(project(":core:keys"))
+                implementation(project(":core:ui"))
+                implementation(project(":core:utils"))
+
+                // The pump log, kept by the driver.
+                api(libs.androidx.room.runtime)
+
+                implementation(libs.jetbrains.compose.runtime)
+                implementation(libs.jetbrains.compose.foundation)
+                implementation(libs.jetbrains.compose.ui)
+                implementation(libs.jetbrains.compose.material3)
+                implementation(libs.jetbrains.compose.material.icons.extended)
+                implementation(libs.jetbrains.compose.ui.tooling.preview)
+                // The multiplatform lifecycle: ViewModel, viewModelScope and collectAsStateWithLifecycle.
+                implementation(libs.jetbrains.lifecycle.viewmodel.compose)
+                implementation(libs.jetbrains.lifecycle.runtime.compose)
+                // The pump picture, one copy for every platform (src/commonMain/composeResources).
+                implementation(libs.jetbrains.compose.components.resources)
+            }
+        }
+
+        // Runs on every target.
+        commonTest {
+            dependencies {
+                implementation(project(":shared:tests"))
+                implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
+
+        androidMain {
+            dependencies {
+                api(project.dependencies.platform(libs.androidx.compose.bom))
+                api(libs.androidx.ui)
+                implementation(libs.androidx.compose.ui.tooling)
+                implementation(libs.androidx.sqlite.bundled)
+            }
+        }
+
+        // The bundled driver is what opens the database on a phone, so iOS needs it too.
+        iosMain {
+            dependencies {
+                implementation(libs.androidx.sqlite.bundled)
+            }
+        }
+
+        // Hand written rather than taken from test-module-dependencies and compose-test-module-dependencies, which
+        // apply com.android.library and so cannot be used here.
+        getByName("androidHostTest") {
+            dependencies {
+                implementation(project(":shared:tests"))
+                implementation(kotlin("test"))
+                implementation(libs.org.junit.jupiter)
+                implementation(libs.org.junit.jupiter.api)
+                implementation(libs.org.mockito.junit.jupiter)
+                implementation(libs.org.mockito.kotlin)
+                implementation(libs.com.google.truth)
+                implementation(libs.kotlinx.coroutines.test)
+                implementation(project.dependencies.platform(libs.androidx.compose.bom))
+                implementation(libs.androidx.compose.ui.test.junit4)
+                implementation(libs.androidx.compose.ui.test.manifest)
+                implementation(libs.org.robolectric)
+                runtimeOnly(libs.org.junit.vintage.engine)
+                runtimeOnly(libs.org.junit.platform.launcher)
+            }
+        }
+    }
+}
+
 dependencies {
-    api(project(":pump:aaruy:protocol"))
-    implementation(project(":pump:aaruy:emulator"))
-    implementation(project(":core:data"))
-    implementation(project(":core:interfaces"))
-    implementation(project(":core:keys"))
-    implementation(project(":core:objects"))
-    implementation(project(":core:utils"))
-    implementation(project(":core:ui"))
-    implementation(project(":pump:common"))
-    implementation(project(":shared:impl"))
-
-    implementation(libs.com.google.code.gson)
-
-    api(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
-
-    testImplementation(project(":shared:tests"))
-    testImplementation(libs.org.robolectric)
-    testRuntimeOnly(libs.org.junit.vintage.engine)
+    // Room generates the database initialiser per target, so its processor runs for every target the @Database class
+    // is compiled for. A missing one is invisible to the compiler and fails only when the database is opened.
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspJvm", libs.androidx.room.compiler)
 }
