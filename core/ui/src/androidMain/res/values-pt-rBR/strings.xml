@@ -586,7 +586,7 @@
     <string name="pump_not_configured">Bomba não configurada</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Executado</string>
-    <string name="comment">Commentário</string>
+    <string name="comment">Comentário</string>
     <string name="percent">Porcentagem</string>
     <string name="absolute">Absoluto</string>
     <string name="waitingforpumpresult">Aguardando resultados</string>
