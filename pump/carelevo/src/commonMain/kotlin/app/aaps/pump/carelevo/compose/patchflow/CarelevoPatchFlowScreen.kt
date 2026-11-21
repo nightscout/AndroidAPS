@@ -1,27 +1,16 @@
 package app.aaps.pump.carelevo.compose.patchflow
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.pump.ProfileGateWizardStep
@@ -30,6 +19,7 @@ import app.aaps.core.ui.compose.siteRotation.SiteLocationWizardStep
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.common.model.UiState
+import app.aaps.pump.carelevo.compose.CarelevoBusyOverlay
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectEvent
 import app.aaps.pump.carelevo.presentation.type.CarelevoPatchStep
 import app.aaps.pump.carelevo.presentation.type.CarelevoScreenType
@@ -210,33 +200,12 @@ private fun CarelevoPatchConnectionFlowScreen(
         }
 
         if (activeUiState is UiState.Loading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.32f))
-                    // Consume all taps: without this the scrim is decoration only and a
-                    // double-tap can still reach (and re-fire) the buttons underneath while
-                    // the first BLE command is in flight.
-                    .pointerInput(Unit) { detectTapGestures { } },
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(AapsSpacing.extraLarge)
-                ) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                    // A Retry waits about 30 s for each of its pulses, so it says which one it is at.
-                    val pulse = primingPulse.takeIf { page == CarelevoPatchStep.SAFETY_CHECK }
-                    Text(
-                        text = if (pulse != null) stringResource(CarelevoStrings.carelevo_priming_pulse_progress, pulse, safetyCheckViewModel.primingPulseCount)
-                        else stringResource(CoreUiStrings.loading),
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(horizontal = AapsSpacing.extraLarge)
-                    )
-                }
-            }
+            // A Retry waits about 30 s for each of its pulses, so it says which one it is at.
+            val pulse = primingPulse.takeIf { page == CarelevoPatchStep.SAFETY_CHECK }
+            CarelevoBusyOverlay(
+                text = if (pulse != null) stringResource(CarelevoStrings.carelevo_priming_pulse_progress, pulse, safetyCheckViewModel.primingPulseCount)
+                else stringResource(CoreUiStrings.loading)
+            )
         }
     }
 }
