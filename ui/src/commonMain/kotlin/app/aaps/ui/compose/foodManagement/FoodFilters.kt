@@ -1,20 +1,22 @@
 package app.aaps.ui.compose.foodManagement
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -24,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import app.aaps.core.ui.compose.AapsSpacing
@@ -131,11 +134,13 @@ internal fun GroupFilterRow(
         if (sortByName != null) {
             val sortLabel = stringResource(if (sortByName) UiStrings.food_sort_name else UiStrings.food_sort_recent)
             val sortDescription = stringResource(UiStrings.food_sort_description, sortLabel)
+            // Small side margins: on a 360 dp wide phone the two lists need the room.
             TextButton(
                 onClick = { onSortByName(!sortByName) },
+                contentPadding = PaddingValues(horizontal = AapsSpacing.small),
                 modifier = Modifier.semantics { contentDescription = sortDescription }
             ) {
-                Icon(Icons.AutoMirrored.Filled.Sort, contentDescription = null)
+                Icon(Icons.AutoMirrored.Filled.Sort, contentDescription = null, modifier = Modifier.size(ButtonDefaults.IconSize))
                 Spacer(Modifier.width(AapsSpacing.small))
                 Text(sortLabel)
             }
@@ -148,6 +153,9 @@ internal fun GroupFilterRow(
 @Composable
 private fun GroupFilterField(label: String, choices: GroupChoices, selected: GroupFilter, onSelect: (GroupFilter) -> Unit, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
+    // The list cannot be typed in: once a choice is made it gives the focus back, so it is not
+    // shown as the active field.
+    val focusManager = LocalFocusManager.current
     val all = stringResource(UiStrings.food_filter_all)
     val none = stringResource(UiStrings.food_filter_none)
     val options = buildList {
@@ -161,22 +169,21 @@ private fun GroupFilterField(label: String, choices: GroupChoices, selected: Gro
         is GroupFilter.Named -> selected.name
     }
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }, modifier = modifier) {
-        OutlinedTextField(
+        CompactTextField(
             value = text,
             onValueChange = {},
             readOnly = true,
-            singleLine = true,
-            label = { Text(label) },
+            label = label,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
                 .fillMaxWidth()
                 .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
         )
-        ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+        ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false; focusManager.clearFocus() }) {
             options.forEach { (filter, name) ->
                 DropdownMenuItem(
                     text = { Text(name) },
-                    onClick = { onSelect(filter); expanded = false },
+                    onClick = { onSelect(filter); expanded = false; focusManager.clearFocus() },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                 )
             }

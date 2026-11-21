@@ -685,31 +685,32 @@ internal fun RecipeEditContent(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            OutlinedTextField(
+            CompactTextField(
                 value = name,
                 onValueChange = onNameChange,
-                label = { Text(stringResource(CoreUiStrings.name)) },
-                singleLine = true,
+                label = stringResource(CoreUiStrings.name),
                 isError = name.isBlank(),
                 modifier = Modifier.fillMaxWidth()
             )
         }
         // A dish is filed like a food, to find it in a long list. The meals are few: no category.
         if (recipe.kind == RecipeKind.DISH) {
-            SuggestionField(
-                value = category,
-                onValueChange = onCategoryChange,
-                label = stringResource(CoreUiStrings.category),
-                suggestions = categories,
-                modifier = Modifier.fillMaxWidth()
-            )
-            SuggestionField(
-                value = subCategory,
-                onValueChange = onSubCategoryChange,
-                label = stringResource(CoreUiStrings.subcategory),
-                suggestions = subCategories,
-                modifier = Modifier.fillMaxWidth()
-            )
+            Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+                SuggestionField(
+                    value = category,
+                    onValueChange = onCategoryChange,
+                    label = stringResource(CoreUiStrings.category),
+                    suggestions = categories,
+                    modifier = Modifier.weight(1f)
+                )
+                SuggestionField(
+                    value = subCategory,
+                    onValueChange = onSubCategoryChange,
+                    label = stringResource(CoreUiStrings.subcategory),
+                    suggestions = subCategories,
+                    modifier = Modifier.weight(1f)
+                )
+            }
         }
         Text(text = stringResource(UiStrings.food_book_edit_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         items.forEach { item -> MealLine(item, image = imageOf(item), onEdit = { onEditLine(item.key) }, onRemove = { onRemove(item.key) }) }
@@ -729,10 +730,11 @@ internal fun RecipeEditContent(
         }
         // A free comment on the dish or meal: shown only here, not on its card, not in the history.
         // One line when empty; it grows while the user writes.
-        OutlinedTextField(
+        CompactTextField(
+            singleLine = false,
             value = note,
             onValueChange = onNoteChange,
-            label = { Text(stringResource(CoreUiStrings.notes_label)) },
+            label = stringResource(CoreUiStrings.notes_label),
             modifier = Modifier.fillMaxWidth()
         )
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {

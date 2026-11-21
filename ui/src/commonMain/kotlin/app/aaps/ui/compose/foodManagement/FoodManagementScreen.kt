@@ -1,7 +1,5 @@
 package app.aaps.ui.compose.foodManagement
 
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -29,22 +28,17 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -54,9 +48,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusProperties
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -95,6 +86,18 @@ fun FoodManagementScreen(
     val dishCategories by viewModel.dishCategoryChoices.collectAsStateWithLifecycle()
     val dishSubCategories by viewModel.dishSubCategoryChoices.collectAsStateWithLifecycle()
     val snackbarHostState = LocalSnackbarHostState.current
+    val foodListState = rememberLazyListState()
+    // The food list goes back to the top when the filters, the sort or the search change. Without
+    // this the list keeps the food that was at the top before, and the foods above it are out of view.
+    // The new list comes a moment after the new filter, so the scroll waits for it.
+    val foodQuery = listOf(state.filterCategory, state.filterSubCategory, state.sortFoodsByName, state.searchQuery)
+    var shownFoodQuery by remember { mutableStateOf(foodQuery) }
+    LaunchedEffect(filteredFoods) {
+        if (foodQuery != shownFoodQuery) {
+            shownFoodQuery = foodQuery
+            foodListState.scrollToItem(0)
+        }
+    }
 
     // Messages of the dishes and meals POC
     LaunchedEffect(Unit) {
@@ -279,6 +282,7 @@ fun FoodManagementScreen(
                 }
             } else {
                 LazyColumn(
+                    state = foodListState,
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(bottom = AapsSpacing.fabClearance),
                     verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)
@@ -485,75 +489,6 @@ private fun FoodItem(
     }
 }
 
-/**
- * A text field that proposes the values already used, so the same group is not typed twice in two
- * ways. The list shows the values that contain what is typed. A new text makes a new value.
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-internal fun SuggestionField(value: String, onValueChange: (String) -> Unit, label: String, suggestions: List<String>, modifier: Modifier = Modifier) {
-    var expanded by remember { mutableStateOf(false) }
-    // True once the user types in the field. A value set from outside (the "OFF" category of an
-    // import) is not a search: it must not hide the other choices.
-    var typedByUser by remember { mutableStateOf(false) }
-    val typed = value.trim()
-    // A value already chosen or filled in shows every choice, so another one can be picked without
-    // clearing it. While a new text is typed, only the values that contain it are shown.
-    val filtering = typedByUser && typed.isNotEmpty() && suggestions.none { it.equals(typed, ignoreCase = true) }
-    val shown = if (filtering) suggestions.filter { it.contains(typed, ignoreCase = true) } else suggestions
-    val open = expanded && shown.isNotEmpty()
-    // True while the list was opened with the arrow. ExposedDropdownMenuBox gives the focus to the
-    // text field each time the list opens, and the focus brings the keyboard, which hides the list.
-    // So the field cannot take the focus until the list is closed. A tap on the text still gives the
-    // focus, to type a new value.
-    var openedByArrow by remember { mutableStateOf(false) }
-    LaunchedEffect(open) { if (!open) openedByArrow = false }
-    val focusManager = LocalFocusManager.current
-    ExposedDropdownMenuBox(expanded = open, onExpandedChange = { expanded = it }, modifier = modifier) {
-        OutlinedTextField(
-            value = value,
-            onValueChange = { onValueChange(it); typedByUser = true; expanded = true },
-            label = { Text(label) },
-            singleLine = true,
-            // No arrow when there is nothing to propose: the label keeps the whole width.
-            trailingIcon = if (suggestions.isEmpty()) null else {
-                {
-                    // The whole touch area opens the list, not only the small arrow: a tap next to
-                    // the arrow must not go to the text and bring the keyboard.
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .minimumInteractiveComponentSize()
-                            .pointerInput(Unit) {
-                                awaitEachGesture {
-                                    awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
-                                    openedByArrow = true
-                                    focusManager.clearFocus()
-                                }
-                            }
-                            .menuAnchor(ExposedDropdownMenuAnchorType.SecondaryEditable)
-                    ) {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = open)
-                    }
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusProperties { canFocus = !openedByArrow }
-                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryEditable)
-        )
-        ExposedDropdownMenu(expanded = open, onDismissRequest = { expanded = false }) {
-            shown.forEach { item ->
-                DropdownMenuItem(
-                    text = { Text(item) },
-                    onClick = { onValueChange(item); typedByUser = false; expanded = false },
-                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
-                )
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FoodEditorContent(
@@ -606,12 +541,11 @@ internal fun FoodEditorContent(
                 text = stringResource(if (isEditing) CoreUiStrings.edit_food else CoreUiStrings.add_food),
                 style = MaterialTheme.typography.titleLarge
             )
-            OutlinedTextField(
+            CompactTextField(
                 value = state.editorName,
                 onValueChange = onNameChange,
-                label = { Text(stringResource(CoreUiStrings.name)) },
+                label = stringResource(CoreUiStrings.name),
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
                 isError = state.editorSaveAttempted && state.editorName.isBlank()
             )
         }
@@ -620,22 +554,23 @@ internal fun FoodEditorContent(
             OffEditorBanner(product = it, perServing = state.editorOffPerServing, onPerServingChange = onOffPerServingChange)
         }
 
-        // One field per row: the list arrow takes width, and a long label must not wrap.
-        // Only the subcategories of the chosen category are proposed.
-        SuggestionField(
-            value = state.editorCategory,
-            onValueChange = onCategoryChange,
-            label = stringResource(CoreUiStrings.category),
-            suggestions = categories,
-            modifier = Modifier.fillMaxWidth()
-        )
-        SuggestionField(
-            value = state.editorSubCategory,
-            onValueChange = onSubCategoryChange,
-            label = stringResource(CoreUiStrings.subcategory),
-            suggestions = subCategories,
-            modifier = Modifier.fillMaxWidth()
-        )
+        // Category and subcategory on one row. Only the subcategories of the chosen category are proposed.
+        Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+            SuggestionField(
+                value = state.editorCategory,
+                onValueChange = onCategoryChange,
+                label = stringResource(CoreUiStrings.category),
+                suggestions = categories,
+                modifier = Modifier.weight(1f)
+            )
+            SuggestionField(
+                value = state.editorSubCategory,
+                onValueChange = onSubCategoryChange,
+                label = stringResource(CoreUiStrings.subcategory),
+                suggestions = subCategories,
+                modifier = Modifier.weight(1f)
+            )
+        }
 
         // Portion mode: the values follow the portion. Values mode: every field is typed, for example
         // to fix an OFF value or to count a food in biscuits instead of grams.
@@ -658,59 +593,53 @@ internal fun FoodEditorContent(
 
         // Portion, unit and carbs on one row, like fat, protein and energy below.
         Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
-            OutlinedTextField(
+            CompactTextField(
                 value = state.editorPortion,
                 onValueChange = onPortionChange,
-                label = { Text(stringResource(CoreUiStrings.portion)) },
+                label = stringResource(CoreUiStrings.portion),
                 modifier = Modifier.weight(1f),
-                singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
-            OutlinedTextField(
+            CompactTextField(
                 value = state.editorUnit,
                 onValueChange = onUnitChange,
-                label = { Text(stringResource(CoreUiStrings.unit_label)) },
+                label = stringResource(CoreUiStrings.unit_label),
                 modifier = Modifier.weight(1f),
-                singleLine = true,
                 readOnly = !valuesEditable,
                 enabled = valuesEditable
             )
-            OutlinedTextField(
+            CompactTextField(
                 value = state.editorCarbs,
                 onValueChange = onCarbsChange,
-                label = { Text(stringResource(CoreUiStrings.label_carbs_g)) },
+                label = stringResource(CoreUiStrings.label_carbs_g),
                 modifier = Modifier.weight(1f),
-                singleLine = true,
                 enabled = valuesEditable,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
         }
 
         Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
-            OutlinedTextField(
+            CompactTextField(
                 value = state.editorFat,
                 onValueChange = onFatChange,
-                label = { Text(stringResource(CoreUiStrings.label_fat_g)) },
+                label = stringResource(CoreUiStrings.label_fat_g),
                 modifier = Modifier.weight(1f),
-                singleLine = true,
                 enabled = valuesEditable,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
-            OutlinedTextField(
+            CompactTextField(
                 value = state.editorProtein,
                 onValueChange = onProteinChange,
-                label = { Text(stringResource(CoreUiStrings.label_protein_g)) },
+                label = stringResource(CoreUiStrings.label_protein_g),
                 modifier = Modifier.weight(1f),
-                singleLine = true,
                 enabled = valuesEditable,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
-            OutlinedTextField(
+            CompactTextField(
                 value = state.editorEnergy,
                 onValueChange = onEnergyChange,
-                label = { Text(stringResource(CoreUiStrings.label_energy_kj)) },
+                label = stringResource(CoreUiStrings.label_energy_kj),
                 modifier = Modifier.weight(1f),
-                singleLine = true,
                 enabled = valuesEditable,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
@@ -718,10 +647,11 @@ internal fun FoodEditorContent(
 
         // A free comment. It stays on the food: not on its card, not in the dishes, not in the history.
         // One line when empty; it grows while the user writes.
-        OutlinedTextField(
+        CompactTextField(
+            singleLine = false,
             value = state.editorNote,
             onValueChange = onNoteChange,
-            label = { Text(stringResource(CoreUiStrings.notes_label)) },
+            label = stringResource(CoreUiStrings.notes_label),
             modifier = Modifier.fillMaxWidth()
         )
 
