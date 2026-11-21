@@ -65,6 +65,7 @@ class EversenseSessionTest {
         var internetAsked = 0
         val watcher = RecordingWatcher()
         val closes = mutableListOf<String>()
+        val transmitterCloses = mutableListOf<String>()
         val failures = mutableListOf<Boolean>()
         var successes = 0
         var ready = 0
@@ -94,6 +95,11 @@ class EversenseSessionTest {
 
         override fun closeLink(reason: String) {
             closes += reason
+        }
+
+        override fun closeLinkForTransmitter(reason: String) {
+            transmitterCloses += reason
+            closeLink(reason)
         }
     }
 
@@ -154,6 +160,8 @@ class EversenseSessionTest {
             val error = runCatching { session.writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket(), 100) }.exceptionOrNull()
             assertThat(error).isInstanceOf(EversenseWriteException::class.java)
             assertThat(host.closes).containsExactly("no answer in 100 ms")
+            // As the transmitter's close: on iOS the driver then waits for the transmitter, not on a timer
+            assertThat(host.transmitterCloses).containsExactly("no answer in 100 ms")
             assertThat(currentTime).isEqualTo(100)
         }
     }
