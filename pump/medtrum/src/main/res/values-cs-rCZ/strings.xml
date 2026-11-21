@@ -91,6 +91,7 @@
     <string name="press_OK_to_return">Stiskněte <b>OK</b> pro návrat na hlavní obrazovku.</string>
     <string name="deactivate_sure">Opravdu chcete deaktivovat současný Patch?</string>
     <string name="cancel_sure">Jste si jistý, že chcete zrušit aktivaci?</string>
+    <string name="cancel_deactivation_sure">Opravdu chcete zrušit deaktivaci? Patch může zůstat aktivní.</string>
     <string name="medtrum_deactivate_pump_confirm">Jste si jisti? Tuto akci nelze vrátit zpět!!</string>
     <string name="press_next_or_cancel">Stiskněte <b>Další</b> pro deaktivaci nebo <b>Zrušit</b> pro návrat na hlavní obrazovku.</string>
     <string name="deactivating_pump">Deaktivace Patche. Počkejte prosím.</string>
