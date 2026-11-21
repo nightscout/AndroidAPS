@@ -236,14 +236,18 @@ frame is logged; logs can still hold glucose and device data.
 ```
 
 The host tests run on the JVM against the shared code; the session and the driver are tested with a fake
-`BleLink` and `BleCentral`. `src/androidHostTest/resources/protocol-reference.zip` freezes the driver of commit
-`bb0b0373cd6ccf6b935a63783cb5fcf29468e317` (156 files with pinned hashes, 109 commands). Its sources are compiled into
-the host tests only, in their own package, and `ProtocolCompatibilityTest` compares requests, frames and decoding with
-the live code, and the crypto and HTTP tests compare the 365 session (AES-CCM, ECDH, HKDF, ECDSA) and the cloud
-requests byte for byte. 44 commands are compared; the 65 the driver never sent are listed in `protocol-commands-removed.txt`.
-Decoding changed on purpose is listed in `ProtocolCompatibilityTest.decodingChangedOnPurpose` and tested in
-`DecodingFixesTest`. Never regenerate the zip from changed code to make a comparison pass. The comparison proves "same
-as before", not "right".
+`BleLink` and `BleCentral`, the communicators with a fake `EversenseLink`.
+
+The golden tests (`ProtocolGoldenTest`, `BinaryGoldenTest`, `SecureChannelGoldenTest`, `NotificationGoldenTest`) run
+large input sets through the protocol code: every command's request, framing at several MTUs and decoding of many
+answers; the packed dates, times and zone offsets; the cloud records; the 365 channel (AES-CCM, its counter, broken
+material); the joining of notification chunks. Each group of outputs becomes one SHA-256 in
+`src/androidHostTest/resources/golden/`. The digests were recorded on 2026-11-21 in a run where the first driver
+(commit `bb0b0373cd`, compiled into the tests at that time) gave the same bytes, so they pin its behaviour; the frozen
+sources are gone since. Three commands decode differently on purpose (lower limit, "glucose unavailable", protocol
+version text): `DecodingFixesTest` explains them, and their digests pin today's decoding. A failing group writes its new
+digest to `build/golden-actual/`; copy it over the recorded one only for a change made on purpose and checked on a real
+transmitter. The digests prove "same as before", not "right".
 
 ## To check on a device
 

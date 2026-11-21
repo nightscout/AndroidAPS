@@ -1,5 +1,3 @@
-import java.util.zip.ZipFile
-
 plugins {
     id("kmp-android-library")
     id("kotlinx-serialization")
@@ -77,36 +75,8 @@ kotlin {
             implementation(libs.androidx.compose.ui.test.junit4)
             implementation(libs.androidx.compose.ui.test.manifest)
             implementation(libs.com.squareup.okhttp3.mockwebserver)
-            // The frozen first version in protocol-reference.zip uses BouncyCastle for its crypto
-            implementation("org.bouncycastle:bcprov-jdk18on:1.81")
             runtimeOnly(libs.org.junit.vintage.engine)
             runtimeOnly(libs.org.junit.platform.launcher)
         }
     }
 }
-
-// Compile the frozen implementation in an isolated package for byte/result comparison tests. Its own logger needs
-// logback, so it is left out; the reference logs into the silent stand-in in androidHostTest (reference/util).
-val generateProtocolReference by tasks.registering {
-    val archive = layout.projectDirectory.file("src/androidHostTest/resources/protocol-reference.zip")
-    val destination = layout.buildDirectory.dir("generated/protocolReference")
-    inputs.file(archive)
-    outputs.dir(destination)
-    doLast {
-        val output = destination.get().asFile
-        ZipFile(archive.asFile).use { zip ->
-            zip.entries().asSequence().filter { it.name.endsWith(".kt") && !it.name.endsWith("EversenseLogger.kt") }.forEach { entry ->
-                val target = output.resolve(entry.name)
-                check(target.toPath().normalize().startsWith(output.toPath().normalize()))
-                target.parentFile.mkdirs()
-                val source = zip.getInputStream(entry).bufferedReader(Charsets.UTF_8).use { it.readText() }
-                    .replace("app.aaps.plugins.eversense", "app.aaps.plugins.eversense.reference")
-                    .replace(Regex("private const val (eu(?:Token|Upload|Care|Vault)BaseUrl)"), "internal var $1")
-                    .replace("System.currentTimeMillis()", "app.aaps.plugins.eversense.protocol.PacketTime.nowMillis()")
-                    .replace("SystemClock.elapsedRealtime()", "app.aaps.plugins.eversense.protocol.PacketTime.nowMillis()")
-                target.writeText(source, Charsets.UTF_8)
-            }
-        }
-    }
-}
-kotlin.sourceSets.getByName("androidHostTest").kotlin.srcDir(generateProtocolReference)
