@@ -53,6 +53,9 @@
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Baterie descărcată: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Nu a rămas suficientă insulină în rezervor: %1$s</string>
     <string name="equil_reservoir_empty">Rezervorul este gol. Pompa nu mai administrează insulină.</string>
+    <string name="equil_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Comanda de bolus a ajuns la pompă, dar pompa nu a răspuns. Pompa poate administra încă %1$s. Nu administrați din nou bolus. AAPS ia în calcul întreaga cantitate.</string>
+    <string name="equil_stop_not_answered" comment="%1$s=insulin amount with unit. Example: 2.00 U, or for U200 insulin 2.00 U (1.00 CU)">Comanda de oprire nu a ajuns la pompă sau răspunsul pompei s-a pierdut. AAPS ia în calcul întregul bolus de %1$s până când istoricul pompei arată ce s-a administrat.</string>
+    <string name="equil_bolus_not_given" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Istoricul pompei arată că bolusul de %1$s nu a fost administrat. AAPS nu îl ia în calcul.</string>
     <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Pompa s-a oprit în timpul bolusului. Administrat: %1$s din %2$s</string>
     <string name="equil_pump_not_run">Pompa nu funcționează</string>
     <string name="equil_pair">Asociați</string>
