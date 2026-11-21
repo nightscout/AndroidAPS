@@ -28,7 +28,7 @@
     <string name="patch_change_confirm_temp_basal_is_active_desc">Un débit basal temporaire est en cours d\'injection. Voulez-vous vraiment annuler l\'injection d\'insuline et retirer le Patch ?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Un bolus et basal temporaire viennent d\'être délivrés. Voulez-vous vraiment annuler l\'injection d\'insuline et supprimer le Patch ?</string>
     <string name="patch_change_confirm_desc">Voulez-vous vraiment retirer le Patch ?</string>
-    <string name="patch_forced_discard">Annuler</string>
+    <string name="patch_forced_discard">Retirer</string>
     <string name="patch_comm_error_during_discard_desc_2">Pour forcer la désactivation unilatéralement, appuyez sur «Supprimer».</string>
     <string name="patch_manually_turning_off_alarm_title">Désactiver manuellement l\'alarme du Patch</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Si le Patch est désactivé unilatéralement lors d\'une erreur de communication, le bip d\'alarme du patch peut ne pas s\'arrêter.</string>
