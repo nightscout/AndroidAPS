@@ -136,6 +136,7 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Insulina nu a fost schimbată: %1$s Insulina anterioară este încă în uz.</string>
     <string name="insulin_activation_unconfirmed">Schimbarea insulinei nu a putut fi confirmată. Verificați care insulină este activă în profilul dumneavoastră înainte de administrare.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Insulina nu a fost schimbată. Insulina anterioară este încă în uz.\n\n%1$s</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nNici insulina nu a fost schimbată. Dacă noua insulină este deja în pompă, nu conectați pompa și efectuați din nou schimbarea insulinei.</string>
     <string name="active"><![CDATA[<Activ>]]></string>
     <string name="date">Data</string>
     <string name="insulin_nickname_label">Pseudonim insulină</string>
@@ -1067,6 +1068,8 @@
     <string name="wiki_search_offline">Căutarea în documentație necesită o conexiune la internet</string>
     <string name="no_search_results">Nu s-au găsit rezultate</string>
     <string name="search_plugin_disabled">Modul %1$s dezactivat</string>
+    <string name="search_recent">Căutări recente</string>
+    <string name="search_history_remove">Eliminați din căutările recente</string>
     <!--    Food Management -->
     <string name="food_management">Mâncare</string>
     <string name="food_deleted">Mâncare ștearsă</string>
@@ -1210,5 +1213,6 @@
     <string name="units_sec">secunde</string>
     <string name="units_years">an</string>
     <string name="prefs_range_title">Intervalul pentru vizualizare</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">Pompa a oprit bolusul după %1$s. Verificați pompa înainte de următorul bolus.</string>
     <string name="secrets_not_protected">Nu a fost găsit niciun depozit de chei al sistemului pe acest calculator. Cheile care protejează setările și asocierea cu dispozitivul principal sunt păstrate în fișiere lângă date, așa că oricine obține o copie a fișierelor dumneavoastră le obține și pe ele. Pe Linux, instalați și porniți un keyring (de exemplu GNOME Keyring sau KWallet), apoi porniți din nou AAPS.</string>
 </resources>
