@@ -3,6 +3,9 @@
     <string name="executing_right_now">Команда виконується зараз</string>
     <string name="smb_being_delivered">Зараз вводиться SMB. Спробуйте ще раз, коли введення завершиться.</string>
     <string name="basal_value_below_minimum">Базальне значення нижче мінімального. Профіль не встановлено!</string>
+    <string name="concentration_change_failed_title">Не вдалося змінити інсулін</string>
+    <string name="concentration_change_failed">Новий інсулін уже в помпі, але AAPS не зміг записати в неї профіль. Помпа вводить неправильну кількість інсуліну. Негайно від’єднайте або зніміть помпу, перевірте ГК і за потреби введіть інсулін іншим способом. Підключайте помпу знову лише після того, як профіль буде записано.</string>
+    <string name="concentration_change_pending">Профіль із новим інсуліном ще не записано в помпу. Інсулін не можна вводити, доки профіль не буде записано.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Базальний профіль у помпі оновлено. Помпа округлює базал до власного кроку: вона вводить %1$s на добу замість %2$s.</string>
     <string name="basal_reported_far_from_profile">Помпа повідомляє базал, який сильно відрізняється від профілю. AAPS залишає базал профілю. Перевірте базальні швидкості в помпі.</string>
     <!--       Stats -->
@@ -57,8 +60,10 @@
     <string name="ue_exported">Записи користувача експортовано</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">експортовано %1$s тому</string>
     <string name="exported_at" comment="at placeholder we add export date">експортовано %1$s</string>
+    <string name="exported_less_than_hour_ago">експортовано менш ніж годину тому</string>
     <string name="metadata_warning_different_flavour">Налаштування створено у іншому варіанті AAPS (%1$s), а у вас: %2$s.\n\nДеякі параметри можуть бути відсутні або некоректні — перевірте налаштування після імпорту.</string>
     <string name="metadata_warning_different_device">Налаштування створено на іншому пристрої. Це нормально, якщо імпортуєте зі старого/іншого телефону. Переконайтеся, що імпортовані налаштування коректні!</string>
+    <string name="metadata_warning_old_export">Імпортованим налаштуванням уже %1$s днів! Можливо, у вас є новіші налаштування або ви обрали неправильний файл? Не забувайте регулярно експортувати налаштування!</string>
     <string name="metadata_warning_date_format">Некоректний формат дати!</string>
     <string name="metadata_warning_different_version">Налаштування з іншої мінорної версії. Це нормально після оновлення, але перевірте налаштування після імпорту!</string>
     <string name="metadata_urgent_different_version">Налаштування з іншої мажорної версії. Можлива несумісність! Переконайтеся, що після імпорту все налаштовано правильно!</string>
