@@ -1,16 +1,76 @@
 package app.aaps.e2e
 
+import androidx.test.core.app.ActivityScenario
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiDevice
+import app.aaps.ComposeMainActivity
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.pump.emulator.EmulatedAlarm
+import app.aaps.di.testGraphs
 import app.aaps.e2e.ScreenDriver.Companion.COMMAND_TIMEOUT
 import app.aaps.e2e.scenario.PumpScenario
 import app.aaps.e2e.scenario.PumpUnderTest
 import app.aaps.e2e.ui.AbstractPumpUiTest
 import app.aaps.e2e.ui.PumpScreens
+import com.google.common.truth.Truth.assertWithMessage
+import org.junit.Test
 
 /** The Carelevo screens, see [AbstractPumpUiTest]. */
 class CarelevoUiTest : AbstractPumpUiTest() {
 
     override fun pumpUnderTest(): PumpUnderTest = CarelevoPumpUnderTest()
     override fun screens(): PumpScreens = CarelevoScreens
+
+    /**
+     * A patch alarm is a pump alert (`PumpAlerts`): the alarm screen opens with the patch's own step, Silence takes the
+     * sound from the card but keeps the card, and the step - here the discard an occlusion asks for - ends the alarm,
+     * which closes the screen.
+     */
+    @Test
+    fun aPatchAlarmOpensTheAlarmScreenThatSilencesAndActs() {
+        val activity = ActivityScenario.launch(ComposeMainActivity::class.java)
+        try {
+            screen.waitForOverview()
+            screen.openVia("Manage", expect = PUMP_MANAGEMENT)
+            screen.openVia(PUMP_MANAGEMENT, expect = CarelevoScreens.unpairedMark, exact = true)
+            CarelevoScreens.pair(screen, scenario)
+            screen.waitForExactOrThrow(CarelevoScreens.pairedMark, COMMAND_TIMEOUT)
+
+            assertWithMessage("the patch raises an occlusion").that(scenario.control.raise(EmulatedAlarm.OCCLUSION)).isTrue()
+            // AAPS learns of it at the latest at its next connection to the patch.
+            scenario.readStatusOnNewLink()
+
+            // Only the alarm screen of a pump alert has this button.
+            screen.waitForVisibleOrThrow(SILENCE, COMMAND_TIMEOUT)
+            scenario.awaitTrue("the alarm card rings") { alertCards().any { it.sound != null } }
+
+            screen.clickButton(SILENCE)
+            scenario.awaitTrue("the card stays, without sound") { alertCards().isNotEmpty() && alertCards().none { it.sound != null } }
+
+            screen.clickButton(DEACTIVATE)
+            scenario.awaitTrue("the alarm ended with the patch", COMMAND_TIMEOUT) { alertCards().isEmpty() }
+            scenario.awaitTrue("the alarm screen closed") { device.findObject(By.text(SILENCE)) == null }
+            // Not the overview: back in front, the main screen may first show its permissions sheet on a test emulator.
+            scenario.awaitTrue("AAPS has no patch any more", COMMAND_TIMEOUT) { !testGraphs.activePlugin.activePumpInternal.isInitialized() }
+        } catch (t: Throwable) {
+            t.addSuppressed(IllegalStateException("On the screen: " + screen.logScreen("E2E_CarelevoAlarm")))
+            throw t
+        } finally {
+            activity.close()
+        }
+    }
+
+    private fun alertCards() = testGraphs.notificationManager.notifications.value.filter { it.id == NotificationId.PUMP_ALERT }
+
+    private val device: UiDevice get() = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+    private companion object {
+
+        const val PUMP_MANAGEMENT = "Pump"
+        const val SILENCE = "Silence for 30 min"
+        const val DEACTIVATE = "Deactivate Patch"
+    }
 }
 
 /**

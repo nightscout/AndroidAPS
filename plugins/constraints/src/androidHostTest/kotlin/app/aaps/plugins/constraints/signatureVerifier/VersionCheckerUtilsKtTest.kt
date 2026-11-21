@@ -1,25 +1,41 @@
 package app.aaps.plugins.constraints.signatureVerifier
 
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionDefinition
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.constraints.versionChecker.VersionCheckerUtilsImpl
+import app.aaps.plugins.constraints.versionChecker.keys.VersionCheckerLongKey
 import app.aaps.plugins.constraints.versionChecker.numericVersionPart
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonObject
+import java.io.IOException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyVararg
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 @Suppress("SpellCheckingInspection")
+@OptIn(ExperimentalCoroutinesApi::class)
 class VersionCheckerUtilsKtTest : TestBase() {
 
     private lateinit var versionCheckerUtils: VersionCheckerUtilsImpl
@@ -46,9 +62,94 @@ class VersionCheckerUtilsKtTest : TestBase() {
             "  \"3.3.1.3\": \"2025-05-31\"\n" +
             "}"
 
+    private val scope = TestScope(StandardTestDispatcher())
+
     @BeforeEach fun setup() {
         val definition = VersionDefinition { Json.parseToJsonElement(generateSupportedVersions()).jsonObject }
-        versionCheckerUtils = VersionCheckerUtilsImpl(aapsLogger, preferences, rh, config, dateUtil, notificationManager, definition)
+        versionCheckerUtils = VersionCheckerUtilsImpl(aapsLogger, preferences, rh, config, dateUtil, notificationManager, definition, scope)
+    }
+
+    // ---- the three sources of the allowed versions ----------------------------------------------------
+
+    private fun JsonObject.text(key: String): String? = (this[key] as? JsonPrimitive)?.content
+
+    private fun fetchFromGithub(answer: suspend () -> String) {
+        versionCheckerUtils.fetchGithubDefinition = answer
+        versionCheckerUtils.fetchGithubDefinitionIfDue()
+        scope.runCurrent()
+    }
+
+    @Test
+    fun `the GitHub file wins over the bundled one, and remote config over both`() {
+        fetchFromGithub { """{"38": "3.4.0.0", "3.3.1.3": "2025-06-30"}""" }
+
+        assertThat(versionCheckerUtils.definition.text("38")).isEqualTo("3.4.0.0")
+        assertThat(versionCheckerUtils.definition.text("30")).isEqualTo("3.3.1.4")
+
+        versionCheckerUtils.setRemoteDefinition(Json.parseToJsonElement("""{"38": "3.5.0.0"}""").jsonObject)
+
+        assertThat(versionCheckerUtils.definition.text("38")).isEqualTo("3.5.0.0")
+        assertThat(versionCheckerUtils.definition.text("3.3.1.3")).isEqualTo("2025-06-30")
+    }
+
+    @Test
+    fun `remote config still wins when GitHub answers after it`() {
+        versionCheckerUtils.setRemoteDefinition(Json.parseToJsonElement("""{"38": "3.5.0.0"}""").jsonObject)
+
+        fetchFromGithub { """{"38": "3.4.0.0"}""" }
+
+        assertThat(versionCheckerUtils.definition.text("38")).isEqualTo("3.5.0.0")
+    }
+
+    @Test
+    fun `a GitHub file that cannot be read keeps the bundled one`() {
+        fetchFromGithub { throw IOException("offline") }
+
+        assertThat(versionCheckerUtils.definition.text("38")).isEqualTo("3.3.1.4")
+    }
+
+    /** `definition.json` on the same branch is the old array form, kept for older versions. It must not be taken. */
+    @Test
+    fun `the old array form is not taken`() {
+        fetchFromGithub { """[{"minAndroid":30,"maxAndroid":99,"supported":"9.9.9"}]""" }
+
+        assertThat(versionCheckerUtils.definition.text("38")).isEqualTo("3.3.1.4")
+    }
+
+    /** The two warnings had one time between them, so a new-version warning held back the expiry warning. */
+    @Test
+    fun `an expiry warning is not held back by a new-version warning just given`() {
+        val devConfig = mock<Config> {
+            on { isDev() } doReturn true
+            on { VERSION_NAME } doReturn "3.3.1.3"
+        }
+        whenever(config.invoke()).thenReturn(devConfig)
+        whenever(dateUtil.isAfterNoon()).thenReturn(true)
+        whenever(rh.gs(any<TextRef>(), anyVararg())).thenReturn("expires")
+        val now = dateUtil.now()
+        whenever(preferences.get(VersionCheckerLongKey.LastVersionCheckWarning)).thenReturn(now)
+        whenever(preferences.get(VersionCheckerLongKey.LastExpiredWarning)).thenReturn(0L)
+
+        versionCheckerUtils.triggerCheckVersion()
+
+        val expiryPosted = Mockito.mockingDetails(notificationManager).invocations.any { it.method.name == "post" && it.arguments[0] == NotificationId.VERSION_EXPIRE }
+        assertThat(expiryPosted).isTrue()
+    }
+
+    @Test
+    fun `GitHub is read at most once a day after a success`() {
+        var now = 10_000_000_000L
+        whenever(dateUtil.now()).thenAnswer { now }
+        var reads = 0
+        val answer: suspend () -> String = { reads++; """{"38": "3.4.0.0"}""" }
+
+        fetchFromGithub(answer)
+        fetchFromGithub(answer)
+        assertThat(reads).isEqualTo(1)
+
+        now += 24 * 60 * 60 * 1000L
+        fetchFromGithub(answer)
+        assertThat(reads).isEqualTo(2)
     }
 
     @Test

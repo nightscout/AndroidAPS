@@ -1,6 +1,7 @@
 package app.aaps.di.metro
 
 import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.shared.tests.aapsClassesOnClasspath
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
@@ -26,12 +27,24 @@ import dev.zacsweers.metro.IntKey as MetroIntKey
  */
 class PumpDriverBucketTest {
 
-    /** Keys declared by the drivers compiled into THIS build, read from their own annotations. */
-    private fun declaredDriverKeys(): Set<Int> =
-        aapsClassesOnClasspath(listOf(AppRootGraph::class.java))
+    /**
+     * The key each driver compiled into THIS build declares, by driver class. A driver declares it in one of two
+     * places: on its own class (`@PumpDriver @MetroIntKey` next to `@ContributesIntoMap`), or on the `@Provides`
+     * that registers it. The second is for a driver in shared code that each platform registers on its own, so a
+     * platform without its ports has no such pump (Carelevo: `CarelevoRegistration`).
+     */
+    private fun declaredDriverKeys(): Map<Class<*>, Int> {
+        val classes = aapsClassesOnClasspath(listOf(AppRootGraph::class.java))
+        val onClasses = classes
             .filter { it.isAnnotationPresent(PumpDriver::class.java) }
-            .mapNotNull { it.getAnnotation(MetroIntKey::class.java)?.value }
-            .toSet()
+            .mapNotNull { driver -> driver.getAnnotation(MetroIntKey::class.java)?.let { driver to it.value } }
+        val onProviders = classes
+            .flatMap { it.declaredMethods.asList() }
+            .filter { it.isAnnotationPresent(PumpDriver::class.java) && it.parameterCount == 1 }
+            .filter { PluginBase::class.java.isAssignableFrom(it.parameterTypes[0]) }
+            .mapNotNull { provider -> provider.getAnnotation(MetroIntKey::class.java)?.let { provider.parameterTypes[0] to it.value } }
+        return (onClasses + onProviders).toMap()
+    }
 
     /**
      * The original assertion, with the expectation derived instead of written out. It still catches a
@@ -41,7 +54,7 @@ class PumpDriverBucketTest {
      */
     @Test
     fun `the pump bucket holds exactly the drivers compiled into this build`() {
-        val declared = declaredDriverKeys()
+        val declared = declaredDriverKeys().values.toSet()
         check(declared.isNotEmpty()) { "Found no @PumpDriver classes on the classpath - the scan broke" }
 
         assertThat(testRoot().contributedPumpDriverPlugins.keys).isEqualTo(declared)
@@ -55,8 +68,9 @@ class PumpDriverBucketTest {
      */
     @Test
     fun `every pump driver is filed under its own declared key`() {
+        val declared = declaredDriverKeys()
         val misfiled = testRoot().contributedPumpDriverPlugins
-            .filter { (key, plugin) -> plugin::class.java.getAnnotation(MetroIntKey::class.java)?.value != key }
+            .filter { (key, plugin) -> declared[plugin::class.java] != key }
             .map { (key, plugin) -> "${plugin::class.java.simpleName} is filed under $key" }
 
         assertThat(misfiled).isEmpty()

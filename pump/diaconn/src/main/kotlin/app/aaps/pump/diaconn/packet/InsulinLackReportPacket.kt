@@ -6,7 +6,11 @@ import app.aaps.pump.diaconn.DiaconnG8Pump
 import dev.zacsweers.metro.Inject
 
 /**
- * InsulinLackReportPacket
+ * The pump reports that the reservoir is low.
+ *
+ * Its type is 0xD9. It was 0xD8, the type of [InjectionBlockReportPacket], so the table kept only one of the two and
+ * this report was never read. 0xD9 is from DiaconnKit (github.com/miyeongkim/DiaconnKit, `DiaconnPacketType`), read
+ * 2026-11-19; not yet seen from a real G8.
  */
 class InsulinLackReportPacket(
     injector: MetroMemberInjector
@@ -15,7 +19,7 @@ class InsulinLackReportPacket(
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
 
     init {
-        msgType = 0xD8.toByte()
+        msgType = 0xD9.toByte()
         aapsLogger.debug(LTag.PUMPCOMM, "InsulinLackReportPacket init ")
     }
 

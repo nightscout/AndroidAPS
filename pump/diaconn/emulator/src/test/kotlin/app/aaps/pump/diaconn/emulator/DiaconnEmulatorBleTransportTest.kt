@@ -151,6 +151,9 @@ class DiaconnEmulatorBleTransportTest {
 
         assertThat(transport.raise(EmulatedAlarm.OCCLUSION)).isTrue()
         assertThat(awaitPacket(0xD8).u8(4)).isEqualTo(3)
+
+        assertThat(transport.raise(EmulatedAlarm.LOW_RESERVOIR)).isTrue()
+        assertThat(awaitPacket(0xD9).u8(4)).isEqualTo(2)
     }
 
     @Test

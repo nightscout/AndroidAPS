@@ -269,20 +269,20 @@ class BLECommonService internal constructor(
             if (message is InjectionBlockReportPacket) {
                 message.handleMessage(data)
                 diaconnG8Pump.bolusBlocked = true
-                uiInteraction.runAlarm(rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), AlarmSound.BOLUS_ERROR)
+                uiInteraction.runAlarm("diaconn-injection-blocked", rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), AlarmSound.BOLUS_ERROR)
                 return
             }
             // battery warning report
             if (message is BatteryWarningReportPacket) {
                 message.handleMessage(data)
-                uiInteraction.runAlarm(rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), AlarmSound.BOLUS_ERROR)
+                uiInteraction.runAlarm("diaconn-battery", rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), AlarmSound.BOLUS_ERROR)
                 return
             }
 
             // insulin lack warning report
             if (message is InsulinLackReportPacket) {
                 message.handleMessage(data)
-                uiInteraction.runAlarm(rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), AlarmSound.BOLUS_ERROR)
+                uiInteraction.runAlarm("diaconn-insulin", rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), AlarmSound.BOLUS_ERROR)
                 return
             }
 

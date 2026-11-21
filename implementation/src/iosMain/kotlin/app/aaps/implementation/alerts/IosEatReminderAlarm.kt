@@ -24,8 +24,7 @@ import platform.UserNotifications.UNUserNotificationCenter
  * The system holds the notification, so it rings at the time even when the app was terminated since. It has
  * one fixed identifier: scheduling again replaces the pending one, and [cancel] takes it back.
  *
- * Today the iOS app is a client, and a client never sets this alarm (the master owns the timer). It is still
- * a real implementation, so the shared timer is never silent on this platform.
+ * The full app sets it; a client never does, because the master owns the timer.
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)

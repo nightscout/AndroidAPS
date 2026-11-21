@@ -1,0 +1,948 @@
+package app.aaps.pump.carelevo.presentation.viewmodel
+
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.SwapHoriz
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.ScreenAction
+import app.aaps.core.ui.compose.StatusLevel
+import app.aaps.core.ui.compose.icons.IcLoopPaused
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
+import app.aaps.core.ui.compose.pump.PumpInfoRow
+import app.aaps.core.ui.compose.pump.PumpOverviewUiState
+import app.aaps.core.ui.compose.pump.StatusBanner
+import app.aaps.core.ui.compose.pump.tickerFlow
+import app.aaps.pump.carelevo.CarelevoStrings
+import app.aaps.pump.carelevo.ble.CarelevoBleSession
+import app.aaps.pump.carelevo.command.CmdDiscard
+import app.aaps.pump.carelevo.command.CmdPumpStop
+import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.common.MutableEventFlow
+import app.aaps.pump.carelevo.common.asEventFlow
+import app.aaps.pump.carelevo.common.latest
+import app.aaps.pump.carelevo.common.model.Event
+import app.aaps.pump.carelevo.common.model.PatchState
+import app.aaps.pump.carelevo.common.model.State
+import app.aaps.pump.carelevo.common.model.UiState
+import app.aaps.pump.carelevo.coordinator.CarelevoAlarmClearCoordinator
+import app.aaps.pump.carelevo.domain.model.ResponseResult
+import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
+import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
+import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
+import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoDeleteInfusionInfoUseCase
+import app.aaps.pump.carelevo.domain.usecase.infusion.model.CarelevoDeleteInfusionRequestModel
+import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
+import app.aaps.pump.carelevo.ext.BOOT_DATE_TIME_FORMAT
+import app.aaps.pump.carelevo.ext.OVERVIEW_DATE_TIME_FORMAT
+import app.aaps.pump.carelevo.presentation.model.CarelevoOverviewEvent
+import app.aaps.pump.carelevo.presentation.model.CarelevoOverviewUiModel
+import app.aaps.pump.carelevo.presentation.type.CarelevoScreenType
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
+
+@OptIn(ExperimentalAtomicApi::class)
+class CarelevoOverviewViewModel @Inject constructor(
+    private val rh: TextResolver,
+    private val notificationManager: NotificationManager,
+    private val dateUtil: DateUtil,
+    private val commandQueue: CommandQueue,
+    private val aapsLogger: AAPSLogger,
+    private val carelevoPatch: CarelevoPatch,
+    private val bleSession: CarelevoBleSession,
+    private val alarmClearCoordinator: CarelevoAlarmClearCoordinator,
+    private val patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase,
+    private val carelevoDeleteInfusionInfoUseCase: CarelevoDeleteInfusionInfoUseCase,
+    private val patchInfoRepository: CarelevoPatchInfoRepository,
+    private val rxBus: RxBus,
+    private val decimalFormatter: DecimalFormatter
+) : ViewModel() {
+
+    private val _patchState = MutableStateFlow<PatchState>(PatchState.NotConnectedNotBooting)
+    val patchState: StateFlow<PatchState> = _patchState.asStateFlow()
+
+    private val _serialNumber = MutableStateFlow<String?>(null)
+    val serialNumber: StateFlow<String?> = _serialNumber.asStateFlow()
+
+    private val _bootDateTime = MutableStateFlow<String?>(null)
+    val bootDateTime: StateFlow<String?> = _bootDateTime.asStateFlow()
+
+    private val _expirationTime = MutableStateFlow<String?>(null)
+    val expirationTime: StateFlow<String?> = _expirationTime.asStateFlow()
+
+    private val _basalRate = MutableStateFlow<Double?>(null)
+    val basalRate: StateFlow<Double?> = _basalRate.asStateFlow()
+
+    private val _tempBasalRate = MutableStateFlow<Double?>(null)
+    val tempBasalRate: StateFlow<Double?> = _tempBasalRate.asStateFlow()
+
+    private val _insulinRemains = MutableStateFlow<String?>(null)
+    val insulinRemains: StateFlow<String?> = _insulinRemains.asStateFlow()
+
+    private val _totalInsulinAmount = MutableStateFlow<Double?>(null)
+    val totalInsulinAmount: StateFlow<Double?> = _totalInsulinAmount.asStateFlow()
+
+    private val _runningRemainMinutes = MutableStateFlow<Int?>(null)
+    val runningRemainMinutes: StateFlow<Int?> = _runningRemainMinutes.asStateFlow()
+
+    private var _isCreated = false
+    val isCreated get() = _isCreated
+
+    private val _event = MutableEventFlow<Event>()
+    val event = _event.asEventFlow()
+
+    private val _uiState: MutableStateFlow<State> = MutableStateFlow(UiState.Idle)
+    val uiState = _uiState.asStateFlow()
+
+    private val _patchStateFlow = MutableStateFlow<PatchState>(PatchState.NotConnectedNotBooting)
+    private val _overviewDataFlow = MutableStateFlow(defaultOverviewData())
+    private val _basalRateFlow = MutableStateFlow(0.0)
+    private val _tempBasalRateFlow = MutableStateFlow<Double?>(null)
+
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, viewModelScope)
+
+    private val connectionInfo = combine(
+        bleSession.connected,
+        bleSession.lastConnectedAt
+    ) { connected, lastConnectedAt -> ConnectionInfo(connected, lastConnectedAt) }
+
+    private val overviewInputs = combine(
+        _patchStateFlow,
+        _overviewDataFlow,
+        _basalRateFlow,
+        _tempBasalRateFlow,
+        connectionInfo
+    ) { patchState, overviewData, basalRate, tempBasalRate, connection ->
+        OverviewInputs(
+            patchState = patchState,
+            overviewData = overviewData,
+            basalRate = basalRate,
+            tempBasalRate = tempBasalRate,
+            connected = connection.connected,
+            lastConnectedAt = connection.lastConnectedAt
+        )
+    }
+
+    val overviewUiState = combine(
+        overviewInputs,
+        communicationStatus.refreshTrigger,
+        tickerFlow(30_000L)
+    ) { inputs, _, _ ->
+        buildOverviewState(
+            patchState = inputs.patchState,
+            overviewData = inputs.overviewData,
+            basalRate = inputs.basalRate,
+            tempBasalRate = inputs.tempBasalRate,
+            connected = inputs.connected,
+            lastConnectedAt = inputs.lastConnectedAt
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000L),
+        initialValue = buildOverviewState(
+            patchState = _patchStateFlow.value,
+            overviewData = _overviewDataFlow.value,
+            basalRate = _basalRateFlow.value,
+            tempBasalRate = _tempBasalRateFlow.value,
+            connected = bleSession.connected.value,
+            lastConnectedAt = bleSession.lastConnectedAt.value
+        )
+    )
+
+    private val _isPumpStop = MutableStateFlow(false)
+    val isPumpStop: StateFlow<Boolean> = _isPumpStop.asStateFlow()
+
+    private var _isCheckScreen = MutableStateFlow<CarelevoScreenType?>(null)
+    val isCheckScreen get() = _isCheckScreen
+
+    private val _hasUnacknowledgedAlarms = MutableStateFlow(false)
+    val hasUnacknowledgedAlarms = _hasUnacknowledgedAlarms.asStateFlow()
+
+    /**
+     * Where a removal of a patch that could not be reached runs. Not the ViewModel's scope: the removal must end also
+     * when the screen goes away (D9). A test sets an unconfined dispatcher.
+     */
+    internal var removalDispatcher: CoroutineDispatcher = aapsIoDispatcher
+    private val removalScope: CoroutineScope by lazy { CoroutineScope(removalDispatcher + SupervisorJob()) }
+
+    val secondTick: Flow<Instant> = flow {
+        while (currentCoroutineContext().isActive) {
+            val now = Clock.System.now()
+            emit(now)
+            delay((1000 - now.toEpochMilliseconds() % 1000).coerceIn(1, 1000))
+        }
+    }.flowOn(Dispatchers.Default)
+
+    init {
+        viewModelScope.launch {
+            secondTick.collect {
+                clearExpiredInfusions()
+            }
+        }
+    }
+
+    fun setIsCreated(isCreated: Boolean) {
+        _isCreated = isCreated
+    }
+
+    fun observePatchInfo() {
+        carelevoPatch.patchInfo
+            .mapNotNull { patchInfo ->
+                if (patchInfo == null) {
+                    aapsLogger.debug(LTag.PUMPCOMM, "[observePatchInfo] skip null/failure")
+                    _isCheckScreen.tryEmit(null)
+                    null
+                } else {
+                    aapsLogger.debug(LTag.PUMPCOMM, "[observePatchInfo] state: $patchInfo")
+                    updateCheckScreen(patchInfo)
+                    buildUi(patchInfo)
+                }
+            }
+            .onEach { ui ->
+                updateState(ui)
+                aapsLogger.debug(LTag.PUMPCOMM, "state : $ui")
+            }
+            .catch { e -> aapsLogger.debug(LTag.PUMPCOMM, "onError", e) }
+            .launchIn(viewModelScope)
+    }
+
+    private fun updateCheckScreen(patchInfo: CarelevoPatchInfoDomainModel) {
+        val screenType = when {
+            patchInfo.checkNeedle == false                         -> {
+                val count = patchInfo.needleFailedCount
+                if (count != null && count < 3) CarelevoScreenType.NEEDLE_INSERTION else null
+            }
+
+            patchInfo.checkSafety == null                          -> CarelevoScreenType.SAFETY_CHECK
+            patchInfo.checkSafety && patchInfo.checkNeedle == null -> CarelevoScreenType.SAFETY_CHECK
+            // Needle in, last step not done (the app ended in between): back to it, or the patch never counts as
+            // initialized and the loop never doses.
+            patchInfo.checkNeedle == true &&
+                patchInfo.activationComplete == false              -> CarelevoScreenType.NEEDLE_INSERTION
+            else                                                   -> null
+        }
+        _isCheckScreen.tryEmit(screenType)
+    }
+
+    private fun updateState(ui: CarelevoOverviewUiModel) {
+        _overviewDataFlow.value = ui
+        _serialNumber.value = ui.serialNumber
+        _bootDateTime.value = ui.bootDateTimeUi
+        _expirationTime.value = ui.expirationTime
+        //_infusionStatus.value = ui.infusionStatus
+        _insulinRemains.value = ui.insulinRemainText
+        _totalInsulinAmount.value = Round.roundTo(ui.totalBasal + ui.totalBolus, 0.01)
+        _isPumpStop.value = ui.isPumpStopped
+        _runningRemainMinutes.value = ui.runningRemainMinutes
+    }
+
+    private fun buildUi(info: CarelevoPatchInfoDomainModel): CarelevoOverviewUiModel {
+        aapsLogger.debug(LTag.PUMPCOMM, "info : $info")
+        val zone = TimeZone.currentSystemDefault()
+        // The stored millis, or else the stored yyMMddHHmm text, read in the zone of the phone.
+        val boot = info.bootDateTimeUtcMillis?.let { Instant.fromEpochMilliseconds(it) }
+            ?: parseBootDateTime(info.bootDateTime)?.toInstant(zone)
+        val bootUi = boot?.toLocalDateTime(zone)?.format(OVERVIEW_DATE_TIME_FORMAT) ?: ""
+
+        // The patch reports these in hundredths already, so this rounding only shows them as two decimals.
+        val infusedBasal = Round.roundTo(info.infusedTotalBasalAmount ?: 0.0, 0.01)
+        val infusedBolus = Round.roundTo(info.infusedTotalBolusAmount ?: 0.0, 0.01)
+
+        val remainMinutes = boot?.let { getRemainMin(it) } ?: 0
+        val expireAt = boot?.let { endAt(it).toLocalDateTime(zone).format(OVERVIEW_DATE_TIME_FORMAT) } ?: ""
+
+        return CarelevoOverviewUiModel(
+            serialNumber = info.manufactureNumber.orEmpty(),
+            bootDateTimeUi = bootUi,
+            expirationTime = expireAt,
+            infusionStatus = info.mode,
+            insulinRemainText = if (info.insulinRemain != null && info.insulinAmount != null)
+                rh.gs(
+                    CarelevoStrings.carelevo_insulin_remain_value,
+                    rh.gs(CarelevoStrings.common_label_unit_value_dose_with_space, info.insulinRemain),
+                    rh.gs(CarelevoStrings.common_label_unit_value_dose_with_space, info.insulinAmount)
+                )
+            else "",
+            totalBasal = infusedBasal,
+            totalBolus = infusedBolus,
+            isPumpStopped = info.isStopped ?: false,
+            runningRemainMinutes = remainMinutes
+        )
+    }
+
+    fun observePatchState() {
+        carelevoPatch.patchState
+            .onEach { response ->
+                aapsLogger.debug(LTag.PUMPCOMM, "state : $response")
+                response?.let { patchState ->
+                    _patchState.value = patchState
+                    _patchStateFlow.value = patchState
+                    if (patchState == PatchState.NotConnectedNotBooting) {
+                        onDisconnectValue()
+                    } else {
+                        val basalRate = carelevoPatch.profile.latest?.getBasal() ?: 0.0
+                        _basalRate.value = basalRate
+                        _basalRateFlow.value = basalRate
+                    }
+                }
+            }
+            .catch { aapsLogger.debug(LTag.PUMPCOMM, "doOnError called : $it") }
+            .launchIn(viewModelScope)
+    }
+
+    fun observeInfusionInfo() {
+        carelevoPatch.infusionInfo
+            .onEach {
+                val infusionInfo = it ?: run {
+                    // The stored record, not carelevoPatch.patchInfo: that stream follows the store a moment later,
+                    // so right after a discard it still held the old patch and the wizard reopened at the needle step.
+                    val patchInfo = patchInfoRepository.getPatchInfoBySync() ?: return@onEach
+                    if (patchInfo.checkNeedle == true) {
+                        _isCheckScreen.tryEmit(CarelevoScreenType.NEEDLE_INSERTION)
+                    }
+                    return@onEach
+                }
+                handleInfusionProgram(infusionInfo)
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun handleInfusionProgram(info: CarelevoInfusionInfoDomainModel) {
+        val temp = info.tempBasalInfusionInfo
+        _tempBasalRate.value = temp?.speed
+        _tempBasalRateFlow.value = temp?.speed
+    }
+
+    /**
+     * Removes temp basal and extended bolus records whose time has passed. A left immediate bolus record is not
+     * removed here: it can belong to a bolus the app never recorded, and `CarelevoBolusCoordinator.recoverLeftoverBolus`
+     * records that bolus from the patch and then removes the record.
+     */
+    private fun clearExpiredInfusions() {
+        val infusionInfo = carelevoPatch.infusionInfo.latest ?: return
+        val tempBasalInfusionInfo = infusionInfo.tempBasalInfusionInfo
+        val extendBolusInfusionInfo = infusionInfo.extendBolusInfusionInfo
+
+        val now = Clock.System.now()
+
+        val tempBasal = tempBasalInfusionInfo?.takeIf { infusion ->
+            val duration = infusion.infusionDurationMin ?: return@takeIf true
+            val endTime = infusion.createdAt + duration.minutes
+            endTime > now
+        }
+
+        val extendBolus = extendBolusInfusionInfo?.takeIf { infusion ->
+            val duration = infusion.infusionDurationMin ?: return@takeIf true
+            val endTime = infusion.createdAt + duration.minutes
+            endTime > now
+        }
+
+        val deleteTemp = (infusionInfo.tempBasalInfusionInfo != null && tempBasal == null)
+        val deleteExtend = (infusionInfo.extendBolusInfusionInfo != null && extendBolus == null)
+
+        if (!deleteTemp && !deleteExtend) return
+
+        val requestModel = CarelevoDeleteInfusionRequestModel(
+            isDeleteTempBasal = deleteTemp,
+            isDeleteImmeBolus = false,
+            isDeleteExtendBolus = deleteExtend
+        )
+        clearInfusionInfo(requestModel)
+    }
+
+    fun clearInfusionInfo(requestModel: CarelevoDeleteInfusionRequestModel) {
+        viewModelScope.launch {
+            try {
+                carelevoDeleteInfusionInfoUseCase.execute(requestModel)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.debug(LTag.PUMPCOMM, "error : $e")
+                return@launch
+            }
+            // The result is not looked at: a refused delete refreshes too, as before.
+            aapsLogger.debug(LTag.PUMPCOMM, "success")
+            refreshPatchInfusionInfo()
+        }
+    }
+
+    fun observeProfile() {
+        carelevoPatch.profile
+            .onEach {
+                val basalRate = it?.getBasal() ?: 0.0
+                _basalRate.value = basalRate
+                _basalRateFlow.value = basalRate
+            }
+            .launchIn(viewModelScope)
+    }
+
+    fun initUnacknowledgedAlarms() {
+        _hasUnacknowledgedAlarms.value = false
+    }
+
+    fun triggerEvent(event: Event) {
+        viewModelScope.launch {
+            when (event) {
+                is CarelevoOverviewEvent -> generateEventType(event).run { _event.emit(this) }
+            }
+        }
+    }
+
+    private fun generateEventType(event: Event): Event {
+        return when (event) {
+            is CarelevoOverviewEvent.ShowMessageBluetoothNotEnabled    -> event
+            is CarelevoOverviewEvent.ShowMessageCarelevoIsNotConnected -> event
+            is CarelevoOverviewEvent.DiscardFailed                     -> event
+            is CarelevoOverviewEvent.ResumePumpFailed                  -> event
+            is CarelevoOverviewEvent.StopPumpFailed                    -> event
+            is CarelevoOverviewEvent.StartConnectionFlow               -> event
+            is CarelevoOverviewEvent.ShowPumpDiscardDialog             -> event
+
+            is CarelevoOverviewEvent.ClickPumpStopResumeBtn            -> {
+                resolvePumpStopResumeEvent()
+            }
+
+            else                                                       -> CarelevoOverviewEvent.NoAction
+        }
+    }
+
+    private fun resolvePumpStopResumeEvent(): CarelevoOverviewEvent {
+        return when (carelevoPatch.resolvePatchState()) {
+            is PatchState.NotConnectedNotBooting -> {
+                CarelevoOverviewEvent.ShowMessageCarelevoIsNotConnected
+            }
+
+            else                                 -> {
+                val isStop = carelevoPatch.patchInfo.latest?.isStopped ?: false
+                if (isStop) {
+                    CarelevoOverviewEvent.ShowPumpResumeDialog
+                } else {
+                    CarelevoOverviewEvent.ShowPumpStopDurationSelectDialog
+                }
+            }
+        }
+    }
+
+    /**
+     * Written straight through, not posted through `viewModelScope.launch`. [startOperation] reads the
+     * lock and then writes this in the same step, so a posted write would make that a check-then-act that
+     * only holds together while every caller happens to be on the main thread.
+     */
+    private fun setUiState(state: State) {
+        _uiState.tryEmit(state)
+    }
+
+    /**
+     * One patch operation at a time. Discard, suspend and resume are all BLE round trips on the same
+     * patch, so they are mutually exclusive, and a slow round trip must not let a second tap start its own
+     * coroutine - two suspends would insert two PUMP_SUSPEND rows for what the user did once.
+     *
+     * Deliberately NOT [_uiState]: the screen state is what the UI draws, several code paths write it, and
+     * any of them reaching [UiState.Idle] would release a lock it never took.
+     */
+    private val operationInProgress = AtomicBoolean(false)
+
+    /** Take the operation lock and show the busy state, or report that another operation holds it. */
+    private fun startOperation(tag: String): Boolean {
+        if (!operationInProgress.compareAndSet(false, true)) {
+            aapsLogger.debug(LTag.PUMPCOMM, "[$tag] another patch operation is in progress, ignoring")
+            return false
+        }
+        setUiState(UiState.Loading)
+        return true
+    }
+
+    /** Release the operation lock and return the screen to idle. Safe to call when nothing is held. */
+    private fun endOperation() {
+        operationInProgress.store(false)
+        setUiState(UiState.Idle)
+    }
+
+    fun startDiscardProcess() {
+        when (carelevoPatch.patchState.latest) {
+            is PatchState.NotConnectedNotBooting, null -> Unit // no active patch → nothing to discard
+
+            else                                       -> {
+                if (!startOperation("startDiscard")) return
+                // Route the BLE stop through the queue (reconnect-before-execute); if the patch can't
+                // be reached at all, fall back to the DB-only force-discard.
+                viewModelScope.launch {
+                    val result = commandQueue.customCommand(CmdDiscard())
+                    if (result.success) {
+                        aapsLogger.debug(LTag.PUMPCOMM, "[startDiscard] success")
+                        // unBond + releasePatch run inside CmdDiscard on the queue thread
+                        endOperation()
+                    } else {
+                        aapsLogger.error(LTag.PUMPCOMM, "[startDiscard] failed, falling back to force-discard")
+                        // Keeps the lock; the force-discard callbacks below release it.
+                        startPatchForceDiscard()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun handlePatchDiscardResponse(response: ResponseResult<*>) {
+        when (response) {
+            is ResponseResult.Success -> aapsLogger.debug(LTag.PUMPCOMM, "[startPatchDiscard] success")
+
+            else                      -> {
+                aapsLogger.debug(LTag.PUMPCOMM, "[startPatchDiscard] failed or error")
+                triggerEvent(CarelevoOverviewEvent.DiscardFailed)
+            }
+        }
+        endOperation()
+    }
+
+    private fun handlePatchDiscardError(error: Throwable) {
+        aapsLogger.debug(LTag.PUMPCOMM, "[startPatchDiscard] error: $error")
+        endOperation()
+        triggerEvent(CarelevoOverviewEvent.DiscardFailed)
+    }
+
+    /**
+     * Removes a patch that could not be reached from AAPS. Only reached from [startDiscardProcess], which already holds
+     * the operation lock.
+     *
+     * The removal runs to its end also when the screen goes away (D9). Cut by the screen, it deleted the patch between
+     * the end of its temp basal and the end of its extended bolus, and AAPS went on counting the extended bolus. So only
+     * the result shown on the screen ends with the screen, and the removal holds no reference to this ViewModel.
+     */
+    private fun startPatchForceDiscard() {
+        val address = carelevoPatch.getPatchInfoAddress()
+        val patch = carelevoPatch
+        val notifications = notificationManager
+        val logger = aapsLogger
+        val notReached = rh.gs(CarelevoStrings.carelevo_discarded_not_reached)
+        val useCase = patchForceDiscardUseCase
+        val removal = removalScope.async {
+            val response = withTimeoutOrNull(REMOVAL_TIMEOUT) { useCase.execute() }
+                ?: throw IllegalStateException("removal did not end in $REMOVAL_TIMEOUT")
+            if (response is ResponseResult.Success) {
+                patch.discardTeardown(address)
+                // The patch was not told to stop, so the user must take it off.
+                notifications.post(NotificationId.PUMP_WARNING, notReached, level = NotificationLevel.IMPORTANT)
+            }
+            response
+        }
+        removal.invokeOnCompletion { error ->
+            if (error != null && error !is CancellationException) logger.error(LTag.PUMPCOMM, "[startPatchDiscard] removal failed", error)
+        }
+        viewModelScope.launch {
+            val response = try {
+                removal.await()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                handlePatchDiscardError(e)
+                return@launch
+            }
+            handlePatchDiscardResponse(response)
+        }
+    }
+
+    fun startPumpStopProcess(stopMinute: Int) {
+        if (!carelevoPatch.isBluetoothEnabled()) {
+            triggerEvent(CarelevoOverviewEvent.ShowMessageBluetoothNotEnabled)
+            return
+        }
+        if (!startOperation("startPumpStopProcess")) return
+
+        val infusionInfo = carelevoPatch.infusionInfo.latest
+        val isExtendBolusRunning = infusionInfo?.extendBolusInfusionInfo != null
+        val isTempBasalRunning = infusionInfo?.tempBasalInfusionInfo != null
+
+        viewModelScope.launch {
+            try {
+                val cancelExtendBolusResult = if (isExtendBolusRunning) {
+                    cancelExtendBolus()
+                } else {
+                    true
+                }
+                val cancelTempBasalResult = if (isTempBasalRunning) {
+                    cancelTempBasal()
+                } else {
+                    true
+                }
+
+                aapsLogger.debug(
+                    LTag.PUMPCOMM,
+                    "[startPumpStopProcess] tempBasal running=$isTempBasalRunning cancelled=$cancelTempBasalResult, " +
+                        "extendedBolus running=$isExtendBolusRunning cancelled=$cancelExtendBolusResult, stopMinute: $stopMinute"
+                )
+
+                if (cancelExtendBolusResult && cancelTempBasalResult) {
+                    // Route the stop frame through the queue (connect-before-execute). The pre-cancel above
+                    // already ran on the queue from this coroutine (safe — not the worker thread).
+                    // The command itself records the stop (CarelevoActivationExecutor), so the record does not
+                    // depend on this screen still being there when the queue returns.
+                    val result = commandQueue.customCommand(CmdPumpStop(stopMinute))
+                    if (result.success) {
+                        handlePumpStopResponse(isTempBasalRunning = isTempBasalRunning, isExtendBolusRunning = isExtendBolusRunning)
+                    } else {
+                        aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] stop failed")
+                        triggerEvent(CarelevoOverviewEvent.StopPumpFailed)
+                    }
+                } else {
+                    aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] pre-cancel failed, aborting stop")
+                    triggerEvent(CarelevoOverviewEvent.StopPumpFailed)
+                }
+            } finally {
+                // Held until the stop and its record (written by the command) are done; releasing right after
+                // the BLE round trip left a window for a re-entrant tap. The infusion-info delete in
+                // handlePumpStopResponse runs in its own coroutine that nothing waits for, so it is NOT covered by this. In a `finally`
+                // because a call that throws would otherwise leave the screen behind the Loading scrim for
+                // good, and the lock would then refuse every later suspend, resume and discard.
+                endOperation()
+            }
+        }
+    }
+
+    private fun handlePumpStopResponse(isTempBasalRunning: Boolean, isExtendBolusRunning: Boolean) {
+        aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] response success")
+        clearInfusionInfo(
+            CarelevoDeleteInfusionRequestModel(
+                isDeleteTempBasal = isTempBasalRunning,
+                isDeleteImmeBolus = false,
+                isDeleteExtendBolus = isExtendBolusRunning
+            )
+        )
+    }
+
+    private suspend fun cancelTempBasal(): Boolean {
+        return commandQueue.cancelTempBasal(true).success
+    }
+
+    private suspend fun cancelExtendBolus(): Boolean {
+        return commandQueue.cancelExtended().success
+    }
+
+    fun startPumpResume() {
+        if (!carelevoPatch.isBluetoothEnabled()) {
+            triggerEvent(CarelevoOverviewEvent.ShowMessageBluetoothNotEnabled)
+            return
+        }
+        if (!startOperation("startPumpResume")) return
+
+        viewModelScope.launch {
+            try {
+                // Go through the coordinator rather than queueing CmdPumpResume here. The CommandQueue
+                // dedups custom commands by CLASS, so a resume running for an auto-suspend alarm would make
+                // this one report a failure that never happened; the coordinator's app-scoped mutex makes
+                // the two wait for each other instead. It also owns the guarded TBR-stop sync.
+                if (!alarmClearCoordinator.resumeInfusion()) {
+                    aapsLogger.debug(LTag.PUMPCOMM, "[startPumpResume] resume failed")
+                    triggerEvent(CarelevoOverviewEvent.ResumePumpFailed)
+                }
+            } finally {
+                // See startPumpStopProcess — released in a `finally` so a throwing sync cannot wedge the
+                // screen in Loading.
+                endOperation()
+            }
+        }
+    }
+
+    fun parseBootDateTime(raw: String?): LocalDateTime? {
+        if (raw.isNullOrBlank()) {
+            return null
+        }
+        return try {
+            BOOT_DATE_TIME_FORMAT.parse(raw)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    private fun onDisconnectValue() {
+        _overviewDataFlow.value = defaultOverviewData()
+        _serialNumber.value = ""
+        _bootDateTime.value = ""
+        _expirationTime.value = ""
+        _insulinRemains.value = ""
+        _totalInsulinAmount.value = 0.0
+        _isPumpStop.value = false
+        _runningRemainMinutes.value = 0
+        _tempBasalRate.value = null
+        _tempBasalRateFlow.value = null
+        _basalRate.value = 0.0
+        _basalRateFlow.value = 0.0
+    }
+
+    private fun defaultOverviewData(): CarelevoOverviewUiModel = CarelevoOverviewUiModel(
+        serialNumber = "",
+        bootDateTimeUi = "",
+        expirationTime = "",
+        infusionStatus = null,
+        insulinRemainText = "",
+        totalBasal = 0.0,
+        totalBolus = 0.0,
+        isPumpStopped = false,
+        runningRemainMinutes = 0
+    )
+
+    private fun buildOverviewState(
+        patchState: PatchState?,
+        overviewData: CarelevoOverviewUiModel,
+        basalRate: Double,
+        tempBasalRate: Double?,
+        connected: Boolean,
+        lastConnectedAt: Long
+    ): PumpOverviewUiState {
+        // A patch is activated (connected OR just idle-disconnected) → no warning banner; let the shared
+        // communication/queue status surface (matches Medtrum/Equil). Idle-disconnect is normal now that
+        // the queue owns the lifecycle and reconnects on demand; only "no active patch" and "suspended"
+        // are real top-status conditions.
+        val banner = when {
+            patchState == PatchState.NotConnectedNotBooting -> StatusBanner(
+                text = rh.gs(CarelevoStrings.carelevo_state_none_value),
+                level = StatusLevel.WARNING
+            )
+
+            // Suspended outranks the (idle) connection status — delivery is paused (matches Medtrum).
+            overviewData.isPumpStopped                      -> StatusBanner(
+                text = rh.gs(InterfacesStrings.pumpsuspended),
+                level = StatusLevel.WARNING
+            )
+
+            else                                            -> null
+        } ?: communicationStatus.statusBanner()
+
+        val infoRows = buildList {
+            add(
+                PumpInfoRow(
+                    label = rh.gs(CarelevoStrings.carelevo_bluetooth_state_key),
+                    value = connectionLabel(patchState, connected)
+                )
+            )
+
+            when (patchState) {
+                // Patch activated (connected or idle-disconnected) → show the full status. Idle-disconnect
+                // is normal; values are last-known and the queue reconnects on the next action.
+                PatchState.ConnectedBooted,
+                PatchState.NotConnectedBooted -> {
+                    add(
+                        PumpInfoRow(
+                            label = rh.gs(CoreUiStrings.last_connection_label),
+                            value = lastConnectionLabel(lastConnectedAt)
+                        )
+                    )
+                    add(
+                        PumpInfoRow(
+                            label = rh.gs(CarelevoStrings.carelevo_serial_number_key),
+                            value = overviewData.serialNumber.ifBlank { "-" }
+                        )
+                    )
+                    add(
+                        PumpInfoRow(
+                            label = rh.gs(CarelevoStrings.carelevo_boot_date_time_key),
+                            value = overviewData.bootDateTimeUi.ifBlank { "-" }
+                        )
+                    )
+                    add(
+                        PumpInfoRow(
+                            label = rh.gs(CarelevoStrings.carelevo_expiration_key),
+                            value = overviewData.expirationTime.ifBlank { "-" }
+                        )
+                    )
+                    add(
+                        PumpInfoRow(
+                            label = rh.gs(CarelevoStrings.carelevo_running_remain_time),
+                            value = formatRemainingMinutes(overviewData.runningRemainMinutes)
+                        )
+                    )
+                    add(
+                        PumpInfoRow(
+                            label = rh.gs(CarelevoStrings.carelevo_basal_rate_key),
+                            value = rh.gs(CarelevoStrings.common_label_unit_value_dose_per_speed_with_space, basalRate)
+                        )
+                    )
+                    add(
+                        PumpInfoRow(
+                            label = rh.gs(CarelevoStrings.carelevo_temp_basal_rate_key),
+                            // "-" when none runs, as the other rows: "0.00 U/hr" read as a running zero temp basal.
+                            value = tempBasalRate?.let { rh.gs(CarelevoStrings.common_label_unit_value_dose_per_speed_with_space, it) } ?: "-"
+                        )
+                    )
+                    add(
+                        PumpInfoRow(
+                            label = rh.gs(CarelevoStrings.carelevo_insulin_remain_key),
+                            value = overviewData.insulinRemainText.ifBlank { "-" }
+                        )
+                    )
+                    add(
+                        PumpInfoRow(
+                            label = rh.gs(CarelevoStrings.carelevo_total_insulin_key),
+                            value = rh.gs(
+                                CarelevoStrings.common_label_unit_value_dose_with_space,
+                                decimalFormatter.to2Decimal(overviewData.totalBasal + overviewData.totalBolus)
+                            )
+                        )
+                    )
+                }
+
+                else                          -> Unit
+            }
+        }
+
+        val primaryActions = when (patchState) {
+            PatchState.NotConnectedNotBooting -> listOf(
+                ScreenAction(
+                    label = rh.gs(CarelevoStrings.carelevo_overview_connect_btn_label),
+                    icon = Icons.Filled.SwapHoriz,
+                    onClick = { triggerEvent(CarelevoOverviewEvent.StartConnectionFlow) }
+                )
+            )
+
+            else                              -> emptyList()
+        }
+
+        // Suspend/Discard are available whenever a patch is activated (connected or idle-disconnected);
+        // they reconnect-on-tap via the queue rather than being gated behind a live link.
+        val managementActions = if (patchState == PatchState.ConnectedBooted || patchState == PatchState.NotConnectedBooted) {
+            listOf(
+                ScreenAction(
+                    label = rh.gs(CarelevoStrings.carelevo_overview_pump_discard_btn_label),
+                    icon = Icons.Filled.Delete,
+                    onClick = { triggerEvent(CarelevoOverviewEvent.ShowPumpDiscardDialog) }
+                ),
+                ScreenAction(
+                    label = if (overviewData.isPumpStopped) {
+                        rh.gs(CarelevoStrings.carelevo_overview_pump_resume_btn_label)
+                    } else {
+                        rh.gs(CarelevoStrings.carelevo_overview_pump_suspend_btn_label)
+                    },
+                    icon = if (overviewData.isPumpStopped) Icons.Filled.PlayArrow else IcLoopPaused,
+                    onClick = { triggerEvent(CarelevoOverviewEvent.ClickPumpStopResumeBtn) }
+                )
+            )
+        } else {
+            emptyList()
+        }
+
+        return PumpOverviewUiState(
+            statusBanner = banner,
+            queueStatus = communicationStatus.queueStatus(),
+            infoRows = infoRows,
+            primaryActions = primaryActions,
+            managementActions = managementActions
+        )
+    }
+
+    /** Live connection label: Connected only while a session is open, Disconnected when idle, none when no patch. */
+    private fun connectionLabel(patchState: PatchState?, connected: Boolean): String = when {
+        patchState == PatchState.NotConnectedNotBooting -> rh.gs(CarelevoStrings.carelevo_state_none_value)
+        connected                                       -> rh.gs(CarelevoStrings.carelevo_state_connected_value)
+        else                                            -> rh.gs(CarelevoStrings.carelevo_state_disconnected_value)
+    }
+
+    /** "Last connection: X ago" reachability value via the shared [DateUtil.minAgo] (matching other pumps); "-" until the first connection. */
+    private fun lastConnectionLabel(lastConnectedAt: Long): String =
+        if (lastConnectedAt <= 0L) "-" else dateUtil.minAgo(rh, lastConnectedAt)
+
+    private fun formatRemainingMinutes(totalMinutes: Int): String {
+        if (totalMinutes <= 0) return "-"
+
+        val days = totalMinutes / 1440
+        val remainingMinutesAfterDays = totalMinutes % 1440
+        val hours = remainingMinutesAfterDays / 60
+        val minutes = remainingMinutesAfterDays % 60
+
+        return if (days > 0) {
+            rh.gs(CarelevoStrings.common_unit_value_day_hour_min, days, hours, minutes)
+        } else {
+            rh.gs(CarelevoStrings.common_unit_value_hour_min, hours, minutes)
+        }
+    }
+
+    private data class OverviewInputs(
+        val patchState: PatchState,
+        val overviewData: CarelevoOverviewUiModel,
+        val basalRate: Double,
+        val tempBasalRate: Double?,
+        val connected: Boolean,
+        val lastConnectedAt: Long
+    )
+
+    private data class ConnectionInfo(val connected: Boolean, val lastConnectedAt: Long)
+
+    /** Canonical clock for the expiry countdown — [dateUtil] so tests can inject a fake time. */
+    private fun now(): Instant = Instant.fromEpochMilliseconds(dateUtil.now())
+
+    /**
+     * 7 days, plus the 12 hour grace the patch adds once they are up. Both overview rows read it. Counted in real hours,
+     * as the patch counts them, so across a clock change the expiry is not at the boot hour.
+     */
+    private fun endAt(boot: Instant): Instant {
+        val baseEnd = boot + 7.days
+        return if (now() > baseEnd) baseEnd + 12.hours else baseEnd
+    }
+
+    private fun getRemainMin(boot: Instant): Int =
+        (endAt(boot) - now()).inWholeMinutes.coerceAtLeast(0).toInt()
+
+    fun refreshPatchInfusionInfo() {
+        if (!carelevoPatch.isBluetoothEnabled()) {
+            return
+        }
+        // Route through the queue: connect-before-read so an idle-disconnected patch reconnects,
+        // reads status, then the queue idle-disconnects.
+        viewModelScope.launch {
+            commandQueue.readStatus("Carelevo overview refresh")
+        }
+    }
+
+}
+
+private val REMOVAL_TIMEOUT = 10.seconds

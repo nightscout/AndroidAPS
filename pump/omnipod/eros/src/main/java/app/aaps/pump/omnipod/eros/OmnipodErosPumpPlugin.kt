@@ -677,6 +677,7 @@ class OmnipodErosPumpPlugin(
         }
 
         uiInteraction.runAlarm(
+            "omnipod-eros-pulse-log",
             rh.gs(app.aaps.core.ui.R.string.label_with_colon, rh.gs(R.string.omnipod_eros_pod_management_pulse_log_value)) + "\n" + result.toString(),
             rh.gs(R.string.omnipod_eros_pod_management_pulse_log),
             null
@@ -835,7 +836,8 @@ class OmnipodErosPumpPlugin(
         return getOperationNotSupportedWithCustomText(app.aaps.pump.common.R.string.pump_operation_not_supported_by_pump_driver)
     }
 
-    override fun isUseRileyLinkBatteryLevel(): Boolean = aapsOmnipodErosManager.isShowRileyLinkBatteryLevel
+    // The pod has no battery level; the RileyLink's is shown when the user asked for it.
+    override fun reportsBatteryLevel(): Boolean = aapsOmnipodErosManager.isShowRileyLinkBatteryLevel
 
     override fun isBatteryChangeLoggingEnabled(): Boolean = aapsOmnipodErosManager.isBatteryChangeLoggingEnabled
 

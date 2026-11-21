@@ -11,7 +11,7 @@ import androidx.core.app.NotificationCompat
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.IconsProvider
-import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.ui.AndroidActivities
 import app.aaps.implementation.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -25,7 +25,7 @@ class NotificationHolderImpl(
     private val rh: ResourceHelper,
     private val context: Context,
     private val iconsProvider: IconsProvider,
-    private val uiInteraction: UiInteraction
+    private val androidActivities: AndroidActivities
 ) : NotificationHolder {
 
     override val channelID = "AndroidAPS-Ongoing"
@@ -46,7 +46,7 @@ class NotificationHolderImpl(
         PendingIntent.getActivity(
             context,
             0,
-            Intent(context, uiInteraction.mainActivity.java)
+            Intent(context, androidActivities.main.java)
                 .setAction(Intent.ACTION_MAIN)
                 .addCategory(Intent.CATEGORY_LAUNCHER)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED),

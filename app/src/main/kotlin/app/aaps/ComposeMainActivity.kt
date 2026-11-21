@@ -94,7 +94,7 @@ import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.utils.isRunningRealPumpTest
-import app.aaps.implementation.androidNotification.AlarmNotificationManager
+import app.aaps.implementation.pump.alerts.AndroidPumpAlertPlatform
 import app.aaps.implementation.plugin.PluginPermissionsImpl
 import app.aaps.implementation.protection.BiometricCheck
 import app.aaps.plugins.automation.AutomationRuntime
@@ -171,7 +171,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var prefFileList: FileListProvider
     @Inject lateinit var notificationManager: NotificationManager
-    @Inject lateinit var alarmNotificationManager: AlarmNotificationManager
+    @Inject lateinit var pumpAlertPlatform: AndroidPumpAlertPlatform
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var builtInSearchables: BuiltInSearchables
     @Inject lateinit var bolusProgressData: BolusProgressData
@@ -513,7 +513,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                 visibilityContext = visibilityContext,
                 onNavigationRequest = { request, nc -> handleNavigationRequest(request, nc) },
                 onShowDeliveryError = { comment, title ->
-                    uiInteraction.runAlarm(comment, rh.gs(title), AlarmSound.BOLUS_ERROR)
+                    uiInteraction.runAlarm(UiInteraction.KEY_COMMAND_FAILED, comment, rh.gs(title), AlarmSound.BOLUS_ERROR)
                 },
                 withProtection = { protection, action -> navigator(navController).guarded(protection, action) },
                 requestEditModeAuthorization = { onGranted ->
@@ -625,7 +625,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
         // its alarm screen again (#5338). In onStart and not in onResume: the alarm screen is
         // translucent, so leaving it with Back resumes this activity without starting it, and the
         // alarm screen does not come straight back.
-        alarmNotificationManager.unansweredAlarmIntent()?.let { startActivity(it) }
+        pumpAlertPlatform.unansweredAlarmIntent()?.let { startActivity(it) }
     }
 
     override fun onResume() {

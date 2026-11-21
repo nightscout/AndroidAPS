@@ -11,6 +11,7 @@ import androidx.work.WorkManager
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.implementation.maintenance.KeepAliveRunner
 import app.aaps.plugins.source.AidexPlugin
 import app.aaps.plugins.source.DexcomInbox
 import app.aaps.plugins.source.GlimpPlugin
@@ -48,6 +49,7 @@ class DataReceiverTest : TestBase() {
     @Mock private lateinit var dataInbox: DataInbox
     @Mock private lateinit var fabricPrivacy: FabricPrivacy
     @Mock private lateinit var workManager: WorkManager
+    @Mock private lateinit var keepAliveRunner: KeepAliveRunner
     @Mock private lateinit var context: Context
     @Mock private lateinit var bundle: Bundle
 
@@ -59,6 +61,7 @@ class DataReceiverTest : TestBase() {
             it.dataInbox = dataInbox
             it.fabricPrivacy = fabricPrivacy
             it.workManager = workManager
+            it.keepAliveRunner = keepAliveRunner
         }
     }
 

@@ -1,7 +1,6 @@
 package app.aaps.implementation.receivers
 
 import android.content.Context
-import androidx.annotation.VisibleForTesting
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
@@ -11,33 +10,14 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
-import androidx.work.workDataOf
-import app.aaps.core.data.model.RM
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.alerts.LocalAlertUtils
-import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.awaitInitialized
-import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.dst.DstHelper
-import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.queue.Command
-import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.objects.workflow.MetroWorkerCreator
-import app.aaps.implementation.maintenance.PeriodicMaintenance
+import app.aaps.core.objects.workflow.RunnerWorker
+import app.aaps.core.objects.workflow.WorkOutcome
+import app.aaps.implementation.maintenance.KeepAliveRunner
 import com.google.common.util.concurrent.ListenableFuture
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -45,31 +25,21 @@ import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
-import kotlin.math.abs
+import kotlin.time.Duration.Companion.minutes
 
+/**
+ * Runs the [KeepAliveRunner] every 5 minutes. All the checks are in the runner, which every platform shares; this
+ * worker keeps only what belongs to WorkManager: the schedule and the WorkManager database checks.
+ */
 @AssistedInject
 class KeepAliveWorker(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     aapsLogger: AAPSLogger,
     fabricPrivacy: FabricPrivacy,
-    private val localAlertUtils: LocalAlertUtils,
-    private val persistenceLayer: PersistenceLayer,
-    private val config: Config,
-    private val iobCobCalculator: IobCobCalculator,
-    private val loop: Loop,
-    private val dateUtil: DateUtil,
-    private val activePlugin: ActivePlugin,
-    private val profileFunction: ProfileFunction,
-    private val rxBus: RxBus,
-    private val commandQueue: CommandQueue,
-    private val periodicMaintenance: PeriodicMaintenance,
-    private val rh: ResourceHelper,
-    private val preferences: Preferences,
-    private val dstHelper: DstHelper,
-    private val workManager: WorkManager,
-    private val ch: ConcentrationHelper
-) : LoggingWorker(context, params, Dispatchers.Default, aapsLogger, fabricPrivacy) {
+    private val keepAliveRunner: KeepAliveRunner,
+    private val workManager: WorkManager
+) : RunnerWorker(context, params, Dispatchers.Default, aapsLogger, fabricPrivacy) {
 
     @AssistedFactory
     fun interface Factory : MetroWorkerCreator {
@@ -79,18 +49,15 @@ class KeepAliveWorker(
 
     companion object {
 
-        private val STATUS_UPDATE_FREQUENCY = T.mins(15).msecs()
-        private const val IOB_UPDATE_FREQUENCY_IN_MINUTES = 5L
-
-        private var lastReadStatus: Long = 0
-        private var lastRun: Long = 0
-        private var lastIobUpload: Long = 0
-
         const val KA_0 = "KeepAlive"
         private const val KA_5 = "KeepAlive_5"
         private const val KA_10 = "KeepAlive_10"
 
-        fun scheduleIfNotRunning(context: Context, aapsLogger: AAPSLogger, fabricPrivacy: FabricPrivacy) {
+        /** The runs at +5 and +10 minutes are skipped when they come this soon after the last pass. */
+        private val MIN_INTERVAL = 4.minutes
+
+        fun scheduleIfNotRunning(context: Context, keepAliveRunner: KeepAliveRunner, aapsLogger: AAPSLogger, fabricPrivacy: FabricPrivacy) {
+            val lastRun = keepAliveRunner.lastRun
             if (lastRun != 0L && lastRun + T.mins(20).msecs() < System.currentTimeMillis()) {
                 schedule(context)
                 aapsLogger.error(LTag.CORE, "KeepAliveRescheduled")
@@ -111,11 +78,12 @@ class KeepAliveWorker(
         }
     }
 
-    override suspend fun doWorkAndLog(): Result {
+    override suspend fun runBody(isStopped: () -> Boolean): WorkOutcome {
         aapsLogger.debug(LTag.CORE, "KeepAlive received from: " + inputData.getString("schedule") + " Thread count: " + Thread.activeCount())
 
         // 15 min interval is WorkManager minimum so schedule another instances to have 5 min interval
-        if (inputData.getString("schedule") == KA_0) {
+        val periodic = inputData.getString("schedule") == KA_0
+        if (periodic) {
             workManager.enqueueUniqueWork(
                 KA_5,
                 ExistingWorkPolicy.REPLACE,
@@ -132,42 +100,17 @@ class KeepAliveWorker(
                     .setInitialDelay(10, TimeUnit.MINUTES)
                     .build()
             )
-        } else {
-            // Sometimes schedule +5min, +10min gets broken
-            // If this happens do nothing
-            // It's causing false Pump unreachable alerts
-            if (lastRun + T.mins(4).msecs() > dateUtil.now()) return Result.success(workDataOf("Error" to "Schedule broken. Ignoring"))
         }
 
-        // Gate the plugin-touching work behind app init — without this, a worker that fires
-        // after a reboot before MainApp's init scope has populated pluginStore.plugins crashes.
-        if (!config.awaitInitialized()) {
-            aapsLogger.debug(LTag.CORE, "KeepAlive: app not yet initialized, retrying")
-            return Result.retry()
+        // Sometimes schedule +5min, +10min gets broken. If this happens do nothing:
+        // it was causing false Pump unreachable alerts.
+        val outcome = keepAliveRunner.runOnce(minInterval = if (periodic) null else MIN_INTERVAL)
+        if (outcome == WorkOutcome.Success) {
+            workerDbStatus()
+            workerActiveStatus()
         }
-
-        if (lastRun != 0L && dateUtil.now() - lastRun > T.mins(10).msecs()) {
-            aapsLogger.error(LTag.CORE, "KeepAlive fail")
-            fabricPrivacy.logCustom("KeepAliveFail")
-        }
-        lastRun = dateUtil.now()
-
-        dstHelper.dstCheck()
-        // The platform-neutral half - missed-reading alarm, snooze shortening, log and database
-        // trimming - lives in PeriodicMaintenance so iOS and desktop run the same code instead of
-        // nothing. What stays here is what genuinely needs this worker: the pump and APS checks, and
-        // the WorkManager telemetry below.
-        periodicMaintenance.runOnce()
-        checkPump()
-        // Retries a missing zero TBR while the pump is disconnected - nothing else does, as the loop is paused
-        loop.verifyZeroDelivery()
-        checkAPS()
-        workerDbStatus()
-        workerActiveStatus()
-
-        return Result.success()
+        return outcome
     }
-
 
     // When Worker DB grows too much, work operations become slow
     // Library is cleaning DB every 7 days which may not be sufficient for NSClient full sync
@@ -220,73 +163,6 @@ class KeepAliveWorker(
         } catch (e: Exception) {
             aapsLogger.error(LTag.CORE, "WorkManager getWorkInfos failed for $states", e)
             null
-        }
-    }
-
-    // Usually deviceStatus is uploaded through LoopPlugin after every loop cycle.
-    // if there is no BG available, we have to upload anyway to have correct
-    // IOB displayed in NS
-    @VisibleForTesting
-    suspend fun checkAPS() {
-        var shouldUploadStatus = false
-        if (config.AAPSCLIENT) return
-        if (config.PUMPCONTROL) shouldUploadStatus = true
-        else if (!loop.runningMode().isLoopRunning() || iobCobCalculator.ads.actualBg() == null) shouldUploadStatus = true
-        else if (activePlugin.activeAPS?.let { dateUtil.isOlderThan(it.lastAPSRun, 5) } == true) shouldUploadStatus = true
-        if (dateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY_IN_MINUTES) && shouldUploadStatus) {
-            lastIobUpload = dateUtil.now()
-            loop.scheduleBuildAndStoreDeviceStatus("KeepAliveWorker")
-        }
-    }
-
-    @VisibleForTesting
-    suspend fun checkPump() {
-        val pump = activePlugin.activePump
-        val ps = profileFunction.getRequestedProfile() ?: return
-        val requestedProfile = ProfileSealed.PS(ps, activePlugin)
-        val runningProfile = profileFunction.getProfile()
-        val lastConnection = pump.lastDataTime.value
-        val now = dateUtil.now()
-        val isStatusOutdated = lastConnection + STATUS_UPDATE_FREQUENCY < now
-        // Against the running profile: it holds the rate the pump really gives, which can be rounded to its step
-        // (#2454). The requested one differed by up to a step, and a pump that rounds was read every 5 minutes.
-        // A requested profile that is not running yet is caught first, by the profile check below.
-        val isBasalOutdated = abs((runningProfile ?: requestedProfile).getBasal() - ch.fromPump(pump.baseBasalRate)) > pump.pumpDescription.basalStep
-        aapsLogger.debug(LTag.CORE, "Last connection: " + dateUtil.dateAndTimeString(lastConnection))
-        // Sometimes it can happen that keepalive is not triggered every 5 minutes as it should.
-        // In some cases, it may not even have been started at all.
-        // If these cases aren't handled, false "pump unreachable" alarms can be produced.
-        // Avoid this by checking that (a) readStatus was requested at least once (lastReadStatus
-        // is != 0 in that case) and (b) the last read status request was not too long ago.
-        //
-        // Also, use 5:30 as the threshold for (b) above instead of 5 minutes sharp. The keepalive
-        // checks come in 5 minute intervals, but due to temporal jitter, the interval between the
-        // last read status attempt and the current time can be slightly over 5 minutes (for example,
-        // 300041 milliseconds instead of exactly 300000). Add 30 extra seconds to allow for
-        // plenty of tolerance.
-        val runningMode = loop.runningMode()
-        if (lastReadStatus != 0L && (now - lastReadStatus).coerceIn(minimumValue = 0, maximumValue = null) <= T.secs(5 * 60 + 30).msecs()) {
-            localAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated, runningMode == RM.Mode.DISCONNECTED_PUMP)
-        }
-        if (runningMode == RM.Mode.DISCONNECTED_PUMP) {
-            // do nothing if pump is disconnected
-        } else if (
-            runningProfile == null ||
-            (
-                (!pump.isThisProfileSet(requestedProfile) ||
-                    !requestedProfile.isAppliedAs(runningProfile) ||
-                    (runningProfile is ProfileSealed.EPS && runningProfile.value.originalEnd < dateUtil.now() && runningProfile.value.originalDuration != 0L)
-                    )
-                    && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)
-                )
-        ) {
-            rxBus.send(EventProfileChangeRequested())
-        } else if (isStatusOutdated && !pump.isBusy()) {
-            lastReadStatus = now
-            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.keepalive_status_outdated))
-        } else if (isBasalOutdated && !pump.isBusy()) {
-            lastReadStatus = now
-            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.keepalive_basal_outdated))
         }
     }
 }

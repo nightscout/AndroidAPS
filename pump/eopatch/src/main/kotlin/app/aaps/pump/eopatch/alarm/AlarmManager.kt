@@ -144,7 +144,7 @@ class AlarmManager() : IAlarmManager {
 
         // Critical alarms trigger the global alarm sound overlay
         if (isCritical) {
-            uiInteraction.runAlarm(alarmMsg, resourceHelper.gs(app.aaps.core.ui.R.string.alarm), AlarmSound.ERROR)
+            uiInteraction.runAlarm("eopatch-" + alarmCode.name, alarmMsg, resourceHelper.gs(app.aaps.core.ui.R.string.alarm), AlarmSound.ERROR)
         }
 
         notificationManager.post(

@@ -243,7 +243,7 @@ class DiaconnG8Service : MetroService() {
             if (timeDiff != null && abs(timeDiff) > 60 * 60 * 1.5) {
                 aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds - large difference")
                 //If time-diff is very large, warn user until we can synchronize history readings properly
-                uiInteraction.runAlarm(rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), AlarmSound.ERROR)
+                uiInteraction.runAlarm("diaconn-time-diff", rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), AlarmSound.ERROR)
 
                 //de-initialize pump
                 diaconnG8Pump.reset()
@@ -267,7 +267,7 @@ class DiaconnG8Service : MetroService() {
                 // times, so the user is told, as for a clock far off. With no answer to the clock read, it is only tried
                 // again at the next connection.
                 if (diaconnG8Pump.pumpClockImpossible)
-                    uiInteraction.runAlarm(rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), AlarmSound.ERROR)
+                    uiInteraction.runAlarm("diaconn-time-diff", rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), AlarmSound.ERROR)
                 diaconnG8Pump.reset()
                 rxBus.send(EventDiaconnG8NewStatus())
                 rxBus.send(EventInitializationChanged())

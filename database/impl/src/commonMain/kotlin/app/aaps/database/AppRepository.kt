@@ -258,7 +258,7 @@ class AppRepository internal constructor(
             .forEach { ret.appendLine(it.first + " " + it.second) }
         // VACUUM is intentionally NOT run here. It is memory heavy and crashed (SQLITE_NOMEM) when
         // it overlapped live DB activity; defragmenting VACUUM now runs only at startup while the
-        // DB is quiescent (see vacuumDatabase / MainApp.vacuumDatabaseIfDue).
+        // DB is quiescent (see vacuumDatabase / AppStartSequence.vacuumDatabaseIfDue).
         database.useWriterConnection { connection -> connection.usePrepared("PRAGMA wal_checkpoint(TRUNCATE)") { it.step() } }
         return ret.toString()
     }

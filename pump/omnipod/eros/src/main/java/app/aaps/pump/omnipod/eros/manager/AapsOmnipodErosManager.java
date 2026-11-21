@@ -1018,7 +1018,7 @@ public class AapsOmnipodErosManager {
     }
 
     private void showErrorDialog(@NonNull String message, AlarmSound sound) {
-        uiInteraction.runAlarm(message, rh.gs(app.aaps.core.ui.R.string.error), sound);
+        uiInteraction.runAlarm("omnipod-eros-error", message, rh.gs(app.aaps.core.ui.R.string.error), sound);
     }
 
     private void showPodFaultNotification(FaultEventCode faultEventCode) {
@@ -1026,7 +1026,8 @@ public class AapsOmnipodErosManager {
     }
 
     private void showPodFaultNotification(FaultEventCode faultEventCode, AlarmSound sound) {
-        notificationManager.post(NotificationId.OMNIPOD_POD_FAULT, createPodFaultErrorMessage(faultEventCode), NotificationLevel.IMPORTANT, 0, sound, java.util.Collections.emptyList(), null);
+        // URGENT, as on Dash: a pod fault stops the insulin, and a card below URGENT does not play its sound.
+        notificationManager.post(NotificationId.OMNIPOD_POD_FAULT, createPodFaultErrorMessage(faultEventCode), NotificationLevel.URGENT, 0, sound, java.util.Collections.emptyList(), null);
     }
 
     private void showNotification(NotificationId id, String message, NotificationLevel level, AlarmSound sound) {

@@ -4,34 +4,34 @@ import android.content.Intent
 import android.media.AudioManager
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import app.aaps.core.data.ue.Action
-import app.aaps.core.data.ue.Sources
-import app.aaps.core.interfaces.alerts.EatReminder
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.AlarmIntent
-import app.aaps.core.interfaces.notifications.AlarmSound
-import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
+import app.aaps.core.interfaces.pump.alerts.PumpAlerts
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAlarmDismissed
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.SnackbarHostPresence
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -46,9 +46,18 @@ import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
 
 /**
- * Full-screen alarm UI. Audio playback (looping MediaPlayer + volume ramp) lives in the shared
- * [AlarmSoundPlayer] singleton so the internal-notification alarm path can reuse it; this activity
- * only drives play/stop in response to user actions.
+ * The alarm screen: one alert, over whatever the user is looking at and over the lock screen.
+ *
+ * It owns no sound. Every alarm is a card in the notification list now - a pump's alert and the app's own alike -
+ * and that list is the only thing that plays alarm audio, so this screen is a view of the ringing card and its
+ * buttons act on that one alert. See `_docs/PUMP_DESIGN.md`, section 2 and section 8.
+ *
+ * It used to own a `MediaPlayer` under `OWNER_FULLSCREEN` for the alarms that came through
+ * `UiInteraction.runAlarm`, and carried the title, the message, the sound and the eat-reminder flag in its intent.
+ * All of that is gone with the second alarm path: the screen is told which alert to show and reads the rest from
+ * [PumpAlerts.active], so an alert whose text changes while the screen is open shows the new text.
+ *
+ * The screen itself is shared code ([PumpAlertScreen]), so iOS shows the same one.
  */
 class ErrorActivity : MetroAppCompatActivity() {
 
@@ -57,58 +66,44 @@ class ErrorActivity : MetroAppCompatActivity() {
     @Inject lateinit var snackbarHostPresence: SnackbarHostPresence
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
-    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var iconsProvider: IconsProvider
-    @Inject lateinit var alarmSoundPlayer: AlarmSoundPlayer
-    @Inject lateinit var eatReminder: EatReminder
+    @Inject lateinit var pumpAlerts: PumpAlerts
 
-    private var status by mutableStateOf("")
-    private var title by mutableStateOf("")
-    private var eatReminderAlarm by mutableStateOf(false)
-
-    /** The eat reminder's alarm was silenced on this screen. The screen then stays, as for every alarm. */
-    private var mutedHere = false
-    private var sound: AlarmSound = AlarmSound.ERROR
-
-    /**
-     * `SystemClock.elapsedRealtime()` when the originating notification was posted (from
-     * [AlarmIntent.EXTRA_POSTED_AT_ELAPSED_REALTIME]). Forwarded to [AlarmSoundPlayer.play] so it
-     * can defer its start until the notification channel's one-shot sound has finished.
-     */
-    private var postedAtElapsedRealtime: Long = 0L
+    /** Which alert is shown. Mutable because [onNewIntent] replaces it when a second alarm takes the screen. */
+    private var alertSource by mutableStateOf<String?>(null)
+    private var alertKey by mutableStateOf<String?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Hardware volume buttons control whichever stream the alarm plays on while activity is up.
+        // The hardware volume buttons control whichever stream the alarm plays on while this is up.
         volumeControlStream =
             if (preferences.get(BooleanKey.AlertOverrideDoNotDisturb)) AudioManager.STREAM_ALARM
             else AudioManager.STREAM_NOTIFICATION
 
-        // FSI-launched alarms must be able to wake the screen and show over the lock screen.
+        // An alarm woken from the background has to be able to light the screen and show over the lock screen.
         setShowWhenLocked(true)
         setTurnScreenOn(true)
 
-        status = intent.getStringExtra(AlarmIntent.EXTRA_STATUS) ?: ""
-        title = intent.getStringExtra(AlarmIntent.EXTRA_TITLE) ?: ""
-        eatReminderAlarm = intent.getBooleanExtra(AlarmIntent.EXTRA_EAT_REMINDER, false)
-        sound = intent.getStringExtra(AlarmIntent.EXTRA_SOUND)?.let { runCatching { AlarmSound.valueOf(it) }.getOrNull() } ?: AlarmSound.ERROR
-        postedAtElapsedRealtime = intent.getLongExtra(AlarmIntent.EXTRA_POSTED_AT_ELAPSED_REALTIME, 0L)
+        readAlert(intent)
         val appIcon = iconsProvider.getIcon()
 
-        aapsLogger.debug("Error activity displayed: $title - $status")
+        // The flavour launcher icon, badged over the error icon. It is a drawable id, so the shared screen takes it
+        // as a slot rather than a parameter.
+        val badge: @Composable () -> Unit = {
+            Image(
+                painter = painterResource(id = appIcon),
+                contentDescription = "App icon",
+                modifier = Modifier.size(20.dp)
+            )
+        }
 
         setContent {
-            // The timer ended or was moved +5 min somewhere else (the watch, a client, the notification): its
-            // alarm is silenced there, and this screen has nothing left to offer, so it closes. The alarm has
-            // rung when this screen opens, so a timer that has not rung is one that was extended.
-            if (eatReminderAlarm) LaunchedEffect(Unit) {
-                eatReminder.state.first { it == null || !it.alarmRang }
-                if (!mutedHere) finish()
-            }
-            // OK on the watch: the alarm is stopped there, and this screen closes as its own OK would
+            val source = alertSource
+            val key = alertKey
+            // OK on the watch: the alarm is answered there, and this screen closes as its own OK would.
             LaunchedEffect(Unit) {
                 rxBus.toFlow(EventAlarmDismissed::class).first()
                 finish()
@@ -126,37 +121,13 @@ class ErrorActivity : MetroAppCompatActivity() {
                             modifier = Modifier.fillMaxSize(),
                             color = Color.Transparent
                         ) {
-                            ErrorScreen(
-                                title = title,
-                                status = status,
-                                appIcon = appIcon,
-                                onOk = {
-                                    uel.log(Action.ERROR_DIALOG_OK, Sources.Unknown)
-                                    stopAlarm("Dismiss")
-                                    finish()
-                                },
-                                onMute = {
-                                    uel.log(Action.ERROR_DIALOG_MUTE, Sources.Unknown)
-                                    mutedHere = true
-                                    stopAlarm("Mute")
-                                },
-                                onMute5Min = {
-                                    uel.log(Action.ERROR_DIALOG_MUTE_5MIN, Sources.Unknown)
-                                    if (eatReminderAlarm) {
-                                        // +5 min moves the timer itself, so the alarm comes back even when this
-                                        // screen is closed, and it starts a new one when Silence here ended it.
-                                        // extend() silences this alarm itself. When the new alarm cannot be set,
-                                        // nothing changed: the alarm goes on, and this screen stays with the message.
-                                        if (eatReminder.extend()) finish()
-                                    } else {
-                                        // The re-ring comes from UiInteraction, so the watch is told too, and it
-                                        // survives this screen closing. This screen stays, as before.
-                                        alarmSoundPlayer.stop(AlarmSoundPlayer.OWNER_FULLSCREEN)
-                                        uiInteraction.muteAlarm(UiInteraction.MUTE_MINUTES, "Mute 5 min")
-                                    }
-                                },
-                                onStart = { startAlarm() },
-                                eatReminder = eatReminderAlarm
+                            if (source != null && key != null) PumpAlertScreen(
+                                pumpAlerts = pumpAlerts,
+                                source = source,
+                                key = key,
+                                uel = uel,
+                                onClose = { finish() },
+                                badge = badge
                             )
                         }
                         GlobalSnackbarHost(
@@ -174,29 +145,21 @@ class ErrorActivity : MetroAppCompatActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        status = intent.getStringExtra(AlarmIntent.EXTRA_STATUS) ?: ""
-        title = intent.getStringExtra(AlarmIntent.EXTRA_TITLE) ?: ""
-        eatReminderAlarm = intent.getBooleanExtra(AlarmIntent.EXTRA_EAT_REMINDER, false)
-        sound = intent.getStringExtra(AlarmIntent.EXTRA_SOUND)?.let { runCatching { AlarmSound.valueOf(it) }.getOrNull() } ?: AlarmSound.ERROR
-        postedAtElapsedRealtime = intent.getLongExtra(AlarmIntent.EXTRA_POSTED_AT_ELAPSED_REALTIME, 0L)
-        aapsLogger.debug("Error activity updated: $title - $status")
-        // play() stops any previous playback first.
-        startAlarm()
+        readAlert(intent)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        // Owner-scoped: only stops audio this activity owns, never an internal-path alarm.
-        alarmSoundPlayer.stop(AlarmSoundPlayer.OWNER_FULLSCREEN)
-    }
-
-    private fun startAlarm() {
-        alarmSoundPlayer.play(sound, AlarmSoundPlayer.OWNER_FULLSCREEN, postedAtElapsedRealtime)
-    }
-
-    private fun stopAlarm(reason: String) {
-        aapsLogger.debug(LTag.CORE, "stopAlarm: $reason")
-        alarmSoundPlayer.stop(AlarmSoundPlayer.OWNER_FULLSCREEN)
-        uiInteraction.stopAlarm(reason)
+    /**
+     * Which alert this screen is for. Without it there is nothing to show, so the screen closes rather than
+     * standing there empty - it can only happen if something other than the alert platform started it.
+     */
+    private fun readAlert(intent: Intent) {
+        alertSource = intent.getStringExtra(AlarmIntent.EXTRA_PUMP_ALERT_SOURCE)
+        alertKey = intent.getStringExtra(AlarmIntent.EXTRA_PUMP_ALERT_KEY)
+        if (alertSource == null || alertKey == null) {
+            aapsLogger.error(LTag.CORE, "Alarm screen started without an alert, closing")
+            finish()
+            return
+        }
+        aapsLogger.debug(LTag.CORE, "Alarm screen for $alertSource/$alertKey")
     }
 }

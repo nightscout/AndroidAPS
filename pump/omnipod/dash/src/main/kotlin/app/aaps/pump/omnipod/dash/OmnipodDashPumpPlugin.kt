@@ -1592,7 +1592,7 @@ class OmnipodDashPumpPlugin(
     }
 
     private fun showErrorDialog(message: String, sound: AlarmSound?) {
-        uiInteraction.runAlarm(message, rh.gs(app.aaps.core.ui.R.string.error), sound)
+        uiInteraction.runAlarm("omnipod-dash-alert", message, rh.gs(app.aaps.core.ui.R.string.error), sound)
     }
 
     private fun showNotification(id: NotificationId, message: String, sound: AlarmSound?, level: NotificationLevel = id.defaultLevel) {

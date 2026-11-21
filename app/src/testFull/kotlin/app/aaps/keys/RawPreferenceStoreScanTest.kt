@@ -82,6 +82,11 @@ class RawPreferenceStoreScanTest {
             "reads the v3 insulin and DIA names this build no longer registers, to stamp records that predate ICfg",
         "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/migration/FileKeyValueStore.kt" to
             "an in-memory store over an import file, so the migrations above run on it without touching the device",
+        // The app start, which `MainApp` did before every platform shared it. `MainApp` reached the store
+        // too, but through a graph accessor, so it never named the type and this scan never saw it.
+        "appshell/src/commonMain/kotlin/app/aaps/appshell/start/AppStartSequence.kt" to
+            "hands the device's store to the migrations above, removes the old DIA names once they are migrated, " +
+            "and writes the vacuum flag with edit(commit = true) before a VACUUM that can end the process",
         "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/cloud/CloudStorageManager.kt" to "moves export files to and from cloud storage",
         "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/cloud/GoogleDriveProvider.kt" to "cloud export, shared part",
         "implementation/src/androidMain/kotlin/app/aaps/implementation/maintenance/cloud/AndroidGoogleDriveProvider.kt" to "cloud export, Android part",

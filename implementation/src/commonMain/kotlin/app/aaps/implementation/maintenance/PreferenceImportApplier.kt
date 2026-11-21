@@ -95,7 +95,7 @@ class PreferenceImportApplier(
     suspend fun apply(prefs: Prefs, keepPumpSettings: Boolean): ImportExportPrefs.ImportOutcome {
         val migrated = FileKeyValueStore(prefs.values)
         // Read BEFORE the migrations: `PreferenceMigrations.insulinPlugins` deletes the very names this
-        // reads. Same order as start-up, see MainApp.doMigrations.
+        // reads. Same order as start-up, see AppStartSequence.migratePreferences.
         val legacyInsulins = legacyInsulinsOf(migrated)
         migrations.migrate(migrated)
         val outcome = run(migrated.asTextMap(), keepPumpSettings, write = true)

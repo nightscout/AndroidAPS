@@ -7,6 +7,8 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.doCallRealMethod
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
@@ -14,6 +16,7 @@ class TriggerPumpBatteryLevelTest : TriggerTestBase() {
 
     @Test fun shouldRunTest() = runTest {
         whenever(pumpPluginWithConcentration.model()).thenReturn(PumpType.GENERIC_AAPS)
+        doCallRealMethod().whenever(pumpPluginWithConcentration).reportsBatteryLevel()
         whenever(pumpPluginWithConcentration.batteryLevel).thenReturn(MutableStateFlow(6))
         var t: TriggerPumpBatteryLevel = TriggerPumpBatteryLevel(triggerDeps).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
@@ -34,16 +37,22 @@ class TriggerPumpBatteryLevelTest : TriggerTestBase() {
     }
 
     @Test fun shouldRunBatteryLevelSupport() = runTest {
+        // The default: the pump type says whether the level is real. The do-form, because the real method calls model().
+        doCallRealMethod().whenever(pumpPluginWithConcentration).reportsBatteryLevel()
         whenever(pumpPluginWithConcentration.model()).thenReturn(PumpType.GENERIC_AAPS)
         whenever(pumpPluginWithConcentration.batteryLevel).thenReturn(MutableStateFlow(6))
         val t: TriggerPumpBatteryLevel = TriggerPumpBatteryLevel(triggerDeps).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isTrue()
 
+        // A type without a level, as a virtual pump that emulates Eros: its made-up level is not used.
         whenever(pumpPluginWithConcentration.model()).thenReturn(PumpType.OMNIPOD_EROS)
-        whenever(pumpPluginWithConcentration.isUseRileyLinkBatteryLevel()).thenReturn(true)
-        whenever(pumpPluginWithConcentration.batteryLevel).thenReturn(MutableStateFlow(6))
+        assertThat(t.shouldRun()).isFalse()
+
+        // The Eros driver with the RileyLink level turned on.
+        doReturn(true).whenever(pumpPluginWithConcentration).reportsBatteryLevel()
         assertThat(t.shouldRun()).isTrue()
 
+        doCallRealMethod().whenever(pumpPluginWithConcentration).reportsBatteryLevel()
         whenever(pumpPluginWithConcentration.model()).thenReturn(PumpType.OMNIPOD_DASH)
         whenever(pumpPluginWithConcentration.batteryLevel).thenReturn(MutableStateFlow(0))
         assertThat(t.shouldRun()).isFalse()

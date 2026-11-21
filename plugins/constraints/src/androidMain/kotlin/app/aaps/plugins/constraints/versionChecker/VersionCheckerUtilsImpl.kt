@@ -3,6 +3,7 @@ package app.aaps.plugins.constraints.versionChecker
 import android.os.Build
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -21,7 +22,15 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonObject
+import java.net.URL
+import kotlin.coroutines.cancellation.CancellationException
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
@@ -33,34 +42,75 @@ class VersionCheckerUtilsImpl(
     private val config: () -> Config,
     private val dateUtil: DateUtil,
     private val notificationManager: NotificationManager,
-    private val versionDefinition: VersionDefinition
+    private val versionDefinition: VersionDefinition,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : VersionCheckerUtils {
 
-    private var loadedDefinition: JsonObject? = null
+    /**
+     * The bundled `definition.json`, read on first use. Lazy, because invoking [VersionDefinition] opens the file from
+     * the assets: as a property initializer it made *building the object graph* do file I/O - wrong in production, and
+     * fatal in a unit test, where the context is a `RETURNS_MOCKS` mock so `assets.open()` returns a mock `InputStream`
+     * whose `read()` answers 0 and never -1, and the read loop in `SignatureVerifierPlugin.readInputStream` never
+     * terminates.
+     */
+    private val bundled: JsonObject by lazy { versionDefinition.invoke() }
+
+    /** The file on GitHub ([GITHUB_DEFINITION_URL]), once fetched. */
+    @Volatile private var github: JsonObject? = null
+
+    /** From Firebase remote config ([setRemoteDefinition]). */
+    @Volatile private var remote: JsonObject? = null
 
     /**
-     * The allowed-versions document: read on first use, and writable.
-     *
-     * Both halves matter and pull in opposite directions.
-     *
-     * **Lazy**, because invoking [VersionDefinition] opens `definition.json` from the assets. As a
-     * property initializer it made *building the object graph* do file I/O - wrong in production, and
-     * fatal in a unit test, where the context is a `RETURNS_MOCKS` mock so `assets.open()` returns a
-     * mock `InputStream` whose `read()` answers 0 and never -1, and the read loop in
-     * `SignatureVerifierPlugin.readInputStream` never terminates.
-     *
-     * **A `var`**, because `MainApp.setupRemoteConfig` finds this property by reflection and casts it
-     * to `KMutableProperty` to merge the remote config into it. Making it a `val by lazy` threw
-     * `ClassCastException` on startup - and only on a device, since that path needs network and Play
-     * Services, so no test or CI build reaches it.
+     * The allowed versions: the bundled file, then the file on GitHub, then remote config, a later one winning for a key
+     * that more than one has. The order holds whichever of the two remote sources answers first.
      */
-    var definition: JsonObject
-        get() = loadedDefinition ?: versionDefinition.invoke().also { loadedDefinition = it }
-        set(value) {
-            loadedDefinition = value
+    val definition: JsonObject
+        get() = JsonObject(bundled + (github ?: EMPTY) + (remote ?: EMPTY))
+
+    override fun setRemoteDefinition(definition: JsonObject) {
+        remote = definition
+    }
+
+    /** How the GitHub file is read. A test replaces it. */
+    internal var fetchGithubDefinition: suspend () -> String = {
+        withContext(Dispatchers.IO) { URL(GITHUB_DEFINITION_URL).readText() }
+    }
+
+    private val githubLock = Any()
+    private var nextGithubFetch = 0L
+    private var githubFetchRunning = false
+
+    /** At most once a day after a success, once an hour after a failure; never two at once. Does not wait for it. */
+    internal fun fetchGithubDefinitionIfDue() {
+        val now = dateUtil.now()
+        synchronized(githubLock) {
+            if (githubFetchRunning || now < nextGithubFetch) return
+            githubFetchRunning = true
         }
+        appScope.launch {
+            val fetched = try {
+                Json.parseToJsonElement(fetchGithubDefinition()).jsonObject
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.CORE, "Version definition from GitHub not read: $e")
+                null
+            }
+            if (fetched != null) {
+                github = fetched
+                aapsLogger.debug(LTag.CORE, "Version definition from GitHub read: ${fetched.size} entries")
+            }
+            synchronized(githubLock) {
+                nextGithubFetch = dateUtil.now() + if (fetched != null) T.days(1).msecs() else T.hours(1).msecs()
+                githubFetchRunning = false
+            }
+        }
+    }
 
     override fun triggerCheckVersion() {
+        // Used by the next check: this one goes on with what is known now.
+        fetchGithubDefinitionIfDue()
         val version: String? = AllowedVersions.findByApi(definition, Build.VERSION.SDK_INT)
         val newVersionByApi = compareWithCurrentVersion(newVersion = version, currentVersion = config().VERSION_NAME)
 
@@ -148,22 +198,25 @@ class VersionCheckerUtilsImpl(
         return true
     }
 
+    /**
+     * The expiry warnings keep their own time ([VersionCheckerLongKey.LastExpiredWarning]), apart from the new-version
+     * warning ([VersionCheckerLongKey.LastVersionCheckWarning]), as before the remote config: with one time for both,
+     * a new-version warning held back the expiry warning, and the other way round.
+     */
     private fun onExpireDateDetected(currentVersion: String, endDate: Long) {
         val now = dateUtil.now()
-        if (dateUtil.now() > endDate && shouldWarnAgain()) {
-            // store last notification time
-            preferences.put(VersionCheckerLongKey.LastVersionCheckWarning, now)
-            //notify
+        if (now > endDate && shouldWarnAgain()) {
+            preferences.put(VersionCheckerLongKey.LastExpiredWarning, now)
             notificationManager.post(NotificationId.VERSION_EXPIRE, ConstraintsStrings.application_expired)
-        } else if (dateUtil.isAfterNoon() && now > preferences.get(VersionCheckerLongKey.LastVersionCheckWarning) + warnEvery(endDate)) {
+        } else if (dateUtil.isAfterNoon() && now > preferences.get(VersionCheckerLongKey.LastExpiredWarning) + warnEvery(endDate)) {
             aapsLogger.debug(LTag.CORE, rh.gs(ConstraintsStrings.version_expire, currentVersion, dateUtil.dateString(endDate)))
-            notificationManager.post(NotificationId.VERSION_EXPIRE, ConstraintsStrings.version_expire.withArgs(currentVersion,dateUtil.dateString(endDate)), level = NotificationLevel.LOW)
+            notificationManager.post(NotificationId.VERSION_EXPIRE, ConstraintsStrings.version_expire.withArgs(currentVersion, dateUtil.dateString(endDate)), level = NotificationLevel.LOW)
             preferences.put(VersionCheckerLongKey.LastExpiredWarning, now)
         }
     }
 
     private fun shouldWarnAgain() =
-        dateUtil.now() > preferences.get(VersionCheckerLongKey.LastVersionCheckWarning) + warnEvery(expiration = preferences.get(LongComposedKey.AppExpiration, config().VERSION_NAME))
+        dateUtil.now() > preferences.get(VersionCheckerLongKey.LastExpiredWarning) + warnEvery(expiration = preferences.get(LongComposedKey.AppExpiration, config().VERSION_NAME))
 
     private fun String?.toNumberList() =
         this?.numericVersionPart().takeIf { !it.isNullOrBlank() }?.split(".")?.map { it.toInt() }
@@ -182,6 +235,18 @@ class VersionCheckerUtilsImpl(
             expiration - dateUtil.now() > T.days(14).msecs() -> T.days(3).msecs()
             else                                             -> T.days(1).msecs()
         }
+
+    companion object {
+
+        /**
+         * The allowed versions on GitHub, in the flat form of the bundled file and of remote config. A file of its
+         * own: `definition.json` on the same branch keeps the old array form, because older versions of AAPS still read
+         * it.
+         */
+        const val GITHUB_DEFINITION_URL = "https://raw.githubusercontent.com/nightscout/AndroidAPS/versions/version_definitions.json"
+
+        private val EMPTY = JsonObject(emptyMap())
+    }
 }
 
 fun String.numericVersionPart(): String =

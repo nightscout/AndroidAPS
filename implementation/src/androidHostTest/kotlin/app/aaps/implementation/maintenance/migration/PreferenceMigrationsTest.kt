@@ -86,7 +86,7 @@ class PreferenceMigrationsTest {
 
     /**
      * The raw `_name` key must survive. `MainApp` reads it with `_dia` to pair a profile with the DIA
-     * it was using, and only drops both once `dataMigrations()` has stamped the insulin records.
+     * it was using, and only drops both once `AppStartSequence.migrateRecords()` has stamped the insulin records.
      */
     @Test fun `the raw profile name key is copied across rather than moved`() = runTest {
         val store = storeOf("LocalProfile_0_name" to "Adult", "LocalProfile_0_dia" to 6.0)

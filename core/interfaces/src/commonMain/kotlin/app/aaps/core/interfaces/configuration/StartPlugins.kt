@@ -16,25 +16,21 @@ import kotlin.time.Duration.Companion.seconds
  * How long any start path waits for the plugins to settle before carrying on regardless.
  *
  * A driver whose `onStart` never finishes must not hold up start up for ever, and it must not keep
- * the app from ever calculating either - see [initializeAndAnnounceReady].
+ * the app from ever calculating either - see [announceReadyWhenStarted].
  *
- * One value for every path on purpose. `MainApp`, `ConfigBuilderImpl.applyConfiguration` and this
- * all bound the same wait, and each used to carry its own copy of the number with a comment saying
+ * One value for every path on purpose. `AppStartSequence`, `ConfigBuilderImpl.applyConfiguration` and
+ * this all bound the same wait, and each used to carry its own copy of the number with a comment saying
  * it had to match the others. A number that must match in three places is a number that will not.
  */
 val PLUGIN_SETTLE_WAIT: Duration = 30.seconds
 
 /**
- * Starts the plugins, then says the app is ready - once they really are.
+ * Says the app is ready once the plugins really have started.
  *
  * [EventAppInitialized] is what starts the first IOB/COB calculation: `IobCobCalculatorPlugin`
  * collects it and runs the main calculation on it. Without it nothing is calculated until some
  * other change comes along, which on a client means the next glucose reading - up to five minutes
  * of an empty graph after every start (nightscout/AndroidAPS#5485).
- *
- * Only `MainApp` sent the event, so only Android had this. The listener is shared code, so the iOS
- * and the desktop shell both had the same empty graph; this is here rather than in each shell so
- * the next platform gets it by using it.
  *
  * ### Why it waits
  *
@@ -43,29 +39,13 @@ val PLUGIN_SETTLE_WAIT: Duration = 30.seconds
  * collector is started `UNDISPATCHED` precisely because this event fires once and must not be
  * missed, which only helps if the subscription already exists. So the jobs are waited for first.
  *
- * Waiting also closes the other half of the same gap. Both shells threw the returned jobs away,
- * which [ConfigBuilder.initialize] warns about in as many words.
- *
  * The wait is bounded and the event is sent even when it runs out, with a warning. One pump driver
  * that never finishes starting should cost the log line, not every calculation from then on.
  *
- * Android keeps its own send: it has more start-up work to do afterwards and announces at the end
- * of all of it, not here.
+ * Only the iOS shell still uses this. Android and the desktop run `AppStartSequence`, which waits the
+ * same way and announces at the end of the whole start. Once iOS runs it too, this can go.
  *
  * @return the job doing the waiting, so a caller - or a test - can await the announcement.
- */
-fun ConfigBuilder.initializeAndAnnounceReady(
-    scope: CoroutineScope,
-    rxBus: RxBus,
-    aapsLogger: AAPSLogger,
-    wait: Duration = PLUGIN_SETTLE_WAIT
-): Job = announceReadyWhenStarted(initialize(), scope, rxBus, aapsLogger, wait)
-
-/**
- * [initializeAndAnnounceReady] for a caller that already holds the start jobs.
- *
- * The iOS shell starts the plugins through its own `PluginRegistry`, so it has the jobs rather than
- * the builder. Same waiting and the same announcement, so the two shells cannot drift apart.
  */
 fun announceReadyWhenStarted(
     started: List<Job>,

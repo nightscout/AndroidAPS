@@ -165,7 +165,7 @@ fun OverviewScreen(
         isSimpleMode = state.isSimpleMode,
         onNavigate = onNavigate,
         onActionsError = { comment, title ->
-            uiInteraction.runAlarm(comment, title, AlarmSound.BOLUS_ERROR)
+            uiInteraction.runAlarm(UiInteraction.KEY_COMMAND_FAILED, comment, title, AlarmSound.BOLUS_ERROR)
         },
     )
 

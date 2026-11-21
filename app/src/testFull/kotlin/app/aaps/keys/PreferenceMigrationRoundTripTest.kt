@@ -106,7 +106,7 @@ class PreferenceMigrationRoundTripTest {
         migrations().migrate(store)
 
         // `_name` is deliberately copied rather than moved: MainApp still reads it to pair a profile
-        // with the DIA it was using, for the database migration in dataMigrations().
+        // with the DIA it was using, for the database migration in AppStartSequence.migrateRecords().
         assertThat(store.getAll().keys.intersect(legacyStore.keys)).containsExactly("LocalProfile_0_name")
     }
 

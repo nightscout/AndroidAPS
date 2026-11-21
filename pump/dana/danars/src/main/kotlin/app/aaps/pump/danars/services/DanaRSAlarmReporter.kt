@@ -1,5 +1,6 @@
 package app.aaps.pump.danars.services
 
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.PumpSync
@@ -24,9 +25,12 @@ class DanaRSAlarmReporter(
     private val danaPump: DanaPump
 ) {
 
-    /** Posts the alarm notification and stores the alarm as an announcement */
+    /**
+     * Posts the alarm notification and stores the alarm as an announcement. With a sound: an URGENT card without one is
+     * silent, and these are occlusion, empty reservoir, shutdown and pump errors.
+     */
     fun report(text: String) {
-        notificationManager.post(NotificationId.DANA_PUMP_ALARM, text)
+        notificationManager.post(NotificationId.DANA_PUMP_ALARM, text, sound = AlarmSound.ALARM)
         runBlocking { pumpSync.insertAnnouncement(text, null, danaPump.pumpType(), danaPump.serialNumber) }
     }
 

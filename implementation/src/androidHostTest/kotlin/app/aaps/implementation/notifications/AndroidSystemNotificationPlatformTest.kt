@@ -22,8 +22,10 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.notNull
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -87,7 +89,9 @@ class AndroidSystemNotificationPlatformTest {
         sut.show(notification(NotificationLevel.URGENT, sound = AlarmSound.URGENT_ALARM), "Urgent")
 
         verify(alarmNotificationManager).postSilentAlarmNotification(
-            notificationKey = eq(42), title = eq("Urgent"), body = eq("text"), urgent = eq(true)
+            notificationKey = eq(42), title = eq("Urgent"), body = eq("text"), urgent = eq(true),
+            // Mute and the swipe: the card carries them so an alarm can be answered without opening the app.
+            dismissIntent = notNull()
         )
         verify(preferences, never()).get(any<BooleanKey>())
     }
@@ -98,7 +102,7 @@ class AndroidSystemNotificationPlatformTest {
 
         sut.show(notification(NotificationLevel.NORMAL), "Info")
 
-        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any())
+        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any(), anyOrNull())
     }
 
     @Test
@@ -108,7 +112,7 @@ class AndroidSystemNotificationPlatformTest {
 
         sut.show(notification(NotificationLevel.NORMAL, actions = listOf(mock())), "Info")
 
-        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any())
+        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any(), anyOrNull())
     }
 
     @Test
@@ -119,7 +123,7 @@ class AndroidSystemNotificationPlatformTest {
 
         sut.show(notification(NotificationLevel.URGENT), "Urgent")
 
-        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any())
+        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any(), anyOrNull())
     }
 
     @Test

@@ -80,6 +80,12 @@ class ContributedPluginsTest {
     }
 
     @Test
+    fun `the BG quality plugin in the list is the one the graph builds`() {
+        val root = testRoot()
+        assertThat(root.contributedPlugins[860]).isSameInstanceAs(root.bgQualityCheckPlugin)
+    }
+
+    @Test
     fun `the NS client source plugin and the NSClientSource binding are the same object`() {
         val root = testRoot()
         assertThat(root.nsClientSource).isSameInstanceAs(root.contributedPlugins[410])

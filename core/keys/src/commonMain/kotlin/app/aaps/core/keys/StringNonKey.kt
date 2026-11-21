@@ -125,5 +125,8 @@ enum class StringNonKey(
     // Nightscout address it belongs to: with another address it is not used.
     NsClientControlMasterSigningKey(key = "nsclient_control_master_signing_key", defaultValue = "", exportable = false),
     NsClientControlMasterSigningKeyUrl(key = "nsclient_control_master_signing_key_url", defaultValue = "", exportable = false),
+    // The pump alerts the user silenced, and until when (PumpAlerts). Kept so a restart does not ring them before
+    // the silence ends. Not exportable: the alerts belong to this install and its pump.
+    PumpAlertSilences(key = "pump_alert_silences", defaultValue = "[]", exportable = false),
 
 }

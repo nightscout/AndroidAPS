@@ -30,7 +30,7 @@ import dev.zacsweers.metro.Inject
  *
  * ## Why they take the store
  *
- * These used to be the body of `MainApp.doMigrations()` and ran only against the live store on start
+ * These used to be the body of `MainApp.doMigrations()` (now `AppStartSequence.migratePreferences()`) and ran only against the live store on start
  * up. That was enough while an import wrote every name from the file into the store raw, because the
  * next start then converted them. It is not enough now: `PreferenceImportApplier` resolves each name
  * from the file and drops the ones it does not know, so an old backup's names never reach the store
@@ -83,7 +83,7 @@ import dev.zacsweers.metro.Inject
  *   the old keys when they are present; `MainApp` still creates three factory presets when they are
  *   not, which is new-install bootstrap and would write invented presets over a user's real ones.
  * - the insulin label and peak derivation, and the `LocalProfile_<n>_name` / `_dia` harvest. Both fill
- *   `MainApp` fields that `dataMigrations()` consumes much later, so they are about this app's
+ *   `AppStartSequence` fields that `migrateRecords()` consumes much later, so they are about this app's
  *   start-up sequence rather than about the store. Neither is needed on an import: there is no
  *   database import in AAPS, so a fresh install plus import has no legacy rows to stamp.
  */
@@ -351,7 +351,7 @@ class PreferenceMigrations(
      * the insulin sensitivity, carb ratio, basal and target schedules.
      *
      * The raw `_name` key is written across but NOT removed. `MainApp` still reads it with `_dia` to
-     * build the name-to-DIA map `dataMigrations()` needs; removing it here would strand those values
+     * build the name-to-DIA map `AppStartSequence.migrateRecords()` needs; removing it here would strand those values
      * and stamp historical records with a substituted insulin.
      *
      * The index is parsed strictly. `SafeParse.stringToInt`, which the old version used, answers 0 for

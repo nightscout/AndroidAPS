@@ -524,7 +524,8 @@ class EquilPumpPlugin(
         if (battery != null && preferences.get(EquilBooleanPreferenceKey.EquilAlarmBattery)) {
             val text = rh.gs(R.string.equil_low_battery_level, battery)
             when {
-                battery < 5   -> alarmOnce(EquilBooleanKey.AlarmBattery5, NotificationId.EQUIL_LOW_BATTERY, text, NotificationLevel.IMPORTANT)
+                // The default URGENT, as at 10 %: a lower level does not play the sound, so the more urgent alarm was silent.
+                battery < 5   -> alarmOnce(EquilBooleanKey.AlarmBattery5, NotificationId.EQUIL_LOW_BATTERY, text)
                 battery <= 10 -> alarmOnce(EquilBooleanKey.AlarmBattery10, NotificationId.EQUIL_LOW_BATTERY, text)
             }
         }

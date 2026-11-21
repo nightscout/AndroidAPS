@@ -28,6 +28,11 @@ class DiaconnScenarioTest : AbstractPumpScenarioTest() {
     override fun anEmptyReservoirRaisesAnAlarm() {
     }
 
+    @Ignore("Acceptance A1: Diaconn alarms are not pump alerts yet; it moves with acceptance v2")
+    @Test
+    override fun anOcclusionIsARingingPumpAlert() {
+    }
+
     /**
      * The pump numbers its log 0..9999 and then starts again with a higher wrap count. AAPS records a bolus only from
      * the pump log, and the driver read the old wrap to its end and then nothing more: every bolus after it was lost.

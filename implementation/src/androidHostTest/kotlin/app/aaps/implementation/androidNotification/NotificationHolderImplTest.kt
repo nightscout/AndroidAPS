@@ -6,7 +6,7 @@ import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.IconsProvider
-import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.ui.AndroidActivities
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,13 +30,13 @@ class NotificationHolderImplTest {
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
     private fun sut(): NotificationHolderImpl {
-        val uiInteraction: UiInteraction = mock()
-        whenever(uiInteraction.mainActivity).thenReturn(Activity::class)
+        val activities: AndroidActivities = mock()
+        whenever(activities.main).thenReturn(Activity::class)
         return NotificationHolderImpl(
             rh = mock<ResourceHelper>(),
             context = context,
             iconsProvider = mock<IconsProvider>(),
-            uiInteraction = uiInteraction
+            androidActivities = activities
         )
     }
 

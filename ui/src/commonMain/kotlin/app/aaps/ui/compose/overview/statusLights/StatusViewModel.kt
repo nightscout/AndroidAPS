@@ -260,10 +260,8 @@ class StatusViewModel(
         val pump = activePlugin.activePump
         val hasAge = pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()
 
-        // Eros doesn't report battery itself, but RileyLink alternatives may
-        val erosBatteryLinkAvailable = pump.model() == PumpType.OMNIPOD_EROS && pump.isUseRileyLinkBatteryLevel()
         val batteryLevelValue = pump.batteryLevel.value?.toDouble()
-        val hasLevel = batteryLevelValue != null && (pump.model().supportBatteryLevel || erosBatteryLinkAvailable)
+        val hasLevel = batteryLevelValue != null && pump.reportsBatteryLevel()
 
         // If neither age nor level can be shown, skip entirely
         if (!hasAge && !hasLevel) return null

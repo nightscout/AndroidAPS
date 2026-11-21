@@ -624,7 +624,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     }
 
     private fun verifyAlarm(mode: VerificationMode) =
-        verify(uiInteraction, mode).runAlarm(any(), eq("Insulin change failed"), eq(AlarmSound.BOLUS_ERROR))
+        verify(uiInteraction, mode).runAlarm(eq(UiInteraction.KEY_COMMAND_FAILED), any(), eq("Insulin change failed"), eq(AlarmSound.BOLUS_ERROR))
 
     @Test
     fun `a failed write with a concentration change pending raises the alarm over the screen`() = runTest {

@@ -2,7 +2,9 @@ package app.aaps.pump.equil
 
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.PumpProfile
@@ -118,6 +120,18 @@ class EquilPumpPluginTest : TestBaseWithProfile() {
         repeat(3) { equilPumpPlugin.playAlarm() }
 
         assertEquals(1, alarmsPosted(NotificationId.EQUIL_LOW_BATTERY))
+    }
+
+    /** It was posted IMPORTANT, a level that does not play the sound, so the more urgent battery alarm was silent. */
+    @Test
+    fun `battery under 5 percent rings as urgent as at 10 percent`() {
+        prepareAlarms(insulin = 100, battery = 4)
+
+        equilPumpPlugin.playAlarm()
+
+        val post = Mockito.mockingDetails(notificationManager).invocations.single { it.method.name == "post" && it.arguments[0] == NotificationId.EQUIL_LOW_BATTERY }
+        assertEquals(NotificationLevel.URGENT, post.arguments[2])
+        assertEquals(AlarmSound.ALARM, post.arguments.firstOrNull { it is AlarmSound })
     }
 
     @Test

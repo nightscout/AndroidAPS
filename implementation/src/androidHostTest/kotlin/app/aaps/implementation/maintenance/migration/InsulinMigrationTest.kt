@@ -248,7 +248,7 @@ class InsulinMigrationTest {
 
     @Test fun `reading after the preference migrations loses the selection`() = runTest {
         // Not a defect, a pin. `PreferenceMigrations.insulinPlugins` removes these dead names, so
-        // `MainApp.doMigrations` has to read them first. That used to be a comment and nothing else, and a
+        // `AppStartSequence.migratePreferences` has to read them first. That used to be a comment and nothing else, and a
         // reordering would have cost every upgrading user their insulin selection without failing a test.
         val store = storeOf("ConfigBuilder_Enabled_INSULIN_InsulinLyumjevPlugin" to true)
         assertThat(sut().readLegacyInsulin(store).fromExplicitKey).isTrue()

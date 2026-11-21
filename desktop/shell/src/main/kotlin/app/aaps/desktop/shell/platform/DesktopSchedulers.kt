@@ -12,6 +12,8 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.alerts.EatReminderAlarm
 import app.aaps.implementation.scenes.SceneExpiryRunner
 import app.aaps.implementation.scenes.SceneExpiryScheduler
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryJob
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryTimer
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -131,6 +133,43 @@ class DesktopSceneExpiryScheduler(
             delay(delayMs)
             val outcome = expiryRunner().run(sceneName)
             aapsLogger.debug(LTag.CORE, "Scene '$sceneName' expiry finished: $outcome")
+        }
+    }
+
+    override fun cancel() {
+        pending?.cancel()
+        pending = null
+    }
+}
+
+/**
+ * Runs [RunningModeExpiryJob] at the end of a temporary running mode, as a coroutine that waits, like
+ * [DesktopSceneExpiryScheduler].
+ *
+ * The scheduler that calls this works only on a device that drives the pump, which this client never is.
+ * It is real all the same, so nothing on this platform pretends to do work it does not do.
+ *
+ * The wait lives in this process. When AAPS is closed before the mode ends, the next start schedules the
+ * end again from the database, and an end that is already past is handled there. The job is looked up when
+ * it runs, not when the graph is built, for the same reason as the scene runner above.
+ */
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
+@Inject
+class DesktopRunningModeExpiryTimer(
+    private val aapsLogger: AAPSLogger,
+    private val expiryJob: () -> RunningModeExpiryJob,
+    @ApplicationScope private val scope: CoroutineScope
+) : RunningModeExpiryTimer {
+
+    private var pending: Job? = null
+
+    override fun schedule(delayMs: Long) {
+        cancel()
+        aapsLogger.debug(LTag.APS, "Running mode ends in ${delayMs}ms")
+        pending = scope.launch {
+            delay(delayMs)
+            expiryJob().run()
         }
     }
 

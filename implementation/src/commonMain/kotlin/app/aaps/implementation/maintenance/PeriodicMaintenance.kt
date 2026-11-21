@@ -36,16 +36,18 @@ import kotlin.time.Duration.Companion.minutes
  *
  * ## What is here and what is not
  *
- * Only the platform-neutral work. `KeepAliveWorker` keeps the rest, and it belongs there: the
- * WorkManager self-rescheduling, the worker-database telemetry, and the pump and APS checks, which
- * are gated on `config.APS` and so are no-ops on the two shells that hardcode it false.
+ * Only the housekeeping. The pump and APS checks are in [KeepAliveRunner], which runs this class as
+ * part of its pass. The WorkManager schedule and the worker-database telemetry stay in
+ * `KeepAliveWorker`.
  *
  * ## Who drives it
  *
  * The trigger stays per platform, because that part genuinely differs: Android has WorkManager and a
- * wake lock, and the other two do not. Android calls [runOnce] from `KeepAliveWorker` on its existing
- * schedule; iOS and desktop call [start] and get a coroutine ticker. What must NOT differ again is
- * the work itself, which is why it is one method rather than three call sites.
+ * wake lock, and the other two do not. Android runs [KeepAliveRunner] from `KeepAliveWorker` on its
+ * existing schedule; iOS and desktop, both followers today, call [start] and get a coroutine ticker.
+ * A shell that runs [KeepAliveRunner] must not also call [start], or the housekeeping runs twice.
+ * What must NOT differ again is the work itself, which is why it is one method rather than three
+ * call sites.
  */
 @SingleIn(AppScope::class)
 @Inject

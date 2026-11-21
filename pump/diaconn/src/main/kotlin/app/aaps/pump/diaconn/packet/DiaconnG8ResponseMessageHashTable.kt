@@ -13,8 +13,10 @@ class DiaconnG8ResponseMessageHashTable(
 
     var messages: HashMap<Int, DiaconnG8Packet> = HashMap()
 
+    /** Two packets with one type would leave only the last one in the table, and the other would never be read. */
     fun put(message: DiaconnG8Packet) {
-        messages[message.msgType.toInt()] = message
+        val earlier = messages.put(message.msgType.toInt(), message)
+        check(earlier == null) { "${earlier?.friendlyName} and ${message.friendlyName} have the same type ${message.msgType}" }
     }
 
     fun findMessage(command: Int): DiaconnG8Packet {

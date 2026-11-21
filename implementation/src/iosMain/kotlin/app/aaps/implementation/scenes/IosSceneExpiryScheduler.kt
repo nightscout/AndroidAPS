@@ -6,61 +6,107 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import platform.Foundation.NSNotificationCenter
+import platform.Foundation.NSOperationQueue
+import platform.UIKit.UIApplicationDidBecomeActiveNotification
+import platform.UIKit.UIApplicationWillEnterForegroundNotification
 
 /**
- * Scene expiry is **not scheduled on iOS**, and on a client build it never needs to be. This exists
- * so the rest of scenes compiles and the editor works; it is not an implementation of the contract.
+ * Ends a timed scene on iOS: on time while the app is awake, late but reliably when it is not.
  *
- * ## Why nothing calls this
+ * ## Why a timer is allowed here, when [SceneExpiryScheduler] says it is not
  *
- * The only caller of [SceneExpiryScheduler.schedule] is `SceneExecutor.activate`, which runs on the
- * **master**. `config.AAPSCLIENT` is hardcoded `true` in `IosClientConfig`, and on a client
- * `RoleBranch.prepare`/`commit` send the command to the master rather than calling the local lambda,
- * while `SceneActions.stop` goes through `ClientControlActionDispatcher`. A client runs only
- * `validateActivation`, which is a pure query. So the master activates the scene and schedules its
- * expiry with its own working scheduler, and the client is told the result.
+ * That warning was written when scene expiry had no backstop, and it no longer has none.
+ * `PostCalculationRunner.endOverdueScene` calls [app.aaps.core.interfaces.scenes.SceneExpiryCheck.endIfOverdue]
+ * before every loop run, so a scene whose scheduled end never fired is ended by the next glucose
+ * calculation instead. That gate is `config.APS`, which is exactly the build this class matters on -
+ * a follower receives a scene's end from its master and schedules nothing.
  *
- * It still logs at error rather than doing nothing quietly, because the day iOS ships as something
- * other than a client this becomes reachable, and then it matters - see below.
+ * So the promise is kept by three things together, which is the arrangement
+ * [app.aaps.implementation.profile.ProfileSwitchScheduler] already relies on:
  *
- * ## What it would cost if iOS were ever a master
+ * 1. this timer, while the app is alive - the scene ends at its exact time;
+ * 2. the foreground sweep below, so opening AAPS ends an overdue scene at once rather than at the
+ *    next reading;
+ * 3. `PostCalculationRunner`, every loop run, which is the durable one: it does not care whether
+ *    this process is the one that scheduled anything.
  *
- * [SceneExpiryRunner] does more than refresh a screen. At expiry it reverts the two actions whose
- * effect does not end on its own - the SMB toggle, which is a preference with no duration, and the
- * profile switch, whose `EffectiveProfileSwitch` outlives the timed record it came from. Without
- * this callback both would stay applied **indefinitely**, and a chained follow-up scene would never
- * start.
+ * What that costs is lateness, bounded by how often glucose arrives - about five minutes with a CGM
+ * running. It is not "silently never", which is what the previous placeholder here would have given
+ * an iOS master, and what makes an exercise profile outlive the exercise.
  *
- * Temp target, loop mode and care portal entries are safe either way: those self-expire from their
- * own timestamps.
+ * ## What is deliberately not here
  *
- * ## Why not a timer
+ * A local notification posted at the deadline, so that a phone whose app was killed *and* whose CGM
+ * has stopped still hears about the scene. It is the right refinement, and the write-up in
+ * `_docs/ios_blockers.md` names it. It is left out on purpose: posting it from here would be another
+ * bespoke notification path, and pump and alarm notifications are being unified into core rather
+ * than written once per feature. It belongs to that work, not to this class.
  *
- * iOS has no exact-time background execution. A `UNTimeIntervalNotificationTrigger` fires reliably
- * but only shows a notification; a `BGProcessingTask` runs when iOS decides, which may be hours
- * late or never; an in-process timer works only while the app is alive, which for a follower it
- * usually is not. A real implementation is a combination - timer when alive, notification at the
- * deadline, and an overdue sweep on foreground so the runner executes late rather than never - and
- * that is a product decision about scenes on iOS, not a port. See `_docs/ios_todo.md`.
+ * ## Why the runner arrives as a provider
  *
- * This was twice written up as "a timed scene never ends on iOS". It is not, for the reason above.
+ * `SceneExecutor.activate` calls [schedule], and [SceneExpiryRunner] depends on `SceneExecutor`, so
+ * taking the runner directly would be a dependency cycle. Asking for it only when the deadline
+ * arrives breaks it, the same way `IosRunningModeExpiryTimer` does.
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
 @Inject
 class IosSceneExpiryScheduler(
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val runner: () -> SceneExpiryRunner,
+    private val scope: CoroutineScope
 ) : SceneExpiryScheduler {
 
+    private var pending: Job? = null
+
+    init {
+        // Opening the app is the one moment a user expects to see the truth, and it costs nothing:
+        // `endIfOverdue` returns immediately unless a scene is genuinely past its end.
+        observeForeground(UIApplicationWillEnterForegroundNotification)
+        observeForeground(UIApplicationDidBecomeActiveNotification)
+    }
+
     override fun schedule(sceneName: String, delayMs: Long) {
-        aapsLogger.error(
-            LTag.UI,
-            "Scene expiry cannot be scheduled on iOS: '$sceneName' will NOT end by itself in ${delayMs}ms. " +
-                "Its SMB toggle and profile switch would stay applied. Timed scenes must be gated in the UI."
-        )
+        cancel()
+        aapsLogger.debug(LTag.UI, "Scene '$sceneName' ends in ${delayMs}ms")
+        pending = scope.launch {
+            delay(delayMs)
+            // Not guarded by a time check: the delay already waited it out, and the runner takes the
+            // lock and re-reads the active scene, so a scene that ended another way is a no-op there.
+            aapsLogger.debug(LTag.UI, "Scene '$sceneName' reached its end, ending it")
+            runner().run(sceneName)
+        }
     }
 
     override fun cancel() {
-        // Nothing was ever scheduled, so there is nothing to cancel. Not an error.
+        pending?.cancel()
+        pending = null
+    }
+
+    private fun observeForeground(name: String?) {
+        NSNotificationCenter.defaultCenter.addObserverForName(
+            name = name,
+            `object` = null,
+            queue = NSOperationQueue.mainQueue,
+            usingBlock = { sweep() }
+        )
+    }
+
+    /**
+     * Ends the active scene if it is already past its end.
+     *
+     * Failures are logged and swallowed. This runs on the way into the app, and a scene that cannot
+     * be ended must not stop the app opening - the next loop run tries again anyway.
+     */
+    private fun sweep() {
+        scope.launch {
+            runCatching { runner().endIfOverdue() }
+                .onFailure { aapsLogger.error(LTag.UI, "Ending an overdue scene on foreground failed: $it") }
+        }
     }
 }

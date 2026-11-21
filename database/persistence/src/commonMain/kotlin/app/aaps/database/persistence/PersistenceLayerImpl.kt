@@ -186,6 +186,18 @@ class PersistenceLayerImpl(
         DatabaseMaintenanceInfo(raw.dbSizeBytes, raw.availableBytes, raw.totalRows, raw.deletableRows, raw.changeRows, raw.report)
     }
 
+    override suspend fun migrateProfileSwitchInsulinConfig(label: String, end: Long, peak: Long, concentration: Double): Int = withContext(aapsIoDispatcher) {
+        repository.bulkMigrateProfileSwitchInsulinConfig(label, end, peak, concentration)
+    }
+
+    override suspend fun migrateEffectiveProfileSwitchInsulinConfig(label: String, end: Long, peak: Long, concentration: Double): Int = withContext(aapsIoDispatcher) {
+        repository.bulkMigrateEffectiveProfileSwitchInsulinConfig(label, end, peak, concentration)
+    }
+
+    override suspend fun migrateBolusInsulinConfig(label: String, end: Long, peak: Long, concentration: Double): Int = withContext(aapsIoDispatcher) {
+        repository.bulkMigrateBolusInsulinConfig(label, end, peak, concentration)
+    }
+
     // Flow-based change observation
     @Suppress("UNCHECKED_CAST")
     override fun <T : Any> observeChanges(type: KClass<T>): Flow<List<T>> {

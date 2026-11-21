@@ -1065,11 +1065,11 @@ class DiaconnPumpEmulator(val state: DiaconnPumpState = DiaconnPumpState.newPump
         internal const val BIG_MAIN_INFO_INQUIRE = 0x73
         internal const val INCARNATION_INQUIRE = 0x7A
 
-        // Reports. UNVERIFIED: 0xD8 for the insulin lack report. The driver gives both it and the injection block report
-        // 0xD8, so it reads every 0xD8 as an injection block. Which one a real G8 sends as 0xD8 is not known.
+        // Reports. The three alarm reports are from DiaconnKit (github.com/miyeongkim/DiaconnKit, `DiaconnPacketType`),
+        // read 2026-11-19. UNVERIFIED on a real G8.
         internal const val BATTERY_WARNING_REPORT = 0xD7
-        internal const val INSULIN_LACK_REPORT = 0xD8
         internal const val INJECTION_BLOCK_REPORT = 0xD8
+        internal const val INSULIN_LACK_REPORT = 0xD9
         internal const val SNACK_RESULT_REPORT = 0xE4
 
         /**

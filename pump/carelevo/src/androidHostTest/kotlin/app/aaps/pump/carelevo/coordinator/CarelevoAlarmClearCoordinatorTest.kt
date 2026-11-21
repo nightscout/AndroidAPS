@@ -1,0 +1,175 @@
+package app.aaps.pump.carelevo.coordinator
+
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.ble.BleBonding
+import app.aaps.core.interfaces.pump.ble.BleCentral
+import app.aaps.core.interfaces.pump.ble.DeviceId
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.pump.carelevo.command.CmdAlarmClear
+import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.common.latestValueFlow
+import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
+import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
+import app.aaps.pump.carelevo.domain.type.AlarmCause
+import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.junit.jupiter.MockitoSettings
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
+import org.mockito.kotlin.whenever
+import org.mockito.quality.Strictness
+import java.util.concurrent.atomic.AtomicInteger
+
+@ExtendWith(MockitoExtension::class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+internal class CarelevoAlarmClearCoordinatorTest {
+
+    @Mock lateinit var aapsLogger: AAPSLogger
+    @Mock lateinit var commandQueue: CommandQueue
+    @Mock lateinit var carelevoPatch: CarelevoPatch
+    @Mock lateinit var central: BleCentral
+
+    private lateinit var sut: CarelevoAlarmClearCoordinator
+
+    private fun enactResult(success: Boolean): PumpEnactResult = mock<PumpEnactResult>().also {
+        whenever(it.success).thenReturn(success)
+    }
+
+    private fun alarm(cause: AlarmCause = AlarmCause.ALARM_ALERT_OUT_OF_INSULIN): CarelevoAlarmInfo =
+        CarelevoAlarmInfo(
+            alarmId = "alarm-1",
+            alarmType = cause.alarmType,
+            cause = cause,
+            value = null,
+            createdAt = "2026-07-16T10:00:00",
+            updatedAt = "2026-07-16T10:00:00",
+            isAcknowledged = false
+        )
+
+    @BeforeEach
+    fun setUp() {
+        whenever(carelevoPatch.patchInfo).thenReturn(latestValueFlow<CarelevoPatchInfoDomainModel?>().apply { tryEmit(null) })
+        sut = CarelevoAlarmClearCoordinator(aapsLogger, commandQueue, carelevoPatch, central)
+    }
+
+    @Test
+    fun `clearAlarmOnPatch returns the queue result`() = runBlocking {
+        // Build the result mocks BEFORE stubbing — creating a stubbed mock inside thenReturn is
+        // "stubbing another mock before thenReturn completes" and trips UnfinishedStubbingException.
+        val ok = enactResult(true)
+        val fail = enactResult(false)
+
+        whenever { commandQueue.customCommand(any()) }.thenReturn(ok)
+        assertThat(sut.clearAlarmOnPatch(alarm())).isTrue()
+
+        whenever { commandQueue.customCommand(any()) }.thenReturn(fail)
+        assertThat(sut.clearAlarmOnPatch(alarm())).isFalse()
+    }
+
+    @Test
+    fun `opMutex serializes two concurrent clear operations`(): Unit = runBlocking {
+        // First command call parks until released; a concurrent second clear must NOT reach the
+        // queue while the first holds the mutex — CommandQueue dedups by command class, so a
+        // parallel second alarm-clear would misread as a clear-failure and locally dismiss an
+        // alarm that was never cleared on the patch.
+        val firstStarted = CompletableDeferred<Unit>()
+        val releaseFirst = CompletableDeferred<Unit>()
+        val callCount = AtomicInteger(0)
+        val ok = enactResult(true)
+        whenever { commandQueue.customCommand(any()) }.thenAnswer {
+            if (callCount.incrementAndGet() == 1) {
+                firstStarted.complete(Unit)
+                runBlocking { releaseFirst.await() }
+            }
+            ok
+        }
+
+        val first = async(Dispatchers.Default) { sut.clearAlarmOnPatch(alarm()) }
+        firstStarted.await()
+        val second = async(Dispatchers.Default) { sut.discardOnAlarm(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED)) }
+        // Give the second op every chance to (incorrectly) enter the queue while the first holds the mutex.
+        delay(300)
+        assertThat(callCount.get()).isEqualTo(1)
+
+        releaseFirst.complete(Unit)
+        assertThat(first.await()).isTrue()
+        assertThat(second.await()).isTrue()
+        assertThat(callCount.get()).isEqualTo(2)
+    }
+
+    /** The resume command ends the stop record itself (see CarelevoActivationExecutorTest); this only passes its result on. */
+    @Test
+    fun `resumeInfusion returns the result of the resume command`() = runBlocking {
+        val ok = enactResult(true)
+        val fail = enactResult(false)
+
+        whenever { commandQueue.customCommand(any()) }.thenReturn(ok)
+        assertThat(sut.resumeInfusion()).isTrue()
+
+        whenever { commandQueue.customCommand(any()) }.thenReturn(fail)
+        assertThat(sut.resumeInfusion()).isFalse()
+    }
+
+    @Test
+    fun `forceQuitTeardown removes the bond of the patch then flushes and completes`() {
+        val bonding = mock<BleBonding>()
+        whenever(central.bonding).thenReturn(bonding)
+        whenever(carelevoPatch.getPatchInfoAddress()).thenReturn("aa:bb:cc:dd:ee:ff")
+        var completed = false
+
+        sut.forceQuitTeardown { completed = true }
+
+        // On Android the device id is the MAC in upper case.
+        verifyBlocking(bonding) { removeBond(DeviceId("AA:BB:CC:DD:EE:FF")) }
+        verify(carelevoPatch).flushPatchInformation()
+        assertThat(completed).isTrue()
+    }
+
+    @Test
+    fun `forceQuitTeardown flushes state and completes even when the unbond throws`() {
+        whenever(carelevoPatch.getPatchInfoAddress()).thenReturn("aa:bb:cc:dd:ee:ff")
+        whenever(central.bonding).thenThrow(RuntimeException("no adapter"))
+        var completed = false
+
+        sut.forceQuitTeardown { completed = true }
+
+        assertThat(completed).isTrue()
+        verify(carelevoPatch).flushPatchInformation()
+    }
+
+    @Test
+    fun `isPatchReachable requires both a stored address and enabled bluetooth`() {
+        whenever(carelevoPatch.getPatchInfoAddress()).thenReturn(null)
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        assertThat(sut.isPatchReachable()).isFalse()
+
+        whenever(carelevoPatch.getPatchInfoAddress()).thenReturn("aa:bb:cc:dd:ee:ff")
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(false)
+        assertThat(sut.isPatchReachable()).isFalse()
+
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        assertThat(sut.isPatchReachable()).isTrue()
+    }
+
+    @Test
+    fun `clearAlarmOnPatch routes through the queue as a custom command`() = runBlocking {
+        val ok = enactResult(true)
+        whenever { commandQueue.customCommand(any()) }.thenReturn(ok)
+
+        sut.clearAlarmOnPatch(alarm())
+
+        verifyBlocking(commandQueue) { customCommand(any<CmdAlarmClear>()) }
+    }
+}

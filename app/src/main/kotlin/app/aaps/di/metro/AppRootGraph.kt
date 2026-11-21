@@ -2,14 +2,13 @@ package app.aaps.di.metro
 
 import android.content.Context
 import androidx.work.WorkManager
-import app.aaps.core.interfaces.alerts.EatReminder
+import app.aaps.appshell.start.AppStartSequence
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.autotune.Autotune
-import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
@@ -96,6 +95,7 @@ import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.ui.CarbSuggestionActions
 import app.aaps.core.interfaces.ui.IconsProvider
+import app.aaps.core.interfaces.ui.AndroidActivities
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
@@ -124,9 +124,7 @@ import app.aaps.database.di.DatabaseConfig
 import app.aaps.di.ExternalOptionsOverride
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
-import app.aaps.implementation.notifications.SnackbarNotificationFallback
 import app.aaps.implementation.plugin.PluginStore
-import app.aaps.implementation.profile.ProfileSwitchScheduler
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.implementation.queue.CommandExecutor
 import app.aaps.implementation.resources.ResourceHelperImpl
@@ -306,6 +304,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val resourceHelper: ResourceHelper
     val fabricPrivacy: FabricPrivacy
     val uiInteraction: UiInteraction
+    val androidActivities: AndroidActivities
     val carbSuggestionActions: CarbSuggestionActions
     val temporaryBasalStorage: TemporaryBasalStorage
     val detailedBolusInfoStorage: DetailedBolusInfoStorage
@@ -356,9 +355,6 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val apsResult: APSResult
     val pumpEnactResult: PumpEnactResult
     val profileSwitchSilentGate: ProfileSwitchSilentGate
-    val profileSwitchScheduler: ProfileSwitchScheduler
-    val snackbarNotificationFallback: SnackbarNotificationFallback
-    val eatReminder: EatReminder
     val uiRestart: UiRestart
     val runningConfiguration: RunningConfiguration
     val runningConfigurationKeys: RunningConfigurationKeys
@@ -394,6 +390,9 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val resourceHelperImpl: ResourceHelperImpl
     val fabricPrivacyImpl: FabricPrivacyImpl
     val processLifecycleListener: ProcessLifecycleListener
+
+    /** The start sequence every platform runs, from `:appshell`. */
+    val appStartSequence: AppStartSequence
     val dataSyncSelectorXdrip: DataSyncSelectorXdrip
     val activeSceneSync: ActiveSceneSync
 
@@ -475,7 +474,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     /** Autotune, for the automation actions. */
     val autotune: Autotune
 
-    /** Running-mode helpers, from commonMain. `MainApp` reads the reconciler. */
+    /** Running-mode helpers, from commonMain. The instrumented tests read the reconciler. */
     val runningModeReconciler: RunningModeReconciler
     val runningModeExpiryJob: RunningModeExpiryJob
 
@@ -504,17 +503,6 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val dexcomPlugin: DexcomPlugin
 
     val sourceGraph: SourceMetroGraph
-    /**
-     * Interfaces backed by a plugin this graph already builds. A `@Provides` rather than a delegate,
-     * because the instance is the plugin.
- *
- * This used to claim that binding it any other way "would make a second one". That is not true of
- * Metro: `@ContributesBinding` on a `@SingleIn` class resolves to the same scoped instance, which is
- * why `DexcomPlugin` and `XdripSourcePlugin` carry their second binding on the class now. Only
- * `BgQualityCheckPlugin` still needs stating here - see below.
-     */
-    /** Metro already builds the plugin; the openAPS plugins ask for the interface. */
-    @Provides fun bgQualityCheck(plugin: BgQualityCheckPlugin): BgQualityCheck = plugin
 
     @DependencyGraph.Factory
     fun interface Factory {

@@ -40,7 +40,9 @@ step is green on its own and the DI stays working:
 1. **DI first.** Any annotation-processor DI out, Metro in. Nothing else can proceed while a processor
    is in the module, and this is where the constructor traps below bite.
 2. **UI to Compose**, if it still has XML. A View-based screen cannot move to common code at all.
-3. **Strings** to the generated `TextRef`s.
+3. **Strings** to the generated `TextRef`s. `registerKeyStrings` configures the multiplatform extension
+   and reads `src/androidMain/res`, so it fails on a plain Android library: in practice this step comes
+   right after step 5.
 4. **Platform ports** - replace `Context` and other Android types with interfaces, checking first
    whether the parameter is used at all.
 5. **Flip the module type**, move the sources, add the iOS targets.
@@ -216,7 +218,9 @@ fails if the owner is not in the list. Then:
    exports with `api`.
 2. Nothing to register by hand. Every shell (`:app`, its instrumented tests, desktop, iOS) generates
    `GeneratedStringOwners` from `StringOwnerModules.ALL`. Add one of the module's strings to
-   `DesktopStringOwnersTest` and `IosStringOwnersTest`.
+   `DesktopStringOwnersTest` and `IosStringOwnersTest`. A module the desktop shell does not link, as
+   a pump driver, gets `onDesktop = false` in the list, or the desktop registry imports an object it
+   cannot see; then its string goes in the iOS test only.
 3. Swap `R.string.foo` for `XxxStrings.foo`. The substitution is name-preserving, so a wrong mapping
    cannot happen silently - it fails to compile.
 4. In Composables import `app.aaps.core.ui.compose.stringResource`. In androidMain it can sit next
@@ -354,6 +358,40 @@ Smaller ones: `Throwable.localizedMessage` is JVM only (use `message`); `@Synchr
 `AapsLock` + `withLock` from `:core:interfaces`; `@Volatile` needs `kotlin.concurrent.Volatile`;
 `Dispatchers.IO` needs `import kotlinx.coroutines.IO`.
 
+`java.io.Serializable` with `ObjectOutputStream` becomes `@Serializable` with `Json` (the `kotlinx-serialization`
+plugin in the module). A plain class with `var`s in its body serializes as it is: properties with a backing field are
+written, computed getters are not, and an enum from another module needs no annotation. A type from another module
+that is part of the saved object needs `@Serializable` there too, with the plugin in that module.
+`:pump:carelevo:emulator` saves its patch this way.
+
+### RxJava to coroutines
+
+RxJava has no Kotlin/Native artifact, so a module that uses it must move to coroutines first. The Carelevo driver
+(`405beac0b1`, 48 files) found these traps:
+
+- **An inner time limit is not a cancel.** `withTimeout` throws `TimeoutCancellationException`, a
+  `CancellationException`. A `catch (e: CancellationException) { throw e }` around a call that has its own time limit
+  passes a timed-out BLE write up as if the caller was cancelled. The queue then drops the command and AAPS never
+  learns the result. Rx code with `runCatching` around `runBlocking` turned it into a normal failure. Write
+  `catch (e: CancellationException) { currentCoroutineContext().ensureActive(); /* handle as a failure */ }`.
+  Only an emulator scenario with a lost answer found this; every unit test passed.
+- **`BehaviorSubject` is not a `StateFlow`.** A `StateFlow` drops a value equal to the last one and starts with a value.
+  A faithful replacement is `MutableSharedFlow(replay = 1, extraBufferCapacity = 64, DROP_OLDEST)`, as
+  `latestValueFlow()` in `:pump:carelevo`; `replayCache.isEmpty()` is the old `value == null`. Without the buffer a
+  collector that is behind gets only the newest value, where `observeOn` queued them all.
+- **Trampolined tests become unconfined ones.** Give each class that launches collectors an
+  `internal var dispatcher` (default `aapsIoDispatcher`), and set `Dispatchers.Unconfined` in its test right after
+  construction. View models use `viewModelScope`; their tests already replace Main.
+- **A blocking call stays blocking.** A lambda that runs `runBlocking` inside cannot be stopped by an outer
+  `withTimeout`. Only a suspend call is cut by it.
+- **Look for Rx chains that never really ran.** A `subscribeOn(io)` chain added to a `CompositeDisposable` that is
+  cleared on the next line is almost always disposed before it starts. Port what the code does, not what its comment
+  says, and report it.
+- **The compiler can show one error per run.** In this build the Kotlin compile of a test source set reported only
+  the first error, also with `kotlin.incremental=false`. Convert by pattern, not by compile error.
+- **Never sort imports with PowerShell `Sort-Object -Unique`.** It is case-insensitive and drops `flow.Flow` when
+  `flow.flow` is there too.
+
 ### Pin what the code writes and shows before you move it
 
 The safe order is: tests that pin the current output first, green on the old code, then the move,
@@ -374,9 +412,30 @@ accepted unseen). What those tests found is worth knowing before the next move:
   shortest decimal text (1.005 shows 1.01, 0.15 at one decimal shows 0.2); `DecimalFormat` HALF_UP
   rounds the double (1.00 and 0.1). `roundHalfUpAsText` in the Autotune view model keeps the old
   text and is checked against `String.format` over thousands of values.
+- **`BigDecimal.valueOf(x).setScale(2, HALF_UP)` rounds the shortest decimal text too**, so a plain
+  `round(x * 100)` turns 1.005 into 1.00 where it gave 1.01. The exact common replacement compares x with the double
+  nearest each half-way decimal, `(2c + 1) / 200.0` (one correctly rounded division): `hundredthsHalfUp` in
+  `:pump:carelevo:protocol`. For a dose, keep the old `BigDecimal` code in a JVM test as the reference and compare
+  every hundredth, every thousandth, the doubles next to each half-way point and random values
+  (`DoseEncodingEquivalenceTest`), with the hard values also in a common test that runs on iOS.
 - **A test that changes the default time zone must call `SystemTimeZone.invalidate()`.** Code moved
   off `Calendar`/`TimeZone.getDefault()` reads the zone through `SystemTimeZone`, which keeps a read
   for 10 s, so the test would otherwise run in the zone of the test before it.
+- **kotlinx can write exactly what Gson wrote.** Gson leaves a null field out, writes every other field
+  (also one at its default), skips unknown keys, and with `serializeSpecialFloatingPointValues` keeps
+  NaN. The same bytes come from `Json { explicitNulls = false; encodeDefaults = true;
+  ignoreUnknownKeys = true; allowSpecialFloatingPointValues = true }` (`carelevoJson` in
+  `:pump:carelevo`). Pin it through the DAOs with JSON that the Gson code wrote
+  (`CarelevoStoredJsonGoldenTest`). Two reads differ, and both are better: a missing field takes the
+  Kotlin default (Gson gave 0 or null, also in a non-null field), and an enum name the build does not
+  know throws, where Gson gave null - give such an enum a serializer that falls back to an "unknown"
+  entry, or one bad entry makes the whole stored list unreadable.
+- **`java.time.LocalDateTime` maths is clock maths.** `plusDays`, `plusHours` and
+  `ChronoUnit.MINUTES.between` ignore clock changes. In kotlinx-datetime keep that in the move by doing
+  the sum on the date, or through `TimeZone.UTC`, not with a `TimeZone` that has summer time. Pin it
+  with a test that crosses a clock change. Then ask whether clock maths was right at all: a device that
+  counts its own time, as a patch counts its 7 days, needs real hours on an `Instant`. The Carelevo
+  overview was wrong this way and was fixed after the move, as its own change.
 - **Moving `rh.gs(R.string.x)` to `TextRef` makes missing stubs fail.** The shared `TextRefStubs`
   throw for a string no test stubbed, where the mock used to answer null. Expect to add stubs.
 
@@ -408,6 +467,57 @@ same change, or Metro reports a duplicate binding.
 `Provider<T>` is deprecated: the compiler says *"Using the desugared `Provider<T>` type is
 discouraged. Prefer the function syntax form `() -> T`."* Write `() -> T` in new code. Call sites are
 identical - `provider()` either way - so only the type and the import change.
+
+### A pump driver: what moves now, and what stays until the platform can run a pump
+
+`:pump:carelevo` was the first driver to flip. Its logic (BLE session, commands, coordinators, use cases, storage)
+went to commonMain first; the plugin class, its view models, its screens, the Android notifications and the broadcast
+receiver stayed in androidMain until the iOS app was ready to run a pump. Then they moved too - see "Moving the plugin
+and its screens" below.
+
+- **Find what can move by its dependencies, not file by file.** A file stays when it imports a platform API, or when it
+  uses a file that stays. Compute that closure first; a handful of blocking calls usually hold back most of a module.
+  In Carelevo they were `java.util.UUID`, `SystemClock.sleep`, `TimeUnit`, `BigInteger`, `String.format`,
+  `synchronized`, `java.lang.Float.MIN_NORMAL` and `ResourceHelper` (use `TextResolver`, which is common).
+- **Do not let the plugin or its view models register themselves from commonMain while iOS cannot run the pump.** A
+  plugin registered from commonMain joins the iOS graph, and its view models join the iOS view model map, so iOS would
+  need every pump binding. The classes can still move: register them per platform (below), so the driver is visibly
+  absent on iOS rather than present and dead. Plain `@ContributesBinding`
+  classes (the driver's storage) can move: Metro accepts them in the iOS graph while nothing there injects them.
+  Compile `:ios:shell:compileKotlinIosArm64` to prove it, since that is where the graph is checked.
+- **A blocking sleep is platform code.** `SystemClock.sleep` keeps sleeping through an interrupt; `runBlocking { delay }`
+  throws on one. Use an `expect fun` with the platform call on each target, as `sleepBlocking` in `:pump:carelevo`.
+- **A commonTest also runs in `testAndroidHostTest`, where Android calls do nothing.** `isReturnDefaultValues` makes
+  `SystemClock.sleep` return at once, so a timing test of an Android `actual` cannot live in commonTest.
+
+#### Moving the plugin and its screens
+
+How the Carelevo plugin, its 6 view models and 15 screens went to commonMain while iOS still has no Carelevo:
+
+- **Register per platform, not on the class.** Take `@ContributesIntoMap` off the plugin and off every view model, and
+  list them as `@Provides @IntoMap` in one commonMain `@BindingContainer` that is *not* contributed
+  (`CarelevoRegistration`: `@PumpDriver @MetroIntKey(1190)` for the plugin, `@ViewModelKey(X::class)` for each view
+  model). Each platform switches it on with a contributed container that only includes it
+  (`@ContributesTo(AppScope::class) @BindingContainer(includes = [CarelevoRegistration::class]) object ...`). A view
+  model contributed from commonMain is enough to drag the whole driver into `IosAppGraph` - it failed on
+  `PumpEmulators`, which iOS does not provide.
+- **`PumpDriverBucketTest` reads driver keys from annotations.** It now also reads them from `@PumpDriver` providers in
+  binding containers. A new driver registered this way needs nothing more.
+- **Put what the platform does behind small ports in the driver**, each with the Android implementation in androidMain:
+  foreground state (`CarelevoAppForeground`), the Bluetooth check before pairing (`CarelevoBleReadyCheck`, a
+  `@Composable` member that wraps `BlePreCheckHost` on Android). The Bluetooth adapter state needs no port: read
+  `BleCentral.adapterState` from the driver's own central, which also covers the emulated patch. Alarms and the phone
+  notification need no port either: they go through `PumpAlerts` (`_docs/PUMP_DESIGN.md`, section 2).
+- **What failed to compile, and the fix:** `ResourceHelper` → `TextResolver` (also in view models and the notifier);
+  `AnnotatedString.fromHtml` → `htmlToAnnotatedString()` from `:core:ui` (knows only `<b>` and `<br>`); `LiveData` →
+  `StateFlow`; `java.util.concurrent.atomic.AtomicBoolean` → `kotlin.concurrent.atomics.AtomicBoolean` with
+  `@OptIn(ExperimentalAtomicApi::class)` (`set` is `store`); `BigDecimal.setScale` for display → `Round.roundTo`;
+  `Dispatchers.IO` → `aapsIoDispatcher`; an Activity result launcher → an `expect @Composable` with a null `actual` on
+  iOS and JVM.
+- **Images:** `painterResource(R.drawable.x)` cannot be common. Move the files to `src/commonMain/composeResources/drawable`
+  and add `libs.jetbrains.compose.components.resources` with a `compose.resources { packageOfResClass = ... }` block;
+  each accessor (`Res.drawable.x`) needs its own import. Android vector XML with `aapt:attr` gradients renders.
+- **The module also builds for `jvm()`**, so every `expect` needs a `jvmMain` actual, even though desktop links no pump.
 
 ### Lift the platform call out, keep the rule
 
@@ -466,3 +576,9 @@ do not belong in the API Swift sees. There is a `filterNot` in `ios/shell/build.
 fails the framework link until the module is listed. It names the module and what to do: add it to
 `migratedModules` in `ios/shell/build.gradle.kts`. Then update `ShellInfo.LINKED_MODULES`: nothing
 checks the count, so set it to the number of entries in `migratedModules`. Expect this on every flip.
+
+## Do not run a javax-stripping sweep over `:app`'s DI files
+
+`AppRootGraph`, `MetroGraphs`, `AapsLeaves` and `CoreObjectsModule` legitimately import
+`javax.inject.Singleton` and `javax.inject.Inject`. A helper that strips javax while adding an import
+breaks them with `Unresolved reference 'Singleton'`. Edit those by hand.

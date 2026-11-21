@@ -1,0 +1,954 @@
+package app.aaps.pump.carelevo.common
+
+import app.aaps.core.data.model.TE
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.ble.BleBonding
+import app.aaps.core.interfaces.pump.ble.BleCentral
+import app.aaps.core.interfaces.pump.ble.DeviceId
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.Event
+import app.aaps.core.interfaces.rx.events.EventCustomActionsChanged
+import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.core.interfaces.rx.events.EventRefreshOverview
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.pump.carelevo.ble.UnsolicitedMessage
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotFlags
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotResponse
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotTier
+import app.aaps.pump.carelevo.ble.data.BleState
+import app.aaps.pump.carelevo.ble.data.BondingState
+import app.aaps.pump.carelevo.ble.data.DeviceModuleState
+import app.aaps.pump.carelevo.ble.data.NotificationState
+import app.aaps.pump.carelevo.ble.data.PeripheralConnectionState
+import app.aaps.pump.carelevo.ble.data.ServiceDiscoverState
+import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
+import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
+import app.aaps.pump.carelevo.common.model.PatchState
+import app.aaps.pump.carelevo.domain.model.ResponseResult
+import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
+import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
+import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
+import app.aaps.pump.carelevo.domain.model.userSetting.CarelevoUserSettingInfoDomainModel
+import app.aaps.pump.carelevo.domain.type.AlarmCause
+import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
+import app.aaps.pump.carelevo.domain.usecase.alarm.CarelevoAlarmInfoUseCase
+import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoInfusionInfoMonitorUseCase
+import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoPumpResumeUseCase
+import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoPumpStopUseCase
+import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchInfoMonitorUseCase
+import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchRptInfusionInfoProcessUseCase
+import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoPatchRptInfusionInfoRequestModel
+import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoCreateUserSettingInfoUseCase
+import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoUserSettingInfoMonitorUseCase
+import app.aaps.pump.carelevo.domain.usecase.userSetting.model.CarelevoUserSettingInfoRequestModel
+import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.junit.jupiter.MockitoSettings
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeastOnce
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.stub
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
+import org.mockito.kotlin.whenever
+import org.mockito.quality.Strictness
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
+
+/**
+ * Second suite over the REAL [CarelevoPatch], covering what [CarelevoPatchTest] leaves open:
+ * the init/latch lifecycle, the `rxBus` fan-out of [CarelevoPatch.resolvePatchState], the
+ * profile-equality helper, the `applyInfusionInfoReport` enum round-trip, the
+ * [CarelevoPatch.handleAlarm] seam, the `discardTeardown` happy/single-flight paths, and the three monitor subscriptions
+ * ([CarelevoPatch.patchInfo] / [CarelevoPatch.infusionInfo] / [CarelevoPatch.userSettingInfo])
+ * including the "no user-setting record → seed defaults from prefs" path.
+ *
+ * [CarelevoPatchTest] keeps its own (already green) coverage of the state-derivation matrix, the
+ * Bluetooth ON→OFF alarm edge and `flushPatchInformation`; nothing here duplicates it.
+ *
+ * The patch runs its coroutines on [Dispatchers.Unconfined], so values are delivered and written on the
+ * test thread before each call returns, exactly as in [CarelevoPatchTest].
+ */
+@ExtendWith(MockitoExtension::class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+internal class CarelevoPatchMoreTest {
+
+    @Mock lateinit var central: BleCentral
+    @Mock lateinit var rxBus: RxBus
+    @Mock lateinit var preferences: Preferences
+    @Mock lateinit var aapsLogger: AAPSLogger
+    @Mock lateinit var infusionInfoMonitorUseCase: CarelevoInfusionInfoMonitorUseCase
+    @Mock lateinit var patchInfoMonitorUseCase: CarelevoPatchInfoMonitorUseCase
+    @Mock lateinit var userSettingInfoMonitorUseCase: CarelevoUserSettingInfoMonitorUseCase
+    @Mock lateinit var patchRptInfusionInfoProcessUseCase: CarelevoPatchRptInfusionInfoProcessUseCase
+    @Mock lateinit var createUserSettingInfoUseCase: CarelevoCreateUserSettingInfoUseCase
+    @Mock lateinit var carelevoAlarmInfoUseCase: CarelevoAlarmInfoUseCase
+    @Mock lateinit var pumpResumeUseCase: CarelevoPumpResumeUseCase
+    @Mock lateinit var pumpStopUseCase: CarelevoPumpStopUseCase
+    @Mock lateinit var bonding: BleBonding
+    @Mock lateinit var activeAlarmSnapshotAlarmMapper: ActiveAlarmSnapshotAlarmMapper
+
+    private lateinit var sut: CarelevoPatch
+
+    private fun bleState(enabled: Boolean): BleState =
+        BleState(
+            isEnabled = if (enabled) DeviceModuleState.DEVICE_STATE_ON else DeviceModuleState.DEVICE_STATE_OFF,
+            isBonded = BondingState.BOND_BONDED,
+            isServiceDiscovered = ServiceDiscoverState.DISCOVER_STATE_DISCOVERED,
+            isConnected = PeripheralConnectionState.CONN_STATE_CONNECTED,
+            isNotificationEnabled = NotificationState.NOTIFICATION_ENABLED
+        )
+
+    private fun patchInfo(): CarelevoPatchInfoDomainModel =
+        CarelevoPatchInfoDomainModel(
+            address = "aa:bb:cc:dd:ee:ff",
+            createdAt = Clock.System.now() - 1.hours,
+            updatedAt = Clock.System.now(),
+            manufactureNumber = "CARELEVO-TEST-001",
+            insulinRemain = 60.0,
+            bolusActionSeq = 1,
+            mode = 1
+        )
+
+    /** A snapshot (CRITICAL tier by default) with only `outOfInsulin` toggled — everything else unused/false. */
+    private fun outOfInsulinSnapshot(
+        active: Boolean,
+        tier: ActiveAlarmSnapshotTier = ActiveAlarmSnapshotTier.CRITICAL
+    ): ActiveAlarmSnapshotResponse =
+        ActiveAlarmSnapshotResponse(
+            tier = tier,
+            infusing = true,
+            flags = ActiveAlarmSnapshotFlags(
+                outOfInsulin = active,
+                operatingLifeExpired = false,
+                lowBattery = false,
+                outOfRangeTemperature = false,
+                autoOff = false,
+                unconnectedBle = false,
+                patchAppIncomplete = false,
+                startInsulin = false,
+                selfDiagnosisFailed = false,
+                patchExpired = false,
+                patchError = false,
+                occlusionDetected = false,
+                userForcedTermination = false
+            )
+        )
+
+    /** Rebuilds the SUT — call after re-stubbing a monitor use case, the wiring happens in the ctor/initPatch. */
+    private fun createPatch(): CarelevoPatch =
+        CarelevoPatch(
+            central = central,
+            rxBus = rxBus,
+            preferences = preferences,
+            aapsLogger = aapsLogger,
+            infusionInfoMonitorUseCase = infusionInfoMonitorUseCase,
+            patchInfoMonitorUseCase = patchInfoMonitorUseCase,
+            userSettingInfoMonitorUseCase = userSettingInfoMonitorUseCase,
+            patchRptInfusionInfoProcessUseCase = patchRptInfusionInfoProcessUseCase,
+            createUserSettingInfoUseCase = createUserSettingInfoUseCase,
+            carelevoAlarmInfoUseCase = carelevoAlarmInfoUseCase,
+            pumpResumeUseCase = pumpResumeUseCase,
+            pumpStopUseCase = pumpStopUseCase,
+            activeAlarmSnapshotAlarmMapper = activeAlarmSnapshotAlarmMapper
+        ).apply {
+            // Collect the patch streams and write the store on the test thread, before each call returns.
+            dispatcher = Dispatchers.Unconfined
+        }
+
+    /** A monitor that never sends anything. */
+    private fun <T> silentFlow() = flow<T> { awaitCancellation() }
+
+    /** Starts [CarelevoPatch.initPatchAndAwait] without blocking the test; the job ends when the wait ends. */
+    private fun startInitPatchAndAwait(): Job = CoroutineScope(Dispatchers.Unconfined).launch { sut.initPatchAndAwait() }
+
+    private fun profileWith(vararg values: Pair<Int, Double>): Profile {
+        val profile = mock<Profile>()
+        whenever(profile.getBasalValues())
+            .thenReturn(values.map { Profile.ProfileValue(it.first, it.second) }.toTypedArray())
+        return profile
+    }
+
+    /** Everything the RxBus saw, in order. */
+    private fun sentEvents(): List<Event> {
+        val captor = argumentCaptor<Event>()
+        verify(rxBus, atLeastOnce()).send(captor.capture())
+        return captor.allValues
+    }
+
+    @BeforeEach
+    fun setUp() {
+        whenever(patchInfoMonitorUseCase.execute()).thenReturn(flowOf(ResponseResult.Success(patchInfo())))
+        whenever(infusionInfoMonitorUseCase.execute()).thenReturn(silentFlow())
+        whenever(userSettingInfoMonitorUseCase.execute()).thenReturn(silentFlow())
+        // Default: no persisted edge-detection baseline (applyActiveAlarmSnapshots' snapshot-cause
+        // store) — every snapshot poll behaves as a first-ever poll unless a test overrides this
+        // with a real fake (see fakeSnapshotCauseStore) to exercise the persistence across polls.
+        whenever(preferences.get(CarelevoStringNonKey.LastSnapshotAlarmCauses))
+            .thenReturn(CarelevoStringNonKey.LastSnapshotAlarmCauses.defaultValue)
+        whenever(pumpResumeUseCase.persistResumed()).thenReturn(true)
+        whenever(pumpStopUseCase.persistStopped(any())).thenReturn(true)
+        whenever(activeAlarmSnapshotAlarmMapper.map(any(), any(), any())).thenAnswer { invocation ->
+            val snapshots = invocation.getArgument<List<ActiveAlarmSnapshotResponse>>(0)
+            val currentPatch = invocation.getArgument<CarelevoPatchInfoDomainModel?>(1)
+            val now = invocation.getArgument<String>(2)
+            ActiveAlarmSnapshotAlarmMapper().map(snapshots, currentPatch, now)
+        }
+        whenever { patchRptInfusionInfoProcessUseCase.execute(any()) }
+            .thenReturn(ResponseResult.Success<CarelevoUseCaseResponse>(null))
+        whenever { createUserSettingInfoUseCase.execute(any()) }
+            .thenReturn(ResponseResult.Success<CarelevoUseCaseResponse>(null))
+        whenever(central.bonding).thenReturn(bonding)
+
+        sut = createPatch()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // site placement (wizard hand-off to the CANNULA_CHANGE therapy event)
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `site placement defaults to NONE when the wizard step is skipped`() {
+        assertThat(sut.sitePlacementLocation).isEqualTo(TE.Location.NONE)
+        assertThat(sut.sitePlacementArrow).isEqualTo(TE.Arrow.NONE)
+    }
+
+    @Test
+    fun `setSitePlacement stores the location and arrow chosen in the wizard`() {
+        sut.setSitePlacement(TE.Location.SIDE_RIGHT_UPPER_ARM, TE.Arrow.UP)
+
+        assertThat(sut.sitePlacementLocation).isEqualTo(TE.Location.SIDE_RIGHT_UPPER_ARM)
+        assertThat(sut.sitePlacementArrow).isEqualTo(TE.Arrow.UP)
+
+        // Last write wins — the flow re-sets it on every step change.
+        sut.setSitePlacement(TE.Location.NONE, TE.Arrow.NONE)
+        assertThat(sut.sitePlacementLocation).isEqualTo(TE.Location.NONE)
+        assertThat(sut.sitePlacementArrow).isEqualTo(TE.Arrow.NONE)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // init lifecycle
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `initPatch latches isWorking and collects each monitor exactly once`() {
+        assertThat(sut.isWorking).isFalse()
+
+        sut.initPatch()
+        sut.initPatch()
+
+        assertThat(sut.isWorking).isTrue()
+        verify(patchInfoMonitorUseCase, times(1)).execute()
+        verify(infusionInfoMonitorUseCase, times(1)).execute()
+        verify(userSettingInfoMonitorUseCase, times(1)).execute()
+    }
+
+    @Test
+    fun `initPatchAndAwait starts the patch when it runs`() {
+        // Nothing runs before the call.
+        assertThat(sut.isWorking).isFalse()
+        verify(patchInfoMonitorUseCase, never()).execute()
+
+        val job = startInitPatchAndAwait()
+
+        assertThat(sut.isWorking).isTrue()
+        verify(patchInfoMonitorUseCase, times(1)).execute()
+        job.cancel()
+    }
+
+    @Test
+    fun `initPatchOnce shares one in-flight start across duplicate callers`() {
+        val first = sut.initPatchOnce()
+        val second = sut.initPatchOnce()
+
+        assertThat(second).isSameInstanceAs(first)
+        first.cancel()
+    }
+
+    @Test
+    fun `initPatchAndAwait ends once a patch with Bluetooth on is ready`() {
+        sut.onBluetoothStateChanged(bleState(enabled = true))
+
+        val job = startInitPatchAndAwait()
+
+        assertThat(sut.patchState.latest).isEqualTo(PatchState.ConnectedBooted)
+        // Ended, and not by a failure.
+        assertThat(job.isCompleted).isTrue()
+        assertThat(job.isCancelled).isFalse()
+    }
+
+    @Test
+    fun `initPatchAndAwait ends once it is known that there is no patch`() {
+        whenever(patchInfoMonitorUseCase.execute())
+            .thenReturn(flowOf(ResponseResult.Success<CarelevoUseCaseResponse>(null)))
+        sut = createPatch()
+        sut.onBluetoothStateChanged(bleState(enabled = true))
+
+        val job = startInitPatchAndAwait()
+
+        assertThat(sut.patchState.latest).isEqualTo(PatchState.NotConnectedNotBooting)
+        // Ended, and not by a failure.
+        assertThat(job.isCompleted).isTrue()
+        assertThat(job.isCancelled).isFalse()
+    }
+
+    @Test
+    fun `initPatchAndAwait keeps waiting while Bluetooth is off`() {
+        sut.onBluetoothStateChanged(bleState(enabled = false))
+
+        val job = startInitPatchAndAwait()
+
+        assertThat(sut.patchState.latest).isEqualTo(PatchState.NotConnectedBooted)
+        assertThat(job.isCompleted).isFalse()
+        job.cancel()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // observeChangeState → patchState publication + rxBus fan-out
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `an activated patch with bluetooth on publishes ConnectedBooted and the CONNECTED fan-out`() {
+        sut.initPatch()
+        sut.onBluetoothStateChanged(bleState(enabled = true))
+
+        assertThat(sut.patchState.latest).isEqualTo(PatchState.ConnectedBooted)
+
+        val events = sentEvents()
+        assertThat(events.filterIsInstance<EventPumpStatusChanged>().map { it.status })
+            .containsExactly(EventPumpStatusChanged.Status.CONNECTED)
+        assertThat(events.filterIsInstance<EventRefreshOverview>().map { it.from })
+            .containsExactly("Carelevo connection state")
+        assertThat(events.filterIsInstance<EventCustomActionsChanged>()).hasSize(1)
+    }
+
+    @Test
+    fun `no patch record publishes NotConnectedNotBooting and the DISCONNECTED fan-out`() {
+        whenever(patchInfoMonitorUseCase.execute())
+            .thenReturn(flowOf(ResponseResult.Success<CarelevoUseCaseResponse>(null)))
+        sut = createPatch()
+
+        sut.initPatch()
+        sut.onBluetoothStateChanged(bleState(enabled = true))
+
+        assertThat(sut.patchState.latest).isEqualTo(PatchState.NotConnectedNotBooting)
+        assertThat(sut.getPatchInfoAddress()).isNull()
+
+        val events = sentEvents()
+        assertThat(events.filterIsInstance<EventPumpStatusChanged>().map { it.status })
+            .containsExactly(EventPumpStatusChanged.Status.DISCONNECTED)
+        assertThat(events.filterIsInstance<EventRefreshOverview>()).hasSize(1)
+        assertThat(events.filterIsInstance<EventCustomActionsChanged>()).hasSize(1)
+    }
+
+    @Test
+    fun `NotConnectedBooted is published silently without any rxBus fan-out`() {
+        // Bluetooth off with a valid patch is a UI-only state: overview must not be told the pump
+        // disconnected (the patch keeps delivering basal on its own).
+        sut.initPatch()
+        sut.onBluetoothStateChanged(bleState(enabled = false))
+
+        assertThat(sut.patchState.latest).isEqualTo(PatchState.NotConnectedBooted)
+        verify(rxBus, never()).send(any())
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // checkIsSameProfile
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `checkIsSameProfile is false before any profile has been set`() {
+        assertThat(sut.checkIsSameProfile(profileWith(0 to 1.0))).isFalse()
+    }
+
+    @Test
+    fun `checkIsSameProfile is false for a null candidate`() {
+        sut.setProfile(profileWith(0 to 1.0))
+
+        assertThat(sut.checkIsSameProfile(null)).isFalse()
+    }
+
+    @Test
+    fun `checkIsSameProfile is false when the segment count differs`() {
+        sut.setProfile(profileWith(0 to 1.0))
+
+        assertThat(sut.checkIsSameProfile(profileWith(0 to 1.0, 3600 to 1.0))).isFalse()
+    }
+
+    @Test
+    fun `checkIsSameProfile is false when a segment start time differs`() {
+        sut.setProfile(profileWith(0 to 1.0, 3600 to 2.0))
+
+        assertThat(sut.checkIsSameProfile(profileWith(0 to 1.0, 7200 to 2.0))).isFalse()
+    }
+
+    @Test
+    fun `checkIsSameProfile ignores sub-minute start time differences`() {
+        // Comparison is minute-resolution: 0s and 30s are the same pump segment boundary.
+        sut.setProfile(profileWith(0 to 1.0))
+
+        assertThat(sut.checkIsSameProfile(profileWith(30 to 1.0))).isTrue()
+    }
+
+    @Test
+    fun `checkIsSameProfile is true for an identical profile`() {
+        sut.setProfile(profileWith(0 to 0.75, 3600 to 1.25))
+
+        assertThat(sut.checkIsSameProfile(profileWith(0 to 0.75, 3600 to 1.25))).isTrue()
+    }
+
+    @Test
+    fun `checkIsSameProfile tolerates a sub-epsilon basal rate difference`() {
+        sut.setProfile(profileWith(0 to 1.0))
+
+        assertThat(sut.checkIsSameProfile(profileWith(0 to 1.0005))).isTrue()
+    }
+
+    @Test
+    fun `checkIsSameProfile is false for a materially different basal rate`() {
+        sut.setProfile(profileWith(0 to 1.0))
+
+        assertThat(sut.checkIsSameProfile(profileWith(0 to 1.5))).isFalse()
+    }
+
+    @Test
+    fun `checkIsSameProfile is false when a segment is zeroed out`() {
+        // Guards nearlyEqual's zero branch: 0 vs 0.5 must never collapse to "same".
+        sut.setProfile(profileWith(0 to 0.5))
+
+        assertThat(sut.checkIsSameProfile(profileWith(0 to 0.0))).isFalse()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // applyInfusionInfoReport — raw 0x91 bytes normalized through the enum round-trip
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `applyInfusionInfoReport persists known raw codes through the enum round-trip`() {
+        sut.applyInfusionInfoReport(
+            runningMinutes = 42,
+            remains = 137.5,
+            infusedTotalBasalAmount = 12.25,
+            infusedTotalBolusAmount = 3.5,
+            pumpStateRaw = 2,   // RUNNING
+            modeRaw = 5         // EXTEND_BOLUS
+        )
+
+        val captor = argumentCaptor<CarelevoPatchRptInfusionInfoRequestModel>()
+        verifyBlocking(patchRptInfusionInfoProcessUseCase) { execute(captor.capture()) }
+        val request = captor.firstValue
+        assertThat(request.runningMinute).isEqualTo(42)
+        assertThat(request.remains).isEqualTo(137.5)
+        assertThat(request.infusedTotalBasalAmount).isEqualTo(12.25)
+        assertThat(request.infusedTotalBolusAmount).isEqualTo(3.5)
+        assertThat(request.pumpState).isEqualTo(2)
+        assertThat(request.mode).isEqualTo(5)
+        // Not carried by the 0x91 report — the process use case does not persist them.
+        assertThat(request.currentInfusedProgramVolume).isEqualTo(0.0)
+        assertThat(request.realInfusedTime).isEqualTo(0)
+    }
+
+    @Test
+    fun `applyInfusionInfoReport maps unknown raw codes onto the ERROR codes`() {
+        sut.applyInfusionInfoReport(
+            runningMinutes = 1,
+            remains = 1.0,
+            infusedTotalBasalAmount = 0.0,
+            infusedTotalBolusAmount = 0.0,
+            pumpStateRaw = 99,
+            modeRaw = 99
+        )
+
+        val captor = argumentCaptor<CarelevoPatchRptInfusionInfoRequestModel>()
+        verifyBlocking(patchRptInfusionInfoProcessUseCase) { execute(captor.capture()) }
+        assertThat(captor.firstValue.pumpState).isEqualTo(3)  // PumpStateResult.ERROR
+        assertThat(captor.firstValue.mode).isEqualTo(-1)      // InfusionModeResult.ERROR
+    }
+
+    @Test
+    fun `applyInfusionInfoReport round-trips every basal-to-bolus mode code unchanged`() {
+        listOf(1, 2, 3, 4, 5).forEach { sut.applyInfusionInfoReport(0, 0.0, 0.0, 0.0, 0, it) }
+
+        val captor = argumentCaptor<CarelevoPatchRptInfusionInfoRequestModel>()
+        verifyBlocking(patchRptInfusionInfoProcessUseCase, times(5)) { execute(captor.capture()) }
+        assertThat(captor.allValues.map { it.mode }).containsExactly(1, 2, 3, 4, 5).inOrder()
+        // pumpStateRaw 0 → READY → 0 on every one of them.
+        assertThat(captor.allValues.map { it.pumpState }.distinct()).containsExactly(0)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // handleAlarm — the public unsolicitedEvents bridge seam
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `handleAlarm raises an unacknowledged alarm carrying the cause value and type`() {
+        sut.handleAlarm("warning", value = 5, cause = AlarmCause.ALARM_WARNING_LOW_INSULIN)
+
+        val captor = argumentCaptor<CarelevoAlarmInfo>()
+        verifyBlocking(carelevoAlarmInfoUseCase) { upsertAlarm(captor.capture()) }
+        val info = captor.firstValue
+        assertThat(info.cause).isEqualTo(AlarmCause.ALARM_WARNING_LOW_INSULIN)
+        assertThat(info.alarmType).isEqualTo(AlarmCause.ALARM_WARNING_LOW_INSULIN.alarmType)
+        assertThat(info.value).isEqualTo(5)
+        assertThat(info.isAcknowledged).isFalse()
+        assertThat(info.alarmId).isNotEmpty()
+        assertThat(info.createdAt).isNotEmpty()
+        assertThat(info.updatedAt).isNotEmpty()
+    }
+
+    @Test
+    fun `handleAlarm swallows an upsert failure instead of tearing down the caller`() {
+        whenever { carelevoAlarmInfoUseCase.upsertAlarm(any()) }.thenAnswer { throw RuntimeException("db down") }
+
+        // The bridge runs on the BLE notification path — an alarm write failure must not escape.
+        sut.handleAlarm("alert", value = null, cause = AlarmCause.ALARM_ALERT_BLE_NOT_CONNECTED)
+
+        val captor = argumentCaptor<CarelevoAlarmInfo>()
+        verifyBlocking(carelevoAlarmInfoUseCase) { upsertAlarm(captor.capture()) }
+        assertThat(captor.firstValue.value).isNull()
+    }
+
+    @Test
+    fun `applyActiveAlarmSnapshots de-duplicates lower tier alarms and syncs stopped state from infusing flag`() {
+        whenever(patchInfoMonitorUseCase.execute())
+            .thenReturn(flowOf(ResponseResult.Success(patchInfo().copy(isStopped = false, mode = 1))))
+        sut = createPatch()
+        sut.initPatch()
+
+        sut.applyActiveAlarmSnapshots(
+            listOf(
+                ActiveAlarmSnapshotResponse(
+                    tier = ActiveAlarmSnapshotTier.CRITICAL,
+                    infusing = false,
+                    flags = ActiveAlarmSnapshotFlags(
+                        outOfInsulin = true,
+                        operatingLifeExpired = false,
+                        lowBattery = false,
+                        outOfRangeTemperature = false,
+                        autoOff = false,
+                        unconnectedBle = false,
+                        patchAppIncomplete = false,
+                        startInsulin = false,
+                        selfDiagnosisFailed = false,
+                        patchExpired = false,
+                        patchError = false,
+                        occlusionDetected = false,
+                        userForcedTermination = false
+                    )
+                ),
+                ActiveAlarmSnapshotResponse(
+                    tier = ActiveAlarmSnapshotTier.ADVISORY,
+                    infusing = false,
+                    flags = ActiveAlarmSnapshotFlags(
+                        outOfInsulin = true,
+                        operatingLifeExpired = false,
+                        lowBattery = false,
+                        outOfRangeTemperature = false,
+                        autoOff = false,
+                        unconnectedBle = false,
+                        patchAppIncomplete = false,
+                        startInsulin = false,
+                        selfDiagnosisFailed = false,
+                        patchExpired = false,
+                        patchError = false,
+                        occlusionDetected = false,
+                        userForcedTermination = false
+                    )
+                )
+            )
+        )
+
+        // First-ever snapshot poll: no previous baseline, so the single de-duped cause is "newly raised".
+        val captor = argumentCaptor<CarelevoAlarmInfo>()
+        verifyBlocking(carelevoAlarmInfoUseCase) { upsertAlarm(captor.capture()) }
+        // CRITICAL tier resolves as a live 0xA1 report would: (AlarmType.WARNING, CAUSE 0x01).
+        assertThat(captor.firstValue.cause).isEqualTo(AlarmCause.ALARM_WARNING_LOW_INSULIN)
+        verify(pumpStopUseCase).persistStopped(0)
+        assertThat(sut.patchInfo.latest?.isStopped).isTrue()
+        assertThat(sut.patchInfo.latest?.mode).isEqualTo(0)
+    }
+
+    /** Minimal fake backing [preferences] so the edge-detection baseline actually persists across calls. */
+    private fun fakeSnapshotCauseStore() {
+        var stored = CarelevoStringNonKey.LastSnapshotAlarmCauses.defaultValue
+        whenever(preferences.get(CarelevoStringNonKey.LastSnapshotAlarmCauses)).thenAnswer { stored }
+        doAnswer { inv ->
+            stored = inv.getArgument(1)
+            null
+        }.whenever(preferences).put(eq(CarelevoStringNonKey.LastSnapshotAlarmCauses), any<String>())
+    }
+
+    @Test
+    fun `applyActiveAlarmSnapshots does not re-raise a cause still active on the previous poll`() {
+        fakeSnapshotCauseStore()
+        sut.initPatch()
+
+        sut.applyActiveAlarmSnapshots(listOf(outOfInsulinSnapshot(active = true)))
+        sut.applyActiveAlarmSnapshots(listOf(outOfInsulinSnapshot(active = true)))
+
+        // Only the first poll's edge (off -> on) raises the alarm. The second poll finds the same
+        // condition still true and must NOT resurrect an alarm the user may have already confirmed —
+        // this is the "확인을 눌렀는데 클리어가 안되네" regression.
+        verifyBlocking(carelevoAlarmInfoUseCase, times(1)) { upsertAlarm(any()) }
+    }
+
+    @Test
+    fun `applyActiveAlarmSnapshots re-raises a cause that was only removed locally after a failed patch clear`() {
+        fakeSnapshotCauseStore()
+        sut.initPatch()
+
+        val advisory = ActiveAlarmSnapshotTier.ADVISORY
+        sut.applyActiveAlarmSnapshots(listOf(outOfInsulinSnapshot(active = true, tier = advisory)))
+        // User confirms, AlarmClear fails on the patch, handler falls back to a local-only remove.
+        // The patch never cleared it, so the next poll still reports it and it must show again.
+        sut.forgetSnapshotAlarmCause(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)
+        sut.applyActiveAlarmSnapshots(listOf(outOfInsulinSnapshot(active = true, tier = advisory)))
+
+        val captor = argumentCaptor<CarelevoAlarmInfo>()
+        verifyBlocking(carelevoAlarmInfoUseCase, times(2)) { upsertAlarm(captor.capture()) }
+        assertThat(captor.allValues.map { it.cause })
+            .containsExactly(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN, AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)
+    }
+
+    @Test
+    fun `applyActiveAlarmSnapshots clears a cause the patch no longer reports`() {
+        fakeSnapshotCauseStore()
+        sut.initPatch()
+        val stale = CarelevoAlarmInfo(
+            alarmId = "stale-1",
+            alarmType = AlarmCause.ALARM_WARNING_LOW_INSULIN.alarmType,
+            cause = AlarmCause.ALARM_WARNING_LOW_INSULIN,
+            value = 40,
+            createdAt = "now",
+            updatedAt = "now",
+            isAcknowledged = false
+        )
+        whenever { carelevoAlarmInfoUseCase.getAlarmsOnce() }.thenReturn(listOf(stale))
+
+        sut.applyActiveAlarmSnapshots(listOf(outOfInsulinSnapshot(active = true)))
+        sut.applyActiveAlarmSnapshots(listOf(outOfInsulinSnapshot(active = false)))
+
+        // The second poll no longer reports OUT_OF_INSULIN — the patch has confirmed it resolved, so
+        // it is dropped locally even though nobody pressed "확인".
+        verifyBlocking(carelevoAlarmInfoUseCase) { acknowledgeAlarm("stale-1") }
+    }
+
+    @Test
+    fun `applyActiveAlarmSnapshots routes infusing true through resume reconciliation`() {
+        whenever(patchInfoMonitorUseCase.execute())
+            .thenReturn(
+                flowOf(
+                    ResponseResult.Success(
+                        patchInfo().copy(
+                            isStopped = true,
+                            stopMinutes = 30,
+                            stopMode = 0,
+                            isForceStopped = false,
+                            mode = 0
+                        )
+                    )
+                )
+            )
+        sut = createPatch()
+        sut.initPatch()
+
+        sut.applyActiveAlarmSnapshots(
+            listOf(
+                ActiveAlarmSnapshotResponse(
+                    tier = ActiveAlarmSnapshotTier.CRITICAL,
+                    infusing = true,
+                    flags = ActiveAlarmSnapshotFlags(
+                        outOfInsulin = false,
+                        operatingLifeExpired = false,
+                        lowBattery = false,
+                        outOfRangeTemperature = false,
+                        autoOff = false,
+                        unconnectedBle = false,
+                        patchAppIncomplete = false,
+                        startInsulin = false,
+                        selfDiagnosisFailed = false,
+                        patchExpired = false,
+                        patchError = false,
+                        occlusionDetected = false,
+                        userForcedTermination = false
+                    )
+                )
+            )
+        )
+
+        verify(pumpResumeUseCase).persistResumed()
+        assertThat(sut.patchInfo.latest?.isStopped).isFalse()
+        assertThat(sut.patchInfo.latest?.mode).isEqualTo(1)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // reconcileAutoResumed — the auto-resume guard
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `reconcileAutoResumed clears the stopped state when the pump is stopped`() {
+        whenever(patchInfoMonitorUseCase.execute())
+            .thenReturn(flowOf(ResponseResult.Success(patchInfo().copy(isStopped = true, stopMinutes = 30))))
+        whenever(pumpResumeUseCase.persistResumed()).thenReturn(true)
+        sut = createPatch()
+        sut.initPatch()
+
+        sut.reconcileAutoResumed()
+
+        verify(pumpResumeUseCase).persistResumed()
+    }
+
+    @Test
+    fun `reconcileAutoResumed is a no-op while the pump is running`() {
+        // The default patchInfo() has isStopped = null (running); a basal-restart report (0x88) that fires
+        // during normal delivery, or races a stop, must NOT clear a legitimate suspend.
+        sut.initPatch()
+
+        sut.reconcileAutoResumed()
+
+        verify(pumpResumeUseCase, never()).persistResumed()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // onUnsolicited — frames the patch sends by itself. The alarm frames are in CarelevoPatchTest.
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `an infusion report the patch sends by itself is stored like a status read`() {
+        sut.onUnsolicited(UnsolicitedMessage(INFUSION_INFO_REPORT[0], INFUSION_INFO_REPORT))
+
+        val captor = argumentCaptor<CarelevoPatchRptInfusionInfoRequestModel>()
+        verifyBlocking(patchRptInfusionInfoProcessUseCase) { execute(captor.capture()) }
+        val request = captor.firstValue
+        assertThat(request.runningMinute).isEqualTo(150)
+        assertThat(request.remains).isEqualTo(150.5)
+        assertThat(request.infusedTotalBasalAmount).isEqualTo(10.25)
+        assertThat(request.infusedTotalBolusAmount).isEqualTo(5.5)
+        assertThat(request.pumpState).isEqualTo(2)
+        assertThat(request.mode).isEqualTo(1)
+    }
+
+    /** 0x8A: the stop time ended and the patch delivers again. */
+    @Test
+    fun `a stop report resumes a stopped pump`() {
+        whenever(patchInfoMonitorUseCase.execute())
+            .thenReturn(flowOf(ResponseResult.Success(patchInfo().copy(isStopped = true, stopMinutes = 30))))
+        whenever(pumpResumeUseCase.persistResumed()).thenReturn(true)
+        sut = createPatch()
+        sut.initPatch()
+
+        sut.onUnsolicited(UnsolicitedMessage(PUMP_STOP_REPORT, byteArrayOf(PUMP_STOP_REPORT)))
+
+        verify(pumpResumeUseCase).persistResumed()
+    }
+
+    /** 0x88: the patch started its basal again. */
+    @Test
+    fun `a basal restart report resumes a stopped pump`() {
+        whenever(patchInfoMonitorUseCase.execute())
+            .thenReturn(flowOf(ResponseResult.Success(patchInfo().copy(isStopped = true, stopMinutes = 30))))
+        whenever(pumpResumeUseCase.persistResumed()).thenReturn(true)
+        sut = createPatch()
+        sut.initPatch()
+
+        sut.onUnsolicited(UnsolicitedMessage(BASAL_RESTART_REPORT, byteArrayOf(BASAL_RESTART_REPORT)))
+
+        verify(pumpResumeUseCase).persistResumed()
+    }
+
+    @Test
+    fun `a frame the driver does not know changes nothing`() {
+        sut.initPatch()
+
+        sut.onUnsolicited(UnsolicitedMessage(UNKNOWN_REPORT, byteArrayOf(UNKNOWN_REPORT, 0x01)))
+
+        verifyBlocking(patchRptInfusionInfoProcessUseCase, never()) { execute(any()) }
+        verify(pumpResumeUseCase, never()).persistResumed()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // releasePatch / discardTeardown
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `releasePatch clears both the cached patch and infusion info`() {
+        whenever(infusionInfoMonitorUseCase.execute())
+            .thenReturn(flowOf(ResponseResult.Success(CarelevoInfusionInfoDomainModel())))
+        sut = createPatch()
+        sut.initPatch()
+        assertThat(sut.infusionInfo.latest).isNotNull()
+
+        sut.releasePatch()
+
+        assertThat(sut.getPatchInfoAddress()).isNull()
+        // Both streams hold a value, and it is "no record".
+        assertThat(sut.patchInfo.replayCache.single()).isNull()
+        assertThat(sut.infusionInfo.replayCache.single()).isNull()
+    }
+
+    @Test
+    fun `discardTeardown removes the OS bond for the uppercased patch address`() {
+        sut.initPatch()
+        sut.onBluetoothStateChanged(bleState(enabled = true))
+
+        sut.discardTeardown()
+
+        verifyBlocking(bonding) { removeBond(DeviceId("AA:BB:CC:DD:EE:FF")) }
+        assertThat(sut.getPatchInfoAddress()).isNull()
+        assertThat(sut.resolvePatchState()).isEqualTo(PatchState.NotConnectedNotBooting)
+    }
+
+    @Test
+    fun `discardTeardown without a patch record skips the unbond`() {
+        sut.discardTeardown()
+
+        verifyBlocking(bonding, never()) { removeBond(any()) }
+    }
+
+    @Test
+    fun `discardTeardown is single-flight against a re-entrant caller`() {
+        sut.initPatch()
+        sut.onBluetoothStateChanged(bleState(enabled = true))
+        var reentered = false
+        bonding.stub {
+            onBlocking { removeBond(any()) } doAnswer {
+                if (!reentered) {
+                    reentered = true
+                    // A queued CmdDiscard racing the ViewModel force-discard fallback: must be skipped.
+                    sut.discardTeardown()
+                }
+                null
+            }
+        }
+
+        sut.discardTeardown()
+
+        assertThat(reentered).isTrue()
+        verifyBlocking(bonding, times(1)) { removeBond(any()) }
+    }
+
+    @Test
+    fun `discardTeardown releases the single-flight latch for the next patch`() {
+        // Drive patchInfo by hand so a SECOND patch can be activated after the first is discarded.
+        // No replay: a value goes only to the collector that is there, as before. The buffer lets tryEmit hand it over.
+        val patchRecords = MutableSharedFlow<ResponseResult<CarelevoUseCaseResponse>>(extraBufferCapacity = 1)
+        whenever(patchInfoMonitorUseCase.execute()).thenReturn(patchRecords)
+        sut = createPatch()
+        sut.initPatch()
+        sut.onBluetoothStateChanged(bleState(enabled = true))
+
+        assertThat(patchRecords.tryEmit(ResponseResult.Success(patchInfo()))).isTrue()
+        sut.discardTeardown()
+        // A later activation must not be blocked by a latch left set by the previous teardown.
+        assertThat(patchRecords.tryEmit(ResponseResult.Success(patchInfo()))).isTrue()
+        sut.discardTeardown()
+
+        verifyBlocking(bonding, times(2)) { removeBond(DeviceId("AA:BB:CC:DD:EE:FF")) }
+        assertThat(sut.getPatchInfoAddress()).isNull()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // monitor subscriptions
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun `a successful infusion info emission is cached`() {
+        val model = CarelevoInfusionInfoDomainModel()
+        whenever(infusionInfoMonitorUseCase.execute()).thenReturn(flowOf(ResponseResult.Success(model)))
+        sut = createPatch()
+
+        sut.initPatch()
+
+        assertThat(sut.infusionInfo.latest).isEqualTo(model)
+    }
+
+    @Test
+    fun `monitor errors and failures leave the cached info empty`() {
+        whenever(infusionInfoMonitorUseCase.execute())
+            .thenReturn(flowOf(ResponseResult.Error(RuntimeException("boom")), ResponseResult.Failure("nope")))
+        whenever(patchInfoMonitorUseCase.execute())
+            .thenReturn(flowOf(ResponseResult.Error(RuntimeException("boom")), ResponseResult.Failure("nope")))
+        whenever(userSettingInfoMonitorUseCase.execute())
+            .thenReturn(flowOf(ResponseResult.Error(RuntimeException("boom")), ResponseResult.Failure("nope")))
+        sut = createPatch()
+
+        sut.initPatch()
+
+        // No value at all, not even "no record".
+        assertThat(sut.infusionInfo.replayCache).isEmpty()
+        assertThat(sut.patchInfo.replayCache).isEmpty()
+        assertThat(sut.userSettingInfo.replayCache).isEmpty()
+        // An errored user-setting read must NOT be mistaken for "no record" and seed defaults.
+        verifyBlocking(createUserSettingInfoUseCase, never()) { execute(any()) }
+    }
+
+    @Test
+    fun `an existing user setting record is cached and no defaults are seeded`() {
+        val model = CarelevoUserSettingInfoDomainModel(lowInsulinNoticeAmount = 8, maxBasalSpeed = 15.0, maxBolusDose = 4.0)
+        whenever(userSettingInfoMonitorUseCase.execute()).thenReturn(flowOf(ResponseResult.Success(model)))
+        sut = createPatch()
+
+        sut.initPatch()
+
+        assertThat(sut.userSettingInfo.latest).isEqualTo(model)
+        verifyBlocking(createUserSettingInfoUseCase, never()) { execute(any()) }
+    }
+
+    @Test
+    fun `a missing user setting record seeds the defaults from the preferences`() {
+        whenever(userSettingInfoMonitorUseCase.execute())
+            .thenReturn(flowOf(ResponseResult.Success<CarelevoUseCaseResponse>(null)))
+        whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)).thenReturn(12)
+        whenever(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(7.5)
+        sut = createPatch()
+
+        sut.initPatch()
+
+        val captor = argumentCaptor<CarelevoUserSettingInfoRequestModel>()
+        verifyBlocking(createUserSettingInfoUseCase) { execute(captor.capture()) }
+        assertThat(captor.firstValue.lowInsulinNoticeAmount).isEqualTo(12)
+        assertThat(captor.firstValue.maxBasalSpeed).isEqualTo(15.0)
+        assertThat(captor.firstValue.maxBolusDose).isEqualTo(7.5)
+        assertThat(captor.firstValue.patchState).isNull()
+    }
+
+    private companion object {
+
+        const val PUMP_STOP_REPORT: Byte = 0x8A.toByte()
+        const val BASAL_RESTART_REPORT: Byte = 0x88.toByte()
+        const val UNKNOWN_REPORT: Byte = 0x55
+
+        /** A real-shape 0x91: running 150 min, 150.5 U left, basal 10.25 U, bolus 5.5 U, pump state 2, mode 1. */
+        val INFUSION_INFO_REPORT = byteArrayOf(
+            0x91.toByte(), 0x00,
+            0x02, 0x1E,
+            0x01, 0x32, 0x32,
+            0x0A, 0x19,
+            0x05, 0x32,
+            0x02,
+            0x01,
+            0x00, 0x00,
+            0x03, 0x00,
+            0x00, 0x01, 0x0A
+        )
+    }
+}

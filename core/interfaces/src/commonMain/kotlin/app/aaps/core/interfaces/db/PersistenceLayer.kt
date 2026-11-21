@@ -99,6 +99,19 @@ interface PersistenceLayer {
      */
     suspend fun databaseMaintenanceInfo(retentionDays: Long): DatabaseMaintenanceInfo
 
+    /**
+     * Gives the profile switches that have no insulin configuration yet (the `insulinEndTime = -1` mark of the
+     * database 33 migration) this insulin. A start-up migration only: it runs once, before the loop starts.
+     * @return how many records were changed
+     */
+    suspend fun migrateProfileSwitchInsulinConfig(label: String, end: Long, peak: Long, concentration: Double): Int
+
+    /** [migrateProfileSwitchInsulinConfig] for the effective profile switches. */
+    suspend fun migrateEffectiveProfileSwitchInsulinConfig(label: String, end: Long, peak: Long, concentration: Double): Int
+
+    /** [migrateProfileSwitchInsulinConfig] for the boluses. */
+    suspend fun migrateBolusInsulinConfig(label: String, end: Long, peak: Long, concentration: Double): Int
+
     // Flow-based change observation
     /**
      * Observe changes for a specific domain type

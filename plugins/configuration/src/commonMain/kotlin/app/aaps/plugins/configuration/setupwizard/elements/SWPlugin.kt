@@ -103,14 +103,19 @@ class SWPlugin(
             }
         }
 
-        if (confirmationMessage != null) {
+        // Read once into a local, and the dialog shows that. Not a not-null assertion on the state inside
+        // the lambda: OK runs the switch and then clears the message, and on iOS Compose Multiplatform draws
+        // the dialog's content once more as it closes - the state was null by then, and the full app died
+        // choosing a pump in the wizard. Android drops the dialog at once, so it never failed there.
+        val message = confirmationMessage
+        if (message != null) {
             AlertDialog(
                 onDismissRequest = {
                     confirmationMessage = null
                     pendingAction = null
                 },
                 title = { Text(stringResource(CoreUiStrings.confirmation)) },
-                text = { Text(confirmationMessage!!) },
+                text = { Text(message) },
                 confirmButton = {
                     TextButton(onClick = {
                         pendingAction?.invoke()

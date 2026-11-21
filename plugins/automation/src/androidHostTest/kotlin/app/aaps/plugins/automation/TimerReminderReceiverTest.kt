@@ -59,7 +59,7 @@ class TimerReminderReceiverTest : TestBase() {
 
         sut.onReceive(context, intent)
 
-        verify(uiInteraction).runAlarm(status = "Time to eat", title = "AAPS", sound = AlarmSound.ALARM)
+        verify(uiInteraction).runAlarm(key = TimerReminderReceiver.KEY, status = "Time to eat", title = "AAPS", sound = AlarmSound.ALARM)
     }
 
     @Test
@@ -69,7 +69,7 @@ class TimerReminderReceiverTest : TestBase() {
 
         sut.onReceive(context, intent)
 
-        verify(uiInteraction).runAlarm(status = "AAPS", title = "AAPS", sound = AlarmSound.ALARM)
+        verify(uiInteraction).runAlarm(key = TimerReminderReceiver.KEY, status = "AAPS", title = "AAPS", sound = AlarmSound.ALARM)
     }
 
     @Test
@@ -80,6 +80,6 @@ class TimerReminderReceiverTest : TestBase() {
 
         sut.onReceive(context, intent)
 
-        verify(uiInteraction).runAlarm(status = "AAPS", title = "AAPS", sound = AlarmSound.ALARM)
+        verify(uiInteraction).runAlarm(key = TimerReminderReceiver.KEY, status = "AAPS", title = "AAPS", sound = AlarmSound.ALARM)
     }
 }

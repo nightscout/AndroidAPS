@@ -728,7 +728,7 @@ class MedtronicPumpPlugin(
                     // LOG.debug("MedtronicPumpPlugin::deliverBolus - Delivery Canceled after Bolus started.");
                     Thread {
                         SystemClock.sleep(2000)
-                        uiInteraction.runAlarm(rh.gs(R.string.medtronic_cmd_cancel_bolus_not_supported), rh.gs(app.aaps.core.ui.R.string.warning), AlarmSound.BOLUS_ERROR)
+                        uiInteraction.runAlarm("medtronic-cancel-bolus", rh.gs(R.string.medtronic_cmd_cancel_bolus_not_supported), rh.gs(app.aaps.core.ui.R.string.warning), AlarmSound.BOLUS_ERROR)
                     }.start()
                 }
                 val now = System.currentTimeMillis()

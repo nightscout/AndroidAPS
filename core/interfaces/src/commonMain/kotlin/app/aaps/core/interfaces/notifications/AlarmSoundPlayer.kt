@@ -1,6 +1,5 @@
 package app.aaps.core.interfaces.notifications
 
-import app.aaps.core.interfaces.notifications.AlarmSoundPlayer.Companion.OWNER_FULLSCREEN
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer.Companion.OWNER_INTERNAL
 
 /**
@@ -10,12 +9,12 @@ import app.aaps.core.interfaces.notifications.AlarmSoundPlayer.Companion.OWNER_I
  * AAPS normally holds foreground state via the persistent notification service (`DummyService`),
  * which is what lets a background [android.media.MediaPlayer] start — this avoids the old
  * `AlarmSoundService` `startForegroundService()` race. NOTE: if the user has disabled the
- * persistent notification, a backgrounded internal alarm may be throttled on Android 12+; the
- * full-screen ([OWNER_FULLSCREEN]) path is unaffected because the activity is itself foreground.
+ * persistent notification, a backgrounded alarm may be throttled on Android 12+.
  *
- * A single sound plays at a time. Each playback records the [OWNER_FULLSCREEN]/[OWNER_INTERNAL]
- * tag of whoever requested it; [stop] is owner-scoped so one driver tearing down (e.g. the
- * full-screen activity on rotation) cannot silence an alarm started by the other driver.
+ * A single sound plays at a time. Each playback records the [OWNER_INTERNAL] tag of whoever
+ * requested it, and [stop] is owner-scoped, so a second owner could never silence the first's alarm.
+ * There used to be a second one, `OWNER_FULLSCREEN`, for the alarm the deleted `postFullScreenAlarm`
+ * started; every alarm is a card in the notification list now and the registry is the only owner.
  * Volume ramp and DND/stream routing follow the user's `AlertIncreaseVolume` /
  * `AlertOverrideDoNotDisturb` preferences. On Android a stream choice alone cannot keep the override
  * setting, the Do Not Disturb profile decides what a stream may do: with the override off the player
@@ -35,23 +34,14 @@ interface AlarmSoundPlayer {
 
     /**
      * Start looping playback of [sound], recording [ownerTag] as the current owner. Any previous
-     * playback (from either owner) is stopped first.
-     *
-     * @param postedAtElapsedRealtime [android.os.SystemClock.elapsedRealtime] when an accompanying
-     *   notification carrying a one-shot channel sound of the same resource was posted. When > 0,
-     *   the start is deferred until that one-shot finishes (avoids brief double-audio on full-screen
-     *   auto-launch). Pass 0 (the default) when there is no accompanying channel sound — the
-     *   duration probe is then skipped entirely.
+     * playback is stopped first.
      */
-    fun play(sound: AlarmSound, ownerTag: String, postedAtElapsedRealtime: Long = 0L)
+    fun play(sound: AlarmSound, ownerTag: String)
 
     /** Stop and release playback **only if** [ownerTag] is the current owner. No-op otherwise. */
     fun stop(ownerTag: String)
 
     companion object {
-
-        /** Owner tag for the full-screen [ErrorActivity] alarm path. */
-        const val OWNER_FULLSCREEN = "fullscreen"
 
         /** Owner tag for the internal-notification (`NotificationManager`) alarm path. */
         const val OWNER_INTERNAL = "internal"
