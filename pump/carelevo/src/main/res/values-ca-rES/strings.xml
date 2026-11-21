@@ -57,14 +57,14 @@
     <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Rang: %1$d ~ %2$d U</string>
     <string name="carelevo_insulin_refill_step1">1. Traieu el paper protector del blíster del patch.</string>
     <string name="carelevo_insulin_refill_step2">2. Desinfecteu el tap de goma del vial d\'insulina amb un tovalló amb alcohol.</string>
-    <string name="carelevo_insulin_refill_step3">3. Traieu el tap protector de l\'agulla de la jeringa d\'insulina estirant-lo en línia recta.</string>
-    <string name="carelevo_insulin_refill_step4">4. Estireu l\'èmbol de la jeringa per omplir-la amb uns 2 ml d\'aire.</string>
-    <string name="carelevo_insulin_refill_step5">5. Inseriu la jeringa plena d\'aire al vial d\'insulina i injecteu l\'aire dins del vial.</string>
-    <string name="carelevo_insulin_refill_step6">6. Amb la jeringa encara inserida, gireu el vial i la jeringa cap per avall i, amb la pressió, ompliu la jeringa amb uns 2 ml d\'insulina.</string>
-    <string name="carelevo_insulin_refill_step7">7. Inseriu l\'agulla de la jeringa en vertical al port d\'emplenament d\'insulina del patch (①) fins que arribi al fons. Estireu l\'èmbol del tot cap amunt i després deixeu-lo anar. Traieu la jeringa del port d\'emplenament.</string>
-    <string name="carelevo_insulin_refill_step8">8. Manteniu la jeringa en vertical i doneu-hi copets suaus al costat per reunir totes les bombolles d\'aire a dalt.</string>
+    <string name="carelevo_insulin_refill_step3">3. Traieu el tap protector de l\'agulla de la xeringa d\'insulina estirant-lo en línia recta.</string>
+    <string name="carelevo_insulin_refill_step4">4. Estireu l\'èmbol de la xeringa per omplir-la amb uns 2 ml d\'aire.</string>
+    <string name="carelevo_insulin_refill_step5">5. Inseriu la xeringa plena d\'aire al vial d\'insulina i injecteu l\'aire dins del vial.</string>
+    <string name="carelevo_insulin_refill_step6">6. Amb la xeringa encara inserida, gireu el vial i la xeringa cap per avall i, amb la pressió, ompliu la xeringa amb uns 2 ml d\'insulina.</string>
+    <string name="carelevo_insulin_refill_step7">7. Inseriu l\'agulla de la xeringa en vertical al port d\'emplenament d\'insulina del patch (①) fins que arribi al fons. Estireu l\'èmbol del tot cap amunt i després deixeu-lo anar. Traieu la xeringa del port d\'emplenament.</string>
+    <string name="carelevo_insulin_refill_step8">8. Manteniu la xeringa en vertical i doneu-hi copets suaus al costat per reunir totes les bombolles d\'aire a dalt.</string>
     <string name="carelevo_insulin_refill_step9">9. Torneu a inserir l\'agulla al vial d\'insulina, empenyeu tot l\'aire dins del vial i després carregueu la quantitat exacta d\'insulina que fareu servir durant la vida del patch.</string>
-    <string name="carelevo_insulin_refill_step10">10. Traieu la jeringa del vial. Si hi ha bombolles d\'aire, manteniu la jeringa en vertical, doneu copets al costat per portar les bombolles a dalt i expulseu tot l\'aire de la jeringa.</string>
+    <string name="carelevo_insulin_refill_step10">10. Traieu la xeringa del vial. Si hi ha bombolles d\'aire, manteniu la xeringa en vertical, doneu copets al costat per portar les bombolles a dalt i expulseu tot l\'aire de la xeringa.</string>
     <string name="carelevo_insulin_refill_step11">11. Alineeu la part superior de l\'èmbol amb la marca de l\'escala per ajustar amb precisió la dosi d\'insulina.</string>
     <string name="carelevo_insulin_refill_step12">12. Inseriu l\'agulla en vertical al port d\'emplenament d\'insulina del patch (①) fins que arribi al fons i empenyeu l\'èmbol lentament per injectar tota la insulina dins del patch.</string>
     <string name="carelevo_connect_prepare_title">Patch iniciat</string>
