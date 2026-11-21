@@ -26,6 +26,11 @@
 <string name="eversense_calibration_invalid_value">Please enter a valid blood glucose value</string>
 
 <string name="eversense_calibration_failed">Failed to submit calibration. Make sure the transmitter is connected and ready.</string>
+<string name="eversense_calibration_refused_rate">Calibration not possible now: glucose is changing too fast. Try again when it is stable.</string>
+<string name="eversense_calibration_refused_too_soon">Calibration not possible now: the last calibration was too recent.</string>
+<string name="eversense_calibration_refused_no_data">Calibration not possible now: the transmitter does not have enough sensor data yet.</string>
+<string name="eversense_calibration_refused_sensor">Calibration not possible: no working sensor is linked to the transmitter.</string>
+<string name="eversense_calibration_refused_transmitter">Calibration not possible now: the transmitter cannot take one in its present state.</string>
 
 <string name="eversense_placement_title">Transmitter Placement</string>
 
@@ -93,9 +98,6 @@
 
 <string name="eversense_status_never">Never</string>
 
-    <string name="eversense_diagnostic_logging">Diagnostic logging</string>
-    <string name="eversense_diagnostic_logging_summary">Record detailed Bluetooth and sensor data. Turn off after troubleshooting.</string>
-
     <!-- Pairing wizard -->
     <string name="eversense_pair_title">Pair transmitter</string>
     <string name="eversense_pair_before_title">Before you start</string>
@@ -105,6 +107,9 @@
     <string name="eversense_pair_account_title">Eversense account</string>
     <string name="eversense_pair_account_hint">AAPS signs in with your Eversense account: a 365 needs it to connect, and the cloud upload uses it. The login is not exported with the settings.</string>
     <string name="eversense_pair_model">Which Eversense do you use?</string>
+    <string name="eversense_pair_without_sign_in">Continue without signing in</string>
+    <string name="eversense_pair_without_sign_in_hint">An E3 connects without an Eversense account. Without one, readings are not uploaded to the Eversense cloud.</string>
+    <string name="eversense_not_signed_in_no_cloud">Not signed in: readings are not uploaded to the Eversense cloud.</string>
     <string name="eversense_model_e3">Eversense E3</string>
     <string name="eversense_model_365_usa">Eversense 365 (USA)</string>
     <string name="eversense_model_365_other">Eversense 365 (other countries)</string>

@@ -2,6 +2,7 @@ package app.aaps.plugins.eversense.di
 
 import android.bluetooth.BluetoothManager
 import android.content.Context
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.plugins.eversense.EversenseCGMPlugin
 import app.aaps.plugins.eversense.storage.EversenseStateStore
 import dev.zacsweers.metro.AppScope
@@ -15,9 +16,9 @@ import dev.zacsweers.metro.SingleIn
 object EversenseBindings {
     @Provides
     @SingleIn(AppScope::class)
-    fun provideEversense(context: Context, store: EversenseStateStore): EversenseCGMPlugin {
+    fun provideEversense(context: Context, store: EversenseStateStore, aapsLogger: AAPSLogger): EversenseCGMPlugin {
         val appContext = context.applicationContext
         val manager = appContext.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        return EversenseCGMPlugin(appContext, manager, store)
+        return EversenseCGMPlugin(appContext, manager, store, aapsLogger)
     }
 }

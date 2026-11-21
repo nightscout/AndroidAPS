@@ -12,7 +12,6 @@ enum class EversenseBooleanKey(
     summaryRes: Int? = null,
     override val exportable: Boolean = true
 ) : BooleanPreferenceKey {
-    EversenseDiagnosticLogging("eversense_diagnostic_logging", false, R.string.eversense_diagnostic_logging, R.string.eversense_diagnostic_logging_summary, exportable = false),
     EversenseCloudUploadEnabled("eversense_cloud_upload_enabled", true, R.string.eversense_cloud_upload_enabled);
 
     override val preferenceType = PreferenceType.SWITCH

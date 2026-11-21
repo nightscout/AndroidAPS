@@ -29,9 +29,14 @@ class ReferenceIntegrityTest {
         assertEquals("bb0b0373cd6ccf6b935a63783cb5fcf29468e317", manifest.getValue("baseline_commit").jsonPrimitive.content)
         val commands = checkNotNull(javaClass.getResourceAsStream("/protocol-command-classes.txt"))
             .bufferedReader().use { it.readLines() }
-        assertEquals(109, commands.size)
-        assertEquals(109, commands.toSet().size)
-        assertEquals(manifest.getValue("commands").jsonArray.map { it.jsonPrimitive.content }.sorted(), commands.sorted())
+        // Commands the driver never sent (settings, alarm repeats, E3 history logs) were removed as dead code. The
+        // frozen sources keep them; every command of the snapshot is either still compared or listed as removed.
+        val removed = checkNotNull(javaClass.getResourceAsStream("/protocol-commands-removed.txt"))
+            .bufferedReader().use { it.readLines() }
+        assertEquals(44, commands.size)
+        assertEquals(65, removed.size)
+        assertEquals(109, (commands + removed).toSet().size)
+        assertEquals(manifest.getValue("commands").jsonArray.map { it.jsonPrimitive.content }.sorted(), (commands + removed).sorted())
         val files = manifest.getValue("files").jsonArray
         assertEquals(156, files.size)
         for (file in files) {

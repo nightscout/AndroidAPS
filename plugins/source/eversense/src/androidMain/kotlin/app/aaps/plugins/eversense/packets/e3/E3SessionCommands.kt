@@ -1,17 +1,14 @@
 package app.aaps.plugins.eversense.packets.e3
 
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.plugins.eversense.enums.EversenseE3Memory
-import app.aaps.plugins.eversense.enums.EversenseSecurityType
 import app.aaps.plugins.eversense.enums.EversenseTrendArrow
-import app.aaps.plugins.eversense.models.ActiveAlarm
 import app.aaps.plugins.eversense.packets.EversenseBasePacket
 import app.aaps.plugins.eversense.packets.e3.util.EversenseE3Parser
 import app.aaps.plugins.eversense.packets.e3.util.EversenseE3Writer
 import app.aaps.plugins.eversense.protocol.GlucoseDecoders
 import app.aaps.plugins.eversense.protocol.PacketSpec
 import app.aaps.plugins.eversense.protocol.PacketTime
-import app.aaps.plugins.eversense.util.EversenseLogger
-import app.aaps.plugins.eversense.util.MessageCoder
 import java.util.TimeZone
 import kotlin.math.abs
 
@@ -53,10 +50,10 @@ class GetCurrentDatetimePacket : EversenseBasePacket(PacketSpec.e3(EversenseE3Pa
         val actualTimeZoneOffset = TimeZone.getDefault().getOffset(PacketTime.nowMillis()).toLong()
         // Allow time drift <10s
         if (abs(PacketTime.nowMillis() - (date + time)) > 10_000) {
-            EversenseLogger.warning("GetCurrentDatetimePacket", "time drift detected... drift: ${abs(PacketTime.nowMillis() - (date + time))} ms")
+            log?.warn(LTag.BGSOURCE, "time drift detected... drift: ${abs(PacketTime.nowMillis() - (date + time))} ms")
             needsTimeSync = true
         } else if (actualTimeZoneOffset != timeZoneOffset) {
-            EversenseLogger.warning("GetCurrentDatetimePacket", "timezone mismatch - received: $timeZoneOffset, actual: $actualTimeZoneOffset")
+            log?.warn(LTag.BGSOURCE, "timezone mismatch - received: $timeZoneOffset, actual: $actualTimeZoneOffset")
             needsTimeSync = true
         }
         return Response(date + time, timeZoneOffset, needsTimeSync)
@@ -74,65 +71,6 @@ class GetCurrentGlucosePacket : EversenseBasePacket(PacketSpec.e3(EversenseE3Pac
     data class Response(val datetime: Long, val glucoseInMgDl: Int, val trend: EversenseTrendArrow, val rawResponseHex: String = "") : EversenseBasePacket.Response()
 }
 
-class GetGlucoseAlertsAndStatusPacket : EversenseBasePacket(PacketSpec.e3(EversenseE3Packets.ReadSensorGlucoseAlertsAndStatusCommandId, EversenseE3Packets.ReadSensorGlucoseAlertsAndStatusResponseId)) {
-    private val STATUS_FLAG_COUNT = 13
-
-    override fun getRequestData(): ByteArray = ByteArray(0)
-
-    override fun parseResponse(): Response? {
-        if (receivedData.isEmpty()) return null
-        val s = getStartIndex()
-        val rawContent = receivedData.drop(s + 1).dropLast(2).map { it.toInt() and 0xFF }
-        val content = IntArray(STATUS_FLAG_COUNT)
-        val offset = STATUS_FLAG_COUNT - rawContent.size.coerceAtMost(STATUS_FLAG_COUNT)
-        rawContent.take(STATUS_FLAG_COUNT).forEachIndexed { i, v -> content[offset + i] = v }
-        if (content.all { it == 0 }) return Response(alarms = emptyList())
-        val alarms = mutableListOf<ActiveAlarm>()
-        fun add(alarm: app.aaps.plugins.eversense.enums.EversenseAlarm?) {
-            alarm?.let { alarms.add(ActiveAlarm(code = it, codeRaw = it.code, flag = 0, priority = 0)) }
-        }
-        add(MessageCoder.messageCodeForGlucoseLevelAlarmFlags(content[0]))
-        add(MessageCoder.messageCodeForGlucoseLevelAlertFlags(content[1]))
-        add(MessageCoder.messageCodeForRateAlertFlags(content[2]))
-        add(MessageCoder.messageCodeForPredictiveAlertFlags(content[3]))
-        add(MessageCoder.messageCodeForSensorHardwareAndAlertFlags(content[4]))
-        add(MessageCoder.messageCodeForSensorReadAlertFlags(content[5]))
-        add(MessageCoder.messageCodeForSensorReplacementFlags(content[6]))
-        add(MessageCoder.messageCodeForSensorCalibrationFlags(content[7]))
-        add(MessageCoder.messageCodeForTransmitterStatusAlertFlags(content[8]))
-        add(MessageCoder.messageCodeForTransmitterBatteryAlertFlags(content[9]))
-        add(MessageCoder.messageCodeForTransmitterEOLAlertFlags(content[10]))
-        add(MessageCoder.messageCodeForSensorReplacementFlags2(content[11]))
-        add(MessageCoder.messageCodeForCalibrationSwitchFlags(content[12]))
-        return Response(alarms = alarms)
-    }
-
-    data class Response(val alarms: List<ActiveAlarm>) : EversenseBasePacket.Response()
-}
-
-class GetHighGlucoseRepeatIntervalPacket : EversenseBasePacket(PacketSpec.e3(EversenseE3Packets.ReadSingleByteSerialFlashRegisterCommandId, EversenseE3Packets.ReadSingleByteSerialFlashRegisterResponseId)) {
-
-    override fun getRequestData(): ByteArray = EversenseE3Memory.HighGlucoseAlarmRepeatIntervalDay.getRequestData()
-
-    override fun parseResponse(): Response? {
-        if (receivedData.size < getStartIndex() + 1) return null
-        return Response(intervalMinutes = receivedData[getStartIndex()].toInt() and 0xFF)
-    }
-
-    data class Response(val intervalMinutes: Int) : EversenseBasePacket.Response()
-}
-
-class GetLowGlucoseRepeatIntervalPacket : EversenseBasePacket(PacketSpec.e3(EversenseE3Packets.ReadSingleByteSerialFlashRegisterCommandId, EversenseE3Packets.ReadSingleByteSerialFlashRegisterResponseId)) {
-
-    override fun getRequestData(): ByteArray = EversenseE3Memory.LowGlucoseAlarmRepeatIntervalDay.getRequestData()
-
-    override fun parseResponse(): Response? {
-        if (receivedData.size < getStartIndex() + 1) return null
-        return Response(intervalMinutes = receivedData[getStartIndex()].toInt() and 0xFF)
-    }
-
-    data class Response(val intervalMinutes: Int) : EversenseBasePacket.Response()
-}
 
 class GetMmaFeaturesPacket : EversenseBasePacket(PacketSpec.e3(EversenseE3Packets.ReadSingleByteSerialFlashRegisterCommandId, EversenseE3Packets.ReadSingleByteSerialFlashRegisterResponseId)) {
 
@@ -291,64 +229,4 @@ class SetCurrentDatetimePacket : EversenseBasePacket(PacketSpec.e3(EversenseE3Pa
     }
 
     class Response : EversenseBasePacket.Response() {}
-}
-
-class SetHighGlucoseRepeatIntervalDayPacket(private val intervalMinutes: Int) : EversenseBasePacket(PacketSpec.e3(EversenseE3Packets.WriteSingleByteSerialFlashRegisterCommandId, EversenseE3Packets.WriteSingleByteSerialFlashRegisterResponseId)) {
-
-    override fun getRequestData(): ByteArray {
-        return EversenseE3Memory.HighGlucoseAlarmRepeatIntervalDay.getRequestData() +
-            byteArrayOf(intervalMinutes.toByte())
-    }
-
-    override fun parseResponse(): Response? {
-        if (receivedData.isEmpty()) return null
-        return Response()
-    }
-
-    class Response : EversenseBasePacket.Response()
-}
-
-class SetHighGlucoseRepeatIntervalNightPacket(private val intervalMinutes: Int) : EversenseBasePacket(PacketSpec.e3(EversenseE3Packets.WriteSingleByteSerialFlashRegisterCommandId, EversenseE3Packets.WriteSingleByteSerialFlashRegisterResponseId)) {
-
-    override fun getRequestData(): ByteArray {
-        return EversenseE3Memory.HighGlucoseAlarmRepeatIntervalNight.getRequestData() +
-            byteArrayOf(intervalMinutes.toByte())
-    }
-
-    override fun parseResponse(): Response? {
-        if (receivedData.isEmpty()) return null
-        return Response()
-    }
-
-    class Response : EversenseBasePacket.Response()
-}
-
-class SetLowGlucoseRepeatIntervalDayPacket(private val intervalMinutes: Int) : EversenseBasePacket(PacketSpec.e3(EversenseE3Packets.WriteSingleByteSerialFlashRegisterCommandId, EversenseE3Packets.WriteSingleByteSerialFlashRegisterResponseId)) {
-
-    override fun getRequestData(): ByteArray {
-        return EversenseE3Memory.LowGlucoseAlarmRepeatIntervalDay.getRequestData() +
-            byteArrayOf(intervalMinutes.toByte())
-    }
-
-    override fun parseResponse(): Response? {
-        if (receivedData.isEmpty()) return null
-        return Response()
-    }
-
-    class Response : EversenseBasePacket.Response()
-}
-
-class SetLowGlucoseRepeatIntervalNightPacket(private val intervalMinutes: Int) : EversenseBasePacket(PacketSpec.e3(EversenseE3Packets.WriteSingleByteSerialFlashRegisterCommandId, EversenseE3Packets.WriteSingleByteSerialFlashRegisterResponseId)) {
-
-    override fun getRequestData(): ByteArray {
-        return EversenseE3Memory.LowGlucoseAlarmRepeatIntervalNight.getRequestData() +
-            byteArrayOf(intervalMinutes.toByte())
-    }
-
-    override fun parseResponse(): Response? {
-        if (receivedData.isEmpty()) return null
-        return Response()
-    }
-
-    class Response : EversenseBasePacket.Response()
 }

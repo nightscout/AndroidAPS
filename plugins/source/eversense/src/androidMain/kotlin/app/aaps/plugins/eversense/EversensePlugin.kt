@@ -13,6 +13,7 @@ import app.aaps.plugins.eversense.util.EversenseHttpE3Util
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -39,11 +40,11 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.eversense.EversenseCGMPlugin
 import app.aaps.plugins.eversense.callbacks.EversenseWatcher
 import app.aaps.plugins.eversense.ui.EversenseComposeContent
+import app.aaps.plugins.eversense.enums.CalibrationReadiness
 import app.aaps.plugins.eversense.enums.EversenseAlarm
 import app.aaps.plugins.eversense.enums.EversenseType
 import app.aaps.plugins.eversense.models.EversenseCGMResult
 import app.aaps.plugins.eversense.models.EversenseState
-import app.aaps.plugins.eversense.util.EversenseLogger
 import app.aaps.plugins.eversense.util.StorageKeys
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -114,6 +115,10 @@ class EversensePlugin(
         // placement guide.
         private const val POST_EXIT_UNKNOWN_ALARM_SUPPRESS_WINDOW_MS = 5000L
 
+        /** The battery low notice fires at this level or below, and is armed again above [BATTERY_REARM_PERCENT]. */
+        private const val BATTERY_LOW_PERCENT = 10
+        private const val BATTERY_REARM_PERCENT = 20
+
         /** The values the transmitter takes as a calibration, in mg/dL */
         private val CALIBRATION_RANGE_MGDL = 40..400
     }
@@ -138,7 +143,8 @@ class EversensePlugin(
 
     private val securePrefs: EversenseStore get() = eversense.preferences
 
-    private fun cloudUploadEnabled() = preferences.get(EversenseBooleanKey.EversenseCloudUploadEnabled)
+    /** The upload signs in to the Eversense cloud: an E3 used without a login queues nothing. */
+    private fun cloudUploadEnabled() = preferences.get(EversenseBooleanKey.EversenseCloudUploadEnabled) && pairing.account.value != null
 
     private val lastNotifiedFirmwareVersion: String get() = securePrefs.getString("last_notified_firmware_version", "") ?: ""
     private fun setLastNotifiedFirmwareVersion(version: String) = securePrefs.edit(commit = true) { putString("last_notified_firmware_version", version) }
@@ -152,8 +158,8 @@ class EversensePlugin(
         securePrefs.edit(commit = true) { putBoolean("eversense_cal_due_dismissed_${nextCalibrationDate}", true) }
     private fun isBatteryLowDismissed(): Boolean =
         securePrefs.getBoolean("eversense_battery_low_dismissed", false)
-    private fun setBatteryLowDismissed() =
-        securePrefs.edit(commit = true) { putBoolean("eversense_battery_low_dismissed", true) }
+    private fun setBatteryLowDismissed(dismissed: Boolean) =
+        securePrefs.edit(commit = true) { putBoolean("eversense_battery_low_dismissed", dismissed) }
     private val NO_SIGNAL_WARNING_THRESHOLD = 3
     private val CALIBRATION_RECONNECT_TIMEOUT_MS = 30_000L
 
@@ -169,10 +175,6 @@ class EversensePlugin(
         super.onStart()
         val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         running = Running(scope, newCloudUploader(scope))
-        EversenseLogger.setDiagnosticLogging(preferences.get(EversenseBooleanKey.EversenseDiagnosticLogging))
-        preferences.observe(EversenseBooleanKey.EversenseDiagnosticLogging)
-            .onEach { EversenseLogger.setDiagnosticLogging(it) }
-            .launchIn(scope)
         eversense.addWatcher(this)
         eversense.start()
         // Android can leave out the disconnect callback while Bluetooth is off: reconnect when it is back on. The
@@ -196,7 +198,6 @@ class EversensePlugin(
         running = null
         eversense.removeWatcher(this)
         eversense.stop()
-        EversenseLogger.setDiagnosticLogging(false)
         sensorBatteryLevel = -1
         notificationManager.dismiss(NotificationId.EVERSENSE_PLACEMENT)
     }
@@ -209,7 +210,27 @@ class EversensePlugin(
     // Without a transmitter there is nothing to send to. Said before the confirmation, not after a wait for a link
     // that cannot come. A refused login does not stop it: the value goes to the transmitter over Bluetooth.
     override suspend fun calibrationRefusal(): String? =
-        if (pairing.attention.value == CgmAttention.NOT_PAIRED) rh.gs(R.string.eversense_not_paired) else null
+        if (pairing.attention.value == CgmAttention.NOT_PAIRED) rh.gs(R.string.eversense_not_paired)
+        else readinessRefusal(eversense.getCurrentState().calibrationReadiness)?.let { rh.gs(it) }
+
+    /**
+     * What the transmitter said at its last sync about taking a calibration. Only the E3 says it; a 365 always reads
+     * as ready. Unknown (not read yet) is left to the transmitter.
+     */
+    private fun readinessRefusal(readiness: CalibrationReadiness): Int? = when (readiness) {
+        CalibrationReadiness.READY,
+        CalibrationReadiness.REASON_UNKNOWN           -> null
+        CalibrationReadiness.GLUCOSE_RATE_TOO_HIGH    -> R.string.eversense_calibration_refused_rate
+        CalibrationReadiness.TOO_SOON,
+        CalibrationReadiness.WAITING_POST_CALIBRATION -> R.string.eversense_calibration_refused_too_soon
+        CalibrationReadiness.NOT_ENOUGH_DATA,
+        CalibrationReadiness.DROPOUT_PHASE            -> R.string.eversense_calibration_refused_no_data
+        CalibrationReadiness.SENSOR_EOL,
+        CalibrationReadiness.NO_SENSOR_LINKED         -> R.string.eversense_calibration_refused_sensor
+        CalibrationReadiness.UNSUPPORTED_MODE,
+        CalibrationReadiness.LED_DISCONNECT_DETECTED,
+        CalibrationReadiness.TRANSMITTER_EOL          -> R.string.eversense_calibration_refused_transmitter
+    }
 
     override suspend fun calibrate(bgMgdl: Double): String? = withContext(Dispatchers.IO) {
         calibrationRefusal()?.let { return@withContext it }
@@ -261,24 +282,14 @@ class EversensePlugin(
         key = "eversense_settings",
         title = TextRef.AndroidRes(R.string.source_eversense),
         items = listOf(
-            EversenseBooleanKey.EversenseCloudUploadEnabled,
-            EversenseBooleanKey.EversenseDiagnosticLogging
+            EversenseBooleanKey.EversenseCloudUploadEnabled
         ),
         icon = pluginDescription.icon
     )
 
-    private fun signalToLabel(strength: Int): String = when {
-        strength >= 75 -> rh.gs(R.string.eversense_signal_excellent)
-        strength >= 48 -> rh.gs(R.string.eversense_signal_good)
-        strength >= 30 -> rh.gs(R.string.eversense_signal_fair)
-        strength >= 25 -> rh.gs(R.string.eversense_signal_weak)
-        strength > 0   -> rh.gs(R.string.eversense_signal_poor)
-        else           -> rh.gs(R.string.eversense_not_connected)
-    }
-
     override fun onStateChanged(state: EversenseState) {
         val running = running ?: return   // stopped: a late callback changes nothing
-        EversenseLogger.diagnostic { aapsLogger.info(LTag.BGSOURCE, "New state received: ${Json.encodeToString(state)}") }
+        aapsLogger.debug(LTag.BGSOURCE) { "New state received: ${Json.encodeToString(state)}" }
 
         // Update sensor battery level for Overview status lights
         sensorBatteryLevel = if (state.batteryPercentage >= 0) state.batteryPercentage else -1
@@ -290,7 +301,7 @@ class EversensePlugin(
         if (state.insertionDate > 0 && eversense.is365()) {
             running.scope.launch {
                 persistenceLayer.insertCgmSourceData(Sources.Eversense, emptyList(), emptyList(), state.insertionDate)
-                EversenseLogger.diagnostic { aapsLogger.info(LTag.BGSOURCE, "Updated SENSOR_CHANGE event to insertionDate: ${state.insertionDate}") }
+                aapsLogger.debug(LTag.BGSOURCE) { "Updated SENSOR_CHANGE event to insertionDate: ${state.insertionDate}" }
             }
         }
 
@@ -326,36 +337,35 @@ class EversensePlugin(
             if (isAfterNoon && daysRemaining in 31..60 && !isSensorExpiryDismissed(state.insertionDate, 60)) {
                 setSensorExpiryDismissed(state.insertionDate, 60)
                 notificationManager.post(
-                    NotificationId.EVERSENSE_ALARM,
+                    NotificationId.EVERSENSE_SENSOR_EXPIRY,
                     rh.gs(R.string.eversense_sensor_expiry_plan, daysRemaining),
                     level = NotificationLevel.INFO
                 )
             } else if (isAfterNoon && daysRemaining in 11..30 && !isSensorExpiryDismissed(state.insertionDate, 30)) {
                 setSensorExpiryDismissed(state.insertionDate, 30)
                 notificationManager.post(
-                    NotificationId.EVERSENSE_ALARM,
-                    rh.gs(R.string.eversense_sensor_expiry_soon, daysRemaining),
-                    level = NotificationLevel.NORMAL
+                    NotificationId.EVERSENSE_SENSOR_EXPIRY,
+                    rh.gs(R.string.eversense_sensor_expiry_soon, daysRemaining)
                 )
             } else if (isAfterNoon && daysRemaining in 1..10 && !isSensorExpiryDismissed(state.insertionDate, daysRemaining)) {
                 setSensorExpiryDismissed(state.insertionDate, daysRemaining)
+                // Days ahead, not an acute danger: important, but not the alarm tier
                 notificationManager.post(
-                    NotificationId.EVERSENSE_ALARM,
+                    NotificationId.EVERSENSE_SENSOR_EXPIRY,
                     rh.gs(R.string.eversense_sensor_expiry_urgent, daysRemaining),
-                    level = NotificationLevel.URGENT
+                    level = NotificationLevel.IMPORTANT
                 )
             }
         }
 
-        // Battery low notification — fires once at noon when battery < 11%
-        val isAfterNoonBattery = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 12
-        if (isAfterNoonBattery && state.batteryPercentage in 1..10 && !isBatteryLowDismissed()) {
-            setBatteryLowDismissed()
-            notificationManager.post(
-                NotificationId.EVERSENSE_ALARM,
-                rh.gs(R.string.eversense_battery_low, state.batteryPercentage),
-                level = NotificationLevel.NORMAL
-            )
+        // Battery low: once per discharge. The transmitter is recharged often, so the notice is armed again when the
+        // battery is back above the limit. At any hour: an empty transmitter gives no readings.
+        if (state.batteryPercentage in 1..BATTERY_LOW_PERCENT && !isBatteryLowDismissed()) {
+            setBatteryLowDismissed(true)
+            notificationManager.post(NotificationId.EVERSENSE_BATTERY_LOW, rh.gs(R.string.eversense_battery_low, state.batteryPercentage))
+        } else if (state.batteryPercentage > BATTERY_REARM_PERCENT && isBatteryLowDismissed()) {
+            setBatteryLowDismissed(false)
+            notificationManager.dismiss(NotificationId.EVERSENSE_BATTERY_LOW)
         }
 
         // Calibration due notification — fires once per calibration day
@@ -365,11 +375,7 @@ class EversensePlugin(
             && System.currentTimeMillis() >= state.nextCalibrationDate
             && !isCalibrationDueDismissed(calDueDay)) {
             setCalibrationDueDismissed(calDueDay)
-            notificationManager.post(
-                NotificationId.EVERSENSE_ALARM,
-                rh.gs(R.string.eversense_calibration_due),
-                level = NotificationLevel.NORMAL
-            )
+            notificationManager.post(NotificationId.EVERSENSE_CALIBRATION_DUE, rh.gs(R.string.eversense_calibration_due))
         }
 
         // Show firmware notification only once per unique firmware version
@@ -438,32 +444,24 @@ class EversensePlugin(
             else -> NotificationLevel.URGENT
         }
         if (running == null) return
+        // AAPS holds the transmitter link, so the vendor app is not there to sound it: a critical alarm rings here.
         notificationManager.post(
             NotificationId.EVERSENSE_ALARM,
             title,
-            level = level
+            level = level,
+            sound = if (level == NotificationLevel.URGENT) AlarmSound.ALARM else null
         )
     }
 
     override fun onCGMRead(type: EversenseType, readings: List<EversenseCGMResult>) {
         val running = running ?: return   // stopped: a reading of the old link is not stored
-        // The transmitter is alive — reset the liveness watchdog.
-        // Log what the BLE layer actually produced, per reading, before anything downstream can
-        // filter or reshape it. The DMS uploader drops readings with no rawResponseHex and keys
-        // the portal record on sensorId, and neither field is visible anywhere else in an exported
-        // log - the Eversense packet classes log through EversenseLogger, which only reaches
-        // logcat. Without this, a reading that never makes it to the portal cannot be told apart
-        // from one the server discarded.
-        //
-        // Backfill readings are the ones to watch: GlucoseHistoryItem carries no sensorId at all,
-        // so anything reconstructed from the transmitter's log arrives here with sensorId empty.
-        EversenseLogger.diagnostic {
-            readings.forEach { r ->
-                aapsLogger.info(
-                    LTag.BGSOURCE,
-                    "Eversense CGM read: ts=${r.datetime} glucose=${r.glucoseInMgDl} " +
-                        "rawHexBytes=${r.rawResponseHex.length / 2} sensorId=${if (r.sensorId.isEmpty()) "EMPTY" else r.sensorId}"
-                )
+        // What the transmitter gave, before anything filters it. The cloud upload drops readings with no raw data and
+        // the portal keys a record on the sensor id, so a reading that never reaches the portal can be told apart from
+        // one the server dropped. Backfill readings have no sensor id.
+        readings.forEach { r ->
+            aapsLogger.debug(LTag.BGSOURCE) {
+                "Eversense CGM read: ts=${r.datetime} glucose=${r.glucoseInMgDl} " +
+                    "rawHexBytes=${r.rawResponseHex.length / 2} sensorId=${if (r.sensorId.isEmpty()) "EMPTY" else r.sensorId}"
             }
         }
         val glucoseValues = readings.map { reading ->
@@ -482,14 +480,15 @@ class EversensePlugin(
 
         running.scope.launch {
             val state = eversense.getCurrentState()
-            val insertionDate = state.insertionDate.takeIf { it > 0 }
+            // As in onStateChanged: only a 365 gives a stable insertion time. Each new E3 value would add a sensor change.
+            val insertionDate = state.insertionDate.takeIf { it > 0 && type == EversenseType.EVERSENSE_365 }
             val result = persistenceLayer.insertCgmSourceData(
                 Sources.Eversense,
                 glucoseValues,
                 listOf(),
                 insertionDate
             )
-            EversenseLogger.diagnostic { aapsLogger.info(LTag.BGSOURCE, "CGM insert complete — inserted: ${result.inserted}, updated: ${result.updated}") }
+            aapsLogger.debug(LTag.BGSOURCE) { "CGM insert complete — inserted: ${result.inserted}, updated: ${result.updated}" }
 
             if (cloudUploadEnabled()) {
                 try {
@@ -517,8 +516,7 @@ class EversensePlugin(
         )
 
     private fun logCloudError(message: String, error: Exception) {
-        aapsLogger.error(LTag.BGSOURCE, "$message (${error.javaClass.simpleName})")
-        EversenseLogger.diagnostic { aapsLogger.error(LTag.BGSOURCE, message, error) }
+        aapsLogger.error(LTag.BGSOURCE, message, error)
     }
 
     private suspend fun uploadCloudBatch(prefs: EversenseStore, batch: EversenseCloudUploader.PendingUpload): Boolean {
@@ -528,21 +526,21 @@ class EversensePlugin(
         val calibrations = state.calibrationHistory.filter { it.datetime == state.lastCalibrationDate }
         return if (batch.type == EversenseType.EVERSENSE_365) {
             val glucose = EversenseHttp365Util.uploadGlucoseReadings(
-                prefs, readings, state.transmitterName.ifEmpty { state.transmitterSerialNumber }, state.firmwareVersion)
+                aapsLogger, prefs, readings, state.transmitterName.ifEmpty { state.transmitterSerialNumber }, state.firmwareVersion)
             aapsLogger.info(LTag.BGSOURCE, "Eversense hourly upload: success=${glucose.success} sent=${glucose.sentCount} status=${glucose.httpStatus}")
-            EversenseLogger.diagnostic { aapsLogger.info(LTag.BGSOURCE, "Eversense hourly upload details: ${glucose.describe()}") }
+            aapsLogger.debug(LTag.BGSOURCE) { "Eversense hourly upload details: ${glucose.describe()}" }
             if (!glucose.success) return false
             val portal = EversenseHttp365Util.putCurrentValues(
-                prefs, latest.glucoseInMgDl, latest.datetime, latest.trend, state.sensorSignalStrength, state.batteryPercentage)
+                aapsLogger, prefs, latest.glucoseInMgDl, latest.datetime, latest.trend, state.sensorSignalStrength, state.batteryPercentage)
             if (!portal.success) return false
             EversenseHttp365Util.putDeviceEvents(
-                prefs, readings, state.transmitterSerialNumber, calibrations, state.activeAlarms).success
+                aapsLogger, prefs, readings, state.transmitterSerialNumber, calibrations, state.activeAlarms).success
         } else {
             val portal = EversenseHttpE3Util.putCurrentValues(
-                prefs, latest.glucoseInMgDl, latest.datetime, latest.trend, state.sensorSignalStrength, state.batteryPercentage)
+                aapsLogger, prefs, latest.glucoseInMgDl, latest.datetime, latest.trend, state.sensorSignalStrength, state.batteryPercentage)
             if (!portal) return false
             EversenseHttpE3Util.putDeviceEvents(
-                prefs, readings, state.transmitterSerialNumber, calibrations, state.activeAlarms)
+                aapsLogger, prefs, readings, state.transmitterSerialNumber, calibrations, state.activeAlarms)
         }
     }
 }

@@ -1,5 +1,6 @@
 package app.aaps.plugins.eversense
 
+import app.aaps.core.interfaces.logging.LTag
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
@@ -29,9 +30,9 @@ import app.aaps.plugins.eversense.packets.e365.PushAlarmWithDataPacket
 import app.aaps.plugins.eversense.protocol.NotificationAssembler
 import app.aaps.plugins.eversense.storage.EversenseStore
 import app.aaps.plugins.eversense.storage.edit
+import app.aaps.plugins.eversense.util.DmsSignIn
 import app.aaps.plugins.eversense.util.EversenseCrypto365Util
 import app.aaps.plugins.eversense.util.EversenseHttp365Util
-import app.aaps.plugins.eversense.util.EversenseLogger
 import app.aaps.plugins.eversense.util.StorageKeys
 import java.util.UUID
 import java.util.concurrent.ExecutionException
@@ -57,6 +58,7 @@ class EversenseGattCallback internal constructor(
         workGeneration.get()?.let { it == linkGeneration } ?: true
     }
     private val preferences get() = stateStore
+    internal val aapsLogger get() = plugin.aapsLogger
     internal fun operationStore(): EversenseStore {
         val generation = linkGeneration
         return sessionStore.restrict { generation == linkGeneration }
@@ -66,8 +68,6 @@ class EversenseGattCallback internal constructor(
     private fun accepts(gatt: BluetoothGatt?) = active() && gatt != null && (bluetoothGatt == null || bluetoothGatt === gatt)
 
     companion object {
-        private const val TAG = "EversenseGattCallback"
-
         const val serviceUUID = "c3230001-9308-47ae-ac12-3d030892a211"
 
         private const val requestUUID = "6eb0f021-a7ba-7e7d-66c9-6d813f01d273"
@@ -94,13 +94,13 @@ class EversenseGattCallback internal constructor(
 
     private var payloadSize: Int = 20
     private var security: EversenseSecurityType = EversenseSecurityType.None
-    private var cryptoUtil = EversenseCrypto365Util(preferences)
+    private var cryptoUtil = EversenseCrypto365Util(preferences, aapsLogger)
 
     private val notifications = NotificationAssembler(SystemClock::elapsedRealtime) { notice ->
         when (notice) {
             NotificationAssembler.Notice.DUPLICATE ->
-                EversenseLogger.debug(TAG) { "Duplicate notification ignored" }
-            else -> EversenseLogger.warning(TAG, "Notification assembly: $notice")
+                aapsLogger.debug(LTag.BGSOURCE) { "Duplicate notification ignored" }
+            else -> aapsLogger.warn(LTag.BGSOURCE, "Notification assembly: $notice")
         }
     }
 
@@ -169,7 +169,7 @@ class EversenseGattCallback internal constructor(
         if (gatt == null) return
         if (!active()) { gatt.close(); return }
         bluetoothGatt?.takeIf { it !== gatt }?.let {
-            EversenseLogger.info(TAG, "Closing an earlier GATT handle before using the new one")
+            aapsLogger.info(LTag.BGSOURCE, "Closing an earlier GATT handle before using the new one")
             it.disconnect()
             it.close()
         }
@@ -177,7 +177,7 @@ class EversenseGattCallback internal constructor(
     }
     @SuppressLint("MissingPermission")
     fun readRssi() {
-        bluetoothGatt?.readRemoteRssi() ?: EversenseLogger.warning(TAG, "Cannot read RSSI — not connected")
+        bluetoothGatt?.readRemoteRssi() ?: aapsLogger.warn(LTag.BGSOURCE, "Cannot read RSSI — not connected")
     }
 
     @SuppressLint("MissingPermission")
@@ -186,10 +186,10 @@ class EversenseGattCallback internal constructor(
     private fun handleOnReadRemoteRssi(gatt: BluetoothGatt, rssi: Int, status: Int) {
         if (!accepts(gatt)) return
         if (status == BluetoothGatt.GATT_SUCCESS) {
-            EversenseLogger.debug(TAG) { "RSSI: $rssi dBm" }
+            aapsLogger.debug(LTag.BGSOURCE) { "RSSI: $rssi dBm" }
             plugin.onRssiRead(rssi, session)
         } else {
-            EversenseLogger.warning(TAG, "Failed to read RSSI - status: $status")
+            aapsLogger.warn(LTag.BGSOURCE, "Failed to read RSSI - status: $status")
         }
     }
 
@@ -198,8 +198,8 @@ class EversenseGattCallback internal constructor(
 
     private fun handleOnConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
         if (!accepts(gatt)) return
-        EversenseLogger.info(TAG, "Connection state changed - status: $status, newState: $newState")
-        EversenseLogger.debug(TAG) { "Connected device: ${gatt.device.name}" }
+        aapsLogger.info(LTag.BGSOURCE, "Connection state changed - status: $status, newState: $newState")
+        aapsLogger.debug(LTag.BGSOURCE) { "Connected device: ${gatt.device.name}" }
 
         if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_CONNECTED) {
             bluetoothGatt = gatt
@@ -217,7 +217,7 @@ class EversenseGattCallback internal constructor(
             }
 
             if (!gatt.requestMtu(512)) {
-                EversenseLogger.warning(TAG, "requestMtu returned false — skipping to discoverServices with default payload size")
+                aapsLogger.warn(LTag.BGSOURCE, "requestMtu returned false — skipping to discoverServices with default payload size")
                 payloadSize = 20
                 gatt.discoverServices()
             }
@@ -225,7 +225,7 @@ class EversenseGattCallback internal constructor(
         }
 
         if (newState == BluetoothProfile.STATE_DISCONNECTED || status != BluetoothGatt.GATT_SUCCESS) {
-            EversenseLogger.warning(TAG, "Disconnected or failed - status: $status, newState: $newState")
+            aapsLogger.warn(LTag.BGSOURCE, "Disconnected or failed - status: $status, newState: $newState")
 
             connected = false
             transmitterReady = false
@@ -247,15 +247,15 @@ class EversenseGattCallback internal constructor(
     private fun handleOnMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
         if (!accepts(gatt)) return
         if (status != 0) {
-            EversenseLogger.warning(TAG, "MTU negotiation failed (status: $status) — using default payload size of 20")
+            aapsLogger.warn(LTag.BGSOURCE, "MTU negotiation failed (status: $status) — using default payload size of 20")
             payloadSize = 20
         } else {
             payloadSize = mtu - 3
         }
-        EversenseLogger.debug(TAG) { "New payload size: $payloadSize" }
+        aapsLogger.debug(LTag.BGSOURCE) { "New payload size: $payloadSize" }
 
         val success = gatt?.discoverServices()
-        EversenseLogger.info(TAG, "Trigger discover services - success: $success")
+        aapsLogger.info(LTag.BGSOURCE, "Trigger discover services - success: $success")
     }
 
     @SuppressLint("MissingPermission")
@@ -263,10 +263,10 @@ class EversenseGattCallback internal constructor(
 
     private fun handleOnServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
         if (!accepts(gatt)) return
-        EversenseLogger.info(TAG, "Discovered services - status: $status")
+        aapsLogger.info(LTag.BGSOURCE, "Discovered services - status: $status")
 
         if (gatt == null) {
-            EversenseLogger.error(TAG, "Gatt is null")
+            aapsLogger.error(LTag.BGSOURCE, "Gatt is null")
             return
         }
 
@@ -275,14 +275,14 @@ class EversenseGattCallback internal constructor(
         // that could never be reached. firstOrNull correctly returns null on no match.
         val service = gatt.services.firstOrNull { it.uuid.toString() == serviceUUID }
         if (service == null) {
-            EversenseLogger.error(TAG, "Required service not found -> disconnecting")
+            aapsLogger.error(LTag.BGSOURCE, "Required service not found -> disconnecting")
             gatt.disconnect()
             return
         }
 
         eversenseBluetoothService = service
         if (service.characteristics.isEmpty()) {
-            EversenseLogger.error(TAG, "Service has no characteristics -> disconnecting")
+            aapsLogger.error(LTag.BGSOURCE, "Service has no characteristics -> disconnecting")
             gatt.disconnect()
             return
         }
@@ -290,7 +290,7 @@ class EversenseGattCallback internal constructor(
         var requestChar = service.characteristics.find { it.uuid.toString() == requestUUID }
         var responseChar = service.characteristics.find { it.uuid.toString() == responseUUID }
         if (requestChar != null && responseChar != null) {
-            EversenseLogger.info(TAG, "Connected to Eversense E3!")
+            aapsLogger.info(LTag.BGSOURCE, "Connected to Eversense E3!")
             security = EversenseSecurityType.None
             requestCharacteristic = requestChar
             responseCharacteristic = responseChar
@@ -304,12 +304,12 @@ class EversenseGattCallback internal constructor(
         requestChar = service.characteristics.find { it.uuid.toString() == requestSecureV2UUID }
         responseChar = service.characteristics.find { it.uuid.toString() == responseSecureV2UUID }
         if (requestChar == null || responseChar == null) {
-            EversenseLogger.error(TAG, "No Eversense request/response characteristic found -> disconnecting")
+            aapsLogger.error(LTag.BGSOURCE, "No Eversense request/response characteristic found -> disconnecting")
             gatt.disconnect()
             return
         }
 
-        EversenseLogger.info(TAG, "Connected to Eversense 365!")
+        aapsLogger.info(LTag.BGSOURCE, "Connected to Eversense 365!")
         security = EversenseSecurityType.SecureV2
         requestCharacteristic = requestChar
         responseCharacteristic = responseChar
@@ -323,7 +323,7 @@ class EversenseGattCallback internal constructor(
 
     private fun handleOnDescriptorWrite(gatt: BluetoothGatt, descriptor: BluetoothGattDescriptor, status: Int) {
         if (!accepts(gatt)) return
-        EversenseLogger.debug(TAG) { "onDescriptorWrite (${descriptor.uuid}) for characteristic (${descriptor.characteristic.uuid}) - status $status" }
+        aapsLogger.debug(LTag.BGSOURCE) { "onDescriptorWrite (${descriptor.uuid}) for characteristic (${descriptor.characteristic.uuid}) - status $status" }
 
         if (status == BluetoothGatt.GATT_SUCCESS && descriptor.uuid.toString() == magicDescriptorUUID) {
             if (descriptor.characteristic.uuid.toString() == responseUUID) {
@@ -370,7 +370,7 @@ class EversenseGattCallback internal constructor(
     @OptIn(ExperimentalStdlibApi::class)
     private fun handleCharacteristicChanged(gatt: BluetoothGatt, rawData: ByteArray) {
         if (!accepts(gatt)) return
-        EversenseLogger.debug(TAG) { "Received data: ${rawData.toHexString()}" }
+        aapsLogger.debug(LTag.BGSOURCE) { "Received data: ${rawData.toHexString()}" }
 
         if (rawData.isEmpty()) return
         var data = rawData
@@ -379,17 +379,16 @@ class EversenseGattCallback internal constructor(
 
             if (data[0] != Eversense365Packets.AuthenticateResponseId) {
                 data = cryptoUtil.decrypt(data)
-                EversenseLogger.debug(TAG) { "Decrypted data -> ${data.toHexString()}" }
                 if (data.isEmpty()) {
                     // A decrypt/MAC failure means the session key no longer matches the
                     // transmitter, so retrying the shortcut is guaranteed to fail the same way.
                     // Force a full WhoAmI + DMS re-auth on the next connect, so we recover on the
                     // first retry instead of waiting out SHORTCUT_FAIL_THRESHOLD auth timeouts.
                     if (plugin.hasInternet()) {
-                        EversenseLogger.error(TAG, "Failed to decrypt data — requesting full re-auth on next connect")
+                        aapsLogger.error(LTag.BGSOURCE, "Failed to decrypt data — requesting full re-auth on next connect")
                         cryptoUtil.disallowUseShortcut()
                     } else {
-                        EversenseLogger.warning(TAG, "Failed to decrypt data offline — retaining registered identity for a new local handshake")
+                        aapsLogger.warn(LTag.BGSOURCE, "Failed to decrypt data offline — retaining registered identity for a new local handshake")
                     }
                     disconnectAndScheduleReconnect()
                     return
@@ -398,7 +397,7 @@ class EversenseGattCallback internal constructor(
         }
 
         if (!is365() && EversenseE3Packets.isPushPacket(data[0])) {
-            EversenseLogger.debug(TAG) { "Keep Alive packet received (E3)!" }
+            aapsLogger.debug(LTag.BGSOURCE) { "Keep Alive packet received (E3)!" }
             submitToExecutor {
                 // Sync transmitter clock before reading glucose so the glucose timestamp
                 // reflects phone time, not the drifted transmitter clock. The official app
@@ -408,13 +407,13 @@ class EversenseGattCallback internal constructor(
                         app.aaps.plugins.eversense.packets.e3.GetCurrentDatetimePacket()
                     )
                     if (currentDatetime.needsTimeSync) {
-                        EversenseLogger.info(TAG, "Clock drift detected before glucose read — syncing transmitter clock")
+                        aapsLogger.info(LTag.BGSOURCE, "Clock drift detected before glucose read — syncing transmitter clock")
                         writePacket<app.aaps.plugins.eversense.packets.e3.SetCurrentDatetimePacket.Response>(
                             app.aaps.plugins.eversense.packets.e3.SetCurrentDatetimePacket()
                         )
                     }
                 } catch (e: Exception) {
-                    EversenseLogger.warning(TAG, "Pre-glucose clock sync failed (non-fatal): $e")
+                    aapsLogger.warn(LTag.BGSOURCE, "Pre-glucose clock sync failed (non-fatal): $e")
                 }
                 EversenseE3Communicator.readGlucose(this, preferences, plugin.watchersFor(this.session))
                 EversenseE3Communicator.fullSync(this, preferences, plugin.watchersFor(this.session))
@@ -423,7 +422,7 @@ class EversenseGattCallback internal constructor(
         }
 
         if (data.size >= 2 && Eversense365Packets.isKeepAlivePacket(data[0], data[1])) {
-            EversenseLogger.debug(TAG) { "Keep Alive packet received (365)!" }
+            aapsLogger.debug(LTag.BGSOURCE) { "Keep Alive packet received (365)!" }
 
             val packet = KeepAlivePacket()
             packet.appendData(data.toUByteArray())
@@ -444,27 +443,27 @@ class EversenseGattCallback internal constructor(
             val packet = PushAlarmWithDataPacket()
             packet.appendData(data.toUByteArray())
             val response = packet.parseResponse() ?: run {
-                EversenseLogger.warning(TAG, "Push alarm packet too short -> skipping")
+                aapsLogger.warn(LTag.BGSOURCE, "Push alarm packet too short -> skipping")
                 return
             }
             if (response.alarm.code == EversenseAlarm.UNKNOWN) {
                 // Unrecognized/bogus codes (e.g. the removed TxDocked/TxUndocked 68/69) must not
                 // surface as a real alarm - matches the upstream iOS EversenseKit fix.
-                EversenseLogger.warning(TAG, "Received unknown push alarm code: ${response.alarm.codeRaw}")
+                aapsLogger.warn(LTag.BGSOURCE, "Received unknown push alarm code: ${response.alarm.codeRaw}")
                 return
             }
-            EversenseLogger.info(TAG, "Push alarm received: ${response.alarm.code.title}")
+            aapsLogger.info(LTag.BGSOURCE, "Push alarm received: ${response.alarm.code.title}")
             handler.post {
                 plugin.watchersFor(this.session).forEach { it.onAlarmReceived(response.alarm) }
             }
             return
         } else if (Eversense365Packets.isNotificationPacket(data[0])) {
-            EversenseLogger.warning(TAG, "Unknown notification packet received")
+            aapsLogger.warn(LTag.BGSOURCE, "Unknown notification packet received")
             return
         }
 
         val exchange = currentExchange.get() ?: run {
-            EversenseLogger.warning(TAG, "currentPacket is null -> skipping packet")
+            aapsLogger.warn(LTag.BGSOURCE, "currentPacket is null -> skipping packet")
             return
         }
 
@@ -479,7 +478,7 @@ class EversenseGattCallback internal constructor(
                 data.size == 3 && data[0] == 0xff.toByte() &&
                 data[1] == spec.typeId
             ) {
-                EversenseLogger.warning(TAG, "365 command rejected - type: ${data[1].toInt() and 0xff}, error: ${data[2].toInt() and 0xff}")
+                aapsLogger.warn(LTag.BGSOURCE, "365 command rejected - type: ${data[1].toInt() and 0xff}, error: ${data[2].toInt() and 0xff}")
                 packet.isErrorResponse = true
                 exchange.complete()
                 return
@@ -490,8 +489,8 @@ class EversenseGattCallback internal constructor(
             // response ID — but earlier versions of this code checked 0x80 before checking the
             // expected response ID, causing every battery/readiness/calibration read to fail.
             if (EversenseE3Packets.isErrorPacket(data[0]) && spec.responseId != data[0]) {
-                EversenseLogger.error(TAG, "Transmitter returned an error response")
-                EversenseLogger.debug(TAG) { "Error response data: ${data.toHexString()}" }
+                aapsLogger.error(LTag.BGSOURCE, "Transmitter returned an error response")
+                aapsLogger.debug(LTag.BGSOURCE) { "Error response data: ${data.toHexString()}" }
                 packet.isErrorResponse = true
                 exchange.complete()
                 return
@@ -499,18 +498,18 @@ class EversenseGattCallback internal constructor(
 
             if (security == EversenseSecurityType.None) {
                 if (!packet.skipResponseIdValidation && spec.responseId != data[0]) {
-                    EversenseLogger.warning(TAG, "Incorrect responseId - expected: ${spec.responseId}, got: ${data[0]}")
+                    aapsLogger.warn(LTag.BGSOURCE, "Incorrect responseId - expected: ${spec.responseId}, got: ${data[0]}")
                     return
                 }
                 packet.appendData(data.toUByteArray())
                 exchange.complete()
             } else {
                 if (spec.responseId != data[0]) {
-                    EversenseLogger.warning(TAG, "Incorrect responseId - expected: ${spec.responseId}, got: ${data[0]}")
+                    aapsLogger.warn(LTag.BGSOURCE, "Incorrect responseId - expected: ${spec.responseId}, got: ${data[0]}")
                     return
                 }
                 if (data.size < 2 || spec.typeId != data[1]) {
-                    EversenseLogger.warning(TAG, "Incorrect responseType - expected: ${spec.typeId}, got: ${data.getOrNull(1)}")
+                    aapsLogger.warn(LTag.BGSOURCE, "Incorrect responseType - expected: ${spec.typeId}, got: ${data.getOrNull(1)}")
                     return
                 }
                 packet.appendData(data.toUByteArray())
@@ -525,6 +524,7 @@ class EversenseGattCallback internal constructor(
         if (!active() || Thread.currentThread().isInterrupted) throw EversenseWriteException("Session closed")
         val gatt = bluetoothGatt ?: throw EversenseWriteException("GATT is not connected")
         val characteristic = requestCharacteristic ?: throw EversenseWriteException("Request characteristic is missing")
+        packet.log = aapsLogger
         val request = packet.buildRequest(cryptoUtil, payloadSize) ?: throw EversenseWriteException("Cannot build packet")
         val exchange = PacketExchange(packet)
         try {
@@ -559,16 +559,16 @@ class EversenseGattCallback internal constructor(
     }
 
     private fun authE3flow() {
-        EversenseLogger.info(TAG, "Starting auth flow E3...")
+        aapsLogger.info(LTag.BGSOURCE, "Starting auth flow E3...")
         try {
             writePacket<SaveBondingInformationPacket.SaveBondingInformationResponse>(SaveBondingInformationPacket())
         } catch (exception: Exception) {
             if (!active()) return
-            EversenseLogger.error(TAG, "Auth flow E3 failed: $exception")
+            aapsLogger.error(LTag.BGSOURCE, "Auth flow E3 failed: $exception")
             return
         }
 
-        EversenseLogger.info(TAG, "E3 auth complete — notifying watchers")
+        aapsLogger.info(LTag.BGSOURCE, "E3 auth complete — notifying watchers")
         // fullSync is triggered by onConnectionChanged via triggerFullSync on the bleExecutor.
         // Do NOT call fullSync here — it would race with the triggerFullSync call.
         if (!active()) return
@@ -592,8 +592,16 @@ class EversenseGattCallback internal constructor(
             }
 
             if (!cryptoUtil.canUseShortcut()) {
+                // A 365 registers with the Eversense server, and that needs the login. With none (an E3 was chosen
+                // without one), say so as a refused login: the overview shows it and the wizard asks for the login.
+                if (plugin.username.isEmpty() || plugin.password.isEmpty()) {
+                    aapsLogger.warn(LTag.BGSOURCE, "365 registration needs the Eversense login, and none is stored")
+                    DmsSignIn.remember(preferences, DmsSignIn.Outcome.REFUSED)
+                    bluetoothGatt?.disconnect()
+                    return
+                }
                 if (!plugin.hasInternet()) {
-                    EversenseLogger.warning(TAG, "365 registration requires internet; retaining stored identity and retrying later")
+                    aapsLogger.warn(LTag.BGSOURCE, "365 registration requires internet; retaining stored identity and retrying later")
                     disconnectAndScheduleReconnect()
                     return
                 }
@@ -602,7 +610,7 @@ class EversenseGattCallback internal constructor(
 
                 // HTTP results carry the same link generation as the authentication attempt.
                 val authSession = networkExecutor.submit<Any?> {
-                    EversenseHttp365Util.login(networkStore)
+                    EversenseHttp365Util.login(aapsLogger, networkStore)
                 }.get(65, TimeUnit.SECONDS) ?: run {
                     bluetoothGatt?.disconnect()
                     return
@@ -620,6 +628,7 @@ class EversenseGattCallback internal constructor(
 
                 val fleet = networkExecutor.submit<Any?> {
                     EversenseHttp365Util.getFleetSecretV2(
+                        aapsLogger = aapsLogger,
                         preferences = networkStore,
                         accessToken = authSession.access_token,
                         serialNumber = whoAmI.serialNumber,
@@ -657,16 +666,16 @@ class EversenseGattCallback internal constructor(
             // Auth succeeded — reset both fail counters
             plugin.authenticationSucceeded(this.session)
 
-            EversenseLogger.info(TAG, "365 auth complete — ready for full sync")
+            aapsLogger.info(LTag.BGSOURCE, "365 auth complete — ready for full sync")
             Eversense365Communicator.fullSync(this, preferences, plugin.watchersFor(this.session), force = true)
             // Read glucose immediately after auth so readings don't wait for next Keep Alive
             // This prevents late readings after reconnect from fullSync disconnect fix
             try {
                 Eversense365Communicator.readGlucose(this, preferences, plugin.watchersFor(this.session))
             } catch (e: Exception) {
-                EversenseLogger.warning(TAG, "[365] readGlucose after auth failed (non-fatal): $e")
+                aapsLogger.warn(LTag.BGSOURCE, "[365] readGlucose after auth failed (non-fatal): $e")
             }
-            EversenseLogger.info(TAG, "365 transmitter ready — notifying watchers")
+            aapsLogger.info(LTag.BGSOURCE, "365 transmitter ready — notifying watchers")
             if (!active()) return
             transmitterReady = true
             plugin.sessionReady(this.session)
@@ -677,8 +686,7 @@ class EversenseGattCallback internal constructor(
             if (generation != linkGeneration) return
             plugin.authenticationFailed(this.session, shortcutAttempt)
             if (!active()) return
-            EversenseLogger.error(TAG, "[365] authV2 failed: $exception")
-            EversenseLogger.debug(TAG) { exception.stackTraceToString() }
+            aapsLogger.error(LTag.BGSOURCE, "[365] authV2 failed", exception)
 
             bluetoothGatt?.disconnect()
         }

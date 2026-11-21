@@ -40,8 +40,6 @@ kotlin {
             api(libs.androidx.core)
             api(project.dependencies.platform(libs.kotlinx.serialization.bom))
             api(libs.kotlinx.serialization.json)
-            api(libs.org.slf4j.api)
-            api(libs.com.github.tony19.logback.android)
             implementation("org.bouncycastle:bcpkix-jdk18on:1.81")
             implementation("org.bouncycastle:bcprov-jdk18on:1.81")
             implementation(libs.androidx.appcompat)
@@ -73,7 +71,8 @@ kotlin {
     }
 }
 
-// Compile the frozen implementation in an isolated package for byte/result comparison tests.
+// Compile the frozen implementation in an isolated package for byte/result comparison tests. Its own logger needs
+// logback, so it is left out; the reference logs into the silent stand-in in androidHostTest (reference/util).
 val generateProtocolReference by tasks.registering {
     val archive = layout.projectDirectory.file("src/androidHostTest/resources/protocol-reference.zip")
     val destination = layout.buildDirectory.dir("generated/protocolReference")
@@ -88,15 +87,10 @@ val generateProtocolReference by tasks.registering {
                 target.parentFile.mkdirs()
                 val source = zip.getInputStream(entry).bufferedReader(Charsets.UTF_8).use { it.readText() }
                     .replace("app.aaps.plugins.eversense", "app.aaps.plugins.eversense.reference")
-                    .replace("app.aaps.plugins.eversense.reference.util.EversenseLogger", "app.aaps.plugins.eversense.util.EversenseLogger")
                     .replace(Regex("private const val (eu(?:Token|Upload|Care|Vault)BaseUrl)"), "internal var $1")
                     .replace("System.currentTimeMillis()", "app.aaps.plugins.eversense.protocol.PacketTime.nowMillis()")
                     .replace("SystemClock.elapsedRealtime()", "app.aaps.plugins.eversense.protocol.PacketTime.nowMillis()")
-                val prepared = if ("EversenseLogger" in source && "import app.aaps.plugins.eversense.util.EversenseLogger" !in source) {
-                    val end = source.indexOf('\n') + 1
-                    source.substring(0, end) + "\nimport app.aaps.plugins.eversense.util.EversenseLogger\n" + source.substring(end)
-                } else source
-                target.writeText(prepared, Charsets.UTF_8)
+                target.writeText(source, Charsets.UTF_8)
             }
         }
     }

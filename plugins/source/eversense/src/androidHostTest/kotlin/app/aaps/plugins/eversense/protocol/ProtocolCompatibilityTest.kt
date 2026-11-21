@@ -8,7 +8,6 @@ import java.time.ZoneOffset
 import java.util.Random
 import java.util.TimeZone
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import org.mockito.Mockito
@@ -19,6 +18,16 @@ class ProtocolCompatibilityTest {
     private val instant = 1_735_689_610_000L
     private val clock = Clock.fixed(Instant.ofEpochMilli(instant), ZoneOffset.UTC)
     private val names = javaClass.getResourceAsStream("/protocol-command-classes.txt")!!.bufferedReader().readLines()
+
+    /**
+     * Commands whose decoding was changed on purpose after the frozen snapshot, so the snapshot's answer is no longer
+     * the right one. Their requests are still compared here; their decoding is covered by [DecodingFixesTest].
+     */
+    private val decodingChangedOnPurpose = setOf(
+        "app.aaps.plugins.eversense.packets.e365.GetGlucoseDataPacket",       // lower limit, "glucose unavailable" reason
+        "app.aaps.plugins.eversense.packets.e365.GetGlucoseLogValuesPacket",  // lower limit
+        "app.aaps.plugins.eversense.packets.e365.GetSensorInformationPacket"  // protocol version text no longer parsed
+    )
 
     @TestFactory fun allCommandContracts(): List<DynamicTest> = names.map { name ->
         DynamicTest.dynamicTest(name.substringAfter(".packets.")) {
@@ -46,6 +55,7 @@ class ProtocolCompatibilityTest {
                     assertEquals(request(original, mtu, emptyCiphertext), request(rewritten, mtu, emptyCiphertext), "$name framed request variant=$variant mtu=$mtu emptyCiphertext=$emptyCiphertext")
                 }
             }
+            if (name in decodingChangedOnPurpose) continue
             for ((index, response) in responses(original).withIndex()) {
                 val old = create(reference, variant)
                 val new = create(current, variant)

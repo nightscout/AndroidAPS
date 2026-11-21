@@ -17,12 +17,14 @@ import kotlinx.coroutines.flow.emptyFlow
 class NoEversenseDriver : EversensePairing {
 
     override val account: StateFlow<EversenseAccount?> = MutableStateFlow(null)
+    override val withoutSignIn: StateFlow<Boolean> = MutableStateFlow(false)
     override val transmitter: StateFlow<String?> = MutableStateFlow(null)
     override val attention: StateFlow<CgmAttention?> = MutableStateFlow(CgmAttention.NOT_PAIRED)
 
     // Nothing is stored and no server is asked: there is no driver to use the login
     override suspend fun signIn(username: String, password: String, model: EversenseModel): SignInResult = SignInResult.SERVER_ERROR
     override fun signOut() = Unit
+    override fun useWithoutSignIn() = Unit
     override fun scan(): Flow<List<ScannedDevice>> = emptyFlow()
     override suspend fun pair(transmitter: ScannedDevice): PairResult = PairResult.NOT_STARTED
     override fun unpair() = Unit

@@ -1,5 +1,7 @@
 package app.aaps.plugins.eversense.util
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import android.annotation.SuppressLint
 import app.aaps.plugins.eversense.enums.EversenseTrendArrow
 import app.aaps.plugins.eversense.models.EversenseCGMResult
@@ -27,7 +29,6 @@ import kotlinx.serialization.json.Json
  */
 class EversenseHttpE3Util {
     companion object {
-        private const val TAG = "EversenseHttpE3Util"
         private val JSON = Json { ignoreUnknownKeys = true }
 
 
@@ -46,26 +47,26 @@ class EversenseHttpE3Util {
 
         // -- Auth --------------------------------------------------------------
 
-        fun login(preferences: EversenseStore): LoginResponseModel? {
+        fun login(aapsLogger: AAPSLogger, preferences: EversenseStore): LoginResponseModel? {
             val state = getState(preferences)
             return try {
                 val reply = DmsHttpClient.post("${tokenBaseUrl}connect/token", DmsHttpClient.passwordGrant(state.username, state.password), form = true)
                 DmsSignIn.remember(preferences, DmsSignIn.outcome(reply))
                 if (reply.status >= 400) {
-                    EversenseLogger.error(TAG, "Login failed: HTTP ${reply.status}")
+                    aapsLogger.error(LTag.BGSOURCE, "Login failed: HTTP ${reply.status}")
                     null
                 } else {
-                    EversenseLogger.info(TAG, "Login succeeded: HTTP ${reply.status}")
+                    aapsLogger.info(LTag.BGSOURCE, "Login succeeded: HTTP ${reply.status}")
                     Json.decodeFromString(LoginResponseModel.serializer(), reply.body)
                 }
             } catch (error: Exception) {
-                EversenseLogger.error(TAG, "Login failed: $error")
+                aapsLogger.error(LTag.BGSOURCE, "Login failed: $error")
                 null
             }
         }
 
-        fun getOrRefreshToken(preferences: EversenseStore): String? = DmsAccessTokens.resolve(preferences) {
-            login(preferences)?.let { DmsAccessTokens.Login(it.access_token, it.expires_in) }
+        fun getOrRefreshToken(aapsLogger: AAPSLogger, preferences: EversenseStore): String? = DmsAccessTokens.resolve(preferences) {
+            login(aapsLogger, preferences)?.let { DmsAccessTokens.Login(it.access_token, it.expires_in) }
         }
 
         // -- Portal sync -------------------------------------------------------
@@ -74,6 +75,7 @@ class EversenseHttpE3Util {
          * POST api/care/PutCurrentValues � updates Last Sync Date on portal and feeds AGP reports.
          */
         fun putCurrentValues(
+            aapsLogger: AAPSLogger,
             preferences: EversenseStore,
             glucose: Int,
             timestamp: Long,
@@ -81,8 +83,8 @@ class EversenseHttpE3Util {
             signalStrength: Int,
             batteryPercentage: Int
         ): Boolean {
-            val token = getOrRefreshToken(preferences) ?: run {
-                EversenseLogger.error(TAG, "E3 putCurrentValues � no valid token")
+            val token = getOrRefreshToken(aapsLogger, preferences) ?: run {
+                aapsLogger.error(LTag.BGSOURCE, "E3 putCurrentValues � no valid token")
                 return false
             }
             return try {
@@ -93,14 +95,14 @@ class EversenseHttpE3Util {
                 val code = reply.status
                 if (code >= 400) {
                     val err = reply.body
-                    EversenseLogger.error(TAG, "E3 PutCurrentValues failed � status: $code")
+                    aapsLogger.error(LTag.BGSOURCE, "E3 PutCurrentValues failed � status: $code")
                     false
                 } else {
-                    EversenseLogger.debug(TAG) { "E3 PutCurrentValues ok � status: $code, glucose=$glucose" }
+                    aapsLogger.debug(LTag.BGSOURCE) { "E3 PutCurrentValues ok � status: $code, glucose=$glucose" }
                     true
                 }
             } catch (e: Exception) {
-                EversenseLogger.error(TAG, "E3 PutCurrentValues exception: $e")
+                aapsLogger.error(LTag.BGSOURCE, "E3 PutCurrentValues exception: $e")
                 false
             }
         }
@@ -109,6 +111,7 @@ class EversenseHttpE3Util {
          * POST api/care/PutDeviceEvents � populates Sensor Glucose history table on portal.
          */
         fun putDeviceEvents(
+            aapsLogger: AAPSLogger,
             preferences: EversenseStore,
             readings: List<EversenseCGMResult>,
             transmitterSerialNumber: String,
@@ -116,8 +119,8 @@ class EversenseHttpE3Util {
             alerts: List<app.aaps.plugins.eversense.models.ActiveAlarm> = emptyList()
         ): Boolean {
             if (readings.isEmpty()) return true
-            val token = getOrRefreshToken(preferences) ?: run {
-                EversenseLogger.error(TAG, "E3 putDeviceEvents � no valid token")
+            val token = getOrRefreshToken(aapsLogger, preferences) ?: run {
+                aapsLogger.error(LTag.BGSOURCE, "E3 putDeviceEvents � no valid token")
                 return false
             }
             return try {
@@ -129,7 +132,7 @@ class EversenseHttpE3Util {
                 val patientBytes = EversenseDmsBinaryCodec.buildEmptyPatientBytes()
                 val alertBytes  = EversenseDmsBinaryCodec.buildAlertBytes(sensorId, alerts, readings.lastOrNull()?.datetime ?: System.currentTimeMillis(), readings.lastOrNull()?.glucoseInMgDl ?: 0)
 
-                EversenseLogger.debug(TAG) { "E3 PutDeviceEvents: ${readings.size} reading(s), txId='$transmitterSerialNumber'" }
+                aapsLogger.debug(LTag.BGSOURCE) { "E3 PutDeviceEvents: ${readings.size} reading(s), txId='$transmitterSerialNumber'" }
 
                 val body = """{"deviceType":"SMSIMeter","deviceName":"Smart Transmitter (Android)","deviceID":"$transmitterSerialNumber","offsetBytes":"$offsetBytes","sgBytes":"$sgBytes","mgBytes":"$mgBytes","patientBytes":"$patientBytes","alertBytes":"$alertBytes","algorithmVersion":"10"}"""
 
@@ -137,14 +140,14 @@ class EversenseHttpE3Util {
                 val code = reply.status
                 if (code >= 400) {
                     val err = reply.body
-                    EversenseLogger.error(TAG, "E3 PutDeviceEvents failed � status: $code")
+                    aapsLogger.error(LTag.BGSOURCE, "E3 PutDeviceEvents failed � status: $code")
                     false
                 } else {
-                    EversenseLogger.info(TAG, "E3 PutDeviceEvents ok � status: $code, readings: ${readings.size}")
+                    aapsLogger.info(LTag.BGSOURCE, "E3 PutDeviceEvents ok � status: $code, readings: ${readings.size}")
                     true
                 }
             } catch (e: Exception) {
-                EversenseLogger.error(TAG, "E3 PutDeviceEvents exception: $e")
+                aapsLogger.error(LTag.BGSOURCE, "E3 PutDeviceEvents exception: $e")
                 false
             }
         }

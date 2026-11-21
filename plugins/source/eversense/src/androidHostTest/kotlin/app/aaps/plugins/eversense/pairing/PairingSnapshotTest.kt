@@ -61,6 +61,27 @@ class PairingSnapshotTest {
         assertThat(cgmAttention(snapshot.account, snapshot.transmitter, snapshot.loginRefused)).isEqualTo(CgmAttention.NOT_PAIRED)
     }
 
+    /** An E3 links over Bluetooth alone: chosen without a login it is paired, only the cloud upload is off. */
+    @Test fun `an E3 without a login is paired`() {
+        val snapshot = PairingSnapshot.of(deviceState(model = "E3", address = "00:11:22:33:44:55", name = "T123456"))
+        assertThat(snapshot.account).isNull()
+        assertThat(snapshot.withoutSignIn).isTrue()
+        assertThat(cgmAttention(snapshot.account, snapshot.transmitter, snapshot.loginRefused, snapshot.withoutSignIn)).isNull()
+    }
+
+    /** Without a login a refusal means the transmitter is a 365, which cannot register: the user is asked to sign in. */
+    @Test fun `a 365 paired without a login asks for one`() {
+        val snapshot = PairingSnapshot.of(deviceState(model = "E3", address = "00:11:22:33:44:55", name = "T123456", refused = true))
+        assertThat(cgmAttention(snapshot.account, snapshot.transmitter, snapshot.loginRefused, snapshot.withoutSignIn)).isEqualTo(CgmAttention.SIGN_IN_FAILED)
+    }
+
+    /** Only the E3 links without a login. */
+    @Test fun `a 365 model without a login is not used without one`() {
+        val snapshot = PairingSnapshot.of(deviceState(model = "E365_USA", address = "00:11:22:33:44:55", name = "T123456"))
+        assertThat(snapshot.withoutSignIn).isFalse()
+        assertThat(cgmAttention(snapshot.account, snapshot.transmitter, snapshot.loginRefused, snapshot.withoutSignIn)).isEqualTo(CgmAttention.NOT_PAIRED)
+    }
+
     @Test fun `a refused login asks to sign in again`() {
         val snapshot = PairingSnapshot.of(deviceState("user", "secret", "E3", "00:11:22:33:44:55", "T123456", refused = true))
         assertThat(cgmAttention(snapshot.account, snapshot.transmitter, snapshot.loginRefused)).isEqualTo(CgmAttention.SIGN_IN_FAILED)

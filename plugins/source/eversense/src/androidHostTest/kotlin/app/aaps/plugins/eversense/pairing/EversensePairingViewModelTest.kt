@@ -25,6 +25,7 @@ class EversensePairingViewModelTest {
     private class FakePairing : EversensePairing {
 
         override val account = MutableStateFlow<EversenseAccount?>(null)
+        override val withoutSignIn = MutableStateFlow(false)
         override val transmitter = MutableStateFlow<String?>(null)
         override val attention = MutableStateFlow<CgmAttention?>(CgmAttention.NOT_PAIRED)
         var signInAnswer = SignInResult.OK
@@ -43,6 +44,11 @@ class EversensePairingViewModelTest {
         override fun signOut() {
             signedOut = true
             account.value = null
+        }
+
+        override fun useWithoutSignIn() {
+            account.value = null
+            withoutSignIn.value = true
         }
 
         override fun scan(): Flow<List<ScannedDevice>> = scanResults
@@ -110,6 +116,31 @@ class EversensePairingViewModelTest {
 
         viewModel.setModel(EversenseModel.E3)
         assertThat(state.canSignIn).isTrue()
+    }
+
+    /** An E3 links without a login: the account step can be passed without one. A 365 cannot, it registers online. */
+    @Test fun `an E3 can go on without signing in`() {
+        viewModel.start(signInOnly = false)
+        viewModel.next()
+        viewModel.setModel(EversenseModel.E365_USA)
+        assertThat(state.canGoOnWithoutSignIn).isFalse()
+        viewModel.continueWithoutSignIn()
+        assertThat(state.step).isEqualTo(Step.ACCOUNT)
+        assertThat(pairing.withoutSignIn.value).isFalse()
+
+        viewModel.setModel(EversenseModel.E3)
+        viewModel.continueWithoutSignIn()
+
+        assertThat(pairing.withoutSignIn.value).isTrue()
+        assertThat(pairing.signIns).isEmpty()
+        assertThat(state.step).isEqualTo(Step.TRANSMITTER)
+    }
+
+    /** Opened again later, the wizard remembers that the E3 is used without a login. */
+    @Test fun `an E3 used without a login is offered again as E3`() {
+        pairing.withoutSignIn.value = true
+        viewModel.start(signInOnly = true)
+        assertThat(state.model).isEqualTo(EversenseModel.E3)
     }
 
     /** A refused login keeps the step, says why, and keeps the typed values to correct them. */

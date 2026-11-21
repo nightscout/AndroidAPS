@@ -54,7 +54,7 @@ import kotlin.time.Duration.Companion.minutes
 @ContributesBinding(AppScope::class)
 @Inject
 class AndroidEversensePairing(
-    // Deferred: the driver configures its log file when built, which a graph build must not do
+    // Deferred: building the driver makes its Bluetooth objects, which a graph build must not do
     private val eversenseProvider: () -> EversenseCGMPlugin,
     private val preferences: Preferences,
     private val aapsLogger: AAPSLogger
@@ -72,9 +72,10 @@ class AndroidEversensePairing(
     }
 
     override val account: StateFlow<EversenseAccount?> by lazy { snapshot.derived { it.account } }
+    override val withoutSignIn: StateFlow<Boolean> by lazy { snapshot.derived { it.withoutSignIn } }
     override val transmitter: StateFlow<String?> by lazy { snapshot.derived { it.transmitter } }
     override val attention: StateFlow<CgmAttention?> by lazy {
-        snapshot.derived { cgmAttention(it.account, it.transmitter, it.loginRefused) }
+        snapshot.derived { cgmAttention(it.account, it.transmitter, it.loginRefused, it.withoutSignIn) }
     }
 
     private fun <T> StateFlow<PairingSnapshot>.derived(pick: (PairingSnapshot) -> T): StateFlow<T> =
@@ -104,6 +105,8 @@ class AndroidEversensePairing(
     }
 
     override fun signOut() = eversense.clearCredentials()
+
+    override fun useWithoutSignIn() = eversense.useWithoutLogin()
 
     override fun scan(): Flow<List<ScannedDevice>> = callbackFlow {
         val found = LinkedHashMap<String, ScannedDevice>()
@@ -155,7 +158,12 @@ class AndroidEversensePairing(
 }
 
 /** What pairing shows, read from the driver's stored JSON object. */
-internal data class PairingSnapshot(val account: EversenseAccount?, val transmitter: String?, val loginRefused: Boolean) {
+internal data class PairingSnapshot(
+    val account: EversenseAccount?,
+    val transmitter: String?,
+    val loginRefused: Boolean,
+    val withoutSignIn: Boolean = false
+) {
 
     companion object {
 
@@ -174,7 +182,8 @@ internal data class PairingSnapshot(val account: EversenseAccount?, val transmit
             return PairingSnapshot(
                 account = account,
                 transmitter = address?.let { string(StorageKeys.REMOTE_DEVICE_NAME) ?: it },
-                loginRefused = store[StorageKeys.LOGIN_REFUSED]?.jsonPrimitive?.booleanOrNull == true
+                loginRefused = store[StorageKeys.LOGIN_REFUSED]?.jsonPrimitive?.booleanOrNull == true,
+                withoutSignIn = account == null && secure.model == EversenseModel.E3.name
             )
         }
     }

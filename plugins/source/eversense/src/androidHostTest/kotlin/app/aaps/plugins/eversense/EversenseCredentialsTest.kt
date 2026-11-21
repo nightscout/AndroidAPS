@@ -3,6 +3,7 @@ package app.aaps.plugins.eversense
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import app.aaps.plugins.eversense.models.EversenseSecureState
+import app.aaps.shared.tests.AAPSLoggerTest
 import app.aaps.plugins.eversense.storage.EversenseStore
 import app.aaps.plugins.eversense.util.StorageKeys
 import kotlinx.serialization.json.Json
@@ -21,7 +22,7 @@ class EversenseCredentialsTest {
         whenever(editor.commit()).thenReturn(true)
         whenever(store.getString(StorageKeys.SECURE_STATE, null)).thenReturn(
             json.encodeToString(EversenseSecureState().apply { username = "user"; password = "secret"; canUseShortcut = true }))
-        return EversenseCGMPlugin(context, bluetooth, store)
+        return EversenseCGMPlugin(context, bluetooth, store, AAPSLoggerTest())
     }
     @Test fun clearCredentialsRemovesCachedLoginAndDisablesShortcut() {
         val backend = backend()

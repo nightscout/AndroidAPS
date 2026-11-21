@@ -42,7 +42,7 @@ enum class CalibrationReadiness(private val value: Int) {
     REASON_UNKNOWN(0xFF);
 
     companion object {
-        // E3 mapping — raw byte from register 0x040C
+        // E3 mapping — raw byte from register 0x0137 (EversenseE3Memory.CalibrationReadiness)
         fun from(value: Int): CalibrationReadiness {
             return when(value) {
                 0 -> READY

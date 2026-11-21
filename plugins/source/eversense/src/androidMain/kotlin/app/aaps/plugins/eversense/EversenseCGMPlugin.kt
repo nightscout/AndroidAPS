@@ -1,5 +1,7 @@
 package app.aaps.plugins.eversense
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.annotation.SuppressLint
@@ -12,7 +14,6 @@ import android.os.SystemClock
 import app.aaps.plugins.eversense.storage.edit
 import app.aaps.plugins.eversense.callbacks.EversenseScanCallback
 import app.aaps.plugins.eversense.models.EversenseState
-import app.aaps.plugins.eversense.models.EversenseTransmitterSettings
 import app.aaps.plugins.eversense.packets.Eversense365Communicator
 import app.aaps.plugins.eversense.packets.EversenseE3Communicator
 import app.aaps.plugins.eversense.packets.e3.EnterDiagnosticModePacket
@@ -24,12 +25,11 @@ import app.aaps.plugins.eversense.packets.e3.GetSignalStrengthRawPacket
 import app.aaps.plugins.eversense.packets.e365.GetSignalStrengthPacket
 import app.aaps.plugins.eversense.packets.e365.SetBloodGlucosePointPacket365
 import app.aaps.plugins.eversense.enums.CalibrationReadiness
+import app.aaps.plugins.eversense.pairing.EversenseModel
 import app.aaps.plugins.eversense.util.EversenseCrypto365Util
-import app.aaps.plugins.eversense.util.EversenseLogger
 import app.aaps.plugins.eversense.util.EversenseScanner
 import app.aaps.plugins.eversense.util.StorageKeys
 import kotlinx.serialization.json.Json
-import java.io.File
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
@@ -51,20 +51,9 @@ import app.aaps.plugins.eversense.enums.EversenseType
 class EversenseCGMPlugin(
     private val context: Context,
     private val bluetoothManager: BluetoothManager,
-    val preferences: EversenseStore
+    val preferences: EversenseStore,
+    val aapsLogger: AAPSLogger
 ) {
-    init {
-        // Must run before anything below (or in EversenseGattCallback's construction) does any
-        // EversenseLogger.* call - EversenseLogger configures Logback on first use, and
-        // configure() has no effect after that point. Points Eversense's own log file at the
-        // app's real, permission-free scoped external-files directory (same one AndroidAPS.log
-        // uses) instead of EversenseLogger's raw-/sdcard fallback, which scoped storage silently
-        // blocks writes to on modern Android without MANAGE_EXTERNAL_STORAGE - see
-        // EversenseLogger.configure() for the full story.
-        val extFilesDir = context.getExternalFilesDir(null)
-        val eversenseLogDir = if (extFilesDir != null) File(extFilesDir, "eversense").absolutePath else "/sdcard/AndroidAPS/eversense"
-        EversenseLogger.configure(eversenseLogDir)
-    }
 
     @Volatile private var activeCallback: EversenseGattCallback? = null
     private val scheduler = HandlerConnectionScheduler()
@@ -97,11 +86,11 @@ class EversenseCGMPlugin(
             if (!hasInternet()) return@whileOwned
             if (++shortcutFailures >= 3) {
                 shortcutFailures = 0
-                EversenseCrypto365Util(preferences).disallowUseShortcut()
+                EversenseCrypto365Util(preferences, aapsLogger).disallowUseShortcut()
             }
         } else if (++fullAuthFailures >= 3) {
             fullAuthFailures = 0
-            EversenseCrypto365Util(preferences).allowUseShortcut()
+            EversenseCrypto365Util(preferences, aapsLogger).allowUseShortcut()
         }
     }
     internal fun placementChanged(session: Long, status: Int, is365: Boolean) = connection.whileOwned(session) {
@@ -119,11 +108,26 @@ class EversenseCGMPlugin(
         val state = secureState()
         username = state.username
         password = state.password
-        connection.start(username.isNotEmpty() && password.isNotEmpty() && preferences.getString(StorageKeys.REMOTE_DEVICE_KEY, null) != null)
+        connection.start(mayLink(state) && preferences.getString(StorageKeys.REMOTE_DEVICE_KEY, null) != null)
     }
 
     private fun secureState(): EversenseSecureState =
         JSON.decodeFromString<EversenseSecureState>(preferences.getString(StorageKeys.SECURE_STATE, null) ?: "{}")
+
+    /**
+     * Whether the link may be opened: with a login, or for an E3 used without one. A 365 registers this phone with the
+     * Eversense server, and that needs the login.
+     */
+    private fun mayLink(state: EversenseSecureState = secureState()): Boolean =
+        (username.isNotEmpty() && password.isNotEmpty()) || (state.username.isEmpty() && state.model == EversenseModel.E3.name)
+
+    /** Uses an E3 without a login: a stored login is forgotten (with its cloud queue), and the link opens without one. */
+    @Synchronized
+    fun useWithoutLogin() {
+        clearCredentials()
+        rememberModel(EversenseModel.E3.name)
+        if (preferences.getString(StorageKeys.REMOTE_DEVICE_KEY, null) != null) connection.connect()
+    }
 
     /**
      * Pairs the transmitter at [address]: stores it with its [name], makes the next connection a full registration (a
@@ -137,7 +141,7 @@ class EversenseCGMPlugin(
             putString(StorageKeys.REMOTE_DEVICE_KEY, address)
             putString(StorageKeys.REMOTE_DEVICE_NAME, name)
         }
-        EversenseCrypto365Util(preferences).disallowUseShortcut()
+        EversenseCrypto365Util(preferences, aapsLogger).disallowUseShortcut()
         placementFailures = 0
         return connection.connect(force = true)
     }
@@ -233,7 +237,7 @@ class EversenseCGMPlugin(
         val token = ++scanToken
         val bluetoothScanner = bluetoothManager.adapter?.bluetoothLeScanner
             ?: return@synchronized AutoCloseable { }
-        val newScanner = EversenseScanner(callback)
+        val newScanner = EversenseScanner(callback, aapsLogger)
         scanner = newScanner
         try {
             val settings = ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build()
@@ -241,7 +245,7 @@ class EversenseCGMPlugin(
             scanDeadline = scheduler.after(10_000L) { synchronized(scanLock) { if (scanToken == token) stopScan() } }
         } catch (e: SecurityException) {
             scanner = null
-            EversenseLogger.warning(TAG, "Cannot scan without Bluetooth permission: $e")
+            aapsLogger.warn(LTag.BGSOURCE, "Cannot scan without Bluetooth permission: $e")
         }
         AutoCloseable { synchronized(scanLock) { if (scanToken == token) stopScan() } }
     }
@@ -253,7 +257,7 @@ class EversenseCGMPlugin(
         val old = scanner
         scanner = null
         if (old != null) try { bluetoothManager.adapter?.bluetoothLeScanner?.stopScan(old) }
-        catch (e: SecurityException) { EversenseLogger.warning(TAG, "Scan permission was revoked: $e") }
+        catch (e: SecurityException) { aapsLogger.warn(LTag.BGSOURCE, "Scan permission was revoked: $e") }
     }
 
     /** Connects to the paired transmitter now, unless a connection is already up or on its way. A new one is [pair]. */
@@ -262,7 +266,7 @@ class EversenseCGMPlugin(
     @SuppressLint("MissingPermission")
     private fun openConnection(session: Long): Boolean {
         stopScan()
-        if (username.isEmpty() || password.isEmpty() || bluetoothManager.adapter?.isEnabled != true) return false
+        if (!mayLink() || bluetoothManager.adapter?.isEnabled != true) return false
         val address = preferences.getString(StorageKeys.REMOTE_DEVICE_KEY, null) ?: return false
         val device = try { bluetoothManager.adapter.getRemoteDevice(address) } catch (_: IllegalArgumentException) { return false }
         val callback = EversenseGattCallback(this, SessionStore(connection, session, preferences), session)
@@ -328,8 +332,8 @@ class EversenseCGMPlugin(
             remove(StorageKeys.REMOTE_DEVICE_KEY)
             remove(StorageKeys.REMOTE_DEVICE_NAME)
         }
-        EversenseCrypto365Util(preferences).disallowUseShortcut()
-        EversenseLogger.info(TAG, "Cleared stored device address")
+        EversenseCrypto365Util(preferences, aapsLogger).disallowUseShortcut()
+        aapsLogger.info(LTag.BGSOURCE, "Cleared stored device address")
     }
 
     fun disconnect() {
@@ -340,7 +344,7 @@ class EversenseCGMPlugin(
     fun setDiagnosticMode(isEnabled: Boolean) {
         val callback = activeCallback?.takeIf { it.isConnected() }
         if (callback == null) {
-            EversenseLogger.warning(TAG, "Cannot set diagnostic mode — not connected")
+            aapsLogger.warn(LTag.BGSOURCE, "Cannot set diagnostic mode — not connected")
             return
         }
         try {
@@ -349,7 +353,7 @@ class EversenseCGMPlugin(
             val future = callback.submitToExecutor(readyOnly = true) { doSetDiagnosticMode(callback, isEnabled) }
             await(future, 20_000)
         } catch (e: Exception) {
-            EversenseLogger.warning(TAG, "setDiagnosticMode failed: $e")
+            aapsLogger.warn(LTag.BGSOURCE, "setDiagnosticMode failed: $e")
         }
     }
 
@@ -368,21 +372,21 @@ class EversenseCGMPlugin(
             } else {
                 callback.writePacket<ExitDiagnosticMode365Packet.Response>(ExitDiagnosticMode365Packet())
             }
-            EversenseLogger.info(TAG, "Diagnostic mode set to $isEnabled (365)")
+            aapsLogger.info(LTag.BGSOURCE, "Diagnostic mode set to $isEnabled (365)")
         } else {
             if (isEnabled) {
                 callback.writePacket<EnterDiagnosticModePacket.Response>(EnterDiagnosticModePacket())
             } else {
                 callback.writePacket<ExitDiagnosticModePacket.Response>(ExitDiagnosticModePacket())
             }
-            EversenseLogger.info(TAG, "Diagnostic mode set to $isEnabled (E3)")
+            aapsLogger.info(LTag.BGSOURCE, "Diagnostic mode set to $isEnabled (E3)")
         }
     }
 
     fun enterPositioningMode() {
         isPositioningMode = true
         setDiagnosticMode(true)
-        EversenseLogger.info(TAG, "Diagnostic Mode ENABLED: Positioning active")
+        aapsLogger.info(LTag.BGSOURCE, "Diagnostic Mode ENABLED: Positioning active")
     }
 
     // Set whenever we intentionally exit diagnostic/positioning mode. The transmitter reliably
@@ -398,29 +402,13 @@ class EversenseCGMPlugin(
         isPositioningMode = false
         lastPositioningModeExitAt = System.currentTimeMillis()
         setDiagnosticMode(false)
-        EversenseLogger.info(TAG, "Diagnostic Mode DISABLED: Power saving active")
-    }
-
-    fun writeSettings(settings: EversenseTransmitterSettings): Boolean {
-        val callback = activeCallback?.takeIf { it.isConnected() }
-        if (callback == null) {
-            EversenseLogger.error(TAG, "Transmitter is not connected")
-            return false
-        }
-        return try {
-            await(callback.submitToExecutor(readyOnly = true) {
-                EversenseE3Communicator.writeSettings(callback, callback.stateStore, settings)
-            }, 60_000)
-        } catch (e: Exception) {
-            EversenseLogger.warning(TAG, "writeSettings failed: $e")
-            false
-        }
+        aapsLogger.info(LTag.BGSOURCE, "Diagnostic Mode DISABLED: Power saving active")
     }
 
     fun sendCalibration(glucoseMgDl: Int, timestampMs: Long = System.currentTimeMillis()): Boolean {
         val callback = activeCallback?.takeIf { it.isConnected() }
         if (callback == null) {
-            EversenseLogger.error(TAG, "Transmitter is not connected")
+            aapsLogger.error(LTag.BGSOURCE, "Transmitter is not connected")
             return false
         }
         val store = callback.operationStore()
@@ -430,7 +418,7 @@ class EversenseCGMPlugin(
                 if (callback.is365()) {
                     val packet = SetBloodGlucosePointPacket365(glucoseMgDl, timestampMs)
                     callback.writePacket<SetBloodGlucosePointPacket365.Response>(packet)
-                    EversenseLogger.info(TAG, "365 calibration sent: $glucoseMgDl mg/dL")
+                    aapsLogger.info(LTag.BGSOURCE, "365 calibration sent: $glucoseMgDl mg/dL")
                 } else {
                     EversenseE3Communicator.sendCalibration(callback, glucoseMgDl)
                 }
@@ -445,7 +433,7 @@ class EversenseCGMPlugin(
             store.edit(commit = true) {
                 putString(StorageKeys.STATE, JSON.encodeToString(updatedState))
             }
-            EversenseLogger.debug(TAG) { "Updated calibration state: lastCalibrationDate=$timestampMs, readiness=WAITING_POST_CALIBRATION" }
+            aapsLogger.debug(LTag.BGSOURCE) { "Updated calibration state: lastCalibrationDate=$timestampMs, readiness=WAITING_POST_CALIBRATION" }
 
             if (!callback.is365()) {
                 callback.submitToExecutor(readyOnly = true) {
@@ -457,17 +445,17 @@ class EversenseCGMPlugin(
                         store.edit(commit = true) {
                             putString(StorageKeys.STATE, JSON.encodeToString(currentState))
                         }
-                        EversenseLogger.debug(TAG) { "Post-calibration readiness re-read: ${readinessResponse.readiness}" }
+                        aapsLogger.debug(LTag.BGSOURCE) { "Post-calibration readiness re-read: ${readinessResponse.readiness}" }
                         watchersFor(callback.session).forEach { it.onStateChanged(currentState) }
                     } catch (e: Exception) {
-                        EversenseLogger.warning(TAG, "Post-calibration readiness re-read failed (non-fatal): $e")
+                        aapsLogger.warn(LTag.BGSOURCE, "Post-calibration readiness re-read failed (non-fatal): $e")
                     }
                 }
             }
 
             true
         } catch (e: Exception) {
-            EversenseLogger.error(TAG, "Failed to send calibration: $e")
+            aapsLogger.error(LTag.BGSOURCE, "Failed to send calibration: $e")
             false
         }
     }
@@ -475,11 +463,11 @@ class EversenseCGMPlugin(
     fun submitToExecutorAndSync(force: Boolean = false) {
         val callback = activeCallback?.takeIf { it.isConnected() }
         if (callback == null) {
-            EversenseLogger.error(TAG, "Cannot sync — not connected")
+            aapsLogger.error(LTag.BGSOURCE, "Cannot sync — not connected")
             return
         }
         if (callback.is365()) {
-            EversenseLogger.debug(TAG) { "365 transmitter — skipping submitToExecutorAndSync (authV2flow handles it)" }
+            aapsLogger.debug(LTag.BGSOURCE) { "365 transmitter — skipping submitToExecutorAndSync (authV2flow handles it)" }
             return
         }
         callback.submitToExecutor(readyOnly = true) {
@@ -489,12 +477,12 @@ class EversenseCGMPlugin(
                 // executor and deadlock (see doSetDiagnosticMode's doc comment).
                 try {
                     doSetDiagnosticMode(callback, true)
-                    EversenseLogger.info(TAG, "Re-enabled Diagnostic Mode after reconnect")
+                    aapsLogger.info(LTag.BGSOURCE, "Re-enabled Diagnostic Mode after reconnect")
                 } catch (e: Exception) {
-                    EversenseLogger.warning(TAG, "Failed to re-enable diagnostic mode after reconnect: $e")
+                    aapsLogger.warn(LTag.BGSOURCE, "Failed to re-enable diagnostic mode after reconnect: $e")
                 }
             }
-            EversenseLogger.debug(TAG) { "Running E3 fullSync on bleExecutor after connect" }
+            aapsLogger.debug(LTag.BGSOURCE) { "Running E3 fullSync on bleExecutor after connect" }
             EversenseE3Communicator.fullSync(callback, callback.stateStore, watchersFor(callback.session), force)
         }
     }
@@ -502,11 +490,11 @@ class EversenseCGMPlugin(
     fun triggerFullSync(force: Boolean = false) {
         val callback = activeCallback?.takeIf { it.isConnected() }
         if (callback == null) {
-            EversenseLogger.error(TAG, "Cannot sync — not connected")
+            aapsLogger.error(LTag.BGSOURCE, "Cannot sync — not connected")
             return
         }
         callback.submitToExecutor(readyOnly = true) {
-            EversenseLogger.info(TAG, "Triggering full sync on user request")
+            aapsLogger.info(LTag.BGSOURCE, "Triggering full sync on user request")
             if (callback.is365()) {
                 Eversense365Communicator.fullSync(callback, callback.stateStore, watchersFor(callback.session), force)
                 Eversense365Communicator.readGlucose(callback, callback.stateStore, watchersFor(callback.session))
@@ -524,13 +512,13 @@ class EversenseCGMPlugin(
         val state = JSON.decodeFromString<EversenseState>(stateJson)
         state.placementSignalRssi = rssi
         callback.stateStore.edit { putString(StorageKeys.STATE, JSON.encodeToString(state)) }
-        EversenseLogger.debug(TAG) { "RSSI updated: $rssi dBm" }
+        aapsLogger.debug(LTag.BGSOURCE) { "RSSI updated: $rssi dBm" }
         watchersFor(session).forEach { it.onStateChanged(state) }
     }
 
     fun readSignalStrength() {
         val callback = activeCallback?.takeIf { it.isConnected() }
-        if (callback == null) { EversenseLogger.warning(TAG, "Cannot read signal strength — not connected"); return }
+        if (callback == null) { aapsLogger.warn(LTag.BGSOURCE, "Cannot read signal strength — not connected"); return }
         val store = callback.operationStore()
         try {
             // Routed through bleExecutor (like every other write path) so this can't race a
@@ -542,7 +530,7 @@ class EversenseCGMPlugin(
                     response.signalStrength
                 } else {
                     val response = callback.writePacket<GetSignalStrengthRawPacket.Response>(GetSignalStrengthRawPacket())
-                    EversenseLogger.debug(TAG) { "E3 signal raw: ${response.rawValue} -> ${response.signalStrength}%" }
+                    aapsLogger.debug(LTag.BGSOURCE) { "E3 signal raw: ${response.rawValue} -> ${response.signalStrength}%" }
                     response.signalStrength
                 }
             }
@@ -551,10 +539,10 @@ class EversenseCGMPlugin(
             val state = JSON.decodeFromString<EversenseState>(stateJson)
             state.sensorSignalStrength = signalStrength
             store.edit { putString(StorageKeys.STATE, JSON.encodeToString(state)) }
-            EversenseLogger.debug(TAG) { "Signal strength: $signalStrength%" }
+            aapsLogger.debug(LTag.BGSOURCE) { "Signal strength: $signalStrength%" }
             watchersFor(callback.session).forEach { it.onStateChanged(state) }
         } catch (e: Exception) {
-            EversenseLogger.warning(TAG, "readSignalStrength failed: $e")
+            aapsLogger.warn(LTag.BGSOURCE, "readSignalStrength failed: $e")
             callback.readRssi()
         }
     }
@@ -572,8 +560,6 @@ class EversenseCGMPlugin(
     }
 
     companion object {
-        private const val TAG = "EversenseCGMManager"
         private val JSON = Json { ignoreUnknownKeys = true }
-
     }
 }

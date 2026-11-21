@@ -270,10 +270,14 @@ enum class NotificationId(
     PUMP_ALERT(URGENT, PUMP, allowMultiple = true),
 
     // Appended to keep the stored ordinals of existing notifications stable.
-    EVERSENSE_RELEASE(NORMAL, CGM),
     EVERSENSE_PLACEMENT(NORMAL, CGM),
     EVERSENSE_FIRMWARE(INFO, CGM),
-    EVERSENSE_ALARM(NORMAL, CGM);
+
+    // An alarm the transmitter raised. Its own card, so a reminder below never replaces it; the level is set per alarm.
+    EVERSENSE_ALARM(NORMAL, CGM),
+    EVERSENSE_SENSOR_EXPIRY(NORMAL, CGM),
+    EVERSENSE_BATTERY_LOW(NORMAL, CGM),
+    EVERSENSE_CALIBRATION_DUE(NORMAL, CGM);
 
     companion object {
 

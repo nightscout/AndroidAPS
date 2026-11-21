@@ -8,6 +8,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,6 +52,11 @@ fun EversensePairingCard(
                 null                        -> {
                     transmitter?.let { Text(stringResource(EversenseStrings.eversense_paired_transmitter, it), style = MaterialTheme.typography.bodyLarge) }
                     account?.let { Text(stringResource(EversenseStrings.eversense_signed_in_as, it.username), style = MaterialTheme.typography.bodyMedium) }
+                    // An E3 used without a login: it works, but nothing goes to the Eversense cloud
+                    if (account == null) {
+                        Text(stringResource(EversenseStrings.eversense_not_signed_in_no_cloud), style = MaterialTheme.typography.bodyMedium)
+                        TextButton(onClick = onSignInAgain) { Text(stringResource(EversenseStrings.eversense_sign_in)) }
+                    }
                     OutlinedButton(onClick = { confirmUnpair = true }, modifier = Modifier.fillMaxWidth()) {
                         Text(stringResource(EversenseStrings.eversense_unpair))
                     }

@@ -3,6 +3,7 @@ package app.aaps.plugins.eversense.util
 import app.aaps.plugins.eversense.storage.EversenseStore
 import app.aaps.plugins.eversense.enums.EversenseTrendArrow
 import app.aaps.plugins.eversense.models.EversenseCGMResult
+import app.aaps.shared.tests.AAPSLoggerTest
 import mockwebserver3.MockResponse
 import mockwebserver3.MockWebServer
 import org.junit.jupiter.api.AfterEach
@@ -20,6 +21,7 @@ import org.mockito.kotlin.whenever
 
 class EversenseHttp365UtilTest {
 
+    private val aapsLogger = AAPSLoggerTest()
     private lateinit var mockWebServer: MockWebServer
     private lateinit var prefs: EversenseStore
     private lateinit var editor: EversenseStore.Editor
@@ -71,7 +73,7 @@ class EversenseHttp365UtilTest {
         whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
         whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("cached_token_xyz")
 
-        val token = EversenseHttp365Util.getOrRefreshToken(prefs)
+        val token = EversenseHttp365Util.getOrRefreshToken(aapsLogger, prefs)
 
         assertEquals("cached_token_xyz", token)
         // No requests should have been made to the server
@@ -88,7 +90,7 @@ class EversenseHttp365UtilTest {
 
         mockWebServer.enqueue(MockResponse.Builder().body(validTokenJson).code(200).build())
 
-        val token = EversenseHttp365Util.getOrRefreshToken(prefs)
+        val token = EversenseHttp365Util.getOrRefreshToken(aapsLogger, prefs)
 
         assertEquals("test_access_token_abc123", token)
         assertEquals(1, mockWebServer.requestCount)
@@ -105,7 +107,7 @@ class EversenseHttp365UtilTest {
 
         mockWebServer.enqueue(MockResponse.Builder().code(401).body("""{"error":"invalid_client"}""").build())
 
-        val token = EversenseHttp365Util.getOrRefreshToken(prefs)
+        val token = EversenseHttp365Util.getOrRefreshToken(aapsLogger, prefs)
 
         assertNull(token)
     }
@@ -122,7 +124,7 @@ class EversenseHttp365UtilTest {
 
         mockWebServer.enqueue(MockResponse.Builder().body(validTokenJson).code(200).build())
 
-        val token = EversenseHttp365Util.getOrRefreshToken(prefs)
+        val token = EversenseHttp365Util.getOrRefreshToken(aapsLogger, prefs)
 
         assertEquals("test_access_token_abc123", token)
         assertEquals(1, mockWebServer.requestCount)
@@ -148,7 +150,7 @@ class EversenseHttp365UtilTest {
             )
         )
 
-        val result = EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX-12345", "1.2.3")
+        val result = EversenseHttp365Util.uploadGlucoseReadings(aapsLogger, prefs, readings, "TX-12345", "1.2.3")
 
         assertTrue(result.success, "Expected upload to succeed on HTTP 200")
         assertEquals(1, result.sentCount, "Expected the reading to be counted as actually sent")
@@ -179,7 +181,7 @@ class EversenseHttp365UtilTest {
             )
         )
 
-        EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TXSERIAL", "2.0.1")
+        EversenseHttp365Util.uploadGlucoseReadings(aapsLogger, prefs, readings, "TXSERIAL", "2.0.1")
 
         val body = mockWebServer.takeRequest().body!!.utf8()
 
@@ -207,7 +209,7 @@ class EversenseHttp365UtilTest {
             EversenseCGMResult(105, 1700000600000L, EversenseTrendArrow.SINGLE_DOWN, "s1", "cc")
         )
 
-        EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX99", "3.0")
+        EversenseHttp365Util.uploadGlucoseReadings(aapsLogger, prefs, readings, "TX99", "3.0")
 
         assertEquals(1, mockWebServer.requestCount)
         val body = mockWebServer.takeRequest().body!!.utf8()
@@ -218,7 +220,7 @@ class EversenseHttp365UtilTest {
 
     @Test
     fun `uploadGlucoseReadings does nothing when readings list is empty`() {
-        EversenseHttp365Util.uploadGlucoseReadings(prefs, emptyList(), "TX99", "1.0")
+        EversenseHttp365Util.uploadGlucoseReadings(aapsLogger, prefs, emptyList(), "TX99", "1.0")
 
         assertEquals(0, mockWebServer.requestCount)
     }
@@ -245,7 +247,7 @@ class EversenseHttp365UtilTest {
             )
         )
 
-        val result = EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX1", "1.0")
+        val result = EversenseHttp365Util.uploadGlucoseReadings(aapsLogger, prefs, readings, "TX1", "1.0")
 
         assertFalse(result.success, "Sending nothing is not a successful upload")
         assertEquals(0, result.sentCount)
@@ -265,7 +267,7 @@ class EversenseHttp365UtilTest {
             EversenseCGMResult(121, 1700000300000L, EversenseTrendArrow.FLAT, "sensor_001", "")
         )
 
-        val result = EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX1", "1.0")
+        val result = EversenseHttp365Util.uploadGlucoseReadings(aapsLogger, prefs, readings, "TX1", "1.0")
 
         assertTrue(result.success)
         assertEquals(1, result.sentCount, "Only the reading with raw data was sent")
@@ -285,7 +287,7 @@ class EversenseHttp365UtilTest {
         )
 
         // Should not throw — errors are logged internally, returns false
-        val result = EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX1", "1.0")
+        val result = EversenseHttp365Util.uploadGlucoseReadings(aapsLogger, prefs, readings, "TX1", "1.0")
 
         assertFalse(result.success, "Expected upload to fail on HTTP 400")
         assertEquals(0, result.sentCount, "A rejected request must not report readings as sent")
@@ -305,7 +307,7 @@ class EversenseHttp365UtilTest {
             EversenseCGMResult(80, System.currentTimeMillis(), EversenseTrendArrow.FLAT, "s1", "01")
         )
 
-        val result = EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX1", "1.0")
+        val result = EversenseHttp365Util.uploadGlucoseReadings(aapsLogger, prefs, readings, "TX1", "1.0")
 
         assertFalse(result.success, "Expected upload to fail on HTTP 500")
         assertEquals(0, result.sentCount, "A rejected request must not report readings as sent")
@@ -325,7 +327,7 @@ class EversenseHttp365UtilTest {
             EversenseCGMResult(100, System.currentTimeMillis(), EversenseTrendArrow.FLAT, "s1", "ab")
         )
 
-        EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX1", "1.0")
+        EversenseHttp365Util.uploadGlucoseReadings(aapsLogger, prefs, readings, "TX1", "1.0")
 
         // Only the login attempt should have been made, not the upload
         assertEquals(1, mockWebServer.requestCount)
@@ -342,7 +344,7 @@ class EversenseHttp365UtilTest {
 
         mockWebServer.enqueue(MockResponse.Builder().body(validTokenJson).code(200).build())
 
-        val result = EversenseHttp365Util.login(prefs)
+        val result = EversenseHttp365Util.login(aapsLogger, prefs)
 
         assertNotNull(result)
         assertEquals("test_access_token_abc123", result!!.access_token)
@@ -363,7 +365,7 @@ class EversenseHttp365UtilTest {
 
         mockWebServer.enqueue(MockResponse.Builder().code(401).body("""{"error":"invalid_grant"}""").build())
 
-        val result = EversenseHttp365Util.login(prefs)
+        val result = EversenseHttp365Util.login(aapsLogger, prefs)
 
         assertNull(result)
     }
@@ -384,7 +386,7 @@ class EversenseHttp365UtilTest {
             EversenseCGMResult(120, 1700000000000L, EversenseTrendArrow.FLAT, "s1", "ab")
         )
 
-        EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX1", "1.0")
+        EversenseHttp365Util.uploadGlucoseReadings(aapsLogger, prefs, readings, "TX1", "1.0")
 
         val body = mockWebServer.takeRequest().body!!.utf8()
         assertTrue(

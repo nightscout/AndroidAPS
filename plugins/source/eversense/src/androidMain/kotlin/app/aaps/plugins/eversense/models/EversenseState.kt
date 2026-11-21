@@ -28,25 +28,6 @@ class EversenseState {
     var transmitterSerialNumber: String = ""
     var transmitterName: String = ""
     var sensorId: String = ""
-    var settings = EversenseTransmitterSettings()
     var calibrationHistory: List<CalibrationHistoryItem> = emptyList()
-}
-
-@Serializable
-class EversenseTransmitterSettings {
-    var vibrateEnabled: Boolean = true
-    var glucoseHighAlarmEnabled: Boolean = true
-    var glucoseHighAlarmThreshold: Int = 250
-    var glucoseLowAlarmThreshold: Int = 60
-    var rateFallingAlarmEnabled: Boolean = true
-    var rateFallingAlarmThreshold: Double = 1.5
-    var rateRisingAlarmEnabled: Boolean = true
-    var rateRisingAlarmThreshold: Double = 1.5
-    var predictiveHighAlarmEnabled: Boolean = true
-    var predictiveHighAlarmThreshold: Int = 180
-    var predictiveHighAlarmMinutes: Int = 5
-    var predictiveLowAlarmEnabled: Boolean = true
-    var predictiveLowAlarmThreshold: Int = 70
-    var predictiveLowAlarmMinutes: Int = 5
 }
 

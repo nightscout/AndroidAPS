@@ -18,6 +18,9 @@ interface EversensePairing {
     /** The stored login, or null when there is none. */
     val account: StateFlow<EversenseAccount?>
 
+    /** An E3 used without a login: its link needs none. The Eversense cloud upload is off then. */
+    val withoutSignIn: StateFlow<Boolean>
+
     /** The name of the paired transmitter, or null when none is paired. */
     val transmitter: StateFlow<String?>
 
@@ -32,6 +35,12 @@ interface EversensePairing {
 
     /** Forgets the login and closes the link; the transmitter stays paired. */
     fun signOut()
+
+    /**
+     * Uses an E3 without a login (a stored one is forgotten). Only for an E3: a 365 registers this phone with the
+     * Eversense server, and that needs the login.
+     */
+    fun useWithoutSignIn()
 
     /** Eversense transmitters in range, as they are found, for about ten seconds. */
     fun scan(): Flow<List<ScannedDevice>>
@@ -85,16 +94,17 @@ enum class PairResult {
     /** Not ready within the wait: out of range, not in pairing mode, held by the official app, or no internet. */
     TIMED_OUT,
 
-    /** The link cannot be opened: Eversense is not the active BG source, Bluetooth is off, or the login is missing. */
+    /** The link cannot be opened: Eversense is not the active BG source, Bluetooth is off, or the login is missing (only an E3 links without one). */
     NOT_STARTED
 }
 
 /**
- * What the user has to fix: nothing to start with (no login or no transmitter), or a login the server refused. A
- * refusal counts only while a login is stored; signing out or in again clears it.
+ * What the user has to fix: nothing to start with (no login, unless an E3 is used [withoutSignIn], or no transmitter),
+ * or a login the server refused. Signing out or in again clears a refusal. Without a login it means the transmitter is
+ * a 365, which cannot register without one.
  */
-fun cgmAttention(account: EversenseAccount?, transmitter: String?, signInRefused: Boolean): CgmAttention? = when {
-    account == null || transmitter == null -> CgmAttention.NOT_PAIRED
-    signInRefused                          -> CgmAttention.SIGN_IN_FAILED
-    else                                   -> null
+fun cgmAttention(account: EversenseAccount?, transmitter: String?, signInRefused: Boolean, withoutSignIn: Boolean = false): CgmAttention? = when {
+    (account == null && !withoutSignIn) || transmitter == null -> CgmAttention.NOT_PAIRED
+    signInRefused                                              -> CgmAttention.SIGN_IN_FAILED
+    else                                                       -> null
 }

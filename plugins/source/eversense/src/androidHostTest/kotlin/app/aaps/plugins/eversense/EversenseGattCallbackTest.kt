@@ -7,6 +7,9 @@ import app.aaps.plugins.eversense.connection.SessionStore
 import app.aaps.plugins.eversense.exceptions.EversenseWriteException
 import app.aaps.plugins.eversense.packets.e3.GetSignalStrengthRawPacket
 import app.aaps.plugins.eversense.storage.EversenseStore
+import app.aaps.plugins.eversense.util.StorageKeys
+import app.aaps.shared.tests.AAPSLoggerTest
+import org.mockito.Answers
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -29,6 +32,7 @@ class EversenseGattCallbackTest {
     private val callback: EversenseGattCallback
     init {
         controller.start()
+        whenever(plugin.aapsLogger).thenReturn(AAPSLoggerTest())
         whenever(plugin.sessionActive(1L)).thenReturn(true)
         whenever(plugin.deliver(eq(1L), any())).thenAnswer { it.getArgument<() -> Unit>(1).invoke() }
         callback = EversenseGattCallback(plugin, SessionStore(controller, 1, delegate), 1)
@@ -192,10 +196,30 @@ class EversenseGattCallbackTest {
         val crypto: app.aaps.plugins.eversense.util.EversenseCrypto365Util = mock()
         whenever(crypto.canUseShortcut()).thenReturn(false)
         whenever(crypto.generateKeyPairIfNotExists()).thenReturn(true)
+        whenever(plugin.username).thenReturn("user")
+        whenever(plugin.password).thenReturn("secret")
         whenever(plugin.hasInternet()).thenReturn(false)
         EversenseGattCallback::class.java.getDeclaredField("cryptoUtil").apply { isAccessible = true; set(callback, crypto) }
         EversenseGattCallback::class.java.getDeclaredMethod("authV2flow").apply { isAccessible = true }.invoke(callback)
         verify(plugin).sessionDisconnected(1, BluetoothGatt.GATT_SUCCESS, false)
+        verify(gatt, never()).writeCharacteristic(any())
+    }
+
+    /** A 365 with no login stored (an E3 was chosen without one) cannot register: said as a refused login, nothing sent. */
+    @Test fun a365WithoutALoginRecordsARefusedLoginAndSendsNothing() {
+        val crypto: app.aaps.plugins.eversense.util.EversenseCrypto365Util = mock()
+        whenever(crypto.canUseShortcut()).thenReturn(false)
+        whenever(crypto.generateKeyPairIfNotExists()).thenReturn(true)
+        whenever(plugin.username).thenReturn("")
+        whenever(plugin.password).thenReturn("")
+        whenever(plugin.hasInternet()).thenReturn(true)
+        val editor: EversenseStore.Editor = mock(defaultAnswer = Answers.RETURNS_SELF)
+        whenever(editor.commit()).thenReturn(true)
+        whenever(delegate.edit()).thenReturn(editor)
+        EversenseGattCallback::class.java.getDeclaredField("cryptoUtil").apply { isAccessible = true; set(callback, crypto) }
+        EversenseGattCallback::class.java.getDeclaredMethod("authV2flow").apply { isAccessible = true }.invoke(callback)
+        verify(editor).putBoolean(StorageKeys.LOGIN_REFUSED, true)
+        verify(gatt).disconnect()
         verify(gatt, never()).writeCharacteristic(any())
     }
 

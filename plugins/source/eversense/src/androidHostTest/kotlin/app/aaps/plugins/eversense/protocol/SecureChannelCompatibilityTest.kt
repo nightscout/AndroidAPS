@@ -2,6 +2,7 @@ package app.aaps.plugins.eversense.protocol
 
 import app.aaps.plugins.eversense.storage.EversenseStore
 import app.aaps.plugins.eversense.util.EversenseCrypto365Util
+import app.aaps.shared.tests.AAPSLoggerTest
 import java.lang.reflect.InvocationTargetException
 import java.util.Random
 import org.junit.jupiter.api.Assertions.assertArrayEquals
@@ -26,7 +27,7 @@ class SecureChannelCompatibilityTest {
         for (start in listOf(0, 1, 16382, 16383, 16384, 65535, Int.MAX_VALUE, Int.MIN_VALUE)) {
             for (size in listOf(0, 1, 2, 15, 16, 17, 64, 185, 512)) {
                 val old = reference()
-                val current = EversenseCrypto365Util(mock<EversenseStore>())
+                val current = EversenseCrypto365Util(mock<EversenseStore>(), AAPSLoggerTest())
                 val key = ByteArray(16).also(random::nextBytes)
                 val salt = ByteArray(8).also(random::nextBytes)
                 material(old, salt, key, start); material(current, salt, key, start)
@@ -46,7 +47,7 @@ class SecureChannelCompatibilityTest {
     }
     @Test fun missingMaterialTruncatedMessagesAndInvalidKeySizesRetainFailureOutcomes() {
         for (salt in listOf(null, ByteArray(8))) for (key in listOf(null, ByteArray(0), ByteArray(15), ByteArray(16))) {
-            val old = reference(); val current = EversenseCrypto365Util(mock<EversenseStore>())
+            val old = reference(); val current = EversenseCrypto365Util(mock<EversenseStore>(), AAPSLoggerTest())
             material(old, salt, key, 1); material(current, salt, key, 1)
             for (bytes in listOf(byteArrayOf(), byteArrayOf(1), byteArrayOf(1,2), ByteArray(10))) {
                 for (method in listOf("encrypt", "decrypt")) {

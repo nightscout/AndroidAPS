@@ -1,7 +1,6 @@
 package app.aaps.plugins.eversense.packets.e365
 
 import app.aaps.plugins.eversense.enums.EversenseAlarm
-import app.aaps.plugins.eversense.enums.EversenseSecurityType
 import app.aaps.plugins.eversense.models.ActiveAlarm
 import app.aaps.plugins.eversense.packets.EversenseBasePacket
 import app.aaps.plugins.eversense.packets.e365.utils.toByteArray
@@ -11,7 +10,6 @@ import app.aaps.plugins.eversense.packets.e365.utils.toUnixArray
 import app.aaps.plugins.eversense.protocol.CalibrationPayload
 import app.aaps.plugins.eversense.protocol.PacketSpec
 import app.aaps.plugins.eversense.protocol.PacketTime
-import java.time.ZonedDateTime
 import java.util.TimeZone
 import kotlin.math.abs
 
@@ -158,34 +156,6 @@ class PushAlarmWithDataPacket : EversenseBasePacket(PacketSpec.v2(Eversense365Pa
  * [10] = battery level (raw enum value)
  * [11..18] = most recent glucose datetime (Unix2000)
  */
-
-class PushKeepAlive365Packet : EversenseBasePacket(PacketSpec.v2(Eversense365Packets.NotificationResponseId, Eversense365Packets.NotificationKeepAlive, 0)) {
-
-    override fun getRequestData(): ByteArray = ByteArray(0)
-
-    override fun parseResponse(): Response? {
-        if (receivedData.size < 19) return null
-        val batteryLevel = receivedData[OFFSET_BATTERY_LEVEL].toInt() and 0xFF
-        val glucoseDatetime = receivedData.copyOfRange(
-            OFFSET_GLUCOSE_DATETIME_START,
-            OFFSET_GLUCOSE_DATETIME_END
-        ).toUnix()
-        return Response(
-            batteryLevelRaw = batteryLevel,
-            mostRecentGlucoseDatetime = glucoseDatetime
-        )
-    }
-
-    data class Response(
-        val batteryLevelRaw: Int,
-        val mostRecentGlucoseDatetime: Long
-    ) : EversenseBasePacket.Response()
-    companion object {
-        private const val OFFSET_BATTERY_LEVEL = 10
-        private const val OFFSET_GLUCOSE_DATETIME_START = 11
-        private const val OFFSET_GLUCOSE_DATETIME_END = 19
-    }
-}
 
 class SetAppVersion365Packet(private val appVersion: String = "8.0.4") : EversenseBasePacket(PacketSpec.v2(Eversense365Packets.WriteCommandId, Eversense365Packets.WriteResponseId, Eversense365Packets.WriteAppVersion)) {
 

@@ -1,6 +1,8 @@
 package app.aaps.plugins.eversense.protocol
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.plugins.eversense.util.StorageKeys
+import app.aaps.shared.tests.AAPSLoggerTest
 import java.time.Clock
 import java.time.Instant
 import java.time.ZoneOffset
@@ -76,7 +78,13 @@ class DmsHttpCompatibilityTest {
                 "getFleetSecretV2" -> arrayOf(store, "test-token", byteArrayOf(1,2,3), byteArrayOf(4,5,6), true, ByteArray(91) { it.toByte() })
                 else -> error(operation)
             }
-            return owner.javaClass.methods.single { it.name == operation && it.parameterCount == args.size }.invoke(owner, *args)
+            // The live helpers take the AAPS logger first; the frozen ones had their own logger
+            val method = owner.javaClass.methods.single {
+                it.name == operation && (it.parameterCount == args.size ||
+                    it.parameterCount == args.size + 1 && it.parameterTypes[0] == AAPSLogger::class.java)
+            }
+            val callArgs = if (method.parameterCount == args.size) args else arrayOf<Any>(AAPSLoggerTest(), *args)
+            return method.invoke(owner, *callArgs)
         }
     }
 

@@ -1,22 +1,20 @@
 package app.aaps.plugins.eversense.packets.e365
 
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.plugins.eversense.enums.CalibrationFlag
 import app.aaps.plugins.eversense.enums.CalibrationMode
 import app.aaps.plugins.eversense.enums.CalibrationPhase
 import app.aaps.plugins.eversense.enums.CalibrationReadiness
 import app.aaps.plugins.eversense.enums.EversenseAlarm
-import app.aaps.plugins.eversense.enums.EversenseSecurityType
 import app.aaps.plugins.eversense.enums.EversenseTrendArrow
 import app.aaps.plugins.eversense.models.ActiveAlarm
 import app.aaps.plugins.eversense.models.GlucoseHistoryItem
 import app.aaps.plugins.eversense.packets.EversenseBasePacket
 import app.aaps.plugins.eversense.packets.e365.utils.toInt
-import app.aaps.plugins.eversense.packets.e365.utils.toShort
 import app.aaps.plugins.eversense.packets.e365.utils.toUnix
 import app.aaps.plugins.eversense.packets.e365.utils.toUtfString
 import app.aaps.plugins.eversense.protocol.GlucoseDecoders
 import app.aaps.plugins.eversense.protocol.PacketSpec
-import app.aaps.plugins.eversense.util.EversenseLogger
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlinx.serialization.Serializable
@@ -35,7 +33,7 @@ class GetActiveAlarmsPacket : EversenseBasePacket(PacketSpec.v2(Eversense365Pack
         for (i in 0 until count) {
             val offsetStart = i * 3 + 3
             if (receivedData.size < offsetStart + 3) {
-                EversenseLogger.warning("GetActiveAlarmsPacket", "Missing data for alarm $i")
+                log?.warn(LTag.BGSOURCE, "Missing data for alarm $i")
                 break
             }
             alarms.add(ActiveAlarm(
@@ -46,59 +44,13 @@ class GetActiveAlarmsPacket : EversenseBasePacket(PacketSpec.v2(Eversense365Pack
             ))
         }
         alarms.sortBy { it.priority }
-        EversenseLogger.debug("GetActiveAlarmsPacket") { "Active alarms: ${alarms.map { it.code.title }}" }
+        log?.debug(LTag.BGSOURCE) { "Active alarms: ${alarms.map { it.code.title }}" }
         return Response(count = count, alarms = alarms)
     }
 
     data class Response(
         val count: Int,
         val alarms: List<ActiveAlarm>
-    ) : EversenseBasePacket.Response()
-}
-
-data class AlertHistoryItem(
-    val datetime: Long,
-    val code: EversenseAlarm
-)
-
-class GetAlertsLogValuesPacket(
-    private val from: Int,
-    private val to: Int
-) : EversenseBasePacket(PacketSpec.v2(Eversense365Packets.ReadCommandId, Eversense365Packets.ReadLogsId, Eversense365Packets.ReadLogValue)) {
-
-    override fun getRequestData(): ByteArray {
-        return byteArrayOf(
-            Eversense365Packets.LogTypeAlerts,
-            (from and 0xFF).toByte(), ((from shr 8) and 0xFF).toByte(),
-            ((from shr 16) and 0xFF).toByte(), ((from shr 24) and 0xFF).toByte(),
-            (to and 0xFF).toByte(), ((to shr 8) and 0xFF).toByte(),
-            ((to shr 16) and 0xFF).toByte(), ((to shr 24) and 0xFF).toByte()
-        )
-    }
-
-    override fun parseResponse(): Response? {
-        if (receivedData.isEmpty()) return null
-        if (receivedData[6].toInt() != Eversense365Packets.LogTypeAlerts.toInt()) {
-            EversenseLogger.error("GetAlertsLogValuesPacket", "Invalid log type: ${receivedData[6]}")
-            return Response(count = 0, alertHistory = emptyList())
-        }
-        val actualData = receivedData.drop(7).toUByteArray()
-        val recordLength = 60
-        val history = mutableListOf<AlertHistoryItem>()
-        var i = 0
-        while (i + recordLength <= actualData.size) {
-            val chunk = actualData.copyOfRange(i, i + recordLength)
-            val datetime = chunk.copyOfRange(4, 12).toUnix()
-            val alarmCode = chunk[12].toInt() and 0xFF
-            history.add(AlertHistoryItem(datetime = datetime, code = EversenseAlarm.from(alarmCode)))
-            i += recordLength
-        }
-        return Response(count = history.size, alertHistory = history)
-    }
-
-    data class Response(
-        val count: Int,
-        val alertHistory: List<AlertHistoryItem>
     ) : EversenseBasePacket.Response()
 }
 
@@ -125,7 +77,7 @@ class GetCalibrationInfoPacket : EversenseBasePacket(PacketSpec.v2(Eversense365P
         }
         val calPerDay = receivedData[12].toInt()
         val rawReadiness = receivedData[3].toInt() and 0xFF
-        EversenseLogger.debug("GetCalibrationInfoPacket") { "Raw calibration readiness byte: $rawReadiness (0x${rawReadiness.toString(16)})" }
+        log?.debug(LTag.BGSOURCE) { "Raw calibration readiness byte: $rawReadiness (0x${rawReadiness.toString(16)})" }
         return Response(
             currentPhase = CalibrationPhase.from365(receivedData[2].toInt(), calPerDay),
             calibrationReadiness = CalibrationReadiness.from365(rawReadiness),
@@ -170,7 +122,7 @@ class GetCalibrationLogValuesPacket(
     override fun parseResponse(): Response? {
         if (receivedData.isEmpty()) return null
         if (receivedData[6].toInt() != Eversense365Packets.LogTypeCalibrations.toInt()) {
-            EversenseLogger.error("GetCalibrationLogValuesPacket", "Invalid log type: ${receivedData[6]}")
+            log?.error(LTag.BGSOURCE, "Invalid log type: ${receivedData[6]}")
             return Response(count = 0, calibrationHistory = emptyList())
         }
         val actualData = receivedData.drop(7).toUByteArray()
@@ -200,7 +152,7 @@ class GetCalibrationLogValuesPacket(
 
 class GetGlucoseDataPacket(private val sensorIdLen: Int) : EversenseBasePacket(PacketSpec.v2(Eversense365Packets.ReadCommandId, Eversense365Packets.ReadResponseId, Eversense365Packets.ReadGlucoseData)) {
 
-    override fun parseResponse(): Response? = GlucoseDecoders.v2(receivedData, sensorIdLen)?.let {
+    override fun parseResponse(): Response? = GlucoseDecoders.v2(receivedData, sensorIdLen, log)?.let {
         Response(it.timestamp, it.glucose, it.trend, it.signal, it.sensorId, it.raw)
     }
 
@@ -228,7 +180,7 @@ class GetGlucoseLogValuesPacket(
     override fun parseResponse(): Response? {
         if (receivedData.isEmpty()) return null
         if (receivedData[6].toInt() != 13) {
-            EversenseLogger.error("GetGlucoseLogValuesPacket", "Invalid log type: ${receivedData[6]}")
+            log?.error(LTag.BGSOURCE, "Invalid log type: ${receivedData[6]}")
             return Response(count = 0, glucoseHistory = emptyList())
         }
         val actualData = receivedData.drop(7).toUByteArray()
@@ -246,14 +198,14 @@ class GetGlucoseLogValuesPacket(
             i += recordLength
             // Safety ceiling matches EversenseKit's (loopandlearn/bastiaanv, the reference iOS
             // implementation this port is based on), tightened from 1000 to 450 mg/dl.
-            if (glucose >= 450) {
-                EversenseLogger.warning("GetGlucoseLogValuesPacket", "Glucose exceeds limits: $glucose — skipping")
+            if (glucose !in GlucoseDecoders.MIN_GLUCOSE..449) {
+                log?.warn(LTag.BGSOURCE, "Glucose outside ${GlucoseDecoders.MIN_GLUCOSE}..449: $glucose — skipping")
                 continue
             }
             val rawHex = chunk.joinToString("") { "%02X".format(it.toInt()) }
             history.add(GlucoseHistoryItem(valueInMgDl = glucose, datetime = datetime, trend = trend, rawResponseHex = rawHex))
         }
-        EversenseLogger.debug("GetGlucoseLogValuesPacket") { "History records: ${history.size}" }
+        log?.debug(LTag.BGSOURCE) { "History records: ${history.size}" }
         return Response(count = history.size, glucoseHistory = history)
     }
 
@@ -290,77 +242,11 @@ class GetLogRangePacket365(private val logType: LogType) : EversenseBasePacket(P
             ((receivedData[8].toLong() and 0xFF) shl 8) or
             ((receivedData[9].toLong() and 0xFF) shl 16) or
             ((receivedData[10].toLong() and 0xFF) shl 24)).toInt()
-        app.aaps.plugins.eversense.util.EversenseLogger.debug("GetLogRangePacket365") { "Log range: $rangeFrom - $rangeTo" }
+        log?.debug(LTag.BGSOURCE) { "Log range: $rangeFrom - $rangeTo" }
         return Response(rangeFrom = rangeFrom, rangeTo = rangeTo)
     }
 
     data class Response(val rangeFrom: Int, val rangeTo: Int) : EversenseBasePacket.Response()
-}
-
-class GetPatientSettingsPacket : EversenseBasePacket(PacketSpec.v2(Eversense365Packets.ReadCommandId, Eversense365Packets.ReadResponseId, Eversense365Packets.ReadPatientInformation)) {
-
-    override fun parseResponse(): Response? {
-        if (receivedData.size < 65) {
-            return null
-        }
-        // Message parsed:
-        // 42 21 -> CmdType & CmdId
-        // 44 33 30 36 33 36 36 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 -> Transmitter name
-        // 38 2E 30 2E 34 00 00 00 00 00 00 00 00 00 00 00 -> Recent MMA Version
-        // 00 -> Is clinical mode enabled
-        // 00 -> Is do not Disturb Enabled
-        // 2C 01 -> BLE connect time in sec -> 300s
-        // 46 00 -> Low sugar target in mg/dl
-        // B4 00 -> High sugar target in mg/dl
-        // 00 -> Alarm rate falling enabled
-        // 19 -> Alarm rate falling threshold
-        // 00 -> Alarm rate rising enabled
-        // 19 -> Alarm rate rising threshold
-        // 00 -> Alarm Predictive Low enabled
-        // 14 -> Alarm Predictive Low Time
-        // 00 -> Alarm Predictive High enabled
-        // 14 -> Alarm Predictive High Time
-        // 01 -> Alarm High Glucose enabled
-        // FA 00 -> Alarm High Glucose Threshold
-        // 1E -> Alarm High Glucose Repeat Interval
-        // 41 00 -> Alarm Low Glucose Threshold
-        // 0F -> Alarm Low Glucose Repeat Interval
-        // 34 -> Battery Temp Thresh Mode Change
-        // 44 -> Battery Temp Thresh Warn
-        return Response(
-            vibrateMode = receivedData[44].toInt() != 0x00,
-            highGlucoseEnabled = receivedData[59].toInt() != 0x00,
-            highGlucoseAlarmInMgDl = receivedData.copyOfRange(60, 62).toShort().toInt(),
-            lowGlucoseAlarmInMgDl = receivedData.copyOfRange(63, 65).toShort().toInt(),
-            predictionLowEnabled = receivedData[55].toInt() != 0x00,
-            predictionHighEnabled = receivedData[57].toInt() != 0x00,
-            predictionFallingInterval = receivedData[56].toInt(),
-            predictionRisingInterval = receivedData[58].toInt(),
-            predictionFallingThreshold = receivedData.copyOfRange(47, 49).toShort().toInt(),
-            predictionRisingThreshold = receivedData.copyOfRange(49, 51).toShort().toInt(),
-            rateFallingEnabled = receivedData[51].toInt() != 0x00,
-            rateRisingEnabled = receivedData[53].toInt() != 0x00,
-            rateFallingThreshold = receivedData[52].toDouble() / 10,
-            rateRisingThreshold = receivedData[54].toDouble() / 10,
-        )
-    }
-
-    data class Response(
-        val vibrateMode: Boolean,
-        val highGlucoseEnabled: Boolean,
-        val lowGlucoseAlarmInMgDl: Int,
-        val highGlucoseAlarmInMgDl: Int,
-        val predictionLowEnabled: Boolean,
-        val predictionHighEnabled: Boolean,
-        val predictionFallingInterval: Int,
-        val predictionRisingInterval: Int,
-        val predictionFallingThreshold: Int,
-        val predictionRisingThreshold: Int,
-        val rateFallingEnabled: Boolean,
-        val rateRisingEnabled: Boolean,
-        val rateFallingThreshold: Double,
-        val rateRisingThreshold: Double
-    ) : EversenseBasePacket.Response()
 }
 
 class GetSensorInformationPacket : EversenseBasePacket(PacketSpec.v2(Eversense365Packets.ReadCommandId, Eversense365Packets.ReadResponseId, Eversense365Packets.ReadSensorInformation)) {
@@ -416,8 +302,7 @@ class GetSensorInformationPacket : EversenseBasePacket(PacketSpec.v2(Eversense36
             batteryLevel = receivedData[114+sensorIdDoubleLength].toInt(),
             version = receivedData.copyOfRange(115+sensorIdDoubleLength, 131+sensorIdDoubleLength).toUtfString(),
             extVersion = receivedData.copyOfRange(131+sensorIdDoubleLength, 139+sensorIdDoubleLength).toUtfString(),
-            sensorIdLength = sensorIdLength,
-            communicationProtocolVersion = receivedData.copyOfRange(69, 75).toUtfString().toDouble()
+            sensorIdLength = sensorIdLength
         )
     }
 
@@ -430,8 +315,7 @@ class GetSensorInformationPacket : EversenseBasePacket(PacketSpec.v2(Eversense36
         val batteryLevel: Int,
         val version: String,
         val extVersion: String,
-        val sensorIdLength: Int,
-        val communicationProtocolVersion: Double
+        val sensorIdLength: Int
     ) : EversenseBasePacket.Response()
 }
 
@@ -450,7 +334,7 @@ class GetSignalStrengthPacket : EversenseBasePacket(PacketSpec.v2(Eversense365Pa
 
     override fun parseResponse(): Response? {
         if (receivedData.isEmpty()) return null
-        app.aaps.plugins.eversense.util.EversenseLogger.debug("GetSignalStrengthPacket") {
+        log?.debug(LTag.BGSOURCE) {
             "Raw response: " + receivedData.joinToString(" ") { it.toString(16).padStart(2, '0') }
         }
         // Byte [3] = sensor ID length
@@ -458,7 +342,7 @@ class GetSignalStrengthPacket : EversenseBasePacket(PacketSpec.v2(Eversense365Pa
         // Signal coupling float starts at byte 14 + sensorIdLength
         val couplingStart = 14 + sensorIdLength
         if (receivedData.size < couplingStart + 4) {
-            app.aaps.plugins.eversense.util.EversenseLogger.warning("GetSignalStrengthPacket", "Response too short: ${receivedData.size} bytes, need ${couplingStart + 4}")
+            log?.warn(LTag.BGSOURCE, "Response too short: ${receivedData.size} bytes, need ${couplingStart + 4}")
             return Response(signalStrength = 0)
         }
         // Read little-endian float and multiply by 100 for percentage
@@ -472,7 +356,7 @@ class GetSignalStrengthPacket : EversenseBasePacket(PacketSpec.v2(Eversense365Pa
             .order(ByteOrder.LITTLE_ENDIAN)
             .float
         val signalPercent = (signalFloat * 100).toInt().coerceIn(0, 100)
-        app.aaps.plugins.eversense.util.EversenseLogger.debug("GetSignalStrengthPacket") { "sensorIdLength: $sensorIdLength, signalFloat: $signalFloat -> $signalPercent%" }
+        log?.debug(LTag.BGSOURCE) { "sensorIdLength: $sensorIdLength, signalFloat: $signalFloat -> $signalPercent%" }
         return Response(signalStrength = signalPercent)
     }
 

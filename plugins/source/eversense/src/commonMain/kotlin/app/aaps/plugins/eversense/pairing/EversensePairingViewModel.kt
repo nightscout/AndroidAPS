@@ -49,6 +49,9 @@ class EversensePairingViewModel(private val pairing: EversensePairing) : ViewMod
     ) {
 
         val canSignIn: Boolean get() = username.isNotBlank() && password.isNotEmpty() && model != null && !busy
+
+        /** Only an E3 links without a login; a 365 registers with the Eversense server. */
+        val canGoOnWithoutSignIn: Boolean get() = model == EversenseModel.E3 && !busy
     }
 
     /** The stored login: the account step offers to continue with it, or to sign out. */
@@ -65,7 +68,7 @@ class EversensePairingViewModel(private val pairing: EversensePairing) : ViewMod
         _state.value = UiState(
             step = if (signInOnly) Step.ACCOUNT else Step.BEFORE,
             signInOnly = signInOnly,
-            model = account.value?.model
+            model = account.value?.model ?: EversenseModel.E3.takeIf { pairing.withoutSignIn.value }
         )
     }
 
@@ -118,6 +121,16 @@ class EversensePairingViewModel(private val pairing: EversensePairing) : ViewMod
     fun continueSignedIn() {
         if (account.value == null) return
         _state.update { if (it.signInOnly) it.copy(finished = true) else it.copy(step = Step.TRANSMITTER) }
+    }
+
+    /** Goes on with an E3 and no login: the link needs none, only the Eversense cloud upload does. */
+    fun continueWithoutSignIn() {
+        if (!_state.value.canGoOnWithoutSignIn) return
+        pairing.useWithoutSignIn()
+        _state.update {
+            val cleared = it.copy(password = "", signInError = null)
+            if (it.signInOnly) cleared.copy(finished = true) else cleared.copy(step = Step.TRANSMITTER)
+        }
     }
 
     /** Forgets the stored login, so another one can be entered. */

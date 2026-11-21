@@ -1,5 +1,6 @@
 package app.aaps.plugins.eversense.packets
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.plugins.eversense.enums.EversenseSecurityType
 import app.aaps.plugins.eversense.packets.e365.Eversense365Packets
 import app.aaps.plugins.eversense.protocol.PacketSpec
@@ -15,6 +16,9 @@ abstract class EversenseBasePacket(val spec: PacketSpec) {
         get() = snapshot ?: response.toByteArray().toUByteArray().also { snapshot = it }
 
     @Volatile var isErrorResponse = false
+
+    /** The logger for what [parseResponse] finds wrong. Set when the packet is sent; null in tests that parse a frame directly. */
+    var log: AAPSLogger? = null
     open val skipResponseIdValidation = false
     open fun getRequestData(): ByteArray = byteArrayOf()
     abstract fun parseResponse(): Response?

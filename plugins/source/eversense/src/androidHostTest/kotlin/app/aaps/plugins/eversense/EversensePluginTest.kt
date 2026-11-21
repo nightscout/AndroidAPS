@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.source.CgmAttention
 import app.aaps.core.interfaces.source.CgmDriver
 import app.aaps.core.keys.LongNonKey
 import app.aaps.plugins.eversense.EversenseCGMPlugin
+import app.aaps.plugins.eversense.enums.CalibrationReadiness
 import app.aaps.plugins.eversense.enums.EversenseType
 import app.aaps.plugins.eversense.enums.EversenseTrendArrow
 import app.aaps.plugins.eversense.models.EversenseCGMResult
@@ -31,6 +32,7 @@ import app.aaps.plugins.eversense.models.EversenseState
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
@@ -40,6 +42,8 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.eversense.EversensePlugin
 import app.aaps.plugins.eversense.R
 import app.aaps.plugins.eversense.keys.EversenseBooleanKey
+import app.aaps.plugins.eversense.pairing.EversenseAccount
+import app.aaps.plugins.eversense.pairing.EversenseModel
 import app.aaps.plugins.eversense.pairing.EversensePairing
 import app.aaps.plugins.eversense.keys.EversenseRuntimeKey
 import com.google.common.truth.Truth.assertThat
@@ -49,7 +53,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 
 class EversensePluginTest {
-    /** The settings are the cloud upload and the logging; the login is the pairing wizard's, not a setting to export. */
+    /** The only setting is the cloud upload (logging is AAPS's own); the login is the pairing wizard's, not a setting to export. */
     @Test fun registersItsSettingsButNoLogin() {
         val preferences: Preferences = mock()
         val plugin = EversensePlugin(mock(), mock(), preferences, mock(), mock(), mock(), mock(), bleCentral, pairing)
@@ -58,9 +62,7 @@ class EversensePluginTest {
         assertThat(plugin.pluginDescription.composeContentProvider).isNotNull()
         assertThat(plugin.pluginDescription.defaultPlugin).isFalse()
         val screen = plugin.getPreferenceScreenContent()
-        assertThat(screen.items).containsExactly(EversenseBooleanKey.EversenseCloudUploadEnabled, EversenseBooleanKey.EversenseDiagnosticLogging)
-        assertThat(EversenseBooleanKey.EversenseDiagnosticLogging.defaultValue).isFalse()
-        assertThat(EversenseBooleanKey.EversenseDiagnosticLogging.exportable).isFalse()
+        assertThat(screen.items).containsExactly(EversenseBooleanKey.EversenseCloudUploadEnabled)
         assertThat(EversenseBooleanKey.entries.all { it.preferenceType == PreferenceType.SWITCH }).isTrue()
     }
 
@@ -72,10 +74,12 @@ class EversensePluginTest {
     /** A ResourceHelper whose texts are their own resource id, so that a refusal is never null by accident. */
     private fun texts(): ResourceHelper = mock<ResourceHelper>().also { whenever(it.gs(anyInt())).thenAnswer { invocation -> "text ${invocation.arguments[0]}" } }
 
-    private fun connectedBackend(accepts: Boolean = true): EversenseCGMPlugin = mock<EversenseCGMPlugin>().also {
-        whenever(it.isConnected()).thenReturn(true)
-        whenever(it.sendCalibration(any(), any())).thenReturn(accepts)
-    }
+    private fun connectedBackend(accepts: Boolean = true, readiness: CalibrationReadiness = CalibrationReadiness.READY): EversenseCGMPlugin =
+        mock<EversenseCGMPlugin>().also {
+            whenever(it.isConnected()).thenReturn(true)
+            whenever(it.sendCalibration(any(), any())).thenReturn(accepts)
+            whenever(it.getCurrentState()).thenReturn(EversenseState().apply { calibrationReadiness = readiness })
+        }
 
     /** The user calibrates in the AAPS calibration dialog; the master hands the value to calibrate(). */
     @Test fun isACgmDriverThatTakesCalibrations() {
@@ -119,6 +123,28 @@ class EversensePluginTest {
         assertThat(plugin.calibrationRefusal()).isEqualTo("text ${R.string.eversense_not_paired}")
         assertThat(plugin.calibrate(100.0)).isEqualTo("text ${R.string.eversense_not_paired}")
         verify(backend, never()).sendCalibration(any(), any())
+    }
+
+    /**
+     * An E3 says when it cannot take a calibration (glucose changing fast, too soon after the last one, ...). That is
+     * said before the confirmation and nothing is sent. Not known yet is left to the transmitter.
+     */
+    @Test fun anE3ThatIsNotReadyRefusesTheCalibrationWithItsReason(): Unit = runBlocking {
+        for ((readiness, reason) in listOf(
+            CalibrationReadiness.GLUCOSE_RATE_TOO_HIGH to R.string.eversense_calibration_refused_rate,
+            CalibrationReadiness.WAITING_POST_CALIBRATION to R.string.eversense_calibration_refused_too_soon,
+            CalibrationReadiness.NO_SENSOR_LINKED to R.string.eversense_calibration_refused_sensor
+        )) {
+            val backend = connectedBackend(readiness = readiness)
+            val plugin = EversensePlugin(texts(), mock(), mock(), mock(), mock(), { backend }, mock(), bleCentral, pairing)
+            assertThat(plugin.calibrationRefusal()).isEqualTo("text $reason")
+            assertThat(plugin.calibrate(100.0)).isEqualTo("text $reason")
+            verify(backend, never()).sendCalibration(any(), any())
+        }
+        for (readiness in listOf(CalibrationReadiness.READY, CalibrationReadiness.REASON_UNKNOWN)) {
+            val plugin = EversensePlugin(texts(), mock(), mock(), mock(), mock(), { connectedBackend(readiness = readiness) }, mock(), bleCentral, pairing)
+            assertThat(plugin.calibrationRefusal()).isNull()
+        }
     }
 
     /** A refused login is no reason to refuse: the value goes to the transmitter over Bluetooth. */
@@ -180,12 +206,14 @@ class EversensePluginTest {
     /** Bluetooth as the app's central reports it; a test switches it off and on. */
     private val adapter = MutableStateFlow(AdapterState.ON)
     private val bleCentral: BleCentral = mock<BleCentral>().also { whenever(it.adapterState).thenReturn(adapter) }
-    private val pairing: EversensePairing = mock<EversensePairing>().also { whenever(it.attention).thenReturn(MutableStateFlow(null)) }
+    private val pairing: EversensePairing = mock<EversensePairing>().also {
+        whenever(it.attention).thenReturn(MutableStateFlow(null))
+        whenever(it.account).thenReturn(MutableStateFlow(EversenseAccount("user", EversenseModel.E3)))
+    }
 
     /** The preferences a started plugin reads: the switches it watches. The login is the driver's own. */
     private fun storedLogin(cloudUpload: Boolean = false): Preferences = mock<Preferences>().also {
         whenever(it.get(EversenseBooleanKey.EversenseCloudUploadEnabled)).thenReturn(cloudUpload)
-        whenever(it.observe(EversenseBooleanKey.EversenseDiagnosticLogging)).thenReturn(MutableStateFlow(false))
     }
 
     /**
@@ -259,6 +287,34 @@ class EversensePluginTest {
         val plugin = EversensePlugin(mock(), mock(), mock(), mock(), mock(), { mock() }, mock(), bleCentral, pairing)
         assertThat(plugin.requiredPermissions().flatMap { it.permissions })
             .containsAtLeast(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN)
+    }
+
+    /** An E3 used without a login: the reading is stored, and nothing is queued for a cloud it cannot sign in to. */
+    @Test fun anE3WithoutALoginQueuesNoCloudUpload(): Unit = runBlocking {
+        val backend: EversenseCGMPlugin = mock()
+        whenever(backend.getCurrentState()).thenReturn(EversenseState())
+        val cloudUsed = CompletableDeferred<Unit>()
+        whenever(backend.cloudStore()).thenAnswer { cloudUsed.complete(Unit); null }
+        val noLogin: EversensePairing = mock<EversensePairing>().also {
+            whenever(it.attention).thenReturn(MutableStateFlow(null))
+            whenever(it.account).thenReturn(MutableStateFlow(null))
+        }
+        val persistence: PersistenceLayer = mock()
+        val stored = CompletableDeferred<Unit>()
+        whenever(persistence.insertCgmSourceData(any(), any(), any(), anyOrNull())).thenAnswer {
+            stored.complete(Unit)
+            PersistenceLayer.TransactionResult<GV>()
+        }
+        val plugin = EversensePlugin(mock(), mock(), storedLogin(cloudUpload = true), mock(), mock(), { backend }, persistence, bleCentral, noLogin)
+        plugin.onStart()
+        try {
+            plugin.onCGMRead(EversenseType.EVERSENSE_E3, listOf(EversenseCGMResult(123, 1_800_000_000_000L, EversenseTrendArrow.FLAT)))
+            withTimeout(5_000) { stored.await() }
+            // The queue step comes right after the store; with a login it reaches the cloud store at once
+            assertThat(withTimeoutOrNull(500) { cloudUsed.await() }).isNull()
+        } finally {
+            plugin.onStop()
+        }
     }
 
     @Test fun localGlucosePersistenceContinuesWhenCloudQueueFails(): Unit = runBlocking {

@@ -1,18 +1,23 @@
 package app.aaps.plugins.eversense.protocol
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.plugins.eversense.enums.EversenseTrendArrow
 import app.aaps.plugins.eversense.packets.e3.util.EversenseE3Parser
-import app.aaps.plugins.eversense.util.EversenseLogger
 
 /** Generation-specific layouts share primitives, while preserving their different validity rules. */
 internal object GlucoseDecoders {
+
+    /** The lowest value taken as glucose, on both generations. Below it the field is a placeholder, not a reading. */
+    const val MIN_GLUCOSE = 20
+
     data class Reading(val timestamp: Long, val glucose: Int, val trend: EversenseTrendArrow,
                        val signal: Int = 0, val sensorId: String = "", val raw: String)
 
     fun e3(bytes: UByteArray): Reading? {
         if (bytes.isEmpty()) return null
         val glucose = EversenseE3Parser.readGlucose(bytes, 9)
-        if (glucose !in 20..450) return null
+        if (glucose !in MIN_GLUCOSE..450) return null
         return Reading(
             timestamp = EversenseE3Parser.readDate(bytes, 4) + EversenseE3Parser.readTime(bytes, 6),
             glucose = glucose,
@@ -21,15 +26,26 @@ internal object GlucoseDecoders {
         )
     }
 
-    fun v2(bytes: UByteArray, fallbackSensorLength: Int): Reading? {
+    /**
+     * The current 365 reading. After the sensor id (length L) come the glucose time (12+L, 8 bytes), the glucose
+     * (20+L), the signal (22+L) and the reason why no glucose is available (24+L, 0 = there is a value).
+     */
+    fun v2(bytes: UByteArray, fallbackSensorLength: Int, log: AAPSLogger? = null): Reading? {
         if (bytes.isEmpty()) return null
         val length = bytes[11].toInt().takeUnless { it == 0 } ?: fallbackSensorLength
         val signal = BinaryFields.unsigned(bytes, 22 + length, 2).toInt()
         val sensor = bytes.copyOfRange(12, 12 + length)
         val glucose = BinaryFields.unsigned(bytes, 20 + length, 2).toInt()
+        val unavailable = if (bytes.size >= 26 + length) BinaryFields.unsigned(bytes, 24 + length, 2).toInt() else 0
+        // A placeholder must not be stored as glucose. UNVERIFIED on a transmitter: the reason field's place comes from
+        // the frame layout only.
+        if (unavailable != 0) {
+            log?.warn(LTag.BGSOURCE, "Glucose not available (reason $unavailable, value $glucose) — rejecting")
+            return null
+        }
         // The frozen 365 implementation rejects 450 itself; E3 accepts that boundary.
-        if (glucose >= 450) {
-            EversenseLogger.warning("GetGlucoseDataPacket", "Glucose exceeds safety limits: $glucose — rejecting")
+        if (glucose !in MIN_GLUCOSE..449) {
+            log?.warn(LTag.BGSOURCE, "Glucose outside $MIN_GLUCOSE..449: $glucose — rejecting")
             return null
         }
         return Reading(

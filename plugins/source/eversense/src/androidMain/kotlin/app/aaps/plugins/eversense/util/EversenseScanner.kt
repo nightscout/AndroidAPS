@@ -3,10 +3,12 @@ package app.aaps.plugins.eversense.util
 import android.annotation.SuppressLint
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.plugins.eversense.callbacks.EversenseScanCallback
 import app.aaps.plugins.eversense.models.EversenseScanResult
 
-class EversenseScanner(private val callback: EversenseScanCallback): ScanCallback() {
+class EversenseScanner(private val callback: EversenseScanCallback, private val aapsLogger: AAPSLogger) : ScanCallback() {
 
     @SuppressLint("MissingPermission")
     override fun onScanResult(callbackType: Int, scanRecord: ScanResult) {
@@ -21,15 +23,11 @@ class EversenseScanner(private val callback: EversenseScanCallback): ScanCallbac
             return
         }
 
-        EversenseLogger.debug(TAG) { "Found Eversense device: $deviceName (address: ${scanRecord.device?.address})" }
+        aapsLogger.debug(LTag.BGSOURCE) { "Found Eversense device: $deviceName (address: ${scanRecord.device?.address})" }
         callback.onResult(EversenseScanResult(deviceName, scanRecord.rssi, scanRecord.device))
     }
 
     override fun onScanFailed(errorCode: Int) {
-        EversenseLogger.error(TAG, "BLE scan failed with error code: $errorCode")
-    }
-
-    companion object {
-        private const val TAG = "EversenseScanner"
+        aapsLogger.error(LTag.BGSOURCE, "BLE scan failed with error code: $errorCode")
     }
 }

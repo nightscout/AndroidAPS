@@ -1,5 +1,6 @@
 package app.aaps.plugins.eversense.packets
 
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.plugins.eversense.storage.EversenseStore
 import android.os.Handler
 import android.os.Looper
@@ -10,7 +11,6 @@ import app.aaps.plugins.eversense.enums.EversenseAlarm
 import app.aaps.plugins.eversense.enums.EversenseType
 import app.aaps.plugins.eversense.models.EversenseCGMResult
 import app.aaps.plugins.eversense.models.EversenseState
-import app.aaps.plugins.eversense.models.EversenseTransmitterSettings
 import app.aaps.plugins.eversense.packets.e365.GetActiveAlarmsPacket
 import app.aaps.plugins.eversense.packets.e365.Ping365Packet
 import app.aaps.plugins.eversense.packets.e365.SetAppVersion365Packet
@@ -18,29 +18,11 @@ import app.aaps.plugins.eversense.packets.e365.SetBleDisconnect365Packet
 import app.aaps.plugins.eversense.packets.e365.GetCalibrationLogValuesPacket
 import app.aaps.plugins.eversense.packets.e365.GetGlucoseLogValuesPacket
 import app.aaps.plugins.eversense.packets.e365.GetLogRangePacket365
-import app.aaps.plugins.eversense.packets.e365.SetHighGlucoseAlarm365Packet
-import app.aaps.plugins.eversense.packets.e365.SetHighGlucoseAlarmEnabled365Packet
-import app.aaps.plugins.eversense.packets.e365.SetLowGlucoseAlarm365Packet
-import app.aaps.plugins.eversense.packets.e365.SetPredictionHighEnabled365Packet
-import app.aaps.plugins.eversense.packets.e365.SetPredictionHighThreshold365Packet
-import app.aaps.plugins.eversense.packets.e365.SetPredictionHighTime365Packet
-import app.aaps.plugins.eversense.packets.e365.SetPredictionLowEnabled365Packet
-import app.aaps.plugins.eversense.packets.e365.SetPredictionLowThreshold365Packet
-import app.aaps.plugins.eversense.packets.e365.SetPredictionLowTime365Packet
-import app.aaps.plugins.eversense.packets.e365.SetRateFallingEnabled365Packet
-import app.aaps.plugins.eversense.packets.e365.SetRateFallingThreshold365Packet
-import app.aaps.plugins.eversense.packets.e365.SetRateRisingEnabled365Packet
-import app.aaps.plugins.eversense.packets.e365.SetRateRisingThreshold365Packet
-import app.aaps.plugins.eversense.packets.e365.SetRepeatHighGlucose365Packet
-import app.aaps.plugins.eversense.packets.e365.SetRepeatLowGlucose365Packet
-import app.aaps.plugins.eversense.packets.e365.SetVibrateMode365Packet
 import app.aaps.plugins.eversense.packets.e365.LogType
 import app.aaps.plugins.eversense.packets.e365.GetCalibrationInfoPacket
 import app.aaps.plugins.eversense.packets.e365.GetGlucoseDataPacket
-import app.aaps.plugins.eversense.packets.e365.GetPatientSettingsPacket
 import app.aaps.plugins.eversense.packets.e365.GetSensorInformationPacket
 import app.aaps.plugins.eversense.packets.e365.SetCurrentDateTimePacket
-import app.aaps.plugins.eversense.util.EversenseLogger
 import app.aaps.plugins.eversense.util.StorageKeys
 import kotlinx.serialization.json.Json
 import java.util.concurrent.TimeUnit
@@ -48,7 +30,6 @@ import kotlin.math.abs
 
 class Eversense365Communicator {
     companion object {
-        private const val TAG = "Eversense365Communicator"
         private val JSON = Json { ignoreUnknownKeys = true }
         private val handler = Handler(Looper.getMainLooper())
 
@@ -76,7 +57,7 @@ class Eversense365Communicator {
 
             val glucoseData = gatt.writePacket<GetGlucoseDataPacket.Response>(GetGlucoseDataPacket(sensorIdLength))
             if (glucoseData.datetime <= state.recentGlucoseDatetime) {
-                EversenseLogger.warning(TAG, "Glucose data is still recent after reading - currentReading: ${glucoseData.datetime}, lastReading: ${state.recentGlucoseDatetime}")
+                gatt.aapsLogger.warn(LTag.BGSOURCE, "Glucose data is still recent after reading - currentReading: ${glucoseData.datetime}, lastReading: ${state.recentGlucoseDatetime}")
                 return
             }
 
@@ -88,7 +69,7 @@ class Eversense365Communicator {
             state.recentGlucoseValue = currentGlucose
             state.lastGlucoseRaw = glucoseData.glucoseInMgDl
             state.sensorSignalStrength = glucoseData.signalStrength
-            EversenseLogger.debug(TAG) { "Sensor signal strength from glucose packet: ${glucoseData.signalStrength}" }
+            gatt.aapsLogger.debug(LTag.BGSOURCE) { "Sensor signal strength from glucose packet: ${glucoseData.signalStrength}" }
 
             state.sensorId = glucoseData.sensorId
 
@@ -111,10 +92,10 @@ class Eversense365Communicator {
                         GetCalibrationLogValuesPacket(from = calibFrom, to = calibLogRange.rangeTo)
                     )
                     state.calibrationHistory = calibHistory.calibrationHistory
-                    EversenseLogger.debug(TAG) { "Calibration: ${calibHistory.count} entries read (range $calibFrom..${calibLogRange.rangeTo})" }
+                    gatt.aapsLogger.debug(LTag.BGSOURCE) { "Calibration: ${calibHistory.count} entries read (range $calibFrom..${calibLogRange.rangeTo})" }
                 }
             } catch (e: Exception) {
-                EversenseLogger.warning(TAG, "Could not read calibration history: $e")
+                gatt.aapsLogger.warn(LTag.BGSOURCE, "Could not read calibration history: $e")
             }
 
             // Read glucose history for backfill — use previousGlucoseDatetime so gap readings are included
@@ -131,10 +112,10 @@ class Eversense365Communicator {
                     .map { item -> EversenseCGMResult(glucoseInMgDl = item.valueInMgDl, datetime = item.datetime, trend = item.trend, rawResponseHex = item.rawResponseHex) }
                 if (backfill.isNotEmpty()) {
                     result.addAll(0, backfill)
-                    EversenseLogger.debug(TAG) { "Backfill: added ${backfill.size} historical readings" }
+                    gatt.aapsLogger.debug(LTag.BGSOURCE) { "Backfill: added ${backfill.size} historical readings" }
                 }
             } catch (e: Exception) {
-                EversenseLogger.warning(TAG, "Could not read glucose history: $e")
+                gatt.aapsLogger.warn(LTag.BGSOURCE, "Could not read glucose history: $e")
             }
 
             preferences.edit(commit = true) {
@@ -152,7 +133,7 @@ class Eversense365Communicator {
             val stateCheck = JSON.decodeFromString<EversenseState>(stateJsonCheck)
             val fourMinAgo = System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(240)
             if (!force && stateCheck.lastSync > fourMinAgo) {
-                EversenseLogger.debug(TAG) { "365 fullSync skipped — last sync was recent (${(System.currentTimeMillis() - stateCheck.lastSync) / 1000}s ago)" }
+                gatt.aapsLogger.debug(LTag.BGSOURCE) { "365 fullSync skipped — last sync was recent (${(System.currentTimeMillis() - stateCheck.lastSync) / 1000}s ago)" }
                 return
             }
             try {
@@ -162,10 +143,10 @@ class Eversense365Communicator {
                 var sensorInformation = gatt.writePacket<GetSensorInformationPacket.Response>(GetSensorInformationPacket())
 
                 // Ping transmitter first — matches iOS fullSync order
-                try { gatt.writePacket<Ping365Packet.Response>(Ping365Packet()) } catch (e: Exception) { EversenseLogger.warning(TAG, "Ping failed: $e") }
+                try { gatt.writePacket<Ping365Packet.Response>(Ping365Packet()) } catch (e: Exception) { gatt.aapsLogger.warn(LTag.BGSOURCE, "Ping failed: $e") }
 
                 if (abs(System.currentTimeMillis() - sensorInformation.transmitterDatetime) > 10_000) {
-                    EversenseLogger.debug(TAG) { "Updating transmitter datetime" }
+                    gatt.aapsLogger.debug(LTag.BGSOURCE) { "Updating transmitter datetime" }
                     gatt.writePacket<SetCurrentDateTimePacket.Response>(SetCurrentDateTimePacket())
                     sensorInformation = gatt.writePacket(GetSensorInformationPacket())
                 }
@@ -177,8 +158,8 @@ class Eversense365Communicator {
                 state.extFirmwareVersion = sensorInformation.extVersion
                 state.transmitterSerialNumber = sensorInformation.serialNumber
                 state.transmitterName = sensorInformation.transmitterName
-                EversenseLogger.debug(TAG) { "Transmitter serialNumber='${sensorInformation.serialNumber}' transmitterName='${sensorInformation.transmitterName}'" }
-                EversenseLogger.debug(TAG) { "Firmware version: ${sensorInformation.version} / ${sensorInformation.extVersion}" }
+                gatt.aapsLogger.debug(LTag.BGSOURCE) { "Transmitter serialNumber='${sensorInformation.serialNumber}' transmitterName='${sensorInformation.transmitterName}'" }
+                gatt.aapsLogger.debug(LTag.BGSOURCE) { "Firmware version: ${sensorInformation.version} / ${sensorInformation.extVersion}" }
 
                 val calibrationInfo = gatt.writePacket<GetCalibrationInfoPacket.Response>(GetCalibrationInfoPacket())
                 state.calibrationPhase = calibrationInfo.currentPhase
@@ -187,31 +168,15 @@ class Eversense365Communicator {
                 state.nextCalibrationDate = calibrationInfo.nextCalibration
                 state.lastCalibrationDate = calibrationInfo.lastCalibration
 
-                val patientSettings = gatt.writePacket<GetPatientSettingsPacket.Response>(GetPatientSettingsPacket())
-                state.settings.vibrateEnabled = patientSettings.vibrateMode
-                state.settings.glucoseHighAlarmEnabled = patientSettings.highGlucoseEnabled
-                state.settings.glucoseHighAlarmThreshold = patientSettings.highGlucoseAlarmInMgDl
-                state.settings.glucoseLowAlarmThreshold = patientSettings.lowGlucoseAlarmInMgDl
-                state.settings.rateFallingAlarmEnabled = patientSettings.rateFallingEnabled
-                state.settings.rateFallingAlarmThreshold = patientSettings.rateFallingThreshold
-                state.settings.rateRisingAlarmEnabled = patientSettings.rateRisingEnabled
-                state.settings.rateRisingAlarmThreshold = patientSettings.rateRisingThreshold
-                state.settings.predictiveHighAlarmEnabled = patientSettings.predictionHighEnabled
-                state.settings.predictiveHighAlarmMinutes = patientSettings.predictionRisingInterval
-                state.settings.predictiveHighAlarmThreshold = patientSettings.predictionRisingThreshold
-                state.settings.predictiveLowAlarmEnabled = patientSettings.predictionLowEnabled
-                state.settings.predictiveLowAlarmMinutes = patientSettings.predictionFallingInterval
-                state.settings.predictiveLowAlarmThreshold = patientSettings.predictionFallingThreshold
-
                 // Send app version — iOS sends "8.0.4" in every fullSync
-                try { gatt.writePacket<SetAppVersion365Packet.Response>(SetAppVersion365Packet()) } catch (e: Exception) { EversenseLogger.warning(TAG, "SetAppVersion failed: $e") }
+                try { gatt.writePacket<SetAppVersion365Packet.Response>(SetAppVersion365Packet()) } catch (e: Exception) { gatt.aapsLogger.warn(LTag.BGSOURCE, "SetAppVersion failed: $e") }
 
                 // Test the packet's standard five-minute interval; this firmware rejects zero.
                 try {
                     gatt.writePacket<SetBleDisconnect365Packet.Response>(SetBleDisconnect365Packet(300))
-                    EversenseLogger.info(TAG, "SetBleDisconnect accepted: 300 seconds")
+                    gatt.aapsLogger.info(LTag.BGSOURCE, "SetBleDisconnect accepted: 300 seconds")
                 } catch (e: Exception) {
-                    EversenseLogger.warning(TAG, "SetBleDisconnect (300 seconds) failed: $e")
+                    gatt.aapsLogger.warn(LTag.BGSOURCE, "SetBleDisconnect (300 seconds) failed: $e")
                 }
 
                 // Read active alarms
@@ -221,13 +186,13 @@ class Eversense365Communicator {
                     // can't masquerade as a real ongoing alarm - matches the upstream iOS EversenseKit fix.
                     val filteredAlarms = activeAlarms.alarms.filter { it.code != EversenseAlarm.UNKNOWN }
                     state.activeAlarms = filteredAlarms
-                    EversenseLogger.debug(TAG) { "Active alarms: ${filteredAlarms.map { it.code.title }}" }
+                    gatt.aapsLogger.debug(LTag.BGSOURCE) { "Active alarms: ${filteredAlarms.map { it.code.title }}" }
                 } catch (e: Exception) {
-                    EversenseLogger.warning(TAG, "Could not read active alarms: $e")
+                    gatt.aapsLogger.warn(LTag.BGSOURCE, "Could not read active alarms: $e")
                 }
 
                 state.lastSync = System.currentTimeMillis()
-                EversenseLogger.debug(TAG) { "Completed full sync - datetime: ${state.lastSync}" }
+                gatt.aapsLogger.debug(LTag.BGSOURCE) { "Completed full sync - datetime: ${state.lastSync}" }
                 preferences.edit(commit = true) {
                     putString(StorageKeys.STATE, JSON.encodeToString(state))
                 }
@@ -236,44 +201,18 @@ class Eversense365Communicator {
                     watchers.forEach { it.onStateChanged(state) }
                 }
             } catch (exception: Exception) {
-                EversenseLogger.error(TAG, "Failed to do full sync: $exception")
-                EversenseLogger.debug(TAG) { exception.stackTraceToString() }
+                gatt.aapsLogger.error(LTag.BGSOURCE, "Failed to do full sync: $exception")
+                gatt.aapsLogger.debug(LTag.BGSOURCE) { exception.stackTraceToString() }
                 // Disconnect on fullSync failure so BLE session resets cleanly rather than looping
                 // with broken GATT state. Must use disconnectAndScheduleReconnect() here, not plain
                 // disconnect() - see that method's doc comment for why a self-initiated disconnect
                 // doesn't reliably re-trigger onConnectionStateChange() (and therefore its reconnect
                 // scheduling) on its own.
-                EversenseLogger.warning(TAG, "Disconnecting after fullSync failure to reset BLE session")
+                gatt.aapsLogger.warn(LTag.BGSOURCE, "Disconnecting after fullSync failure to reset BLE session")
                 gatt.disconnectAndScheduleReconnect()
             }
         }
 
-        fun writeSettings(gatt: EversenseGattCallback, preferences: EversenseStore, settings: EversenseTransmitterSettings): Boolean {
-            return try {
-                gatt.writePacket<SetVibrateMode365Packet.Response>(SetVibrateMode365Packet(settings.vibrateEnabled))
-                gatt.writePacket<SetHighGlucoseAlarmEnabled365Packet.Response>(SetHighGlucoseAlarmEnabled365Packet(settings.glucoseHighAlarmEnabled))
-                gatt.writePacket<SetHighGlucoseAlarm365Packet.Response>(SetHighGlucoseAlarm365Packet(settings.glucoseHighAlarmThreshold))
-                gatt.writePacket<SetLowGlucoseAlarm365Packet.Response>(SetLowGlucoseAlarm365Packet(settings.glucoseLowAlarmThreshold))
-                gatt.writePacket<SetRateFallingEnabled365Packet.Response>(SetRateFallingEnabled365Packet(settings.rateFallingAlarmEnabled))
-                gatt.writePacket<SetRateFallingThreshold365Packet.Response>(SetRateFallingThreshold365Packet(settings.rateFallingAlarmThreshold))
-                gatt.writePacket<SetRateRisingEnabled365Packet.Response>(SetRateRisingEnabled365Packet(settings.rateRisingAlarmEnabled))
-                gatt.writePacket<SetRateRisingThreshold365Packet.Response>(SetRateRisingThreshold365Packet(settings.rateRisingAlarmThreshold))
-                gatt.writePacket<SetPredictionLowEnabled365Packet.Response>(SetPredictionLowEnabled365Packet(settings.predictiveLowAlarmEnabled))
-                gatt.writePacket<SetPredictionLowThreshold365Packet.Response>(SetPredictionLowThreshold365Packet(settings.predictiveLowAlarmThreshold))
-                gatt.writePacket<SetPredictionLowTime365Packet.Response>(SetPredictionLowTime365Packet(settings.predictiveLowAlarmMinutes))
-                gatt.writePacket<SetPredictionHighEnabled365Packet.Response>(SetPredictionHighEnabled365Packet(settings.predictiveHighAlarmEnabled))
-                gatt.writePacket<SetPredictionHighThreshold365Packet.Response>(SetPredictionHighThreshold365Packet(settings.predictiveHighAlarmThreshold))
-                gatt.writePacket<SetPredictionHighTime365Packet.Response>(SetPredictionHighTime365Packet(settings.predictiveHighAlarmMinutes))
-                EversenseLogger.debug(TAG) { "365 settings written successfully" }
-                preferences.edit(commit = true) {
-                    putString(StorageKeys.STATE, JSON.encodeToString(JSON.decodeFromString<EversenseState>(preferences.getString(StorageKeys.STATE, null) ?: "{}").also { it.settings = settings }))
-                }
-                true
-            } catch (e: Exception) {
-                EversenseLogger.error(TAG, "Failed to write 365 settings: $e")
-                false
-            }
-        }
     }
 }
 

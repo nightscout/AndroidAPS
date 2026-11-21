@@ -35,8 +35,8 @@ The PR's own CI on `dev` failed, and so did the full gate here.
 - A reading with a time in the future is accepted, stored and kept as `recentGlucoseDatetime`
   (`Eversense365Communicator.readGlucose`, `EversenseE3Communicator.readGlucose` only check `<= recent`). Real
   readings are then refused as "still recent" until the clock passes that time.
-- The 365 decoder has no lower bound (`GlucoseDecoders`: only `>= 450` is refused; E3 takes 20..450). A 0 or an error
-  value can be stored as glucose. The same goes for 365 history (`GetGlucoseLogValuesPacket`).
+- Fixed: the 365 decoder had no lower bound. Now 20..449 for the reading and the history, and a reading with a
+  "glucose unavailable" reason is not taken (`GlucoseDecoders.v2`, `DecodingFixesTest`).
 - `recentGlucoseDatetime` is saved before the reading is delivered (`EversenseCGMPlugin.watchersFor` posts it only
   while the session is active). A link drop in between loses that reading; E3 has no backfill and the 365 backfill
   window starts after it.
@@ -50,9 +50,9 @@ The PR's own CI on `dev` failed, and so did the full gate here.
 
 - `EversensePlugin.onStateChanged` writes `IntKey.OverviewSageWarning` / `OverviewSageCritical` on every update: the
   user's own SAGE limits are overwritten and stay after a change of CGM.
-- `NotificationId.EVERSENSE_ALARM` is one card per id: a later battery or expiry notice replaces an open urgent
-  alarm, and nothing removes the card when the alarm ends. `EVERSENSE_CREDENTIALS` and `EVERSENSE_PLACEMENT` are
-  posted at another level than their declared one.
+- Fixed: battery, expiry and calibration-due notices have their own ids, so they no longer replace an open alarm.
+  Still open: nothing removes the alarm card when the alarm ends; `EVERSENSE_PLACEMENT` is posted at another level
+  than its declared one.
 - `QuickLaunchResolver`: the "Eversense Calibration" action is offered to every user, whatever the CGM.
 - `LongNonKey.EversenseLastCalibrationSubmittedAt` puts a device key into `core:keys` only so that `ui` can read it.
 - `StringPreferenceKey.requiresPasswordConfirmation` (default true): only the Eversense password skips confirmation.
@@ -102,7 +102,7 @@ The module already uses `kmp-android-library` (iOS and JVM targets declared); al
 | Timers, threads | coroutines, `Mutex`, `withTimeout`, `CompletableDeferred` |
 | Storage | `EversenseStore` (already a port), backed by `Preferences` |
 | Time | kotlinx-datetime and `DateUtil` |
-| Logging | `AAPSLogger` (`LTag.BGSOURCE`); drop slf4j and logback |
+| Logging | `AAPSLogger` (`LTag.BGSOURCE`), done |
 | Alerts | `NotificationManager` |
 
 Crypto for 365: ECDSA P-256, ECDH P-256, HKDF-SHA256 and random are in cryptography-kotlin. **AES-CCM is not**
@@ -177,6 +177,23 @@ Bluetooth off and on; a lost answer; app restart.
      `calibrationNote()`; the master shows it in the confirmation and the SMS reply repeats it.
 
    Known: with xDrip+ and Juggluco both installed the calibration goes to xDrip+ (as before this branch).
+
+   Compared with PR #4869 (CAPTCG, not used): our code was built on its last state, the protocol is the same byte for
+   byte, and every fix it claims is in ours. Ours is better on the link (a timeout closes it, one thread and lock,
+   offline 365, stop cleans up). Taken over or fixed from the comparison:
+   - Logging through `AAPSLogger` (`LTag.BGSOURCE`) everywhere; the own logback file, its setting and slf4j/logback are
+     gone. The decrypted frame dump is gone with it; a test checks the session key never reaches the log.
+   - An E3 can be used without a login ("Continue without signing in"); the cloud upload is off then. A 365 still
+     needs the login, and one found without it shows as a refused login.
+   - Transmitter alarms that are critical ring; battery low comes once per discharge (was once per install, after
+     noon only); an E3 that says it cannot calibrate now refuses before the confirmation; an E3 reading no longer adds
+     a sensor change; the 365 protocol version text, which could stop every sync, is no longer parsed.
+   - Dead code: the transmitter settings (read every sync and never used, written by nothing), 65 commands the driver
+     never sent, `MessageCoder`, `CommandError`, `signalToLabel`, `EVERSENSE_RELEASE`. `TECHNICAL.md` rewritten.
+
+   Kept as it was: the cloud upload once an hour. To check on a device: the 365 Bluetooth disconnect timeout (300 s
+   here, 0 in #4869), the reconnect with the phone asleep, the 365 "glucose unavailable" field, the E3 calibration
+   time zone.
 
    Then the rest of the list above: the glucose-data findings, the effects on other features, the rules, the missing
    tests.

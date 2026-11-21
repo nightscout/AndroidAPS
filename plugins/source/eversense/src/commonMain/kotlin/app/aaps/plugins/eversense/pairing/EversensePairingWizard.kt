@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -154,6 +155,12 @@ private fun AccountStep(state: EversensePairingViewModel.UiState, account: Evers
         )
         state.signInError?.let { error ->
             Text(stringResource(error.message()), color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium)
+        }
+        if (state.model == EversenseModel.E3) {
+            Text(stringResource(EversenseStrings.eversense_pair_without_sign_in_hint), style = MaterialTheme.typography.bodyMedium)
+            TextButton(onClick = viewModel::continueWithoutSignIn, enabled = state.canGoOnWithoutSignIn) {
+                Text(stringResource(EversenseStrings.eversense_pair_without_sign_in))
+            }
         }
     }
 }

@@ -1,5 +1,7 @@
 package app.aaps.plugins.eversense.util
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import android.annotation.SuppressLint
 import app.aaps.plugins.eversense.enums.EversenseTrendArrow
 import app.aaps.plugins.eversense.models.EversenseCGMResult
@@ -21,11 +23,6 @@ class EversenseHttp365Util {
      *
      * Declared on the class rather than inside [Companion] so callers can name it as
      * `EversenseHttp365Util.UploadOutcome`.
-     *
-     * [EversenseLogger] output never reaches the exported log file - it uses arbitrary string
-     * tags while the file appender only captures AAPS's LTag loggers - so everything needed to
-     * diagnose a missing reading has to travel back to the caller, which logs through
-     * aapsLogger.
      */
     data class UploadOutcome(
         val success: Boolean,
@@ -59,7 +56,6 @@ class EversenseHttp365Util {
     }
 
     companion object {
-        private val TAG = "EversenseHttp365Util"
         private val JSON = Json { ignoreUnknownKeys = true }
 
         private val CLIENT_NO = 2
@@ -105,25 +101,25 @@ class EversenseHttp365Util {
         private fun effectiveCareBaseUrl(state: EversenseSecureState) = if (state.isEuropeanRegion) euCareBaseUrl else careBaseUrl
         private fun effectiveVaultBaseUrl(state: EversenseSecureState) = if (state.isEuropeanRegion) euVaultBaseUrl else vaultBaseUrl
 
-        fun login(preference: EversenseStore): LoginResponseModel? {
+        fun login(aapsLogger: AAPSLogger, preference: EversenseStore): LoginResponseModel? {
             val state = getState(preference)
             return try {
                 val reply = DmsHttpClient.post("${effectiveTokenBaseUrl(state)}connect/token", DmsHttpClient.passwordGrant(state.username, state.password), form = true)
                 DmsSignIn.remember(preference, DmsSignIn.outcome(reply))
                 if (reply.status >= 400) {
-                    EversenseLogger.error(TAG, "Login failed: HTTP ${reply.status}")
+                    aapsLogger.error(LTag.BGSOURCE, "Login failed: HTTP ${reply.status}")
                     null
                 } else {
-                    EversenseLogger.info(TAG, "Login succeeded: HTTP ${reply.status}")
+                    aapsLogger.info(LTag.BGSOURCE, "Login succeeded: HTTP ${reply.status}")
                     Json.decodeFromString(LoginResponseModel.serializer(), reply.body)
                 }
             } catch (error: Exception) {
-                EversenseLogger.error(TAG, "Login failed: $error")
+                aapsLogger.error(LTag.BGSOURCE, "Login failed: $error")
                 null
             }
         }
 
-        fun getFleetSecretV2(preferences: EversenseStore, accessToken: String, serialNumber: ByteArray, nonce: ByteArray, flags: Boolean, publicKey: ByteArray): FleetSecretV2ResponseModel? {
+        fun getFleetSecretV2(aapsLogger: AAPSLogger, preferences: EversenseStore, accessToken: String, serialNumber: ByteArray, nonce: ByteArray, flags: Boolean, publicKey: ByteArray): FleetSecretV2ResponseModel? {
             try {
                 val publicKeyStr = Base64.getUrlEncoder().withoutPadding()
                     .encodeToString(publicKey.copyOfRange(27, publicKey.count()))
@@ -145,13 +141,13 @@ class EversenseHttp365Util {
 
                 val response = Json.decodeFromString(FleetSecretV2ResponseModel.serializer(), dataJson)
                 if (response.Status != "Success" || response.Result.Certificate == null) {
-                    EversenseLogger.error(TAG, "Received invalid tx certificate response - status=${response.Status}")
+                    aapsLogger.error(LTag.BGSOURCE, "Received invalid tx certificate response - status=${response.Status}")
                     return null
                 }
 
                 return response
             } catch (e: Exception) {
-                EversenseLogger.error(TAG, "Failed to get fleetSecretV2 - exception: $e")
+                aapsLogger.error(LTag.BGSOURCE, "Failed to get fleetSecretV2 - exception: $e")
                 return null
             }
         }
@@ -165,8 +161,8 @@ class EversenseHttp365Util {
             }
         }
 
-        fun getOrRefreshToken(preferences: EversenseStore): String? = DmsAccessTokens.resolve(preferences) {
-            login(preferences)?.let { DmsAccessTokens.Login(it.access_token, it.expires_in) }
+        fun getOrRefreshToken(aapsLogger: AAPSLogger, preferences: EversenseStore): String? = DmsAccessTokens.resolve(preferences) {
+            login(aapsLogger, preferences)?.let { DmsAccessTokens.Login(it.access_token, it.expires_in) }
         }
 
         /**
@@ -179,14 +175,15 @@ class EversenseHttp365Util {
          * silently dropped the reading looked identical to a genuine success.
          */
         fun uploadGlucoseReadings(
+            aapsLogger: AAPSLogger,
             preferences: EversenseStore,
             readings: List<EversenseCGMResult>,
             transmitterSerialNumber: String,
             firmwareVersion: String
         ): UploadOutcome {
             if (readings.isEmpty()) return UploadOutcome(success = true)
-            val token = getOrRefreshToken(preferences) ?: run {
-                EversenseLogger.error(TAG, "Cannot upload glucose — no valid access token")
+            val token = getOrRefreshToken(aapsLogger, preferences) ?: run {
+                aapsLogger.error(LTag.BGSOURCE, "Cannot upload glucose — no valid access token")
                 return UploadOutcome(success = false, error = "no valid access token")
             }
             val state = getState(preferences)
@@ -195,7 +192,7 @@ class EversenseHttp365Util {
                 // Only upload readings that have raw BLE data — readings without rawResponseHex are skipped.
                 val uploadable = readings.filter { it.rawResponseHex.isNotEmpty() }
                 if (uploadable.isEmpty()) {
-                    EversenseLogger.info(TAG, "No readings with raw BLE data to upload — skipping")
+                    aapsLogger.info(LTag.BGSOURCE, "No readings with raw BLE data to upload — skipping")
                     // Deliberately not success: nothing reached the server, and reporting this as a
                     // send is what made dropped readings look like healthy uploads in the log.
                     return UploadOutcome(
@@ -205,7 +202,7 @@ class EversenseHttp365Util {
                     )
                 }
 
-                EversenseLogger.debug(TAG) { "Uploading ${uploadable.size} reading(s) — TransmitterId='$transmitterSerialNumber'" }
+                aapsLogger.debug(LTag.BGSOURCE) { "Uploading ${uploadable.size} reading(s) — TransmitterId='$transmitterSerialNumber'" }
 
                 // Counted, not filtered: a reading with no sensorId is still sent, because dropping
                 // it would trade one silent loss for another. Reported so a portal gap can be tied
@@ -223,7 +220,7 @@ class EversenseHttp365Util {
                         r.rawResponseHex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
                     )
                     val ts = dateFormatter.get().format(Date(r.datetime))
-                    EversenseLogger.debug(TAG) { "  Reading: glucose=${r.glucoseInMgDl} ts=$ts rawHex=${r.rawResponseHex.length / 2}B" }
+                    aapsLogger.debug(LTag.BGSOURCE) { "  Reading: glucose=${r.glucoseInMgDl} ts=$ts rawHex=${r.rawResponseHex.length / 2}B" }
                     """{"SensorId":"$portalSensorId","TransmitterId":"$transmitterSerialNumber","Timestamp":"$ts","CurrentGlucoseValue":${r.glucoseInMgDl},"CurrentGlucoseDateTime":"$ts","FWVersion":"$firmwareVersion","EssentialLog":"$essentialLog"}"""
                 }
 
@@ -231,8 +228,8 @@ class EversenseHttp365Util {
                 val responseCode = reply.status
                 if (responseCode >= 400) {
                     val error = reply.body
-                    EversenseLogger.error(TAG, "Glucose upload failed — status: $responseCode")
-                    EversenseLogger.debug(TAG) { "Cloud response body: $error" }
+                    aapsLogger.error(LTag.BGSOURCE, "Glucose upload failed — status: $responseCode")
+                    aapsLogger.debug(LTag.BGSOURCE) { "Cloud response body: $error" }
                     UploadOutcome(
                         success = false,
                         sentCount = 0,
@@ -243,8 +240,8 @@ class EversenseHttp365Util {
                     )
                 } else {
                     val responseBody = reply.body
-                    EversenseLogger.info(TAG, "Glucose upload success — status: $responseCode, readings: ${uploadable.size}")
-                    EversenseLogger.debug(TAG) { "Cloud response body: $responseBody" }
+                    aapsLogger.info(LTag.BGSOURCE, "Glucose upload success — status: $responseCode, readings: ${uploadable.size}")
+                    aapsLogger.debug(LTag.BGSOURCE) { "Cloud response body: $responseBody" }
                     // Carried out, but the body is what tells us whether the server actually kept
                     // the reading - a 2xx alone has proven not to mean it landed in the portal.
                     UploadOutcome(
@@ -257,7 +254,7 @@ class EversenseHttp365Util {
                     )
                 }
             } catch (e: Exception) {
-                EversenseLogger.error(TAG, "Glucose upload exception: $e")
+                aapsLogger.error(LTag.BGSOURCE, "Glucose upload exception: $e")
                 UploadOutcome(success = false, error = e.toString())
             }
         }
@@ -268,6 +265,7 @@ class EversenseHttp365Util {
          * Returns true on HTTP 2xx, false on any error.
          */
         fun putCurrentValues(
+            aapsLogger: AAPSLogger,
             preferences: EversenseStore,
             glucose: Int,
             timestamp: Long,
@@ -275,8 +273,8 @@ class EversenseHttp365Util {
             signalStrength: Int,
             batteryPercentage: Int
         ): UploadOutcome {
-            val token = getOrRefreshToken(preferences) ?: run {
-                EversenseLogger.error(TAG, "Cannot post current values — no valid access token")
+            val token = getOrRefreshToken(aapsLogger, preferences) ?: run {
+                aapsLogger.error(LTag.BGSOURCE, "Cannot post current values — no valid access token")
                 return UploadOutcome(success = false, error = "no valid access token")
             }
             return try {
@@ -287,17 +285,17 @@ class EversenseHttp365Util {
                 val responseCode = reply.status
                 if (responseCode >= 400) {
                     val error = reply.body
-                    EversenseLogger.error(TAG, "PutCurrentValues failed — status: $responseCode")
-                    EversenseLogger.debug(TAG) { "Cloud response body: $error" }
+                    aapsLogger.error(LTag.BGSOURCE, "PutCurrentValues failed — status: $responseCode")
+                    aapsLogger.debug(LTag.BGSOURCE) { "Cloud response body: $error" }
                     UploadOutcome(success = false, httpStatus = responseCode, responseBody = error)
                 } else {
                     val responseBody = reply.body
-                    EversenseLogger.debug(TAG) { "PutCurrentValues success — status: $responseCode, glucose=$glucose" }
-                    EversenseLogger.debug(TAG) { "Cloud response body: $responseBody" }
+                    aapsLogger.debug(LTag.BGSOURCE) { "PutCurrentValues success — status: $responseCode, glucose=$glucose" }
+                    aapsLogger.debug(LTag.BGSOURCE) { "Cloud response body: $responseBody" }
                     UploadOutcome(success = true, sentCount = 1, httpStatus = responseCode, responseBody = responseBody)
                 }
             } catch (e: Exception) {
-                EversenseLogger.error(TAG, "PutCurrentValues exception: $e")
+                aapsLogger.error(LTag.BGSOURCE, "PutCurrentValues exception: $e")
                 UploadOutcome(success = false, error = e.toString())
             }
         }
@@ -311,6 +309,7 @@ class EversenseHttp365Util {
          * decompiled official Eversense app.
          */
         fun putDeviceEvents(
+            aapsLogger: AAPSLogger,
             preferences: EversenseStore,
             readings: List<EversenseCGMResult>,
             transmitterSerialNumber: String,
@@ -318,8 +317,8 @@ class EversenseHttp365Util {
             alerts: List<app.aaps.plugins.eversense.models.ActiveAlarm> = emptyList()
         ): UploadOutcome {
             if (readings.isEmpty()) return UploadOutcome(success = true)
-            val token = getOrRefreshToken(preferences) ?: run {
-                EversenseLogger.error(TAG, "Cannot post device events — no valid access token")
+            val token = getOrRefreshToken(aapsLogger, preferences) ?: run {
+                aapsLogger.error(LTag.BGSOURCE, "Cannot post device events — no valid access token")
                 return UploadOutcome(success = false, error = "no valid access token")
             }
             return try {
@@ -331,7 +330,7 @@ class EversenseHttp365Util {
                 val patientBytes = EversenseDmsBinaryCodec.buildEmptyPatientBytes()
                 val alertBytes = EversenseDmsBinaryCodec.buildAlertBytes(sensorId, alerts, readings.lastOrNull()?.datetime ?: System.currentTimeMillis(), readings.lastOrNull()?.glucoseInMgDl ?: 0)
 
-                EversenseLogger.debug(TAG) { "PutDeviceEvents: ${readings.size} reading(s), txId='$transmitterSerialNumber', sensorId='$sensorId'" }
+                aapsLogger.debug(LTag.BGSOURCE) { "PutDeviceEvents: ${readings.size} reading(s), txId='$transmitterSerialNumber', sensorId='$sensorId'" }
 
                 val jsonBody = """{"deviceType":"SMSIMeter","deviceName":"Smart Transmitter (Android)","deviceID":"$transmitterSerialNumber","offsetBytes":"$offsetBytes","sgBytes":"$sgBytes","mgBytes":"$mgBytes","patientBytes":"$patientBytes","alertBytes":"$alertBytes","algorithmVersion":"10"}"""
 
@@ -339,13 +338,13 @@ class EversenseHttp365Util {
                 val responseCode = reply.status
                 if (responseCode >= 400) {
                     val error = reply.body
-                    EversenseLogger.error(TAG, "PutDeviceEvents failed — status: $responseCode")
-                    EversenseLogger.debug(TAG) { "Cloud response body: $error" }
+                    aapsLogger.error(LTag.BGSOURCE, "PutDeviceEvents failed — status: $responseCode")
+                    aapsLogger.debug(LTag.BGSOURCE) { "Cloud response body: $error" }
                     UploadOutcome(success = false, httpStatus = responseCode, responseBody = error)
                 } else {
                     val responseBody = reply.body
-                    EversenseLogger.info(TAG, "PutDeviceEvents success — status: $responseCode, readings: ${readings.size}")
-                    EversenseLogger.debug(TAG) { "Cloud response body: $responseBody" }
+                    aapsLogger.info(LTag.BGSOURCE, "PutDeviceEvents success — status: $responseCode, readings: ${readings.size}")
+                    aapsLogger.debug(LTag.BGSOURCE) { "Cloud response body: $responseBody" }
                     UploadOutcome(
                         success = true,
                         sentCount = readings.size,
@@ -355,7 +354,7 @@ class EversenseHttp365Util {
                     )
                 }
             } catch (e: Exception) {
-                EversenseLogger.error(TAG, "PutDeviceEvents exception: $e")
+                aapsLogger.error(LTag.BGSOURCE, "PutDeviceEvents exception: $e")
                 UploadOutcome(success = false, error = e.toString())
             }
         }

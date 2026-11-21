@@ -1,6 +1,8 @@
 package app.aaps.plugins.eversense.util
 
 import android.security.keystore.KeyProperties
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.plugins.eversense.models.EversenseSecureState
 import app.aaps.plugins.eversense.packets.e365.utils.toByteArray
 import app.aaps.plugins.eversense.packets.e365.utils.toLong
@@ -34,7 +36,7 @@ import org.bouncycastle.crypto.generators.HKDFBytesGenerator
 import org.bouncycastle.crypto.params.HKDFParameters
 import org.bouncycastle.util.BigIntegers
 
-class EversenseCrypto365Util(val preference: EversenseStore) {
+class EversenseCrypto365Util(val preference: EversenseStore, private val aapsLogger: AAPSLogger) {
     private var ephemPrivate: ECPrivateKey? = null
     private var ephemPublic: ECPublicKey? = null
     private var ephemSalt: ByteArray? = null
@@ -66,7 +68,7 @@ class EversenseCrypto365Util(val preference: EversenseStore) {
     fun generateKeyPairIfNotExists(): Boolean {
         val state = getState(preference)
         if (state.clientId.isNotEmpty() && state.publicKey.isNotEmpty() && state.privateKey.isNotEmpty()) {
-            EversenseLogger.debug(TAG) { "Already generated keypair" }
+            aapsLogger.debug(LTag.BGSOURCE) { "Already generated keypair" }
             return true
         }
 
@@ -76,7 +78,7 @@ class EversenseCrypto365Util(val preference: EversenseStore) {
         state.publicKey = keyPair.public.encoded.toHexString()
 
         saveState(state, preference)
-        EversenseLogger.debug(TAG) { "Generated keypair!" }
+        aapsLogger.debug(LTag.BGSOURCE) { "Generated keypair!" }
         return true
     }
 
@@ -100,7 +102,7 @@ class EversenseCrypto365Util(val preference: EversenseStore) {
 
     fun generateEphem(): ByteArray? {
         val keyPair = generatePrivateKeyPair() ?:run {
-            EversenseLogger.error(TAG, "Failed to generate keypair...")
+            aapsLogger.error(LTag.BGSOURCE, "Failed to generate keypair...")
             return null
         }
 
@@ -117,8 +119,7 @@ class EversenseCrypto365Util(val preference: EversenseStore) {
             val data = publicKey.copyOfRange(27, publicKey.count()) + v2Salt
             return ecdsaSign(privateKey, data)
         } catch (e: Exception) {
-            EversenseLogger.debug(TAG) { e.stackTraceToString() }
-            EversenseLogger.error(TAG, "Got exception during generateEphem - exception: $e")
+            aapsLogger.error(LTag.BGSOURCE, "Got exception during generateEphem", e)
             return null
         }
     }
@@ -157,8 +158,7 @@ class EversenseCrypto365Util(val preference: EversenseStore) {
 
             sessionKey = symmetricKey
         } catch (e: Exception) {
-            EversenseLogger.debug(TAG) { e.stackTraceToString() }
-            EversenseLogger.error(TAG, "Failed to generate sessionKey: $e")
+            aapsLogger.error(LTag.BGSOURCE, "Failed to generate sessionKey", e)
         }
     }
 
@@ -169,7 +169,7 @@ class EversenseCrypto365Util(val preference: EversenseStore) {
         val prefix = SecureV2Cipher.prefix(index)
         val nonce = SecureV2Cipher.nonce(seed, index)
         messageSequenceNumber++
-        return SecureV2Cipher.encrypt(data, key, prefix, nonce) ?: byteArrayOf()
+        return SecureV2Cipher.encrypt(data, key, prefix, nonce) ?: cipherFailed("encrypt")
     }
 
     fun decrypt(response: ByteArray): ByteArray {
@@ -179,55 +179,59 @@ class EversenseCrypto365Util(val preference: EversenseStore) {
         val prefix = response.copyOfRange(0, 2)
         val index = (BinaryFields.unsigned(prefix.toUByteArray()) shr 2) and 0x3fff
         val nonce = SecureV2Cipher.nonce(seed, index)
-        return SecureV2Cipher.decrypt(ciphertext, key, prefix, nonce) ?: byteArrayOf()
+        return SecureV2Cipher.decrypt(ciphertext, key, prefix, nonce) ?: cipherFailed("decrypt")
     }
 
     private fun missingMaterial(name: String): ByteArray {
-        EversenseLogger.error(TAG, "No $name available")
+        aapsLogger.error(LTag.BGSOURCE, "No $name available")
         return byteArrayOf()
     }
 
+    private fun cipherFailed(operation: String): ByteArray {
+        aapsLogger.error(LTag.BGSOURCE, "Authenticated $operation failed")
+        return byteArrayOf()
+    }
+
+    private fun generatePrivateKeyPair(): KeyPair? {
+        try {
+            return KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC).run {
+                initialize(ECGenParameterSpec("secp256r1"))
+                generateKeyPair()
+            }
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.BGSOURCE, "Error generating key pair", e)
+            return null
+        }
+    }
+
+    private fun ecdsaSign(privateKey: PrivateKey, data: ByteArray): ByteArray? {
+        try {
+            val signature = Signature.getInstance("SHA256withECDSA").run {
+                initSign(privateKey)
+                update(data)
+                sign()
+            }
+
+            val dLSequence = ASN1InputStream(signature).readObject() as DLSequence
+            val value1 = (dLSequence.getObjectAt(0) as ASN1Integer).value
+            val value2 = (dLSequence.getObjectAt(1) as ASN1Integer).value
+            val bigInt1 = BigIntegers.asUnsignedByteArray(32, value1)
+            val bigInt2 = BigIntegers.asUnsignedByteArray(32, value2)
+
+            return bigInt1 + bigInt2
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.BGSOURCE, "Got exception during ecdsaSign", e)
+            return null
+        }
+    }
+
     companion object {
-        private const val TAG = "EversenseCrypto365Handler"
         private val JSON = Json { ignoreUnknownKeys = true }
 
         private fun generateRandomBytes(i: Int): ByteArray {
             val bArr = ByteArray(i)
             SecureRandom().nextBytes(bArr)
             return bArr
-        }
-
-        private fun generatePrivateKeyPair(): KeyPair? {
-            try {
-                return KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC).run {
-                    initialize(ECGenParameterSpec("secp256r1"))
-                    generateKeyPair()
-                }
-            } catch (e: Exception) {
-                EversenseLogger.error(TAG, "Error generating key pair: $e")
-                return null
-            }
-        }
-
-        private fun ecdsaSign(privateKey: PrivateKey, data: ByteArray): ByteArray? {
-            try {
-                val signature = Signature.getInstance("SHA256withECDSA").run {
-                    initSign(privateKey)
-                    update(data)
-                    sign()
-                }
-
-                val dLSequence = ASN1InputStream(signature).readObject() as DLSequence
-                val value1 = (dLSequence.getObjectAt(0) as ASN1Integer).value
-                val value2 = (dLSequence.getObjectAt(1) as ASN1Integer).value
-                val bigInt1 = BigIntegers.asUnsignedByteArray(32, value1)
-                val bigInt2 = BigIntegers.asUnsignedByteArray(32, value2)
-
-                return bigInt1 + bigInt2
-            } catch(e: Exception) {
-                EversenseLogger.error(TAG, "Got exception during ecdsaSign - exception: $e")
-                return null
-            }
         }
 
         private fun getState(preference: EversenseStore): EversenseSecureState {
