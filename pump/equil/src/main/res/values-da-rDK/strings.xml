@@ -71,9 +71,9 @@
     <string name="equil_common_history_bolus_value">%1$.2f IE</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Indstil bolus</string>
-    <string name="equil_common_cmd_cancel_bolus">Annullér bolus</string>
+    <string name="equil_common_cmd_cancel_bolus">Annuller bolus</string>
     <string name="equil_common_cmd_set_tbr">Indstil midlertidig basal</string>
-    <string name="equil_common_cmd_cancel_tbr">Annullér midlertidig basal</string>
+    <string name="equil_common_cmd_cancel_tbr">Annuller midlertidig basal</string>
     <string name="equil_common_cmd_set_basal_schedule">Indstil basalplan</string>
     <string name="equil_common_cmd_set_time">Indstil tid</string>
     <string name="equil_common_cmd_suspend_delivery">Sæt insulintilførsel på pause</string>
