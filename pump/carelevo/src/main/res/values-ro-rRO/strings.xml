@@ -113,10 +113,7 @@
     <string name="carelevo_dialog_patch_connect_message_title">Dacă plasturele găsit mai jos este cel corect, apăsați butonul Confirmați.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">Inserarea acului este finalizată și aplicatorul este îndepărtat</string>
     <string name="carelevo_dialog_connect_detached">Aplicator îndepărtat</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">
-        Apăsați clemele de pe ambele părți ale aplicatorului pentru a-l desprinde de plasture,\n
-        apoi apăsați butonul `Aplicator îndepărtat`. Administrarea insulinei va începe.
-    </string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">Apăsați clemele de pe ambele părți ale aplicatorului pentru a-l desprinde de plasture,\napoi apăsați butonul `Aplicator îndepărtat`. Administrarea insulinei va începe.</string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth nu este pornit. Verificați.</string>
     <string name="carelevo_toast_msg_patch_not_connected">Niciun plasture conectat.</string>
@@ -130,6 +127,7 @@
     <string name="carelevo_toast_msg_needle_check_failed">Verificarea acului a eșuat.</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">Eliminarea plasturelui a eșuat. Încercați din nou.</string>
+    <string name="carelevo_discarded_not_reached">Plasturele nu a putut fi contactat. A fost eliminat din AAPS, dar nu a fost oprit și poate administra încă insulină. Scoateți-l de pe corp.</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">Cererea de administrare a bazalei a eșuat. Încercați din nou.</string>
     <!-- Delivery Resume/Suspend -->
@@ -183,7 +181,7 @@
     <string name="alarm_notification_desc_warning_low_insulin">Au rămas mai puțin de 10 U de insulină; administrarea insulinei a fost oprită. Apăsați butonul [Dezactivați plasturele] și schimbați plasturele acum.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Plasturele a expirat; administrarea insulinei a fost oprită. Apăsați butonul [Dezactivați plasturele] și schimbați plasturele acum.</string>
     <string name="alarm_notification_desc_warning_low_battery">Baterie aproape descărcată; administrarea insulinei a fost oprită. Apăsați butonul [Eliminați plasturele] și schimbați plasturele acum.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">Administrarea insulinei a fost oprită. Mergeți acum într-un loc cu temperatură potrivită (40℉ ~ 99℉).</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">Administrarea insulinei a fost oprită. Mergeți acum într-un loc cu temperatură potrivită (40℉–99℉).</string>
     <string name="alarm_notification_desc_warning_not_used_app">Administrarea insulinei a fost oprită. Apăsați butonul [Porniți insulina] și reporniți administrarea bazalei.</string>
     <string name="alarm_notification_desc_warning_incomplete_patch_setting">Timpul de aplicare a plasturelui a expirat. Apăsați butonul [Dezactivați plasturele] și schimbați plasturele acum.</string>
     <string name="alarm_notification_desc_warning_failed_safety_check">Autodiagnosticarea a eșuat. Apăsați butonul [Dezactivați plasturele] și schimbați plasturele acum.</string>
@@ -214,5 +212,7 @@
     <string name="carelevo_profile_update_skip_comment">Omis: actualizare prea devreme.</string>
     <string name="carelevo_bolus_stop_not_confirmed">Plasturele nu a confirmat oprirea. Se așteaptă terminarea bolusului…</string>
     <string name="carelevo_bolus_rejected_missed_bolus_recorded">Un bolus care nu fusese înregistrat a fost adăugat acum. Verificați IOB, apoi încercați din nou.</string>
+    <string name="carelevo_bolus_outcome_unknown">Plasturele nu a răspuns la bolus. Întregul bolus este luat în calcul până când plasturele raportează cât a administrat.</string>
     <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Plasturele nu a confirmat oprirea. Este înregistrat bolusul complet de %1$s.</string>
+    <string name="carelevo_bolus_stopped_by_patch" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The patch stopped the bolus. Given: 0.50 U of 2.00 U">Plasturele a oprit bolusul. Administrat: %1$s din %2$s</string>
 </resources>
