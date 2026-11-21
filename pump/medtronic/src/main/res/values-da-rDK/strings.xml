@@ -3,14 +3,15 @@
     <!-- Medtronic (MDT) - Base -->
     <string name="description_pump_medtronic">Pumpeintegration til Medtronic, kræver RileyLink-enhed og specifik Pumpemodel</string>
     <!-- MDT Configuration -->
-    <string name="medtronic_serial_number">Pumpe Serienummer</string>
-    <string name="medtronic_pump_type">Pumpe Type</string>
-    <string name="medtronic_pump_frequency">Pumpe Frekvens</string>
+    <string name="medtronic_serial_number">Pumpens serienummer</string>
+    <string name="medtronic_pump_type">Pumpetype</string>
+    <string name="medtronic_pump_frequency">Pumpefrekvens</string>
     <string name="medtronic_pump_bolus_delay">Forsinkelse før Bolus starter (s)</string>
     <string name="medtronic_pump_max_bolus">Maks. Bolus på pumpe (IE)</string>
     <string name="medtronic_pump_max_basal">Maks. Basal på pumpe (E/t)</string>
     <string name="medtronic_custom_action_wake_and_tune">Vågn og Tune op</string>
     <string name="medtronic_custom_action_clear_bolus_block">Ryd Bolus-blok</string>
+    <string name="medtronic_custom_action_reset_rileylink">Nulstil RileyLink</string>
     <string name="medtronic_pump_battery_select">Batteritype</string>
     <string name="medtronic_pump_battery_no">Ikke valgt</string>
     <string name="medtronic_pump_battery_alkaline">Alkaline</string>
@@ -18,9 +19,25 @@
     <string name="medtronic_pump_battery_nizn">NiZn</string>
     <string name="medtronic_pump_battery_nimh">NiMH</string>
     <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">Andet (ikke understøttet)</string>
+    <string name="medtronic_pump_type_512">512</string>
+    <string name="medtronic_pump_type_712">712</string>
+    <string name="medtronic_pump_type_515">515</string>
+    <string name="medtronic_pump_type_715">715</string>
+    <string name="medtronic_pump_type_522">522</string>
+    <string name="medtronic_pump_type_722">722</string>
+    <string name="medtronic_pump_type_523_24a">523 (Fw 2.4A eller lavere)</string>
+    <string name="medtronic_pump_type_723_24a">723 (Fw 2.4A eller lavere)</string>
+    <string name="medtronic_pump_type_554_eu">554 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_eu">754 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_554_ca">554 (CA Fw. &lt;= 2.7A)</string>
+    <string name="medtronic_pump_type_754_ca">754 (CA Fw. &lt;= 2.7A)</string>
     <!-- Bolus delay entries -->
+    <string name="medtronic_bolus_delay_5s">5 s</string>
+    <string name="medtronic_bolus_delay_10s">10 s</string>
+    <string name="medtronic_bolus_delay_15s">15 s</string>
     <!-- MDT Fragment -->
-    <string name="rl_battery_label">RileyLink Batteri</string>
+    <string name="rl_battery_label">RileyLink-batteri</string>
     <!-- MDT Errors -->
     <string name="medtronic_error_serial_invalid">Serienummer ugyldig.</string>
     <string name="medtronic_error_pump_type_not_set">Pumpetype ikke angivet.</string>
@@ -50,19 +67,19 @@
     <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bolus kunne ikke afgives, da den tilgængelige insulinmængde (%1$.2f) er mindre end den krævede bolus (%2$.2f).</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">TBR kunne ikke indstilles.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Kunne ikke annullere den aktuelle TBR.</string>
-    <string name="medtronic_cmd_basal_profile_could_not_be_set">Basal profil kunne ikke indstilles.</string>
-    <string name="medtronic_cmd_basal_profile_not_set_is_same">Basal profil er den samme, så den vil ikke blive indstillet igen.</string>
+    <string name="medtronic_cmd_basal_profile_could_not_be_set">Basalprofilen kunne ikke indstilles.</string>
+    <string name="medtronic_cmd_basal_profile_not_set_is_same">Basalprofilen er den samme, så den bliver ikke indstillet igen.</string>
     <string name="medtronic_cmd_desc_get_history">Hent historik - Side %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Hent historik - Side %1$d</string>
-    <string name="medtronic_cmd_desc_get_time">Hent Pumpetid</string>
-    <string name="medtronic_cmd_desc_set_time">Indstil Pumpetid</string>
-    <string name="medtronic_cmd_desc_get_battery_status">Hent Batteristatus</string>
-    <string name="medtronic_cmd_desc_get_settings">Hent Indstillinger</string>
-    <string name="medtronic_cmd_desc_get_model">Hent Pumpemodel</string>
+    <string name="medtronic_cmd_desc_get_time">Hent pumpetid</string>
+    <string name="medtronic_cmd_desc_set_time">Indstil pumpetid</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Hent batteristatus</string>
+    <string name="medtronic_cmd_desc_get_settings">Hent indstillinger</string>
+    <string name="medtronic_cmd_desc_get_model">Hent pumpemodel</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Hent Basalprofil</string>
-    <string name="medtronic_cmd_desc_set_basal_profile">Indstil Basal Profil</string>
-    <string name="medtronic_cmd_desc_get_tbr">Hent Midlertidig Basal</string>
-    <string name="medtronic_cmd_desc_set_tbr">Indstil Midlertidig Basal</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">Indstil basalprofil</string>
+    <string name="medtronic_cmd_desc_get_tbr">Hent midlertidig basal</string>
+    <string name="medtronic_cmd_desc_set_tbr">Indstil midlertidig basal</string>
     <string name="medtronic_cmd_desc_cancel_tbr">Annuller midlertidig basal</string>
     <string name="medtronic_cmd_desc_set_bolus">Indstil Bolus</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Hent resterende insulin</string>
@@ -73,6 +90,6 @@
     <string name="set_neutral_temps_title">Indstil neutrale midlertidige basaler</string>
     <string name="set_neutral_temps_summary">Hvis aktiveret, vil det annullere en midlertidig basal inden udgangen af hver time. Denne metode kan hjælpe med at stoppe nogle pumper i at bippe/vibrere hver time.</string>
     <string name="invalid_history_data">Ugyldig pumpehistorikdata registreret. Åbn nyt problem og upload logfiler.</string>
-    <string name="riley_statistics">RL Statistik</string>
+    <string name="riley_statistics">RL-statistik</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Klikket: opdater</string>
 </resources>
