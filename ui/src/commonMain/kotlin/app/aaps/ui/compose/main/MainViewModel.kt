@@ -35,6 +35,7 @@ import app.aaps.core.interfaces.overview.graph.TbrDisplayData
 import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.interfaces.overview.graph.TempTargetDisplayData
 import app.aaps.core.interfaces.overview.graph.TempTargetState
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
@@ -111,6 +112,7 @@ import kotlin.time.TimeSource
 @Stable
 @Inject
 class MainViewModel(
+    private val activePlugin: ActivePlugin,
     val config: Config,
     private val urlOpener: UrlOpener,
     val preferences: Preferences,

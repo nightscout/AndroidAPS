@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -82,6 +83,7 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class MainViewModelTest {
 
+    @Mock private lateinit var activePlugin: ActivePlugin
     @Mock private lateinit var config: Config
     @Mock private lateinit var urlOpener: UrlOpener
     @Mock private lateinit var preferences: Preferences
@@ -156,7 +158,7 @@ internal class MainViewModelTest {
 
     /** The one place the constructor is called, so a test can re-stub a flow and build its own instance. */
     private fun buildSut() = MainViewModel(
-        config, urlOpener, preferences, fabricPrivacy, rh, dateUtil,
+        activePlugin, config, urlOpener, preferences, fabricPrivacy, rh, dateUtil,
         overviewDataCache, profileFunction, quickWizard,
         automation, persistenceLayer, aapsLogger, quickLaunchResolver, wizardExecutor,
         batchExecutor, uel, loop, protectionCheck, sceneActions, sceneChainTargetResolver,
