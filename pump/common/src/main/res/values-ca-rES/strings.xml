@@ -8,7 +8,7 @@
     <string name="pump_status_encrypt">Xifrant la comunicació</string>
     <string name="pump_status_ready">Preparat</string>
     <string name="pump_status_busy">Ocupat</string>
-    <string name="pump_status_suspended">En pausa</string>
+    <string name="pump_status_suspended">Suspesa</string>
     <string name="pump_status_executing_command">Executant ordre</string>
     <!-- Commands -->
     <string name="pump_cmd_desc_get_settings">Obtenir configuració</string>
