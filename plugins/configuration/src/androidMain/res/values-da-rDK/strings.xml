@@ -19,7 +19,7 @@
     <string name="master_password_summary">Hovedadgangskode bruges til backup kryptering og til at tilsidesætte sikkerhed i applikationen. Husk det eller gem et sikkert sted.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Brug værdien af den største mængde mad du plejer at indtage\n</string>
-    <string name="syncinfotext">Synkronisér data til skyen. Du kan springe denne del nu, men du vil ikke være i stand til at passere mål, før du opretter en Nightscout- eller Tidepool-klient.</string>
+    <string name="syncinfotext">Synkroniser data til skyen. Du kan springe denne del nu, men du vil ikke være i stand til at passere mål, før du opretter en Nightscout- eller Tidepool-klient.</string>
     <string name="status_label">Status:</string>
     <string name="diawarning">Husk: nye insulinprofiler kræver DIA mindst 5 timer. DIA 5-6 timer på ny profil er lig med DIA 3 timer på gamle insulinprofiler.</string>
     <string name="profile">Profil</string>
@@ -35,19 +35,19 @@
     <string name="setupwizard_permissions">Tilladelser</string>
     <string name="setupwizard_profile_info">Opret en profil med dine basalrater, IC, ISF og målværdier. Du kan tilføje flere profiler senere.</string>
     <string name="setupwizard_permissions_info">AAPS skal have adgang til lagerplads og tilladelser for at virke korrekt. Giv de nødvendige tilladelser nedenfor.</string>
-    <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink-status:</string>
     <string name="setupwizard_client_control_title">Klientstyring</string>
-    <string name="setupwizard_client_control_info">Par klientenheder, så de kan sende signerede kommandoer til denne hovedtelefon via Nightscout. Det er den nye anbefalede måde at fjernstyre AAPS på.</string>
+    <string name="setupwizard_client_control_info">Par klientenheder, så de kan sende signerede kommandoer til denne hovedenhed via Nightscout. Det er den nye anbefalede måde at fjernstyre AAPS på.</string>
     <string name="setupwizard_ns_receive_info">Modtagelse af behandlinger og data direkte fra Nightscout (en mindre sikker metode) er nu slået fra som standard. Åbn kun indstillingerne nedenfor, hvis du stadig har brug for det. Det er nødvendigt, hvis du indtaster data via NS eller apps fra tredjepart.</string>
     <string name="setupwizard_open_ns_receive_settings">Modtagelse af data fra Nightscout</string>
-    <string name="setupwizard_pair_with_master_info">Par denne klient med din AAPS-hovedtelefon, så den kan sende kommandoer via en sikker kanal. Efter parringen er opsætningen færdig.</string>
-    <string name="setupwizard_setup_from_master_title">Opsæt fra hovedtelefonen</string>
-    <string name="setupwizard_setup_from_master_info">Åbn Godkendte klienter på hovedtelefonen, og tilføj denne telefon med en QR-kode. Når du scanner den, opsættes Nightscout med sit eget token, og telefonen kan også blive parret. Efter scanningen er opsætningen færdig. Uden en QR-kode kan du springe dette trin over og selv opsætte Nightscout.</string>
+    <string name="setupwizard_pair_with_master_info">Par denne klient med din AAPS-hovedenhed, så den kan sende kommandoer via en sikker kanal. Efter parringen er opsætningen færdig.</string>
+    <string name="setupwizard_setup_from_master_title">Opsæt fra hovedenheden</string>
+    <string name="setupwizard_setup_from_master_info">Åbn Godkendte klienter på hovedenheden, og tilføj denne telefon med en QR-kode. Når du scanner den, opsættes Nightscout med sit eget token, og telefonen kan også blive parret. Efter scanningen er opsætningen færdig. Uden en QR-kode kan du springe dette trin over og selv opsætte Nightscout.</string>
     <string name="setupwizard_scan_master_qr">Scan QR-koden</string>
     <string name="setupwizard_pairing_ws_warning">Nightscout WebSocket-forbindelsen er nødvendig for parring. Gå tilbage til forrige trin, og aktiver den først.</string>
     <string name="setupwizard_pairing_status_master">Parrede klienter: %1$d</string>
     <string name="setupwizard_pairing_status_master_none">Ingen klienter parret endnu</string>
-    <string name="setupwizard_pairing_status_client_paired">Parret med en hovedtelefon</string>
+    <string name="setupwizard_pairing_status_client_paired">Parret med en hovedenhed</string>
     <string name="setupwizard_pairing_status_client_not_paired">Ikke parret endnu</string>
     <string name="setupwizard_instance_name_title">Hvem bruger denne telefon?</string>
     <string name="readstatus">Læs status</string>
