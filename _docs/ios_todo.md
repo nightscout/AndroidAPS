@@ -98,10 +98,18 @@ runs the loop and drives a pump. `IosClientConfig` reads which build it is from 
 identifier, mirroring Android's `ConfigImpl`, and `AapsAppHost` merges the `@APS` and `@PumpDriver`
 plugin buckets only there. The two client targets are unchanged. What the full app still lacks:
 
-- **Nothing on iOS calls `KeepAliveRunner`.** So on the full app the pump status check, the
-  pump-unreachable alarm and the zero temp basal retry do not run at all. It needs `runOnce` on every
-  wake, and something has to wake it every five minutes - see the keep-alive section of
-  `_docs/ios_blockers.md`. This is the first thing to do before the full app drives a real pump.
+- **`KeepAliveRunner` runs, but only while the app runs.** `IosStartPlatform.startKeepAlive` calls
+  `runOnce` every five minutes of real time (2026-11-21). On a locked phone the app runs only when
+  something wakes it, and the wake is the CGM: Eversense on iOS keeps a connect open with no time limit.
+  Seen on an iPhone on 2026-11-21 with an Eversense 365 and a CareLevo patch: the 365 sends a keep-alive
+  every minute and a reading every five, each one wakes the app, and the loop ran and gave SMBs to the
+  patch with the phone locked.
+- **iOS freezes the app about 10 seconds after each wake, whatever it is doing.** Seen the same day: a
+  patch connect froze half way and timed out on the next wake, and a loop run waited 52 s for its
+  decision. The calculation and the command queue now ask for background time (`IosBackgroundTime`, up
+  to about 30 s). Anything that waits by sleeping counts only the awake time; the CareLevo bolus
+  progress did, and took 3 minutes for a 38 s bolus, so it follows the clock now. Look for the same
+  pattern in other drivers before they run on iOS.
 - `RoleBranch.prepare`/`commit` call the local lambda on the full app instead of sending to a master.
   That path has never run on iOS.
 - `SignatureVerifierPlugin` is Android-only, so the full app's `@APS` bucket has two plugins of three.
