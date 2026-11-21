@@ -136,6 +136,7 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Inzulín nebyl přepnut: %1$s. Váš předchozí inzulin se stále používá.</string>
     <string name="insulin_activation_unconfirmed">Přepnutí inzulínu nemohlo být potvrzeno. Zkontrolujte, který inzulín je aktivní ve vašem profilu před dávkováním.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Inzulín nebyl přepnut. Váš předchozí inzulin se stále používá.\n\n%1$s</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInzulín také nebyl přepnut. Pokud je nový inzulín již v pumpě, pumpu nepřipojujte a změnu inzulínu spusťte znovu.</string>
     <string name="active"><![CDATA[<Aktivní>]]></string>
     <string name="date">Datum</string>
     <string name="insulin_nickname_label">Přezdívka inzulínu</string>
@@ -1070,6 +1071,8 @@
     <string name="wiki_search_offline">Hledání v dokumentaci vyžaduje připojení k internetu</string>
     <string name="no_search_results">Nebyly nalezeny žádné výsledky</string>
     <string name="search_plugin_disabled">Plugin %1$s zakázán</string>
+    <string name="search_recent">Nedávná vyhledávání</string>
+    <string name="search_history_remove">Odebrat z nedávných vyhledávání</string>
     <!--    Food Management -->
     <string name="food_management">Potraviny</string>
     <string name="food_deleted">Potravina odstraněna</string>
@@ -1116,6 +1119,7 @@
     <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Nastavení ke změně: %1$d. Pluginy, které byly změněny, budou restartovány.</string>
     <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Nastavení ke změně: %1$d. Nastavení pumpy zachováno: %2$d, takže vaše pumpa bude fungovat nadále.</string>
     <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Importovaná nastavení vybrala nedostupnou pumpu v tomto telefonu. %1$s je nyní aktivní - zkontrolujte nastavení pumpy.</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">Ze zálohy přidáno do vašeho seznamu inzulínů: %1$s. Zatím se nepoužívá: při aktivaci profilu vyberte ten správný, a to dříve, než Nightscout stáhne vaše starší ošetření.</string>
     <string name="import_applying">Používání nastavení…</string>
     <string name="import_replace_pump_settings">Nahradit také nastavení pumpy</string>
     <string name="import_replace_pump_settings_summary">Ponechte toto vypnuto, aby pumpa zůstala spárována. Zapněte ji při obnovování na novém telefonu se stejnou pumpou.</string>
@@ -1212,5 +1216,6 @@
     <string name="units_sec">s</string>
     <string name="units_years">r</string>
     <string name="prefs_range_title">Rozsah pro zobrazení</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">Bolus byl po %1$s zastaven pumpou. Před dalším bolusem zkontrolujte pumpu.</string>
     <string name="secrets_not_protected">Na tomto počítači nebylo nalezeno žádné úložiště s klíči. Klíče, které chrání vaše nastavení a párování s hlavním zařízením, jsou uloženy v souborech vedle dat, takže každý, kdo dostane kopii vašich souborů, je také získá. Na Linuxu nainstalujte a spusťte klávesnici (například GNOME Keyring nebo KWallet), poté znovu spusťte AAPS.</string>
 </resources>
