@@ -106,7 +106,6 @@ class AaruyBLE(
     private val BOLUS_STATE_EXTENDED = 1
     private val BOLUS_STATE_DONE = 2
     private val BOLUS_TYPE_SMB = 2
-    private val BOLUS_SECONDS_PER_STEP = 2.0
     private val HISTORY_BASAL = 0
     private val HISTORY_TEMP_BASAL = 1
     private val HISTORY_BOLUS = 2
@@ -575,9 +574,7 @@ class AaruyBLE(
                             if (bolusCompleted && aaruyPump.canSaveHistory) requestHistoryData(aaruyPump.lastHistoryTime)
                             val bolus = statusInfo.bolusStatus
                             if (!bolusCompleted && bolus != null) {
-                                // Seen on a real pump: 0.05 U given and 18 s left was a bolus of 0.5 U, one step every 2 s.
-                                val left = bolus.remainTime / BOLUS_SECONDS_PER_STEP * aaruyPump.bolusStepUnits
-                                aaruyPump.showFoundBolus(total = bolus.curBolusNow / 1000 + left, isSmb = bolus.bolusType == BOLUS_TYPE_SMB)
+                                aaruyPump.showFoundBolus(given = bolus.curBolusNow / 1000, secondsLeft = bolus.remainTime, isSmb = bolus.bolusType == BOLUS_TYPE_SMB)
                             }
                             aaruyPump.handleBolusStatusUpdate(bolusCompleted, (statusInfo.bolusStatus?.curBolusNow ?: 0.0) / 1000)
                         }

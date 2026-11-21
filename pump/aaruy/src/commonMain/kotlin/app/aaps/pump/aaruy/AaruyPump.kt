@@ -234,9 +234,20 @@ class AaruyPump(
     /**
      * A status shows a bolus that no bolus command of this app run started. Without this there is no progress and no
      * Stop button for it, and this pump has no screen of its own: AAPS is the only way to stop it.
+     *
+     * The status has no total. It is what was given plus what is left: one step every [BOLUS_MS_PER_STEP] ms. That
+     * needs the step the pump uses, so nothing is shown until the pump has reported it; the next status, a moment later,
+     * shows the bolus. Seen on a real pump (2026-11-21): after an app restart the status came before the settings, and
+     * the default step showed a bolus of 1.0 U as 1.5 U.
+     *
+     * @param given U the pump has given of this bolus
+     * @param secondsLeft how long the pump says the bolus still runs
      */
-    fun showFoundBolus(total: Double, isSmb: Boolean) {
+    fun showFoundBolus(given: Double, secondsLeft: Long, isSmb: Boolean) {
         if (bolusCommandRunning || foundBolusGeneration != null) return
+        val step = reportedBolusStep ?: return
+        // Seen on a real pump: 0.05 U given and 18 s left was a bolus of 0.5 U.
+        val total = given + secondsLeft * 1000 / BOLUS_MS_PER_STEP * step * BOLUS_PRECISION_UNITS
         foundBolusGeneration = bolusProgressData.startIfIdle(total, isSmb)?.also {
             aapsLogger.debug(LTag.PUMP, "A running bolus of $total U is shown, it was not started in this app run")
         }
@@ -278,6 +289,10 @@ class AaruyPump(
     var maxBolus: Double = 10.0
     /** The bolus step as a count of 0.025 U, from 1. */
     var bolusStep: Int = 2
+
+    /** The bolus step the pump reported in this app run, as [bolusStep]. Null until it reports. */
+    @Volatile
+    private var reportedBolusStep: Int? = null
     /** The low reservoir alarm, in U. */
     var lowAlert: Double = 20.0
     /** 0 beeps and alarm sounds, 1 alarm sounds only, 2 beeps only, 3 neither. */
@@ -511,6 +526,7 @@ class AaruyPump(
         maxBasal = basicParam.maxBasal
         maxBolus = basicParam.maxBolus
         bolusStep = basicParam.bolusStep
+        reportedBolusStep = basicParam.bolusStep
         lowAlert = basicParam.lowAlert
         closeInjectSound = basicParam.closeInjectSound
 
@@ -594,6 +610,7 @@ suspend fun syncStopTBRWithPumpId(endTime: Long) {
             // The next status read asks the new pump.
             swVersion = ""
             actualBasalProfile = null
+            reportedBolusStep = null
             // Paired or unpaired: the alarms of the old pump end with it (acceptance A6).
             clearAllAlarms()
         }
