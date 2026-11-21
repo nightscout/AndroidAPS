@@ -53,6 +53,9 @@
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">סוללה חלשה: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">לא נותר מספיק אינסולין במכל: %1$s</string>
     <string name="equil_reservoir_empty">המכל ריק. המשאבה אינה מספקת עוד אינסולין.</string>
+    <string name="equil_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">פקודת הבולוס הגיעה למשאבה, אבל המשאבה לא ענתה. ייתכן שהיא עדיין תיתן %1$s. אין לתת בולוס נוסף. AAPS מביא בחשבון את כל הכמות.</string>
+    <string name="equil_stop_not_answered" comment="%1$s=insulin amount with unit. Example: 2.00 U, or for U200 insulin 2.00 U (1.00 CU)">פקודת העצירה לא הגיעה למשאבה, או שהתשובה שלה אבדה. AAPS מביא בחשבון את כל הבולוס של %1$s עד שהיסטוריית המשאבה תראה מה ניתן.</string>
+    <string name="equil_bolus_not_given" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">היסטוריית המשאבה מראה שהבולוס של %1$s לא ניתן. AAPS לא מביא אותו בחשבון.</string>
     <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">המשאבה נעצרה במהלך הבולוס. ניתנו: %1$s מתוך %2$s</string>
     <string name="equil_pump_not_run">המשאבה לא פעילה</string>
     <string name="equil_pair">צימוד</string>
