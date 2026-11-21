@@ -1,20 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Parring fik timeout</string>
+    <string name="danars_bonding_failed">Bluetooth-parring med pumpen mislykkedes eller blev annulleret. Prøv igen, og indtast den PIN, der vises på pumpen.</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="description_pump_dana_rs">Pumpeintegration til DANA Diabecare RS og Dana-i pumper</string>
     <string name="maxbolusviolation">Max bolus overtrædelse</string>
     <string name="commanderror">Kommando fejl</string>
     <string name="speederror">Hastighedsfejl</string>
     <string name="insulinlimitviolation">Overtrædelse af insulingrænse</string>
+    <string name="boluserrorcode">Ønsket: %1$.2f IE Leveret: %2$.2f IE Fejlkode: %3$s</string>
+    <string name="danai2_bolus_error_no_prime">Pumpen er ikke klargjort</string>
+    <string name="danai2_bolus_error_not_enough_insulin">Ikke nok insulin i reservoiret</string>
+    <string name="danai2_bolus_error_easy_sleep">Easy sleep-tilstand er slået til i pumpen</string>
+    <string name="danai2_pump_check_error">Fejl ved pumpekontrol</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Easy-tilstand</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Autolås</string>
     <string name="danar_valuenotsetproperly">Værdi ikke angivet korrekt</string>
     <string name="danar_setbasalstep001">Indstil basal trin til 0,01 E/t</string>
     <string name="resetpairing">Nulstil parringsinformation?</string>
     <string name="dana_model">%1$s\nModel: %2$02X\nProtokol: %3$02X\nKode: %4$02X</string>
     <string name="processinghistory">Behandler begivenhed</string>
     <string name="danar_enableextendedbolus">Aktiver forlængede bolusser på pumpe</string>
+    <string name="danar_disablebolusblock">Bolusblokering er slået til i pumpen. AAPS kan ikke give insulin, mens den er aktiv. Slå Bolusblokering fra i pumpens indstillinger.</string>
     <string name="overview_bolusprogress_stoped">Stoppet</string>
     <string name="unsupportedfirmware">Ikke understøttet pumpe firmware</string>
+    <string name="danars_unsupported_model">Ikke-understøttet pumpemodel (kode %1$s)</string>
     <string name="pumperror">Pumpe Fejl</string>
     <string name="lowbattery">Lavt batteri</string>
     <string name="basalcompare">Leverer mindre end forudindstillet basal rate</string>
@@ -35,6 +45,7 @@
     <string name="gettingtempbasalstatus">Få midlertidig basal status</string>
     <string name="gettingpumpsettings">Henter pumpeindstillinger</string>
     <string name="gettingpumptime">Henter pumpetid</string>
+    <string name="largetimedifftitle">Stor tidsforskel</string>
     <string name="largetimediff">Stor tidsforskel:\nTid i pumpen varierer med mere end 1,5 time.\nJustér venligst tiden manuelt på pumpen og sørg for, at læsning af historikken fra pumpen ikke forårsager uventet adfærd.\nHvis det er muligt; fjern historik fra pumpen før du ændrer tiden eller deaktiverer closed loop i én DIA efter den sidste forkerte historik post, men minimum én DIA fra nu.</string>
     <string name="pairfirst">Par venligst din pumpe med din telefon!</string>
     <string name="approachingdailylimit">Nærmer sig daglig insulingrænse</string>
@@ -87,12 +98,31 @@
     <string name="option_off">Slukket</string>
     <string name="danars_password_title">Pumpe kodeord (kun v1)</string>
     <string name="danar_password_title">Pumpe kodeord</string>
+    <string name="danar_useextended_title">Brug forlængede boluser ved &gt;200%</string>
+    <string name="bolus_speed_12">12 s/E</string>
+    <string name="bolus_speed_30">30 s/E</string>
+    <string name="bolus_speed_60">60 s/E</string>
     <string name="selectedpump">Valgt pumpe</string>
     <string name="rs_loginsulinchange_title">Log reservoir ændring</string>
     <string name="rs_loginsulinchange_summary">Tilføj \"Insulin Skift\" begivenhed til careportal, når de registreres i historik</string>
+    <string name="rs_logcanulachange_title">Registrer kanyleskift</string>
     <string name="rs_logcanulachange_summary">Tilføj \"Indstik skift\" begivenhed til careportal, når de registreres i historik</string>
     <string name="press_ok_on_the_pump">Tryk OK på pumpen\nog angiv 2 viste numre\nHold skærmen tændt på pumpen ved at trykke på minus knappen, indtil du er færdig med at indtaste kode.</string>
     <string name="num1pin">1: (12 cifre)</string>
     <string name="num2pin">2: (8 cifre)</string>
     <string name="basal_bolus_step">Basal/bolus trin</string>
+    <string name="connecting_to_pump">Forbinder til pumpen…</string>
+    <string name="pairing_successful">Parring lykkedes!</string>
+    <string name="pairing_successful_message">Din pumpe er nu forbundet og klar til brug.</string>
+    <string name="cancel_pairing_title">Annuller parring?</string>
+    <string name="cancel_pairing_message">Parringen bliver afbrudt.</string>
+    <string name="done">Færdig</string>
+    <string name="open_bluetooth_settings">Åbn Bluetooth-indstillinger</string>
+    <string name="enter_pump_password">Indtast pumpens adgangskode</string>
+    <string name="select_paired_device">Vælg parret enhed</string>
+    <string name="no_paired_devices">Ingen parrede Dana-enheder fundet. Par først din pumpe i Androids Bluetooth-indstillinger.</string>
+    <string name="password_hint">4-cifret adgangskode (0–9999)</string>
+    <string name="connecting_verifying">Forbinder og kontrollerer adgangskode…</string>
+    <string name="password_ok">Adgangskoden er bekræftet!</string>
+    <string name="password_wrong">Forkert adgangskode. Gå tilbage, og ret den.</string>
 </resources>
