@@ -58,5 +58,11 @@ internal class MemoryStore : EversenseStore {
         override fun putAll(from: Map<out String, Any>) = lock.withLock { map.putAll(from) }
         override fun clear() = lock.withLock { map.clear() }
         override fun toString(): String = lock.withLock { map.toString() }
+
+        // Equal to any map with the same entries, as Map requires. Without it a comparison fails on iOS only: kotlin.test
+        // on Native compares actual.equals(expected), on the JVM expected.equals(actual). A copy is compared, so the lock
+        // is not held while the other map is read.
+        override fun equals(other: Any?): Boolean = other === this || lock.withLock { HashMap(map) } == other
+        override fun hashCode(): Int = lock.withLock { map.hashCode() }
     }
 }

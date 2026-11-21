@@ -176,6 +176,10 @@ value. A class a test replaces with Mockito gets `@OpenForTesting` and a small f
 Truth's `isEmpty()`, `hasSize()` and `isEqualTo()` accept maps and arrays; `assertEquals` needs
 `emptyMap()` for a map and `assertContentEquals` for an array.
 
+`assertEquals` compares in a different direction per platform: on the JVM `expected.equals(actual)`,
+on Native `actual.equals(expected)`. So a hand-written collection fake without `equals` passes on the
+JVM and fails only on iOS (`Expected <{}>, actual <{}>`). Give such a fake `equals` and `hashCode`.
+
 ## The Metro construction trap
 
 This is the worst one, and it has happened four times. A class that nothing contributes is **never**
