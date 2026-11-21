@@ -2,23 +2,46 @@
 <resources>
     <string name="label_watchface_circle">AAPS(Cercle)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
+    <string name="label_watchface_custom">AAPS(Personalitzat)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(Personalitzat) sempre encès</string>
+    <string name="label_actions_tile">Accions</string>
+    <string name="label_temp_target_tile">Objectiu temporal</string>
+    <string name="label_quick_wizard_tile">Assistent ràpid</string>
+    <string name="label_user_action_tile">Acció de l\'usuari</string>
+    <string name="label_scene_tile">Escena</string>
     <string name="msg_warning_sync">Cap dada rebuda des de %1$s! Comproveu si AAPS al telèfon envia dades al rellotge</string>
     <string name="msg_warning_old">Les dades d\'AAPS son antigues de %1$s! Comproveu el vostre sensor, xDrip+, NS, la configuració AAPS, etc!</string>
     <string name="pref_vibrate_on_bolus">Vibrar durant bolus</string>
+    <string name="units_short">U</string>
+    <string name="pref_display_settings">Pantalla</string>
+    <string name="pref_graph_settings">Gràfic</string>
+    <string name="pref_interface_settings">Interfície</string>
+    <string name="pref_tile_settings">Mosaics</string>
+    <string name="pref_others_settings">Altres</string>
+    <string name="pref_complication_settings">Complicació</string>
     <string name="pref_show_date">Mostrar data</string>
     <string name="pref_show_iob">Mostrar IOB</string>
+    <string name="pref_show_detailed_iob">Mostrar IOB detallat</string>
     <string name="pref_show_cob">Mostrar COB</string>
     <string name="pref_show_delta">Mostrar delta</string>
+    <string name="pref_show_detailed_delta">Mostrar delta detallada</string>
     <string name="pref_show_avgdelta">Mostrar delta promig</string>
     <string name="pref_show_phone_battery">Mostrar bateria telèfon</string>
     <string name="pref_show_rig_battery">Mostrar bateria rig</string>
     <string name="pref_show_basal_rate">Mostrar basal</string>
+    <string name="pref_show_temp_target">Mostrar objectiu temporal</string>
+    <string name="pref_show_reservoir_level">Mostrar nivell del reservori</string>
     <string name="pref_show_loop_status">Mostrar estat llaç</string>
     <string name="pref_show_bg">Mostrar glucèmia</string>
+    <string name="pref_show_bgi">Mostrar BGI</string>
     <string name="pref_show_direction_arrow">Mostrar fletxa direcció</string>
     <string name="pref_show_ago">Mostrar històric</string>
+    <string name="pref_show_temp_basal">Mostrar TBR</string>
+    <string name="pref_show_bolus">Mostrar bolus i SMB</string>
+    <string name="pref_show_grid">Mostrar quadrícula</string>
     <string name="pref_dark" comment="Enables dark visual theme">Fosc</string>
     <string name="pref_highlight_basals">Ressaltar basals</string>
+    <string name="pref_prediction_lines">Mostrar prediccions</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Divisor invisible</string>
     <string name="pref_chart_timeframe">Gràfic de temps</string>
     <string name="pref_1_hour">1 hora</string>
@@ -26,37 +49,86 @@
     <string name="pref_3_hours">3 hores</string>
     <string name="pref_4_hours">4 hores</string>
     <string name="pref_5_hours">5 hores</string>
+    <string name="pref_1_min">desactivat</string>
+    <string name="pref_5_min">5 min</string>
+    <string name="pref_10_min">10 min</string>
+    <string name="pref_15_min">15 min</string>
     <string name="pref_big_numbers">Números grossos</string>
     <string name="pref_ring_history">Historial Ring</string>
     <string name="pref_light_ring_history">Historial Ring Light</string>
     <string name="pref_animations">Animacions</string>
+    <string name="pref_wizard_in_menu">Calculadora al menú</string>
     <string name="pref_prime_in_menu">Encebar al menú</string>
     <string name="pref_single_target">Objectiu únic</string>
+    <string name="pref_wizard_percentage">Percentatge calculadora</string>
+    <string name="pref_wizard_carbs_type">Tipus d\'àpat a la calculadora</string>
+    <string name="pref_wizard_carb_time">Temps dels carbohidrats a la calculadora</string>
     <string name="pref_complication_tap_action">Acció toc complicació</string>
+    <string name="pref_complication_bg_graph_hours">Interval de temps del gràfic de glucèmia</string>
+    <string name="duration_1_hour">1 hora</string>
+    <string name="duration_3_hours">3 hores</string>
+    <string name="duration_6_hours">6 hores</string>
     <string name="pref_unicode_in_complications">Unicode a complicacions</string>
     <string name="pref_version">Versió:</string>
     <string name="pref_moreWatchfaceSettings">Altres configuracions de Watchface</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Mireu a la configuració de Watchface, si us plau.</string>
     <string name="menu_tempt">TempT</string>
+    <string name="menu_tempt_long">Objectiu temporal</string>
     <string name="menu_wizard">Calculadora</string>
     <string name="menu_wizard_short">Calc</string>
     <string name="menu_treatment">Tractament</string>
+    <string name="menu_treatment_short">Tract</string>
     <string name="menu_bolus">Bolus</string>
     <string name="menu_carb">Carbs</string>
+    <string name="menu_ecarb">e-carbs</string>
     <string name="menu_settings">Configuració</string>
     <string name="menu_status">Estat</string>
+    <string name="menu_bg_graph">Gràfic glucèmia</string>
     <string name="menu_resync">Re-sincronizar</string>
     <string name="menu_prime_fill">Encebar</string>
+    <string name="menu_install_watchface">Instal·lar watchface</string>
+    <string name="menu_installing_watchface">Instal·lant watchface…</string>
+    <string name="watchface_installed_active">Watchface instal·lada i activada</string>
+    <string name="watchface_installed_select">Watchface instal·lada, seleccioneu-la al selector d\'esferes</string>
+    <string name="watchface_install_failed">Ha fallat la instal·lació de la watchface</string>
     <string name="menu_none">Cap</string>
     <string name="menu_default">Per defecte</string>
     <string name="menu_menu">Menú</string>
+    <string name="action_tempt_confirmation">Objectiu temporal sol·licitat</string>
+    <string name="action_quick_wizard_confirmation">Assistent ràpid sol·licitat</string>
+    <string name="action_user_action_confirmation">Acció de l\'usuari sol·licitada</string>
+    <string name="action_scene_confirmation">Escena sol·licitada</string>
+    <string name="scene_end">Finalitzar</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Ometre</string>
+    <string name="action_treatment_confirmation">Tractament sol·licitat</string>
+    <string name="action_bolus_confirmation">Bolus sol·licitat</string>
+    <string name="action_wizard_confirmation">Càlcul sol·licitat</string>
+    <string name="action_fill_confirmation">Encebament sol·licitat</string>
+    <string name="action_ecarb_confirmation">Carbohidrats sol·licitats</string>
+    <string name="action_profile_switch_confirmation">Canvi de perfil sol·licitat</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Objectiu [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Baix [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Alt [%s]</string>
     <string name="action_carbs">Carbs</string>
+    <string name="action_carbs_gram">Carbs [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Màx. a treure: %1$d g (COB)</string>
+    <string name="action_ecarbs">e-carbs</string>
+    <string name="action_percentage">Percentatge\n[%]</string>
+    <string name="action_start_minutes">Inici\n[minuts]</string>
+    <string name="action_duration_hours">Durada\n[hores]</string>
+    <string name="action_duration_hours_format">%1$d h</string>
+    <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
+    <string name="action_minutes_format">%1$d min</string>
+    <string name="ecarbs_start_format">%1$d min</string>
+    <string name="action_confirm_timeshift">Decalatge horari: %1$s</string>
     <string name="action_insulin">Insulina</string>
+    <string name="action_insulin_units">Insulina [U]</string>
     <string name="action_preset_1">Predefinit 1</string>
     <string name="action_preset_2">Predefinit 2</string>
     <string name="action_preset_3">Predefinit 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Quantitat lliure</string>
     <string name="action_confirm">CONFIRMAR</string>
+    <string name="action_timeshift_hours">Decalatge\n[hores]</string>
     <string name="bolus_progress">Progressió bolus</string>
     <string name="press_to_cancel">premeu per cancel·lar</string>
     <string name="cancel_bolus">CANCEL·LAR BOLUS</string>
@@ -91,22 +163,218 @@
     <string name="pref_simplify_ui">Simplificar la interfície</string>
     <string name="pref_vibrate_hourly">Vibrar cada hora</string>
     <string name="pref_show_weeknumber">Mostrar nr. de setmana</string>
+    <string name="pref_complication_1">Complicació 1</string>
+    <string name="pref_complication_2">Complicació 2</string>
+    <string name="pref_complication_3">Complicació 3</string>
+    <string name="pref_complication_4">Complicació 4</string>
+    <string name="pref_complication_5">Complicació 5</string>
+    <string name="complication_summary_none">Toqueu per seleccionar una font de dades</string>
+    <string name="pref_complication_type_priority">Prioritat del tipus de complicació</string>
+    <string name="pref_complication_type_priority_all">Per defecte per a totes les posicions</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Un canvi aquí s\'aplica la propera vegada que trieu una font de dades. No n\'hi ha prou amb tornar a triar la mateixa: primer trieu una font de dades diferent i després trieu la que voleu.</string>
+    <string name="complication_type_priority_value">Valor o indicador</string>
+    <string name="complication_type_priority_text">Text</string>
+    <string name="complication_type_priority_icon">Icona</string>
+    <string name="complication_type_priority_use_default">Usar el valor per defecte</string>
+    <string name="cwf_complication_layout">Disposició de les complicacions</string>
+    <string name="cwf_complication_layout_description">Posició i mida de les complicacions, segons la watchface personalitzada carregada.</string>
+    <string name="pref_include_external">Incloure vistes externes a la plantilla</string>
+    <string name="pref_switch_external">Alternar dades externes al watchface</string>
+    <string name="custom_pref_show_seconds">Mostrar segons</string>
+    <string name="digitalstyle_pref_your_style">El vostre estil</string>
     <string name="digitalstyle_style_none">sense estil</string>
     <string name="digitalstyle_style_minimal">estil minimalista</string>
     <string name="digitalstyle_style_shape">estil forma</string>
     <string name="digitalstyle_style_full">estil complet</string>
+    <string name="digitalstyle_pref_your_color">El vostre color</string>
+    <string name="digitalstyle_pref_your_color_saturation">Saturació del vostre color</string>
+    <string name="digitalstyle_pref_your_color_opacity">Opacitat del vostre color</string>
     <string name="bolus_progress_channel_name">Progressió bolus AAPS</string>
     <string name="bolus_progress_silent_channel_name">Progressió bolus AAPS silenciós</string>
     <string name="bolus_progress_channel_description">Progressió i cancel·lació de bolus</string>
     <string name="bolus_progress_silent_channel_description">Progressió i cancel·lació de bolus amb menys vibracions</string>
+    <string name="open_loop_channel_name">AAPS Llaç obert</string>
+    <string name="open_loop_channel_description">Avís de petició del llaç obert</string>
     <string name="simple_ui_off">Desactivat</string>
     <string name="simple_ui_charging">Durant la càrrega</string>
     <string name="simple_ui_always_on">Mode sempre encès</string>
     <string name="simple_ui_always_on_charging">Sempre encès i carregant</string>
+    <string name="temp_target_eating_soon">Menjar aviat</string>
     <string name="temp_target_hypo">Hipo</string>
     <string name="temp_target_activity">Activitat (esport)</string>
     <string name="temp_target_manual">Manual</string>
     <string name="temp_target_cancel">Cancel·lar</string>
     <string name="tile_none">Cap</string>
+    <string name="tile_no_config">Cap configuració disponible</string>
+    <string name="wear_control_not_enabled">Controls des del rellotge desactivats</string>
+    <string name="wear_control_no_data">No hi ha dades disponibles</string>
+    <string name="abbreviation_average">mitj.</string>
     <string name="no_iob_u">--U</string>
+    <string name="no_cob_g">--g</string>
+    <string name="no_tmp_basal_u_h">-.--U/h</string>
+    <string name="cob_000g">000g</string>
+    <string name="svg_00_0" comment="use , or . only">00,0</string>
+    <string name="iob_0_00u">0,00U</string>
+    <string name="snooze_alert">Postposar alerta AAPS</string>
+    <string name="sending_snooze">Enviant postposició a AAPS</string>
+    <string name="week_short">s</string>
+    <string name="day_short">d</string>
+    <string name="hour_short">h</string>
+    <string name="minute_short">m</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
+    <string name="error">Error</string>
+    <string name="pref_heartRateSampling">Freqüència cardíaca</string>
+    <string name="pref_heartRateSmoothing">Suavitzat FC</string>
+    <string name="pref_stepsSampling">Activar comptador de passos</string>
+    <string name="tile_tempt_1">Objectiu temporal 1</string>
+    <string name="tile_tempt_2">Objectiu temporal 2</string>
+    <string name="tile_tempt_3">Objectiu temporal 3</string>
+    <string name="tile_tempt_4">Objectiu temporal 4</string>
+    <string name="tile_action_1">Acció 1</string>
+    <string name="tile_action_2">Acció 2</string>
+    <string name="tile_action_3">Acció 3</string>
+    <string name="tile_action_4">Acció 4</string>
+    <string name="tile_scene_1">Escena 1</string>
+    <string name="tile_scene_2">Escena 2</string>
+    <string name="tile_scene_3">Escena 3</string>
+    <string name="tile_scene_4">Escena 4</string>
+    <string name="tile_scene_auto">Automàtic</string>
+    <string name="tile_scene_unavailable">No disponible</string>
+    <string name="datalayer_notification_title">Servei en primer pla Data Layer</string>
+    <string name="datalayer_notification_text">AAPS s\'està executant en primer pla. Per amagar l\'avís, aneu a Opcions per a desenvolupadors, Notificacions d\'aplicacions, Aplicacions de rellotge permeses, seleccioneu AAPS i desactiveu la notificació del canal Data Layer Foreground Service.</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+    <string name="complication_full_status">Estat complet</string>
+    <string name="complication_full_status_flipped">Estat complet (invertit)</string>
+    <string name="complication_blood_glucose">Glucèmia</string>
+    <string name="complication_blood_glucose_large">Glucèmia (gran)</string>
+    <string name="complication_blood_glucose_ext1">Glucèmia Ext1</string>
+    <string name="complication_blood_glucose_ext2">Glucèmia Ext2</string>
+    <string name="complication_bg_graph">Gràfic glucèmia</string>
+    <string name="complication_cwf_image">Watchface personalitzat</string>
+    <string name="complication_cwf_ambient_bg">Watchface personalitzat: glucèmia en mode ambient</string>
+    <string name="complication_cwf_ambient_status">Watchface personalitzat: estat en mode ambient</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Watchface personalitzat: fons</string>
+    <string name="complication_cwf_upper">Watchface personalitzat: rellotge</string>
+    <string name="complication_br_cob_iob">BR, CoB i IoB</string>
+    <string name="complication_br_cob_iob_ext1">BR, CoB i IoB Ext1</string>
+    <string name="complication_br_cob_iob_ext2">BR, CoB i IoB Ext2</string>
+    <string name="complication_br_iob">BR i IoB</string>
+    <string name="complication_br">Taxa basal</string>
+    <string name="complication_br_tt">BR i objectiu</string>
+    <string name="complication_target">Objectiu</string>
+    <string name="complication_cob_iob">CoB i IoB</string>
+    <string name="complication_cob_icon">Icona CoB</string>
+    <string name="complication_cob_detailed">CoB detallat</string>
+    <string name="complication_iob_icon">Icona IoB</string>
+    <string name="complication_iob_detailed">IoB detallat</string>
+    <string name="complication_uploader_phone_battery">Bateria uploader/telèfon</string>
+    <string name="running_mode_resume">Reprendre llaç</string>
+    <string name="running_mode_reconnect">Reconnectar bomba</string>
+    <string name="label_running_mode_title">Mode de funcionament</string>
+    <string name="label_bg_graph_tile">Gràfic glucèmia</string>
+    <string name="tile_tap_action">Acció en tocar</string>
+    <string name="tile_graph_time_range">Interval de temps</string>
+    <string name="tile_tap_bg_graph">Gràfic glucèmia</string>
+    <string name="tile_tap_main_menu">Menú principal</string>
+    <string name="tile_tap_loop_status">Estat del llaç</string>
+    <string name="action_running_mode_selected">Mode de funcionament sol·licitat</string>
+    <string name="title_activity_disconnect_pump">Desconnectar bomba</string>
+    <string name="title_activity_suspend_loop">Suspendre el llaç</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="wizard_carbs_type">Tipus d\'àpat</string>
+    <string name="wizard_carbs_type_bread">Pa</string>
+    <string name="wizard_carbs_type_cake">Pastís</string>
+    <string name="wizard_carbs_type_pizza">Pizza</string>
+    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">Carbs en\n[min]</string>
+    <string name="wizard_carb_time_now">Ara</string>
+    <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
+    <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d min</string>
+    <string name="wizard_set_alarm">Posar alarma</string>
+    <string name="eat_reminder_title">Hora de menjar</string>
+    <string name="eat_reminder_silence">Silenciar</string>
+    <string name="eat_reminder_stop">Aturar</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Sona a les %1$s</string>
+    <string name="eat_reminder_countdown_channel">Hora de menjar, en curs</string>
+    <string name="eat_reminder_channel_silent">Hora de menjar en mode No molestis</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="phone_alarm_channel">Alarmes del telèfon</string>
+    <string name="phone_alarm_channel_silent">Alarmes del telèfon en mode No molestis</string>
+    <string name="phone_alarm_silence">Silenciar</string>
+    <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">Silenciar %1$d min</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
+    <string name="insulin_unit_short">U</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
+    <string name="wizard_confirmation_sent">Enviat</string>
+    <string name="contacting_master">Contactant amb el telèfon principal…</string>
+    <string name="contacting_master_unknown">Estat desconegut — comproveu el telèfon</string>
+    <string name="tile_settings">Configuració del mosaic</string>
+    <string name="loop_status_error">No s\'ha pogut carregar l\'estat</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
+    <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">Queden %1$s</string>
+    <string name="loop_status_tbr_continues">La basal temporal continua</string>
+    <string name="loop_status_tbr_cancel">Establint la basal normal</string>
+    <string name="loop_status_smb">%1$.2f U</string>
+    <string name="loop_status_no_last_run">N/D</string>
+    <string name="loop_status_closed">Llaç tancat</string>
+    <string name="loop_status_open">Llaç obert</string>
+    <string name="loop_status_lgs">Suspensió per glucèmia baixa</string>
+    <string name="loop_status_disabled">Llaç desactivat</string>
+    <string name="loop_status_suspended">Llaç suspès</string>
+    <string name="loop_status_pump_suspended">Bomba suspesa</string>
+    <string name="loop_status_dst_suspended">Suspès pel canvi d\'hora (DST)</string>
+    <string name="loop_status_disconnected">Bomba desconnectada</string>
+    <string name="loop_status_superbolus">Superbolus</string>
+    <string name="loop_status_unknown">Desconegut</string>
+    <string name="loop_status_result">Resultat del llaç</string>
+    <string name="loop_status_last_run_enact">Última execució i activació</string>
+    <string name="loop_status_last_run">Última execució</string>
+    <string name="loop_status_last_enact">Última activació</string>
+    <string name="loop_status_smb_text">SMB</string>
+    <string name="loop_status_basal_rate">Taxa</string>
+    <string name="loop_status_duration">Durada</string>
+    <string name="loop_status_oaps_reason">Motiu OpenAPS</string>
+    <string name="loop_status_targets">Objectius</string>
+    <string name="loop_status_temp_target">Objectiu temporal</string>
+    <string name="loop_status_target_range">Rang</string>
+    <string name="loop_status_target">Objectiu</string>
+    <string name="loop_status_adjusted_target">Objectiu ajustat</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Fins que s\'acabi</string>
+    <string name="loop_status_scene_ended">Finalitzada</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Escena següent</string>
+    <string name="loop_status_profile">Perfil</string>
+    <string name="loop_status_no_profile">Cap perfil definit</string>
+    <string name="loop_status_profile_percentage">Percentatge</string>
+    <string name="loop_status_profile_timeshift">Desplaçament horari</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Torna a</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dh</string>
+    <string name="loop_status_sensitivity">Sensibilitat</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Definit per l\'escena activa</string>
+    <string name="loop_status">Estat del llaç</string>
+    <string name="loop_status_refresh">Actualitzar</string>
+    <string name="confirm">Confirmar</string>
+    <string name="request">Petició</string>
+    <string name="constraint_applied">Restricció aplicada!</string>
+    <string name="wizard_total_insulin">Insulina total</string>
+    <string name="wizard_calculation">Càlcul</string>
+    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
+    <string name="wizard_result_bg">Glucèmia</string>
+    <string name="wizard_result_bg_tt">Glucèmia (OT: %1$s)</string>
+    <string name="wizard_result_trend">Tendència 15\'</string>
+    <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">IOB nou: %1$s U</string>
+    <string name="wizard_result_cob">COB (%1$.1f g)</string>
+    <string name="wizard_result_carbs">Carbohidrats (%1$d g)</string>
+    <string name="wizard_result_subtotal">Subtotal</string>
+    <string name="wizard_result_correction">Correcció</string>
+    <string name="wizard_result_total">Total</string>
+    <string name="wizard_insulin_format">%1$s U</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
 </resources>
