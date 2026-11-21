@@ -113,6 +113,9 @@
     <string name="eversense_model_e3">Eversense E3</string>
     <string name="eversense_model_365_usa">Eversense 365 (USA)</string>
     <string name="eversense_model_365_other">Eversense 365 (other countries)</string>
+    <string name="eversense_pair_no_account">No Eversense account yet? Create one in the Eversense app or on this page:</string>
+    <string name="eversense_account_page_usa" translatable="false">https://us.eversensedms.com/login</string>
+    <string name="eversense_account_page_other" translatable="false">https://global.eversensedms.com/login</string>
     <string name="eversense_sign_in">Sign in</string>
     <string name="eversense_signed_in_as" comment="%1$s=the Eversense username, for example an e-mail address">Signed in as %1$s</string>
     <string name="eversense_sign_in_refused">Eversense did not accept this username or password. Check them, and that the right Eversense is chosen.</string>

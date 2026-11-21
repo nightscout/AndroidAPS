@@ -23,6 +23,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
@@ -31,6 +32,7 @@ import app.aaps.core.ui.compose.pump.BleScanStep
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardScreen
 import app.aaps.core.ui.compose.pump.WizardStepLayout
+import app.aaps.core.ui.compose.rememberSafeUriHandler
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.eversense.EversenseStrings
 import app.aaps.plugins.eversense.pairing.EversensePairingViewModel.Step
@@ -119,6 +121,7 @@ private fun AccountStep(state: EversensePairingViewModel.UiState, account: Evers
         return
     }
     val focusManager = LocalFocusManager.current
+    val uriHandler = rememberSafeUriHandler()
     WizardStepLayout(
         modifier = Modifier.clearFocusOnTap(focusManager),
         primaryButton = WizardButton(stringResource(EversenseStrings.eversense_sign_in), viewModel::signIn, enabled = state.canSignIn, loading = state.busy),
@@ -140,6 +143,11 @@ private fun AccountStep(state: EversensePairingViewModel.UiState, account: Evers
                     Text(stringResource(model.label()), style = MaterialTheme.typography.bodyLarge)
                 }
             }
+        }
+        state.model?.accountPage()?.let { page ->
+            val url = stringResource(page)
+            Text(stringResource(EversenseStrings.eversense_pair_no_account), style = MaterialTheme.typography.bodyMedium)
+            TextButton(onClick = { uriHandler.openUri(url) }) { Text(url) }
         }
         OutlinedTextField(
             value = state.username,
@@ -200,6 +208,13 @@ private fun DoneStep(transmitter: String, onFinish: () -> Unit) {
     WizardStepLayout(primaryButton = WizardButton(stringResource(CoreUiStrings.finish), onFinish)) {
         Text(stringResource(EversenseStrings.eversense_pair_done, transmitter), style = MaterialTheme.typography.titleMedium)
     }
+}
+
+/** The web page where a 365 user can create an Eversense account; the E3 needs no account */
+private fun EversenseModel.accountPage(): TextRef? = when (this) {
+    EversenseModel.E3         -> null
+    EversenseModel.E365_USA   -> EversenseStrings.eversense_account_page_usa
+    EversenseModel.E365_OTHER -> EversenseStrings.eversense_account_page_other
 }
 
 private fun EversenseModel.label() = when (this) {
