@@ -116,8 +116,12 @@ class EversensePlugin(
         private const val POST_EXIT_UNKNOWN_ALARM_SUPPRESS_WINDOW_MS = 5000L
 
         /** The battery low notice fires at this level or below, and is armed again above [BATTERY_REARM_PERCENT]. */
-        private const val BATTERY_LOW_PERCENT = 10
+        internal const val BATTERY_LOW_PERCENT = 10
         private const val BATTERY_REARM_PERCENT = 20
+
+        /** The sensor age turns orange this many days before the sensor ends, and red at [SENSOR_END_CRITICAL_DAYS]. */
+        internal const val SENSOR_END_WARNING_DAYS = 30
+        internal const val SENSOR_END_CRITICAL_DAYS = 10
 
     }
 
@@ -321,8 +325,8 @@ class EversensePlugin(
         // Sync SAGE color thresholds to match Eversense sensor lifetime and notification days
         if (state.insertionDate > 0) {
             val lifetimeDays = if (eversense.is365()) 365 else 180
-            val warnHours  = (lifetimeDays - 30) * 24   // orange when 30 days remaining
-            val urgentHours = (lifetimeDays - 10) * 24  // red when 10 days remaining
+            val warnHours = (lifetimeDays - SENSOR_END_WARNING_DAYS) * 24
+            val urgentHours = (lifetimeDays - SENSOR_END_CRITICAL_DAYS) * 24
             preferences.put(IntKey.OverviewSageWarning, warnHours)
             preferences.put(IntKey.OverviewSageCritical, urgentHours)
         }

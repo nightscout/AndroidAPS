@@ -13,6 +13,7 @@ import app.aaps.plugins.eversense.models.GlucoseHistoryItem
 import app.aaps.plugins.eversense.packets.EversenseBasePacket
 import app.aaps.plugins.eversense.packets.e365.utils.toInt
 import app.aaps.plugins.eversense.packets.e365.utils.toUnix
+import app.aaps.plugins.eversense.packets.e365.utils.toUnixOrNone
 import app.aaps.plugins.eversense.packets.e365.utils.toUtfString
 import app.aaps.plugins.eversense.protocol.GlucoseDecoders
 import app.aaps.plugins.eversense.protocol.PacketSpec
@@ -81,8 +82,8 @@ class GetCalibrationInfoPacket : EversenseBasePacket(PacketSpec.v2(Eversense365P
             currentPhase = CalibrationPhase.from365(receivedData[2].toInt(), calPerDay),
             calibrationReadiness = CalibrationReadiness.from365(rawReadiness),
             calibrationMode = CalibrationMode.from365(calPerDay),
-            nextCalibration = receivedData.copyOfRange(4, 12).toUnix(),
-            lastCalibration = receivedData.copyOfRange(34, 42).toUnix(),
+            nextCalibration = receivedData.copyOfRange(4, 12).toUnixOrNone(),
+            lastCalibration = receivedData.copyOfRange(34, 42).toUnixOrNone(),
         )
     }
 
@@ -296,7 +297,7 @@ class GetSensorInformationPacket : EversenseBasePacket(PacketSpec.v2(Eversense36
             serialNumber = receivedData.copyOfRange(2, 18).toUtfString(),
             transmitterName = receivedData.copyOfRange(18, 43).toUtfString(),
             transmitterDatetime = receivedData.copyOfRange(43, 51).toUnix(),
-            insertionDate = receivedData.copyOfRange(104+sensorIdLength, 112+sensorIdLength).toUnix(),
+            insertionDate = receivedData.copyOfRange(104+sensorIdLength, 112+sensorIdLength).toUnixOrNone(),
             mmaFeatures = receivedData[95].toInt(),
             batteryLevel = receivedData[114+sensorIdDoubleLength].toInt(),
             version = receivedData.copyOfRange(115+sensorIdDoubleLength, 131+sensorIdDoubleLength).toUtfString(),

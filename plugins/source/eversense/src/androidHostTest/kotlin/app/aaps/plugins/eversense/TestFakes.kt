@@ -195,7 +195,7 @@ internal class RecordingWatcher : EversenseWatcher {
     }
 }
 
-/** Texts as their resource name, with the arguments in brackets: `eversense_status_battery(85%)`. */
+/** Texts as their resource name, with the arguments in brackets: `units_format_percent(85)`. */
 internal class NameTextResolver : TextResolver {
 
     override fun gs(ref: TextRef): String = name(ref)

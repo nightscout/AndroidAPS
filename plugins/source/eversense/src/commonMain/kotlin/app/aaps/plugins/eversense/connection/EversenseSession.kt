@@ -173,7 +173,7 @@ internal class EversenseSession(
                 }
             }
         }
-        val subscribed = link.subscribe(response, Subscription.NOTIFY)
+        val subscribed = link.subscribe(response, Subscription.NOTIFY, SUBSCRIBE_TIMEOUT)
         if (subscribed is BleResult.Failed) {
             aapsLogger.error(LTag.BGSOURCE, "Cannot turn on the notifications: ${subscribed.failure}")
             host.closeLink("notifications refused")
@@ -472,5 +472,12 @@ internal class EversenseSession(
 
         /** The 365 registration's two server calls: each may take this long. */
         val SERVER_TIMEOUT = 65.seconds
+
+        /**
+         * Turning on the notifications of a new transmitter starts the bonding, and Android then asks the user to
+         * allow the pairing: the wait must leave time to tap "Pair". Seen on a Pixel 9a with a 365: the usual 5 s ran
+         * out while the request was open.
+         */
+        val SUBSCRIBE_TIMEOUT = 30.seconds
     }
 }

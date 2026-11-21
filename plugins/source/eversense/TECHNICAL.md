@@ -15,8 +15,8 @@ and iOS; the platforms add only small parts.
 | AAPS plugin | BG source, readings into AAPS, notices, cloud queue, calibration | `EversensePlugin` |
 | Driver | Connection control, one session per Bluetooth link, packets, 365 authentication | `EversenseDriver`, `EversenseSession` |
 | Eversense cloud (DMS) | Sign-in, 365 registration, upload; ktor | `DmsHttpClient`, `EversenseHttp365Util`, `EversenseHttpE3Util` |
-| Pairing | The pairing wizard, the pairing card, what the user has to fix | `EversensePairing`, `EversensePairingViewModel`, `cgmAttention` |
-| Screens | Status and Glucose tabs; pairing wizard and placement guide inside the same screen | `EversenseComposeContent`, `EversensePlacementScreen` |
+| Pairing | The pairing wizard, what the user has to fix | `EversensePairing`, `EversensePairingViewModel`, `cgmAttention` |
+| Screens | Status and Glucose tabs; pairing wizard and placement guide inside the same screen. The status tab is the pumps' `PumpOverviewScreen`: a banner (not paired, login refused, or the link), label and value rows, the picture, and the buttons at the bottom (Pair, Sign in, Unpair among them) | `EversenseComposeContent`, `EversenseStatusViewModel`, `EversensePlacementScreen` |
 | Shared AAPS code | Bluetooth, calibration routing and the CGM driver contract | `BleCentral`, `BgSource`, `CgmDriver`, `MasterRecordWriter` |
 
 | Platform part | Android | iOS |
@@ -108,7 +108,7 @@ exported, so a new phone pairs again. Unpair forgets the transmitter and keeps t
 wizard.
 
 - **E3:** links over Bluetooth alone. "Continue without signing in" stores the model E3 with no login; the link opens,
-  and the cloud upload is off (the pairing card says so and offers to sign in).
+  and the cloud upload is off (the account row of the status tab says so, and a "Sign in" button is offered).
 - **365:** registers this phone with the Eversense server on its first link, so it needs the login and internet then.
   A 365 found without a login records a refused login, which shows the "!" badge and asks for one.
 

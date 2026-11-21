@@ -80,21 +80,23 @@
 
 <string name="eversense_firmware_update">Eversense firmware: %1$s — open the official Eversense app to check for updates</string>
 
-<string name="eversense_status_connected_label">Connected: %1$s</string>
+<string name="eversense_connected">Connected</string>
 
-<string name="eversense_status_battery" comment="%1$s=the battery level, for example 85 %, or a dash before the first sync">Battery: %1$s</string>
+<string name="eversense_transmitter">Transmitter</string>
 
-<string name="eversense_status_insertion_label">Insertion date: %1$s</string>
+<string name="eversense_last_sync">Last sync</string>
 
-<string name="eversense_status_last_sync_label">Last sync: %1$s</string>
+<string name="eversense_sensor_inserted">Sensor inserted</string>
 
-<string name="eversense_status_signal_label">Placement signal: %1$s</string>
+<string name="eversense_sensor_end">Sensor ends</string>
 
-<string name="eversense_status_phase_label">Calibration phase: %1$s</string>
+<string name="eversense_signal">Placement signal</string>
 
-<string name="eversense_status_last_cal_label">Last calibration: %1$s</string>
+<string name="eversense_calibration_phase">Calibration phase</string>
 
-<string name="eversense_status_next_cal_label">Next calibration: %1$s</string>
+<string name="eversense_last_calibration">Last calibration</string>
+
+<string name="eversense_next_calibration">Next calibration</string>
 
 <string name="eversense_status_never">Never</string>
 
@@ -133,14 +135,10 @@
     <string name="eversense_not_paired">No transmitter paired.</string>
     <string name="eversense_sign_in_failed">Eversense refused the stored login. Sign in again.</string>
     <string name="eversense_sign_in_again">Sign in again</string>
-    <string name="eversense_paired_transmitter" comment="%1$s=the transmitter name, for example T123456">Transmitter: %1$s</string>
     <string name="eversense_unpair">Unpair</string>
     <string name="eversense_unpair_confirm" comment="%1$s=the transmitter name, for example T123456">Forget transmitter %1$s? The login stays, so a replacement pairs without signing in again.</string>
 
     <!-- Status tab -->
-    <string name="eversense_status_sensor_end" comment="%1$s=the date the sensor ends">Sensor ends: %1$s</string>
-    <string name="eversense_status_firmware" comment="%1$s=the transmitter firmware version, for example 6.03.13">Firmware: %1$s</string>
-    <string name="eversense_status_alarm" comment="%1$s=the name of an active transmitter alarm, for example Low Glucose">Alarm: %1$s</string>
     <string name="eversense_signal_value" comment="%1$s=the signal in words, for example Good; %2$s=the signal in percent, for example 63 %">%1$s (%2$s)</string>
     <string name="eversense_signal_none">No signal</string>
     <string name="eversense_placement_bars" comment="For screen readers. %1$d=how many of the 5 signal bars are lit, 0 to 5">%1$d of 5 signal bars</string>

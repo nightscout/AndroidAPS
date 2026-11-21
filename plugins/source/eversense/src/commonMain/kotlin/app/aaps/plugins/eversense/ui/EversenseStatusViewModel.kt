@@ -7,7 +7,14 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.source.CgmAttention
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.StatusLevel
+import app.aaps.core.ui.compose.pump.PumpInfoRow
+import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.plugins.eversense.EversenseDriver
+import app.aaps.plugins.eversense.EversenseDriver.ConnectionState
+import app.aaps.plugins.eversense.EversensePlugin.Companion.BATTERY_LOW_PERCENT
+import app.aaps.plugins.eversense.EversensePlugin.Companion.SENSOR_END_CRITICAL_DAYS
+import app.aaps.plugins.eversense.EversensePlugin.Companion.SENSOR_END_WARNING_DAYS
 import app.aaps.plugins.eversense.EversenseStrings
 import app.aaps.plugins.eversense.callbacks.EversenseWatcher
 import app.aaps.plugins.eversense.enums.EversenseType
@@ -15,7 +22,6 @@ import app.aaps.plugins.eversense.enums.SignalStrength
 import app.aaps.plugins.eversense.models.ActiveAlarm
 import app.aaps.plugins.eversense.models.EversenseCGMResult
 import app.aaps.plugins.eversense.models.EversenseState
-import app.aaps.plugins.eversense.pairing.EversenseAccount
 import app.aaps.plugins.eversense.pairing.EversensePairing
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.delay
@@ -23,13 +29,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 /**
- * The status tab of the Eversense screen: the pairing (with what to fix), what the transmitter reports, and a full
- * sync. The link itself follows the plugin: it is open while Eversense is the active BG source and a transmitter is
- * paired, and the driver reconnects by itself.
+ * The status tab of the Eversense screen, laid out as a pump's: a banner with what needs the user first (no pairing, a
+ * refused login, or the link), the transmitter's values as label and value rows, and the buttons at the bottom. The
+ * link itself follows the plugin: it is open while Eversense is the active BG source and a transmitter is paired, and
+ * the driver reconnects by itself.
  */
 // Registered in EversenseRegistration. Unscoped, so each screen gets its own.
 @Stable
@@ -42,21 +50,24 @@ class EversenseStatusViewModel(
 ) : ViewModel(), EversenseWatcher {
 
     data class UiState(
-        val lines: List<String> = emptyList(),
+        val banner: StatusBanner? = null,
+        val rows: List<PumpInfoRow> = emptyList(),
+        val attention: CgmAttention? = null,
+        /** False for an E3 used without an Eversense account */
+        val signedIn: Boolean = false,
+        val transmitter: String? = null,
         val connected: Boolean = false
     )
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
-    val attention: StateFlow<CgmAttention?> = pairing.attention
-    val account: StateFlow<EversenseAccount?> = pairing.account
-    val transmitter: StateFlow<String?> = pairing.transmitter
-
     init {
         eversense.addWatcher(this)
-        // Connected, ready and lost come as states, with no watcher call for each step
-        eversense.connectionState.onEach { refresh() }.launchIn(viewModelScope)
+        // Connected, ready and lost come as states, with no watcher call for each step; the pairing as its own flows
+        merge(eversense.connectionState, pairing.attention, pairing.account, pairing.transmitter)
+            .onEach { refresh() }
+            .launchIn(viewModelScope)
     }
 
     override fun onCleared() {
@@ -73,36 +84,85 @@ class EversenseStatusViewModel(
     override fun onCGMRead(type: EversenseType, readings: List<EversenseCGMResult>) {}
 
     private fun refresh() {
-        val state = eversense.getCurrentState()
-        val connected = eversense.isConnected()
+        val attention = pairing.attention.value
+        val account = pairing.account.value
+        val transmitter = pairing.transmitter.value
+        val banner = when (attention) {
+            CgmAttention.NOT_PAIRED     -> StatusBanner(rh.gs(EversenseStrings.eversense_not_paired), StatusLevel.WARNING)
+            CgmAttention.SIGN_IN_FAILED -> StatusBanner(rh.gs(EversenseStrings.eversense_sign_in_failed), StatusLevel.CRITICAL)
+            null                        -> when (eversense.connectionState.value) {
+                ConnectionState.READY      -> StatusBanner(rh.gs(EversenseStrings.eversense_connected), StatusLevel.NORMAL)
+                ConnectionState.CONNECTING -> StatusBanner(rh.gs(CoreUiStrings.connecting))
+                else                       -> StatusBanner(rh.gs(EversenseStrings.eversense_not_connected), StatusLevel.WARNING)
+            }
+        }
+        // What the transmitter reports means something only once one is paired
+        val rows = if (attention == CgmAttention.NOT_PAIRED) emptyList() else buildList {
+            transmitter?.let { add(PumpInfoRow(rh.gs(EversenseStrings.eversense_transmitter), it)) }
+            add(
+                if (account != null) PumpInfoRow(rh.gs(EversenseStrings.eversense_pair_account_title), account.username)
+                // An E3 used without a login: it works, but nothing goes to the Eversense cloud
+                else PumpInfoRow(rh.gs(EversenseStrings.eversense_pair_account_title), rh.gs(EversenseStrings.eversense_not_signed_in_no_cloud), StatusLevel.WARNING)
+            )
+            addAll(transmitterRows(eversense.getCurrentState()))
+        }
+        _uiState.value = UiState(
+            banner = banner,
+            rows = rows,
+            attention = attention,
+            signedIn = account != null,
+            transmitter = transmitter,
+            connected = eversense.isConnected()
+        )
+    }
+
+    private fun transmitterRows(state: EversenseState): List<PumpInfoRow> {
         // Before the first sync the stored values are the defaults, not what the transmitter said
         val synced = state.lastSync > 0
         val never = rh.gs(EversenseStrings.eversense_status_never)
         fun date(value: Long) = if (value > 0) dateUtil.dateAndTimeString(value) else never
         fun percent(value: Int) = rh.gs(CoreUiStrings.units_format_percent, value)
+        fun row(label: String, value: String, level: StatusLevel = StatusLevel.UNSPECIFIED) = PumpInfoRow(label, value, level)
+        val now = dateUtil.now()
         val signal = SignalStrength.from365(state.sensorSignalStrength)
-        val lines = buildList {
-            add(rh.gs(EversenseStrings.eversense_status_connected_label, rh.gs(if (connected) CoreUiStrings.yes else CoreUiStrings.no)))
-            add(rh.gs(EversenseStrings.eversense_status_battery, if (synced && state.batteryPercentage >= 0) percent(state.batteryPercentage) else NO_VALUE))
-            add(rh.gs(EversenseStrings.eversense_status_insertion_label, date(state.insertionDate)))
-            if (state.insertionDate > 0) {
-                val lifetimeDays = if (eversense.transmitterIs365()) 365 else 180
-                add(rh.gs(EversenseStrings.eversense_status_sensor_end, dateUtil.dateString(state.insertionDate + lifetimeDays * DAY_MS)))
-            }
-            add(rh.gs(EversenseStrings.eversense_status_last_sync_label, date(state.lastSync)))
+        return buildList {
+            add(row(rh.gs(EversenseStrings.eversense_last_sync), date(state.lastSync)))
+            val batteryKnown = synced && state.batteryPercentage >= 0
             add(
-                rh.gs(
-                    EversenseStrings.eversense_status_signal_label,
-                    if (synced) rh.gs(EversenseStrings.eversense_signal_value, rh.gs(signal.label), percent(state.sensorSignalStrength)) else NO_VALUE
+                row(
+                    rh.gs(CoreUiStrings.battery_label),
+                    if (batteryKnown) percent(state.batteryPercentage) else NO_VALUE,
+                    // The same limit as the battery-low notice
+                    if (batteryKnown && state.batteryPercentage <= BATTERY_LOW_PERCENT) StatusLevel.CRITICAL else StatusLevel.UNSPECIFIED
                 )
             )
-            add(rh.gs(EversenseStrings.eversense_status_phase_label, if (synced) rh.gs(state.calibrationPhase.label) else NO_VALUE))
-            add(rh.gs(EversenseStrings.eversense_status_last_cal_label, date(state.lastCalibrationDate)))
-            add(rh.gs(EversenseStrings.eversense_status_next_cal_label, date(state.nextCalibrationDate)))
-            if (state.firmwareVersion.isNotEmpty()) add(rh.gs(EversenseStrings.eversense_status_firmware, state.firmwareVersion))
-            state.activeAlarms.forEach { add(rh.gs(EversenseStrings.eversense_status_alarm, rh.gs(it.code.title))) }
+            add(
+                row(
+                    rh.gs(EversenseStrings.eversense_signal),
+                    if (synced) rh.gs(EversenseStrings.eversense_signal_value, rh.gs(signal.label), percent(state.sensorSignalStrength)) else NO_VALUE,
+                    if (synced) signal.level else StatusLevel.UNSPECIFIED
+                )
+            )
+            add(row(rh.gs(EversenseStrings.eversense_sensor_inserted), date(state.insertionDate)))
+            if (state.insertionDate > 0) {
+                val lifetimeDays = if (eversense.transmitterIs365()) 365 else 180
+                val end = state.insertionDate + lifetimeDays * DAY_MS
+                val daysLeft = (end - now) / DAY_MS
+                // The same days as the sensor age colours of the overview
+                val level = when {
+                    daysLeft <= SENSOR_END_CRITICAL_DAYS -> StatusLevel.CRITICAL
+                    daysLeft <= SENSOR_END_WARNING_DAYS  -> StatusLevel.WARNING
+                    else                                 -> StatusLevel.UNSPECIFIED
+                }
+                add(row(rh.gs(EversenseStrings.eversense_sensor_end), dateUtil.dateString(end), level))
+            }
+            add(row(rh.gs(EversenseStrings.eversense_calibration_phase), if (synced) rh.gs(state.calibrationPhase.label) else NO_VALUE))
+            add(row(rh.gs(EversenseStrings.eversense_last_calibration), date(state.lastCalibrationDate)))
+            val calibrationDue = state.nextCalibrationDate > 0 && now >= state.nextCalibrationDate
+            add(row(rh.gs(EversenseStrings.eversense_next_calibration), date(state.nextCalibrationDate), if (calibrationDue) StatusLevel.WARNING else StatusLevel.UNSPECIFIED))
+            if (state.firmwareVersion.isNotEmpty()) add(row(rh.gs(CoreUiStrings.firmware), state.firmwareVersion))
+            state.activeAlarms.forEach { add(row(rh.gs(CoreUiStrings.alarm), rh.gs(it.code.title), StatusLevel.CRITICAL)) }
         }
-        _uiState.value = UiState(lines = lines, connected = connected)
     }
 
     /** Forgets the transmitter; the login stays. */

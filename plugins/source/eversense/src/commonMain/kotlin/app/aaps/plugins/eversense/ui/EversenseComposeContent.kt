@@ -1,41 +1,36 @@
 package app.aaps.plugins.eversense.ui
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.source.CgmAttention
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.compose.AapsCard
-import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.PluginTab
 import app.aaps.core.ui.compose.PluginTabsContent
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.icons.IcPluginEversense
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.navigation.LocalPluginNavigationRequest
 import app.aaps.core.ui.compose.navigation.NavigationRequest
+import app.aaps.core.ui.compose.pump.PumpOverviewScreen
+import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.plugins.eversense.EversenseStrings
-import app.aaps.plugins.eversense.pairing.EversenseAccount
-import app.aaps.plugins.eversense.pairing.EversensePairingCard
 import app.aaps.plugins.eversense.pairing.EversensePairingViewModel
 import app.aaps.plugins.eversense.pairing.EversensePairingWizard
 import app.aaps.plugins.eversense.placement.EversensePlacementScreen
@@ -119,9 +114,6 @@ private fun EversenseStatusTab(
     onPlacement: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val attention by viewModel.attention.collectAsStateWithLifecycle()
-    val account by viewModel.account.collectAsStateWithLifecycle()
-    val transmitter by viewModel.transmitter.collectAsStateWithLifecycle()
     val navigate = LocalPluginNavigationRequest.current
 
     LaunchedEffect(Unit) {
@@ -141,9 +133,6 @@ private fun EversenseStatusTab(
 
     EversenseStatusContent(
         state = state,
-        attention = attention,
-        account = account,
-        transmitter = transmitter,
         onPair = onPair,
         onSignInAgain = onSignInAgain,
         onUnpair = viewModel::unpair,
@@ -154,13 +143,14 @@ private fun EversenseStatusTab(
     )
 }
 
-/** The status tab without its view model, so that a test can show it. */
+/**
+ * The status tab without its view model, so that a test can show it. The pumps' own layout: the banner, the value
+ * rows, the picture, and the buttons at the bottom. The pairing (pair, sign in, unpair) is in the buttons, as a pump's
+ * "Pair" and "Unpair" are.
+ */
 @Composable
 internal fun EversenseStatusContent(
     state: EversenseStatusViewModel.UiState,
-    attention: CgmAttention?,
-    account: EversenseAccount?,
-    transmitter: String?,
     onPair: () -> Unit,
     onSignInAgain: () -> Unit,
     onUnpair: () -> Unit,
@@ -168,41 +158,62 @@ internal fun EversenseStatusContent(
     onCalibrate: () -> Unit,
     onPlacement: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(AapsSpacing.extraLarge),
-        verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
-    ) {
-        EversensePairingCard(
-            attention = attention,
-            account = account,
-            transmitter = transmitter,
-            onPair = onPair,
-            onSignInAgain = onSignInAgain,
-            onUnpair = onUnpair
+    var confirmUnpair by remember { mutableStateOf(false) }
+    val paired = state.attention != CgmAttention.NOT_PAIRED
+    val unpair = ScreenAction(stringResource(EversenseStrings.eversense_unpair), onClick = { confirmUnpair = true })
+    val primaryActions =
+        if (paired) listOf(
+            // The link follows the plugin (no Connect or Disconnect); Sync waits for it
+            ScreenAction(stringResource(EversenseStrings.eversense_information_last_sync), enabled = state.connected, onClick = onSync),
+            // The AAPS calibration dialog
+            ScreenAction(stringResource(EversenseStrings.eversense_calibration_action), onClick = onCalibrate),
+            ScreenAction(stringResource(EversenseStrings.eversense_placement_title), onClick = onPlacement)
+        ) else emptyList()
+    val managementActions = when (state.attention) {
+        CgmAttention.NOT_PAIRED     -> listOf(ScreenAction(stringResource(EversenseStrings.eversense_pair_title), onClick = onPair))
+        CgmAttention.SIGN_IN_FAILED -> listOf(ScreenAction(stringResource(EversenseStrings.eversense_sign_in_again), onClick = onSignInAgain), unpair)
+        // An E3 used without a login can still sign in
+        null                        -> listOfNotNull(
+            if (!state.signedIn) ScreenAction(stringResource(EversenseStrings.eversense_sign_in), onClick = onSignInAgain) else null,
+            unpair
         )
-        // What the transmitter reports means something only once one is paired
-        if (attention != CgmAttention.NOT_PAIRED) {
-            AapsCard(modifier = Modifier.fillMaxWidth()) {
-                Column(Modifier.padding(AapsSpacing.extraLarge), verticalArrangement = Arrangement.spacedBy(AapsSpacing.large)) {
-                    state.lines.forEach { Text(it, style = MaterialTheme.typography.bodyLarge) }
-                }
-            }
-            Button(onClick = onSync, modifier = Modifier.fillMaxWidth(), enabled = state.connected) {
-                Text(stringResource(EversenseStrings.eversense_information_last_sync))
-            }
+    }
 
-            HorizontalDivider(Modifier.padding(vertical = AapsSpacing.medium))
-
-            OutlinedButton(onClick = onCalibrate, modifier = Modifier.fillMaxWidth()) {
-                Text(stringResource(EversenseStrings.eversense_calibration_action))
-            }
-            OutlinedButton(onClick = onPlacement, modifier = Modifier.fillMaxWidth()) {
-                Text(stringResource(EversenseStrings.eversense_placement_title))
+    PumpOverviewScreen(
+        state = PumpOverviewUiState(
+            statusBanner = state.banner,
+            infoRows = state.rows,
+            primaryActions = primaryActions,
+            managementActions = managementActions
+        ),
+        customContent = {
+            // The plugin's own icon: a single colour, so it takes the theme's colour in light and dark mode
+            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                Icon(
+                    imageVector = IcPluginEversense,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .fillMaxWidth(PICTURE_WIDTH)
+                        .aspectRatio(1f)
+                )
             }
         }
+    )
+
+    if (confirmUnpair) {
+        OkCancelDialog(
+            title = stringResource(EversenseStrings.eversense_unpair),
+            message = stringResource(EversenseStrings.eversense_unpair_confirm, state.transmitter.orEmpty()),
+            onConfirm = {
+                confirmUnpair = false
+                onUnpair()
+            },
+            onDismiss = { confirmUnpair = false }
+        )
     }
 }
+
+/** The part of the width the picture takes */
+private const val PICTURE_WIDTH = 0.4f
 

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.plugins.eversense.EversenseStrings
 import app.aaps.plugins.eversense.enums.CalibrationPhase
 import app.aaps.plugins.eversense.enums.SignalStrength
@@ -32,6 +33,14 @@ internal val SignalStrength.instruction: TextRef
 
 /** Lit bars of the placement guide, 0 to 5: the step's place in the scale. */
 internal val SignalStrength.bars: Int get() = ordinal
+
+/** The signal row of the status tab: good is fine, fair needs a look, weaker needs a move. */
+internal val SignalStrength.level: StatusLevel
+    get() = when (this) {
+        SignalStrength.EXCELLENT, SignalStrength.GOOD -> StatusLevel.NORMAL
+        SignalStrength.LOW                            -> StatusLevel.WARNING
+        else                                          -> StatusLevel.CRITICAL
+    }
 
 /** The colour of the lit bars: good is fine, fair needs a look, weaker needs a move. */
 @Composable

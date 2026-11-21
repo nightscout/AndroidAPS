@@ -15,4 +15,10 @@ fun UByteArray.toInt(): Int = BinaryFields.unsigned(this, width = 2).toInt()
 fun UByteArray.toLong(): Long = BinaryFields.unsigned(this)
 fun ByteArray.toLong(): Long = BinaryFields.unsigned(toUByteArray())
 fun UByteArray.toUnix(): Long = BinaryFields.sensorTimestamp(this)
+
+/**
+ * As [toUnix], but the transmitter's zero time (2000-01-01 00:00 UTC) is 0: no date. A 365 with no sensor sends it as
+ * its insertion date and as both calibration dates.
+ */
+fun UByteArray.toUnixOrNone(): Long = toUnix().takeIf { it > BinaryFields.SENSOR_EPOCH_MS } ?: 0L
 fun Long.toUnixArray(): ByteArray = BinaryFields.sensorTimestamp(this)

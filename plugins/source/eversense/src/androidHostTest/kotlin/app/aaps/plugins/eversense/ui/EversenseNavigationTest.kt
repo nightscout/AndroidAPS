@@ -16,11 +16,11 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.CoreUiStringIds
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalPreferences
+import app.aaps.core.ui.compose.pump.PumpInfoRow
+import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.plugins.eversense.EversenseStringIds
 import app.aaps.plugins.eversense.R
 import app.aaps.plugins.eversense.enums.SignalStrength
-import app.aaps.plugins.eversense.pairing.EversenseAccount
-import app.aaps.plugins.eversense.pairing.EversenseModel
 import app.aaps.plugins.eversense.placement.EversensePlacementContent
 import app.aaps.plugins.eversense.placement.EversensePlacementViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -56,6 +56,7 @@ class EversenseNavigationTest {
     private fun show(
         connected: Boolean = true,
         attention: CgmAttention? = null,
+        signedIn: Boolean = true,
         onPair: () -> Unit = {},
         onSignInAgain: () -> Unit = {},
         onUnpair: () -> Unit = {},
@@ -66,10 +67,14 @@ class EversenseNavigationTest {
             CompositionLocalProvider(LocalPreferences provides preferences) {
                 AapsTheme {
                     EversenseStatusContent(
-                        state = EversenseStatusViewModel.UiState(lines = listOf("Status example"), connected = connected),
-                        attention = attention,
-                        account = EversenseAccount("user@example.com", EversenseModel.E365_OTHER),
-                        transmitter = "T123456",
+                        state = EversenseStatusViewModel.UiState(
+                            banner = StatusBanner("Banner example"),
+                            rows = if (attention == CgmAttention.NOT_PAIRED) emptyList() else listOf(PumpInfoRow("Label example", "Value example")),
+                            attention = attention,
+                            signedIn = signedIn,
+                            transmitter = "T123456",
+                            connected = connected
+                        ),
                         onPair = onPair,
                         onSignInAgain = onSignInAgain,
                         onUnpair = onUnpair,
@@ -84,19 +89,25 @@ class EversenseNavigationTest {
 
     private fun text(id: Int, vararg args: Any) = context.getString(id, *args)
 
+    /** The pumps' layout: the banner, the label and value rows, and the buttons. */
     @Test fun statusShowsWhatTheTransmitterReports() {
         show()
-        compose.onNodeWithText("Status example").assertIsDisplayed()
-        compose.onNodeWithText(text(R.string.eversense_paired_transmitter, "T123456")).assertIsDisplayed()
-        compose.onNodeWithText(text(R.string.eversense_signed_in_as, "user@example.com")).assertIsDisplayed()
+        compose.onNodeWithText("Banner example").assertIsDisplayed()
+        compose.onNodeWithText("Label example").assertIsDisplayed()
+        compose.onNodeWithText("Value example").assertIsDisplayed()
+        compose.onNodeWithText(text(R.string.eversense_information_last_sync)).assertIsDisplayed()
+        compose.onNodeWithText(text(R.string.eversense_placement_title)).assertIsDisplayed()
+        // Signed in: nothing to sign in to
+        compose.onNodeWithText(text(R.string.eversense_sign_in)).assertDoesNotExist()
     }
 
     /** Where the bottom bar's "!" leads: the reason, and the button that starts the wizard. */
     @Test fun notPairedOffersPairingAndNothingElse() {
         var pair = false
         show(attention = CgmAttention.NOT_PAIRED, onPair = { pair = true })
-        compose.onNodeWithText(text(R.string.eversense_not_paired)).assertIsDisplayed()
-        compose.onNodeWithText("Status example").assertDoesNotExist()
+        compose.onNodeWithText("Label example").assertDoesNotExist()
+        compose.onNodeWithText(text(R.string.eversense_information_last_sync)).assertDoesNotExist()
+        compose.onNodeWithText(text(R.string.eversense_unpair)).assertDoesNotExist()
         compose.onNodeWithText(text(R.string.eversense_pair_title)).performClick()
         compose.runOnIdle { assertEquals(true, pair) }
     }
@@ -104,8 +115,15 @@ class EversenseNavigationTest {
     @Test fun refusedLoginOffersSigningInAgain() {
         var signIn = false
         show(attention = CgmAttention.SIGN_IN_FAILED, onSignInAgain = { signIn = true })
-        compose.onNodeWithText(text(R.string.eversense_sign_in_failed)).assertIsDisplayed()
         compose.onNodeWithText(text(R.string.eversense_sign_in_again)).performClick()
+        compose.runOnIdle { assertEquals(true, signIn) }
+    }
+
+    /** An E3 used without a login can still sign in from here. */
+    @Test fun withoutALoginSignInIsOffered() {
+        var signIn = false
+        show(signedIn = false, onSignInAgain = { signIn = true })
+        compose.onNodeWithText(text(R.string.eversense_sign_in)).performClick()
         compose.runOnIdle { assertEquals(true, signIn) }
     }
 
@@ -113,7 +131,7 @@ class EversenseNavigationTest {
     @Test fun unpairAsksFirst() {
         var unpaired = false
         show(onUnpair = { unpaired = true })
-        compose.onNodeWithText(text(R.string.eversense_unpair)).performScrollTo().performClick()
+        compose.onNodeWithText(text(R.string.eversense_unpair)).performClick()
         compose.onNodeWithText(text(R.string.eversense_unpair_confirm, "T123456")).assertIsDisplayed()
         compose.runOnIdle { assertEquals(false, unpaired) }
         compose.onNodeWithText(context.getString(CoreUiR.string.ok)).performClick()
@@ -130,7 +148,7 @@ class EversenseNavigationTest {
     @Test fun calibrateOpensTheCalibration() {
         var calibrate = false
         show(onCalibrate = { calibrate = true })
-        compose.onNodeWithText(text(R.string.eversense_calibration_action)).performScrollTo().performClick()
+        compose.onNodeWithText(text(R.string.eversense_calibration_action)).performClick()
         compose.runOnIdle { assertEquals(true, calibrate) }
     }
 
