@@ -18,7 +18,7 @@
     <string name="openapsma_last_run_label">Sidst kørt</string>
     <string name="openapsma_input_parameters_label">Input parametre</string>
     <string name="openapsma_glucose_status_label">Glukose status</string>
-    <string name="openapsma_current_temp_label">Nuværende Midlertidig Basal</string>
+    <string name="openapsma_current_temp_label">Nuværende midlertidig basal</string>
     <string name="openapsma_iob_data_label">IOB data</string>
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_meal_data_label">Måltids data</string>
@@ -45,10 +45,10 @@
     <string name="zero_basal_not_set">Pumpen accepterede ikke nul-basalen. Den giver måske stadig basalinsulin. Tjek pumpen.</string>
     <string name="description_loop">Aktiver eller deaktiver implementeringen som aktiverer Loop.</string>
     <string name="no_aps_selected">INGEN APS VALGT ELLER GIVET RESULTAT</string>
-    <string name="ignore5m">Ignorér 5m</string>
-    <string name="ignore15m">Ignorér 15m</string>
-    <string name="ignore30m">Ignorér 30m</string>
-    <string name="carbs_suggestion">Kulhydrater Forslag</string>
+    <string name="ignore5m">Ignorer 5m</string>
+    <string name="ignore15m">Ignorer 15m</string>
+    <string name="ignore30m">Ignorer 30m</string>
+    <string name="carbs_suggestion">Kulhydratforslag</string>
     <string name="open_loop_new_suggestion">Nyt forslag tilgængeligt</string>
     <string name="loop_notification_channel_name">Loop-forslag</string>
     <string name="loop_notification_channel_silent_name">Loop-forslag under Forstyr ikke</string>
@@ -78,7 +78,7 @@
     <string name="autotune_error">Fejl i inputdata, prøv at køre autotune igen eller reducer antallet af dage</string>
     <string name="autotune_error_more_days">Fejl i inputdata, øg antallet af dage</string>
     <string name="autotune_warning_during_run">Automatisk beregning startet, vær venligst tålmodig</string>
-    <string name="autotune_warning_after_run">Kontrollér resultaterne omhyggeligt, før du bruger dem!</string>
+    <string name="autotune_warning_after_run">Kontroller resultaterne omhyggeligt, før du bruger dem!</string>
     <string name="autotune_partial_result">Delvis resultat dag %1$d / %2$d justeret</string>
     <string name="autotune_result">Resultat: %1$s</string>
     <string name="autotune_param">Parameter</string>
