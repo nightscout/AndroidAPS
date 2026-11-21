@@ -3,7 +3,7 @@
     <string name="nav_history_browser">Historie bekijken</string>
     <string name="sensor_label">Sensor</string>
     <string name="insulin_label">Insuline</string>
-    <string name="pb_label">Pomp batterij</string>
+    <string name="pb_label">Pompbatterij</string>
     <string name="cannula">Canule</string>
     <string name="patch_pump">Patchpomp</string>
     <!-- Overview -->
