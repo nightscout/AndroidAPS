@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -31,6 +32,9 @@ import app.aaps.core.objects.workflow.MetroWorkerCreator
 import app.aaps.core.ui.compose.icons.IcGenericCgm
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.source.AbstractBgSourcePlugin
+import app.aaps.plugins.source.cgmapps.CgmAppCatalog
+import app.aaps.plugins.source.cgmapps.CgmApps
+import app.aaps.plugins.source.cgmapps.calibrationMode
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
@@ -56,7 +60,8 @@ class InstaraPlugin(
     aapsLogger: AAPSLogger,
     preferences: Preferences,
     config: Config,
-    notificationManager: NotificationManager
+    notificationManager: NotificationManager,
+    private val cgmAppCatalog: CgmAppCatalog
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -73,6 +78,13 @@ class InstaraPlugin(
     ownPreferences = InstaraBooleanKey.entries + InstaraStringKey.entries,
     aapsLogger, rh, preferences, config, notificationManager
 ), BgSource {
+
+    override val appPackages: List<String>
+        get() = cgmAppCatalog.apps.packagesOf(CgmApps.INSTARA)
+
+    /** The Instara sensor needs no calibration and the app takes none: AAPS's calibration plugin may. */
+    override val calibrationMode: CalibrationMode
+        get() = cgmAppCatalog.firstInstalled(CgmApps.INSTARA).calibrationMode()
 
     private fun appContext(): Context = context
 

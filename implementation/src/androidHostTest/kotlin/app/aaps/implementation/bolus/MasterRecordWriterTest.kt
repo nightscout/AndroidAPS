@@ -13,8 +13,10 @@ import app.aaps.core.interfaces.calibration.AddEntryResult
 import app.aaps.core.interfaces.calibration.Calibration
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.source.XDripSource
-import app.aaps.core.interfaces.sync.XDripBroadcast
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -25,7 +27,9 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -40,9 +44,15 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var translator: Translator
     @Mock lateinit var uel: UserEntryLogger
-    @Mock lateinit var xDripSource: XDripSource
-    @Mock lateinit var xDripBroadcast: XDripBroadcast
-    @Mock lateinit var calibration: Calibration
+
+    /** The active calibration plugin, as the Linear one: a real plugin, not the default one that stores nothing. */
+    private val calibration: Calibration = calibrationPlugin(defaultPlugin = false)
+
+    private fun calibrationPlugin(defaultPlugin: Boolean): Calibration {
+        val plugin = mock<PluginBase>(extraInterfaces = arrayOf(Calibration::class))
+        whenever(plugin.pluginDescription).thenReturn(PluginDescription().apply { this.defaultPlugin = defaultPlugin })
+        return plugin as Calibration
+    }
 
     private lateinit var sut: MasterRecordWriter
 
@@ -51,7 +61,7 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
         whenever(activePlugin.activeCalibration).thenReturn(calibration)
         sut = MasterRecordWriter(
             persistenceLayer, baseText, dateUtil, profileUtil, profileFunction, decimalFormatter, translator, activePlugin,
-            uel, xDripSource, xDripBroadcast, aapsLogger
+            uel, aapsLogger
         )
     }
 
@@ -148,41 +158,213 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
         verify(persistenceLayer).invalidateTherapyEventsWithNote(baseText.gs(CoreUiStrings.androidaps_start), Action.RESTART_EVENTS_REMOVED, Sources.NSClient)
     }
 
+    // ----- calibration: AAPS, the BG source does not calibrate -----
+
+    /** The BG source and its calibration mode. A Mockito mock does not run interface defaults. */
+    private fun bgSource(mode: CalibrationMode): BgSource = mock<BgSource>().also {
+        whenever(it.calibrationMode).thenReturn(mode)
+        whenever(activePlugin.activeBgSource).thenReturn(it)
+    }
+
     @Test
     fun `a calibration the master cannot take now is refused with its reason`() = runTest {
+        bgSource(CalibrationMode.AAPS)
         whenever(calibration.checkPreconditions()).thenReturn(AddEntryResult.Rejected.NoSession)
 
-        assertThat(sut.calibrationRefusal()).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_session))
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(120.0))).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_session))
     }
 
     @Test
     fun `a calibration the master can take is not refused`() = runTest {
+        bgSource(CalibrationMode.AAPS)
         whenever(calibration.checkPreconditions()).thenReturn(AddEntryResult.Accepted)
 
-        assertThat(sut.calibrationRefusal()).isNull()
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(120.0))).isNull()
     }
 
     @Test
-    fun `a stored calibration is logged and also sent to xDrip when xDrip is the BG source`() = runTest {
+    fun `a calibration stored by the calibration plugin is logged`() = runTest {
+        val source = bgSource(CalibrationMode.AAPS)
         whenever(calibration.addEntry(eq(120.0), any())).thenReturn(AddEntryResult.Accepted)
-        whenever(xDripSource.isEnabled()).thenReturn(true)
         var failure: MasterActionExecutor.Failure? = null
 
         sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
 
         assertThat(failure).isNull()
         verify(uel).log(eq(Action.CALIBRATION), eq(Sources.NSClient), anyOrNull(), any<ValueWithUnit>())
-        verify(xDripBroadcast).sendCalibration(any())
+        verify(source, never()).calibrate(any())
     }
 
     @Test
     fun `a calibration refused when it is stored reports the reason`() = runTest {
+        bgSource(CalibrationMode.AAPS)
         whenever(calibration.addEntry(eq(120.0), any())).thenReturn(AddEntryResult.Rejected.NoSensorPair)
         var failure: MasterActionExecutor.Failure? = null
 
         sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
 
         assertThat(failure?.comment).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_pair))
-        verify(xDripBroadcast, never()).sendCalibration(any())
+    }
+
+    /**
+     * No calibration plugin: the default one would take the value and store nothing, so it would look done and be
+     * lost. An SMS CAL or a client with an out-of-date plugin selection can send one.
+     */
+    @Test
+    fun `a calibration with no calibration plugin is refused, not lost`() = runTest {
+        bgSource(CalibrationMode.AAPS)
+        val noCalibration = calibrationPlugin(defaultPlugin = true)
+        whenever(activePlugin.activeCalibration).thenReturn(noCalibration)
+        var failure: MasterActionExecutor.Failure? = null
+
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(120.0))).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_plugin))
+        sut.addCalibration(BatchAction.Calibration(120.0), Sources.SMS) { failure = it }
+
+        assertThat(failure?.comment).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_no_plugin))
+        verify(noCalibration, never()).addEntry(any(), any())
+        verify(uel).log(eq(Action.CALIBRATION), eq(Sources.SMS), anyOrNull(), any<ValueWithUnit>())
+    }
+
+    // ----- calibration: the value -----
+
+    /** "CAL 100" sent by SMS with mmol/L is 1800 mg/dL: a typo, refused before it can bend the fit or reach a sensor. */
+    @Test
+    fun `a calibration outside what the dialog offers is refused before it goes anywhere`() = runTest {
+        val source = bgSource(CalibrationMode.SOURCE)
+        doReturn("mg/dL").whenever(rh).gs(CoreUiStrings.bg_mgdl)
+        val typo = BatchAction.Calibration(1800.0)
+        val expected = baseText.gs(
+            CoreUiStrings.cal_reject_out_of_range,
+            profileUtil.fromMgdlToStringWithUnits(1800.0), profileUtil.fromMgdlToStringWithUnits(36.0), profileUtil.fromMgdlToStringWithUnits(500.0)
+        )
+        var failure: MasterActionExecutor.Failure? = null
+
+        assertThat(sut.calibrationRefusal(typo)).isEqualTo(expected)
+        sut.addCalibration(typo, Sources.SMS) { failure = it }
+
+        assertThat(failure?.comment).isEqualTo(expected)
+        verify(source, never()).calibrationRefusal()
+        verify(source, never()).calibrate(any())
+        verify(calibration, never()).addEntry(any(), any())
+    }
+
+    /** A sensor that takes 40 to 400 mg/dL (an Eversense): a value it would refuse is refused before the confirmation. */
+    @Test
+    fun `a self-calibrating source narrows the range to what it takes`() = runTest {
+        val source = bgSource(CalibrationMode.SOURCE)
+        whenever(source.calibrationRangeMgdl).thenReturn(40.0..400.0)
+        doReturn("mg/dL").whenever(rh).gs(CoreUiStrings.bg_mgdl)
+        val expected = baseText.gs(
+            CoreUiStrings.cal_reject_out_of_range,
+            profileUtil.fromMgdlToStringWithUnits(39.0), profileUtil.fromMgdlToStringWithUnits(40.0), profileUtil.fromMgdlToStringWithUnits(400.0)
+        )
+
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(39.0))).isEqualTo(expected)
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(401.0))).isNotNull()
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(40.0))).isNull()
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(400.0))).isNull()
+    }
+
+    /** The ends of the range are what the dialog offers, so they are taken. */
+    @Test
+    fun `the ends of the range are taken`() = runTest {
+        bgSource(CalibrationMode.AAPS)
+        doReturn("mg/dL").whenever(rh).gs(CoreUiStrings.bg_mgdl)
+        whenever(calibration.checkPreconditions()).thenReturn(AddEntryResult.Accepted)
+
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(36.0))).isNull()
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(500.0))).isNull()
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(35.0))).isNotNull()
+    }
+
+    // ----- calibration: SOURCE, a CGM driver or xDrip takes it -----
+
+    @Test
+    fun `a source that takes calibrations decides the refusal, not the calibration plugin`() = runTest {
+        val source = bgSource(CalibrationMode.SOURCE)
+        whenever(source.calibrationRefusal()).thenReturn("transmitter busy")
+
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(120.0))).isEqualTo("transmitter busy")
+        verify(calibration, never()).checkPreconditions()
+    }
+
+    @Test
+    fun `a calibration goes to the source that takes calibrations and is logged`() = runTest {
+        val source = bgSource(CalibrationMode.SOURCE)
+        whenever(source.calibrate(120.0)).thenReturn(null)
+        var failure: MasterActionExecutor.Failure? = null
+
+        sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
+
+        assertThat(failure).isNull()
+        verify(source).calibrate(120.0)
+        verify(calibration, never()).addEntry(any(), any())
+        verify(uel).log(eq(Action.CALIBRATION), eq(Sources.NSClient), anyOrNull(), any<ValueWithUnit>())
+    }
+
+    /** xDrip+ gets the broadcast also when it ignores it, so the user reads what it needs before and after. */
+    @Test
+    fun `the confirmation of a calibration the source takes carries the source's note`() {
+        val source = bgSource(CalibrationMode.SOURCE)
+        whenever(source.calibrationNote()).thenReturn("turn it on")
+        doReturn("mg/dL").whenever(rh).gs(CoreUiStrings.bg_mgdl)
+
+        val lines = sut.calibrationLines(BatchAction.Calibration(120.0))
+
+        assertThat(lines.map { it.role }).containsExactly(ConfirmationRole.PRIMARY, ConfirmationRole.INFO).inOrder()
+        assertThat(lines.last().text).isEqualTo("turn it on")
+    }
+
+    @Test
+    fun `the note of a source that does not take the calibration is not shown`() {
+        val source = bgSource(CalibrationMode.AAPS)
+        whenever(source.calibrationNote()).thenReturn("turn it on")
+        doReturn("mg/dL").whenever(rh).gs(CoreUiStrings.bg_mgdl)
+
+        assertThat(sut.calibrationLines(BatchAction.Calibration(120.0)).map { it.role }).containsExactly(ConfirmationRole.PRIMARY)
+    }
+
+    @Test
+    fun `a calibration the source refuses reports the source's reason`() = runTest {
+        val source = bgSource(CalibrationMode.SOURCE)
+        whenever(source.calibrate(120.0)).thenReturn("sensor refused")
+        var failure: MasterActionExecutor.Failure? = null
+
+        sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
+
+        assertThat(failure?.comment).isEqualTo("sensor refused")
+    }
+
+    // ----- calibration: OWN_APP, the vendor app calibrates -----
+
+    /** Only a client can send one: on this phone the button opens the vendor app. It must not look done. */
+    @Test
+    fun `a calibration for a sensor calibrated in its own app is refused, not dropped`() = runTest {
+        val source = bgSource(CalibrationMode.OWN_APP)
+        var failure: MasterActionExecutor.Failure? = null
+
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(120.0))).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_in_cgm_app))
+        sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
+
+        assertThat(failure?.comment).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_in_cgm_app))
+        verify(calibration, never()).addEntry(any(), any())
+        verify(source, never()).calibrate(any())
+    }
+
+    // ----- calibration: PUMP, the sensor is calibrated on the pump -----
+
+    /** A Medtronic sensor read through the pump: neither AAPS nor an app can take it, and the user is told where. */
+    @Test
+    fun `a calibration for a sensor calibrated on the pump is refused with where to do it`() = runTest {
+        val source = bgSource(CalibrationMode.PUMP)
+        var failure: MasterActionExecutor.Failure? = null
+
+        assertThat(sut.calibrationRefusal(BatchAction.Calibration(120.0))).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_on_pump))
+        sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
+
+        assertThat(failure?.comment).isEqualTo(baseText.gs(CoreUiStrings.cal_reject_on_pump))
+        verify(calibration, never()).checkPreconditions()
+        verify(calibration, never()).addEntry(any(), any())
+        verify(source, never()).calibrate(any())
     }
 }

@@ -20,9 +20,12 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TimeDiff
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.StatusLevel
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
@@ -208,6 +211,45 @@ internal class StatusViewModelTest {
         screen.cancelAndJoin()
     }
 
+    /** A CGM source that knows its sensor's lifetime sets the sensor age limits: a 365 sensor is orange in its last month. */
+    @Test
+    fun `a known sensor lifetime sets the sensor age limits`() = runBlocking<Unit> {
+        Dispatchers.setMain(UnconfinedTestDispatcher())
+        givenStatusData()
+        givenSensorAgeHours(340 * 24)
+        whenever(preferences.get(IntNonKey.SensorLifetimeHours)).thenReturn(365 * 24)
+        val viewModel = newViewModel()
+        val screen = show(viewModel)
+        awaitValue(finished, 1)
+
+        assertThat(viewModel.uiState.value.sensorStatus?.ageStatus).isEqualTo(StatusLevel.WARNING)
+        assertThat(viewModel.uiState.value.sensorStatus?.agePercent).isWithin(0.001f).of(340f / 365f)
+        screen.cancelAndJoin()
+    }
+
+    /** With no lifetime known, the limits set in the preferences apply. */
+    @Test
+    fun `without a sensor lifetime the limits of the preferences apply`() = runBlocking<Unit> {
+        Dispatchers.setMain(UnconfinedTestDispatcher())
+        givenStatusData()
+        givenSensorAgeHours(228)
+        whenever(preferences.get(IntKey.OverviewSageWarning)).thenReturn(216)
+        whenever(preferences.get(IntKey.OverviewSageCritical)).thenReturn(240)
+        val viewModel = newViewModel()
+        val screen = show(viewModel)
+        awaitValue(finished, 1)
+
+        assertThat(viewModel.uiState.value.sensorStatus?.ageStatus).isEqualTo(StatusLevel.WARNING)
+        screen.cancelAndJoin()
+    }
+
+    private suspend fun givenSensorAgeHours(hours: Long) {
+        val sensorChange = mock<TE>()
+        whenever(sensorChange.timestamp).thenReturn(SENSOR_TIME)
+        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(sensorChange)
+        whenever(dateUtil.now()).thenReturn(SENSOR_TIME + hours * 60 * 60 * 1000L)
+    }
+
     /** Collects the state the way a screen does. */
     private fun CoroutineScope.show(viewModel: StatusViewModel): Job =
         launch(Dispatchers.Unconfined) { viewModel.uiState.collect { } }
@@ -259,6 +301,9 @@ internal class StatusViewModelTest {
     private companion object {
 
         const val USAGE_TEXT = "12 U"
+
+        /** When the sensor was inserted */
+        const val SENSOR_TIME = 1_000_000_000L
 
         /** How long a test waits to be sure that something did NOT happen. */
         const val QUIET_MS = 300L

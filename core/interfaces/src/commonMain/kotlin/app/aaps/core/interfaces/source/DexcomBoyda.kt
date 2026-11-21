@@ -4,5 +4,4 @@ interface DexcomBoyda {
 
     fun isEnabled(): Boolean
     fun requestPermissionIfNeeded()
-    fun dexcomPackages(): List<String>
 }

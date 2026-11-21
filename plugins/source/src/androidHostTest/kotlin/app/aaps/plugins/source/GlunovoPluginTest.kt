@@ -41,7 +41,7 @@ class GlunovoPluginTest : TestBaseWithProfile() {
             whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
         }
 
-        glunovoPlugin = GlunovoPlugin(rh, aapsLogger, preferences, config, context, persistenceLayer, dateUtil, fabricPrivacy, mock())
+        glunovoPlugin = GlunovoPlugin(rh, aapsLogger, preferences, config, context, persistenceLayer, dateUtil, fabricPrivacy, mock(), mock())
 
         // Default cursor to be empty
         whenever(cursor.isAfterLast).thenReturn(true)

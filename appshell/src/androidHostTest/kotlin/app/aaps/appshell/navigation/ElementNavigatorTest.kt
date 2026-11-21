@@ -4,10 +4,13 @@ import androidx.navigation.NavController
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.protection.AuthorizationResult
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
-import app.aaps.core.interfaces.source.DexcomBoyda
+import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.CalibrationMode
+import app.aaps.core.interfaces.source.CgmDriver
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.ui.compose.main.MainViewModel
@@ -37,9 +40,10 @@ class ElementNavigatorTest {
     private lateinit var activePlugin: ActivePlugin
     private lateinit var protectionCheck: ProtectionCheck
     private lateinit var configBuilder: ConfigBuilder
-    private lateinit var dexcomBoyda: DexcomBoyda
 
-    private val openedCgmApps = mutableListOf<String>()
+    /** Each call to `onOpenCgmApp`, with the packages it was given */
+    private val openRequests = mutableListOf<List<String>>()
+    private val openedCgmApps get() = openRequests.flatten()
     private var exited = false
 
     private lateinit var sut: ElementNavigator
@@ -51,8 +55,7 @@ class ElementNavigatorTest {
         activePlugin = mock()
         protectionCheck = mock()
         configBuilder = mock()
-        dexcomBoyda = mock()
-        openedCgmApps.clear()
+        openRequests.clear()
         exited = false
         sut = ElementNavigator(
             navController = navController,
@@ -60,8 +63,7 @@ class ElementNavigatorTest {
             activePlugin = activePlugin,
             protectionCheck = protectionCheck,
             configBuilder = configBuilder,
-            dexcomBoyda = dexcomBoyda,
-            onOpenCgmApp = { openedCgmApps += it },
+            onOpenCgmApp = { openRequests.add(it) },
             onExit = { exited = true },
             onRequestDirectoryAccess = {},
             onOpenUrl = {}
@@ -268,7 +270,7 @@ class ElementNavigatorTest {
             setUp()
             grantAuthorization(ProtectionCheck.Protection.MASTER)
             resolveProtection(ProtectionResult.GRANTED)
-            whenever(dexcomBoyda.dexcomPackages()).thenReturn(listOf("com.dexcom.g6"))
+            bgSourceWithApp("com.dexcom.g6")
 
             sut.handleNavigationRequest(NavigationRequest.Element(type))
 
@@ -292,23 +294,73 @@ class ElementNavigatorTest {
         assertThat(mockingDetails(configBuilder).invocations.map { it.method.name }).contains("exitApp")
     }
 
-    @Test
-    fun `the xdrip element opens the xdrip package`() {
-        grantAuthorization(ProtectionCheck.Protection.MASTER)
+    /** The active BG source's app, with the packages the CGM app catalog lists for it. */
+    private fun bgSourceWithApp(vararg packages: String, mode: CalibrationMode = CalibrationMode.AAPS) {
+        val source = mock<BgSource>()
+        whenever(source.appPackages).thenReturn(packages.toList())
+        whenever(source.calibrationMode).thenReturn(mode)
+        whenever(activePlugin.activeBgSource).thenReturn(source)
+    }
 
-        sut.handleNavigationRequest(NavigationRequest.Element(ElementType.CGM_XDRIP))
+    @Test
+    fun `the CGM element opens the app of the active source`() {
+        grantAuthorization(ProtectionCheck.Protection.MASTER)
+        bgSourceWithApp("com.eveningoutpost.dexdrip")
+
+        sut.handleNavigationRequest(NavigationRequest.Element(ElementType.CGM))
 
         assertThat(openedCgmApps).containsExactly("com.eveningoutpost.dexdrip")
     }
 
+    /** One request with every package: the platform opens the first installed one, so two installed apps do not both open. */
     @Test
-    fun `the dexcom element opens every package the source reports`() {
+    fun `the CGM element asks once with every package the source reports`() {
         grantAuthorization(ProtectionCheck.Protection.MASTER)
-        whenever(dexcomBoyda.dexcomPackages()).thenReturn(listOf("com.dexcom.g6", "com.dexcom.g7"))
+        bgSourceWithApp("com.dexcom.g6", "com.dexcom.g7")
 
-        sut.handleNavigationRequest(NavigationRequest.Element(ElementType.CGM_DEX))
+        sut.handleNavigationRequest(NavigationRequest.Element(ElementType.CGM))
 
-        assertThat(openedCgmApps).containsExactly("com.dexcom.g6", "com.dexcom.g7").inOrder()
+        assertThat(openRequests).containsExactly(listOf("com.dexcom.g6", "com.dexcom.g7"))
+    }
+
+    /** A CGM driver has its own screen: the CGM element opens it, as PUMP opens the pump's. */
+    @Test
+    fun `the CGM element opens the screen of a CGM driver`() {
+        grantAuthorization(ProtectionCheck.Protection.MASTER)
+        val driver = mock<PluginBase>(extraInterfaces = arrayOf(CgmDriver::class))
+        whenever(driver.hasComposeContent()).thenReturn(true)
+        whenever(activePlugin.activeBgSource).thenReturn(driver as CgmDriver)
+        whenever(activePlugin.getPluginsList()).thenReturn(arrayListOf(driver))
+
+        sut.handleNavigationRequest(NavigationRequest.Element(ElementType.CGM))
+
+        assertThat(navigatedRoutes()).containsExactly(AppRoute.PluginContent.createRoute(0))
+        assertThat(openedCgmApps).isEmpty()
+    }
+
+    /** The vendor app calibrates its sensor: the calibrate button opens it, not the AAPS dialog. */
+    @Test
+    fun `calibration opens the vendor app when the app calibrates`() {
+        grantAuthorization(ProtectionCheck.Protection.MASTER)
+        resolveProtection(ProtectionResult.GRANTED)
+        bgSourceWithApp("com.dexcom.g6", mode = CalibrationMode.OWN_APP)
+
+        sut.handleNavigationRequest(NavigationRequest.Element(ElementType.CALIBRATION))
+
+        assertThat(openedCgmApps).containsExactly("com.dexcom.g6")
+        assertThat(navigatedRoutes()).isEmpty()
+    }
+
+    @Test
+    fun `calibration opens the AAPS dialog when the source takes the value`() {
+        grantAuthorization(ProtectionCheck.Protection.MASTER)
+        resolveProtection(ProtectionResult.GRANTED)
+        bgSourceWithApp("com.eveningoutpost.dexdrip", mode = CalibrationMode.SOURCE)
+
+        sut.handleNavigationRequest(NavigationRequest.Element(ElementType.CALIBRATION))
+
+        assertThat(navigatedRoutes()).containsExactly(AppRoute.CalibrationDialog.route)
+        assertThat(openedCgmApps).isEmpty()
     }
 
     // endregion

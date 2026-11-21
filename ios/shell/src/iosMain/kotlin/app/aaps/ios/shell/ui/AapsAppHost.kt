@@ -595,9 +595,8 @@ private fun AapsApp(app: StartedApp) {
                 activePlugin = graph.activePlugin,
                 protectionCheck = graph.protectionCheck,
                 configBuilder = graph.configBuilder,
-                dexcomBoyda = graph.dexcomBoyda,
                 // The Dexcom build is an Android app; an iOS client reads glucose from Nightscout.
-                onOpenCgmApp = { pkg -> reportNotAvailable("open CGM app $pkg") },
+                onOpenCgmApp = { packages -> reportNotAvailable("open CGM app $packages") },
                 // iOS gives an app no way to quit itself, and Apple treats that as a crash.
                 onExit = { reportNotAvailable("exit from the menu") },
                 // Needs a UIDocumentPicker, which nothing on iOS has yet.

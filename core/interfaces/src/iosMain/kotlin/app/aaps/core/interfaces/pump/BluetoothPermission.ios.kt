@@ -7,4 +7,4 @@ import app.aaps.core.interfaces.plugin.PermissionGroup
  * (`NSBluetoothAlwaysUsageDescription`) and the system prompts on first use, so there is nothing for
  * a plugin to list or for the permission screen to ask for.
  */
-internal actual fun bluetoothPermissionGroup(): PermissionGroup? = null
+actual fun bluetoothPermissionGroup(): PermissionGroup? = null

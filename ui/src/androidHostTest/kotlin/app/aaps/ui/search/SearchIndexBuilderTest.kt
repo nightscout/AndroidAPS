@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.PreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -43,6 +44,7 @@ internal class SearchIndexBuilderTest {
     fun setUp() {
         whenever(activePlugin.getPluginsList()).thenReturn(arrayListOf())
         whenever(config.platform).thenReturn(AppPlatform.Android)
+        whenever(visibilityContext.preferences).thenReturn(preferences)
         whenever(preferences.getAllPreferenceKeys()).thenReturn(
             listOf(IntKey.OverviewBageWarning, IntKey.OverviewIageWarning, IntKey.OverviewSageWarning)
         )
@@ -69,6 +71,16 @@ internal class SearchIndexBuilderTest {
         whenever(visibilityContext.isBatteryReplaceable).thenReturn(true)
 
         assertThat(indexedKeys()).containsExactly(IntKey.OverviewBageWarning, IntKey.OverviewIageWarning, IntKey.OverviewSageWarning)
+    }
+
+    // A CGM driver that knows its sensor's lifetime sets the sensor age limits: the manual ones are hidden, also in search.
+    @Test
+    fun `a known sensor lifetime hides the sensor age limits`() {
+        whenever(visibilityContext.isPatchPump).thenReturn(false)
+        whenever(visibilityContext.isBatteryReplaceable).thenReturn(true)
+        whenever(preferences.get(IntNonKey.SensorLifetimeHours)).thenReturn(365 * 24)
+
+        assertThat(indexedKeys()).containsExactly(IntKey.OverviewBageWarning, IntKey.OverviewIageWarning)
     }
 
     // Omnipod Eros: the pod has no battery, but the user can log RileyLink battery changes.

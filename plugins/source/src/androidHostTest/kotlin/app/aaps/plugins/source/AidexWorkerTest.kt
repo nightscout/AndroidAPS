@@ -70,6 +70,7 @@ class AidexWorkerTest : TestBaseWithProfile() {
             preferences = mock<Preferences>(),
             config = mock<Config>(),
             notificationManager = notificationManager,
+            cgmAppCatalog = mock(),
         )
         whenever(workerParameters.inputData).thenReturn(inputDataOf())
         worker = AidexPlugin.AidexWorker(context, workerParameters, aapsLogger, fabricPrivacy, aidexPlugin, persistenceLayer, rxBusMock)

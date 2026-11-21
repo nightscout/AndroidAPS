@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -27,6 +28,7 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.pump.ProfileGateStepHost
+import app.aaps.core.ui.compose.pump.WizardScan
 import app.aaps.core.ui.compose.pump.activateProfileFromGate
 import app.aaps.core.ui.compose.pump.switchToWizardInsulin
 import app.aaps.core.ui.compose.siteRotation.BodyType
@@ -98,10 +100,21 @@ class EquilWizardViewModel(
     private val rxBus: RxBus,
     private val insulinManager: InsulinManager,
     private val bleTransport: EquilBleTransport,
-    private val hardLimits: HardLimits
+    private val hardLimits: HardLimits,
+    bleCentral: BleCentral
 ) : ViewModel(), SiteLocationStepHost, ProfileGateStepHost {
 
     // region State
+
+    private val deviceScan = WizardScan(
+        scope = viewModelScope,
+        adapterState = bleCentral.adapterState,
+        onStart = ::beginDeviceScan,
+        onStop = ::endDeviceScan
+    )
+
+    /** The scan step's scan: whether it runs, and why it found nothing when it has ended */
+    val deviceScanState: StateFlow<WizardScan.State> = deviceScan.state
 
     private val _wizardStep = MutableStateFlow<EquilWizardStep?>(null)
     val wizardStep: StateFlow<EquilWizardStep?> = _wizardStep.asStateFlow()
@@ -460,7 +473,11 @@ class EquilWizardViewModel(
 
     // --- New scan-first flow ---
 
-    fun startDeviceScan() {
+    fun startDeviceScan() = deviceScan.start()
+
+    fun stopDeviceScan() = deviceScan.stop()
+
+    private fun beginDeviceScan() {
         _scannedDevices.value = emptyList()
         bleTransport.scanAddress = null
         scanJob = viewModelScope.launch {
@@ -475,7 +492,7 @@ class EquilWizardViewModel(
         bleTransport.scanner.startScan()
     }
 
-    fun stopDeviceScan() {
+    private fun endDeviceScan() {
         scanJob?.cancel()
         scanJob = null
         bleTransport.scanner.stopScan()

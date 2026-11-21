@@ -47,7 +47,7 @@ class SourceGraphTest {
     }
 
     @Test
-    fun `the notification reader service is the only member injection here`() {
+    fun `the source member injector is the notification reader service`() {
         assertThat(graph().memberInjectors.keys).containsExactly(NotificationCollectorService::class)
     }
 }

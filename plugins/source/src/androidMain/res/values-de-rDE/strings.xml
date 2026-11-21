@@ -27,4 +27,66 @@
     <!-- Instara preferences -->
     <!-- Notification Reader -->
     <!-- Permission rationales -->
+    <string name="eversense_diagnostic_logging">Diagnoseprotokollierung</string>
+    <string name="eversense_diagnostic_logging_summary">Ausführliche Bluetooth- und Sensordaten protokollieren. Nach der Fehlersuche wieder ausschalten.</string>
+    <!-- Automatically translated Eversense UI drafts; linguistic review pending. -->
+    <string name="eversense_status_title">Status und Verbindung</string>
+    <string name="eversense_cloud_upload_enabled">Cloud-Upload aktivieren</string>
+    <string name="eversense_credentials_title">Eversense-DMS-Zugangsdaten</string>
+    <string name="eversense_credentials_username">Benutzername</string>
+    <string name="eversense_credentials_password">Passwort</string>
+    <string name="eversense_credentials_not_set">Nicht festgelegt</string>
+    <string name="eversense_european_region">Europäischer Sender (365)</string>
+    <string name="eversense_european_region_summary">Verwendet für Anmeldung und Cloud-Synchronisierung europäische statt US-Server. Bei einem US-Sender ausgeschaltet lassen.</string>
+    <string name="eversense_sign_out">Abmelden</string>
+    <string name="eversense_documentation">Dokumentation und Einrichtung</string>
+    <string name="eversense_calibration_action">Sender kalibrieren</string>
+    <string name="eversense_placement_title">Senderpositionierung</string>
+    <string name="eversense_cloud_upload_toast">Ergebnis des Cloud-Uploads anzeigen</string>
+    <string name="eversense_calibration_bg_hint">Blutzuckerwert eingeben</string>
+    <string name="eversense_calibration_bg_value">Blutzuckerwert</string>
+    <string name="eversense_calibration_submit">Kalibrierung senden</string>
+    <string name="eversense_calibration_sending">Kalibrierung wird gesendet…</string>
+    <string name="eversense_calibration_success">Kalibrierung erfolgreich gesendet</string>
+    <string name="eversense_calibration_failed">Kalibrierung konnte nicht gesendet werden. Prüfe, ob der Sender verbunden und bereit ist.</string>
+    <string name="eversense_calibration_invalid_value">Bitte einen gültigen Blutzuckerwert eingeben</string>
+    <string name="eversense_change_transmitter">Sender wechseln</string>
+    <string name="eversense_change_transmitter_confirm">Diesen Sender vergessen und nach einem neuen suchen? Wähle anschließend den neuen Sender aus den Suchergebnissen aus.</string>
+    <string name="eversense_disconnect_confirm">Verbindung zum Sender trennen?</string>
+    <string name="eversense_default_sync_days_label">Standardzeitraum der Synchronisierung (Tage)</string>
+    <string name="eversense_information_connected">Verbunden</string>
+    <string name="eversense_information_last_sync">SYNCHRONISIEREN</string>
+    <string name="eversense_not_connected">Nicht verbunden</string>
+    <string name="eversense_no_transmitters_found">Keine Sender gefunden. Stelle sicher, dass sich der Sender in der Nähe befindet, und versuche es erneut.</string>
+    <string name="eversense_scan_title">Sender auswählen</string>
+    <string name="eversense_scan_cancel">Abbrechen</string>
+    <string name="eversense_scan_in_progress">Suche nach Sendern (10 Sekunden)…</string>
+    <string name="eversense_reconnecting">Verbindung wird wiederhergestellt…</string>
+    <string name="eversense_placement_guide_heading">Anleitung zur Senderpositionierung</string>
+    <string name="eversense_placement_guide_subtitle">Passe die Senderposition an,\num die Signalstärke zu verbessern</string>
+    <string name="eversense_placement_instruction_excellent">Sehr gute Position! Belasse den Sender an dieser Stelle.</string>
+    <string name="eversense_placement_instruction_good">Gute Position. Das Signal ist stark.</string>
+    <string name="eversense_placement_instruction_fair">Das Signal ist ausreichend. Verschiebe den Sender leicht, um den Empfang zu verbessern.</string>
+    <string name="eversense_placement_instruction_weak">Schwaches Signal. Positioniere den Sender näher am Sensor.</string>
+    <string name="eversense_placement_instruction_poor">Schlechter Empfang. Stelle sicher, dass der Sender direkt über der Sensorstelle liegt.</string>
+    <string name="eversense_placement_instruction_not_connected">Verbinde dich mit dem Sender, um die Signalstärke anzuzeigen.</string>
+    <string name="eversense_placement_last_update">Letzte Aktualisierung: %1$s</string>
+    <string name="eversense_placement_reading">Signal wird gelesen…</string>
+    <string name="eversense_signal_excellent">Sehr gut</string>
+    <string name="eversense_signal_good">Gut</string>
+    <string name="eversense_signal_fair">Ausreichend</string>
+    <string name="eversense_signal_weak">Schwach</string>
+    <string name="eversense_signal_poor">Schlecht</string>
+    <string name="eversense_status_connected_label">Verbunden: %1$s</string>
+    <string name="eversense_status_battery_label">Akku: %1$d%%</string>
+    <string name="eversense_status_insertion_label">Einsetzdatum: %1$s</string>
+    <string name="eversense_status_last_sync_label">Letzte Synchronisierung: %1$s</string>
+    <string name="eversense_status_signal_label">Positionierungssignal: %1$s</string>
+    <string name="eversense_status_phase_label">Kalibrierungsphase: %1$s</string>
+    <string name="eversense_status_last_cal_label">Letzte Kalibrierung: %1$s</string>
+    <string name="eversense_status_next_cal_label">Nächste Kalibrierung: %1$s</string>
+    <string name="eversense_status_never">Nie</string>
+    <string name="eversense_status_connect">Verbinden</string>
+    <string name="eversense_status_disconnect">Trennen</string>
+    <string name="eversense_sign_out_confirmation">Beim Abmelden werden der gespeicherte DMS-Benutzername und das Passwort gelöscht. Möchtest du fortfahren?</string>
 </resources>

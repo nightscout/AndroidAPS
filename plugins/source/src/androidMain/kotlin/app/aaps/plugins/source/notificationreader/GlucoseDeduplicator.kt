@@ -19,7 +19,7 @@ import org.json.JSONObject
  *    same larger known interval, with no shorter gaps interrupting. This covers seed-too-low
  *    cases (e.g. default 5 min for an actual 15-min sensor).
  *  - **No snap down.** The configured seed (or default) is a hard floor. All production packages
- *    are seeded with their true cadence in `notification_reader_packages.json`; unknown packages
+ *    are seeded with their true cadence in the CGM app catalog (`cgm_apps.json`); unknown packages
  *    default to 5 min, which is the shortest real CGM cadence we expect. Allowing the interval to
  *    decay below the seed was the source of the Dexcom field bug where a single transition glitch
  *    permanently dropped dedup to 1-min mode.
@@ -92,6 +92,10 @@ class GlucoseDeduplicator(
         persist()
         return true
     }
+
+    /** The package of the newest reading taken, or null before the first one. Kept across restarts with the rest of the state. */
+    @Synchronized
+    fun lastPackage(): String? = states.maxByOrNull { it.value.lastAcceptedTimestamp }?.key
 
     /** Currently-effective interval for a package (for diagnostics/tests). */
     fun currentIntervalMs(packageName: String): Long =

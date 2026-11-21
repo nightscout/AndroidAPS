@@ -1,5 +1,7 @@
 package app.aaps.core.keys.interfaces
 
+import app.aaps.core.keys.IntNonKey
+
 /**
  * Functional interface for determining preference visibility at runtime.
  *
@@ -68,6 +70,12 @@ fun interface ElementVisibility {
          * Visible only when BG source supports advanced filtering (for certain SMB options)
          */
         val ADVANCED_FILTERING = ElementVisibility { it.advancedFilteringSupported }
+
+        /**
+         * Visible only while the CGM source does not know how long its sensor lasts: the manual sensor age limits.
+         * When it knows, the limits come from the sensor's lifetime and the manual ones would do nothing.
+         */
+        val SENSOR_LIFETIME_UNKNOWN = ElementVisibility { it.preferences.get(IntNonKey.SensorLifetimeHours) <= 0 }
 
         /**
          * Creates a visibility condition that checks if an IntKey equals a specific value.

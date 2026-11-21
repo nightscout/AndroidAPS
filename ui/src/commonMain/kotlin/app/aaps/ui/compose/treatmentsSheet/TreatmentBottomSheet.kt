@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.interfaces.ElementVisibility
@@ -61,7 +62,7 @@ fun TreatmentBottomSheet(
     showInsulin: Boolean,
     showCarbs: Boolean,
     showCalculator: Boolean,
-    isDexcomSource: Boolean,
+    cgmIcon: ImageVector?,
     showSettingsIcon: Boolean,
     // QuickWizard
     quickWizardItems: List<QuickWizardItem>,
@@ -94,7 +95,7 @@ fun TreatmentBottomSheet(
                 showInsulin = showInsulin,
                 showCarbs = showCarbs,
                 showCalculator = showCalculator,
-                isDexcomSource = isDexcomSource,
+                cgmIcon = cgmIcon,
                 showSettingsIcon = showSettingsIcon,
                 onSettingsClick = { showSettings = true }
             )
@@ -116,7 +117,7 @@ internal fun TreatmentSelectionContent(
     showInsulin: Boolean,
     showCarbs: Boolean,
     showCalculator: Boolean,
-    isDexcomSource: Boolean,
+    cgmIcon: ImageVector?,
     showSettingsIcon: Boolean,
     onSettingsClick: () -> Unit
 ) {
@@ -218,15 +219,15 @@ internal fun TreatmentSelectionContent(
             HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
         }
 
-        // CGM
+        // CGM: the active BG source's screen (a CGM driver) or its vendor app, with that source's icon
         if (showCgm) {
-            val cgmType = if (isDexcomSource) ElementType.CGM_DEX else ElementType.CGM_XDRIP
             TreatmentItem(
-                elementType = cgmType,
+                elementType = ElementType.CGM,
+                icon = cgmIcon,
                 enabled = true,
                 disabledAlpha = disabledAlpha,
                 onDismiss = onDismiss,
-                onClick = { onNavigate(NavigationRequest.Element(cgmType)) }
+                onClick = { onNavigate(NavigationRequest.Element(ElementType.CGM)) }
             )
         }
 
@@ -317,6 +318,7 @@ internal fun TreatmentSettingsContent(
 @Composable
 private fun TreatmentItem(
     elementType: ElementType,
+    icon: ImageVector? = null,
     enabled: Boolean,
     disabledAlpha: Float,
     onDismiss: () -> Unit,
@@ -349,7 +351,7 @@ private fun TreatmentItem(
         } else null,
         leadingContent = {
             TonalIcon(
-                icon = elementType.icon(),
+                icon = icon ?: elementType.icon(),
                 color = if (effectiveEnabled) color
                 else MaterialTheme.colorScheme.onSurface.copy(alpha = disabledAlpha),
                 enabled = effectiveEnabled

@@ -356,4 +356,5 @@
     <string name="cal_precheck_delta_too_high">La glucosa está cambiando demasiado rápido (Δ %1$s %3$s por cada 5 min, límite %2$s). Espera a que se estabilice</string>
     <string name="cal_precheck_mark_sensor_change">Registrar cambio de sensor</string>
     <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
+    <string name="eversense_calibration_rapid_change_warning">La glucosa cambia rápidamente. La calibración durante una subida o bajada rápida puede ser poco fiable. Sigue las instrucciones de Eversense. Puedes enviar el valor de todos modos.</string>
 </resources>

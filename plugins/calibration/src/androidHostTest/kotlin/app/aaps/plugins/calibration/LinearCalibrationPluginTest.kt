@@ -18,6 +18,10 @@ import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.EnforcedState
+import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
 import app.aaps.shared.tests.generatedTextResolver
@@ -30,6 +34,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -42,6 +47,7 @@ class LinearCalibrationPluginTest : TestBase() {
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Mock lateinit var config: Config
+    @Mock lateinit var activePlugin: ActivePlugin
 
     private lateinit var plugin: LinearCalibrationPlugin
 
@@ -58,11 +64,72 @@ class LinearCalibrationPluginTest : TestBase() {
         whenever(persistenceLayer.getTherapyEventDataFromToTime(any(), any())).thenReturn(emptyList())
         whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenReturn(emptyList())
         plugin = LinearCalibrationPlugin(
-            aapsLogger, rh, dateUtil, persistenceLayer, notificationManager, glucoseStatusProvider, rxBus, config
+            aapsLogger, rh, dateUtil, persistenceLayer, notificationManager, glucoseStatusProvider, rxBus, config, activePlugin
         )
     }
 
+    // ------------ enforcement ------------
+
+    /** The active BG source and its calibration mode. A Mockito mock does not run interface defaults. */
+    private fun bgSource(mode: CalibrationMode) {
+        val source = mock<BgSource>()
+        whenever(source.calibrationMode).thenReturn(mode)
+        whenever(activePlugin.activeBgSource).thenReturn(source)
+    }
+
+    /** A CGM driver or xDrip takes the value: its readings come back calibrated, a fit on top would correct them twice. */
+    @Test
+    fun isOff_whileTheSourceTakesTheCalibrations() {
+        bgSource(CalibrationMode.SOURCE)
+        assertThat(plugin.enforcedState()).isEqualTo(EnforcedState.Disabled)
+    }
+
+    /** The vendor app calibrates its sensor: the same. */
+    @Test
+    fun isOff_whileTheVendorAppCalibrates() {
+        bgSource(CalibrationMode.OWN_APP)
+        assertThat(plugin.enforcedState()).isEqualTo(EnforcedState.Disabled)
+    }
+
+    /** The pump calibrates its sensor: the same. */
+    @Test
+    fun isOff_whileThePumpCalibrates() {
+        bgSource(CalibrationMode.PUMP)
+        assertThat(plugin.enforcedState()).isEqualTo(EnforcedState.Disabled)
+    }
+
+    @Test
+    fun isTheUsersChoice_withASourceThatDoesNotCalibrate() {
+        bgSource(CalibrationMode.AAPS)
+        assertThat(plugin.enforcedState()).isNull()
+    }
+
+    /** Before the first plugin election there is no BG source, and reading it throws: the enforcement must not. */
+    @Test
+    fun isTheUsersChoice_beforeABgSourceIsElected() {
+        whenever(activePlugin.activeBgSource).thenThrow(IllegalStateException("No bg source selected"))
+        assertThat(plugin.enforcedState()).isNull()
+    }
+
     // ------------ calibrate() ------------
+
+    /**
+     * The plugin was elected while the source left calibration to AAPS. Then the source learned it calibrates itself
+     * (the notification reader at its first reading). No fit on top, even before the next election.
+     */
+    @Test
+    fun calibrate_sourceThatCalibratesItself_returnsIdentity() = runTest {
+        bgSource(CalibrationMode.OWN_APP)
+        whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenReturn(
+            listOf(
+                entry(sensor = 100.0, fs = 110.0, ageDays = 1L),
+                entry(sensor = 200.0, fs = 220.0, ageDays = 1L)
+            )
+        )
+        val data = bucketed(listOf(now to 150.0))
+        plugin.calibrate(data, CalibrationContext.NONE)
+        assertThat(data[0].calibrated).isNull()
+    }
 
     @Test
     fun calibrate_emptyData_returnsEmpty() = runTest {

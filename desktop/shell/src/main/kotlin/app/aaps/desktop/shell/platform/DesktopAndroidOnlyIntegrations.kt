@@ -60,12 +60,7 @@ class DesktopXDripSource() : XDripSource {
     override fun isEnabled(): Boolean = false
 }
 
-/**
- * The Dexcom app is Android only, so there is nothing to ask permission of.
- *
- * [dexcomPackages] returns an empty list rather than the Android package names: nothing here can
- * check whether one is installed, and returning names would invite a caller to believe otherwise.
- */
+/** The Dexcom app is Android only, so there is nothing to ask permission of. */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 @Inject
@@ -78,8 +73,6 @@ class DesktopDexcomBoyda(
     override fun requestPermissionIfNeeded() {
         aapsLogger.debug(LTag.CORE, "No Dexcom app on desktop, so no permission to request")
     }
-
-    override fun dexcomPackages(): List<String> = emptyList()
 }
 
 /**

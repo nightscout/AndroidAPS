@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
@@ -25,6 +26,9 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.objects.workflow.MetroWorkerCreator
 import app.aaps.core.ui.compose.icons.IcPluginMM640G
+import app.aaps.plugins.source.cgmapps.CgmAppCatalog
+import app.aaps.plugins.source.cgmapps.CgmApps
+import app.aaps.plugins.source.cgmapps.calibrationMode
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
@@ -48,7 +52,8 @@ class MM640gPlugin(
     aapsLogger: AAPSLogger,
     preferences: Preferences,
     config: Config,
-    notificationManager: NotificationManager
+    notificationManager: NotificationManager,
+    private val cgmAppCatalog: CgmAppCatalog
 ) : AbstractBgSourcePlugin(
     pluginDescription = PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -64,6 +69,14 @@ class MM640gPlugin(
     ownPreferences = emptyList(),
     aapsLogger, rh, preferences, config, notificationManager
 ), BgSource {
+
+    /** The 600 Series Uploader, which reads the pump: what the CGM button opens. */
+    override val appPackages: List<String>
+        get() = cgmAppCatalog.apps.packagesOf(CgmApps.MEDTRONIC_600_UPLOADER)
+
+    /** A Guardian or Enlite sensor on a 600 series pump is calibrated on the pump: AAPS has nothing to offer. */
+    override val calibrationMode: CalibrationMode
+        get() = cgmAppCatalog.firstInstalled(CgmApps.MEDTRONIC_600_UPLOADER).calibrationMode()
 
     // cannot be inner class because of needed injection
 

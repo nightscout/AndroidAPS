@@ -25,7 +25,6 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -145,7 +144,6 @@ interface DesktopAppGraph : MetroViewModelMultibindings {
 
     /** Where a Google sign in is shown. Not [urlOpener] - see `AuthBrowser` for why they differ. */
     val authBrowser: AuthBrowser
-    val dexcomBoyda: DexcomBoyda
 
     /**
      * Assisted rather than contributed: both are built with the overview data cache instead of

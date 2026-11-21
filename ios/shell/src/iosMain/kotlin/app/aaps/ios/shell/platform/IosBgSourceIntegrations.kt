@@ -98,6 +98,4 @@ class IosDexcomBoyda(
     }
 
     override fun requestPermissionIfNeeded() = aapsLogger.notOnThisPlatform("DexcomBoyda.requestPermissionIfNeeded")
-
-    override fun dexcomPackages(): List<String> = emptyList()
 }

@@ -20,7 +20,7 @@ class PatchedSinoAppPluginTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        patchedSinoAppPlugin = PatchedSinoAppPlugin(rh, aapsLogger, preferences, config, mock())
+        patchedSinoAppPlugin = PatchedSinoAppPlugin(rh, aapsLogger, preferences, config, mock(), mock())
     }
 
     @Test

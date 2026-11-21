@@ -191,6 +191,10 @@
     <string name="cal_reject_no_pair">Calibration not saved: no CGM reading found in the 10 minutes before now.</string>
     <string name="cal_reject_warmup">Calibration not saved: sensor is still in the 2-hour warm-up window.</string>
     <string name="cal_reject_no_session">Calibration not saved: no sensor session is active. Mark a sensor change first.</string>
+    <string name="cal_reject_in_cgm_app">Calibration not saved: this sensor is calibrated in its own app. Calibrate it there.</string>
+    <string name="cal_reject_on_pump">Calibration not saved: this sensor is calibrated on the pump. Calibrate it there.</string>
+    <string name="cal_reject_no_plugin">Calibration not saved: no calibration plugin is enabled.</string>
+    <string name="cal_reject_out_of_range" comment="%1$s=the value entered, %2$s=the lowest value, %3$s=the highest value, each with its unit. Example: 1800 mg/dL, 36 mg/dL, 500 mg/dL">Calibration not saved: %1$s is outside %2$s – %3$s.</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Bolus reported an error. Manually check real delivered insulin and carb amount</string>
     <string name="bolus_reminder">Remind for bolus when BG recovers</string>
@@ -1207,6 +1211,11 @@
     <string name="step_ble_scan">Find Pump</string>
     <string name="ble_scan_select_pump">Select your pump from the list below</string>
     <string name="ble_scan_scanning">Scanning for devices…</string>
+    <string name="ble_scan_nothing_found">No device found. Keep it near the phone and scan again.</string>
+    <string name="ble_scan_finished">Scan finished. Tap your device in the list.</string>
+    <string name="ble_scan_again">Scan again</string>
+    <string name="ble_scan_bluetooth_off">Bluetooth is off. Turn it on and scan again.</string>
+    <string name="ble_scan_not_allowed">AAPS may not use Bluetooth. Allow it in the phone settings and scan again.</string>
 
     <!-- Graph configuration -->
     <string name="graph_add">Add graph</string>

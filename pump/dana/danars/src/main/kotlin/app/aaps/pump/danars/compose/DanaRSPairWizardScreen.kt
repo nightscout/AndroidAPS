@@ -36,6 +36,7 @@ fun DanaRSPairWizardScreen(
     onCancel: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val scanState by viewModel.scanState.collectAsStateWithLifecycle()
 
     val stepIndex = when (uiState.step) {
         WizardStep.BLE_SCAN         -> 0
@@ -60,7 +61,11 @@ fun DanaRSPairWizardScreen(
                 devices = uiState.devices,
                 onSelectDevice = viewModel::selectDevice,
                 onStartScan = viewModel::startScan,
-                onCancel = onCancelDialog
+                onStopScan = viewModel::stopScan,
+                onCancel = onCancelDialog,
+                scanning = scanState.scanning,
+                onScanAgain = viewModel::startScan,
+                problem = scanState.problem
             )
 
             WizardStep.PAIRING_PROGRESS -> PairingProgressStep(

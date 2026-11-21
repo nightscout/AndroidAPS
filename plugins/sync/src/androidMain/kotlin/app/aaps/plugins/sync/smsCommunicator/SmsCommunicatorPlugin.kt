@@ -42,7 +42,6 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.smsCommunicator.smsFromMessage
-import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
@@ -126,7 +125,6 @@ class SmsCommunicatorPlugin(
     private val commandQueue: CommandQueue,
     private val loop: Loop,
     private val iobCobCalculator: IobCobCalculator,
-    private val xDripBroadcast: XDripBroadcast,
     private var otp: OneTimePassword,
     private val config: Config,
     private val dateUtil: DateUtil,
@@ -971,6 +969,7 @@ class SmsCommunicatorPlugin(
         } else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
     }
 
+    /** CAL <value>, in the user's units. It takes the master's calibration path, so the BG source decides where it goes. */
     private fun processCAL(divided: Array<String>, receivedSms: Sms) {
         val cal = SafeParse.stringToDouble(divided[1])
         if (cal > 0.0) {
@@ -980,11 +979,11 @@ class SmsCommunicatorPlugin(
             messageToConfirm = authRequest(
                 receivedSms, reply, passCode,
                 CalibrationAction(
-                    value = cal,
+                    bgMgdl = profileUtil.convertToMgdl(cal, profileUtil.units),
                     receivedSms = receivedSms,
-                    xDripBroadcast = xDripBroadcast,
+                    masterActionExecutor = masterActionExecutorProvider(),
                     rh = rh,
-                    uel = uel,
+                    smsCommunicator = this,
                     sendSMSToAllNumbers = ::sendSMSToAllNumbers
                 )
             )

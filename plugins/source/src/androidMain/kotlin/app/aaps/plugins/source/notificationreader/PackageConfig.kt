@@ -1,15 +1,14 @@
 package app.aaps.plugins.source.notificationreader
 
 import app.aaps.core.data.model.SourceSensor
-import org.json.JSONObject
+import app.aaps.plugins.source.cgmapps.CgmApps
 import kotlin.math.abs
 
 /**
- * Loads package-to-sensor mapping from JSON configuration.
- * The JSON can be bundled as an asset or fetched remotely for future updates.
+ * The notification reader's view of the CGM app catalog: which packages post readings in their notifications, the
+ * sensor each one stands for, and how often it posts.
  */
 class PackageConfig(
-    val version: Int,
     val supportedPackages: Set<String>,
     val packageToSensor: Map<String, SourceSensor>,
     val packageToIntervalMs: Map<String, Long> = emptyMap()
@@ -30,43 +29,23 @@ class PackageConfig(
         private val KNOWN_INTERVALS_MIN = intArrayOf(1, 3, 5, 15)
 
         /**
-         * Parse configuration from JSON string.
-         *
-         * Expected format:
-         * ```json
-         * {
-         *   "version": 2,
-         *   "packages": [
-         *     { "package": "com.dexcom.g7", "sensor": "AAPS-DexcomG7", "intervalMinutes": 5 }
-         *   ]
-         * }
-         * ```
-         * `intervalMinutes` is optional. Missing/zero/negative values fall back to caller's default.
-         * Out-of-set values are snapped to the nearest of {1, 3, 5, 15}.
+         * The packages of every app in [apps] that has a `notification` entry. An interval of 0 or less falls back to
+         * the caller's default; any other value is snapped to the nearest of {1, 3, 5, 15}.
          */
-        fun fromJson(json: String): PackageConfig {
-            val root = JSONObject(json)
-            val version = root.optInt("version", 0)
-            val packagesArray = root.getJSONArray("packages")
+        fun fromCatalog(apps: CgmApps): PackageConfig {
             val supportedPackages = mutableSetOf<String>()
             val packageToSensor = mutableMapOf<String, SourceSensor>()
             val packageToIntervalMs = mutableMapOf<String, Long>()
-
-            for (i in 0 until packagesArray.length()) {
-                val entry = packagesArray.getJSONObject(i)
-                val pkg = entry.getString("package")
-                val sensorText = entry.getString("sensor")
-                supportedPackages.add(pkg)
-                packageToSensor[pkg] = SourceSensor.fromString(sensorText)
-
-                val intervalMin = entry.optInt("intervalMinutes", 0)
-                if (intervalMin > 0) {
-                    val snapped = snapToKnownIntervalMinutes(intervalMin)
-                    packageToIntervalMs[pkg] = snapped * 60_000L
+            for (app in apps.apps) {
+                val reading = app.notification ?: continue
+                val sensor = SourceSensor.fromString(reading.sensor)
+                for (pkg in app.packages) {
+                    supportedPackages.add(pkg)
+                    packageToSensor[pkg] = sensor
+                    if (reading.intervalMinutes > 0) packageToIntervalMs[pkg] = snapToKnownIntervalMinutes(reading.intervalMinutes) * 60_000L
                 }
             }
-
-            return PackageConfig(version, supportedPackages, packageToSensor, packageToIntervalMs)
+            return PackageConfig(supportedPackages, packageToSensor, packageToIntervalMs)
         }
 
         private fun snapToKnownIntervalMinutes(value: Int): Int =

@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.treatmentsSheet
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.ui.compose.main.QuickWizardItem
 
 /**
@@ -16,8 +17,8 @@ data class TreatmentUiState(
     val showCarbs: Boolean = true,
     val showCalculator: Boolean = true,
 
-    // Source info
-    val isDexcomSource: Boolean = false,
+    // The active BG source's own icon for the CGM button, or null for the generic CGM icon
+    val cgmIcon: ImageVector? = null,
 
     // QuickWizard items
     val quickWizardItems: List<QuickWizardItem> = emptyList(),

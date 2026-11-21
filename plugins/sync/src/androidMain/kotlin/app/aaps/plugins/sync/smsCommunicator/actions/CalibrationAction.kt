@@ -1,39 +1,41 @@
 package app.aaps.plugins.sync.smsCommunicator.actions
 
-import app.aaps.core.data.ue.Action
-import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.data.ui.ConfirmationRole
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.smsCommunicator.Sms
-import app.aaps.core.interfaces.sync.XDripBroadcast
+import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.smsCommunicator.SmsAction
+import app.aaps.plugins.sync.smsCommunicator.SmsBatchResult
+import app.aaps.plugins.sync.smsCommunicator.runSmsBatch
 
-/** Sends a calibration to xDrip: CAL <value>. */
+/**
+ * A calibration through [MasterActionExecutor]: CAL <value>. The same path as the calibration dialog and a client, so
+ * the BG source decides where it goes - to xDrip+ or the Eversense transmitter, to the calibration plugin, or refused
+ * with the reason when the sensor is calibrated in its own app or on the pump. The executor logs it.
+ */
 class CalibrationAction(
-    val value: Double,
+    private val bgMgdl: Double,
     private val receivedSms: Sms,
-    private val xDripBroadcast: XDripBroadcast,
+    private val masterActionExecutor: MasterActionExecutor,
     private val rh: TextResolver,
-    private val uel: UserEntryLogger,
+    private val smsCommunicator: SmsCommunicator,
     private val sendSMSToAllNumbers: (Sms) -> Unit
 ) : SmsAction(pumpCommand = false) {
 
     override suspend fun run() {
-        val result = xDripBroadcast.sendCalibration(value)
-        val replyText =
-            if (result) rh.gs(SyncStrings.smscommunicator_calibration_sent) else rh.gs(SyncStrings.smscommunicator_calibration_failed)
-        sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-        if (result)
-            uel.log(
-                Action.CALIBRATION, Sources.SMS, rh.gs(SyncStrings.smscommunicator_calibration_sent),
-                ValueWithUnit.SimpleString(rh.gsNotLocalised(SyncStrings.smscommunicator_calibration_sent))
-            )
-        else
-            uel.log(
-                Action.CALIBRATION, Sources.SMS, rh.gs(SyncStrings.smscommunicator_calibration_failed),
-                ValueWithUnit.SimpleString(rh.gsNotLocalised(SyncStrings.smscommunicator_calibration_failed))
-            )
+        when (val result = masterActionExecutor.runSmsBatch(listOf(BatchAction.Calibration(bgMgdl)))) {
+            // With the BG source's note from the confirmation, as "xDrip+ must accept calibrations"
+            is SmsBatchResult.Done    -> {
+                val notes = result.preview.lines.filter { it.role == ConfirmationRole.INFO }.map { it.text }
+                val reply = (listOf(rh.gs(SyncStrings.smscommunicator_calibration_accepted)) + notes).joinToString("\n")
+                sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, reply))
+            }
+
+            is SmsBatchResult.NotDone ->
+                smsCommunicator.sendSMS(Sms(receivedSms.phoneNumber, result.reply(rh.gs(SyncStrings.smscommunicator_calibration_not_accepted))))
+        }
     }
 }

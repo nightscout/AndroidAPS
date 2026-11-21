@@ -41,6 +41,7 @@ val migratedModules = listOf(
     ":plugins:sensitivity",
     ":plugins:smoothing",
     ":plugins:source",
+    ":plugins:source:eversense",
     ":plugins:sync",
     ":pump:carelevo",
     ":pump:carelevo:emulator",

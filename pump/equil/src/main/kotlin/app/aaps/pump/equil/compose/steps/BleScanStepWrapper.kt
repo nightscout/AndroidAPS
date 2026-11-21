@@ -16,6 +16,7 @@ internal fun BleScanStepWrapper(
     onCancel: () -> Unit
 ) {
     val devices by viewModel.scannedDevices.collectAsStateWithLifecycle()
+    val scanState by viewModel.deviceScanState.collectAsStateWithLifecycle()
 
     BleScanStep(
         devices = devices,
@@ -23,6 +24,9 @@ internal fun BleScanStepWrapper(
         onStartScan = { viewModel.startDeviceScan() },
         onStopScan = { viewModel.stopDeviceScan() },
         onCancel = onCancel,
-        deviceNameFilter = Regex("^Equil")
+        deviceNameFilter = Regex("^Equil"),
+        scanning = scanState.scanning,
+        onScanAgain = { viewModel.startDeviceScan() },
+        problem = scanState.problem
     )
 }

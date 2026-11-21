@@ -36,7 +36,12 @@ import app.aaps.core.ui.compose.stringResource
  * @param onCancel called when user cancels
  * @param deviceNameFilter optional regex to filter devices by name — only matching devices are shown
  * @param title optional title text override
- * @param subtitle optional subtitle text override
+ * @param subtitle optional subtitle text override, shown while the scan runs
+ * @param scanning false once the scan has ended: the step then says what it found, or why it found nothing
+ * @param onScanAgain when given, a "Scan again" button is shown once the scan has ended
+ * @param problem why the scan could not run (Bluetooth off, not allowed), shown instead of "nothing found"
+ *
+ * [WizardScan] gives a scan its end and the [problem].
  */
 @Composable
 fun BleScanStep(
@@ -47,7 +52,10 @@ fun BleScanStep(
     onCancel: () -> Unit,
     deviceNameFilter: Regex? = null,
     title: String = stringResource(CoreUiStrings.ble_scan_select_pump),
-    subtitle: String = stringResource(CoreUiStrings.ble_scan_scanning)
+    subtitle: String = stringResource(CoreUiStrings.ble_scan_scanning),
+    scanning: Boolean = true,
+    onScanAgain: (() -> Unit)? = null,
+    problem: ScanProblem? = null
 ) {
     DisposableEffect(Unit) {
         onStartScan()
@@ -62,6 +70,7 @@ fun BleScanStep(
 
     WizardStepLayout(
         scrollable = false,
+        primaryButton = if (!scanning && onScanAgain != null) WizardButton(text = stringResource(CoreUiStrings.ble_scan_again), onClick = onScanAgain) else null,
         secondaryButton = WizardButton(
             text = stringResource(CoreUiStrings.cancel),
             onClick = onCancel
@@ -72,10 +81,18 @@ fun BleScanStep(
             style = MaterialTheme.typography.bodyLarge
         )
 
+        // A device found before Bluetooth went off can still be chosen: "finished" then, not the problem
+        val nothingFound = !scanning && filteredDevices.isEmpty()
         Text(
-            text = subtitle,
+            text = when {
+                scanning                          -> subtitle
+                !nothingFound                     -> stringResource(CoreUiStrings.ble_scan_finished)
+                problem == ScanProblem.BLUETOOTH_OFF -> stringResource(CoreUiStrings.ble_scan_bluetooth_off)
+                problem == ScanProblem.NOT_ALLOWED -> stringResource(CoreUiStrings.ble_scan_not_allowed)
+                else                              -> stringResource(CoreUiStrings.ble_scan_nothing_found)
+            },
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = if (nothingFound) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         LazyColumn(modifier = Modifier.weight(1f)) {

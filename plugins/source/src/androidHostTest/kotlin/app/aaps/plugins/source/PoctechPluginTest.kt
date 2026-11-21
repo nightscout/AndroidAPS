@@ -20,7 +20,7 @@ class PoctechPluginTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        poctechPlugin = PoctechPlugin(rh, aapsLogger, preferences, config, mock())
+        poctechPlugin = PoctechPlugin(rh, aapsLogger, preferences, config, mock(), mock())
     }
 
     @Test

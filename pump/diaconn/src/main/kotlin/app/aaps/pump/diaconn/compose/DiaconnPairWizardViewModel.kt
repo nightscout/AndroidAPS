@@ -5,10 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.pump.WizardScan
 import app.aaps.pump.diaconn.di.DiaconnBle
 import app.aaps.pump.diaconn.events.EventDiaconnG8DeviceChange
 import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
@@ -48,7 +50,8 @@ class DiaconnPairWizardViewModel(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val rxBus: RxBus,
-    @param:DiaconnBle private val bleTransport: BleTransport
+    @param:DiaconnBle private val bleTransport: BleTransport,
+    bleCentral: BleCentral
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DiaconnPairWizardUiState())
@@ -56,6 +59,16 @@ class DiaconnPairWizardViewModel(
 
     private val _events = MutableSharedFlow<DiaconnPairWizardEvent>(extraBufferCapacity = 5)
     val events: SharedFlow<DiaconnPairWizardEvent> = _events
+
+    private val scan = WizardScan(
+        scope = viewModelScope,
+        adapterState = bleCentral.adapterState,
+        onStart = { bleTransport.scanner.startScan() },
+        onStop = { bleTransport.scanner.stopScan() }
+    )
+
+    /** Whether the scan runs, and why it found nothing when it has ended */
+    val scanState: StateFlow<WizardScan.State> = scan.state
 
     init {
         // The transport finds only Diaconn pumps, or the emulated one.
@@ -71,12 +84,12 @@ class DiaconnPairWizardViewModel(
 
     fun startScan() {
         aapsLogger.debug(LTag.PUMP, "DiaconnPairWizard: startScan")
-        bleTransport.scanner.startScan()
+        scan.start()
     }
 
     fun stopScan() {
         aapsLogger.debug(LTag.PUMP, "DiaconnPairWizard: stopScan")
-        bleTransport.scanner.stopScan()
+        scan.stop()
     }
 
     fun selectDevice(device: ScannedDevice) {

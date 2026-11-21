@@ -25,12 +25,16 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.objects.workflow.MetroWorkerCreator
 import app.aaps.core.ui.compose.icons.IcGenericCgm
+import app.aaps.plugins.source.cgmapps.CgmAppCatalog
+import app.aaps.plugins.source.cgmapps.CgmApps
+import app.aaps.plugins.source.cgmapps.calibrationMode
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
@@ -53,6 +57,7 @@ class AidexPlugin(
     preferences: Preferences,
     config: Config,
     notificationManager: NotificationManager,
+    private val cgmAppCatalog: CgmAppCatalog
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -68,6 +73,14 @@ class AidexPlugin(
     ownPreferences = emptyList(),
     aapsLogger, rh, preferences, config, notificationManager
 ), BgSource {
+
+    /** The AiDEX and LinX apps, as the CGM app catalog lists them. */
+    override val appPackages: List<String>
+        get() = cgmAppCatalog.apps.packagesOf(CgmApps.AIDEX)
+
+    /** The AiDEX and LinX apps take optional calibrations: the calibrate button opens the app. */
+    override val calibrationMode: CalibrationMode
+        get() = cgmAppCatalog.firstInstalled(CgmApps.AIDEX).calibrationMode()
 
     @Volatile
     private var _hasSensorError = false

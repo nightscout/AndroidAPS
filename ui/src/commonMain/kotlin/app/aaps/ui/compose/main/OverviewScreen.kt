@@ -5,6 +5,7 @@ import androidx.compose.material.icons.automirrored.filled.TrendingFlat
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -18,6 +19,8 @@ import app.aaps.core.interfaces.notifications.NotificationHandle
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.source.CgmAttention
+import app.aaps.core.interfaces.source.CgmDriver
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -142,13 +145,18 @@ fun OverviewScreen(
     val objectivesProgressDescription =
         if (showObjectivesSetup) stringResource(UiStrings.a11y_objectives_progress, objectivesDone, objectivesTotal) else null
 
-    // BG source shortcut: shown when BG quality check reports FLAT or DOUBLED
+    // BG source shortcut: shown when BG quality check reports FLAT or DOUBLED, or when a CGM driver needs the user
+    // (not paired, sign-in failed) - the BG source's counterpart of the uninitialized pump's button.
     val bgQualityState by bgQualityCheck.stateFlow.collectAsStateWithLifecycle()
-    val bgSourcePlugin = activePlugin.activeBgSource as? PluginBase
-    val showBgSetup = (bgQualityState == BgQualityCheck.State.FLAT || bgQualityState == BgQualityCheck.State.DOUBLED) &&
-        bgSourcePlugin != null && bgSourcePlugin.hasComposeContent()
+    val bgSource = activePlugin.activeBgSource
+    val bgSourcePlugin = bgSource as? PluginBase
+    // A client runs no driver of its own: what the master's driver needs is for the master's user
+    val attentionFlow = remember(bgSource) { (bgSource as? CgmDriver)?.attention?.takeUnless { config.AAPSCLIENT } }
+    val cgmAttention = attentionFlow?.collectAsStateWithLifecycle()?.value
+    val showBgSetup = showBgSourceShortcut(bgQualityState, cgmAttention, hasScreen = bgSourcePlugin?.hasComposeContent() == true)
     val bgSetupPlugin = if (showBgSetup) bgSourcePlugin else null
-    val bgQualityBadgeIcon: ImageVector? = if (showBgSetup) when (bgQualityState) {
+    // The driver's need comes first and gets the pump's "!" (no icon); a quality problem keeps its own icon
+    val bgQualityBadgeIcon: ImageVector? = if (showBgSetup && cgmAttention == null) when (bgQualityState) {
         BgQualityCheck.State.DOUBLED -> Icons.Filled.Warning
         BgQualityCheck.State.FLAT    -> Icons.AutoMirrored.Filled.TrendingFlat
         else                         -> null
@@ -158,7 +166,12 @@ fun OverviewScreen(
         BgQualityCheck.State.DOUBLED, BgQualityCheck.State.FLAT -> AapsTheme.generalColors.statusCritical
         else                                                    -> Color.Unspecified
     }
-    val bgQualityBadgeDescription = if (showBgSetup) bgQualityCheck.stateDescription() else null
+    val bgQualityBadgeDescription = when {
+        !showBgSetup                                -> null
+        cgmAttention == CgmAttention.NOT_PAIRED     -> stringResource(UiStrings.cgm_attention_not_paired)
+        cgmAttention == CgmAttention.SIGN_IN_FAILED -> stringResource(UiStrings.cgm_attention_sign_in_failed)
+        else                                        -> bgQualityCheck.stateDescription()
+    }
 
     val manageSheetState = ManageSheetHost(
         manageViewModel = manageViewModel,
@@ -252,3 +265,10 @@ fun OverviewScreen(
         }
     )
 }
+
+/**
+ * Whether the bottom bar shows the BG source button, which opens the source's own screen: the BG looks flat or doubled,
+ * or a CGM driver needs the user ([attention], always null on a client: the master's driver is not its own).
+ */
+internal fun showBgSourceShortcut(quality: BgQualityCheck.State, attention: CgmAttention?, hasScreen: Boolean): Boolean =
+    hasScreen && (quality == BgQualityCheck.State.FLAT || quality == BgQualityCheck.State.DOUBLED || attention != null)

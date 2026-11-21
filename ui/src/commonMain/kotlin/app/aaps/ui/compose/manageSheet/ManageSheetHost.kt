@@ -63,6 +63,7 @@ fun ManageSheetHost(
             cancelExtendedBolusText = manageState.cancelExtendedBolusText,
             isPatchPump = manageState.isPatchPump,
             pumpPlugin = manageState.pumpPlugin,
+            cgmPlugin = manageState.cgmPlugin,
             customActions = manageState.customActions,
             onNavigate = onNavigate,
             onCancelTempBasalClick = { manageViewModel.cancelTempBasal() },

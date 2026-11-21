@@ -24,6 +24,8 @@ private val ADVANCED_FILTERING_SENSORS = setOf(
     SourceSensor.LIBRE_3,
     SourceSensor.SYAI_TAG,
     SourceSensor.RANDOM,
+    SourceSensor.EVERSENSE_E3,
+    SourceSensor.EVERSENSE_365,
 )
 
 private val FLAT_BG_CHECK_SENSORS = setOf(

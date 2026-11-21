@@ -24,11 +24,13 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.CalibrationMode
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginGlunovo
+import app.aaps.plugins.source.cgmapps.CgmAppCatalog
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import app.aaps.plugins.source.keys.GlunovoLongKey
 import dev.zacsweers.metro.AppScope
@@ -54,6 +56,7 @@ class GlunovoPlugin(
     private val dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy,
     notificationManager: NotificationManager,
+    private val cgmAppCatalog: CgmAppCatalog
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -69,6 +72,17 @@ class GlunovoPlugin(
     ownPreferences = GlunovoLongKey.entries,
     aapsLogger, resourceHelper, preferences, config, notificationManager
 ), BgSource {
+
+    /** The Glunovo app that serves the provider AAPS reads: what the CGM button opens. */
+    override val appPackages: List<String>
+        get() = listOfNotNull(cgmAppCatalog.providerPackage(AUTHORITY.trimEnd('/')))
+
+    /**
+     * The Glunovo i3 sensor needs a finger-stick calibration at least every 12 hours, entered in the Glunovo app. AAPS
+     * reads those calibrations from it, so the calibrate button opens the app. Without the app AAPS has nothing to open.
+     */
+    override val calibrationMode: CalibrationMode
+        get() = if (appPackages.isNotEmpty()) CalibrationMode.OWN_APP else CalibrationMode.AAPS
 
     @VisibleForTesting
     var handler: Handler? = null

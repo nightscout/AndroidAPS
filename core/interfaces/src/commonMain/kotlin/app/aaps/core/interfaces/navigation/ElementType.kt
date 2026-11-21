@@ -35,11 +35,14 @@ enum class ElementType(
     QUICK_WIZARD(protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.MealAssistant),
     TREATMENT(category = ElementCategory.TREATMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.MealAssistant),
 
-    // CGM
-    CGM_XDRIP(category = ElementCategory.CGM, searchable = true),
-    CGM_DEX(category = ElementCategory.CGM),
+    // CGM: what the active BG source has. A CGM driver (CgmDriver) opens its own screen; a source that reads a vendor
+    // app opens that app (BgSource.appPackages). Unavailable when it has neither, and on a client: both are on the
+    // master's phone.
+    CGM(category = ElementCategory.CGM, searchable = true),
 
-    // On a client a calibration goes to the master as BatchAction.Calibration, which hands it to its CGM plugin.
+    // Follows BgSource.calibrationMode: the AAPS calibration dialog (SOURCE, or AAPS with the calibration plugin on),
+    // or the vendor app (OWN_APP); none for PUMP. A client offers it only with the calibration plugin it syncs from
+    // the master, and the calibration goes to the master as BatchAction.Calibration.
     CALIBRATION(category = ElementCategory.CGM, searchable = true, role = ClientRole.Caregiver),
 
     // Profile & Targets — minimum level is BOLUS; screen mode (PLAY/EDIT) determined by granted auth level.

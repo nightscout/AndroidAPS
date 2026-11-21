@@ -93,7 +93,9 @@ enum class StringNonKey(
     ActivePluginPump("active_plugin_pump", "", exportable = false),
     ActivePluginBgSource("active_plugin_bgsource", "", exportable = false),
 
-    NotificationReaderPackages(key = "notification_reader_packages", defaultValue = ""),
+    // The CGM app catalog fetched from the versions branch, kept while it is newer than the bundled one. Downloaded
+    // data, not a setting, so not exportable: another phone fetches its own.
+    CgmAppCatalog(key = "cgm_app_catalog", defaultValue = "", exportable = false),
     NotificationReaderDedupState(key = "notification_reader_dedup_state", defaultValue = ""),
 
     // Google Drive settings (internal, no preferences UI)

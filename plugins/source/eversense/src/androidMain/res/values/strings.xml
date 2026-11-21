@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="source_eversense">Eversense</string>
+    <string name="description_source_eversense">Eversense E3/365 driver</string>
+
+<string name="eversense_information_last_sync">Sync now</string>
+
+<string name="eversense_calibration_action">Calibrate transmitter</string>
+
+<string name="eversense_sign_out">Sign out</string>
+
+<string name="eversense_status_title">Status &amp; Connection</string>
+
+<string name="eversense_cloud_upload_enabled">Enable cloud upload</string>
+
+<string name="eversense_not_connected">Not connected</string>
+
+<string name="eversense_credentials_username">Username</string>
+
+<string name="eversense_credentials_password">Password</string>
+
+<string name="eversense_scan_title">Select Eversense transmitter</string>
+
+<string name="eversense_scan_in_progress">Scanning for Eversense devices (10 seconds)…</string>
+
+<string name="eversense_calibration_invalid_value">Please enter a valid blood glucose value</string>
+
+<string name="eversense_calibration_failed">Failed to submit calibration. Make sure the transmitter is connected and ready.</string>
+<string name="eversense_calibration_refused_rate">Calibration not possible now: glucose is changing too fast. Try again when it is stable.</string>
+<string name="eversense_calibration_refused_too_soon">Calibration not possible now: the last calibration was too recent.</string>
+<string name="eversense_calibration_refused_no_data">Calibration not possible now: the transmitter does not have enough sensor data yet.</string>
+<string name="eversense_calibration_refused_sensor">Calibration not possible: no working sensor is linked to the transmitter.</string>
+<string name="eversense_calibration_refused_transmitter">Calibration not possible now: the transmitter cannot take one in its present state.</string>
+
+<string name="eversense_placement_title">Transmitter Placement</string>
+
+<string name="eversense_placement_guide_heading">Transmitter Placement Guide</string>
+
+<string name="eversense_placement_guide_subtitle">Adjust your transmitter position\nto improve signal strength</string>
+
+<string name="eversense_signal_excellent">Excellent</string>
+
+<string name="eversense_signal_good">Good</string>
+
+<string name="eversense_signal_fair">Fair</string>
+
+<string name="eversense_signal_weak">Weak</string>
+
+<string name="eversense_signal_poor">Poor</string>
+
+<string name="eversense_placement_instruction_excellent">Great placement! Keep the transmitter in this position.</string>
+
+<string name="eversense_placement_instruction_good">Good placement. Signal is strong.</string>
+
+<string name="eversense_placement_instruction_fair">Signal is acceptable. Try moving the transmitter slightly for a better reading.</string>
+
+<string name="eversense_placement_instruction_weak">Weak signal. Reposition the transmitter closer to the sensor.</string>
+
+<string name="eversense_placement_instruction_poor">Poor signal. Make sure the transmitter is placed directly over the sensor site.</string>
+
+<string name="eversense_placement_instruction_not_connected">Connect to your transmitter to view signal strength.</string>
+
+<string name="eversense_placement_last_update">Last update: %1$s</string>
+
+<string name="eversense_placement_reading">Reading…</string>
+
+<string name="eversense_transmitter_not_placed">Eversense transmitter not detecting — check placement</string>
+
+<string name="eversense_sensor_expiry_plan">Eversense sensor expires in %1$d days — plan your sensor replacement.</string>
+
+<string name="eversense_sensor_expiry_soon">Eversense sensor expires in %1$d days — replace your sensor soon.</string>
+
+<string name="eversense_sensor_expiry_urgent">Eversense sensor expires in %1$d days — replace your sensor immediately.</string>
+
+<string name="eversense_battery_low">Eversense transmitter battery low: %1$d%% — please charge your transmitter.</string>
+
+<string name="eversense_calibration_due">Eversense calibration is due — open AAPS to calibrate your sensor.</string>
+
+<string name="eversense_calibration_due_now">Eversense Calibration Due Now</string>
+
+<string name="eversense_firmware_update">Eversense firmware: %1$s — open the official Eversense app to check for updates</string>
+
+<string name="eversense_connected">Connected</string>
+
+<string name="eversense_transmitter">Transmitter</string>
+
+<string name="eversense_last_sync">Last sync</string>
+
+<string name="eversense_sensor_inserted">Sensor inserted</string>
+
+<string name="eversense_sensor_end">Sensor ends</string>
+
+<string name="eversense_signal">Placement signal</string>
+
+<string name="eversense_calibration_phase">Calibration phase</string>
+
+<string name="eversense_last_calibration">Last calibration</string>
+
+<string name="eversense_next_calibration">Next calibration</string>
+
+<string name="eversense_status_never">Never</string>
+
+    <!-- Pairing wizard -->
+    <string name="eversense_pair_title">Pair transmitter</string>
+    <string name="eversense_pair_before_title">Before you start</string>
+    <string name="eversense_pair_before_official_app">Set up the sensor and the transmitter in the official Eversense app first. AAPS does not do the first setup.</string>
+    <string name="eversense_pair_before_force_stop">Then force stop the official app: Android settings, Apps, Eversense, Force stop. Only one app can be connected to the transmitter at a time.</string>
+    <string name="eversense_pair_before_pairing_mode">Put the transmitter in pairing mode: press its button three times, until the light blinks.</string>
+    <string name="eversense_pair_before_nearby">Keep the phone near the transmitter, with Bluetooth on.</string>
+    <string name="eversense_pair_account_title">Eversense account</string>
+    <string name="eversense_pair_account_hint">AAPS signs in with your Eversense account: a 365 needs it to connect, and the cloud upload uses it. The login is not exported with the settings.</string>
+    <string name="eversense_pair_model">Which Eversense do you use?</string>
+    <string name="eversense_pair_without_sign_in">Continue without signing in</string>
+    <string name="eversense_pair_without_sign_in_hint">An E3 connects without an Eversense account. Without one, readings are not uploaded to the Eversense cloud.</string>
+    <string name="eversense_not_signed_in_no_cloud">Not signed in: readings are not uploaded to the Eversense cloud.</string>
+    <string name="eversense_model_e3">Eversense E3</string>
+    <string name="eversense_model_365_usa">Eversense 365 (USA)</string>
+    <string name="eversense_model_365_other">Eversense 365 (other countries)</string>
+    <string name="eversense_pair_no_account">No Eversense account yet? Create one in the Eversense app or on this page:</string>
+    <string name="eversense_account_page_usa" translatable="false">https://us.eversensedms.com/login</string>
+    <string name="eversense_account_page_other" translatable="false">https://global.eversensedms.com/login</string>
+    <string name="eversense_sign_in">Sign in</string>
+    <string name="eversense_signed_in_as" comment="%1$s=the Eversense username, for example an e-mail address">Signed in as %1$s</string>
+    <string name="eversense_sign_in_refused">Eversense did not accept this username or password. Check them, and that the right Eversense is chosen.</string>
+    <string name="eversense_sign_in_no_connection">Cannot reach Eversense. Check the internet connection.</string>
+    <string name="eversense_sign_in_server_error">Eversense answered with an error. Try again later.</string>
+    <string name="eversense_pair_connecting" comment="%1$s=the transmitter name, for example T123456">Connecting to %1$s…</string>
+    <string name="eversense_pair_registering">A 365 registers with Eversense online the first time. This can take a minute.</string>
+    <string name="eversense_pair_timed_out">The transmitter did not answer. Keep it near the phone, check that the official app is force stopped, and try again.</string>
+    <string name="eversense_pair_not_started">Cannot connect. Eversense must be the active BG source, and Bluetooth must be on.</string>
+    <string name="eversense_pair_leave">Leave the pairing? What is done so far stays.</string>
+    <string name="eversense_pair_done" comment="%1$s=the transmitter name, for example T123456">Paired with %1$s. Readings follow.</string>
+
+    <!-- Pairing on the status tab -->
+    <string name="eversense_not_paired">No transmitter paired.</string>
+    <string name="eversense_not_paired_forget_bond" comment="%1$s=the transmitter name, for example T123456">No transmitter paired. Before you pair %1$s again on this phone, forget it in the phone\'s Bluetooth settings.</string>
+    <string name="eversense_sign_in_failed">Eversense refused the stored login. Sign in again.</string>
+    <string name="eversense_sign_in_again">Sign in again</string>
+    <string name="eversense_unpair">Unpair</string>
+    <string name="eversense_unpair_confirm" comment="%1$s=the transmitter name, for example T123456">Forget transmitter %1$s? The login stays, so a replacement pairs without signing in again.</string>
+
+    <!-- Status tab -->
+    <string name="eversense_signal_value" comment="%1$s=the signal in words, for example Good; %2$s=the signal in percent, for example 63 %">%1$s (%2$s)</string>
+    <string name="eversense_signal_none">No signal</string>
+    <string name="eversense_placement_bars" comment="For screen readers. %1$d=how many of the 5 signal bars are lit, 0 to 5">%1$d of 5 signal bars</string>
+    <string name="eversense_calibration_note_reconnect">The transmitter is not connected now. AAPS connects it first, which can take up to 30 seconds.</string>
+
+    <!-- Calibration phases -->
+    <string name="eversense_phase_warming_up">Warm-up</string>
+    <string name="eversense_phase_initialization">Initialization</string>
+    <string name="eversense_phase_daily">Daily calibration</string>
+    <string name="eversense_phase_weekly">Weekly calibration</string>
+    <string name="eversense_phase_suspicious">Calibration questionable</string>
+    <string name="eversense_phase_unknown">Unknown</string>
+    <string name="eversense_phase_debug">Debug</string>
+    <string name="eversense_phase_dropout">Sensor dropout</string>
+
+    <!-- Transmitter alarms, as the official app names them -->
+    <string name="eversense_alarm_transmitter_error">Transmitter error</string>
+    <string name="eversense_alarm_sensor_replacement">Sensor replacement</string>
+    <string name="eversense_alarm_battery_empty">Battery empty</string>
+    <string name="eversense_alarm_sensor_temperature_high">High sensor temperature</string>
+    <string name="eversense_alarm_sensor_temperature_low">Low sensor temperature</string>
+    <string name="eversense_alarm_transmitter_temperature_high">High transmitter temperature</string>
+    <string name="eversense_alarm_no_sensor">No sensor detected</string>
+    <string name="eversense_alarm_new_sensor">New sensor detected</string>
+    <string name="eversense_alarm_calibrate_now">Calibrate now</string>
+    <string name="eversense_alarm_out_of_range_low">Out of range low glucose</string>
+    <string name="eversense_alarm_out_of_range_high">Out of range high glucose</string>
+    <string name="eversense_alarm_low_glucose">Low glucose</string>
+    <string name="eversense_alarm_high_glucose">High glucose</string>
+    <string name="eversense_alarm_predicted_low">Predicted low glucose</string>
+    <string name="eversense_alarm_predicted_high">Predicted high glucose</string>
+    <string name="eversense_alarm_rate_falling">Glucose falling fast</string>
+    <string name="eversense_alarm_rate_rising">Glucose rising fast</string>
+    <string name="eversense_alarm_calibration_past_due">Calibration past due</string>
+    <string name="eversense_alarm_calibration_expired">Calibration expired</string>
+    <string name="eversense_alarm_low_battery">Low battery</string>
+    <string name="eversense_alarm_invalid_time">Invalid transmitter time</string>
+    <string name="eversense_alarm_transmitter_disconnected">Transmitter disconnected</string>
+    <string name="eversense_alarm_vibration_motor">Vibration motor</string>
+    <string name="eversense_alarm_calibrate_again">Calibrate again</string>
+    <string name="eversense_alarm_new_calibration_needed">New calibration needed</string>
+    <string name="eversense_alarm_transmitter_replacement">Transmitter replacement</string>
+    <string name="eversense_alarm_battery_error">Battery error</string>
+    <string name="eversense_alarm_one_calibration_phase">One calibration a week</string>
+    <string name="eversense_alarm_two_calibration_phase">Two calibrations a day</string>
+    <string name="eversense_alarm_battery_status">Battery status</string>
+    <string name="eversense_alarm_sensor_connection">Sensor connection</string>
+    <string name="eversense_alarm_sensor_retirement_area">Sensor near its end</string>
+    <string name="eversense_alarm_glucose_suspend">Glucose suspended</string>
+    <string name="eversense_alarm_sensor_sync_confirmed">Sensor sync confirmed</string>
+    <string name="eversense_alarm_sensor_stability">Sensor stability</string>
+    <string name="eversense_alarm_unknown">Unknown transmitter error</string>
+</resources>

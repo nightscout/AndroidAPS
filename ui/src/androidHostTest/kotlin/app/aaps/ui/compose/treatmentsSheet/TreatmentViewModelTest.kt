@@ -12,7 +12,6 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
-import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -55,7 +54,6 @@ internal class TreatmentViewModelTest {
     @Mock private lateinit var quickWizard: QuickWizard
     @Mock private lateinit var rxBus: RxBus
     @Mock private lateinit var aapsLogger: AAPSLogger
-    @Mock private lateinit var dexcomBoyda: DexcomBoyda
     @Mock private lateinit var elementAvailability: ElementAvailability
 
     private lateinit var sut: TreatmentViewModel
@@ -84,7 +82,7 @@ internal class TreatmentViewModelTest {
         whenever(config.appInitialized).thenAnswer { initProgress.value.done && !initProgress.value.reconfiguring }
         sut = TreatmentViewModel(
             rh, preferences, activePlugin, config, profileFunction, loop, iobCobCalculator,
-            constraintChecker, quickWizard, rxBus, aapsLogger, dexcomBoyda, elementAvailability
+            constraintChecker, quickWizard, rxBus, aapsLogger, elementAvailability
         )
     }
 
@@ -100,7 +98,7 @@ internal class TreatmentViewModelTest {
         assertThat(state.showCalculator).isTrue()
         assertThat(state.showCgm).isFalse()
         assertThat(state.showCalibration).isFalse()
-        assertThat(state.isDexcomSource).isFalse()
+        assertThat(state.cgmIcon).isNull()
         assertThat(state.showSettingsIcon).isFalse()
         assertThat(state.quickWizardItems).isEmpty()
     }
