@@ -136,6 +136,7 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Insulinas nepakeistas: %1$s Naudojamas ankstesnis insulinas.</string>
     <string name="insulin_activation_unconfirmed">Insulino pakeitimo patvirtinti nepavyko. Prieš leisdami insuliną patikrinkite, kuris insulinas aktyvuotas profilyje.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Insulinas nepakeistas. Toliau naudojamas ankstesnis insulinas.\n\n%1$s</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulinas taip pat nebuvo pakeistas. Jei naujas insulinas jau pompoje, pompos neprijunkite ir dar kartą atlikite insulino keitimą.</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Data</string>
     <string name="insulin_nickname_label">Insulino pavadinimas</string>
@@ -1070,6 +1071,8 @@
     <string name="wiki_search_offline">Norint ieškoti dokumentacijoje reikia interneto ryšio</string>
     <string name="no_search_results">Rezultatų nerasta</string>
     <string name="search_plugin_disabled">Įskiepis %1$s išjungtas</string>
+    <string name="search_recent">Paskutinės paieškos</string>
+    <string name="search_history_remove">Pašalinti iš paskutinių paieškų</string>
     <!--    Food Management -->
     <string name="food_management">Maistas</string>
     <string name="food_deleted">Maistas pašalintas</string>
@@ -1116,6 +1119,7 @@
     <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Bus pakeista nustatymų: %1$d. Įskiepiai, kurių nustatymai pasikeitė, bus paleisti iš naujo.</string>
     <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Bus pakeista nustatymų: %1$d. Pompos nustatymai išsaugoti: %2$d, todėl pompa veiks toliau.</string>
     <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Importuotuose nustatymuose pasirinkta pompa šiame telefone nepasiekiama. Dabar aktyvi %1$s – patikrinkite pompos nustatymus.</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">Iš atsarginės kopijos į jūsų insulinų sąrašą pridėta: %1$s. Dar nenaudojama: aktyvuodami profilį pasirinkite tinkamą insuliną ir tai padarykite, kol Nightscout dar neatsisiuntė senesnių terapijos įrašų.</string>
     <string name="import_applying">Taikomi nustatymai…</string>
     <string name="import_replace_pump_settings">Taip pat pakeisti pompos nustatymus</string>
     <string name="import_replace_pump_settings_summary">Palikite išjungtą, jei norite išsaugoti šiame telefone susietos pompos nustatymus. Įjunkite, jei atkuriate nustatymus naujame telefone ir naudosite tą pačią pompą.</string>
@@ -1212,5 +1216,6 @@
     <string name="units_sec">sek</string>
     <string name="units_years">m.</string>
     <string name="prefs_range_title">Vizualizacijos diapazonas</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">Pompa sustabdė bolusą suleidusi %1$s. Prieš leisdami kitą bolusą patikrinkite pompą.</string>
     <string name="secrets_not_protected">Šiame kompiuteryje nerasta sistemos raktų saugykla. Jūsų nustatymus ir susiejimą su pagrindine AAPS programėle saugantys raktai laikomi failuose šalia duomenų, todėl juos taip pat gaus kiekvienas, turintis šių failų kopiją. Linux sistemoje įdiekite ir paleiskite raktų saugyklą, pavyzdžiui, GNOME Keyring arba KWallet, tada paleiskite AAPS iš naujo.</string>
 </resources>
