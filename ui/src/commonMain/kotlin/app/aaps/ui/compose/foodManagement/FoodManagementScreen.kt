@@ -33,7 +33,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarResult
@@ -203,7 +202,9 @@ fun FoodManagementScreen(
                     onDelete = if (state.editorFood != null) {
                         { focusManager.clearFocus(); viewModel.deleteAndCloseEditor() }
                     } else null,
-                    isEditing = state.editorFood != null
+                    isEditing = state.editorFood != null,
+                    categories = viewModel.categorySuggestions(),
+                    subCategories = viewModel.subCategoriesOf(state.editorCategory),
                 )
             }
         }
@@ -312,6 +313,8 @@ internal fun FoodEditorContent(
     onCancel: () -> Unit,
     onDelete: (() -> Unit)?,
     isEditing: Boolean,
+    categories: List<String> = emptyList(),
+    subCategories: List<String> = emptyList(),
 ) {
     Column(
         modifier = Modifier
@@ -320,7 +323,7 @@ internal fun FoodEditorContent(
             .imePadding()
             .consumeOverscroll()
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = AapsSpacing.xxLarge)
+            .padding(horizontal = AapsSpacing.extraLarge)
             .padding(bottom = AapsSpacing.xxLarge),
         verticalArrangement = Arrangement.spacedBy(AapsSpacing.large)
     ) {
@@ -329,82 +332,77 @@ internal fun FoodEditorContent(
             style = MaterialTheme.typography.titleLarge
         )
 
-        OutlinedTextField(
+        CompactTextField(
             value = state.editorName,
             onValueChange = onNameChange,
-            label = { Text(stringResource(CoreUiStrings.name)) },
+            label = stringResource(CoreUiStrings.name),
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
             isError = state.editorSaveAttempted && state.editorName.isBlank()
         )
 
-        Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.large)) {
-            OutlinedTextField(
+        // The values already used are proposed, so "Fruits" is not typed again as "fruit".
+        // Only the subcategories of the chosen category are proposed.
+        Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+            SuggestionField(
                 value = state.editorCategory,
                 onValueChange = onCategoryChange,
-                label = { Text(stringResource(CoreUiStrings.category)) },
-                modifier = Modifier.weight(1f),
-                singleLine = true
+                label = stringResource(CoreUiStrings.category),
+                suggestions = categories,
+                modifier = Modifier.weight(1f)
             )
-            OutlinedTextField(
+            SuggestionField(
                 value = state.editorSubCategory,
                 onValueChange = onSubCategoryChange,
-                label = { Text(stringResource(CoreUiStrings.subcategory)) },
-                modifier = Modifier.weight(1f),
-                singleLine = true
+                label = stringResource(CoreUiStrings.subcategory),
+                suggestions = subCategories,
+                modifier = Modifier.weight(1f)
             )
         }
 
-        Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.large)) {
-            OutlinedTextField(
+        // Portion, unit and carbs on one row, like fat, protein and energy below.
+        Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+            CompactTextField(
                 value = state.editorPortion,
                 onValueChange = onPortionChange,
-                label = { Text(stringResource(CoreUiStrings.portion)) },
+                label = stringResource(CoreUiStrings.portion),
                 modifier = Modifier.weight(1f),
-                singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
-            OutlinedTextField(
+            CompactTextField(
                 value = state.editorUnit,
                 onValueChange = onUnitChange,
-                label = { Text(stringResource(CoreUiStrings.unit_label)) },
+                label = stringResource(CoreUiStrings.unit_label),
+                modifier = Modifier.weight(1f)
+            )
+            CompactTextField(
+                value = state.editorCarbs,
+                onValueChange = onCarbsChange,
+                label = stringResource(CoreUiStrings.label_carbs_g),
                 modifier = Modifier.weight(1f),
-                singleLine = true
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
         }
 
-        OutlinedTextField(
-            value = state.editorCarbs,
-            onValueChange = onCarbsChange,
-            label = { Text(stringResource(CoreUiStrings.label_carbs_g)) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-
-        Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.large)) {
-            OutlinedTextField(
+        Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+            CompactTextField(
                 value = state.editorFat,
                 onValueChange = onFatChange,
-                label = { Text(stringResource(CoreUiStrings.label_fat_g)) },
+                label = stringResource(CoreUiStrings.label_fat_g),
                 modifier = Modifier.weight(1f),
-                singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
-            OutlinedTextField(
+            CompactTextField(
                 value = state.editorProtein,
                 onValueChange = onProteinChange,
-                label = { Text(stringResource(CoreUiStrings.label_protein_g)) },
+                label = stringResource(CoreUiStrings.label_protein_g),
                 modifier = Modifier.weight(1f),
-                singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
-            OutlinedTextField(
+            CompactTextField(
                 value = state.editorEnergy,
                 onValueChange = onEnergyChange,
-                label = { Text(stringResource(CoreUiStrings.label_energy_kj)) },
+                label = stringResource(CoreUiStrings.label_energy_kj),
                 modifier = Modifier.weight(1f),
-                singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
         }

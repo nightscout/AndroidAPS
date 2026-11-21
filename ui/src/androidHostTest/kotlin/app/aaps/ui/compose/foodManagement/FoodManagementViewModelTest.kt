@@ -23,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -240,5 +241,62 @@ internal class FoodManagementViewModelTest {
         dispatcher.scheduler.runCurrent()
 
         assertThat(vm.uiState.value.filterCategory).isEqualTo(GroupFilter.Named("Bakery"))
+    }
+
+    // ---- Editor: the groups already used are proposed, and kept with their spelling ----
+
+    @Test
+    fun `the categories proposed are the ones used, once each, A to Z`() {
+        val vm = screenWith(
+            apple, prune, nut,
+            FD(id = 53, name = "Bun", category = "Bakery", portion = 100.0, unit = "g", carbs = 55),
+            FD(id = 54, name = "Kiwi", category = "fruit ", portion = 100.0, unit = "g", carbs = 10),
+            FD(id = 55, name = "Pepper", category = "Épices", portion = 100.0, unit = "g", carbs = 2),
+        )
+
+        assertThat(vm.categorySuggestions()).containsExactly("Bakery", "Épices", "Fruit").inOrder()
+    }
+
+    @Test
+    fun `only the subcategories of the chosen category are proposed`() {
+        val vm = screenWith(apple, prune, FD(id = 53, name = "Bun", category = "Bakery", subCategory = "Sweet", portion = 100.0, unit = "g", carbs = 55))
+
+        assertThat(vm.subCategoriesOf(" fruit")).containsExactly("Fresh")
+        assertThat(vm.subCategoriesOf("")).isEmpty()
+    }
+
+    @Test
+    fun `a group typed with other capitals is saved with the spelling already used`() {
+        val vm = screenWith(apple)
+        vm.openEditor(null)
+        vm.updateEditorName("Pear")
+        vm.updateEditorCategory("fruit ")
+        vm.updateEditorSubCategory("FRESH")
+        vm.updateEditorCarbs("10")
+
+        vm.saveFood()
+        dispatcher.scheduler.runCurrent()
+
+        val saved = argumentCaptor<FD>()
+        runBlocking { verify(persistenceLayer).insertOrUpdateFood(saved.capture()) }
+        assertThat(saved.firstValue.category).isEqualTo("Fruit")
+        assertThat(saved.firstValue.subCategory).isEqualTo("Fresh")
+    }
+
+    @Test
+    fun `a new group is saved as typed, and an empty one as no group`() {
+        val vm = screenWith(apple)
+        vm.openEditor(null)
+        vm.updateEditorName("Crisps")
+        vm.updateEditorCategory(" Snacks ")
+        vm.updateEditorSubCategory(" ")
+
+        vm.saveFood()
+        dispatcher.scheduler.runCurrent()
+
+        val saved = argumentCaptor<FD>()
+        runBlocking { verify(persistenceLayer).insertOrUpdateFood(saved.capture()) }
+        assertThat(saved.firstValue.category).isEqualTo("Snacks")
+        assertThat(saved.firstValue.subCategory).isNull()
     }
 }

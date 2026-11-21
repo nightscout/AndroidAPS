@@ -187,6 +187,7 @@ class FoodManagementViewModel(
         val state = uiState.value
         val name = state.editorName.trim()
         if (name.isBlank()) return
+        val category = sameAs(state.editorCategory, categorySuggestions())
 
         val food = FD(
             id = state.editorFood?.id ?: 0,
@@ -196,8 +197,9 @@ class FoodManagementViewModel(
             referenceId = state.editorFood?.referenceId,
             ids = state.editorFood?.ids ?: IDs(),
             name = name,
-            category = state.editorCategory.trim().ifBlank { null },
-            subCategory = state.editorSubCategory.trim().ifBlank { null },
+            // "fruits " is saved as the existing "Fruits": a typing difference must not make a new group.
+            category = category,
+            subCategory = category?.let { sameAs(state.editorSubCategory, subCategoriesOf(it)) },
             portion = state.editorPortion.toDoubleOrNull() ?: 0.0,
             unit = state.editorUnit.trim().ifBlank { "g" },
             carbs = state.editorCarbs.toIntOrNull() ?: 0,
@@ -214,6 +216,26 @@ class FoodManagementViewModel(
                 aapsLogger.error(LTag.UI, "Failed to save food", e)
             }
         }
+    }
+
+    /** The categories already used, A to Z, each once whatever its capitals. */
+    fun categorySuggestions(): List<String> = distinctNames(uiState.value.foods.map { it.category })
+
+    /** The subcategories already used with [category] (same letters, any case), A to Z. */
+    fun subCategoriesOf(category: String): List<String> {
+        val wanted = category.trim()
+        if (wanted.isEmpty()) return emptyList()
+        return distinctNames(uiState.value.foods.filter { it.category?.trim().equals(wanted, ignoreCase = true) }.map { it.subCategory })
+    }
+
+    private fun distinctNames(values: List<String?>): List<String> =
+        values.mapNotNull { it?.trim()?.takeIf { v -> v.isNotEmpty() } }.distinctBy { it.lowercase() }.sortedBy { nameSortKey(it) }
+
+    /** [typed] trimmed, written as in [existing] when it is there with other capitals. Null when empty. */
+    private fun sameAs(typed: String, existing: List<String>): String? {
+        val text = typed.trim()
+        if (text.isEmpty()) return null
+        return existing.firstOrNull { it.equals(text, ignoreCase = true) } ?: text
     }
 
     fun deleteFood(food: FD) {
