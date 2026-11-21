@@ -127,6 +127,7 @@
     <string name="carelevo_toast_msg_needle_check_failed">Verificarea acului a eșuat.</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">Eliminarea plasturelui a eșuat. Încercați din nou.</string>
+    <string name="carelevo_discarded_not_reached">Plasturele nu a putut fi contactat. A fost eliminat din AAPS, dar nu a fost oprit și poate administra încă insulină. Scoateți-l de pe corp.</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">Cererea de administrare a bazalei a eșuat. Încercați din nou.</string>
     <!-- Delivery Resume/Suspend -->
@@ -211,5 +212,7 @@
     <string name="carelevo_profile_update_skip_comment">Omis: actualizare prea devreme.</string>
     <string name="carelevo_bolus_stop_not_confirmed">Plasturele nu a confirmat oprirea. Se așteaptă terminarea bolusului…</string>
     <string name="carelevo_bolus_rejected_missed_bolus_recorded">Un bolus care nu fusese înregistrat a fost adăugat acum. Verificați IOB, apoi încercați din nou.</string>
+    <string name="carelevo_bolus_outcome_unknown">Plasturele nu a răspuns la bolus. Întregul bolus este luat în calcul până când plasturele raportează cât a administrat.</string>
     <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Plasturele nu a confirmat oprirea. Este înregistrat bolusul complet de %1$s.</string>
+    <string name="carelevo_bolus_stopped_by_patch" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The patch stopped the bolus. Given: 0.50 U of 2.00 U">Plasturele a oprit bolusul. Administrat: %1$s din %2$s</string>
 </resources>
