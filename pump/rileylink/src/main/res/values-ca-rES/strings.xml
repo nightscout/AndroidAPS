@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Mai contactada</string>
+    <string name="pump_status_sleeping">En repòs</string>
+    <string name="pump_status_waking_up">Despertant</string>
+    <string name="pump_status_active">Activa</string>
+    <string name="pump_status_error_comm">Error de comunicació</string>
+    <string name="pump_status_timeout_comm">Temps d\'espera de comunicació exhaurit</string>
+    <string name="pump_status_invalid_config">Configuració no vàlida</string>
+    <string name="medtronic_pump_encoding_title">Codificació Medtronic</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Codificació 4b6b per programari</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Codificació 4b6b per maquinari</string>
+    <string name="medtronic_pump_frequency_us_ca">EUA i Canadà (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Mundial (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Escanejant</string>
     <string name="riley_link_ble_config_connected_never">Mai</string>
@@ -22,6 +34,7 @@
     <string name="rileylink_last_device_contact">Últim contacte dispositiu:</string>
     <string name="rileylink_firmware_version">Versió del firmware:</string>
     <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
     <string name="rileylink_pump_serial_number">Número de sèrie bomba:</string>
     <string name="rileylink_pump_frequency">Freqüència bomba:</string>
     <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
@@ -47,7 +60,7 @@
     <string name="rileylink_target_device_medtronic">Bomba Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Mostrar nivell de batería reportat per OrangeLink/EmaLink/DiaLink</string>
+    <string name="riley_link_show_battery_level">Mostrar nivell de bateria reportat per OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">NO funciona amb el RileyLink original. Pot ser que no funcioni amb alternatives a RileyLink.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dia</item>
@@ -57,4 +70,9 @@
         <item quantity="one">%1$d hora</item>
         <item quantity="other">%1$d hores</item>
     </plurals>
+    <string name="orange_use_scanning_level">Fer servir escaneig</string>
+    <string name="orange_use_scanning_level_summary">Escanejar abans de connectar a OrangeLink; hauria de millorar les connexions (també es pot fer servir amb altres clons de RileyLink, si cal)</string>
+    <string name="rileylink_pair">Emparellar RileyLink</string>
+    <string name="rileylink_pair_success">RileyLink emparellat correctament</string>
+    <string name="rileylink_config_reset">Configuració de RileyLink restablerta</string>
 </resources>
