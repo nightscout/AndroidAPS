@@ -1,20 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Истекло время ожидания соединения</string>
+    <string name="danars_bonding_failed">Сопряжение Bluetooth с помпой не удалось или было отменено. Повторите попытку и введите PIN-код, показанный на помпе.</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="description_pump_dana_rs">Интеграция с помпами DANA Diabecare RS и Dana-i</string>
     <string name="maxbolusviolation">Нарушение макс болюса</string>
     <string name="commanderror">Ошибка в команде</string>
     <string name="speederror">Ошибка в скорости</string>
     <string name="insulinlimitviolation">Нарушение лимита инсулина</string>
+    <string name="boluserrorcode">Запрошено: %1$.2f ед Подано: %2$.2f ед Код ошибки: %3$s</string>
+    <string name="danai2_bolus_error_no_prime">Помпа не заполнена</string>
+    <string name="danai2_bolus_error_not_enough_insulin">Недостаточно инсулина в резервуаре</string>
+    <string name="danai2_bolus_error_easy_sleep">На помпе включен режим Easy sleep</string>
+    <string name="danai2_pump_check_error">Ошибка проверки помпы</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Режим Easy</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Автоблокировка</string>
     <string name="danar_valuenotsetproperly">величина не задана должным образом</string>
     <string name="danar_setbasalstep001">Установить шаг базала 0.01 ед/ч</string>
     <string name="resetpairing">Сбросить информацию о сопряжении?</string>
     <string name="dana_model">%1$s\nМодель: %2$02X\nПротокол: %3$02X\nКод: %4$02X</string>
     <string name="processinghistory">Обработка события</string>
     <string name="danar_enableextendedbolus">Активировать пролонгированные болюсы на помпе</string>
+    <string name="danar_disablebolusblock">На помпе включена блокировка болюса (Bolus block). AAPS не может подавать инсулин, пока она активна. Отключите блокировку болюса в настройках помпы.</string>
     <string name="overview_bolusprogress_stoped">остановлено</string>
     <string name="unsupportedfirmware">Неподдерживаемая версия прошивки помпы</string>
+    <string name="danars_unsupported_model">Неподдерживаемая модель помпы (код %1$s)</string>
     <string name="pumperror">ошибка помпы</string>
     <string name="lowbattery">низкий заряд батареи</string>
     <string name="basalcompare">Подается меньше предварительно установленной базальной скорости</string>
@@ -25,7 +35,7 @@
     <string name="checkshaft">Проверьте шток помпы</string>
     <string name="basalmax">Макс. шаг базала</string>
     <string name="dailymax">Максимум за сутки</string>
-    <string name="bloodsugarmeasurementalert">Предупреждение при измерении уровня СК</string>
+    <string name="bloodsugarmeasurementalert">Предупреждение при измерении уровня ГК</string>
     <string name="remaininsulinalert">Уровень оставшегося инсулина</string>
     <string name="missedbolus">Недоставленный болюс</string>
     <string name="invalidpairing">Неверная информация о соединении. Запрос нового сопряжения</string>
@@ -35,6 +45,7 @@
     <string name="gettingtempbasalstatus">Получение статуса временного базала</string>
     <string name="gettingpumpsettings">Получение настроек помпы</string>
     <string name="gettingpumptime">Получение времени помпы</string>
+    <string name="largetimedifftitle">Большая разница во времени</string>
     <string name="largetimediff">Большая разница во времени: \n Время в помпе расходится более чем 1,5 ч. \n. Пожалуйста установите время на помпе вручную и убедитесь, что чтение истории помпы не вызывает неожиданное поведение.\n если возможно, удалите историю из помпы перед изменением времени или отключите замкнутый цикл на один DIA после последней неверной записи в журнале, как минимум на один DIA с настоящего момента.</string>
     <string name="pairfirst">Выполните сопряжение помпы с телефоном!</string>
     <string name="approachingdailylimit">приближается суточный лимит инсулина</string>
@@ -86,14 +97,32 @@
     <string name="option_on">Вкл.</string>
     <string name="option_off">Выкл.</string>
     <string name="danars_password_title">Пароль для помпы (только v1)</string>
-    <string name="danar_password_title">пароль помпы</string>
+    <string name="danar_password_title">Пароль помпы</string>
     <string name="danar_useextended_title">Для величин &gt;200% пользуйтесь пролонгированным болюсом</string>
+    <string name="bolus_speed_12">12 с/ед</string>
+    <string name="bolus_speed_30">30 с/ед</string>
+    <string name="bolus_speed_60">60 с/ед</string>
     <string name="selectedpump">Выбранная помпа</string>
     <string name="rs_loginsulinchange_title">Отслеживать замену резервуара</string>
-    <string name="rs_loginsulinchange_summary">Добавить событие \"Замена инсулина\" в портал терапииl при обнаружении в хронологии</string>
-    <string name="rs_logcanulachange_summary">Добавить событие \"Замена места катетера помпы\" в портал терапииl при обнаружении в журнале</string>
+    <string name="rs_loginsulinchange_summary">Добавить событие \"Замена инсулина\" в портал терапии при обнаружении в хронологии</string>
+    <string name="rs_logcanulachange_title">Записывать замену катетера</string>
+    <string name="rs_logcanulachange_summary">Добавить событие \"Замена места катетера помпы\" в портал терапии при обнаружении в журнале</string>
     <string name="press_ok_on_the_pump">Нажмите OK на помпе\nи введите 2 отображаемых номера\nДержите экран помпы включенным нажимая кнопку минус, пока не закончите ввод кода.</string>
     <string name="num1pin">1: (12 цифр)</string>
     <string name="num2pin">2: (8 цифр)</string>
     <string name="basal_bolus_step">Шаг Базала/болюса</string>
+    <string name="connecting_to_pump">Подключение к помпе…</string>
+    <string name="pairing_successful">Сопряжение успешно!</string>
+    <string name="pairing_successful_message">Помпа подключена и готова к работе.</string>
+    <string name="cancel_pairing_title">Отменить сопряжение?</string>
+    <string name="cancel_pairing_message">Процесс сопряжения будет прерван.</string>
+    <string name="done">Готово</string>
+    <string name="open_bluetooth_settings">Открыть настройки Bluetooth</string>
+    <string name="enter_pump_password">Введите пароль помпы</string>
+    <string name="select_paired_device">Выберите сопряженное устройство</string>
+    <string name="no_paired_devices">Сопряженные устройства Dana не найдены. Сначала выполните сопряжение с помпой в настройках Bluetooth Android.</string>
+    <string name="password_hint">4-значный пароль (0–9999)</string>
+    <string name="connecting_verifying">Подключение и проверка пароля…</string>
+    <string name="password_ok">Пароль успешно проверен!</string>
+    <string name="password_wrong">Неверный пароль. Вернитесь назад и исправьте его.</string>
 </resources>
