@@ -44,6 +44,7 @@
     <string name="diaconn_g8_screentimeout">Χρόνος ενεργής οθόνης [second]</string>
     <string name="diaconn_g8_language">Γλώσσα</string>
     <string name="diaconn_g8_bolus_speed">Ταχύτητα Bolus</string>
+    <string name="diaconn_g8_pumplang_chiness">Κινεζικά</string>
     <string name="diaconn_g8_pumplang_korean">Korean</string>
     <string name="diaconn_g8_pumplang_english">Αγγλικά</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -61,6 +62,7 @@
     <string name="diaconn_g8_logbatterychange_summary">Προσθήκη συμβάντος \"Αλλαγή μπαταρίας\" στο careportal όταν εντοπιστεί στο ιστορικό</string>
     <string name="diaconn_g8_logbatterychange_title">Καταγραφή αλλαγής μπαταρίας</string>
     <string name="diaconn_g8_logsyncinprogress">Συγχρονισμός αρχείου καταγραφής σε εξέλιξη</string>
+    <string name="diaconn_g8_loginsulinshorage">Έλλειψη ινσουλίνης</string>
     <string name="diaconn_g8_logbatteryshorage">Έλλειψη μπαταρίας</string>
     <string name="diaconn_g8_logneedleprime">Πλήρωση βελόνας :%1$.2fU</string>
     <string name="diaconn_g8_loginjectorprime">Prime συστήματος έγχυσης :%1$.2fU</string>
@@ -74,6 +76,7 @@
     <string name="diaconn_g8_reasoncomplete">Ολοκληρώθηκε</string>
     <string name="diaconn_g8_reasoninjectonblock">Αποκλεισμός έγχυσης</string>
     <string name="diaconn_g8_reasonbatteryshortage">Έλλειψη μπαταρίας</string>
+    <string name="diaconn_g8_reasoninsulinshortage">Έλλειψη ινσουλίνης</string>
     <string name="diaconn_g8_reasonuserstop">Διακοπή χρήστη</string>
     <string name="diaconn_g8_reasonsystemreset">Επαναφορά συστήματος</string>
     <string name="diaconn_g8_reasonother">Άλλο</string>
@@ -89,6 +92,7 @@
     <string name="diaconn_g8_logalarmblock">Αποκλεισμός έγχυσης (%s)</string>
     <string name="diaconn_g8_lgorelease">απελευθέρωση βασικού (%s)</string>
     <string name="diaconn_g8_lgosuspend">αναστολή βασικού (%s)</string>
+    <string name="diaconn_g8_logdualnormalsuccess">Επιτυχία Dual Normal</string>
     <string name="diaconn_g8_logdualsquarestart">Έναρξη Διπλής Τετραγωνικής</string>
     <string name="diaconn_g8_logdualsquaresuccess">Επιτυχία Διπλής Τετραγωνικής</string>
     <string name="diaconn_g8_logsquarestart">Έναρξη Τετραγωνικής</string>
@@ -97,6 +101,8 @@
     <string name="diaconn_g8_logsuccess">Επιτυχία</string>
     <string name="diaconn_g8_logmealsuccess">Επιτυχία Γεύματος</string>
     <string name="diaconn_g8_errorcode_1">Δεν είναι δυνατή η αναζήτηση λόγω σφάλματος CRC πακέτου.</string>
+    <string name="diaconn_g8_errorcode_2">Δεν είναι δυνατή η ρύθμιση: σφάλμα παραμέτρου εισόδου.</string>
+    <string name="diaconn_g8_errorcode_3">Δεν είναι δυνατή η ρύθμιση: σφάλμα προδιαγραφής πρωτοκόλλου.</string>
     <string name="diaconn_g8_errorcode_4">Ώρα φαγητού, δεν γίνεται έγχυση.</string>
     <string name="diaconn_g8_errorcode_6">Ακυρώθηκε από την αντλία</string>
     <string name="diaconn_g8_errorcode_7">Λήψη άλλων ενεργειών, περιορισμός ρυθμίσεων εφαρμογής.</string>
@@ -106,6 +112,7 @@
     <string name="diaconn_g8_errorcode_11">Η έγχυση δεν είναι δυνατή λόγω χαμηλής μπαταρίας.</string>
     <string name="diaconn_g8_errorcode_12">Δεν είναι δυνατή η έγχυση λόγω ανεπάρκειας ινσουλίνης.</string>
     <string name="diaconn_g8_errorcode_13">Δεν είναι δυνατή η έγχυση επειδή γίνεται υπέρβαση του ορίου.</string>
+    <string name="diaconn_g8_errorcode_14">Δεν είναι δυνατή η έγχυση, γιατί ξεπερνά τον όγκο έγχυσης για σήμερα.</string>
     <string name="diaconn_g8_errorcode_15">Μετά την ολοκλήρωση της ρύθμισης του βασικού ρυθμού, μπορεί να πραγματοποιηθεί έγχυση βασική.</string>
     <string name="diaconn_g8_logtubechange_title">Καταγραφή αλλαγής σωλήνωσης</string>
     <string name="diaconn_g8_logtubechange_summary">Προσθήκη συμβάντος \"Αλλαγή Σωλήνωσης\" σε σημείωση όταν εντοπιστεί στο ιστορικό</string>
@@ -113,6 +120,8 @@
     <string name="diaconn_g8_errorcode_32">Κατά την εκτέλεση του LGS, η χορήγηση περιορίζεται</string>
     <string name="diaconn_g8_errorcode_33">Η κατάσταση LGS είναι ON, η εντολή ON απορρίπτεται.</string>
     <string name="diaconn_g8_errorcode_34">Η κατάσταση LGS είναι OFF, η εντολή OFF απορρίπτεται.</string>
+    <string name="diaconn_g8_errorcode_35">Η έναρξη προσωρινού βασικού ρυθμού απορρίπτεται όταν τρέχει ήδη προσωρινός βασικός ρυθμός</string>
+    <string name="diaconn_g8_errorcode_36">Η διακοπή προσωρινού βασικού ρυθμού απορρίπτεται όταν δεν τρέχει προσωρινός βασικός ρυθμός</string>
     <string name="diaconn_g8_cloudsend_summary">Αποστολή αρχείων καταγραφής αντλίας στο Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Συγχρονισμός Diaconn Cloud</string>
     <string name="bolus_speed_1">1 U/min</string>
@@ -125,4 +134,5 @@
     <string name="bolus_speed_8">8 U/min</string>
     <string name="diaconn_pairing_successful">Η σύζευξη πέτυχε!</string>
     <string name="diaconn_pairing_successful_message">Η αντλία σας είναι τώρα συνδεδεμένη και έτοιμη για χρήση.</string>
+    <string name="diaconn_g8_cloud_sync_progress" comment="Pump status while AAPS sends the pump log to the Diaconn cloud. %1$d=parts sent, %2$d=all parts. Example: Cloud sync: 3 / 10">Συγχρονισμός cloud: %1$d / %2$d</string>
 </resources>
