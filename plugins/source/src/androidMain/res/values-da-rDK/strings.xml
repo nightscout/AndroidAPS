@@ -8,9 +8,9 @@
     <string name="dexcom_app_patched">BYODA</string>
     <string name="description_source_dexcom">Modtag BS-værdier fra \'Byg din egen Dexcom App\'.</string>
     <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Modtag BG-værdier fra Glimp.</string>
+    <string name="description_source_glimp">Modtag BS-værdier fra Glimp.</string>
     <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Modtag BG-værdier fra 600SeriesAndroidUploader.</string>
+    <string name="description_source_mm640g">Modtag BS-værdier fra 600SeriesAndroidUploader.</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Modtag BS-værdier fra Poctech app</string>
     <string name="glunovo">Glunovo</string>
@@ -20,7 +20,7 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="description_source_tomato">Modtag BS-værdier fra Tomato-appen (MiaoMiao enhed)</string>
     <string name="random_bg">Tilfældigt BS</string>
-    <string name="description_source_random_bg">Generér tilfældig BS-data (kun demotilstand)</string>
+    <string name="description_source_random_bg">Generer tilfældig BS-data (kun demotilstand)</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai/Ottai</string>
     <string name="description_source_patched_syai_tag_app">Modtag glukosedata fra Syai/Ottai-appen.</string>
