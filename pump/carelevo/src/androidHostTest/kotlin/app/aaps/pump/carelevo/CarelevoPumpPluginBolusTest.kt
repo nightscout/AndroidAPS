@@ -182,6 +182,29 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
         verifyBlocking(pumpSync) { syncBolusWithPumpId(any(), any(), any(), any(), any(), any()) }
     }
 
+    /**
+     * A locked iPhone freezes the app between Bluetooth events, and a sleep counts only the time the app is awake. The
+     * progress follows the clock, so a bolus whose time has passed ends at once. Before, the 10 minutes here were all
+     * slept, and the test ran into its timeout.
+     */
+    @Test
+    @Timeout(10)
+    fun `deliverTreatment ends when the clock says the bolus time has passed`() {
+        whenever { bleSession.runSingle(any(), isA<ImmediateBolusCommand>(), any()) }
+            .thenReturn(ImmediateBolusResponse(actionId = 1, resultCode = 0, expectedCompletionSeconds = 600, remainingReservoirUnits = 60.0))
+        // Every look at the clock finds a minute gone, as after a freeze.
+        var clock = System.currentTimeMillis()
+        whenever(dateUtil.now()).thenAnswer { clock += 60_000L; clock }
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0), infusionInfo(bolusTotal = 2.25))
+
+        val result = runBlocking { plugin.deliverTreatment(bolus(0.25)) }
+
+        assertThat(result.success).isTrue()
+        assertThat(result.enacted).isTrue()
+        assertThat(result.bolusDelivered).isWithin(0.001).of(0.25)
+        verifyBlocking(pumpSync) { syncBolusWithPumpId(any(), any(), any(), any(), any(), any()) }
+    }
+
     @Test
     @Timeout(10)
     fun `deliverTreatment should report a pump-confirmed user stop as a partial success`() {
