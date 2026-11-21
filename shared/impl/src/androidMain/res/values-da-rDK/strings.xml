@@ -25,12 +25,12 @@
     <string name="cwf_comment_timestamp_ext">Minutter siden sidste modtagne BS (fra AAPSClient eller AAPSClient2)</string>
     <string name="cwf_comment_sgv_ext">BS-værdi (fra AAPSClient eller AAPSClient2)</string>
     <string name="cwf_comment_patient_name">Patientnavn</string>
-    <string name="cwf_comment_iob1">IOB-etiket eller IOB-sum, hvis givet</string>
-    <string name="cwf_comment_iob2">IOB-sum eller (Bolus_IOB|Basal_IOB) hvis givet</string>
+    <string name="cwf_comment_iob1">IOB-etiket eller IOB-sum, hvis detaljeret</string>
+    <string name="cwf_comment_iob2">IOB-sum eller (Bolus_IOB|Basal_IOB), hvis detaljeret</string>
     <string name="cwf_comment_cob1">COB-etiket</string>
     <string name="cwf_comment_cob2">COB-værdi</string>
-    <string name="cwf_comment_delta">Kort BG-delta</string>
-    <string name="cwf_comment_avg_delta">Gennemsnitlig BG-delta (15min)</string>
+    <string name="cwf_comment_delta">Kort BS-delta</string>
+    <string name="cwf_comment_avg_delta">Gennemsnitlig BS-delta (15min)</string>
     <string name="cwf_comment_temp_target">Midlertidigt mål eller nedre - øvre værdi for midlertidigt mål</string>
     <string name="cwf_comment_reservoir">Reservoirniveau</string>
     <string name="cwf_comment_uploader_battery">Telefonbatteri (%)</string>
@@ -47,7 +47,7 @@
     <string name="cwf_comment_day">Dag (DD)</string>
     <string name="cwf_comment_week_number">Ugenummer (uu)</string>
     <string name="cwf_comment_month">Måned navn (kort)</string>
-    <string name="cwf_comment_loop">Loop status og tid</string>
+    <string name="cwf_comment_loop">Loop-status og tid</string>
     <string name="cwf_comment_direction">Retningspil</string>
     <string name="cwf_comment_timestamp">Minutter siden sidste modtagne BS</string>
     <string name="cwf_comment_sgv">BS-værdi</string>
