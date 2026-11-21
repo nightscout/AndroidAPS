@@ -12,7 +12,7 @@
     <string name="objectives_openloop_gate">Funcionar en mode llaç obert uns quants dies i acceptar manualment múltiples basals temporals. Configurar i utilitzar objectius temporals i objectius temporals per defecte (p.ex. esport o carbs per tractament d\'hipo)</string>
     <string name="objectives_openloop_learned">El llaç obert es pot fer servir per obtenir recomanacions si no teniu una bomba compatible o encara no esteu preparats per tancar el llaç.</string>
     <string name="objectives_maxbasal_objective">Entendre el vostre llaç obert, recomanacions de basals temporals incloses</string>
-    <string name="objectives_maxbasal_gate">D\'acord amb aquesta experiència, decidiu quina hauria de ser la basal màxima i configureu-la a la bomba i la configuració</string>
+    <string name="objectives_maxbasal_gate">D\'acord amb aquesta experiència, decidiu quina hauria de ser la basal màxima i configureu-la a la bomba i a la configuració. En mode simple aquest valor es calcula segons la recomanació de la wiki i no cal configurar-lo.</string>
     <string name="objectives_maxbasal">Fer l\'acció per complir la recomanació</string>
     <string name="objectives_maxbasal_learned">Tingueu cura de les funcions de seguretat i ajusteu els paràmetres de seguretat quan calgui.</string>
     <string name="objectives_maxiobzero_objective">Començant a tancar el llaç amb LGS (Suspensió per glucèmia baixa)</string>
@@ -23,7 +23,7 @@
     <string name="objectives_maxiob_learned">Actualitzeu la IOB màxima a mesura que l\'infant creix. No permeteu que el sistema us doni més insulina de la que podeu cobrir amb menjar = un valor molt alt és mala idea. En mode simple la IOB màxima es calcula automàticament</string>
     <string name="maxiobset">IOB màxima configurada correctament (no cal en mode simple)</string>
     <string name="objectives_autosens_objective">Ajustar basals i ràtios si cal, i després activar auto-sens</string>
-    <string name="objectives_autosens_gate">1 setmana d\'èxit en mode llaç tancat durant el dia, amb introducció regular de carbohidrats</string>
+    <string name="objectives_autosens_gate">1 setmana d\'èxit en mode llaç tancat durant el dia, amb introducció regular de carbohidrats. En mode simple, Autosens està activat per defecte.</string>
     <string name="objectives_autosens_learned">Si el resultat d\'autosens no oscil·la al voltant del 100%, probablement el perfil és incorrecte.</string>
     <string name="objectives_smb_objective">Activant funcions addicionals d\'ús diurn, com l\'SMB (super micro bolus)</string>
     <string name="objectives_smb_gate">Heu de llegir la wiki i augmentar la IOB màxima perquè els SMB funcionin bé! Un bon inici és IOB màxima = bolus d\'àpat mitjà + 3 x basal diària màxima. En mode simple aquest valor es calcula segons la recomanació de la wiki i no cal configurar-lo.</string>
