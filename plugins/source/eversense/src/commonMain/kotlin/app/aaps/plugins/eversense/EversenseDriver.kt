@@ -459,6 +459,9 @@ class EversenseDriver internal constructor(
         data class Lost(val failure: BleFailure, val byTransmitter: Boolean, val is365: Boolean) : LinkEnd
         data class Closed(val reason: String) : LinkEnd
 
+        /** Closed because the transmitter stopped answering, or the protocol asked for a new link. */
+        data class Unanswered(val reason: String) : LinkEnd
+
         /** Not ready within [ATTEMPT_DEADLINE]. */
         data object TimedOut : LinkEnd
 
@@ -491,10 +494,15 @@ class EversenseDriver internal constructor(
                 _connectionState.value = ConnectionState.DISCONNECTED
                 security.value = null
                 aapsLogger.info(LTag.BGSOURCE, "Eversense link ended: $end")
-                // On iOS a link lost by radio (or gone silent) waits for the transmitter in a pending connect: a timer
-                // would not run while the app is in the background. A link the session closed (no internet for the
-                // registration, a failed sign-in) waits on a timer there too, or it would fail again at once.
-                val waitInBackground = waitInBackgroundAfterLoss && (end is LinkEnd.Lost || end == LinkEnd.Stale)
+                // On iOS a link lost by radio, gone silent, or whose transmitter stopped answering waits for the
+                // transmitter in a pending connect: a timer would not run while the app is in the background. On a
+                // locked iPhone a timer here meant no readings until the user opened the app (seen 2026-11-21, after
+                // two packets in a row got no answer). A transmitter that keeps not answering is then asked again
+                // every few seconds instead of on the backoff, which is still better than never.
+                // A link the session closed for a reason of its own (no internet for the registration, a failed
+                // sign-in) waits on a timer there too, or it would fail again at once.
+                val waitInBackground = waitInBackgroundAfterLoss &&
+                    (end is LinkEnd.Lost || end == LinkEnd.Stale || end is LinkEnd.Unanswered)
                 waitForTransmitter = waitInBackground || (end is LinkEnd.Lost && end.byTransmitter && end.is365)
                 if (!waitInBackground) delay(
                     when (end) {
@@ -642,6 +650,10 @@ class EversenseDriver internal constructor(
 
         override fun closeLink(reason: String) {
             end.complete(LinkEnd.Closed(reason))
+        }
+
+        override fun closeLinkForTransmitter(reason: String) {
+            end.complete(LinkEnd.Unanswered(reason))
         }
     }
 

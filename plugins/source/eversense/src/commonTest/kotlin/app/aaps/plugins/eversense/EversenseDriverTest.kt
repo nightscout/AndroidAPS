@@ -8,6 +8,7 @@ import app.aaps.plugins.eversense.DriverHarness.Companion.CLOSED_BY_TRANSMITTER
 import app.aaps.plugins.eversense.DriverHarness.Companion.NAME
 import app.aaps.plugins.eversense.DriverHarness.Companion.START
 import app.aaps.plugins.eversense.EversenseDriver.ConnectionState
+import app.aaps.plugins.eversense.connection.EversenseLink
 import app.aaps.plugins.eversense.packets.e3.EnterDiagnosticModePacket
 import app.aaps.plugins.eversense.packets.e3.EversenseE3Packets
 import app.aaps.plugins.eversense.packets.e3.PingPacket
@@ -455,6 +456,41 @@ class EversenseDriverTest {
         assertTrue(central.connects[1].androidAutoConnect)
         assertEquals(Duration.INFINITE, central.connects[1].timeout)
         assertEquals(ConnectionState.READY, driver.connectionState.value)
+    }
+
+    /**
+     * A transmitter that stops answering is waited for in the same way. On a locked iPhone the backoff timer here never
+     * ran, and the readings stopped until the user opened the app.
+     */
+    @Test fun withoutTimersATransmitterThatStopsAnsweringIsWaitedForAtOnce(): Unit = harness.also { it.reconnectWithoutTimers = true }.run { driver ->
+        harness.pairedE3()
+        driver.start()
+        runCurrent()
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
+
+        central.links[0].onWrite = {}
+        driver.triggerFullSync(force = true)
+        runCurrent()
+        advance(EversenseLink.WRITE_TIMEOUT_MS)
+        assertEquals(2, central.connects.size)
+        assertEquals(Duration.INFINITE, central.connects[1].timeout)
+    }
+
+    /** Where timers run, a transmitter that stops answering is asked again on the backoff, as before. */
+    @Test fun aTransmitterThatStopsAnsweringIsAskedAgainOnTheBackoff(): Unit = harness.run { driver ->
+        harness.pairedE3()
+        driver.start()
+        runCurrent()
+        assertEquals(ConnectionState.READY, driver.connectionState.value)
+
+        central.links[0].onWrite = {}
+        driver.triggerFullSync(force = true)
+        runCurrent()
+        advance(EversenseLink.WRITE_TIMEOUT_MS)
+        assertEquals(1, central.connects.size)
+        advance(5_000)
+        assertEquals(2, central.connects.size)
+        assertEquals(EversenseDriver.CONNECT_TIMEOUT, central.connects[1].timeout)
     }
 
     /** A link the session gave up on is not a radio loss: at once it would only fail again, so it waits on the backoff. */
