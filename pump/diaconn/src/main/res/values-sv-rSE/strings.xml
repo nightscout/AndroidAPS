@@ -44,6 +44,7 @@
     <string name="diaconn_g8_screentimeout">LCD på, tid [sekunder]</string>
     <string name="diaconn_g8_language">Språk</string>
     <string name="diaconn_g8_bolus_speed">Bolushastighet</string>
+    <string name="diaconn_g8_pumplang_chiness">Kinesiska</string>
     <string name="diaconn_g8_pumplang_korean">Koreanska</string>
     <string name="diaconn_g8_pumplang_english">Engelska</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -61,6 +62,7 @@
     <string name="diaconn_g8_logbatterychange_summary">Logga batteribyte automatiskt när det upptäcks i historiken</string>
     <string name="diaconn_g8_logbatterychange_title">Logga batteribyten</string>
     <string name="diaconn_g8_logsyncinprogress">Synkronisering pågår</string>
+    <string name="diaconn_g8_loginsulinshorage">Ont om insulin</string>
     <string name="diaconn_g8_logbatteryshorage">Nivåvarning pumpbatteri</string>
     <string name="diaconn_g8_logneedleprime">Förfyllning nål:%1$.2fU</string>
     <string name="diaconn_g8_loginjectorprime">Förfyllning :%1$.2fU</string>
@@ -74,6 +76,7 @@
     <string name="diaconn_g8_reasoncomplete">Slutförd</string>
     <string name="diaconn_g8_reasoninjectonblock">Bolusblockering</string>
     <string name="diaconn_g8_reasonbatteryshortage">Pumpbatteri slut</string>
+    <string name="diaconn_g8_reasoninsulinshortage">Ont om insulin</string>
     <string name="diaconn_g8_reasonuserstop">Användaren pausat</string>
     <string name="diaconn_g8_reasonsystemreset">Systemåterställning</string>
     <string name="diaconn_g8_reasonother">Övrigt</string>
@@ -109,6 +112,7 @@
     <string name="diaconn_g8_errorcode_11">Bolus är inte möjlig på grund av lågt batteri.</string>
     <string name="diaconn_g8_errorcode_12">Bolus inte tillåten pga låg reservoarnivå.</string>
     <string name="diaconn_g8_errorcode_13">Bolus blockerad eftersom det kommer överskrida gränsen.</string>
+    <string name="diaconn_g8_errorcode_14">Kan ej injiceras då det överskrider injektionsvolymen för idag.</string>
     <string name="diaconn_g8_errorcode_15">Efter att konfigurationen är klar, kan basaldosen påbörjas.</string>
     <string name="diaconn_g8_logtubechange_title">Logga slangbyte</string>
     <string name="diaconn_g8_logtubechange_summary">Lägg till händelse \"slangbyte\" när den upptäcks i historiken</string>
@@ -130,4 +134,5 @@
     <string name="bolus_speed_8">8 U/min</string>
     <string name="diaconn_pairing_successful">Parkopplingen lyckades!</string>
     <string name="diaconn_pairing_successful_message">Din pump är nu ansluten och redo att användas.</string>
+    <string name="diaconn_g8_cloud_sync_progress" comment="Pump status while AAPS sends the pump log to the Diaconn cloud. %1$d=parts sent, %2$d=all parts. Example: Cloud sync: 3 / 10">Molnsynkronisering: %1$d / %2$d</string>
 </resources>
