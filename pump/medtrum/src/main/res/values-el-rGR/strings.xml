@@ -5,11 +5,13 @@
     <string name="medtrum_pump_description">Ενσωμάτωση της αντλίας για Medtrum Nano και Medtrum 300U</string>
     <string name="medtrum_pump_setting">Ρυθμίσεις αντλίας Medtrum</string>
     <string name="pump_error">Σφάλμα αντλίας: %1$s !! </string>
+    <string name="pump_warning">Προειδοποίηση αντλίας: %1$s</string>
     <string name="pump_is_suspended">Η αντλία είναι σε αναστολή</string>
     <string name="pump_is_suspended_hour_max">Η αντλία αναστέλλεται λόγω υπέρβασης της ωριαίας μέγιστης ινσουλίνης</string>
     <string name="pump_is_suspended_day_max">Η αντλία αναστέλλεται λόγω υπέρβασης της ημερήσιας μέγιστης ινσουλίνης</string>
     <string name="patch_not_active">Μη ενεργοποιημένο Patch</string>
     <string name="pump_setting_failed">Η ρύθμιση των ρυθμίσεων χρήστη στην αντλία απέτυχε!</string>
+    <string name="pump_sync_error">Σφάλμα κατά τον συγχρονισμό του ιστορικού από την αντλία, μια εγγραφή παραλείφθηκε. Ελέγξτε στην καρτέλα θεραπειών αν το bolus συγχρονίστηκε σωστά. Κάντε αναβολή και, αν το σφάλμα εμφανίζεται ξανά, αλλάξτε το patch ή τη βάση της αντλίας.</string>
     <string name="patch_reset_after_primed_error">Το patch επανεκκινήθηκε μόνο του και έχασε τη συνεδρία του. Δεν μπορεί πλέον να χορηγήσει ινσουλίνη. Αφαιρέστε το patch και ξεκινήστε ένα νέο.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Ενεργό bolus</string>
@@ -89,6 +91,7 @@
     <string name="press_OK_to_return">Πατήστε <b>OK</b> για να επιστρέψετε στην κύρια οθόνη.</string>
     <string name="deactivate_sure">Είστε βέβαιοι ότι θέλετε να απενεργοποιήσετε το τρέχον patch;</string>
     <string name="cancel_sure">Είστε βέβαιοι ότι θέλετε να ακυρώσετε την ενεργοποίηση;</string>
+    <string name="cancel_deactivation_sure">Είστε σίγουροι ότι θέλετε να ακυρώσετε την απενεργοποίηση; Το patch μπορεί να μείνει ενεργό.</string>
     <string name="medtrum_deactivate_pump_confirm">Είσαι σίγουρος; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί!!</string>
     <string name="press_next_or_cancel">Πατήστε <b>Επόμενο</b> για να απενεργοποιήσετε ή <b>Ακύρωση</b> για να επιστρέψετε στην κύρια οθόνη.</string>
     <string name="deactivating_pump">Απενεργοποιήστε το patch. Παρακαλώ περιμένετε.</string>
