@@ -44,6 +44,7 @@
     <string name="diaconn_g8_screentimeout">Час підсвічування LCD [с]</string>
     <string name="diaconn_g8_language">Мова</string>
     <string name="diaconn_g8_bolus_speed">Швидкість болюсу</string>
+    <string name="diaconn_g8_pumplang_chiness">Китайська</string>
     <string name="diaconn_g8_pumplang_korean">Корейська</string>
     <string name="diaconn_g8_pumplang_english">Англійська</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -61,6 +62,7 @@
     <string name="diaconn_g8_logbatterychange_summary">Додавати подію «Заміна батареї» в Careportal, коли її знайдено в історії</string>
     <string name="diaconn_g8_logbatterychange_title">Записувати заміну батареї</string>
     <string name="diaconn_g8_logsyncinprogress">Триває синхронізація журналу</string>
+    <string name="diaconn_g8_loginsulinshorage">Нестача інсуліну</string>
     <string name="diaconn_g8_logbatteryshorage">Низький заряд батареї</string>
     <string name="diaconn_g8_logneedleprime">Заповнення голки: %1$.2f Од</string>
     <string name="diaconn_g8_loginjectorprime">Заповнення інжектора: %1$.2f Од</string>
@@ -74,6 +76,7 @@
     <string name="diaconn_g8_reasoncomplete">Завершено</string>
     <string name="diaconn_g8_reasoninjectonblock">Блокування введення</string>
     <string name="diaconn_g8_reasonbatteryshortage">Низький заряд батареї</string>
+    <string name="diaconn_g8_reasoninsulinshortage">Нестача інсуліну</string>
     <string name="diaconn_g8_reasonuserstop">Зупинено користувачем</string>
     <string name="diaconn_g8_reasonsystemreset">Скидання системи</string>
     <string name="diaconn_g8_reasonother">Інше</string>
@@ -89,6 +92,7 @@
     <string name="diaconn_g8_logalarmblock">Блокування введення (%s)</string>
     <string name="diaconn_g8_lgorelease">відновлення базалу (%s)</string>
     <string name="diaconn_g8_lgosuspend">призупинення базалу (%s)</string>
+    <string name="diaconn_g8_logdualnormalsuccess">Двохвильовий, звичайна частина: успіх</string>
     <string name="diaconn_g8_logdualsquarestart">Двохвильовий, квадратна частина: початок</string>
     <string name="diaconn_g8_logdualsquaresuccess">Двохвильовий, квадратна частина: успіх</string>
     <string name="diaconn_g8_logsquarestart">Квадратний болюс: початок</string>
@@ -97,6 +101,8 @@
     <string name="diaconn_g8_logsuccess">Успіх</string>
     <string name="diaconn_g8_logmealsuccess">Болюс на їжу: успіх</string>
     <string name="diaconn_g8_errorcode_1">Неможливо прочитати: помилка CRC пакета.</string>
+    <string name="diaconn_g8_errorcode_2">Неможливо встановити: помилка вхідного параметра.</string>
+    <string name="diaconn_g8_errorcode_3">Неможливо встановити: помилка специфікації протоколу.</string>
     <string name="diaconn_g8_errorcode_4">Час прийому їжі, введення неможливе.</string>
     <string name="diaconn_g8_errorcode_6">Скасовано помпою</string>
     <string name="diaconn_g8_errorcode_7">Помпа виконує іншу дію, налаштування із застосунку обмежено.</string>
@@ -106,6 +112,7 @@
     <string name="diaconn_g8_errorcode_11">Введення неможливе: низький заряд батареї.</string>
     <string name="diaconn_g8_errorcode_12">Введення неможливе: недостатньо інсуліну.</string>
     <string name="diaconn_g8_errorcode_13">Введення неможливе: перевищено разовий ліміт.</string>
+    <string name="diaconn_g8_errorcode_14">Введення неможливе: перевищено добовий обсяг введення.</string>
     <string name="diaconn_g8_errorcode_15">Базальне введення можливе лише після завершення налаштування базалу.</string>
     <string name="diaconn_g8_logtubechange_title">Записувати заміну трубки</string>
     <string name="diaconn_g8_logtubechange_summary">Додавати подію «Заміна трубки» як примітку, коли її знайдено в історії</string>
@@ -113,6 +120,8 @@
     <string name="diaconn_g8_errorcode_32">Поки працює LGS, введення обмежено</string>
     <string name="diaconn_g8_errorcode_33">LGS уже увімкнено, команду увімкнення відхилено.</string>
     <string name="diaconn_g8_errorcode_34">LGS уже вимкнено, команду вимкнення відхилено.</string>
+    <string name="diaconn_g8_errorcode_35">Запуск тимчасового базалу відхилено: тимчасовий базал уже працює</string>
+    <string name="diaconn_g8_errorcode_36">Зупинку тимчасового базалу відхилено: тимчасовий базал не працює</string>
     <string name="diaconn_g8_cloudsend_summary">Надсилати журнали помпи в Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Синхронізація з Diaconn Cloud</string>
     <string name="bolus_speed_1">1 Од/хв</string>
@@ -125,4 +134,5 @@
     <string name="bolus_speed_8">8 Од/хв</string>
     <string name="diaconn_pairing_successful">Спарювання успішне!</string>
     <string name="diaconn_pairing_successful_message">Помпу підключено, вона готова до роботи.</string>
+    <string name="diaconn_g8_cloud_sync_progress" comment="Pump status while AAPS sends the pump log to the Diaconn cloud. %1$d=parts sent, %2$d=all parts. Example: Cloud sync: 3 / 10">Синхронізація з хмарою: %1$d / %2$d</string>
 </resources>
