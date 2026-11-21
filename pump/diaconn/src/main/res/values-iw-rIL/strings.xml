@@ -123,7 +123,7 @@
     <string name="diaconn_g8_errorcode_35">התחלת בזאלי זמני חדש נדחית כאשר בזאלי זמני אחר כבר פעיל</string>
     <string name="diaconn_g8_errorcode_36">הפסקת בזאלי זמני נדחית כאשר אין בזאלי זמני פעיל</string>
     <string name="diaconn_g8_cloudsend_summary">שליחת יומני משאבה לענן Diaconn.</string>
-    <string name="diaconn_g8_cloudsend_title">סנכרון Diaconn Cloud </string>
+    <string name="diaconn_g8_cloudsend_title">סנכרון Diaconn Cloud</string>
     <string name="bolus_speed_1">1 יחידות/דקה</string>
     <string name="bolus_speed_2">2 יחידות/דקה</string>
     <string name="bolus_speed_3">3 יחידות/דקה</string>
