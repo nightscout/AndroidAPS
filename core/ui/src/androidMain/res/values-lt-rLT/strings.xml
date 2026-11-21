@@ -50,7 +50,7 @@
     <string name="snooze_60m">Atidėti 60 min.</string>
     <string name="virtual_pump">Virtuali pompa</string>
     <string name="constraints">Apribojimai</string>
-    <string name="superbolus">Superbolus</string>
+    <string name="superbolus">Superbolusas</string>
     <string name="pump_paused">Pompa pristabdyta</string>
     <string name="and">Ir</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Naudotojas</string>
@@ -80,7 +80,7 @@
     <string name="configbuilder_sensitivity">Jautrumo nustatymas</string>
     <string name="configbuilder_aps">DKS</string>
     <string name="configbuilder_loop">Ciklas</string>
-    <string name="configbuilder_sync">Ryšys</string>
+    <string name="configbuilder_sync">Ryšiai</string>
     <string name="configbuilder_general">Bendrieji</string>
     <string name="protection">Apsauga</string>
     <string name="value_unavailable_short">n/a</string>
@@ -97,7 +97,7 @@
     <string name="treatments_iob_label_string">AIO:</string>
     <string name="mute5min">Nutildyti 5 min</string>
     <string name="mute">Nutildyti</string>
-    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Nutildyti</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Nutildyti signalą</string>
     <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Nutildyti ir uždaryti</string>
     <string name="success">Atlikta</string>
     <string name="advanced_settings_title">Papildomi nustatymai</string>
@@ -136,7 +136,7 @@
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Insulinas nepakeistas: %1$s Naudojamas ankstesnis insulinas.</string>
     <string name="insulin_activation_unconfirmed">Insulino pakeitimo patvirtinti nepavyko. Prieš leisdami insuliną patikrinkite, kuris insulinas aktyvuotas profilyje.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Insulinas nepakeistas. Toliau naudojamas ankstesnis insulinas.\n\n%1$s</string>
-    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulinas taip pat nepakeistas.</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulinas taip pat nebuvo pakeistas. Jei naujas insulinas jau pompoje, pompos neprijunkite ir dar kartą atlikite insulino keitimą.</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Data</string>
     <string name="insulin_nickname_label">Insulino pavadinimas</string>
@@ -226,11 +226,11 @@
     <string name="pump_wizard_profile_gate_pick">Pasirinkite profilį, kuris bus taikomas aktyvavus.</string>
     <string name="pump_wizard_profile_gate_no_store">Profilis nesukurtas. Atidarykite profilių valdymą, sukurkite profilį ir pradėkite aktyvavimą iš naujo.</string>
     <string name="reset">Nustatyti iš naujo</string>
-    <string name="profileswitch_ismissing">Neatliktas profilio keitimas. Prašome atlikti profilio keitimą arba paspausti \"Aktyvuoti profilį\" Vietinio profilio (VP) skiltyje.</string>
+    <string name="profileswitch_ismissing">Neatliktas profilio keitimas. Atlikite profilio keitimą arba paspauskite \"Aktyvuoti profilį\" Vietinio profilio (VP) skiltyje.</string>
     <string name="profile">Profilis</string>
     <string name="percentage_label">Procentais</string>
     <string name="timeshift_label">Laiko perstūmimas</string>
-    <string name="confirm_remove_multiple_items">Ar tikrai norite pašalinti %1$d elementus</string>
+    <string name="confirm_remove_multiple_items">Ar tikrai norite pašalinti %1$d elementus?</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Pagrindinėje AAPS programėlėje trūksta %1$d šių įrašų. Jie nebus pašalinti.</string>
     <string name="overview_treatment_label">Terapija</string>
     <string name="copytolocalprofile">Kurti naują profilį iš šito profilio?</string>
@@ -435,7 +435,7 @@
     <string name="client_role_title">Vaidmuo</string>
     <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Vaidmuo: %1$s</string>
     <string name="client_roles_info_open">Apie vaidmenis</string>
-    <string name="client_roles_info">Kiekvienas susietas telefonas turi savo vaidmenį. Pagrindinis telefonas jį patikrina vykdydamas kiekvieną komandą, o susietame telefone rodomos tik tam vaidmeniui leidžiamos funkcijos. Pakeitus vaidmenį, jis įsigalioja iš karto – susieti iš naujo nereikia.\n\nTik peržiūra: telefonas lieka susietas, tačiau gali tik rodyti duomenis.\n\nMaistas: leidžiama naudoti bolusą, boluso patarėją, Greitąjį vedlį ir įvesti angliavandenius. Taip pat galima sustabdyti vykdomą bolusą. Čia įvesti angliavandeniai gali paskatinti algoritmą skirti daugiau insulino.\n\nPrižiūrintis asmuo: leidžiama atlikti visus įprastus AAPS naudotojo veiksmus, pavyzdžiui, keisti laikiną gliukozės tikslą, profilį ar insuliną, ciklo režimą, laikiną bazę, ištęstą bolusą, scenarijus, terapijos įrašus, kalibravimus ir šalinti įrašus. Nustatymų ir ruošinių keisti negalima.\n\nAdministratorius: leidžiama viskas, įskaitant nustatymų ir ruošinių keitimą: Greitąjį vedlį, laikino gliukozės tikslo ruošinius, scenarijus, profilius, automatizaciją ir insuliną.</string>
+    <string name="client_roles_info">Kiekvienas susietas telefonas turi savo vaidmenį. Pagrindinis telefonas jį patikrina vykdydamas kiekvieną komandą, o susietame telefone rodomos tik tam vaidmeniui leidžiamos funkcijos. Pakeitus vaidmenį, jis įsigalioja iš karto – susieti iš naujo nereikia.\n\nTik peržiūra: telefonas yra susietas, tačiau gali tik rodyti duomenis.\n\nMaistas: leidžiama naudoti bolusus, boluso patarėją, greitąjį vedlį ir įvesti angliavandenius. Galima sustabdyti pradėtą bolusą. Įvesti angliavandeniai gali paskatinti algoritmą skirti daugiau insulino.\n\nPrižiūrintis asmuo: leidžiama atlikti visus įprastus AAPS naudotojo veiksmus: keisti laikiną tikslą, profilį ar insuliną, ciklo režimą, laikiną bazę, ištęstą bolusą, scenarijus, terapijos įrašus, kalibravimus ir šalinti įrašus. Nustatymų ir ruošinių keisti negalima.\n\nAdministratorius: leidžiama viskas, įskaitant nustatymų ir ruošinių keitimą, greitąjį vedlį, laikino tikslo ruošinius, scenarijus, profilius, automatizacijas ir insuliną.</string>
     <string name="client_read_only_banner">Šiam telefonui pagrindiniame telefone nustatytas tik peržiūros vaidmuo.</string>
     <string name="hardened_mode_info">Pagrindinis telefonas priima pakeitimus tik iš susietų klientų. Jis nepriima terapijos įrašų, laikinų gliukozės tikslų, profilio pakeitimų, veikimo režimo pakeitimų ar įrašų šalinimo, jei šie pakeitimai atliekami tiesiogiai per Nightscout. Kai įjungtas sustiprintos apsaugos režimas, nustatymai, leidžiantys priimti duomenis iš Nightscout, yra paslėpti. SMS komandoms tai įtakos neturi.\n\nPagrindinis telefonas ir toliau siunčia visus duomenis į Nightscout, įskaitant gliukozės duomenis. Jei gliukozės duomenys gaunami iš Nightscout, jie ir toliau bus priimami iš ten.\n\nNorėdami įkelti istorinius duomenis į naują pagrindinį telefoną, NSClient naudokite pilną sinchronizavimą. Pilno sinchronizavimo metu įkeliami visi Nightscout esantys duomenys, įskaitant profilius.\n\nNuotoliniam valdymui iš klientų reikia veikiančio WebSocket ryšio su Nightscout tiek pagrindiniame telefone, tiek susietuose klientuose. Paprastasis režimas visada įjungia sustiprintos apsaugos režimą. Norėdami jį išjungti, išeikite iš paprastojo režimo ir pagrindiniame telefone išjunkite klientų valdymą.</string>
     <string name="scene_lock_reason_master_offline">Pagrindinis įrenginys atsijungęs</string>
@@ -528,12 +528,12 @@
     <string name="user_entry">Naudotojo įrašas</string>
     <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Iš piršto</string>
-    <string name="glucosetype_sensor">Sensorius</string>
+    <string name="glucosetype_sensor">Jutiklis</string>
     <string name="manual">Rankiniu būdu</string>
     <string name="unknown">Nežinoma</string>
     <string name="eatingsoon">Netrukus valgysiu</string>
     <string name="hypo">Hipo</string>
-    <string name="activity">Sportas</string>
+    <string name="activity">Aktyvumas</string>
     <string name="wear">Išmanieji laikrodžiai</string>
     <string name="automation">Automatizacija</string>
     <string name="automation_management_desc">Kurkite taisykles, kurios automatiškai atliks veiksmus pagal nustatytas sąlygas</string>
@@ -661,7 +661,7 @@
     <string name="uel_ns_queue_cleared">NS EILĖ IŠVALYTA</string>
     <string name="uel_ns_settings_copied">NS NUSTATYMAI KOPIJUOTI</string>
     <string name="uel_error_dialog_ok">DIALOGO KLAIDA OK</string>
-    <string name="uel_error_dialog_mute">DIALOGO KLAIDA NUTILDYTI </string>
+    <string name="uel_error_dialog_mute">KLAIDOS LANGAS NUTILDYTAS</string>
     <string name="uel_error_dialog_mute_5min">NUTILDYTI KLAIDOS PRANEŠIMĄ 5MIN</string>
     <string name="uel_objective_started">ETAPAS PRADĖTAS</string>
     <string name="uel_objective_unstarted">ETAPAS NEPRADĖTAS</string>
@@ -726,7 +726,7 @@
     <string name="error_in_isf_values">JIF reikšmės klaida</string>
     <string name="error_in_basal_values">Bazės reikšmių klaida</string>
     <string name="error_in_target_values">Klaidinga glikemijos tikslo reikšmė</string>
-    <string name="profile_name_contains_dot">Profilio pavadinime yra taškų.\nŠios funkcijos NS nepalaiko.\nProfilis nebus įkeltas į NS.</string>
+    <string name="profile_name_contains_dot">Kai kurių profilių pavadinimuose yra taškų.\nNS to nepalaiko.\nProfiliai nebus įkelti į NS.</string>
     <string name="invalid_profile_not_accepted">Neteisingas profilis %1$s nepriimtas iš NS</string>
     <string name="errors">Klaidos</string>
     <!-- Command Queue + readStatus reasons -->
@@ -789,6 +789,7 @@
     <string name="wizard_set_alarm">Nustatyti įspėjimą</string>
     <string name="eat_reminder_title">Laikas valgyti</string>
     <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Skambės %1$s</string>
     <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Bendra laukimo trukmė: %1$s</string>
     <string name="eat_reminder_rung">Laikas baigėsi</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
@@ -870,7 +871,7 @@
     <string name="message">Pranešimas</string>
     <string name="ok">OK</string>
     <string name="cancel">Atšaukti</string>
-    <string name="dismiss">Atmesti</string>
+    <string name="dismiss">Gerai</string>
     <string name="yes">Taip</string>
     <string name="no">Ne</string>
     <string name="close">Uždaryti</string>
@@ -891,7 +892,7 @@
     <string name="export_result_message_exported">Nustatymai eksportuoti</string>
     <string name="export_result_message_failed">Nustatymų eksportas NEPAVYKO!</string>
     <string name="export_result_message_about_to_expire">Nustatymai eksportuoti: slaptažodis greitai baigs galioti. Eksportuokite rankiniu būdu ir (pakartotinai) įveskite slaptažodį.</string>
-    <string name="export_result_message_expired">Nustatymų eksportavimas atšauktas: slaptažodis pasibaigęs. Eksportuokite rankiniu būdu ir (pakartotinai) įveskite!</string>
+    <string name="export_result_message_expired">Nustatymų eksportavimas atšauktas: slaptažodis nebegalioja. Eksportuokite rankiniu būdu ir vėl įveskite slaptažodį!</string>
     <string name="export_result_message_disabled">Įspėjimas (automatizacija): Nustatymų eksportavimas neįjungtas!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Sėkmingai eksportuota į debesį</string>
@@ -992,13 +993,13 @@
     <string name="device_maintenance">Įrenginio priežiūra</string>
     <string name="from_label">Nuo</string>
     <string name="to_label">Iki</string>
-    <string name="sensor_label">Sensorius</string>
+    <string name="sensor_label">Jutiklis</string>
     <string name="insulin_label">Insulinas</string>
     <string name="pb_label">Pompos baterija</string>
     <string name="cannula">Kaniulė</string>
     <string name="patch_pump">Patch pompa</string>
     <!-- Site Rotation -->
-    <string name="select_location">Paspauskite ir pasirinkite vietą</string>
+    <string name="select_location">Palieskite žemiau, kad pasirinktumėte vietą</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="fabric_upload_disabled">Sutrikimų žurnalo įrašų įkėlimas išjungtas!</string>
@@ -1053,7 +1054,7 @@
     <string name="unsaved_changes">Neišsaugoti pakeitimai</string>
     <string name="unsaved_changes_message">Turite neišsaugotų pakeitimų. Ką norėtumėte daryti?</string>
     <string name="discard">Pašalinti</string>
-    <string name="ic_dynamic_label_warning">Algoritmas gali dinamiškai apskaičiuoti IA reikšmę. Pateiktos reikšmės naudojamos tik kaip atsarginis variantas, jei trūksta duomenų</string>
+    <string name="ic_dynamic_label_warning">Algoritmas gali dinamiškai apskaičiuoti IA. Žemiau esančios reikšmės naudojamos tik kaip atsarginės, jei trūksta duomenų, arba tik kaip orientacinės reikšmės</string>
     <string name="isf_dynamic_label_warning">Algoritmas gali dinamiškai apskaičiuoti JIF reikšmę. Pateiktos reikšmės naudojamos tik kaip atsarginis variantas, jei trūksta duomenų</string>
     <string name="add_time_block">Pridėti laiko intervalą</string>
     <string name="remove_entry">Pašalinti įrašą</string>
@@ -1070,6 +1071,8 @@
     <string name="wiki_search_offline">Norint ieškoti dokumentacijoje reikia interneto ryšio</string>
     <string name="no_search_results">Rezultatų nerasta</string>
     <string name="search_plugin_disabled">Įskiepis %1$s išjungtas</string>
+    <string name="search_recent">Paskutinės paieškos</string>
+    <string name="search_history_remove">Pašalinti iš paskutinių paieškų</string>
     <!--    Food Management -->
     <string name="food_management">Maistas</string>
     <string name="food_deleted">Maistas pašalintas</string>
@@ -1116,9 +1119,10 @@
     <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Bus pakeista nustatymų: %1$d. Įskiepiai, kurių nustatymai pasikeitė, bus paleisti iš naujo.</string>
     <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Bus pakeista nustatymų: %1$d. Pompos nustatymai išsaugoti: %2$d, todėl pompa veiks toliau.</string>
     <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Importuotuose nustatymuose pasirinkta pompa šiame telefone nepasiekiama. Dabar aktyvi %1$s – patikrinkite pompos nustatymus.</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">Iš atsarginės kopijos į jūsų insulinų sąrašą pridėta: %1$s. Dar nenaudojama: aktyvuodami profilį pasirinkite tinkamą insuliną ir tai padarykite, kol Nightscout dar neatsisiuntė senesnių terapijos įrašų.</string>
     <string name="import_applying">Taikomi nustatymai…</string>
     <string name="import_replace_pump_settings">Taip pat pakeisti pompos nustatymus</string>
-    <string name="import_replace_pump_settings_summary">Palikite išjungta, jei norite išsaugoti šiame telefone susietos pompos nustatymus. Įjunkite, jei atkuriate nustatymus naujame telefone ir naudosite tą pačią pompą.</string>
+    <string name="import_replace_pump_settings_summary">Palikite išjungtą, jei norite išsaugoti šiame telefone susietos pompos nustatymus. Įjunkite, jei atkuriate nustatymus naujame telefone ir naudosite tą pačią pompą.</string>
     <string name="import_apply_waiting">Laukiama pompos…</string>
     <string name="import_apply_pump_busy">Pompa vis dar užimta, todėl nustatymai nepritaikyti.</string>
     <string name="import_apply_retry_question">Bandyti dar kartą dabar?</string>
@@ -1212,5 +1216,6 @@
     <string name="units_sec">sek</string>
     <string name="units_years">m.</string>
     <string name="prefs_range_title">Vizualizacijos diapazonas</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">Pompa sustabdė bolusą suleidusi %1$s. Prieš leisdami kitą bolusą patikrinkite pompą.</string>
     <string name="secrets_not_protected">Šiame kompiuteryje nerasta sistemos raktų saugykla. Jūsų nustatymus ir susiejimą su pagrindine AAPS programėle saugantys raktai laikomi failuose šalia duomenų, todėl juos taip pat gaus kiekvienas, turintis šių failų kopiją. Linux sistemoje įdiekite ir paleiskite raktų saugyklą, pavyzdžiui, GNOME Keyring arba KWallet, tada paleiskite AAPS iš naujo.</string>
 </resources>
