@@ -2,26 +2,52 @@
 <resources>
     <string name="error_field_must_not_be_empty">Dette felt må ikke være tomt</string>
     <string name="error_mustbe4hexadidits">Skal være 4 tegn af ABCDEF0123456789</string>
+    <string name="authorized_clients_manage_label">Godkendte klienter</string>
+    <string name="authorized_clients_manage_desc">Administrer parrede klientenheder, der styrer denne hovedtelefon.</string>
+    <string name="pair_with_master_manage_label">Par med hovedtelefon</string>
+    <string name="pair_with_master_manage_desc">Indtast hovedtelefonens parrings-PIN, så denne klient kan sende signerede kommandoer.</string>
     <!--    General-->
+    <string name="treatments">Behandlinger</string>
+    <string name="treatments_history">Behandlingshistorik</string>
+    <string name="treatments_desc">Se og administrer behandlingshistorik</string>
+    <string name="nav_configuration">Konfiguration</string>
+    <string name="nav_configuration_desc">Opsæt din konfiguration (CGM, pumpe, ...) og aktiver funktioner</string>
     <string name="count_selected">%1$d valgt</string>
+    <string name="delete">Slet</string>
     <string name="show_invalidated">Vis ugyldige</string>
     <string name="hide_invalidated">Skjul ugyldige</string>
+    <string name="more_options">Flere valgmuligheder</string>
     <string name="refresh">Opdatér</string>
+    <string name="no_history_records">Ingen poster fundet</string>
     <string name="error">Fejl</string>
+    <string name="navigation_error_screen_not_found">Skærmen kunne ikke åbnes (ikke tilgængelig i denne konfiguration)</string>
     <string name="profile_set_ok">Basal profil i pumpen er opdateret</string>
     <string name="invalid_input">Ugyldigt input</string>
+    <string name="invalid_number">Ugyldigt tal</string>
     <string name="constraint_applied">Begrænsning anvendt!</string>
     <string name="tt_label">Midlertidig Mål</string>
     <string name="pump_unreachable">Pumpe utilgængelig</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">Pumpedriveren svarer ikke. \"%1$s\" har kørt i %2$d min, og ingen anden kommando kan nå pumpen. Tjek pumpen, og genstart derefter AAPS.</string>
     <string name="insulin_unit_shortname">IE</string>
     <string name="pump_base_basal_rate">%1$.2f E/t</string>
+    <string name="pump_base_basal_rate_dynamic">%1$s E/t</string>
     <string name="pump_not_initialized_profile_not_set">Pumpe ikke initialiseret, profil ikke angivet!</string>
     <string name="failed_update_basal_profile">Opdatering af basal profil mislykkedes</string>
     <string name="no_valid_basal_rate">Ingen gyldig basal rate læst fra pumpen</string>
     <string name="limiting_iob">Begrænser IOB til %1$.1f IE på grund af %2$s</string>
+    <string name="loop_disabled_by_user">Loop deaktiveret af bruger</string>
     <string name="event_type">Hændelsestype</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="bg_mgdl">%1$d mg/dl</string>
+    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Gem</string>
+    <string name="skip">Spring over</string>
+    <string name="switch_to_edit">Rediger</string>
     <string name="snooze">Udsæt</string>
+    <string name="snooze_15m">Udsæt 15 min</string>
+    <string name="snooze_30m">Udsæt 30 min</string>
+    <string name="snooze_60m">Udsæt 60 min</string>
     <string name="virtual_pump">Virtuel pumpe</string>
     <string name="constraints">Begrænsninger</string>
     <string name="superbolus">Superbolus</string>
@@ -30,14 +56,31 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Bruger</string>
     <string name="result">Resultat</string>
     <string name="settings">Indstillinger</string>
+    <string name="open_plugin">Åbn plugin</string>
+    <string name="configbuilder_pick_one_hint">Vælg én. Kun én kan være aktiv ad gangen.</string>
+    <string name="configbuilder_pick_many_hint">Vælg hvad der gælder.</string>
+    <string name="configbuilder_no_selection_warning">Intet plugin er valgt i denne kategori.</string>
+    <string name="configbuilder_switch_confirmation_title">Skift plugin?</string>
+    <string name="configbuilder_switch_confirmation">Dette deaktiverer %1$s og aktiverer %2$s.</string>
+    <string name="expand">Udvid</string>
+    <string name="collapse">Fold sammen</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Fuldført</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Foldet ud</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Foldet sammen</string>
+    <string name="no_compose_preferences">Ingen indstillinger tilgængelige for dette plugin</string>
+    <string name="confirm_password_hint">Bekræft adgangskode</string>
+    <string name="confirm_pin_hint">Bekræft PIN</string>
+    <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Status lys</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="configbuilder_bgsource">BG kilde</string>
     <string name="configbuilder_smoothing">Udjævning</string>
+    <string name="configbuilder_calibration">Kalibrering</string>
     <string name="configbuilder_pump">Pumpe</string>
     <string name="configbuilder_sensitivity">Detektering af følsomhed</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_sync">Kommunikation</string>
     <string name="configbuilder_general">Generelt</string>
     <string name="protection">Beskyttelse</string>
     <string name="value_unavailable_short">ikke tilgængelig</string>
@@ -45,6 +88,7 @@
     <string name="ue_export_to_csv">Eksporter brugerindtastninger til Excel (csv)</string>
     <string name="confirm">Bekræft</string>
     <string name="pump">Pumpe</string>
+    <string name="pump_management">Pumpe</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader">Uploader</string>
@@ -53,21 +97,51 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Lydløs i 5 minutter</string>
     <string name="mute">Lydløs</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Gør alarmen lydløs</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Lydløs og luk</string>
     <string name="success">Succes</string>
     <string name="advanced_settings_title">Avancerede indstillinger</string>
     <string name="extended_bolus">Forlænget bolus</string>
     <string name="paused">Pauset</string>
+    <string name="running">Kører</string>
     <string name="tdd_total">TDD Total</string>
+    <string name="tdd_old_data">Gamle data</string>
     <string name="goingtodeliver">Leverer %1$.2f IE</string>
+    <string name="carbs_not_saved_after_bolus">Bolus leveret, men kulhydraterne kunne ikke gemmes. Indtast kulhydraterne igen.</string>
     <string name="androidaps_start">AAPS startet</string>
+    <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f t</string>
+    <string name="format_mins">%1$d min</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
+    <string name="value_question" comment="Asks if this should be done. %1$s=what will be done. Example: Send logs?">%1$s?</string>
+    <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
+    <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
+    <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
+    <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">Mål</string>
     <string name="please_wait">Vent venligst…</string>
     <string name="stop">Stop</string>
+    <string name="stop_pressed">STOP TRYKKET</string>
     <string name="invalid_profile">Ugyldig profil!</string>
     <string name="no_profile_set">INGEN PROFIL SAT</string>
+    <string name="profile_switch_no_insulin">Kan ikke skifte profil: ingen insulin er i brug, og ingen blev valgt.</string>
+    <string name="scene_no_profile_before">Ingen profil var i brug, før scenen startede.</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">Scenen %1$s er slut, men dens profil er stadig i brug. %2$s Aktiver en profil manuelt.</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Dette midlertidige skift har %1$s, men den faste profil under det har %2$s. Aktiver først den insulin, der er i pumpen, i insulinindstillingerne.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Tidspunktet for profilskiftet skal være inden for %1$d timer fra nu.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Det midlertidige mål skal starte inden for %1$d timer fra nu.</string>
+    <string name="profile_switch_select_insulin_hint">Ingen insulin er i brug endnu. Vælg den insulin, du bruger, så dette profilskift kan registrere den.</string>
+    <string name="insulin_activation_failed">Insulinen blev ikke skiftet. Din tidligere insulin er stadig i brug.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Insulinen blev ikke skiftet: %1$s Din tidligere insulin er stadig i brug.</string>
+    <string name="insulin_activation_unconfirmed">Insulinskiftet kunne ikke bekræftes. Tjek hvilken insulin der er aktiv i din profil, før du doserer.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Insulinen blev ikke skiftet. Din tidligere insulin bruges stadig.\n\n%1$s</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulinen blev heller ikke skiftet. Hvis den nye insulin allerede er i pumpen, så tilslut ikke pumpen, og udfør insulinskiftet igen.</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Dato</string>
+    <string name="insulin_nickname_label">Insulinens kaldenavn</string>
+    <string name="concentration_label">Koncentration</string>
+    <string name="peak_label">Spids</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
     <string name="isf_label">ISF</string>
@@ -86,28 +160,43 @@
     <string name="removerecord">Fjern registrering</string>
     <string name="loopisdisabled">Loop er deaktiveret</string>
     <string name="alarm">Alarm</string>
+    <string name="exportsettings">Eksporter indstillinger</string>
     <string name="disableloop">Deaktivér loop</string>
+    <string name="disabled_loop">Deaktiveret loop</string>
     <string name="resumeloop">Genoptag loop</string>
     <string name="suspendloop">Suspendér Loop</string>
     <string name="notification">Notifikation</string>
     <string name="noprofile">Ingen profil er indlæst fra NS endnu</string>
     <string name="exists">eksisterer</string>
+    <string name="notexists">findes ikke</string>
     <string name="glucose">Glukose</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="name_short">Navn:</string>
     <string name="time">Tid</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="loading">Indlæser…</string>
+    <string name="waiting_for_pump">Venter på pumpe…</string>
+    <string name="initialization_failed">Initialisering mislykkedes</string>
     <string name="notes_label">Bemærkninger</string>
     <string name="wrong_pump_data">Data kommer fra en anden pumpe. Skift pumpedriver for at nulstille pumpetilstand.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibrering</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Kalibrering ikke gemt: BS ændrer sig for hurtigt (Δ %1$s %3$s pr. 5 min, grænse %2$s). Prøv igen, når glukosen er stabil.</string>
+    <string name="cal_reject_no_pair">Kalibrering ikke gemt: ingen CGM-værdi fundet i de sidste 10 minutter.</string>
+    <string name="cal_reject_warmup">Kalibrering ikke gemt: sensoren er stadig i 2-timers opvarmningsvinduet.</string>
+    <string name="cal_reject_no_session">Kalibrering ikke gemt: ingen sensorsession er aktiv. Registrer et sensorskift først.</string>
     <string name="cgm">CGM</string>
+    <string name="treatmentdeliveryerror">Bolus rapporterede en fejl. Kontroller manuelt den faktisk leverede mængde insulin og kulhydrater</string>
+    <string name="bolus_reminder">Påmind om bolus, når BS er normalt igen</string>
     <string name="duration_label">Varighed</string>
     <string name="shortgramm">g</string>
+    <string name="pump_running">Pumpe kører</string>
     <string name="notconfigured">Ikke konfigureret</string>
+    <string name="loop_suspended_by_dst">Loop suspenderet pga. sommertid</string>
     <string name="required">krævet</string>
+    <string name="a11y_arrow_triple_down">falder meget hurtigt</string>
     <string name="a11y_arrow_double_down">falder hurtigt</string>
     <string name="a11y_arrow_single_down">falder</string>
     <string name="a11y_arrow_forty_five_down">falder langsomt</string>
@@ -115,30 +204,65 @@
     <string name="a11y_arrow_forty_five_up">stiger langsomt</string>
     <string name="a11y_arrow_single_up">stiger</string>
     <string name="a11y_arrow_double_up">stiger hurtigt</string>
+    <string name="a11y_arrow_triple_up">stiger meget hurtigt</string>
     <string name="a11y_arrow_none">ingen</string>
     <string name="a11y_arrow_unknown">ukendt</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">sænk %1$s med %2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">øg %1$s med %2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">åbn %1$s for indtastning</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">luk %1$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Flyt op</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Flyt ned</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Trin %1$d af %2$d</string>
     <string name="decrement">formindskelse</string>
     <string name="increment">forøgelse</string>
     <string name="a11y_high">høj</string>
     <string name="a11y_inrange">inden for området</string>
     <string name="a11y_low">lav</string>
+    <string name="remove_label">Fjern</string>
     <string name="activate_profile">Aktivér profil</string>
+    <string name="activate_insulin">Aktiver insulin</string>
+    <string name="pump_wizard_profile_gate_title">Profil påkrævet</string>
+    <string name="pump_wizard_profile_gate_pick">Vælg den profil, der skal bruges ved aktivering.</string>
+    <string name="pump_wizard_profile_gate_no_store">Ingen profil defineret. Åbn profiladministration for at oprette en, og start derefter aktiveringen igen.</string>
+    <string name="reset">Nulstil</string>
+    <string name="profileswitch_ismissing">Profilskift mangler. Lav et profilskift, eller tryk på \"Aktiver profil\" i Lokal profil.</string>
     <string name="profile">Profil</string>
     <string name="percentage_label">Procentdel</string>
     <string name="timeshift_label">Tidsskift</string>
+    <string name="confirm_remove_multiple_items">Er du sikker på, at du vil fjerne %1$d elementer?</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Hovedtelefonen har ikke %1$d af disse poster. De bliver ikke fjernet.</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="copytolocalprofile">Opret ny profil fra denne profil?</string>
+    <string name="wear_wizard_settings">Indstillinger for beregner på ur</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="invalid">UGYLDIG</string>
     <string name="login">Log ind</string>
     <string name="logout">Log af</string>
     <string name="prime_fill">Prime / Fyld</string>
+    <string name="prime_not_available">Denne pumpe fylder og klargør sig selv under aktiveringen. Klargør/Fyld fra AAPS er ikke tilgængelig.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Skift</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Fyld</string>
+    <string name="site_rotation">Rotation af indstikssteder</string>
+    <string name="edit_site">Rediger</string>
+    <string name="select_arrow">Vælg pil</string>
+    <string name="site_filter_info">Vælg den type behandlingshændelse, du vil se: kanyleskift og/eller sensorskift</string>
+    <string name="selected_location">Valgt: %1$s</string>
+    <string name="last_site_location">Sidste sted: %1$s</string>
+    <string name="pick_site">Vælg sted</string>
+    <string name="select_site_location">Vælg indstikssted</string>
+    <string name="site_location">Indstikssted</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="stoptemptarget">Stop midlertidig mål</string>
     <string name="closedloop">Lukket Loop</string>
     <string name="openloop">Åben Loop</string>
     <string name="lowglucosesuspend">Lav glukose suspendering</string>
+    <string name="pump_suspended">Pumpe sat på pause</string>
+    <string name="pump_suspend">Sæt pumpe på pause</string>
+    <string name="pump_resume">Genoptag pumpe</string>
+    <string name="mode_reverted">Tilstand gendannet</string>
+    <string name="select_insulin">Vælg insulin</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
@@ -146,11 +270,24 @@
     <string name="canceling_eb_failed">Annullering af forlænget bolus mislykkedes</string>
     <string name="virtualpump_uploadstatus_title">Upload pumpestatus til NS eller Tidepool</string>
     <string name="iob_label">Insulin om bord (IOB)</string>
+    <string name="loopstatus_targets">MÅL:</string>
+    <string name="loopstatus_OAPS_result">OAPS RESULTAT:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f IE ( %2$.2f E/t )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f E/t (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f E/t @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">E %1$.2f E/t @%2$s %3$s/%4$s min</string>
+    <string name="extended_bolus_medium">%1$.2f E/t %2$s/%3$s\'</string>
     <string name="nav_export">Eksporter indstillinger</string>
+    <string name="location_permission_not_granted">Tilladelse til placering er ikke givet. Tillad den i Android-indstillinger.</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
     <string name="not_available_full">Ikke tilgængelig</string>
+    <string name="not_implemented_yet">Denne funktion er endnu ikke klar på denne platform</string>
+    <string name="not_available_on_platform">Denne funktion er ikke tilgængelig på denne platform</string>
     <string name="engineering_mode_enabled">Engineering mode aktiveret</string>
+    <string name="back">Tilbage</string>
     <string name="next">Næste</string>
+    <string name="pref_syncs_with_main_phone">Synkroniseres med hovedtelefonen</string>
     <string name="show_hide_records">Skjul loop poster</string>
     <!--    Protection-->
     <string name="wrongpassword">Forkert kodeord</string>
@@ -159,6 +296,7 @@
     <string name="pin_dont_match">PIN-koder ikke identiske</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Start profil %1$d%% i %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Annuller midlertidig basal</string>
     <string name="let_temp_basal_run">Lad midlertidig basal køre</string>
@@ -167,10 +305,21 @@
     <string name="reason">Årsag</string>
     <string name="nochangerequested">Ingen ændring efterspurgt</string>
     <!--    Insulin / Concentration-->
+    <string name="ins_concentration_confirmed">Insulin %1$s bekræftet</string>
+    <string name="current_insulin">Aktiv nu</string>
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Bliver aktiveret</string>
+    <string name="change_insulin">Skift</string>
+    <string name="select_insulin_description">Vælg den insulin, du fylder i pumpen. Et profilskift udføres efter aktivering/klargøring.</string>
+    <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
+    <string name="selected_insulin">Valgt insulin: %1$s</string>
+    <string name="record_insulin_hint">Hvis du indtaster insulin givet med pen, så vælg den rigtige insulintype nedenfor. Dosis er altid i internationale enheder.</string>
     <!--       Stats -->
     <string name="average">Gennemsnit</string>
+    <string name="tir">Tid i målområde</string>
     <string name="below" comment="below &quot;in range&quot;">Under</string>
     <string name="in_range">Inden for området</string>
+    <string name="veryLow" comment="below 3.1">Meget lav</string>
     <string name="low" comment="3.1-3.9">Lav</string>
     <string name="high" comment="10.0-13.9">Høj</string>
     <string name="veryHigh" comment="above 13.9">Meget høj</string>
@@ -180,21 +329,34 @@
     <string name="night_tir">Nat TIR</string>
     <string name="hba1c">HbA1c: </string>
     <string name="std_deviation">SD: %1$s</string>
+    <string name="seven_days_short">7d</string>
+    <string name="thirty_days_short">30d</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">BS kontrol</string>
     <string name="careportal_mbg">Manuelt BS eller kalibrering</string>
     <string name="careportal_announcement">Meddelelse</string>
+    <string name="careportal_settings_export">Eksport af indstillinger</string>
     <string name="careportal_note">Notat</string>
     <string name="careportal_question">Spørgsmål</string>
     <string name="careportal_exercise">Motion</string>
+    <string name="careportal_announcement_message">Meddelelse: %1$s</string>
     <string name="careportal_note_message">Notat : %1$s</string>
+    <string name="careportal_question_message">Spørgsmål: %1$s</string>
     <string name="careportal_exercise_message">Motion: %1$s</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Skift af infusionssæt: %1$s</string>
     <string name="careportal_pump_site_change">Skift indstikssted</string>
+    <string name="cgm_sensor_insert">Sensorindstik</string>
+    <string name="careportal_pump_site_management">Indstikssteder for pumpe</string>
+    <string name="careportal_cgm_site_management">Indstikssteder for CGM</string>
+    <string name="careportal_cgmsensorstart">Sensorstart</string>
+    <string name="careportal_cgm_sensor_stop">Sensorstop</string>
     <string name="careportal_dad_alert">Diabeteshund alarm</string>
     <string name="careportal_insulin_cartridge_change">Skift af insulinampul</string>
     <string name="careportal_profileswitch">Profilskift</string>
+    <string name="profile_management">Profil</string>
     <string name="careportal_snackbolus">Snack Bolus</string>
     <string name="careportal_mealbolus">Måltidsbolus</string>
     <string name="careportal_correctionbolus">Korrektionsbolus</string>
@@ -205,25 +367,223 @@
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="pump_battery_change">Skift af pumpebatteri</string>
     <string name="temporary_target">Midlertidigt mål</string>
+    <string name="temporary_targets">Midlertidige mål</string>
+    <string name="running_mode">Loop-tilstand</string>
+    <string name="running_mode_desc">Luk eller åbn loopet, suspender det, eller afbryd pumpen</string>
+    <string name="running_mode_change_not_allowed">Ændring af loop-tilstand er ikke tilgængelig</string>
+    <string name="pump_reconnect">Genforbind pumpe</string>
+    <string name="scene">Scene</string>
+    <string name="scenes">Scener</string>
+    <string name="scene_desc">Forvalg til situationer — aktiver flere handlinger på én gang</string>
+    <string name="scene_activate">Aktiver</string>
+    <string name="scene_deactivate">Afslut scene</string>
+    <string name="scene_active">Aktiv</string>
+    <string name="scene_ended">Scene afsluttet</string>
+    <string name="scene_end_active">Afslut aktiv scene</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Spring til</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Opfølgende scene %1$s starter ikke</string>
+    <string name="scene_confirm_activate">Aktiver scene \"%1$s\"?</string>
+    <string name="scene_confirm_deactivate">Afslut scene \"%1$s\" og fortryd ændringer?</string>
+    <string name="scene_conflict_active_tt">Aktivt midlertidigt mål bliver erstattet</string>
+    <string name="scene_conflict_active_profile">Aktivt profilskift bliver erstattet</string>
+    <string name="scene_conflict_active_running_mode">Aktiv loop-tilstand bliver erstattet</string>
+    <string name="scene_conflict_active_scene">Aktiv scene \"%1$s\" afsluttes først</string>
+    <string name="scene_action_tt">Midlertidigt mål: %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profil: %1$s %2$d%%</string>
+    <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profil: %1$d%%</string>
+    <string name="scene_action_smb_on">Aktiver SMB</string>
+    <string name="scene_action_smb_off">Deaktiver SMB</string>
+    <string name="scene_action_running_mode">Loop-tilstand: %1$s</string>
+    <string name="scene_action_careportal">Registrer: %1$s</string>
+    <string name="scene_management">Scener</string>
+    <string name="scene_management_desc">Opret, rediger og administrer scener</string>
+    <string name="scene_start_from_template">Start fra skabelon</string>
+    <string name="scene_editor_target">Målværdi</string>
+    <string name="scene_editor_tt_preset">Forvalg for midlertidigt mål</string>
+    <string name="scene_editor_no_tt_presets">Ingen forvalg for midlertidigt mål er sat op</string>
+    <string name="scene_editor_select_tt_preset">Vælg et forvalg</string>
+    <string name="scene_editor_percentage">Procent</string>
+    <string name="scene_editor_profile">Profil</string>
+    <string name="scene_editor_keep_current_profile">-- Behold nuværende --</string>
+    <string name="scene_editor_mode">Tilstand</string>
+    <string name="scene_editor_event_type">Hændelsestype</string>
+    <string name="scene_editor_note">Notat</string>
+    <string name="scene_icon">Ikon</string>
+    <string name="scene_editor_enabled">Aktiveret</string>
+    <string name="scene_editor_disabled">Deaktiveret</string>
+    <string name="scene_summary">%1$d handlinger, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
+    <string name="scene_duration_indefinite">Ubegrænset (manuel afslutning)</string>
+    <string name="scene_some_actions_failed">Nogle handlinger mislykkedes</string>
+    <string name="scene_no_active">Ingen aktiv scene</string>
+    <string name="scene_some_reverts_failed">Nogle handlinger kunne ikke fortrydes</string>
+    <string name="scene_no_profile_store">Intet profillager tilgængeligt</string>
+    <string name="scene_no_actions">Scenen har ingen handlinger</string>
+    <string name="scene_profile_not_found">Profil \"%1$s\" ikke fundet</string>
+    <string name="scene_lock_banner_master_offline">Hovedtelefonen kan ikke nås. Scenestyring virker igen, når forbindelsen er genoprettet.</string>
+    <string name="scene_lock_banner_control_disabled">Hovedtelefonen har deaktiveret fjernstyring. Scenestyring virker igen, når den er aktiveret igen på hovedtelefonen.</string>
+    <string name="master_offline_banner">Hovedtelefonen kan ikke nås. Redigering er deaktiveret, indtil forbindelsen er genoprettet.</string>
+    <string name="master_control_disabled_banner">Hovedtelefonen har deaktiveret fjernstyring. Redigering er deaktiveret, indtil den er aktiveret igen på hovedtelefonen.</string>
+    <string name="hardened_mode_on">Hærdet tilstand til</string>
+    <string name="hardened_mode_title">Hærdet tilstand</string>
+    <string name="hardened_mode_info_open">Om hærdet tilstand</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Skrivebeskyttet</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Måltider</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Omsorgsperson</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Admin</string>
+    <string name="client_role_title">Rolle</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Rolle: %1$s</string>
+    <string name="client_roles_info_open">Om roller</string>
+    <string name="client_roles_info">Hver parret telefon har en rolle. Hovedtelefonen kontrollerer den for hver kommando, og telefonen viser kun det, som dens rolle tillader. En ny rolle gælder med det samme, uden ny parring.\n\nSkrivebeskyttet: telefonen forbliver parret, men viser kun data.\n\nMåltider: bolus, bolusberegner, Hurtigbolus og kulhydrater. Den kan også stoppe en igangværende bolus. Kulhydrater, der indtastes her, kan få loopet til at give mere insulin.\n\nOmsorgsperson: alt, hvad en bruger gør i AAPS, f.eks. midlertidige mål, profil- og insulinskift, loop-tilstand, midlertidig basal, forlænget bolus, scener, careportal-hændelser, kalibreringer og fjernelse af poster. Den kan ikke ændre indstillinger eller forvalg.\n\nAdmin: alt, også indstillinger og forvalg (Hurtigbolus, forvalg for midlertidige mål, scener, profiler, automatisering, insulin).</string>
+    <string name="client_read_only_banner">Denne telefon er skrivebeskyttet på hovedtelefonen.</string>
+    <string name="hardened_mode_info">Hovedtelefonen tager kun imod ændringer fra parrede klienter. Den tager ikke imod behandlinger, midlertidige mål, profilændringer, ændringer af loop-tilstand eller sletninger, der laves direkte i Nightscout, f.eks. på hjemmesiden eller i andre apps. Indstillingerne for at modtage data fra Nightscout er skjult, mens hærdet tilstand er slået til. SMS-kommandoer påvirkes ikke.\n\nHovedtelefonen uploader stadig alle data til Nightscout, også BS. Hvis den får sit BS fra Nightscout, henter den stadig BS derfra.\n\nFor at hente historikken til en ny hovedtelefon skal du bruge Fuld synkronisering i NSClient. Fuld synkronisering henter alt, hvad der er i Nightscout, også profiler.\n\nFjernstyring fra klienter kræver en fungerende WebSocket-forbindelse til Nightscout på hovedtelefonen og på de parrede klienter. Simpel tilstand slår altid hærdet tilstand til. For at slå den fra skal du forlade simpel tilstand og slå klientstyring fra på hovedtelefonen.</string>
+    <string name="scene_lock_reason_master_offline">Forbindelse til hovedtelefon afbrudt</string>
+    <string name="scene_lock_reason_control_disabled">Fjernstyring deaktiveret</string>
+    <string name="scene_lock_reason_scene_active">Stop den kørende scene først</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">Sæt midlertidigt mål</string>
+    <string name="clientcontrol_action_cancel_temp_target">Annuller midlertidigt mål</string>
+    <string name="clientcontrol_action_activate_scene">Aktiver scene %1$s</string>
+    <string name="clientcontrol_action_deactivate_scene">Afslut scene</string>
+    <string name="clientcontrol_action_update_settings">Opdater indstillinger</string>
+    <string name="clientcontrol_action_deliver_bolus">Tilfør bolus</string>
+    <string name="clientcontrol_action_eat_reminder">Ændre spisepåmindelse</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">Denne enhed er ikke parret med en hovedtelefon.</string>
+    <string name="clientcontrol_fail_not_reachable">Hovedtelefonen er offline.</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">Pumpekonfigurationen er ikke synkroniseret med hovedtelefonen. Prøv igen.</string>
+    <string name="clientcontrol_fail_no_reply">Intet svar fra hovedtelefonen i tide.</string>
+    <string name="clientcontrol_fail_expired">Kommandoen udløb, før hovedtelefonen udførte den.</string>
+    <string name="clientcontrol_fail_busy">En anden handling er allerede i gang.</string>
+    <string name="clientcontrol_fail_send_failed">Kunne ikke nå Nightscout.</string>
+    <string name="clientcontrol_fail_no_active_profile">Hovedtelefonen har ingen aktiv profil at anvende den på.</string>
+    <string name="clientcontrol_fail_scene_not_found">Scenen findes ikke længere.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">Posten for indstiksstedet findes ikke længere.</string>
+    <string name="clientcontrol_fail_scene_disabled">Scenen er deaktiveret.</string>
+    <string name="clientcontrol_fail_partial">Nogle handlinger kunne ikke udføres.</string>
+    <string name="clientcontrol_fail_execution">Hovedtelefonen kunne ikke udføre den.</string>
+    <string name="clientcontrol_fail_cancelled">Kommandoen blev annulleret, før den blev kørt. Intet blev sendt til pumpen.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus annulleret. Der blev ikke givet insulin.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Annulleret</string>
+    <string name="smb_paused_for_bolus" comment="Loop status: why no SMB was given. The user is confirming a bolus that was calculated without this SMB.">Ingen SMB mens en bolus venter på bekræftelse</string>
+    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">En SMB bliver leveret. Du kan bekræfte, når den er færdig.</string>
+    <string name="clientcontrol_fail_control_disabled">Fjernstyring er slået fra på hovedtelefonen.</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">Denne telefons rolle på hovedtelefonen tillader ikke dette.</string>
+    <string name="clientcontrol_fail_other_token">Hovedtelefonen afviste det: denne telefon skriver til Nightscout med et andet token end sit eget. Fjern denne telefon på hovedtelefonen, og tilføj den igen.</string>
+    <string name="clientcontrol_fail_no_pending_bolus">Den forberedte bolus er udløbet eller er blevet erstattet. Tryk på knappen igen.</string>
+    <string name="clientcontrol_fail_bolus_compute">Hovedtelefonen kunne ikke beregne bolussen (mangler glukose/profil, eller pumpen er ikke klar).</string>
+    <string name="clientcontrol_fail_internal">Noget gik galt.</string>
+    <string name="clientcontrol_fail_unknown">Kommandoen mislykkedes.</string>
+    <string name="clientcontrol_unconfirmed_wear">Status ukendt — tjek telefon/Nightscout, før du giver bolus igen.</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">Forbindelse mistet — leveringsstatus ukendt</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Denne telefon modtager ikke længere opdateringer fra hovedtelefonen. Bolussen kan stadig være i gang, eller den kan være færdig. Hvis du lukker dette, skjules det kun her — det stopper ikke pumpen. Tjek på hovedtelefonen, hvor meget der faktisk blev leveret.</string>
+    <string name="scene_revert_tt">Annuller midlertidigt mål</string>
+    <string name="scene_revert_profile">Fortryd profilskift</string>
+    <string name="scene_revert_smb_on">Aktiver SMB igen</string>
+    <string name="scene_revert_smb_off">Deaktiver SMB</string>
+    <string name="scene_revert_loop_mode">Annuller ændring af loop-tilstand</string>
+    <string name="scene_careportal_no_revert">Careportal-poster bliver ikke fortrudt</string>
+    <string name="careportal_sickness">Sygdom</string>
+    <string name="careportal_stress">Stress</string>
+    <string name="careportal_pre_period">Før menstruation</string>
+    <string name="careportal_alcohol">Alkohol</string>
+    <string name="careportal_cortisone">Kortison</string>
+    <string name="careportal_feeling_low">Føler mig lav</string>
+    <string name="careportal_feeling_high">Føler mig høj</string>
+    <string name="careportal_falling_asleep">Falder i søvn</string>
+    <string name="careportal_waking_up">Vågner</string>
     <string name="careportal_temporarytargetvalue">Midlertidig mål værdi</string>
     <string name="careportal_temporarytargetcancel">Afslut midlertidigt mål</string>
     <string name="boluswizard">Bolusberegner</string>
+    <string name="treatment_desc">Registrer insulin og kulhydrater sammen</string>
+    <string name="treatment_insulin_desc">Giv bolus manuelt</string>
+    <string name="treatment_carbs_desc">Registrer kulhydrater uden insulin</string>
+    <string name="treatment_calculator_desc">Beregn bolus</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Insulinindstillinger</string>
+    <string name="manage_insulin_desc">Administrer og aktiver insulinkonfigurationer</string>
+    <string name="concentration_disable_blocked">Kan ikke deaktivere understøttelse af koncentration, mens der findes insuliner, der ikke er U100. Fjern først alle insulinkonfigurationer, der ikke er U100, og skift til en U100-profil.</string>
+    <string name="simple_mode_blocked_by_concentration">Kan ikke aktivere simpel tilstand, mens du bruger insulin, der ikke er U100. Skift først til U100-insulin.</string>
+    <string name="manage_profile_desc">Administrer og aktiver profiler</string>
+    <string name="manage_temp_target_desc">Administrer og sæt midlertidige mål</string>
+    <string name="manage_temp_basal_desc">Start midlertidig basal</string>
+    <string name="manage_extended_bolus_desc">Start forlænget bolus</string>
+    <string name="manage_site_rotation_desc">Registrer og roter indstikssteder</string>
+    <string name="manage_quickwizard_desc">Administrer forvalg til hurtigbolus</string>
+    <string name="treatment_note_desc">Tilføj et notat til dine registreringer</string>
+    <string name="treatment_question_desc">Registrer et spørgsmål til dit behandlerteam</string>
+    <string name="treatment_cgm_desc">Åbn CGM-app</string>
+    <string name="treatment_calibration_desc">Kalibrer CGM-sensor</string>
+    <string name="treatment_bg_check_desc">Registrer blodsukkerkontrol</string>
+    <string name="treatment_exercise_desc">Registrer motion</string>
+    <string name="treatment_announcement_desc">Send meddelelse</string>
+    <string name="treatment_sensor_insert_desc">Registrer indstik af CGM-sensor</string>
+    <string name="treatment_battery_change_desc">Registrer skift af pumpebatteri</string>
+    <string name="treatment_cannula_change_desc">Registrer skift af kanyle/infusionssæt</string>
+    <string name="treatment_fill_desc">Klargør og fyld kanyle</string>
+    <string name="temp_basal">Midlertidig basal</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Over profil</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Under profil</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Ingen</string>
     <string name="user_entry">Bruger indtastning</string>
+    <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manuel</string>
+    <string name="unknown">Ukendt</string>
     <string name="eatingsoon">Spiser snart</string>
     <string name="hypo">Hypo</string>
     <string name="activity">Aktivitet</string>
     <string name="wear">Ur</string>
     <string name="automation">Automatisering</string>
+    <string name="automation_management_desc">Opret regler, der udfører handlinger automatisk ud fra udløsere</string>
+    <string name="settingsexport">Eksport af indstillinger</string>
     <string name="custom">Brugerdefineret</string>
+    <string name="preset_settings">Indstillinger for forvalg</string>
+    <string name="activation">Aktivering</string>
+    <string name="temp_target_management">Midlertidigt mål</string>
+    <string name="revert_to_defaults">Gendan standardværdier</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
+    <string name="location_front_right_upper_chest">Højre bryst</string>
+    <string name="location_front_left_upper_chest">Venstre bryst</string>
+    <string name="location_side_right_upper_arm">Højre overarm, yderside</string>
+    <string name="location_side_left_upper_arm">Venstre overarm, yderside</string>
+    <string name="location_back_right_upper_arm">Højre overarm, bagside</string>
+    <string name="location_back_left_upper_arm">Venstre overarm, bagside</string>
+    <string name="location_side_right_upper_abdomen">Højre mave øverst, side</string>
+    <string name="location_side_left_upper_abdomen">Venstre mave øverst, side</string>
+    <string name="location_side_right_lower_abdomen">Højre mave nederst, side</string>
+    <string name="location_side_left_lower_abdomen">Venstre mave nederst, side</string>
+    <string name="location_front_right_upper_abdomen">Højre mave øverst, forside</string>
+    <string name="location_front_left_upper_abdomen">Venstre mave øverst, forside</string>
+    <string name="location_front_right_lower_abdomen">Højre mave nederst, forside</string>
+    <string name="location_front_left_lower_abdomen">Venstre mave nederst, forside</string>
+    <string name="location_back_right_buttock">Højre balde</string>
+    <string name="location_back_left_buttock">Venstre balde</string>
+    <string name="location_back_right_lower_back">Højre ryg nederst</string>
+    <string name="location_back_left_lower_back">Venstre ryg nederst</string>
+    <string name="location_side_right_upper_thigh">Højre lår øverst, yderside</string>
+    <string name="location_side_left_upper_thigh">Venstre lår øverst, yderside</string>
+    <string name="location_side_right_lower_thigh">Højre lår nederst, yderside</string>
+    <string name="location_side_left_lower_thigh">Venstre lår nederst, yderside</string>
+    <string name="location_front_right_upper_thigh">Højre lår øverst, forside</string>
+    <string name="location_front_left_upper_thigh">Venstre lår øverst, forside</string>
+    <string name="location_front_right_lower_thigh">Højre lår nederst, forside</string>
+    <string name="location_front_left_lower_thigh">Venstre lår nederst, forside</string>
+    <string name="arrow_up">Op</string>
+    <string name="arrow_up_right">Op til højre</string>
+    <string name="arrow_right">Højre</string>
+    <string name="arrow_down_right">Ned til højre</string>
+    <string name="arrow_down">Ned</string>
+    <string name="arrow_down_left">Ned til venstre</string>
+    <string name="arrow_left">Venstre</string>
+    <string name="arrow_up_left">Op til venstre</string>
+    <string name="arrow_center">Midt</string>
     <!--    Command-->
     <string name="connectiontimedout">Forbindelsen fik timeout</string>
+    <string name="command_replaced">Erstattet af nyere kommando</string>
+    <string name="pump_not_configured">Pumpe ikke konfigureret</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Udført</string>
     <string name="comment">Kommentar</string>
@@ -234,6 +594,8 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g ekstra kulhydrater kræves inden for %2$d minutter</string>
     <string name="basalrate">Basal</string>
+    <string name="tdd_short">TDD</string>
+    <string name="tdd">Samlet daglig dosis</string>
     <!--    Ntp-->
     <string name="timedetection">Tidsdetektering</string>
     <!-- User Entry -->
@@ -254,6 +616,8 @@
     <string name="uel_lgs_loop_mode">LGS LOOP MODUS</string>
     <string name="uel_open_loop_mode">ÅBEN LOOP MODUS</string>
     <string name="uel_loop_disabled">LOOP DEAKTIVERET</string>
+    <string name="uel_loop_resumed">LOOP GENOPTAGET</string>
+    <string name="uel_pump_running">PUMPE KØRER</string>
     <string name="uel_reconnect">GENFORBIND</string>
     <string name="uel_disconnect">AFBRYD</string>
     <string name="uel_resume">FORTSÆT</string>
@@ -266,7 +630,9 @@
     <string name="uel_cancel_extended_bolus">ANNULLER FORLÆNGET BOLUS</string>
     <string name="uel_cancel_tt">ANNULLER MIDLERTIDIG MÅL</string>
     <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_sensor_location">SENSORSTED</string>
     <string name="uel_site_change">SKIFT INFUSIONSSÆT</string>
+    <string name="uel_site_location">INDSTIKSSTED</string>
     <string name="uel_reservoir_change">SKIFT RESERVOIR</string>
     <string name="uel_calibration">KALIBRERING</string>
     <string name="uel_prime_bolus">FORFYLDNINGSBOLUS</string>
@@ -277,6 +643,7 @@
     <string name="uel_tt_ns_refresh">MIDLERTIDIG MÅL NS OPDATER</string>
     <string name="uel_automation_removed">AUTOMATIK FJERNET</string>
     <string name="uel_bg_removed">BG FJERNET</string>
+    <string name="uel_calibration_removed">KALIBRERING FJERNET</string>
     <string name="uel_careportal_removed">CAREPORTAL FJERNET</string>
     <string name="uel_bolus_removed">BOLUS FJERNET</string>
     <string name="uel_carbs_removed">KULHYDRATER FJERNET</string>
@@ -294,6 +661,7 @@
     <string name="uel_ns_queue_cleared">NS KØ RYDDET</string>
     <string name="uel_ns_settings_copied">NS INDSTILLINGER KOPIERET</string>
     <string name="uel_error_dialog_ok">FEJLDIALOG OK</string>
+    <string name="uel_error_dialog_mute">FEJLDIALOG LYDLØS</string>
     <string name="uel_error_dialog_mute_5min">FEJLDIALOG LYDLØS 5MIN</string>
     <string name="uel_objective_started">MÅL STARTET</string>
     <string name="uel_objective_unstarted">MÅL EJ STARTET</string>
@@ -303,7 +671,9 @@
     <string name="uel_delete_future_treatments">SLET FREMTIDIGE BEHANDLINGER</string>
     <string name="uel_export_settings">EKSPORTER INDSTILLINGER</string>
     <string name="uel_import_settings">IMPORTER INDSTILLINGER</string>
+    <string name="uel_select_directory">VÆLG MAPPE</string>
     <string name="uel_reset_databases">NULSTIL DATABASER</string>
+    <string name="uel_reset_aps_results">NULSTIL APS-RESULTATER</string>
     <string name="uel_cleanup_databases">RENS DATABASER</string>
     <string name="uel_export_databases">EKSPORTER DATABASER</string>
     <string name="uel_import_databases">IMPORTER DATABASER</string>
@@ -323,19 +693,40 @@
     <string name="ue_none">Ingen Enhed</string>
     <string name="uel_loop_change">LOOP ÆNDRET</string>
     <string name="uel_loop_removed">LOOP FJERNET</string>
+    <string name="uel_new_insulin">NY INSULIN</string>
+    <string name="uel_change_pump_insulin">SKIFT PUMPEINSULIN</string>
+    <string name="uel_store_insulin">GEM INSULIN</string>
+    <string name="uel_change_insulin_concentration">SKIFT INSULINKONCENTRATION</string>
+    <string name="uel_insulin_removed">INSULIN FJERNET</string>
+    <string name="uel_running_mode">LOOP-TILSTAND</string>
+    <string name="uel_running_mode_removed">LOOP-TILSTAND FJERNET</string>
+    <string name="uel_running_mode_updarted">LOOP-TILSTAND OPDATERET</string>
+    <string name="uel_scene_activated">SCENE AKTIVERET</string>
+    <string name="uel_scene_deactivated">SCENE DEAKTIVERET</string>
+    <string name="uel_remote_config_changed">FJERNKONFIGURATION ÆNDRET</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">Nedre værdi for midlertidigt mål</string>
     <string name="temp_target_high_target">Øvre målværdi for midlertidig mål</string>
     <string name="temp_target_value">Midlertidig mål værdi</string>
+    <string name="insulin_dia">DIA-værdi for insulin</string>
+    <string name="insulin_peak">Spidsværdi for insulin</string>
     <string name="profile_max_daily_basal_value">Maksimal profil basal værdi</string>
     <string name="current_basal_value">Aktuel basal værdi</string>
     <string name="valuelimitedto">%1$.2f begrænset til %2$.2f</string>
     <string name="valueoutofrange">»%1$s« er uden for absolutte grænser</string>
     <!-- Profile validation -->
+    <string name="no_profile_selected">Ingen profil valgt</string>
     <string name="missing_profile_name">Manglende profilnavn</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">%1$s kopi</string>
+    <string name="profile_not_saved_activate">Profil ikke gemt. Gem profilen før aktivering.</string>
+    <string name="profile_basal_not_compatible_with_pump">Basalraten er ikke kompatibel med den aktuelle pumpe og kan ikke aktiveres. Reducer procenten, eller juster basalraten.</string>
+    <string name="profile_basal_below_pump_minimum">Basalraten er under minimum for den aktuelle pumpe og kan ikke aktiveres. Hæv procenten, eller juster basalraten.</string>
+    <string name="profile_pump_incompatible_label">Pumpegrænse</string>
     <string name="error_in_ic_values">Fejl i IC-værdier</string>
     <string name="error_in_isf_values">Fejl i ISF-værdier</string>
     <string name="error_in_basal_values">Fejl i basal rate værdier</string>
     <string name="error_in_target_values">Fejl i målværdier</string>
+    <string name="profile_name_contains_dot">Nogle profilnavne indeholder punktummer.\nDette understøttes ikke af NS.\nProfiler bliver ikke uploadet til NS.</string>
     <string name="invalid_profile_not_accepted">Ugyldig profil %1$s blev ikke accepteret fra NS</string>
     <string name="errors">Fejl</string>
     <!-- Command Queue + readStatus reasons -->
@@ -363,6 +754,15 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
+    <string name="sensitivity">Følsomhed</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens fra</string>
+    <string name="isf_for_carbs">Gennemsnitlig ISF for beregner og kulhydratabsorption: %1$.1f</string>
+    <string name="isf_profile">Profil-ISF: %1$.1f</string>
+    <string name="isf_variable">Variabel ISF: %1$.1f</string>
+    <string name="isf_effective">Effektiv ISF: %1$.1f</string>
+    <string name="autosens_long">Autosens-værdi: %.0f%%</string>
+    <string name="autosens_short">%.0f%%</string>
+    <string name="algorithm_long">Autosens i algoritmen: %.0f%%</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_tune_days">Justerings dage :</string>
@@ -373,12 +773,45 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolus-rådgiver</string>
     <string name="bolus_advisor_message">Du har høj glycæmi. I stedet for at spise nu anbefales det at vente på bedre glycæmi. Ønsker du at lave en korrektionsbolus nu og minde dig om, hvornår det er tid til at spise? I dette tilfælde vil ingen kulhydrater blive registreret, og du skal bruge guiden igen, når vi påminder dig.</string>
+    <string name="wizard_bg_label">BS</string>
+    <string name="wizard_correction">Korrektion</string>
+    <string name="wizard_subtotal">Deltotal</string>
+    <string name="carbs_type_bread">Brød, salt bagværk, yoghurt, frugt (æble, banan, pære), kartofler, ris, boghvede, havregryn, langsomme og kulhydratfattige fødevarer, grøntsager</string>
+    <string name="carbs_type_cake">Dumplings, pasta, asiatisk mad med mange kulhydrater og meget fedt, sødt bagværk og gærbagværk, morgenmadsprodukter, grød, honning, marmelade</string>
+    <string name="carbs_type_pizza">Lasagne, pizza, burgere, pommes frites, bagte kartofler, chips og lignende snacks</string>
+    <string name="wizard_total">Total</string>
+    <string name="wizard_carb_time">Kulhydrattid</string>
+    <string name="carb_time_now">Nu</string>
+    <string name="change">Ændr</string>
+    <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
+    <string name="grant">Tillad</string>
+    <string name="set">Indstil</string>
+    <string name="wizard_set_alarm">Indstil alarm</string>
+    <string name="eat_reminder_title">Tid til at spise</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Ringer kl. %1$s</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Ventetid i alt: %1$s</string>
+    <string name="eat_reminder_rung">Tiden er gået</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="eat_reminder_not_set">Spisepåmindelsen kunne ikke indstilles. Tillad AAPS at indstille alarmer og påmindelser i Android-indstillingerne.</string>
+    <string name="wizard_use_percentage">Brug procent</string>
+    <string name="wizard_include_bg">Medtag BS</string>
+    <string name="wizard_include_tt">Medtag midlertidigt mål</string>
+    <string name="wizard_include_trend">Medtag trend</string>
+    <string name="wizard_include_iob">Medtag IOB</string>
+    <string name="wizard_include_cob">Medtag COB</string>
+    <string name="wizard_calculation">Beregning</string>
+    <string name="no_action_selected">Ingen handling valgt, intet vil ske.</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Maks. fjernelse: %1$d g (kulhydrater om bord)</string>
+    <string name="wizard_no_insulin_required">Ingen insulin nødvendig</string>
     <string name="wizard_no_actual_bg">Ingen nylig BG til at basere beregningen på!</string>
     <string name="wizard_no_active_profile">Ingen aktiv profil angivet!</string>
     <string name="wizard_carbs_constraint">KH begrænsninger overtrådt!</string>
+    <string name="wizard_trend_detail">Trend over 15 min (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Overtrædelse af insulinbegrænsning!\nKan ikke levere %1$.2fE</string>
     <string name="wizard_pump_not_available">Ingen pumpe tilgængelig!</string>
     <string name="quick_wizard_not_available">Valgt guide er ikke længere tilgængeligt. Opdater venligst din widget</string>
+    <string name="quickwizard_managemnt">Hurtigbolus</string>
     <!--    Preferences-->
     <string name="child">Barn</string>
     <string name="teenage">Teeanger</string>
@@ -403,6 +836,7 @@
     <string name="connecting">Forbinder</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Klikket: tilslut til pumpe</string>
     <string name="daily_units">Daglige enheder</string>
+    <string name="max_daily_units">Maks. enheder pr. dag</string>
     <string name="pump_history">Pumpe historik</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Pumpe driver ændret.</string>
     <string name="device_changed" comment="26 characters max for translation">Enhed ændret</string>
@@ -414,10 +848,22 @@
     <string name="reading_pump_history">Læser pumpehistorik</string>
     <string name="password_cleared">Adgangskode slettet!</string>
     <string name="pairing">Parring</string>
+    <string name="initializing">Initialiserer…</string>
+    <string name="secs" comment="second short">%1$d s</string>
+    <string name="warning" comment="Generic warning dialog title">Advarsel</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Kritisk</string>
+    <string name="alert" comment="Generic alert dialog title">Alarm</string>
+    <string name="retry" comment="Button label to retry a failed operation">Prøv igen</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">Færdig</string>
+    <string name="firmware" comment="Pump firmware version label">Firmware</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">Bolushastighed</string>
+    <string name="history" comment="Tab/screen title for viewing past events">Historik</string>
+    <string name="overview_reservoir_concentration_value_over">Over %1$s tilbage</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrænser max IOB til %1$.2f E/t på grund af %2$s</string>
     <string name="pumplimit">pumpe grænse</string>
     <string name="limitingpercentrate">Begrænser maks. procent til %1$d%% på grund af %2$s</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Procentrate %1$d%% omregnet til %2$s E/t med aktuel basal %3$s E/t</string>
     <string name="itmustbepositivevalue">det skal være en positiv værdi</string>
     <string name="limitingbolus">Begrænser bolus til %1$.1f IE på grund af %2$s</string>
     <!--    Dialogs-->
@@ -425,21 +871,72 @@
     <string name="message">Besked</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuller</string>
+    <string name="dismiss">Afvis</string>
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
     <string name="close">Luk</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Advarsel</string>
+    <string name="export_expired">Udløbet</string>
+    <string name="export_disabled">Deaktiveret</string>
+    <string name="export_failed">Mislykkedes</string>
+    <string name="export_alert">ALARM</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">Hovedadgangskoden er ikke angivet!\n\nAngiv først en hovedadgangskode, og prøv så igen.</string>
     <string name="export_to">Eksporter indstillinger til</string>
     <string name="password_preferences_encrypt_prompt">Du bliver bedt om hovedadgangskode, som vil blive brugt til at kryptere eksporterede præferencer.</string>
     <string name="preferences_export_canceled">Eksport annulleret! Indstillinger er IKKE eksporteret!</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Indstillinger eksporteret</string>
+    <string name="export_result_message_failed">Eksport af indstillinger MISLYKKEDES!</string>
+    <string name="export_result_message_about_to_expire">Indstillinger eksporteret: adgangskoden udløber snart. Eksporter manuelt, og indtast adgangskoden (igen).</string>
+    <string name="export_result_message_expired">Eksport af indstillinger annulleret: adgangskoden er udløbet. Eksporter manuelt, og indtast adgangskoden igen!</string>
+    <string name="export_result_message_disabled">Advarsel (automatisering): Eksport af indstillinger er ikke aktiveret!</string>
     <!-- Cloud export -->
+    <string name="export_cloud_success">Eksport til skyen lykkedes</string>
+    <string name="export_cloud_failed">Eksport til skyen MISLYKKEDES!</string>
+    <string name="csv_exported">Brugerindtastninger eksporteret</string>
+    <string name="csv_export_failed">Eksport af brugerindtastninger MISLYKKEDES!</string>
+    <string name="logs_sent">Logfiler sendt via e-mail</string>
+    <string name="logs_send_failed">Kunne ikke sende logfiler</string>
+    <string name="cloud_directory">Skymappe</string>
+    <string name="cloud_token_expired_or_invalid">Godkendelsen til skylageret er udløbet eller ugyldig. Godkend igen.</string>
     <!-- Export destination chip labels -->
+    <string name="chip_local">Lokal</string>
+    <string name="chip_cloud">Sky</string>
+    <string name="chip_email">E-mail</string>
+    <string name="send_logs">Send logfiler</string>
+    <string name="file_management">Filhåndtering</string>
+    <string name="database_management">Databasehåndtering</string>
     <string name="data_choices">Valg Af Data</string>
+    <string name="unattended_settings_export">Automatisk eksport af indstillinger</string>
     <!-- Maintenance bottom sheet descriptions -->
+    <string name="maintenance_log_settings_desc">Indstil logniveauer</string>
+    <string name="maintenance_send_logs_desc">Del logfiler til fejlsøgning</string>
+    <string name="maintenance_delete_logs_desc">Fjern gamle logfiler</string>
+    <string name="maintenance_aaps_directory_desc">Vælg lokal lagermappe</string>
+    <string name="maintenance_cloud_directory_desc">Opsæt skylager (Google Drive)</string>
+    <string name="maintenance_export_desc">Gem en krypteret sikkerhedskopi af indstillingerne</string>
+    <string name="maintenance_import_desc">Gendan indstillinger fra sikkerhedskopi</string>
+    <string name="maintenance_export_csv_desc">Eksporter behandlingshistorik som regneark</string>
+    <string name="maintenance_cleanup_db_desc">Fjern gamle poster fra databasen</string>
+    <string name="maintenance_reset_aps_results_desc">Ryd gemte algoritmeresultater</string>
+    <string name="maintenance_reset_db_desc">Slet alle databaser, og genindlæs</string>
     <!-- Cloud directory dialog (Compose) -->
+    <string name="select_storage_type">Vælg lagertype</string>
+    <string name="clear_cloud_action">Ryd indstillinger</string>
+    <string name="clear_cloud_settings">Ryd skyindstillinger</string>
+    <string name="clear_cloud_settings_message">Dette skifter til lokalt lager og rydder godkendelsen. Fortsæt?</string>
+    <string name="cloud_revoke_incomplete">Skyindstillingerne er ryddet på denne enhed, men kontoen kunne ikke nås, så adgangen er ikke helt tilbagekaldt. Du kan fjerne adgangen manuelt i dine kontoindstillinger.</string>
+    <string name="cloud_connection_failed">Forbindelse til skylager mislykkedes</string>
+    <string name="cloud_reauthorize_message">Forbindelse til skylager mislykkedes. Vil du godkende igen?</string>
+    <string name="reauthorize">Godkend igen</string>
+    <string name="cloud_auth_success">Godkendelse af skylager lykkedes</string>
+    <string name="authorization_status">Godkendelsesstatus</string>
+    <string name="format_hour_minute" comment="%1$d=hours, %2$d=minutes. Example: 1 h 23 min">%1$d t %2$d min</string>
+    <string name="format_hours_only" comment="%1$d=hours, when minutes are zero. Example: 4 h">%1$d t</string>
     <!-- datetime layout -->
     <string name="event_time_label">Tidspunkt for hændelsen</string>
     <!-- BluetoothDevicePreference -->
@@ -447,28 +944,62 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Bruger anmodning</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">Par</string>
+    <string name="pump_unpair">Ophæv parring</string>
+    <string name="pump_unpair_confirm_title">Ophæv parring af pumpe?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpe parret</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy understøttes ikke.</string>
     <string name="ble_not_enabled">Bluetooth er deaktiveret.</string>
+    <string name="ble_permissions_missing">Bluetooth-tilladelser er ikke givet. Giv dem i appens indstillinger.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin indstillinger</string>
     <!-- Navigation -->
+    <string name="nav_about">Om</string>
+    <string name="nav_about_desc">Se appversion og information</string>
     <string name="nav_exit">Afslut</string>
     <string name="open_navigation">Åbn navigation</string>
     <string name="nav_history_browser">Historik browser</string>
+    <string name="nav_history_browser_desc">Gennemse historiske grafer</string>
+    <string name="appearance">Udseende</string>
+    <string name="manage">Administrer</string>
+    <string name="localprofile">Profil</string>
     <string name="nav_setupwizard">Installationsguide</string>
+    <string name="nav_setupwizard_desc">Konfigurer AAPS trin for trin</string>
     <string name="statistics">Statistikker</string>
+    <string name="statistics_desc">Se statistik og rapporter</string>
+    <string name="tdd_cycle_pattern">TDD-cyklusmønster</string>
+    <string name="tdd_cycle_pattern_desc">Læg daglige insulintotaler over hinanden i 28-dages cyklusser for at se gentagne mønstre</string>
     <string name="nav_profile_helper">Profil hjælper</string>
+    <string name="nav_profile_helper_desc">Opbyg din profil ud fra vægt eller TDD</string>
+    <string name="quick_launch_configure">Konfigurer Hurtigstart</string>
+    <string name="quick_launch_configure_desc">Tilpas hurtigknapper på oversigten</string>
     <!-- Alerts -->
+    <string name="localalertsettings_title">Lokale alarmer</string>
     <!-- Actions Screen -->
+    <string name="add">Tilføj</string>
+    <string name="remove">Fjern</string>
+    <string name="reorder">Skift rækkefølge</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Flyt mod starten</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Flyt mod slutningen</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Vis detaljer</string>
+    <string name="presets_changed_reorder_aborted">Forvalg er ændret et andet sted. Den nye rækkefølge blev ikke gemt.</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Position %1$d af %2$d</string>
+    <string name="status">Status</string>
+    <string name="pump_actions">Pumpehandlinger</string>
+    <string name="tempbasal_button">Midlertidig basal</string>
     <string name="extended_bolus_button">Forlænget bolus</string>
+    <string name="device_maintenance">Vedligeholdelse af enheder</string>
+    <string name="from_label">Fra</string>
+    <string name="to_label">Til</string>
     <string name="sensor_label">Sensor</string>
     <string name="insulin_label">Insulin</string>
     <string name="pb_label">Pumpe batteri</string>
     <string name="cannula">Kanyle</string>
     <string name="patch_pump">Patch pumpe</string>
     <!-- Site Rotation -->
+    <string name="select_location">Tryk nedenfor for at vælge indstikssted</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Dræb ikke min app?</string>
     <string name="fabric_upload_disabled">Upload af Crash logs deaktiveret!</string>
@@ -501,35 +1032,184 @@
     <string name="weekday_monday_short">Man</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f IE</string>
+    <string name="format_insulin_units_signed">%1$+.2f IE</string>
+    <string name="percent_rate_duration">Rate: %1$.2f%% (%2$.2f E/t) Varighed: %3$d min</string>
+    <string name="rate_percent_duration">Rate: %1$.2f E/t (%2$.2f%%) Varighed: %3$d min</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>Rate</b>: %1$.2f%% (%2$.2f E/t)<br><b>Varighed</b>: %3$d min<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>Rate</b>: %1$.2f E/t (%2$.2f%%) <br><b>Varighed</b>: %3$d min<br>]]></string>
     <!--    Playback-->
+    <string name="audio_playback_attribution">"AAPS afspiller lyd"</string>
     <!-- ProfileEditor -->
+    <string name="basal_short">BAS</string>
     <string name="target_short">MÅL</string>
     <string name="profile_name">Profilnavn:</string>
+    <string name="edit_profile_name">Rediger profilnavn</string>
     <string name="units_colon">Enheder:</string>
+    <string name="unsaved_changes">Ikke-gemte ændringer</string>
+    <string name="unsaved_changes_message">Du har ændringer, der ikke er gemt. Hvad vil du gøre?</string>
     <string name="discard">Kassér</string>
+    <string name="ic_dynamic_label_warning">Din algoritme kan beregne IC dynamisk. Værdierne nedenfor bruges kun som reserve, hvis data mangler, eller kun som referenceværdi</string>
+    <string name="isf_dynamic_label_warning">Din algoritme kan beregne ISF dynamisk. Værdierne nedenfor bruges kun som reserve, hvis der mangler data, eller kun som referenceværdi</string>
+    <string name="add_time_block">Tilføj tidsblok</string>
+    <string name="remove_entry">Fjern post</string>
+    <string name="target_low_label">Lav</string>
+    <string name="target_high_label">Høj</string>
     <!--    Search-->
+    <string name="search">Søg</string>
+    <string name="clear">Ryd</string>
+    <string name="search_category_categories">Indstillingskategorier</string>
+    <string name="search_category_preferences">Indstillinger</string>
+    <string name="search_category_dialogs">Dialoger</string>
+    <string name="search_category_plugins">Plugins</string>
+    <string name="search_category_wiki">Dokumentation</string>
+    <string name="wiki_search_offline">Søgning i dokumentationen kræver internetforbindelse</string>
+    <string name="no_search_results">Ingen resultater fundet</string>
+    <string name="search_plugin_disabled">Pluginet %1$s er deaktiveret</string>
+    <string name="search_recent">Seneste søgninger</string>
+    <string name="search_history_remove">Fjern fra seneste søgninger</string>
     <!--    Food Management -->
+    <string name="food_management">Mad</string>
+    <string name="food_deleted">Mad slettet</string>
+    <string name="edit_food">Rediger mad</string>
+    <string name="add_food">Tilføj mad</string>
+    <string name="name">Navn</string>
     <string name="category">Kategori</string>
     <string name="subcategory">Underkategori</string>
+    <string name="portion">Portion</string>
+    <string name="unit_label">Enhed</string>
+    <string name="undo">Fortryd</string>
+    <string name="no_data">Ingen data</string>
+    <string name="manage_food_desc">Administrer poster i maddatabasen</string>
+    <string name="label_carbs_g">Kulhydrater (g)</string>
+    <string name="label_fat_g">Fedt (g)</string>
+    <string name="label_protein_g">Protein (g)</string>
+    <string name="label_energy_kj">Energi (kJ)</string>
     <!--    Log Settings-->
+    <string name="nav_logsettings">Logindstillinger</string>
     <string name="resettodefaults">Nulstil til standardindstillinger</string>
     <!--    Maintenance-->
     <string name="maintenance">Vedligeholdelse</string>
     <string name="description_maintenance">Giver flere funktioner til vedligeholdelse (f.eks. log afsendelse, log sletning).</string>
     <string name="log_files">Logfiler</string>
     <string name="delete_logs">Slet logs</string>
+    <string name="logs_deleted">Logfiler slettet</string>
+    <string name="aaps_directory">AAPS-mappe</string>
     <string name="import_setting">Importer indstillinger</string>
     <!-- Import settings screen -->
+    <string name="import_decrypt_review">Dekrypter og gennemse</string>
+    <string name="import_decrypt">Dekrypter</string>
+    <string name="import_master_password">Hovedadgangskode</string>
+    <string name="import_decryption_password">Adgangskode til dekryptering</string>
+    <string name="import_different_password_hint">Filen blev krypteret med en anden adgangskode</string>
+    <string name="import_wrong_password">Forkert adgangskode</string>
+    <string name="import_btn">Importer</string>
+    <string name="import_anyway_btn">Importer alligevel</string>
+    <string name="import_apply_title">Anvend importerede indstillinger?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Indstillinger, der ændres: %1$d. Plugins, der er ændret, genstartes.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Indstillinger, der ændres: %1$d. Pumpeindstillinger, der beholdes: %2$d, så din pumpe fortsat virker.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">De importerede indstillinger valgte ingen pumpe, som denne telefon har. %1$s er nu aktiv — tjek dine pumpeindstillinger.</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">Tilføjet til din insulinliste fra sikkerhedskopien: %1$s. Ikke i brug endnu: vælg den rigtige, når du aktiverer din profil, og gør det, før Nightscout henter dine ældre behandlinger.</string>
+    <string name="import_applying">Anvender indstillinger…</string>
+    <string name="import_replace_pump_settings">Erstat også pumpeindstillinger</string>
+    <string name="import_replace_pump_settings_summary">Lad denne være slået fra for at beholde den pumpe, som telefonen er parret med. Slå den til, når du gendanner på en ny telefon med den samme pumpe.</string>
+    <string name="import_apply_waiting">Venter på pumpen…</string>
+    <string name="import_apply_pump_busy">Pumpen er stadig optaget, så indstillingerne blev ikke anvendt.</string>
+    <string name="import_apply_retry_question">Prøv igen nu?</string>
+    <string name="import_applied_title">Indstillinger anvendt</string>
+    <string name="import_applied_message">De importerede indstillinger er nu i brug.</string>
+    <string name="import_apply_pump_changed">Annulleret: pumpen blev ændret af importen af indstillinger</string>
+    <string name="import_source_local">Lokal</string>
+    <string name="import_source_cloud">Sky</string>
+    <string name="import_load_more">Indlæs flere</string>
+    <string name="import_no_files">Ingen indstillingsfiler fundet</string>
+    <string name="import_decrypt_ok">Dekryptering lykkedes. Klar til import.</string>
+    <string name="import_decrypt_warn">Dekryptering lykkedes, men der er advarsler.</string>
+    <string name="import_decrypt_error">Dekryptering lykkedes, men import er ikke mulig.</string>
+    <string name="reset_aps_results">Nulstil APS-resultater</string>
     <string name="database_cleanup">Database-oprydning</string>
     <string name="nav_resetdb">Nulstil databaser</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Find pumpe</string>
+    <string name="ble_scan_select_pump">Vælg din pumpe på listen nedenfor</string>
+    <string name="ble_scan_scanning">Søger efter enheder…</string>
     <!-- Graph configuration -->
+    <string name="graph_add">Tilføj graf</string>
+    <string name="graph_new">Ny graf</string>
+    <string name="graph_number">Graf %1$d</string>
+    <string name="graph_bg">BS-graf</string>
+    <string name="graph_height">Grafhøjde [dp]</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">PULS</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">SKRIDT</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Insulin om bord</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Absolut insulin</string>
+    <string name="graph_series_cob">Kulhydrater om bord</string>
+    <string name="graph_series_bgi">Blodsukkerpåvirkning</string>
+    <string name="graph_series_deviations">Afvigelser</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Ændring i følsomhed</string>
+    <string name="graph_series_variable_sens">Variabel følsomhed</string>
+    <string name="graph_series_deviation_slope">Afvigelseshældning</string>
+    <string name="graph_series_heart_rate">Puls</string>
+    <string name="graph_series_steps">Skridt</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Insulinaktivitet</string>
+    <string name="graph_series_predictions">Forudsigelser</string>
+    <string name="units_days">dage</string>
+    <string name="units_format_days">%1$d dage</string>
+    <string name="units_format_days_range">%1$d dage (%2$d - %3$d)</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="units_format_double_3">%1$.3f</string>
+    <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
+    <string name="units_format_hours">%1$d t</string>
+    <string name="units_format_hours_double">%1$.1f t</string>
+    <string name="units_format_hours_double_range">%1$.1f t (%2$.1f - %3$.1f)</string>
+    <string name="units_format_hours_range">%1$d t (%2$d - %3$d)</string>
+    <string name="units_format_insulin">%1$.1f IE</string>
+    <string name="units_format_insulin_int">%1$d IE</string>
+    <string name="units_format_insulin_int_range">%1$d IE (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f IE (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate">%1$.1f E/t</string>
+    <string name="units_format_insulin_rate_range">%1$.1f E/t (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl">%1$s mg/dL</string>
+    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
+    <string name="units_format_min">%1$d min</string>
+    <string name="units_format_min_range">%1$d min (%2$d - %3$d)</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_value" comment="A percentage. %1$s=the number, already formatted, can have decimals. Example: 52.3%">%1$s%%</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_sec">%1$d sek</string>
+    <string name="units_format_sec_range">%1$d sek (%2$d - %3$d)</string>
+    <string name="units_grams">g</string>
+    <string name="units_hours">t</string>
+    <string name="units_insulin">IE</string>
+    <string name="units_insulin_rate">E/t</string>
+    <string name="units_kg">kg</string>
+    <string name="units_mgdl">mg/dL</string>
+    <string name="units_min">min</string>
+    <string name="units_mmol">mmol/L</string>
+    <string name="units_percent">%</string>
+    <string name="units_sec">sek</string>
+    <string name="units_years">år</string>
     <string name="prefs_range_title">Område for Visualisering</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">Pumpen stoppede bolussen efter %1$s. Kontroller pumpen før næste bolus.</string>
+    <string name="secrets_not_protected">Der blev ikke fundet et nøglelager i systemet på denne computer. Nøglerne, der beskytter dine indstillinger og parringen med hovedtelefonen, gemmes i filer ved siden af dataene, så alle, der får en kopi af dine filer, får dem også. På Linux skal du installere og starte en nøglering (f.eks. GNOME Keyring eller KWallet) og derefter starte AAPS igen.</string>
 </resources>
