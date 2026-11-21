@@ -3,7 +3,7 @@
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Pumpeintegration til Omnipod Dash (Den bluetooth-aktiverede model med blå nålehætte).</string>
     <!-- Omnipod Dash - Overview -->
-    <string name="omnipod_dash_overview_bluetooth_address">Bluetooth adresse</string>
+    <string name="omnipod_dash_overview_bluetooth_address">Bluetooth-adresse</string>
     <string name="omnipod_dash_overview_firmware_version_value">Firmware %1$s / Bluetooth %2$s</string>
     <string name="omnipod_dash_overview_bluetooth_connection_quality">Forbindelseskvalitet</string>
     <string name="omnipod_dash_overview_delivery_status">Afgivelsesstatus</string>
@@ -27,12 +27,12 @@
     <string name="timezone_on_pod_is_different_from_the_timezone">Tidszone på pod er forskellig fra tidszone på telefon. Basalrate er forkert. Skift profil for at rette</string>
     <string name="failed_to_set_the_new_basal_profile">Kunne ikke indstille den nye basalprofil. Levering pauseret</string>
     <string name="setting_basal_profile_might_have_failed">Indstilling af basalprofil er måske mislykkedes. Insulintilførslen kan være suspenderet! Opdater Pod-status manuelt på pumpeskærmen, og genoptag tilførslen om nødvendigt.</string>
-    <string name="bolus_delivery_status_uncertain">Bolustilførselsstatus usikker. Opdatér pod-status for at bekræfte eller afvise.</string>
+    <string name="bolus_delivery_status_uncertain">Bolustilførselsstatus usikker. Opdater pod-status for at bekræfte eller afvise.</string>
     <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Kunne ikke bekræfte, om SMB (%1$s) lykkedes. Opdater pod-status for at bekræfte eller afvise denne kommando.</string>
     <string name="temp_basal_out_of_sync">Midlertidig basal-status ikke som forventet! Hvis en midlertidig basal kørte tidligere, er den blevet aflyst. Tjek venligst tilført insulin og pod-historie</string>
     <string name="checking_delivery_status">Kontrollerer leveringsstatus</string>
     <string name="setting_temp_basal_might_have_basal_failed">Indstilling af midlertidig basal er måske mislykkedes. Hvis en midlertidig basal kørte før, er den blevet annulleret. Opdater Pod-status manuelt på pumpeskærmen.</string>
-    <string name="cancel_temp_basal_result_is_uncertain">Annullér midlertidig basal-resultat er usikkert</string>
-    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Ikke-bekræftet genoptagtilførselskommando. Opdatér pod-status</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Annuller midlertidig basal-resultat er usikkert</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Ikke-bekræftet genoptagtilførselskommando. Opdater pod-status</string>
     <string name="cancelling_temp_basal_might_have_failed">Annullering af midlertidig basal er måske mislykkedes. Hvis en midlertidig basal kørte før, kan den være blevet annulleret. Opdater Pod-status manuelt på pumpeskærmen.</string>
 </resources>
