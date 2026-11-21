@@ -3,54 +3,256 @@
     <!-- AAPSClient -->
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Configuració de connexió</string>
+    <string name="description_ns_client_v3">Sincronitza les vostres dades amb Nightscout mitjançant l\'API v3</string>
+    <string name="blocked_by_charging">Bloquejat per les opcions de càrrega</string>
+    <string name="blocked_by_connectivity">Bloquejat per les opcions de connectivitat</string>
+    <string name="no_connectivity">Sense connectivitat</string>
     <string name="unsupported_ns_version">Versió no compatible de Nightscout</string>
     <!-- AAPSClient -->
     <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <string name="authorized_clients_title">Clients autoritzats</string>
+    <string name="authorized_clients_add">Afegir client</string>
+    <string name="authorized_clients_comm_switch_title">Permetre el control des dels clients</string>
+    <string name="authorized_clients_comm_switch_summary">Permet que els clients emparellats enviïn ordres signades a través de Nightscout. Desactiveu-ho per aturar la comunicació sense eliminar-los.</string>
+    <string name="authorized_clients_state_active">Actiu</string>
+    <string name="authorized_clients_state_pending">Pendent</string>
+    <string name="authorized_clients_last_seen">Vist per última vegada %1$s</string>
+    <string name="authorized_clients_never_seen">Mai utilitzat</string>
+    <string name="authorized_clients_pending_expires_in">L\'emparellament caduca en %1$ss</string>
+    <string name="authorized_clients_empty_title">Cap client autoritzat</string>
+    <string name="authorized_clients_empty_subtitle">Emparelleu un dispositiu client perquè pugui enviar ordres signades a aquest dispositiu principal.</string>
+    <string name="authorized_clients_name_dialog_title">Client nou</string>
+    <string name="authorized_clients_name_placeholder">Nom del dispositiu</string>
+    <string name="authorized_clients_delete_dialog_title">Revocar l\'accés?</string>
+    <string name="authorized_clients_delete_dialog_message">%1$s ja no podrà enviar ordres.</string>
+    <string name="authorized_clients_pin_dialog_title">Emparellar client</string>
+    <string name="authorized_clients_pin_instructions">Introduïu aquest PIN al dispositiu client. El codi només és vàlid per a un emparellament.</string>
+    <string name="authorized_clients_pin_expires_in">Caduca en %1$ss</string>
+    <string name="authorized_clients_pin_done">Fet</string>
+    <string name="authorized_clients_pin_publishing">Enviant l\'oferta d\'emparellament a Nightscout…</string>
+    <string name="authorized_clients_pin_published">Oferta d\'emparellament preparada a Nightscout.</string>
+    <string name="authorized_clients_pin_publish_failed">No s\'ha pogut enviar l\'oferta d\'emparellament a Nightscout.</string>
+    <string name="authorized_clients_pin_retry">Reintentar</string>
+    <string name="authorized_clients_method_title">Com es configura el telèfon?</string>
+    <string name="authorized_clients_method_qr_pair">Codi QR: Nightscout i emparellament</string>
+    <string name="authorized_clients_method_qr_pair_summary">Escanegeu-lo una vegada al telèfon nou. Rep el seu propi token de Nightscout i queda emparellat.</string>
+    <string name="authorized_clients_method_qr_ns">Codi QR: només Nightscout</string>
+    <string name="authorized_clients_method_qr_ns_summary">El telèfon rep el seu propi token de Nightscout i pot llegir les dades. No queda emparellat i no pot enviar ordres.</string>
+    <string name="authorized_clients_method_pin">PIN</string>
+    <string name="authorized_clients_method_pin_summary">Per a un telèfon sense càmera. Ja ha d\'estar connectat a Nightscout.</string>
+    <string name="authorized_clients_qr_working">Creant el token de Nightscout…</string>
+    <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Configurar %1$s</string>
+    <string name="authorized_clients_qr_pair_instructions">Escanegeu aquest codi al telèfon nou, a l\'assistent de configuració o a Emparellar amb el principal. Configura Nightscout i emparella el telèfon.</string>
+    <string name="authorized_clients_qr_ns_instructions">Escanegeu aquest codi al telèfon nou, a l\'assistent de configuració o a Emparellar amb el principal. Configura Nightscout. El telèfon no queda emparellat.</string>
+    <string name="authorized_clients_qr_keep_private">Qualsevol persona que vegi aquest codi pot llegir el vostre Nightscout. Mostreu-lo només al telèfon nou.</string>
+    <string name="authorized_clients_token_problem_title">No hi ha codi QR</string>
+    <string name="authorized_clients_not_added_title">Client no afegit</string>
+    <string name="authorized_clients_token_problem_not_connected">Aquest telèfon no està connectat a Nightscout, així que no pot crear un token per al client.</string>
+    <string name="authorized_clients_token_problem_not_allowed">El token de Nightscout d\'aquest telèfon no és un token d\'administrador, així que no pot crear un token per al client. Feu servir aquí un token d\'administrador, o afegiu el client amb el PIN.</string>
+    <string name="authorized_clients_token_problem_name_taken">Nightscout ja té un token amb aquest nom i altres permisos. Trieu un altre nom.</string>
+    <string name="authorized_clients_token_problem_name_in_use">Ja hi ha un client amb aquest nom a la llista. Trieu un altre nom o elimineu primer aquest client.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout no ha mostrat el token nou a la llista, així que s\'ha tornat a eliminar. No ha quedat res. Torneu-ho a provar.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout no ha mostrat el token nou a la llista i no s\'ha pogut eliminar. Elimineu el token %1$s a Nightscout i torneu-ho a provar.</string>
+    <string name="authorized_clients_tokens_header">Només lectura de Nightscout</string>
+    <string name="authorized_clients_token_unpaired">Token de Nightscout propi, no emparellat</string>
+    <string name="authorized_clients_token_show_qr">Mostrar codi QR</string>
+    <string name="authorized_clients_token_delete_title">Eliminar el token?</string>
+    <string name="authorized_clients_token_delete_message" comment="%1$s = the name of the client, for example Tablet">%1$s ja no podrà llegir Nightscout.</string>
+    <string name="authorized_clients_delete_dialog_token">També s\'elimina el seu token de Nightscout, així que ja no podrà llegir Nightscout.</string>
+    <string name="authorized_clients_uses_client_token">Token de Nightscout propi</string>
+    <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Fa servir el token de Nightscout %1$s, que té més permisos dels que necessita un client</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Fa servir el token de Nightscout %1$s, no el seu propi: les seves ordres es rebutgen. Elimineu-lo i afegiu-lo de nou.</string>
     <!-- Pair with master (client side PIN entry) -->
+    <string name="pair_with_master_title">Emparellar amb el principal</string>
+    <string name="pair_with_master_pin_entry_title">Introduir el PIN d\'emparellament</string>
+    <string name="pair_with_master_pin_entry_message">Obriu Clients autoritzats al dispositiu principal i afegiu aquest client. Escriviu el PIN de 8 xifres que s\'hi mostra.</string>
+    <string name="pair_with_master_pin_entry_label">PIN de 8 xifres</string>
+    <string name="pair_with_master_pin_entry_submit">Emparellar</string>
+    <string name="pair_with_master_fetching">Cercant l\'emparellament…</string>
+    <string name="pair_with_master_confirm_title">Emparellar amb aquest dispositiu principal?</string>
+    <string name="pair_with_master_confirm_master">Principal: %1$s</string>
+    <string name="pair_with_master_confirm_warning">Després de l\'emparellament, aquest dispositiu podrà enviar ordres signades a aquest principal.</string>
+    <string name="pair_with_master_confirm_pair">Emparellar</string>
+    <string name="pair_with_master_error_title">No es pot emparellar</string>
+    <string name="pair_with_master_error_wrong_pin">No s\'ha trobat cap emparellament per a aquest PIN. Comproveu el PIN al dispositiu principal i torneu-ho a provar.</string>
+    <string name="pair_with_master_error_ambiguous_pin">Diversos emparellaments coincideixen amb aquest PIN. Genereu-ne un de nou al dispositiu principal i torneu-ho a provar.</string>
+    <string name="pair_with_master_error_expired">Aquest emparellament ha caducat. Genereu un PIN nou al dispositiu principal.</string>
+    <string name="pair_with_master_error_network">No es pot connectar amb Nightscout. Comproveu la connexió i torneu-ho a provar.</string>
+    <string name="pair_with_master_error_secret_store">No s\'ha pogut desar el secret d\'emparellament, així que s\'ha cancel·lat l\'emparellament. No s\'ha canviat res. Torneu-ho a provar i, si continua fallant, reinicieu l\'aplicació.</string>
+    <string name="pair_with_master_retry">Tornar-ho a provar</string>
+    <string name="pair_with_master_already_paired_title">Ja emparellat</string>
+    <string name="pair_with_master_already_paired_master">Actualment emparellat amb el principal %1$s. Desemparelleu primer per introduir un PIN nou.</string>
+    <string name="pair_with_master_unpair">Desemparellar</string>
+    <string name="pair_with_master_sending">Enviant el missatge d\'emparellament…</string>
     <!-- Client set-up from the master's QR code -->
+    <string name="client_setup_scan_button">Escanejar codi QR</string>
+    <string name="client_setup_scan_title">Escanejar el codi QR del principal</string>
+    <string name="client_setup_scan_instructions">Al dispositiu principal, obriu Clients autoritzats i afegiu aquest telèfon amb un codi QR. Apunteu la càmera al codi.</string>
+    <string name="client_setup_scan_camera_refused">Cal la càmera per llegir el codi QR. Permeteu-la o emparelleu amb el PIN.</string>
+    <string name="client_setup_scan_camera_denied">L\'accés a la càmera està desactivat per a AAPS. Activeu-lo a la configuració del sistema o emparelleu amb el PIN.</string>
+    <string name="client_setup_scan_camera_blocked">L\'accés a la càmera no està permès en aquest dispositiu. Emparelleu amb el PIN.</string>
+    <string name="client_setup_scan_camera_unavailable">La càmera no es pot fer servir en aquest dispositiu. Emparelleu amb el PIN.</string>
+    <string name="client_setup_scan_open_settings">Obrir configuració</string>
+    <string name="client_setup_scan_not_a_code">Aquest no és un codi QR d\'AAPS.</string>
+    <string name="client_setup_scan_other_version">Aquest codi és d\'una altra versió d\'AAPS. El principal i aquest telèfon han de fer servir la mateixa versió.</string>
+    <string name="client_setup_scan_expired">Aquest codi ha caducat. Creeu-ne un de nou al principal.</string>
+    <string name="client_setup_scan_already_paired">Aquest telèfon ja està emparellat. Desemparelleu-lo primer per fer servir un codi que emparella.</string>
+    <string name="client_setup_confirm_title">Fer servir aquest codi?</string>
+    <string name="client_setup_confirm_nightscout" comment="%1$s = the Nightscout address, for example https://my.nightscout.host">Nightscout: %1$s</string>
+    <string name="client_setup_confirm_pairs" comment="%1$s = the id of the master phone">També emparella aquest telèfon amb el principal %1$s.</string>
+    <string name="client_setup_confirm_replaces">Substitueix l\'adreça i el token de Nightscout d\'aquest telèfon.</string>
+    <string name="client_setup_confirm_apply">Utilitzar</string>
+    <string name="client_setup_done_title">Fet</string>
+    <string name="client_setup_done_paired">Nightscout està configurat i el telèfon està emparellat. El principal el mostra com a actiu quan s\'ha connectat.</string>
+    <string name="client_setup_done_ns_only">Nightscout està configurat. Per controlar el principal des d\'aquest telèfon, emparelleu-lo també.</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
+    <string name="clientcontrol_orphan_notification">L\'AAPS principal ja no reconeix aquest dispositiu. Obriu el full Gestionar → Emparellar amb el principal per tornar a emparellar-lo.</string>
     <string name="ns_client">NSClient</string>
     <string name="ns_client_url">URL:</string>
+    <string name="ns_client_v3_title">NSClientV3</string>
     <string name="deliver_now">Lliurar ara</string>
     <string name="queue">Cua:</string>
+    <string name="status_label">Estat:</string>
     <string name="clear_log">Buidar log</string>
     <string name="full_sync">Sincronització completa</string>
+    <string name="full_sync_comment">Sincronització completa? Pot trigar moltes hores i, fins que no acabi, no veureu dades noves a NS.</string>
     <string name="ns_sync_options">Sincronització</string>
     <string name="ns_alarm_options">Configuració alarmes</string>
+    <string name="ns_remote_control_options">Control remot</string>
     <!-- Tidepool -->
+    <string name="summary_tidepool_dev_servers">Si està activat, les dades s\'enviaran als servidors de prova en lloc dels habituals</string>
     <string name="title_tidepool_dev_servers">Utilitzar servidors d\'integració (test)</string>
+    <string name="title_tidepool_use_ns_connection">Fer servir la configuració de connexió de Nightscout</string>
+    <string name="summary_tidepool_use_ns_connection">Desactiveu-ho per definir una configuració de connexió pròpia per a Tidepool</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Envia dades a Tidepool</string>
+    <string name="upload_now">Enviar ara</string>
+    <string name="tidepool_purge_data">Esborrar totes les dades</string>
+    <string name="tidepool_purge_data_confirm">Voleu eliminar TOTES les dades que AAPS ha enviat a Tidepool? No es pot desfer. Feu-ho servir per eliminar dades malmeses per una versió antiga i després executeu \"Sincronització completa\" per tornar-les a enviar.</string>
+    <string name="tidepool_full_sync_comment">Sincronització completa? AAPS tornarà a enviar totes les dades a Tidepool. Pot trigar una estona.</string>
+    <string name="tidepool_logout_confirm">Tancar la sessió de Tidepool? Els enviaments s\'aturen fins que torneu a iniciar la sessió.</string>
+    <string name="tidepool_status_not_logged_in">Sessió no iniciada</string>
+    <string name="tidepool_status_no_session">Sessió iniciada, encara no connectat</string>
+    <string name="tidepool_status_blocked">Bloquejat per la configuració de connexió</string>
+    <string name="tidepool_status_failed">Error. Vegeu el registre de sota.</string>
+    <string name="not_connected">No connectat</string>
+    <string name="read_only">Només lectura</string>
+    <string name="working">Funcionant</string>
     <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="description_xdrip">Enviar dades a xDrip+</string>
+    <string name="xdrip_status_settings">Línia d\'estat d\'xDrip+ avançada</string>
     <string name="xdrip_not_installed">xDrip+ no instal·lat</string>
     <string name="calibration_sent">Calibració enviada a xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Envia dades de glucèmia i tractaments a xDrip+. Cal seleccionar l\'origen de dades \"xDrip+ Sync Follower\" i activar l\'acceptació de dades a Settings - Inter-app settings - Accept Glucose/Treatments</string>
+    <string name="xdrip_local_broadcasts_title">Activar les difusions a xDrip+.</string>
     <!--    DataBroadcast-->
+    <string name="tizen">Apps complementàries externes</string>
+    <string name="tizen_description">Activa l\'enviament de dades a diverses apps complementàries externes</string>
     <!-- GarminPlugin -->
+    <string name="garmin">Garmin</string>
+    <string name="garmin_description">Connexió amb un dispositiu Garmin (Fenix, Edge, …)</string>
+    <string name="garmin_local_http_server_port">Port del servidor HTTP local</string>
+    <string name="garmin_local_http_server">Servidor HTTP local</string>
+    <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">El rellotge Garmin ha enviat %1$s de carbohidrats. Aquest telèfon és un client, així que no s\'han introduït. Introduïu-los a AAPS.</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">El rellotge Garmin ha demanat connectar o desconnectar la bomba. Aquest telèfon és un client, així que no s\'ha canviat res. Feu-ho a AAPS.</string>
     <!--    Wear-->
+    <string name="description_wear">Monitoreu i controleu AAPS amb el vostre rellotge WearOS.</string>
+    <string name="no_watch_connected">(Cap rellotge connectat)</string>
+    <string name="pump_status">Estat bomba</string>
+    <string name="loop_status">Estat llaç</string>
+    <string name="user_action_not_available">L\'acció de l\'usuari seleccionada %1$s ja no està disponible. Actualitzeu el mosaic.</string>
+    <string name="scene_not_available">L\'escena %1$s ja no està disponible. Actualitzeu el mosaic.</string>
+    <string name="wear_remote_insulin_not_allowed_in_client">Les ordres d\'insulina remotes estan desactivades en mode client</string>
+    <string name="wear_phone_not_ready">El telèfon encara s\'està iniciant o aplicant la configuració. Torneu-ho a provar d\'aquí a un moment.</string>
+    <string name="wear_control_disabled">El control des del rellotge està desactivat a la configuració de Wear del telèfon.</string>
+    <string name="wear_action_tempt_unit_error">El rellotge i el telèfon fan servir unitats diferents!</string>
+    <string name="wear_action_tempt_min_bg_error">Glucèmia mínima fora de rang!</string>
+    <string name="wear_action_tempt_max_bg_error">Glucèmia màxima fora de rang!</string>
+    <string name="wear_action_tempt_range_error">Rang no vàlid: l\'objectiu baix (%1$s) no pot ser més gran que l\'objectiu alt (%2$s)</string>
     <string name="wear_wizard_settings_summary">Càlculs inclosos al resultat de l\'assistent:</string>
     <string name="wear_general_settings">Configuració general</string>
+    <string name="wear_custom_watchface_settings">Configuració del watchface personalitzat</string>
+    <string name="wear_custom_watchface">Watchface personalitzat: %1$s</string>
+    <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Instal·lant…</string>
+    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">El rellotge mostra el watchface de complicacions. Seleccioneu el watchface personalitzat per veure %1$s al rellotge.</string>
+    <string name="wear_pushed_watchface_confirm_title">Canviar el watchface del rellotge?</string>
+    <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s substituirà %2$s al rellotge.</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s substituirà %2$s al rellotge. Les complicacions que heu canviat a l\'editor del watchface tornaran als valors per defecte.</string>
+    <string name="wear_load_watchface">Carregar watchface</string>
+    <string name="wear_infos_watchface">Informació del watchface</string>
+    <string name="wear_export_watchface">Exportar plantilla</string>
+    <string name="wear_new_custom_watchface_exported">Plantilla de watchface personalitzat exportada</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Reenviar totes les dades</string>
     <string name="open_settings_on_wear">Obrir Configuració a Wear</string>
+    <string name="wear_import_custom_watchface_title">Seleccionar watchface personalitzat</string>
+    <string name="cwf_infos_pref_locked">Llista de configuracions bloquejades pel watchface</string>
+    <string name="cwf_infos_pref_required">Llista de configuracions necessàries per al watchface</string>
+    <string name="cwf_infos_view_title">Llista de camps inclosos al watchface</string>
+    <string name="enabled">Activat</string>
+    <string name="disabled">Desactivat</string>
+    <string name="pump_fetching_data">intentant obtenir dades de la bomba.</string>
+    <string name="pump_old_data">TDD: Les dades encara són antigues! No es poden carregar de la bomba.</string>
+    <string name="units_short">U</string>
+    <string name="hour_short">h</string>
+    <string name="no_active_profile">Cap canvi de perfil actiu!</string>
+    <string name="target_only_aps_mode">Els objectius només s\'apliquen en mode APS!</string>
+    <string name="no_history">No hi ha dades d\'historial!</string>
+    <string name="temp_target">Objectiu temporal</string>
+    <string name="until">fins</string>
+    <string name="default_range">RANG PER DEFECTE</string>
+    <string name="target">objectiu</string>
+    <string name="rate_duration">Taxa: %1$.2fU/h (%2$.2f%%) \nDurada %3$d min</string>
+    <string name="no_profile">Cap perfil carregat</string>
+    <string name="aps_only">Només s\'aplica en mode APS!</string>
+    <string name="last_aps_result_na">L\'últim resultat no està disponible!</string>
+    <string name="loop_status_closed">LLAÇ TANCAT</string>
+    <string name="loop_status_open">LLAÇ OBERT</string>
+    <string name="loop_status_lgs">LGS</string>
+    <string name="loop_status_disabled">LLAÇ DESACTIVAT</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Última execució</string>
+    <string name="last_enact">Última aplicació</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fU %2$.0f%%</string>
+    <string name="today">Avui</string>
+    <string name="weighted">ponderada</string>
+    <string name="full_xdrip_sync_comment">Sincronització completa? Pot trigar una estona i, fins que no acabi, no veureu dades noves a xDrip+.</string>
+    <string name="wear_action_loop_state_unauthorized">Torneu-ho a provar.</string>
+    <string name="wear_action_loop_state_invalid">S\'ha sol·licitat un estat del llaç no vàlid</string>
+    <string name="wear_action_running_mode_title">Mode de funcionament</string>
+    <string name="garmin_request_key">Sol·licitar clau</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Comunicador SMS</string>
+    <string name="description_sms_communicator">Controleu AAPS a distància amb ordres SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">de l\'app d\'autenticació per: %1$s seguit per PIN</string>
     <string name="smscommunicator_tab_otp_label">Configuració de l\'Autenticador</string>
     <string name="smscommunicator_code_verify_label">Codi per comprovar:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">El codi de verificació consta de 6 xifres que mostra l\'app d\'autenticació (conegudes com a OTP) seguides de 3 o més xifres del PIN obligatori.</string>
     <string name="smscommunicator_otp_reset_btn">Restablir autenticadors</string>
     <string name="smscommunicator_otp_reset_title">Restablir clau d\'Autenticador</string>
+    <string name="smscommunicator_otp_reset_prompt">Esteu segurs que voleu restablir la clau de l\'Autenticador? Tots els autenticadors configurats ara deixaran de ser vàlids i els haureu de tornar a configurar.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Instal·lar autenticador</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Escanejar el codi per configurar els codis OTP d\'AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Provar clau d\'un sol ús</string>
     <string name="smscommunicator_otp_reset_header">Restablir autenticadors</string>
     <string name="smscommunicator_otp_install_info">Instal·leu a cada telèfon seguidor una app d\'autenticació compatible amb tokens RFC 6238 TOTP. Apps gratuites populars:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">En restablir l\'autenticador, tots els autenticadors ja configurats deixen de ser vàlids. Els haureu de tornar a configurar!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">MIDA NO VÀLIDA!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">PIN INCORRECTE</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">OTP INCORRECTE</string>
     <string name="sms_wrong_code">Codi erroni. Ordre cancel·lada.</string>
     <string name="sms_timeout_while_waiting">Temps d\'espera excedit en esperar el final de l\'anterior comunicació amb la bomba</string>
     <string name="smscommunicator_bolus_reply_with_code">Per lliurar bolus %1$.2fU contesteu amb el codi %2$s</string>
     <string name="smscommunicator_meal_bolus_reply_with_code">Per lliurar bolus d\'àpat %1$.2fU contesteu amb el codi %2$s</string>
     <string name="smscommunicator_temptarget_with_code">Per definir un Objectiu Temporal %1$s contesteu amb el codi %2$s</string>
     <string name="smscommunicator_temptarget_cancel">Per cancel·lar Objectiu Temporal contesteu amb el codi %1$s</string>
+    <string name="smscommunicator_stops_ns_with_code">Per desactivar el Servei Remot d\'SMS contesteu amb el codi %1$s.\n\nTingueu en compte que només el podreu reactivar directament des del mòbil principal d\'AAPS.</string>
     <string name="smscommunicator_stopped_sms">Servei Remot d\'SMS aturat. Per reactivar-lo, utilitzeu AAPS des del mòbil principal.</string>
     <string name="smscommunicator_calibration_reply_with_code">Per enviar calibració %1$.2f contesteu amb el codi %2$s</string>
+    <string name="smscommunicator_bolus_failed">El bolus ha fallat. Comproveu l\'estat real abans d\'enviar una altra ordre!</string>
     <string name="smscommunicator_bolus_delivered">Bolus %1$.2f U llliurat correctament</string>
     <string name="smscommunicator_meal_bolus_delivered">Bolus d\'àpat %1$.2f U lliurat correctament</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Objectiu %1$s per %2$d minuts</string>
@@ -64,6 +266,7 @@
     <string name="smscommunicator_pump_disconnected">Bomba desconnectada</string>
     <string name="smscommunicator_reconnect">Bomba reconnectada</string>
     <string name="smscommunicator_remote_command_not_allowed">Ordre remota no permesa</string>
+    <string name="smscommunicator_remote_command_not_possible">Ordre remota no possible</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Bolus remot no disponible. Torneu-ho a intentar més tard.</string>
     <string name="smscommunicator_basal_reply_with_code">Per iniciar basal de %1$.2f U/h durant %2$d min. contesteu amb el codi %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">Per canviar el perfil a %1$s %2$d%% contesteu amb el codi %3$s</string>
@@ -73,8 +276,11 @@
     <string name="smscommunicator_suspend_reply_with_code">Per interrompre el llaç durant %1$d minuts contesteu amb el codi %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Per reprendre el llaç contesteu amb el codi %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Per desactivar el llaç contesteu amb el codi %1$s</string>
+    <string name="smscommunicator_restart_reply_with_code">Per reiniciar AAPS contesteu amb el codi %1$s</string>
+    <string name="smscommunicator_restarting">AAPS s\'està reiniciant</string>
     <string name="smscommunicator_tempbasal_set">Basal temporal %1$.2fU/h durant %2$d min iniciada correctament</string>
     <string name="smscommunicator_extended_set">Bolus estès %1$.2fU durant %2$d min iniciat correctament</string>
+    <string name="smscommunicator_carbs_set">Carbohidrats %1$d g introduïts correctament</string>
     <string name="smscommunicator_carbs_failed">Error en introduir %1$dg de carbs</string>
     <string name="smscommunicator_tempbasal_set_percent">Basal temporal %1$d%% durant %2$d min iniciada ok</string>
     <string name="smscommunicator_tempbasal_failed">Error en iniciar basal temporal</string>
@@ -94,6 +300,9 @@
     <string name="smscommunicator_calibration_sent">Calibració enviada. Cal que la recepció a xDrip+ estigui activada.</string>
     <string name="smscommunicator_calibration_failed">xDrip+ no està rebent calibracions</string>
     <string name="smscommunicator_message_body">Cos de missatge incorrecte</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Per canviar el mode del llaç a LGS (suspensió per glucèmia baixa) contesteu amb el codi %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Per canviar el mode del llaç a llaç tancat contesteu amb el codi %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Mode de funcionament actual: %1$s</string>
     <string name="wrong_format">Format incorrecte</string>
     <string name="sms_actual_bg">Glucèmia:</string>
     <string name="sms_last_bg">Darrera glucèmia:</string>
@@ -106,4 +315,9 @@
     <string name="sms_read_status_failed">Error en llegir estat</string>
     <string name="sms_profile_switch_created">Canvi de perfil creat</string>
     <string name="sms_wrong_tbr_duration">La durada d\'una TBR ha de ser múltiple de %1$d minuts i més gran que 0.</string>
+    <string name="sms_tbr_percent_only">Aquesta bomba només accepta la basal temporal en percentatge, no en U/h.</string>
+    <string name="sms_tbr_absolute_only">Aquesta bomba només accepta la basal temporal en U/h, no en percentatge.</string>
+    <string name="a11y_otp_qr_code">Codi QR per configurar la contrasenya d\'un sol ús</string>
+    <string name="permission_sms_title">SMS</string>
+    <string name="permission_sms_description">L\'aplicació necessita el permís d\'SMS per al control remot mitjançant missatges de text</string>
 </resources>
