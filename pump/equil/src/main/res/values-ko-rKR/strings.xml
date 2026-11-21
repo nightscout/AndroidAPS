@@ -53,6 +53,9 @@
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">배터리 부족: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">레저버에 남은 인슐린이 부족합니다: %1$s</string>
     <string name="equil_reservoir_empty">레저버가 비었습니다. 펌프가 더 이상 인슐린을 주입하지 않습니다.</string>
+    <string name="equil_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">볼러스 명령이 펌프에 전달되었지만 펌프가 응답하지 않았습니다. 펌프가 아직 %1$s을(를) 주입할 수 있습니다. 다시 볼러스하지 마십시오. AAPS는 전체 양을 계산에 넣습니다.</string>
+    <string name="equil_stop_not_answered" comment="%1$s=insulin amount with unit. Example: 2.00 U, or for U200 insulin 2.00 U (1.00 CU)">중지 명령이 펌프에 전달되지 않았거나 펌프의 응답이 유실되었습니다. 펌프 이력에 실제 주입량이 나올 때까지 AAPS는 %1$s 볼러스 전체를 계산에 넣습니다.</string>
+    <string name="equil_bolus_not_given" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">펌프 이력에 따르면 %1$s 볼러스는 주입되지 않았습니다. AAPS는 이 볼러스를 계산에 넣지 않습니다.</string>
     <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">볼러스 중에 펌프가 멈췄습니다. 주입량: %1$s / %2$s</string>
     <string name="equil_pump_not_run">펌프가 작동하지 않음</string>
     <string name="equil_pair">페어링</string>
