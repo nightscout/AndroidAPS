@@ -1,20 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Kommando udføres lige nu</string>
+    <string name="smb_being_delivered">Der leveres en SMB lige nu. Prøv igen, når den er færdig.</string>
     <string name="basal_value_below_minimum">Basal værdi under minimum. Profil ikke angivet!</string>
+    <string name="concentration_change_failed_title">Insulinskift mislykkedes</string>
+    <string name="concentration_change_failed">Den nye insulin er i pumpen, men AAPS kunne ikke skrive profilen til pumpen. Pumpen giver den forkerte mængde insulin. Afbryd eller fjern pumpen nu, kontroller dit blodsukker, og giv insulin på en anden måde, hvis du har brug for det. Tilslut først pumpen igen, når profilen er skrevet.</string>
+    <string name="concentration_change_pending">Profilen med den nye insulin er endnu ikke skrevet til pumpen. Der kan ikke gives insulin, før den er skrevet.</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Basalprofilen i pumpen er opdateret. Pumpen afrunder basalen til sit eget trin: den giver %1$s pr. dag i stedet for %2$s.</string>
+    <string name="basal_reported_far_from_profile">Pumpen rapporterer en basal, der ligger langt fra profilen. AAPS beholder profilens basal. Kontroller basalraterne i pumpen.</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">Kulhydrater</string>
     <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">Sidste forb.: %1$d min siden</string>
+    <string name="short_status_last_bolus">Sidste bolus: %1$sIE @ %2$s</string>
+    <string name="short_status_temp_basal">TBR: %1$s</string>
+    <string name="short_status_battery">Batt: %1$d%%</string>
+    <string name="short_status_not_initialized">Pumpe ikke initialiseret</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">Batterioptimering</string>
+    <string name="permission_battery_description">Appen skal undtages fra batterioptimering for at køre pålideligt i baggrunden</string>
+    <string name="permission_directory_title">AAPS-mappe</string>
+    <string name="permission_directory_description">Vælg en mappe til appens indstillinger og logfiler</string>
+    <string name="permission_notifications_title">Notifikationer</string>
+    <string name="permission_notifications_description">Kræves for at vise advarsler, alarmer og opdateringer af pumpestatus</string>
+    <string name="permission_schedule_exact_alarm_title">Alarmer og påmindelser</string>
+    <string name="permission_schedule_exact_alarm_description">Kræves, så alarmer kan tænde skærmen, mens AAPS kører i baggrunden, og så påmindelser ringer til tiden</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">AAPS-alarmer</string>
+    <string name="alarm_channel_standard">Standardalarm</string>
+    <string name="alarm_channel_bolus_error">Bolusfejl</string>
+    <string name="alarm_channel_error">Generel fejl</string>
+    <string name="alarm_channel_urgent">Akut alarm</string>
+    <string name="alarm_channel_eat_reminder">Tid til at spise</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (tilsidesætter Forstyr ikke)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (respekterer Forstyr ikke)</string>
+    <string name="alarm_channel_silent_urgent">Akut alarm (gradvist stigende lydstyrke)</string>
+    <string name="alarm_channel_silent">Alarm (gradvist stigende lydstyrke)</string>
+    <string name="alarm_channel_silent_description">Bruges, når \'Øg lydstyrken for notifikationer gradvist\' er slået til. Alarmskærmen afspiller lyden.</string>
+    <string name="ongoing_channel_name">Løbende status</string>
+    <string name="eat_reminder_channel">Nedtælling til spisepåmindelse</string>
+    <string name="eat_reminder_channel_description">Viser tiden, indtil det er tid til at spise. Den laver ingen lyd; det gør alarmen til sidst.</string>
+    <string name="notifications_channel_name">AAPS-notifikationer</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0IE (%2$.1f\u00a0µl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/t</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Indstillingerne er eksporteret til skylager</string>
+    <string name="export_to_cloud_failed">Eksport til skylager mislykkedes</string>
+    <string name="csv_uploaded_to_cloud">CSV med brugerindtastninger er uploadet til skylager</string>
     <string name="exported">Præferencer eksporteret</string>
+    <string name="exported_failed">Eksport af indstillinger mislykkedes!</string>
     <string name="filenotfound">Filen blev ikke fundet</string>
     <string name="ue_exported">Brugerindtastninger exporteret</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksporteret %1$s siden</string>
     <string name="exported_at" comment="at placeholder we add export date">eksporteret ved %1$s</string>
+    <string name="exported_less_than_hour_ago">eksporteret for mindre end en time siden</string>
     <string name="metadata_warning_different_flavour">Præferencer er oprettet med forskellig variant af AAPS (%1$s) Mens du har: %2$s.\n\nNogle indstillinger mangler eller er ugyldige-efter import, tjek og opdatér dine præferencer.</string>
     <string name="metadata_warning_different_device">Indstillinger er oprettet på en anden enhed. Det er OK, hvis du importerer fra ældre / anden telefon, men sørg for, at importerede præferencer er korrekte!</string>
+    <string name="metadata_warning_old_export">De importerede indstillinger er allerede %1$s dage gamle! Måske har du nyere indstillinger, eller har du valgt den forkerte fil? Husk at eksportere indstillingerne jævnligt!</string>
     <string name="metadata_warning_date_format">Ugyldigt datoformat!</string>
     <string name="metadata_warning_different_version">Indstillinger fra en anden mindre version af applikationen. Det er OK, hvis du importerer efter opgradering, men tjek efter import, hvis indstillingerne stadig er korrekte!</string>
     <string name="metadata_urgent_different_version">Indstillinger fra en anden overordnet version af applikationen. Større versioner er forskellige, og de kan have inkompatible præferencer. Sørg for, at indstillingerne stadig er korrekte, når du har importeret!</string>
@@ -29,11 +78,37 @@
     <string name="prefdecrypt_issue_wrong_pass">Dekrypteringsfejl, det angivne kodeord er ugyldigt, eller indstillingsfilen er ændret. Det kan forekomme, at den importerede fil er eksporteret med et andet masterkodeord.</string>
     <string name="prefdecrypt_issue_wrong_format">Manglende krypteringskonfiguration, indstillingsformat er ugyldigt!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Ikke-understøttet eller ikke angivet krypteringsalgoritme!</string>
+    <string name="metadata_label_format">Filformat</string>
     <string name="metadata_label_created_at">Oprettet den</string>
     <string name="metadata_label_aaps_version">AAPS Version</string>
     <string name="metadata_label_aaps_flavour">Build-variant</string>
     <string name="metadata_label_device_name">Eksporterer enhedens patientnavn</string>
     <string name="metadata_label_device_model">Eksporterer enhedsmodel</string>
     <string name="metadata_label_encryption">Filkryptering</string>
+    <string name="metadata_format_new">Nyt krypteret format</string>
     <string name="metadata_format_other">Ukendt eksportformat</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Fejl ved adgang til filsystemet. Vælg AAPS-mappen korrekt.</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">Sikkerhedskopi til Google Drive</string>
+    <string name="csv_upload_failed">Upload af CSV med brugerindtastninger til skylager mislykkedes</string>
+    <string name="csv_upload_error">Der opstod en fejl under upload af CSV til skyen</string>
+    <string name="uploading_to_cloud">Uploader til skyen...</string>
+    <string name="cloud_directory_path">Skymappe: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Kan ikke forny adgangstoken til Google Drive</string>
+    <string name="google_drive_token_refresh_error">Kan ikke forny adgangstoken til Google Drive: %1$s</string>
+    <string name="google_drive_connection_test_failed">Test af forbindelsen til Google Drive mislykkedes</string>
+    <string name="google_drive_connect_error">Kan ikke oprette forbindelse til Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">Kunne ikke vise mapperne i Google Drive</string>
+    <string name="google_drive_list_folders_error">Fejl ved visning af mapper: %1$s</string>
+    <string name="google_drive_upload_no_id">Upload lykkedes, men der blev ikke returneret noget id</string>
+    <string name="google_drive_upload_verify_failed">Kontrol af upload mislykkedes</string>
+    <string name="google_drive_upload_failed">Upload mislykkedes: %1$s</string>
+    <string name="google_drive_upload_error">Fejl ved upload af fil: %1$s</string>
+    <string name="google_drive_folder_access_error">Kan ikke oprette eller åbne destinationsmappen: %1$s</string>
+    <string name="google_drive_list_settings_failed">Kunne ikke vise indstillingsfilerne</string>
+    <string name="google_drive_list_settings_error">Fejl ved visning af indstillingsfiler: %1$s</string>
+    <string name="google_drive_download_failed">Download af fil mislykkedes</string>
+    <string name="google_drive_download_error">Fejl ved download af fil: %1$s</string>
+    <string name="google_drive_authorized">Google Drive er godkendt</string>
+    <string name="google_drive_reauth_required">Ryd indstillingerne, og godkend Google Drive igen</string>
 </resources>
