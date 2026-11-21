@@ -6,7 +6,7 @@
     <string name="previous_button">Forrige</string>
     <string name="setupwizard_finish">FÆRDIG</string>
     <string name="welcome">Velkommen</string>
-    <string name="welcometosetupwizard">Velkommen til opsætningsguiden. Den vil guide dig gennem opsætningsprocessen\n</string>
+    <string name="welcometosetupwizard">Velkommen til opsætningsguiden. Den fører dig gennem opsætningen.</string>
     <string name="end_user_license_agreement">Slutbrugerlicensaftale</string>
     <string name="end_user_license_agreement_text">MÅ IKKE BRUGES TIL AT TRÆFFE MEDICINSKE BESLUTNINGER. DER ER INGEN GARANTI FOR PROGRAMMET, I DET OMFANG GÆLDENDE LOV TILLADER DET. UNDTAGEN NÅR DET ELLERS ER ANFØRT SKRIFTLIGT, AT RETTIGHEDSHAVERE OG / ELLER ANDRE PARTER LEVERER PROGRAMMET \"SOM BESET\" UDEN NOGEN FORM FOR GARANTI, HVERKEN UDTRYKT ELLER UNDERFORSTÅET, HERUNDER, MEN IKKE BEGRÆNSET TIL, DE UNDERFORSTÅELIGHEDER, DER ER FORBUNDET MED EGNETHED OG EGNETHED TIL ET BESTEMT FORMÅL. HELE RISIKOEN MED HENSYN TIL KVALITETEN OG YDEEVNEN AF PROGRAMMET ER DIN. HVIS PROGRAMMET VISER SIG AT VÆRE DEFEKT, BÆRER DU SELV OMKOSTNINGERNE VED ALLE NØDVENDIGE SERVICER, REPARATIONER ELLER KORREKTIONER SOM ER NØDVENDIGE.</string>
     <string name="end_user_license_agreement_i_understand">JEG FORSTÅR OG ER ENIG</string>
@@ -19,23 +19,45 @@
     <string name="master_password_summary">Hovedadgangskode bruges til backup kryptering og til at tilsidesætte sikkerhed i applikationen. Husk det eller gem et sikkert sted.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Brug værdien af den største mængde mad du plejer at indtage\n</string>
-    <string name="syncinfotext">Synkronisér data til skyen. Du kan springe denne del nu, men du vil ikke være i stand til at passere mål, før du opretter en Nightscout- eller Tidepool-klient.</string>
+    <string name="syncinfotext">Synkroniser data til skyen. Du kan springe denne del nu, men du vil ikke være i stand til at passere mål, før du opretter en Nightscout- eller Tidepool-klient.</string>
+    <string name="status_label">Status:</string>
     <string name="diawarning">Husk: nye insulinprofiler kræver DIA mindst 5 timer. DIA 5-6 timer på ny profil er lig med DIA 3 timer på gamle insulinprofiler.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Skift profil</string>
     <string name="exitwizard">Spring opsætningsguiden over</string>
     <string name="setupwizard_sensitivity_description">Følsomhedsplugin bruges til detektering af følsomhed og COB beregning. For mere info besøg:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Vælg en af de tilgængelige algoritmer. De er sorteret fra ældste til nyeste. En nyere algoritme er normalt mere effektiv. Husk at læse OpenAPS-dokumentationen og konfigurere den før brug.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Konfigurer venligst din RileyLink nedenfor. Når du har valgt en RileyLink, vil det være muligt at fortsætte opsætningen, når RileyLink-status er \"Tilsluttet\". Dette kan tage et minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Bemærk:</b> Du kan fortsætte opsætningen, når pumpen er konfigureret.\n</string>
     <string name="startobjective">Start dit første mål</string>
-    <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
+    <string name="open_objectives">Åbn Mål</string>
+    <string name="setupwizard_permissions">Tilladelser</string>
+    <string name="setupwizard_profile_info">Opret en profil med dine basalrater, IC, ISF og målværdier. Du kan tilføje flere profiler senere.</string>
+    <string name="setupwizard_permissions_info">AAPS skal have adgang til lagerplads og tilladelser for at virke korrekt. Giv de nødvendige tilladelser nedenfor.</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink-status:</string>
+    <string name="setupwizard_client_control_title">Klientstyring</string>
+    <string name="setupwizard_client_control_info">Par klientenheder, så de kan sende signerede kommandoer til denne hovedenhed via Nightscout. Det er den nye anbefalede måde at fjernstyre AAPS på.</string>
+    <string name="setupwizard_ns_receive_info">Modtagelse af behandlinger og data direkte fra Nightscout (en mindre sikker metode) er nu slået fra som standard. Åbn kun indstillingerne nedenfor, hvis du stadig har brug for det. Det er nødvendigt, hvis du indtaster data via NS eller apps fra tredjepart.</string>
+    <string name="setupwizard_open_ns_receive_settings">Modtagelse af data fra Nightscout</string>
+    <string name="setupwizard_pair_with_master_info">Par denne klient med din AAPS-hovedenhed, så den kan sende kommandoer via en sikker kanal. Efter parringen er opsætningen færdig.</string>
+    <string name="setupwizard_setup_from_master_title">Opsæt fra hovedenheden</string>
+    <string name="setupwizard_setup_from_master_info">Åbn Godkendte klienter på hovedenheden, og tilføj denne telefon med en QR-kode. Når du scanner den, opsættes Nightscout med sit eget token, og telefonen kan også blive parret. Efter scanningen er opsætningen færdig. Uden en QR-kode kan du springe dette trin over og selv opsætte Nightscout.</string>
+    <string name="setupwizard_scan_master_qr">Scan QR-koden</string>
+    <string name="setupwizard_pairing_ws_warning">Nightscout WebSocket-forbindelsen er nødvendig for parring. Gå tilbage til forrige trin, og aktiver den først.</string>
+    <string name="setupwizard_pairing_status_master">Parrede klienter: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Ingen klienter parret endnu</string>
+    <string name="setupwizard_pairing_status_client_paired">Parret med en hovedenhed</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Ikke parret endnu</string>
+    <string name="setupwizard_instance_name_title">Hvem bruger denne telefon?</string>
     <string name="readstatus">Læs status</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Denne enhed synes ikke at understøtte batterioptimering whitelisting - du kan opleve problemer med ydeevnen.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Hvilken pumpe vil du gerne bruge med AAPS?</string>
     <string name="configbuilder_aps_description">Hvilken APS algoritme skal foretage terapi justeringer?</string>
-    <string name="configbuilder_bgsource_description">Hvor skal AAPS få sine data fra?</string>
+    <string name="configbuilder_sync_description">Plugins til upload af data, synkronisering og kommunikation.</string>
+    <string name="configbuilder_bgsource_description">Hvor skal AAPS hente sine data fra?</string>
     <string name="configbuilder_sensitivity_description">Hvilken følsomhedsalgoritme skal anvendes?</string>
     <string name="allow_hardware_pump_text">Bemærk: Hvis du aktiverer og opretter forbindelse til en hardwarepumpe, vil AndroidAPS kopiere de basale indstillinger fra profilen til pumpen og overskrive den eksisterende basal rate lagret på pumpen. Sørg for, at du har den korrekte basal indstilling i AndroidAPS. Hvis du ikke er sikker på eller ikke ønsker at overskrive de basale indstillinger på din pumpe, tryk på annuller og gentag skift til pumpen på et senere tidspunkt.</string>
     <string name="nsclient_version_does_not_match">AAPSClient version matcher ikke AAPS version. Opdater venligst.</string>
@@ -49,6 +71,9 @@
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
+    <string name="loading">Indlæser…</string>
+    <string name="warning_wrong_directory_selected">Forkert mappe valgt</string>
+    <string name="warning_wrong_directory_message">Du har valgt undermappen \"%1$s\" i stedet for AAPS-hovedmappen. Vælg den overordnede AAPS-mappe. Appen opretter og håndterer selv undermapperne.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <!-- Provider-agnostic cloud storage strings -->
     <!-- Authorization status strings -->
