@@ -6,8 +6,8 @@
     <!-- Omnipod Eros - Errors -->
     <string name="omnipod_eros_error_riley_link_address_invalid">RileyLink adresse ugyldig.</string>
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Vis Puls Log knap i Pod indstillingsmenu</string>
-    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Vis Rileylink statistik knap i Pod indstillingsmenu</string>
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Vis knappen Pulslog i menuen til Pod-administration</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Vis knappen RileyLink-statistik i menuen til Pod-administration</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Aktiver logning af batteriskift i menuen Handlinger</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f IE</string>
@@ -24,7 +24,7 @@
     <string name="omnipod_eros_error_nonce_resync_failed">Kommunikation mislykkedes: \'nonce\' gensynkronisering mislykkedes</string>
     <string name="omnipod_eros_error_nonce_out_of_sync">Kommunikation mislykkedes: \'nonce\' ude af synkronisering</string>
     <string name="omnipod_eros_error_not_enough_data">Kommunikation mislykkedes: Ikke nok data modtaget fra Pod</string>
-    <string name="omnipod_eros_error_pod_fault">En Pod fejl (%1$03d %2$s) er blevet fundet. Deaktivér venligst din Pod og aktivér en ny</string>
+    <string name="omnipod_eros_error_pod_fault">En Pod-fejl (%1$03d %2$s) er blevet fundet. Deaktiver din Pod, og aktiver en ny</string>
     <string name="omnipod_eros_error_pod_returned_error_response">Kommunikation mislykkedes: Pod returnerede et fejlsvar</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Intet svar fra RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink afbrudt</string>
@@ -43,9 +43,9 @@
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Kan ikke verificere, om SMB bolus (%1$.2f IE) lykkedes. <b>Hvis du er sikker på, at Bolus ikke lykkedes, bør du manuelt slette SMB-posten fra behandlinger.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">En midlertidig basal kører på Pod, men AAPS er uvidende om denne midlertidige basal. Annuller venligst din midlertidige basal manuelt.</string>
     <!-- Omnipod Eros - Pod Management -->
-    <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink Status</string>
+    <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink-statistik</string>
     <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Nulstil RileyLink</string>
-    <string name="omnipod_eros_pod_management_pulse_log">Puls Log</string>
+    <string name="omnipod_eros_pod_management_pulse_log">Pulslog</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulslog (kopieret til udklipsholder)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
     <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Fyld en ny Pod med nok insulin til 3 dage.\n\nLyt efter to bip fra Pod under påfyldning. De angiver, at minimumsmængden på 80IE er blevet tilført. Sørg for at tømme fyldningssprøjten fuldstændigt, selv efter at have hørt de to bip.\n\nEfter fyldning af Pod, tryk venligst på <b>Næste</b>.\n\n<b>Bemærk:</b> fjern ikke Pod\'s kanylehætte på nuværende tidspunkt.\n<b>Bemærk:</b> placer venligst RileyLink i opretstående position og placer Pod ca. 10cm fra den.</string>
