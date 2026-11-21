@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="sensitivity_oref1">Osjetljivost Oref1</string>
+    <string name="sensitivity_aaps">Osjetljivost AAPS</string>
+    <string name="sensitivity_weighted_average">Osjetljivost ponderirani prosjek</string>
+    <string name="description_sensitivity_aaps">Osjetljivost se izračunava na isti način kao kod Oref0, ali možete odrediti vremensko razdoblje unatrag. Minimalna apsorpcija ugljikohidrata izračunava se iz maksimalnog vremena apsorpcije ugljikohidrata iz postavki.</string>
     <string name="description_sensitivity_oref1">Osjetljivost se izračunava iz podataka za 8 ili 24 sata u prošlosti (koristeći bilo koji od njih koji je osjetljiviji). Ugljikohidrati (ako se ne apsorbiraju) smanjuju se nakon vremena navedenog u postavkama. Dodatak također izračunava UAM.</string>
     <string name="description_sensitivity_weighted_average">Osjetljivost se izračunava kao procijenjen prosjek odstupanja. Novija odstupanja imaju veću težinu. Minimalna apsorpcija ugljikohidrata izračunava se iz maksimalnog vremena apsorpcije ugljikohidrata iz preferencija. Ovaj algoritam je najbrži u praćenju promjena osjetljivosti.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM je onemogućen jer se oslanja na dodatak za osjetljivost Oref1</string>
+    <string name="absorption_settings_title">Postavke apsorpcije</string>
 </resources>
