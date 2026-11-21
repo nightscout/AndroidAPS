@@ -24,7 +24,7 @@
     <string name="pumpisnottempbasalcapable">La bomba no té la funcionalitat de basals temporals</string>
     <string name="closed_loop_disabled_on_dev_branch">Executant versió de desenvolupament. Llaç tancat no disponible.</string>
     <string name="closed_loop_disabled_with_eb">Llaç tancat desactivat degut a bolus estès actiu</string>
-    <string name="smbalwaysdisabled">Les funcions \"SMB sempre\" i \"SMB després de carbohidrats\" estan desactivades pq la font de glucèmia no fa filtrat avançat</string>
+    <string name="smbalwaysdisabled">Les funcions \"SMB sempre\" i \"SMB després de carbohidrats\" estan desactivades perquè la font de glucèmia no fa filtrat avançat</string>
     <string name="smbnotallowedinopenloopmode">SMB no permès en mode llaç obert</string>
     <string name="maxvalueinpreferences">valor màxim a la configuració</string>
     <string name="hardlimit">límit estricte</string>
