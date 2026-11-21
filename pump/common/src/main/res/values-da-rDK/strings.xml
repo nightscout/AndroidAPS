@@ -9,7 +9,7 @@
     <string name="pump_status_ready">Klar</string>
     <string name="pump_status_busy">Optaget</string>
     <string name="pump_status_suspended">Sat på pause</string>
-    <string name="pump_status_executing_command">Udfører Kommando</string>
+    <string name="pump_status_executing_command">Udfører kommando</string>
     <!-- Commands -->
     <string name="pump_cmd_desc_get_settings">Hent indstillinger</string>
     <string name="pump_cmd_desc_get_firmware">Hent pumpens firmware</string>
@@ -33,7 +33,7 @@
     <string name="history_group_basal">Basaler</string>
     <string name="history_group_configuration">Konfigurationer</string>
     <string name="history_group_notification">Notifikationer</string>
-    <string name="history_group_statistic">Statistikker</string>
+    <string name="history_group_statistic">Statistik</string>
     <string name="history_group_unknown">Ukendte</string>
     <string name="history_group_all">Alle</string>
     <string name="history_group_bolus">Bolusser</string>
@@ -42,7 +42,7 @@
     <string name="history_group_glucose">Blodsukker</string>
     <string name="history_group_base">Grundlæggende</string>
     <string name="history_group_other">Andet</string>
-    <string name="history_group_events">Alle Begivenheder</string>
+    <string name="history_group_events">Alle begivenheder</string>
     <string name="history_group_events_no_stat">Begivenheder (ingen statistik)</string>
     <!-- Time -->
     <string name="time_today">I dag</string>
