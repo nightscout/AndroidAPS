@@ -44,6 +44,7 @@
     <string name="diaconn_g8_screentimeout">Durée affichage LCD [secondes]</string>
     <string name="diaconn_g8_language">Langue</string>
     <string name="diaconn_g8_bolus_speed">Vitesse bolus</string>
+    <string name="diaconn_g8_pumplang_chiness">Chinois</string>
     <string name="diaconn_g8_pumplang_korean">Coréen</string>
     <string name="diaconn_g8_pumplang_english">Anglais</string>
     <string name="diaconn_g8_pumpscreentimeout_10">10</string>
@@ -61,6 +62,7 @@
     <string name="diaconn_g8_logbatterychange_summary">Ajouter \"Changement de pile\" dans careportal si détecté dans l\'historique</string>
     <string name="diaconn_g8_logbatterychange_title">Enreg. changement pile</string>
     <string name="diaconn_g8_logsyncinprogress">Enreg. synchronisation en cours</string>
+    <string name="diaconn_g8_loginsulinshorage">Insuline insuffisante</string>
     <string name="diaconn_g8_logbatteryshorage">Pile faible</string>
     <string name="diaconn_g8_logneedleprime">Amorçage site :%1$.2fU</string>
     <string name="diaconn_g8_loginjectorprime">Amorçage injecteur :%1$.2fU</string>
@@ -74,6 +76,7 @@
     <string name="diaconn_g8_reasoncomplete">Effectué</string>
     <string name="diaconn_g8_reasoninjectonblock">Injection bloquée</string>
     <string name="diaconn_g8_reasonbatteryshortage">Pile faible</string>
+    <string name="diaconn_g8_reasoninsulinshortage">Insuline insuffisante</string>
     <string name="diaconn_g8_reasonuserstop">Arrêt utilisateur</string>
     <string name="diaconn_g8_reasonsystemreset">Réinit. système</string>
     <string name="diaconn_g8_reasonother">Autre</string>
@@ -89,6 +92,7 @@
     <string name="diaconn_g8_logalarmblock">Injection bloquée (%s)</string>
     <string name="diaconn_g8_lgorelease">autorisation basale (%s)</string>
     <string name="diaconn_g8_lgosuspend">suspension basale (%s)</string>
+    <string name="diaconn_g8_logdualnormalsuccess">Succès du double normal</string>
     <string name="diaconn_g8_logdualsquarestart">Début du double carré</string>
     <string name="diaconn_g8_logdualsquaresuccess">Succès du double carré</string>
     <string name="diaconn_g8_logsquarestart">Début du carré</string>
@@ -97,6 +101,8 @@
     <string name="diaconn_g8_logsuccess">Effectué</string>
     <string name="diaconn_g8_logmealsuccess">Repas réussi</string>
     <string name="diaconn_g8_errorcode_1">Recherche impossible en raison d\'une erreur CRC de paquets.</string>
+    <string name="diaconn_g8_errorcode_2">Réglage impossible : erreur de paramètre d\'entrée.</string>
+    <string name="diaconn_g8_errorcode_3">Réglage impossible : erreur de spécification du protocole.</string>
     <string name="diaconn_g8_errorcode_4">Repas retardé, ne peut être injecté.</string>
     <string name="diaconn_g8_errorcode_6">Annulé par la pompe</string>
     <string name="diaconn_g8_errorcode_7">Autres actions en cours, limitation des paramètres de l\'application.</string>
@@ -106,6 +112,7 @@
     <string name="diaconn_g8_errorcode_11">L\'injection n\'est pas possible en raison d\'une pile faible.</string>
     <string name="diaconn_g8_errorcode_12">Injection impossible en raison de manque d\'insuline.</string>
     <string name="diaconn_g8_errorcode_13">Vous ne pouvez pas l\'injecter car il dépasse la limite.</string>
+    <string name="diaconn_g8_errorcode_14">Injection impossible : le volume d\'injection autorisé pour aujourd\'hui serait dépassé.</string>
     <string name="diaconn_g8_errorcode_15">Une fois la configuration du basal terminée, l\'injection de basal peut être effectuée.</string>
     <string name="diaconn_g8_logtubechange_title">Enreg. changement de tubulure</string>
     <string name="diaconn_g8_logtubechange_summary">Ajouter \"Changement de tubulure\" à Careportal lorsqu\'il est détecté dans l\'historique</string>
@@ -113,6 +120,8 @@
     <string name="diaconn_g8_errorcode_32">En mode AGB, l\'injection d\'insuline est limitée</string>
     <string name="diaconn_g8_errorcode_33">Mode AGB activé, la commande de mise en marche est refusée.</string>
     <string name="diaconn_g8_errorcode_34">Mode AGB désactivé, la commande d\'arrêt est refusée.</string>
+    <string name="diaconn_g8_errorcode_35">Démarrage du débit basal temporaire refusé : un débit basal temporaire est déjà en cours</string>
+    <string name="diaconn_g8_errorcode_36">Arrêt du débit basal temporaire refusé : aucun débit basal temporaire n\'est en cours</string>
     <string name="diaconn_g8_cloudsend_summary">Envoyer les logs sur le Cloud Diaconn.</string>
     <string name="diaconn_g8_cloudsend_title">Synchro Diaconn Cloud</string>
     <string name="bolus_speed_1">1 U/min</string>
@@ -125,4 +134,5 @@
     <string name="bolus_speed_8">8 U/min</string>
     <string name="diaconn_pairing_successful">Appairage réussi !</string>
     <string name="diaconn_pairing_successful_message">Votre pompe est maintenant connectée et prête à l\'emploi.</string>
+    <string name="diaconn_g8_cloud_sync_progress" comment="Pump status while AAPS sends the pump log to the Diaconn cloud. %1$d=parts sent, %2$d=all parts. Example: Cloud sync: 3 / 10">Synchronisation Cloud : %1$d / %2$d</string>
 </resources>
