@@ -1,18 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">Jednostavni način rada</string>
+    <string name="pref_title_insulin_concentration">Podrška za koncentraciju inzulina</string>
+    <string name="pref_summary_insulin_concentration">Omogućite podršku za različite koncentracije inzulina (U50, U200 itd.)</string>
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Drži zaslon uključenim</string>
+    <string name="pref_title_show_treatment_button">Prikaži gumb za tretman</string>
+    <string name="pref_title_show_wizard_button">Prikaži gumb za kalkulator</string>
+    <string name="pref_title_show_insulin_button">Prikaži gumb za inzulin</string>
+    <string name="pref_title_show_carbs_button">Prikaži gumb za ugljikohidrate</string>
+    <string name="pref_title_show_cgm_button">Prikaži gumb za CGM</string>
+    <string name="pref_summary_show_cgm_button">Otvara xDrip+ ili Dexcom aplikaciju (možete koristiti tipku za povratak kako biste se vratili u AAPS).</string>
+    <string name="pref_title_show_calibration_button">Prikaži gumb za kalibraciju</string>
+    <string name="pref_summary_show_calibration_button">Šalje kalibraciju u xDrip+ (u xDrip+ pod Inter-App settings mora biti uključeno „Accept Calibrations“).</string>
+    <string name="pref_title_show_notes_in_dialogs">Prikaži bilješke u dijaloškim okvirima</string>
+    <string name="pref_title_use_bolus_advisor">Koristi savjetnik za bolus</string>
+    <string name="pref_summary_use_bolus_advisor">Uključite savjetnik za bolus koji pomaže pri izračunu bolusa u slučajevima povišene razine glukoze.</string>
+    <string name="pref_title_use_bolus_reminder">Koristi podsjetnik za bolus</string>
+    <string name="pref_summary_use_bolus_reminder">Uključite obavijesti-podsjetnike za bolus kako biste lakše pratili primjenu inzulina.</string>
+    <string name="pref_title_use_super_bolus">Koristi superbolus</string>
+    <string name="pref_summary_use_super_bolus">Omogućite superbolus, koji posuđuje inzulin iz bazala za trenutnu isporuku.</string>
     <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">BT Watchdog</string>
+    <string name="pref_summary_bt_watchdog">Isključuje Bluetooth na telefonu na jednu sekundu ako nije moguće uspostaviti vezu s pumpom. To može pomoći na nekim telefonima kod kojih dolazi do blokade Bluetooth sustava.</string>
     <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">Upozori ako ne stižu podaci o GUK-u</string>
+    <string name="pref_title_alert_pump_unreachable">Upozori ako je pumpa nedostupna</string>
+    <string name="pref_title_alert_carbs_required">Upozori ako su potrebni ugljikohidrati</string>
+    <string name="pref_title_alert_urgent_as_android_notification">Prikaži hitne alarme kao Android obavijesti</string>
+    <string name="pref_title_alert_increase_volume">Postupno pojačavaj glasnoću obavijesti</string>
+    <string name="pref_title_alert_override_dnd">Zaobiđi način rada Ne ometaj</string>
     <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">Prenesi podatke o GUK-u u NS</string>
+    <string name="pref_title_bg_source_create_sensor_change">Zabilježi promjenu senzora</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Stvara događaj terapije „Promjena senzora“ kada se umetne senzor.</string>
     <!-- APS preferences -->
+    <string name="pref_title_aps_use_dynamic_sensitivity">Koristi dinamičku osjetljivost</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">Za prilagodbu osjetljivosti koristi DynamicISF umjesto Autosensa.</string>
+    <string name="pref_title_aps_use_autosens">Koristi Autosens</string>
+    <string name="pref_title_aps_use_smb">Omogući SMB</string>
+    <string name="pref_summary_aps_use_smb">Omogućite Super Micro Bolus (SMB). SMB odmah isporučuje inzulin kao odgovor na porast razine glukoze u krvi.</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">Omogući SMB s visokim privremenim ciljem</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">Dopušta SMB kada je aktivan visoki privremeni cilj.</string>
+    <string name="pref_title_aps_use_smb_always">Uvijek omogući SMB</string>
+    <string name="pref_summary_aps_use_smb_always">Omogućuje SMB u svim uvjetima, neovisno o bolusu ili aktivnim ugljikohidratima (COB).</string>
+    <string name="pref_title_aps_use_smb_with_cob">Omogući SMB uz COB</string>
+    <string name="pref_summary_aps_use_smb_with_cob">Dopušta SMB kada postoje aktivni ugljikohidrati (COB).</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">Omogući SMB s niskim privremenim ciljem</string>
+    <string name="pref_summary_aps_use_smb_with_low_tt">Dopušta SMB kada je aktivan niski privremeni cilj.</string>
+    <string name="pref_title_aps_use_smb_after_carbs">Omogući SMB nakon ugljikohidrata</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">Dopušta SMB određeno vrijeme nakon unosa ugljikohidrata.</string>
+    <string name="pref_title_aps_use_uam">Omogući UAM</string>
+    <string name="pref_summary_aps_use_uam">Omogućuje prepoznavanje i liječenje nenajavljenih obroka (UAM).</string>
+    <string name="pref_title_aps_sensitivity_raises_target">Osjetljivost podiže cilj</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">Kada se otkrije osjetljivost, podiže se ciljna vrijednost glukoze.</string>
+    <string name="pref_title_aps_resistance_lowers_target">Rezistencija snižava cilj</string>
+    <string name="pref_summary_aps_resistance_lowers_target">Kada se otkrije rezistencija, snižava se ciljna vrijednost glukoze.</string>
+    <string name="pref_title_aps_always_use_short_deltas">Uvijek koristi kratku prosječnu deltu</string>
+    <string name="pref_summary_aps_always_use_short_deltas">Za izračun promjene GUK-a uvijek koristi kratku prosječnu deltu umjesto obične delte.</string>
+    <string name="pref_title_aps_dynisf_adjust_sensitivity">DynamicISF prilagođava osjetljivost</string>
+    <string name="pref_summary_aps_dynisf_adjust_sensitivity">Prilagođava izračune osjetljivosti kada se koristi DynamicISF.</string>
+    <string name="pref_title_aps_autosens_adjust_targets">Autosens prilagođava ciljeve</string>
+    <string name="pref_summary_aps_autosens_adjust_targets">Dopušta Autosensu da osim bazala i ISF-a prilagođava i ciljnu vrijednost glukoze.</string>
+    <string name="pref_title_aps_high_tt_raises_sensitivity">Visoki privremeni cilj povećava osjetljivost</string>
+    <string name="pref_summary_aps_high_tt_raises_sensitivity">Visoki privremeni ciljevi povećat će osjetljivost na inzulin.</string>
+    <string name="pref_title_aps_low_tt_lowers_sensitivity">Niski privremeni cilj smanjuje osjetljivost</string>
+    <string name="pref_summary_aps_low_tt_lowers_sensitivity">Niski privremeni ciljevi smanjit će osjetljivost na inzulin.</string>
+    <string name="pref_title_aps_use_autoisf_weights">Omogući AutoISF</string>
+    <string name="pref_summary_aps_use_autoisf_weights">Omogućuje AutoISF prilagodbe ISF-a na temelju težinskih faktora.</string>
+    <string name="pref_title_aps_smb_on_even_target">Omogući SMB pri parnom cilju</string>
+    <string name="pref_summary_aps_smb_on_even_target">Drugi način uključivanja opcije „Uvijek omogući SMB“, na temelju vrijednosti cilja glukoze.</string>
     <!-- Maintenance preferences -->
+    <string name="pref_title_maintenance_enable_fabric">Omogući slanje izvješća o rušenju (Fabric)</string>
+    <string name="pref_title_maintenance_enable_export_automation">Omogući automatski izvoz postavki</string>
     <!-- Autotune preferences -->
+    <string name="pref_title_autotune_auto_switch_profile">Automatski zamijeni profil</string>
+    <string name="pref_summary_autotune_auto_switch_profile">Nakon izračuna automatski prelazi na profil koji je izradio Autotune.</string>
+    <string name="pref_title_autotune_categorize_uam_as_basal">Svrstaj UAM u bazal</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">U izračunima Autotunea nenajavljene obroke smatra potrebom za bazalnim inzulinom.</string>
+    <string name="pref_title_autotune_tune_insulin_curve">Prilagodi krivulju inzulina</string>
+    <string name="pref_title_autotune_circadian_ic_isf">Koristi cirkadijalni IC/ISF</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">U izračunima Autotunea primjenjuje cirkadijalne promjene na IC i ISF.</string>
+    <string name="pref_title_autotune_additional_log">Dodatno bilježenje</string>
     <!-- SMS preferences -->
+    <string name="pref_title_sms_allow_remote_commands">Dopusti daljinske naredbe putem SMS-a</string>
+    <string name="pref_title_sms_report_pump_unreachable">Javi nedostupnost pumpe putem SMS-a</string>
+    <string name="pref_summary_sms_report_pump_unreachable">Šalje SMS obavijest kada pumpa postane nedostupna.</string>
     <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">Prenesi status pumpe u NS</string>
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_upload_data">Prenesi podatke u NS</string>
+    <string name="pref_summary_ns_upload_data">Prenosi tretmane, privremene bazale i druge podatke u Nightscout.</string>
+    <string name="pref_title_ns_receive_cgm">Primaj CGM podatke iz NS-a</string>
+    <string name="pref_summary_ns_receive_cgm">Prihvaća CGM očitanja iz Nightscouta.</string>
+    <string name="pref_title_ns_receive_profile_store">Primaj spremište profila iz NS-a</string>
+    <string name="pref_summary_ns_receive_profile_store">Prihvaća ažuriranja spremišta profila iz Nightscouta.</string>
+    <string name="pref_title_ns_receive_temp_target">Primaj privremene ciljeve iz NS-a</string>
+    <string name="pref_summary_ns_receive_temp_target">Prihvaća promjene privremenog cilja iz Nightscouta.</string>
+    <string name="pref_title_ns_receive_profile_switch">Primaj zamjene profila iz NS-a</string>
+    <string name="pref_summary_ns_receive_profile_switch">Prihvaća zamjene profila iz Nightscouta.</string>
+    <string name="pref_title_ns_receive_insulin">Primaj inzulin iz NS-a</string>
+    <string name="pref_summary_ns_receive_insulin">Prihvaća unose inzulina iz Nightscouta.</string>
+    <string name="pref_title_ns_receive_carbs">Primaj ugljikohidrate iz NS-a</string>
+    <string name="pref_summary_ns_receive_carbs">Prihvaća unose ugljikohidrata iz Nightscouta.</string>
+    <string name="pref_title_ns_receive_therapy_event">Primaj događaje terapije iz NS-a</string>
+    <string name="pref_summary_ns_receive_therapy_event">Prihvaća događaje terapije iz Nightscouta.</string>
+    <string name="pref_title_ns_receive_running_mode">Primaj način rada iz NS-a</string>
+    <string name="pref_summary_ns_receive_running_mode">Prihvaća promjene načina rada iz Nightscouta.</string>
+    <string name="pref_title_ns_receive_tbr_eb">Primaj TBR/EB iz NS-a</string>
+    <string name="pref_summary_ns_receive_tbr_eb">Prihvaća privremene bazale i produžene boluse iz Nightscouta.</string>
+    <string name="pref_title_ns_notifications_from_alarms">NS alarmi</string>
+    <string name="pref_title_ns_notifications_from_announcements">NS najave</string>
+    <string name="pref_title_ns_use_cellular">Koristi mobilne podatke</string>
+    <string name="pref_title_ns_use_roaming">Koristi roaming</string>
+    <string name="pref_title_ns_use_wifi">Koristi WiFi</string>
+    <string name="pref_title_ns_use_on_battery">Sinkroniziraj pri radu na bateriji</string>
+    <string name="pref_title_ns_use_on_charging">Sinkroniziraj tijekom punjenja</string>
+    <string name="pref_title_ns_log_app_start">Zabilježi pokretanje aplikacije</string>
+    <string name="pref_title_ns_create_announcements_from_errors">Stvori najave iz pogrešaka</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">Stvori najave za potrebne ugljikohidrate</string>
+    <string name="pref_title_ns_slow_sync">Koristi sporu sinkronizaciju</string>
+    <string name="pref_title_ns_use_ws">Koristi WebSockets</string>
+    <string name="pref_summary_ns_use_ws">Koristi WebSockets za komunikaciju s Nightscoutom u stvarnom vremenu.</string>
+    <string name="pref_title_ns_allow_client_control">Dopusti upravljanje s klijenta</string>
     <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">Samo WiFi</string>
+    <string name="pref_title_openhumans_charging_only">Samo tijekom punjenja</string>
     <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_status">Šalji status u xDrip+</string>
     <!-- Wear preferences -->
     <!-- Site rotation preferences -->
     <!-- IntKey: Overview preferences -->
