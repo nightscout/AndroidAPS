@@ -8,8 +8,8 @@
     <string name="omnipod_dash_overview_bluetooth_connection_quality">Качество соединения</string>
     <string name="omnipod_dash_overview_delivery_status">Статус подачи</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
-    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Заполните новый Pod запасом инсулина на 3 дня.\n\nПоступят два звуковых сигнала от помпы во время заправки. Это означает, что минимальное количество 80 ед. заправлено. Не забудьте опустошить заправочный шприц даже после того, как услышите два звуковых сигнала.\n\nПосле заполнения Pod нажмите <b>Next</b>.\n\n<b>Примечание:</b> Пока что не снимайте с помпы колпачок с иглой.</string>
-    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Попытка соединиться с новым подом и активировать его.\n\nКогда процесс инициализации успешно завершен, нажмите &lt;b&gt;Next/b&gt;.</string>
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Заполните новый Pod запасом инсулина на 3 дня.\n\nПоступят два звуковых сигнала от Pod во время заправки. Это означает, что минимальное количество 80 ед заправлено. Не забудьте опустошить заправочный шприц даже после того, как услышите два звуковых сигнала.\n\nПосле заполнения Pod нажмите <b>Далее</b>.\n\n<b>Примечание:</b> Пока что не снимайте с Pod колпачок с иглой.</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Попытка выполнить сопряжение с новым Pod и заполнить его.\n\nКогда процесс инициализации успешно завершится, нажмите <b>Далее</b>.</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_failed_to_connect">Не удалось подключиться</string>
     <string name="omnipod_dash_found_too_many_pods">Найдено слишком много подов</string>
@@ -21,12 +21,17 @@
     <string name="omnipod_dash_not_enough_insulin">В резервуаре недостаточно инсулина</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Неподтвержденная команда</string>
     <string name="requested_by_user" comment="26 characters max for translation">Запрошено пользователем</string>
+    <string name="suspend_delivery_is_unconfirmed">Приостановка подачи не подтверждена! Обновите вручную статус Pod на экране помпы и при необходимости возобновите подачу.</string>
     <string name="insulin_delivery_suspended">Введение инсулина приостановлено</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Часовой пояс Pod отличается от часового пояса на телефоне. Базальная скорость неверна. Переключите профиль для исправления</string>
     <string name="failed_to_set_the_new_basal_profile">Не удалось установить новый базовый профиль. Подача инсулина приостановлена</string>
+    <string name="setting_basal_profile_might_have_failed">Возможно, не удалось установить базальный профиль. Подача может быть приостановлена! Обновите вручную статус Pod на экране помпы и при необходимости возобновите подачу.</string>
     <string name="bolus_delivery_status_uncertain">Статус подачи болюса неясен. Обновите статус pod, чтобы подтвердить или отклонить.</string>
+    <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Не удалось проверить, выполнен ли SMB (%1$s). Обновите статус Pod, чтобы подтвердить или опровергнуть эту команду.</string>
     <string name="temp_basal_out_of_sync">Неожиданное состояние врем базала! Если перед этим подавался врем базал, то он отменен. Проверьте кол-во поданного инсулина и журнал событий POD</string>
     <string name="checking_delivery_status">Выполняется проверка статуса подачи</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Возможно, не удалось установить временный базал. Если до этого работал временный базал, он отменен. Обновите вручную статус Pod на экране помпы.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Результат отмены временного базала неясен</string>
-    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Неподтвержденная команда возобновления болюса. Обновите статус pod</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Неподтвержденная команда возобновления подачи. Обновите статус Pod</string>
+    <string name="cancelling_temp_basal_might_have_failed">Возможно, не удалось отменить временный базал. Если до этого работал временный базал, он мог быть отменен. Обновите вручную статус Pod на экране помпы.</string>
 </resources>
