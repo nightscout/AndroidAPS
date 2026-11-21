@@ -1071,6 +1071,8 @@
     <string name="wiki_search_offline">Vyhľadávanie v dokumentácii vyžaduje internetové pripojenie</string>
     <string name="no_search_results">Nenašli sa žiadne výsledky</string>
     <string name="search_plugin_disabled">Plugin %1$s je deaktivovaný</string>
+    <string name="search_recent">Nedávne vyhľadávania</string>
+    <string name="search_history_remove">Odstrániť z nedávnych vyhľadávaní</string>
     <!--    Food Management -->
     <string name="food_management">Jedlo</string>
     <string name="food_deleted">Jedlo odstránené</string>
@@ -1214,5 +1216,6 @@
     <string name="units_sec">sek</string>
     <string name="units_years">r</string>
     <string name="prefs_range_title">Rozsah pre zobrazenie</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">Pumpa zastavila podávanie bolusu po podaní %1$s. Pred podaním ďalšieho bolusu skontrolujte pumpu.</string>
     <string name="secrets_not_protected">Na tomto počítači sa nenašlo systémové úložisko kľúčov. Kľúče, ktoré chránia vaše nastavenia a párovanie s hlavným zariadením, sú uložené v súboroch vedľa údajov, takže každý, kto získa kópiu vašich súborov, získa aj tieto kľúče. V systéme Linux nainštalujte a spustite správcu kľúčov (napríklad GNOME Keyring alebo KWallet) a potom znova spustite AAPS.</string>
 </resources>
