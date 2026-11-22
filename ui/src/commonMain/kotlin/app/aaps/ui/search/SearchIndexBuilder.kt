@@ -233,14 +233,20 @@ class SearchIndexBuilder(
         }
     }
 
-    private data class ParentScreenInfo(val key: String, val plugin: PluginBase?)
+    private data class ParentScreenInfo(val key: String, val plugin: PluginBase?, val item: PreferenceKey)
 
     private fun collectPreferenceKeys(entries: MutableList<SearchIndexEntry>, seenKeys: MutableSet<String>) {
         // Get all preference keys from registered enums
-        val allKeys = preferences.getAllPreferenceKeys()
+        val registered = preferences.getAllPreferenceKeys()
 
         // Build a map of preference key to parent screen info (screen key + owning plugin)
         val parentScreenMap = buildParentScreenMap()
+
+        // And every item a screen shows, also one no enum registers: an item that only opens a screen or a page, as
+        // "Alert kinds" and "Display over other apps" under Local alerts. Such an item is on the screen only where the
+        // platform has it, so search finds it where the screen shows it, and nowhere else.
+        val registeredKeys = registered.map { it.key }.toSet()
+        val allKeys = registered + parentScreenMap.values.map { it.item }.filter { it.key !in registeredKeys }
 
         allKeys.forEach { prefKey ->
             // Skip keys not visible in the current build mode (mirror calculatePreferenceVisibility)
@@ -305,7 +311,7 @@ class SearchIndexBuilder(
                     // disabled one and navigates to the screen that is actually in use.
                     val existing = map[item.key]
                     if (existing == null || (plugin?.isEnabled() == true && existing.plugin?.isEnabled() != true))
-                        map[item.key] = ParentScreenInfo(screenKey, plugin)
+                        map[item.key] = ParentScreenInfo(screenKey, plugin, item)
                 }
 
                 is PreferenceSubScreenDef -> collectPreferenceKeysFromScreen(item, item.key, plugin, map)

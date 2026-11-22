@@ -14,6 +14,7 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.search.SearchableItem
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.shared.tests.generatedTextResolver
+import app.aaps.ui.keys.UiIntentKey
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -113,5 +114,23 @@ internal class SearchIndexBuilderTest {
 
         assertThat(index.mapNotNull { (it.item as? SearchableItem.Preference)?.preferenceKey }).containsExactlyElementsIn(fillButtons)
         assertThat(index.map { it.item.key }).contains(fillScreen.key)
+    }
+
+    /**
+     * An item that only opens a screen, as "Alert kinds" under Local alerts, is in no registered enum. Search took its
+     * settings only from the registered enums, so it never found it, although the screen shows it.
+     */
+    @Test
+    fun `an item a screen shows is found also when no enum registers it`() {
+        whenever(preferences.getAllPreferenceKeys()).thenReturn(emptyList())
+        val alertsScreen = PreferenceSubScreenDef(key = "alerts", title = CoreUiStrings.localalertsettings_title, items = listOf(UiIntentKey.AlertKinds))
+        val provider = object : SearchableProvider {
+            override fun getSearchableItems(): List<SearchableItem> = listOf(SearchableItem.Category(alertsScreen))
+        }
+        val found = index(setOf(provider)).mapNotNull { it.item as? SearchableItem.Preference }
+
+        assertThat(found.map { it.preferenceKey }).containsExactly(UiIntentKey.AlertKinds)
+        // A result opens the screen that shows it
+        assertThat(found.single().parentScreenKey).isEqualTo("alerts")
     }
 }
