@@ -366,6 +366,7 @@ nsclientinternal_url|StringKey|true
 oh_charging_only|BooleanKey|true
 oh_wifi_only|BooleanKey|true
 openaps_smb_min_5m_carbimpact|DoubleKey|true
+openaps_smb_on_even_temp_target|BooleanKey|true
 openapsama_autosens_period|IntKey|true
 openapsama_current_basal_safety_multiplier|DoubleKey|true
 openapsama_enable_autoISF|BooleanKey|true

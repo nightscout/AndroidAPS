@@ -282,6 +282,8 @@ class OpenAPSViewModel(
         add(KeyValueRow("allowSMB_with_high_temptarget", allowSMB_with_high_temptarget.toString()))
         add(KeyValueRow("enableSMB_always", enableSMB_always.toString()))
         add(KeyValueRow("enableSMB_after_carbs", enableSMB_after_carbs.toString()))
+        add(KeyValueRow("enableSMB_EvenOn_OddOff", enableSMB_EvenOn_OddOff.toString()))
+        add(KeyValueRow("enableSMB_EvenOn_OddOff_always", enableSMB_EvenOn_OddOff_always.toString()))
         add(KeyValueRow("maxSMBBasalMinutes", maxSMBBasalMinutes.toString()))
         add(KeyValueRow("maxUAMSMBBasalMinutes", maxUAMSMBBasalMinutes.toString()))
         add(KeyValueRow("bolus_increment", bolus_increment.toString()))

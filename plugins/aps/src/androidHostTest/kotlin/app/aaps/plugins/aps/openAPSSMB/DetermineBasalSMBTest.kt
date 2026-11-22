@@ -88,6 +88,8 @@ class DetermineBasalSMBTest : TestBaseWithProfile() {
         allowSMB_with_high_temptarget = false,
         enableSMB_always = false,
         enableSMB_after_carbs = false,
+        enableSMB_EvenOn_OddOff = false,
+        enableSMB_EvenOn_OddOff_always = false,
         maxSMBBasalMinutes = 30,
         maxUAMSMBBasalMinutes = 30,
         bolus_increment = 0.1,
@@ -370,5 +372,60 @@ class DetermineBasalSMBTest : TestBaseWithProfile() {
     fun `99 mg_dL keeps SMB and 100 disables it`() {
         assertThat(enableSmbWithTempTarget(99.0)).isTrue()
         assertThat(enableSmbWithTempTarget(100.0)).isFalse()
+    }
+
+    private fun enableSmbEvenOdd(target: Double, tempTarget: Boolean, tempTargetOption: Boolean, profileOption: Boolean, units: String = "mg/dl"): Boolean =
+        sut.enable_smb(
+            profile = profile().copy(
+                min_bg = target,
+                max_bg = target,
+                target_bg = target,
+                temptargetSet = tempTarget,
+                enableSMB_always = true,
+                enableSMB_EvenOn_OddOff = tempTargetOption,
+                enableSMB_EvenOn_OddOff_always = profileOption,
+                out_units = units
+            ),
+            microBolusAllowed = true,
+            meal_data = noMeal(),
+            target_bg = target
+        )
+
+    @Test
+    fun `even temp target keeps SMB and odd temp target disables it`() {
+        assertThat(enableSmbEvenOdd(98.0, tempTarget = true, tempTargetOption = true, profileOption = false)).isTrue()
+        assertThat(enableSmbEvenOdd(99.0, tempTarget = true, tempTargetOption = true, profileOption = false)).isFalse()
+    }
+
+    @Test
+    fun `even profile target keeps SMB and odd profile target disables it`() {
+        assertThat(enableSmbEvenOdd(100.0, tempTarget = false, tempTargetOption = false, profileOption = true)).isTrue()
+        assertThat(enableSmbEvenOdd(101.0, tempTarget = false, tempTargetOption = false, profileOption = true)).isFalse()
+    }
+
+    /** Each option covers only its own kind of target. */
+    @Test
+    fun `an odd target is ignored when the option for this kind of target is off`() {
+        assertThat(enableSmbEvenOdd(99.0, tempTarget = true, tempTargetOption = false, profileOption = true)).isTrue()
+        assertThat(enableSmbEvenOdd(101.0, tempTarget = false, tempTargetOption = true, profileOption = false)).isTrue()
+    }
+
+    /** The profile option needs a single target. With a target range there is nothing to check. */
+    @Test
+    fun `the profile option is ignored for a target range`() {
+        val result = sut.enable_smb(
+            profile = profile().copy(min_bg = 100.0, max_bg = 102.0, target_bg = 101.0, enableSMB_always = true, enableSMB_EvenOn_OddOff_always = true),
+            microBolusAllowed = true,
+            meal_data = noMeal(),
+            target_bg = 101.0
+        )
+        assertThat(result).isTrue()
+    }
+
+    /** In mmol/L the decimal counts: 5.4 is even, 5.5 is odd. */
+    @Test
+    fun `in mmol the decimal decides`() {
+        assertThat(enableSmbEvenOdd(5.4 * Constants.MMOLL_TO_MGDL, tempTarget = true, tempTargetOption = true, profileOption = false, units = "mmol/L")).isTrue()
+        assertThat(enableSmbEvenOdd(5.5 * Constants.MMOLL_TO_MGDL, tempTarget = true, tempTargetOption = true, profileOption = false, units = "mmol/L")).isFalse()
     }
 }

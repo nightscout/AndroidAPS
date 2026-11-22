@@ -201,6 +201,14 @@ enum class BooleanKey(
         defaultedBySM = true,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
+    ApsSmbOnEvenTempTarget(
+        "openaps_smb_on_even_temp_target",
+        false,
+        KeysStrings.pref_title_aps_smb_on_even_temp_target,
+        KeysStrings.pref_summary_aps_smb_on_even_temp_target,
+        defaultedBySM = true,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
 
     // Simple Mode uploads with no switch, and that is the decision, not an oversight: `defaultedBySM`
     // hides the row and `hideParentScreenIfHidden` takes the whole Data choices screen with it. Two

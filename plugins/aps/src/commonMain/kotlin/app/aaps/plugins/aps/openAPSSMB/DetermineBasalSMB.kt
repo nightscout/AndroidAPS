@@ -89,7 +89,22 @@ class DetermineBasalSMB(
     //if (profile.out_units === "mmol/L") round(value / 18, 1).toFixed(1);
     //else Math.round(value);
 
+    /** An even target is an even number in mg/dL, or a number with an even decimal in mmol/L. */
+    private fun isEvenTarget(profile: OapsProfile): Boolean =
+        if (profile.out_units == "mmol/L") round(profile.target_bg * Constants.MGDL_TO_MMOLL * 10.0, 0).toInt() % 2 == 0
+        else round(profile.target_bg, 0).toInt() % 2 == 0
+
     fun enable_smb(profile: OapsProfile, microBolusAllowed: Boolean, meal_data: MealData, target_bg: Double): Boolean {
+        // With a temp target only the temp target option counts. Without one, the profile option
+        // counts only if the profile has a single target (min_bg == max_bg).
+        val checkEvenTarget =
+            if (profile.temptargetSet) profile.enableSMB_EvenOn_OddOff
+            else profile.enableSMB_EvenOn_OddOff_always && profile.min_bg == profile.max_bg
+        if (checkEvenTarget && !isEvenTarget(profile)) {
+            consoleError.add("SMB disabled due to odd target ${convert_bg(profile.target_bg)}")
+            return false
+        }
+
         // disable SMB when a high temptarget is set
         if (!microBolusAllowed) {
             consoleError.add("SMB disabled (!microBolusAllowed)")

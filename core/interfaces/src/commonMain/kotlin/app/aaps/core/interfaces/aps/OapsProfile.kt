@@ -35,6 +35,8 @@ data class OapsProfile(
     var allowSMB_with_high_temptarget: Boolean,
     var enableSMB_always: Boolean,
     var enableSMB_after_carbs: Boolean,
+    var enableSMB_EvenOn_OddOff: Boolean,
+    var enableSMB_EvenOn_OddOff_always: Boolean,
     var maxSMBBasalMinutes: Int,
     var maxUAMSMBBasalMinutes: Int,
     var bolus_increment: Double,

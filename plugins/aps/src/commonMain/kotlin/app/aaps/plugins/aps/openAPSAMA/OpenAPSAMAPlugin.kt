@@ -211,6 +211,8 @@ class OpenAPSAMAPlugin(
             allowSMB_with_high_temptarget = false, // not used
             enableSMB_always = false, // not used
             enableSMB_after_carbs = false, // not used
+            enableSMB_EvenOn_OddOff = false, // not used
+            enableSMB_EvenOn_OddOff_always = false, // not used
             maxSMBBasalMinutes = 0, // not used
             maxUAMSMBBasalMinutes = 0, // not used
             bolus_increment = pump.pumpDescription.bolusStep, // not used
