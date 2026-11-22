@@ -215,6 +215,10 @@ Shard C's logcat can rotate before CI reads it, so the UI base adds the screen t
   `isFakingTempsByExtendedBoluses` says.
 - An alarm reaches the user in two ways: from a background thread as the full-screen alarm notification, from the main
   thread as the alarm screen. `checkUrgentAlarmSince` accepts either.
+- A pump can send an alarm only as a message while a link is up, and not log it or send it again at the next connection.
+  The queue keeps the link only for its commands, so such an alarm is lost. Aaruy's "stopped too long" was (real pump,
+  2026-11-21): the driver now raises it from the status, which says since when the pump is stopped. Check each alarm of a
+  new pump for this, and let the emulator drop what it sends with no link, as the real pump does.
 - A driver's own database, as the stored pump log of Aaruy (the driver lives on the `aaruy` branch, not on dev), is a
   file. It outlives the test graph, so a test finds the rows of the tests before it. A driver must not take an old row
   for a new event; Aaruy tells them apart by the row id.

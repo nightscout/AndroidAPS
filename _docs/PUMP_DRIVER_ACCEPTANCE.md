@@ -169,6 +169,8 @@ Known exceptions in drivers that are in the tree now:
   at a time, each with a real-pump test (`PUMP_DESIGN.md`, section 4).
 - **Every driver but Carelevo, Aaruy and the virtual pump, K1-K3:** Android only. Each moves when it is next reworked.
 - **Carelevo, R14:** not run yet; the patch raised no alarm since the move to `PumpAlerts`.
+- **Aaruy, R14:** run with "stopped too long" (after a rewind), which rings, is silenced and ends when the basal runs
+  again. The alert's action on the pump is not run yet: no alarm the pump confirms could be raised without harm.
 
 - **Omnipod Eros, D2:** the activation wizard calls the pod directly for "Initialize Pod" and "Insert Cannula", not
   through the queue. Left as it is until someone can test the change on an Eros pod with a RileyLink. The Dash and
