@@ -203,10 +203,16 @@ interface Alerts {
     /** The pump is removed, discarded or stopped: every alert of [source] ends. */
     fun resolveAll(source: String)
 
-    /** Called by the alarm screen and the card, never by a driver. The alert stays; its sound stops for [SILENCE_MINUTES]. */
-    fun silence(source: String, key: String)
+    /**
+     * The user answered the alarm. Called by the alarm screen, the card and the watch, never by a driver. An
+     * [AlertLifetime.CONDITION] stays and its sound stops for [minutes]; an [AlertLifetime.EVENT] ends.
+     */
+    fun silence(source: String, key: String, minutes: Int = SILENCE_MINUTES)
 
-    /** As [silence], for [minutes]. */
+    /**
+     * The sound stops for [minutes], whatever the lifetime: "Mute 5 min", and the silence of a CONDITION. A protected
+     * kind is silenced for [PROTECTED_SILENCE_MAX_MINUTES] at most.
+     */
     fun snooze(source: String, key: String, minutes: Int)
 
     /** Called by the alarm screen: run the alert's action, as its button on the card does. */
@@ -214,8 +220,21 @@ interface Alerts {
 
     companion object {
 
-        /** How long a silence lasts. When it ends and the alert is still active, it rings again (decided 2026-11-19). */
+        /**
+         * How long a silence lasts when the user does not choose: a swipe, the watch, Silence on the card. When it ends
+         * and the alert is still active, it rings again (decided 2026-11-19).
+         */
         const val SILENCE_MINUTES = 30
+
+        /** The longest silence of a protected kind: insulin delivery stopped or not safe must not wait long. */
+        const val PROTECTED_SILENCE_MAX_MINUTES = 30
+
+        /** The silence lengths the alarm screen offers, in minutes (decided 2026-11-22). */
+        private val SILENCE_LENGTHS = listOf(15, 30, 60, 120, 240)
+
+        /** The silence lengths the alarm screen offers for an alert of [kind]: a protected kind only the short ones. */
+        fun silenceLengths(kind: AlertKind): List<Int> =
+            if (kind.isProtected) SILENCE_LENGTHS.filter { it <= PROTECTED_SILENCE_MAX_MINUTES } else SILENCE_LENGTHS
     }
 }
 

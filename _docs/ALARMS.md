@@ -77,6 +77,11 @@ ding) and a card of a Silent kind dinged.
   again after 30 minutes.
 - **Every card in the tray makes a sound** (section 2): any card without buttons, at any level, dings with the
   phone's notification sound while the tray setting is on. Only the cards of alerts do not.
+- **The alarm screen over another app (Android).** Android does not let an app in the background put a screen over
+  another app (#5338): the alarm rings, its notification pops up with Mute, and the alarm screen shows when AAPS is
+  opened. On a locked phone the screen wake brings it up. Since 2026-11-22 the user can allow "Display over other
+  apps" (Settings > Local alerts), and then the alarm screen opens at once also over another app (checked on the
+  Pixel, Android 16: `BAL_ALLOW_SAW_PERMISSION`). It is optional: AAPS does not ask for it.
 - **Eversense** posts plain cards today, its transmitter's glucose alarms included. AAPS has no low or high glucose
   alarm of its own yet, so those cards are the only glucose alarm an Eversense user gets (the vendor app is stopped).
 - **Nightscout alarms** are the glucose alarms of an AAPSClient today. They come from the Nightscout server's plugins.
@@ -117,7 +122,11 @@ Alerts keep their three severities: CRITICAL, WARNING, INFO. The list of cards h
   BG alarms, core errors, the eat reminder and automation, not only pumps. This reverses decision 4 of
   `PUMP_DESIGN.md`. The stored key of the silences keeps its first name, `pump_alert_silences`.
 - **A silence length per alert, and the user's choice of it.** A high can wait an hour or two, an urgent low 15
-  minutes. The alert says its default and which lengths the alarm screen offers. Today it is a fixed 30 minutes.
+  minutes. Built 2026-11-22: the alarm screen of an alert that lasts (CONDITION) has a row of lengths, 15 min, 30 min,
+  1 h, 2 h and 4 h, with 30 min picked, and its two Silence buttons use the one picked. A protected kind offers only
+  15 and 30 min, and the core never silences it for longer than 30 min, whoever asks. A swipe, the watch and the card
+  silence for 30 min. One of the app's own alarms ends when it is answered, so it has no row. The alert's own
+  default (a high longer, an urgent low shorter) comes with the BG alarms, its first user.
 - **Scheduled alerts: ring at a time, unless cancelled before.** The platform books it in advance (a local
   notification on iOS, `AlarmManager` on Android), so it rings also when the app cannot run. It replaces four
   mechanisms of their own: `IosMissedReadingAlarm`, the eat reminder alarms, the automation reminder
@@ -382,8 +391,8 @@ The order matters: step 3 must not come before step 2.
    (done 2026-11-22: Settings > Local alerts settings > Alert kinds, a "Silence this kind on this phone" button on
    the alarm screen of a kind that is not protected, and a line in the notification sheet; on Android and iOS only,
    as the desktop has no alerts) (`AlertKind`, `CoreAlert`) with the user's Ring, Silent or Off
-   per phone and its settings screen, the silence length and its choice, the announcement under its own source, the
-   scheduled alerts.
+   per phone and its settings screen, the silence length and its choice (done 2026-11-22), the announcement under its
+   own source, the scheduled alerts.
 2. The BG alarms, stale data included, on the master and the clients, with the shared silence. The escalation comes
    later, after the basics work.
 3. The Nightscout alarms removed; announcements as a WARNING alert.
@@ -417,8 +426,9 @@ The order matters: step 3 must not come before step 2.
 Open, with a recommendation:
 
 - Do Not Disturb: the urgent low always breaks through; the other alarms follow the existing override setting.
-- Which silence lengths the alarm screen offers. xDrip offers 10 minutes to 12 hours, with 35 minutes for a low and
-  2 hours for a high as the defaults.
+
+Decided: the silence lengths the alarm screen offers (2026-11-22): 15 min to 4 h, a protected kind 15 and 30 min
+only (xDrip offers 10 minutes to 12 hours, with 35 minutes for a low and 2 hours for a high as the defaults).
 
 ## 7. How to find them again
 

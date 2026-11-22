@@ -49,7 +49,7 @@ internal fun ErrorScreenShortPreview() {
     }
 }
 
-/** The pump-alert shape of the same screen: an action button first, and the two silence buttons naming the time. */
+/** The pump-alert shape of the same screen: an action button first, the silence lengths, and the two silence buttons naming the time. */
 @Preview(showBackground = true, widthDp = 360, heightDp = 720)
 @Composable
 internal fun ErrorScreenAlertPreview() {
@@ -61,6 +61,7 @@ internal fun ErrorScreenAlertPreview() {
             onMute = {},
             onMute5Min = {},
             actionLabel = "Deactivate Patch",
+            silenceLengths = listOf(15, 30, 60, 120, 240),
             silenceMinutes = 30,
             badge = badge
         )

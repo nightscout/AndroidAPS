@@ -178,15 +178,15 @@ class AlertsImpl(
     /**
      * What "the user dealt with the sound" means depends on who owns the alert.
      *
-     * A [AlertLifetime.CONDITION] is the pump's, so silence only quiets it and it comes back in
-     * [Alerts.SILENCE_MINUTES]. A [AlertLifetime.EVENT] is the user's: answering it is the end of it, and a
-     * bolus error that came back half an hour later would be telling them about something they have already read.
+     * A [AlertLifetime.CONDITION] is the pump's, so silence only quiets it and it comes back in [minutes]. A
+     * [AlertLifetime.EVENT] is the user's: answering it is the end of it, and a bolus error that came back half an
+     * hour later would be telling them about something they have already read.
      */
-    override fun silence(source: String, key: String) {
+    override fun silence(source: String, key: String, minutes: Int) {
         val lifetime = lock.withLock { entries[source to key]?.alert?.lifetime } ?: return
         // Outside the lock: neither call may be made while holding it, it is not reentrant.
         if (lifetime == AlertLifetime.EVENT) resolve(source, key)
-        else snooze(source, key, Alerts.SILENCE_MINUTES)
+        else snooze(source, key, minutes)
     }
 
     override fun snooze(source: String, key: String, minutes: Int) = lock.withLock {
@@ -309,9 +309,11 @@ class AlertsImpl(
         }
     }
 
-    /** Caller holds [lock]. */
+    /** Caller holds [lock]. A protected kind is silenced only briefly, whatever the caller asked for. */
     private fun silenceEntry(entry: Entry, minutes: Int) {
-        val until = dateUtil.now() + minutes * 60_000L
+        val length = if (entry.alert.kind.isProtected) minOf(minutes, Alerts.PROTECTED_SILENCE_MAX_MINUTES) else minutes
+        if (length != minutes) aapsLogger.info(LTag.NOTIFICATION, "Alert ${entry.alert.kind.id} is protected: silenced $length min, not $minutes")
+        val until = dateUtil.now() + length * 60_000L
         entry.silencedUntil = until
         rememberSilence(entry.alert, until)
         platform.snoozed(entry.alert, until)

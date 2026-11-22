@@ -364,6 +364,35 @@ class AlertsImplTest : TestBase() {
         assertThat(sut.active.value).hasSize(1)
     }
 
+    /** The length the user picked on the alarm screen (`_docs/ALARMS.md`, step 1d). */
+    @Test
+    fun `silence lasts the length the user picked`() {
+        sut.raise(alert(kind = occlusion))
+
+        sut.silence("pump", "occlusion", 120)
+
+        assertThat(alertPlatform.snoozes).containsExactly("occlusion" to now + 120 * 60_000L)
+    }
+
+    @Test
+    fun `a protected kind is silenced for 30 minutes at most`() {
+        val stopped = TestKind("pump", AlertOrigin.PUMP, "occlusion", isProtected = true)
+        sut.raise(alert(kind = stopped))
+
+        sut.silence("pump", "occlusion", 240)
+
+        assertThat(alertPlatform.snoozes).containsExactly("occlusion" to now + Alerts.PROTECTED_SILENCE_MAX_MINUTES * 60_000L)
+    }
+
+    @Test
+    fun `the alarm screen offers a protected kind only the short silences`() {
+        val stopped = TestKind("pump", AlertOrigin.PUMP, "occlusion", isProtected = true)
+
+        assertThat(Alerts.silenceLengths(occlusion)).containsExactly(15, 30, 60, 120, 240).inOrder()
+        assertThat(Alerts.silenceLengths(stopped)).containsExactly(15, 30).inOrder()
+        assertThat(Alerts.silenceLengths(occlusion)).contains(Alerts.SILENCE_MINUTES)
+    }
+
     @Test
     fun `when the silence ends an alert still active rings again`() {
         sut.raise(alert())

@@ -101,6 +101,7 @@
     <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Silence and close</string>
     <string name="alarm_silence_for" comment="Button on the alarm screen of a pump alarm. It stops the sound for a time, and the screen stays open. %1$s=time, for example: 30 min">Silence for %1$s</string>
     <string name="alarm_silence_for_and_close" comment="Button on the alarm screen of a pump alarm. It stops the sound for a time and closes the screen. %1$s=time, for example: 30 min">Silence for %1$s and close</string>
+    <string name="alarm_silence_length" comment="Label on the alarm screen above a row of times (15 min, 30 min, 1 h...). The time picked is how long the Silence buttons below stop the sound.">How long to silence</string>
     <string name="pump_alert_action_failed">The pump did not confirm. Try again.</string>
     <string name="pump_alert_text" comment="Text of the card of a pump alarm. %1$s=title of the alarm, for example: Occlusion. %2$s=what to do, for example: Replace the patch.">%1$s\n%2$s</string>
     <string name="success">Success</string>

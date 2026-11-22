@@ -4,6 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.alerts.AlertChoice
@@ -52,6 +55,9 @@ fun AlertScreen(
         onClose()
     }
 
+    // The length the user picked for the two silence buttons; a new alarm on the same screen starts from the default.
+    var silenceMinutes by rememberSaveable(source, key) { mutableIntStateOf(Alerts.SILENCE_MINUTES) }
+
     // The alert ended; the effect above is closing the host. Drawing a card with no content would only flash.
     if (alert == null) return
 
@@ -60,12 +66,12 @@ fun AlertScreen(
         status = alert.text?.let { stringResource(it) } ?: "",
         onOk = {
             uel.log(Action.ERROR_DIALOG_OK, Sources.Unknown)
-            alerts.silence(source, key)
+            alerts.silence(source, key, silenceMinutes)
             onClose()
         },
         onMute = {
             uel.log(Action.ERROR_DIALOG_MUTE, Sources.Unknown)
-            alerts.silence(source, key)
+            alerts.silence(source, key, silenceMinutes)
         },
         onMute5Min = {
             uel.log(Action.ERROR_DIALOG_MUTE_5MIN, Sources.Unknown)
@@ -78,7 +84,9 @@ fun AlertScreen(
         onAction = { alerts.act(source, key) },
         // "Silence for 30 min" is a promise, and only a pump's alert keeps it: one of the app's own is over when
         // it is answered, so its buttons say plain Silence rather than naming a time it will not come back after.
-        silenceMinutes = if (alert.lifetime == AlertLifetime.CONDITION) Alerts.SILENCE_MINUTES else null,
+        silenceLengths = if (alert.lifetime == AlertLifetime.CONDITION) Alerts.silenceLengths(alert.kind) else null,
+        silenceMinutes = silenceMinutes,
+        onSilenceMinutes = { silenceMinutes = it },
         // The moment it rings is when the user wants to say "not this again". Not for a protected kind, which always
         // rings. It also answers this alarm, as Silence does, so setting the kind back to Ring later does not ring it
         // again: a pump's alert stays as a card with no sound, one of the app's own is over.

@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -63,8 +65,14 @@ fun ErrorScreen(
     /** A pump alert's own step, for example "clear the alarm on the patch", shown first. Null: no such button. */
     actionLabel: String? = null,
     onAction: () -> Unit = {},
-    /** A pump alert: its silence lasts this long, and the two silence buttons say so. Null: they say nothing of time. */
-    silenceMinutes: Int? = null,
+    /**
+     * A pump alert: the lengths its silence may have, shown as a row to pick from. Null: no row, and the two silence
+     * buttons say nothing of time, as for one of the app's own alarms, which ends when it is answered.
+     */
+    silenceLengths: List<Int>? = null,
+    /** The length picked in the row, in minutes; the two silence buttons use it. */
+    silenceMinutes: Int = 0,
+    onSilenceMinutes: (Int) -> Unit = {},
     /**
      * Makes alerts of this kind silent on this phone from now on, for a kind the user may silence
      * (`_docs/ALARMS.md`, section 6). Null: no such button, as for a protected kind or an alarm that is no alert.
@@ -170,13 +178,38 @@ fun ErrorScreen(
                     Spacer(modifier = Modifier.height(12.dp))
                 }
 
+                // How long the two buttons below silence it, the alert's default picked
+                if (silenceLengths != null) {
+                    Text(
+                        text = stringResource(CoreUiStrings.alarm_silence_length),
+                        style = MaterialTheme.typography.labelLarge,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    // Three in a row: five do not fit on a phone, and a last one alone on its line looks lost
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium, Alignment.CenterHorizontally),
+                        maxItemsInEachRow = 3,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        silenceLengths.forEach { minutes ->
+                            FilterChip(
+                                selected = minutes == silenceMinutes,
+                                onClick = { onSilenceMinutes(minutes) },
+                                label = { Text(silenceLength(minutes)) }
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(AapsSpacing.medium))
+                }
+
                 // Silence button: the sound stops, this screen stays open
                 Button(
                     onClick = onMute,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        if (silenceMinutes != null) stringResource(CoreUiStrings.alarm_silence_for, stringResource(CoreUiStrings.format_mins, silenceMinutes))
+                        if (silenceLengths != null) stringResource(CoreUiStrings.alarm_silence_for, silenceLength(silenceMinutes))
                         else stringResource(CoreUiStrings.alarm_silence)
                     )
                 }
@@ -189,7 +222,7 @@ fun ErrorScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        if (silenceMinutes != null) stringResource(CoreUiStrings.alarm_silence_for_and_close, stringResource(CoreUiStrings.format_mins, silenceMinutes))
+                        if (silenceLengths != null) stringResource(CoreUiStrings.alarm_silence_for_and_close, silenceLength(silenceMinutes))
                         else stringResource(CoreUiStrings.alarm_silence_and_close)
                     )
                 }
@@ -208,3 +241,9 @@ fun ErrorScreen(
         }
     }
 }
+
+/** A silence length as the user reads it: "15 min", or "2 h" from a full hour on. */
+@Composable
+private fun silenceLength(minutes: Int): String =
+    if (minutes >= 60 && minutes % 60 == 0) stringResource(CoreUiStrings.format_hours_only, minutes / 60)
+    else stringResource(CoreUiStrings.format_mins, minutes)
