@@ -22,10 +22,6 @@ cameraX = "1.7.0"
 # Compose
 wearCompose = "1.7.2"
 lifecycleRuntimeKtx = "2.11.1"
-# Only for androidx-compose-ui-test-manifest. Keep it at the androidx Compose version that
-# composeMultiplatform below uses on Android (CMP 1.12.2 -> androidx Compose 1.12.1).
-composeUi = "1.12.1"
-
 # Compose Multiplatform. It decides the androidx Compose version on Android too, because its Android
 # variants point to fixed androidx libraries and nothing here overrides them.
 composeMultiplatform = "1.12.2"
@@ -213,9 +209,11 @@ net-openid-appauth = { group = "net.openid", name = "appauth", version = "0.11.1
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version = "1.13.0" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
 com-patrykandpatrick-vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version = "3.3.1" }
-# The only androidx Compose library with no JetBrains republish. Its version must match the androidx
-# Compose that Compose Multiplatform uses on Android (see composeUi above).
-androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "composeUi" }
+# The only androidx Compose library with no JetBrains republish. No version on purpose: androidx
+# Compose UI publishes version constraints for its sibling libraries, so the androidx.compose.ui:ui
+# that Compose Multiplatform brings in sets this one to the same version. Every use sits next to the
+# Compose UI test libraries, so that ui is always there.
+androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 sh-calvin-reorderable = { group = "sh.calvin.reorderable", name = "reorderable", version = "3.1.0" }
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version = "1.2.0" }
 
