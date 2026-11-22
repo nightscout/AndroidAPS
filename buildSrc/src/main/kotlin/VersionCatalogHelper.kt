@@ -15,13 +15,6 @@ class VersionCatalogHelper(private val project: Project) {
             { throw IllegalArgumentException("Library '$libName' not found in version catalog.") }
         )
     }
-
-    fun platformDependency(libName: String, configurationName: String) {
-        versionCatalog.findLibrary(libName).ifPresentOrElse(
-            { library -> project.dependencies.add(configurationName, project.dependencies.platform(library)) },
-            { throw IllegalArgumentException("Library '$libName' not found in version catalog.") }
-        )
-    }
 }
 
 // Extension functions for different configurations
@@ -47,8 +40,4 @@ fun Project.testRuntimeOnlyFromCatalog(libName: String) {
 
 fun Project.debugImplementationFromCatalog(libName: String) {
     VersionCatalogHelper(this).dependency(libName, "debugImplementation")
-}
-
-fun Project.testImplementationPlatformFromCatalog(libName: String) {
-    VersionCatalogHelper(this).platformDependency(libName, "testImplementation")
 }

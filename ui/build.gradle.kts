@@ -81,13 +81,12 @@ kotlin {
 
         androidMain {
             dependencies {
-                api(project.dependencies.platform(libs.androidx.compose.bom))
                 implementation(libs.androidx.activity.compose)
-                api(libs.androidx.compose.runtime)
+                api(libs.jetbrains.compose.runtime)
                 api(libs.androidx.lifecycle.runtime.compose)
-                api(libs.androidx.ui.tooling.preview)
+                api(libs.jetbrains.compose.ui.tooling.preview)
                 // Was debugImplementation; the multiplatform library target has no build types.
-                implementation(libs.androidx.ui.tooling)
+                implementation(libs.jetbrains.compose.ui.tooling)
                 implementation(libs.androidx.glance.appwidget)
                 implementation(libs.androidx.work.runtime)
                 implementation(libs.androidx.core)
@@ -110,8 +109,7 @@ kotlin {
                 implementation(libs.org.mockito.kotlin)
                 implementation(libs.com.google.truth)
                 implementation(libs.kotlinx.coroutines.test)
-                implementation(project.dependencies.platform(libs.androidx.compose.bom))
-                implementation(libs.androidx.compose.ui.test.junit4)
+                implementation(libs.jetbrains.compose.ui.test.junit4)
                 implementation(libs.org.robolectric)
                 implementation(libs.androidx.compose.ui.test.manifest)
                 runtimeOnly(libs.org.junit.vintage.engine)

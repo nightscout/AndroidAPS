@@ -39,8 +39,7 @@ kotlin {
 
         androidMain {
             dependencies {
-                api(project.dependencies.platform(libs.androidx.compose.bom))
-                api(libs.androidx.ui)
+                api(libs.jetbrains.compose.ui)
             }
         }
 

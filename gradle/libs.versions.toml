@@ -22,11 +22,12 @@ cameraX = "1.7.0"
 # Compose
 wearCompose = "1.7.2"
 lifecycleRuntimeKtx = "2.11.1"
+# Only for androidx-compose-ui-test-manifest. Keep it at the androidx Compose version that
+# composeMultiplatform below uses on Android (CMP 1.12.2 -> androidx Compose 1.12.1).
 composeUi = "1.12.1"
 
-# Compose Multiplatform. Separate from the androidx Compose above: CMP publishes the same
-# androidx.compose.* package names and its Android variants delegate to androidx, so the
-# composeBom still decides the Android versions.
+# Compose Multiplatform. It decides the androidx Compose version on Android too, because its Android
+# variants point to fixed androidx libraries and nothing here overrides them.
 composeMultiplatform = "1.12.2"
 jetbrainsLifecycle = "2.11.0"
 
@@ -210,30 +211,28 @@ net-openid-appauth = { group = "net.openid", name = "appauth", version = "0.11.1
 
 # Compose
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version = "1.13.0" }
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version = "2026.09.00" }
-androidx-ui = { group = "androidx.compose.ui", name = "ui" }
-androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
-androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
 com-patrykandpatrick-vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version = "3.3.1" }
-androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "composeUi" }
-androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "composeUi" }
-androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "composeUi" }
-androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+# The only androidx Compose library with no JetBrains republish. Its version must match the androidx
+# Compose that Compose Multiplatform uses on Android (see composeUi above).
+androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "composeUi" }
 sh-calvin-reorderable = { group = "sh.calvin.reorderable", name = "reorderable", version = "3.1.0" }
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version = "1.2.0" }
 
 # Compose Multiplatform. Explicit coordinates rather than the `compose.xxx` DSL accessors, which
 # are deprecated since 1.11.1.
+#
+# Used in the Android-only modules too, instead of the androidx coordinates. On Android each of these
+# points to a fixed androidx library, so the Compose Multiplatform version decides the androidx
+# Compose version everywhere. There is no androidx Compose BOM on purpose: a BOM newer than Compose
+# Multiplatform overrode those androidx versions on Android, and the shared code stopped compiling.
 jetbrains-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
 jetbrains-compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
 jetbrains-compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
+jetbrains-compose-ui-graphics = { module = "org.jetbrains.compose.ui:ui-graphics", version.ref = "composeMultiplatform" }
+jetbrains-compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "composeMultiplatform" }
 jetbrains-compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
+jetbrains-compose-ui-test-junit4 = { module = "org.jetbrains.compose.ui:ui-test-junit4", version.ref = "composeMultiplatform" }
 # The JetBrains republish of androidx lifecycle. The plain `androidx.lifecycle` artifacts are
 # Android only; these carry the uikit targets, so ViewModel, viewModelScope, `viewModel { }` and
 # collectAsStateWithLifecycle can all be used from commonMain.

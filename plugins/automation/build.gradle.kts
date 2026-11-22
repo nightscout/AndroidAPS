@@ -66,13 +66,12 @@ kotlin {
                 // OpenStreetMap for map picker
                 implementation(libs.org.osmdroid)
 
-                api(project.dependencies.platform(libs.androidx.compose.bom))
-                api(libs.androidx.ui)
-                api(libs.androidx.ui.graphics)
-                api(libs.androidx.ui.tooling)
-                api(libs.androidx.ui.tooling.preview)
-                api(libs.androidx.compose.material3)
-                api(libs.androidx.compose.material.icons.extended)
+                api(libs.jetbrains.compose.ui)
+                api(libs.jetbrains.compose.ui.graphics)
+                api(libs.jetbrains.compose.ui.tooling)
+                api(libs.jetbrains.compose.ui.tooling.preview)
+                api(libs.jetbrains.compose.material3)
+                api(libs.jetbrains.compose.material.icons.extended)
                 api(libs.androidx.lifecycle.runtime.compose)
             }
         }
@@ -96,8 +95,7 @@ kotlin {
                 implementation(libs.com.google.truth)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.org.robolectric)
-                implementation(project.dependencies.platform(libs.androidx.compose.bom))
-                implementation(libs.androidx.compose.ui.test.junit4)
+                implementation(libs.jetbrains.compose.ui.test.junit4)
                 implementation(libs.androidx.compose.ui.test.manifest)
                 // The real org.json: isReturnDefaultValues makes the platform stub answer null rather
                 // than throwing, which NPEs the shared profile fixtures in TestBaseWithProfile.
