@@ -40,6 +40,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -96,7 +97,8 @@ class RunningConfigurationImpl(
         }
     }
 
-    // called in AAPS mode only — the small "hot" doc: the active scene and the "time to eat" timer, if any.
+    // called in AAPS mode only — the small "hot" doc: the active scene, the "time to eat" timer, if any, and the BG
+    // alarm silences given for every phone (step 2f).
     override fun hotConfiguration(): JsonObject = buildJsonObject {
         activeSceneSync.activeSceneSnapshot()?.let { snapshot ->
             // Serialize from the wire DTO so the field set stays in lockstep with
@@ -121,6 +123,10 @@ class RunningConfigurationImpl(
             val wire = NSEatReminder(startedAt = it.startedAt, endsAt = it.endsAt, durationMs = it.durationMs)
             put("eatReminder", wireJson.encodeToJsonElement(NSEatReminder.serializer(), wire))
         }
+        // As the master keeps them, the master's own and the ones its clients sent; a client checks each one again
+        (runCatching { Json.parseToJsonElement(preferences.get(StringNonKey.AlertSharedSilences)) }.getOrNull() as? JsonArray)
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { put("alertSilences", it) }
     }
 
     // All cold-synced values (plugin selection, plugin settings, scene/quick-wizard/automation/insulin
@@ -182,7 +188,7 @@ class RunningConfigurationImpl(
     }
 
     // Runtime state — published to the separate "hot" doc, not the cold config doc.
-    override fun hotKeys(): List<NonPreferenceKey> = listOf(StringNonKey.ActiveScene, StringNonKey.EatReminder)
+    override fun hotKeys(): List<NonPreferenceKey> = listOf(StringNonKey.ActiveScene, StringNonKey.EatReminder, StringNonKey.AlertSharedSilences)
 
     // called in NSClient mode only — apply the cold config doc (everything except the hot state).
     override fun applyCold(configuration: NSRunningConfiguration) {
@@ -230,6 +236,8 @@ class RunningConfigurationImpl(
         activeSceneSync.applyActiveScene(configuration.activeScene?.toSnapshot())
         // Same for the timer: null means none (or an older master that does not send it).
         eatReminder.applyRemote(configuration.eatReminder?.let { EatReminderState(startedAt = it.startedAt, endsAt = it.endsAt, durationMs = it.durationMs) })
+        // The master's BG alarm silences given for every phone; the BG alarms apply each new one (null: none)
+        preferences.put(StringNonKey.AlertSharedSilences, configuration.alertSilences?.toString() ?: "[]")
     }
 
     private fun NSActiveScene.toSnapshot() =

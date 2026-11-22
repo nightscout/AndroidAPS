@@ -28,7 +28,9 @@ import app.aaps.core.nssdk.localmodel.configuration.NSActiveScene
 import app.aaps.core.nssdk.localmodel.configuration.NSEatReminder
 import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -117,6 +119,35 @@ internal class RunningConfigurationImplTest {
         verify(eatReminder).applyRemote(eq(EatReminderState(startedAt = 1_000L, endsAt = 1_201_000L, durationMs = 1_200_000L)))
     }
 
+    // -- the BG alarm silences given for every phone (ALARMS.md, step 2f) -------------------------------
+
+    private val silences = """[{"source":"bg","key":"low","raisedAt":1,"until":2,"sentAt":1}]"""
+
+    /** The master's list of shared silences rides the hot doc, and a change of it publishes the doc. */
+    @Test
+    fun theHotDocCarriesTheSharedSilences() {
+        whenever(preferences.get(StringNonKey.AlertSharedSilences)).thenReturn(silences)
+
+        assertEquals(Json.parseToJsonElement(silences), sut.hotConfiguration()["alertSilences"])
+        assertTrue(StringNonKey.AlertSharedSilences in sut.hotKeys())
+    }
+
+    @Test
+    fun theHotDocHasNoSilencesWhenThereAreNone() {
+        whenever(preferences.get(StringNonKey.AlertSharedSilences)).thenReturn("[]")
+
+        assertNull(sut.hotConfiguration()["alertSilences"])
+    }
+
+    /** A client keeps the master's list as it is; the BG alarms check each silence again. None in the doc: none. */
+    @Test
+    fun applyHotKeepsTheMastersSilences() {
+        sut.applyHot(NSRunningConfiguration(alertSilences = Json.parseToJsonElement(silences).jsonArray))
+        verify(preferences).put(StringNonKey.AlertSharedSilences, Json.parseToJsonElement(silences).toString())
+
+        sut.applyHot(NSRunningConfiguration())
+        verify(preferences).put(StringNonKey.AlertSharedSilences, "[]")
+    }
     /** No timer in the hot doc ends the client's copy: the master stopped it, or an older master has none. */
     @Test
     fun applyHotWithoutATimerEndsTheCopy() {

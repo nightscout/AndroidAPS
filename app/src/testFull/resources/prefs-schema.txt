@@ -83,6 +83,7 @@ alert_choices|StringNonKey|true
 alert_kinds|UiIntentKey|false
 alert_override_dnd|BooleanKey|true
 alert_pauses|StringNonKey|false
+alert_shared_silences|StringNonKey|false
 alert_sounds|StringNonKey|true
 allow_hardware_pump|BooleanNonKey|true
 always_use_shortavg|BooleanKey|true

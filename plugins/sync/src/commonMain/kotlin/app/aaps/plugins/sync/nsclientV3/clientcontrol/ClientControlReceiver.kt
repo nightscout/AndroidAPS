@@ -4,8 +4,10 @@ import app.aaps.core.data.json.OrgJsonCompat.optJsonObjectCompat
 import app.aaps.core.data.json.OrgJsonCompat.optStringCompat
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.alerts.BgAlert
 import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.alerts.EatReminderAction
+import app.aaps.core.interfaces.alerts.SharedSilence
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.bolus.RemoteCaller
 import app.aaps.core.interfaces.bolus.requiredRole
@@ -27,6 +29,7 @@ import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongComposedKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.DoubleNonPreferenceKey
@@ -415,6 +418,7 @@ class ClientControlReceiver(
             is ClientControlMessage.WizardPrepare     -> onVerifiedWizardPrepare(entry, envelope, message, now)
             is ClientControlMessage.BatchPrepare      -> onVerifiedBatchPrepare(entry, envelope, message, now)
             ClientControlMessage.DismissAlarm         -> onVerifiedDismissAlarm(entry, envelope, now)
+            is ClientControlMessage.AlertSilence      -> onVerifiedAlertSilence(entry, envelope, message, now)
             ClientControlMessage.StopBolus            -> onVerifiedStopBolus(entry, envelope, now)
             is ClientControlMessage.EatReminderControl -> onVerifiedEatReminderControl(entry, message)
         }
@@ -439,6 +443,8 @@ class ClientControlReceiver(
         is ClientControlMessage.BolusCommit,
         ClientControlMessage.StopBolus,
         ClientControlMessage.DismissAlarm,
+        // Quiets the master's phone too, so not for a client that may only look
+        is ClientControlMessage.AlertSilence,
         // The timer belongs to a meal, so whoever may enter the meal may also stop or move it.
         is ClientControlMessage.EatReminderControl -> ClientRole.MealAssistant
 
@@ -548,6 +554,25 @@ class ClientControlReceiver(
         authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
         notificationManager.dismiss(NotificationId.BOLUS_DELIVERY_FAILED)
         nsClientRepository.addLog("◄ CLIENTCTL", "dismiss_alarm from ${entry.name}")
+        return AckOutcome(AckStatus.Ok, null)
+    }
+
+    /**
+     * A client silenced a BG alarm everywhere (`_docs/ALARMS.md`, step 2f). Fire-and-forget: the client has silenced its
+     * own already. Kept in the master's list of shared silences, from which the master's BG alarms silence the same
+     * alarm here and the hot status doc takes it to every client. Refused when the client's clock is far ahead or the
+     * silence is too long; the envelope's own time was checked before.
+     */
+    private suspend fun onVerifiedAlertSilence(entry: AuthorizedClient, envelope: SignedEnvelope, message: ClientControlMessage.AlertSilence, now: Long): AckOutcome {
+        authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
+        val silence = SharedSilence(source = message.source, key = message.key, raisedAt = message.raisedAt, until = message.until, sentAt = message.sentAt)
+        if (silence.source != BgAlert.SOURCE || !silence.accepts(now)) {
+            aapsLogger.warn(LTag.NSCLIENT, "ClientControl: alert silence from ${entry.name} refused: $silence")
+            return AckOutcome(AckStatus.Failed, FailureReason.ExecutionFailed.name)
+        }
+        val list = SharedSilence.merge(SharedSilence.parse(preferences.get(StringNonKey.AlertSharedSilences)), silence, now)
+        preferences.put(StringNonKey.AlertSharedSilences, SharedSilence.toJson(list))
+        nsClientRepository.addLog("◄ CLIENTCTL", "alert_silence ${silence.key} from ${entry.name}")
         return AckOutcome(AckStatus.Ok, null)
     }
 

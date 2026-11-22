@@ -98,6 +98,13 @@ fun AlertScreen(
                 onClose()
             }
         },
+        onSilenceEverywhere = if (alert.lifetime == AlertLifetime.CONDITION && alerts.canSilenceEverywhere(alert)) {
+            {
+                uel.log(Action.ERROR_DIALOG_OK, Sources.Unknown)
+                alerts.silenceEverywhere(source, key, silenceMinutes)
+                onClose()
+            }
+        } else null,
         badge = badge
     )
 }

@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertChoice
+import app.aaps.core.interfaces.alerts.SharedSilence
 import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertSound
 import app.aaps.core.interfaces.alerts.AlertSeverity
@@ -68,6 +69,9 @@ class CarelevoAlarmNotifierTest {
         override val sounds: StateFlow<Map<String, AlertSound>> = MutableStateFlow(emptyMap())
         override fun setSound(kind: AlertKind, sound: AlertSound?) {}
         override fun test(kind: AlertKind, severity: AlertSeverity): Boolean = true
+        override fun silenceEverywhere(source: String, key: String, minutes: Int) {}
+        override fun canSilenceEverywhere(alert: Alert): Boolean = false
+        override fun applySharedSilence(silence: SharedSilence) {}
         override fun silencedUntil(source: String, key: String): Long = 0L
         val raised = mutableListOf<Alert>()
         val resolved = mutableListOf<String>()

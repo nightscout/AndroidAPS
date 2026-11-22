@@ -19,10 +19,13 @@ import app.aaps.ui.compose.bgAlarms.BgAlarmRulesScreen
 import app.aaps.ui.compose.bgAlarms.BgUnits
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.PreferenceItem
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withCompose
 import app.aaps.core.ui.compose.ComposeScreenContent
+import app.aaps.core.ui.compose.LocalClientRole
+import app.aaps.core.ui.compose.LocalMasterReachable
 import app.aaps.ui.keys.UiIntentKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -83,8 +86,9 @@ class AlertKindsSettingsImpl(
             val pauses by alerts.pauses.collectAsState()
             BgAlarmRulesScreen(
                 rules = rules,
-                // The rules are the master's: a client shows them only
-                readOnly = config.AAPSCLIENT,
+                // One set of rules for every phone (step 2f): a client edits them only as an Admin and while the
+                // master can be reached, as every synced setting (the master checks the role again)
+                readOnly = config.AAPSCLIENT && (!LocalMasterReachable.current || !LocalClientRole.current.allows(ClientRole.Admin)),
                 units = BgUnits(
                     label = profileUtil.unitLabel,
                     format = { profileUtil.fromMgdlToStringWithUnits(it) },

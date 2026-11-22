@@ -13,6 +13,9 @@ import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.AlertPlatform
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.AlertSound
+import app.aaps.core.interfaces.alerts.BgAlert
+import app.aaps.core.interfaces.alerts.SharedSilence
+import app.aaps.core.interfaces.alerts.SharedSilenceLink
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.configuration.Config
@@ -133,6 +136,17 @@ class AlertsImplTest : TestBase() {
     private val pump: PumpWithConcentration = mock()
     private val soundPlayer: AlarmSoundPlayer = mock()
 
+    /** The client-control link as the test sets it, with what was sent through it. */
+    private val link = object : SharedSilenceLink {
+        var on = true
+        val sent = mutableListOf<SharedSilence>()
+        override fun available(): Boolean = on
+        override fun send(silence: SharedSilence) {
+            sent += silence
+        }
+    }
+    private var storedShared = "[]"
+
     private var now = 1_000_000_000L
     private var storedSilences = "[]"
     private var storedChoices = "{}"
@@ -156,6 +170,8 @@ class AlertsImplTest : TestBase() {
         doAnswer { storedBookings = it.arguments[1] as String; Unit }.whenever(preferences).put(eq(StringNonKey.AlertBookings), any<String>())
         whenever(preferences.get(StringNonKey.AlertPauses)).thenAnswer { storedPauses }
         whenever(preferences.get(StringNonKey.AlertSounds)).thenAnswer { storedSounds }
+        whenever(preferences.get(StringNonKey.AlertSharedSilences)).thenAnswer { storedShared }
+        doAnswer { storedShared = it.arguments[1] as String; Unit }.whenever(preferences).put(eq(StringNonKey.AlertSharedSilences), any<String>())
         doAnswer { storedSounds = it.arguments[1] as String; Unit }.whenever(preferences).put(eq(StringNonKey.AlertSounds), any<String>())
         doAnswer { storedPauses = it.arguments[1] as String; Unit }.whenever(preferences).put(eq(StringNonKey.AlertPauses), any<String>())
         // A booking is raised only after the app start
@@ -176,7 +192,7 @@ class AlertsImplTest : TestBase() {
     }
 
     private fun newAlerts() =
-        AlertsImpl(aapsLogger, notificationManager, alertPlatform, preferences, pumpSync, persistenceLayer, config, activePlugin, rh, eventBus, dateUtil, soundPlayer, scope, { setOf(catalogue) })
+        AlertsImpl(aapsLogger, notificationManager, alertPlatform, preferences, pumpSync, persistenceLayer, config, activePlugin, rh, eventBus, dateUtil, soundPlayer, { link }, scope, { setOf(catalogue) })
 
     /** A kind for the tests, named after the alert's key unless a test gives its own. */
     private data class TestKind(
@@ -1041,5 +1057,115 @@ class AlertsImplTest : TestBase() {
         storedSounds = """{"a":"NO_SUCH_SOUND","b":"ERROR","c":{"uri":"u"}}"""
 
         assertThat(newAlerts().sounds.value).containsExactly("b", AlertSound.Bundled(AlarmSound.ERROR))
+    }
+
+    // ---- the silence everywhere (step 2f) -----------------------------------------------------------
+
+    private fun bgLow(raisedAt: Long = 500L) = alert(key = "low", source = BgAlert.SOURCE, origin = AlertOrigin.APP, raisedAt = raisedAt, kind = BgAlert.LOW)
+
+    @Test
+    fun `on the master a silence everywhere silences here and is kept for the clients`() {
+        sut.raise(bgLow())
+
+        sut.silenceEverywhere(BgAlert.SOURCE, "low", 60)
+
+        assertThat(card().sound).isNull()
+        val shared = SharedSilence.parse(storedShared).single()
+        assertThat(shared.until).isEqualTo(now + 60 * 60_000L)
+        assertThat(shared.raisedAt).isEqualTo(500L)
+        assertThat(link.sent).isEmpty()
+    }
+
+    /** Here first, never waiting for the way round: a client out of reach must still stop ringing. */
+    @Test
+    fun `on a client a silence everywhere silences here at once and is sent to the master`() {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        sut.raise(bgLow())
+
+        sut.silenceEverywhere(BgAlert.SOURCE, "low", 60)
+
+        assertThat(card().sound).isNull()
+        assertThat(link.sent.single().until).isEqualTo(now + 60 * 60_000L)
+        assertThat(storedShared).isEqualTo("[]")
+    }
+
+    @Test
+    fun `only a BG alarm can be silenced everywhere, and only with the link on`() {
+        assertThat(sut.canSilenceEverywhere(bgLow())).isTrue()
+        assertThat(sut.canSilenceEverywhere(alert())).isFalse()
+
+        link.on = false
+
+        assertThat(sut.canSilenceEverywhere(bgLow())).isFalse()
+    }
+
+    @Test
+    fun `a silence from another phone silences the same alarm here`() {
+        sut.raise(bgLow())
+
+        sut.applySharedSilence(SharedSilence(BgAlert.SOURCE, "low", raisedAt = 500L, until = now + 30 * 60_000L, sentAt = now))
+
+        assertThat(card().sound).isNull()
+        assertThat(sut.silencedUntil(BgAlert.SOURCE, "low")).isEqualTo(now + 30 * 60_000L)
+    }
+
+    /** The master sends every silence back in its doc, also the one this phone gave: that echo changes nothing. */
+    @Test
+    fun `the echo of this phone's own silence changes nothing`() {
+        sut.raise(bgLow())
+        sut.silence(BgAlert.SOURCE, "low", 60)
+        val snoozes = alertPlatform.snoozes.size
+
+        sut.applySharedSilence(SharedSilence(BgAlert.SOURCE, "low", raisedAt = 500L, until = now + 30 * 60_000L, sentAt = now))
+
+        assertThat(sut.silencedUntil(BgAlert.SOURCE, "low")).isEqualTo(now + 60 * 60_000L)
+        assertThat(alertPlatform.snoozes).hasSize(snoozes)
+    }
+
+    @Test
+    fun `a silence from a phone whose clock is far ahead is refused`() {
+        sut.raise(bgLow())
+
+        sut.applySharedSilence(SharedSilence(BgAlert.SOURCE, "low", raisedAt = 500L, until = now + 30 * 60_000L, sentAt = now + 10 * 60_000L))
+
+        assertThat(sut.silencedUntil(BgAlert.SOURCE, "low")).isEqualTo(0L)
+    }
+
+    /** The readings may come to this phone a moment later: the silence waits for the alarm it is for. */
+    @Test
+    fun `a silence for an alarm not raised here yet holds when it is raised`() {
+        sut.applySharedSilence(SharedSilence(BgAlert.SOURCE, "low", raisedAt = 500L, until = now + 30 * 60_000L, sentAt = now))
+
+        sut.raise(bgLow())
+
+        assertThat(card().sound).isNull()
+        assertThat(alertPlatform.screens).isEmpty()
+    }
+
+    @Test
+    fun `a waiting silence does not silence a later occurrence`() {
+        sut.applySharedSilence(SharedSilence(BgAlert.SOURCE, "low", raisedAt = 500L, until = now + 30 * 60_000L, sentAt = now))
+
+        sut.raise(bgLow(raisedAt = 500L + 60 * 60_000L))
+
+        assertThat(alertPlatform.screens).containsExactly("low")
+    }
+
+    @Test
+    fun `urgent low is silenced from another phone only briefly`() {
+        sut.raise(alert(key = "low", source = BgAlert.SOURCE, origin = AlertOrigin.APP, kind = BgAlert.URGENT_LOW))
+
+        sut.applySharedSilence(SharedSilence(BgAlert.SOURCE, "low", raisedAt = 500L, until = now + 120 * 60_000L, sentAt = now))
+
+        assertThat(sut.silencedUntil(BgAlert.SOURCE, "low")).isEqualTo(now + Alerts.PROTECTED_SILENCE_MAX_MINUTES * 60_000L)
+    }
+
+    @Test
+    fun `the master's list keeps one silence per alarm and drops the ones that are over`() {
+        val first = SharedSilence(BgAlert.SOURCE, "low", raisedAt = 1L, until = now + 60_000L, sentAt = now)
+        val over = SharedSilence(BgAlert.SOURCE, "high", raisedAt = 1L, until = now - 1L, sentAt = now)
+        val second = first.copy(until = now + 120_000L)
+
+        assertThat(SharedSilence.merge(listOf(first, over), second, now)).containsExactly(second)
     }
 }

@@ -225,6 +225,23 @@ interface Alerts {
     fun test(kind: AlertKind, severity: AlertSeverity): Boolean
 
     /**
+     * "Silence everywhere" (`_docs/ALARMS.md`, step 2f): silences the alert on this phone at once, as [silence] does,
+     * and then for every other phone - the master records it for its clients, a client sends it to the master. Not
+     * waiting for the other phones: a client that is not connected still stops ringing.
+     */
+    fun silenceEverywhere(source: String, key: String, minutes: Int)
+
+    /** Whether [alert] can be silenced everywhere from this phone: a BG alarm, and the link to the other phones is on. */
+    fun canSilenceEverywhere(alert: Alert): Boolean
+
+    /**
+     * A silence given on another phone for every phone. It silences the matching active alert until its end, and is
+     * kept for a while for an alert this phone has not raised yet. A silence that is over, from a clock far ahead, or
+     * shorter than this phone's own silence of it changes nothing.
+     */
+    fun applySharedSilence(silence: SharedSilence)
+
+    /**
      * Until when (epoch ms) the active alert of [source] and [key] is silenced, or 0 when it is not silenced or not
      * active. For a raiser that extends a silence itself, as the BG alarms' smart silence does.
      */

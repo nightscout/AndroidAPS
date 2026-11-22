@@ -405,6 +405,7 @@
     <string name="alert_choice_silent" comment="One of three choices for a kind of alert: a card with no sound">Silent</string>
     <string name="alert_choice_off" comment="One of three choices for a kind of alert: not shown at all">Off</string>
     <string name="alert_kind_protected" comment="Shown instead of the three choices for a kind of alert the user cannot silence, for example insulin delivery stopped">Always rings, for safety</string>
+    <string name="alarm_silence_everywhere_for_and_close" comment="Button on the alarm screen of a glucose alarm: silence it on this phone and on every other phone (master and clients), and close. %1$s=how long, for example: 30 min">Silence for %1$s on every phone and close</string>
     <string name="alert_kind_sound" comment="Label before the sound an alert kind plays on this phone">Sound</string>
     <string name="alert_kind_sound_own" comment="Sound choice of an alert kind: the sound the alert itself asks for, as before">Its own sound</string>
     <string name="alert_kind_sound_phone" comment="Sound choice of an alert kind: opens the phone's list of sounds (ringtones, notification sounds, alarms)">Sound of the phone…</string>
@@ -413,8 +414,8 @@
     <string name="alert_kind_silence_on_this_phone" comment="Button on the alarm screen: from now on, alerts of this kind come as a card with no sound, on this phone">Silence this kind on this phone</string>
     <string name="bg_alarm_rules_title">BG alarm rules</string>
     <string name="bg_alarm_rules_summary">Your own low, high, rate and predicted low alarms</string>
-    <string name="bg_alarm_rules_intro">Your own BG alarms: low, high, persistent high, falling or rising fast, and predicted low. Urgent low is always on; its threshold is in Local alerts. The rules are set here on the master and every phone uses them; in Alert kinds each phone chooses whether it rings.</string>
-    <string name="bg_alarm_rules_read_only">These rules are set on the master phone. In Alert kinds you choose whether this phone rings.</string>
+    <string name="bg_alarm_rules_intro">Your own BG alarms: low, high, persistent high, falling or rising fast, and predicted low. Urgent low is always on; its threshold is in Local alerts. The rules are the same on every phone; in Alert kinds each phone chooses how it rings.</string>
+    <string name="bg_alarm_rules_read_only">These rules are the same on every phone. They are changed on the master phone, or here by a client with the Admin role while the master can be reached. In Alert kinds you choose how this phone rings.</string>
     <string name="bg_alarm_rule_low" comment="Title of a low glucose alarm rule. %1$s=the threshold with its unit, for example: 3.9 mmol/l">Low below %1$s</string>
     <string name="bg_alarm_rule_high" comment="Title of a high glucose alarm rule. %1$s=the threshold with its unit, for example: 13.9 mmol/l">High above %1$s</string>
     <string name="bg_alarm_rule_low_title">Low alarm</string>

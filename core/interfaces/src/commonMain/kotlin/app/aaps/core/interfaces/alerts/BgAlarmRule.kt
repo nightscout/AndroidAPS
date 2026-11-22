@@ -73,7 +73,7 @@ data class BgAlarmRule(
 }
 
 /**
- * The user's BG level rules: set on the master, synced to the clients, which read them only. Every phone evaluates
+ * The user's BG rules: one list for every phone, set on the master or by an Admin client, and synced. Every phone evaluates
  * them on its own readings.
  */
 interface BgAlarmRules {
@@ -81,6 +81,9 @@ interface BgAlarmRules {
     /** The rules now; a change on the master or from the master comes through here. */
     val rules: StateFlow<List<BgAlarmRule>>
 
-    /** Master only: stores [rules] in place of the old list. A client does nothing (the rules are the master's). */
+    /**
+     * Stores [rules] in place of the old list. On a client the sync sends them to the master, which takes them from an
+     * Admin only and sends them to every phone; the screen lets only the master and an Admin client edit.
+     */
     fun save(rules: List<BgAlarmRule>)
 }

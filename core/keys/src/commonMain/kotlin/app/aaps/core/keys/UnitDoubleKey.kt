@@ -35,7 +35,8 @@ enum class UnitDoubleKey(
     ),
 
     // The urgent low BG alarm (`_docs/ALARMS.md`, step 2): always on and protected, the user sets only its threshold.
-    // The rule is the master's; the clients take it and decide only whether they ring.
+    // One value for every phone, so a silence given everywhere is for the same alarm (step 2f): the master's, which an
+    // Admin client may change too (Bidirectional); each phone decides only how it rings.
     AlertUrgentLow(
         key = "bg_alarm_urgent_low",
         defaultValue = 54.0,
@@ -43,7 +44,7 @@ enum class UnitDoubleKey(
         maxMgdl = 80,
         title = KeysStrings.pref_title_bg_alarm_urgent_low,
         summary = KeysStrings.pref_summary_bg_alarm_urgent_low,
-        sync = SyncSpec(SyncChannel.Cold, SyncDirection.MasterOnly)
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     )
     ;
 

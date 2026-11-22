@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.alerts.BgAlarms
 import app.aaps.core.interfaces.alerts.BgAlert
 import app.aaps.core.interfaces.alerts.BgDirection
 import app.aaps.core.interfaces.alerts.BgRuleType
+import app.aaps.core.interfaces.alerts.SharedSilence
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.awaitInitialized
@@ -37,6 +38,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
@@ -161,6 +163,14 @@ class BgAlarmsImpl(
             // must not lose them.
             while (!config.awaitInitialized()) aapsLogger.debug(LTag.BGSOURCE, "BG alarms wait for the app start")
             showIntroOnce()
+            // The silences given for every phone (step 2f): the master's list, which it also keeps from its clients, and
+            // a client's copy of it from the master's status doc. Each new one silences the same alarm here. The stored
+            // ones first, before the first evaluation: an alarm raised at the start must not ring for a moment before
+            // its silence is read (seen on the Pixel)
+            applySharedSilences(preferences.get(StringNonKey.AlertSharedSilences))
+            launch {
+                preferences.observe(StringNonKey.AlertSharedSilences).collect { applySharedSilences(it) }
+            }
             merge(
                 persistenceLayer.observeChanges(GV::class).map { },
                 preferences.observe(UnitDoubleKey.AlertUrgentLow).map { },
@@ -181,6 +191,9 @@ class BgAlarmsImpl(
             }
         }
     }
+
+    private fun applySharedSilences(text: String) =
+        SharedSilence.parse(text).filter { it.source == BgAlert.SOURCE }.forEach { alerts.applySharedSilence(it) }
 
     /** Raises, updates or ends the alerts from the readings now. Internal for the test. */
     internal suspend fun evaluate() {

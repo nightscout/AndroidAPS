@@ -150,6 +150,7 @@ class ClientControlPublisher(
             is ClientControlMessage.SceneStop,
             ClientControlMessage.Ping,
             ClientControlMessage.DismissAlarm,
+            is ClientControlMessage.AlertSilence,
             ClientControlMessage.StopBolus,
             is ClientControlMessage.PreferencesUpdate,
             is ClientControlMessage.BolusPrepare,

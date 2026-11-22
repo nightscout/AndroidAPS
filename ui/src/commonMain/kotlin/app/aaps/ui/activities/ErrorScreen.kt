@@ -79,6 +79,11 @@ fun ErrorScreen(
      */
     onSilenceKind: (() -> Unit)? = null,
     /**
+     * "Silence everywhere" of a BG alarm (`_docs/ALARMS.md`, step 2f): silences it for the picked length here at once
+     * and on every other phone, and closes. Null: not offered, as for an alarm of this phone only or with no link.
+     */
+    onSilenceEverywhere: (() -> Unit)? = null,
+    /**
      * Drawn small over the error icon, to say which AAPS this is. Android passes its flavour launcher icon, which is
      * a drawable id and so cannot be a parameter of shared code. Null: no badge, which is what iOS shows.
      */
@@ -225,6 +230,17 @@ fun ErrorScreen(
                         if (silenceLengths != null) stringResource(CoreUiStrings.alarm_silence_for_and_close, silenceLength(silenceMinutes))
                         else stringResource(CoreUiStrings.alarm_silence_and_close)
                     )
+                }
+
+                // The same answer for every phone: here at once, then for the others
+                if (onSilenceEverywhere != null) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Button(
+                        onClick = onSilenceEverywhere,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(UiStrings.alarm_silence_everywhere_for_and_close, silenceLength(silenceMinutes)))
+                    }
                 }
 
                 // A setting, not an answer to this alarm: from now on a card with no sound, on this phone

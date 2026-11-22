@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.alerts.BgAlarmRule
 import app.aaps.core.interfaces.alerts.BgAlarmRules
 import app.aaps.core.interfaces.alerts.BgDirection
 import app.aaps.core.interfaces.alerts.BgRuleType
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -44,7 +43,6 @@ import kotlinx.serialization.json.put
 @Inject
 class BgAlarmRulesImpl(
     private val preferences: Preferences,
-    private val config: Config,
     private val aapsLogger: AAPSLogger,
     @ApplicationScope private val scope: CoroutineScope
 ) : BgAlarmRules {
@@ -55,10 +53,7 @@ class BgAlarmRulesImpl(
     }
 
     override fun save(rules: List<BgAlarmRule>) {
-        if (config.AAPSCLIENT) {
-            aapsLogger.error(LTag.BGSOURCE, "BG alarm rules saved on a client - ignored, they are the master's")
-            return
-        }
+        // On a client the sync sends it to the master, which takes it from an Admin only and sends it to every phone
         preferences.put(StringNonKey.BgAlarmRules, toJson(rules))
     }
 

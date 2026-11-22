@@ -5,6 +5,7 @@ import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertChoice
+import app.aaps.core.interfaces.alerts.SharedSilence
 import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertSound
 import app.aaps.core.interfaces.alerts.AlertSeverity
@@ -84,6 +85,9 @@ class BgAlarmsImplTest : TestBase() {
         override val sounds: StateFlow<Map<String, AlertSound>> = MutableStateFlow(emptyMap())
         override fun setSound(kind: AlertKind, sound: AlertSound?) {}
         override fun test(kind: AlertKind, severity: AlertSeverity): Boolean = true
+        override fun silenceEverywhere(source: String, key: String, minutes: Int) {}
+        override fun canSilenceEverywhere(alert: Alert): Boolean = false
+        override fun applySharedSilence(silence: SharedSilence) {}
         override fun silencedUntil(source: String, key: String): Long = silenced[key] ?: 0L
         override fun act(source: String, key: String) {}
         val booked = mutableListOf<Pair<Alert, Long>>()
@@ -587,7 +591,7 @@ class BgAlarmsImplTest : TestBase() {
 
     @Test
     fun `old rules without a type are level rules and every type is stored`() {
-        val impl = BgAlarmRulesImpl(preferences, config, aapsLogger, mock<CoroutineScope>())
+        val impl = BgAlarmRulesImpl(preferences, aapsLogger, mock<CoroutineScope>())
         val old = impl.parse("""[{"id":"a","direction":"LOW","thresholdMgdl":70.0,"severity":"WARNING"}]""")
         assertThat(old.single().type).isEqualTo(BgRuleType.LEVEL)
 
@@ -597,7 +601,7 @@ class BgAlarmsImplTest : TestBase() {
 
     @Test
     fun `a rule that does not fit its type is dropped when read`() {
-        val impl = BgAlarmRulesImpl(preferences, config, aapsLogger, mock<CoroutineScope>())
+        val impl = BgAlarmRulesImpl(preferences, aapsLogger, mock<CoroutineScope>())
 
         val rules = impl.parse("""[{"id":"a","type":"PREDICTED_LOW","direction":"HIGH","thresholdMgdl":70.0,"severity":"WARNING"}]""")
 

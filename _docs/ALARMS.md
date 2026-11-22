@@ -362,6 +362,24 @@ rings because of it (decided 2026-11-21: acceptable).
   over the master-client link. Each phone decides whether it takes silences from the others: a parent can silence
   the child's phone, or keep their own ringing. It replaces the Nightscout acknowledgement, which goes away with the
   Nightscout alarms. A silence from a phone whose clock is far off is refused.
+- Built (2f, 2026-11-22), changed with the user: not a per-phone "take silences" setting, but the choice at the
+  moment of silencing. The alarm screen of a BG alarm has "Silence for N on every phone and close" next to the
+  silence of this phone; the notification, the watch, a swipe and the card silence this phone only. Every phone
+  uses the same rules for it to mean the same alarm: the BG rules and the urgent low threshold are one set, synced
+  both ways (`SyncDirection.Bidirectional`): set on the master, or on a client with the Admin role while the master
+  can be reached, the master deciding last writer wins. Each phone keeps only how it rings (Ring, Silent, Off, the
+  sound, the pause).
+  - The phone that silences does it on itself at once, never waiting for the way round: a client that is not
+    connected still stops ringing (`Alerts.silenceEverywhere`).
+  - A client sends it to the master as a signed client-control message `alert_silence` (role Meal assistant or
+    higher: it quiets the master's phone too). The master keeps its own and its clients' silences that hold now in
+    `StringNonKey.AlertSharedSilences`, a hot key, so its hot status doc takes the list to every client within
+    seconds. Each phone's BG alarms watch the key and silence the same alarm (`SharedSilence`, matched by source,
+    key and the occurrence's time within 10 minutes); one not raised there yet is held and applied when it is.
+  - Refused: a silence from a clock more than 5 minutes ahead, one longer than 4 hours, or one that is over.
+    Urgent low is silenced from another phone for 30 minutes at most, as on the phone itself.
+  - Offered only with client control on: on the master with a paired client, on a client when paired with a role
+    that may send it.
 - **Escalation (a later step).** A client can be set to ring only when the master has not answered within N minutes;
   optionally an SMS to a contact. It needs the shared silence.
 
@@ -442,8 +460,8 @@ The order matters: step 3 must not come before step 2.
    low and high rules with their screen (`BgAlarmsImpl`, `BgAlarmRules`); 2b stale data as a booked alert at the last
    reading plus the threshold, with a 5-minute grace after a start (replaces `checkStaleBGAlert` and
    `IosMissedReadingAlarm`; the setting "Alert if no BG data is received" and its threshold stay); 2c persistent high,
-   falling and rising fast and predicted low as rule types of the same screen; 2d smart silence and the pause. Still
-   to come: 2e sounds and the Test button, 2f the shared silence. The escalation comes
+   falling and rising fast and predicted low as rule types of the same screen; 2d smart silence and the pause;
+   2e the sound per kind and the Test button; 2f the silence on every phone. The escalation comes
    later, after the basics work.
 3. The Nightscout alarms removed; announcements as a WARNING alert.
 4. The core's sounding cards to alerts (the table above).

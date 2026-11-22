@@ -139,11 +139,16 @@ enum class StringNonKey(
     // The sound the user chose for each kind of alert on this phone (Alerts.setSound), by kind id. Exported with this
     // phone's settings; not synced, because each phone decides how it rings.
     AlertSounds(key = "alert_sounds", defaultValue = "{}", exportable = true),
+    // The BG alarm silences given for every phone that hold now (SharedSilence, step 2f), a JSON list. The master
+    // writes it and sends it in its hot status doc; a client keeps the master's copy. Not exported: it belongs to
+    // this moment.
+    AlertSharedSilences(key = "alert_shared_silences", defaultValue = "[]", exportable = false),
     // The alerts booked to ring at a time (Alerts.schedule), so one booked before the process ended still rings. Not
     // exportable: a booking belongs to this phone and this moment.
     AlertBookings(key = "alert_bookings", defaultValue = "[]", exportable = false),
-    // The user's own BG level rules (BgAlarmRules), a JSON list. Set on the master and synced to the clients, which
-    // read them only; exported with the master's settings.
-    BgAlarmRules(key = "bg_alarm_rules", defaultValue = "[]", exportable = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.MasterOnly)),
+    // The user's own BG rules (BgAlarmRules), a JSON list. One list for every phone, so a silence given everywhere is
+    // for the same alarm (step 2f): set on the master or by an Admin client (Bidirectional, the master decides last
+    // writer wins) and synced to every phone; exported with the master's settings.
+    BgAlarmRules(key = "bg_alarm_rules", defaultValue = "[]", exportable = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
 
 }

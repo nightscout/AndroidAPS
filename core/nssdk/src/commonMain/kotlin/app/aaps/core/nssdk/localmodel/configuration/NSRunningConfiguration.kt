@@ -1,6 +1,7 @@
 package app.aaps.core.nssdk.localmodel.configuration
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonArray
 
 /**
  * Typed payload of the NS `settings/aaps` doc's `runningConfig` block.
@@ -23,6 +24,9 @@ data class NSRunningConfiguration(
     val activeScene: NSActiveScene? = null,
     // Hot doc, like [activeScene]: the master's running "time to eat" timer. Null = none (or an older master).
     val eatReminder: NSEatReminder? = null,
+    // Hot doc: the BG alarm silences given for every phone that hold now (`SharedSilence` in core/interfaces, step 2f),
+    // as the master keeps them. Null: none, or an older master.
+    val alertSilences: JsonArray? = null,
     // Flat block of cold-channel synced preference values (key string → value serialized as string),
     // driven by each key's SyncSpec. Applied with "master wins" on the client; client→master edits
     // travel separately via the signed Client-Control PreferencesUpdate channel.

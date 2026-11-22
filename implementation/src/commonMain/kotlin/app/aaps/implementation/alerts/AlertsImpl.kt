@@ -13,6 +13,9 @@ import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.AlertPlatform
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.AlertSound
+import app.aaps.core.interfaces.alerts.BgAlert
+import app.aaps.core.interfaces.alerts.SharedSilence
+import app.aaps.core.interfaces.alerts.SharedSilenceLink
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.concurrent.withLock
@@ -86,6 +89,8 @@ class AlertsImpl(
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
     private val soundPlayer: AlarmSoundPlayer,
+    // A provider: the Nightscout client behind it reaches much of the app, and is needed only when a silence is shared
+    private val sharedSilenceLink: () -> SharedSilenceLink,
     @ApplicationScope private val appScope: CoroutineScope,
     // A provider: a driver's catalogue reaches its plugin, which raises through here. Read only to restore a saved booking.
     private val catalogues: () -> Set<AlertKindCatalogue>
@@ -112,6 +117,9 @@ class AlertsImpl(
     private var choiceMap: MutableMap<String, AlertChoice>? = null
     private var pauseMap: MutableMap<String, Long>? = null
     private var soundMap: MutableMap<String, AlertSound>? = null
+
+    /** Silences given on another phone for an alert this phone has not raised yet; used by [raise]. Guarded by [lock]. */
+    private val pendingShared = mutableListOf<SharedSilence>()
     private var pauseEnd: Job? = null
     private var bookings: MutableMap<Pair<String, String>, Booking>? = null
     private var observing = false
@@ -243,6 +251,60 @@ class AlertsImpl(
         mutableMapOf()
     }
 
+    override fun silenceEverywhere(source: String, key: String, minutes: Int) {
+        // Here first, at once: the other phones may be out of reach
+        silence(source, key, minutes)
+        val shared = lock.withLock {
+            val entry = entries[source to key] ?: return
+            if (entry.silencedUntil <= dateUtil.now()) return
+            SharedSilence(source = source, key = key, raisedAt = entry.alert.raisedAt, until = entry.silencedUntil, sentAt = dateUtil.now())
+        }
+        aapsLogger.info(LTag.NOTIFICATION, "Alert $source/$key silenced everywhere until ${dateUtil.timeString(shared.until)}")
+        // The master keeps it for its clients (its hot status doc); a client sends it to the master, which does that
+        if (config.AAPSCLIENT) sharedSilenceLink().send(shared)
+        else preferences.put(
+            StringNonKey.AlertSharedSilences,
+            SharedSilence.toJson(SharedSilence.merge(SharedSilence.parse(preferences.get(StringNonKey.AlertSharedSilences)), shared, dateUtil.now()))
+        )
+    }
+
+    // Only the BG alarms: every phone raises the same ones from the same rules and readings
+    override fun canSilenceEverywhere(alert: Alert): Boolean = alert.source == BgAlert.SOURCE && sharedSilenceLink().available()
+
+    override fun applySharedSilence(silence: SharedSilence) {
+        val now = dateUtil.now()
+        if (!silence.accepts(now)) {
+            if (silence.until > now) aapsLogger.warn(LTag.NOTIFICATION, "Shared silence refused, the sender's clock is far off or it is too long: $silence")
+            return
+        }
+        lock.withLock {
+            val entry = entries[silence.source to silence.key]
+            if (entry != null && silence.isFor(entry.alert.source, entry.alert.key, entry.alert.raisedAt)) {
+                // The same silence again (its echo from the master), or a shorter one: nothing to do
+                if (entry.silencedUntil >= silence.until) return
+                aapsLogger.info(LTag.NOTIFICATION, "Alert ${silence.source}/${silence.key} silenced from another phone until ${dateUtil.timeString(silence.until)}")
+                silenceEntryUntil(entry, silence.until)
+            } else {
+                // Not raised here yet: the readings may come a moment later to this phone
+                pendingShared.removeAll { it.source == silence.source && it.key == silence.key }
+                pendingShared += silence
+            }
+        }
+    }
+
+    /** Caller holds [lock]. The end of a pending shared silence of [alert]'s occurrence, used up, or 0. */
+    private fun takePendingShared(alert: Alert): Long {
+        val now = dateUtil.now()
+        pendingShared.removeAll { !it.accepts(now) }
+        val match = pendingShared.firstOrNull { it.isFor(alert.source, alert.key, alert.raisedAt) } ?: return 0L
+        pendingShared.remove(match)
+        val until = if (alert.kind.isProtected) minOf(match.until, now + Alerts.PROTECTED_SILENCE_MAX_MINUTES * 60_000L) else match.until
+        rememberSilence(alert, until)
+        platform.snoozed(alert, until)
+        aapsLogger.info(LTag.NOTIFICATION, "Alert ${alert.source}/${alert.key} raised silenced: silenced from another phone until ${dateUtil.timeString(until)}")
+        return until
+    }
+
     override fun silencedUntil(source: String, key: String): Long = lock.withLock {
         entries[source to key]?.silencedUntil?.takeIf { it > dateUtil.now() } ?: 0L
     }
@@ -292,7 +354,7 @@ class AlertsImpl(
                 if (existing.card != null) showCard(existing, ring = false)
             } else {
                 existing?.let { removeCard(it) }
-                val entry = Entry(alert, silencedUntil = storedSilence(alert))
+                val entry = Entry(alert, silencedUntil = maxOf(storedSilence(alert), takePendingShared(alert)))
                 entries[id] = entry
                 publish()
                 showCard(entry, ring = true)
@@ -571,10 +633,15 @@ class AlertsImpl(
     private fun silenceEntry(entry: Entry, minutes: Int) {
         val length = if (entry.alert.kind.isProtected) minOf(minutes, Alerts.PROTECTED_SILENCE_MAX_MINUTES) else minutes
         if (length != minutes) aapsLogger.info(LTag.NOTIFICATION, "Alert ${entry.alert.kind.id} is protected: silenced $length min, not $minutes")
-        val until = dateUtil.now() + length * 60_000L
-        entry.silencedUntil = until
-        rememberSilence(entry.alert, until)
-        platform.snoozed(entry.alert, until)
+        silenceEntryUntil(entry, dateUtil.now() + length * 60_000L)
+    }
+
+    /** Caller holds [lock]. Silences [entry] until [until]; a protected kind for a short time at most. */
+    private fun silenceEntryUntil(entry: Entry, until: Long) {
+        val capped = if (entry.alert.kind.isProtected) minOf(until, dateUtil.now() + Alerts.PROTECTED_SILENCE_MAX_MINUTES * 60_000L) else until
+        entry.silencedUntil = capped
+        rememberSilence(entry.alert, capped)
+        platform.snoozed(entry.alert, capped)
         showCard(entry, ring = false)
     }
 
@@ -628,6 +695,9 @@ class AlertsImpl(
         appScope.launch {
             notificationManager.notifications.collect { lock.withLock { restoreRemovedCards() } }
         }
+        // Made now, not when the first alarm screen asks: the master learns from it whether it has a client, and the
+        // screen should not miss "Silence everywhere" while that is still being read
+        appScope.launch { sharedSilenceLink() }
     }
 
     /** Caller holds [lock]. Reads the list as it is now, not as the flow sent it, so a card posted meanwhile counts. */

@@ -177,6 +177,22 @@ sealed class ClientControlMessage {
     data object DismissAlarm : ClientControlMessage()
 
     /**
+     * "Silence everywhere" of a BG alarm on a client (`_docs/ALARMS.md`, step 2f): the master silences the same alarm
+     * and passes the silence to every client in its hot status doc. The client has already silenced its own, so this
+     * is fire-and-forget. [raisedAt] names the occurrence, [until] is the end of the silence, [sentAt] the client's
+     * clock when it was given; all epoch ms.
+     */
+    @Serializable
+    @SerialName("alert_silence")
+    data class AlertSilence(
+        val source: String,
+        val key: String,
+        val raisedAt: Long,
+        val until: Long,
+        val sentAt: Long
+    ) : ClientControlMessage()
+
+    /**
      * Client asks the master to abort the in-progress bolus it initiated (the one being mirrored to this client).
      * Fire-and-forget: the master calls commandQueue.cancelAllBoluses() and the resulting progress terminal mirrors
      * back. Safe (only ever delivers less) and idempotent.
