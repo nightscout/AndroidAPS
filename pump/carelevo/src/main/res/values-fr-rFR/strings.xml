@@ -58,9 +58,7 @@
     <string name="carelevo_insulin_refill_step1">1. Retirez le papier de protection de la coque du patch.</string>
     <string name="carelevo_insulin_refill_step2">2. Désinfectez le bouchon en caoutchouc du flacon d\'insuline avec une lingette alcoolisée.</string>
     <string name="carelevo_insulin_refill_step3">3. Retirez le capuchon de protection de l\'aiguille de la seringue d\'insuline en le tirant tout droit.</string>
-    <string name="carelevo_insulin_refill_step4">4. Tirez le piston de la seringue pour la remplir d\'environ 2 mL d\'air.</string>
     <string name="carelevo_insulin_refill_step5">5. Insérez la seringue remplie d\'air dans le flacon d\'insuline et injectez l\'air dans le flacon.</string>
-    <string name="carelevo_insulin_refill_step6">6. Avec la seringue toujours insérée, retournez le flacon et la seringue, et utilisez la pression pour remplir la seringue d\'environ 2 mL d\'insuline.</string>
     <string name="carelevo_insulin_refill_step7">7. Insérez l\'aiguille de la seringue verticalement dans l\'orifice de remplissage d\'insuline du patch (①) jusqu\'au fond. Tirez le piston jusqu\'en haut, puis relâchez-le. Retirez la seringue de l\'orifice de remplissage.</string>
     <string name="carelevo_insulin_refill_step8">8. Tenez la seringue droite et tapotez doucement le côté pour rassembler toutes les bulles d\'air en haut.</string>
     <string name="carelevo_insulin_refill_step9">9. Insérez à nouveau l\'aiguille dans le flacon d\'insuline, poussez tout l\'air dans le flacon, puis prélevez la quantité exacte d\'insuline que vous utiliserez pendant la durée du patch.</string>
