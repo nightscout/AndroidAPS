@@ -58,9 +58,7 @@
     <string name="carelevo_insulin_refill_step1">1. Dra av skyddspappret från poddens blisterförpackning.</string>
     <string name="carelevo_insulin_refill_step2">2. Desinficera gummilocket på insulinflaskan med en spritsudd.</string>
     <string name="carelevo_insulin_refill_step3">3. Ta av nålskyddet från insulinsprutan genom att dra det rakt av.</string>
-    <string name="carelevo_insulin_refill_step4">4. Dra tillbaka sprutans kolv så att sprutan fylls med ungefär 2 ml luft.</string>
     <string name="carelevo_insulin_refill_step5">5. Stick in den luftfyllda sprutan i insulinflaskan och tryck in luften i flaskan.</string>
-    <string name="carelevo_insulin_refill_step6">6. Låt sprutan sitta kvar, vänd flaskan och sprutan upp och ner och låt trycket fylla sprutan med ungefär 2 ml insulin.</string>
     <string name="carelevo_insulin_refill_step7">7. Stick in sprutans nål lodrätt i poddens påfyllningsport (①) tills den når botten. Dra kolven hela vägen upp och släpp den sedan. Ta ut sprutan ur påfyllningsporten.</string>
     <string name="carelevo_insulin_refill_step8">8. Håll sprutan upprätt och knacka lätt på sidan så att alla luftbubblor samlas längst upp.</string>
     <string name="carelevo_insulin_refill_step9">9. Stick in nålen i insulinflaskan igen, tryck in all luft i flaskan och dra sedan upp exakt den mängd insulin som du kommer att använda under poddens användningstid.</string>
