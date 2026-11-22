@@ -6,7 +6,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertChoice
 import app.aaps.core.interfaces.alerts.AlertKind
-import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.alerts.AlertSound
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.keys.interfaces.IntPreferenceKey
@@ -65,8 +65,8 @@ class CarelevoAlarmNotifierTest {
         override val pauses: StateFlow<Map<String, Long>> = MutableStateFlow(emptyMap())
         override fun pause(kinds: Collection<AlertKind>, until: Long) {}
         override fun resume(kinds: Collection<AlertKind>) {}
-        override val sounds: StateFlow<Map<String, AlarmSound>> = MutableStateFlow(emptyMap())
-        override fun setSound(kind: AlertKind, sound: AlarmSound?) {}
+        override val sounds: StateFlow<Map<String, AlertSound>> = MutableStateFlow(emptyMap())
+        override fun setSound(kind: AlertKind, sound: AlertSound?) {}
         override fun test(kind: AlertKind, severity: AlertSeverity): Boolean = true
         override fun silencedUntil(source: String, key: String): Long = 0L
         val raised = mutableListOf<Alert>()

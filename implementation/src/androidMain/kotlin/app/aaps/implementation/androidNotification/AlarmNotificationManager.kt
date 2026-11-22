@@ -9,7 +9,10 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.AudioAttributes
+import android.media.RingtoneManager
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import app.aaps.core.interfaces.alerts.EatReminder
@@ -110,6 +113,9 @@ class AlarmNotificationManager(
          * NotificationHolder=4711 and FULL_SCREEN=4712.
          */
         const val SOUND_ID_OFFSET = 100_000
+
+        /** A ringtone chosen for a WARNING alert plays at most this long: a chime, not a phone call. */
+        const val CHIME_RINGTONE_MS = 5_000L
 
         /** Base of the ids of [postChime]: above the sound alarms, whose keys stay far below 100 000. */
         const val CHIME_ID_OFFSET = 300_000
@@ -343,15 +349,21 @@ class AlarmNotificationManager(
     }
 
     /**
-     * A notification that sounds once, for a WARNING pump alert: the sound channel of [AlarmSound.ALARM], so the sound
-     * plays one time and does not loop. While Do Not Disturb is on and the override is off it only vibrates, as every
-     * alarm here (see [DoNotDisturbRule]). [chimeKey] identifies it for [cancelChime].
+     * A notification that sounds once, for a WARNING alert: the sound channel of [sound], so the sound plays one time
+     * and does not loop. While Do Not Disturb is on and the override is off it only vibrates, as every alarm here (see
+     * [DoNotDisturbRule]). [chimeKey] identifies it for [cancelChime].
+     *
+     * With the user's [ringtoneUri] (`_docs/ALARMS.md`, step 2e) the notification goes on the silent channel and the
+     * ringtone plays once, for [CHIME_RINGTONE_MS] at most: a channel's sound is fixed when it is made, so it cannot be
+     * the ringtone. A ringtone that cannot be opened chimes with [sound] instead.
      */
-    fun postChime(chimeKey: Int, title: String, body: String, sound: AlarmSound = AlarmSound.ALARM) {
+    fun postChime(chimeKey: Int, title: String, body: String, sound: AlarmSound = AlarmSound.ALARM, ringtoneUri: String? = null) {
         channels // created on first post, see the field
         val overrideDnd = preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
+        val quiet = DoNotDisturbRule.staysQuiet(overrideDnd, mgr.currentInterruptionFilter)
+        val ringtonePlayed = !quiet && ringtoneUri != null && playRingtoneOnce(ringtoneUri, overrideDnd)
         val channelId =
-            if (DoNotDisturbRule.staysQuiet(overrideDnd, mgr.currentInterruptionFilter)) CHANNEL_SILENT
+            if (quiet || ringtonePlayed) CHANNEL_SILENT
             else channelIdForSound(sound, overrideDnd)
         val notification = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(iconsProvider.getNotificationIcon())
@@ -368,6 +380,27 @@ class AlarmNotificationManager(
         } catch (ex: SecurityException) {
             aapsLogger.error(LTag.NOTIFICATION, "Failed to post chime \"$title\" - POST_NOTIFICATIONS likely revoked", ex)
         }
+    }
+
+    /** Plays [uri] once on the stream the alarms use, stopped after [CHIME_RINGTONE_MS]. False when it cannot be played. */
+    private fun playRingtoneOnce(uri: String, overrideDnd: Boolean): Boolean = try {
+        val ringtone = RingtoneManager.getRingtone(context, Uri.parse(uri))
+        if (ringtone == null) {
+            aapsLogger.error(LTag.NOTIFICATION, "Ringtone $uri cannot be opened, the chime plays its bundled sound")
+            false
+        } else {
+            ringtone.audioAttributes = AudioAttributes.Builder()
+                .setUsage(if (overrideDnd) AudioAttributes.USAGE_ALARM else AudioAttributes.USAGE_NOTIFICATION)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build()
+            ringtone.isLooping = false
+            ringtone.play()
+            Handler(Looper.getMainLooper()).postDelayed({ ringtone.stop() }, CHIME_RINGTONE_MS)
+            true
+        }
+    } catch (e: Exception) {
+        aapsLogger.error(LTag.NOTIFICATION, "Ringtone $uri cannot be played, the chime plays its bundled sound", e)
+        false
     }
 
     fun cancelChime(chimeKey: Int) = mgr.cancel(CHIME_ID_OFFSET + chimeKey)

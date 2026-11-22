@@ -55,7 +55,7 @@ class IosSystemNotificationPlatformTest {
 
         val calls = mutableListOf<String>()
 
-        override fun play(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean) {
+        override fun play(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean, ringtoneUri: String?) {
             calls.add("play:${sound.name}")
         }
 

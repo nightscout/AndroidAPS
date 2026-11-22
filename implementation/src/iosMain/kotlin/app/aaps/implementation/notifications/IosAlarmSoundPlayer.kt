@@ -69,7 +69,8 @@ class IosAlarmSoundPlayer(
     private var currentOwner: String? = null
     private var rampJob: Job? = null
 
-    override fun play(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean) {
+    // [ringtoneUri] is never set on iOS: an app can play only the sounds it ships, so the user picks only those
+    override fun play(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean, ringtoneUri: String?) {
         scope.launch { doPlay(sound, ownerTag, breakThroughDnd) }
     }
 

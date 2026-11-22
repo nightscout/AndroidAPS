@@ -37,7 +37,8 @@ interface NotificationManager {
         alarmTitle: String? = null,
         canMute: Boolean = false,
         tellWatch: Boolean = true,
-        breakThroughDnd: Boolean = false
+        breakThroughDnd: Boolean = false,
+        ringtoneUri: String? = null
     ): NotificationHandle
 
     /**

@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import app.aaps.core.interfaces.alerts.AlertChoice
 import app.aaps.core.interfaces.alerts.AlertKind
+import app.aaps.core.interfaces.alerts.AlertSound
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
@@ -48,7 +49,8 @@ import app.aaps.ui.UiStrings
  * Ring, Silent or Off for each kind of alert, on this phone (`_docs/ALARMS.md`, section 6). A change applies at once,
  * so there is no Save: the back arrow only goes back. A protected kind shows that it always rings, with no choice.
  *
- * Each kind also has its sound on this phone ([sounds], by kind id; not in it: the alert's own) and a Test button,
+ * Each kind also has its sound on this phone ([sounds], by kind id; not in it: the alert's own) - one AAPS ships, or
+ * on Android any sound of the phone - and a Test button,
  * which plays it as an alarm for a few seconds. [onTest] returns false when nothing was played: an alarm is ringing.
  */
 @Composable
@@ -56,8 +58,8 @@ fun AlertKindsScreen(
     groups: List<AlertKindGroup>,
     silentOrOff: Int,
     onChoice: (AlertKind, AlertChoice) -> Unit,
-    sounds: Map<String, AlarmSound>,
-    onSound: (AlertKind, AlarmSound?) -> Unit,
+    sounds: Map<String, AlertSound>,
+    onSound: (AlertKind, AlertSound?) -> Unit,
     onTest: (AlertKind) -> Boolean,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
@@ -104,9 +106,9 @@ fun AlertKindsScreen(
 @Composable
 private fun AlertKindRowView(
     row: AlertKindRow,
-    sound: AlarmSound?,
+    sound: AlertSound?,
     onChoice: (AlertKind, AlertChoice) -> Unit,
-    onSound: (AlertKind, AlarmSound?) -> Unit,
+    onSound: (AlertKind, AlertSound?) -> Unit,
     onTest: (AlertKind) -> Boolean
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
@@ -138,16 +140,25 @@ private fun AlertKindRowView(
     }
 }
 
-/** The kind's sound on this phone, to pick from the sounds AAPS ships, and its Test. */
+/** The kind's sound on this phone, to pick from the sounds AAPS ships or, on Android, the phone's; and its Test. */
 @Composable
-private fun SoundRow(kind: AlertKind, sound: AlarmSound?, onSound: (AlertKind, AlarmSound?) -> Unit, onTest: (AlertKind) -> Boolean) {
+private fun SoundRow(kind: AlertKind, sound: AlertSound?, onSound: (AlertKind, AlertSound?) -> Unit, onTest: (AlertKind) -> Boolean) {
     var picking by remember { mutableStateOf(false) }
+    val ringtonePicker = rememberRingtonePicker { uri, title -> onSound(kind, AlertSound.Ringtone(uri, title)) }
     var refused by remember { mutableStateOf(false) }
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
         Text(stringResource(UiStrings.alert_kind_sound), style = MaterialTheme.typography.bodyMedium)
         Box {
             TextButton(onClick = { picking = true }) {
-                Text(stringResource(sound?.title ?: UiStrings.alert_kind_sound_own), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(
+                    when (sound) {
+                        null                   -> stringResource(UiStrings.alert_kind_sound_own)
+                        is AlertSound.Bundled  -> stringResource(sound.sound.title)
+                        is AlertSound.Ringtone -> sound.title
+                    },
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
             DropdownMenu(expanded = picking, onDismissRequest = { picking = false }) {
                 DropdownMenuItem(
@@ -162,7 +173,16 @@ private fun SoundRow(kind: AlertKind, sound: AlarmSound?, onSound: (AlertKind, A
                         text = { Text(stringResource(s.title)) },
                         onClick = {
                             picking = false
-                            onSound(kind, s)
+                            onSound(kind, AlertSound.Bundled(s))
+                        }
+                    )
+                }
+                ringtonePicker?.let { pick ->
+                    DropdownMenuItem(
+                        text = { Text(stringResource(UiStrings.alert_kind_sound_phone)) },
+                        onClick = {
+                            picking = false
+                            pick((sound as? AlertSound.Ringtone)?.uri)
                         }
                     )
                 }

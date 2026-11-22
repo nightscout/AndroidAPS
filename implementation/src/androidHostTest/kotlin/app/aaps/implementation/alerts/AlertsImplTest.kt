@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.alerts.AlertLifetime
 import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.AlertPlatform
 import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.AlertSound
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.configuration.Config
@@ -71,7 +72,7 @@ class AlertsImplTest : TestBase() {
         override fun cancel(instanceKey: Int) {}
         override fun cancelAll() {}
         var breaksThrough = false
-        override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean) {
+        override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean, ringtoneUri: String?) {
             soundingKey = instanceKey
             breaksThrough = breakThroughDnd
         }
@@ -90,9 +91,11 @@ class AlertsImplTest : TestBase() {
             screens += alert.key
         }
 
-        override fun chime(alert: Alert, sound: AlarmSound) {
+        val chimeRingtones = mutableListOf<String?>()
+        override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?) {
             chimes += alert.key
             chimeSounds += sound
+            chimeRingtones += ringtoneUri
         }
 
         override fun snoozed(alert: Alert, until: Long) {
@@ -927,7 +930,7 @@ class AlertsImplTest : TestBase() {
     @Test
     fun `a kind's chosen sound rings instead of the alert's own`() {
         val a = alert()
-        sut.setSound(a.kind, AlarmSound.URGENT_ALARM)
+        sut.setSound(a.kind, AlertSound.Bundled(AlarmSound.URGENT_ALARM))
 
         sut.raise(a)
 
@@ -937,7 +940,7 @@ class AlertsImplTest : TestBase() {
     @Test
     fun `a warning chimes with the chosen sound`() {
         val a = alert(severity = AlertSeverity.WARNING)
-        sut.setSound(a.kind, AlarmSound.ERROR)
+        sut.setSound(a.kind, AlertSound.Bundled(AlarmSound.ERROR))
 
         sut.raise(a)
 
@@ -947,8 +950,8 @@ class AlertsImplTest : TestBase() {
     @Test
     fun `the sound choice survives a restart, and null brings the alert's own back`() {
         val a = alert()
-        sut.setSound(a.kind, AlarmSound.ERROR)
-        assertThat(newAlerts().sounds.value).containsExactly(a.kind.id, AlarmSound.ERROR)
+        sut.setSound(a.kind, AlertSound.Bundled(AlarmSound.ERROR))
+        assertThat(newAlerts().sounds.value).containsExactly(a.kind.id, AlertSound.Bundled(AlarmSound.ERROR))
 
         sut.setSound(a.kind, null)
         sut.raise(a)
@@ -959,11 +962,11 @@ class AlertsImplTest : TestBase() {
     @Test
     fun `the test plays the alarm sound for a few seconds`() {
         val kind = TestKind("pump", AlertOrigin.PUMP, "occlusion")
-        sut.setSound(kind, AlarmSound.BOLUS_ERROR)
+        sut.setSound(kind, AlertSound.Bundled(AlarmSound.BOLUS_ERROR))
 
         assertThat(sut.test(kind, AlertSeverity.CRITICAL)).isTrue()
 
-        verify(soundPlayer).play(eq(AlarmSound.BOLUS_ERROR), any(), eq(false))
+        verify(soundPlayer).play(eq(AlarmSound.BOLUS_ERROR), any(), eq(false), eq(null))
         scope.advanceTimeBy(Alerts.TEST_SECONDS * 1000L + 1)
         verify(soundPlayer).stop(any())
         // A test is not an alert: no card, no announcement
@@ -987,6 +990,56 @@ class AlertsImplTest : TestBase() {
 
         assertThat(sut.test(TestKind("pump", AlertOrigin.PUMP, "other"), AlertSeverity.CRITICAL)).isFalse()
 
-        verify(soundPlayer, never()).play(any(), any(), any())
+        verify(soundPlayer, never()).play(any(), any(), any(), anyOrNull())
+    }
+
+    // ---- a phone ringtone (step 2e-2) ---------------------------------------------------------------
+
+    private val ringtone = AlertSound.Ringtone("content://media/internal/audio/media/42", "Beep")
+
+    @Test
+    fun `a chosen ringtone rings, with the alert's own sound as its fallback`() {
+        val a = alert()
+        sut.setSound(a.kind, ringtone)
+
+        sut.raise(a)
+
+        assertThat(card().ringtoneUri).isEqualTo(ringtone.uri)
+        assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
+    }
+
+    @Test
+    fun `a warning chimes with the chosen ringtone`() {
+        val a = alert(severity = AlertSeverity.WARNING)
+        sut.setSound(a.kind, ringtone)
+
+        sut.raise(a)
+
+        assertThat(alertPlatform.chimeRingtones).containsExactly(ringtone.uri)
+    }
+
+    @Test
+    fun `a ringtone choice survives a restart`() {
+        val a = alert()
+        sut.setSound(a.kind, ringtone)
+
+        assertThat(newAlerts().sounds.value).containsExactly(a.kind.id, ringtone)
+    }
+
+    @Test
+    fun `the test plays the chosen ringtone`() {
+        val kind = TestKind("pump", AlertOrigin.PUMP, "occlusion")
+        sut.setSound(kind, ringtone)
+
+        sut.test(kind, AlertSeverity.CRITICAL)
+
+        verify(soundPlayer).play(eq(AlarmSound.ALARM), any(), eq(false), eq(ringtone.uri))
+    }
+
+    @Test
+    fun `an unreadable stored sound is left out, the others stay`() {
+        storedSounds = """{"a":"NO_SUCH_SOUND","b":"ERROR","c":{"uri":"u"}}"""
+
+        assertThat(newAlerts().sounds.value).containsExactly("b", AlertSound.Bundled(AlarmSound.ERROR))
     }
 }

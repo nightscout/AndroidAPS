@@ -210,10 +210,10 @@ interface Alerts {
      * The sound the user chose for each kind on this phone (`_docs/ALARMS.md`, step 2e), by kind id. A kind that is not
      * in it plays its alert's own sound. Each phone its own, as the choice to ring.
      */
-    val sounds: StateFlow<Map<String, AlarmSound>>
+    val sounds: StateFlow<Map<String, AlertSound>>
 
     /** Sets the sound of [kind] on this phone; null: the alert's own sound again. It applies from the next ring. */
-    fun setSound(kind: AlertKind, sound: AlarmSound?)
+    fun setSound(kind: AlertKind, sound: AlertSound?)
 
     /**
      * Plays [kind]'s sound on this phone as an alert of [severity] would ring, for [TEST_SECONDS]: CRITICAL the alarm
@@ -316,8 +316,11 @@ interface AlertPlatform {
     /** A CRITICAL alert rings: bring up the alarm screen for it, also when the app is in the background. */
     fun showAlarmScreen(alert: Alert)
 
-    /** A WARNING alert: show it as a system notification with one sound. */
-    fun chime(alert: Alert, sound: AlarmSound)
+    /**
+     * A WARNING alert: show it as a system notification with one sound: [sound], or on Android the user's ringtone
+     * [ringtoneUri], with [sound] as its fallback.
+     */
+    fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String? = null)
 
     /**
      * The alert is silenced until [until] (epoch ms). The core rings it again itself when the time comes, but only

@@ -79,7 +79,8 @@ class PluginBaseStartFailureTest {
             alarmTitle: String?,
             canMute: Boolean,
             tellWatch: Boolean,
-            breakThroughDnd: Boolean
+            breakThroughDnd: Boolean,
+            ringtoneUri: String?
         ): NotificationHandle = record(id, text, level, sound)
 
         override fun post(

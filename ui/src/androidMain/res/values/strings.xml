@@ -407,6 +407,7 @@
     <string name="alert_kind_protected" comment="Shown instead of the three choices for a kind of alert the user cannot silence, for example insulin delivery stopped">Always rings, for safety</string>
     <string name="alert_kind_sound" comment="Label before the sound an alert kind plays on this phone">Sound</string>
     <string name="alert_kind_sound_own" comment="Sound choice of an alert kind: the sound the alert itself asks for, as before">Its own sound</string>
+    <string name="alert_kind_sound_phone" comment="Sound choice of an alert kind: opens the phone's list of sounds (ringtones, notification sounds, alarms)">Sound of the phone…</string>
     <string name="alert_kind_sound_test" comment="Button: play the sound of this alarm for a few seconds, as it will ring">Test</string>
     <string name="alert_kind_sound_test_refused">Not played: an alarm is ringing now.</string>
     <string name="alert_kind_silence_on_this_phone" comment="Button on the alarm screen: from now on, alerts of this kind come as a card with no sound, on this phone">Silence this kind on this phone</string>

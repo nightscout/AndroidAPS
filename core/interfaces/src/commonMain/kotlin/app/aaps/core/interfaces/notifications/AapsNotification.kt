@@ -37,5 +37,10 @@ data class AapsNotification(
      */
     val tellWatch: Boolean = true,
     /** Its [sound] rings in Do Not Disturb and silent mode whatever the user's override says: urgent low only. */
-    val breakThroughDnd: Boolean = false
+    val breakThroughDnd: Boolean = false,
+    /**
+     * Android: a ringtone of the phone the user chose for this alarm (`_docs/ALARMS.md`, step 2e), played instead of
+     * [sound]. [sound] stays the fallback: a ringtone that was deleted or cannot be read must not leave the alarm silent.
+     */
+    val ringtoneUri: String? = null
 )

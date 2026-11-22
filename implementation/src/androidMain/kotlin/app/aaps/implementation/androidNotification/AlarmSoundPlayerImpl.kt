@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -58,23 +59,29 @@ class AlarmSoundPlayerImpl(
     /** Whether the sound playing now breaks through Do Not Disturb (urgent low) whatever the override says. */
     private var currentBreaksThrough = false
 
-    override fun play(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean) {
-        handler.post { doPlay(sound, ownerTag, breakThroughDnd) }
+    /** The phone ringtone the user chose for the sound playing now, or null: the bundled [currentSound]. */
+    private var currentRingtone: String? = null
+
+    override fun play(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean, ringtoneUri: String?) {
+        handler.post { doPlay(sound, ownerTag, breakThroughDnd, ringtoneUri) }
     }
 
     override fun stop(ownerTag: String) {
         handler.post { if (currentOwner == ownerTag) doStop() }
     }
 
-    private fun doPlay(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean) {
+    private fun doPlay(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean, ringtoneUri: String?) {
         // Idempotent: a re-request of the exact same sound by the same owner while it is already playing is a no-op,
         // so the registry offering the same alarm again does not restart the volume ramp.
-        if (player != null && currentOwner == ownerTag && currentSound == sound && currentBreaksThrough == breakThroughDnd) return
+        if (player != null && currentOwner == ownerTag && currentSound == sound && currentBreaksThrough == breakThroughDnd &&
+            currentRingtone == ringtoneUri
+        ) return
 
         doStop()
         currentSound = sound
         currentBreaksThrough = breakThroughDnd
         currentOwner = ownerTag
+        currentRingtone = ringtoneUri
         // Started at once. The start used to be deferred past the one-shot sound of the notification channel that
         // the deleted `postFullScreenAlarm` posted alongside it; the card that carries an alarm now is silent, so
         // there is nothing to wait out and no reason for the blocking MediaMetadataRetriever probe.
@@ -116,13 +123,29 @@ class AlarmSoundPlayerImpl(
                 MediaPlayer()
             }
             mp.setAudioAttributes(audioAttrs)
-            val afd = context.resources.openRawResourceFd(soundRes) ?: run {
-                aapsLogger.error(LTag.CORE, "AlarmSoundPlayer: unable to open raw resource $soundRes")
-                mp.release()
-                return
+            // The user's ringtone, else the bundled sound. A ringtone that cannot be opened falls back at once: it
+            // must never leave the alarm silent
+            val ringtone = currentRingtone?.let { uri ->
+                try {
+                    mp.setDataSource(context, Uri.parse(uri))
+                    true
+                } catch (e: Exception) {
+                    aapsLogger.error(LTag.CORE, "AlarmSoundPlayer: ringtone $uri cannot be played, the bundled sound plays", e)
+                    currentRingtone = null
+                    mp.reset()
+                    mp.setAudioAttributes(audioAttrs)
+                    false
+                }
+            } == true
+            if (!ringtone) {
+                val afd = context.resources.openRawResourceFd(soundRes) ?: run {
+                    aapsLogger.error(LTag.CORE, "AlarmSoundPlayer: unable to open raw resource $soundRes")
+                    mp.release()
+                    return
+                }
+                mp.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+                afd.close()
             }
-            mp.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
-            afd.close()
             mp.isLooping = true
             if (preferences.get(BooleanKey.AlertIncreaseVolume)) {
                 currentVolumeLevel = 0
@@ -137,9 +160,17 @@ class AlarmSoundPlayerImpl(
                 if (player === prepared) prepared.start()
                 else prepared.release()
             }
-            mp.setOnErrorListener { _, what, extra ->
+            mp.setOnErrorListener { failed, what, extra ->
                 aapsLogger.error(LTag.CORE, "AlarmSoundPlayer: MediaPlayer error what=$what extra=$extra")
-                doStop()
+                if (player === failed && currentRingtone != null) {
+                    // The ringtone failed while preparing or playing: the bundled sound plays instead, same owner
+                    aapsLogger.error(LTag.CORE, "AlarmSoundPlayer: ringtone failed, the bundled sound plays")
+                    handler.removeCallbacks(volumeRamp)
+                    player = null
+                    failed.release()
+                    currentRingtone = null
+                    startMediaPlayer()
+                } else doStop()
                 true
             }
             // Assign before prepareAsync so doStop() can find it during the Preparing state.

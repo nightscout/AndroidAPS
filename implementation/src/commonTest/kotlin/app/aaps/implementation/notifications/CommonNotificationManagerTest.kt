@@ -65,7 +65,7 @@ class CommonNotificationManagerTest {
             calls.add("cancelAll")
         }
 
-        override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean) {
+        override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean, ringtoneUri: String?) {
             audibleKey = instanceKey
             audibleSound = sound
             audibleCallCount++

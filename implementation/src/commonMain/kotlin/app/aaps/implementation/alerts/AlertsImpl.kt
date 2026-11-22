@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.alerts.AlertLifetime
 import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.AlertPlatform
 import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.AlertSound
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.concurrent.withLock
@@ -110,7 +111,7 @@ class AlertsImpl(
     private var silences: MutableList<Silence>? = null
     private var choiceMap: MutableMap<String, AlertChoice>? = null
     private var pauseMap: MutableMap<String, Long>? = null
-    private var soundMap: MutableMap<String, AlarmSound>? = null
+    private var soundMap: MutableMap<String, AlertSound>? = null
     private var pauseEnd: Job? = null
     private var bookings: MutableMap<Pair<String, String>, Booking>? = null
     private var observing = false
@@ -157,19 +158,29 @@ class AlertsImpl(
         schedulePauseEnd()
     }
 
-    private val _sounds = MutableStateFlow<Map<String, AlarmSound>>(emptyMap())
+    private val _sounds = MutableStateFlow<Map<String, AlertSound>>(emptyMap())
     private val soundsView = _sounds.asStateFlow()
-    override val sounds: StateFlow<Map<String, AlarmSound>>
+    override val sounds: StateFlow<Map<String, AlertSound>>
         get() {
             lock.withLock { storedSounds() }
             return soundsView
         }
 
-    override fun setSound(kind: AlertKind, sound: AlarmSound?): Unit = lock.withLock {
+    override fun setSound(kind: AlertKind, sound: AlertSound?): Unit = lock.withLock {
         val map = storedSounds()
         if (map[kind.id] == sound) return@withLock
         if (sound == null) map.remove(kind.id) else map[kind.id] = sound
-        preferences.put(StringNonKey.AlertSounds, buildJsonObject { map.forEach { (id, s) -> put(id, s.name) } }.toString())
+        preferences.put(StringNonKey.AlertSounds, buildJsonObject {
+            map.forEach { (id, s) ->
+                when (s) {
+                    is AlertSound.Bundled  -> put(id, s.sound.name)
+                    is AlertSound.Ringtone -> put(id, buildJsonObject {
+                        put("uri", s.uri)
+                        put("title", s.title)
+                    })
+                }
+            }
+        }.toString())
         _sounds.value = map.toMap()
         aapsLogger.info(LTag.NOTIFICATION, "Alert kind ${kind.id} sound on this phone: ${sound ?: "its own"}")
     }
@@ -181,17 +192,17 @@ class AlertsImpl(
             aapsLogger.info(LTag.NOTIFICATION, "Alert test of ${kind.id} not played: an alarm is sounding")
             return false
         }
-        val sound = lock.withLock { soundFor(testAlert) }
-        aapsLogger.info(LTag.NOTIFICATION, "Alert test of ${kind.id}: $severity, $sound")
+        val (sound, ringtone) = lock.withLock { soundFor(testAlert) to ringtoneFor(testAlert) }
+        aapsLogger.info(LTag.NOTIFICATION, "Alert test of ${kind.id}: $severity, $sound${ringtone?.let { ", ringtone $it" } ?: ""}")
         if (severity == AlertSeverity.CRITICAL) {
-            soundPlayer.play(sound, OWNER_TEST, breakThroughDnd = false)
+            soundPlayer.play(sound, OWNER_TEST, breakThroughDnd = false, ringtoneUri = ringtone)
             // Owner-scoped: a real alarm that started meanwhile took the player over and is not stopped here
             appScope.launch {
                 delay(Alerts.TEST_SECONDS * 1000L)
                 soundPlayer.stop(OWNER_TEST)
             }
         } else {
-            platform.chime(testAlert, sound)
+            platform.chime(testAlert, sound, ringtone)
             appScope.launch {
                 delay(Alerts.TEST_SECONDS * 1000L)
                 platform.withdrawn(kind.source, TEST_KEY)
@@ -200,19 +211,32 @@ class AlertsImpl(
         return true
     }
 
-    /** Caller holds [lock]. The sound an alert plays on this phone: the user's for its kind, else its own. */
-    private fun soundFor(alert: Alert): AlarmSound = storedSounds()[alert.kind.id] ?: alert.sound ?: AlarmSound.ALARM
+    /**
+     * Caller holds [lock]. The bundled sound an alert plays on this phone: the user's for its kind, else its own. With a
+     * ringtone chosen, the alert's own: the fallback when the ringtone cannot be played.
+     */
+    private fun soundFor(alert: Alert): AlarmSound =
+        (storedSounds()[alert.kind.id] as? AlertSound.Bundled)?.sound ?: alert.sound ?: AlarmSound.ALARM
+
+    /** Caller holds [lock]. The phone ringtone the user chose for the alert's kind (Android), or null. */
+    private fun ringtoneFor(alert: Alert): String? = (storedSounds()[alert.kind.id] as? AlertSound.Ringtone)?.uri
 
     /** Caller holds [lock]. The stored sound choices, read on first use. */
-    private fun storedSounds(): MutableMap<String, AlarmSound> =
+    private fun storedSounds(): MutableMap<String, AlertSound> =
         soundMap ?: loadSounds().also {
             soundMap = it
             _sounds.value = it.toMap()
         }
 
-    private fun loadSounds(): MutableMap<String, AlarmSound> = try {
+    private fun loadSounds(): MutableMap<String, AlertSound> = try {
         Json.parseToJsonElement(preferences.get(StringNonKey.AlertSounds)).jsonObject
-            .mapNotNull { (id, value) -> AlarmSound.entries.firstOrNull { it.name == value.jsonPrimitive.content }?.let { id to it } }
+            .mapNotNull { (id, value) ->
+                // One entry that cannot be read is left out, not the whole map
+                runCatching {
+                    if (value is JsonObject) AlertSound.Ringtone(value.getValue("uri").jsonPrimitive.content, value.getValue("title").jsonPrimitive.content)
+                    else AlertSound.Bundled(AlarmSound.valueOf(value.jsonPrimitive.content))
+                }.getOrNull()?.let { id to it }
+            }
             .toMap().toMutableMap()
     } catch (e: Exception) {
         aapsLogger.error(LTag.NOTIFICATION, "Stored alert sounds unreadable, every kind plays its own", e)
@@ -500,6 +524,7 @@ class AlertsImpl(
             date = alert.raisedAt,
             validTo = 0L,
             sound = if (alert.severity == AlertSeverity.CRITICAL && !silenced && !quiet) soundFor(alert) else null,
+            ringtoneUri = if (alert.severity == AlertSeverity.CRITICAL && !silenced && !quiet) ringtoneFor(alert) else null,
             actions = alert.action?.let { listOf(NotificationAction(it.label) { act(alert.source, alert.key) }) } ?: emptyList(),
             validityCheck = null,
             // What the system notification and the watch announce it as. A pump alert passes nothing and is named by
@@ -517,7 +542,7 @@ class AlertsImpl(
             silenced                                                -> scheduleSilenceEnd(entry)
             !ring                                                   -> Unit
             alert.severity == AlertSeverity.CRITICAL -> platform.showAlarmScreen(alert)
-            alert.severity == AlertSeverity.WARNING  -> platform.chime(alert, soundFor(alert))
+            alert.severity == AlertSeverity.WARNING  -> platform.chime(alert, soundFor(alert), ringtoneFor(alert))
             else                                                    -> Unit
         }
     }

@@ -109,13 +109,15 @@ class CommonNotificationManager(
         alarmTitle: String?,
         canMute: Boolean,
         tellWatch: Boolean,
-        breakThroughDnd: Boolean
+        breakThroughDnd: Boolean,
+        ringtoneUri: String?
     ): NotificationHandle =
         postInternal(
             id = id, text = text, level = level,
             date = date, validTo = validTo,
             sound = sound, actions = actions, validityCheck = validityCheck,
-            alarmTitle = alarmTitle, canMute = canMute, tellWatch = tellWatch, breakThroughDnd = breakThroughDnd
+            alarmTitle = alarmTitle, canMute = canMute, tellWatch = tellWatch, breakThroughDnd = breakThroughDnd,
+            ringtoneUri = ringtoneUri
         )
 
     override fun post(
@@ -148,7 +150,8 @@ class CommonNotificationManager(
         alarmTitle: String? = null,
         canMute: Boolean = false,
         tellWatch: Boolean = true,
-        breakThroughDnd: Boolean = false
+        breakThroughDnd: Boolean = false,
+        ringtoneUri: String? = null
     ): NotificationHandle = lock.withLock {
         // Clean up expired notifications piggyback on writes.
         removeExpired()
@@ -177,7 +180,8 @@ class CommonNotificationManager(
             alarmTitle = alarmTitle,
             canMute = canMute,
             tellWatch = tellWatch,
-            breakThroughDnd = breakThroughDnd
+            breakThroughDnd = breakThroughDnd,
+            ringtoneUri = ringtoneUri
         )
         current.add(notification)
         current.sortBy { it.level.priority }
@@ -279,7 +283,7 @@ class CommonNotificationManager(
 
             top.instanceKey != soundingKey -> {
                 soundingKey = top.instanceKey
-                platform.setAudibleAlarm(top.instanceKey, top.sound, top.breakThroughDnd)
+                platform.setAudibleAlarm(top.instanceKey, top.sound, top.breakThroughDnd, top.ringtoneUri)
                 // Not for an alarm the watch rings by itself: the "time to eat" timer would otherwise show twice.
                 if (top.tellWatch) rxBus.send(
                     EventMobileToWear(

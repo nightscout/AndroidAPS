@@ -349,8 +349,12 @@ rings because of it (decided 2026-11-21: acceptable).
   severity would ring, for 5 seconds, with the same Do Not Disturb rule, and nothing while an alarm is sounding
   (the player plays one sound at a time). Test buttons: per kind in Alert kinds (as an alarm), and in the rule
   dialog (at the severity picked there). The sound names moved from `:implementation` to `:core:interfaces`
-  (`AlarmSound.title`). Still to come: 2e-2 any Android ringtone; distinct low and high sounds once the files are
-  supplied (decided: no generated tones).
+  (`AlarmSound.title`). 2e-2: on Android any sound of the phone (the system ringtone picker, "Sound of the phone…";
+  `AlertSound.Ringtone` with its uri and name). The alarm player plays it and falls back to the alert's own sound
+  when it cannot be opened or fails while playing (deleted, or a file in the phone's storage the app may not read):
+  an alarm is never silent. A WARNING plays it once, at most 5 seconds, with its notification on the silent channel
+  (a channel's sound is fixed when it is made). iOS has no picker. Still to come: distinct low and high sounds once
+  the files are supplied (decided: no generated tones).
 
 #### Between the phones
 

@@ -141,8 +141,9 @@ class IosAlertPlatform(
         if (_alarmScreen.value == AlertId(source, key)) _alarmScreen.value = null
     }
 
-    // The system sound: iOS cannot play an mp3 as a notification sound, so the chosen [sound] is the alarm's only
-    override fun chime(alert: Alert, sound: AlarmSound) = post(chimeId(alert.source, alert.key), alert, trigger = null)
+    // The system sound: iOS cannot play an mp3 as a notification sound, so the chosen [sound] is the alarm's only.
+    // [ringtoneUri] is never set on iOS: an app can play only the sounds it ships.
+    override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?) = post(chimeId(alert.source, alert.key), alert, trigger = null)
 
     override fun snoozed(alert: Alert, until: Long) {
         val seconds = secondsFromNow(until)

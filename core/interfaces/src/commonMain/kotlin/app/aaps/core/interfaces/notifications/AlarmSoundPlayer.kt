@@ -42,7 +42,7 @@ interface AlarmSoundPlayer {
      * As [play]. [breakThroughDnd]: this alarm rings in Do Not Disturb and silent mode whatever the user's override
      * setting says - urgent low (`_docs/ALARMS.md`, step 2, decided 2026-11-22).
      */
-    fun play(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean)
+    fun play(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean, ringtoneUri: String? = null)
 
     /** Stop and release playback **only if** [ownerTag] is the current owner. No-op otherwise. */
     fun stop(ownerTag: String)
