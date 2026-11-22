@@ -270,4 +270,18 @@ class BgAlarmsImplTest : TestBase() {
         assertThat(alerts.raised.last().kind).isEqualTo(BgAlert.LOW)
         assertThat(alerts.raised.last().raisedAt).isEqualTo(urgentAt)
     }
+
+    /** An edited threshold applies at once: the alert of the rule as it was must not stay (found on the Pixel). */
+    @Test
+    fun `an edited rule ends its alert when the readings are clear of the new threshold`() {
+        ruleList.value = listOf(low(90.0, id = "r"))
+        readings(79.0)
+        evaluate()
+        assertThat(alerts.raised.single().kind).isEqualTo(BgAlert.LOW)
+
+        ruleList.value = listOf(low(72.0, id = "r"))
+        evaluate()
+
+        assertThat(alerts.resolved).containsExactly(BgAlarmsImpl.KEY_LOW)
+    }
 }

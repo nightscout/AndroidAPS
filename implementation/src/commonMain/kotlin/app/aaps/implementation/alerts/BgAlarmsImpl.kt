@@ -170,8 +170,9 @@ class BgAlarmsImpl(
             val since = runStart(readings, level, margin = 0.0) ?: return@firstOrNull false
             last.timestamp - since >= level.durationMinutes * 60_000L
         }
-        // The level that rings now stays while the readings are within its end margin
-        val keep = ringing?.first?.takeIf { level -> levels.any { it.id == level.id } && runStart(readings, level, END_MARGIN_MGDL) != null }
+        // The level that rings now stays while the readings are within its end margin - as the rule is now: an edited
+        // threshold applies at once (found on the Pixel: the old threshold kept the alert on)
+        val keep = ringing?.first?.let { old -> levels.firstOrNull { it.id == old.id } }?.takeIf { runStart(readings, it, END_MARGIN_MGDL) != null }
         val level = when {
             winner == null                 -> keep
             keep == null                   -> winner
