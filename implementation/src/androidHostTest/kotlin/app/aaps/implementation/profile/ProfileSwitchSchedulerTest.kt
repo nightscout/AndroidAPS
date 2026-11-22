@@ -12,6 +12,7 @@ import app.aaps.shared.tests.TestBase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.emptyFlow
@@ -35,6 +36,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import kotlin.reflect.KClass
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ProfileSwitchSchedulerTest : TestBase() {
 
     @Mock lateinit var persistenceLayer: PersistenceLayer

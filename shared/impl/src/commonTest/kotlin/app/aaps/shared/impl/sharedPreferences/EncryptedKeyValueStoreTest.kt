@@ -1,5 +1,6 @@
 package app.aaps.shared.impl.sharedPreferences
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
@@ -10,6 +11,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class EncryptedKeyValueStoreTest {
 
     /** The disk, in memory. [failNext] makes that many writes throw, the way a locked file does on Windows. */

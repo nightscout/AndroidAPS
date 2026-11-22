@@ -1014,7 +1014,7 @@ class OverviewDataCacheImpl(
             }
     }
 
-    private suspend fun rebuildRunningModeGraph() = runningModeRebuildMutex.withLock {
+    private suspend fun rebuildRunningModeGraph(): Unit = runningModeRebuildMutex.withLock {
         val (fromTime, toTime) = graphTimeRange() ?: return
         val endTime = graphEndTime(toTime)
 
@@ -1045,7 +1045,7 @@ class OverviewDataCacheImpl(
         _runningModeGraphFlow.value = RunningModeGraphData(segments = mergeRunningModeSegments(samples, endTime))
     }
 
-    private suspend fun rebuildTargetLine() = targetLineRebuildMutex.withLock {
+    private suspend fun rebuildTargetLine(): Unit = targetLineRebuildMutex.withLock {
         val (fromTime, toTime) = graphTimeRange() ?: return
         val profile = profileFunction.getProfile() ?: return
         val endTime = graphEndTime(toTime)
@@ -1080,7 +1080,7 @@ class OverviewDataCacheImpl(
      * the freshest range always wins. Reading the range before taking the lock would leave the bug
      * in place.
      */
-    private suspend fun rebuildBasalGraph() = basalRebuildMutex.withLock {
+    private suspend fun rebuildBasalGraph(): Unit = basalRebuildMutex.withLock {
         val (fromTime, toTime) = graphTimeRange() ?: return
         val endTime = graphEndTime(toTime)
         val profileBasal = mutableListOf<GraphDataPoint>()

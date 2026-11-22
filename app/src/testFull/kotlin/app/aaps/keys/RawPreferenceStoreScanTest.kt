@@ -187,7 +187,7 @@ class RawPreferenceStoreScanTest {
     }
 
     private fun repoRoot(): File {
-        var dir: File? = File(System.getProperty("user.dir"))
+        var dir: File? = File(System.getProperty("user.dir")!!)
         while (dir != null && !File(dir, "settings.gradle").exists() && !File(dir, "settings.gradle.kts").exists()) dir = dir.parentFile
         return checkNotNull(dir) { "Could not find the repository root above ${System.getProperty("user.dir")}" }
     }

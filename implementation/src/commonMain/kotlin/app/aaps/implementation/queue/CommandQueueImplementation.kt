@@ -212,11 +212,11 @@ class CommandQueueImplementation(
             val active = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())
             val alreadyEffective = active != null && active.originalPsId != null && active.originalPsId == it.id
             if (alreadyEffective && activePlugin.activePump.isThisProfileSet(ProfileSealed.PS(it, activePlugin))) {
-                aapsLogger.debug(LTag.PROFILE, "Skipping onProfileChanged: active EPS id=${active?.id} already represents PS id=${it.id} and the pump has it")
+                aapsLogger.debug(LTag.PROFILE, "Skipping onProfileChanged: active EPS id=${active.id} already represents PS id=${it.id} and the pump has it")
                 return@let
             }
             if (alreadyEffective)
-                aapsLogger.debug(LTag.PROFILE, "onProfileChanged: active EPS id=${active?.id} represents PS id=${it.id}, but the pump has another basal. Setting it again")
+                aapsLogger.debug(LTag.PROFILE, "onProfileChanged: active EPS id=${active.id} represents PS id=${it.id}, but the pump has another basal. Setting it again")
             // Bound the pump round-trip. setProfile() awaits the completion of a CommandSetProfile; if
             // that is never completed the await never returns, and because the collector processes
             // emissions sequentially that single hang would block every future ProfileSwitch. On
@@ -253,7 +253,7 @@ class CommandQueueImplementation(
                     notifyProfileSet(asked = nonCustomized.basalBlocks, given = basalBlocks)
                 // A PS that is already effective only had to be set in the pump again. It gets no second EPS,
                 // unless this pump gives another basal than the EPS holds, e.g. a new pump with another step.
-                if (alreadyEffective && active?.basalBlocks == basalBlocks) return@let
+                if (alreadyEffective && active.basalBlocks == basalBlocks) return@let
                 val eps = EPS(
                     timestamp = dateUtil.now(),
                     basalBlocks = basalBlocks,

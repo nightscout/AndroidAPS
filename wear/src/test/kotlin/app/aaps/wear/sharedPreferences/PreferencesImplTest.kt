@@ -6,7 +6,6 @@ import app.aaps.core.keys.IntComposedKey
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.UnitDoubleKey
-import app.aaps.core.keys.interfaces.PreferenceKey
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -111,8 +110,6 @@ internal class PreferencesImplTest {
     fun getAllPreferenceKeysReturnsOnlyPreferenceKeysAndExcludesNonPreferenceEnums() {
         val all = sut.getAllPreferenceKeys()
         assertThat(all).isNotEmpty()
-        // Every element must be a PreferenceKey
-        assertThat(all.all { it is PreferenceKey }).isTrue()
         // Contains a well-known PreferenceKey enum
         assertThat(all).contains(BooleanKey.GeneralSimpleMode)
         // IntNonKey / LongNonKey are NonPreferenceKey-only enums and must be absent

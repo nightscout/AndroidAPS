@@ -85,7 +85,7 @@ private fun classesOnClasspath(anchors: List<Class<*>>): List<Class<*>> {
     // The anchors' own outputs too: a class loaded from somewhere off java.class.path would otherwise
     // be missed, and it costs nothing to add them.
     val anchorRoots = anchors.mapNotNull { anchor ->
-        runCatching { File(anchor.protectionDomain.codeSource.location.toURI()) }.getOrNull()
+        runCatching { File(anchor.protectionDomain!!.codeSource.location.toURI()) }.getOrNull()
     }
 
     return (roots + anchorRoots).distinct()

@@ -470,7 +470,7 @@ class MasterActionExecutorImpl(
         // the WIZARD-mode path in prepareQuickWizard and the disabled button the overview already shows for an
         // over-limit `carbs`. Only for a QuickWizard: a wear or dialog eCarbs value was clamped by its own input
         // field moments ago, and capFixed below is what bounds the rest of a batch.
-        if (entry != null && bolus != null && bolus.eCarbsGrams > 0 &&
+        if (entry != null && bolus.eCarbsGrams > 0 &&
             constraintChecker.applyCarbsConstraints(ConstraintObject(bolus.eCarbsGrams, aapsLogger)).value() != bolus.eCarbsGrams
         ) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
         // Gate + pump-init only for an actual INSULIN delivery — carbs-only, a record-only log, and a TT-only batch

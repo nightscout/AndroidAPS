@@ -311,7 +311,7 @@ fun SliderWithButtons(
                     color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.End,
                     modifier = Modifier
-                        .widthIn(min = if (asDuration || valueFormat != null || resolvedUnitLabel.isNotEmpty()) 70.dp else 40.dp)
+                        .widthIn(min = 70.dp)
                         // Opens the input dialog. Said as "Max bolus: 3 U, button" rather than a bare "3 U".
                         .then(if (enabled) Modifier.clickable(role = Role.Button) { showDialog = true } else Modifier)
                         .then(

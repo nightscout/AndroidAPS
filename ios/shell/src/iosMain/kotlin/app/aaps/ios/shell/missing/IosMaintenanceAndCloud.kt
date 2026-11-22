@@ -72,10 +72,8 @@ class IosMaintenance(
         val share = UIActivityViewController(activityItems = files, applicationActivities = null)
         // An iPad shows this as a popover, and presenting one with nowhere to point it raises.
         share.popoverPresentationController?.let { popover ->
-            host.view?.let { view ->
-                popover.sourceView = view
-                popover.sourceRect = view.bounds
-            }
+            popover.sourceView = host.view
+            popover.sourceRect = host.view.bounds
         }
         host.presentViewController(share, animated = true, completion = null)
         aapsLogger.debug(LTag.CORE, "Offered ${files.size} log file(s) to share")

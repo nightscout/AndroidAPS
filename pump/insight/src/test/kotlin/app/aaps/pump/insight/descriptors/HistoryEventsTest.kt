@@ -57,10 +57,13 @@ class HistoryEventsTest {
         assertThat(shared).isEmpty()
     }
 
-    /** Every event the table builds must really be a history event the parser can drive. */
+    /**
+     * Every id in the table must build its event. The type is checked by the compiler; what can still go
+     * wrong is building it, for example an event class without the constructor the table calls.
+     */
     @Test
-    fun everyBuiltEventIsAHistoryEvent() {
-        val wrong = eventIds.filterNot { (_, id) -> HistoryEvents.fromId(id) is HistoryEvent }
+    fun everyIdBuildsItsEvent() {
+        val wrong = eventIds.filter { (_, id) -> runCatching { HistoryEvents.fromId(id) }.isFailure }
         assertThat(wrong.map { it.first }).isEmpty()
     }
 

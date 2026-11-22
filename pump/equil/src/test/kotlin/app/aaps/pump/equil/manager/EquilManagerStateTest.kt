@@ -17,6 +17,7 @@ import app.aaps.pump.equil.driver.definition.BluetoothConnectionState
 import app.aaps.pump.equil.keys.EquilStringKey
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -40,6 +41,7 @@ import kotlin.concurrent.thread
  * on CI (#5040): once with a stale COMPLETED surviving a reset, once with a finished activation reset
  * back so the wizard waited forever for a COMPLETED it had already reached.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class EquilManagerStateTest {
