@@ -38,7 +38,6 @@ import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.LanguageTag
 import app.aaps.core.interfaces.resources.TextRefValueRegistry
 import app.aaps.core.keys.StringKey
-import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalMetroViewModelFactory
 import app.aaps.core.ui.compose.metroViewModel
@@ -52,7 +51,6 @@ import app.aaps.desktop.shell.secure.KeyVaultUnavailableException
 import app.aaps.implementation.logging.AAPSLoggerDesktop
 import app.aaps.desktop.shell.platform.openFolder
 import app.aaps.implementation.maintenance.DesktopFolders
-import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.shared.clientbindings.ClientViewModelFactory
 import app.aaps.shared.impl.sharedPreferences.StoreUnreadableException
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
@@ -79,7 +77,7 @@ import app.aaps.ui.compose.tempTarget.TempTargetManagementViewModel
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentsViewModel
 import app.aaps.ui.compose.treatmentsSheet.TreatmentViewModel
 import app.aaps.ui.search.SearchViewModel
-import dev.zacsweers.metro.createGraphFactory
+import dev.zacsweers.metro.createGraph
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import java.io.File
@@ -214,7 +212,7 @@ private class DesktopStartup {
  * screen.
  */
 private fun startApp(storage: DesktopStorage.Opened): DesktopAppGraph {
-    val graph = createGraphFactory<DesktopAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
+    val graph = createGraph<DesktopAppGraph>()
     startPlugins(graph)
     // Said in the app, not only in the log: the user is the one who can fix it, by installing a keyring.
     if (storage.fallbackReason != null)
