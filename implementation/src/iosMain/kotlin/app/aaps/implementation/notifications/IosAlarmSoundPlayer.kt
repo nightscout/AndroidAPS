@@ -177,15 +177,12 @@ class IosAlarmSoundPlayer(
         }
     }
 
+    /**
+     * The same files as `:core:ui/res/raw` on Android, copied into the bundle by the build: the five
+     * AAPS sounds (`mp3`) and the Trio sounds (`m4a`), see `core/ui/SOUNDS.md`.
+     */
     private fun urlFor(sound: AlarmSound): NSURL? =
-        NSBundle.mainBundle.URLForResource(fileName(sound), withExtension = "mp3")
+        NSBundle.mainBundle.URLForResource(sound.fileName, withExtension = sound.fileExtension)
 
-    /** Same five files as `:core:ui/res/raw` on Android, copied into the bundle by the build. */
-    private fun fileName(sound: AlarmSound): String = when (sound) {
-        AlarmSound.ALARM        -> "alarm"
-        AlarmSound.URGENT_ALARM -> "urgentalarm"
-        AlarmSound.ERROR        -> "error"
-        AlarmSound.BOLUS_ERROR  -> "boluserror"
-        AlarmSound.EAT_REMINDER -> "eatreminder"
-    }
+    private fun fileName(sound: AlarmSound): String = "${sound.fileName}.${sound.fileExtension}"
 }

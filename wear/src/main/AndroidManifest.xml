@@ -919,6 +919,10 @@
         <receiver
             android:name=".alarm.PhoneAlarmReceiver"
             android:exported="false" />
+        <!-- The CGM alarms of the phone on the watch: Acknowledge on their notification, and its swipe -->
+        <receiver
+            android:name=".alarm.CgmAlarmReceiver"
+            android:exported="false" />
         <activity
             android:name="androidx.wear.activity.ConfirmationActivity"
             android:exported="false"

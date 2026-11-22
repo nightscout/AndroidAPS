@@ -672,4 +672,29 @@ sealed class EventData : Event() {
         val durations: List<Int>,
         val title: String = ""
     ) : EventData()
+
+    // CGM alarms. Appended at the END of the class on purpose, so nothing above them moves.
+
+    /**
+     * Mobile -> Wear: a CGM alarm is going off on the phone (sent again for each reminder). The watch
+     * shows it with an Acknowledge button and vibrates through its silent mode, for [vibrationSeconds]
+     * (0 = no vibration), stronger when [urgent]. [id] is the `CgmAlarmType.id`, so a later
+     * [CgmAlarmCancel] or [CgmAlarmAcknowledge] can name it.
+     */
+    @Serializable
+    data class CgmAlarm(
+        val id: String,
+        val title: String,
+        val message: String,
+        val vibrationSeconds: Int,
+        val urgent: Boolean
+    ) : EventData()
+
+    /** Mobile -> Wear: the CGM alarm [id] is over (acknowledged somewhere, or its cause is gone). Stop and remove it. */
+    @Serializable
+    data class CgmAlarmCancel(val id: String) : EventData()
+
+    /** Wear -> Mobile: the wearer acknowledged the CGM alarm [id] on the watch. */
+    @Serializable
+    data class CgmAlarmAcknowledge(val id: String) : EventData()
 }

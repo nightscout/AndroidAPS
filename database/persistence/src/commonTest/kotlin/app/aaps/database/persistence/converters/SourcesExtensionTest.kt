@@ -31,6 +31,9 @@ internal class SourcesExtensionTest {
         assertEquals(UserEntry.Sources.Unknown, Sources.Unknown.toDb())
         assertEquals(Sources.Unknown, UserEntry.Sources.Unknown.fromDb())
 
+        assertEquals(UserEntry.Sources.Libre3Native, Sources.Libre3Native.toDb())
+        assertEquals(Sources.Libre3Native, UserEntry.Sources.Libre3Native.fromDb())
+
         assertEquals(UserEntry.Sources.Garmin, Sources.Garmin.toDb())
         assertEquals(Sources.Garmin, UserEntry.Sources.Garmin.fromDb())
     }

@@ -1,0 +1,341 @@
+THIRD-PARTY / UPSTREAM NOTICE
+=============================
+Module: :plugins:libre3 (Libre 3 / Libre 3 Plus / Libre Select native CGM driver)
+
+Status: Current NOTICE for ported / derived sources (update when new files land).
+        Do not invent copyright holders. Unknown items are marked as unknown.
+
+This AndroidAPS tree is licensed under the GNU Affero General Public License v3
+(see repository root LICENSE.txt). The Libre 3 work in this module is derived
+from two upstream projects that are both licensed under the MIT License. MIT
+code may be included in an AGPL-3 combined work. The MIT copyright and
+permission notices must travel with the distribution, so they are reproduced in
+full below.
+
+Starting point: this driver started from the Libre 3 support of Trio
+(https://github.com/nightscout/Trio). Trio takes that support from LibreLoop
+through a git submodule, https://github.com/loopandlearn/LibreLoop (branch
+legacy-loopkit-compat). Trio itself vendors no driver code. The code that was
+ported comes from the two projects in sections 1 and 2.
+
+Scope of this module: Libre 3, Libre 3 Plus and Libre Select only (Libre Select uses the
+same protocol and pairing as Libre 3). No Libre 2 / Libre 2 Plus
+code is added here. The existing follower paths (xDrip, Glimp, Tomato, and the
+LIBRE_2 / LIBRE_2_NATIVE / LIBRE_3 enum entries) are untouched.
+
+
+-------------------------------------------------------------------------------
+1. LibreCRKit — protocol (NFC, pairing, crypto, data plane)
+-------------------------------------------------------------------------------
+
+Project:     LibreCRKit
+Repository:  https://github.com/airedev326/LibreCRKit
+License:     MIT License (file LICENSE at repository root)
+Copyright:   Copyright (c) 2026 LibreCRKit contributors
+
+Pins:
+  Studied / ported from: a86b92f9e0807b2a6e12a896360833aeef49f5ba
+                         ("Improve NFC scan alert message with clearer
+                          sensor-placement hint")
+  Earlier pin of record: 66920c6d5a0d13c3047a1920d514c26b19e87cb4
+                         (the pin seen in the Loop Package.resolved; the delta to
+                          a86b92f is additive and touches scanner, session,
+                          PatchStatus and PairingFlow only)
+  Note:                  upstream main had moved on to 9efa81e when the port was
+                         made. This port stays on a86b92f.
+
+Availability, checked on 2026-10-29:
+  * The repository above is no longer reachable at its URL (HTTP 404).
+  * The same GitHub account now publishes RoundWhiteDiscKit
+    (https://github.com/airedev326/RoundWhiteDiscKit, MIT, "Copyright (c) 2026
+    RoundWhiteDiscKit contributors"). Commit a86b92f is not found in that
+    repository, and its main branch no longer contains this material: no
+    LibAES, no Phase5KeySchedule, no FirstPairSourceSlice, no RuntimeTables, and
+    its README says it does not ship an app credential (the host app supplies
+    its own key and certificate).
+  * So the pinned source of the files in section 3 cannot be fetched from its
+    original URL today. Two forks named LibreCRKit exist on GitHub; they were
+    not checked for the pin.
+
+MIT License text (LibreCRKit):
+
+  MIT License
+
+  Copyright (c) 2026 LibreCRKit contributors
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+
+
+-------------------------------------------------------------------------------
+2. LibreLoop — live handshake rules, notification set, key storage
+-------------------------------------------------------------------------------
+
+Project:     LibreLoop
+Repository:  https://github.com/LoopKit/LibreLoop
+License:     MIT License (file LICENSE at repository root)
+Copyright:   Copyright (c) 2026 loopkitdev
+
+Pin:
+  Studied / ported from: e4a4642dde228ef705e20548b391bec6bcfbbf9a (branch main,
+                         2026-08-02)
+
+Where the binary material was at this pin (checked on 2026-10-29):
+  * The phone certificate phone_cert_162b.bin was in the LibreLoop repository
+    itself, in LibreLoop/Resources/.
+  * The pairing tables came from the LibreLoop dependency LibreCRKit
+    (https://github.com/airedev326/LibreCRKit, pins a86b92f and 66920c6, see
+    section 1).
+
+Availability, checked on 2026-10-29: the repository and the pin are reachable.
+LibreLoop commit 1a3195ed3a (2026-10-04, "Switch from LibreCRKit to
+RoundWhiteDiscKit") moved this material out of the source tree. LibreLoop main
+and the loopandlearn branch above now download it at run time from a pinned,
+hash-checked file. LibreCRKit is no longer reachable (HTTP 404), and
+RoundWhiteDiscKit contains no tables.
+
+MIT License text (LibreLoop):
+
+  MIT License
+
+  Copyright (c) 2026 loopkitdev
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+
+
+-------------------------------------------------------------------------------
+3. What is ported into this module
+-------------------------------------------------------------------------------
+
+Nothing is a verbatim Swift copy. The Swift tree is not vendored. Behaviour,
+wire formats, numbers, byte tables and the bundled certificate are ported into
+Kotlin. Each ported file names its source and pin in its own header.
+
+Paths below are relative to src/<source set>/kotlin/app/aaps/plugins/libre3/.
+
+3a. From LibreCRKit @ a86b92f (Swift paths as the file headers name them)
+
+  crypto/Libre3LibAes.kt                  <- Crypto/LibAES.swift
+  crypto/Libre3LibAesTables.kt            <- the LibAES table banks (3c)
+  crypto/Libre3Phase5KeySchedule.kt       <- Crypto/Phase5KeySchedule.swift
+  crypto/Libre3AesCcm.kt                  <- Crypto/AESCCM.swift
+  crypto/Libre3DataPlaneCrypto.kt         <- DataPlane/DataPlaneCrypto.swift
+  crypto/Libre3EphemeralKeys.kt           <- Pairing/SessionKey (first pair ephemeral)
+  crypto/Libre3FirstPairPhase5Source.kt   <- Pairing/SessionKey
+  crypto/Libre3PairingMessages.kt         <- Pairing/ChallengeMessage.swift,
+                                             Pairing/Phase6Response.swift
+  crypto/Libre3PhoneCert.kt               <- Pairing/PhoneCert.swift, including
+                                             FirstPairStaticScalarWindow (3c)
+  crypto/Libre3SensorCert.kt              <- Pairing/SensorCert.swift (the sensor
+                                             maker's public signing keys)
+  crypto/Libre3RuntimeTables.kt           <- the RuntimeTables folder (3c)
+  crypto/firstpair/*.kt (25 files)        <- Crypto/FirstPairSourceSlice.swift
+                                             (Libre3FirstPairVm.kt from its private
+                                             vm... and step... helpers;
+                                             Libre3FirstPairP256.kt has no header
+                                             of its own and belongs to the same port)
+  androidMain crypto/Libre3P256Android.kt <- Crypto/P256ScalarMultiplier.swift
+  gatt/Libre3BluetoothUuids.kt            <- BLE/LibreSensorGATT.swift
+  gatt/Libre3BleFraming.kt                <- BLE/FrameAssembler.swift
+  nfc/Libre3NfcCommands.kt                <- NFCActivationModels.swift, and the
+                                             receiver id fold of Libre3ReceiverID
+  nfc/Libre3NfcSession.kt                 <- CoreNFCActivationReader.swift,
+                                             NFCActivationCommand.swift
+  parse/Libre3DataFrame.kt                <- DataPlane/DataFrame.swift
+  parse/Libre3GlucoseFrameAssembler.kt    <- DataPlane/DataPlaneDecoder.swift
+  parse/Libre3GlucoseParser.kt            <- DataPlane/RealtimeGlucoseReading.swift
+  parse/Libre3PatchStatusParser.kt        <- DataPlane/PatchStatus.swift
+  session/Libre3SessionAuth.kt            <- Pairing/PairingFlow.swift
+  session/Libre3BleSession.kt             <- follows Pairing/PairingFlow.swift
+                                             where its comments say so
+  warmup/Libre3WarmupClock.kt             <- DataPlane/SensorLifecycle.swift
+
+  Test vectors in androidHostTest come from the LibreCRKit tests at the same
+  pin: AESCCMTests.swift, LibAESTests.swift, Phase5KeyScheduleTests.swift,
+  FirstPairSourceSliceTests.swift (every file under crypto/firstpair/),
+  NFCActivationCommandTests.swift (also the captured frames of
+  Libre3NfcSessionTest). Libre3GlucoseParserTest follows the offsets of
+  RealtimeGlucoseReading.swift, Libre3SessionAuthTest the command order of
+  PairingFlow.swift and Libre3GattHandshakeTransportTest the framing of
+  SensorSessionTransport.swift.
+
+3b. From LibreLoop @ e4a4642
+
+  session/Libre3SessionAuth.kt            <- LibreLoopPairingService (live rules)
+  session/Libre3BleSession.kt             <- "0x01 on an active sensor fails at
+                                             Phase 6": a stored key always takes
+                                             the short reconnect path
+  gatt/Libre3BluetoothUuids.kt            <- LibreLoopSensorMonitor (which
+                                             channels must be switched on)
+  androidMain gatt/Libre3GattClientAndroid.kt
+                                          <- connect the device that was just seen
+                                             on the air
+  warmup/Libre3WarmupClock.kt             <- self-healing of the activation time
+  androidHostTest session/Libre3SessionStartPolicyTest.kt
+                                          <- LibreLoopPairingService rules
+
+3c. Binary files and fixed values (from the LibreCRKit tree,
+    Sources/LibreCRKit/Resources/RuntimeTables, and Pairing/PhoneCert.swift)
+
+  All 36 files under src/commonMain/resources/libre3/, 1,827,181 bytes:
+
+    phone_cert_162b.bin (162 bytes, family prefix 03 03) — the phone
+      certificate sent during a first pairing. The same file was also in the
+      LibreLoop repository at the pin e4a4642 (LibreLoop/Resources/).
+    libaes_5defec_round1_tables_26f621.bin, libaes_final_key_tables_276cfc.bin,
+    libaes_final_table_index_277cfc.bin, libaes_final_table_map_277d3c.bin,
+    libaes_final_table_words_270624.bin, libaes_keyexp_consts_276bbc.bin,
+    libaes_keyexp_tables_275bbb.bin, libaes_round1_tables_278dc2.bin,
+    libaes_round2_9_tables_279dc4.bin — the table banks of the Phase 5 wire
+      block primitive.
+    phase5_keysched_region_274000.bin — the static region the Phase 5 key
+      schedule reads.
+    sbox_19bit_lib_986819.bin (524,288 bytes) and
+    child23_ttable_b_ext_976ea8_100000.bin (1,048,576 bytes) — the two large
+      lookup tables that every step of the first pairing scheme reads.
+    firstpair_633fa8_null_nibble_303a14.bin,
+    firstpair_633fa8_null_tables_2fd1f1.bin,
+    firstpair_633fa8_tail_fold_tables_2fe798.bin,
+    firstpair_633fa8_tail_u32_low_tables_112528.bin,
+    firstpair_6388f0_caller_loop_interleaved_2cdfa9.bin,
+    firstpair_6388f0_lane_tables_302678.bin,
+    firstpair_6388f0_low_loop_statics_2fe600.bin,
+    firstpair_6388f0_low_seed_statics_2f4d28.bin,
+    firstpair_6388f0_selector_add_119788.bin,
+    firstpair_6388f0_selector_mul_116968.bin,
+    firstpair_6388f0_shared_context_2cdae1.bin,
+    firstpair_63c278_fold_tables_2feb18.bin,
+    firstpair_63c278_u32_tables_112588.bin,
+    firstpair_679f48_seed_tables_37075e.bin,
+    firstpair_df80_round_tables_37120e.bin,
+    firstpair_final_len_tables_372102.bin,
+    firstpair_finalizer_tables_370e30.bin,
+    firstpair_process2_public_tables_3038c0.bin,
+    firstpair_reducer67ea28_nibble_373cf4.bin — the tables of the first
+      pairing scheme.
+    firstpair_prog_638840_2f5046.bin, firstpair_prog_64e2b8_3041b4.bin,
+    firstpair_prog_67076c_35d3ef.bin, firstpair_prog_67cc18_369862.bin — the
+      four small programs that the first pairing machines walk.
+
+  Fixed values in the source code:
+    crypto/Libre3PhoneCert.kt Libre3FirstPairStaticScalarWindow — a 32-byte
+      scalar. Its header, ported from the upstream, calls it "the row 59 static
+      scalar window of the sensor maker's certificate private index 1".
+    crypto/Libre3SensorCert.kt KNOWN_SIGNING_KEYS — the sensor maker's public
+      signing keys, used to check the sensor's certificate.
+
+What this material is, in the words of the ported code itself:
+  * crypto/firstpair/Libre3FirstPairConstants.kt: "The names are addresses and
+    offsets inside the sensor maker's own library." The hex numbers in the
+    file and table names above are such addresses.
+  * crypto/firstpair/Libre3FirstPairVm.kt: "Each machine walks a short program
+    taken out of a shipped table".
+  * crypto/Libre3LibAes.kt: ported from LibAES.swift, "which is itself a clean
+    room port of the sensor maker's own routine. It looks like AES but it is
+    not: every step is driven by fixed tables that ship with the app".
+  * crypto/Libre3Phase5KeySchedule.kt: "itself a clean room port of the sensor
+    maker's own routine".
+  * Upstream stated that these tables were produced by clean-room research on
+    the sensor maker's own library and that they are fixed across users and
+    installs.
+
+So the tables, the phone certificate, the static scalar and the first pairing
+code reproduce the behaviour of the sensor maker's (Abbott's) own library. See
+section 5.
+
+3d. Written for AndroidAPS, with parts that follow the upstream
+
+  identity/Libre3SensorStore.kt           the store itself is written for
+                                             AndroidAPS. Its wear-time
+                                             extension (extendWearIfStillAlive)
+                                             follows a rule that its header
+                                             says "the upstream project added";
+                                             the header does not say which of
+                                             the two. It also names the
+                                             LibreCRKit tests (their test
+                                             receiver id is not used).
+  nfc/Libre3NfcUids.kt                    the ISO 15693 command constants. Its
+                                             header compares the frame with
+                                             the upstream Swift code, which
+                                             passes only the command body.
+
+
+-------------------------------------------------------------------------------
+4. What is NOT in this module
+-------------------------------------------------------------------------------
+
+  * No Abbott shared object (.so), no Abbott APK content, no Abbott binary of
+    any kind is shipped or loaded at run time. The tables in 3c are data files
+    read by the Kotlin code of this module.
+  * No Juggluco source (Java, C++, tables, cert loaders). Juggluco is named in
+    user-facing text only as an app to close before connecting; that is not code
+    derivation.
+  * No Libre 2 / Libre 2 Plus protocol code, and no Libre 2 UUIDs.
+  * No Dexcom, Eversense or xDrip code.
+  * The source files in this module that are not listed in section 3 (driver
+    facade and registry, reconnect policy, scan budget, MAC arbiter,
+    disconnect and session start policies, logging, the Android platform code
+    other than the files named above) were written for AndroidAPS. The two
+    files in 3d are written for AndroidAPS too, but follow the upstream in the
+    parts named there.
+
+
+-------------------------------------------------------------------------------
+5. Risk notes for the maintainer (not legal advice)
+-------------------------------------------------------------------------------
+
+  a. Both upstreams are MIT, so the licence side of the port is simple: keep the
+     two copyright notices above and ship this NOTICE.
+  b. The LibAES tables, the first pairing tables and programs, the 162-byte
+     phone certificate and the static scalar are, by the upstream's own
+     description, artifacts distilled from Abbott's library through reverse
+     engineering. MIT covers the upstream authors' own contribution; it cannot
+     grant rights that the upstream did not hold. This is a real residual risk
+     and it is a maintainer decision, not a licence question.
+  c. Both upstreams have since taken this kind of material out of their source
+     trees (section 1 and 2). This module still ships it in the source tree.
+  d. Licence review is separate from safety and regulation. An MIT port does not
+     make this driver approved for medical use.
+
+
+-------------------------------------------------------------------------------
+6. Reviewer verification points
+-------------------------------------------------------------------------------
+
+  a. Re-read both LICENSE files if either pin moves.
+  b. Keep the pins in section 1 and 2 in step with the code that is actually
+     ported, and the file list in section 3 in step with the module.
+  c. Repository root LICENSE.txt is AGPL-3.
+
+End of NOTICE

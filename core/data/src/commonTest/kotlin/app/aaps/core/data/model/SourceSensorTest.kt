@@ -129,4 +129,10 @@ class SourceSensorTest {
             }
         }
     }
+
+    @Test
+    fun `libre 3 native is found by its text`() {
+        assertEquals(SourceSensor.LIBRE_3_NATIVE, SourceSensor.fromString("AAPS-Libre3"))
+        assertEquals("AAPS-Libre3", SourceSensor.LIBRE_3_NATIVE.text)
+    }
 }

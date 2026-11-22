@@ -96,6 +96,16 @@
             android:name="app.aaps.implementation.androidNotification.AlarmMuteReceiver"
             android:exported="false" />
 
+        <!-- "Hypo treated" action on the low glucose alarm notification: holds the low alarms 20 min. -->
+        <receiver
+            android:name="app.aaps.implementation.androidNotification.HypoTreatedReceiver"
+            android:exported="false" />
+
+        <!-- "Acknowledge" action on a CGM alarm notification: quiet for the repeat time of the alarm. -->
+        <receiver
+            android:name="app.aaps.implementation.androidNotification.CgmAlarmAcknowledgeReceiver"
+            android:exported="false" />
+
         <!-- "Time to eat" timer: its alarm (setAlarmClock) and the Stop / +5 min notification buttons. -->
         <receiver
             android:name="app.aaps.implementation.alerts.EatReminderReceiver"

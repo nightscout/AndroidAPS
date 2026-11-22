@@ -345,4 +345,27 @@ class EventDataTest {
         assertThat(old).doesNotContain("carbsType")
         assertThat(EventData.deserialize(old)).isEqualTo(EventData.ActionWizardPreCheck(30, 100, CarbsType.BREAD))
     }
+
+    @Test
+    fun cgmAlarmMessagesRoundTrip() {
+        listOf(
+            EventData.CgmAlarm(id = "urgent_low", title = "Urgent low", message = "52 mg/dL", vibrationSeconds = 10, urgent = true),
+            EventData.CgmAlarm(id = "high", title = "High", message = "", vibrationSeconds = 0, urgent = false),
+            EventData.CgmAlarmCancel("urgent_low"),
+            EventData.CgmAlarmAcknowledge("signal_loss")
+        ).forEach {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+    }
+
+    @Test
+    fun cgmAlarmMessagesDoNotChangeTheEncodingOfOlderMessages() {
+        // The CGM alarm messages are appended at the end of EventData. An older message must still
+        // decode to itself, and must not decode to one of the new ones.
+        val old = EventData.AlarmStopped(5L)
+        assertThat(EventData.deserializeByte(old.serializeByte())).isEqualTo(old)
+        assertThat(EventData.deserialize(old.serialize())).isEqualTo(old)
+        assertThat(EventData.CgmAlarmCancel("x").serialize()).contains("CgmAlarmCancel")
+    }
 }

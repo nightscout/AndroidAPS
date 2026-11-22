@@ -1,0 +1,18 @@
+AAPS implementation module - notices for ideas that came from elsewhere
+
+CGM alarm engine (src/commonMain/kotlin/app/aaps/implementation/alerts/cgm/)
+---------------------------------------------------------------------------
+CgmAlarmEngine, CgmAlarmConditions, CgmAlarmKeys and CgmAlarmManager follow the
+alarm engine of nightscout/AndroidAPS pull request 5397 (Dexcom G7 direct, by
+t1dude), files G7Alarms.kt and G7AlarmEngine.kt at commit bec1b16ba20:
+https://github.com/nightscout/AndroidAPS/pull/5397
+
+That code was written for AndroidAPS and is under the same licence as
+AndroidAPS (GNU Affero General Public License v3, see LICENSE.txt at the root
+of this repository). The alarm types, the delay and repeat settings and the
+acknowledge are taken from it, written again here as one layer for every BG
+source. Its two open review points are fixed: an alarm repeats until it is
+acknowledged (a dismissed notification is not an acknowledge), and the mute
+timer can never silence urgent low.
+
+The alarm sounds are Trio's, see core/ui/SOUNDS.md.

@@ -22,6 +22,12 @@ internal class SourceSensorExtensionTest {
     }
 
     @Test
+    fun `libre 3 native maps both ways`() {
+        assertEquals(GlucoseValue.SourceSensor.LIBRE_3_NATIVE, SourceSensor.LIBRE_3_NATIVE.toDb())
+        assertEquals(SourceSensor.LIBRE_3_NATIVE, GlucoseValue.SourceSensor.LIBRE_3_NATIVE.fromDb())
+    }
+
+    @Test
     fun `representative mappings map by name`() {
         assertEquals(GlucoseValue.SourceSensor.DEXCOM_G6, SourceSensor.DEXCOM_G6.toDb())
         assertEquals(SourceSensor.LIBRE_2, GlucoseValue.SourceSensor.LIBRE_2.fromDb())

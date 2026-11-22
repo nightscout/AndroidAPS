@@ -36,6 +36,66 @@
     <string name="pref_title_alert_increase_volume">Gradually increase notification volume</string>
     <string name="pref_title_alert_override_dnd">Override Do Not Disturb mode</string>
     <string name="pref_summary_alert_override_dnd">On: alarms ring even when the phone is silent or in Do Not Disturb. Off: alarms do not ring then. In Do Not Disturb they only vibrate.</string>
+    <string name="alert_sound_default">AAPS sound</string>
+    <string name="pref_title_alert_hypo">Alert on low glucose</string>
+    <string name="pref_summary_alert_hypo">Sound an alarm when glucose is at or below the low threshold.</string>
+    <string name="pref_title_alert_hypo_threshold">Low glucose alarm threshold</string>
+    <string name="pref_title_alert_hyper">Alert on high glucose</string>
+    <string name="pref_summary_alert_hyper">Notify when glucose is at or above the high threshold.</string>
+    <string name="pref_title_alert_hyper_threshold">High glucose alarm threshold</string>
+    <string name="pref_title_alert_rapid_fall">Alert on rapid fall</string>
+    <string name="pref_summary_alert_rapid_fall">Sound an alarm when glucose drops by at least the configured amount within the configured time window.</string>
+    <string name="pref_title_alert_rapid_fall_drop">Rapid fall drop threshold</string>
+    <string name="pref_summary_alert_rapid_fall_drop" comment="mg/dL and mmol/L are glucose units: keep them as they are. The value is always set in mg/dL, also for mmol/L users.">How much glucose must drop to sound the alarm. Always in mg/dL, also when AAPS shows mmol/L (18 mg/dL is about 1 mmol/L).</string>
+    <string name="pref_title_alert_rapid_fall_window">Rapid fall time window</string>
+    <string name="pref_title_alert_urgent_low">Urgent low alarm</string>
+    <string name="pref_summary_alert_urgent_low" comment="mg/dL and mmol/L are glucose units: keep them as they are">Sound an alarm when glucose is at or below 55 mg/dL (3.1 mmol/L). The mute timer never silences it.</string>
+    <string name="pref_title_alert_urgent_low_soon">Urgent low soon alarm</string>
+    <string name="pref_summary_alert_urgent_low_soon" comment="mg/dL and mmol/L are glucose units: keep them as they are">Sound an alarm when glucose is falling and will be at or below 55 mg/dL (3.1 mmol/L) within 20 minutes.</string>
+    <string name="pref_title_alert_rapid_rise">Alert on rapid rise</string>
+    <string name="pref_summary_alert_rapid_rise">Notify when glucose rises by at least the set amount within the set time window.</string>
+    <string name="pref_title_alert_rapid_rise_amount">Rapid rise threshold</string>
+    <string name="pref_summary_alert_rapid_rise_amount" comment="mg/dL and mmol/L are glucose units: keep them as they are. The value is always set in mg/dL, also for mmol/L users.">How much glucose must rise for the alarm. Always in mg/dL, also when AAPS shows mmol/L (18 mg/dL is about 1 mmol/L).</string>
+    <string name="pref_title_alert_rapid_rise_window">Rapid rise time window</string>
+    <string name="pref_title_alert_delay_first">Delay the first alarm</string>
+    <string name="pref_summary_alert_delay_first">The alarm goes off only when the condition has lasted this long. 0 = at once.</string>
+    <string name="pref_title_alert_repeat">Repeat after acknowledge</string>
+    <string name="pref_summary_alert_repeat">An alarm that is not acknowledged goes off again every 5 minutes. After you acknowledge it, it stays quiet this long, then goes off again if the cause is still there. 0 = not again until the cause has gone.</string>
+    <string name="pref_summary_alert_repeat_urgent_low">An alarm that is not acknowledged goes off again every 5 minutes. After you acknowledge it, it stays quiet this long, then goes off again if glucose is still urgent low. It always comes back, after 30 minutes at most.</string>
+    <string name="pref_title_alert_cgm_sound">Sound</string>
+    <string name="pref_summary_alert_cgm_sound">The AAPS sound is the standard AAPS alarm sound. Without sound, the alarm shows a notification only.</string>
+    <string name="alert_sound_none">No sound</string>
+    <string name="alert_sound_trio_acoustic_mild" comment="Name of an alarm sound from Trio: acoustic style (real instruments), mild urgency">Trio acoustic, mild</string>
+    <string name="alert_sound_trio_acoustic_medium" comment="Name of an alarm sound from Trio: acoustic style (real instruments), medium urgency">Trio acoustic, medium</string>
+    <string name="alert_sound_trio_acoustic_harsh" comment="Name of an alarm sound from Trio: acoustic style (real instruments), highest urgency">Trio acoustic, harsh</string>
+    <string name="alert_sound_trio_electronic_mild" comment="Name of an alarm sound from Trio: electronic style (synthesizer), mild urgency">Trio electronic, mild</string>
+    <string name="alert_sound_trio_electronic_medium" comment="Name of an alarm sound from Trio: electronic style (synthesizer), medium urgency">Trio electronic, medium</string>
+    <string name="alert_sound_trio_electronic_harsh" comment="Name of an alarm sound from Trio: electronic style (synthesizer), highest urgency">Trio electronic, harsh</string>
+    <string name="alert_sound_trio_glass_bell" comment="Name of an alarm tone">Glass bell</string>
+    <string name="alert_sound_trio_harp" comment="Name of an alarm tone">Harp</string>
+    <string name="alert_sound_trio_meow" comment="Name of an alarm tone: the sound of a cat">Meow</string>
+    <string name="alert_sound_trio_saw_wave" comment="Name of an alarm tone: a saw-tooth wave from a synthesizer">Saw wave</string>
+    <string name="alert_sound_trio_hard_saw_wave" comment="Name of an alarm tone: a harder saw-tooth wave from a synthesizer">Hard saw wave</string>
+    <string name="alert_sound_trio_sine_wave" comment="Name of an alarm tone: a pure sine wave">Sine wave</string>
+    <string name="alert_sound_trio_open_can" comment="Name of an alarm tone: the sound of a can being opened">Open can</string>
+    <string name="alert_sound_trio_open_wrapper" comment="Name of an alarm tone: the sound of a wrapper being opened">Open wrapper</string>
+    <string name="pref_title_alert_cgm_sensor_failed">Alert when the CGM sensor fails</string>
+    <string name="pref_summary_alert_cgm_sensor_failed">Sound an alarm when the sensor reports an error or cannot be used. Only for BG sources that report their sensor state.</string>
+    <string name="pref_title_alert_cgm_sensor_expired">Alert when the CGM sensor has ended</string>
+    <string name="pref_summary_alert_cgm_sensor_expired">Sound an alarm when the usable time of the sensor has ended. Only for BG sources that report their sensor state.</string>
+    <string name="pref_title_alert_cgm_sensor_expiring">Warn before the CGM sensor ends</string>
+    <string name="pref_summary_alert_cgm_sensor_expiring">Notify some hours before the usable time of the sensor ends, so you can prepare a new sensor. Only for BG sources that report their sensor state.</string>
+    <string name="pref_title_alert_cgm_expiring_lead">Warn this long before the sensor ends</string>
+    <string name="pref_title_alert_cgm_signal_lost">Alert on lost CGM signal</string>
+    <string name="pref_summary_alert_cgm_signal_lost">Notify when the phone has had no link to the sensor, or no reading from it, for some time. Only for BG sources that report their sensor state.</string>
+    <string name="pref_title_alert_cgm_signal_lost_delay">Signal lost for at least</string>
+    <string name="pref_title_alert_cgm_sensor_issue">Alert on a CGM sensor issue</string>
+    <string name="pref_summary_alert_cgm_sensor_issue">Notify when the sensor is linked but sends no usable glucose value, for example because of noise. Only for BG sources that report their sensor state.</string>
+    <string name="pref_title_alert_cgm_sensor_issue_delay">Sensor issue for at least</string>
+    <string name="pref_title_alert_cgm_warmup_done">Notify when sensor warm-up is done</string>
+    <string name="pref_summary_alert_cgm_warmup_done">Notify when a new sensor sends its first usable reading. Only for BG sources that report their sensor state.</string>
+    <string name="pref_title_alert_cgm_second_sensor_ready">Notify when a second sensor is ready</string>
+    <string name="pref_summary_alert_cgm_second_sensor_ready">Notify when a pre-soaked second sensor is ready and you can switch to it. Only for BG sources that support a second sensor.</string>
 
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Upload BG data to NS</string>

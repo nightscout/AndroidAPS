@@ -3,9 +3,11 @@ package app.aaps.implementation.notifications
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AapsNotification
+import app.aaps.core.interfaces.notifications.AlarmAction
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.IosNotificationDelegate
+import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import platform.UserNotifications.UNAuthorizationOptionAlert
@@ -13,6 +15,7 @@ import platform.UserNotifications.UNAuthorizationOptionBadge
 import platform.UserNotifications.UNAuthorizationOptionSound
 import platform.UserNotifications.UNMutableNotificationContent
 import platform.UserNotifications.UNNotification
+import platform.UserNotifications.UNNotificationAction
 import platform.UserNotifications.UNNotificationCategory
 import platform.UserNotifications.UNNotificationCategoryOptionCustomDismissAction
 import platform.UserNotifications.UNNotificationDismissActionIdentifier
@@ -36,6 +39,20 @@ import platform.UserNotifications.UNUserNotificationCenter
 class IosSystemNotificationPlatform(
     private val aapsLogger: AAPSLogger,
     private val alarmSoundPlayer: AlarmSoundPlayer,
+    /**
+     * The button text of an [AlarmAction] (for example "Hypo treated"). Read when the categories
+     * are registered, at start up.
+     */
+    private val alarmActionLabel: (AlarmAction) -> String = { it.name },
+    /**
+     * What to do when the user presses the button of an [AlarmAction] on the notification. A
+     * function rather than `LocalAlertUtils` itself, because `LocalAlertUtils` posts through the
+     * notification manager that is built on top of this class.
+     *
+     * The default does nothing. Then the button is not offered at all, see [categoryFor], because a
+     * button that does nothing would be worse than none: the user would think the alarm was handled.
+     */
+    private val onAlarmAction: ((AlarmAction) -> Unit)? = null,
     /**
      * `AlertOverrideDoNotDisturb`, read fresh each time so a change takes effect without a restart.
      *
@@ -82,9 +99,10 @@ class IosSystemNotificationPlatform(
      * was no ramping player to hand it to. There is: `IosAlarmSoundPlayer`, which ramps exactly as
      * the Android one does.)
      *
-     * `actions` **is** still ignored, and that one is a real gap rather than a decision - a
-     * notification carrying actions reaches the tray here with none of them attached, where Android
-     * suppresses it so it can be answered in the app.
+     * `actions` (the in-app buttons) are still not attached, and that one is a real gap rather than
+     * a decision - they hold a lambda that cannot travel through iOS. What does travel is the
+     * [AlarmAction] an alarm declares on its [NotificationId] (for example "Acknowledge" on a CGM
+     * alarm): it gets its own category with a real button, see [categoryFor].
      */
     override fun show(notification: AapsNotification, title: String) {
         ensureAuthorization()
@@ -96,7 +114,7 @@ class IosSystemNotificationPlatform(
             // The sound stays off here on purpose: audible alarms are driven by setAudibleAlarm, the
             // same split the Android side uses so a replaced alarm does not restart the sound.
             // Without the category the dismiss callback never fires - see onDismissed.
-            setCategoryIdentifier(CATEGORY)
+            setCategoryIdentifier(categoryFor(notification.id))
             setInterruptionLevel(
                 if (breakThroughFocus) UNNotificationInterruptionLevelTimeSensitive
                 else UNNotificationInterruptionLevelActive
@@ -226,7 +244,10 @@ class IosSystemNotificationPlatform(
      * silently stop the first one's callbacks.
      */
     override fun onDismissed(callback: (instanceKey: Int) -> Unit) {
-        IosNotificationDelegate.register(setOf(dismissibleCategory())) { actionId, notificationId ->
+        val categories = setOf(dismissibleCategory()) + if (onAlarmAction != null) AlarmAction.entries.map { alarmActionCategory(it) } else emptyList()
+        IosNotificationDelegate.register(categories) { actionId, notificationId ->
+            // Only answer a button of a notification this class posted.
+            if (instanceKeyOf(notificationId) != null && handleAlarmAction(actionId)) return@register true
             if (actionId != UNNotificationDismissActionIdentifier) return@register false
             // A tap is deliberately not a dismissal: the notification goes away, but the user asked
             // to *see* the thing, so it stays in the in-app list.
@@ -256,6 +277,54 @@ class IosSystemNotificationPlatform(
      * not undo; what does not happen is the alarm being treated as answered.
      */
     internal fun clearedByDismissal(instanceKey: Int): Boolean = instanceKey !in unanswered
+
+    /**
+     * The category to post [id] with: one with the button of its [AlarmAction] when it declares one
+     * and a handler exists, else the plain one. Both report dismissals, see [onDismissed].
+     */
+    internal fun categoryFor(id: NotificationId): String {
+        val action = id.alarmAction ?: return CATEGORY
+        return if (onAlarmAction != null) alarmActionCategoryId(action) else CATEGORY
+    }
+
+    /**
+     * Runs the [AlarmAction] whose button was pressed. False when [actionId] is not such a button.
+     *
+     * Split from the delegate callback so it can be checked: a real response needs a delivered
+     * notification, which a test binary cannot have.
+     */
+    internal fun handleAlarmAction(actionId: String): Boolean {
+        val handler = onAlarmAction ?: return false
+        val action = AlarmAction.entries.firstOrNull { alarmActionId(it) == actionId } ?: return false
+        aapsLogger.debug(LTag.NOTIFICATION, "Alarm action pressed on the notification: $action")
+        handler(action)
+        return true
+    }
+
+    /**
+     * A category with the button of [action]. It also carries `customDismissAction`, otherwise
+     * swiping these notifications away would no longer be reported.
+     *
+     * The button has no options, so pressing it does not open the app: iOS wakes the app in the
+     * background to run it, which is what a person in a hypo with a locked phone needs.
+     */
+    private fun alarmActionCategory(action: AlarmAction): UNNotificationCategory =
+        UNNotificationCategory.categoryWithIdentifier(
+            identifier = alarmActionCategoryId(action),
+            actions = listOf(
+                UNNotificationAction.actionWithIdentifier(
+                    identifier = alarmActionId(action),
+                    title = alarmActionLabel(action),
+                    options = 0u
+                )
+            ),
+            intentIdentifiers = emptyList<Any>(),
+            options = UNNotificationCategoryOptionCustomDismissAction
+        )
+
+    internal fun alarmActionId(action: AlarmAction) = "$ALARM_ACTION_PREFIX${action.name}"
+
+    private fun alarmActionCategoryId(action: AlarmAction) = "$CATEGORY-${action.name}"
 
     private fun dismissibleCategory(): UNNotificationCategory =
         UNNotificationCategory.categoryWithIdentifier(
@@ -288,5 +357,8 @@ class IosSystemNotificationPlatform(
 
         /** Named once: it has to match between the posted content and the registered category. */
         private const val CATEGORY = "aaps-notification"
+
+        /** Prefix of the identifier of an [AlarmAction] button. */
+        private const val ALARM_ACTION_PREFIX = "aaps-alarm-action-"
     }
 }

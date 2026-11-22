@@ -75,6 +75,7 @@ data class GlucoseValue(
         LIBRE_1,
         LIBRE_2,
         LIBRE_3,
+        LIBRE_3_NATIVE,
         MEDTRUM_A6,
         MEDTRUM_UNKNOWN,
         MM_600_SERIES,

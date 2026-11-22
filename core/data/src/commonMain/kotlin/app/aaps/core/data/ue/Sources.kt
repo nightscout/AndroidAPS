@@ -38,6 +38,7 @@ enum class Sources {
     Glunovo,
     Intelligo,
     Xdrip,
+    Libre3Native,
     Insulin,            //From Insulin plugin
     Ottai,              //From Ottai Plugin
     SyaiTag,

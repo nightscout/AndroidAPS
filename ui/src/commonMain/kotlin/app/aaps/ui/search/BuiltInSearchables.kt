@@ -7,17 +7,25 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.TipsAndUpdates
 import androidx.compose.material.icons.outlined.Palette
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.alerts.CgmAlarmType
+import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.interfaces.AppPlatform
+import app.aaps.core.keys.interfaces.PreferenceItem
 import app.aaps.core.keys.interfaces.withChangeGuard
+import app.aaps.core.keys.interfaces.withCompose
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.alerts.title
+import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcCalculator
 import app.aaps.core.ui.compose.icons.IcCannulaChange
@@ -32,6 +40,8 @@ import app.aaps.core.ui.compose.icons.Pump
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.search.SearchableItem
 import app.aaps.core.ui.search.SearchableProvider
+import app.aaps.ui.compose.alerts.CgmAlarmControlsScreen
+import app.aaps.ui.compose.alerts.CgmAlarmIntentKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
 import dev.zacsweers.metro.Inject
@@ -54,7 +64,9 @@ class BuiltInSearchables(
     private val rh: TextResolver,
     private val insulinManager: InsulinManager,
     private val profileFunction: ProfileFunction,
-    private val config: Config
+    private val config: Config,
+    private val localAlertUtils: LocalAlertUtils,
+    private val dateUtil: DateUtil
 ) : SearchableProvider {
 
     // Decides whether concentration-related preferences are worth surfacing in search, so an unknown
@@ -190,10 +202,68 @@ class BuiltInSearchables(
             BooleanKey.AlertCarbsRequired,
             BooleanKey.AlertUrgentAsAndroidNotification,
             BooleanKey.AlertIncreaseVolume,
-            BooleanKey.AlertOverrideDoNotDisturb
+            BooleanKey.AlertOverrideDoNotDisturb,
+            cgmAlarms
         ),
         icon = Icons.Default.Notifications
     )
+
+    /**
+     * The CGM alarms (`CgmAlarmType`): one sub screen per alarm, with its switch, level, delay, repeat
+     * and sound, and a screen to mute and test them.
+     */
+    private val cgmAlarms: PreferenceSubScreenDef
+        get() = PreferenceSubScreenDef(
+            key = "cgm_alarms",
+            title = CoreUiStrings.cgm_alarms_title,
+            summary = CoreUiStrings.cgm_alarms_summary,
+            items = listOf(
+                CgmAlarmIntentKey.Controls.withCompose(
+                    ComposeScreenContent { onBack ->
+                        CgmAlarmControlsScreen(
+                            mutedUntil = localAlertUtils.cgmAlarmsMutedUntil,
+                            now = { dateUtil.now() },
+                            formatTime = { dateUtil.timeString(it) },
+                            platformNote = if (config.platform == AppPlatform.Ios) CoreUiStrings.cgm_alarms_platform_ios else CoreUiStrings.cgm_alarms_platform_android,
+                            onMute = { localAlertUtils.muteCgmAlarms(it) },
+                            onTest = { localAlertUtils.testCgmAlarm(it) },
+                            onBack = onBack
+                        )
+                    }
+                ),
+                cgmAlarm(CgmAlarmType.URGENT_LOW, BooleanKey.AlertUrgentLow, IntKey.AlertUrgentLowRepeat, StringKey.AlertUrgentLowSound),
+                cgmAlarm(CgmAlarmType.URGENT_LOW_SOON, BooleanKey.AlertUrgentLowSoon, IntKey.AlertUrgentLowSoonRepeat, StringKey.AlertUrgentLowSoonSound),
+                cgmAlarm(CgmAlarmType.LOW, BooleanKey.AlertHypo, UnitDoubleKey.AlertHypoThreshold, IntKey.AlertHypoRepeat, StringKey.AlertHypoSound),
+                cgmAlarm(
+                    CgmAlarmType.FALL_RATE, BooleanKey.AlertRapidFall, IntKey.AlertRapidFallDrop, IntKey.AlertRapidFallWindow, IntKey.AlertRapidFallRepeat,
+                    StringKey.AlertRapidFallSound
+                ),
+                cgmAlarm(
+                    CgmAlarmType.HIGH, BooleanKey.AlertHyper, UnitDoubleKey.AlertHyperThreshold, IntKey.AlertHyperDelay, IntKey.AlertHyperRepeat,
+                    StringKey.AlertHyperSound
+                ),
+                cgmAlarm(
+                    CgmAlarmType.RISE_RATE, BooleanKey.AlertRapidRise, IntKey.AlertRapidRiseAmount, IntKey.AlertRapidRiseWindow, IntKey.AlertRapidRiseRepeat,
+                    StringKey.AlertRapidRiseSound
+                ),
+                cgmAlarm(CgmAlarmType.SENSOR_FAILED, BooleanKey.AlertCgmSensorFailed, IntKey.AlertCgmSensorFailedRepeat, StringKey.AlertCgmSensorFailedSound),
+                cgmAlarm(CgmAlarmType.SENSOR_ENDED, BooleanKey.AlertCgmSensorExpired, IntKey.AlertCgmSensorExpiredRepeat, StringKey.AlertCgmSensorExpiredSound),
+                cgmAlarm(CgmAlarmType.SENSOR_ENDING_SOON, BooleanKey.AlertCgmSensorExpiring, IntKey.AlertCgmExpiringLeadHours),
+                cgmAlarm(
+                    CgmAlarmType.SIGNAL_LOSS, BooleanKey.AlertCgmSignalLost, IntKey.AlertCgmSignalLostMinutes, IntKey.AlertCgmSignalLostRepeat,
+                    StringKey.AlertCgmSignalLostSound
+                ),
+                cgmAlarm(
+                    CgmAlarmType.SENSOR_ISSUE, BooleanKey.AlertCgmSensorIssue, IntKey.AlertCgmSensorIssueMinutes, IntKey.AlertCgmSensorIssueRepeat,
+                    StringKey.AlertCgmSensorIssueSound
+                ),
+                cgmAlarm(CgmAlarmType.SECOND_SENSOR_READY, BooleanKey.AlertCgmSecondSensorReady),
+                cgmAlarm(CgmAlarmType.WARMUP_DONE, BooleanKey.AlertCgmWarmupDone)
+            )
+        )
+
+    private fun cgmAlarm(type: CgmAlarmType, vararg keys: PreferenceItem) =
+        PreferenceSubScreenDef(key = "cgm_alarm_${type.id}", title = type.title, items = keys.toList())
 
     // ========== Dialog Settings (not shown in AllPreferencesScreen, only for search) ==========
 
