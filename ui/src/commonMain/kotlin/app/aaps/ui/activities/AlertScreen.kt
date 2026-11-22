@@ -55,8 +55,8 @@ fun AlertScreen(
         onClose()
     }
 
-    // The length the user picked for the two silence buttons; a new alarm on the same screen starts from the default.
-    var silenceMinutes by rememberSaveable(source, key) { mutableIntStateOf(Alerts.SILENCE_MINUTES) }
+    // The length the user picked for the two silence buttons; a new alarm on the same screen starts from its own default.
+    var silenceMinutes by rememberSaveable(source, key) { mutableIntStateOf(alert?.silenceMinutes ?: Alerts.SILENCE_MINUTES) }
 
     // The alert ended; the effect above is closing the host. Drawing a card with no content would only flash.
     if (alert == null) return
@@ -84,7 +84,8 @@ fun AlertScreen(
         onAction = { alerts.act(source, key) },
         // "Silence for 30 min" is a promise, and only a pump's alert keeps it: one of the app's own is over when
         // it is answered, so its buttons say plain Silence rather than naming a time it will not come back after.
-        silenceLengths = if (alert.lifetime == AlertLifetime.CONDITION) Alerts.silenceLengths(alert.kind) else null,
+        // The alert's own default is always offered, also when it is not one of the usual lengths
+        silenceLengths = if (alert.lifetime == AlertLifetime.CONDITION) (Alerts.silenceLengths(alert.kind) + alert.silenceMinutes).distinct().sorted() else null,
         silenceMinutes = silenceMinutes,
         onSilenceMinutes = { silenceMinutes = it },
         // The moment it rings is when the user wants to say "not this again". Not for a protected kind, which always

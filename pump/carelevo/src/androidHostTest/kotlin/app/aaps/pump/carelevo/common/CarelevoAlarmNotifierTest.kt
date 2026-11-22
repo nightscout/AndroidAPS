@@ -78,7 +78,7 @@ class CarelevoAlarmNotifierTest {
             _active.value.filter { it.source == source }.forEach { resolve(source, it.key) }
         }
 
-        override fun silence(source: String, key: String, minutes: Int) {}
+        override fun silence(source: String, key: String, minutes: Int?) {}
         override fun snooze(source: String, key: String, minutes: Int) {}
         override fun schedule(alert: Alert, at: Long): Boolean = true
         override fun unschedule(source: String, key: String) {}

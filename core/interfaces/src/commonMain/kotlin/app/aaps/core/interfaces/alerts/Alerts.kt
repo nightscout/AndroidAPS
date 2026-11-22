@@ -151,7 +151,14 @@ class Alert(
      * rule in `_docs/PUMP_DESIGN.md`. It is here for the app's own alarms, which have always chosen between a bolus
      * error, the eat reminder and the plain alarm, and would otherwise all sound the same.
      */
-    val sound: AlarmSound? = null
+    val sound: AlarmSound? = null,
+    /**
+     * How long Silence lasts when the user does not pick a length: the alarm screen starts from it, and a swipe, the
+     * watch and the card use it. A BG alarm takes it from its rule (an urgent low short, a high longer).
+     */
+    val silenceMinutes: Int = Alerts.SILENCE_MINUTES,
+    /** Rings in Do Not Disturb and silent mode whatever the user's override setting says. Urgent low only. */
+    val breakThroughDnd: Boolean = false
 ) {
 
     /** Who raised it: a driver ("carelevo", "eversense"), or "aaps" for the app's own alarms. */
@@ -205,9 +212,10 @@ interface Alerts {
 
     /**
      * The user answered the alarm. Called by the alarm screen, the card and the watch, never by a driver. An
-     * [AlertLifetime.CONDITION] stays and its sound stops for [minutes]; an [AlertLifetime.EVENT] ends.
+     * [AlertLifetime.CONDITION] stays and its sound stops for [minutes], or its own [Alert.silenceMinutes] when null;
+     * an [AlertLifetime.EVENT] ends.
      */
-    fun silence(source: String, key: String, minutes: Int = SILENCE_MINUTES)
+    fun silence(source: String, key: String, minutes: Int? = null)
 
     /**
      * The sound stops for [minutes], whatever the lifetime: "Mute 5 min", and the silence of a CONDITION. A protected

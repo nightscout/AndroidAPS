@@ -69,8 +69,10 @@ class AlertsImplTest : TestBase() {
         override fun show(notification: AapsNotification, title: String) {}
         override fun cancel(instanceKey: Int) {}
         override fun cancelAll() {}
-        override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?) {
+        var breaksThrough = false
+        override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean) {
             soundingKey = instanceKey
+            breaksThrough = breakThroughDnd
         }
 
         override fun onDismissed(callback: (Int) -> Unit) {}
@@ -698,6 +700,24 @@ class AlertsImplTest : TestBase() {
     @Test
     fun `nothing ringing means no sounding alert`() {
         assertThat(sut.sounding).isNull()
+    }
+
+    /** A BG alarm takes its silence from its rule: a silence with no length picked uses it (_docs/ALARMS.md, step 2). */
+    @Test
+    fun `a silence with no length picked uses the alert's own`() {
+        sut.raise(Alert(kind = occlusion, key = "occlusion", severity = AlertSeverity.CRITICAL, title = TextRef.Literal("low"), raisedAt = 500L, silenceMinutes = 15))
+
+        sut.silence("pump", "occlusion")
+
+        assertThat(alertPlatform.snoozes).containsExactly("occlusion" to now + 15 * 60_000L)
+    }
+
+    /** Urgent low rings in Do Not Disturb whatever the user's override says: the platform is told so. */
+    @Test
+    fun `an alert that breaks through Do Not Disturb tells the sound owner`() {
+        sut.raise(Alert(kind = occlusion, key = "occlusion", severity = AlertSeverity.CRITICAL, title = TextRef.Literal("low"), raisedAt = 500L, breakThroughDnd = true))
+
+        assertThat(systemPlatform.breaksThrough).isTrue()
     }
 
     // ---- booked alerts (`_docs/ALARMS.md`, step 1e) ---------------------------------------------

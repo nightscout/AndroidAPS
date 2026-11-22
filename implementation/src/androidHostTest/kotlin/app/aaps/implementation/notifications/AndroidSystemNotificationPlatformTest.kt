@@ -131,18 +131,26 @@ class AndroidSystemNotificationPlatformTest {
     @Test
     fun `the audible alarm starts, holds and stops`() {
         sut.setAudibleAlarm(1, AlarmSound.ALARM)
-        verify(alarmSoundPlayer).play(AlarmSound.ALARM, AlarmSoundPlayer.OWNER_INTERNAL)
+        verify(alarmSoundPlayer).play(AlarmSound.ALARM, AlarmSoundPlayer.OWNER_INTERNAL, false)
 
         // Called again with the same key means "keep playing" - a second play() would restart the ramp.
         sut.setAudibleAlarm(1, AlarmSound.ALARM)
-        verify(alarmSoundPlayer).play(AlarmSound.ALARM, AlarmSoundPlayer.OWNER_INTERNAL)
+        verify(alarmSoundPlayer).play(AlarmSound.ALARM, AlarmSoundPlayer.OWNER_INTERNAL, false)
 
         // A different alarm takes over.
         sut.setAudibleAlarm(2, AlarmSound.URGENT_ALARM)
-        verify(alarmSoundPlayer).play(AlarmSound.URGENT_ALARM, AlarmSoundPlayer.OWNER_INTERNAL)
+        verify(alarmSoundPlayer).play(AlarmSound.URGENT_ALARM, AlarmSoundPlayer.OWNER_INTERNAL, false)
 
         sut.setAudibleAlarm(null, null)
         verify(alarmSoundPlayer).stop(AlarmSoundPlayer.OWNER_INTERNAL)
+    }
+
+    /** Urgent low rings in Do Not Disturb whatever the setting says; the player is told so. */
+    @Test
+    fun `an alarm that breaks through Do Not Disturb tells the player`() {
+        sut.setAudibleAlarm(1, AlarmSound.ALARM, breakThroughDnd = true)
+
+        verify(alarmSoundPlayer).play(AlarmSound.ALARM, AlarmSoundPlayer.OWNER_INTERNAL, true)
     }
 
     @Test

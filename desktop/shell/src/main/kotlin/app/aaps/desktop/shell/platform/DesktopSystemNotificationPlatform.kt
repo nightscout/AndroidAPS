@@ -69,7 +69,7 @@ class DesktopSystemNotificationPlatform(
         aapsLogger.debug(LTag.CORE, "Cannot cancel desktop notifications: tray toasts are transient")
     }
 
-    override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?) {
+    override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean) {
         // Called again with the same key means "keep playing", and a single beep has already
         // finished, so there is nothing to keep. Only a new alarm that carries a sound beeps.
         if (instanceKey != null && sound != null) runCatching { Toolkit.getDefaultToolkit().beep() }

@@ -36,7 +36,8 @@ interface NotificationManager {
         validityCheck: (() -> Boolean)? = null,
         alarmTitle: String? = null,
         canMute: Boolean = false,
-        tellWatch: Boolean = true
+        tellWatch: Boolean = true,
+        breakThroughDnd: Boolean = false
     ): NotificationHandle
 
     /**

@@ -116,7 +116,7 @@ class AndroidSystemNotificationPlatform(
         alarmNotificationManager().cancelAlarm()
     }
 
-    override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?) {
+    override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean) {
         if (instanceKey == null || sound == null) {
             if (soundingKey != null) {
                 soundingKey = null
@@ -127,7 +127,7 @@ class AndroidSystemNotificationPlatform(
         // Called again with the same key means "keep playing" - restarting would reset the ramp.
         if (instanceKey != soundingKey) {
             soundingKey = instanceKey
-            alarmSoundPlayer().play(sound, AlarmSoundPlayer.OWNER_INTERNAL)
+            alarmSoundPlayer().play(sound, AlarmSoundPlayer.OWNER_INTERNAL, breakThroughDnd)
         }
     }
 

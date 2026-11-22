@@ -90,7 +90,8 @@ class IosPluginPermissionsTest {
         override fun post(
             id: NotificationId, text: String, level: NotificationLevel, date: Long, validTo: Long, sound: AlarmSound?,
             actions: List<NotificationAction>, validityCheck: (() -> Boolean)?, alarmTitle: String?, canMute: Boolean,
-            tellWatch: Boolean
+            tellWatch: Boolean,
+            breakThroughDnd: Boolean
         ) = NotificationHandle(0)
         override fun post(id: NotificationId, textRef: TextRef, level: NotificationLevel, validMinutes: Int, date: Long, validTo: Long, sound: AlarmSound?, actions: List<NotificationAction>, validityCheck: (() -> Boolean)?) = NotificationHandle(0)
         override fun dismiss(id: NotificationId) {}

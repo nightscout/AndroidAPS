@@ -192,11 +192,11 @@ class AlertsImpl(
      * [AlertLifetime.EVENT] is the user's: answering it is the end of it, and a bolus error that came back half an
      * hour later would be telling them about something they have already read.
      */
-    override fun silence(source: String, key: String, minutes: Int) {
-        val lifetime = lock.withLock { entries[source to key]?.alert?.lifetime } ?: return
+    override fun silence(source: String, key: String, minutes: Int?) {
+        val alert = lock.withLock { entries[source to key]?.alert } ?: return
         // Outside the lock: neither call may be made while holding it, it is not reentrant.
-        if (lifetime == AlertLifetime.EVENT) resolve(source, key)
-        else snooze(source, key, minutes)
+        if (alert.lifetime == AlertLifetime.EVENT) resolve(source, key)
+        else snooze(source, key, minutes ?: alert.silenceMinutes)
     }
 
     override fun snooze(source: String, key: String, minutes: Int) = lock.withLock {
@@ -216,7 +216,7 @@ class AlertsImpl(
     override fun act(source: String, key: String) {
         val alert = lock.withLock {
             val entry = entries[source to key] ?: return
-            if (entry.alert.lifetime == AlertLifetime.CONDITION) silenceEntry(entry, Alerts.SILENCE_MINUTES)
+            if (entry.alert.lifetime == AlertLifetime.CONDITION) silenceEntry(entry, entry.alert.silenceMinutes)
             entry.alert
         }
         val action = alert.action ?: return
@@ -324,7 +324,8 @@ class AlertsImpl(
     /** The same alert, raised at [at]: the time of its booking is the time of the occurrence. */
     private fun Alert.raisedAt(at: Long) = Alert(
         kind = kind, key = key, severity = severity, title = title, text = text, raisedAt = at, action = action,
-        lifetime = lifetime, notificationTitle = notificationTitle, canMute = canMute, tellWatch = tellWatch, sound = sound
+        lifetime = lifetime, notificationTitle = notificationTitle, canMute = canMute, tellWatch = tellWatch, sound = sound,
+        silenceMinutes = silenceMinutes, breakThroughDnd = breakThroughDnd
     )
 
     // ---- the cards ----------------------------------------------------------------------------
@@ -366,7 +367,8 @@ class AlertsImpl(
             // its level, as every card was before; the app's own alarms carry the title their caller gave.
             alarmTitle = alert.notificationTitle,
             canMute = alert.canMute,
-            tellWatch = alert.tellWatch
+            tellWatch = alert.tellWatch,
+            breakThroughDnd = alert.breakThroughDnd
         )
         when {
             quiet                                                   -> Unit
@@ -483,7 +485,7 @@ class AlertsImpl(
                 else                                                             -> {
                     aapsLogger.debug(LTag.PUMP, "Pump alert card removed while active, shown again silenced: ${alert.source}/${alert.key}")
                     if (entry.silencedUntil > dateUtil.now()) showCard(entry, ring = false)
-                    else silenceEntry(entry, Alerts.SILENCE_MINUTES)
+                    else silenceEntry(entry, alert.silenceMinutes)
                 }
             }
         }
@@ -643,6 +645,8 @@ class AlertsImpl(
                     put("canMute", a.canMute)
                     put("tellWatch", a.tellWatch)
                     a.sound?.let { put("sound", it.name) }
+                    put("silenceMinutes", a.silenceMinutes)
+                    put("breakThroughDnd", a.breakThroughDnd)
                 })
             }
         }
@@ -672,7 +676,9 @@ class AlertsImpl(
                     notificationTitle = o["notificationTitle"]?.jsonPrimitive?.content,
                     canMute = o.getValue("canMute").jsonPrimitive.boolean,
                     tellWatch = o.getValue("tellWatch").jsonPrimitive.boolean,
-                    sound = o["sound"]?.jsonPrimitive?.content?.let { name -> AlarmSound.entries.firstOrNull { it.name == name } }
+                    sound = o["sound"]?.jsonPrimitive?.content?.let { name -> AlarmSound.entries.firstOrNull { it.name == name } },
+                    silenceMinutes = o["silenceMinutes"]?.jsonPrimitive?.long?.toInt() ?: Alerts.SILENCE_MINUTES,
+                    breakThroughDnd = o["breakThroughDnd"]?.jsonPrimitive?.boolean ?: false
                 )
                 map[alert.source to alert.key] = Booking(alert, o.number("at"))
             }

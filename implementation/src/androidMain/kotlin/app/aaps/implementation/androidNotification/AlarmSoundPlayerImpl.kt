@@ -55,21 +55,25 @@ class AlarmSoundPlayerImpl(
     private var currentOwner: String? = null
     private var currentVolumeLevel = 0
 
-    override fun play(sound: AlarmSound, ownerTag: String) {
-        handler.post { doPlay(sound, ownerTag) }
+    /** Whether the sound playing now breaks through Do Not Disturb (urgent low) whatever the override says. */
+    private var currentBreaksThrough = false
+
+    override fun play(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean) {
+        handler.post { doPlay(sound, ownerTag, breakThroughDnd) }
     }
 
     override fun stop(ownerTag: String) {
         handler.post { if (currentOwner == ownerTag) doStop() }
     }
 
-    private fun doPlay(sound: AlarmSound, ownerTag: String) {
+    private fun doPlay(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean) {
         // Idempotent: a re-request of the exact same sound by the same owner while it is already playing is a no-op,
         // so the registry offering the same alarm again does not restart the volume ramp.
-        if (player != null && currentOwner == ownerTag && currentSound == sound) return
+        if (player != null && currentOwner == ownerTag && currentSound == sound && currentBreaksThrough == breakThroughDnd) return
 
         doStop()
         currentSound = sound
+        currentBreaksThrough = breakThroughDnd
         currentOwner = ownerTag
         // Started at once. The start used to be deferred past the one-shot sound of the notification channel that
         // the deleted `postFullScreenAlarm` posted alongside it; the card that carries an alarm now is silent, so
@@ -94,7 +98,8 @@ class AlarmSoundPlayerImpl(
     private fun startMediaPlayer() {
         val soundRes = currentSound?.rawRes ?: return
 
-        val overrideDnd = preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
+        // Urgent low rings in Do Not Disturb whatever the user's override says; it plays on the alarm stream for that
+        val overrideDnd = currentBreaksThrough || preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
         if (DoNotDisturbRule.staysQuiet(overrideDnd, notificationManager.currentInterruptionFilter)) {
             aapsLogger.debug(LTag.CORE, "AlarmSoundPlayer: Do Not Disturb is on and the override is off, the alarm stays quiet")
             return

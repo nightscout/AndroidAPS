@@ -108,13 +108,14 @@ class CommonNotificationManager(
         validityCheck: (() -> Boolean)?,
         alarmTitle: String?,
         canMute: Boolean,
-        tellWatch: Boolean
+        tellWatch: Boolean,
+        breakThroughDnd: Boolean
     ): NotificationHandle =
         postInternal(
             id = id, text = text, level = level,
             date = date, validTo = validTo,
             sound = sound, actions = actions, validityCheck = validityCheck,
-            alarmTitle = alarmTitle, canMute = canMute, tellWatch = tellWatch
+            alarmTitle = alarmTitle, canMute = canMute, tellWatch = tellWatch, breakThroughDnd = breakThroughDnd
         )
 
     override fun post(
@@ -146,7 +147,8 @@ class CommonNotificationManager(
         validityCheck: (() -> Boolean)?,
         alarmTitle: String? = null,
         canMute: Boolean = false,
-        tellWatch: Boolean = true
+        tellWatch: Boolean = true,
+        breakThroughDnd: Boolean = false
     ): NotificationHandle = lock.withLock {
         // Clean up expired notifications piggyback on writes.
         removeExpired()
@@ -174,7 +176,8 @@ class CommonNotificationManager(
             validityCheck = validityCheck,
             alarmTitle = alarmTitle,
             canMute = canMute,
-            tellWatch = tellWatch
+            tellWatch = tellWatch,
+            breakThroughDnd = breakThroughDnd
         )
         current.add(notification)
         current.sortBy { it.level.priority }
@@ -276,7 +279,7 @@ class CommonNotificationManager(
 
             top.instanceKey != soundingKey -> {
                 soundingKey = top.instanceKey
-                platform.setAudibleAlarm(top.instanceKey, top.sound)
+                platform.setAudibleAlarm(top.instanceKey, top.sound, top.breakThroughDnd)
                 // Not for an alarm the watch rings by itself: the "time to eat" timer would otherwise show twice.
                 if (top.tellWatch) rxBus.send(
                     EventMobileToWear(

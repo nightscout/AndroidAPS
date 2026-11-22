@@ -52,7 +52,10 @@ interface SystemNotificationPlatform {
      * a second urgent alarm arrive without interrupting the first, and what lets dismissing the
      * audible one promote the next instead of going quiet.
      */
-    fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?)
+    fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?) = setAudibleAlarm(instanceKey, sound, breakThroughDnd = false)
+
+    /** As [setAudibleAlarm]; [breakThroughDnd] plays it in Do Not Disturb whatever the setting says (urgent low). */
+    fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean)
 
     /**
      * Register interest in dismissals the user made outside the app, by swiping the system

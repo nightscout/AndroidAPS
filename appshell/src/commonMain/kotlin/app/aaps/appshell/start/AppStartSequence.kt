@@ -9,6 +9,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.alerts.BgAlarms
 import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
@@ -111,6 +112,7 @@ class AppStartSequence(
     private val profileSwitchScheduler: ProfileSwitchScheduler,
     private val automationRuntime: AutomationRuntime,
     private val eatReminder: EatReminder,
+    private val bgAlarms: BgAlarms,
     private val localAlertUtils: LocalAlertUtils,
     private val rxBus: RxBus,
     // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
@@ -355,6 +357,8 @@ class AppStartSequence(
         automationRuntime.start()
         // A restart removes the alarm of a running "time to eat" timer; set it again. Master only.
         eatReminder.restore()
+        // The BG alarms, on the master and on every client: they watch the readings from now on.
+        bgAlarms.start()
     }
 
     /**

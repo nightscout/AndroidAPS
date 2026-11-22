@@ -78,7 +78,8 @@ class PluginBaseStartFailureTest {
             validityCheck: (() -> Boolean)?,
             alarmTitle: String?,
             canMute: Boolean,
-            tellWatch: Boolean
+            tellWatch: Boolean,
+            breakThroughDnd: Boolean
         ): NotificationHandle = record(id, text, level, sound)
 
         override fun post(

@@ -1,5 +1,6 @@
 package app.aaps.appshell.start
 
+import app.aaps.core.interfaces.alerts.BgAlarms
 import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
@@ -87,6 +88,7 @@ class AppStartSequenceTest {
     private val profileSwitchScheduler: ProfileSwitchScheduler = mock()
     private val automationRuntime: AutomationRuntime = mock()
     private val eatReminder: EatReminder = mock()
+    private val bgAlarms: BgAlarms = mock()
     private val localAlertUtils: LocalAlertUtils = mock()
     private val rxBus: RxBus = mock()
     private val platform: AppStartPlatform = mock()
@@ -119,7 +121,7 @@ class AppStartSequenceTest {
         aapsLogger, config, preferences, store, persistenceLayer, dateUtil, profileUtil, hardLimits, rh, fabricPrivacy,
         notificationManager, snackbarNotificationFallback, profileRepository, profileFunction, insulinManager, pluginStore,
         configBuilder, runningModeReconciler, runningModeExpiryScheduler, profileSwitchScheduler, automationRuntime,
-        eatReminder, localAlertUtils, rxBus, backgroundScope
+        eatReminder, bgAlarms, localAlertUtils, rxBus, backgroundScope
     )
 
     private fun postedNotifications(): List<NotificationId> =
@@ -130,7 +132,7 @@ class AppStartSequenceTest {
 
         val order = inOrder(
             snackbarNotificationFallback, preferences, profileRepository, pluginStore, configBuilder, runningModeReconciler,
-            runningModeExpiryScheduler, profileSwitchScheduler, automationRuntime, eatReminder, persistenceLayer, platform,
+            runningModeExpiryScheduler, profileSwitchScheduler, automationRuntime, eatReminder, bgAlarms, persistenceLayer, platform,
             localAlertUtils, config, rxBus
         )
         order.verify(snackbarNotificationFallback).start()
@@ -146,6 +148,7 @@ class AppStartSequenceTest {
         order.verify(profileSwitchScheduler).start()
         order.verify(automationRuntime).start()
         order.verify(eatReminder).restore()
+        order.verify(bgAlarms).start()
         order.verify(persistenceLayer).migrateProfileSwitchInsulinConfig(any(), any(), any(), any())
         order.verify(platform).startServices()
         // The pre-snooze before the keep-alive, whose first check can run at once.

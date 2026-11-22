@@ -61,6 +61,9 @@ class IosSystemNotificationPlatform(
         observeAppForeground { onAppForeground(it) }
     }
 
+    /** Whether the alarm sound playing now breaks through the silent switch whatever the setting says (urgent low). */
+    private var audibleBreaksThrough = false
+
     /**
      * Two things change with the app leaving or entering the screen.
      *
@@ -84,7 +87,7 @@ class IosSystemNotificationPlatform(
         if (!came) return
         val sound = audibleSound ?: return
         aapsLogger.debug(LTag.NOTIFICATION, "App in front with alarm $soundingKey still ringing, starting its audio")
-        alarmSoundPlayer.play(sound, AlarmSoundPlayer.OWNER_INTERNAL)
+        alarmSoundPlayer.play(sound, AlarmSoundPlayer.OWNER_INTERNAL, audibleBreaksThrough)
     }
 
     /**
@@ -255,7 +258,7 @@ class IosSystemNotificationPlatform(
      * again with the same key must not restart the audio - that is what stops a second alarm
      * cutting the first one off, and why the owner key is compared here rather than in the player.
      */
-    override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?) {
+    override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean) {
         if (instanceKey == soundingKey) return
         soundingKey = instanceKey
         if (instanceKey == null || sound == null) {
@@ -266,7 +269,8 @@ class IosSystemNotificationPlatform(
             // Remembered, not only played: in the background the start below does nothing, and onAppForeground is
             // then the only thing that gets the ramp going when the user opens the app.
             audibleSound = sound
-            alarmSoundPlayer.play(sound, AlarmSoundPlayer.OWNER_INTERNAL)
+            audibleBreaksThrough = breakThroughDnd
+            alarmSoundPlayer.play(sound, AlarmSoundPlayer.OWNER_INTERNAL, breakThroughDnd)
             aapsLogger.debug(LTag.NOTIFICATION, "Alarm audio owner is now $instanceKey ($sound)")
         }
     }

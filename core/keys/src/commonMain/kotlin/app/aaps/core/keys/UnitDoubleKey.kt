@@ -32,6 +32,18 @@ enum class UnitDoubleKey(
         defaultedBySM = true,
         dependency = BooleanKey.ApsUseDynamicSensitivity,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
+
+    // The urgent low BG alarm (`_docs/ALARMS.md`, step 2): always on and protected, the user sets only its threshold.
+    // The rule is the master's; the clients take it and decide only whether they ring.
+    AlertUrgentLow(
+        key = "bg_alarm_urgent_low",
+        defaultValue = 54.0,
+        minMgdl = 40,
+        maxMgdl = 80,
+        title = KeysStrings.pref_title_bg_alarm_urgent_low,
+        summary = KeysStrings.pref_summary_bg_alarm_urgent_low,
+        sync = SyncSpec(SyncChannel.Cold, SyncDirection.MasterOnly)
     )
     ;
 

@@ -172,4 +172,8 @@
     <string name="alert_kind_eat_reminder" comment="Name of a kind of alarm in the alert settings: the timer that says it is time to eat">Time to eat</string>
     <string name="alert_kind_automation_alarm" comment="Name of a kind of alarm in the alert settings: the Alarm action of an automation rule">Automation alarm</string>
     <string name="alert_kind_pump_driver_alarm" comment="Name of a kind of alarm in the alert settings: an alarm of a pump driver that has no alert kinds of its own yet">Pump driver alarm</string>
+    <string name="alert_kinds_group_bg" comment="Heading of the group of the glucose alarms in the alert settings">BG alarms</string>
+    <string name="alert_kind_bg_urgent_low" comment="Name of a kind of glucose alarm, and the title of its alarm: glucose below the urgent low threshold">Urgent low</string>
+    <string name="bg_alarm_text" comment="Text of a glucose alarm. %1$s=the glucose with its unit, for example: 2.9 mmol/l">BG %1$s</string>
+    <string name="bg_alarms_intro">AAPS has its own BG alarms now. Urgent low rings below 54 mg/dl (3.0 mmol/l), also in Do Not Disturb. Set them in Settings > Local alerts. If another app already rings for this, you may get two alarms.</string>
 </resources>

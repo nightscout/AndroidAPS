@@ -68,8 +68,8 @@ class IosAlarmSoundPlayer(
     private var currentOwner: String? = null
     private var rampJob: Job? = null
 
-    override fun play(sound: AlarmSound, ownerTag: String) {
-        scope.launch { doPlay(sound, ownerTag) }
+    override fun play(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean) {
+        scope.launch { doPlay(sound, ownerTag, breakThroughDnd) }
     }
 
     override fun stop(ownerTag: String) {
@@ -81,13 +81,13 @@ class IosAlarmSoundPlayer(
         }
     }
 
-    private fun doPlay(sound: AlarmSound, ownerTag: String) {
+    private fun doPlay(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean) {
         doStop()
         val url = urlFor(sound) ?: run {
             aapsLogger.error(LTag.NOTIFICATION, "Alarm sound ${fileName(sound)} is not in the app bundle, cannot alarm")
             return
         }
-        activateSession()
+        activateSession(breakThroughDnd)
 
         val created = memScoped {
             val error = alloc<ObjCObjectVar<NSError?>>()
@@ -147,7 +147,7 @@ class IosAlarmSoundPlayer(
      * Passing null for the error pointer here cost real time once: the player refused to start and
      * there was nothing to say why, because every failure had been thrown away at the call site.
      */
-    private fun activateSession() = memScoped {
+    private fun activateSession(breakThroughDnd: Boolean) = memScoped {
         val session = AVAudioSession.sharedInstance()
         val error = alloc<ObjCObjectVar<NSError?>>()
         // The category is the only lever there is: iOS publishes no way to read the Ring/Silent
@@ -162,7 +162,8 @@ class IosAlarmSoundPlayer(
         // Worth knowing about the off case: SoloAmbient is also silenced when the screen locks, so
         // the alarm can stop there too. That has no counterpart on Android's notification stream. It
         // is the price of respecting the switch at all, and it only reaches a user who asked for it.
-        val override = preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
+        // Urgent low plays through the silent switch whatever the setting says
+        val override = breakThroughDnd || preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
         val category = if (override) AVAudioSessionCategoryPlayback else AVAudioSessionCategorySoloAmbient
         if (!session.setCategory(category, error = error.ptr)) {
             aapsLogger.error(LTag.NOTIFICATION, "Cannot set the audio category $category: ${error.value?.localizedDescription}")

@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertPlatform
 import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.BgAlarms
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.implementation.lifecycle.observeAppForeground
@@ -50,6 +51,10 @@ object AlertsIosBindings {
     /** The app's own alarms are alerts too, and the shared implementation needs the same platform half. */
     @Provides
     fun uiInteraction(impl: UiInteractionImpl): UiInteraction = impl
+
+    /** The BG alarms raise through the alerts, so they are here where the alerts are. */
+    @Provides
+    fun bgAlarms(impl: BgAlarmsImpl): BgAlarms = impl
 }
 
 /** Which alert the alarm screen should be showing. */

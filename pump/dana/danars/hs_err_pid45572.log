@@ -1,0 +1,883 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (malloc) failed to allocate 1395056 bytes. Error detail: Chunk::new
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   This process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+#   JVM is running with Unscaled Compressed Oops mode in which the Java heap is
+#     placed in the first 4GB address space. The Java Heap base address is the
+#     maximum limit for the native heap growth. Please use -XX:HeapBaseMinAddress
+#     to set the Java Heap base and to place the Java Heap above 4GB virtual address.
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (arena.cpp:168), pid=45572, tid=48284
+#
+# JRE version: OpenJDK Runtime Environment JBR-21.0.10+1-1163.108-jcef (21.0.10+1) (build 21.0.10+1-b1163.108)
+# Java VM: OpenJDK 64-Bit Server VM JBR-21.0.10+1-1163.108-jcef (21.0.10+1-b1163.108, mixed mode, sharing, tiered, compressed oops, compressed class ptrs, g1 gc, windows-amd64)
+# No core dump will be written. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -Djava.awt.headless=true -Djava.library.path=C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\NVIDIA Corporation\NVIDIA App\NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\GitHub CLI\;C:\Program Files (x86)\HP\Common\HPDestPlgIn\;C:\Program Files\PuTTY\;C:\Program Files\nodejs\;C:\Program Files\dotnet\;C:\Users\m.kozak\AppData\Local\Microsoft\WindowsApps;C:\Users\m.kozak\.local\bin;C:\Users\m.kozak\AppData\Local\Android\Sdk\platform-tools;C:\Users\m.kozak\AppData\Roaming\npm;.;E:\GitHub\AndroidAPS\pump\dana\danars\src\testDebug\jniLibs;E:\GitHub\AndroidAPS\pump\dana\danars\src\test\jniLibs -Dorg.gradle.internal.worker.tmpdir=E:\GitHub\AndroidAPS\pump\dana\danars\build\tmp\testDebugUnitTest\work --add-opens=java.base/java.io=ALL-UNNAMED -javaagent:E:\GitHub\AndroidAPS\pump\dana\danars\build\tmp\.cache\expanded\zip_27729b840c216bdc69a9315e04b27ab1\jacocoagent.jar=destfile=build/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec,append=true,excludes=jdk.internal.*,inclnolocationclasses=true,dumponexit=true,output=file,jmx=false -Xmx1536m -Dfile.encoding=UTF-8 -Duser.country=CZ -Duser.language=cs -Duser.variant -ea worker.org.gradle.process.internal.worker.GradleWorkerMain 'Gradle Test Executor 198'
+
+Host: AMD Ryzen 9 9950X 16-Core Processor            , 32 cores, 61G,  Windows 11 , 64 bit Build 26100 (10.0.26100.9974)
+Time: Sun Nov 22 15:14:29 2026 elapsed time: 16.272943 seconds (0d 0h 0m 16s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00000182fae71910):  JavaThread "C2 CompilerThread0" daemon [_thread_in_native, id=48284, stack(0x0000001aa9400000,0x0000001aa9500000) (1024K)]
+
+
+Current CompileTask:
+C2:16272 8431       4       org.jacoco.agent.rt.internal_29a6edd.asm.ClassReader::readCode (5117 bytes)
+
+Stack: [0x0000001aa9400000,0x0000001aa9500000]
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x6ecf49]  os::win32::platform_print_native_stack+0xd9  (os_windows_x86.cpp:236)
+V  [jvm.dll+0x8cbe73]  VMError::report+0xd83  (vmError.cpp:1018)
+V  [jvm.dll+0x8ce49e]  VMError::report_and_die+0x5fe  (vmError.cpp:1886)
+V  [jvm.dll+0x8ceb83]  VMError::report_and_die+0x43  (vmError.cpp:1656)
+V  [jvm.dll+0x28b776]  report_vm_out_of_memory+0x56  (debug.cpp:225)
+V  [jvm.dll+0xc6f3d]  Chunk::operator new+0x10d  (arena.cpp:168)
+V  [jvm.dll+0xc7473]  Arena::grow+0x103  (arena.cpp:301)
+V  [jvm.dll+0x302510]  PhaseIdealLoop::Dominators+0x90  (domgraph.cpp:417)
+V  [jvm.dll+0x612839]  PhaseIdealLoop::build_and_optimize+0x3e9  (loopnode.cpp:4628)
+V  [jvm.dll+0x25b822]  PhaseIdealLoop::optimize+0x152  (loopnode.hpp:1203)
+V  [jvm.dll+0x25bbdf]  Compile::optimize_loops+0xbf  (compile.cpp:2171)
+V  [jvm.dll+0x254385]  Compile::Optimize+0xf75  (compile.cpp:2410)
+V  [jvm.dll+0x251bde]  Compile::Compile+0xdde  (compile.cpp:852)
+V  [jvm.dll+0x1ceea4]  C2Compiler::compile_method+0xd4  (c2compiler.cpp:123)
+V  [jvm.dll+0x26157e]  CompileBroker::invoke_compiler_on_method+0x78e  (compileBroker.cpp:2326)
+V  [jvm.dll+0x25fac6]  CompileBroker::compiler_thread_loop+0x3b6  (compileBroker.cpp:1995)
+V  [jvm.dll+0x403a4e]  JavaThread::run+0x11e  (javaThread.cpp:704)
+V  [jvm.dll+0x874d68]  Thread::call_run+0xc8  (thread.cpp:231)
+V  [jvm.dll+0x6eb6cd]  os::win32::thread_native_entry+0x7d  (os_windows.cpp:557)
+C  [ucrtbase.dll+0x2cd30]
+C  [KERNEL32.DLL+0x2dda7]
+C  [ntdll.dll+0xc9c5c]
+
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x00000182ff6cb050, length=19, elements={
+0x00000182ef97c4a0, 0x00000182fae650b0, 0x00000182fae67120, 0x00000182fae6aa70,
+0x00000182fae6b950, 0x00000182fae6d010, 0x00000182fae6db60, 0x00000182fae6fce0,
+0x00000182fae71910, 0x00000182fae7baa0, 0x00000182ff0e2730, 0x00000182ff31ba70,
+0x00000182ff31c120, 0x00000182d13f68a0, 0x00000182d38c3040, 0x00000182d20b7a10,
+0x00000182d20b8080, 0x00000182d4637870, 0x00000182d33f4de0
+}
+
+Java Threads: ( => current thread )
+  0x00000182ef97c4a0 JavaThread "Test worker"                       [_thread_in_Java, id=47776, stack(0x0000001aa8500000,0x0000001aa8600000) (1024K)]
+  0x00000182fae650b0 JavaThread "Common-Cleaner"             daemon [_thread_blocked, id=43048, stack(0x0000001aa8d00000,0x0000001aa8e00000) (1024K)]
+  0x00000182fae67120 JavaThread "Reference Handler"          daemon [_thread_blocked, id=40220, stack(0x0000001aa8e00000,0x0000001aa8f00000) (1024K)]
+  0x00000182fae6aa70 JavaThread "Finalizer"                  daemon [_thread_blocked, id=47148, stack(0x0000001aa8f00000,0x0000001aa9000000) (1024K)]
+  0x00000182fae6b950 JavaThread "Signal Dispatcher"          daemon [_thread_blocked, id=28184, stack(0x0000001aa9000000,0x0000001aa9100000) (1024K)]
+  0x00000182fae6d010 JavaThread "Attach Listener"            daemon [_thread_blocked, id=43520, stack(0x0000001aa9100000,0x0000001aa9200000) (1024K)]
+  0x00000182fae6db60 JavaThread "Service Thread"             daemon [_thread_blocked, id=48536, stack(0x0000001aa9200000,0x0000001aa9300000) (1024K)]
+  0x00000182fae6fce0 JavaThread "Monitor Deflation Thread"   daemon [_thread_blocked, id=47840, stack(0x0000001aa9300000,0x0000001aa9400000) (1024K)]
+=>0x00000182fae71910 JavaThread "C2 CompilerThread0"         daemon [_thread_in_native, id=48284, stack(0x0000001aa9400000,0x0000001aa9500000) (1024K)]
+  0x00000182fae7baa0 JavaThread "C1 CompilerThread0"         daemon [_thread_blocked, id=46168, stack(0x0000001aa9500000,0x0000001aa9600000) (1024K)]
+  0x00000182ff0e2730 JavaThread "C1 CompilerThread1"         daemon [_thread_blocked, id=35800, stack(0x0000001aa9600000,0x0000001aa9700000) (1024K)]
+  0x00000182ff31ba70 JavaThread "C1 CompilerThread2"         daemon [_thread_blocked, id=39528, stack(0x0000001aa9700000,0x0000001aa9800000) (1024K)]
+  0x00000182ff31c120 JavaThread "C1 CompilerThread3"         daemon [_thread_blocked, id=45712, stack(0x0000001aa9800000,0x0000001aa9900000) (1024K)]
+  0x00000182d13f68a0 JavaThread "Notification Thread"        daemon [_thread_blocked, id=48008, stack(0x0000001aa9b00000,0x0000001aa9c00000) (1024K)]
+  0x00000182d38c3040 JavaThread "/127.0.0.1:62212 to /127.0.0.1:62209 workers"        [_thread_blocked, id=45236, stack(0x0000001aab500000,0x0000001aab600000) (1024K)]
+  0x00000182d20b7a10 JavaThread "/127.0.0.1:62212 to /127.0.0.1:62209 workers Thread 2"        [_thread_blocked, id=26152, stack(0x0000001aab600000,0x0000001aab700000) (1024K)]
+  0x00000182d20b8080 JavaThread "/127.0.0.1:62212 to /127.0.0.1:62209 workers Thread 3"        [_thread_in_native, id=44236, stack(0x0000001aab700000,0x0000001aab800000) (1024K)]
+  0x00000182d4637870 JavaThread "RxCachedWorkerPoolEvictor-1" daemon [_thread_blocked, id=19476, stack(0x0000001aabc00000,0x0000001aabd00000) (1024K)]
+  0x00000182d33f4de0 JavaThread "C2 CompilerThread1"         daemon [_thread_in_native, id=26256, stack(0x0000001aab200000,0x0000001aab300000) (1024K)]
+Total: 19
+
+Other Threads:
+  0x00000182fae49470 VMThread "VM Thread"                           [id=40564, stack(0x0000001aa8c00000,0x0000001aa8d00000) (1024K)]
+  0x00000182fae3bdd0 WatcherThread "VM Periodic Task Thread"        [id=47496, stack(0x0000001aa8b00000,0x0000001aa8c00000) (1024K)]
+  0x00000182ef9c6290 WorkerThread "GC Thread#0"                     [id=40032, stack(0x0000001aa8600000,0x0000001aa8700000) (1024K)]
+  0x00000182d2923130 WorkerThread "GC Thread#1"                     [id=4644, stack(0x0000001aa9c00000,0x0000001aa9d00000) (1024K)]
+  0x00000182d29234e0 WorkerThread "GC Thread#2"                     [id=7716, stack(0x0000001aa9d00000,0x0000001aa9e00000) (1024K)]
+  0x00000182d2572e50 WorkerThread "GC Thread#3"                     [id=2872, stack(0x0000001aa9e00000,0x0000001aa9f00000) (1024K)]
+  0x00000182d2d0b130 WorkerThread "GC Thread#4"                     [id=42072, stack(0x0000001aa9f00000,0x0000001aaa000000) (1024K)]
+  0x00000182d2d0b4e0 WorkerThread "GC Thread#5"                     [id=14364, stack(0x0000001aaa000000,0x0000001aaa100000) (1024K)]
+  0x00000182d251e970 WorkerThread "GC Thread#6"                     [id=48680, stack(0x0000001aaa100000,0x0000001aaa200000) (1024K)]
+  0x00000182d251ed20 WorkerThread "GC Thread#7"                     [id=42320, stack(0x0000001aaa200000,0x0000001aaa300000) (1024K)]
+  0x00000182d3294090 WorkerThread "GC Thread#8"                     [id=34036, stack(0x0000001aaa300000,0x0000001aaa400000) (1024K)]
+  0x00000182d1ccee30 WorkerThread "GC Thread#9"                     [id=44356, stack(0x0000001aaa400000,0x0000001aaa500000) (1024K)]
+  0x00000182d1cce320 WorkerThread "GC Thread#10"                    [id=35108, stack(0x0000001aaa500000,0x0000001aaa600000) (1024K)]
+  0x00000182d1cce6d0 WorkerThread "GC Thread#11"                    [id=48588, stack(0x0000001aaa600000,0x0000001aaa700000) (1024K)]
+  0x00000182d1ccea80 WorkerThread "GC Thread#12"                    [id=34120, stack(0x0000001aaa700000,0x0000001aaa800000) (1024K)]
+  0x00000182d1ccf1e0 WorkerThread "GC Thread#13"                    [id=47580, stack(0x0000001aaa800000,0x0000001aaa900000) (1024K)]
+  0x00000182d1ccf590 WorkerThread "GC Thread#14"                    [id=41480, stack(0x0000001aaa900000,0x0000001aaaa00000) (1024K)]
+  0x00000182d1ccf940 WorkerThread "GC Thread#15"                    [id=43916, stack(0x0000001aaaa00000,0x0000001aaab00000) (1024K)]
+  0x00000182d1ccdf70 WorkerThread "GC Thread#16"                    [id=37820, stack(0x0000001aaab00000,0x0000001aaac00000) (1024K)]
+  0x00000182d23c1fd0 WorkerThread "GC Thread#17"                    [id=42576, stack(0x0000001aaac00000,0x0000001aaad00000) (1024K)]
+  0x00000182d23c2ae0 WorkerThread "GC Thread#18"                    [id=22428, stack(0x0000001aaad00000,0x0000001aaae00000) (1024K)]
+  0x00000182d23c09b0 WorkerThread "GC Thread#19"                    [id=47280, stack(0x0000001aaae00000,0x0000001aaaf00000) (1024K)]
+  0x00000182d23c1c20 WorkerThread "GC Thread#20"                    [id=7412, stack(0x0000001aaaf00000,0x0000001aab000000) (1024K)]
+  0x00000182d23befe0 WorkerThread "GC Thread#21"                    [id=13404, stack(0x0000001aab000000,0x0000001aab100000) (1024K)]
+  0x00000182d23bf390 WorkerThread "GC Thread#22"                    [id=10444, stack(0x0000001aab100000,0x0000001aab200000) (1024K)]
+  0x00000182ef9d4100 ConcurrentGCThread "G1 Main Marker"            [id=47548, stack(0x0000001aa8700000,0x0000001aa8800000) (1024K)]
+  0x00000182ef9d6260 WorkerThread "G1 Conc#0"                       [id=48400, stack(0x0000001aa8800000,0x0000001aa8900000) (1024K)]
+  0x00000182d23c2730 WorkerThread "G1 Conc#1"                       [id=48224, stack(0x0000001aa9900000,0x0000001aa9a00000) (1024K)]
+  0x00000182d2f33680 WorkerThread "G1 Conc#2"                       [id=38344, stack(0x0000001aa9a00000,0x0000001aa9b00000) (1024K)]
+  0x00000182d2f35400 WorkerThread "G1 Conc#3"                       [id=44196, stack(0x0000001aab300000,0x0000001aab400000) (1024K)]
+  0x00000182d2f35b60 WorkerThread "G1 Conc#4"                       [id=11192, stack(0x0000001aab800000,0x0000001aab900000) (1024K)]
+  0x00000182d2f32060 WorkerThread "G1 Conc#5"                       [id=46152, stack(0x0000001aab900000,0x0000001aaba00000) (1024K)]
+  0x00000182f966d9c0 ConcurrentGCThread "G1 Refine#0"               [id=42084, stack(0x0000001aa8900000,0x0000001aa8a00000) (1024K)]
+  0x00000182f966e3e0 ConcurrentGCThread "G1 Service"                [id=13276, stack(0x0000001aa8a00000,0x0000001aa8b00000) (1024K)]
+Total: 34
+
+Threads with active compile tasks:
+C2 CompilerThread0  16512 8431       4       org.jacoco.agent.rt.internal_29a6edd.asm.ClassReader::readCode (5117 bytes)
+Total: 1
+
+VM state: not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap address: 0x00000000a0000000, size: 1536 MB, Compressed Oops mode: 32-bit
+
+CDS archive(s) mapped at: [0x000001828f000000-0x0000018290c20000-0x0000018290c20000), size 29491200, SharedBaseAddress: 0x000001828f000000, ArchiveRelocationMode: 1.
+Compressed class space mapped at: 0x0000018291000000-0x00000182d1000000, reserved size: 1073741824
+Narrow klass base: 0x000001828f000000, Narrow klass shift: 0, Narrow klass range: 0x100000000
+
+GC Precious Log:
+ CardTable entry size: 512
+ Card Set container configuration: InlinePtr #cards 5 size 8 Array Of Cards #cards 12 size 40 Howl #buckets 4 coarsen threshold 1843 Howl Bitmap #cards 512 size 80 coarsen threshold 460 Card regions per heap region 1 cards per card region 2048
+ CPUs: 32 total, 32 available
+ Memory: 63124M
+ Large Page Support: Disabled
+ NUMA Support: Disabled
+ Compressed Oops: Enabled (32-bit)
+ Heap Region Size: 1M
+ Heap Min Capacity: 8M
+ Heap Initial Capacity: 988M
+ Heap Max Capacity: 1536M
+ Pre-touch: Disabled
+ Parallel Workers: 23
+ Concurrent Workers: 6
+ Concurrent Refinement Workers: 23
+ Periodic GC: Disabled
+
+Heap:
+ garbage-first heap   total 111616K, used 70147K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 40 young (40960K), 5 survivors (5120K)
+ Metaspace       used 38632K, committed 39104K, reserved 1114112K
+  class space    used 4347K, committed 4608K, reserved 1048576K
+
+Heap Regions: E=young(eden), S=young(survivor), O=old, HS=humongous(starts), HC=humongous(continues), CS=collection set, F=free, TAMS=top-at-mark-start, PB=parsable bottom
+|   0|0x00000000a0000000, 0x00000000a0100000, 0x00000000a0100000|100%|HS|  |TAMS 0x00000000a0000000| PB 0x00000000a0000000| Complete 
+|   1|0x00000000a0100000, 0x00000000a0200000, 0x00000000a0200000|100%|HC|  |TAMS 0x00000000a0100000| PB 0x00000000a0100000| Complete 
+|   2|0x00000000a0200000, 0x00000000a0300000, 0x00000000a0300000|100%|HS|  |TAMS 0x00000000a0200000| PB 0x00000000a0200000| Complete 
+|   3|0x00000000a0300000, 0x00000000a0400000, 0x00000000a0400000|100%| O|  |TAMS 0x00000000a0300000| PB 0x00000000a0300000| Untracked 
+|   4|0x00000000a0400000, 0x00000000a0500000, 0x00000000a0500000|100%|HS|  |TAMS 0x00000000a0400000| PB 0x00000000a0400000| Complete 
+|   5|0x00000000a0500000, 0x00000000a0600000, 0x00000000a0600000|100%|HS|  |TAMS 0x00000000a0500000| PB 0x00000000a0500000| Complete 
+|   6|0x00000000a0600000, 0x00000000a0700000, 0x00000000a0700000|100%| O|  |TAMS 0x00000000a0600000| PB 0x00000000a0600000| Untracked 
+|   7|0x00000000a0700000, 0x00000000a0800000, 0x00000000a0800000|100%| O|  |TAMS 0x00000000a0700000| PB 0x00000000a0700000| Untracked 
+|   8|0x00000000a0800000, 0x00000000a0900000, 0x00000000a0900000|100%| O|  |TAMS 0x00000000a0800000| PB 0x00000000a0800000| Untracked 
+|   9|0x00000000a0900000, 0x00000000a0a00000, 0x00000000a0a00000|100%| O|  |TAMS 0x00000000a0900000| PB 0x00000000a0900000| Untracked 
+|  10|0x00000000a0a00000, 0x00000000a0b00000, 0x00000000a0b00000|100%| O|  |TAMS 0x00000000a0a00000| PB 0x00000000a0a00000| Untracked 
+|  11|0x00000000a0b00000, 0x00000000a0c00000, 0x00000000a0c00000|100%| O|  |TAMS 0x00000000a0b00000| PB 0x00000000a0b00000| Untracked 
+|  12|0x00000000a0c00000, 0x00000000a0d00000, 0x00000000a0d00000|100%| O|  |TAMS 0x00000000a0c00000| PB 0x00000000a0c00000| Untracked 
+|  13|0x00000000a0d00000, 0x00000000a0e00000, 0x00000000a0e00000|100%| O|  |TAMS 0x00000000a0d00000| PB 0x00000000a0d00000| Untracked 
+|  14|0x00000000a0e00000, 0x00000000a0f00000, 0x00000000a0f00000|100%| O|  |TAMS 0x00000000a0e00000| PB 0x00000000a0e00000| Untracked 
+|  15|0x00000000a0f00000, 0x00000000a1000000, 0x00000000a1000000|100%| O|  |TAMS 0x00000000a0f00000| PB 0x00000000a0f00000| Untracked 
+|  16|0x00000000a1000000, 0x00000000a1000000, 0x00000000a1100000|  0%| F|  |TAMS 0x00000000a1000000| PB 0x00000000a1000000| Untracked 
+|  17|0x00000000a1100000, 0x00000000a1200000, 0x00000000a1200000|100%| O|  |TAMS 0x00000000a1100000| PB 0x00000000a1100000| Untracked 
+|  18|0x00000000a1200000, 0x00000000a1300000, 0x00000000a1300000|100%| O|  |TAMS 0x00000000a1200000| PB 0x00000000a1200000| Untracked 
+|  19|0x00000000a1300000, 0x00000000a1400000, 0x00000000a1400000|100%| O|  |TAMS 0x00000000a1300000| PB 0x00000000a1300000| Untracked 
+|  20|0x00000000a1400000, 0x00000000a1500000, 0x00000000a1500000|100%| O|  |TAMS 0x00000000a1400000| PB 0x00000000a1400000| Untracked 
+|  21|0x00000000a1500000, 0x00000000a1600000, 0x00000000a1600000|100%| O|  |TAMS 0x00000000a1500000| PB 0x00000000a1500000| Untracked 
+|  22|0x00000000a1600000, 0x00000000a1700000, 0x00000000a1700000|100%| O|  |TAMS 0x00000000a1600000| PB 0x00000000a1600000| Untracked 
+|  23|0x00000000a1700000, 0x00000000a1800000, 0x00000000a1800000|100%| O|  |TAMS 0x00000000a1700000| PB 0x00000000a1700000| Untracked 
+|  24|0x00000000a1800000, 0x00000000a1900000, 0x00000000a1900000|100%| O|  |TAMS 0x00000000a1800000| PB 0x00000000a1800000| Untracked 
+|  25|0x00000000a1900000, 0x00000000a1a00000, 0x00000000a1a00000|100%| O|  |TAMS 0x00000000a1900000| PB 0x00000000a1900000| Untracked 
+|  26|0x00000000a1a00000, 0x00000000a1b00000, 0x00000000a1b00000|100%| O|  |TAMS 0x00000000a1a00000| PB 0x00000000a1a00000| Untracked 
+|  27|0x00000000a1b00000, 0x00000000a1c00000, 0x00000000a1c00000|100%| O|  |TAMS 0x00000000a1b00000| PB 0x00000000a1b00000| Untracked 
+|  28|0x00000000a1c00000, 0x00000000a1d00000, 0x00000000a1d00000|100%| O|  |TAMS 0x00000000a1c00000| PB 0x00000000a1c00000| Untracked 
+|  29|0x00000000a1d00000, 0x00000000a1e00000, 0x00000000a1e00000|100%| O|  |TAMS 0x00000000a1d00000| PB 0x00000000a1d00000| Untracked 
+|  30|0x00000000a1e00000, 0x00000000a1f00000, 0x00000000a1f00000|100%| O|Cm|TAMS 0x00000000a1e00000| PB 0x00000000a1e00000| Complete 
+|  31|0x00000000a1f00000, 0x00000000a1f60c00, 0x00000000a2000000| 37%| O|  |TAMS 0x00000000a1f00000| PB 0x00000000a1f00000| Untracked 
+|  32|0x00000000a2000000, 0x00000000a2000000, 0x00000000a2100000|  0%| F|  |TAMS 0x00000000a2000000| PB 0x00000000a2000000| Untracked 
+|  33|0x00000000a2100000, 0x00000000a2100000, 0x00000000a2200000|  0%| F|  |TAMS 0x00000000a2100000| PB 0x00000000a2100000| Untracked 
+|  34|0x00000000a2200000, 0x00000000a2200000, 0x00000000a2300000|  0%| F|  |TAMS 0x00000000a2200000| PB 0x00000000a2200000| Untracked 
+|  35|0x00000000a2300000, 0x00000000a2300000, 0x00000000a2400000|  0%| F|  |TAMS 0x00000000a2300000| PB 0x00000000a2300000| Untracked 
+|  36|0x00000000a2400000, 0x00000000a2400000, 0x00000000a2500000|  0%| F|  |TAMS 0x00000000a2400000| PB 0x00000000a2400000| Untracked 
+|  37|0x00000000a2500000, 0x00000000a2500000, 0x00000000a2600000|  0%| F|  |TAMS 0x00000000a2500000| PB 0x00000000a2500000| Untracked 
+|  38|0x00000000a2600000, 0x00000000a2600000, 0x00000000a2700000|  0%| F|  |TAMS 0x00000000a2600000| PB 0x00000000a2600000| Untracked 
+|  39|0x00000000a2700000, 0x00000000a2700000, 0x00000000a2800000|  0%| F|  |TAMS 0x00000000a2700000| PB 0x00000000a2700000| Untracked 
+|  40|0x00000000a2800000, 0x00000000a2800000, 0x00000000a2900000|  0%| F|  |TAMS 0x00000000a2800000| PB 0x00000000a2800000| Untracked 
+|  41|0x00000000a2900000, 0x00000000a2900000, 0x00000000a2a00000|  0%| F|  |TAMS 0x00000000a2900000| PB 0x00000000a2900000| Untracked 
+|  42|0x00000000a2a00000, 0x00000000a2a00000, 0x00000000a2b00000|  0%| F|  |TAMS 0x00000000a2a00000| PB 0x00000000a2a00000| Untracked 
+|  43|0x00000000a2b00000, 0x00000000a2b00000, 0x00000000a2c00000|  0%| F|  |TAMS 0x00000000a2b00000| PB 0x00000000a2b00000| Untracked 
+|  44|0x00000000a2c00000, 0x00000000a2c00000, 0x00000000a2d00000|  0%| F|  |TAMS 0x00000000a2c00000| PB 0x00000000a2c00000| Untracked 
+|  45|0x00000000a2d00000, 0x00000000a2d00000, 0x00000000a2e00000|  0%| F|  |TAMS 0x00000000a2d00000| PB 0x00000000a2d00000| Untracked 
+|  46|0x00000000a2e00000, 0x00000000a2e00000, 0x00000000a2f00000|  0%| F|  |TAMS 0x00000000a2e00000| PB 0x00000000a2e00000| Untracked 
+|  47|0x00000000a2f00000, 0x00000000a2f00000, 0x00000000a3000000|  0%| F|  |TAMS 0x00000000a2f00000| PB 0x00000000a2f00000| Untracked 
+|  48|0x00000000a3000000, 0x00000000a3000000, 0x00000000a3100000|  0%| F|  |TAMS 0x00000000a3000000| PB 0x00000000a3000000| Untracked 
+|  49|0x00000000a3100000, 0x00000000a3100000, 0x00000000a3200000|  0%| F|  |TAMS 0x00000000a3100000| PB 0x00000000a3100000| Untracked 
+|  50|0x00000000a3200000, 0x00000000a3200000, 0x00000000a3300000|  0%| F|  |TAMS 0x00000000a3200000| PB 0x00000000a3200000| Untracked 
+|  51|0x00000000a3300000, 0x00000000a3300000, 0x00000000a3400000|  0%| F|  |TAMS 0x00000000a3300000| PB 0x00000000a3300000| Untracked 
+|  52|0x00000000a3400000, 0x00000000a3400000, 0x00000000a3500000|  0%| F|  |TAMS 0x00000000a3400000| PB 0x00000000a3400000| Untracked 
+|  53|0x00000000a3500000, 0x00000000a3500000, 0x00000000a3600000|  0%| F|  |TAMS 0x00000000a3500000| PB 0x00000000a3500000| Untracked 
+|  54|0x00000000a3600000, 0x00000000a3600000, 0x00000000a3700000|  0%| F|  |TAMS 0x00000000a3600000| PB 0x00000000a3600000| Untracked 
+|  55|0x00000000a3700000, 0x00000000a3700000, 0x00000000a3800000|  0%| F|  |TAMS 0x00000000a3700000| PB 0x00000000a3700000| Untracked 
+|  56|0x00000000a3800000, 0x00000000a3800000, 0x00000000a3900000|  0%| F|  |TAMS 0x00000000a3800000| PB 0x00000000a3800000| Untracked 
+|  57|0x00000000a3900000, 0x00000000a3900000, 0x00000000a3a00000|  0%| F|  |TAMS 0x00000000a3900000| PB 0x00000000a3900000| Untracked 
+|  58|0x00000000a3a00000, 0x00000000a3a203f0, 0x00000000a3b00000| 12%| S|CS|TAMS 0x00000000a3a00000| PB 0x00000000a3a00000| Complete 
+|  59|0x00000000a3b00000, 0x00000000a3c00000, 0x00000000a3c00000|100%| S|CS|TAMS 0x00000000a3b00000| PB 0x00000000a3b00000| Complete 
+|  60|0x00000000a3c00000, 0x00000000a3d00000, 0x00000000a3d00000|100%| S|CS|TAMS 0x00000000a3c00000| PB 0x00000000a3c00000| Complete 
+|  61|0x00000000a3d00000, 0x00000000a3e00000, 0x00000000a3e00000|100%| S|CS|TAMS 0x00000000a3d00000| PB 0x00000000a3d00000| Complete 
+|  62|0x00000000a3e00000, 0x00000000a3f00000, 0x00000000a3f00000|100%| S|CS|TAMS 0x00000000a3e00000| PB 0x00000000a3e00000| Complete 
+|  63|0x00000000a3f00000, 0x00000000a3f00000, 0x00000000a4000000|  0%| F|  |TAMS 0x00000000a3f00000| PB 0x00000000a3f00000| Untracked 
+|  64|0x00000000a4000000, 0x00000000a4000000, 0x00000000a4100000|  0%| F|  |TAMS 0x00000000a4000000| PB 0x00000000a4000000| Untracked 
+|  65|0x00000000a4100000, 0x00000000a4100000, 0x00000000a4200000|  0%| F|  |TAMS 0x00000000a4100000| PB 0x00000000a4100000| Untracked 
+|  66|0x00000000a4200000, 0x00000000a4200000, 0x00000000a4300000|  0%| F|  |TAMS 0x00000000a4200000| PB 0x00000000a4200000| Untracked 
+|  67|0x00000000a4300000, 0x00000000a4300000, 0x00000000a4400000|  0%| F|  |TAMS 0x00000000a4300000| PB 0x00000000a4300000| Untracked 
+|  68|0x00000000a4400000, 0x00000000a4400000, 0x00000000a4500000|  0%| F|  |TAMS 0x00000000a4400000| PB 0x00000000a4400000| Untracked 
+|  69|0x00000000a4500000, 0x00000000a4500000, 0x00000000a4600000|  0%| F|  |TAMS 0x00000000a4500000| PB 0x00000000a4500000| Untracked 
+|  70|0x00000000a4600000, 0x00000000a4600000, 0x00000000a4700000|  0%| F|  |TAMS 0x00000000a4600000| PB 0x00000000a4600000| Untracked 
+|  71|0x00000000a4700000, 0x00000000a4700000, 0x00000000a4800000|  0%| F|  |TAMS 0x00000000a4700000| PB 0x00000000a4700000| Untracked 
+|  72|0x00000000a4800000, 0x00000000a4800000, 0x00000000a4900000|  0%| F|  |TAMS 0x00000000a4800000| PB 0x00000000a4800000| Untracked 
+|  73|0x00000000a4900000, 0x00000000a4900000, 0x00000000a4a00000|  0%| F|  |TAMS 0x00000000a4900000| PB 0x00000000a4900000| Untracked 
+|  74|0x00000000a4a00000, 0x00000000a4a80000, 0x00000000a4b00000| 50%| E|  |TAMS 0x00000000a4a00000| PB 0x00000000a4a00000| Complete 
+|  75|0x00000000a4b00000, 0x00000000a4c00000, 0x00000000a4c00000|100%| E|CS|TAMS 0x00000000a4b00000| PB 0x00000000a4b00000| Complete 
+|  76|0x00000000a4c00000, 0x00000000a4d00000, 0x00000000a4d00000|100%| E|CS|TAMS 0x00000000a4c00000| PB 0x00000000a4c00000| Complete 
+|  77|0x00000000a4d00000, 0x00000000a4e00000, 0x00000000a4e00000|100%| E|CS|TAMS 0x00000000a4d00000| PB 0x00000000a4d00000| Complete 
+|  78|0x00000000a4e00000, 0x00000000a4f00000, 0x00000000a4f00000|100%| E|CS|TAMS 0x00000000a4e00000| PB 0x00000000a4e00000| Complete 
+|  79|0x00000000a4f00000, 0x00000000a5000000, 0x00000000a5000000|100%| E|CS|TAMS 0x00000000a4f00000| PB 0x00000000a4f00000| Complete 
+|  80|0x00000000a5000000, 0x00000000a5100000, 0x00000000a5100000|100%| E|CS|TAMS 0x00000000a5000000| PB 0x00000000a5000000| Complete 
+|  81|0x00000000a5100000, 0x00000000a5200000, 0x00000000a5200000|100%| E|CS|TAMS 0x00000000a5100000| PB 0x00000000a5100000| Complete 
+|  82|0x00000000a5200000, 0x00000000a5300000, 0x00000000a5300000|100%| E|CS|TAMS 0x00000000a5200000| PB 0x00000000a5200000| Complete 
+|  83|0x00000000a5300000, 0x00000000a5400000, 0x00000000a5400000|100%| E|CS|TAMS 0x00000000a5300000| PB 0x00000000a5300000| Complete 
+|  84|0x00000000a5400000, 0x00000000a5500000, 0x00000000a5500000|100%| E|CS|TAMS 0x00000000a5400000| PB 0x00000000a5400000| Complete 
+|  85|0x00000000a5500000, 0x00000000a5600000, 0x00000000a5600000|100%| E|CS|TAMS 0x00000000a5500000| PB 0x00000000a5500000| Complete 
+|  86|0x00000000a5600000, 0x00000000a5700000, 0x00000000a5700000|100%| E|CS|TAMS 0x00000000a5600000| PB 0x00000000a5600000| Complete 
+|  87|0x00000000a5700000, 0x00000000a5800000, 0x00000000a5800000|100%| E|CS|TAMS 0x00000000a5700000| PB 0x00000000a5700000| Complete 
+|  88|0x00000000a5800000, 0x00000000a5900000, 0x00000000a5900000|100%| E|CS|TAMS 0x00000000a5800000| PB 0x00000000a5800000| Complete 
+|  89|0x00000000a5900000, 0x00000000a5a00000, 0x00000000a5a00000|100%| E|CS|TAMS 0x00000000a5900000| PB 0x00000000a5900000| Complete 
+|  90|0x00000000a5a00000, 0x00000000a5b00000, 0x00000000a5b00000|100%| E|CS|TAMS 0x00000000a5a00000| PB 0x00000000a5a00000| Complete 
+|  91|0x00000000a5b00000, 0x00000000a5c00000, 0x00000000a5c00000|100%| E|CS|TAMS 0x00000000a5b00000| PB 0x00000000a5b00000| Complete 
+|  92|0x00000000a5c00000, 0x00000000a5d00000, 0x00000000a5d00000|100%| E|CS|TAMS 0x00000000a5c00000| PB 0x00000000a5c00000| Complete 
+|  93|0x00000000a5d00000, 0x00000000a5e00000, 0x00000000a5e00000|100%| E|CS|TAMS 0x00000000a5d00000| PB 0x00000000a5d00000| Complete 
+|  94|0x00000000a5e00000, 0x00000000a5f00000, 0x00000000a5f00000|100%| E|CS|TAMS 0x00000000a5e00000| PB 0x00000000a5e00000| Complete 
+|  95|0x00000000a5f00000, 0x00000000a6000000, 0x00000000a6000000|100%| E|CS|TAMS 0x00000000a5f00000| PB 0x00000000a5f00000| Complete 
+|  96|0x00000000a6000000, 0x00000000a6100000, 0x00000000a6100000|100%| E|CS|TAMS 0x00000000a6000000| PB 0x00000000a6000000| Complete 
+|  97|0x00000000a6100000, 0x00000000a6200000, 0x00000000a6200000|100%| E|CS|TAMS 0x00000000a6100000| PB 0x00000000a6100000| Complete 
+|  98|0x00000000a6200000, 0x00000000a6300000, 0x00000000a6300000|100%| E|CS|TAMS 0x00000000a6200000| PB 0x00000000a6200000| Complete 
+|  99|0x00000000a6300000, 0x00000000a6400000, 0x00000000a6400000|100%| E|CS|TAMS 0x00000000a6300000| PB 0x00000000a6300000| Complete 
+| 766|0x00000000cfe00000, 0x00000000cff00000, 0x00000000cff00000|100%| E|CS|TAMS 0x00000000cfe00000| PB 0x00000000cfe00000| Complete 
+| 767|0x00000000cff00000, 0x00000000d0000000, 0x00000000d0000000|100%| E|CS|TAMS 0x00000000cff00000| PB 0x00000000cff00000| Complete 
+| 768|0x00000000d0000000, 0x00000000d0100000, 0x00000000d0100000|100%| E|CS|TAMS 0x00000000d0000000| PB 0x00000000d0000000| Complete 
+| 769|0x00000000d0100000, 0x00000000d0200000, 0x00000000d0200000|100%| E|CS|TAMS 0x00000000d0100000| PB 0x00000000d0100000| Complete 
+| 770|0x00000000d0200000, 0x00000000d0300000, 0x00000000d0300000|100%| E|CS|TAMS 0x00000000d0200000| PB 0x00000000d0200000| Complete 
+| 771|0x00000000d0300000, 0x00000000d0400000, 0x00000000d0400000|100%| E|CS|TAMS 0x00000000d0300000| PB 0x00000000d0300000| Complete 
+| 772|0x00000000d0400000, 0x00000000d0500000, 0x00000000d0500000|100%| E|CS|TAMS 0x00000000d0400000| PB 0x00000000d0400000| Complete 
+| 773|0x00000000d0500000, 0x00000000d0600000, 0x00000000d0600000|100%| E|CS|TAMS 0x00000000d0500000| PB 0x00000000d0500000| Complete 
+| 987|0x00000000ddb00000, 0x00000000ddc00000, 0x00000000ddc00000|100%| E|CS|TAMS 0x00000000ddb00000| PB 0x00000000ddb00000| Complete 
+
+Card table byte_map: [0x00000182f5430000,0x00000182f5730000] _byte_map_base: 0x00000182f4f30000
+
+Marking Bits: (CMBitMap*) 0x00000182ef9c69a0
+ Bits: [0x00000182f5730000, 0x00000182f6f30000)
+
+Polling page: 0x00000182ed6f0000
+
+Metaspace:
+
+Usage:
+  Non-class:     33.48 MB used.
+      Class:      4.25 MB used.
+       Both:     37.73 MB used.
+
+Virtual space:
+  Non-class space:       64.00 MB reserved,      33.69 MB ( 53%) committed,  1 nodes.
+      Class space:        1.00 GB reserved,       4.50 MB ( <1%) committed,  1 nodes.
+             Both:        1.06 GB reserved,      38.19 MB (  4%) committed. 
+
+Chunk freelists:
+   Non-Class:  14.25 MB
+       Class:  11.42 MB
+        Both:  25.67 MB
+
+MaxMetaspaceSize: unlimited
+CompressedClassSpaceSize: 1.00 GB
+Initial GC threshold: 21.00 MB
+Current GC threshold: 61.06 MB
+CDS: on
+ - commit_granule_bytes: 65536.
+ - commit_granule_words: 8192.
+ - virtual_space_node_default_size: 8388608.
+ - enlarge_chunks_in_place: 1.
+ - use_allocation_guard: 0.
+
+
+Internal statistics:
+
+num_allocs_failed_limit: 6.
+num_arena_births: 598.
+num_arena_deaths: 0.
+num_vsnodes_births: 2.
+num_vsnodes_deaths: 0.
+num_space_committed: 602.
+num_space_uncommitted: 0.
+num_chunks_returned_to_freelist: 6.
+num_chunks_taken_from_freelist: 2066.
+num_chunk_merges: 3.
+num_chunk_splits: 1463.
+num_chunks_enlarged: 1099.
+num_inconsistent_stats: 0.
+
+CodeHeap 'non-profiled nmethods': size=118848Kb used=5978Kb max_used=7060Kb free=112869Kb
+ bounds [0x0000018287bf0000, 0x00000182882e0000, 0x000001828f000000]
+CodeHeap 'profiled nmethods': size=118848Kb used=14685Kb max_used=18033Kb free=104162Kb
+ bounds [0x0000018280000000, 0x00000182811a0000, 0x0000018287410000]
+CodeHeap 'non-nmethods': size=8064Kb used=3432Kb max_used=3983Kb free=4631Kb
+ bounds [0x0000018287410000, 0x0000018287810000, 0x0000018287bf0000]
+CodeCache: size=245760Kb, used=24095Kb, max_used=29076Kb, free=221662Kb
+ total_blobs=7953, nmethods=7240, adapters=613, full_count=0
+Compilation: enabled, stopped_count=0, restarted_count=0
+
+Compilation events (20 events):
+Event: 15.242 Thread 0x00000182ff31ba70 8450       3       java.lang.invoke.LambdaForm$MH/0x0000018291359000::invoke (49 bytes)
+Event: 15.243 Thread 0x00000182ff0e2730 8451       3       net.bytebuddy.implementation.bytecode.StackManipulation$Illegal::$jacocoInit (52 bytes)
+Event: 15.243 Thread 0x00000182ff31c120 8452       3       net.bytebuddy.implementation.bind.MethodDelegationBinder$ParameterBinding$Illegal::$jacocoInit (52 bytes)
+Event: 15.243 Thread 0x00000182d33f4de0 nmethod 8449 0x0000018287d9c610 code [0x0000018287d9c7a0, 0x0000018287d9c838]
+Event: 15.243 Thread 0x00000182ff31ba70 nmethod 8450 0x0000018280122290 code [0x00000182801224e0, 0x0000018280122ee8]
+Event: 15.243 Thread 0x00000182ff31ba70 8453   !   3       jdk.proxy3.$Proxy57::nullIfImpossible (53 bytes)
+Event: 15.243 Thread 0x00000182fae7baa0 8454       3       net.bytebuddy.implementation.bytecode.StackManipulation$Illegal::isValid (10 bytes)
+Event: 15.243 Thread 0x00000182ff31c120 nmethod 8452 0x000001828045ad90 code [0x000001828045afa0, 0x000001828045b908]
+Event: 15.243 Thread 0x00000182ff0e2730 nmethod 8451 0x0000018280795c10 code [0x0000018280795e20, 0x0000018280796788]
+Event: 15.243 Thread 0x00000182ff31ba70 nmethod 8453 0x0000018280121910 code [0x0000018280121b00, 0x0000018280121fd8]
+Event: 15.243 Thread 0x00000182fae7baa0 nmethod 8454 0x0000018280080e10 code [0x0000018280080fc0, 0x0000018280081128]
+Event: 15.243 Thread 0x00000182ff31c120 8456       3       net.bytebuddy.implementation.bind.MethodDelegationBinder$MethodInvoker$Simple::invoke (13 bytes)
+Event: 15.243 Thread 0x00000182d33f4de0 8458       4       java.util.ArrayList::toArray (57 bytes)
+Event: 15.243 Thread 0x00000182ff0e2730 8457       3       net.bytebuddy.implementation.bind.MethodDelegationBinder$MethodBinding$Builder$Build::<init> (66 bytes)
+Event: 15.243 Thread 0x00000182ff31ba70 8455       3       net.bytebuddy.implementation.bind.MethodDelegationBinder$ParameterBinding$Illegal::isValid (10 bytes)
+Event: 15.243 Thread 0x00000182ff31c120 nmethod 8456 0x0000018280080790 code [0x0000018280080960, 0x0000018280080b10]
+Event: 15.243 Thread 0x00000182ff31ba70 nmethod 8455 0x00000182800d9b90 code [0x00000182800d9d40, 0x00000182800d9ea8]
+Event: 15.243 Thread 0x00000182ff0e2730 nmethod 8457 0x0000018280880410 code [0x0000018280880620, 0x0000018280880cf8]
+Event: 15.244 Thread 0x00000182ff31ba70 8460       3       net.bytebuddy.implementation.bytecode.Removal::isValid (11 bytes)
+Event: 15.244 Thread 0x00000182ff31ba70 nmethod 8460 0x00000182800d9790 code [0x00000182800d9940, 0x00000182800d9aa8]
+
+GC Heap History (20 events):
+Event: 1.579 GC heap before
+{Heap before GC invocations=0 (full 0):
+ garbage-first heap   total 1011712K, used 56320K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 49 young (50176K), 0 survivors (0K)
+ Metaspace       used 3901K, committed 4160K, reserved 1114112K
+  class space    used 369K, committed 512K, reserved 1048576K
+}
+Event: 1.592 GC heap after
+{Heap after GC invocations=1 (full 0):
+ garbage-first heap   total 1011712K, used 17000K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 7 young (7168K), 7 survivors (7168K)
+ Metaspace       used 3901K, committed 4160K, reserved 1114112K
+  class space    used 369K, committed 512K, reserved 1048576K
+}
+Event: 2.067 GC heap before
+{Heap before GC invocations=1 (full 0):
+ garbage-first heap   total 1011712K, used 60008K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 49 young (50176K), 7 survivors (7168K)
+ Metaspace       used 6545K, committed 6720K, reserved 1114112K
+  class space    used 703K, committed 768K, reserved 1048576K
+}
+Event: 2.069 GC heap after
+{Heap after GC invocations=2 (full 0):
+ garbage-first heap   total 1011712K, used 19733K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 3 young (3072K), 3 survivors (3072K)
+ Metaspace       used 6545K, committed 6720K, reserved 1114112K
+  class space    used 703K, committed 768K, reserved 1048576K
+}
+Event: 2.749 GC heap before
+{Heap before GC invocations=2 (full 0):
+ garbage-first heap   total 1011712K, used 85269K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 67 young (68608K), 3 survivors (3072K)
+ Metaspace       used 10979K, committed 11264K, reserved 1114112K
+  class space    used 1218K, committed 1344K, reserved 1048576K
+}
+Event: 2.752 GC heap after
+{Heap after GC invocations=3 (full 0):
+ garbage-first heap   total 1011712K, used 20964K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 4 young (4096K), 4 survivors (4096K)
+ Metaspace       used 10979K, committed 11264K, reserved 1114112K
+  class space    used 1218K, committed 1344K, reserved 1048576K
+}
+Event: 7.329 GC heap before
+{Heap before GC invocations=3 (full 0):
+ garbage-first heap   total 1011712K, used 261604K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 214 young (219136K), 4 survivors (4096K)
+ Metaspace       used 20914K, committed 21248K, reserved 1114112K
+  class space    used 2737K, committed 2880K, reserved 1048576K
+}
+Event: 7.342 GC heap after
+{Heap after GC invocations=4 (full 0):
+ garbage-first heap   total 1011712K, used 27956K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 8 young (8192K), 8 survivors (8192K)
+ Metaspace       used 20914K, committed 21248K, reserved 1114112K
+  class space    used 2737K, committed 2880K, reserved 1048576K
+}
+Event: 8.715 GC heap before
+{Heap before GC invocations=5 (full 0):
+ garbage-first heap   total 96256K, used 94516K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 74 young (75776K), 8 survivors (8192K)
+ Metaspace       used 25120K, committed 25472K, reserved 1114112K
+  class space    used 3092K, committed 3264K, reserved 1048576K
+}
+Event: 8.720 GC heap after
+{Heap after GC invocations=6 (full 0):
+ garbage-first heap   total 111616K, used 31805K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 15 young (15360K), 15 survivors (15360K)
+ Metaspace       used 25120K, committed 25472K, reserved 1114112K
+  class space    used 3092K, committed 3264K, reserved 1048576K
+}
+Event: 9.809 GC heap before
+{Heap before GC invocations=6 (full 0):
+ garbage-first heap   total 111616K, used 83005K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 65 young (66560K), 15 survivors (15360K)
+ Metaspace       used 26675K, committed 27072K, reserved 1114112K
+  class space    used 3195K, committed 3392K, reserved 1048576K
+}
+Event: 9.815 GC heap after
+{Heap after GC invocations=7 (full 0):
+ garbage-first heap   total 111616K, used 33370K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 3 young (3072K), 3 survivors (3072K)
+ Metaspace       used 26675K, committed 27072K, reserved 1114112K
+  class space    used 3195K, committed 3392K, reserved 1048576K
+}
+Event: 11.124 GC heap before
+{Heap before GC invocations=7 (full 0):
+ garbage-first heap   total 111616K, used 99930K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 64 young (65536K), 3 survivors (3072K)
+ Metaspace       used 28612K, committed 29056K, reserved 1114112K
+  class space    used 3280K, committed 3456K, reserved 1048576K
+}
+Event: 11.125 GC heap after
+{Heap after GC invocations=8 (full 0):
+ garbage-first heap   total 111616K, used 32205K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 2 young (2048K), 2 survivors (2048K)
+ Metaspace       used 28612K, committed 29056K, reserved 1114112K
+  class space    used 3280K, committed 3456K, reserved 1048576K
+}
+Event: 12.481 GC heap before
+{Heap before GC invocations=8 (full 0):
+ garbage-first heap   total 111616K, used 96717K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 65 young (66560K), 2 survivors (2048K)
+ Metaspace       used 31417K, committed 31808K, reserved 1114112K
+  class space    used 3597K, committed 3776K, reserved 1048576K
+}
+Event: 12.485 GC heap after
+{Heap after GC invocations=9 (full 0):
+ garbage-first heap   total 111616K, used 33395K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 3 young (3072K), 3 survivors (3072K)
+ Metaspace       used 31417K, committed 31808K, reserved 1114112K
+  class space    used 3597K, committed 3776K, reserved 1048576K
+}
+Event: 13.224 GC heap before
+{Heap before GC invocations=9 (full 0):
+ garbage-first heap   total 111616K, used 96883K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 65 young (66560K), 3 survivors (3072K)
+ Metaspace       used 34533K, committed 34944K, reserved 1114112K
+  class space    used 3907K, committed 4096K, reserved 1048576K
+}
+Event: 13.225 GC heap after
+{Heap after GC invocations=10 (full 0):
+ garbage-first heap   total 111616K, used 34352K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 4 young (4096K), 4 survivors (4096K)
+ Metaspace       used 34533K, committed 34944K, reserved 1114112K
+  class space    used 3907K, committed 4096K, reserved 1048576K
+}
+Event: 14.359 GC heap before
+{Heap before GC invocations=10 (full 0):
+ garbage-first heap   total 111616K, used 80432K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 50 young (51200K), 4 survivors (4096K)
+ Metaspace       used 37092K, committed 37440K, reserved 1114112K
+  class space    used 4202K, committed 4352K, reserved 1048576K
+}
+Event: 14.362 GC heap after
+{Heap after GC invocations=11 (full 0):
+ garbage-first heap   total 111616K, used 35331K [0x00000000a0000000, 0x0000000100000000)
+  region size 1024K, 5 young (5120K), 5 survivors (5120K)
+ Metaspace       used 37092K, committed 37440K, reserved 1114112K
+  class space    used 4202K, committed 4352K, reserved 1048576K
+}
+
+Dll operation events (5 events):
+Event: 0.008 Loaded shared library C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\java.dll
+Event: 0.041 Loaded shared library C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\zip.dll
+Event: 0.048 Loaded shared library C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\jsvml.dll
+Event: 0.761 Loaded shared library C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\verify.dll
+Event: 5.468 Loaded shared library C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\instrument.dll
+
+Deoptimization events (20 events):
+Event: 14.697 Thread 0x00000182ef97c4a0 Uncommon trap: trap_request=0xffffffde fr.pc=0x00000182880f5270 relative=0x00000000000001b0
+Event: 14.697 Thread 0x00000182ef97c4a0 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00000182880f5270 method=java.util.AbstractList.rangeCheckForAdd(I)V @ 6 c2
+Event: 14.697 Thread 0x00000182ef97c4a0 DEOPT PACKING pc=0x00000182880f5270 sp=0x0000001aa85fb590
+Event: 14.697 Thread 0x00000182ef97c4a0 DEOPT UNPACKING pc=0x0000018287467ba2 sp=0x0000001aa85fb4d0 mode 2
+Event: 14.697 Thread 0x00000182ef97c4a0 Uncommon trap: trap_request=0xffffffde fr.pc=0x00000182880f5270 relative=0x00000000000001b0
+Event: 14.697 Thread 0x00000182ef97c4a0 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00000182880f5270 method=java.util.AbstractList.rangeCheckForAdd(I)V @ 6 c2
+Event: 14.697 Thread 0x00000182ef97c4a0 DEOPT PACKING pc=0x00000182880f5270 sp=0x0000001aa85fb590
+Event: 14.697 Thread 0x00000182ef97c4a0 DEOPT UNPACKING pc=0x0000018287467ba2 sp=0x0000001aa85fb4d0 mode 2
+Event: 15.017 Thread 0x00000182ef97c4a0 Uncommon trap: trap_request=0xfffffff4 fr.pc=0x0000018287e29f8c relative=0x00000000000003cc
+Event: 15.017 Thread 0x00000182ef97c4a0 Uncommon trap: reason=null_check action=make_not_entrant pc=0x0000018287e29f8c method=sun.invoke.util.VerifyType.isNullConversion(Ljava/lang/Class;Ljava/lang/Class;Z)Z @ 67 c2
+Event: 15.017 Thread 0x00000182ef97c4a0 DEOPT PACKING pc=0x0000018287e29f8c sp=0x0000001aa85fae70
+Event: 15.017 Thread 0x00000182ef97c4a0 DEOPT UNPACKING pc=0x0000018287467ba2 sp=0x0000001aa85fae10 mode 2
+Event: 15.020 Thread 0x00000182ef97c4a0 Uncommon trap: trap_request=0xffffffdc fr.pc=0x0000018287e2656c relative=0x00000000000002ac
+Event: 15.020 Thread 0x00000182ef97c4a0 Uncommon trap: reason=class_check action=make_not_entrant pc=0x0000018287e2656c method=java.util.ArrayList.toArray([Ljava/lang/Object;)[Ljava/lang/Object; @ 21 c2
+Event: 15.020 Thread 0x00000182ef97c4a0 DEOPT PACKING pc=0x0000018287e2656c sp=0x0000001aa85f96b0
+Event: 15.020 Thread 0x00000182ef97c4a0 DEOPT UNPACKING pc=0x0000018287467ba2 sp=0x0000001aa85f9680 mode 2
+Event: 15.029 Thread 0x00000182ef97c4a0 Uncommon trap: trap_request=0xffffff45 fr.pc=0x0000018287db6e20 relative=0x0000000000000700
+Event: 15.029 Thread 0x00000182ef97c4a0 Uncommon trap: reason=unstable_if action=reinterpret pc=0x0000018287db6e20 method=java.util.regex.Pattern$Start.match(Ljava/util/regex/Matcher;ILjava/lang/CharSequence;)Z @ 10 c2
+Event: 15.029 Thread 0x00000182ef97c4a0 DEOPT PACKING pc=0x0000018287db6e20 sp=0x0000001aa85f9620
+Event: 15.029 Thread 0x00000182ef97c4a0 DEOPT UNPACKING pc=0x0000018287467ba2 sp=0x0000001aa85f9590 mode 2
+
+Classes loaded (20 events):
+Event: 15.040 Loading class app/aaps/core/interfaces/constraints/PumpPluginConstraints
+Event: 15.040 Loading class app/aaps/core/interfaces/constraints/PumpPluginConstraints done
+Event: 15.040 Loading class app/aaps/core/interfaces/plugin/OwnDatabasePlugin
+Event: 15.040 Loading class app/aaps/core/interfaces/plugin/OwnDatabasePlugin done
+Event: 15.040 Loading class app/aaps/core/interfaces/pump/PumpPluginBase
+Event: 15.040 Loading class app/aaps/core/interfaces/pump/PumpPluginBase done
+Event: 15.041 Loading class app/aaps/core/interfaces/plugin/PluginBaseWithPreferences
+Event: 15.041 Loading class app/aaps/core/interfaces/plugin/PluginBaseWithPreferences done
+Event: 15.042 Loading class app/aaps/core/interfaces/pump/ble/BleCentral
+Event: 15.042 Loading class app/aaps/core/interfaces/pump/ble/BleCentral done
+Event: 15.042 Loading class kotlinx/coroutines/test/TestDispatcher
+Event: 15.042 Loading class kotlinx/coroutines/test/TestDispatcher done
+Event: 15.063 Loading class kotlinx/coroutines/Delay
+Event: 15.063 Loading class kotlinx/coroutines/Delay done
+Event: 15.064 Loading class kotlinx/coroutines/DelayWithTimeoutDiagnostics
+Event: 15.064 Loading class kotlinx/coroutines/DelayWithTimeoutDiagnostics done
+Event: 15.172 Loading class org/mockito/kotlin/MockingKt
+Event: 15.172 Loading class org/mockito/kotlin/MockingKt done
+Event: 15.175 Loading class org/mockito/kotlin/MockitoKotlinException
+Event: 15.175 Loading class org/mockito/kotlin/MockitoKotlinException done
+
+Classes unloaded (0 events):
+No events
+
+Classes redefined (20 events):
+Event: 9.432 Thread 0x00000182fae49470 redefined class name=java.lang.Object, count=1
+Event: 9.433 Thread 0x00000182fae49470 redefined class name=android.app.Application, count=2
+Event: 9.433 Thread 0x00000182fae49470 redefined class name=android.content.ComponentCallbacks2, count=2
+Event: 9.433 Thread 0x00000182fae49470 redefined class name=android.content.Context, count=2
+Event: 9.433 Thread 0x00000182fae49470 redefined class name=android.content.ComponentCallbacks, count=2
+Event: 9.433 Thread 0x00000182fae49470 redefined class name=android.content.ContextWrapper, count=3
+Event: 9.607 Thread 0x00000182fae49470 redefined class name=app.aaps.core.keys.interfaces.Preferences, count=2
+Event: 9.753 Thread 0x00000182fae49470 redefined class name=app.aaps.core.interfaces.constraints.ConstraintsChecker, count=2
+Event: 9.753 Thread 0x00000182fae49470 redefined class name=app.aaps.core.interfaces.constraints.PluginConstraints, count=2
+Event: 9.954 Thread 0x00000182fae49470 redefined class name=app.aaps.core.interfaces.notifications.NotificationManager, count=2
+Event: 10.114 Thread 0x00000182fae49470 redefined class name=android.content.res.Resources$Theme, count=2
+Event: 10.167 Thread 0x00000182fae49470 redefined class name=android.content.res.TypedArray, count=2
+Event: 10.167 Thread 0x00000182fae49470 redefined class name=java.lang.AutoCloseable, count=2
+Event: 10.245 Thread 0x00000182fae49470 redefined class name=app.aaps.core.interfaces.profile.ProfileRepository, count=2
+Event: 10.328 Thread 0x00000182fae49470 redefined class name=app.aaps.core.interfaces.insulin.ConcentrationHelper, count=2
+Event: 10.549 Thread 0x00000182fae49470 redefined class name=app.aaps.core.interfaces.utils.DateUtil, count=2
+Event: 10.549 Thread 0x00000182fae49470 redefined class name=app.aaps.shared.impl.utils.DateUtilImpl, count=1
+Event: 14.873 Thread 0x00000182fae49470 redefined class name=app.aaps.pump.dana.database.DanaHistoryRecordDao, count=2
+Event: 14.923 Thread 0x00000182fae49470 redefined class name=app.aaps.core.interfaces.pump.PumpSync, count=2
+Event: 15.206 Thread 0x00000182fae49470 redefined class name=app.aaps.core.interfaces.logging.AAPSLogger, count=2
+
+Internal exceptions (20 events):
+Event: 12.994 Thread 0x00000182ef97c4a0 Exception <a 'sun/nio/fs/WindowsException'{0x00000000a3d278c8}> (0x00000000a3d278c8) 
+thrown [s\src\hotspot\share\prims\jni.cpp, line 537]
+Event: 13.277 Thread 0x00000182ef97c4a0 Exception <a 'sun/nio/fs/WindowsException'{0x00000000d010fe10}> (0x00000000d010fe10) 
+thrown [s\src\hotspot\share\prims\jni.cpp, line 537]
+Event: 13.278 Thread 0x00000182ef97c4a0 Exception <a 'sun/nio/fs/WindowsException'{0x00000000d0111820}> (0x00000000d0111820) 
+thrown [s\src\hotspot\share\prims\jni.cpp, line 537]
+Event: 13.278 Thread 0x00000182ef97c4a0 Exception <a 'sun/nio/fs/WindowsException'{0x00000000d01131d8}> (0x00000000d01131d8) 
+thrown [s\src\hotspot\share\prims\jni.cpp, line 537]
+Event: 13.570 Thread 0x00000182ef97c4a0 Exception <a 'java/lang/NoSuchMethodError'{0x00000000a5932fa8}: 'java.lang.Object java.lang.invoke.DirectMethodHandle$Holder.newInvokeSpecial(java.lang.Object, java.lang.Object, int)'> (0x00000000a5932fa8) 
+thrown [s\src\hotspot\share\interpreter\linkResolver.cpp, line 784]
+Event: 13.578 Thread 0x00000182ef97c4a0 Exception <a 'java/lang/NoSuchMethodError'{0x00000000a5861428}: 'java.lang.Object java.lang.invoke.DirectMethodHandle$Holder.newInvokeSpecial(java.lang.Object, int, java.lang.Object)'> (0x00000000a5861428) 
+thrown [s\src\hotspot\share\interpreter\linkResolver.cpp, line 784]
+Event: 14.429 Thread 0x00000182ef97c4a0 Exception <a 'java/lang/NoSuchMethodError'{0x00000000d043e2d0}: 'java.lang.Object java.lang.invoke.DirectMethodHandle$Holder.newInvokeSpecial(java.lang.Object, java.lang.Object, double)'> (0x00000000d043e2d0) 
+thrown [s\src\hotspot\share\interpreter\linkResolver.cpp, line 784]
+Event: 14.588 Thread 0x00000182ef97c4a0 Exception <a 'java/lang/NoSuchMethodError'{0x00000000a5e40bd0}: 'java.lang.Object java.lang.invoke.DirectMethodHandle$Holder.invokeStaticInit(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)'> (0x00000000a5e40bd0) 
+thrown [s\src\hotspot\share\interpreter\linkResolver.cpp, line 784]
+Event: 14.602 Thread 0x00000182ef97c4a0 Exception <a 'java/lang/NoSuchMethodError'{0x00000000a5e499a8}: 'int java.lang.invoke.DirectMethodHandle$Holder.invokeStaticInit(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)'> (0x00000000a5e499a8) 
+thrown [s\src\hotspot\share\interpreter\linkResolver.cpp, line 784]
+Event: 14.605 Thread 0x00000182ef97c4a0 Exception <a 'java/lang/NoSuchMethodError'{0x00000000a5e4e518}: 'int java.lang.invoke.DirectMethodHandle$Holder.invokeStaticInit(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)'> (0x00000000a5e4e518) 
+thrown [s\src\hotspot\share\interpreter\linkResolver.cpp, line 784]
+Event: 14.614 Thread 0x00000182ef97c4a0 Implicit null exception at 0x0000018287f92ff7 to 0x0000018287f93314
+Event: 14.618 Thread 0x00000182ef97c4a0 Implicit null exception at 0x00000182882d3475 to 0x00000182882d3550
+Event: 14.621 Thread 0x00000182ef97c4a0 Exception <a 'java/lang/NoSuchMethodError'{0x00000000a5e82558}: 'int java.lang.invoke.DirectMethodHandle$Holder.invokeSpecial(java.lang.Object, java.lang.Object, int, java.lang.Object)'> (0x00000000a5e82558) 
+thrown [s\src\hotspot\share\interpreter\linkResolver.cpp, line 784]
+Event: 14.652 Thread 0x00000182ef97c4a0 Exception <a 'java/lang/NoSuchMethodError'{0x00000000a5ea3090}: 'java.lang.Object java.lang.invoke.DirectMethodHandle$Holder.invokeStatic(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, int)'> (0x00000000a5ea3090) 
+thrown [s\src\hotspot\share\interpreter\linkResolver.cpp, line 784]
+Event: 14.654 Thread 0x00000182ef97c4a0 Exception <a 'java/lang/NoSuchMethodError'{0x00000000a5eaac88}: 'int java.lang.invoke.DirectMethodHandle$Holder.invokeSpecial(java.lang.Object, java.lang.Object, int)'> (0x00000000a5eaac88) 
+thrown [s\src\hotspot\share\interpreter\linkResolver.cpp, line 784]
+Event: 14.654 Thread 0x00000182ef97c4a0 Exception <a 'java/lang/NoSuchMethodError'{0x00000000a5eb2f20}: 'int java.lang.invoke.DirectMethodHandle$Holder.invokeSpecial(java.lang.Object, java.lang.Object, java.lang.Object, int)'> (0x00000000a5eb2f20) 
+thrown [s\src\hotspot\share\interpreter\linkResolver.cpp, line 784]
+Event: 14.654 Thread 0x00000182ef97c4a0 Exception <a 'java/lang/NoSuchMethodError'{0x00000000a5eb6b10}: 'int java.lang.invoke.Invokers$Holder.linkToTargetMethod(java.lang.Object, int, java.lang.Object)'> (0x00000000a5eb6b10) 
+thrown [s\src\hotspot\share\interpreter\linkResolver.cpp, line 784]
+Event: 14.697 Thread 0x00000182ef97c4a0 Exception <a 'java/lang/NoSuchMethodError'{0x00000000a5cfc8d8}: 'java.lang.Object java.lang.invoke.Invokers$Holder.invoke_MT(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)'> (0x00000000a5cfc8d8) 
+thrown [s\src\hotspot\share\interpreter\linkResolver.cpp, line 784]
+Event: 15.017 Thread 0x00000182ef97c4a0 Implicit null exception at 0x0000018287e29c90 to 0x0000018287e29f78
+Event: 15.017 Thread 0x00000182ef97c4a0 Exception <a 'java/lang/NoSuchMethodError'{0x00000000a530b5c8}: 'long java.lang.invoke.DirectMethodHandle$Holder.invokeStatic(java.lang.Object, java.lang.Object, int)'> (0x00000000a530b5c8) 
+thrown [s\src\hotspot\share\interpreter\linkResolver.cpp, line 784]
+
+ZGC Phase Switch (0 events):
+No events
+
+VM Operations (20 events):
+Event: 12.481 Executing safepoint VM operation: G1CollectForAllocation (G1 Evacuation Pause)
+Event: 12.485 Executing safepoint VM operation: G1CollectForAllocation (G1 Evacuation Pause) done
+Event: 13.223 Executing safepoint VM operation: G1CollectForAllocation (G1 Evacuation Pause)
+Event: 13.225 Executing safepoint VM operation: G1CollectForAllocation (G1 Evacuation Pause) done
+Event: 14.234 Executing safepoint VM operation: Cleanup
+Event: 14.234 Executing safepoint VM operation: Cleanup done
+Event: 14.359 Executing safepoint VM operation: CollectForMetadataAllocation (Metadata GC Threshold)
+Event: 14.362 Executing safepoint VM operation: CollectForMetadataAllocation (Metadata GC Threshold) done
+Event: 14.368 Executing safepoint VM operation: G1PauseRemark
+Event: 14.374 Executing safepoint VM operation: G1PauseRemark done
+Event: 14.375 Executing safepoint VM operation: G1PauseCleanup
+Event: 14.375 Executing safepoint VM operation: G1PauseCleanup done
+Event: 14.864 Executing safepoint VM operation: RedefineClasses
+Event: 14.892 Executing safepoint VM operation: RedefineClasses done
+Event: 14.914 Executing safepoint VM operation: RedefineClasses
+Event: 14.941 Executing safepoint VM operation: RedefineClasses done
+Event: 15.198 Executing safepoint VM operation: RedefineClasses
+Event: 15.239 Executing safepoint VM operation: RedefineClasses done
+Event: 16.240 Executing safepoint VM operation: Cleanup
+Event: 16.240 Executing safepoint VM operation: Cleanup done
+
+Memory protections (0 events):
+No events
+
+Nmethod flushes (20 events):
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x0000018280660990
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x0000018280663490
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x0000018280663d10
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x0000018280664b90
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x0000018280668490
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x0000018280669590
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x00000182806d8f10
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x00000182806db490
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x000001828077f310
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x0000018280786b90
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x0000018280788610
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x0000018280789690
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x00000182807daa10
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x00000182808dc610
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x000001828092c190
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x000001828092c690
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x000001828092cb90
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x000001828092f690
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x000001828092fb10
+Event: 14.372 Thread 0x00000182fae49470 flushing  nmethod 0x0000018280933690
+
+Events (20 events):
+Event: 9.462 Thread 0x00000182ff0e2730 Thread added: 0x00000182d33f4de0
+Event: 10.908 Thread 0x00000182d33f4de0 Thread exited: 0x00000182d33f4de0
+Event: 11.853 Thread 0x00000182d33f54b0 Thread exited: 0x00000182d33f54b0
+Event: 12.479 Thread 0x00000182d33f6250 Thread exited: 0x00000182d33f6250
+Event: 12.479 Thread 0x00000182d33f8460 Thread exited: 0x00000182d33f8460
+Event: 12.479 Thread 0x00000182d33f6ff0 Thread exited: 0x00000182d33f6ff0
+Event: 12.479 Thread 0x00000182d33f4710 Thread exited: 0x00000182d33f4710
+Event: 12.479 Thread 0x00000182d33f5b80 Thread exited: 0x00000182d33f5b80
+Event: 12.491 Thread 0x00000182d33f7d90 Thread exited: 0x00000182d33f7d90
+Event: 12.491 Thread 0x00000182d4f781c0 Thread exited: 0x00000182d4f781c0
+Event: 12.994 Thread 0x00000182d30d97d0 Thread exited: 0x00000182d30d97d0
+Event: 13.575 Thread 0x00000182ff31ba70 Thread added: 0x00000182d33f5b80
+Event: 13.859 Thread 0x00000182d33f5b80 Thread exited: 0x00000182d33f5b80
+Event: 14.098 Thread 0x00000182ff31ba70 Thread added: 0x00000182d33f6ff0
+Event: 14.302 Thread 0x00000182d33f6ff0 Thread exited: 0x00000182d33f6ff0
+Event: 14.421 Thread 0x00000182fae7baa0 Thread added: 0x00000182d33f4de0
+Event: 14.461 Thread 0x00000182ff31c120 Thread added: 0x00000182d33f5b80
+Event: 14.805 Thread 0x00000182d33f5b80 Thread exited: 0x00000182d33f5b80
+Event: 14.975 Thread 0x00000182ff31ba70 Thread added: 0x00000182d33f5b80
+Event: 15.177 Thread 0x00000182d33f5b80 Thread exited: 0x00000182d33f5b80
+
+
+Dynamic libraries:
+0x00007ff69f850000 - 0x00007ff69f85a000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\java.exe
+0x00007ffe57390000 - 0x00007ffe575fc000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x00007ffe56170000 - 0x00007ffe5623b000 	C:\WINDOWS\System32\KERNEL32.DLL
+0x00007ffe548d0000 - 0x00007ffe54cd9000 	C:\WINDOWS\System32\KERNELBASE.dll
+0x00007ffe54dc0000 - 0x00007ffe54f0c000 	C:\WINDOWS\System32\ucrtbase.dll
+0x00007ffe386e0000 - 0x00007ffe386f8000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\jli.dll
+0x00007ffe21840000 - 0x00007ffe2185b000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\VCRUNTIME140.dll
+0x00007ffe55810000 - 0x00007ffe559ee000 	C:\WINDOWS\System32\USER32.dll
+0x00007ffe54ce0000 - 0x00007ffe54d07000 	C:\WINDOWS\System32\win32u.dll
+0x00007ffe3b530000 - 0x00007ffe3b7c1000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.26100.9818_none_3e071914e3359bdd\COMCTL32.dll
+0x00007ffe55580000 - 0x00007ffe555ab000 	C:\WINDOWS\System32\GDI32.dll
+0x00007ffe57030000 - 0x00007ffe570d9000 	C:\WINDOWS\System32\msvcrt.dll
+0x00007ffe54f20000 - 0x00007ffe55049000 	C:\WINDOWS\System32\gdi32full.dll
+0x00007ffe54d10000 - 0x00007ffe54db3000 	C:\WINDOWS\System32\msvcp_win.dll
+0x00007ffe57310000 - 0x00007ffe57341000 	C:\WINDOWS\System32\IMM32.DLL
+0x00007ffe50940000 - 0x00007ffe5094c000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\vcruntime140_1.dll
+0x00007ffe06660000 - 0x00007ffe066ed000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\msvcp140.dll
+0x00007ffde6940000 - 0x00007ffde770d000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\server\jvm.dll
+0x00007ffe56d70000 - 0x00007ffe56e2c000 	C:\WINDOWS\System32\ADVAPI32.dll
+0x00007ffe560c0000 - 0x00007ffe56168000 	C:\WINDOWS\System32\sechost.dll
+0x00007ffe55e90000 - 0x00007ffe55fa8000 	C:\WINDOWS\System32\RPCRT4.dll
+0x00007ffe570e0000 - 0x00007ffe57160000 	C:\WINDOWS\System32\WS2_32.dll
+0x00007ffe54380000 - 0x00007ffe543de000 	C:\WINDOWS\SYSTEM32\POWRPROF.dll
+0x00007ffe459e0000 - 0x00007ffe45a16000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x00007ffe51a90000 - 0x00007ffe51a9b000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x00007ffe54360000 - 0x00007ffe54375000 	C:\WINDOWS\SYSTEM32\UMPDC.dll
+0x00007ffe53190000 - 0x00007ffe531ab000 	C:\WINDOWS\SYSTEM32\kernel.appcore.dll
+0x00007ffe386d0000 - 0x00007ffe386da000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\jimage.dll
+0x00007ffe50bd0000 - 0x00007ffe50e1c000 	C:\WINDOWS\SYSTEM32\DBGHELP.DLL
+0x00007ffe551d0000 - 0x00007ffe55575000 	C:\WINDOWS\System32\combase.dll
+0x00007ffe56240000 - 0x00007ffe5631a000 	C:\WINDOWS\System32\OLEAUT32.dll
+0x00007ffe34100000 - 0x00007ffe3413b000 	C:\WINDOWS\SYSTEM32\dbgcore.DLL
+0x00007ffe545f0000 - 0x00007ffe5469c000 	C:\WINDOWS\System32\bcryptPrimitives.dll
+0x00007ffe329e0000 - 0x00007ffe329ee000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\instrument.dll
+0x00007ffe1eff0000 - 0x00007ffe1f010000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\java.dll
+0x00007ffe565b0000 - 0x00007ffe56d60000 	C:\WINDOWS\System32\SHELL32.dll
+0x00007ffe51d20000 - 0x00007ffe525e0000 	C:\WINDOWS\SYSTEM32\windows.storage.dll
+0x00007ffe55fc0000 - 0x00007ffe560b8000 	C:\WINDOWS\System32\SHCORE.dll
+0x00007ffe572a0000 - 0x00007ffe57308000 	C:\WINDOWS\System32\shlwapi.dll
+0x00007ffe54440000 - 0x00007ffe54469000 	C:\WINDOWS\SYSTEM32\profapi.dll
+0x00007ffe1efd0000 - 0x00007ffe1efe8000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\zip.dll
+0x00007ffe06580000 - 0x00007ffe06657000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\jsvml.dll
+0x00007ffe1efc0000 - 0x00007ffe1efd0000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\net.dll
+0x00007ffe4d410000 - 0x00007ffe4d533000 	C:\WINDOWS\SYSTEM32\WINHTTP.dll
+0x00007ffe53730000 - 0x00007ffe5379b000 	C:\WINDOWS\system32\mswsock.dll
+0x00007ffe06560000 - 0x00007ffe06576000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\nio.dll
+0x00007ffe1efb0000 - 0x00007ffe1efc0000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\verify.dll
+0x00007ffe371d0000 - 0x00007ffe371e8000 	C:\WINDOWS\system32\napinsp.dll
+0x00007ffe528e0000 - 0x00007ffe52a2c000 	C:\WINDOWS\SYSTEM32\DNSAPI.dll
+0x00007ffe53550000 - 0x00007ffe5355d000 	C:\WINDOWS\SYSTEM32\DSPARSE.dll
+0x00007ffe528a0000 - 0x00007ffe528d3000 	C:\WINDOWS\SYSTEM32\IPHLPAPI.DLL
+0x00007ffe57190000 - 0x00007ffe5719a000 	C:\WINDOWS\System32\NSI.dll
+0x00007ffe371f0000 - 0x00007ffe37203000 	C:\WINDOWS\System32\winrnr.dll
+0x00007ffe378b0000 - 0x00007ffe378d7000 	C:\WINDOWS\system32\nlansp_c.dll
+0x00007ffe4c1b0000 - 0x00007ffe4c1c6000 	C:\WINDOWS\system32\wshbth.dll
+0x00007ffe49ab0000 - 0x00007ffe49abb000 	C:\Windows\System32\rasadhlp.dll
+0x00007ffe4f3d0000 - 0x00007ffe4f456000 	C:\WINDOWS\System32\fwpuclnt.dll
+0x00007ffe064c0000 - 0x00007ffe064c9000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\extnet.dll
+0x00007ffe064b0000 - 0x00007ffe064be000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\sunmscapi.dll
+0x00007ffe54740000 - 0x00007ffe548be000 	C:\WINDOWS\System32\CRYPT32.dll
+0x00007ffe53cd0000 - 0x00007ffe53d00000 	C:\WINDOWS\SYSTEM32\ncrypt.dll
+0x00007ffe53c80000 - 0x00007ffe53cbf000 	C:\WINDOWS\SYSTEM32\NTASN1.dll
+0x00007ffe27960000 - 0x00007ffe27968000 	C:\WINDOWS\system32\wshunix.dll
+0x00007ffe53b60000 - 0x00007ffe53b7b000 	C:\WINDOWS\SYSTEM32\CRYPTSP.dll
+0x00007ffe530f0000 - 0x00007ffe53129000 	C:\WINDOWS\system32\rsaenh.dll
+0x00007ffe537d0000 - 0x00007ffe53804000 	C:\WINDOWS\SYSTEM32\USERENV.dll
+0x00007ffe54410000 - 0x00007ffe5443a000 	C:\WINDOWS\SYSTEM32\bcrypt.dll
+0x00007ffe53990000 - 0x00007ffe5399c000 	C:\WINDOWS\SYSTEM32\CRYPTBASE.dll
+0x00007ffe06940000 - 0x00007ffe06949000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\management.dll
+0x00007ffe064d0000 - 0x00007ffe064db000 	C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\management_ext.dll
+0x00007ffe56400000 - 0x00007ffe56408000 	C:\WINDOWS\System32\PSAPI.DLL
+
+JVMTI agents:
+E:\GitHub\AndroidAPS\pump\dana\danars\build\tmp\.cache\expanded\zip_27729b840c216bdc69a9315e04b27ab1\jacocoagent.jar path:C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\instrument.dll, loaded, initialized, instrumentlib options:destfile=build/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec,append=true,excludes=jdk.internal.*,inclnolocationclasses=true,dumponexit=true,output=file,jmx=false
+C:\Users\m.kozak\.gradle\caches\modules-2\files-2.1\net.bytebuddy\byte-buddy-agent\1.17.7\fbf3d6d649ed37fc9e9c59480a05be0a26e3c2da\byte-buddy-agent-1.17.7.jar path:C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\instrument.dll, loaded, initialized, dynamic instrumentlib options:none
+
+dbghelp: loaded successfully - version: 4.0.5 - missing functions: none
+symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin;C:\WINDOWS\SYSTEM32;C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.26100.9818_none_3e071914e3359bdd;C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin\server
+
+VM Arguments:
+jvm_args: -Djava.awt.headless=true -Djava.library.path=C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\NVIDIA Corporation\NVIDIA App\NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\GitHub CLI\;C:\Program Files (x86)\HP\Common\HPDestPlgIn\;C:\Program Files\PuTTY\;C:\Program Files\nodejs\;C:\Program Files\dotnet\;C:\Users\m.kozak\AppData\Local\Microsoft\WindowsApps;C:\Users\m.kozak\.local\bin;C:\Users\m.kozak\AppData\Local\Android\Sdk\platform-tools;C:\Users\m.kozak\AppData\Roaming\npm;.;E:\GitHub\AndroidAPS\pump\dana\danars\src\testDebug\jniLibs;E:\GitHub\AndroidAPS\pump\dana\danars\src\test\jniLibs -Dorg.gradle.internal.worker.tmpdir=E:\GitHub\AndroidAPS\pump\dana\danars\build\tmp\testDebugUnitTest\work --add-opens=java.base/java.io=ALL-UNNAMED -javaagent:E:\GitHub\AndroidAPS\pump\dana\danars\build\tmp\.cache\expanded\zip_27729b840c216bdc69a9315e04b27ab1\jacocoagent.jar=destfile=build/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec,append=true,excludes=jdk.internal.*,inclnolocationclasses=true,dumponexit=true,output=file,jmx=false -Xmx1536m -Dfile.encoding=UTF-8 -Duser.country=CZ -Duser.language=cs -Duser.variant -ea 
+java_command: worker.org.gradle.process.internal.worker.GradleWorkerMain 'Gradle Test Executor 198'
+java_class_path (initial): C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\workerMain\\gradle-worker.jar;E:\\GitHub\\AndroidAPS\\pump\\dana\\danars\\build\\intermediates\\unit_test_config_directory\\debugUnitTest\\generateDebugUnitTestConfig\\out;E:\\GitHub\\AndroidAPS\\pump\\dana\\danars\\build\\intermediates\\compile_and_runtime_r_class_jar\\debugUnitTest\\processDebugUnitTestResources\\R.jar;E:\\GitHub\\AndroidAPS\\pump\\dana\\danars\\build\\intermediates\\built_in_kotlinc\\debugUnitTest\\compileDebugUnitTestKotlin\\classes;E:\\GitHub\\AndroidAPS\\pump\\dana\\danars\\build\\intermediates\\java_res\\debugUnitTest\\extractDebugUnitTestJavaRes\\out;E:\\GitHub\\AndroidAPS\\pump\\dana\\danars\\build\\intermediates\\runtime_library_classes_jar\\debug\\bundleLibRuntimeToJarDebug\\classes.jar;E:\\GitHub\\AndroidAPS\\shared\\tests\\build\\intermediates\\runtime_library_classes_jar\\androidMain\\bundleAndroidMainClassesToRuntimeJar\\classes.jar;E:\\GitHub\\AndroidAPS\\implementation\\build\\intermediates\\runtime_library_classes_jar\\androidMain\\bundleAndroidMainClassesToRuntimeJar\\classes.jar;E:\\GitHub\\AndroidAPS\\plugins\\aps\\build\\intermediates\\runtime_library_classes_jar\\androidMain\\bundleAndroidMainClassesToRuntimeJar\\classes.jar;E:\\GitHub\\AndroidAPS\\core\\objects\\build\\intermediates\\runtime_library_classes_jar\\androidMain\\bundleAndroidMainClassesToRuntimeJar\\classes.jar;E:\\GitHub\\AndroidAPS\\pump\\dana\\danars\\emulator\\build\\intermediates\\runtime_library_classes_jar\\debug\\bundleLibRuntimeToJarDebug\\classes.jar;E:\\GitHub\\AndroidAPS\\pump\\dana\\common\\build\\intermediates\\runtime_library_classes_jar\\debug\\bundleLibRuntimeToJarDebug\\classes.jar;E:\\GitHub\\AndroidAPS\\core\\graph\\build\\intermediates\\runtime_library_classes_jar\\androidMain\\bundleAndroidMainClassesToRuntimeJar\\classes.jar;E:\\GitHub\\AndroidAPS\\core\\ui\\build\\intermediates\\runtime_library_classes_jar\\androidMain\\bundleAndroidMainClassesToRuntimeJar\\classes.jar;E:\\GitHub\\AndroidAPS\\shared\\impl\\build\\intermediates\\runtime_library_classes_jar\\androidMain\\bundleAndroidMainClassesToRuntimeJar\\classes.jar;E:\\GitHub\\AndroidAPS\\core\\interfaces\\build\\intermediates\\runtime_library_classes_jar\\androidMain\\bundleAndroidMainClassesToRuntimeJar\\classes.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\dev.zacsweers.metro\\metrox-viewmodel-jvm\\1.6.0\\15da2d118581c1ad95b243c9e6a69db9d48b2585\\metrox-viewmodel-jvm-1.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ac0e139566e4ad8ebee5135a050fa882\\transformed\\material-1.14.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-test\\2.4.21\\a7c19fa95e7d3433cef81f4d2c9d46af9e355e1d\\kotlin-test-2.4.21.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.mockito\\mockito-junit-jupiter\\5.24.0\\961dc4a97bb33b749c287aa44f780cfa2fa6af38\\mockito-junit-jupiter-5.24.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.junit.jupiter\\junit-jupiter-engine\\6.1.3\\3778a548f15693db463c3d090b419c64b486b848\\junit-jupiter-engine-6.1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.junit.jupiter\\junit-jupiter-params\\6.1.3\\435fa4ec654c11fb82e666a47d9baefcee3f8df6\\junit-jupiter-params-6.1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.junit.jupiter\\junit-jupiter-api\\6.1.3\\6a57f0ce4d6bfe9784d103077055ba39f3e6f638\\junit-jupiter-api-6.1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.junit.platform\\junit-platform-launcher\\6.1.3\\dad54f7f53b702e6e6f873bc19903dfec870bf1b\\junit-platform-launcher-6.1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.junit.vintage\\junit-vintage-engine\\6.1.3\\ee2e019c662152a8cc983bbe0db119a5fae632b9\\junit-vintage-engine-6.1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.junit.platform\\junit-platform-engine\\6.1.3\\e48a6061b576ebe36eac3b518dc917c23d119a91\\junit-platform-engine-6.1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.junit.platform\\junit-platform-commons\\6.1.3\\acb99d3482ea51fcbcc4f6ea8672761e2b3d5bb7\\junit-platform-commons-6.1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.junit.jupiter\\junit-jupiter\\6.1.3\\cd72619e9eb4cf64e30a87615a4f9b50a80ce103\\junit-jupiter-6.1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.mockito.kotlin\\mockito-kotlin\\6.4.0\\596cdb86c0c66bb25b802f3d6dfbfda5eccb9fc5\\mockito-kotlin-6.4.0.jar;E:\\GitHub\\AndroidAPS\\core\\utils\\build\\intermediates\\runtime_library_classes_jar\\androidMain\\bundleAndroidMainClassesToRuntimeJar\\classes.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\780874afc1f810b81bc5a1006d35e15f\\transformed\\android.joda-2.15.1-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\joda-time\\joda-time\\2.15.1\\7b94a946a5e2e7b260f5abf708e49f592a27ec46\\joda-time-2.15.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\joda-time\\joda-time\\2.15.1\\dda8e4bfe1ebe283039bea508d50bd804142fe01\\joda-time-2.15.1-no-tzdb.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.google.truth\\truth\\1.4.5\\176753805c1c7d8ec439dd61c48bd688cdc48436\\truth-1.4.5.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.skyscreamer\\jsonassert\\1.5.3\\aaa43e0823d2a0e106e8754d6a9c4ab24e05e9bc\\jsonassert-1.5.3.jar;E:\\GitHub\\AndroidAPS\\core\\keys\\build\\intermediates\\runtime_library_classes_jar\\androidMain\\bundleAndroidMainClassesToRuntimeJar\\classes.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\4822e588aa7fbfeef54d7ae1afcc9ba6\\transformed\\biometric-1.1.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\24a9f8ef7e35dc6f1b050ec2a4890157\\transformed\\appcompat-resources-1.8.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\3c536f51e8f9bbffe93b9967543faafc\\transformed\\constraintlayout-2.2.1-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\00ec80da82e4a5724f37ab5997227061\\transformed\\appcompat-1.8.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\66f2e728267f063b4f5908c58dfae228\\transformed\\viewpager2-1.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ce8105ba15d3dc7a0dc828cf2be4f502\\transformed\\firebase-analytics-24.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\4c9c18debc9b8f163337103840346fe6\\transformed\\play-services-measurement-24.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\2cec0b9b6a2029dbde0951852f179d01\\transformed\\play-services-measurement-api-24.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\7718d1bfb86ec74953e08c55b87ce395\\transformed\\play-services-measurement-sdk-24.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\084d1f9718c502d4deda3d91d4d4a64a\\transformed\\firebase-crashlytics-21.0.1-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\b59e1e300c419f28fd8337c3d6cc7f7a\\transformed\\firebase-sessions-4.0.1-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\95759c12f77249a402fd81934630c18d\\transformed\\firebase-installations-20.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\194ec6cdde4f37b58c6c31fe4d33e442\\transformed\\firebase-installations-interop-18.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\46e2aae53d87e9ae8c05dd76ac33bf84\\transformed\\firebase-common-23.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8f23475504b7efe157e0c126918a8807\\transformed\\play-services-measurement-impl-24.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-play-services\\1.11.0\\1669ebaddbc4df1c7cfff7ae983cd14d73579c11\\kotlinx-coroutines-play-services-1.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\d712d8fb21d18f60a55c27a14258a1e3\\transformed\\play-services-base-18.5.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\4f9e159aa224bee528b81fef5176115b\\transformed\\play-services-tasks-18.4.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\08c06b5310e4a4218e339066db82fd33\\transformed\\firebase-measurement-connector-20.0.1-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1c515ba538260e00cf2be3c391883c67\\transformed\\play-services-ads-identifier-18.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\00f3727b0671c1f5e97d3202bbc60813\\transformed\\play-services-measurement-sdk-api-24.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\727e333103362766c8265a3922e9b45c\\transformed\\play-services-measurement-base-24.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1398f1050881c4d2e75cc0fc70e776fe\\transformed\\play-services-stats-17.0.2-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0de0657876e8d366e85dc01f03423c50\\transformed\\play-services-basement-18.9.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\39cc43d3ea71b04b731ab33083b5a518\\transformed\\fragment-1.5.4-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\09a96d09dbcd1bd1ebaa0c4512217f4d\\transformed\\compose-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\488470924c6ae9c1e7765169bda3f648\\transformed\\animation-core-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\eed1a9e13ced55c06e94d6cd4c4bc800\\transformed\\animation-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c460d444663ef32330c90590522a0261\\transformed\\foundation-layout-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\2cb45d417f0eceafb112fc20069425ce\\transformed\\foundation-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\5c5ed60fcadb8d0ce53b89a978fdf4e8\\transformed\\ui-unit-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\62f01f2151f30a3bbb80d446a83c4619\\transformed\\ui-geometry-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\9a5bf56899cff45f89db4c147102fc71\\transformed\\ui-backhandler-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ac13adee0cdae8e8ede4211d74fe7a5f\\transformed\\ui-util-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\e54b538206c7c18d12890a244dd56978\\transformed\\ui-text-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0c5ae793b15a45c1f484e0b72b98f51d\\transformed\\ui-graphics-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\f1e167abd3f804812279ab29b088bf28\\transformed\\ui-tooling-preview-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\5619ea80d701809bb0c9913349681df3\\transformed\\ui-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\96c38d610b894d13f2389dc606dddb70\\transformed\\activity-ktx-1.13.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\e86a43ce8e6f7c18892921285faf8bd4\\transformed\\activity-1.13.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\afa4593df84de75179ae8beeac540c0a\\transformed\\material3-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\6c07408581aa899f32e8a3eefb095634\\transformed\\ui-tooling-data-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c482092b1c66b57d508dadc76e09df1b\\transformed\\material-ripple-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0f3f7313bc7cac22ed26967ca3a24ad2\\transformed\\animation-core-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8e4d125dcb9defe2b4bdcc324b16117b\\transformed\\animation-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c2afe12ec57a5c389b81c65dd0410800\\transformed\\foundation-layout-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\392c51118784701f4138e1850ccb5c6a\\transformed\\foundation-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\19e979ef68a904b34f82f97a1fc3005e\\transformed\\ui-util-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\9a5a603fdfcf28653c78f78e8c07fed0\\transformed\\ui-unit-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\956f5298606a1fe4f1ef588e6a3e356e\\transformed\\ui-text-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\3550b2880d2118c1e04bc5dc4ae0d38e\\transformed\\ui-graphics-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\04123195081c80a1ac2fc009a61532df\\transformed\\ui-geometry-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\31c1409d976e041980909f24954d815e\\transformed\\ui-tooling-preview-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\edec582c7c32e2070dd62e493fcd035d\\transformed\\ui-tooling-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\045524c4d35461e88cb6be8507a7a629\\transformed\\activity-compose-1.13.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\6ce94a3c6fbe6f33dda2cc56b0396104\\transformed\\legacy-support-core-utils-1.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\3b333657a1168770dde847c08a752603\\transformed\\loader-1.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0cee517f8c3059aeca7984e003e8479b\\transformed\\documentfile-1.1.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\a32e55612c38cfc363953f0a900ab2a3\\transformed\\work-runtime-ktx-2.12.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\972e9c016851568688ab57b6b3d21f96\\transformed\\work-runtime-2.12.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\59bab78e12e63453a90bfe093ff47810\\transformed\\drawerlayout-1.1.1-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8a2d7cf443c3fa414a1467ea9c9c93b3\\transformed\\coordinatorlayout-1.1.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8b72a439628fcef9bdab4e7166a1e36c\\transformed\\recyclerview-1.2.1-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\dd159e8f810d768dac82f17feed8d588\\transformed\\viewpager-1.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\2923d058d6ce8bfa77979057e4973c66\\transformed\\customview-1.2.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\7dc947e6227e3be86c61b5d49320640e\\transformed\\transition-1.5.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\7f6a266c93b00dd2fcade571bb6c2aa5\\transformed\\dynamicanimation-1.1.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\eead6673acf03c44f8a3684c44125857\\transformed\\vectordrawable-animated-1.1.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1afe8289becee61d85080c621f841db8\\transformed\\vectordrawable-1.1.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\2e80fdba819deb45c05fcfc55ad1db7d\\transformed\\customview-poolingcontainer-1.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\7994f083b3df3627fefa25edf54a3ab2\\transformed\\graphics-shapes-release-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\a7ba357642b5da20896c2c339fc58955\\transformed\\runtime-saveable-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\androidx.lifecycle\\lifecycle-common-java8\\2.11.0\\9d9c098b5dc3bbcdce8ec4495991b9b0ee25606e\\lifecycle-common-java8-2.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\805ec7178f74b18904e90fa2f2e3503b\\transformed\\lifecycle-viewmodel-compose-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\cee017b05437479391c965aec00896ea\\transformed\\lifecycle-livedata-core-ktx-2.11.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c9ac2f6991bdb937eb6c76cdee30b002\\transformed\\lifecycle-runtime-ktx-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\cf92917f5a806119fe04560454cafc92\\transformed\\lifecycle-service-2.11.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ed27e8c05b2f66f2b4d03ebe2a7c8425\\transformed\\lifecycle-livedata-2.11.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\9666d74ad0760d6243bad00ccc0c96af\\transformed\\lifecycle-viewmodel-ktx-2.11.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\b8e6121325cf4cfec3a0e88377a40614\\transformed\\lifecycle-viewmodel-savedstate-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\86d561564c5a39352e0e1074fcd65c1a\\transformed\\lifecycle-runtime-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\fa86606d98604e885917d695f753a373\\transformed\\lifecycle-viewmodel-savedstate-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\b6470bcd0cc0eac99f1409e2a74df2f4\\transformed\\lifecycle-viewmodel-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.androidx.lifecycle\\lifecycle-common-jvm\\2.11.0\\a56a66ee80e26159ac4281e8eca66857aa995fd3\\lifecycle-common-jvm-2.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\9f4318f75b8850a0e00d136e11607c48\\transformed\\lifecycle-runtime-compose-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\bb7ee02ccbd56a12a25db90962fa32fd\\transformed\\lifecycle-viewmodel-compose-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c3819d83782a756de52040eead1d02ab\\transformed\\runtime-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\6035ce372c4eed31062f4ab608e6dc7f\\transformed\\navigationevent-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\9e848d95f04e202b01ec27fcd40b8ec8\\transformed\\navigationevent-compose-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\fba1b696a3f059023a70e70fd569f46e\\transformed\\runtime-annotation-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\50430d0a539f72dfd4c2a364962fced7\\transformed\\runtime-retain-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c2a3d4896982edf8902f54154639cc43\\transformed\\runtime-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\3127ca826bcfc888960bb617870c888b\\transformed\\runtime-saveable-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c134a3bc715486951ba5401cc87003fd\\transformed\\savedstate-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\00d7bd863672bb8c9f39fcee97d74d10\\transformed\\savedstate-ktx-1.4.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\e1d4af6d315660fa2df6dc707a132d94\\transformed\\savedstate-compose-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\6337153bc681a774931232858618dac8\\transformed\\ads-adservices-java-1.1.0-beta11-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0392e6ba90cfb53aea7aa3174f1435f1\\transformed\\ads-adservices-1.1.0-beta11-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\68554a539e5be1dc85186974384657c7\\transformed\\core-ktx-1.18.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\28ee705ed573b6da60c33f0ed63a4f0e\\transformed\\autofill-1.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ea388f9444570c9c6c6cf159293cfaa2\\transformed\\window-core-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8bd07beb2d4280315d0bb38417ebab94\\transformed\\window-1.5.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\57967817dbfe5911746122959db9135d\\transformed\\graphics-path-1.0.1-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\78c932eadb2c022ebd6d14230bbcef77\\transformed\\emoji2-views-helper-1.4.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\e84fc77c127d33642dd84a026f2f2a3a\\transformed\\emoji2-1.4.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\4f1a23b5882d23afeed392fb72cd3809\\transformed\\core-1.18.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\androidx.lifecycle\\lifecycle-common-jvm\\2.11.0\\2c4f7d92f1fd723121d394c93455f50158403ad9\\lifecycle-common-jvm-2.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\6f7aea8fa000ca52b50cd9be1ecebe66\\transformed\\lifecycle-viewmodel-2.11.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ced71cf9cb9d388b5f3902af90e67fa6\\transformed\\lifecycle-viewmodel-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0ad1550a8484bfb4e5e7ee1e7bca6df4\\transformed\\lifecycle-runtime-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\a563d44fa82a097c526e242da989ec5f\\transformed\\lifecycle-livedata-core-2.11.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\6bbe8b0f1b0dc26feb51082b7cdb79a3\\transformed\\lifecycle-process-2.11.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\50e9a50ff4891a070ff790459db98dbd\\transformed\\lifecycle-runtime-compose-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ee52a6875841eef6254f5f29f6a775f8\\transformed\\material-icons-extended-release-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0cac7b53a354e6487a6d0bbc6e9c4c5b\\transformed\\material-icons-core-release-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\991191449e481b56c59d05c31b043d53\\transformed\\ui-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\androidx.room\\room-common-jvm\\2.8.5\\3aeefef6615720bec8c860dd0786b48552ef3300\\room-common-jvm-2.8.5.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0d07bcc7edbc8517e681ef641c28ff4b\\transformed\\room-runtime-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-android\\1.11.0\\51ffb50a6478872fbbac6cbd48f09553bf4e9e7d\\kotlinx-coroutines-android-1.11.0.jar;E:\\GitHub\\AndroidAPS\\core\\nssdk\\build\\libs\\nssdk-jvm.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\androidx.datastore\\datastore-preferences-external-protobuf\\1.3.0\\cefa47d9ef6f877ed6805edd0f6aac8a7df3380e\\datastore-preferences-external-protobuf-1.3.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\androidx.datastore\\datastore-preferences-proto\\1.3.0\\1866e2980256742c45074b90095a7c6cb22e3285\\datastore-preferences-proto-1.3.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1fc962d5b315ab16ed2cd3ff08623e15\\transformed\\datastore-preferences-core-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\616848011c088db31c035cf77a483c9d\\transformed\\datastore-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\androidx.datastore\\datastore-core-okio-jvm\\1.3.0\\f2c7ec19197dea75968ccb3c090eab7573c7f9db\\datastore-core-okio-jvm-1.3.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\3642f357141d9f0caf0f4e726170c21d\\transformed\\datastore-core-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0b425d32ebb7ce73d36025cc64b67941\\transformed\\datastore-preferences-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-client-okhttp-jvm\\3.6.1\\89ef953f22a22910fa7838777d878e586e971078\\ktor-client-okhttp-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-client-content-negotiation-jvm\\3.6.1\\dae9131f1635c065772219f3d276d864571cf8dd\\ktor-client-content-negotiation-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-client-core-jvm\\3.6.1\\4967a1faab4e5d24c2dc01c7da749c5ed4183cb9\\ktor-client-core-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-test-jvm\\1.11.0\\1dfe8ce2b805d913922f283b386895bd0979dfcb\\kotlinx-coroutines-test-jvm-1.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\androidx.concurrent\\concurrent-futures-ktx\\1.1.0\\b4c245baf36d1a9e7defaf3be84f7a2ad4e1c797\\concurrent-futures-ktx-1.1.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-slf4j\\1.11.0\\556153d93573d016dd4e5df37e3d03d07d8d303\\kotlinx-coroutines-slf4j-1.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-serialization-kotlinx-json-jvm\\3.6.1\\c3556bfe7123c26a889425ccf4ba839e65fc00f\\ktor-serialization-kotlinx-json-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-http-cio-jvm\\3.6.1\\b1fa880b968a3f9bc3c76355fc3148f6e3322b0\\ktor-http-cio-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-websocket-serialization-jvm\\3.6.1\\869ba465db7bd7000c79f84121958d002ced447f\\ktor-websocket-serialization-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-serialization-kotlinx-jvm\\3.6.1\\28cca3ca97ec5c0cb9cde3d0a14aa8a9246d436\\ktor-serialization-kotlinx-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-serialization-jvm\\3.6.1\\9ec30e0f7cd6fa63f20d1a223ba92fd756c0d547\\ktor-serialization-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-websockets-jvm\\3.6.1\\6d4ec975dac1873e56209bd8215ae1dbcb8e631\\ktor-websockets-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-openapi-schema-jvm\\3.6.1\\1ce9e7c9e7e6bff4a69eadb03401a072f0e338be\\ktor-openapi-schema-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-http-jvm\\3.6.1\\e00685e95c959fd5bbdf77089d3a61e8a5057217\\ktor-http-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-events-jvm\\3.6.1\\1925c317023d83139e53ad1786aa32e46be6d78b\\ktor-events-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-sse-jvm\\3.6.1\\a43ad7e48d7e66ff8d59a9f3a2a53084ab60b23\\ktor-sse-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\37aee0b5ea22e05312524f34fe12a771\\transformed\\profileinstaller-1.4.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c613e864c2e1fc48697475d32d8bf779\\transformed\\okhttp-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0fb293b490002953868883d648d4172f\\transformed\\startup-runtime-1.2.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\b6f4f5fdfad3f105ad7d0fbbad49636a\\transformed\\tracing-ktx-2.0.1-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\7b1feade2ac8475a45517eca3b0fc686\\transformed\\tracing-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-network-jvm\\3.6.1\\550b034ff9a43fbec2243cfc98f17fa9cad5923c\\ktor-network-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-utils-jvm\\3.6.1\\9630d7cf3d4f4cca8965c95e190197ec3255420f\\ktor-utils-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-io-jvm\\3.6.1\\fecdf03d33519e69ef7495b487c9e460940876dc\\ktor-io-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-core-jvm\\1.11.0\\3d57dc678bd8d72a60e7adf0eca5c54e3f4f4b79\\kotlinx-coroutines-core-jvm-1.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.robolectric\\robolectric\\4.18\\80de0c42d8b6009c6e0ac3be3c572f65706ea929\\robolectric-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\dev.zacsweers.metro\\runtime-jvm\\1.6.0\\da48d255f21f6dd85e2bd256515a64f31a59d8f2\\runtime-jvm-1.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\e4023e0b605a36876af36085450636b3\\transformed\\viewbinding-9.5.1-runtime.jar;E:\\GitHub\\AndroidAPS\\core\\data\\build\\libs\\data-jvm.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.reactivex.rxjava3\\rxkotlin\\3.0.1\\b1f503cc7c57573e5d7e4a6258f5d667800b138f\\rxkotlin-3.0.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-reflect\\2.4.21\\123e9b5b31f85b43025149fb1a34bb569288157\\kotlin-reflect-2.4.21.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\78b9d04d84462223840489c16b352816\\transformed\\firebase-datatransport-21.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib-jdk8\\2.4.21\\bde65d4df65a144069bddced1ee28ca9ea834756\\kotlin-stdlib-jdk8-2.4.21.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\a15c1661892a114a9f9d1f754ce43fa7\\transformed\\versionedparcelable-1.1.1-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\androidx.collection\\collection-ktx\\1.7.0\\2286a2c97d6ae418af178c52b7b4a30544c351ab\\collection-ktx-1.7.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\androidx.collection\\collection-jvm\\1.7.0\\541276c6be6718da6d952cc617151747aa0e1023\\collection-jvm-1.7.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-serialization-protobuf-jvm\\1.12.0\\6f24eddc92f12e79e8c12ad1a1355f02791a701a\\kotlinx-serialization-protobuf-jvm-1.12.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-serialization-json-io-jvm\\1.12.0\\9365e9421c5981e525547b69b4667c9ffb826ce1\\kotlinx-serialization-json-io-jvm-1.12.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.charleskorn.kaml\\kaml-jvm\\0.79.0\\77fee41e34be3cbf6b096d48b739a6c9fe8d3ee8\\kaml-jvm-0.79.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\dev.whyoleg.cryptography\\cryptography-core-jvm\\0.6.0\\2edd277bdb38a09a10adedd15ee9f84ada5532ce\\cryptography-core-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\dev.whyoleg.cryptography\\cryptography-bigint-jvm\\0.6.0\\1d66d30d224a8eda40aa1d19969f3809106037db\\cryptography-bigint-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\dev.whyoleg.cryptography\\cryptography-random-jvm\\0.6.0\\c6a16f9c31e510290b451c9c88fba493deaa0b46\\cryptography-random-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\dev.whyoleg.cryptography\\cryptography-serialization-pem-jvm\\0.6.0\\63c23b55fdc4b6b5ff2bd855d43508a880a60bfc\\cryptography-serialization-pem-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\dev.whyoleg.cryptography\\cryptography-serialization-asn1-modules-jvm\\0.6.0\\78071dd6e954ea8b25b694ccc2b18dbedf378d59\\cryptography-serialization-asn1-modules-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\dev.whyoleg.cryptography\\cryptography-provider-optimal-jvm\\0.6.0\\df455b24f9bcf1722c50b2fdd9207d84a5b5d39\\cryptography-provider-optimal-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\dev.whyoleg.cryptography\\cryptography-provider-jdk-jvm\\0.6.0\\67ea8218e3a44e3c75b71c92d2a90bb4dc6ba2bb\\cryptography-provider-jdk-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\dev.whyoleg.cryptography\\cryptography-provider-base-jvm\\0.6.0\\da8e9605429d3a30240579aa2ca7416869377651\\cryptography-provider-base-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\dev.whyoleg.cryptography\\cryptography-serialization-asn1-jvm\\0.6.0\\17b5f48bf4977218d70e228dc6816fbb7928c218\\cryptography-serialization-asn1-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-serialization-core-jvm\\1.12.0\\60e7a99e653c96101a80f817b57bf698e40bf66c\\kotlinx-serialization-core-jvm-1.12.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-serialization-json-jvm\\1.12.0\\3e4ae142f2e099c52e99d2ea8256f6ad1b9518ce\\kotlinx-serialization-json-jvm-1.12.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib-jdk7\\2.4.21\\e67549fe137bb765b9380c806e28f9c414c6fb46\\kotlin-stdlib-jdk7-2.4.21.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\b20ef77d8da7bfc0c9d77578831bd9a4\\transformed\\firebase-components-20.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.google.firebase\\firebase-annotations\\18.0.0\\85d6dcad57d6a54b2c309135c0ccf751f4afa8a8\\firebase-annotations-18.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\f88b75471231d877e5c8c5526689879b\\transformed\\firebase-config-interop-17.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\9218cf35688395231671c1316bd96d21\\transformed\\transport-backend-cct-5.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\015252fa8c8300141e663879b7e545a2\\transformed\\firebase-encoders-json-19.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\916c501934802607cd5802dbfe8e3f74\\transformed\\transport-runtime-5.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\19dfdc73d7f936d9932958cf28bcf8bf\\transformed\\core-viewtree-1.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\19edd42e391094b5ee97136333328e14\\transformed\\annotation-experimental-1.5.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\87fa5b66426f99a9a477a3b9c7fce199\\transformed\\sqlite-framework-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\12334a8534767cd2768782c0e97afff1\\transformed\\sqlite-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\it.krzeminski\\snakeyaml-engine-kmp-jvm\\3.1.1\\542190d973fb66f3568fbcec1a3a8210e2f705dc\\snakeyaml-engine-kmp-jvm-3.1.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.squareup.okio\\okio-jvm\\3.18.2\\4cd37b59c55955e8706a9fd09e22a903efb47641\\okio-jvm-3.18.2.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.google.crypto.tink\\tink-android\\1.24.0\\c2ca30c9d3654a37a3966dff064c7bf063e81f9a\\tink-android-1.24.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\4dcba28216091cc3addca914740d83a2\\transformed\\cursoradapter-1.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\androidx.resourceinspection\\resourceinspection-annotation\\1.0.1\\8c21f8ff5d96d5d52c948707f7e4d6ca6773feef\\resourceinspection-annotation-1.0.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\d8c93fbf196058583d19e72fd9cd20b4\\transformed\\cardview-1.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\androidx.concurrent\\concurrent-futures\\1.1.0\\50b7fb98350d5f42a4e49704b03278542293ba48\\concurrent-futures-1.1.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\116d2c52eab482529aadfff4acc22c44\\transformed\\transport-api-5.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.google.firebase\\firebase-encoders-proto\\17.0.0\\3ed5fd1e39b4918865d9ee02581d6e960d73d292\\firebase-encoders-proto-17.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.google.firebase\\firebase-encoders\\18.0.0\\565808cc3310f0ecc664c04fc4bddf50ddfe4c29\\firebase-encoders-18.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0b1cfadc807579c03d943af26ad5aef5\\transformed\\interpolator-1.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\androidx.constraintlayout\\constraintlayout-core\\1.1.1\\f7ab6170b99b9421bd4942846426ff820b552f7d\\constraintlayout-core-1.1.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\6eeeb56b5caa85423bd1c7388011de73\\transformed\\core-runtime-2.2.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\androidx.arch.core\\core-common\\2.2.0\\5e1b8b81dfd5f52c56a8d53b18ca759c19a301f3\\core-common-2.2.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1c40a7928bdd575b721e3278915d1c6d\\transformed\\localbroadcastmanager-1.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\6559f3669d12e162542bd884f09b0698\\transformed\\print-1.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\androidx.annotation\\annotation-jvm\\1.10.0\\388cfaa79001d0f024d28f6a13d5a3dfc2f0e18f\\annotation-jvm-1.10.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\atomicfu-jvm\\0.28.0\\6a9ac536f4b2144e57c176fd4e26821eb12084f4\\atomicfu-jvm-0.28.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-io-core-jvm\\0.9.1\\8c926478f17f8109e01e68adee93795c68dcad3c\\kotlinx-io-core-jvm-0.9.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-datetime-jvm\\0.8.0-0.6.x-compat\\c4bf6532a54e118f35afb24ac5f0dacacfc90e63\\kotlinx-datetime-jvm-0.8.0-0.6.x-compat.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-io-bytestring-jvm\\0.9.1\\7a28d93fce9fc8b663a6fe19cb2ae14a6ade7e8a\\kotlinx-io-bytestring-jvm-0.9.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\net.thauvin.erik.urlencoder\\urlencoder-lib-jvm\\1.6.0\\6b922dd3ff960b08873c10395545e08355e250c9\\urlencoder-lib-jvm-1.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib\\2.4.21\\c343e135bd1e7dd94b7ed76b4159068d888d09db\\kotlin-stdlib-2.4.21.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jacoco\\org.jacoco.core\\0.8.11\\2ea73c899b5d6cde2a0a5e0ca29268b37622845d\\org.jacoco.core-0.8.11.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.opentest4j\\opentest4j\\1.3.0\\152ea56b3a72f655d4fd677fc0ef2596c3dd5e6e\\opentest4j-1.3.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.mockito\\mockito-core\\5.24.0\\277dd2f725dd344fba6216f0bc611fae7fc4c1d8\\mockito-core-5.24.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.robolectric\\junit\\4.18\\66ce437b976f1cb5cd607118a02373529bc80fc\\junit-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.robolectric\\shadows-framework\\4.18\\59526cab2194250217d661bfac0b71e9561fbe58\\shadows-framework-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.robolectric\\resources\\4.18\\399feeb84901513a07ba5a7c97c2cabc7c58692e\\resources-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.robolectric\\sandbox\\4.18\\98bde5ea0964c7d483e0346a9857f2f692fd65b7\\sandbox-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.robolectric\\utils-reflector\\4.18\\f91dc2674aad0847e655e4d4856f7f5e1960fa6e\\utils-reflector-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.robolectric\\plugins-maven-dependency-resolver\\4.18\\22d96df93f1ce3ce48983fb4acfa54f159dfc266\\plugins-maven-dependency-resolver-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.robolectric\\nativeruntime\\4.18\\f062b34631df930797eb25e1c69547246ea85f6d\\nativeruntime-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.robolectric\\shadowapi\\4.18\\9286c5deb7e1032be293c1502c63bd6b6fa66eb6\\shadowapi-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.robolectric\\utils\\4.18\\578ddad75cd792d631bec0bbef76bf11851dcdba\\utils-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.robolectric\\pluginapi\\4.18\\5e58d90330f4d18f8c4c534541470d63b176f33a\\pluginapi-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.google.guava\\guava\\33.7.2-jre\\e601df8fa35293ad4fa7c6ec4522152d304eb41\\guava-33.7.2-android.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.robolectric\\annotations\\4.18\\4dd89c385fe98cf05936e8748a75d0cc07fef852\\annotations-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jspecify\\jspecify\\1.0.1\\3d60fd98eb8ade73004f4195c37b6317e02cf3d7\\jspecify-1.0.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\junit\\junit\\4.13.2\\8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12\\junit-4.13.2.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.google.auto.value\\auto-value-annotations\\1.11.1\\3493561c5809b92f9e5f54f48ecfe9682ba6cbbe\\auto-value-annotations-1.11.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.google.code.gson\\gson\\2.13.2\\48b8230771e573b54ce6e867a9001e75977fe78e\\gson-2.13.2.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.google.errorprone\\error_prone_annotations\\2.50.0\\74ba43e49ab1184d41634af2ef0047e82c4064b0\\error_prone_annotations-2.50.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.ow2.asm\\asm-commons\\9.11.1\\3707c04c3f7197c3d1d8dbc728b791a58809a59e\\asm-commons-9.11.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.ow2.asm\\asm-tree\\9.11.1\\ad2b01f445d65aa84cb65900d1c848d121843986\\asm-tree-9.11.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.ow2.asm\\asm\\9.11.1\\edb29aa0c2da2918ce338fb7b218c21ea138dde2\\asm-9.11.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.vaadin.external.google\\android-json\\0.0.20131108.vaadin1\\fa26d351fe62a6a17f5cda1287c1c6110dec413f\\android-json-0.0.20131108.vaadin1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.conscrypt\\conscrypt-openjdk-uber\\2.8.0\\69c08720637bd82fa7c9c3bae7f3ab862b383555\\conscrypt-openjdk-uber-2.8.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.yaml\\snakeyaml\\2.7\\47713fda569f07641538ff7f2fa9cb3ead4603e5\\snakeyaml-2.7.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\441635f4a7e1258e7b5f834266650a93\\transformed\\espresso-idling-resource-3.7.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.google.testparameterinjector\\test-parameter-injector\\1.25\\c23398e413c8ae78f4dbd5fa8bc9606f50f180a2\\test-parameter-injector-1.25.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\javax.inject\\javax.inject\\1\\6975da39a7040257bd51d21a231b76c915872d38\\javax.inject-1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\javax.annotation\\javax.annotation-api\\1.3.2\\934c04d3cfef185a8008e7bf34331b79730a9d43\\javax.annotation-api-1.3.2.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.bouncycastle\\bcprov-jdk18on\\1.86\\830c8467bed8e4c1148262386b09fc42aedcf262\\bcprov-jdk18on-1.86.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\e1cd5625f2ce38e35b0f7582930246b9\\transformed\\monitor-1.8.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains\\annotations\\23.0.0\\8cc20c07506ec18e0834947b84a864bfc094484e\\annotations-23.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.commons\\commons-lang3\\3.21.0\\7bad013a5acee0a078d75fc352a906baa57acb74\\commons-lang3-3.21.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.madgag.spongycastle\\core\\1.58.0.0\\e08789f8f1e74f155db8b69c3575b5cb213c156c\\core-1.58.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\net.bytebuddy\\byte-buddy\\1.17.7\\3856bfab61beb23e099a0d6629f2ba8de4b98ace\\byte-buddy-1.17.7.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\net.bytebuddy\\byte-buddy-agent\\1.17.7\\fbf3d6d649ed37fc9e9c59480a05be0a26e3c2da\\byte-buddy-agent-1.17.7.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.objenesis\\objenesis\\3.3\\1049c09f1de4331e8193e579448d0916d75b7631\\objenesis-3.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.google.guava\\failureaccess\\1.0.3\\aeaffd00d57023a2c947393ed251f0354f0985fc\\failureaccess-1.0.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.google.guava\\listenablefuture\\9999.0-empty-to-avoid-conflict-with-guava\\b421526c5f297295adef1c886e5246c39d4ac629\\listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.google.j2objc\\j2objc-annotations\\3.1\\a892ca9507839bbdb900d64310ac98256cab992f\\j2objc-annotations-3.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.hamcrest\\hamcrest-core\\1.3\\42a25dc3219429f0e5d060061f71acb49bf010a0\\hamcrest-core-1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.slf4j\\slf4j-api\\2.0.20\\7fea9d92ba67e9b3c8f03515fb202b86a1fe44f6\\slf4j-api-2.0.20.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\5b6615ae1c2a95eb2741a9970c1ea2c4\\transformed\\logback-android-3.0.0-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.mozilla\\rhino\\1.9.2\\fb5faeaff6a5cebe0a8491345a69febae6239512\\rhino-1.9.2.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.caverock\\androidsvg\\1.4\\4accacfa9d497b964c5ca6d7a073af60fb3ebd63\\androidsvg-1.4.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\7639f8017c05d778eb86ea99cf0738a8\\transformed\\rxandroid-3.0.2-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.almworks.sqlite4java\\sqlite4java\\1.0.392\\d6234e08ff4e1607ff5321da2579571f05ff778d\\sqlite4java-1.0.392.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.ibm.icu\\icu4j\\79.1\\e9625cd26b59e7929978f649d0e7152a99a3de35\\icu4j-79.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\io.reactivex.rxjava3\\rxjava\\3.1.5\\f640172f6d3a066ef68b185b321059ecfc63a890\\rxjava-3.1.5.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\com.google.code.findbugs\\jsr305\\3.0.2\\25ea2e8b0c338a877313bd4672d3fe056ea78f0d\\jsr305-3.0.2.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.robolectric\\nativeruntime-dist-compat\\1.0.20\\bceced8728e7ea2e5e89bfebc710e2d09e9effaf\\nativeruntime-dist-compat-1.0.20.jar;C:\\Users\\m.kozak\\.gradle\\caches\\modules-2\\files-2.1\\org.reactivestreams\\reactive-streams\\1.0.4\\3864a1320d97d7b045f729a326e1e077661f31b7\\reactive-streams-1.0.4.jar;E:\\GitHub\\AndroidAPS\\pump\\dana\\danars\\build\\intermediates\\java_res_compressed_jar\\debug\\compressDebugJavaRes\\java_res.jar;E:\\GitHub\\AndroidAPS\\shared\\tests\\build\\intermediates\\java_res_compressed_jar\\androidMain\\compressAndroidMainJavaRes\\java_res.jar;E:\\GitHub\\AndroidAPS\\implementation\\build\\intermediates\\java_res_compressed_jar\\androidMain\\compressAndroidMainJavaRes\\java_res.jar;E:\\GitHub\\AndroidAPS\\plugins\\aps\\build\\intermediates\\java_res_compressed_jar\\androidMain\\compressAndroidMainJavaRes\\java_res.jar;E:\\GitHub\\AndroidAPS\\core\\objects\\build\\intermediates\\java_res_compressed_jar\\androidMain\\compressAndroidMainJavaRes\\java_res.jar;E:\\GitHub\\AndroidAPS\\pump\\dana\\danars\\emulator\\build\\intermediates\\java_res_compressed_jar\\debug\\compressDebugJavaRes\\java_res.jar;E:\\GitHub\\AndroidAPS\\pump\\dana\\common\\build\\intermediates\\java_res_compressed_jar\\debug\\compressDebugJavaRes\\java_res.jar;E:\\GitHub\\AndroidAPS\\core\\graph\\build\\intermediates\\java_res_compressed_jar\\androidMain\\compressAndroidMainJavaRes\\java_res.jar;E:\\GitHub\\AndroidAPS\\core\\ui\\build\\intermediates\\java_res_compressed_jar\\androidMain\\compressAndroidMainJavaRes\\java_res.jar;E:\\GitHub\\AndroidAPS\\shared\\impl\\build\\intermediates\\java_res_compressed_jar\\androidMain\\compressAndroidMainJavaRes\\java_res.jar;E:\\GitHub\\AndroidAPS\\core\\interfaces\\build\\intermediates\\java_res_compressed_jar\\androidMain\\compressAndroidMainJavaRes\\java_res.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c9f6e7d64c31d6690a53b62b3f9713ef\\transformed\\metrox-viewmodel-jvm-1.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\43b64b4dd7c913fa434732557fbec394\\transformed\\material-1.14.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\38e503b56cc68b978e50354a2aafafb2\\transformed\\kotlin-test-2.4.21.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\bdf70b58b4fa5b2ab9f42bff78e77f76\\transformed\\mockito-junit-jupiter-5.24.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0b09bf6cdcefd7e90eaa809cefa21114\\transformed\\junit-jupiter-engine-6.1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\b97ddcee8a63aac087c6cd27f65af691\\transformed\\junit-jupiter-params-6.1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\3ca015d9b25ae32590342b0a14aea4a2\\transformed\\junit-jupiter-api-6.1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\54450b6a90476707826e182c2e18179f\\transformed\\junit-platform-launcher-6.1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\34614840d073e7d261b845f0ef3bf55f\\transformed\\junit-vintage-engine-6.1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\121238cfeba51ad8a9539c181bcd9228\\transformed\\junit-platform-engine-6.1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\5bf353c56307cc22c02aae4593e50944\\transformed\\junit-platform-commons-6.1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ee460ab7bc96ff7017197467ab427bf6\\transformed\\junit-jupiter-6.1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\bac703bc989db432a961af57cb9c9584\\transformed\\mockito-kotlin-6.4.0.jar;E:\\GitHub\\AndroidAPS\\core\\utils\\build\\intermediates\\java_res_compressed_jar\\androidMain\\compressAndroidMainJavaRes\\java_res.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\08d30cd1a8d5cfe7310262472ba8b0e3\\transformed\\android.joda-2.15.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\64d6677ca93aee87d130241652316477\\transformed\\joda-time-2.15.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1a54100b5e53cd4846514743afd74a0d\\transformed\\joda-time-2.15.1-no-tzdb.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c50ed3b4a91e95f7b95055123c9a9f17\\transformed\\truth-1.4.5.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\21899d3e6ad2a43df6b16b9c68f9ed35\\transformed\\jsonassert-1.5.3.jar;E:\\GitHub\\AndroidAPS\\core\\keys\\build\\intermediates\\java_res_compressed_jar\\androidMain\\compressAndroidMainJavaRes\\java_res.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\7428a25501fb745dcc0b1c32a1c63df6\\transformed\\biometric-1.1.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8265c04db8d9d635c9eb3b71c2ea99b5\\transformed\\appcompat-resources-1.8.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\2377f180f58387c30aa01a8861d62461\\transformed\\constraintlayout-2.2.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1c3c451536a7862d6f41ac11b43013cd\\transformed\\appcompat-1.8.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\e8b0dcbc29d8f5acca8d722bed4c738f\\transformed\\viewpager2-1.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0b4886bc2580d8d42e6a69e2b889f05c\\transformed\\firebase-analytics-24.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\e0c38bcfd389dc1e9be2050ae1992def\\transformed\\play-services-measurement-24.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\9331fb0a3a5d126c8a66cbb7144cb46a\\transformed\\play-services-measurement-api-24.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\9245a75c89dcc713521a46ac071ad818\\transformed\\play-services-measurement-sdk-24.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\d9b70087db65596be08f67f6a70b47e6\\transformed\\firebase-crashlytics-21.0.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\cff5f80a3ec67309ffcc1b07d74e1fde\\transformed\\firebase-sessions-4.0.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\58c3ba59e9d73a4885cfd326cf5a25f6\\transformed\\firebase-installations-20.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\d53c6dfe532ff2f24e9723e01dd8707c\\transformed\\firebase-installations-interop-18.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\93dda359e2bf16083b65702337d02049\\transformed\\firebase-common-23.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1ddd1cdd15819cd27ef54d0055c4fb4e\\transformed\\play-services-measurement-impl-24.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ac642399b67e143e4698f36d858a13a4\\transformed\\kotlinx-coroutines-play-services-1.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c59cdd6d9485bd755d5b7e3b329ce464\\transformed\\play-services-base-18.5.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8d6f65da6ed9fa6c66ba8b82a77e24ad\\transformed\\play-services-tasks-18.4.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\5fc89b342b0c67021bd7f843ce4bfcf7\\transformed\\firebase-measurement-connector-20.0.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\03de821a2ea58a63aa6c03ad5aad356a\\transformed\\play-services-ads-identifier-18.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\48172aec0c6b7a1ce1fe3f0155dbbe12\\transformed\\play-services-measurement-sdk-api-24.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\fa31037a90ac96c7bf7353a78a245c2d\\transformed\\play-services-measurement-base-24.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\402b6464a5cbf1205e273f028a3ba697\\transformed\\play-services-stats-17.0.2.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\47ef2b2439f58de6518d8346d68c2929\\transformed\\play-services-basement-18.9.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\959c4e07ea89aecd710d1e46834bdb0b\\transformed\\fragment-1.5.4.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\604cd37ba4d66f3c1b11c9e4bd47d31f\\transformed\\compose.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\cc196226f90f667962f900063539fc8d\\transformed\\animation-core.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\6e2105dd4eb4186c7a2d3ccde9514afd\\transformed\\animation.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c6de7443355810528d73a16359382e0a\\transformed\\foundation-layout.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ac0e7cc4d21256fac219068c2a9926f0\\transformed\\foundation.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\9e0acece85333fcdce69f5a9c2e1ec3f\\transformed\\ui-unit.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8983c696a33a44a1b7c1c0cd7a5e6d2f\\transformed\\ui-geometry.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\3f458970379b423c92e567ac2d22c0e4\\transformed\\ui-backhandler.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\f9f87fb157aa22375cb244c637f8ddef\\transformed\\ui-util.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\bf12151a29d24295860cab6faf37443d\\transformed\\ui-text.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\b5bd4127599463df3149294a87582d7b\\transformed\\ui-graphics.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\bcd4ed0b405ca95aaae45a4f3d200c25\\transformed\\ui-tooling-preview.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\31261de3ab32e7bc4e170b22940b9f2e\\transformed\\ui.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\89c9cef7ef02c0db0d7220bddcc9ed27\\transformed\\activity-ktx-1.13.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\4d4953ab9ff71f02b40f64016be78d5f\\transformed\\activity-1.13.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8cea09f3d9cddf563776e88e0df6a57b\\transformed\\material3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\9fe9060fc0454479450318f0f6cfa027\\transformed\\ui-tooling-data.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8dfc9700b7888867f7629b6aa2cbf3c2\\transformed\\material-ripple.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\2bd4fa45d6bff0fd904aec68211d575e\\transformed\\animation-core.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\9b92ef6bb43e187efe8c1a54c230c959\\transformed\\animation.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8e62eb5ed3c264b1fa85087c23a342cf\\transformed\\foundation-layout.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\10063cb80a6039f6cc9530cb0b9029ab\\transformed\\foundation.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0d7c5d8aeb9750c06d970b3f973341ad\\transformed\\ui-util.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\3d9f4d26488ded7c2a492d27707f757f\\transformed\\ui-unit.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\bec065d27488afb89f75143f04728b55\\transformed\\ui-text.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\50e1b9ca1efd9e65c56c2a8f37ec9b3d\\transformed\\ui-graphics.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\28f718dadc8f26466f7e79ca9669dab2\\transformed\\ui-geometry.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0b498f45538da26a75612fd2d4154674\\transformed\\ui-tooling-preview.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0c5e75344df169acebeee17583177c10\\transformed\\ui-tooling.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\949173a838237750e21060a453ec6fe8\\transformed\\activity-compose-1.13.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8ddeaedc42577a1f681781e1a0032a00\\transformed\\legacy-support-core-utils-1.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\2ef44ba74fdb21724379ee53b5894d7c\\transformed\\loader-1.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\12e04b83b91d921e5d1affa2354fa3e4\\transformed\\documentfile-1.1.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\7c799b6f8a67077498368e6c21d9c21c\\transformed\\work-runtime-ktx-2.12.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ce6394234c86046c381111cd9a3a44b8\\transformed\\work-runtime-2.12.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\d3a73c8c952f56b7f701f3fb2b05309a\\transformed\\drawerlayout-1.1.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\aebdaf256595dc1436e57709cca2c4e5\\transformed\\coordinatorlayout-1.1.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\21425246e59c8a85774fc559e1944286\\transformed\\recyclerview-1.2.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\b86366c6b5c6c5c0b829bc3b92e92216\\transformed\\viewpager-1.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1dbd3b2a80eedec8288b7f9b62942699\\transformed\\customview-1.2.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\4c23ce4c2500839afab25cefc4dc8a27\\transformed\\transition-1.5.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\b81f74a2db1d23677575e5b3dbf32d88\\transformed\\dynamicanimation-1.1.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\e3e31578da1fdd257a420931c647a12f\\transformed\\vectordrawable-animated-1.1.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\69da394a2e995fc499c2033da3a0590e\\transformed\\vectordrawable-1.1.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\2295bb36ff459aa2c0cd40da9a1abdb4\\transformed\\customview-poolingcontainer-1.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\024ca916ef74e57d5931288a91715816\\transformed\\graphics-shapes-release.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\5ec6f27bf0da478386d104d177b87740\\transformed\\runtime-saveable.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ed718938af7ddd24e25784f3a0e5f83d\\transformed\\lifecycle-common-java8-2.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\806eef8a55700ea43c0b140c98de0f85\\transformed\\lifecycle-viewmodel-compose.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\d59f17792bdb1fdd8b6d8da8249ebfb1\\transformed\\lifecycle-livedata-core-ktx-2.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\d67cbb586265e99d328d07248f0be2a4\\transformed\\lifecycle-runtime-ktx.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c6f6e92e5cc7c829d8307f61245f0a4c\\transformed\\lifecycle-service-2.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\9e162b5cd75651b8ed859c3d0335b1e5\\transformed\\lifecycle-livedata-2.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\58ee8ba712a6c3e09c02efa85d7ff7ce\\transformed\\lifecycle-viewmodel-ktx-2.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\4d0f3edda99bd36418bdc6e868b96afd\\transformed\\lifecycle-viewmodel-savedstate.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\61f2d6ba3733c290b93086b04285594d\\transformed\\lifecycle-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\e7fa3114fe0793f773044338119158b7\\transformed\\lifecycle-viewmodel-savedstate.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ecf0137a102bd757f1cfea4edb044963\\transformed\\lifecycle-viewmodel.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c673e0819a4e4438b02f6110086b28d7\\transformed\\lifecycle-common-jvm-2.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\f119c9bde9337a56d3750601ba31adcc\\transformed\\lifecycle-runtime-compose.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\527de26577b4c3fa7914e88555cb109c\\transformed\\lifecycle-viewmodel-compose.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\d4cbabb64b6258d8fbbecfc7c248a489\\transformed\\runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ba8d59e2fc343fac8aa2959c4838cf9b\\transformed\\navigationevent.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8c61a3abcd6b0e12d8d07eb286ffee3e\\transformed\\navigationevent-compose.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\29f8f6800027f7ff382de597fe02ddf5\\transformed\\runtime-annotation.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\914675c726dfc5be2bf0e3b9c15d75b3\\transformed\\runtime-retain.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\9c777fdcde90e502aa9a1aa0f00ef676\\transformed\\runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\d3a736cdea0a596ff2058e7308e9db9a\\transformed\\runtime-saveable.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\a0d01bf01659f5adcdc6a08411d5906f\\transformed\\savedstate.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\6d1b4fa699090ee25b174b5ef0fbc6c9\\transformed\\savedstate-ktx-1.4.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\041c4b35054c7b4c2f410b49fc4a4ff6\\transformed\\savedstate-compose.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\e25628704cae2d44e71418607e80d865\\transformed\\ads-adservices-java-1.1.0-beta11.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\68c187dee1c5c12e49a250c0f8b45fb4\\transformed\\ads-adservices-1.1.0-beta11.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\13e9f729414ce6d227d2b10fee97f1ab\\transformed\\core-ktx-1.18.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\7b20b491c2cce5f1081efb8fa20bfbb5\\transformed\\autofill-1.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\b0bcc0fbbef94cb92996c348e21e44a9\\transformed\\window-core.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\f9a8a9b2d4fc51e366c3c089c5d855fe\\transformed\\window-1.5.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\72071515a71dff29621f47650310be03\\transformed\\graphics-path-1.0.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\4b9ce439a072cc7dfe1c4ef4c72be114\\transformed\\emoji2-views-helper-1.4.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\2f3e64ecdc7458178a53ac76cc981e19\\transformed\\emoji2-1.4.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8c7f03e164ea02d4915199330bca6ad1\\transformed\\core-1.18.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1290a4337ca5d65efab2d55591269731\\transformed\\lifecycle-common-jvm-2.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c1ea7525a9baf5c1a953fa1d359177cb\\transformed\\lifecycle-viewmodel-2.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\2f4da6e65fc7ae0603a595085e274a8f\\transformed\\lifecycle-viewmodel.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\b27ae49513d4fed8e76a3351ebe83009\\transformed\\lifecycle-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\5703d89266a611be6e740b0947a4684a\\transformed\\lifecycle-livedata-core-2.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\05762037e1b346d2a77aee31d501738c\\transformed\\lifecycle-process-2.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\63d2760f98cbae35c21e3f07508da0c5\\transformed\\lifecycle-runtime-compose.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\bc717225c20e71594cce5235451eda22\\transformed\\material-icons-extended-release.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\3779590be994375a62d247a58ed0c739\\transformed\\material-icons-core-release.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\90a2667d0fbc12876dc17bef84c0b8a1\\transformed\\ui.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\aabbd87677ab6d0edd25f821b0ad7d83\\transformed\\room-common-jvm-2.8.5.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\607d2c93facc0d9c23b40f2091f59fe7\\transformed\\room-runtime.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\710a28d125ea3c9a434b9eac2d9a54ee\\transformed\\kotlinx-coroutines-android-1.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\61e9a9bad794d013367a8fdf343462ae\\transformed\\nssdk-jvm.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\20a6d4ac584edb39ede266834425e511\\transformed\\datastore-preferences-external-protobuf-1.3.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c78174ed9e85e2958335d649b76fb6d7\\transformed\\datastore-preferences-proto-1.3.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\fe190e0e2efef6e439f11c16f65dd58d\\transformed\\datastore-preferences-core.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\d46c043bd11e45647972d8df4953f431\\transformed\\datastore.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\44e5bda8925eb85a0db0feef9d99ef0e\\transformed\\datastore-core-okio-jvm-1.3.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\babbc4a4a79f7777c262df5dae27a0f7\\transformed\\datastore-core.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\19f9cde5712f2a09e6efb4824e0813ab\\transformed\\datastore-preferences.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1a49dfa5d30aab8af6315050bb42864c\\transformed\\ktor-client-okhttp-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\3c6ca13ee8df81eb5ea38dac9d8b0a08\\transformed\\ktor-client-content-negotiation-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\052a02e796de82c233867ab3b555df73\\transformed\\ktor-client-core-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1bcc7545b6aa27c808834963a8ead1d2\\transformed\\kotlinx-coroutines-test-jvm-1.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\dd6c0c6f88a322ef86c4ab4e8c2be970\\transformed\\concurrent-futures-ktx-1.1.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\50fb3193d7e4eec0a929d3ab7a6386ad\\transformed\\kotlinx-coroutines-slf4j-1.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\15e243159dfe060d49521655b6f7d4b6\\transformed\\ktor-serialization-kotlinx-json-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\538015559932539e2bbba2e5a189a02b\\transformed\\ktor-http-cio-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ff71591db885340482aa1f2a1a9ba1ab\\transformed\\ktor-websocket-serialization-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c3fdcbaf3faef03bacf1b219369e998c\\transformed\\ktor-serialization-kotlinx-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8e24036554c5df35328e63936ecea7f5\\transformed\\ktor-serialization-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\55591fa3f3273fb46022d8970acc9944\\transformed\\ktor-websockets-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\a4d63015b494d2000a2d2c1f1518f97b\\transformed\\ktor-openapi-schema-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\5b72677427f7b519eedcc4d59a89f647\\transformed\\ktor-http-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\92cf394641ffc18deb45bc332c46b3de\\transformed\\ktor-events-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\d0e0dc521f5721b1e672b8b92d670386\\transformed\\ktor-sse-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\5ab5c45bb4ee89533c9287ab11bb093c\\transformed\\profileinstaller-1.4.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\27f22d72ce1e2466a91463a2c43b4a08\\transformed\\okhttp.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\441b2a9e7820f6a57afdbabc1c65372d\\transformed\\startup-runtime-1.2.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c7b80d2af3c75be8abf2783706a67a17\\transformed\\tracing-ktx-2.0.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\cb8b7f96d48cc7a78b4269570d4e278e\\transformed\\tracing.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1f39d5ebd7526cb7a5b16a51d815aee3\\transformed\\ktor-network-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8581307fc6708d71bae74e2061d858b4\\transformed\\ktor-utils-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\9956389ee793569a054323e78d448866\\transformed\\ktor-io-jvm-3.6.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\fbd1ad7e1cb002d866e61b88c4264f3a\\transformed\\kotlinx-coroutines-core-jvm-1.11.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\be1a4e00647ff38ad1eaf381345bc867\\transformed\\robolectric-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ac1b2bdd0d3e76a35e3a98d5e18f747e\\transformed\\runtime-jvm-1.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\4adfcf65ba578f7bb89914c74af07222\\transformed\\viewbinding-9.5.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\3e89c9eaa2217df4bee7d227a087c32a\\transformed\\data-jvm.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\7c3d12b42ab65365e52f08601b7d52e2\\transformed\\rxkotlin-3.0.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\04a9ca8a2adefb8fdbe3619774cb1482\\transformed\\kotlin-reflect-2.4.21.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\d97e829f12e120bc2c0981991d290cb8\\transformed\\firebase-datatransport-21.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\4cd8add824bbd52b3d8a88b57e49dea4\\transformed\\kotlin-stdlib-jdk8-2.4.21.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0b3276a1bdc210147e72a6884ca3818e\\transformed\\versionedparcelable-1.1.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\719f5dd4e9f4154dbfbae6adf170202e\\transformed\\collection-ktx-1.7.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c59f4e23cd712edf8c2aa37700b7eb1b\\transformed\\collection-jvm-1.7.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\61c51748cdc4f17c8afff5f25cfcebdd\\transformed\\kotlinx-serialization-protobuf-jvm-1.12.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\554184642536238a905674a1a5050156\\transformed\\kotlinx-serialization-json-io-jvm-1.12.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\4eded4ec384064b7d7e03f6d1c9b3c8b\\transformed\\kaml-jvm-0.79.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\d8ad1e03c99434186f4fec96cc233309\\transformed\\cryptography-core-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\da6769055f59b024aad3e62fc620110a\\transformed\\cryptography-bigint-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\505b82f4e77ca8e44b088b42a7e0799c\\transformed\\cryptography-random-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8e72d5e72d7a4d2875c7a12a7bb11776\\transformed\\cryptography-serialization-pem-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\3e83ea73e73cfe4322010b7da73826c8\\transformed\\cryptography-serialization-asn1-modules-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\52afc826a251047162f742e8bcb7f703\\transformed\\cryptography-provider-optimal-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\66a89eebf827eb716df577c9895a0889\\transformed\\cryptography-provider-jdk-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c1e61cc8f9befff33b3f36dc0a3fd191\\transformed\\cryptography-provider-base-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\66c315ea99388bee36991ede787f03ba\\transformed\\cryptography-serialization-asn1-jvm-0.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1021398287d7000e6382935e8439255c\\transformed\\kotlinx-serialization-core-jvm-1.12.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\15776e7164e7cdcbf0b5f77e71832beb\\transformed\\kotlinx-serialization-json-jvm-1.12.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\69f69c212a2c0441fede1068ae15a715\\transformed\\kotlin-stdlib-jdk7-2.4.21.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\e7c905dfb95bef12a976684c5bbc5039\\transformed\\firebase-components-20.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\b3fd6e9b3ba4ef23b90026548dba5008\\transformed\\firebase-annotations-18.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\d748f2bfb9864a23a646d6187df56790\\transformed\\firebase-config-interop-17.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c027713f2fc0445e51a8e57a949677ba\\transformed\\transport-backend-cct-5.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\81fbd18e8de6614ebcbf2bb1b29107e4\\transformed\\firebase-encoders-json-19.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\6d44bb25e0b60e71197e15142c8271bb\\transformed\\transport-runtime-5.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\a7d3a1a81c1abd08c1ed9287452c5bd4\\transformed\\core-viewtree-1.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\32d49956c97bd16558370658d4054957\\transformed\\annotation-experimental-1.5.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ec3b4a1e3702ac4bc0515138a72bf234\\transformed\\sqlite-framework.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\99fe336d7794b8913d8cfff4da6254b6\\transformed\\sqlite.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\3b4067fe509cd6853458347123b3f9d7\\transformed\\snakeyaml-engine-kmp-jvm-3.1.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\bf2bb4c7be1b7fa2c04f1609aa6344f7\\transformed\\okio-jvm-3.18.2.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\4b72804d98d89cc7fa0a05703fef3cab\\transformed\\tink-android-1.24.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\cf2ff9205ddc27a3bd556a625a8e05fe\\transformed\\cursoradapter-1.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\da11800301f84100f9bef47f1332a263\\transformed\\resourceinspection-annotation-1.0.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\30785d4e38be65b76b8d1574ed7bde1e\\transformed\\cardview-1.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\14b29b01f5024377dd1c4e8fc1c4f906\\transformed\\concurrent-futures-1.1.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1fd3ec169e5a6fdbaa4e797b2fdf6309\\transformed\\transport-api-5.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\576adae3c4291cbd2f7e7ec14b83617e\\transformed\\firebase-encoders-proto-17.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\45df9c62241c31a12e93e5df10183225\\transformed\\firebase-encoders-18.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1180752988924bb386b350f034fe65aa\\transformed\\interpolator-1.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\822f4c984cc54873ac7ddf7b7bb7d15b\\transformed\\constraintlayout-core-1.1.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\5259223f82008264d19eaab20420dd8b\\transformed\\core-runtime-2.2.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\70e66bdeae9dbe02156f312aff33117d\\transformed\\core-common-2.2.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\dd70df392ee01d55306bda333429f330\\transformed\\localbroadcastmanager-1.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\e46f7792d589c7122ff70936943123a3\\transformed\\print-1.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\a314f9f889bec0764930518783df2dc9\\transformed\\annotation-jvm-1.10.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\63ef6f942da51fb403a2517543061f77\\transformed\\atomicfu-jvm-0.28.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8831846b2b40ed04bdd0ebb6288099ec\\transformed\\kotlinx-io-core-jvm-0.9.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\402fc9823cc2a5d0b851d22186089e20\\transformed\\kotlinx-datetime-jvm-0.8.0-0.6.x-compat.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\706302707d1e5d3108053b5f469e4c70\\transformed\\kotlinx-io-bytestring-jvm-0.9.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1d552f577b58db149eb71d8e13551562\\transformed\\urlencoder-lib-jvm-1.6.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\076429827a4e0921da1f151834519656\\transformed\\kotlin-stdlib-2.4.21.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\977b36a6c76e2c2b778d8bc437464fe5\\transformed\\org.jacoco.core-0.8.11.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8858270b2a7c36bae18a36a5309d1e9c\\transformed\\opentest4j-1.3.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\b215819210858cf60101d25785df76cb\\transformed\\mockito-core-5.24.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\793a213c3ec09fb49ef86c03e0e91aa4\\transformed\\junit-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\f5ec8da4f649956aaa09a643f998feab\\transformed\\shadows-framework-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\b928d015d69a513a751afff9f451ad1d\\transformed\\resources-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\d9d2e0f5bcc0eb9ec6d864c37a1d2c64\\transformed\\sandbox-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\920820eac95c4e360bdfdb0c261891b0\\transformed\\utils-reflector-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\07e1d95ca5f38c9d6c5d10f01fb933a2\\transformed\\plugins-maven-dependency-resolver-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\cb244214d13afaadae41fccbca3d6dad\\transformed\\nativeruntime-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\af464def91c611db6f4dd921179436f3\\transformed\\shadowapi-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\28d833b1303896972eece3f75fd991c4\\transformed\\utils-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\d5a6db90b3a97f2a618a8d2e3a18fc35\\transformed\\pluginapi-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8fb46e6105cfabf8235c1b6b6a8878ef\\transformed\\guava-33.7.2-android.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1e196af52604afbdca42c0dcf2adc131\\transformed\\annotations-4.18.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\305d1027ad61c00ac5a27b04b56754ca\\transformed\\jspecify-1.0.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\fa716b54246c053f281b387da9b7f405\\transformed\\junit-4.13.2.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\65928224fb71bdca15aa60f2c13f5b74\\transformed\\auto-value-annotations-1.11.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\a481d240b738c64c778c65a967e2ce31\\transformed\\gson-2.13.2.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\fd18ed65d0f9d4ecdd50e203fa30770e\\transformed\\error_prone_annotations-2.50.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\ef2ebd56289726fb9f6f6a514bf68cda\\transformed\\asm-commons-9.11.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\79c7fb4adfb1f0545cad0b402546d79e\\transformed\\asm-tree-9.11.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\8fb8a455ece0b4885819b3c45889cfe1\\transformed\\asm-9.11.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\d7c32de82871df05a3500d3353a4fe62\\transformed\\android-json-0.0.20131108.vaadin1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\5088ce58c10ebbc0a0270c1dfef4e2ff\\transformed\\conscrypt-openjdk-uber-2.8.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\0a01f3062cb8d3acdeeb1cce07b8ac50\\transformed\\snakeyaml-2.7.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\38e47078b03da5b558c7a3e668e15c00\\transformed\\espresso-idling-resource-3.7.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\457c24075e85a8488fd96e746492d71e\\transformed\\test-parameter-injector-1.25.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\579968882a2a37539815fe0719e4d2a2\\transformed\\javax.inject-1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\f5a3b9213745fd06576ff4babdbf3370\\transformed\\javax.annotation-api-1.3.2.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\f6eb1c0d5f186b219e07d49b33e2d148\\transformed\\bcprov-jdk18on-1.86.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\a31f6d896220e79735c5b947cf1f8472\\transformed\\monitor-1.8.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\96c722433d4dfb24754bd69f93295444\\transformed\\annotations-23.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\18308b3126a0a30b0382659d936e020d\\transformed\\commons-lang3-3.21.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\c26a4713070f06ac6bb3a6e2e3045704\\transformed\\core-1.58.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\f0b0b13e14f031a80dd19757c29f547f\\transformed\\byte-buddy-1.17.7.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\9ac372a8694e1ebfbe34cd9afdd55518\\transformed\\byte-buddy-agent-1.17.7.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\7be20b937e30e06d0c8bcbf04ce6c3da\\transformed\\objenesis-3.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\1513cfc3daa58860b0c7aa0882cf7a47\\transformed\\failureaccess-1.0.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\278b16c45971b44bea307a967ac55d65\\transformed\\listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\fa3288844550853317505e266df7f1d9\\transformed\\j2objc-annotations-3.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\a31729d0b125b678b39ea7891ea7d351\\transformed\\hamcrest-core-1.3.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\79e05028da742c0f148e70ddb8b8dcd1\\transformed\\slf4j-api-2.0.20.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\380594099ddd132c058876ba4dac36ed\\transformed\\logback-android-3.0.0.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\f254e7255ae323e33f1e6f8be3d37b8b\\transformed\\rhino-1.9.2.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\7cd24b792ab84c23987b01e092073440\\transformed\\androidsvg-1.4.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\e0706f033b179e1953fcf93b1e0f58e8\\transformed\\rxandroid-3.0.2.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\b63238087df06901ed50380ab0868fa0\\transformed\\sqlite4java-1.0.392.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\bc2cdbed6291c02f9054ea56a64c6549\\transformed\\icu4j-79.1.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\350f061c39e273bd129b91fa87a22b76\\transformed\\rxjava-3.1.5.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\3047b63f53404c8e5bbf67a74ade21e2\\transformed\\jsr305-3.0.2.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\a0d63bf3fa37c241971d104c11efd48b\\transformed\\nativeruntime-dist-compat-1.0.20.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\917efd18b76a893b364bc368fee6998e\\transformed\\reactive-streams-1.0.4.jar;C:\\Users\\m.kozak\\.gradle\\caches\\9.8.2\\transforms\\04bbe63e4ae5c63fe7ebb359433e83c1\\transformed\\android.jar
+Launcher Type: SUN_STANDARD
+
+[Global flags]
+     intx CICompilerCount                          = 15                                        {product} {ergonomic}
+     uint ConcGCThreads                            = 6                                         {product} {ergonomic}
+     uint G1ConcRefinementThreads                  = 23                                        {product} {ergonomic}
+   size_t G1HeapRegionSize                         = 1048576                                   {product} {ergonomic}
+    uintx GCDrainStackTargetSize                   = 64                                        {product} {ergonomic}
+   size_t InitialHeapSize                          = 1035993088                                {product} {ergonomic}
+   size_t MarkStackSize                            = 4194304                                   {product} {ergonomic}
+   size_t MaxHeapSize                              = 1610612736                                {product} {command line}
+   size_t MaxNewSize                               = 965738496                                 {product} {ergonomic}
+   size_t MinHeapDeltaBytes                        = 1048576                                   {product} {ergonomic}
+   size_t MinHeapSize                              = 8388608                                   {product} {ergonomic}
+    uintx NonNMethodCodeHeapSize                   = 8192380                                {pd product} {ergonomic}
+    uintx NonProfiledCodeHeapSize                  = 121732930                              {pd product} {ergonomic}
+    uintx ProfiledCodeHeapSize                     = 121732930                              {pd product} {ergonomic}
+    uintx ReservedCodeCacheSize                    = 251658240                              {pd product} {ergonomic}
+     bool SegmentedCodeCache                       = true                                      {product} {ergonomic}
+   size_t SoftMaxHeapSize                          = 1610612736                             {manageable} {ergonomic}
+     bool UseCompressedOops                        = true                           {product lp64_product} {ergonomic}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
+     bool UseLargePagesIndividualAllocation        = false                                  {pd product} {ergonomic}
+
+Logging:
+Log output configuration:
+ #0: stdout all=warning uptime,level,tags foldmultilines=false
+ #1: stderr all=off uptime,level,tags foldmultilines=false
+
+Release file:
+JAVA_VERSION="21.0.10" 
+MODULES="java.base java.datatransfer java.xml java.prefs java.desktop gluegen.rt java.compiler java.instrument java.logging java.management java.security.sasl java.naming java.rmi java.management.rmi java.net.http java.scripting java.security.jgss java.transaction.xa java.sql java.sql.rowset java.xml.crypto java.se java.smartcardio jogl.all jcef jdk.accessibility jdk.internal.jvmstat jdk.attach jdk.charsets jdk.internal.opt jdk.zipfs jdk.compiler jdk.crypto.ec jdk.crypto.cryptoki jdk.crypto.mscapi jdk.dynalink jdk.internal.ed jdk.editpad jdk.hotspot.agent jdk.httpserver jdk.incubator.vector jdk.internal.le jdk.internal.vm.ci jdk.internal.vm.compiler jdk.internal.vm.compiler.management jdk.jartool jdk.javadoc jdk.jcmd jdk.management jdk.management.agent jdk.jconsole jdk.jdeps jdk.jdwp.agent jdk.jdi jdk.jfr jdk.jlink jdk.jpackage jdk.jshell jdk.jsobject jdk.jstatd jdk.localedata jdk.management.jfr jdk.naming.dns jdk.naming.rmi jdk.net jdk.nio.mapmode jdk.random jdk.sctp jdk.security.auth jdk.security.jgss jdk.unsupported jdk.unsupported.desktop jdk.xml.dom" 
+IMPLEMENTOR="JetBrains s.r.o." 
+IMPLEMENTOR_VERSION="JBRSDK-21.0.10+1-1163.108-jcef" 
+JAVA_RUNTIME_VERSION="21.0.10+1-b1163.108" 
+LIBC="default" 
+OS_ARCH="x86_64" 
+OS_NAME="Windows" 
+SOURCE=".:git:f6c01ae40b16+ jcef_git:git:4a605f44671a" 
+JCEF_VERSION="137.0.17.1107+ge397b56" 
+JCEF_COMMIT_HASH="e397b569415d3c67b114495985454e5201955573" 
+
+Environment Variables:
+JAVA_HOME=C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2
+PATH=C:\Users\m.kozak\.gradle\jdks\jetbrains_s_r_o_-21-amd64-windows.2\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\NVIDIA Corporation\NVIDIA App\NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\GitHub CLI\;C:\Program Files (x86)\HP\Common\HPDestPlgIn\;C:\Program Files\PuTTY\;C:\Program Files\nodejs\;C:\Program Files\dotnet\;C:\Users\m.kozak\AppData\Local\Microsoft\WindowsApps;C:\Users\m.kozak\.local\bin;C:\Users\m.kozak\AppData\Local\Android\Sdk\platform-tools;C:\Users\m.kozak\AppData\Roaming\npm
+USERNAME=m.kozak
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD
+TMP=C:\Users\MF2DB~1.KOZ\AppData\Local\Temp
+TEMP=C:\Users\MF2DB~1.KOZ\AppData\Local\Temp
+
+
+
+
+Periodic native trim disabled
+
+JNI global refs:
+JNI global refs: 50, weak refs: 0
+
+JNI global refs memory usage: 835, weak refs: 833
+
+Process memory usage:
+Resident Set Size: 358312K (0% of 64639912K total physical memory with 16709248K free physical memory)
+
+OOME stack traces (most recent first):
+Classloader memory used:
+Loader jdk.internal.loader.ClassLoaders$AppClassLoader                                 : 30746K
+Loader bootstrap                                                                       : 4906K
+Loader java.net.URLClassLoader                                                         : 2689K
+Loader jdk.internal.loader.ClassLoaders$PlatformClassLoader                            : 223K
+Loader jdk.internal.reflect.DelegatingClassLoader                                      : 48832B
+Loader org.jacoco.agent.rt.internal_29a6edd.AgentModule$1                              : 8296B
+Loader net.bytebuddy.utility.dispatcher.JavaDispatcher$DynamicClassLoader              : 5960B
+Loader net.bytebuddy.dynamic.loading.ByteArrayClassLoader                              : 5248B
+
+Classes loaded by more than one classloader:
+Class org.jacoco.agent.rt.internal_29a6edd.core.runtime.InjectedClassRuntime          : loaded 2 times (x 82B)
+Class org.jacoco.agent.rt.internal_29a6edd.core.runtime.InjectedClassRuntime$Lookup   : loaded 2 times (x 73B)
+
+---------------  S Y S T E M  ---------------
+
+OS:
+ Windows 11 , 64 bit Build 26100 (10.0.26100.9974)
+OS uptime: 0 days 1:19 hours
+Hyper-V role detected
+
+CPU: total 32 (initial active 32) (32 cores per cpu, 2 threads per core) family 26 model 68 stepping 0 microcode 0xb404035, cx8, cmov, fxsr, ht, mmx, 3dnowpref, sse, sse2, sse3, ssse3, sse4a, sse4.1, sse4.2, popcnt, lzcnt, tsc, tscinvbit, avx, avx2, aes, erms, clmul, bmi1, bmi2, adx, avx512f, avx512dq, avx512cd, avx512bw, avx512vl, sha, fma, vzeroupper, avx512_vpopcntdq, avx512_vpclmulqdq, avx512_vaes, avx512_vnni, clflush, clflushopt, avx512_vbmi2, avx512_vbmi, hv, rdtscp, rdpid, fsrm, gfni, avx512_bitalg, f16c, cet_ss, avx512_ifma
+Processor Information for the first 32 processors :
+  Max Mhz: 4300, Current Mhz: 4300, Mhz Limit: 4300
+
+Memory: 4k page, system-wide physical 63124M (16309M free)
+TotalPageFile size 93884M (AvailPageFile size 841M)
+current process WorkingSet (physical memory assigned to process): 350M, peak: 425M
+current process commit charge ("private bytes"): 416M, peak: 1260M
+
+vm_info: OpenJDK 64-Bit Server VM (21.0.10+1-b1163.108) for windows-amd64 JRE (21.0.10+1-b1163.108), built on 2026-02-06 by "builduser" with MS VC++ 16.10 / 16.11 (VS2019)
+
+END.

@@ -103,6 +103,8 @@ autotune_default_tune_days|IntKey|true
 autotune_tune_insulin_curve|BooleanKey|true
 bgAccel_ISF_weight|DoubleKey|true
 bgBrake_ISF_weight|DoubleKey|true
+bg_alarm_urgent_low|UnitDoubleKey|true
+bg_alarms_intro_shown|BooleanNonKey|false
 bolus_amount_to_be_delivered|MedtrumDoubleNonKey|true
 bolus_password|StringKey|true
 bolus_pin|StringKey|true

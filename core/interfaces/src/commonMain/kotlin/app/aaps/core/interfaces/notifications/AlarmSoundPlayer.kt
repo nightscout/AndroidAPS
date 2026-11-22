@@ -36,7 +36,13 @@ interface AlarmSoundPlayer {
      * Start looping playback of [sound], recording [ownerTag] as the current owner. Any previous
      * playback is stopped first.
      */
-    fun play(sound: AlarmSound, ownerTag: String)
+    fun play(sound: AlarmSound, ownerTag: String) = play(sound, ownerTag, breakThroughDnd = false)
+
+    /**
+     * As [play]. [breakThroughDnd]: this alarm rings in Do Not Disturb and silent mode whatever the user's override
+     * setting says - urgent low (`_docs/ALARMS.md`, step 2, decided 2026-11-22).
+     */
+    fun play(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean)
 
     /** Stop and release playback **only if** [ownerTag] is the current owner. No-op otherwise. */
     fun stop(ownerTag: String)

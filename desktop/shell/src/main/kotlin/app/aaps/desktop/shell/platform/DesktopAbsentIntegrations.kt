@@ -1,5 +1,6 @@
 package app.aaps.desktop.shell.platform
 
+import app.aaps.core.interfaces.alerts.BgAlarms
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
@@ -108,6 +109,20 @@ class DesktopWidgetUpdater(
 
     override fun update(from: String) {
         aapsLogger.debug(LTag.CORE, "No desktop widget to update (from $from)")
+    }
+}
+
+/**
+ * No BG alarms on the desktop: it has no alert core to ring them. Absent, not present and dead - nothing on the
+ * desktop offers them (the alert settings are not shown here).
+ */
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
+@Inject
+class DesktopAbsentBgAlarms(private val aapsLogger: AAPSLogger) : BgAlarms {
+
+    override fun start() {
+        aapsLogger.debug(LTag.CORE, "No BG alarms on the desktop: it has no alert core")
     }
 }
 

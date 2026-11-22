@@ -35,5 +35,7 @@ data class AapsNotification(
      * False only for an alarm the watch rings by itself - the "time to eat" timer. Everything else tells it, which
      * is what every card did before this field existed.
      */
-    val tellWatch: Boolean = true
+    val tellWatch: Boolean = true,
+    /** Its [sound] rings in Do Not Disturb and silent mode whatever the user's override says: urgent low only. */
+    val breakThroughDnd: Boolean = false
 )

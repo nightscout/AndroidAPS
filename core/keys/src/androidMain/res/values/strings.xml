@@ -397,6 +397,8 @@
 
     <!-- UnitDoubleKey: APS preferences -->
     <string name="pref_title_lgs_threshold">LGS threshold</string>
+    <string name="pref_title_bg_alarm_urgent_low">Urgent low alarm below</string>
+    <string name="pref_summary_bg_alarm_urgent_low">Always on, rings also in Do Not Disturb. Set on the master, the same for every phone.</string>
     <string name="lgs_threshold_summary">BG value below which insulin is suspended. Default value uses standard target model. User can set value between 60mg/dl (3.3mmol/l) and 100mg/dl(5.5mmol/l). Values below 65/3.6 result in use of default model</string>
 
     <!-- IntentKey preferences -->

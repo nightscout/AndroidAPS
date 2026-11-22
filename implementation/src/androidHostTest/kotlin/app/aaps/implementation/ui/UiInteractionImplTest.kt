@@ -63,7 +63,7 @@ class UiInteractionImplTest : TestBase() {
             _active.value = _active.value.filterNot { it.source == source }
         }
 
-        override fun silence(source: String, key: String, minutes: Int) {
+        override fun silence(source: String, key: String, minutes: Int?) {
             silenced += source to key
         }
 

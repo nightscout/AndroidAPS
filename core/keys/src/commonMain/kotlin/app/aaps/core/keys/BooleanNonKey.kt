@@ -41,6 +41,9 @@ enum class BooleanNonKey(
     // break the boot-crash loop. Transient device state, not a user setting → not exportable.
     VacuumInProgress("vacuum_in_progress", false, exportable = false),
 
+    // The one card that says AAPS has its own BG alarms now, shown once after the update (`_docs/ALARMS.md`, step 2).
+    BgAlarmsIntroShown("bg_alarms_intro_shown", false, exportable = false),
+
     // Client: the pairing secret has been replaced by the key exchange in the hello. Until then the client sends a hello
     // with a key on each connection, which is also how a phone paired from a QR code says hello at all. Belongs to the
     // pairing.
