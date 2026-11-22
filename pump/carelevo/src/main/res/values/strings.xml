@@ -69,9 +69,9 @@
     <string name="carelevo_insulin_refill_step1">1. Peel off the backing paper from the patch blister.</string>
     <string name="carelevo_insulin_refill_step2">2. Disinfect the rubber cap of the insulin vial using an alcohol swab.</string>
     <string name="carelevo_insulin_refill_step3">3. Remove the needle protection cap of the insulin syringe by pulling it straight off.</string>
-    <string name="carelevo_insulin_refill_step4">4. Pull back the syringe plunger to fill it with approximately 2 mL of air.</string>
+    <string name="carelevo_insulin_refill_step4">4. Pull back the syringe plunger to fill it with approximately 1 mL of air.</string>
     <string name="carelevo_insulin_refill_step5">5. Insert the air-filled syringe into the insulin vial and inject the air into the vial.</string>
-    <string name="carelevo_insulin_refill_step6">6. With the syringe still inserted, flip both the vial and syringe upside down, and use the pressure to fill the syringe with approximately 2 mL of insulin.</string>
+    <string name="carelevo_insulin_refill_step6">6. With the syringe still inserted, flip both the vial and syringe upside down, and use the pressure to fill the syringe with approximately 1 mL of insulin.</string>
     <string name="carelevo_insulin_refill_step7">7. Insert the syringe needle vertically into the patch\'s insulin fill port (①) until it reaches the bottom. Pull the plunger all the way up, then release it. Remove the syringe from the fill port.</string>
     <string name="carelevo_insulin_refill_step8">8. Hold the syringe upright and tap the side gently to collect all air bubbles at the top.</string>
     <string name="carelevo_insulin_refill_step9">9. Insert the needle back into the insulin vial, push all the air into the vial, and then draw the specific amount of insulin you will use for the duration of the patch.</string>
