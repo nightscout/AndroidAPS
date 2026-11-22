@@ -51,8 +51,26 @@ class UiInteractionImpl(
     private val eatReminder: () -> EatReminder
 ) : UiInteraction {
 
-    override fun runAlarm(key: String, status: String, title: String, sound: AlarmSound?) =
-        raise(key, status, title, sound, action = null, canMute = true, tellWatch = true)
+    override fun runAlarm(key: String, status: String, title: String, sound: AlarmSound?) {
+        aapsLogger.debug(LTag.CORE, "Alarm $key: $title - $status (sound=$sound)")
+        alerts.raise(alarm(key, status, title, sound))
+    }
+
+    override fun runEatReminderAlarm(status: String, title: String) {
+        aapsLogger.debug(LTag.CORE, "Eat reminder alarm: $title - $status")
+        alerts.raise(eatReminderAlarm(status, title))
+    }
+
+    override fun scheduleAlarm(at: Long, key: String, status: String, title: String, sound: AlarmSound?): Boolean =
+        alerts.schedule(alarm(key, status, title, sound), at)
+
+    override fun scheduleEatReminderAlarm(at: Long, status: String, title: String): Boolean =
+        alerts.schedule(eatReminderAlarm(status, title), at)
+
+    override fun cancelScheduledAlarm(key: String) = alerts.unschedule(UiInteraction.SOURCE, key)
+
+    private fun alarm(key: String, status: String, title: String, sound: AlarmSound?) =
+        alert(key, status, title, sound, action = null, canMute = true, tellWatch = true)
 
     /**
      * The "time to eat" timer's alarm, with "+5 min" as the alert's own action.
@@ -62,8 +80,8 @@ class UiInteractionImpl(
      * starts the new one, and when it fails nothing has changed, so the alarm goes on ringing - which is why an
      * action that fails leaves an event alert exactly as it was.
      */
-    override fun runEatReminderAlarm(status: String, title: String) =
-        raise(
+    private fun eatReminderAlarm(status: String, title: String) =
+        alert(
             key = UiInteraction.KEY_EAT_REMINDER,
             status = status,
             title = title,
@@ -77,7 +95,8 @@ class UiInteractionImpl(
             tellWatch = false
         )
 
-    private fun raise(
+    /** One of the app's own alarms, raised now or booked; a booked one gets the time of its booking. */
+    private fun alert(
         key: String,
         status: String,
         title: String,
@@ -85,9 +104,7 @@ class UiInteractionImpl(
         action: AlertAction?,
         canMute: Boolean,
         tellWatch: Boolean
-    ) {
-        aapsLogger.debug(LTag.CORE, "Alarm $key: $title - $status (sound=$sound)")
-        alerts.raise(
+    ): Alert =
             Alert(
                 // The app's own kind for this alarm; it is filed as the app's, not under the pump
                 kind = CoreAlert.ofRunAlarmKey(key),
@@ -109,8 +126,6 @@ class UiInteractionImpl(
                 // ERROR in the channel and in the player, and only a test ever passed null.
                 sound = sound ?: AlarmSound.ERROR
             )
-        )
-    }
 
     /**
      * Silence whatever is ringing.

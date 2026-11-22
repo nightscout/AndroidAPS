@@ -110,8 +110,8 @@ class PluginPermissionsImpl(
         //
         // setAlarmClock() is not permission-free: from targetSdk 31 it needs SCHEDULE_EXACT_ALARM unless
         // AAPS is excluded from battery optimization. (The SDK javadoc leaves that exemption out; the
-        // system service applies it to setAlarmClock exactly as to setExact.) Reminders
-        // (ReminderSchedulerImpl) use it too. Android 14 and later deny the permission by default on a
+        // system service applies it to setAlarmClock exactly as to setExact.) Booked alerts
+        // (AndroidAlertPlatform.book: reminders, "time to eat") use it too. Android 14 and later deny the permission by default on a
         // new install, so it is asked for here, for everyone - it used to be asked for only while the
         // EOPatch plugin was enabled. isPermissionMissing checks canScheduleExactAlarms(), which is true
         // with either the permission or the exemption, so a user who excluded AAPS from battery

@@ -2,7 +2,6 @@ package app.aaps.di.metro
 
 import app.aaps.implementation.alerts.EatReminderReceiver
 import app.aaps.persistentNotification.DummyService
-import app.aaps.plugins.automation.TimerReminderReceiver
 import app.aaps.plugins.automation.services.LocationService
 import app.aaps.receivers.AutoStartReceiver
 import app.aaps.receivers.CarbSuggestionReceiver
@@ -52,13 +51,13 @@ class ReceiverInjectorsTest {
     /**
      * The automation module reaches the same map from its own module.
      *
-     * It used to own a graph extension with a map of its own; these two now contribute into the
-     * root map like every pump driver does. A missing entry here is a crash when a reminder fires
-     * or a location trigger starts its service, which is a long way from this file.
+     * It used to own a graph extension with a map of its own; it now contributes into the root map
+     * like every pump driver does. A missing entry here is a crash when a location trigger starts its
+     * service, which is a long way from this file.
      */
     @Test
-    fun `the automation receiver and service reach the same map`() {
-        assertThat(injectors.keys).containsAtLeast(TimerReminderReceiver::class, LocationService::class)
+    fun `the automation service reaches the same map`() {
+        assertThat(injectors.keys).contains(LocationService::class)
     }
 
     @Test

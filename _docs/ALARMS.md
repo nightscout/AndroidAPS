@@ -17,7 +17,7 @@ How a pump alert works is in `PUMP_DESIGN.md` (sections 2 and 8). How a CGM rais
 | 3 | **App alarms** | `UiInteraction.runAlarm(...)`. Now a shim: it raises an EVENT pump alert with the source `"aaps"` | As row 2: the alarm screen until it is answered | `BOLUS_ERROR`, `EAT_REMINDER`, `ALARM` | Android, iOS | A bolus error (command queue, overview, main activity), the eat reminder, the automation reminder, and the drivers' own alarms: DanaR v2, DanaRS, Diaconn, EOPatch, Medtronic, Omnipod Dash and Eros |
 | 4 | **Local alerts** | `LocalAlertUtils` | An URGENT card: **pump unreachable** (also a therapy event and an SMS), **missed BG readings** (off by default) | `ALARM` | Android, iOS (`IosMissedReadingAlarm`) | Core |
 | 5 | **Nightscout alarms** | `NsFrameHandler`, `NsIncomingDataProcessor` | Alarms and announcements from Nightscout as URGENT cards (the setting `ns_alarms`) | `ALARM`, `URGENT_ALARM` | Android, iOS | NS client |
-| 6 | **Automation** | `ActionNotification`, `ActionAlarm`, `ActionSendSMS` | A card (`AUTOMATION_MESSAGE`); an alarm (a reminder, then row 3); an SMS | The alarm only | Android; iOS through `IosReminderScheduler` | The user's rules |
+| 6 | **Automation** | `ActionNotification`, `ActionAlarm`, `ActionSendSMS` | A card (`AUTOMATION_MESSAGE`); an alarm (a reminder, then row 3); an SMS | The alarm only | Android, iOS (a booked alert since 2026-11-22) | The user's rules |
 | 7 | **Loop notifier** | `LoopNotifier` (`AndroidLoopNotifier`, `IosLoopNotifier`) | A system notification: an open-loop suggestion, carbs required | The channel's sound; silent while Do Not Disturb is on and its override is off | Android, iOS | Loop |
 | 8 | **Ongoing notification** | `NotificationHolder`, `PersistentNotificationPlugin` | The permanent notification of the foreground service, with BG, IOB and the loop status | None | Android | Services, the persistent notification plugin |
 | 9 | **Eat reminder countdown** | `AndroidEatReminderAlarm`, `IosEatReminderAlarm` | A quiet countdown notification, then the alarm (row 3) with "+5 min" | At the end | Android, iOS, watch | The wizard's "time to eat" |
@@ -131,6 +131,20 @@ Alerts keep their three severities: CRITICAL, WARNING, INFO. The list of cards h
   notification on iOS, `AlarmManager` on Android), so it rings also when the app cannot run. It replaces four
   mechanisms of their own: `IosMissedReadingAlarm`, the eat reminder alarms, the automation reminder
   (`ReminderScheduler`, `TimerReminderReceiver`, `IosReminderScheduler`) and the ring after a silence on iOS.
+  Built 2026-11-22 (`Alerts.schedule` and `unschedule`, `AlertPlatform.book` and `unbook`):
+  - The core keeps each booking in memory and saved (`alert_bookings`), with its text but without its action, so it
+    rings also after the process ended. A raiser whose alert has an action books it again at the app start, and
+    the core raises a booking only after the app start, so the alert has it.
+  - It is raised by its own timer while the app runs, by an exact alarm to `AlertWakeReceiver` on Android, and on
+    iOS by a notification that rings by itself, followed by the real alert when the app comes to the front. A
+    booking found more than 2 minutes late (the phone was off) is dropped. A kind the user made silent books no
+    sound on iOS.
+  - Moved onto it: the automation reminder (`AlertReminderScheduler`, Android and iOS) and the "time to eat" alarm
+    (`EatReminderAlarm`, Android keeps its countdown notification). On iOS both are real alerts for the first time:
+    card, alarm screen, announcement, and the user's Ring, Silent or Off. Its stored "the alarm rang" mark went:
+    after the end time, Stop and +5 min silence its own alarm. The desktop has no alert core and keeps its own.
+  - Not yet: the missed readings alarm moves with the BG alarms (step 2, stale data), and the iOS ring after a
+    silence stays in `IosAlertPlatform.snoozed`, which already works.
 - **The announcement is written under the alert's own source.** Today every alert is written through `PumpSync` with
   the active pump's type and serial, also the app's own alarms. Only a pump alert belongs under the pump.
 
@@ -392,7 +406,7 @@ The order matters: step 3 must not come before step 2.
    the alarm screen of a kind that is not protected, and a line in the notification sheet; on Android and iOS only,
    as the desktop has no alerts) (`AlertKind`, `CoreAlert`) with the user's Ring, Silent or Off
    per phone and its settings screen, the silence length and its choice (done 2026-11-22), the announcement under its
-   own source, the scheduled alerts.
+   own source, the scheduled alerts (done 2026-11-22).
 2. The BG alarms, stale data included, on the master and the clients, with the shared silence. The escalation comes
    later, after the basics work.
 3. The Nightscout alarms removed; announcements as a WARNING alert.

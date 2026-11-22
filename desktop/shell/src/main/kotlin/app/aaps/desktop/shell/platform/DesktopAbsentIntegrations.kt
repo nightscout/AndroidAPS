@@ -138,6 +138,21 @@ class DesktopUiInteraction(
     override fun runEatReminderAlarm(status: String, title: String) =
         runAlarm(UiInteraction.KEY_EAT_REMINDER, status, title, AlarmSound.EAT_REMINDER)
 
+    /**
+     * Not here: booking an alarm is the alert core's, which the desktop has not. Its reminders and the "time to eat"
+     * alarm have their own schedulers (`DesktopReminderScheduler`, `DesktopEatReminderAlarm`), so nothing on the
+     * desktop calls this; false tells a caller that would.
+     */
+    override fun scheduleAlarm(at: Long, key: String, status: String, title: String, sound: AlarmSound?): Boolean {
+        aapsLogger.error(LTag.CORE, "Alarm $key not booked: the desktop has no alert core")
+        return false
+    }
+
+    override fun scheduleEatReminderAlarm(at: Long, status: String, title: String): Boolean =
+        scheduleAlarm(at, UiInteraction.KEY_EAT_REMINDER, status, title, AlarmSound.EAT_REMINDER)
+
+    override fun cancelScheduledAlarm(key: String) = Unit
+
     override fun stopAlarm(reason: String) {
         aapsLogger.debug(LTag.CORE, "Alarm stopped: $reason")
         notificationManager.dismiss(NotificationId.TOAST_ALARM)

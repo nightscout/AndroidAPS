@@ -218,11 +218,11 @@ class IosSystemNotificationPlatform(
      *
      * This was `removeAllPendingNotificationRequests()` plus `removeAllDeliveredNotifications()`,
      * and both halves were wrong. This class never creates a pending request at all - every [show]
-     * posts with `trigger = null`, so it is delivered straight away - but
-     * `IosReminderScheduler` does, and its scheduled reminders are named `aaps-reminder-N`, which
-     * sits inside this class's own `aaps-` prefix. Muting alarms therefore deleted every automation
-     * reminder the user was still waiting on, and none of them ever rang. The delivered half swept
-     * up the loop's `aaps-loop` notification for the same reason.
+     * posts with `trigger = null`, so it is delivered straight away - but the automation reminder
+     * did, named `aaps-reminder-N`, inside this class's own `aaps-` prefix. Muting alarms therefore
+     * deleted every automation reminder the user was still waiting on, and none of them ever rang.
+     * (A reminder is a booked alert now, `alert-booking-...`.) The delivered half swept up the loop's
+     * `aaps-loop` notification for the same reason.
      *
      * Android draws exactly this line and says why in `AndroidSystemNotificationPlatform.cancelAll`:
      * "mute all alarms" means take *my* alarms out of the tray, not empty the tray. [instanceKeyOf]

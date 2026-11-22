@@ -10,7 +10,7 @@ import javax.xml.parsers.DocumentBuilderFactory
  * Every component this module declares must name a class that exists.
  *
  * `:app` has the same check in `ManifestComponentsTest`, but it reads only its own manifest, so the
- * location service and the reminder receiver stopped being covered when they moved back here. That
+ * location service (and the reminder receiver, gone since) stopped being covered when they moved back here. That
  * check exists because a real bug got through once: a class was moved into `:app` and the manifest was
  * left pointing at the old name, so the component silently never ran.
  */
@@ -39,7 +39,8 @@ class AutomationManifestTest {
         }
 
         assertThat(missing).isEmpty()
-        // Guards the guard: if the manifest is ever emptied, this test must not silently pass.
-        assertThat(checked).isAtLeast(2)
+        // Guards the guard: if the manifest is ever emptied, this test must not silently pass. One since the
+        // reminder receiver went (the Alarm action is a booked alert): the location service.
+        assertThat(checked).isAtLeast(1)
     }
 }

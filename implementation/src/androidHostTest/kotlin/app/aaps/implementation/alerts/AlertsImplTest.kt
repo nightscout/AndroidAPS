@@ -7,11 +7,13 @@ import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertAction
 import app.aaps.core.interfaces.alerts.AlertChoice
 import app.aaps.core.interfaces.alerts.AlertKind
+import app.aaps.core.interfaces.alerts.AlertKindCatalogue
 import app.aaps.core.interfaces.alerts.AlertLifetime
 import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.AlertPlatform
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.notifications.AapsNotification
@@ -95,6 +97,18 @@ class AlertsImplTest : TestBase() {
         override fun withdrawn(source: String, key: String) {
             withdrawals += key
         }
+
+        val bookings = mutableMapOf<String, Pair<Long, Boolean>>()
+        var canBook = true
+
+        override fun book(alert: Alert, at: Long, ring: Boolean): Boolean {
+            if (canBook) bookings[alert.key] = at to ring
+            return canBook
+        }
+
+        override fun unbook(source: String, key: String) {
+            bookings.remove(key)
+        }
     }
 
     private val scope = TestScope(StandardTestDispatcher())
@@ -113,6 +127,7 @@ class AlertsImplTest : TestBase() {
     private var now = 1_000_000_000L
     private var storedSilences = "[]"
     private var storedChoices = "{}"
+    private var storedBookings = "[]"
 
     private lateinit var notificationManager: CommonNotificationManager
     private lateinit var sut: AlertsImpl
@@ -126,6 +141,10 @@ class AlertsImplTest : TestBase() {
         doAnswer { storedSilences = it.arguments[1] as String; Unit }.whenever(preferences).put(eq(StringNonKey.AlertSilences), any<String>())
         whenever(preferences.get(StringNonKey.AlertChoices)).thenAnswer { storedChoices }
         doAnswer { storedChoices = it.arguments[1] as String; Unit }.whenever(preferences).put(eq(StringNonKey.AlertChoices), any<String>())
+        whenever(preferences.get(StringNonKey.AlertBookings)).thenAnswer { storedBookings }
+        doAnswer { storedBookings = it.arguments[1] as String; Unit }.whenever(preferences).put(eq(StringNonKey.AlertBookings), any<String>())
+        // A booking is raised only after the app start
+        whenever(config.appInitialized).thenReturn(true)
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.model()).thenReturn(PumpType.GENERIC_AAPS)
         whenever(pump.serialNumber()).thenReturn("serial")
@@ -135,8 +154,14 @@ class AlertsImplTest : TestBase() {
         sut = newAlerts()
     }
 
+    private val catalogue = object : AlertKindCatalogue {
+        override val title: TextRef = TextRef.Literal("AAPS")
+        override val kinds: List<AlertKind> = CoreAlert.entries
+        override fun inUse(): Boolean = true
+    }
+
     private fun newAlerts() =
-        AlertsImpl(aapsLogger, notificationManager, alertPlatform, preferences, pumpSync, persistenceLayer, config, activePlugin, rh, eventBus, dateUtil, scope)
+        AlertsImpl(aapsLogger, notificationManager, alertPlatform, preferences, pumpSync, persistenceLayer, config, activePlugin, rh, eventBus, dateUtil, scope, { setOf(catalogue) })
 
     /** A kind for the tests, named after the alert's key unless a test gives its own. */
     private data class TestKind(
@@ -675,4 +700,93 @@ class AlertsImplTest : TestBase() {
         assertThat(sut.sounding).isNull()
     }
 
+    // ---- booked alerts (`_docs/ALARMS.md`, step 1e) ---------------------------------------------
+
+    /** An automation reminder: a kind the catalogue knows, so a booking read back finds it again. */
+    private fun reminder() = alert(
+        key = "automation-timer", source = "aaps", origin = AlertOrigin.APP, lifetime = AlertLifetime.EVENT, kind = CoreAlert.AUTOMATION_ALARM
+    )
+
+    private val minute = 60_000L
+
+    @Test
+    fun `a booked alert rings at its time and not before`() {
+        assertThat(sut.schedule(reminder(), now + minute)).isTrue()
+        assertThat(alertPlatform.bookings).containsKey("automation-timer")
+
+        scope.advanceTimeBy(minute / 2)
+        scope.runCurrent()
+        assertThat(cards()).isEmpty()
+
+        now += minute
+        scope.advanceTimeBy(minute / 2 + 1)
+        scope.runCurrent()
+
+        assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
+        assertThat(alertPlatform.screens).containsExactly("automation-timer")
+        // The time of the booking is the time of the occurrence, also for its announcement
+        assertThat(sut.active.value.single().raisedAt).isEqualTo(now)
+        assertThat(alertPlatform.bookings).isEmpty()
+    }
+
+    @Test
+    fun `a booking taken back does not ring`() {
+        sut.schedule(reminder(), now + minute)
+
+        sut.unschedule("aaps", "automation-timer")
+        now += minute
+        scope.advanceTimeBy(minute + 1)
+        scope.runCurrent()
+
+        assertThat(cards()).isEmpty()
+        assertThat(alertPlatform.bookings).isEmpty()
+        assertThat(storedBookings).isEqualTo("[]")
+    }
+
+    /** The process ended before the time; the platform's alarm starts a new one, which finds the saved booking. */
+    @Test
+    fun `a booking rings also after the process ended`() {
+        sut.schedule(reminder(), now + minute)
+
+        val restarted = newAlerts()
+        now += minute
+        restarted.fireDue()
+        scope.runCurrent()
+
+        assertThat(card().level).isEqualTo(NotificationLevel.URGENT)
+        assertThat(restarted.active.value.single().key).isEqualTo("automation-timer")
+    }
+
+    /** The phone was off: a reminder for something long past is no use. */
+    @Test
+    fun `a booking found long after its time is dropped`() {
+        sut.schedule(reminder(), now + minute)
+
+        val restarted = newAlerts()
+        now += minute + (Alerts.LATE_LIMIT_MINUTES + 1) * minute
+        restarted.fireDue()
+        scope.runCurrent()
+
+        assertThat(cards()).isEmpty()
+        assertThat(storedBookings).isEqualTo("[]")
+    }
+
+    @Test
+    fun `a booking the phone cannot book is not kept`() {
+        alertPlatform.canBook = false
+
+        assertThat(sut.schedule(reminder(), now + minute)).isFalse()
+
+        assertThat(storedBookings).isEqualTo("[]")
+    }
+
+    /** iOS rings a booking by itself; a kind the user made silent must not. */
+    @Test
+    fun `a booking of a silent kind books no sound`() {
+        sut.setChoice(CoreAlert.AUTOMATION_ALARM, AlertChoice.SILENT)
+
+        sut.schedule(reminder(), now + minute)
+
+        assertThat(alertPlatform.bookings["automation-timer"]).isEqualTo((now + minute) to false)
+    }
 }

@@ -39,10 +39,10 @@ interface EatReminder {
      */
     fun extend(): Boolean
 
-    /** Master: the platform calls this when the timer's alarm rings, just before it shows the alarm. */
-    fun onRang()
-
-    /** Master, once at app start: sets the alarm again from the saved timer. A reboot or a force stop removes it. */
+    /**
+     * Master, once at app start: books the alarm again from the saved timer. A reboot or a force stop removes the
+     * phone's alarm, and a booking read back after a restart has lost its +5 min button.
+     */
     fun restore()
 
     /** Client: takes the master's timer, received with the running configuration. Null ends it. */
@@ -61,16 +61,17 @@ interface EatReminder {
  * @param startedAt when the timer was started
  * @param endsAt when it rings; later after each +5 min
  * @param durationMs the whole wait, from [startedAt] until it rings; longer after each +5 min
- * @param alarmRang master only: its alarm really rang ([EatReminder.onRang]). Not sent to clients.
  */
 data class EatReminderState(
     val startedAt: Long,
     val endsAt: Long,
-    val durationMs: Long,
-    val alarmRang: Boolean = false
+    val durationMs: Long
 ) {
 
-    /** True from the end time on. What the screen shows; [alarmRang] is what the master acts on. */
+    /**
+     * True from the end time on: its alarm may be ringing. What the screen shows, and what the master acts on - after
+     * the end time, Stop and +5 min silence the timer's own alarm, which does nothing when it has not come yet.
+     */
     fun hasRung(now: Long): Boolean = now >= endsAt
 
     fun remainingMs(now: Long): Long = (endsAt - now).coerceAtLeast(0L)

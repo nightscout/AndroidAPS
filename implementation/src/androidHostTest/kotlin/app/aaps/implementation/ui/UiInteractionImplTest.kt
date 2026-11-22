@@ -72,6 +72,19 @@ class UiInteractionImplTest : TestBase() {
         }
 
         override fun act(source: String, key: String) {}
+
+        val booked = mutableListOf<Pair<Alert, Long>>()
+        val unbooked = mutableListOf<Pair<String, String>>()
+        var canBook = true
+
+        override fun schedule(alert: Alert, at: Long): Boolean {
+            if (canBook) booked += alert to at
+            return canBook
+        }
+
+        override fun unschedule(source: String, key: String) {
+            unbooked += source to key
+        }
     }
 
     private val alerts = RecordingAlerts()
@@ -184,6 +197,33 @@ class UiInteractionImplTest : TestBase() {
         assertThat(raised().sound).isEqualTo(AlarmSound.EAT_REMINDER)
         assertThat(raised().action).isNotNull()
         assertThat(raised().canMute).isFalse()
+    }
+
+    /** Booked, it is the same alert as raised now - with its +5 min - at the booked time (`_docs/ALARMS.md`, step 1e). */
+    @Test
+    fun `a booked eat reminder is the same alert at its time`() {
+        assertThat(sut.scheduleEatReminderAlarm(at = 60_000L, status = "Time to eat", title = "AAPS")).isTrue()
+
+        val (alert, at) = alerts.booked.single()
+        assertThat(at).isEqualTo(60_000L)
+        assertThat(alert.key).isEqualTo(UiInteraction.KEY_EAT_REMINDER)
+        assertThat(alert.action).isNotNull()
+        assertThat(alert.canMute).isFalse()
+        assertThat(alerts.raised).isEmpty()
+    }
+
+    @Test
+    fun `a booked alarm that the phone cannot book reports it`() {
+        alerts.canBook = false
+
+        assertThat(sut.scheduleAlarm(at = 60_000L, key = UiInteraction.KEY_AUTOMATION_ALARM, status = "Check BG", title = "AAPS")).isFalse()
+    }
+
+    @Test
+    fun `taking back a booked alarm reaches only its key`() {
+        sut.cancelScheduledAlarm(UiInteraction.KEY_EAT_REMINDER)
+
+        assertThat(alerts.unbooked).containsExactly(UiInteraction.SOURCE to UiInteraction.KEY_EAT_REMINDER)
     }
 
     /** The watch rings this one by itself, so telling it as well would show two reminders for one timer. */

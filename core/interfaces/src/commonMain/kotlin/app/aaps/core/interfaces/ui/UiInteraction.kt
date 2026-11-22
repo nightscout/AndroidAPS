@@ -39,6 +39,20 @@ interface UiInteraction {
     fun runEatReminderAlarm(status: String, title: String)
 
     /**
+     * [runAlarm], booked to ring at [at] (epoch ms), also when the app does not run then
+     * ([app.aaps.core.interfaces.alerts.Alerts.schedule]). Booking the same [key] again moves it.
+     *
+     * @return false when this phone cannot book it; the caller tells the user
+     */
+    fun scheduleAlarm(at: Long, key: String, status: String, title: String, sound: AlarmSound? = null): Boolean
+
+    /** [runEatReminderAlarm], booked to ring at [at]. Booking it again moves it. False when it cannot be booked. */
+    fun scheduleEatReminderAlarm(at: Long, status: String, title: String): Boolean
+
+    /** Takes back the booking of [key] that has not rung yet. An alarm already ringing is not touched. */
+    fun cancelScheduledAlarm(key: String)
+
+    /**
      * The user has dealt with the alarm that is ringing: its sound stops.
      *
      * No key, because the surfaces that call this - the watch, the Mute action on the notification, a swipe - give

@@ -7,6 +7,7 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertChoice
 import app.aaps.core.interfaces.alerts.AlertKind
+import app.aaps.core.interfaces.alerts.AlertKindCatalogue
 import app.aaps.core.interfaces.alerts.AlertLifetime
 import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.AlertPlatform
@@ -15,6 +16,7 @@ import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.awaitInitialized
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -33,6 +35,7 @@ import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
@@ -47,6 +50,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonArray
@@ -79,7 +83,9 @@ class AlertsImpl(
     private val rh: TextResolver,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
-    @ApplicationScope private val appScope: CoroutineScope
+    @ApplicationScope private val appScope: CoroutineScope,
+    // A provider: a driver's catalogue reaches its plugin, which raises through here. Read only to restore a saved booking.
+    private val catalogues: () -> Set<AlertKindCatalogue>
 ) : Alerts {
 
     private class Entry(
@@ -93,11 +99,15 @@ class AlertsImpl(
 
     private data class Silence(val source: String, val key: String, val raisedAt: Long, val until: Long)
 
+    /** An alert booked to be raised at [at]. Its timer raises it while the process runs; the platform does otherwise. */
+    private class Booking(val alert: Alert, val at: Long, var timer: Job? = null)
+
     /** Guards [entries], [silences] and every card post or dismiss for them. Not reentrant. */
     private val lock = AapsLock()
     private val entries = LinkedHashMap<Pair<String, String>, Entry>()
     private var silences: MutableList<Silence>? = null
     private var choiceMap: MutableMap<String, AlertChoice>? = null
+    private var bookings: MutableMap<Pair<String, String>, Booking>? = null
     private var observing = false
 
     private val _active = MutableStateFlow<List<Alert>>(emptyList())
@@ -237,6 +247,85 @@ class AlertsImpl(
         val now = dateUtil.now()
         entries.values.filter { it.silencedUntil in 1..now }.forEach { endSilence(it) }
     }
+
+    // ---- the bookings (`_docs/ALARMS.md`, step 1e) ----------------------------------------------
+
+    override fun schedule(alert: Alert, at: Long): Boolean = lock.withLock {
+        val id = alert.source to alert.key
+        val map = storedBookings()
+        // A kind the user made silent or turned off books nothing that rings by itself (iOS); the core still raises it
+        val ring = choiceFor(alert) == AlertChoice.RING && alert.severity != AlertSeverity.INFO
+        if (!platform.book(alert, at, ring)) {
+            aapsLogger.warn(LTag.NOTIFICATION, "Alert ${alert.source}/${alert.key} not booked: the phone cannot book it")
+            return false
+        }
+        map.remove(id)?.timer?.cancel()
+        val booking = Booking(alert, at)
+        map[id] = booking
+        saveBookings(map)
+        startTimer(booking)
+        aapsLogger.debug(LTag.NOTIFICATION, "Alert ${alert.source}/${alert.key} booked for ${dateUtil.dateAndTimeString(at)}")
+        true
+    }
+
+    override fun unschedule(source: String, key: String) = lock.withLock {
+        val map = storedBookings()
+        map.remove(source to key)?.let { booking ->
+            booking.timer?.cancel()
+            saveBookings(map)
+            aapsLogger.debug(LTag.NOTIFICATION, "Alert booking $source/$key taken back")
+        }
+        // Also when nothing is known here: a booking of an earlier process may still be set on the phone
+        platform.unbook(source, key)
+    }
+
+    /**
+     * Raises every booking whose time has come. Called by the timer of each booking, by the platform that wakes the
+     * app at that time (Android: an exact alarm), and when the app comes to the front (iOS, where the phone rang by
+     * itself while the app was not running).
+     *
+     * Not before the app start is over: the process may have been started by this very alarm, and a raiser whose
+     * alert has an action books it again in the start ("time to eat"), so the alert raised then has its action.
+     */
+    fun fireDue() {
+        appScope.launch {
+            while (!config.awaitInitialized()) aapsLogger.debug(LTag.NOTIFICATION, "Alert bookings wait for the app start")
+            val due = lock.withLock {
+                val now = dateUtil.now()
+                val map = storedBookings()
+                // A little early is the same moment: a phone alarm can come a moment before its time
+                val ready = map.values.filter { it.at <= now + EARLY_MS }
+                if (ready.isEmpty()) return@launch
+                ready.forEach { map.remove(it.alert.source to it.alert.key)?.timer?.cancel() }
+                saveBookings(map)
+                ready
+            }
+            due.forEach { booking ->
+                val alert = booking.alert
+                platform.unbook(alert.source, alert.key)
+                val late = dateUtil.now() - booking.at
+                if (late > Alerts.LATE_LIMIT_MINUTES * 60_000L)
+                    aapsLogger.info(LTag.NOTIFICATION, "Alert booking ${alert.source}/${alert.key} dropped: found ${late / 60_000} min after its time")
+                else raise(alert.raisedAt(booking.at))
+            }
+        }
+    }
+
+    /** Caller holds [lock]. */
+    private fun startTimer(booking: Booking) {
+        // The wait counted now, when it is booked, not when the coroutine first runs
+        val wait = booking.at - dateUtil.now()
+        booking.timer = appScope.launch {
+            delay(wait)
+            fireDue()
+        }
+    }
+
+    /** The same alert, raised at [at]: the time of its booking is the time of the occurrence. */
+    private fun Alert.raisedAt(at: Long) = Alert(
+        kind = kind, key = key, severity = severity, title = title, text = text, raisedAt = at, action = action,
+        lifetime = lifetime, notificationTitle = notificationTitle, canMute = canMute, tellWatch = tellWatch, sound = sound
+    )
 
     // ---- the cards ----------------------------------------------------------------------------
 
@@ -526,6 +615,80 @@ class AlertsImpl(
         preferences.put(StringNonKey.AlertSilences, json.toString())
     }
 
+    // ---- the stored bookings ---------------------------------------------------------------------
+
+    /**
+     * Caller holds [lock]. The bookings, read on first use. A booking read back has no timer: the platform wakes the app
+     * for it, and every way back in calls [fireDue].
+     */
+    private fun storedBookings(): MutableMap<Pair<String, String>, Booking> = bookings ?: loadBookings().also { bookings = it }
+
+    /**
+     * Saved with resolved text, because a [app.aaps.core.keys.interfaces.TextRef] cannot be stored, and without the
+     * action, because a function cannot. The kind is found again by its id.
+     */
+    private fun saveBookings(map: Map<Pair<String, String>, Booking>) {
+        val json = buildJsonArray {
+            map.values.forEach { b ->
+                val a = b.alert
+                add(buildJsonObject {
+                    put("kind", a.kind.id)
+                    put("key", a.key)
+                    put("at", b.at)
+                    put("severity", a.severity.name)
+                    put("title", rh.gs(a.title))
+                    a.text?.let { put("text", rh.gs(it)) }
+                    put("lifetime", a.lifetime.name)
+                    a.notificationTitle?.let { put("notificationTitle", it) }
+                    put("canMute", a.canMute)
+                    put("tellWatch", a.tellWatch)
+                    a.sound?.let { put("sound", it.name) }
+                })
+            }
+        }
+        preferences.put(StringNonKey.AlertBookings, json.toString())
+    }
+
+    private fun loadBookings(): MutableMap<Pair<String, String>, Booking> {
+        val kinds = catalogues().flatMap { it.kinds }.associateBy { it.id }
+        val map = mutableMapOf<Pair<String, String>, Booking>()
+        try {
+            Json.parseToJsonElement(preferences.get(StringNonKey.AlertBookings)).jsonArray.forEach { element ->
+                val o = element.jsonObject
+                val kind = kinds[o.text("kind")]
+                if (kind == null) {
+                    // The module that raised it is not in this build any more
+                    aapsLogger.warn(LTag.NOTIFICATION, "Alert booking of unknown kind ${o.text("kind")} dropped")
+                    return@forEach
+                }
+                val alert = Alert(
+                    kind = kind,
+                    key = o.text("key"),
+                    severity = AlertSeverity.valueOf(o.text("severity")),
+                    title = TextRef.Literal(o.text("title")),
+                    text = o["text"]?.jsonPrimitive?.content?.let { TextRef.Literal(it) },
+                    raisedAt = o.number("at"),
+                    lifetime = AlertLifetime.valueOf(o.text("lifetime")),
+                    notificationTitle = o["notificationTitle"]?.jsonPrimitive?.content,
+                    canMute = o.getValue("canMute").jsonPrimitive.boolean,
+                    tellWatch = o.getValue("tellWatch").jsonPrimitive.boolean,
+                    sound = o["sound"]?.jsonPrimitive?.content?.let { name -> AlarmSound.entries.firstOrNull { it.name == name } }
+                )
+                map[alert.source to alert.key] = Booking(alert, o.number("at"))
+            }
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.NOTIFICATION, "Stored alert bookings unreadable, dropped", e)
+            map.clear()
+        }
+        return map
+    }
+
     private fun JsonObject.text(name: String): String = getValue(name).jsonPrimitive.content
     private fun JsonObject.number(name: String): Long = getValue(name).jsonPrimitive.long
+
+    private companion object {
+
+        /** An alarm of the phone may come a moment before its time; that is still its time. */
+        const val EARLY_MS = 1_000L
+    }
 }

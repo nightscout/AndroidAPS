@@ -1,6 +1,7 @@
 package app.aaps.implementation.alerts
 
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.alerts.EatReminderState
 import app.aaps.core.interfaces.concurrent.AapsLock
@@ -32,10 +33,10 @@ import kotlin.math.max
  * The timer is saved in [StringNonKey.EatReminder], so it survives a restart, and the running-configuration
  * publisher sends every change of that key to the clients. Ringing is the job of [EatReminderAlarm].
  *
- * Two kinds of "rung". The screen goes by the clock ([EatReminderState.hasRung]), so the master and a client
- * show the same thing without sending anything at the moment it rings. The master's decisions go by
- * [EatReminderState.alarmRang], set when the alarm really rang: the alarm can come a little after the end time,
- * and an alarm stopped in that gap was not this one.
+ * "Rung" goes by the clock ([EatReminderState.hasRung]), so the master and a client show the same thing without
+ * sending anything at the moment it rings. After the end time Stop and +5 min silence the timer's own alarm, which
+ * does nothing in the moment before the alarm comes. (A stored "the alarm really rang" mark did this until the alarm
+ * became a booked alert, `_docs/ALARMS.md` step 1e: the core raises it, and nothing told the timer.)
  *
  * [UiInteraction] comes through a provider because stopping the alarm shown calls back into [stop], so each needs
  * the other.
@@ -66,7 +67,7 @@ class EatReminderManager(
         val new = EatReminderState(startedAt = now, endsAt = now + durationMs, durationMs = durationMs)
         val rang = lock.withLock {
             if (!alarm.schedule(new.startedAt, new.endsAt)) return
-            val wasRinging = _state.value?.alarmRang == true
+            val wasRinging = _state.value?.hasRung(now) == true
             save(new)
             wasRinging
         }
@@ -82,7 +83,7 @@ class EatReminderManager(
             val current = _state.value ?: return
             alarm.cancel()
             save(null)
-            current.alarmRang
+            current.hasRung(dateUtil.now())
         }
         aapsLogger.debug(LTag.AUTOMATION, "Eat reminder stopped")
         if (rang) uiInteraction().stopEatReminderAlarm()
@@ -99,11 +100,11 @@ class EatReminderManager(
                 // After the end time, +5 min means 5 minutes from now, not from the time that has passed.
                 val newEnd = max(current.endsAt, now) + extendMs
                 // The whole wait grows with the new end, so the bar and the countdown notification show the same number.
-                current.copy(endsAt = newEnd, durationMs = newEnd - current.startedAt, alarmRang = false)
+                current.copy(endsAt = newEnd, durationMs = newEnd - current.startedAt)
             } ?: EatReminderState(startedAt = now, endsAt = now + extendMs, durationMs = extendMs)
             // Nothing changes when the alarm cannot be set: a ringing alarm keeps ringing, and the caller says so
             if (!alarm.schedule(updated.startedAt, updated.endsAt)) return false
-            val wasRinging = _state.value?.alarmRang == true
+            val wasRinging = _state.value?.hasRung(now) == true
             save(updated)
             wasRinging
         }
@@ -112,21 +113,15 @@ class EatReminderManager(
         return true
     }
 
-    override fun onRang() {
-        if (config.AAPSCLIENT) return
-        lock.withLock {
-            val current = _state.value ?: return
-            if (!current.alarmRang) save(current.copy(alarmRang = true))
-        }
-    }
-
     override fun restore() {
         if (config.AAPSCLIENT) return
         lock.withLock {
             val current = _state.value ?: return
             val now = dateUtil.now()
             when {
-                current.endsAt > now                  ->
+                // Still ahead, or due a moment ago: then it may be this very alarm that started the app, and the core
+                // raises the booking only after the app start. Booked again, so the alert it raises has +5 min.
+                current.endsAt > now - RING_LATE_MS   ->
                     if (!alarm.schedule(current.startedAt, current.endsAt)) save(null)
 
                 // Rang long ago and nobody ended it, or ran out while the phone was off: no use any more.
@@ -165,7 +160,6 @@ class EatReminderManager(
                     put(KEY_STARTED_AT, it.startedAt)
                     put(KEY_ENDS_AT, it.endsAt)
                     put(KEY_DURATION, it.durationMs)
-                    put(KEY_ALARM_RANG, it.alarmRang)
                 }.toString()
             } ?: ""
         )
@@ -181,8 +175,7 @@ class EatReminderManager(
             EatReminderState(
                 startedAt = long(KEY_STARTED_AT) ?: return null,
                 endsAt = long(KEY_ENDS_AT) ?: return null,
-                durationMs = long(KEY_DURATION) ?: return null,
-                alarmRang = (json[KEY_ALARM_RANG] as? JsonPrimitive)?.content?.toBooleanStrictOrNull() ?: false
+                durationMs = long(KEY_DURATION) ?: return null
             )
         } catch (_: Exception) {
             null
@@ -194,9 +187,11 @@ class EatReminderManager(
         const val KEY_STARTED_AT = "startedAt"
         const val KEY_ENDS_AT = "endsAt"
         const val KEY_DURATION = "durationMs"
-        const val KEY_ALARM_RANG = "alarmRang"
 
         /** A timer this long past its end is dropped at app start. */
         val STALE_AFTER_MS = T.hours(1).msecs()
+
+        /** Due this short time ago, a timer is booked again at app start; later its alarm is not rung late. */
+        val RING_LATE_MS = T.mins(Alerts.LATE_LIMIT_MINUTES.toLong()).msecs()
     }
 }

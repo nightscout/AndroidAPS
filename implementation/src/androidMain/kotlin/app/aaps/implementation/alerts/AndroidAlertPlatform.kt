@@ -150,9 +150,47 @@ class AndroidAlertPlatform(
         (context.getSystemService(Context.ALARM_SERVICE) as AlarmManager).cancel(wakeIntent(source, key))
     }
 
+    /**
+     * `setAlarmClock`, as the automation reminder and the "time to eat" timer always used: exact, it fires while the
+     * phone is idle, and it starts the app. It needs `SCHEDULE_EXACT_ALARM` unless AAPS is excluded from battery
+     * optimization (`PluginPermissionsImpl` asks for it); without it nothing is booked. [ring] is not needed here: the
+     * core raises the alert when the app wakes, and its sound follows the user's choice then.
+     */
+    override fun book(alert: Alert, at: Long, ring: Boolean): Boolean {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if (!alarmManager.canScheduleExactAlarms()) {
+            aapsLogger.warn(LTag.NOTIFICATION, "Exact alarms not allowed - alert ${alert.source}/${alert.key} not booked")
+            return false
+        }
+        val show = PendingIntent.getActivity(
+            context, requestCode(alert.source, alert.key),
+            Intent(context, androidActivities().main.java),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        return try {
+            alarmManager.setAlarmClock(AlarmManager.AlarmClockInfo(at, show), bookingIntent(alert.source, alert.key))
+            true
+        } catch (e: SecurityException) {
+            // The permission was taken away between the check above and this call.
+            aapsLogger.error(LTag.NOTIFICATION, "Exact alarms revoked - alert ${alert.source}/${alert.key} not booked", e)
+            false
+        }
+    }
+
+    override fun unbook(source: String, key: String) {
+        (context.getSystemService(Context.ALARM_SERVICE) as AlarmManager).cancel(bookingIntent(source, key))
+    }
+
     private fun wakeIntent(source: String, key: String): PendingIntent = PendingIntent.getBroadcast(
         context, requestCode(source, key),
         Intent(context, AlertWakeReceiver::class.java),
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+    )
+
+    /** The same receiver as [wakeIntent], but its own action, so a booking and a silence of one alert do not replace each other. */
+    private fun bookingIntent(source: String, key: String): PendingIntent = PendingIntent.getBroadcast(
+        context, requestCode(source, key),
+        Intent(context, AlertWakeReceiver::class.java).setAction(AlertWakeReceiver.ACTION_BOOKING),
         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     )
 

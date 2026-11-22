@@ -308,6 +308,10 @@ The two commonMain callers are the ones that are silent on iOS today. The androi
 yet, so they are not silent so much as absent - but the eat reminder and the automation reminder both already have an
 iOS scheduler (`IosReminderScheduler`), so they will reach this path as soon as anything rings them.
 
+(2026-11-22: the eat reminder and the automation reminder are booked alerts now, `_docs/ALARMS.md` step 1e. The
+core raises them on both platforms; `TimerReminderReceiver`, `IosReminderScheduler` and the ring of
+`EatReminderReceiver` are gone.)
+
 ### What `runAlarm` does on Android today
 
 Worth writing down, because all of it has to keep working. `UiInteractionImpl.runAlarm`:

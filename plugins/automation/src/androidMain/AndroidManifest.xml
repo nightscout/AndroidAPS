@@ -12,7 +12,7 @@
         android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
-    <!-- ReminderSchedulerImpl rings reminders with setAlarmClock(), which needs this. -->
+    <!-- The Alarm action is a booked alert, which rings with setAlarmClock(); that needs this. -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application>
@@ -22,11 +22,6 @@
             android:name="app.aaps.plugins.automation.services.LocationService"
             android:exported="false"
             android:foregroundServiceType="location" />
-
-        <!-- Rings reminders scheduled through ReminderScheduler. Same story as above. -->
-        <receiver
-            android:name="app.aaps.plugins.automation.TimerReminderReceiver"
-            android:exported="false" />
 
     </application>
 

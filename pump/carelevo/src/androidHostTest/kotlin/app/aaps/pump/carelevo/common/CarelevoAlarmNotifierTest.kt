@@ -80,6 +80,8 @@ class CarelevoAlarmNotifierTest {
 
         override fun silence(source: String, key: String, minutes: Int) {}
         override fun snooze(source: String, key: String, minutes: Int) {}
+        override fun schedule(alert: Alert, at: Long): Boolean = true
+        override fun unschedule(source: String, key: String) {}
         override fun act(source: String, key: String) {}
     }
 

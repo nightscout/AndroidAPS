@@ -104,7 +104,6 @@ class EatReminderManagerTest : TestBase() {
         val sut = manager()
         sut.start(twentyMinutes)
         now += twentyMinutes
-        sut.onRang()
 
         sut.start(twentyMinutes)
 
@@ -133,7 +132,6 @@ class EatReminderManagerTest : TestBase() {
         val sut = manager()
         sut.start(twentyMinutes)
         now += twentyMinutes
-        sut.onRang()
         val before = sut.state.value
         alarm.canSchedule = false
 
@@ -168,13 +166,11 @@ class EatReminderManagerTest : TestBase() {
         val sut = manager()
         sut.start(twentyMinutes)
         now += twentyMinutes + T.mins(2).msecs()
-        sut.onRang()
 
         assertThat(sut.extend()).isTrue()
 
         assertThat(sut.state.value!!.endsAt).isEqualTo(now + fiveMinutes)
         assertThat(sut.state.value!!.durationMs).isEqualTo(twentyMinutes + T.mins(2).msecs() + fiveMinutes)
-        assertThat(sut.state.value!!.alarmRang).isFalse()
         verify(uiInteraction).stopEatReminderAlarm()
         verify(uiInteraction, never()).stopAlarm(any())
     }
@@ -188,7 +184,6 @@ class EatReminderManagerTest : TestBase() {
         val sut = manager()
         sut.start(twentyMinutes)
         now += twentyMinutes
-        sut.onRang()
         sut.stop()
 
         assertThat(sut.extend()).isTrue()
@@ -206,7 +201,6 @@ class EatReminderManagerTest : TestBase() {
         val sut = manager()
         sut.start(twentyMinutes)
         now += twentyMinutes
-        sut.onRang()
         val before = sut.state.value
         alarm.canSchedule = false
 
@@ -237,7 +231,6 @@ class EatReminderManagerTest : TestBase() {
         val sut = manager()
         sut.start(twentyMinutes)
         now += twentyMinutes
-        sut.onRang()
 
         sut.stop()
 
@@ -246,21 +239,32 @@ class EatReminderManagerTest : TestBase() {
         verify(uiInteraction, never()).stopAlarm(any())
     }
 
-    /** The rang mark survives a restart, so a Stop after it still silences the alarm. */
+    /** After a restart a Stop after the end time still silences the alarm: "rung" goes by the clock. */
     @Test
-    fun theRangMarkSurvivesARestart() {
-        manager().apply {
-            start(twentyMinutes)
-            now += twentyMinutes
-            onRang()
-        }
+    fun aStopAfterTheEndSilencesTheAlarmAlsoAfterARestart() {
+        manager().start(twentyMinutes)
+        now += twentyMinutes
 
         val afterRestart = manager()
-        assertThat(afterRestart.state.value!!.alarmRang).isTrue()
         afterRestart.stop()
 
         assertThat(afterRestart.state.value).isNull()
         verify(uiInteraction).stopEatReminderAlarm()
+    }
+
+    /**
+     * Due a moment ago: it may be its own alarm that started the app, and the booking read back has lost +5 min. Booked
+     * again, so the alert raised after the app start has it (`_docs/ALARMS.md`, step 1e).
+     */
+    @Test
+    fun restoreBooksAgainATimerDueAMomentAgo() {
+        manager().start(twentyMinutes)
+        alarm.scheduledEnd = null
+        now += twentyMinutes + T.secs(30).msecs()
+
+        manager().restore()
+
+        assertThat(alarm.scheduledEnd).isEqualTo(1_000_000L + twentyMinutes)
     }
 
     @Test

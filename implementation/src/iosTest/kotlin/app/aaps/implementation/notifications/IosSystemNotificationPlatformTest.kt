@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.implementation.alerts.IosReminderScheduler
+import app.aaps.implementation.alerts.IosAlertPlatform
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -197,17 +197,16 @@ class IosSystemNotificationPlatformTest {
     // ---------------------------------------------------------------------------------------------
 
     /**
-     * The reminder prefix is read from the scheduler itself rather than written out here, so renaming
+     * The booking prefix is read from the alert platform itself rather than written out here, so renaming
      * it cannot quietly re-open the hole this test exists for.
      */
     @Test
-    fun `mute all leaves a scheduled automation reminder alone`() {
-        val reminder = "${IosReminderScheduler.IDENTIFIER_PREFIX}3"
+    fun `mute all leaves a booked automation reminder alone`() {
+        val reminder = "${IosAlertPlatform.BOOKING_PREFIX}aaps/automation-timer"
 
-        // The trap: the reminder id starts with this class's own "aaps-" prefix, so anything cruder
-        // than the key parse - a prefix match, or the removeAll* pair this used to call - deletes a
-        // reminder the user is still waiting on, and it never rings.
-        assertEquals(listOf("aaps-42"), platform.ownIdentifiers(listOf("aaps-42", reminder)))
+        // The trap: a reminder still to come that "mute all" deletes never rings. The old reminder id
+        // started with this class's own "aaps-" prefix; anything cruder than the key parse would hit it.
+        assertEquals(listOf("aaps-42"), platform.ownIdentifiers(listOf("aaps-42", reminder, "aaps-reminder-3")))
     }
 
     /** `IosLoopNotifier.NOTIFICATION_ID`, spelled out because it lives in another module. */

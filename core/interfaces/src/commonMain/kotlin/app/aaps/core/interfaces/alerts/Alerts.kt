@@ -218,7 +218,26 @@ interface Alerts {
     /** Called by the alarm screen: run the alert's action, as its button on the card does. */
     fun act(source: String, key: String)
 
+    /**
+     * Books [alert] to be raised at [at] (epoch ms), also when the app does not run then: the platform rings or wakes
+     * the app at that time (`_docs/ALARMS.md`, step 1e). Booking the same source and key again moves it. A booking
+     * found more than [LATE_LIMIT_MINUTES] after its time (the phone was off) is dropped, not rung late.
+     *
+     * The booking is saved, so it rings also after the process ended, but its [Alert.action] is not: a raiser whose
+     * alert has an action books it again at every app start, as the "time to eat" timer does.
+     *
+     * @return false when this phone cannot book it (Android: exact alarms not allowed). Nothing is booked then, and
+     *   the caller tells the user.
+     */
+    fun schedule(alert: Alert, at: Long): Boolean
+
+    /** Takes back a booking that has not rung yet. Harmless when there is none. An alert already raised stays. */
+    fun unschedule(source: String, key: String)
+
     companion object {
+
+        /** A booking this late is dropped: a reminder for something long past is no use. */
+        const val LATE_LIMIT_MINUTES = 2
 
         /**
          * How long a silence lasts when the user does not choose: a swipe, the watch, Silence on the card. When it ends
@@ -257,4 +276,17 @@ interface AlertPlatform {
 
     /** The alert ended, or rings again now: take back whatever [chime] or [snoozed] left for it. */
     fun withdrawn(source: String, key: String)
+
+    /**
+     * [alert] is booked for [at] (epoch ms) and must happen also when the app does not run then. Android wakes the
+     * app with an exact alarm, and the core raises it. iOS cannot run the app at a time, so it books a notification
+     * that rings by itself ([ring] false: no sound, for a kind the user made silent); the core raises the alert when
+     * the app runs next.
+     *
+     * @return false when the phone cannot book it
+     */
+    fun book(alert: Alert, at: Long, ring: Boolean): Boolean
+
+    /** The booking of [source]/[key] is taken back, or it was raised: take back what [book] left. */
+    fun unbook(source: String, key: String)
 }

@@ -25,6 +25,8 @@ import kotlinx.coroutines.launch
 import platform.Foundation.NSDate
 import platform.Foundation.dateWithTimeIntervalSince1970
 import platform.Foundation.timeIntervalSinceNow
+import platform.UserNotifications.UNAuthorizationOptionAlert
+import platform.UserNotifications.UNAuthorizationOptionSound
 import platform.UserNotifications.UNMutableNotificationContent
 import platform.UserNotifications.UNNotificationInterruptionLevel.UNNotificationInterruptionLevelTimeSensitive
 import platform.UserNotifications.UNNotificationRequest
@@ -115,7 +117,11 @@ class IosAlertPlatform(
 
     init {
         observeAppForeground { inForeground ->
-            if (inForeground) appScope.launch { alerts().checkSilences() }
+            if (inForeground) appScope.launch {
+                alerts().checkSilences()
+                // A booking whose notification rang while the app was not running becomes the real alert now
+                alerts().fireDue()
+            }
         }
     }
 
@@ -150,6 +156,42 @@ class IosAlertPlatform(
     }
 
     /**
+     * A notification at [at], for the same reason as [snoozed]: iOS cannot run the app at a time, but it delivers a
+     * notification then. When the app runs at that time the core raises the alert itself and [unbook] takes this one
+     * back, which may come a moment after it was shown - twice is better than never. A kind the user made silent
+     * ([ring] false) books a notification without sound.
+     */
+    override fun book(alert: Alert, at: Long, ring: Boolean): Boolean {
+        val seconds = secondsFromNow(at)
+        // iOS refuses a trigger that is not in the future. The core's own timer raises one that is due now.
+        if (seconds < 1.0) return true
+        requestAuthorizationOnce()
+        post(bookingId(alert.source, alert.key), alert, UNTimeIntervalNotificationTrigger.triggerWithTimeInterval(seconds, repeats = false), ring)
+        aapsLogger.debug(LTag.NOTIFICATION, "Alert ${alert.source}/${alert.key} booked in ${seconds.toLong()}s")
+        return true
+    }
+
+    override fun unbook(source: String, key: String) {
+        val ids = listOf(bookingId(source, key))
+        center.removePendingNotificationRequestsWithIdentifiers(ids)
+        center.removeDeliveredNotificationsWithIdentifiers(ids)
+    }
+
+    /**
+     * A booking can be the first thing that posts (the "time to eat" timer, an automation reminder), before any card
+     * made `IosSystemNotificationPlatform` ask, and without permission it would be booked and never seen.
+     */
+    private fun requestAuthorizationOnce() {
+        if (authorizationAsked) return
+        authorizationAsked = true
+        center.requestAuthorizationWithOptions(UNAuthorizationOptionAlert or UNAuthorizationOptionSound) { granted, _ ->
+            if (!granted) aapsLogger.error(LTag.NOTIFICATION, "Notifications not permitted, booked alerts will not appear")
+        }
+    }
+
+    private var authorizationAsked = false
+
+    /**
      * One notification for this alert, now ([trigger] null) or at a time.
      *
      * It carries the alert's own title and text, because that is what the user needs to read whether it is the one
@@ -162,11 +204,11 @@ class IosAlertPlatform(
      * calls this), and that goes through `IosSystemNotificationPlatform`, which asks once. If it was refused this
      * fails with the reason in the log rather than disappearing.
      */
-    private fun post(identifier: String, alert: Alert, trigger: UNNotificationTrigger?) {
+    private fun post(identifier: String, alert: Alert, trigger: UNNotificationTrigger?, sound: Boolean = true) {
         val content = UNMutableNotificationContent().apply {
             setTitle(rh.gs(alert.title))
             alert.text?.let { setBody(rh.gs(it)) }
-            setSound(UNNotificationSound.defaultSound())
+            if (sound) setSound(UNNotificationSound.defaultSound())
             setInterruptionLevel(UNNotificationInterruptionLevelTimeSensitive)
         }
         val request = UNNotificationRequest.requestWithIdentifier(identifier, content, trigger)
@@ -187,11 +229,13 @@ class IosAlertPlatform(
 
     private fun chimeId(source: String, key: String) = "$CHIME_PREFIX$source/$key"
     private fun snoozeId(source: String, key: String) = "$SNOOZE_PREFIX$source/$key"
+    private fun bookingId(source: String, key: String) = "$BOOKING_PREFIX$source/$key"
 
     companion object {
 
-        /** Named once: the point of both is that they do not look like an `IosSystemNotificationPlatform` id. */
+        /** Named once: the point of all three is that they do not look like an `IosSystemNotificationPlatform` id. */
         private const val CHIME_PREFIX = "pump-alert-chime-"
         private const val SNOOZE_PREFIX = "pump-alert-snooze-"
+        internal const val BOOKING_PREFIX = "alert-booking-"
     }
 }

@@ -95,12 +95,12 @@
             android:name="app.aaps.implementation.androidNotification.AlarmScreenWakeReceiver"
             android:exported="false" />
 
-        <!-- The silence of a pump alert has ended: it rings again if still active (AndroidAlertPlatform). -->
+        <!-- The silence of an alert has ended, or a booked alert is due: its exact alarm (AndroidAlertPlatform). -->
         <receiver
             android:name="app.aaps.implementation.alerts.AlertWakeReceiver"
             android:exported="false" />
 
-        <!-- "Time to eat" timer: its alarm (setAlarmClock) and the Stop / +5 min notification buttons. -->
+        <!-- "Time to eat" timer: the Stop / +5 min buttons of its countdown. Its alarm is a booked alert. -->
         <receiver
             android:name="app.aaps.implementation.alerts.EatReminderReceiver"
             android:exported="false" />

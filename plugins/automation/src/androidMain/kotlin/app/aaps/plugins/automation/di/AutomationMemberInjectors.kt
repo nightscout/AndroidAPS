@@ -1,7 +1,6 @@
 package app.aaps.plugins.automation.di
 
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
-import app.aaps.plugins.automation.TimerReminderReceiver
 import app.aaps.plugins.automation.services.LocationService
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
@@ -12,7 +11,8 @@ import dev.zacsweers.metro.MembersInjector
 import dev.zacsweers.metro.Provides
 
 /**
- * Members injectors for the two Android classes this module lets the framework construct.
+ * Members injectors for the Android classes this module lets the framework construct. (Its reminder receiver went
+ * when the Alarm action became a booked alert.)
  *
  * Contributed into the root's one `@FeatureMemberInjectors` map, the same way every pump module does
  * it. This used to be a graph extension carrying a map and a scope of its own, which meant `:app` had
@@ -25,12 +25,6 @@ import dev.zacsweers.metro.Provides
 @ContributesTo(AppScope::class)
 @BindingContainer
 object AutomationMemberInjectors {
-
-    @Provides
-    @FeatureMemberInjectors
-    @IntoMap
-    @ClassKey(TimerReminderReceiver::class)
-    fun bindTimerReminderReceiver(injector: MembersInjector<TimerReminderReceiver>): MembersInjector<*> = injector
 
     @Provides
     @FeatureMemberInjectors
