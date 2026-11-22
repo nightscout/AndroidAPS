@@ -29,7 +29,9 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -99,6 +101,9 @@ class WatchDirect(
     /** True once this app run has asked the link to connect, so a running pairing is not started twice. */
     private var connectAsked = false
 
+    /** Waits while the link is down, then asks it to start again. See [WatchDirectRestart]. */
+    private var restartJob: Job? = null
+
     private val _status = MutableStateFlow(EventData.CgmWatchStatus(EventData.CgmWatchState.OFF))
 
     /** For the watch's own screen. */
@@ -163,7 +168,10 @@ class WatchDirect(
 
             override fun onConnected(connected: Boolean) {
                 scope.launch {
-                    if (connected) refusal = null
+                    if (connected) {
+                        refusal = null
+                        stopWatchingTheLink()
+                    } else watchTheLink()
                     report(describe())
                 }
             }
@@ -186,9 +194,45 @@ class WatchDirect(
                     if (connectAsked) aapsLogger.info(LTag.WEAR, "Direct to watch: not paired yet, pairing started again after a restart")
                 }
                 WatchDirectService.start(context)
+                watchTheLink()
             }
             report(describe())
         }
+    }
+
+    /**
+     * Start the wait of [WatchDirectRestart]: while the link stays down, ask it again each time the
+     * wait is over. One wait at a time: a call while one runs changes nothing, so the phone's
+     * repeated messages do not push the wait further out.
+     *
+     * Asking does nothing while the driver still has a session of its own, which is the normal case.
+     * The wait is counted while the watch is awake, so on a sleeping watch it can take longer.
+     */
+    private fun watchTheLink() {
+        if (restartJob?.isActive == true) return
+        restartJob = scope.launch {
+            while (true) {
+                delay(WatchDirectRestart.DOWN_BEFORE_ASKING_MS)
+                val link = link ?: return@launch
+                val ask = WatchDirectRestart.shouldAsk(
+                    hasSensor = link.address() != null,
+                    hasKey = link.hasKey(),
+                    paused = link.isPaused(),
+                    permitted = hasPermissions,
+                    bluetoothOn = bluetoothOn,
+                    connected = link.isConnected()
+                )
+                if (ask && link.resume()) {
+                    aapsLogger.info(LTag.WEAR, "Direct to watch: the link had stopped by itself, started again")
+                    report(describe())
+                }
+            }
+        }
+    }
+
+    private fun stopWatchingTheLink() {
+        restartJob?.cancel()
+        restartJob = null
     }
 
     /** After the wearer allowed Bluetooth on the watch's own screen. */
@@ -241,6 +285,7 @@ class WatchDirect(
                     }
                 }
                 WatchDirectService.start(context)
+                if (!link.isConnected()) watchTheLink()
             }
         } else {
             waitingForPermission = null
@@ -253,6 +298,7 @@ class WatchDirect(
             }
             connectAsked = false
             refusal = null
+            stopWatchingTheLink()
             WatchDirectService.stop(context)
             clearLowAlarm()
         }
