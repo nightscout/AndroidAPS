@@ -17,6 +17,9 @@ enum class UiIntentKey(
     /** The list of alert kinds, where the user chooses Ring, Silent or Off for each on this phone (`_docs/ALARMS.md`). */
     AlertKinds(key = "alert_kinds", title = UiStrings.alert_kinds_title, summary = UiStrings.alert_kinds_summary),
 
+    /** The user's own BG level rules (`_docs/ALARMS.md`, step 2a), set on the master. */
+    BgAlarmRules(key = "bg_alarm_rules_screen", title = UiStrings.bg_alarm_rules_title, summary = UiStrings.bg_alarm_rules_summary),
+
     /**
      * Android only: opens Android's "Display over other apps" page for AAPS. With it the alarm screen opens while
      * another app is on the screen (#5338).

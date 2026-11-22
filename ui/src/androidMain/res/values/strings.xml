@@ -406,6 +406,25 @@
     <string name="alert_choice_off" comment="One of three choices for a kind of alert: not shown at all">Off</string>
     <string name="alert_kind_protected" comment="Shown instead of the three choices for a kind of alert the user cannot silence, for example insulin delivery stopped">Always rings, for safety</string>
     <string name="alert_kind_silence_on_this_phone" comment="Button on the alarm screen: from now on, alerts of this kind come as a card with no sound, on this phone">Silence this kind on this phone</string>
+    <string name="bg_alarm_rules_title">BG alarm rules</string>
+    <string name="bg_alarm_rules_summary">Your own low and high alarms</string>
+    <string name="bg_alarm_rules_intro">Your own low and high alarms. Urgent low is always on; its threshold is in Local alerts. The rules are set here on the master and every phone uses them; in Alert kinds each phone chooses whether it rings.</string>
+    <string name="bg_alarm_rules_read_only">These rules are set on the master phone. In Alert kinds you choose whether this phone rings.</string>
+    <string name="bg_alarm_rule_low" comment="Title of a low glucose alarm rule. %1$s=the threshold with its unit, for example: 3.9 mmol/l">Low below %1$s</string>
+    <string name="bg_alarm_rule_high" comment="Title of a high glucose alarm rule. %1$s=the threshold with its unit, for example: 13.9 mmol/l">High above %1$s</string>
+    <string name="bg_alarm_rule_low_title">Low alarm</string>
+    <string name="bg_alarm_rule_high_title">High alarm</string>
+    <string name="bg_alarm_rule_add_low">Add low</string>
+    <string name="bg_alarm_rule_add_high">Add high</string>
+    <string name="bg_alarm_rule_warning" comment="How a glucose alarm rings: one sound and a card">Warning: one sound</string>
+    <string name="bg_alarm_rule_alarm" comment="How a glucose alarm rings: the alarm sound and the alarm screen until the user answers">Alarm: rings until answered</string>
+    <string name="bg_alarm_rule_all_day">All day</string>
+    <string name="bg_alarm_rule_window" comment="The time of day a glucose alarm rule applies. %1$s=start, %2$s=end, as HH:MM. Example: 22:00 - 07:00">%1$s - %2$s</string>
+    <string name="bg_alarm_rule_lasts" comment="A glucose alarm rule rings only after this long past its threshold. %1$d=minutes. Example: after 15 min">after %1$d min</string>
+    <string name="bg_alarm_rule_threshold" comment="Label of the threshold field of a glucose alarm rule. %1$s=the unit, mg/dl or mmol/l">Threshold (%1$s)</string>
+    <string name="bg_alarm_rule_from">From (HH:MM)</string>
+    <string name="bg_alarm_rule_to">To (HH:MM)</string>
+    <string name="bg_alarm_rule_duration">Rings after (minutes past the threshold)</string>
     <string name="alarm_over_other_apps_title" comment="Settings item that opens the Android page of the same name for AAPS">Display over other apps</string>
     <string name="alarm_over_other_apps_summary">Allow it, and the alarm screen opens also while another app is on the screen. Without it you get the notification, and the alarm screen when you open AAPS.</string>
 </resources>

@@ -8,7 +8,10 @@ import app.aaps.core.interfaces.alerts.AlertChoice
 import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.BgAlarmRule
+import app.aaps.core.interfaces.alerts.BgAlarmRules
 import app.aaps.core.interfaces.alerts.BgAlert
+import app.aaps.core.interfaces.alerts.BgDirection
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -72,6 +75,11 @@ class BgAlarmsImplTest : TestBase() {
     private val dateUtil: DateUtil = mock()
     private val config: Config = mock()
     private val alerts = RecordingAlerts()
+    private val ruleList = MutableStateFlow<List<BgAlarmRule>>(emptyList())
+    private val rules = object : BgAlarmRules {
+        override val rules: StateFlow<List<BgAlarmRule>> = ruleList
+        override fun save(rules: List<BgAlarmRule>) {}
+    }
 
     private val now = 1_000_000_000L
     private val minute = 60_000L
@@ -86,7 +94,7 @@ class BgAlarmsImplTest : TestBase() {
         doAnswer { it.arguments[0] as Double }.whenever(profileUtil).convertToMgdlDetect(any())
         whenever(profileUtil.fromMgdlToStringWithUnits(anyOrNull())).thenReturn("50 mg/dl")
         runBlocking { whenever(persistenceLayer.getBgReadingsDataFromTime(any(), eq(false))).thenAnswer { readings } }
-        sut = BgAlarmsImpl(persistenceLayer, preferences, alerts, profileUtil, notificationManager, rh, dateUtil, config, aapsLogger, mock<CoroutineScope>())
+        sut = BgAlarmsImpl(persistenceLayer, preferences, rules, alerts, profileUtil, notificationManager, rh, dateUtil, config, aapsLogger, mock<CoroutineScope>())
     }
 
     /** Readings every 5 minutes, the newest [values] last, the newest one now. */
@@ -166,5 +174,100 @@ class BgAlarmsImplTest : TestBase() {
         evaluate()
 
         assertThat(alerts.raised).isEmpty()
+    }
+
+    // ---- the user's own rules (step 2a-2) ----------------------------------------------------------
+
+    private fun low(threshold: Double, id: String = "low$threshold", duration: Int = 0, severity: AlertSeverity = AlertSeverity.WARNING) =
+        BgAlarmRule(id = id, direction = BgDirection.LOW, thresholdMgdl = threshold, severity = severity, durationMinutes = duration, silenceMinutes = 45)
+
+    private fun high(threshold: Double, duration: Int = 0) =
+        BgAlarmRule(id = "high$threshold", direction = BgDirection.HIGH, thresholdMgdl = threshold, durationMinutes = duration, silenceMinutes = 120)
+
+    @Test
+    fun `a low rule rings as the low kind with its own severity and silence`() {
+        ruleList.value = listOf(low(70.0))
+        readings(80.0, 75.0, 68.0)
+
+        evaluate()
+
+        val alert = alerts.raised.single()
+        assertThat(alert.kind).isEqualTo(BgAlert.LOW)
+        assertThat(alert.key).isEqualTo(BgAlarmsImpl.KEY_LOW)
+        assertThat(alert.severity).isEqualTo(AlertSeverity.WARNING)
+        assertThat(alert.silenceMinutes).isEqualTo(45)
+        assertThat(alert.breakThroughDnd).isFalse()
+    }
+
+    @Test
+    fun `a high rule rings under its own key`() {
+        ruleList.value = listOf(high(250.0))
+        readings(240.0, 255.0)
+
+        evaluate()
+
+        assertThat(alerts.raised.single().kind).isEqualTo(BgAlert.HIGH)
+        assertThat(alerts.raised.single().key).isEqualTo(BgAlarmsImpl.KEY_HIGH)
+    }
+
+    @Test
+    fun `a rule rings only when it lasted long enough`() {
+        ruleList.value = listOf(high(250.0, duration = 15))
+        readings(200.0, 255.0, 260.0)
+        evaluate()
+        assertThat(alerts.raised).isEmpty()
+
+        readings(200.0, 255.0, 260.0, 262.0, 265.0)
+        evaluate()
+        assertThat(alerts.raised.single().raisedAt).isEqualTo(now - 15 * minute)
+    }
+
+    @Test
+    fun `a disabled rule or one outside its window does not ring`() {
+        val from = 600
+        ruleList.value = listOf(low(70.0).copy(enabled = false), low(75.0, id = "empty").copy(fromMinute = from, toMinute = from))
+        readings(60.0)
+
+        evaluate()
+
+        assertThat(alerts.raised).isEmpty()
+    }
+
+    @Test
+    fun `a window may cross midnight`() {
+        val night = low(70.0).copy(fromMinute = 22 * 60, toMinute = 7 * 60)
+
+        assertThat(night.appliesAt(23 * 60)).isTrue()
+        assertThat(night.appliesAt(3 * 60)).isTrue()
+        assertThat(night.appliesAt(12 * 60)).isFalse()
+    }
+
+    /** Urgent low is the strongest low: it replaces the low rule at once, and rings. */
+    @Test
+    fun `urgent low takes over from a low rule`() {
+        ruleList.value = listOf(low(70.0))
+        readings(68.0, newestAt = now - 10 * minute)
+        evaluate()
+
+        readings(68.0, 60.0, 50.0)
+        evaluate()
+
+        assertThat(alerts.raised.last().kind).isEqualTo(BgAlert.URGENT_LOW)
+        assertThat(alerts.raised.last().raisedAt).isNotEqualTo(alerts.raised.first().raisedAt)
+    }
+
+    /** Coming back from urgent low into the low range is the same occurrence: it does not ring again. */
+    @Test
+    fun `a weaker rule taking over keeps the occurrence`() {
+        ruleList.value = listOf(low(70.0))
+        readings(50.0)
+        evaluate()
+        val urgentAt = alerts.raised.single().raisedAt
+
+        readings(50.0, 62.0, 65.0)
+        evaluate()
+
+        assertThat(alerts.raised.last().kind).isEqualTo(BgAlert.LOW)
+        assertThat(alerts.raised.last().raisedAt).isEqualTo(urgentAt)
     }
 }

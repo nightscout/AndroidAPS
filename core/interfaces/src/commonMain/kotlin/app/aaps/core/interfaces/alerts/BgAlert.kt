@@ -10,9 +10,13 @@ import app.aaps.core.keys.interfaces.TextRef
 enum class BgAlert(private val idName: String, override val title: TextRef, override val isProtected: Boolean) : AlertKind {
 
     /** Always on, always rings, and also in Do Not Disturb. The user sets only its threshold. */
-    URGENT_LOW("urgent_low", InterfacesStrings.alert_kind_bg_urgent_low, isProtected = true);
+    URGENT_LOW("urgent_low", InterfacesStrings.alert_kind_bg_urgent_low, isProtected = true),
 
-    // The kinds of the user's own low and high rules come with those rules (step 2a-2).
+    /** The user's own low rules ([BgAlarmRule], [BgDirection.LOW]). */
+    LOW("low", InterfacesStrings.alert_kind_bg_low, isProtected = false),
+
+    /** The user's own high rules. */
+    HIGH("high", InterfacesStrings.alert_kind_bg_high, isProtected = false);
 
     // A getter: the companion object is not there yet while the entries are built
     override val id: String get() = "$SOURCE.$idName"

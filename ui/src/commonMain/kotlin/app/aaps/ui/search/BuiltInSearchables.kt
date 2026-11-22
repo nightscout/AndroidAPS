@@ -197,6 +197,7 @@ class BuiltInSearchables(
             // Ring, Silent or Off per kind of alert, and the BG alarms, where this platform has alerts (not on the desktop)
         ) + listOfNotNull(
             UnitDoubleKey.AlertUrgentLow.takeIf { alertKindsSettings.settingsItem != null },
+            alertKindsSettings.bgAlarmRulesItem,
             alertKindsSettings.settingsItem
         ) + alertKindsSettings.platformItems,
         icon = Icons.Default.Notifications

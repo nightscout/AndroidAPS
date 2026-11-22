@@ -7,6 +7,13 @@ import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertKindCatalogue
 import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.BgAlarmRules
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.ui.compose.bgAlarms.BgAlarmRulesScreen
+import app.aaps.ui.compose.bgAlarms.BgUnits
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import app.aaps.core.keys.interfaces.PreferenceItem
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withCompose
@@ -33,6 +40,9 @@ interface AlertKindsSettings {
     /** The user's choices on this phone, by kind id; its size is how many kinds are silent or off. */
     val choices: StateFlow<Map<String, AlertChoice>>
 
+    /** The screen of the user's own BG level rules, or null where there are no alerts. */
+    val bgAlarmRulesItem: PreferenceItem? get() = null
+
     /** Settings of the alarms that only this platform has, shown after the alert kinds. Android: display over other apps. */
     val platformItems: List<PreferenceItem> get() = emptyList()
 }
@@ -45,12 +55,37 @@ object AbsentAlertKindsSettings : AlertKindsSettings {
 }
 
 /** Bound by each platform that has alerts, next to its [Alerts]. */
+@OptIn(ExperimentalUuidApi::class)
 @SingleIn(AppScope::class)
 @Inject
 class AlertKindsSettingsImpl(
     private val alerts: Alerts,
-    private val catalogues: Set<AlertKindCatalogue>
+    private val catalogues: Set<AlertKindCatalogue>,
+    private val bgAlarmRules: BgAlarmRules,
+    private val profileUtil: ProfileUtil,
+    private val config: Config
 ) : AlertKindsSettings {
+
+    override val bgAlarmRulesItem: PreferenceItem = UiIntentKey.BgAlarmRules.withCompose(
+        ComposeScreenContent { onBack ->
+            val rules by bgAlarmRules.rules.collectAsState()
+            BgAlarmRulesScreen(
+                rules = rules,
+                // The rules are the master's: a client shows them only
+                readOnly = config.AAPSCLIENT,
+                units = BgUnits(
+                    label = profileUtil.unitLabel,
+                    format = { profileUtil.fromMgdlToStringWithUnits(it) },
+                    toUnits = { profileUtil.fromMgdlToStringInUnits(it) },
+                    // Some keyboards give a decimal comma
+                    toMgdl = { text -> text.trim().replace(',', '.').toDoubleOrNull()?.let { profileUtil.convertToMgdl(it, profileUtil.units) } }
+                ),
+                newId = { Uuid.random().toString() },
+                onSave = { bgAlarmRules.save(it) },
+                onBack = onBack
+            )
+        }
+    )
 
     override val choices: StateFlow<Map<String, AlertChoice>> get() = alerts.choices
 

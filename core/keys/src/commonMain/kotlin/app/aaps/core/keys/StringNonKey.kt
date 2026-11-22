@@ -136,5 +136,8 @@ enum class StringNonKey(
     // The alerts booked to ring at a time (Alerts.schedule), so one booked before the process ended still rings. Not
     // exportable: a booking belongs to this phone and this moment.
     AlertBookings(key = "alert_bookings", defaultValue = "[]", exportable = false),
+    // The user's own BG level rules (BgAlarmRules), a JSON list. Set on the master and synced to the clients, which
+    // read them only; exported with the master's settings.
+    BgAlarmRules(key = "bg_alarm_rules", defaultValue = "[]", exportable = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.MasterOnly)),
 
 }
