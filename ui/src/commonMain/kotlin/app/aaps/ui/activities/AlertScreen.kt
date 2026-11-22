@@ -80,9 +80,11 @@ fun AlertScreen(
         // it is answered, so its buttons say plain Silence rather than naming a time it will not come back after.
         silenceMinutes = if (alert.lifetime == AlertLifetime.CONDITION) Alerts.SILENCE_MINUTES else null,
         // The moment it rings is when the user wants to say "not this again". Not for a protected kind, which always
-        // rings. The alert stays, now as a card with no sound, so this screen closes.
+        // rings. It also answers this alarm, as Silence does, so setting the kind back to Ring later does not ring it
+        // again: a pump's alert stays as a card with no sound, one of the app's own is over.
         onSilenceKind = if (alert.kind.isProtected) null else {
             {
+                alerts.silence(source, key)
                 alerts.setChoice(alert.kind, AlertChoice.SILENT)
                 onClose()
             }

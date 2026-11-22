@@ -1,5 +1,6 @@
 package app.aaps.implementation.notifications
 
+import android.app.Notification
 import android.app.NotificationManager as AndroidNotificationManager
 import android.content.Context
 import android.content.Intent
@@ -72,9 +73,10 @@ class AndroidSystemNotificationPlatformTest {
     private fun notification(
         level: NotificationLevel,
         sound: AlarmSound? = null,
-        actions: List<NotificationAction> = emptyList()
+        actions: List<NotificationAction> = emptyList(),
+        id: NotificationId = NotificationId.NEW_VERSION_DETECTED
     ) = AapsNotification(
-        id = NotificationId.NEW_VERSION_DETECTED,
+        id = id,
         instanceKey = 42,
         text = "text",
         level = level,
@@ -203,5 +205,22 @@ class AndroidSystemNotificationPlatformTest {
         context.sendBroadcast(deleteIntent)
         ShadowLooper.idleMainLooper()
         assertThat(dismissed).isEqualTo(42)
+    }
+
+    /**
+     * The alert core owns the sound of an alert: the alarm screen, one chime or none. Its card in the tray is a copy,
+     * and the channel's sound on top made a WARNING sound twice and a card of a Silent kind ding. Other cards keep it.
+     */
+    @Test
+    fun `the card of an alert is shown in the tray without sound, other cards with it`() {
+        whenever(preferences.get(BooleanKey.AlertUrgentAsAndroidNotification)).thenReturn(true)
+        val tray = shadowOf(context.getSystemService(AndroidNotificationManager::class.java))
+
+        sut.show(notification(NotificationLevel.IMPORTANT, id = NotificationId.ALERT), "Warning")
+        assertThat(tray.allNotifications.single().groupAlertBehavior).isEqualTo(Notification.GROUP_ALERT_SUMMARY)
+
+        // The same instance key, so it replaces the first in the tray
+        sut.show(notification(NotificationLevel.IMPORTANT), "Warning")
+        assertThat(tray.allNotifications.single().groupAlertBehavior).isEqualTo(Notification.GROUP_ALERT_ALL)
     }
 }

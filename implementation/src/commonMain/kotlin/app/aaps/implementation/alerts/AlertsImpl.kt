@@ -130,12 +130,16 @@ class AlertsImpl(
         }
         lock.withLock {
             val map = storedChoices()
+            // Not the same choice again: below, a kind set to Ring rings what is active of it
+            if ((map[kind.id] ?: AlertChoice.RING) == choice) return
             if (choice == AlertChoice.RING) map.remove(kind.id) else map[kind.id] = choice
             saveChoices(map)
             _choices.value = map.toMap()
             aapsLogger.info(LTag.NOTIFICATION, "Alert kind ${kind.id} is now $choice on this phone")
-            // At once for what is active now; a kind set back to Ring rings again, without opening the alarm screen
-            entries.values.filter { it.alert.kind.id == kind.id }.forEach { showCard(it, ring = false) }
+            // At once for what is active now. A kind set back to Ring rings as a new alert does, with the alarm screen,
+            // because sound with nothing on the screen to answer it is worse than both. One the user has answered is
+            // silenced and stays quiet until its silence ends.
+            entries.values.filter { it.alert.kind.id == kind.id }.forEach { showCard(it, ring = choice == AlertChoice.RING) }
         }
     }
 

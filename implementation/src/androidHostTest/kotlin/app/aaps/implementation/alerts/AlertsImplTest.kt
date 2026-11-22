@@ -284,9 +284,34 @@ class AlertsImplTest : TestBase() {
         sut.setChoice(occlusion, AlertChoice.OFF)
         assertThat(cards()).isEmpty()
 
+        // Rings as a new alert does: sound with nothing on the screen to answer it would be worse
         sut.setChoice(occlusion, AlertChoice.RING)
         assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
+        assertThat(alertPlatform.screens).containsExactly("occlusion", "occlusion")
         assertThat(sut.choices.value).isEmpty()
+    }
+
+    /** As "Silence this kind" on the alarm screen does it: the alarm is answered, then the kind goes quiet. */
+    @Test
+    fun `an answered alert stays quiet when its kind is set back to ring`() {
+        sut.raise(alert(kind = occlusion))
+        sut.silence("pump", "occlusion")
+        sut.setChoice(occlusion, AlertChoice.SILENT)
+
+        sut.setChoice(occlusion, AlertChoice.RING)
+
+        assertThat(card().sound).isNull()
+        assertThat(sut.sounding).isNull()
+        assertThat(alertPlatform.screens).containsExactly("occlusion")
+    }
+
+    @Test
+    fun `the same choice again does not ring again`() {
+        sut.raise(alert(kind = occlusion))
+
+        sut.setChoice(occlusion, AlertChoice.RING)
+
+        assertThat(alertPlatform.screens).containsExactly("occlusion")
     }
 
     @Test

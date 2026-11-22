@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
@@ -78,7 +79,8 @@ class AndroidSystemNotificationPlatform(
      *    alert the user twice for one alarm.
      * 2. anything else is shown only when the user asked for it with
      *    [BooleanKey.AlertUrgentAsAndroidNotification] **and** it carries no actions - a notification
-     *    with actions is answered in the app, not from the tray.
+     *    with actions is answered in the app, not from the tray. The card of an alert
+     *    (`NotificationId.ALERT`) is shown with no sound, because the alert core owns its sound.
      * 3. otherwise nothing is shown at all, which is a legitimate outcome here.
      */
     override fun show(notification: AapsNotification, title: String) {
@@ -171,6 +173,9 @@ class AndroidSystemNotificationPlatform(
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setDeleteIntent(deleteIntent(n.instanceKey))
             .setContentIntent(notificationHolder().openAppIntent())
+            // The card of an alert is a copy: the alert core already decided what is heard (the alarm screen, one
+            // chime or nothing). The channel's own sound on top made a WARNING sound twice and a Silent kind ding.
+            .setSilent(n.id == NotificationId.ALERT)
         // No setVibrate or setSound here: since Android 8 the channel decides both, and these were
         // ignored (#5217). Audible alarms go through AlarmNotificationManager.
         // Keyed by instanceKey, which the registry also cancels by. For everything that cannot appear

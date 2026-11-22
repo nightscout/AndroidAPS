@@ -39,6 +39,9 @@ How a pump alert works is in `PUMP_DESIGN.md` (sections 2 and 8). How a CGM rais
 heads-up, for a card of any level, INFO included (checked on a Pixel, 2026-11-21: `mImportance=4`,
 `mSound=.../notification_sound`). The setting's name says "urgent" and the code comment says "no-sound, visual
 only", but neither is true: the 2017 version sent only URGENT cards to the tray, and its level check is gone.
+The card of an alert (`NotificationId.ALERT`) is the exception since 2026-11-22: it goes to the tray with no sound,
+because the alert core already decides what is heard. Before, a WARNING alert sounded twice (its chime and the
+ding) and a card of a Silent kind dinged.
 
 ## 3. Android notification channels
 
@@ -73,7 +76,7 @@ only", but neither is true: the 2017 version sent only URGENT cards to the tray,
   the silence is not: "mute all" stops them all, while a pump alert's silence is for that alert only and it rings
   again after 30 minutes.
 - **Every card in the tray makes a sound** (section 2): any card without buttons, at any level, dings with the
-  phone's notification sound while the tray setting is on.
+  phone's notification sound while the tray setting is on. Only the cards of alerts do not.
 - **Eversense** posts plain cards today, its transmitter's glucose alarms included. AAPS has no low or high glucose
   alarm of its own yet, so those cards are the only glucose alarm an Eversense user gets (the vendor app is stopped).
 - **Nightscout alarms** are the glucose alarms of an AAPSClient today. They come from the Nightscout server's plugins.
@@ -159,7 +162,10 @@ that fails rings before the next try succeeds.
 - **Where the user chooses** (decided 2026-11-22): the list in the settings, and on the alarm screen of a kind that is
   not protected, "Silence this kind on this phone": the moment it rings is when the user wants to say "not this
   again". Each module with kinds adds its group to the list (`AlertKindCatalogue`); a driver's group shows only
-  while it is in use.
+  while it is in use. That button also answers the alarm, as Silence does.
+- **Set back to Ring**, a kind rings what is active of it as a new alert does, with the alarm screen: sound with
+  nothing on the screen to answer it is worse than both. An alert the user has already answered stays quiet until
+  its silence ends (found on the Pixel, 2026-11-22).
 - **No delay in the core.** An alert is shown when it is raised. A kind that is noise for one user is silenced by
   that user. The trade-off: a user who silences "profile update failed" also gets a real, lasting failure as a silent
   card only. (The BG rules keep their own "how long the condition must last"; that is part of a rule, not of the
