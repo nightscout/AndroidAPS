@@ -1,6 +1,7 @@
 package app.aaps.pump.omnipod.common.bledriver.comm.message
 
 import app.aaps.core.utils.toHex
+import app.aaps.pump.omnipod.common.bledriver.comm.packet.BlePacketLayout
 import app.aaps.pump.omnipod.common.bledriver.comm.packet.PayloadSplitter
 import com.google.common.truth.Truth.assertThat
 import com.google.crypto.tink.subtle.Hex
@@ -17,8 +18,8 @@ class PayloadSplitterTest {
         val packets = splitter.splitInPackets()
 
         assertThat(packets).hasSize(2)
-        assertThat(packets[0].toByteArray().toHex()).isEqualTo(f1)
-        val p2 = packets[1].toByteArray()
+        assertThat(packets[0].toByteArray(BlePacketLayout.DASH).toHex()).isEqualTo(f1)
+        val p2 = packets[1].toByteArray(BlePacketLayout.DASH)
         assertThat(p2.size).isAtLeast(10)
         assertThat(p2.copyOfRange(0, 10).toHex()).isEqualTo(f2.subSequence(0, 20))
     }

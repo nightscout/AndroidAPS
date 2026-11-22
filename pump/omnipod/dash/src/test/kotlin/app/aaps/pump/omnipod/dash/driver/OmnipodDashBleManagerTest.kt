@@ -445,6 +445,24 @@ class OmnipodDashBleManagerTest {
         manager.pairNewPod().test().assertResult(PodEvent.AlreadyPaired)
     }
 
+    @Test
+    fun `a closed link is forgotten and the next connect makes a new one`() {
+        assertConnected(manager.connect(1000).test())
+
+        manager.closeLink()
+
+        verify(connection).disconnect(true)
+        assertConnected(manager.connect(1000).test())
+        verify(connectionFactory, times(2)).createConnection(address)
+    }
+
+    @Test
+    fun `closing a link that was never made does nothing`() {
+        manager.closeLink()
+
+        verifyNoInteractions(connectionFactory)
+    }
+
     private fun connectForCommand() {
         assertConnected(manager.connect(1000).test())
         clearInvocations(connection, connectionFactory, podState, deviceManager, session)

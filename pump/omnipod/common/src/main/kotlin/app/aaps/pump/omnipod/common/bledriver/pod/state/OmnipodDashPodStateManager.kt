@@ -14,6 +14,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.response.AlarmStatusResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.DefaultStatusResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.SetUniqueIdResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.VersionResponse
+import app.aaps.pump.omnipod.common.util.PodTimeZone
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
@@ -43,7 +44,9 @@ interface OmnipodDashPodStateManager {
     val failedConnectionsAfterRetries: Int
 
     val timeZoneId: String?
+    val timeZoneOffset: Int?
     val timeZoneUpdated: Long?
+    var timeChangeInProgress: Boolean
     val sameTimeZone: Boolean // The TimeZone is the same on the phone and on the pod
     val lastUpdatedSystem: Long // System.currentTimeMillis()
     val lastStatusResponseReceived: Long
@@ -86,6 +89,9 @@ interface OmnipodDashPodStateManager {
     val lastBolus: LastBolus?
     var suspendAlertsEnabled: Boolean
 
+    /** Counts the current expected rate up to [now] before changing it. */
+    fun updateBasalExpected(now: Long)
+
     fun increaseMessageSequenceNumber()
     fun increaseEapAkaSequenceNumber(): ByteArray
     fun commitEapAkaSequenceNumber()
@@ -99,6 +105,8 @@ interface OmnipodDashPodStateManager {
     fun incrementSuccessfulConnectionAttemptsAfterRetries()
     fun incrementFailedConnectionsAfterRetries()
     fun updateTimeZone()
+    fun confirmTimeZone(timeZone: PodTimeZone)
+    fun recordBasalProgramTimeZone(timeZone: PodTimeZone)
 
     fun createActiveCommand(
         historyId: Long,
@@ -114,6 +122,19 @@ interface OmnipodDashPodStateManager {
     fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: BolusType)
     fun markLastBolusComplete(): LastBolus?
     fun onStart()
+
+    /**
+     * Stores the state and drops the copy in memory. The next read loads the stored state again, as a start of the
+     * app does.
+     */
+    fun onStop()
+
+    /**
+     * Loads the stored state again when something else wrote it, as a settings import does.
+     *
+     * @return true when the state in memory was dropped, so the pod can be another one now
+     */
+    fun reloadIfChangedOutside(): Boolean
 
     /*
     This is called only:. It overwrites activationStatus
@@ -155,7 +176,8 @@ interface OmnipodDashPodStateManager {
         @Transient var sendError: Throwable?,
         var basalProgram: BasalProgram?,
         val tempBasal: TempBasal?,
-        val requestedBolus: Double?
+        val requestedBolus: Double?,
+        var basalTimeZone: PodTimeZone? = null
     )
 
     // TODO: set created to "now" on boot

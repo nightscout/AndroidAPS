@@ -17,8 +17,6 @@ enum class ResponseType(override val value: Byte) : HasValue {
         ALARM_STATUS(0x02.toByte()),
         STATUS_RESPONSE_PAGE_3(0x03.toByte()),
         STATUS_RESPONSE_PAGE_5(0x05.toByte()),
-        STATUS_RESPONSE_PAGE_6(0x06.toByte()),
-        STATUS_RESPONSE_PAGE_70(0x46.toByte()),
         STATUS_RESPONSE_PAGE_80(0x50.toByte()),
         STATUS_RESPONSE_PAGE_81(0x51.toByte()),
         UNKNOWN(0xff.toByte());

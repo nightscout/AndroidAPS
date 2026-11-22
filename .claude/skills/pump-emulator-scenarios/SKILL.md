@@ -156,6 +156,18 @@ CI does (on Windows through `cmd`: PowerShell puts a byte-order mark before the 
 cmd /c "echo no| <sdk>\cmdline-tools\latest\bin\avdmanager.bat create avd -n citest_local -k system-images;android-31;google_apis_playstore;x86_64"
 ```
 
+With no `android-31` image at hand, any phone AVD shows the same layout faults once it is set to that screen:
+`adb -s <serial> shell wm size 320x640` and `adb -s <serial> shell wm density 160`. On a `-read-only` emulator the
+change is gone with the emulator.
+
+What the small screen has shown so far, all in `ScreenDriver`:
+
+- `UiObject2.scroll()` is not used. It did not move a pump settings list (a scrolling Compose column), and it returned
+  "at the end" after every step, so a search went one step down and one step up for ever. `ScreenDriver` swipes by
+  itself, near the left edge where no slider or button is, and turns around when a step moved nothing.
+- A bottom sheet as tall as the screen covers its scrim, so "Close sheet" is not there. The drag handle is the sign
+  then. The permissions sheet at the app start is that tall on a newer Android, which asks for more.
+
 Shard C's logcat can rotate before CI reads it, so the UI base adds the screen to the error, which the test output keeps.
 
 ## Traps
@@ -237,5 +249,17 @@ Shard C's logcat can rotate before CI reads it, so the UI base adds the screen t
   gives the profile's basal, or a fault a test sets right after the pairing hits the pairing's write.
 - A report of the pump is not always "ready". The Diaconn G8 reports a basal write at about 23.5 s, then still refuses
   the start of that basal; it took it at 30.5 s. Test a shorter wait on the real pump before the emulator copies it.
+- A driver may read "connected" from a value its own radio code writes. The Omnipod drivers keep the link state in the
+  pod state, written by the real connection class. The emulator replaces that class, so it must write the same value
+  at the same moments, or the queue asks for a connection again and again while the link is up.
+- A driver without the shared BLE transport (the Omnipod drivers) needs its own seam: an interface for all it asks of
+  Bluetooth (scan, connect, bond), with the real radio and the emulator behind it. Put the emulator at the lowest
+  interface the driver has, so its own packet, pairing and encryption code still runs against the emulated pump.
+- A pump that reports its reservoir only below a limit (a pod says only "more than 50 U" above 50 U): the scenarios
+  follow a bolus by the reservoir, so the emulated pump starts at that limit. Say so in the emulator: it is not what a
+  new pump holds.
+- A pod has no stop on its screens, but its drivers write a profile as "stop the pod, then send the basal". A test
+  that needs a stopped pod loses the second command (`loseCommand(BASAL_PROFILE)`, then `profileWrittenOnce`). That is
+  also how a user comes to see "Resume Delivery".
 - A percent pump turns the loop's rate into a percent of the base rate. A trap needs a base on which the rate is a
   float error away from a step and still under the limits (1 U/h, 200 %): the amount scenario switches to 80 %.

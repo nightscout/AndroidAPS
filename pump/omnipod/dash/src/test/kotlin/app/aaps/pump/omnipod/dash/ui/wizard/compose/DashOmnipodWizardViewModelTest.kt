@@ -6,12 +6,10 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -22,13 +20,15 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
+import app.aaps.pump.omnipod.common.queue.command.CommandDeactivatePod
+import app.aaps.pump.omnipod.common.queue.command.CommandInitializePod
+import app.aaps.pump.omnipod.common.queue.command.CommandInsertCannula
 import app.aaps.pump.omnipod.common.ui.wizard.compose.ActionState
 import app.aaps.pump.omnipod.common.ui.wizard.compose.ActivationType
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodWizardStep
-import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
-import app.aaps.pump.omnipod.dash.history.DashHistory
+import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
 import com.google.common.truth.Truth.assertThat
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,9 +42,11 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.timeout
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
@@ -60,14 +62,10 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class DashOmnipodWizardViewModelTest {
 
-    @Mock private lateinit var omnipodManager: OmnipodDashManager
-    @Mock private lateinit var podStateManager: OmnipodDashPodStateManager
+    @Mock private lateinit var omnipodDashPumpPlugin: OmnipodDashPumpPlugin
     @Mock private lateinit var preferences: Preferences
     @Mock private lateinit var rh: ResourceHelper
-    @Mock private lateinit var history: DashHistory
     @Mock private lateinit var commandQueue: CommandQueue
-    @Mock private lateinit var notificationManager: NotificationManager
-    @Mock private lateinit var pumpSync: PumpSync
     @Mock private lateinit var fabricPrivacy: FabricPrivacy
     @Mock private lateinit var insulinManager: InsulinManager
     @Mock private lateinit var profileFunction: ProfileFunction
@@ -86,8 +84,8 @@ internal class DashOmnipodWizardViewModelTest {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(mainDispatcher)
         sut = DashOmnipodWizardViewModel(
-            omnipodManager, podStateManager, preferences, rh, history, commandQueue,
-            notificationManager, pumpSync, fabricPrivacy, insulinManager, profileFunction,
+            omnipodDashPumpPlugin, preferences, rh, commandQueue,
+            fabricPrivacy, insulinManager, profileFunction,
             profileRepository, persistenceLayer, pumpEnactResultProvider, logger, aapsSchedulers, rxBus
         )
     }
@@ -230,5 +228,35 @@ internal class DashOmnipodWizardViewModelTest {
         assertThat(sut.siteArrow.value).isEqualTo(TE.Arrow.UP)
         assertThat(sut.getSelectedSiteLocation()).isEqualTo(TE.Location.SIDE_RIGHT_UPPER_ARM)
         assertThat(sut.getSelectedSiteArrow()).isEqualTo(TE.Arrow.UP)
+    }
+
+    // The wizard does not talk to the pod. Each step that does is one command of the queue.
+
+    private fun runStep(step: OmnipodWizardStep) {
+        whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
+        whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
+        sut.moveToStep(step)
+        sut.executeAction()
+    }
+
+    @Test
+    fun `pairing and priming the pod is a command of the queue`() {
+        runStep(OmnipodWizardStep.INITIALIZE_POD)
+
+        verifyBlocking(commandQueue, timeout(2_000)) { customCommand(argThat { this is CommandInitializePod }) }
+    }
+
+    @Test
+    fun `inserting the cannula is a command of the queue`() {
+        runStep(OmnipodWizardStep.INSERT_CANNULA)
+
+        verifyBlocking(commandQueue, timeout(2_000)) { customCommand(argThat { this is CommandInsertCannula }) }
+    }
+
+    @Test
+    fun `deactivating the pod is a command of the queue`() {
+        runStep(OmnipodWizardStep.DEACTIVATE_POD)
+
+        verifyBlocking(commandQueue, timeout(2_000)) { customCommand(argThat { this is CommandDeactivatePod }) }
     }
 }

@@ -23,6 +23,7 @@ fun InterfaceIDs.PumpType.fromDb(): PumpType =
         InterfaceIDs.PumpType.DANA_I2                     -> PumpType.DANA_I2
         InterfaceIDs.PumpType.OMNIPOD_EROS                -> PumpType.OMNIPOD_EROS
         InterfaceIDs.PumpType.OMNIPOD_DASH                -> PumpType.OMNIPOD_DASH
+        InterfaceIDs.PumpType.OMNIPOD_5                   -> PumpType.OMNIPOD_5
         InterfaceIDs.PumpType.MEDTRONIC_512_517           -> PumpType.MEDTRONIC_512_712
         InterfaceIDs.PumpType.MEDTRONIC_515_715           -> PumpType.MEDTRONIC_515_715
         InterfaceIDs.PumpType.MEDTRONIC_522_722           -> PumpType.MEDTRONIC_522_722
@@ -66,6 +67,7 @@ fun PumpType.toDb(): InterfaceIDs.PumpType =
         PumpType.DANA_I2                   -> InterfaceIDs.PumpType.DANA_I2
         PumpType.OMNIPOD_EROS              -> InterfaceIDs.PumpType.OMNIPOD_EROS
         PumpType.OMNIPOD_DASH              -> InterfaceIDs.PumpType.OMNIPOD_DASH
+        PumpType.OMNIPOD_5                 -> InterfaceIDs.PumpType.OMNIPOD_5
         PumpType.MEDTRONIC_512_712         -> InterfaceIDs.PumpType.MEDTRONIC_512_517
         PumpType.MEDTRONIC_515_715         -> InterfaceIDs.PumpType.MEDTRONIC_515_715
         PumpType.MEDTRONIC_522_722         -> InterfaceIDs.PumpType.MEDTRONIC_522_722

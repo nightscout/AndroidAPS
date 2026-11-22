@@ -48,5 +48,8 @@ interface OmnipodDashManager {
 
     fun disconnect(closeGatt: Boolean = false)
 
+    /** Closes the link and forgets it, so the next connect starts new. For a driver that stops. */
+    fun closeLink()
+
     fun connect(stop: CountDownLatch): Observable<PodEvent>
 }
