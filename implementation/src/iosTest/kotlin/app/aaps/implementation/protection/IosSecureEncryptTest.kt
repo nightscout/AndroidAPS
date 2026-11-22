@@ -103,12 +103,18 @@ class IosSecureEncryptTest {
         assertFalse(secure.isValidDataString(":"))
     }
 
-    /** The header hash is what turns a tampered or truncated string into a refusal. */
+    /**
+     * The header hash is what turns a tampered or truncated string into a refusal.
+     *
+     * The last hex digit is changed to a different one. Writing a fixed "ff" over the last byte, as
+     * this test did, changed nothing when that byte was already 0xFF - 1 run in 256 - and the test failed.
+     */
     @Test
     fun `a tampered body no longer validates`() {
         val encrypted = secure.encrypt("secret", "alias1")
-        val tampered = encrypted.dropLast(2) + "ff"
+        val tampered = encrypted.dropLast(1) + if (encrypted.last() == '0') '1' else '0'
 
+        assertNotEquals(encrypted, tampered)
         assertFalse(secure.isValidDataString(tampered))
         assertEquals("", secure.decrypt(tampered))
     }

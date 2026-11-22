@@ -1,12 +1,10 @@
 package app.aaps.plugins.constraints.objectives.compose
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.ComposablePluginContent
-import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.metroViewModel
@@ -25,16 +23,6 @@ class ObjectivesComposeContent : ComposablePluginContent {
 
         val state by viewModel.uiState.collectAsStateWithLifecycle()
         val scrollToIndex by viewModel.scrollToIndex.collectAsStateWithLifecycle()
-        val snackbarMessage by viewModel.snackbarMessage.collectAsStateWithLifecycle()
-
-        // Snackbar
-        val snackbarHostState = LocalSnackbarHostState.current
-        LaunchedEffect(snackbarMessage) {
-            snackbarMessage?.let { message ->
-                snackbarHostState.showSnackbar(message)
-                viewModel.onSnackbarShown()
-            }
-        }
 
         ObjectivesScreen(
             state = state,

@@ -13,6 +13,7 @@ import app.aaps.core.ui.compose.pump.scanProblem
 import app.aaps.plugins.eversense.EversenseDriver
 import app.aaps.plugins.eversense.callbacks.EversenseWatcher
 import app.aaps.plugins.eversense.connection.EversenseSession
+import app.aaps.plugins.eversense.di.EversenseCentral
 import app.aaps.plugins.eversense.enums.EversenseType
 import app.aaps.plugins.eversense.keys.EversenseRuntimeKey
 import app.aaps.plugins.eversense.models.ActiveAlarm
@@ -60,7 +61,7 @@ import kotlin.time.Duration.Companion.seconds
 class EversensePairingImpl(
     // Deferred: building the driver opens its store, which a graph build must not do
     private val eversenseProvider: () -> EversenseDriver,
-    private val central: BleCentral,
+    @param:EversenseCentral private val central: BleCentral,
     private val preferences: Preferences,
     private val aapsLogger: AAPSLogger
 ) : EversensePairing {

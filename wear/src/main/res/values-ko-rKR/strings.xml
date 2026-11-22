@@ -18,7 +18,7 @@
     <string name="pref_interface_settings">인터페이스</string>
     <string name="pref_tile_settings">타일</string>
     <string name="pref_others_settings">기타</string>
-    <string name="pref_complication_settings">Complication</string>
+    <string name="pref_complication_settings">컴플리케이션</string>
     <string name="pref_show_date">날짜 표시</string>
     <string name="pref_show_iob">IOB 표시</string>
     <string name="pref_show_detailed_iob">IOB 자세히 표시하기</string>
@@ -60,7 +60,7 @@
     <string name="pref_wizard_in_menu">메뉴의 계산기</string>
     <string name="pref_prime_in_menu">메뉴에서 프라임</string>
     <string name="pref_single_target">단일 목표</string>
-    <string name="pref_wizard_percentage">계산기의 퍼센트</string>
+    <string name="pref_wizard_percentage">계산기 퍼센트</string>
     <string name="pref_wizard_carbs_type">계산기 식사 유형</string>
     <string name="pref_wizard_carb_time">계산기 탄수화물 시간</string>
     <string name="pref_complication_tap_action">컴플리케이션 탭 동작</string>
@@ -72,13 +72,13 @@
     <string name="pref_version">버전:</string>
     <string name="pref_moreWatchfaceSettings">워치 페이스 설정 더 보기</string>
     <string name="pref_lookInYourWatchfaceConfiguration">워치 페이스 설정을 확인하십시오.</string>
-    <string name="menu_tempt">임시목표</string>
+    <string name="menu_tempt">임시 목표</string>
     <string name="menu_tempt_long">임시 목표</string>
     <string name="menu_wizard">계산기</string>
     <string name="menu_wizard_short">Calc</string>
     <string name="menu_treatment">처치</string>
     <string name="menu_treatment_short">처치</string>
-    <string name="menu_bolus">Bolus</string>
+    <string name="menu_bolus">볼러스</string>
     <string name="menu_carb">탄수화물</string>
     <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">설정</string>
@@ -205,7 +205,7 @@
     <string name="temp_target_manual">수동</string>
     <string name="temp_target_cancel">취소</string>
     <string name="tile_none">없음</string>
-    <string name="tile_no_config">가능한 환경설정 없음</string>
+    <string name="tile_no_config">사용 가능한 설정 없음</string>
     <string name="wear_control_not_enabled">Wear 조작 불가능함</string>
     <string name="wear_control_no_data">사용할 수 있는 데이터 없음</string>
     <string name="abbreviation_average">평균</string>
@@ -244,7 +244,7 @@
     <string name="datalayer_notification_title">Data Layer Foreground Service</string>
     <string name="datalayer_notification_text">AAPS가 포그라운드에서 실행 중입니다. 알림을 숨기려면 개발자 옵션, 앱 알림, 허용된 워치 앱으로 이동하여 AAPS를 선택하고 Data Layer Foreground Service Channel 알림을 끄십시오.</string>
     <string name="on">켬</string>
-    <string name="off"></string>
+    <string name="off">끔</string>
     <string name="complication_full_status">전체 상태</string>
     <string name="complication_full_status_flipped">전체 상태 (반전)</string>
     <string name="complication_blood_glucose">혈당</string>
@@ -293,7 +293,7 @@
     <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
     <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d분</string>
     <string name="wizard_set_alarm">알람 설정</string>
-    <string name="eat_reminder_title">식사 시간</string>
+    <string name="eat_reminder_title">식사할 시간</string>
     <string name="eat_reminder_silence">음소거</string>
     <string name="eat_reminder_stop">정지</string>
     <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">%1$s에 울림</string>

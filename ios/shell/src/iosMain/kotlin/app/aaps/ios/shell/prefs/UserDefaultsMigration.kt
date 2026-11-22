@@ -24,6 +24,11 @@ import platform.Foundation.NSUserDefaults
  * the app's defaults - a date, data, a list - was not written by AAPS and stays where it is. A whole
  * number moves as a Long, because `NSUserDefaults` keeps Int and Long the same way; the store reads a
  * Long back as an Int when asked for one.
+ *
+ * Only once. Firebase and iOS keep their own values in the same `NSUserDefaults`, and a move on every
+ * start took those too: each start moved them into the AAPS settings and deleted them where their owner
+ * reads them. So after the first move that worked, or a first open with nothing to move (a new install
+ * never had `IosSp` settings), [MOVE_DONE_KEY] is set and nothing moves again.
  */
 class UserDefaultsMigration(
     private val defaults: NSUserDefaults,
@@ -36,7 +41,12 @@ class UserDefaultsMigration(
 
     private var movedKeys: Set<String> = emptySet()
 
-    override suspend fun shouldMigrate(currentData: Map<String, Any>): Boolean = values().isNotEmpty()
+    override suspend fun shouldMigrate(currentData: Map<String, Any>): Boolean {
+        if (defaults.boolForKey(MOVE_DONE_KEY)) return false
+        if (values().isNotEmpty()) return true
+        defaults.setBool(true, forKey = MOVE_DONE_KEY)
+        return false
+    }
 
     override suspend fun migrate(currentData: Map<String, Any>): Map<String, Any> {
         val values = values()
@@ -53,6 +63,7 @@ class UserDefaultsMigration(
                 return
             }
             movedKeys.forEach { defaults.removeObjectForKey(it) }
+            defaults.setBool(true, forKey = MOVE_DONE_KEY)
             log.info(LTag.CORE, "Moved ${movedKeys.size} settings from NSUserDefaults into the encrypted store")
         } catch (e: Exception) {
             log.error(LTag.CORE, "Could not check the moved settings; they stay in NSUserDefaults: ${e.message}")
@@ -63,6 +74,7 @@ class UserDefaultsMigration(
     internal fun values(): Map<String, Any> =
         defaults.persistentDomainForName(domain).orEmpty().entries.mapNotNull { (key, value) ->
             val name = key as? String ?: return@mapNotNull null
+            if (name == MOVE_DONE_KEY) return@mapNotNull null
             storable(value)?.let { name to it }
         }.toMap()
 
@@ -73,6 +85,9 @@ class UserDefaultsMigration(
     }
 
     companion object {
+
+        /** Set in `NSUserDefaults` once the move is done, so it never runs again. */
+        internal const val MOVE_DONE_KEY = "aaps.settings_moved_to_store"
 
         /**
          * A value of `NSUserDefaults` as the store holds it, or null when the store cannot hold it.

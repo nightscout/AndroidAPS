@@ -40,6 +40,19 @@
 // Set before the include so that the local file can override it.
 AAPS_CLIENT_ID_PREFIX = app.aaps.$(DEVELOPMENT_TEAM)
 
+// The entitlements of a device build. Device.entitlements asks for Time Sensitive
+// notifications, which is what lets an alarm through Focus and Sleep. Without it iOS
+// quietly posts every alarm as a normal notification, and a phone in Sleep shows none.
+//
+// A free Apple account cannot have that entitlement, and signing then fails. Somebody
+// building with a free account puts this in Signing.local.xcconfig, and accepts that
+// alarms do not break through Focus:
+//
+//     AAPS_DEVICE_ENTITLEMENTS =
+//
+// Set before the include so that the local file can override it.
+AAPS_DEVICE_ENTITLEMENTS = Device.entitlements
+
 #include? "Signing.local.xcconfig"
 
 // The generated version numbers, from :ios:shell:generateIosVersionXcconfig. Optional for the same

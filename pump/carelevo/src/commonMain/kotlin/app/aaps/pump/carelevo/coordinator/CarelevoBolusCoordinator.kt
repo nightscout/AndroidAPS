@@ -893,6 +893,10 @@ class CarelevoBolusCoordinator @Inject constructor(
 
         bolusExpectMs = data.expectSec * 1000L
         val delayMs = bolusExpectMs / totalSteps
+        // The progress follows the time of day, not only the time slept. A locked iPhone freezes the app
+        // between Bluetooth events, and a sleep counts only the time the app is awake: there a 38 s bolus
+        // took 3 minutes, and held the pump link and the loop for all that time.
+        val progressStart = dateUtil.now()
 
         var completed = false
         for (step in 0..totalSteps) {
@@ -925,11 +929,14 @@ class CarelevoBolusCoordinator @Inject constructor(
                 )
                 completed = true
             } else {
-                // Sleep the per-step delay in short slices so a mid-step stop is honored within
-                // PROGRESS_POLL_MS rather than after the full delayMs (sleepBlocking is blocking
-                // and does not observe coroutine cancellation).
+                // Wait for the end of this step in short slices, so a mid-step stop is honored within
+                // PROGRESS_POLL_MS (sleepBlocking is blocking and does not observe coroutine
+                // cancellation). The step ends when the clock reaches its end, or when delayMs has been
+                // slept, whichever comes first: the clock catches up after a freeze, and the time slept
+                // still ends the step if the phone clock is set back.
+                val stepEnd = progressStart + (step + 1) * delayMs
                 var slept = 0L
-                while (slept < delayMs && !isImmeBolusStop && !bolusProgressData.isStopPressed) {
+                while (slept < delayMs && dateUtil.now() < stepEnd && !isImmeBolusStop && !bolusProgressData.isStopPressed) {
                     val chunk = min(PROGRESS_POLL_MS, delayMs - slept)
                     sleepBlocking(chunk)
                     slept += chunk

@@ -5,13 +5,13 @@
     <string name="medtrum_pump_description">תמיכה במשאבת Medtrum Nano ו-Medtrum 300U</string>
     <string name="medtrum_pump_setting">הגדרות משאבת Medtrum</string>
     <string name="pump_error">שגיאת משאבה: %1$s !!</string>
-    <string name="pump_warning">אזהרת משאבה: %1$s </string>
+    <string name="pump_warning">אזהרת משאבה: %1$s</string>
     <string name="pump_is_suspended">המשאבה מושהית</string>
     <string name="pump_is_suspended_hour_max">פעולת המשאבה הושעתה בגלל חריגה מערך האינסולין השעתי המקסימלי</string>
     <string name="pump_is_suspended_day_max">המשאבה מושהית עקב חריגה מכמות האינסולין היומית המרבית</string>
     <string name="patch_not_active">הפאץ\' לא הופעל</string>
     <string name="pump_setting_failed">החלת הגדרות המשתמש על המשאבה נכשלה!</string>
-    <string name="pump_sync_error">חלה שגיאה בזמן סינכרון ההיסטוריה מהמשאבה, רשומה דולגה. בדקו ב-\"טיפולים\" האם הבולוסים סונכרנו כיאות. השתיקו את ההתראה, ואם השגיאה חוזרת על עצמה, החליפו את הפאץ\' או את בסיס המשאבה.</string>
+    <string name="pump_sync_error">חלה שגיאה בזמן סנכרון ההיסטוריה מהמשאבה, רשומה דולגה. בדקו בלשונית \"טיפולים\" אם הבולוסים סונכרנו כראוי. השתיקו את ההתראה, ואם השגיאה חוזרת, החליפו את הפאץ\' או את בסיס המשאבה.</string>
     <string name="patch_reset_after_primed_error">הפאץ\' הופעל מחדש בעצמו ואיבד את ההפעלה הנוכחית. הוא אינו יכול לספק עוד אינסולין. הסירו את הפאץ\' והפעילו חדש.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">בולוס פעיל</string>
@@ -91,6 +91,7 @@
     <string name="press_OK_to_return">לחצו על <b>OK</b> כדי לחזור למסך הראשי.</string>
     <string name="deactivate_sure">האם אתם בטוחים שברצונכם להשבית את הפאץ\' הנוכחי?</string>
     <string name="cancel_sure">האם אתם בטוחים שברצונכם לבטל את ההפעלה?</string>
+    <string name="cancel_deactivation_sure">האם אתם בטוחים שברצונכם לבטל את ההשבתה? ייתכן שהפאץ\' יישאר פעיל.</string>
     <string name="medtrum_deactivate_pump_confirm">האם אתם בטוחים? לא ניתן לבטל פעולה זו!!</string>
     <string name="press_next_or_cancel">לחצו על <b>הבא</b> כדי להשבית או על <b>ביטול</b> כדי לחזור למסך הראשי.</string>
     <string name="deactivating_pump">משבית את הפאץ\'. נא להמתין.</string>

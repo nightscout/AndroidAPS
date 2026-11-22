@@ -40,6 +40,8 @@ class EversenseE3Communicator {
         suspend fun readGlucose(gatt: EversenseLink, preferences: EversenseStore, watchers: List<EversenseWatcher>) {
             val stateJson = preferences.getString(StorageKeys.STATE, null) ?: "{}"
             val state = JSON.decodeFromString<EversenseState>(stateJson)
+            // A last reading dated in the future (stored before this check existed) would refuse every real one
+            if (PacketTime.isAhead(state.recentGlucoseDatetime)) state.recentGlucoseDatetime = 0L
             val recentCutoffTime = PacketTime.nowMillis() - 60_000L
 
             if (recentCutoffTime < state.recentGlucoseDatetime) {
@@ -50,6 +52,10 @@ class EversenseE3Communicator {
             try {
                 gatt.aapsLogger.debug(LTag.BGSOURCE) { "Reading current glucose..." }
                 val glucoseData = gatt.writePacket<GetCurrentGlucosePacket.Response>(GetCurrentGlucosePacket())
+                if (PacketTime.isAhead(glucoseData.datetime)) {
+                    gatt.aapsLogger.warn(LTag.BGSOURCE, "Glucose reading dated in the future, not taken - reading: ${glucoseData.datetime}, now: ${PacketTime.nowMillis()}")
+                    return
+                }
                 if (glucoseData.datetime <= state.recentGlucoseDatetime) {
                     gatt.aapsLogger.warn(LTag.BGSOURCE, "Glucose data is still recent after reading - currentReading: ${glucoseData.datetime}, lastReading: ${state.recentGlucoseDatetime}")
                     return

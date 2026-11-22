@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.IosPermission
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -37,12 +38,11 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 /**
- * That iOS reports no permissions, and says so loudly if that ever stops being right.
+ * What the iOS permission screen lists, and when a group counts as missing.
  *
- * Empty is easy to mistake for unfinished, so the second half matters as much as the first: the
- * class asks the plugins before answering, and an answer it cannot act on has to reach the log
- * rather than vanish. A permission listed as missing on iOS would send the user looking for a
- * setting that does not exist; one listed as granted would claim a check nothing performed.
+ * A refused permission on iOS is silent - alarms that never show, a pump that cannot be reached - so
+ * what matters is that a refusal is listed, that a guess is not, and that a group iOS cannot check is
+ * neither shown nor dropped without a word.
  */
 class IosPluginPermissionsTest {
 
@@ -135,7 +135,15 @@ class IosPluginPermissionsTest {
         private fun unused(): Nothing = throw AssertionError("IosPluginPermissions must only read the plugin list")
     }
 
+    private class FakeStatus(val states: MutableMap<String, IosPermissionState> = mutableMapOf()) : IosPermissionStatus {
+
+        override fun state(permission: String): IosPermissionState = states[permission] ?: IosPermissionState.GRANTED
+        override fun refresh(onDone: () -> Unit) = onDone()
+        override fun ask(permission: String, onDone: () -> Unit) = onDone()
+    }
+
     private val logger = RecordingLogger()
+    private val status = FakeStatus()
 
     private fun group(vararg permissions: String) = PermissionGroup(
         permissions = permissions.toList(),
@@ -146,57 +154,84 @@ class IosPluginPermissionsTest {
     private fun sut(
         plugins: List<PluginBase> = emptyList(),
         providers: Set<PermissionProvider> = emptySet()
-    ) = IosPluginPermissions(logger, FakeActivePlugin(plugins)) { providers }
+    ) = IosPluginPermissions(logger, FakeActivePlugin(plugins), status) { providers }
+
+    private fun List<PermissionGroup>.ids() = map { it.permissions }
 
     @Test
-    fun `with no plugins at all both lists are empty`() {
+    fun `notifications are always listed also with no plugins`() {
+        assertEquals(listOf(listOf(IosPermission.NOTIFICATIONS)), sut().collectAllPermissions().ids())
+        assertTrue(logger.errors.isEmpty())
+    }
+
+    @Test
+    fun `granted and not yet read are not missing`() {
+        status.states[IosPermission.NOTIFICATIONS] = IosPermissionState.GRANTED
         assertTrue(sut().collectMissingPermissions().isEmpty())
-        assertTrue(sut().collectAllPermissions().isEmpty())
-        assertTrue(logger.errors.isEmpty())
+
+        status.states[IosPermission.NOTIFICATIONS] = IosPermissionState.UNKNOWN
+        assertTrue(sut().collectMissingPermissions().isEmpty(), "a guess must not open the sheet")
+    }
+
+    /** A refusal is the case this class exists for: without it, alarms are silent and nothing says so. */
+    @Test
+    fun `refused and never asked are missing`() {
+        status.states[IosPermission.NOTIFICATIONS] = IosPermissionState.DENIED
+        assertEquals(listOf(listOf(IosPermission.NOTIFICATIONS)), sut().collectMissingPermissions().ids())
+
+        status.states[IosPermission.NOTIFICATIONS] = IosPermissionState.NOT_ASKED
+        assertEquals(listOf(listOf(IosPermission.NOTIFICATIONS)), sut().collectMissingPermissions().ids())
     }
 
     @Test
-    fun `a plugin that wants nothing produces no complaint`() {
-        val sut = sut(plugins = listOf(FakePlugin(logger, enabled = true, groups = emptyList())))
+    fun `an enabled pump adds Bluetooth and a refusal shows`() {
+        status.states[IosPermission.BLUETOOTH] = IosPermissionState.DENIED
+        val sut = sut(plugins = listOf(FakePlugin(logger, enabled = true, groups = listOf(group(IosPermission.BLUETOOTH)))))
 
-        assertTrue(sut.collectAllPermissions().isEmpty())
-        assertTrue(logger.errors.isEmpty())
-    }
-
-    /** The guard. Today nothing reaches this, and the day something does it must not pass quietly. */
-    @Test
-    fun `a plugin that declares a permission is reported as a problem`() {
-        val sut = sut(plugins = listOf(FakePlugin(logger, enabled = true, groups = listOf(group("some.permission")))))
-
-        assertTrue(sut.collectAllPermissions().isEmpty(), "still nothing the screen can act on")
-        assertEquals(1, logger.errors.size)
-        assertTrue(logger.errors.single().contains("some.permission"))
+        assertEquals(listOf(listOf(IosPermission.NOTIFICATIONS), listOf(IosPermission.BLUETOOTH)), sut.collectAllPermissions().ids())
+        assertEquals(listOf(listOf(IosPermission.BLUETOOTH)), sut.collectMissingPermissions().ids())
     }
 
     @Test
     fun `a disabled plugin is not asked`() {
-        val sut = sut(plugins = listOf(FakePlugin(logger, enabled = false, groups = listOf(group("some.permission")))))
+        val sut = sut(plugins = listOf(FakePlugin(logger, enabled = false, groups = listOf(group(IosPermission.BLUETOOTH)))))
 
-        assertTrue(sut.collectAllPermissions().isEmpty())
-        assertTrue(logger.errors.isEmpty())
+        assertEquals(listOf(listOf(IosPermission.NOTIFICATIONS)), sut.collectAllPermissions().ids())
+    }
+
+    @Test
+    fun `the same group from two plugins is listed once`() {
+        val pump = FakePlugin(logger, enabled = true, groups = listOf(group(IosPermission.BLUETOOTH)))
+        val other = FakePlugin(logger, enabled = true, groups = listOf(group(IosPermission.BLUETOOTH)))
+
+        assertEquals(1, sut(plugins = listOf(pump, other)).collectAllPermissions().count { it.permissions == listOf(IosPermission.BLUETOOTH) })
     }
 
     @Test
     fun `a permission provider is asked as well as the plugins`() {
+        status.states[IosPermission.LOCATION] = IosPermissionState.NOT_ASKED
         val provider = object : PermissionProvider {
-            override fun requiredPermissions(): List<PermissionGroup> = listOf(group("provider.permission"))
+            override fun requiredPermissions(): List<PermissionGroup> = listOf(group(IosPermission.LOCATION))
         }
-        val sut = sut(providers = setOf(provider))
 
-        assertTrue(sut.collectMissingPermissions().isEmpty())
-        assertTrue(logger.errors.single().contains("provider.permission"))
+        assertEquals(listOf(listOf(IosPermission.LOCATION)), sut(providers = setOf(provider)).collectMissingPermissions().ids())
     }
 
-    /** Both entry points behave the same, so neither can drift into inventing a group. */
+    /** The guard: a group iOS cannot check is neither shown nor dropped quietly. */
     @Test
-    fun `missing and all agree`() {
-        val sut = sut(plugins = listOf(FakePlugin(logger, enabled = true, groups = listOf(group("a", "b")))))
+    fun `a permission iOS cannot check is left out and logged`() {
+        val sut = sut(plugins = listOf(FakePlugin(logger, enabled = true, groups = listOf(group("android.permission.SOMETHING")))))
 
-        assertEquals(sut.collectAllPermissions(), sut.collectMissingPermissions())
+        assertEquals(listOf(listOf(IosPermission.NOTIFICATIONS)), sut.collectAllPermissions().ids())
+        assertEquals(1, logger.errors.size)
+        assertTrue(logger.errors.single().contains("android.permission.SOMETHING"))
+    }
+
+    @Test
+    fun `a group that mixes a known and an unknown id is left out as well`() {
+        val sut = sut(plugins = listOf(FakePlugin(logger, enabled = true, groups = listOf(group(IosPermission.BLUETOOTH, "other")))))
+
+        assertEquals(listOf(listOf(IosPermission.NOTIFICATIONS)), sut.collectAllPermissions().ids())
+        assertTrue(logger.errors.single().contains("other"))
     }
 }

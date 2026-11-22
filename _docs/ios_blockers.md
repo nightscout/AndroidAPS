@@ -259,6 +259,13 @@ What the iOS side has to do:
 
 The tests are in `androidHostTest` (`KeepAliveRunnerTest`, 36 tests), so they do not run on iOS yet.
 
+**Done on the iOS side (2026-11-20):** `IosStartPlatform.startKeepAlive` runs `keepAliveRunner.runOnce`
+(with `minInterval = 4.minutes`) in a loop that waits on the wall clock in 10 s steps (`delayUntil`),
+for the full app and a client, and no longer calls `periodicMaintenance.start`. A plain `delay` counts
+only the time the phone is awake, so after the phone slept the next pass could be hours late. Still
+open: the 5-minute heartbeat. The plan is the CGM drivers on Bluetooth that come later; until then a
+locked phone runs a pass only when something else wakes the app.
+
 ### DONE on the iOS side: `RunningModeExpiryTimer`
 
 `RunningModeExpiryScheduler` is in `plugins/aps/src/commonMain` now. It decides when the end of a
@@ -387,7 +394,9 @@ through DataStore's okio storage, which is the only file storage DataStore has o
   (`KeychainStoreCipher` in `implementation/src/iosMain`). `Keychain.loadStrict` tells "no key" apart
   from "the Keychain did not answer", so a locked Keychain never leads to a new key.
 - The first start moves every text, true/false and number value of the app's own defaults domain into
-  the store (`UserDefaultsMigration`), then removes those keys from `NSUserDefaults`.
+  the store (`UserDefaultsMigration`), then removes those keys from `NSUserDefaults`. Only once: a
+  flag in `NSUserDefaults` closes the move, because Firebase and iOS keep their own values there and
+  a move on every start took those too (fixed 2026-11-20).
 - A file that does not open with the key shows `StartupFailedScreen` (`appshell`, shared with the
   desktop) with "Start fresh"; a Keychain that does not answer shows "Try again".
 - Graph tests call `TestStorage.install()` first: a test binary has no Keychain.
@@ -1082,11 +1091,15 @@ The tests check three reference hashes produced independently with Python's `hma
 than by running this code, so they would catch the salt and the message being swapped - a mistake
 that a round trip test cannot see, because it is symmetric.
 
-**`IosPluginPermissions`** (`implementation/src/iosMain/.../plugin/`) returns empty from both
-methods, which is what `PluginPermissionsImpl`'s own docs already predicted. It asks the plugins
-first and logs an error if any of them declares a group, so the emptiness stays a checked fact
-rather than an assumption: today every source is empty on iOS - `bluetoothPermissionGroup()` is
-null, `IosLocationPermissions` returns nothing, and the rest are androidMain.
+**`IosPluginPermissions`** (`implementation/src/iosMain/.../plugin/`) used to return empty from both
+methods, on the idea that iOS has nothing to list. That was wrong in the way that matters: iOS asks
+the user itself, but the answer can be read at any time, and a refusal is silent - refused
+notifications meant alarms that never showed, with nothing on screen to say so. Since 2026-11-20 it
+lists notifications always, Bluetooth from every enabled pump (`bluetoothPermissionGroup()` now
+returns a group with `IosPermission.BLUETOOTH`) and location while automation uses a location
+trigger, reads their state through `IosPermissionStatus`, and the shell shows the shared
+`PermissionsSheet`. "Grant" asks iOS once and after a refusal opens the app's page in Settings.
+Notifications are asked for at the first start, so a first alarm in the background is not lost.
 
 ### One gap this opened: `PrefsFileInfo.listPreferenceFiles` is empty on iOS
 
@@ -1488,7 +1501,8 @@ missing binding, which is how it first failed.
 object graph touched `UNUserNotificationCenter`, which throws `bundleProxyForCurrentProcess is nil`
 outside an app bundle. The whole app graph therefore could not be built in a test, which is how this
 surfaced: a history scoping test died on a notification API it never meant to use. `install()` is now
-called once from `aapsAppViewController`, and registering only records. Declaring what a category is,
+called once from `startAapsApp` (at `App.init`, before launching ends, as Apple asks of a notification
+delegate), and registering only records. Declaring what a category is,
 and claiming a process-wide delegate slot, are different acts and only one of them needs an app.
 
 
@@ -1791,8 +1805,11 @@ Android, and both follow the usual rule - the class moves, only the platform cal
 - `SntpClient` is an interface in commonMain. The implementation is `JvmSntpClient` in a new
   `jvmSharedMain`, so Android and desktop share the actual SNTP exchange - the sockets were always
   plain JVM, only `SystemClock.elapsedRealtime()` was Android, and that is `System.nanoTime()` now.
-  `IosSntpClient` is a **placeholder that needs a real implementation**: this is the reference AAPS
-  validates its own timestamps against, and every treatment carries the device clock.
+  `IosSntpClient` was a placeholder until 2026-11-19, and that mattered more than it looked: objective 1
+  could not start on iOS, so the full app's loop was always refused with "Objective 1 not started". It
+  now sends the request over a POSIX UDP socket (`PosixSntpTransport`), with the shared `SntpPacket`
+  arithmetic. Its KDoc says why it is not Apple's Network framework: three Kotlin/Native problems,
+  one of which stopped the process on any network error.
 - `DurationText` is the "3 d / 5 h / 20 min" text. Android keeps its plural resources;
   `PlainDurationText` in commonMain says it without plural forms, and `IosDurationText` delegates to
   it. If plurals ever land in `TextRef`, this interface should disappear.

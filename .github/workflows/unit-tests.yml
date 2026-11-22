@@ -23,10 +23,13 @@ on:
     branches:
       - dev
       - master
+      # The 4.1 integration branch (dev, ios, Carelevo and Eversense): long-lived, so it needs its own run.
+      - dev41
   pull_request:
     branches:
       - dev
       - master
+      - dev41
       # The incubation branch for new pump work. Fork PRs into it get no CircleCI, so this is their only unit run.
       - o5
 

@@ -1,10 +1,16 @@
 package app.aaps.core.interfaces.pump
 
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.plugin.IosPermission
 import app.aaps.core.interfaces.plugin.PermissionGroup
 
 /**
- * iOS has no runtime permission to request here. Bluetooth access is declared once in `Info.plist`
- * (`NSBluetoothAlwaysUsageDescription`) and the system prompts on first use, so there is nothing for
- * a plugin to list or for the permission screen to ask for.
+ * iOS asks for Bluetooth itself, the first time the app uses it, but the answer can be read at any
+ * time. Listing it lets the permission screen show a refusal. A pump that is refused Bluetooth cannot
+ * be reached at all, and without this the only sign was a pairing wizard that waited for ever.
  */
-actual fun bluetoothPermissionGroup(): PermissionGroup? = null
+actual fun bluetoothPermissionGroup(): PermissionGroup? = PermissionGroup(
+    permissions = listOf(IosPermission.BLUETOOTH),
+    rationaleTitle = InterfacesStrings.permission_bluetooth_title,
+    rationaleDescription = InterfacesStrings.permission_bluetooth_description,
+)

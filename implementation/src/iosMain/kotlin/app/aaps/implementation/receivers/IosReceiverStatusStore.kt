@@ -67,10 +67,10 @@ class IosReceiverStatusStore(
     override val chargingStatusFlow: StateFlow<ReceiverStatusStore.ChargingStatus?> = _chargingStatusFlow.asStateFlow()
 
     /**
-     * Started on first use rather than in the constructor.
+     * Started by [startNetworkWatch] when the app starts, not in the constructor.
      *
-     * Building the graph must not start a network monitor or switch on battery polling; nothing
-     * needs either until something actually asks about connectivity.
+     * Building the graph must not start a network monitor or switch on battery polling: the probe
+     * graphs and the unit tests build it too, with no app around them.
      */
     private val monitor by lazy {
         nw_path_monitor_create()?.also { created ->
@@ -105,6 +105,17 @@ class IosReceiverStatusStore(
 
     override fun updateNetworkStatus() {
         // Touching the monitor starts it; after that the handler keeps the flow current on its own.
+        monitor
+    }
+
+    /**
+     * Starts the network monitor, the way Android registers its network receiver at start.
+     *
+     * Waiting for the first question is too late. The monitor gives its first answer a moment after it
+     * starts, so whatever asked first was told "unknown": the first tap on an objective's Start always
+     * said "Not connected to the internet". In a full app with no Nightscout, nothing else asks first.
+     */
+    fun startNetworkWatch() {
         monitor
     }
 

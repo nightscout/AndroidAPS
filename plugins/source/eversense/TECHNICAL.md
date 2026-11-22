@@ -231,19 +231,54 @@ frame is logged; logs can still hold glucose and device data.
 ## Tests
 
 ```text
-./gradlew.bat :plugins:source:eversense:testAndroidHostTest
+./gradlew.bat :plugins:source:eversense:testAndroidHostTest :plugins:source:eversense:jvmTest
+./gradlew.bat :plugins:source:eversense:compileTestKotlinIosSimulatorArm64
+./gradlew :plugins:source:eversense:iosSimulatorArm64Test        (on the Mac; also run by ios-ci.yml)
 ./gradlew.bat :app:testFullDebugUnitTest --tests "*SourceGraphTest" --tests "*PreferenceKeySnapshotTest"
 ```
 
-The host tests run on the JVM against the shared code; the session and the driver are tested with a fake
-`BleLink` and `BleCentral`. `src/androidHostTest/resources/protocol-reference.zip` freezes the driver of commit
-`bb0b0373cd6ccf6b935a63783cb5fcf29468e317` (156 files with pinned hashes, 109 commands). Its sources are compiled into
-the host tests only, in their own package, and `ProtocolCompatibilityTest` compares requests, frames and decoding with
-the live code, and the crypto and HTTP tests compare the 365 session (AES-CCM, ECDH, HKDF, ECDSA) and the cloud
-requests byte for byte. 44 commands are compared; the 65 the driver never sent are listed in `protocol-commands-removed.txt`.
-Decoding changed on purpose is listed in `ProtocolCompatibilityTest.decodingChangedOnPurpose` and tested in
-`DecodingFixesTest`. Never regenerate the zip from changed code to make a comparison pass. The comparison proves "same
-as before", not "right".
+Two source sets:
+
+- `commonTest` runs on every target, iOS too: the driver's connection rules (`EversenseDriverTest`, with the iOS rule
+  of no timers in the background), the session (`EversenseSessionTest`, `GuardedStoreTest`), the emulator tests (the
+  whole driver and, for the 365, the platform's crypto against the emulator's), the future-reading check and the 365
+  dates. The driver and the session run on a fake `BleLink` and `BleCentral` (`TestFakes.kt`); the 365 crypto is a
+  fake subclass (`EversenseCrypto365Util` is `@OpenForTesting`). Only `kotlin.test` and multiplatform code here: no
+  Truth, Mockito or `java.*`. The iOS test compile works on Windows; running it needs the Mac.
+- The status of a link the transmitter closed differs per platform (`closedByTransmitter`: 19 on Android, 7 on iOS,
+  none on the desktop). The driver takes the rule as a parameter, and `DriverHarness` gives every platform one code,
+  so the rules after such a close are tested everywhere; the mapping itself is one line per platform.
+- `androidHostTest` runs on the JVM only: the tests that need Mockito, Robolectric, a local HTTP server
+  (`mockwebserver3`) or JVM resources, which are the golden tests, the Eversense server tests, the plugin and the
+  screen tests. The communicators are tested there with a fake `EversenseLink`.
+
+The golden tests (`ProtocolGoldenTest`, `BinaryGoldenTest`, `SecureChannelGoldenTest`, `NotificationGoldenTest`) run
+large input sets through the protocol code: every command's request, framing at several MTUs and decoding of many
+answers; the packed dates, times and zone offsets; the cloud records; the 365 channel (AES-CCM, its counter, broken
+material); the joining of notification chunks. Each group of outputs becomes one SHA-256 in
+`src/androidHostTest/resources/golden/`. The digests were recorded on 2026-11-21 in a run where the first driver
+(commit `bb0b0373cd`, compiled into the tests at that time) gave the same bytes, so they pin its behaviour; the frozen
+sources are gone since. Three commands decode differently on purpose (lower limit, "glucose unavailable", protocol
+version text): `DecodingFixesTest` explains them, and their digests pin today's decoding. A failing group writes its new
+digest to `build/golden-actual/`; copy it over the recorded one only for a change made on purpose and checked on a real
+transmitter. The digests prove "same as before", not "right".
+
+## Emulator
+
+`emulator/` holds an emulated transmitter for the shared emulated Bluetooth (`EmulatedBleCentral`), as the pump
+emulators have: `EversenseTransmitterEmulator` (clock, readings, battery, calibrations), `EversenseE3Peripheral`
+(CRC frames, register reads, keep-alive pushes) and `Eversense365Peripheral` (the sign-in, AES-CCM both ways,
+fragmented notifications, the history log for a backfill, keep-alives and pushed alarms). Its frames use the driver's
+own encoders, and the 365 side agrees its session key with its own ECDH and HKDF. Built from the driver's code, not
+from captured frames: UNVERIFIED until real frames are recorded.
+
+- Tests: `EmulatedE3Test` and `Emulated365Test` run the real driver against it in virtual time (sign-in, readings,
+  keep-alive, backfill of a gap, clock, calibration, signal, alarm, Bluetooth off and on). `EmulatedRegistrationTest`
+  runs a 365's first registration against a fake Eversense server on the machine (real time, a few seconds).
+- In the app: the `emulate_eversense` option file gives Eversense an emulated E3 (`EversenseCentral`) instead of the
+  phone's Bluetooth. Pair it in the wizard with "Continue without signing in". The cloud upload is off while it is
+  emulated, so no emulated reading reaches a real Eversense account. A 365 is not offered in the app: its first
+  registration needs the real Eversense server.
 
 ## To check on a device
 

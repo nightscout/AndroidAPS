@@ -2,7 +2,7 @@
 <resources>
     <string name="enable_tbr_over_notification">Activar avisos de fi de TBR\n(configuració bomba)</string>
     <string name="disable_tbr_over_notification">Desactivar avisos de fi de TBR\n(configuració bomba)</string>
-    <string name="not_paired">No sincronitzat</string>
+    <string name="not_paired">No emparellat</string>
     <string name="recovering">Recuperant</string>
     <string name="insight_status">Estat</string>
     <string name="recovery_duration">Durada recuperació</string>
@@ -14,11 +14,15 @@
     <string name="operating_mode">Mode de funcionament</string>
     <string name="description_pump_insight_local">Integració de bomba per models Accu-Chek Insight</string>
     <string name="not_inserted">No inserit</string>
+    <string name="tdd_bolus">TDD Bolus</string>
+    <string name="tdd_basal">TDD Basal</string>
     <string name="multiwave_bolus">Bolus multiona</string>
     <string name="searching_for_devices">Cercant dispositius…</string>
-    <string name="pairing_completed">Sincronització completada</string>
+    <string name="pairing_completed">Emparellament completat</string>
     <string name="code_compare">Coincideixen els codis que es mostren en aquest dispositiu i la bomba?</string>
-    <string name="insight_pairing">Sincronització Insight</string>
+    <string name="insight_pairing">Emparellament Insight</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Tub canviat</string>
     <string name="insight_alert_notification_channel">Alertes Insight</string>
     <string name="disable_vibration">Desactivar vibracions en lliurar bolus manual</string>
@@ -43,4 +47,8 @@
     <string name="max_recovery_duration">Màx. durada recuperació [s]</string>
     <string name="min_recovery_duration">Min. durada recuperació [s]</string>
     <string name="pump_alert">Alerta bomba</string>
+    <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">Desemparellar</string>
+    <string name="reset_pairing">Restablir la informació d\'emparellament?</string>
+    <string name="reservoir_level">Nivell del reservori</string>
 </resources>

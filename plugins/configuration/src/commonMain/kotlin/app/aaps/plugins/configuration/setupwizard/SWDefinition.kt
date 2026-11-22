@@ -27,6 +27,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.KeysStrings
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.AppPlatform
@@ -291,7 +292,8 @@ class SWDefinition(
     private val screenInstanceName
         get() = swScreenProvider().with(ConfigurationStrings.setupwizard_instance_name_title)
             .skippable(true)
-            .add(swInfoTextProvider().label(StringKey.GeneralInstanceName.summary!!))
+            // The key's own summary, named directly: read through the key it is nullable.
+            .add(swInfoTextProvider().label(KeysStrings.pref_summary_patient_name))
             .add(swEditStringProvider().validator(String::isNotEmpty).preference(StringKey.GeneralInstanceName))
 
     private val screenMasterPassword

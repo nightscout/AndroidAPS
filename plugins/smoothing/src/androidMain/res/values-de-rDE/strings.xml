@@ -5,4 +5,7 @@
     <string name="avg_smoothing_name">Durchschnittliche Glättung</string>
     <string name="description_avg_smoothing">"Durchschnittlicher Glättungsalgorithmus, neuester Wert ist nicht betroffen"</string>
     <string name="no_smoothing_name">Ohne Glättung</string>
+    <string name="description_no_smoothing">"Verwende dies, wenn du bereits gefilterte Daten hast z.B. von BYODA G6."</string>
+    <string name="UKF_name">Unscented Kalman Filter</string>
+    <string name="description_UKF">"Fortgeschrittener Algorithmus mit automatischer Rauschanpassung und RTS Glättung."</string>
 </resources>

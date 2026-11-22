@@ -3,8 +3,17 @@ package app.aaps.ios.shell.start
 import app.aaps.appshell.start.AppStartPlatform
 import app.aaps.appshell.start.AppStartSequence
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.implementation.maintenance.PeriodicMaintenance
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.utils.delayUntil
+import app.aaps.implementation.maintenance.KeepAliveRunner
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import platform.Foundation.NSBundle
 
 /**
@@ -16,8 +25,10 @@ import platform.Foundation.NSBundle
  */
 class IosStartPlatform(
     private val config: Config,
-    private val periodicMaintenance: PeriodicMaintenance,
+    private val keepAliveRunner: KeepAliveRunner,
+    private val aapsLogger: AAPSLogger,
     private val scope: CoroutineScope,
+    private val clock: Clock,
     /**
      * The build number, for the version record in the database.
      *
@@ -55,22 +66,49 @@ class IosStartPlatform(
     override fun startServices() = Unit
 
     /**
-     * The 5-minute checks. A follower runs the shared housekeeping on a timer of its own.
+     * The 5-minute checks: the same [KeepAliveRunner] pass Android's `KeepAliveWorker` runs, for the full
+     * app and a client alike - the pump status check, the pump unreachable alarm, the zero temp basal
+     * retry, the status upload and the shared housekeeping. Until this ran it, iOS ran only the
+     * housekeeping, so none of the pump checks happened at all.
      *
-     * `PeriodicMaintenance.start` runs its first pass at once. That is safe here because the sequence
-     * pre-snoozes the alarms immediately before calling this, which is what keeps a cold start from
-     * raising "BG readings missed" for its own downtime (nightscout/AndroidAPS#5495).
+     * iOS keeps nothing running while the app is suspended, so this is a loop that waits on the wall
+     * clock in short steps ([delayUntil]): when the app runs again, after a Bluetooth wake or in the
+     * front, a pass that is due runs within [STEP]. A plain `delay` counts only awake time, so after the
+     * phone slept, the next pass could be hours late. `minInterval` skips a pass that comes too soon.
      *
-     * **Not enough for the full app, which drives a pump.** It needs `KeepAliveRunner.runOnce` on every
-     * wake rather than a timer, because iOS keeps nothing running between wakes - and until that is
-     * wired, the pump status check, the pump-unreachable alarm and the zero temp basal retry do not run
-     * on iOS at all. See the keep-alive section of `_docs/ios_blockers.md`.
+     * The first pass runs at once. That is safe here because the sequence pre-snoozes the alarms
+     * immediately before calling this, which is what keeps a cold start from raising "BG readings
+     * missed" for its own downtime (nightscout/AndroidAPS#5495).
      */
     override fun startKeepAlive() {
-        periodicMaintenance.start(scope)
+        scope.launch {
+            while (isActive) {
+                try {
+                    keepAliveRunner.runOnce(minInterval = MIN_INTERVAL)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    // One bad pass must not stop the checks for the rest of the session.
+                    aapsLogger.error(LTag.CORE, "Keep alive pass failed", e)
+                }
+                clock.delayUntil(clock.now().toEpochMilliseconds() + INTERVAL.inWholeMilliseconds, step = STEP)
+            }
+        }
     }
 
     override suspend fun beforeReady() = Unit
+
+    private companion object {
+
+        /** How often a pass runs, as `KeepAliveWorker` schedules it on Android. */
+        val INTERVAL = 5.minutes
+
+        /** The same skip `KeepAliveWorker` uses for a pass that comes too soon after the last one. */
+        val MIN_INTERVAL = 4.minutes
+
+        /** Short, because a Bluetooth wake gives the app only a few seconds to run. */
+        val STEP = 10.seconds
+    }
 }
 
 /** `CFBundleVersion` as a number, or 0 where there is no app bundle to ask. */

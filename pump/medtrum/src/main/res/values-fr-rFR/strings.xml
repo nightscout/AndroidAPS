@@ -5,13 +5,13 @@
     <string name="medtrum_pump_description">Intégration des pompes Medtrum Nano et Medtrum 300U</string>
     <string name="medtrum_pump_setting">Paramètres de la pompe Medtrum</string>
     <string name="pump_error">Erreur pompe: %1$s!! </string>
-    <string name="pump_warning">Avertissement pompe : %1$s </string>
+    <string name="pump_warning">Avertissement pompe : %1$s</string>
     <string name="pump_is_suspended">La pompe est suspendue</string>
     <string name="pump_is_suspended_hour_max">La pompe est suspendue, la quantité maximum d\'insuline par heure est dépassée</string>
     <string name="pump_is_suspended_day_max">La pompe est suspendue, la quantité maximum d\'insuline par jour est dépassée</string>
     <string name="patch_not_active">Patch non activé</string>
     <string name="pump_setting_failed">La configuration des paramètres de la pompe a échoué!</string>
-    <string name="pump_sync_error">Erreur lors de la synchronisation de l\'historique de la pompe, un enregistrement a été ignoré. Vérifiez l\'onglet de traitement pour vérifier si le bolus est correctement synchronisé. Mettez en veille et si l\'erreur continue d\'apparaître, changer le patch ou la pompe.</string>
+    <string name="pump_sync_error">Erreur lors de la synchronisation de l\'historique de la pompe, un enregistrement a été ignoré. Vérifiez dans l\'onglet Traitements que le bolus est correctement synchronisé. Mettez en veille et, si l\'erreur revient, changez le patch ou la base de la pompe.</string>
     <string name="patch_reset_after_primed_error">Le patch a redémarré par lui-même et a perdu sa session. Il ne peut plus délivrer d\'insuline. Retirez le patch et démarrez un nouveau.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Bolus actif</string>
@@ -91,6 +91,7 @@
     <string name="press_OK_to_return">Appuyez sur <b>OK</b> pour revenir à l\'écran principal.</string>
     <string name="deactivate_sure">Êtes-vous sûr de vouloir désactiver le Patch actuel ?</string>
     <string name="cancel_sure">Êtes-vous sûr de vouloir annuler l\'activation?</string>
+    <string name="cancel_deactivation_sure">Êtes-vous sûr de vouloir annuler la désactivation ? Le patch peut rester actif.</string>
     <string name="medtrum_deactivate_pump_confirm">Êtes-vous certain ? Cette action est irréversible!!</string>
     <string name="press_next_or_cancel">Appuyez sur <b>Suivant</b> pour désactiver ou <b>Annuler</b> pour revenir à l\'écran principal.</string>
     <string name="deactivating_pump">Désactivation du Patch. Veuillez patienter.</string>

@@ -78,6 +78,17 @@ things help and neither is a product decision: cover the window on `willResignAc
 app-switcher snapshot does not hold the PIN, and show the warning the screen can already render
 (`screenshotsBlocked` in `AuthorizedClientsScreen`) when the value is false.
 
+### Time Sensitive alarms need the capability on each App ID
+Phone builds sign with `Device.entitlements` (`AAPS_DEVICE_ENTITLEMENTS` in `Signing.xcconfig`), which
+asks for Time Sensitive notifications so alarms come through Focus and Sleep. Without it iOS quietly
+posts them as normal notifications. A wildcard development profile cannot carry the capability, so each
+bundle id needs an explicit App ID with it. Automatic signing does that by itself - from Xcode with the
+account signed in, or from `xcodebuild` with `-authenticationKeyPath/-ID/-IssuerID` and the App Store
+Connect key - once the account holder has accepted the current Program License Agreement (on
+2026-11-20 Apple refused with "PLA Update available"). Until then a local
+`AAPS_DEVICE_ENTITLEMENTS =` in `Signing.local.xcconfig` builds without it. A command-line override
+of that setting is not enough: the signing check does not see it.
+
 ---
 
 ## 2. Features not built yet
@@ -87,10 +98,18 @@ runs the loop and drives a pump. `IosClientConfig` reads which build it is from 
 identifier, mirroring Android's `ConfigImpl`, and `AapsAppHost` merges the `@APS` and `@PumpDriver`
 plugin buckets only there. The two client targets are unchanged. What the full app still lacks:
 
-- **Nothing on iOS calls `KeepAliveRunner`.** So on the full app the pump status check, the
-  pump-unreachable alarm and the zero temp basal retry do not run at all. It needs `runOnce` on every
-  wake, and something has to wake it every five minutes - see the keep-alive section of
-  `_docs/ios_blockers.md`. This is the first thing to do before the full app drives a real pump.
+- **`KeepAliveRunner` runs, but only while the app runs.** `IosStartPlatform.startKeepAlive` calls
+  `runOnce` every five minutes of real time (2026-11-21). On a locked phone the app runs only when
+  something wakes it, and the wake is the CGM: Eversense on iOS keeps a connect open with no time limit.
+  Seen on an iPhone on 2026-11-21 with an Eversense 365 and a CareLevo patch: the 365 sends a keep-alive
+  every minute and a reading every five, each one wakes the app, and the loop ran and gave SMBs to the
+  patch with the phone locked.
+- **iOS freezes the app about 10 seconds after each wake, whatever it is doing.** Seen the same day: a
+  patch connect froze half way and timed out on the next wake, and a loop run waited 52 s for its
+  decision. The calculation and the command queue now ask for background time (`IosBackgroundTime`, up
+  to about 30 s). Anything that waits by sleeping counts only the awake time; the CareLevo bolus
+  progress did, and took 3 minutes for a 38 s bolus, so it follows the clock now. Look for the same
+  pattern in other drivers before they run on iOS.
 - `RoleBranch.prepare`/`commit` call the local lambda on the full app instead of sending to a master.
   That path has never run on iOS.
 - `SignatureVerifierPlugin` is Android-only, so the full app's `@APS` bucket has two plugins of three.
@@ -106,6 +125,18 @@ A Debug build of the full app may close the loop only in engineering mode, the s
 emulated patch instead of a real one. With no Nightscout there is no glucose, so pick **Random BG** as
 the source - it is shared code now, on every platform. It is offered only on the virtual pump in
 engineering mode, or with an `unfinished_mode` file, so with the emulated patch add that file too.
+
+Seen on the simulator on 2026-11-19, with Random BG and the emulated patch: the wizard runs to the end,
+objective 1 starts against `time.google.com`, and after switching to open loop OpenAPS SMB runs on each
+reading. Accepting its suggestion sent a zero temp basal through the command queue to the patch, and the
+patch reported it enacted. Not yet seen: closed loop (objective 6 and engineering mode), SMB, a bolus.
+Two things to know when setting it up again:
+
+- A fresh install starts with the loop **disabled** (`RM.DEFAULT_MODE`), as on Android. Choose open
+  loop from the loop icon on the overview after objective 1 is started.
+- A first run used to open the setup wizard **twice** on iOS: `AapsAppHost` had its own trigger from
+  before `AapsAppRoot` opened the wizard on every platform. That trigger was removed on 2026-11-20, so
+  `AapsAppRoot` is the only one now, as on Android and the desktop.
 
 | What | Where | Note |
 |---|---|---|

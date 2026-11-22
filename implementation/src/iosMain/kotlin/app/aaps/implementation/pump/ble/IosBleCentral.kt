@@ -96,6 +96,15 @@ class IosBleCentral(
     private val states = MutableStateFlow(AdapterState.UNKNOWN)
 
     /**
+     * Held here for as long as this central lives. `CBCentralManager` keeps its delegate only as a weak
+     * reference, so a delegate made inline in the call is held by nobody, and Kotlin/Native frees it. After
+     * that every callback goes nowhere: the state stays `UNKNOWN`, and scan results, connects and disconnects
+     * are lost too. Seen on the first real patch on an iPhone: the CareLevo pairing waited for Bluetooth
+     * forever and showed an empty screen. Each connection keeps its `PeripheralDelegate` for the same reason.
+     */
+    private val centralDelegate = CentralDelegate(this)
+
+    /**
      * Made on first use, not with the graph: making it shows the Bluetooth permission dialog the first time.
      *
      * The restore identifier is what lets iOS **relaunch a terminated app** when something happens on a
@@ -109,7 +118,7 @@ class IosBleCentral(
      */
     private val manager: CBCentralManager by lazy {
         CBCentralManager(
-            delegate = CentralDelegate(this),
+            delegate = centralDelegate,
             queue = null,
             options = mapOf<Any?, Any>(CBCentralManagerOptionRestoreIdentifierKey to RESTORE_IDENTIFIER)
         )
@@ -209,6 +218,7 @@ class IosBleCentral(
             CBManagerStateUnsupported   -> AdapterState.UNSUPPORTED
             else                        -> AdapterState.UNKNOWN // unknown, or resetting
         }
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Bluetooth state: $adapterState")
         states.value = adapterState
         if (adapterState != AdapterState.ON)
             connections.value.values.forEach { it.disconnected(BleFailure(BleFailure.Kind.BLUETOOTH_OFF, message = "Bluetooth is $adapterState")) }

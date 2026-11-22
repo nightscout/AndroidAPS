@@ -91,6 +91,14 @@ internal class EversenseSession(
 
         /** The session wants the link closed; the driver connects again after its usual wait. */
         fun closeLink(reason: String)
+
+        /**
+         * The link is closed because the transmitter stopped answering, or its state broke and the protocol wants a new
+         * link. The driver connects again as for a lost link: on iOS at once, in a connect that waits for the
+         * transmitter, because a timer does not run while the app is in the background. Elsewhere the same wait as
+         * [closeLink].
+         */
+        fun closeLinkForTransmitter(reason: String) = closeLink(reason)
     }
 
     val is365: Boolean get() = security == EversenseSecurityType.SecureV2
@@ -182,7 +190,7 @@ internal class EversenseSession(
         task { if (is365) authenticate365() else authenticateE3() }
     }
 
-    override fun disconnectAndScheduleReconnect() = host.closeLink("closed by the protocol")
+    override fun disconnectAndScheduleReconnect() = host.closeLinkForTransmitter("closed by the protocol")
 
     @Suppress("UNCHECKED_CAST")
     override suspend fun <T : EversenseBasePacket.Response> writePacket(packet: EversenseBasePacket, timeoutMs: Long): T = writeLock.withLock {
@@ -198,7 +206,7 @@ internal class EversenseSession(
             if (written is BleResult.Failed) throw EversenseWriteException("BLE write failed: ${written.failure}")
             if (withTimeoutOrNull(timeoutMs) { exchange.done.await() } == null) {
                 // Do not let a late reply be taken for the answer to the next packet on the same link
-                host.closeLink("no answer in $timeoutMs ms")
+                host.closeLinkForTransmitter("no answer in $timeoutMs ms")
                 throw EversenseWriteException("Packet response timed out after ${timeoutMs}ms")
             }
             if (packet.isErrorResponse) throw EversenseWriteException("Transmitter rejected the packet")

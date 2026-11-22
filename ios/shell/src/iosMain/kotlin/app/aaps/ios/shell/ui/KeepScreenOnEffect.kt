@@ -7,7 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
-import platform.UIKit.UIApplication
+import app.aaps.core.ui.compose.pump.IosScreenAwake
 
 /**
  * Holds the screen awake while the app is in front, when the user asked for it.
@@ -20,8 +20,9 @@ import platform.UIKit.UIApplication
  *
  * It needs no entitlement and asks the user for nothing.
  *
- * The flag is application wide rather than per view, so [onDispose] clears it: a composition that
- * goes away must not leave the timer switched off behind it.
+ * The flag is application wide rather than per view, and pump wizards set it too, so this goes through
+ * [IosScreenAwake], which counts the holders. Clearing it here directly would let the phone lock in the
+ * middle of a patch activation when the user turned the setting off.
  */
 @Composable
 fun KeepScreenOnEffect(preferences: Preferences) {
@@ -34,7 +35,7 @@ fun KeepScreenOnEffect(preferences: Preferences) {
     val keepScreenOn = remember(changed) { preferences.get(BooleanKey.OverviewKeepScreenOn) }
 
     DisposableEffect(keepScreenOn) {
-        UIApplication.sharedApplication.idleTimerDisabled = keepScreenOn
-        onDispose { UIApplication.sharedApplication.idleTimerDisabled = false }
+        if (keepScreenOn) IosScreenAwake.hold()
+        onDispose { if (keepScreenOn) IosScreenAwake.release() }
     }
 }

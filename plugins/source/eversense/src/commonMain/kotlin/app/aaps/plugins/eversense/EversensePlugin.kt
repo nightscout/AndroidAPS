@@ -6,6 +6,7 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -32,6 +33,7 @@ import app.aaps.core.ui.compose.icons.IcPluginEversense
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.eversense.callbacks.EversenseWatcher
 import app.aaps.plugins.eversense.cloud.EversenseCloudUploader
+import app.aaps.plugins.eversense.di.EversenseCentral
 import app.aaps.plugins.eversense.enums.CalibrationReadiness
 import app.aaps.plugins.eversense.enums.EversenseAlarm
 import app.aaps.plugins.eversense.enums.EversenseType
@@ -86,7 +88,7 @@ class EversensePlugin(
     private val eversenseProvider: () -> EversenseDriver,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
-    private val bleCentral: BleCentral,
+    @param:EversenseCentral private val bleCentral: BleCentral,
     private val pairing: EversensePairing
 ) : AbstractBgSourcePlugin(
     PluginDescription()
@@ -151,7 +153,10 @@ class EversensePlugin(
     private val securePrefs: EversenseStore get() = eversense.preferences
 
     /** The upload signs in to the Eversense cloud: an E3 used without a login queues nothing. */
-    private fun cloudUploadEnabled() = preferences.get(EversenseBooleanKey.EversenseCloudUploadEnabled) && pairing.account.value != null
+    /** An emulated transmitter (the `emulate_eversense` option file): its readings must never reach a real account */
+    private val emulated = config.isEnabled(ExternalOptions.EMULATE_EVERSENSE)
+
+    private fun cloudUploadEnabled() = !emulated && preferences.get(EversenseBooleanKey.EversenseCloudUploadEnabled) && pairing.account.value != null
 
     private val lastNotifiedFirmwareVersion: String get() = securePrefs.getString("last_notified_firmware_version", "") ?: ""
     private fun setLastNotifiedFirmwareVersion(version: String) = securePrefs.edit(commit = true) { putString("last_notified_firmware_version", version) }

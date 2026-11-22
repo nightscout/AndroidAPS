@@ -2,13 +2,14 @@ package app.aaps.implementation.scenes
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.utils.delayUntil
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import platform.Foundation.NSNotificationCenter
 import platform.Foundation.NSOperationQueue
@@ -29,7 +30,8 @@ import platform.UIKit.UIApplicationWillEnterForegroundNotification
  * So the promise is kept by three things together, which is the arrangement
  * [app.aaps.implementation.profile.ProfileSwitchScheduler] already relies on:
  *
- * 1. this timer, while the app is alive - the scene ends at its exact time;
+ * 1. this timer, while the app is alive - the scene ends at its time on the wall clock ([delayUntil]),
+ *    not after an amount of awake time, which a locked phone stretches by however long it slept;
  * 2. the foreground sweep below, so opening AAPS ends an overdue scene at once rather than at the
  *    next reading;
  * 3. `PostCalculationRunner`, every loop run, which is the durable one: it does not care whether
@@ -59,7 +61,8 @@ import platform.UIKit.UIApplicationWillEnterForegroundNotification
 class IosSceneExpiryScheduler(
     private val aapsLogger: AAPSLogger,
     private val runner: () -> SceneExpiryRunner,
-    private val scope: CoroutineScope
+    private val scope: CoroutineScope,
+    private val clock: Clock
 ) : SceneExpiryScheduler {
 
     private var pending: Job? = null
@@ -74,9 +77,10 @@ class IosSceneExpiryScheduler(
     override fun schedule(sceneName: String, delayMs: Long) {
         cancel()
         aapsLogger.debug(LTag.UI, "Scene '$sceneName' ends in ${delayMs}ms")
+        val endMs = clock.now().toEpochMilliseconds() + delayMs
         pending = scope.launch {
-            delay(delayMs)
-            // Not guarded by a time check: the delay already waited it out, and the runner takes the
+            clock.delayUntil(endMs)
+            // Not guarded by a time check: the wait already waited it out, and the runner takes the
             // lock and re-reads the active scene, so a scene that ended another way is a no-op there.
             aapsLogger.debug(LTag.UI, "Scene '$sceneName' reached its end, ending it")
             runner().run(sceneName)

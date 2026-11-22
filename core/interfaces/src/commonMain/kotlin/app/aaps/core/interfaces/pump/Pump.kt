@@ -84,9 +84,10 @@ interface Pump {
     fun disconnect(reason: String)
 
     /**
-     * @return # of second to wait before [disconnect] is send after last command
+     * @return # of second to wait before [disconnect] is send after last command. The default depends on
+     * the platform: 5 on Android, 0 on iOS - see `defaultDisconnectWaitSeconds`.
      */
-    fun waitForDisconnectionInSeconds(): Int = 5
+    fun waitForDisconnectionInSeconds(): Int = defaultDisconnectWaitSeconds
 
     /**
      * Stop connection process

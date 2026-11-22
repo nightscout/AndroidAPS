@@ -5,7 +5,7 @@
     <string name="medtrum_pump_description">Integrazione micro per Medtrum Nano e Medtrum 300U</string>
     <string name="medtrum_pump_setting">Impostazioni micro Medtrum</string>
     <string name="pump_error">Errore micro: %1$s!! </string>
-    <string name="pump_warning">Avviso micro: %1$s </string>
+    <string name="pump_warning">Avviso micro: %1$s</string>
     <string name="pump_is_suspended">Il micro è sospeso</string>
     <string name="pump_is_suspended_hour_max">Il micro è sospeso a causa del superamento della massima insulina oraria</string>
     <string name="pump_is_suspended_day_max">Il micro è sospeso a causa del superamento della massima insulina giornaliera</string>
@@ -91,6 +91,7 @@
     <string name="press_OK_to_return">Premi <b>OK</b> per tornare alla schermata principale.</string>
     <string name="deactivate_sure">Sei sicuro di voler disattivare la patch corrente?</string>
     <string name="cancel_sure">Sei sicuro di voler annullare l\'attivazione?</string>
+    <string name="cancel_deactivation_sure">Sei sicuro di voler annullare la disattivazione? La patch potrebbe rimanere attiva.</string>
     <string name="medtrum_deactivate_pump_confirm">Sei sicuro? Questa azione non può essere annullata!!</string>
     <string name="press_next_or_cancel">Premi <b>Avanti</b> per disattivare o <b>Annulla</b> per tornare alla schermata principale.</string>
     <string name="deactivating_pump">Disattivazione patch. Attendi.</string>

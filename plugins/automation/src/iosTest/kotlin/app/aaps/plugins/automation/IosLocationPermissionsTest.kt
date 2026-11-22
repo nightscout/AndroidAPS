@@ -1,28 +1,22 @@
 package app.aaps.plugins.automation
 
+import app.aaps.core.interfaces.plugin.IosPermission
 import kotlin.test.Test
-import kotlin.test.assertTrue
+import kotlin.test.assertEquals
 
 /**
- * Pins that iOS reports no location permission groups.
+ * iOS reports location as one group with the iOS id, which `IosPluginPermissions` can check.
  *
- * Empty looks like an unfinished implementation and is not: the groups carry Android permission
- * strings, and iOS has nothing to put in them - it asks for location at the point of use instead.
- * `AutomationRuntime` reads this to decide what to tell the user is missing, so returning a made-up
- * group would produce a permission prompt for something the user cannot grant.
+ * `AutomationRuntime` decides when to list it (only while a rule uses a location trigger); this only
+ * says what the group is.
  */
 class IosLocationPermissionsTest {
 
     @Test
-    fun `iOS reports no permission groups to request`() {
-        assertTrue(IosLocationPermissions().groups().isEmpty())
-    }
+    fun `location is one group with the iOS id`() {
+        val groups = IosLocationPermissions().groups()
 
-    @Test
-    fun `asking twice stays empty`() {
-        val permissions = IosLocationPermissions()
-
-        assertTrue(permissions.groups().isEmpty())
-        assertTrue(permissions.groups().isEmpty())
+        assertEquals(1, groups.size)
+        assertEquals(listOf(IosPermission.LOCATION), groups.single().permissions)
     }
 }

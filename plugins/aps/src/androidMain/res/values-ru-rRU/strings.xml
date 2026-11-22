@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Autotune-->
-    <string name="dyn_isf_adjust_title" formatted="false">Коэффициент регулировки динамического диапазона чувствительности ISF %</string>
+    <string name="dyn_isf_adjust_title" formatted="false">Корректирующий коэффициент DynamicISF %</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Динамический ISF</string>
     <string name="openaps_auto_isf">Auto ISF</string>
@@ -14,6 +14,7 @@
     <string name="description_ama">Состояние алгоритма в 2017 году</string>
     <string name="description_smb">Самый новый алгоритм для опытных пользователей</string>
     <string name="description_smb_dynamic_isf">Последний алгоритм для опытных пользователей с динамическим/автоматическим ISF</string>
+    <string name="description_auto_isf">Экспериментальный алгоритм для опытных пользователей с расширениями AutoISF</string>
     <string name="openapsma_last_run_label">Предыдущее выполнение</string>
     <string name="openapsma_input_parameters_label">Параметры ввода</string>
     <string name="openapsma_glucose_status_label">Состояние гликемии</string>
@@ -25,7 +26,7 @@
     <string name="constraints">Ограничения</string>
     <string name="openapsma_autosensdata_label">Данные autosens</string>
     <string name="openapsma_script_debug_data_label">Отладка скрипта</string>
-    <string name="openapsama_link_to_preference_json_doc_txt">Внимание!\n Обычно нет необходимости изменять приведенные ниже величины. Нажмите ЗДЕСЬ, ПРОЧТИТЕ и убедитесь что вы ПОНИМАЕТЕ изложенное прежде чем менять какую-либо из этих величин.</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Внимание!\nОбычно эти значения ниже менять не нужно. НАЖМИТЕ ЗДЕСЬ, ПРОЧИТАЙТЕ текст и убедитесь, что вы его ПОНИМАЕТЕ, прежде чем менять какие-либо из этих значений.</string>
     <string name="increasing_max_basal">Повышаю максимальное значение базы т. к. оно меньше максимального в профиле</string>
     <string name="max_basal_multiplier">множитель макс базала</string>
     <string name="max_daily_basal_multiplier">множитель макс суточного базала</string>
@@ -37,9 +38,11 @@
     <string name="maxvalueinpreferences">максимальное значение в настройках</string>
     <string name="hardlimit">жесткий предел</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">Пик</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Болюс был подан в течение последних трех минут, минуя супер микро болюс SMB</string>
     <string name="pump_not_initialized">Помпа не инициализирована!</string>
+    <string name="zero_basal_not_set">Помпа не приняла нулевой временный базал. Она может продолжать подавать базальный инсулин. Проверьте помпу.</string>
     <string name="description_loop">Активировать или деактивировать запуск цикла.</string>
     <string name="no_aps_selected">APS не выбрана или не выдала результат</string>
     <string name="ignore5m">Игнорировать 5 м</string>
@@ -47,6 +50,9 @@
     <string name="ignore30m">Игнорировать 30 м</string>
     <string name="carbs_suggestion">Предложены углеводы</string>
     <string name="open_loop_new_suggestion">Есть новое предложение</string>
+    <string name="loop_notification_channel_name">Предложения цикла</string>
+    <string name="loop_notification_channel_silent_name">Предложения цикла в режиме «Не беспокоить»</string>
+    <string name="open_loop_suggestion_too_old">Это предложение слишком старое. На помпу ничего не отправлено. Дождитесь следующего.</string>
     <string name="basal_set_correctly">Базал задан корректно</string>
     <string name="last_run_label">Предыдущее выполнение</string>
     <string name="loop_aps_label">Система ИПЖ</string>
@@ -67,11 +73,11 @@
     <string name="autotune_profile">Профиль:</string>
     <string name="autotune_last_run">Последнее выполнение:</string>
     <string name="autotune_warning">Внимание:</string>
-    <string name="autotune_ic_warning">Выбранный профиль имеет %1$d значений IC. Автоматически будет использоваться %2$.2f г/ед</string>
-    <string name="autotune_isf_warning">Выбранный профиль имеет %1$d значений ISF. Автоматически будет использоваться %2$.1f%3$s/ед</string>
+    <string name="autotune_ic_warning">Выбранный профиль имеет %1$d значений IC. Autotune будет использовать %2$.2f г/ед</string>
+    <string name="autotune_isf_warning">Выбранный профиль имеет %1$d значений ISF. Autotune будет использовать %2$.1f %3$s/ед</string>
     <string name="autotune_error">Ошибка ввода данных, попробуйте запустить снова autotune или уменьшить количество дней</string>
     <string name="autotune_error_more_days">Ошибка в данных, увеличьте количество дней</string>
-    <string name="autotune_warning_during_run">Идет настройка автоматизации, ждите</string>
+    <string name="autotune_warning_during_run">Идет расчет Autotune, подождите</string>
     <string name="autotune_warning_after_run">Перед использованием внимательно проверьте результаты!</string>
     <string name="autotune_partial_result">Частичный результат дня %1$d / %2$d для расчета</string>
     <string name="autotune_result">Результат: %1$s</string>
@@ -79,7 +85,7 @@
     <string name="autotune_percent">%</string>
     <string name="autotune_missing">Отсутствует</string>
     <string name="autotune_run">Выполнить Autotune</string>
-    <string name="autotune_check_input_profile_button">Проверьте профиль ввода</string>
+    <string name="autotune_check_input_profile_button">Проверить профиль ввода</string>
     <string name="autotune_compare_profile">Сравнить профили</string>
     <string name="autotune_copy_localprofile_button">Копировать в локальный профиль</string>
     <string name="autotune_update_input_profile_button">Обновить профиль ввода</string>

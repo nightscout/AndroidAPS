@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Device builds only; see AAPS_DEVICE_ENTITLEMENTS in Signing.xcconfig.
+
+	     Time Sensitive notifications. The alarms and reminders are posted with the
+	     time-sensitive interruption level, so that they come through Focus and Sleep. Without
+	     this entitlement iOS does not refuse them: it quietly posts them as normal
+	     notifications, and a phone in Sleep shows nothing. Nothing reports that, which is why
+	     it went unnoticed.
+
+	     Automatic signing adds the capability to the App ID by itself. A free Apple account
+	     cannot have it; Signing.xcconfig says how to build without it. -->
+	<key>com.apple.developer.usernotifications.time-sensitive</key>
+	<true/>
+</dict>
+</plist>

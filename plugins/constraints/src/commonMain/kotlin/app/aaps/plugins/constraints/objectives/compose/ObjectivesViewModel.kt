@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventSWUpdate
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -68,14 +69,6 @@ class ObjectivesViewModel(
     /** Index to auto-scroll to after state update */
     private val _scrollToIndex = MutableStateFlow(-1)
     val scrollToIndex: StateFlow<Int> = _scrollToIndex.asStateFlow()
-
-    /** Snackbar message to show */
-    private val _snackbarMessage = MutableStateFlow<String?>(null)
-    val snackbarMessage: StateFlow<String?> = _snackbarMessage.asStateFlow()
-
-    fun onSnackbarShown() {
-        _snackbarMessage.value = null
-    }
 
     init {
         rxBus.toFlow(EventObjectivesUpdateGui::class)
@@ -192,7 +185,7 @@ class ObjectivesViewModel(
             scope.launch {
                 val result = ntpVerify()
                 if (!result.networkConnected) {
-                    showNtpError(rh.gs(ConstraintsStrings.notconnected))
+                    showNtpError(rh.gs(ConstraintsStrings.notconnected), EventShowSnackbar.Type.Warning)
                 } else if (result.success) {
                     objective.startedOn = result.time
                     showNtpSuccess()
@@ -200,7 +193,7 @@ class ObjectivesViewModel(
                     scrollToCurrentObjective()
                     rxBus.send(EventSWUpdate(false))
                 } else {
-                    showNtpError(rh.gs(ConstraintsStrings.failedretrievetime))
+                    showNtpError(rh.gs(ConstraintsStrings.failedretrievetime), EventShowSnackbar.Type.Error)
                 }
             }
         }
@@ -222,7 +215,7 @@ class ObjectivesViewModel(
             scope.launch {
                 val result = ntpVerify()
                 if (!result.networkConnected) {
-                    showNtpError(rh.gs(ConstraintsStrings.notconnected))
+                    showNtpError(rh.gs(ConstraintsStrings.notconnected), EventShowSnackbar.Type.Warning)
                 } else if (result.success) {
                     if (objective.isCompleted(result.time)) {
                         showNtpSuccess()
@@ -232,10 +225,10 @@ class ObjectivesViewModel(
                         scrollToCurrentObjective()
                         rxBus.send(EventSWUpdate(false))
                     } else {
-                        showNtpError(rh.gs(ConstraintsStrings.requirementnotmet))
+                        showNtpError(rh.gs(ConstraintsStrings.requirementnotmet), EventShowSnackbar.Type.Warning)
                     }
                 } else {
-                    showNtpError(rh.gs(ConstraintsStrings.failedretrievetime))
+                    showNtpError(rh.gs(ConstraintsStrings.failedretrievetime), EventShowSnackbar.Type.Error)
                 }
             }
         }
@@ -262,9 +255,24 @@ class ObjectivesViewModel(
         _uiState.value = _uiState.value.copy(ntpVerification = null)
     }
 
-    private fun showNtpError(message: String) {
+    /** Closes the progress dialog first, so the message is not hidden behind it. */
+    private fun showNtpError(message: String, type: EventShowSnackbar.Type) {
         _uiState.value = _uiState.value.copy(ntpVerification = null)
-        _snackbarMessage.value = message
+        showMessage(message, type)
+    }
+
+    /**
+     * Shows [message] in the app-wide snackbar, not in one of this screen's own.
+     *
+     * Users said a failed time check on Android was silent. The screen used to show its messages
+     * itself, as a short info snackbar: 4 s, after up to 5 s of waiting for the time server, and gone
+     * as soon as the user left the screen. The app-wide host keeps a warning or an error on screen for
+     * 10 s, in its own colour, on whatever screen the user is on, and turns it into a notification
+     * when the app is in the background. It also shows the same message only once while it is waiting,
+     * so tapping Start again does not stack them.
+     */
+    private fun showMessage(message: String, type: EventShowSnackbar.Type) {
+        rxBus.send(EventShowSnackbar(message, type))
     }
 
     fun onRequestUnstart(objectiveIndex: Int) {
@@ -379,7 +387,7 @@ class ObjectivesViewModel(
         task.answered = allCorrect
         if (!allCorrect) {
             task.disabledTo = dateUtil.now() + T.hours(1).msecs()
-            _snackbarMessage.value = rh.gs(ConstraintsStrings.wronganswer)
+            showMessage(rh.gs(ConstraintsStrings.wronganswer), EventShowSnackbar.Type.Warning)
         } else {
             task.disabledTo = 0
         }
@@ -440,7 +448,7 @@ class ObjectivesViewModel(
         val visibleTasks = objective.tasks.filter { !it.shouldBeIgnored() }
         val task = visibleTasks[taskIndex] as? UITask ?: return
         task.code.invoke(task, { scope.launch { updateState() } }) { message ->
-            _snackbarMessage.value = message
+            showMessage(message, EventShowSnackbar.Type.Warning)
         }
     }
 

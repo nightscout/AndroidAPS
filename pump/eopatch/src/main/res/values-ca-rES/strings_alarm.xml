@@ -1,2 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<resources></resources>
+<resources>
+    <string name="string_a002">Reservori buit\nEl patch s\'ha desactivat i el lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_a003">Patch caducat\nEl patch s\'ha desactivat i el lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_a004">Oclusió\nEl patch s\'ha desactivat i el lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_a005">Error en l\'autotest d\'engegada\nEl patch s\'ha desactivat. Canvieu el patch ara.</string>
+    <string name="string_a007">Temperatura inadequada\nEl lliurament d\'insulina o el procés \'Activar patch\' s\'ha aturat. Eviteu les temperatures extremes ara.</string>
+    <string name="string_a016">Error d\'inserció de l\'agulla\nComproveu la posició de la rodeta i premeu \'Reintentar\'.</string>
+    <string name="string_a018">Error de la pila del patch\nEl patch s\'ha desactivat i\nel lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_a019">Error de la pila del patch\nEl patch s\'ha desactivat i el lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_a020">Error d\'activació del patch\nEl procés \'Activar patch\' ha caducat. Premeu \'Confirmar\' per desactivar el patch actual. Canvieu el patch ara.</string>
+    <string name="string_a022">Error del patch\nEl patch s\'ha desactivat i el lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_a023">Error del patch\nEl patch s\'ha desactivat i\nel lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_a034">Error del patch\nEl patch s\'ha desactivat i el lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_a041">Error del patch\nEl patch s\'ha desactivat i el lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_a042">Error del patch\nEl patch s\'ha desactivat i el lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_a043">Error del patch\nEl patch s\'ha desactivat i el lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_a044">Error del patch\nEl patch s\'ha desactivat i el lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_a106">Error del patch\nEl patch s\'ha desactivat i el lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_a107">Error del patch\nEl patch s\'ha desactivat i el lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_a108">Error del patch\nEl patch s\'ha desactivat i el lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_a116">Error del patch\nEl patch s\'ha desactivat i el lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_a117">Error del patch\nEl patch s\'ha desactivat i el lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_a118">Error del patch\nEl patch s\'ha desactivat i el lliurament d\'insulina s\'ha aturat. Canvieu el patch ara.</string>
+    <string name="string_b000">La vida útil del patch acabarà %s. Prepareu-vos per canviar el patch.</string>
+    <string name="string_b001">Fi de la suspensió d\'insulina\nPremeu \'Reprendre\' per reiniciar el lliurament d\'insulina.</string>
+    <string name="string_b003">Reservori baix\nCanvieu el patch aviat.</string>
+    <string name="string_b005">Vida útil del patch acabada\nCanvieu el patch ara.</string>
+    <string name="string_b006">El patch caducarà aviat\nCanvieu el patch ara.</string>
+    <string name="string_b012">Activació del patch incompleta\nCompleteu el procés \'Activar patch\'.</string>
+    <string name="string_b018">Pila del patch baixa\nPrepareu-vos per canviar el patch.</string>
+</resources>

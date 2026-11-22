@@ -28,6 +28,8 @@ on:
     branches:
       - dev
       - master
+      # The 4.1 integration branch (dev, ios, Carelevo and Eversense).
+      - dev41
     paths:
       - 'core/**'
       - 'database/**'
@@ -196,6 +198,7 @@ jobs:
             :implementation:iosSimulatorArm64Test :ios:shell:iosSimulatorArm64Test \
             :plugins:sync:iosSimulatorArm64Test :plugins:aps:iosSimulatorArm64Test \
             :plugins:automation:iosSimulatorArm64Test :plugins:constraints:iosSimulatorArm64Test \
+            :plugins:source:eversense:iosSimulatorArm64Test \
             :pump:aaruy:iosSimulatorArm64Test :pump:aaruy:protocol:iosSimulatorArm64Test \
             :pump:aaruy:emulator:iosSimulatorArm64Test \
             :pump:carelevo:iosSimulatorArm64Test :pump:carelevo:protocol:iosSimulatorArm64Test \
@@ -244,6 +247,7 @@ jobs:
           check ":plugins:aps" plugins/aps
           check ":plugins:automation" plugins/automation
           check ":plugins:constraints" plugins/constraints
+          check ":plugins:source:eversense" plugins/source/eversense
           check ":pump:aaruy" pump/aaruy
           check ":pump:aaruy:protocol" pump/aaruy/protocol
           check ":pump:aaruy:emulator" pump/aaruy/emulator
@@ -301,6 +305,7 @@ jobs:
             implementation/build/test-results/iosSimulatorArm64Test/**
             ios/shell/build/test-results/iosSimulatorArm64Test/**
             plugins/*/build/test-results/iosSimulatorArm64Test/**
+            plugins/source/eversense/build/test-results/iosSimulatorArm64Test/**
             pump/aaruy/build/test-results/iosSimulatorArm64Test/**
             pump/aaruy/protocol/build/test-results/iosSimulatorArm64Test/**
             pump/aaruy/emulator/build/test-results/iosSimulatorArm64Test/**

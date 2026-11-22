@@ -19,14 +19,14 @@
     <string name="omnipod_common_error_failed_to_silence_alerts">Falha ao silenciar os alertas</string>
     <string name="omnipod_common_error_failed_to_suspend_delivery">Falha ao suspender a administração</string>
     <string name="omnipod_common_error_failed_to_set_time">Falha ao definir o tempo</string>
-    <string name="omnipod_common_error_failed_to_resume_delivery">Falha ao reiniciar a administração</string>
+    <string name="omnipod_common_error_failed_to_resume_delivery">Falha ao retomar a administração</string>
     <string name="omnipod_common_error_failed_to_initialize_pod">Falha ao iniciar o Pod</string>
     <string name="omnipod_common_error_failed_to_insert_cannula">Falha ao inserir a cânula</string>
     <string name="omnipod_common_error_pod_fault_activation_time_exceeded">O tempo de ativação do Pod foi ultrapassado. Este Pod não pode mais ser ativado.</string>
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Falha ao verificar o progresso da ativação. Por favor, reinicie novamente.</string>
     <string name="omnipod_common_error_pod_suspended">Pod suspenso</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Falha ao realizar teste sonoro</string>
-    <string name="omnipod_common_error_time_out_of_sync">O tempo no Pod está dessincronizado. Por favor, atualize o tempo na aba Omnipod.</string>
+    <string name="omnipod_common_error_time_out_of_sync">A hora no Pod está dessincronizada. Atualize a hora na tela da bomba.</string>
     <string name="omnipod_common_error_unexpected_exception">Um erro inesperado aconteceu. Por favor, relate! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation_expiration_alerts_updated">A configuração de alerta foi atualizada no Pod.</string>
@@ -34,7 +34,7 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">Configurar a hora</string>
     <string name="omnipod_common_overview_button_suspend_delivery">Suspender</string>
-    <string name="omnipod_common_overview_button_resume_delivery">Reiniciar a administração</string>
+    <string name="omnipod_common_overview_button_resume_delivery">Retomar administração</string>
     <string name="omnipod_common_overview_button_silence_alerts">Silenciar alertas</string>
     <string name="omnipod_common_overview_pod_status">Status do Pod</string>
     <string name="omnipod_common_overview_total_delivered">Total entregue</string>
@@ -81,7 +81,7 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">Beeps de basais ativados</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">Beeps de SMB ativados</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">Beeps de taxa basal temporária ativados</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Mostrar botão de suspensão de entrega na aba Omnipod</string>
+    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Mostrar o botão Suspender administração na tela da bomba</string>
     <string name="omnipod_common_preferences_time_change_enabled">Detecção de fuso horário/zona de horário de verão ativada</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Lembrete de expiração ativado</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Quando ativado, o Pod emitirá um bipe quando o horário especificado for atingido</string>
@@ -148,8 +148,8 @@
     <string name="omnipod_common_cmd_configure_alerts">Configurar alertas</string>
     <string name="omnipod_common_cmd_silence_alerts">Silenciar alertas</string>
     <string name="omnipod_common_cmd_read_pulse_log">Ler Log do Pulso</string>
-    <string name="omnipod_common_cmd_suspend_delivery">Suspender a entrega</string>
-    <string name="omnipod_common_cmd_resume_delivery">Reiniciar a administração</string>
+    <string name="omnipod_common_cmd_suspend_delivery">Suspender administração</string>
+    <string name="omnipod_common_cmd_resume_delivery">Retomar administração</string>
     <string name="omnipod_common_cmd_cancel_tbr">Cancelar TBR (pelo usuário)</string>
     <string name="omnipod_common_cmd_get_pod_info">Obter informações do Pod</string>
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Definir TBR suspensa simulada</string>

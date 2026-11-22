@@ -6,7 +6,7 @@ import Foundation
 /// Firebase Crashlytics, reached from Kotlin.
 ///
 /// The Kotlin side declares `CrashReporter` and knows nothing about Firebase. This class implements
-/// that protocol and is handed to `AapsAppHostKt.aapsAppViewController`, the same way
+/// that protocol and is handed to `AapsAppHostKt.startAapsApp`, the same way
 /// `SwiftNsSocketFactory` is handed in for the Nightscout socket. So no Kotlin module gains a
 /// Firebase dependency and `ios-ci.yml`, which never runs `xcodebuild`, keeps working unchanged.
 ///

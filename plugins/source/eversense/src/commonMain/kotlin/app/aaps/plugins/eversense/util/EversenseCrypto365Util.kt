@@ -1,5 +1,6 @@
 package app.aaps.plugins.eversense.util
 
+import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.plugins.eversense.models.EversenseSecureState
@@ -22,7 +23,10 @@ import kotlinx.serialization.json.Json
  *
  * Stored keys keep the format of the first version: the private key as PKCS#8 DER, the public key as X.509
  * SubjectPublicKeyInfo DER, both in hex. A phone that registered with the first version keeps its registration.
+ *
+ * Open for the session tests, which replace it with a fake on every platform (Mockito is JVM only).
  */
+@OpenForTesting
 class EversenseCrypto365Util(val preference: EversenseStore, private val aapsLogger: AAPSLogger) {
 
     private val provider = CryptographyProvider.Default

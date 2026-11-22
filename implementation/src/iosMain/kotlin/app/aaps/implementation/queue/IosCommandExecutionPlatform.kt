@@ -1,5 +1,6 @@
 package app.aaps.implementation.queue
 
+import app.aaps.implementation.lifecycle.IosBackgroundTime
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -21,18 +22,20 @@ import platform.Foundation.endActivity
 class IosCommandExecutionPlatform() : CommandExecutionPlatform {
 
     /**
-     * `NSProcessInfo.beginActivityWithOptions` is the closest iOS equivalent: it tells the system not
-     * to idle-sleep while the activity is alive. It is the right tool for "do not nap while a bolus is
-     * being delivered".
+     * Two things together, because iOS has no single equivalent of Android's partial wake lock.
      *
-     * It is NOT the same promise as Android's partial wake lock, and the difference is worth knowing
-     * rather than hiding: this holds off *idle sleep*, it does not keep the app running once iOS
-     * suspends it in the background. A pump driver that needs to keep working while backgrounded has
-     * to hold a Core Bluetooth background session as well - that belongs to the driver, not here.
-     * [durationMs] is therefore advisory; the activity lives until it is released.
+     * - `NSProcessInfo.beginActivityWithOptions` holds off idle sleep while the app is in front, for
+     *   "do not nap while a bolus is being delivered".
+     * - [IosBackgroundTime] keeps the app running after it went to the background. A locked phone
+     *   froze the queue about 10 seconds after the wake that started it, in the middle of a patch
+     *   connect. The background time is limited by iOS, to about 30 seconds; after that the queue
+     *   freezes until the next Bluetooth event, as before.
+     *
+     * The background time also ends after [durationMs]. The activity lives until it is released.
      */
     override fun acquireWakeLock(tag: String, durationMs: Long): WakeLockHandle? {
         val token = NSProcessInfo.processInfo.beginActivityWithOptions(NSActivityUserInitiated, tag)
+        val backgroundTime = IosBackgroundTime.hold(tag, durationMs)
         return object : WakeLockHandle {
 
             private var released = false
@@ -40,16 +43,16 @@ class IosCommandExecutionPlatform() : CommandExecutionPlatform {
             override fun release() {
                 if (released) return
                 released = true
+                backgroundTime.release()
                 NSProcessInfo.processInfo.endActivity(token)
             }
         }
     }
 
     /**
-     * True, and that is the truthful answer rather than a convenient one. iOS declares Bluetooth use
-     * in `Info.plist` and prompts once on first use; there is no revocable runtime permission for the
-     * drain loop to re-check on every pass. The same reasoning as `bluetoothPermissionGroup()`
-     * returning null on this platform.
+     * True. iOS asks for Bluetooth itself on first use. The user can refuse it later in the iOS
+     * Settings, and that refusal is shown on the permission sheet (`bluetoothPermissionGroup()`), not
+     * checked here.
      */
     override fun hasBluetoothPermission(): Boolean = true
 
