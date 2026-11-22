@@ -62,6 +62,9 @@ class AaruyPump(
         private const val BASAL_STEP = 0.025
         private const val BOLUS_PRECISION_UNITS = 0.025
 
+        /** After this long stopped the pump raises "stopped too long". From the name of the alarm; UNVERIFIED to the minute. */
+        private const val STOP_TOO_LONG_MS = 15 * 60 * 1000L
+
         /** Measured on a real pump: one bolus step every 2 seconds. */
         private const val BOLUS_MS_PER_STEP = 2000.0
         private const val SECONDS_PER_HALF_HOUR = 1800
@@ -349,7 +352,18 @@ class AaruyPump(
         }
 
     /** The pump holds [alarm]. Seen again while it is held, it keeps the time it was first seen. */
-    fun addAlarm(alarm: AlarmState) = changeAlarms { if (alarm in it) it else it + (alarm to dateUtil.now()) }
+    fun addAlarm(alarm: AlarmState, raisedAt: Long = dateUtil.now()) = changeAlarms { if (alarm in it) it else it + (alarm to raisedAt) }
+
+    /**
+     * A status says the pump is stopped since [since]. The pump says "stopped too long" only in a message while a link is
+     * up, so it is raised from the status too. Seen on a real pump (firmware 1.1.0.01, 2026-11-21): stopped by a rewind,
+     * it beeped once 12 to 21 minutes later, and the next connection brought no message and no record in its log. The
+     * alarm has the time the pump raised it, also when the status comes later.
+     */
+    fun onStopped(since: Long) {
+        val tooLongAt = since + STOP_TOO_LONG_MS
+        if (dateUtil.now() >= tooLongAt) addAlarm(AlarmState.PUMP_STOP_TOO_LONG, raisedAt = tooLongAt)
+    }
 
     /** The pump no longer holds [alarm]. */
     fun removeAlarm(alarm: AlarmState) = changeAlarms { it - alarm }

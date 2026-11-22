@@ -15,7 +15,8 @@ data class BasalStatus(var index: Int, var curValue: Double, var remainTime: Lon
 
 data class BolusStatus(var state: Int, var curBolusNow: Double, var curBolusDelay: Double, var remainTime: Long, var bolusType: Int)
 
-data class PauseStatus(var index: Int, var pauseOrStopTime: Long)
+/** @param since when the pause or the stop began, in ms since 1970, on the pump clock */
+data class PauseStatus(var index: Int, var since: Long)
 
 data class StatusInfo(
     var remainAmount: Int,
@@ -71,7 +72,8 @@ private fun CurrentStatusPacket.BasalValue.toBasalStatus() =
 private fun CurrentStatusPacket.BolusValue.toBolusStatus() =
     BolusStatus(state.toInt(), curBolusNow.unsigned().toDouble(), curBolusDelay.unsigned().toDouble(), remainTime.unsigned().toLong(), bolusType.toInt())
 
-private fun CurrentStatusPacket.PauseValue.toPauseStatus() = PauseStatus(index.toInt(), pauseOrStopTime.unsigned())
+private fun CurrentStatusPacket.PauseValue.toPauseStatus() =
+    PauseStatus(index.toInt(), since = AaruyPumpTime.BASE_TIME_MS + pauseOrStopTime.unsigned() * 1000)
 
 internal fun CurrentStatusPacket.toStatusInfo() =
     StatusInfo(

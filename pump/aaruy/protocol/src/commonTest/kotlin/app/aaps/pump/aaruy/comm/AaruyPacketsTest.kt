@@ -163,6 +163,18 @@ class AaruyPacketsTest {
         }
     }
 
+    /**
+     * Seen on a real pump (firmware 1.1.0.01, 2026-11-21): stopped by a rewind at 23:34:20 local time, read at 23:55:25,
+     * with 290 U in the reservoir. The time of the stop is in the pump's seconds, as every pump time.
+     */
+    @Test
+    fun aStoppedPumpSaysWhenTheStopBegan() {
+        val status = CurrentStatusPacket.parse(bytes(0xDD, 0x2B, 0x14, 0x0B, 0x22, 0x01, 0x08, 0x00, 0xEC, 0x26, 0x14, 0x0B, 0, 0, 0, 0)).toStatusInfo()
+        assertEquals(8, status.runningStatus)
+        assertEquals(290, status.remainAmount)
+        assertEquals(1_795_300_460_000L, status.pauseStatus!!.since)
+    }
+
     /** The vendor library kept such a status, with no basal and maybe reservoir 0. */
     @Test
     fun statusThatEndsEarlyIsRefused() {

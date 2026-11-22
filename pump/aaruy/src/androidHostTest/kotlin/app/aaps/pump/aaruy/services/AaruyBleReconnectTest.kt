@@ -1,5 +1,7 @@
 package app.aaps.pump.aaruy.services
 
+import kotlin.math.abs
+import java.util.concurrent.atomic.AtomicLong
 import android.os.Looper
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -474,6 +476,56 @@ class AaruyBleReconnectTest {
             Thread.sleep(50)
         }
         assertTrue("no link: ${pump.connectionState}", pump.connectionState != ConnectionState.CONNECTED)
+        transport.shutdown()
+    }
+
+    /**
+     * Seen on a real pump: "stopped too long" comes only as a message while a link is up. The pump is stopped by a rewind,
+     * the 15 minutes pass with no link, and the next status must still raise it, at the time the pump raised it.
+     */
+    @Test
+    fun aStopThatGrewTooLongWithNoLinkIsAnAlarmAtTheNextStatus() {
+        // Real time, so the motor of the emulator moves on, plus a jump the test makes.
+        val jump = AtomicLong(0)
+        val now = { System.currentTimeMillis() + jump.get() }
+        val dateUtil = mock(DateUtil::class.java).also { `when`(it.now()).thenAnswer { now() } }
+        val preferences = preferencesWithDefaults()
+        val logger = mock(AAPSLogger::class.java)
+        val pump = AaruyPump(
+            logger, mock(ResourceHelper::class.java), preferences, dateUtil, mock(PumpSync::class.java),
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+        )
+        val ble = AaruyBLE(
+            centralFor(AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }, clock = now))),
+            logger, pump, dateUtil, mock(RxBus::class.java), preferences,
+            historyDaoMock(), mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java),
+            mock(PumpSync::class.java), tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
+        )
+        val transport = ble.emulator!!
+        val emulator = transport.emulator
+
+        ble.connect("first", AaruyEmulatorPeripheral.DEVICE_ADDRESS)
+        waitFor("first connection") { pump.connectionState == ConnectionState.CONNECTED }
+        waitFor("status read at connect") { pump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING }
+        ble.replaceDevice()
+        waitFor("the pump stopped") { pump.pumpLastState == AaruyPumpState.STOP_RUNNING }
+        val stopped = now()
+
+        transport.outOfRange = true
+        transport.loseConnection()
+        waitFor("link lost") { !ble.isConnected }
+        jump.addAndGet(20 * 60_000L)
+        // The pump says it now, and with no link it is lost.
+        Thread.sleep(1000)
+        assertEquals(AaruyPumpEmulator.STATUS_STOPPED, emulator.runningStatus)
+        assertTrue("no alarm yet: ${pump.activeAlarms}", pump.activeAlarms.isEmpty())
+
+        transport.outOfRange = false
+        ble.connect("back in range", AaruyEmulatorPeripheral.DEVICE_ADDRESS)
+        waitFor("the stop is an alarm") { AlarmState.PUMP_STOP_TOO_LONG in pump.activeAlarms }
+        // The time the pump raised it, not the time of this connection 20 minutes after the stop.
+        val raisedAt = pump.activeAlarms.getValue(AlarmState.PUMP_STOP_TOO_LONG)
+        assertTrue("raised at $raisedAt, stopped at $stopped", abs(raisedAt - (stopped + 15 * 60_000L)) < 10_000)
         transport.shutdown()
     }
 

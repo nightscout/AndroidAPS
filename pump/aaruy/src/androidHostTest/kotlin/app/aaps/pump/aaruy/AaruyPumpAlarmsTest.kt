@@ -64,6 +64,27 @@ class AaruyPumpAlarmsTest {
         assertEquals(3_000L, pump.activeAlarms[AlarmState.PUMP_MOTOR_BLOCK])
     }
 
+    /**
+     * Seen on a real pump: "stopped too long" came only as a message while a link was up, and the next connection did not
+     * bring it. The status says since when the pump is stopped, and the alarm gets the time the pump raised it.
+     */
+    @Test
+    fun aStopOfMoreThan15MinutesIsAnAlarmAtTheTimeThePumpRaisedIt() {
+        val since = 100_000L
+        now = since + 14 * 60_000L
+        pump.onStopped(since)
+        assertEquals(emptyMap<AlarmState, Long>(), pump.activeAlarms)
+
+        now = since + 21 * 60_000L
+        pump.onStopped(since)
+        assertEquals(mapOf(AlarmState.PUMP_STOP_TOO_LONG to since + 15 * 60_000L), pump.activeAlarms)
+
+        // Each status says it again: one alarm, at its first time.
+        now = since + 30 * 60_000L
+        pump.onStopped(since)
+        assertEquals(since + 15 * 60_000L, pump.activeAlarms[AlarmState.PUMP_STOP_TOO_LONG])
+    }
+
     /** Stored before the time was kept: the time of the load, so the alert has one. */
     @Test
     fun anAlarmStoredWithoutItsTimeGetsTheTimeOfTheLoad() {

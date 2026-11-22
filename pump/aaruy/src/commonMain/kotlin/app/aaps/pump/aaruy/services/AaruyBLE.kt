@@ -594,6 +594,7 @@ class AaruyBLE(
                     8->{        // Stopped, after a rewind
                         checkPumpInfusion()
                         cancelBolusOk = true
+                        statusInfo.pauseStatus?.let { aaruyPump.onStopped(it.since) }
                     }
                 }
                 // A real pump answers a stop by going from status 3 straight to 1, so any status other than 3 confirms it.
