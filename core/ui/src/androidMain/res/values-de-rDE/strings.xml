@@ -1065,6 +1065,8 @@
     <string name="wiki_search_offline">Für die Suche in der Dokumentation ist eine Internetverbindung erforderlich</string>
     <string name="no_search_results">Keine Ergebnisse gefunden</string>
     <string name="search_plugin_disabled">Plugin %1$s deaktiviert</string>
+    <string name="search_recent">Letzte Suchanfragen</string>
+    <string name="search_history_remove">Aus letzten Suchen entfernen</string>
     <!--    Food Management -->
     <string name="food_management">Lebensmittel</string>
     <string name="food_deleted">Lebensmittel gelöscht</string>
