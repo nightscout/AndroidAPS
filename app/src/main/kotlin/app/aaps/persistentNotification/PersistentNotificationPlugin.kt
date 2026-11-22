@@ -264,7 +264,7 @@ class PersistentNotificationPlugin(
                     )
                 } else {
                     FixedInt(
-                        fromMgdlToUnits.toInt(),
+                        round(fromMgdlToUnits).toInt(),
                         null // unit
                     )
                 }
