@@ -24,7 +24,9 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
@@ -101,9 +103,16 @@ class BgAlarmsImpl(
 
     private var started = false
 
+    /** When the BG alarms started: the stale data alarm waits a grace time after it, for the first reading to come. */
+    internal var startedAt = 0L
+
+    /** The time the stale data alert is booked for now, or null when none is booked. */
+    private var staleBookedAt: Long? = null
+
     override fun start() {
         if (started) return
         started = true
+        startedAt = dateUtil.now()
         scope.launch {
             // Not before the start sequence has run the database migrations; a slow start delays the alarms, it
             // must not lose them.
@@ -112,7 +121,9 @@ class BgAlarmsImpl(
             merge(
                 persistenceLayer.observeChanges(GV::class).map { },
                 preferences.observe(UnitDoubleKey.AlertUrgentLow).map { },
-                rules.rules.map { }
+                rules.rules.map { },
+                preferences.observe(BooleanKey.AlertMissedBgReading).map { },
+                preferences.observe(IntKey.AlertsStaleDataThreshold).map { }
             ).onStart { emit(Unit) }.collect {
                 try {
                     evaluate()
@@ -131,11 +142,52 @@ class BgAlarmsImpl(
         val readings = persistenceLayer.getBgReadingsDataFromTime(now - LOOK_BACK_MS, ascending = false)
             .filter { it.isValid && it.timestamp <= now + FUTURE_TOLERANCE_MS }
             .sortedByDescending { it.timestamp }
+        // Before the check for fresh data: old data is exactly the stale data alarm's case
+        evaluateStale(readings.firstOrNull() ?: persistenceLayer.getLastGlucoseValue()?.takeIf { it.isValid && it.timestamp <= now + FUTURE_TOLERANCE_MS }, now)
         val last = readings.firstOrNull() ?: return
         if (now - last.timestamp > FRESH_MS) return
         val minuteOfDay = Instant.fromEpochMilliseconds(now).toLocalDateTime(SystemTimeZone.current()).let { it.hour * 60 + it.minute }
         for (direction in BgDirection.entries) evaluate(direction, levels(direction, minuteOfDay), readings)
     }
+
+    /**
+     * The stale data alarm (`_docs/ALARMS.md`, step 2b): a booked alert at the last reading plus the threshold, booked
+     * again at every reading, so it rings only when no reading came in time - also when the app does not run then
+     * (Android wakes it, iOS rings its notification). A new reading ends it. After a start it waits [STALE_GRACE_MS]
+     * for the first reading. Off ("Alert if no BG data is received" off), or no reading at all: nothing booked.
+     */
+    private fun evaluateStale(last: GV?, now: Long) {
+        if (!preferences.get(BooleanKey.AlertMissedBgReading) || last == null) {
+            if (staleBookedAt != null) {
+                alerts.unschedule(BgAlert.SOURCE, KEY_STALE)
+                staleBookedAt = null
+            }
+            resolveIfActive(KEY_STALE)
+            return
+        }
+        val dueAt = last.timestamp + preferences.get(IntKey.AlertsStaleDataThreshold) * 60_000L
+        // A reading in time: the readings came back, the alarm of the last gap is over
+        if (now < dueAt) resolveIfActive(KEY_STALE)
+        val at = maxOf(dueAt, startedAt + STALE_GRACE_MS)
+        if (staleBookedAt == at) return
+        if (alerts.schedule(staleAlert(last, at), at)) staleBookedAt = at
+        else aapsLogger.error(LTag.BGSOURCE, "Stale data alarm not booked: the phone cannot book it")
+    }
+
+    private fun resolveIfActive(key: String) {
+        if (alerts.active.value.any { it.source == BgAlert.SOURCE && it.key == key }) alerts.resolve(BgAlert.SOURCE, key)
+    }
+
+    private fun staleAlert(last: GV, at: Long) = Alert(
+        kind = BgAlert.STALE,
+        key = KEY_STALE,
+        severity = AlertSeverity.CRITICAL,
+        title = BgAlert.STALE.title,
+        text = InterfacesStrings.bg_alarm_stale_text.withArgs(dateUtil.timeString(last.timestamp)),
+        // The time of the gap: the same gap is the same alert, so a silence of it holds
+        raisedAt = at,
+        lifetime = AlertLifetime.CONDITION
+    )
 
     /** The levels of [direction] that apply now, the strongest first. */
     private fun levels(direction: BgDirection, minuteOfDay: Int): List<Level> {
@@ -249,6 +301,12 @@ class BgAlarmsImpl(
 
         /** The key of the high alert. */
         const val KEY_HIGH = "high"
+
+        /** The key of the stale data alert. */
+        const val KEY_STALE = "stale"
+
+        /** After a start, the stale data alarm waits this long for the first reading (the old pre-snooze). */
+        const val STALE_GRACE_MS = 5 * 60_000L
 
         fun keyOf(direction: BgDirection): String = if (direction == BgDirection.LOW) KEY_LOW else KEY_HIGH
 

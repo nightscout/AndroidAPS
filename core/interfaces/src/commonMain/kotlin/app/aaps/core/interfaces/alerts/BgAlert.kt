@@ -16,7 +16,10 @@ enum class BgAlert(private val idName: String, override val title: TextRef, over
     LOW("low", InterfacesStrings.alert_kind_bg_low, isProtected = false),
 
     /** The user's own high rules. */
-    HIGH("high", InterfacesStrings.alert_kind_bg_high, isProtected = false);
+    HIGH("high", InterfacesStrings.alert_kind_bg_high, isProtected = false),
+
+    /** No reading for longer than the stale data threshold: a booked alert, booked again at every reading (step 2b). */
+    STALE("stale", InterfacesStrings.alert_kind_bg_stale, isProtected = false);
 
     // A getter: the companion object is not there yet while the entries are built
     override val id: String get() = "$SOURCE.$idName"

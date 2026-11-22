@@ -313,10 +313,6 @@ private fun startApp(nsSocketFactory: NsSocketFactory, crashReporter: CrashRepor
     // itself sends would be lost.
     IosNotificationDelegate.install()
 
-    // Books the missed readings alarm with iOS after each reading, so it rings when the app cannot
-    // run. Here for the same reason as the delegate: `UNUserNotificationCenter` needs an app bundle.
-    graph.missedReadingAlarm.start()
-
     // Same placement and the same reason: this touches UIKit, so it cannot live in the graph or in
     // shared code. Until this ran, Nightscout sync was blocked forever - see `startBatteryWatch`.
     // Before the start sequence as well, rather than from `IosStartPlatform.startServices()`: the

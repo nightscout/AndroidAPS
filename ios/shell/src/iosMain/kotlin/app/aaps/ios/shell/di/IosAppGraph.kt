@@ -47,7 +47,6 @@ import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.database.AppRepository
 import app.aaps.database.di.IosAppDatabaseBuilder
-import app.aaps.implementation.alerts.IosMissedReadingAlarm
 import app.aaps.implementation.maintenance.KeepAliveRunner
 import app.aaps.implementation.maintenance.cloud.AuthBrowser
 import app.aaps.implementation.plugin.IosPermissionStatus
@@ -215,12 +214,9 @@ interface IosAppGraph : MetroViewModelMultibindings {
     /** The wall clock, for waits that have to follow the time of day. */
     val clock: Clock
 
-    /** Started by the app, as it needs an app bundle. See `IosMissedReadingAlarm`. */
-    val missedReadingAlarm: IosMissedReadingAlarm
-
     /**
      * The local alarms, for one call Android makes and this shell has to make too:
-     * `preSnoozeAlarms` holds the stale-data alarm back for five minutes so the first Nightscout
+     * `preSnoozeAlarms` holds the pump unreachable alarm back for five minutes so the first Nightscout
      * round can land before the database is judged out of date.
      */
     val localAlertUtils: LocalAlertUtils

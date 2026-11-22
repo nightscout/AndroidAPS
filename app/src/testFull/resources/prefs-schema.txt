@@ -306,7 +306,6 @@ medtronic_std_boluses_delivered|MedtronicLongNonKey|true
 medtronic_tbrs_set|MedtronicLongNonKey|true
 medtrum_session_token|MedtrumLongNonKey|true
 missed_bg_readings_threshold|IntKey|true
-nextMissedReadingsAlarm|LocalAlertLongKey|false
 nextPumpDisconnectedAlarm|LocalAlertLongKey|false
 notification_reader_dedup_state|StringNonKey|true
 ns_alarm_stale_data_value|IntKey|true

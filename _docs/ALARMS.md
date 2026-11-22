@@ -407,7 +407,13 @@ The order matters: step 3 must not come before step 2.
    as the desktop has no alerts) (`AlertKind`, `CoreAlert`) with the user's Ring, Silent or Off
    per phone and its settings screen, the silence length and its choice (done 2026-11-22), the announcement under its
    own source, the scheduled alerts (done 2026-11-22).
-2. The BG alarms, stale data included, on the master and the clients, with the shared silence. The escalation comes
+2. The BG alarms, stale data included, on the master and the clients, with the shared silence. Built 2026-11-22:
+   2a urgent low (on by default at 54 mg/dl, always rings, also in Do Not Disturb; a one-time card) and the user's own
+   low and high rules with their screen (`BgAlarmsImpl`, `BgAlarmRules`); 2b stale data as a booked alert at the last
+   reading plus the threshold, with a 5-minute grace after a start (replaces `checkStaleBGAlert` and
+   `IosMissedReadingAlarm`; the setting "Alert if no BG data is received" and its threshold stay). Still to come: 2c
+   persistent high, rate and predictive low, 2d smart silence and pause, 2e sounds and the Test button, 2f the shared
+   silence. The escalation comes
    later, after the basics work.
 3. The Nightscout alarms removed; announcements as a WARNING alert.
 4. The core's sounding cards to alerts (the table above).

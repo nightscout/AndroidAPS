@@ -101,7 +101,6 @@ class KeepAliveRunnerTest : TestBaseWithProfile() {
         assertThat(outcome).isEqualTo(WorkOutcome.Success)
         verify(dstHelper).dstCheck()
         verify(localAlertUtils).shortenSnoozeInterval()
-        verify(localAlertUtils).checkStaleBGAlert()
         verify(maintenance).deleteLogs(30)
     }
 

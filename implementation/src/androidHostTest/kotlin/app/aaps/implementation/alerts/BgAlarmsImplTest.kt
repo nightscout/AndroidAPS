@@ -18,6 +18,8 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
@@ -63,8 +65,16 @@ class BgAlarmsImplTest : TestBase() {
         override fun silence(source: String, key: String, minutes: Int?) {}
         override fun snooze(source: String, key: String, minutes: Int) {}
         override fun act(source: String, key: String) {}
-        override fun schedule(alert: Alert, at: Long): Boolean = true
-        override fun unschedule(source: String, key: String) {}
+        val booked = mutableListOf<Pair<Alert, Long>>()
+        val unbooked = mutableListOf<String>()
+        override fun schedule(alert: Alert, at: Long): Boolean {
+            booked += alert to at
+            return true
+        }
+
+        override fun unschedule(source: String, key: String) {
+            unbooked += key
+        }
     }
 
     private val persistenceLayer: PersistenceLayer = mock()
@@ -283,5 +293,77 @@ class BgAlarmsImplTest : TestBase() {
         evaluate()
 
         assertThat(alerts.resolved).containsExactly(BgAlarmsImpl.KEY_LOW)
+    }
+
+    // ---- stale data (step 2b) -----------------------------------------------------------------------
+
+    private fun staleOn(thresholdMinutes: Int = 30) {
+        whenever(preferences.get(BooleanKey.AlertMissedBgReading)).thenReturn(true)
+        whenever(preferences.get(IntKey.AlertsStaleDataThreshold)).thenReturn(thresholdMinutes)
+        whenever(dateUtil.timeString(any())).thenReturn("14:35")
+    }
+
+    @Test
+    fun `the stale data alarm is booked at the last reading plus the threshold`() {
+        staleOn()
+        readings(100.0)
+
+        evaluate()
+
+        val (alert, at) = alerts.booked.single()
+        assertThat(alert.kind).isEqualTo(BgAlert.STALE)
+        assertThat(at).isEqualTo(now + 30 * minute)
+        // The same gap is the same alert, so a silence of it holds
+        assertThat(alert.raisedAt).isEqualTo(at)
+    }
+
+    @Test
+    fun `the same booking is not made again`() {
+        staleOn()
+        readings(100.0)
+
+        evaluate()
+        evaluate()
+
+        assertThat(alerts.booked).hasSize(1)
+    }
+
+    /**
+     * #5495: after a cold start the newest stored reading is old only because the app was not running. That must not
+     * ring at once: the alarm waits a grace time for the first reading.
+     */
+    @Test
+    fun `after a start the stale data alarm waits for the first reading`() {
+        staleOn()
+        sut.startedAt = now
+        readings(100.0, newestAt = now - 45 * minute)
+
+        evaluate()
+
+        assertThat(alerts.booked.single().second).isEqualTo(now + BgAlarmsImpl.STALE_GRACE_MS)
+    }
+
+    @Test
+    fun `a reading in time ends the stale data alarm and books the next one`() {
+        staleOn()
+        alerts.raise(Alert(kind = BgAlert.STALE, key = BgAlarmsImpl.KEY_STALE, severity = AlertSeverity.CRITICAL, title = BgAlert.STALE.title, raisedAt = now - minute))
+        readings(100.0)
+
+        evaluate()
+
+        assertThat(alerts.resolved).contains(BgAlarmsImpl.KEY_STALE)
+        assertThat(alerts.booked.single().second).isEqualTo(now + 30 * minute)
+    }
+
+    @Test
+    fun `switched off nothing is booked and a booking is taken back`() {
+        staleOn()
+        readings(100.0)
+        evaluate()
+
+        whenever(preferences.get(BooleanKey.AlertMissedBgReading)).thenReturn(false)
+        evaluate()
+
+        assertThat(alerts.unbooked).containsExactly(BgAlarmsImpl.KEY_STALE)
     }
 }

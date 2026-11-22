@@ -126,7 +126,6 @@ enum class NotificationId(
     PUMP_EMULATOR_DISPLAY(INFO, PUMP),
 
     // CGM
-    BG_READINGS_MISSED(URGENT, CGM),
     SENSOR_CHANGE_DETECTED(NORMAL, CGM),
 
     // CGM — Aidex

@@ -19,6 +19,6 @@ enum class LocalAlertLongKey(
     override val exportable: Boolean = false
 ) : LongNonPreferenceKey {
 
-    NextPumpDisconnectedAlarm("nextPumpDisconnectedAlarm", 0L),
-    NextMissedReadingsAlarm("nextMissedReadingsAlarm", 0L)
+    NextPumpDisconnectedAlarm("nextPumpDisconnectedAlarm", 0L)
+    // The missed readings alarm's snooze went: that alarm is a booked BG alert now (step 2b)
 }

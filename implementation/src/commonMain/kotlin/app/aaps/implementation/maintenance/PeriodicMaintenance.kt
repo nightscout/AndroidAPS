@@ -66,7 +66,7 @@ class PeriodicMaintenance(
      */
     suspend fun runOnce() {
         localAlertUtils.shortenSnoozeInterval()
-        localAlertUtils.checkStaleBGAlert()
+        // The missed readings check is not polled any more: it is a booked BG alert (BgAlarms, step 2b)
         maintenance.deleteLogs(KEEP_LOG_FILES)
         cleanupDatabase()
     }

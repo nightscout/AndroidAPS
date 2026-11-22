@@ -176,6 +176,8 @@
     <string name="alert_kind_bg_urgent_low" comment="Name of a kind of glucose alarm, and the title of its alarm: glucose below the urgent low threshold">Urgent low</string>
     <string name="alert_kind_bg_low" comment="Name of a kind of glucose alarm, and the title of its alarm: glucose below a low threshold the user set">Low</string>
     <string name="alert_kind_bg_high" comment="Name of a kind of glucose alarm, and the title of its alarm: glucose above a high threshold the user set">High</string>
+    <string name="alert_kind_bg_stale" comment="Name of a kind of glucose alarm, and the title of its alarm: no new glucose reading for too long">Missed BG readings</string>
+    <string name="bg_alarm_stale_text" comment="Text of the missed readings alarm. %1$s=the time of the last reading, for example: 14:35">No BG reading since %1$s</string>
     <string name="bg_alarm_text" comment="Text of a glucose alarm. %1$s=the glucose with its unit, for example: 2.9 mmol/l">BG %1$s</string>
     <string name="bg_alarms_intro">AAPS has its own BG alarms now. Urgent low rings below 54 mg/dl (3.0 mmol/l), also in Do Not Disturb. Set them in Settings > Local alerts. If another app already rings for this, you may get two alarms.</string>
 </resources>

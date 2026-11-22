@@ -26,10 +26,5 @@ interface LocalAlertUtils {
      */
     suspend fun reportPumpStatusRead()
 
-    /**
-     * Check for missing BGs.
-     * Raise alarm if needed.
-     * Overview notification with sound, Therapy event
-     */
-    suspend fun checkStaleBGAlert()
+    // The missed BG readings alarm is a BG alarm now, a booked alert (`BgAlarms`, `_docs/ALARMS.md` step 2b).
 }

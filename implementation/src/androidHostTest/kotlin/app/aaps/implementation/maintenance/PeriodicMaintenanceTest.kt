@@ -49,7 +49,6 @@ class PeriodicMaintenanceTest : TestBase() {
 
         sut.runOnce()
 
-        verify(localAlertUtils).checkStaleBGAlert()
     }
 
     @Test

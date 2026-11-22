@@ -56,10 +56,6 @@ class LocalAlertUtilsImpl(
         preferences.registerPreferences(LocalAlertLongKey.entries)
     }
 
-    private fun missedReadingsThreshold(): Long {
-        return T.mins(preferences.get(IntKey.AlertsStaleDataThreshold).toLong()).msecs()
-    }
-
     private fun pumpUnreachableThreshold(): Long {
         return T.mins(preferences.get(IntKey.AlertsPumpUnreachableThreshold).toLong()).msecs()
     }
@@ -102,18 +98,13 @@ class LocalAlertUtilsImpl(
      * Call only at startup!
      */
     override fun preSnoozeAlarms() {
-        if (preferences.get(LocalAlertLongKey.NextMissedReadingsAlarm) < dateUtil.now()) {
-            preferences.put(LocalAlertLongKey.NextMissedReadingsAlarm, dateUtil.now() + 5 * 60 * 1000)
-        }
+        // The missed readings alarm has its own grace after a start now (BgAlarms, step 2b)
         if (preferences.get(LocalAlertLongKey.NextPumpDisconnectedAlarm) < dateUtil.now()) {
             preferences.put(LocalAlertLongKey.NextPumpDisconnectedAlarm, dateUtil.now() + 5 * 60 * 1000)
         }
     }
 
     override fun shortenSnoozeInterval() { //shortens alarm times in case of setting changes or future data
-        var nextMissedReadingsAlarm = preferences.get(LocalAlertLongKey.NextMissedReadingsAlarm)
-        nextMissedReadingsAlarm = min(dateUtil.now() + missedReadingsThreshold(), nextMissedReadingsAlarm)
-        preferences.put(LocalAlertLongKey.NextMissedReadingsAlarm, nextMissedReadingsAlarm)
         var nextPumpDisconnectedAlarm = preferences.get(LocalAlertLongKey.NextPumpDisconnectedAlarm)
         nextPumpDisconnectedAlarm = min(dateUtil.now() + pumpUnreachableThreshold(), nextPumpDisconnectedAlarm)
         preferences.put(LocalAlertLongKey.NextPumpDisconnectedAlarm, nextPumpDisconnectedAlarm)
@@ -131,28 +122,4 @@ class LocalAlertUtilsImpl(
         }
     }
 
-    override suspend fun checkStaleBGAlert() {
-        val bgReading = persistenceLayer.getLastGlucoseValue() ?: return
-        if (preferences.get(BooleanKey.AlertMissedBgReading)
-            && bgReading.timestamp + missedReadingsThreshold() < dateUtil.now()
-            && preferences.get(LocalAlertLongKey.NextMissedReadingsAlarm) < dateUtil.now()
-        ) {
-            preferences.put(LocalAlertLongKey.NextMissedReadingsAlarm, dateUtil.now() + missedReadingsThreshold())
-            notificationManager.post(NotificationId.BG_READINGS_MISSED, CoreUiStrings.missed_bg_readings, sound = AlarmSound.ALARM)
-            if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors) && config.APS) {
-                appScope.launch {
-                    persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-                        therapyEvent = TE.asAnnouncement(rh.gs(CoreUiStrings.missed_bg_readings)),
-                        timestamp = dateUtil.now(),
-                        action = Action.CAREPORTAL,
-                        source = Sources.Aaps,
-                        note = rh.gs(CoreUiStrings.missed_bg_readings),
-                        listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
-                    )
-                }
-            }
-        } else if (dateUtil.isOlderThan(bgReading.timestamp, 5).not()) {
-            notificationManager.dismiss(NotificationId.BG_READINGS_MISSED)
-        }
-    }
 }
