@@ -2,6 +2,7 @@ package app.aaps.ui.compose.bgAlarms
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,6 +19,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,6 +43,7 @@ import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlarmRule
 import app.aaps.core.interfaces.alerts.BgAlert
 import app.aaps.core.interfaces.alerts.BgDirection
+import app.aaps.core.interfaces.alerts.BgRuleType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -54,12 +58,14 @@ class BgUnits(
     val format: (Double) -> String,
     /** A BG in mg/dl as a number in the user's units, for the field. */
     val toUnits: (Double) -> String,
-    /** A number the user typed in their units, as mg/dl, or null when it is not a number. */
-    val toMgdl: (String) -> Double?
+    /** A number the user typed in their units, as mg/dl, or null when it is not a number. Also for a rate. */
+    val toMgdl: (String) -> Double?,
+    /** A rate in mg/dl per minute as a number in the user's units: it needs more decimals than a BG in mmol/l. */
+    val rateToUnits: (Double) -> String
 )
 
 /**
- * The user's own BG level rules (`_docs/ALARMS.md`, step 2a): a list, with add, edit, delete and on or off. Urgent low
+ * The user's own BG rules (`_docs/ALARMS.md`, steps 2a and 2c): a list, with add, edit, delete and on or off. Urgent low
  * is not here: it is always on and its threshold is in Local alerts. The rules are the master's, so on a client the
  * list is shown and cannot be changed ([readOnly]).
  *
@@ -76,6 +82,7 @@ fun BgAlarmRulesScreen(
     modifier: Modifier = Modifier
 ) {
     var editing by remember { mutableStateOf<BgAlarmRule?>(null) }
+    var adding by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -90,15 +97,20 @@ fun BgAlarmRulesScreen(
         },
         // The screen's actions at the bottom, not in the top bar
         bottomBar = {
-            if (!readOnly) Row(
-                modifier = Modifier.fillMaxWidth().padding(AapsSpacing.extraLarge),
-                horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
-            ) {
-                Button(onClick = { editing = newRule(newId(), BgDirection.LOW) }, modifier = Modifier.weight(1f)) {
-                    Text(stringResource(UiStrings.bg_alarm_rule_add_low))
+            if (!readOnly) Box(modifier = Modifier.fillMaxWidth().padding(AapsSpacing.extraLarge)) {
+                Button(onClick = { adding = true }, modifier = Modifier.fillMaxWidth()) {
+                    Text(stringResource(UiStrings.bg_alarm_rule_add))
                 }
-                Button(onClick = { editing = newRule(newId(), BgDirection.HIGH) }, modifier = Modifier.weight(1f)) {
-                    Text(stringResource(UiStrings.bg_alarm_rule_add_high))
+                DropdownMenu(expanded = adding, onDismissRequest = { adding = false }) {
+                    RuleKind.entries.forEach { kind ->
+                        DropdownMenuItem(
+                            text = { Text(stringResource(kind.alert.title)) },
+                            onClick = {
+                                adding = false
+                                editing = newRule(newId(), kind)
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -144,18 +156,69 @@ fun BgAlarmRulesScreen(
     }
 }
 
-/** The lows first, the strongest first; then the highs, the strongest first. */
-private fun sorted(rules: List<BgAlarmRule>) =
-    rules.filter { it.direction == BgDirection.LOW }.sortedBy { it.thresholdMgdl } +
-        rules.filter { it.direction == BgDirection.HIGH }.sortedByDescending { it.thresholdMgdl }
+/** The rules the user can add, in the order of the menu and the list. */
+private enum class RuleKind(val type: BgRuleType, val direction: BgDirection, val alert: BgAlert) {
 
-/** A new rule with the usual starting values: 70 mg/dl for a low, 250 for a high. */
-private fun newRule(id: String, direction: BgDirection) = BgAlarmRule(
-    id = id,
-    direction = direction,
-    thresholdMgdl = if (direction == BgDirection.LOW) 70.0 else 250.0,
-    silenceMinutes = if (direction == BgDirection.LOW) Alerts.SILENCE_MINUTES else 120
+    LOW(BgRuleType.LEVEL, BgDirection.LOW, BgAlert.LOW),
+    HIGH(BgRuleType.LEVEL, BgDirection.HIGH, BgAlert.HIGH),
+    PERSISTENT_HIGH(BgRuleType.PERSISTENT_HIGH, BgDirection.HIGH, BgAlert.PERSISTENT_HIGH),
+    FALLING(BgRuleType.RATE, BgDirection.LOW, BgAlert.FALLING_FAST),
+    RISING(BgRuleType.RATE, BgDirection.HIGH, BgAlert.RISING_FAST),
+    PREDICTED_LOW(BgRuleType.PREDICTED_LOW, BgDirection.LOW, BgAlert.PREDICTED_LOW);
+
+    /** The limits a threshold must stay in, in mg/dl (a rate in mg/dl per minute). */
+    val limits: ClosedFloatingPointRange<Double>
+        get() = when (this) {
+            LOW, PREDICTED_LOW    -> 40.0..180.0
+            HIGH, PERSISTENT_HIGH -> 100.0..400.0
+            FALLING, RISING       -> 0.5..10.0
+        }
+
+    /** The limits of the minutes field: how long it must last, or for predicted low how far it looks ahead. */
+    val minutes: IntRange?
+        get() = when (this) {
+            LOW, HIGH       -> 0..240
+            PERSISTENT_HIGH -> 15..240
+            PREDICTED_LOW   -> 5..120
+            FALLING, RISING -> null
+        }
+}
+
+private fun kindOf(rule: BgAlarmRule): RuleKind = RuleKind.entries.first { it.type == rule.type && it.direction == rule.direction }
+
+/** By kind as in the menu; in each kind the strongest first: the lowest low, the highest high, the fastest rate. */
+private fun sorted(rules: List<BgAlarmRule>) = rules.sortedWith(
+    compareBy<BgAlarmRule> { kindOf(it).ordinal }.thenBy { if (it.direction == BgDirection.LOW && it.type != BgRuleType.RATE) it.thresholdMgdl else -it.thresholdMgdl }
 )
+
+/** A new rule with the usual starting values. */
+private fun newRule(id: String, kind: RuleKind) = BgAlarmRule(
+    id = id,
+    type = kind.type,
+    direction = kind.direction,
+    thresholdMgdl = when (kind) {
+        RuleKind.LOW, RuleKind.PREDICTED_LOW -> 70.0
+        RuleKind.HIGH                        -> 250.0
+        RuleKind.PERSISTENT_HIGH             -> 180.0
+        RuleKind.FALLING, RuleKind.RISING    -> 3.0
+    },
+    durationMinutes = when (kind) {
+        RuleKind.PERSISTENT_HIGH -> 60
+        RuleKind.PREDICTED_LOW   -> 30
+        else                     -> 0
+    },
+    silenceMinutes = if (kind == RuleKind.HIGH || kind == RuleKind.PERSISTENT_HIGH) 120 else Alerts.SILENCE_MINUTES
+)
+
+@Composable
+private fun ruleTitle(rule: BgAlarmRule, units: BgUnits): String = when (kindOf(rule)) {
+    RuleKind.LOW             -> stringResource(UiStrings.bg_alarm_rule_low, units.format(rule.thresholdMgdl))
+    RuleKind.HIGH            -> stringResource(UiStrings.bg_alarm_rule_high, units.format(rule.thresholdMgdl))
+    RuleKind.PERSISTENT_HIGH -> stringResource(UiStrings.bg_alarm_rule_persistent_high, units.format(rule.thresholdMgdl))
+    RuleKind.FALLING         -> stringResource(UiStrings.bg_alarm_rule_falling, stringResource(CoreUiStrings.value_with_unit, units.rateToUnits(rule.thresholdMgdl), units.label))
+    RuleKind.RISING          -> stringResource(UiStrings.bg_alarm_rule_rising, stringResource(CoreUiStrings.value_with_unit, units.rateToUnits(rule.thresholdMgdl), units.label))
+    RuleKind.PREDICTED_LOW   -> stringResource(UiStrings.bg_alarm_rule_predicted_low, units.format(rule.thresholdMgdl))
+}
 
 @Composable
 private fun RuleCard(rule: BgAlarmRule, units: BgUnits, readOnly: Boolean, onClick: () -> Unit, onEnabled: (Boolean) -> Unit) {
@@ -165,19 +228,17 @@ private fun RuleCard(rule: BgAlarmRule, units: BgUnits, readOnly: Boolean, onCli
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
-                Text(
-                    stringResource(
-                        if (rule.direction == BgDirection.LOW) UiStrings.bg_alarm_rule_low else UiStrings.bg_alarm_rule_high,
-                        units.format(rule.thresholdMgdl)
-                    ),
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Text(ruleTitle(rule, units), style = MaterialTheme.typography.titleMedium)
                 // Each detail its own text: the details are not one sentence a translator could order
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
                     val detail = MaterialTheme.typography.bodyMedium
                     Text(stringResource(severityLabel(rule.severity)), style = detail)
                     Text(windowText(rule), style = detail)
-                    if (rule.durationMinutes > 0) Text(stringResource(UiStrings.bg_alarm_rule_lasts, rule.durationMinutes), style = detail)
+                    when (rule.type) {
+                        BgRuleType.PREDICTED_LOW -> Text(stringResource(UiStrings.bg_alarm_rule_within, rule.durationMinutes), style = detail)
+                        BgRuleType.RATE          -> Unit
+                        else                     -> if (rule.durationMinutes > 0) Text(stringResource(UiStrings.bg_alarm_rule_lasts, rule.durationMinutes), style = detail)
+                    }
                 }
             }
             Switch(checked = rule.enabled, onCheckedChange = onEnabled, enabled = !readOnly)
@@ -208,9 +269,6 @@ private fun minuteOf(text: String): Int? {
     return if (h in 0..23 && m in 0..59) h * 60 + m else null
 }
 
-/** The limits a threshold must stay in, in mg/dl: a low rule below the range, a high one above it. */
-private fun BgDirection.limits() = if (this == BgDirection.LOW) 40.0..180.0 else 100.0..400.0
-
 @Composable
 private fun RuleDialog(
     rule: BgAlarmRule,
@@ -220,7 +278,9 @@ private fun RuleDialog(
     onDelete: () -> Unit,
     onDismiss: () -> Unit
 ) {
-    var threshold by remember { mutableStateOf(units.toUnits(rule.thresholdMgdl)) }
+    val kind = kindOf(rule)
+    val isRate = rule.type == BgRuleType.RATE
+    var threshold by remember { mutableStateOf(if (isRate) units.rateToUnits(rule.thresholdMgdl) else units.toUnits(rule.thresholdMgdl)) }
     var severity by remember { mutableStateOf(rule.severity) }
     var allDay by remember { mutableStateOf(rule.fromMinute == null || rule.toMinute == null) }
     var from by remember { mutableStateOf(clock(rule.fromMinute ?: (22 * 60))) }
@@ -228,21 +288,36 @@ private fun RuleDialog(
     var duration by remember { mutableStateOf(rule.durationMinutes.toString()) }
     var silence by remember { mutableStateOf(rule.silenceMinutes) }
 
-    val thresholdMgdl = units.toMgdl(threshold)?.takeIf { it in rule.direction.limits() }
+    val thresholdMgdl = units.toMgdl(threshold)?.takeIf { it in kind.limits }
     val fromMinute = minuteOf(from)
     val toMinute = minuteOf(to)
-    val durationMinutes = duration.trim().toIntOrNull()?.takeIf { it in 0..240 }
+    val minutesRange = kind.minutes
+    val durationMinutes = if (minutesRange == null) rule.durationMinutes else duration.trim().toIntOrNull()?.takeIf { it in minutesRange }
     val valid = thresholdMgdl != null && durationMinutes != null && (allDay || (fromMinute != null && toMinute != null && fromMinute != toMinute))
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(if (rule.direction == BgDirection.LOW) UiStrings.bg_alarm_rule_low_title else UiStrings.bg_alarm_rule_high_title)) },
+        title = {
+            Text(
+                when (kind) {
+                    RuleKind.LOW  -> stringResource(UiStrings.bg_alarm_rule_low_title)
+                    RuleKind.HIGH -> stringResource(UiStrings.bg_alarm_rule_high_title)
+                    else          -> stringResource(kind.alert.title)
+                }
+            )
+        },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+                when (kind) {
+                    RuleKind.PERSISTENT_HIGH          -> UiStrings.bg_alarm_rule_persistent_high_hint
+                    RuleKind.FALLING, RuleKind.RISING -> UiStrings.bg_alarm_rule_rate_hint
+                    RuleKind.PREDICTED_LOW            -> UiStrings.bg_alarm_rule_predicted_low_hint
+                    else                              -> null
+                }?.let { Text(stringResource(it), style = MaterialTheme.typography.bodyMedium) }
                 OutlinedTextField(
                     value = threshold,
                     onValueChange = { threshold = it },
-                    label = { Text(stringResource(UiStrings.bg_alarm_rule_threshold, units.label)) },
+                    label = { Text(stringResource(if (isRate) UiStrings.bg_alarm_rule_rate else UiStrings.bg_alarm_rule_threshold, units.label)) },
                     isError = thresholdMgdl == null,
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
@@ -266,17 +341,17 @@ private fun RuleDialog(
                         label = { Text(stringResource(UiStrings.bg_alarm_rule_to)) }, modifier = Modifier.weight(1f)
                     )
                 }
-                OutlinedTextField(
+                if (minutesRange != null) OutlinedTextField(
                     value = duration,
                     onValueChange = { duration = it },
-                    label = { Text(stringResource(UiStrings.bg_alarm_rule_duration)) },
+                    label = { Text(stringResource(if (kind == RuleKind.PREDICTED_LOW) UiStrings.bg_alarm_rule_look_ahead else UiStrings.bg_alarm_rule_duration)) },
                     isError = durationMinutes == null,
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
                 Text(stringResource(CoreUiStrings.alarm_silence_length), style = MaterialTheme.typography.labelLarge)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
-                    Alerts.silenceLengths(BgAlert.LOW).forEach { m ->
+                    Alerts.silenceLengths(kind.alert).forEach { m ->
                         FilterChip(
                             selected = silence == m,
                             onClick = { silence = m },

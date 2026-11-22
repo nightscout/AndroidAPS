@@ -2,6 +2,7 @@ package app.aaps.ui.compose.alertKinds
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.alerts.AlertChoice
 import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertKindCatalogue
@@ -10,6 +11,7 @@ import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlarmRules
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.ui.compose.bgAlarms.BgAlarmRulesScreen
 import app.aaps.ui.compose.bgAlarms.BgUnits
 import kotlin.uuid.ExperimentalUuidApi
@@ -63,6 +65,7 @@ class AlertKindsSettingsImpl(
     private val catalogues: Set<AlertKindCatalogue>,
     private val bgAlarmRules: BgAlarmRules,
     private val profileUtil: ProfileUtil,
+    private val decimalFormatter: DecimalFormatter,
     private val config: Config
 ) : AlertKindsSettings {
 
@@ -78,7 +81,12 @@ class AlertKindsSettingsImpl(
                     format = { profileUtil.fromMgdlToStringWithUnits(it) },
                     toUnits = { profileUtil.fromMgdlToStringInUnits(it) },
                     // Some keyboards give a decimal comma
-                    toMgdl = { text -> text.trim().replace(',', '.').toDoubleOrNull()?.let { profileUtil.convertToMgdl(it, profileUtil.units) } }
+                    toMgdl = { text -> text.trim().replace(',', '.').toDoubleOrNull()?.let { profileUtil.convertToMgdl(it, profileUtil.units) } },
+                    // A rate in mmol/l needs two decimals: 3 mg/dl per minute is 0.17 mmol/l
+                    rateToUnits = { rate ->
+                        val value = profileUtil.fromMgdlToUnits(rate)
+                        if (profileUtil.units == GlucoseUnit.MGDL) decimalFormatter.to1Decimal(value) else decimalFormatter.to2Decimal(value)
+                    }
                 ),
                 newId = { Uuid.random().toString() },
                 onSave = { bgAlarmRules.save(it) },

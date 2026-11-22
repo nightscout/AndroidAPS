@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlarmRule
 import app.aaps.core.interfaces.alerts.BgAlarmRules
 import app.aaps.core.interfaces.alerts.BgDirection
+import app.aaps.core.interfaces.alerts.BgRuleType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -81,7 +82,9 @@ class BgAlarmRulesImpl(
         toMinute = get("toMinute")?.jsonPrimitive?.int,
         durationMinutes = get("durationMinutes")?.jsonPrimitive?.int ?: 0,
         silenceMinutes = get("silenceMinutes")?.jsonPrimitive?.int ?: Alerts.SILENCE_MINUTES,
-        enabled = get("enabled")?.jsonPrimitive?.boolean ?: true
+        enabled = get("enabled")?.jsonPrimitive?.boolean ?: true,
+        // Stored before there were types: a level rule
+        type = get("type")?.jsonPrimitive?.content?.let { BgRuleType.valueOf(it) } ?: BgRuleType.LEVEL
     )
 
     internal fun toJson(rules: List<BgAlarmRule>): String = buildJsonArray {
@@ -96,6 +99,7 @@ class BgAlarmRulesImpl(
                 put("durationMinutes", r.durationMinutes)
                 put("silenceMinutes", r.silenceMinutes)
                 put("enabled", r.enabled)
+                put("type", r.type.name)
             })
         }
     }.toString()

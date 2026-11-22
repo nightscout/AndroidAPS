@@ -407,15 +407,24 @@
     <string name="alert_kind_protected" comment="Shown instead of the three choices for a kind of alert the user cannot silence, for example insulin delivery stopped">Always rings, for safety</string>
     <string name="alert_kind_silence_on_this_phone" comment="Button on the alarm screen: from now on, alerts of this kind come as a card with no sound, on this phone">Silence this kind on this phone</string>
     <string name="bg_alarm_rules_title">BG alarm rules</string>
-    <string name="bg_alarm_rules_summary">Your own low and high alarms</string>
-    <string name="bg_alarm_rules_intro">Your own low and high alarms. Urgent low is always on; its threshold is in Local alerts. The rules are set here on the master and every phone uses them; in Alert kinds each phone chooses whether it rings.</string>
+    <string name="bg_alarm_rules_summary">Your own low, high, rate and predicted low alarms</string>
+    <string name="bg_alarm_rules_intro">Your own BG alarms: low, high, persistent high, falling or rising fast, and predicted low. Urgent low is always on; its threshold is in Local alerts. The rules are set here on the master and every phone uses them; in Alert kinds each phone chooses whether it rings.</string>
     <string name="bg_alarm_rules_read_only">These rules are set on the master phone. In Alert kinds you choose whether this phone rings.</string>
     <string name="bg_alarm_rule_low" comment="Title of a low glucose alarm rule. %1$s=the threshold with its unit, for example: 3.9 mmol/l">Low below %1$s</string>
     <string name="bg_alarm_rule_high" comment="Title of a high glucose alarm rule. %1$s=the threshold with its unit, for example: 13.9 mmol/l">High above %1$s</string>
     <string name="bg_alarm_rule_low_title">Low alarm</string>
     <string name="bg_alarm_rule_high_title">High alarm</string>
-    <string name="bg_alarm_rule_add_low">Add low</string>
-    <string name="bg_alarm_rule_add_high">Add high</string>
+    <string name="bg_alarm_rule_add">Add rule</string>
+    <string name="bg_alarm_rule_persistent_high" comment="Title of a persistent high glucose alarm rule. %1$s=the threshold with its unit, for example: 10.0 mmol/l">Persistent high above %1$s</string>
+    <string name="bg_alarm_rule_falling" comment="Title of a falling fast glucose alarm rule. %1$s=the change in one minute with its unit, for example: 0.17 mmol/l">Falling faster than %1$s per minute</string>
+    <string name="bg_alarm_rule_rising" comment="Title of a rising fast glucose alarm rule. %1$s=the change in one minute with its unit, for example: 0.17 mmol/l">Rising faster than %1$s per minute</string>
+    <string name="bg_alarm_rule_predicted_low" comment="Title of a predicted low glucose alarm rule. %1$s=the threshold with its unit, for example: 3.9 mmol/l">Predicted below %1$s</string>
+    <string name="bg_alarm_rule_within" comment="A predicted low alarm looks this far ahead. %1$d=minutes. Example: within 30 min">within %1$d min</string>
+    <string name="bg_alarm_rule_rate" comment="Label of the rate field of a falling or rising fast alarm rule. %1$s=the unit, mg/dl or mmol/l">Rate (%1$s per minute)</string>
+    <string name="bg_alarm_rule_look_ahead">Looks ahead (minutes)</string>
+    <string name="bg_alarm_rule_persistent_high_hint">Rings when BG stays above the threshold this long and does not come down, and only when the readings came regularly.</string>
+    <string name="bg_alarm_rule_rate_hint">Rings when BG changes this fast, on average over the last 15 minutes and also in the last step.</string>
+    <string name="bg_alarm_rule_predicted_low_hint">Rings when the prediction of the loop goes below the threshold within the time ahead, before BG is low. It needs a running loop; a client uses the prediction of the master.</string>
     <string name="bg_alarm_rule_warning" comment="How a glucose alarm rings: one sound and a card">Warning: one sound</string>
     <string name="bg_alarm_rule_alarm" comment="How a glucose alarm rings: the alarm sound and the alarm screen until the user answers">Alarm: rings until answered</string>
     <string name="bg_alarm_rule_all_day">All day</string>

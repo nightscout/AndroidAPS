@@ -306,12 +306,19 @@ rings because of it (decided 2026-11-21: acceptable).
     replaces the missed BG readings alarm of `LocalAlertUtils` and `IosMissedReadingAlarm`, and also the Nightscout
     stale-data settings, which today only colour the data age on a client: one "data is old" rule for the display
     and the alarm.
-  - **Persistent high**: above a threshold for N minutes while not falling, and only when the readings in that time
-    are regular.
-  - **Falling or rising fast**: a rate per minute, from the average of several readings and the last step, so it works
-    for 1-minute and 5-minute sensors alike.
-  - **Predictive low**: from the loop's own prediction, with IOB and COB; a client uses the master's prediction from
-    the device status. Booked as a scheduled alert at the predicted time, and booked again at every reading.
+  - **Persistent high**: above a threshold for N minutes while not falling (not coming down faster than 0.5 mg/dl per
+    minute), and only when the readings in that time are regular (no gap longer than 11 minutes).
+  - **Falling or rising fast**: a rate per minute. The least squares line through the last 15 minutes and the last
+    step (6 minutes) must both be past it, so one noisy jump does not ring and a fall that has stopped does not either;
+    it works for 1-minute and 5-minute sensors alike. It stays on while the 15-minute rate is 3/4 of the rule's.
+  - **Predictive low**: from the loop's own prediction; a client uses the master's prediction from the device status.
+    It rings when the prediction goes below the threshold within the rule's time ahead, and not when BG is already
+    below it (the level rules' job). The curve: with carbs on board the carbs curve, else the unannounced meal curve,
+    else the insulin curve; never the zero-temp curve. A prediction older than 15 minutes is not used. It is evaluated
+    at every reading and every new prediction. (Planned first as an alert booked at the predicted time; not done: a
+    new prediction comes every 5 minutes, and when none comes the stale data alarm rings.)
+  - All three are rule types in the same list as the level rules (`BgRuleType`), each its own alert kind, so each
+    phone chooses Ring, Silent or Off for it.
 - **Smart silence.** A silenced level alert does not ring again while BG already moves back towards the range, judged
   from AAPS's trend per minute. It is part of the BG rules, not of the alert core (decision 9).
 - **Pause.** All BG alarms, the lows or the highs, for a time or until switched on again; and a silence set before an
@@ -411,9 +418,9 @@ The order matters: step 3 must not come before step 2.
    2a urgent low (on by default at 54 mg/dl, always rings, also in Do Not Disturb; a one-time card) and the user's own
    low and high rules with their screen (`BgAlarmsImpl`, `BgAlarmRules`); 2b stale data as a booked alert at the last
    reading plus the threshold, with a 5-minute grace after a start (replaces `checkStaleBGAlert` and
-   `IosMissedReadingAlarm`; the setting "Alert if no BG data is received" and its threshold stay). Still to come: 2c
-   persistent high, rate and predictive low, 2d smart silence and pause, 2e sounds and the Test button, 2f the shared
-   silence. The escalation comes
+   `IosMissedReadingAlarm`; the setting "Alert if no BG data is received" and its threshold stay); 2c persistent high,
+   falling and rising fast and predicted low as rule types of the same screen. Still to come: 2d smart silence and
+   pause, 2e sounds and the Test button, 2f the shared silence. The escalation comes
    later, after the basics work.
 3. The Nightscout alarms removed; announcements as a WARNING alert.
 4. The core's sounding cards to alerts (the table above).

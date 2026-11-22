@@ -12,12 +12,18 @@ import app.aaps.core.interfaces.alerts.BgAlarmRule
 import app.aaps.core.interfaces.alerts.BgAlarmRules
 import app.aaps.core.interfaces.alerts.BgAlert
 import app.aaps.core.interfaces.alerts.BgDirection
+import app.aaps.core.interfaces.alerts.BgRuleType
+import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.UnitDoubleKey
@@ -84,6 +90,8 @@ class BgAlarmsImplTest : TestBase() {
     private val rh: TextResolver = mock()
     private val dateUtil: DateUtil = mock()
     private val config: Config = mock()
+    private val loop: Loop = mock()
+    private val processedDeviceStatusData: ProcessedDeviceStatusData = mock()
     private val alerts = RecordingAlerts()
     private val ruleList = MutableStateFlow<List<BgAlarmRule>>(emptyList())
     private val rules = object : BgAlarmRules {
@@ -104,7 +112,7 @@ class BgAlarmsImplTest : TestBase() {
         doAnswer { it.arguments[0] as Double }.whenever(profileUtil).convertToMgdlDetect(any())
         whenever(profileUtil.fromMgdlToStringWithUnits(anyOrNull())).thenReturn("50 mg/dl")
         runBlocking { whenever(persistenceLayer.getBgReadingsDataFromTime(any(), eq(false))).thenAnswer { readings } }
-        sut = BgAlarmsImpl(persistenceLayer, preferences, rules, alerts, profileUtil, notificationManager, rh, dateUtil, config, aapsLogger, mock<CoroutineScope>())
+        sut = BgAlarmsImpl(persistenceLayer, preferences, rules, alerts, profileUtil, mock<DecimalFormatter>(), notificationManager, rh, dateUtil, config, loop, processedDeviceStatusData, mock<RxBus>(), aapsLogger, mock<CoroutineScope>())
     }
 
     /** Readings every 5 minutes, the newest [values] last, the newest one now. */
@@ -365,5 +373,219 @@ class BgAlarmsImplTest : TestBase() {
         evaluate()
 
         assertThat(alerts.unbooked).containsExactly(BgAlarmsImpl.KEY_STALE)
+    }
+
+    // ---- persistent high, rate and predicted low (step 2c) -------------------------------------------
+
+    private fun persistentHigh(threshold: Double, duration: Int) =
+        BgAlarmRule(id = "ph$threshold", type = BgRuleType.PERSISTENT_HIGH, direction = BgDirection.HIGH, thresholdMgdl = threshold, durationMinutes = duration)
+
+    private fun rate(direction: BgDirection, perMinute: Double) =
+        BgAlarmRule(id = "rate$direction$perMinute", type = BgRuleType.RATE, direction = direction, thresholdMgdl = perMinute)
+
+    private fun predictedLow(threshold: Double, aheadMinutes: Int = 30) =
+        BgAlarmRule(id = "pl$threshold", type = BgRuleType.PREDICTED_LOW, direction = BgDirection.LOW, thresholdMgdl = threshold, durationMinutes = aheadMinutes)
+
+    /** Readings every [stepMinutes], the newest now: [first], then [perStep] more each step, [count] readings. */
+    private fun line(first: Double, perStep: Double, count: Int, stepMinutes: Int = 5) {
+        readings = (0 until count).map { i -> gv(now - (count - 1 - i) * stepMinutes * minute, first + i * perStep) }.reversed()
+    }
+
+    @Test
+    fun `persistent high rings after its time with regular readings`() {
+        ruleList.value = listOf(persistentHigh(180.0, duration = 30))
+        readings(170.0, 200.0, 200.0, 200.0, 200.0, 200.0, 200.0, 200.0)
+
+        evaluate()
+
+        val alert = alerts.raised.single()
+        assertThat(alert.kind).isEqualTo(BgAlert.PERSISTENT_HIGH)
+        assertThat(alert.key).isEqualTo(BgAlarmsImpl.KEY_PERSISTENT_HIGH)
+        assertThat(alert.raisedAt).isEqualTo(now - 30 * minute)
+    }
+
+    @Test
+    fun `persistent high does not ring while BG comes down`() {
+        ruleList.value = listOf(persistentHigh(180.0, duration = 30))
+        line(first = 260.0, perStep = -5.0, count = 8)
+
+        evaluate()
+
+        assertThat(alerts.raised).isEmpty()
+    }
+
+    @Test
+    fun `persistent high does not ring with a gap in the readings`() {
+        ruleList.value = listOf(persistentHigh(180.0, duration = 30))
+        readings = listOf(0, 5, 10, 22, 27, 30).map { gv(now - it * minute, 200.0) }
+
+        evaluate()
+
+        assertThat(alerts.raised).isEmpty()
+    }
+
+    @Test
+    fun `falling fast rings when the average and the last step are both past the rate`() {
+        ruleList.value = listOf(rate(BgDirection.LOW, 1.5))
+        line(first = 150.0, perStep = -10.0, count = 7)
+
+        evaluate()
+
+        val alert = alerts.raised.single()
+        assertThat(alert.kind).isEqualTo(BgAlert.FALLING_FAST)
+        assertThat(alert.key).isEqualTo(BgAlarmsImpl.KEY_FALLING)
+    }
+
+    @Test
+    fun `falling fast works the same with 1-minute readings`() {
+        ruleList.value = listOf(rate(BgDirection.LOW, 1.5))
+        line(first = 150.0, perStep = -2.0, count = 31, stepMinutes = 1)
+
+        evaluate()
+
+        assertThat(alerts.raised.single().kind).isEqualTo(BgAlert.FALLING_FAST)
+    }
+
+    /** A fall that has stopped does not ring, though the average over 15 minutes is still steep. */
+    @Test
+    fun `falling fast does not ring when the last step is flat`() {
+        ruleList.value = listOf(rate(BgDirection.LOW, 1.5))
+        readings(150.0, 140.0, 130.0, 120.0, 110.0, 100.0, 100.0)
+
+        evaluate()
+
+        assertThat(alerts.raised).isEmpty()
+    }
+
+    /** One noisy jump is not a rise: the average over 15 minutes stays small. */
+    @Test
+    fun `one jump does not ring rising fast`() {
+        ruleList.value = listOf(rate(BgDirection.HIGH, 2.0))
+        readings(120.0, 120.0, 121.0, 120.0, 121.0, 120.0, 135.0)
+
+        evaluate()
+
+        assertThat(alerts.raised).isEmpty()
+    }
+
+    @Test
+    fun `the rate is per minute, the line through the readings`() {
+        line(first = 100.0, perStep = 10.0, count = 4)
+
+        assertThat(BgAlarmsImpl.averageRate(readings, BgAlarmsImpl.RATE_WINDOW_MS, 10 * minute)).isWithin(0.001).of(2.0)
+        // Too short a span makes no rate
+        assertThat(BgAlarmsImpl.averageRate(readings.take(2), BgAlarmsImpl.RATE_WINDOW_MS, 10 * minute)).isNull()
+    }
+
+    private fun prediction(vararg values: Double, at: Long = now, sensor: SourceSensor = SourceSensor.IOB_PREDICTION): APSResult {
+        val result: APSResult = mock()
+        whenever(result.date).thenReturn(at)
+        whenever(result.predictionsAsGv).thenReturn(
+            values.mapIndexed { i, v -> GV(timestamp = at + i * 5 * minute, value = v, raw = null, noise = null, trendArrow = TrendArrow.NONE, sourceSensor = sensor) }.toMutableList()
+        )
+        return result
+    }
+
+    private fun masterPrediction(result: APSResult) {
+        whenever(config.APS).thenReturn(true)
+        whenever(loop.lastRun).thenReturn(Loop.LastRun().apply { constraintsProcessed = result })
+    }
+
+    @Test
+    fun `predicted low rings when the loop predicts a low within the time ahead`() {
+        whenever(dateUtil.timeString(any())).thenReturn("14:35")
+        ruleList.value = listOf(predictedLow(70.0, aheadMinutes = 30))
+        readings(100.0)
+        masterPrediction(prediction(100.0, 93.0, 86.0, 79.0, 72.0, 65.0))
+
+        evaluate()
+
+        val alert = alerts.raised.single()
+        assertThat(alert.kind).isEqualTo(BgAlert.PREDICTED_LOW)
+        assertThat(alert.key).isEqualTo(BgAlarmsImpl.KEY_PREDICTED_LOW)
+    }
+
+    @Test
+    fun `a low predicted later than the time ahead does not ring`() {
+        ruleList.value = listOf(predictedLow(70.0, aheadMinutes = 20))
+        readings(100.0)
+        masterPrediction(prediction(100.0, 93.0, 86.0, 79.0, 72.0, 65.0))
+
+        evaluate()
+
+        assertThat(alerts.raised).isEmpty()
+    }
+
+    /** Already low is the level rules' job; a predicted low then would ring twice for one low. */
+    @Test
+    fun `predicted low does not ring when BG is already below the threshold`() {
+        ruleList.value = listOf(predictedLow(70.0))
+        readings(68.0)
+        masterPrediction(prediction(68.0, 64.0, 60.0))
+
+        evaluate()
+
+        assertThat(alerts.raised.map { it.kind }).doesNotContain(BgAlert.PREDICTED_LOW)
+    }
+
+    @Test
+    fun `an old prediction is not used`() {
+        ruleList.value = listOf(predictedLow(70.0))
+        readings(100.0)
+        masterPrediction(prediction(100.0, 80.0, 60.0, at = now - 20 * minute))
+
+        evaluate()
+
+        assertThat(alerts.raised).isEmpty()
+    }
+
+    /** With carbs on board the carbs curve leads: the insulin curve alone would ring after every meal. */
+    @Test
+    fun `the carbs curve is used when there is one`() {
+        ruleList.value = listOf(predictedLow(70.0))
+        readings(100.0)
+        val result = prediction(100.0, 80.0, 60.0)
+        val iob = result.predictionsAsGv
+        val cob = prediction(100.0, 110.0, 120.0, sensor = SourceSensor.COB_PREDICTION).predictionsAsGv
+        val both = (iob + cob).toMutableList()
+        whenever(result.predictionsAsGv).thenReturn(both)
+        masterPrediction(result)
+
+        evaluate()
+
+        assertThat(alerts.raised).isEmpty()
+    }
+
+    @Test
+    fun `a client uses the master's prediction`() {
+        whenever(dateUtil.timeString(any())).thenReturn("14:35")
+        whenever(config.APS).thenReturn(false)
+        ruleList.value = listOf(predictedLow(70.0))
+        readings(100.0)
+        val result = prediction(100.0, 80.0, 60.0)
+        whenever(processedDeviceStatusData.getAPSResult()).thenReturn(result)
+
+        evaluate()
+
+        assertThat(alerts.raised.single().kind).isEqualTo(BgAlert.PREDICTED_LOW)
+    }
+
+    @Test
+    fun `old rules without a type are level rules and every type is stored`() {
+        val impl = BgAlarmRulesImpl(preferences, config, aapsLogger, mock<CoroutineScope>())
+        val old = impl.parse("""[{"id":"a","direction":"LOW","thresholdMgdl":70.0,"severity":"WARNING"}]""")
+        assertThat(old.single().type).isEqualTo(BgRuleType.LEVEL)
+
+        val all = listOf(persistentHigh(180.0, 60), rate(BgDirection.LOW, 3.0), rate(BgDirection.HIGH, 2.5), predictedLow(70.0))
+        assertThat(impl.parse(impl.toJson(all))).isEqualTo(all)
+    }
+
+    @Test
+    fun `a rule that does not fit its type is dropped when read`() {
+        val impl = BgAlarmRulesImpl(preferences, config, aapsLogger, mock<CoroutineScope>())
+
+        val rules = impl.parse("""[{"id":"a","type":"PREDICTED_LOW","direction":"HIGH","thresholdMgdl":70.0,"severity":"WARNING"}]""")
+
+        assertThat(rules).isEmpty()
     }
 }
