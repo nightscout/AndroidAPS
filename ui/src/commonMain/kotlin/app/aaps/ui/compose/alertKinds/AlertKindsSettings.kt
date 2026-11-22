@@ -32,6 +32,9 @@ interface AlertKindsSettings {
 
     /** The user's choices on this phone, by kind id; its size is how many kinds are silent or off. */
     val choices: StateFlow<Map<String, AlertChoice>>
+
+    /** Settings of the alarms that only this platform has, shown after the alert kinds. Android: display over other apps. */
+    val platformItems: List<PreferenceItem> get() = emptyList()
 }
 
 /** For a platform with no alerts: nothing to show. */

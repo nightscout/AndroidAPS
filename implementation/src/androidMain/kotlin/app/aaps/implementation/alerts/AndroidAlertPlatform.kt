@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -95,6 +96,17 @@ class AndroidAlertPlatform(
                     return@post
                 } catch (e: Exception) {
                     aapsLogger.error(LTag.NOTIFICATION, "Pump alert screen did not start, waking the screen instead", e)
+                }
+            }
+            // In the background Android does not let an app put a screen over another app (#5338), unless the user
+            // allowed AAPS to display over other apps. Started now for that case; the screen wake below still runs,
+            // because a locked phone needs it, and the screen stays owed until the alert is answered.
+            if (Settings.canDrawOverlays(context)) {
+                try {
+                    context.startActivity(intent)
+                    aapsLogger.debug(LTag.NOTIFICATION, "Alarm screen started over other apps: ${alert.source}/${alert.key}")
+                } catch (e: Exception) {
+                    aapsLogger.error(LTag.NOTIFICATION, "Alarm screen did not start over other apps", e)
                 }
             }
             // Not shown, so it is owed to the user the next time they open AAPS.

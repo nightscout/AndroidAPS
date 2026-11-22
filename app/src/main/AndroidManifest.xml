@@ -23,6 +23,10 @@
 
     <uses-permission android:name="android.permission.POST_PROMOTED_NOTIFICATIONS" />
 
+    <!-- "Display over other apps", optional, granted by the user in Android settings. With it the alarm screen can
+         start while another app is on the screen; Android blocks a screen from an app in the background (#5338). -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <!-- ComposeMainActivity hides the overlays of other apps, so they cannot trick a tap (tapjacking). -->
     <uses-permission android:name="android.permission.HIDE_OVERLAY_WINDOWS" />
 

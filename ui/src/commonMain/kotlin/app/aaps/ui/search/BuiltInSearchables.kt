@@ -195,7 +195,7 @@ class BuiltInSearchables(
             BooleanKey.AlertIncreaseVolume,
             BooleanKey.AlertOverrideDoNotDisturb
             // Ring, Silent or Off per kind of alert, where this platform has alerts (not on the desktop)
-        ) + listOfNotNull(alertKindsSettings.settingsItem),
+        ) + listOfNotNull(alertKindsSettings.settingsItem) + alertKindsSettings.platformItems,
         icon = Icons.Default.Notifications
     )
 

@@ -76,6 +76,7 @@ active_pump_type|StringNonKey|false
 active_scene|StringNonKey|false
 actual_basal_profile|MedtrumStringNonKey|true
 age|StringKey|true
+alarm_over_other_apps|UiIntentKey|false
 alarm_setting|MedtrumStringKey|true
 alert_choices|StringNonKey|true
 alert_kinds|UiIntentKey|false

@@ -15,5 +15,11 @@ enum class UiIntentKey(
 ) : IntentPreferenceKey {
 
     /** The list of alert kinds, where the user chooses Ring, Silent or Off for each on this phone (`_docs/ALARMS.md`). */
-    AlertKinds(key = "alert_kinds", title = UiStrings.alert_kinds_title, summary = UiStrings.alert_kinds_summary)
+    AlertKinds(key = "alert_kinds", title = UiStrings.alert_kinds_title, summary = UiStrings.alert_kinds_summary),
+
+    /**
+     * Android only: opens Android's "Display over other apps" page for AAPS. With it the alarm screen opens while
+     * another app is on the screen (#5338).
+     */
+    AlarmOverOtherApps(key = "alarm_over_other_apps", title = UiStrings.alarm_over_other_apps_title, summary = UiStrings.alarm_over_other_apps_summary)
 }

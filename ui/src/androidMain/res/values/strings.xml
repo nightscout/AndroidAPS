@@ -406,4 +406,6 @@
     <string name="alert_choice_off" comment="One of three choices for a kind of alert: not shown at all">Off</string>
     <string name="alert_kind_protected" comment="Shown instead of the three choices for a kind of alert the user cannot silence, for example insulin delivery stopped">Always rings, for safety</string>
     <string name="alert_kind_silence_on_this_phone" comment="Button on the alarm screen: from now on, alerts of this kind come as a card with no sound, on this phone">Silence this kind on this phone</string>
+    <string name="alarm_over_other_apps_title" comment="Settings item that opens the Android page of the same name for AAPS">Display over other apps</string>
+    <string name="alarm_over_other_apps_summary">Allow it, and the alarm screen opens also while another app is on the screen. Without it you get the notification, and the alarm screen when you open AAPS.</string>
 </resources>
