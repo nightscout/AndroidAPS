@@ -166,6 +166,7 @@
     <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">Plugin %1$s hit an error and part of it has stopped. Please restart AAPS.</string>
 
     <!-- Kinds of alert, as named in the alert settings, where the user chooses Ring, Silent or Off for each -->
+    <string name="alert_kinds_group_app" comment="Heading of the group of the app's own alarms in the alert settings; the other groups are named after a pump or CGM driver">AAPS</string>
     <string name="alert_kind_command_failed" comment="Name of a kind of alarm in the alert settings: a command the user started (for example a bolus) did not work">Command failed</string>
     <string name="alert_kind_insulin_change_failed" comment="Name of a kind of alarm in the alert settings: a new insulin is in the pump, but its basal program could not be written">Insulin change not written to the pump</string>
     <string name="alert_kind_eat_reminder" comment="Name of a kind of alarm in the alert settings: the timer that says it is time to eat">Time to eat</string>

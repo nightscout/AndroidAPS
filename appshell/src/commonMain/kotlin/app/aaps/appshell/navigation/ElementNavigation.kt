@@ -20,6 +20,7 @@ import app.aaps.ui.compose.careDialog.CareportalEventType
 import app.aaps.ui.compose.fillDialog.FillPreselect
 import app.aaps.ui.compose.main.MainViewModel
 import app.aaps.ui.compose.quickLaunch.QuickLaunchAction
+import app.aaps.ui.keys.UiIntentKey
 import app.aaps.ui.search.SearchIndexEntry
 
 /**
@@ -264,6 +265,13 @@ fun ElementNavigator.handleNotificationAction(notificationId: NotificationId) {
         else                                   -> Unit
     }
 }
+
+/**
+ * From the line in the notification sheet: the local alert settings, with "Alert kinds" marked, where the user
+ * chooses Ring, Silent or Off for each kind (`_docs/ALARMS.md`, section 6).
+ */
+fun ElementNavigator.openAlertKinds() =
+    navController.navigate(AppRoute.PreferenceScreen.createRoute("alerts", UiIntentKey.AlertKinds.key))
 
 /**
  * A search result.

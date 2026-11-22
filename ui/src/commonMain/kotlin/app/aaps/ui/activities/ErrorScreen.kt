@@ -21,13 +21,16 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.UiStrings
 
 /**
  * Modal-style screen rendered over a scrim when an urgent alarm fires. Displays the alarm title/status and three
@@ -62,6 +65,11 @@ fun ErrorScreen(
     onAction: () -> Unit = {},
     /** A pump alert: its silence lasts this long, and the two silence buttons say so. Null: they say nothing of time. */
     silenceMinutes: Int? = null,
+    /**
+     * Makes alerts of this kind silent on this phone from now on, for a kind the user may silence
+     * (`_docs/ALARMS.md`, section 6). Null: no such button, as for a protected kind or an alarm that is no alert.
+     */
+    onSilenceKind: (() -> Unit)? = null,
     /**
      * Drawn small over the error icon, to say which AAPS this is. Android passes its flavour launcher icon, which is
      * a drawable id and so cannot be a parameter of shared code. Null: no badge, which is what iOS shows.
@@ -184,6 +192,17 @@ fun ErrorScreen(
                         if (silenceMinutes != null) stringResource(CoreUiStrings.alarm_silence_for_and_close, stringResource(CoreUiStrings.format_mins, silenceMinutes))
                         else stringResource(CoreUiStrings.alarm_silence_and_close)
                     )
+                }
+
+                // A setting, not an answer to this alarm: from now on a card with no sound, on this phone
+                if (onSilenceKind != null) {
+                    Spacer(modifier = Modifier.height(AapsSpacing.large))
+                    TextButton(
+                        onClick = onSilenceKind,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(UiStrings.alert_kind_silence_on_this_phone))
+                    }
                 }
             }
         }

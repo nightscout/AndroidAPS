@@ -127,6 +127,9 @@ fun MainScreen(
     onNotificationActionClick: (AapsNotification) -> Unit,
     autoShowNotificationSheet: Boolean,
     onAutoShowConsumed: () -> Unit,
+    // Alert kinds silent or off on this phone, for the line in the notification sheet (none on the desktop)
+    silentAlertKinds: Int = 0,
+    onOpenAlertKinds: (() -> Unit)? = null,
     // Pump setup
     pumpSetupPlugin: PluginBase? = null,
     // BG source shortcut
@@ -294,6 +297,8 @@ fun MainScreen(
                         onNotificationActionClick = onNotificationActionClick,
                         autoShowNotificationSheet = autoShowNotificationSheet,
                         onAutoShowConsumed = onAutoShowConsumed,
+                        silentAlertKinds = silentAlertKinds,
+                        onOpenAlertKinds = onOpenAlertKinds,
                         activeSceneState = activeSceneState,
                         sceneExpired = sceneExpired,
                         activeSceneChainTargetName = activeSceneChainTargetName,

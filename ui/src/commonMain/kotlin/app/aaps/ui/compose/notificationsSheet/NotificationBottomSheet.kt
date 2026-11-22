@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.notificationsSheet
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.NotificationsOff
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -42,6 +44,7 @@ import app.aaps.core.ui.compose.icons.IcPluginVirtualPump
 import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
+import app.aaps.ui.UiStrings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +52,11 @@ fun NotificationBottomSheet(
     notifications: List<AapsNotification>,
     onDismissSheet: () -> Unit,
     onDismissNotification: (AapsNotification) -> Unit,
-    onNotificationActionClick: (AapsNotification) -> Unit
+    onNotificationActionClick: (AapsNotification) -> Unit,
+    /** How many kinds of alert are silent or off on this phone, so a choice is not forgotten (`_docs/ALARMS.md`). */
+    silentAlertKinds: Int = 0,
+    /** Opens the list of alert kinds. Null where the platform has no alerts: then the line is not shown. */
+    onOpenAlertKinds: (() -> Unit)? = null
 ) {
     LocalDateUtil.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -67,6 +74,19 @@ fun NotificationBottomSheet(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
                 )
+            }
+
+            if (silentAlertKinds > 0 && onOpenAlertKinds != null) {
+                item(key = "alert_kinds") {
+                    ListItem(
+                        headlineContent = { Text(stringResource(UiStrings.alert_kinds_silent_or_off, silentAlertKinds)) },
+                        leadingContent = { Icon(Icons.Filled.NotificationsOff, contentDescription = null) },
+                        modifier = Modifier.clickable {
+                            onDismissSheet()
+                            onOpenAlertKinds()
+                        }
+                    )
+                }
             }
 
             items(

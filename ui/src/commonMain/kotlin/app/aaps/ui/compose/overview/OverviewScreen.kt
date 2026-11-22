@@ -82,6 +82,8 @@ fun OverviewScreen(
     autoShowNotificationSheet: Boolean,
     onAutoShowConsumed: () -> Unit,
     activeSceneState: ActiveSceneState? = null,
+    silentAlertKinds: Int = 0,
+    onOpenAlertKinds: (() -> Unit)? = null,
     sceneExpired: Boolean = false,
     activeSceneChainTargetName: String? = null,
     onEndScene: () -> Unit = {},
@@ -327,7 +329,9 @@ fun OverviewScreen(
             notifications = notifications,
             onDismissSheet = { showNotificationSheet = false },
             onDismissNotification = onDismissNotification,
-            onNotificationActionClick = onNotificationActionClick
+            onNotificationActionClick = onNotificationActionClick,
+            silentAlertKinds = silentAlertKinds,
+            onOpenAlertKinds = onOpenAlertKinds
         )
     }
 }

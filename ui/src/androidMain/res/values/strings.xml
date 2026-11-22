@@ -395,4 +395,15 @@
 
 
     <string name="eversense_calibration_rapid_change_warning">Glucose is changing rapidly. Calibration during a rapid rise or fall may be unreliable. Follow the Eversense calibration guidance. You can still submit this value.</string>
+
+    <!-- Alert kinds: Ring, Silent or Off for each kind of alert, on this phone -->
+    <string name="alert_kinds_title">Alert kinds</string>
+    <string name="alert_kinds_summary">Ring, Silent or Off for each kind of alert, on this phone</string>
+    <string name="alert_kinds_intro">On this phone only. Silent: a card with no sound. Off: not shown, but still written in the history.</string>
+    <string name="alert_kinds_silent_or_off" comment="%1$d=how many kinds of alert the user set to Silent or Off on this phone. Example: Alert kinds silent or off on this phone: 2">Alert kinds silent or off on this phone: %1$d</string>
+    <string name="alert_choice_ring" comment="One of three choices for a kind of alert: it rings as usual">Ring</string>
+    <string name="alert_choice_silent" comment="One of three choices for a kind of alert: a card with no sound">Silent</string>
+    <string name="alert_choice_off" comment="One of three choices for a kind of alert: not shown at all">Off</string>
+    <string name="alert_kind_protected" comment="Shown instead of the three choices for a kind of alert the user cannot silence, for example insulin delivery stopped">Always rings, for safety</string>
+    <string name="alert_kind_silence_on_this_phone" comment="Button on the alarm screen: from now on, alerts of this kind come as a card with no sound, on this phone">Silence this kind on this phone</string>
 </resources>

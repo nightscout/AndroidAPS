@@ -110,12 +110,15 @@ fun OverviewScreen(
     onRecreateActivity: () -> Unit,
     // Notification sheet, opened from outside when something important arrives
     autoShowNotificationSheet: Boolean,
-    onAutoShowConsumed: () -> Unit
+    onAutoShowConsumed: () -> Unit,
+    // The line in the sheet that leads to the alert kinds; a platform with no alerts passes nothing
+    onOpenAlertKinds: (() -> Unit)? = null
 ) {
     val state by mainViewModel.uiState.collectAsStateWithLifecycle()
     val searchState by searchViewModel.uiState.collectAsStateWithLifecycle()
     val calcProgress by mainViewModel.calcProgressFlow.collectAsStateWithLifecycle()
     val notifications by notificationManager.notifications.collectAsStateWithLifecycle()
+    val alertKindChoices by builtInSearchables.alertKindsSettings.choices.collectAsStateWithLifecycle()
     val quickLaunchItems by mainViewModel.quickLaunchItems.collectAsStateWithLifecycle()
     val permState by permissionsViewModel.uiState.collectAsStateWithLifecycle()
     val bolusState by bolusProgressData.state.collectAsStateWithLifecycle()
@@ -232,6 +235,8 @@ fun OverviewScreen(
         onNotificationActionClick = onNotificationActionClick,
         autoShowNotificationSheet = autoShowNotificationSheet,
         onAutoShowConsumed = onAutoShowConsumed,
+        silentAlertKinds = alertKindChoices.size,
+        onOpenAlertKinds = onOpenAlertKinds.takeIf { builtInSearchables.alertKindsSettings.settingsItem != null },
         pumpSetupPlugin = pumpSetupPlugin,
         bgSetupPlugin = bgSetupPlugin,
         bgQualityBadgeIcon = bgQualityBadgeIcon,

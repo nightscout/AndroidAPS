@@ -47,6 +47,7 @@ import app.aaps.appshell.navigation.appNavGraph
 import app.aaps.appshell.navigation.handleNotificationAction
 import app.aaps.appshell.navigation.handleQuickLaunchAction
 import app.aaps.appshell.navigation.handleSearchResultClick
+import app.aaps.appshell.navigation.openAlertKinds
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
@@ -587,7 +588,8 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                         },
                         onRecreateActivity = { recreate() },
                         autoShowNotificationSheet = _autoShowNotifications.value && appLock.value == AppLockState.OPEN,
-                        onAutoShowConsumed = { _autoShowNotifications.value = false }
+                        onAutoShowConsumed = { _autoShowNotifications.value = false },
+                        onOpenAlertKinds = { navigator(navController).openAlertKinds() }
                     )
                 },
             )

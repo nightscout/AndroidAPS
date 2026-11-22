@@ -1,9 +1,11 @@
 package app.aaps.pump.carelevo.di
 
 import androidx.lifecycle.ViewModel
+import app.aaps.core.interfaces.alerts.AlertKindCatalogue
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.pump.carelevo.CarelevoPumpPlugin
+import app.aaps.pump.carelevo.common.CarelevoAlertCatalogue
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoAlarmViewModel
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoOverviewViewModel
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectViewModel
@@ -12,6 +14,7 @@ import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchNeedleInsertio
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchSafetyCheckViewModel
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.IntoMap
+import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import dev.zacsweers.metro.IntKey as MetroIntKey
@@ -32,6 +35,11 @@ object CarelevoRegistration {
     @PumpDriver
     @MetroIntKey(1190)
     fun carelevoPumpPlugin(plugin: CarelevoPumpPlugin): PluginBase = plugin
+
+    /** Its kinds of alert, for the alert settings (`_docs/ALARMS.md`, section 6). */
+    @Provides
+    @IntoSet
+    fun alertKinds(catalogue: CarelevoAlertCatalogue): AlertKindCatalogue = catalogue
 
     @Provides
     @IntoMap

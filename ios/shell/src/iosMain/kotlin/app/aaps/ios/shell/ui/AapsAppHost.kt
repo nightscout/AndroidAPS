@@ -38,6 +38,7 @@ import app.aaps.appshell.navigation.appNavGraph
 import app.aaps.appshell.navigation.handleNotificationAction
 import app.aaps.appshell.navigation.handleQuickLaunchAction
 import app.aaps.appshell.navigation.handleSearchResultClick
+import app.aaps.appshell.navigation.openAlertKinds
 import app.aaps.appshell.start.PluginSource
 import app.aaps.appshell.start.mergePlugins
 import app.aaps.core.interfaces.configuration.Config
@@ -813,7 +814,8 @@ private fun AapsApp(app: StartedApp) {
                             // No activity to recreate. A Compose scene is not restarted this way.
                             onRecreateActivity = { logger.debug(LTag.CORE, "Nothing to recreate on iOS after a database reset") },
                             autoShowNotificationSheet = false,
-                            onAutoShowConsumed = {}
+                            onAutoShowConsumed = {},
+                            onOpenAlertKinds = { navigator.openAlertKinds() }
                         )
                     }
                 )

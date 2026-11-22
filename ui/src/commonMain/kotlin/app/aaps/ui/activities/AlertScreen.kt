@@ -6,9 +6,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.alerts.AlertChoice
 import app.aaps.core.interfaces.alerts.AlertLifetime
 import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.ui.compose.stringResource
 import kotlinx.coroutines.flow.first
@@ -78,6 +79,14 @@ fun AlertScreen(
         // "Silence for 30 min" is a promise, and only a pump's alert keeps it: one of the app's own is over when
         // it is answered, so its buttons say plain Silence rather than naming a time it will not come back after.
         silenceMinutes = if (alert.lifetime == AlertLifetime.CONDITION) Alerts.SILENCE_MINUTES else null,
+        // The moment it rings is when the user wants to say "not this again". Not for a protected kind, which always
+        // rings. The alert stays, now as a card with no sound, so this screen closes.
+        onSilenceKind = if (alert.kind.isProtected) null else {
+            {
+                alerts.setChoice(alert.kind, AlertChoice.SILENT)
+                onClose()
+            }
+        },
         badge = badge
     )
 }

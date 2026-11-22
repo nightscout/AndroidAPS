@@ -32,6 +32,7 @@ import app.aaps.core.ui.compose.icons.Pump
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.search.SearchableItem
 import app.aaps.core.ui.search.SearchableProvider
+import app.aaps.ui.compose.alertKinds.AlertKindsSettings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
 import dev.zacsweers.metro.Inject
@@ -54,7 +55,9 @@ class BuiltInSearchables(
     private val rh: TextResolver,
     private val insulinManager: InsulinManager,
     private val profileFunction: ProfileFunction,
-    private val config: Config
+    private val config: Config,
+    /** The alert kinds: the settings item, and the choices for the line in the notification sheet. */
+    val alertKindsSettings: AlertKindsSettings
 ) : SearchableProvider {
 
     // Decides whether concentration-related preferences are worth surfacing in search, so an unknown
@@ -191,7 +194,8 @@ class BuiltInSearchables(
             BooleanKey.AlertUrgentAsAndroidNotification,
             BooleanKey.AlertIncreaseVolume,
             BooleanKey.AlertOverrideDoNotDisturb
-        ),
+            // Ring, Silent or Off per kind of alert, where this platform has alerts (not on the desktop)
+        ) + listOfNotNull(alertKindsSettings.settingsItem),
         icon = Icons.Default.Notifications
     )
 

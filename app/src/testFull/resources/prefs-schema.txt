@@ -78,6 +78,7 @@ actual_basal_profile|MedtrumStringNonKey|true
 age|StringKey|true
 alarm_setting|MedtrumStringKey|true
 alert_choices|StringNonKey|true
+alert_kinds|UiIntentKey|false
 alert_override_dnd|BooleanKey|true
 allow_hardware_pump|BooleanNonKey|true
 always_use_shortavg|BooleanKey|true

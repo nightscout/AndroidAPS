@@ -153,8 +153,13 @@ that fails rings before the next try succeeds.
   protected.
 - **Applied in one place**, the alert core. A driver or a rule does nothing for it.
 - **Off is not lost.** An alert that is off is still written to the log and the history; it is only not shown.
-- **Visible.** The alert settings and a mark in the overview say how many kinds are silent or off, so a choice is not
-  forgotten.
+- **Visible.** The alert settings and a line at the top of the notification sheet say how many kinds are silent or
+  off, so a choice is not forgotten (decided 2026-11-22: the sheet, not a new icon on the overview). The line leads to
+  the list. It shows only while the sheet has cards, because the sheet does not open without them.
+- **Where the user chooses** (decided 2026-11-22): the list in the settings, and on the alarm screen of a kind that is
+  not protected, "Silence this kind on this phone": the moment it rings is when the user wants to say "not this
+  again". Each module with kinds adds its group to the list (`AlertKindCatalogue`); a driver's group shows only
+  while it is in use.
 - **No delay in the core.** An alert is shown when it is raised. A kind that is noise for one user is silenced by
   that user. The trade-off: a user who silences "profile update failed" also gets a real, lasting failure as a silent
   card only. (The BG rules keep their own "how long the condition must last"; that is part of a rule, not of the
@@ -367,8 +372,10 @@ The order matters: step 3 must not come before step 2.
    END" comments.
 
 1. The core: the rename to `Alerts` (done 2026-11-21), the announcement under its own source (done 2026-11-22:
-   `AlertOrigin`, one announcement per alert, on the master only), the alert kinds and the choices (done 2026-11-22;
-   the settings screen and the overview mark are next) (`AlertKind`, `CoreAlert`) with the user's Ring, Silent or Off
+   `AlertOrigin`, one announcement per alert, on the master only), the alert kinds and the choices with their screen
+   (done 2026-11-22: Settings > Local alerts settings > Alert kinds, a "Silence this kind on this phone" button on
+   the alarm screen of a kind that is not protected, and a line in the notification sheet; on Android and iOS only,
+   as the desktop has no alerts) (`AlertKind`, `CoreAlert`) with the user's Ring, Silent or Off
    per phone and its settings screen, the silence length and its choice, the announcement under its own source, the
    scheduled alerts.
 2. The BG alarms, stale data included, on the master and the clients, with the shared silence. The escalation comes
