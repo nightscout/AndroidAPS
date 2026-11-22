@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.alerts.AlertChoice
 import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertKindCatalogue
 import app.aaps.core.interfaces.alerts.AlertOrigin
+import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlarmRules
 import app.aaps.core.interfaces.alerts.BgAlert
@@ -102,6 +103,7 @@ class AlertKindsSettingsImpl(
                 timeText = { dateUtil.timeString(it) },
                 onPause = { kinds, minutes -> alerts.pause(kinds, dateUtil.now() + minutes * 60_000L) },
                 onResume = { alerts.resume(BgAlert.PAUSABLE) },
+                onTest = { kind, severity -> alerts.test(kind, severity) },
                 onBack = onBack
             )
         }
@@ -113,10 +115,15 @@ class AlertKindsSettingsImpl(
     override val settingsItem: PreferenceItem = UiIntentKey.AlertKinds.withCompose(
         ComposeScreenContent { onBack ->
             val current by alerts.choices.collectAsState()
+            val sounds by alerts.sounds.collectAsState()
             AlertKindsScreen(
                 groups = alertKindGroups(catalogues, current),
                 silentOrOff = current.size,
                 onChoice = { kind, choice -> alerts.setChoice(kind, choice) },
+                sounds = sounds,
+                onSound = { kind, sound -> alerts.setSound(kind, sound) },
+                // As an alarm: the sound the user picks it for
+                onTest = { kind -> alerts.test(kind, AlertSeverity.CRITICAL) },
                 onBack = onBack
             )
         }

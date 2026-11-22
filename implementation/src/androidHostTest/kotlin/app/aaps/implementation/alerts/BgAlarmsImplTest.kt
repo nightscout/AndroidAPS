@@ -6,6 +6,7 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertChoice
 import app.aaps.core.interfaces.alerts.AlertKind
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlarmRule
@@ -80,6 +81,9 @@ class BgAlarmsImplTest : TestBase() {
         override val pauses: StateFlow<Map<String, Long>> = MutableStateFlow(emptyMap())
         override fun pause(kinds: Collection<AlertKind>, until: Long) {}
         override fun resume(kinds: Collection<AlertKind>) {}
+        override val sounds: StateFlow<Map<String, AlarmSound>> = MutableStateFlow(emptyMap())
+        override fun setSound(kind: AlertKind, sound: AlarmSound?) {}
+        override fun test(kind: AlertKind, severity: AlertSeverity): Boolean = true
         override fun silencedUntil(source: String, key: String): Long = silenced[key] ?: 0L
         override fun act(source: String, key: String) {}
         val booked = mutableListOf<Pair<Alert, Long>>()

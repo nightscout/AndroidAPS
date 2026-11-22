@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationHandle
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -83,6 +84,7 @@ class AlertsImpl(
     private val rh: TextResolver,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
+    private val soundPlayer: AlarmSoundPlayer,
     @ApplicationScope private val appScope: CoroutineScope,
     // A provider: a driver's catalogue reaches its plugin, which raises through here. Read only to restore a saved booking.
     private val catalogues: () -> Set<AlertKindCatalogue>
@@ -108,6 +110,7 @@ class AlertsImpl(
     private var silences: MutableList<Silence>? = null
     private var choiceMap: MutableMap<String, AlertChoice>? = null
     private var pauseMap: MutableMap<String, Long>? = null
+    private var soundMap: MutableMap<String, AlarmSound>? = null
     private var pauseEnd: Job? = null
     private var bookings: MutableMap<Pair<String, String>, Booking>? = null
     private var observing = false
@@ -152,6 +155,68 @@ class AlertsImpl(
         aapsLogger.info(LTag.NOTIFICATION, "Alert kinds $ids no longer paused on this phone")
         ringAfterPause(ids)
         schedulePauseEnd()
+    }
+
+    private val _sounds = MutableStateFlow<Map<String, AlarmSound>>(emptyMap())
+    private val soundsView = _sounds.asStateFlow()
+    override val sounds: StateFlow<Map<String, AlarmSound>>
+        get() {
+            lock.withLock { storedSounds() }
+            return soundsView
+        }
+
+    override fun setSound(kind: AlertKind, sound: AlarmSound?): Unit = lock.withLock {
+        val map = storedSounds()
+        if (map[kind.id] == sound) return@withLock
+        if (sound == null) map.remove(kind.id) else map[kind.id] = sound
+        preferences.put(StringNonKey.AlertSounds, buildJsonObject { map.forEach { (id, s) -> put(id, s.name) } }.toString())
+        _sounds.value = map.toMap()
+        aapsLogger.info(LTag.NOTIFICATION, "Alert kind ${kind.id} sound on this phone: ${sound ?: "its own"}")
+    }
+
+    override fun test(kind: AlertKind, severity: AlertSeverity): Boolean {
+        val testAlert = Alert(kind = kind, key = TEST_KEY, severity = severity, title = kind.title, raisedAt = dateUtil.now())
+        // A test must never stop a real alarm: the player plays one sound at a time
+        if (sounding != null) {
+            aapsLogger.info(LTag.NOTIFICATION, "Alert test of ${kind.id} not played: an alarm is sounding")
+            return false
+        }
+        val sound = lock.withLock { soundFor(testAlert) }
+        aapsLogger.info(LTag.NOTIFICATION, "Alert test of ${kind.id}: $severity, $sound")
+        if (severity == AlertSeverity.CRITICAL) {
+            soundPlayer.play(sound, OWNER_TEST, breakThroughDnd = false)
+            // Owner-scoped: a real alarm that started meanwhile took the player over and is not stopped here
+            appScope.launch {
+                delay(Alerts.TEST_SECONDS * 1000L)
+                soundPlayer.stop(OWNER_TEST)
+            }
+        } else {
+            platform.chime(testAlert, sound)
+            appScope.launch {
+                delay(Alerts.TEST_SECONDS * 1000L)
+                platform.withdrawn(kind.source, TEST_KEY)
+            }
+        }
+        return true
+    }
+
+    /** Caller holds [lock]. The sound an alert plays on this phone: the user's for its kind, else its own. */
+    private fun soundFor(alert: Alert): AlarmSound = storedSounds()[alert.kind.id] ?: alert.sound ?: AlarmSound.ALARM
+
+    /** Caller holds [lock]. The stored sound choices, read on first use. */
+    private fun storedSounds(): MutableMap<String, AlarmSound> =
+        soundMap ?: loadSounds().also {
+            soundMap = it
+            _sounds.value = it.toMap()
+        }
+
+    private fun loadSounds(): MutableMap<String, AlarmSound> = try {
+        Json.parseToJsonElement(preferences.get(StringNonKey.AlertSounds)).jsonObject
+            .mapNotNull { (id, value) -> AlarmSound.entries.firstOrNull { it.name == value.jsonPrimitive.content }?.let { id to it } }
+            .toMap().toMutableMap()
+    } catch (e: Exception) {
+        aapsLogger.error(LTag.NOTIFICATION, "Stored alert sounds unreadable, every kind plays its own", e)
+        mutableMapOf()
     }
 
     override fun silencedUntil(source: String, key: String): Long = lock.withLock {
@@ -434,7 +499,7 @@ class AlertsImpl(
             level = level,
             date = alert.raisedAt,
             validTo = 0L,
-            sound = if (alert.severity == AlertSeverity.CRITICAL && !silenced && !quiet) alert.sound ?: AlarmSound.ALARM else null,
+            sound = if (alert.severity == AlertSeverity.CRITICAL && !silenced && !quiet) soundFor(alert) else null,
             actions = alert.action?.let { listOf(NotificationAction(it.label) { act(alert.source, alert.key) }) } ?: emptyList(),
             validityCheck = null,
             // What the system notification and the watch announce it as. A pump alert passes nothing and is named by
@@ -452,7 +517,7 @@ class AlertsImpl(
             silenced                                                -> scheduleSilenceEnd(entry)
             !ring                                                   -> Unit
             alert.severity == AlertSeverity.CRITICAL -> platform.showAlarmScreen(alert)
-            alert.severity == AlertSeverity.WARNING  -> platform.chime(alert)
+            alert.severity == AlertSeverity.WARNING  -> platform.chime(alert, soundFor(alert))
             else                                                    -> Unit
         }
     }
@@ -805,5 +870,11 @@ class AlertsImpl(
 
         /** An alarm of the phone may come a moment before its time; that is still its time. */
         const val EARLY_MS = 1_000L
+
+        /** The owner of a test sound: its stop never stops a real alarm. */
+        const val OWNER_TEST = "alert-test"
+
+        /** The key of a test chime. */
+        const val TEST_KEY = "test"
     }
 }

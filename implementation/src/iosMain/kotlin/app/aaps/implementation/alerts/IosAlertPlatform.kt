@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlarms
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.implementation.lifecycle.observeAppForeground
 import app.aaps.implementation.ui.UiInteractionImpl
 import dev.zacsweers.metro.AppScope
@@ -140,7 +141,8 @@ class IosAlertPlatform(
         if (_alarmScreen.value == AlertId(source, key)) _alarmScreen.value = null
     }
 
-    override fun chime(alert: Alert) = post(chimeId(alert.source, alert.key), alert, trigger = null)
+    // The system sound: iOS cannot play an mp3 as a notification sound, so the chosen [sound] is the alarm's only
+    override fun chime(alert: Alert, sound: AlarmSound) = post(chimeId(alert.source, alert.key), alert, trigger = null)
 
     override fun snoozed(alert: Alert, until: Long) {
         val seconds = secondsFromNow(until)

@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
@@ -82,14 +83,16 @@ class AlertsImplTest : TestBase() {
 
         val screens = mutableListOf<String>()
         val chimes = mutableListOf<String>()
+        val chimeSounds = mutableListOf<AlarmSound?>()
         val snoozes = mutableListOf<Pair<String, Long>>()
         val withdrawals = mutableListOf<String>()
         override fun showAlarmScreen(alert: Alert) {
             screens += alert.key
         }
 
-        override fun chime(alert: Alert) {
+        override fun chime(alert: Alert, sound: AlarmSound) {
             chimes += alert.key
+            chimeSounds += sound
         }
 
         override fun snoozed(alert: Alert, until: Long) {
@@ -125,12 +128,14 @@ class AlertsImplTest : TestBase() {
     private val config: Config = mock()
     private val activePlugin: ActivePlugin = mock()
     private val pump: PumpWithConcentration = mock()
+    private val soundPlayer: AlarmSoundPlayer = mock()
 
     private var now = 1_000_000_000L
     private var storedSilences = "[]"
     private var storedChoices = "{}"
     private var storedBookings = "[]"
     private var storedPauses = "{}"
+    private var storedSounds = "{}"
 
     private lateinit var notificationManager: CommonNotificationManager
     private lateinit var sut: AlertsImpl
@@ -147,6 +152,8 @@ class AlertsImplTest : TestBase() {
         whenever(preferences.get(StringNonKey.AlertBookings)).thenAnswer { storedBookings }
         doAnswer { storedBookings = it.arguments[1] as String; Unit }.whenever(preferences).put(eq(StringNonKey.AlertBookings), any<String>())
         whenever(preferences.get(StringNonKey.AlertPauses)).thenAnswer { storedPauses }
+        whenever(preferences.get(StringNonKey.AlertSounds)).thenAnswer { storedSounds }
+        doAnswer { storedSounds = it.arguments[1] as String; Unit }.whenever(preferences).put(eq(StringNonKey.AlertSounds), any<String>())
         doAnswer { storedPauses = it.arguments[1] as String; Unit }.whenever(preferences).put(eq(StringNonKey.AlertPauses), any<String>())
         // A booking is raised only after the app start
         whenever(config.appInitialized).thenReturn(true)
@@ -166,7 +173,7 @@ class AlertsImplTest : TestBase() {
     }
 
     private fun newAlerts() =
-        AlertsImpl(aapsLogger, notificationManager, alertPlatform, preferences, pumpSync, persistenceLayer, config, activePlugin, rh, eventBus, dateUtil, scope, { setOf(catalogue) })
+        AlertsImpl(aapsLogger, notificationManager, alertPlatform, preferences, pumpSync, persistenceLayer, config, activePlugin, rh, eventBus, dateUtil, soundPlayer, scope, { setOf(catalogue) })
 
     /** A kind for the tests, named after the alert's key unless a test gives its own. */
     private data class TestKind(
@@ -913,5 +920,73 @@ class AlertsImplTest : TestBase() {
 
         assertThat(sut.silencedUntil("pump", "occlusion")).isEqualTo(now + 60 * 60_000L)
         assertThat(sut.silencedUntil("pump", "other")).isEqualTo(0L)
+    }
+
+    // ---- sounds and the test (step 2e) --------------------------------------------------------------
+
+    @Test
+    fun `a kind's chosen sound rings instead of the alert's own`() {
+        val a = alert()
+        sut.setSound(a.kind, AlarmSound.URGENT_ALARM)
+
+        sut.raise(a)
+
+        assertThat(card().sound).isEqualTo(AlarmSound.URGENT_ALARM)
+    }
+
+    @Test
+    fun `a warning chimes with the chosen sound`() {
+        val a = alert(severity = AlertSeverity.WARNING)
+        sut.setSound(a.kind, AlarmSound.ERROR)
+
+        sut.raise(a)
+
+        assertThat(alertPlatform.chimeSounds).containsExactly(AlarmSound.ERROR)
+    }
+
+    @Test
+    fun `the sound choice survives a restart, and null brings the alert's own back`() {
+        val a = alert()
+        sut.setSound(a.kind, AlarmSound.ERROR)
+        assertThat(newAlerts().sounds.value).containsExactly(a.kind.id, AlarmSound.ERROR)
+
+        sut.setSound(a.kind, null)
+        sut.raise(a)
+
+        assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
+    }
+
+    @Test
+    fun `the test plays the alarm sound for a few seconds`() {
+        val kind = TestKind("pump", AlertOrigin.PUMP, "occlusion")
+        sut.setSound(kind, AlarmSound.BOLUS_ERROR)
+
+        assertThat(sut.test(kind, AlertSeverity.CRITICAL)).isTrue()
+
+        verify(soundPlayer).play(eq(AlarmSound.BOLUS_ERROR), any(), eq(false))
+        scope.advanceTimeBy(Alerts.TEST_SECONDS * 1000L + 1)
+        verify(soundPlayer).stop(any())
+        // A test is not an alert: no card, no announcement
+        assertThat(cards()).isEmpty()
+        verifyNoPumpAnnouncement()
+    }
+
+    @Test
+    fun `the test of a warning chimes`() {
+        val kind = TestKind("pump", AlertOrigin.PUMP, "occlusion")
+
+        sut.test(kind, AlertSeverity.WARNING)
+
+        assertThat(alertPlatform.chimeSounds).containsExactly(AlarmSound.ALARM)
+    }
+
+    /** The player plays one sound at a time: a test while an alarm rings would stop the alarm. */
+    @Test
+    fun `no test while an alarm is sounding`() {
+        sut.raise(alert())
+
+        assertThat(sut.test(TestKind("pump", AlertOrigin.PUMP, "other"), AlertSeverity.CRITICAL)).isFalse()
+
+        verify(soundPlayer, never()).play(any(), any(), any())
     }
 }

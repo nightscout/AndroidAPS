@@ -12,6 +12,7 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmIntent
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertPlatform
 import app.aaps.core.interfaces.alerts.Alerts
@@ -126,11 +127,13 @@ class AndroidAlertPlatform(
     /** A copy, so the caller starting it cannot change what is held here. Null when nothing is owed. */
     fun unansweredAlarmIntent(): Intent? = unanswered?.let { Intent(it) }
 
-    override fun chime(alert: Alert) {
+    override fun chime(alert: Alert, sound: AlarmSound) {
         alarmNotificationManager().postChime(
             chimeKey = requestCode(alert.source, alert.key),
             title = rh.gs(alert.title),
-            body = alert.text?.let { rh.gs(it) } ?: ""
+            body = alert.text?.let { rh.gs(it) } ?: "",
+            // The sound the core chose: the user's for this kind on this phone, else the alert's own
+            sound = sound
         )
     }
 

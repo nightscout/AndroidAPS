@@ -121,14 +121,6 @@ class AlarmNotificationManager(
             AlarmSound.URGENT_ALARM to "urgentalarm",
             AlarmSound.EAT_REMINDER to "eatreminder"
         )
-
-        private val DISPLAY_NAMES: Map<AlarmSound, Int> = mapOf(
-            AlarmSound.ALARM to R.string.alarm_channel_standard,
-            AlarmSound.BOLUS_ERROR to R.string.alarm_channel_bolus_error,
-            AlarmSound.ERROR to R.string.alarm_channel_error,
-            AlarmSound.URGENT_ALARM to R.string.alarm_channel_urgent,
-            AlarmSound.EAT_REMINDER to R.string.alarm_channel_eat_reminder
-        )
     }
 
     private val mgr: NotificationManager
@@ -196,8 +188,8 @@ class AlarmNotificationManager(
         // [postChime] is what uses these now - the one sound of a WARNING alert. A ringing alarm does not: its
         // audio is the looping, ramping [AlarmSoundPlayer], and a channel sound on top of it would be two sounds
         // for one alarm. They all vibrate with the urgent pattern.
-        for ((sound, nameRes) in DISPLAY_NAMES) {
-            val displayName = context.getString(nameRes)
+        for (sound in AlarmSound.entries) {
+            val displayName = rh.gs(sound.title)
             val uri: Uri = Uri.parse("android.resource://${context.packageName}/${sound.rawRes}")
 
             val alarmAttrs = AudioAttributes.Builder()
@@ -355,12 +347,12 @@ class AlarmNotificationManager(
      * plays one time and does not loop. While Do Not Disturb is on and the override is off it only vibrates, as every
      * alarm here (see [DoNotDisturbRule]). [chimeKey] identifies it for [cancelChime].
      */
-    fun postChime(chimeKey: Int, title: String, body: String) {
+    fun postChime(chimeKey: Int, title: String, body: String, sound: AlarmSound = AlarmSound.ALARM) {
         channels // created on first post, see the field
         val overrideDnd = preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
         val channelId =
             if (DoNotDisturbRule.staysQuiet(overrideDnd, mgr.currentInterruptionFilter)) CHANNEL_SILENT
-            else channelIdForSound(AlarmSound.ALARM, overrideDnd)
+            else channelIdForSound(sound, overrideDnd)
         val notification = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(iconsProvider.getNotificationIcon())
             .setContentTitle(title)

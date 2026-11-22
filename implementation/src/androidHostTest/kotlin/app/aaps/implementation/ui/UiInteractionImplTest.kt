@@ -49,6 +49,9 @@ class UiInteractionImplTest : TestBase() {
         override val pauses: StateFlow<Map<String, Long>> = MutableStateFlow(emptyMap())
         override fun pause(kinds: Collection<AlertKind>, until: Long) {}
         override fun resume(kinds: Collection<AlertKind>) {}
+        override val sounds: StateFlow<Map<String, AlarmSound>> = MutableStateFlow(emptyMap())
+        override fun setSound(kind: AlertKind, sound: AlarmSound?) {}
+        override fun test(kind: AlertKind, severity: AlertSeverity): Boolean = true
         override fun silencedUntil(source: String, key: String): Long = 0L
         val raised = mutableListOf<Alert>()
         val silenced = mutableListOf<Pair<String, String>>()

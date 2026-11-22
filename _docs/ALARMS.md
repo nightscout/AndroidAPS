@@ -342,6 +342,15 @@ rings because of it (decided 2026-11-21: acceptable).
   any ringtone of the phone. iOS can only play sounds bundled with the app, so it gets the bundled ones.
 - The rising volume, vibration first, and the Do Not Disturb rule, as today; and no alarm sound during a phone call.
 - **A Test button** per rule, which plays it as it will sound.
+- Built (2e-1, 2026-11-22): the sound per kind per phone from the five bundled sounds (`Alerts.setSound`,
+  `StringNonKey.AlertSounds`, exported, not synced), in Alert kinds; "Its own sound" is the alert's default. It is
+  the alarm's sound, and on Android also the chime's (one channel per sound already exists). On iOS the chime keeps
+  the system sound: iOS cannot play an mp3 as a notification sound. `Alerts.test` plays a kind as an alert of a
+  severity would ring, for 5 seconds, with the same Do Not Disturb rule, and nothing while an alarm is sounding
+  (the player plays one sound at a time). Test buttons: per kind in Alert kinds (as an alarm), and in the rule
+  dialog (at the severity picked there). The sound names moved from `:implementation` to `:core:interfaces`
+  (`AlarmSound.title`). Still to come: 2e-2 any Android ringtone; distinct low and high sounds once the files are
+  supplied (decided: no generated tones).
 
 #### Between the phones
 

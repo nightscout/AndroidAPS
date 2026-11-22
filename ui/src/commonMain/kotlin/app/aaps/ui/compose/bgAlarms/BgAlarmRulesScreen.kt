@@ -72,7 +72,8 @@ class BgUnits(
  * Every change is saved at once ([onSave] with the whole list), as on the alert kinds screen: there is no Save button.
  *
  * On top, the pause of this phone (step 2d), also on a client: a pause is each phone's own, as its choice to ring.
- * [pauses] is kind id to the end of its pause; [timeText] shows such an end as a time of day.
+ * [pauses] is kind id to the end of its pause; [timeText] shows such an end as a time of day. [onTest] plays a rule's
+ * kind as it rings at the severity in its dialog, on this phone; false: not played, an alarm is ringing.
  */
 @Composable
 fun BgAlarmRulesScreen(
@@ -85,6 +86,7 @@ fun BgAlarmRulesScreen(
     timeText: (Long) -> String,
     onPause: (List<BgAlert>, Int) -> Unit,
     onResume: () -> Unit,
+    onTest: (BgAlert, AlertSeverity) -> Boolean,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -151,6 +153,7 @@ fun BgAlarmRulesScreen(
             rule = rule,
             isNew = rules.none { it.id == rule.id },
             units = units,
+            onTest = onTest,
             onSave = { saved ->
                 onSave(if (rules.any { it.id == saved.id }) rules.map { if (it.id == saved.id) saved else it } else rules + saved)
                 editing = null
@@ -282,6 +285,7 @@ private fun RuleDialog(
     rule: BgAlarmRule,
     isNew: Boolean,
     units: BgUnits,
+    onTest: (BgAlert, AlertSeverity) -> Boolean,
     onSave: (BgAlarmRule) -> Unit,
     onDelete: () -> Unit,
     onDismiss: () -> Unit
@@ -295,6 +299,7 @@ private fun RuleDialog(
     var to by remember { mutableStateOf(clock(rule.toMinute ?: (7 * 60))) }
     var duration by remember { mutableStateOf(rule.durationMinutes.toString()) }
     var silence by remember { mutableStateOf(rule.silenceMinutes) }
+    var testRefused by remember { mutableStateOf(false) }
 
     val thresholdMgdl = units.toMgdl(threshold)?.takeIf { it in kind.limits }
     val fromMinute = minuteOf(from)
@@ -334,7 +339,14 @@ private fun RuleDialog(
                     listOf(AlertSeverity.WARNING, AlertSeverity.CRITICAL).forEach { s ->
                         FilterChip(selected = severity == s, onClick = { severity = s }, label = { Text(stringResource(severityLabel(s))) })
                     }
+                    // As it will ring on this phone, with this kind's sound
+                    TextButton(onClick = { testRefused = !onTest(kind.alert, severity) }) { Text(stringResource(UiStrings.alert_kind_sound_test)) }
                 }
+                if (testRefused) Text(
+                    stringResource(UiStrings.alert_kind_sound_test_refused),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(checked = allDay, onCheckedChange = { allDay = it })
                     Text(stringResource(UiStrings.bg_alarm_rule_all_day))

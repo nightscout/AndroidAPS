@@ -207,6 +207,24 @@ interface Alerts {
     fun resume(kinds: Collection<AlertKind>)
 
     /**
+     * The sound the user chose for each kind on this phone (`_docs/ALARMS.md`, step 2e), by kind id. A kind that is not
+     * in it plays its alert's own sound. Each phone its own, as the choice to ring.
+     */
+    val sounds: StateFlow<Map<String, AlarmSound>>
+
+    /** Sets the sound of [kind] on this phone; null: the alert's own sound again. It applies from the next ring. */
+    fun setSound(kind: AlertKind, sound: AlarmSound?)
+
+    /**
+     * Plays [kind]'s sound on this phone as an alert of [severity] would ring, for [TEST_SECONDS]: CRITICAL the alarm
+     * sound, WARNING the chime. It follows the same Do Not Disturb rule as a real alert. Nothing is played while an
+     * alarm is sounding: a test must never stop a real one.
+     *
+     * @return false when nothing was played because an alarm is sounding
+     */
+    fun test(kind: AlertKind, severity: AlertSeverity): Boolean
+
+    /**
      * Until when (epoch ms) the active alert of [source] and [key] is silenced, or 0 when it is not silenced or not
      * active. For a raiser that extends a silence itself, as the BG alarms' smart silence does.
      */
@@ -269,6 +287,9 @@ interface Alerts {
         /** A booking this late is dropped: a reminder for something long past is no use. */
         const val LATE_LIMIT_MINUTES = 2
 
+        /** How long [test] plays an alarm sound. */
+        const val TEST_SECONDS = 5
+
         /**
          * How long a silence lasts when the user does not choose: a swipe, the watch, Silence on the card. When it ends
          * and the alert is still active, it rings again (decided 2026-11-19).
@@ -296,7 +317,7 @@ interface AlertPlatform {
     fun showAlarmScreen(alert: Alert)
 
     /** A WARNING alert: show it as a system notification with one sound. */
-    fun chime(alert: Alert)
+    fun chime(alert: Alert, sound: AlarmSound)
 
     /**
      * The alert is silenced until [until] (epoch ms). The core rings it again itself when the time comes, but only

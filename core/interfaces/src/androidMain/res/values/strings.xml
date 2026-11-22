@@ -179,6 +179,12 @@
     <string name="alert_kind_bg_stale" comment="Name of a kind of glucose alarm, and the title of its alarm: no new glucose reading for too long">Missed BG readings</string>
     <string name="bg_alarm_stale_text" comment="Text of the missed readings alarm. %1$s=the time of the last reading, for example: 14:35">No BG reading since %1$s</string>
     <string name="bg_alarm_text" comment="Text of a glucose alarm. %1$s=the glucose with its unit, for example: 2.9 mmol/l">BG %1$s</string>
+    <!-- The names of the alarm sounds AAPS ships (AlarmSound.title): the alarm channels and the sound choice of an alert kind -->
+    <string name="alarm_channel_standard">Standard alarm</string>
+    <string name="alarm_channel_bolus_error">Bolus error</string>
+    <string name="alarm_channel_error">General error</string>
+    <string name="alarm_channel_urgent">Urgent alarm</string>
+    <string name="alarm_channel_eat_reminder">Time to eat</string>
     <string name="alert_kind_bg_persistent_high" comment="Name of a kind of glucose alarm, and the title of its alarm: glucose high for a long time and not coming down">Persistent high</string>
     <string name="alert_kind_bg_falling_fast" comment="Name of a kind of glucose alarm, and the title of its alarm: glucose going down quickly">Falling fast</string>
     <string name="alert_kind_bg_rising_fast" comment="Name of a kind of glucose alarm, and the title of its alarm: glucose going up quickly">Rising fast</string>

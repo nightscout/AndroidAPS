@@ -1,5 +1,8 @@
 package app.aaps.core.interfaces.notifications
 
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.keys.interfaces.TextRef
+
 /**
  * One of the alarm sounds AAPS ships.
  *
@@ -16,21 +19,23 @@ package app.aaps.core.interfaces.notifications
  * Deliberately a closed set: the sound files live in `:core:ui/res/raw` and there are five of them.
  * Adding one means adding an entry here, which makes the `when` in the Android resolver stop
  * compiling until it is handled.
+ *
+ * [title] is the name the user sees: on the Android alarm channels and in the sound choice of an alert kind.
  */
-enum class AlarmSound {
+enum class AlarmSound(val title: TextRef) {
 
     /** Standard alarm. */
-    ALARM,
+    ALARM(InterfacesStrings.alarm_channel_standard),
 
     /** Urgent alarm - used for the Nightscout urgent announcement path. */
-    URGENT_ALARM,
+    URGENT_ALARM(InterfacesStrings.alarm_channel_urgent),
 
     /** General error. */
-    ERROR,
+    ERROR(InterfacesStrings.alarm_channel_error),
 
     /** Bolus delivery failure. */
-    BOLUS_ERROR,
+    BOLUS_ERROR(InterfacesStrings.alarm_channel_bolus_error),
 
     /** The "time to eat" timer. A soft kitchen timer, so it is not taken for a warning. */
-    EAT_REMINDER
+    EAT_REMINDER(InterfacesStrings.alarm_channel_eat_reminder)
 }
