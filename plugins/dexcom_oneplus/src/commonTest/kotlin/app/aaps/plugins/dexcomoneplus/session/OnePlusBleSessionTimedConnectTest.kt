@@ -55,19 +55,45 @@ class OnePlusBleSessionTimedConnectTest {
         private val real: FakeOnePlusGatt,
         private val failing: IntRange,
         private val stopAt: Int,
+        private val onConnect: () -> Unit = {},
     ) : OnePlusGattClient by real {
 
         lateinit var session: OnePlusBleSession
 
         override fun connect(deviceAddress: String, autoConnect: Boolean) {
+            onConnect()
             real.connect(deviceAddress, autoConnect)
             if (real.connects >= stopAt) session.stop("test done")
             if (real.connects in failing) error("ONEPLUS_GATT: link down status=133")
         }
     }
 
-    private fun session(gatt: OnePlusGattClient, auth: OnePlusSessionAuth, alarm: OnePlusWakeAlarm?) =
+    /** Counts the holds of the length of the timed connect's own lock that are not given back yet. */
+    private class CountingLease : OnePlusCpuLease {
+
+        var timedHoldsOpen = 0
+
+        override fun hold(maxMillis: Long): OnePlusCpuLease.Hold? {
+            if (maxMillis != OnePlusBleSessionCyclePolicy.TIMED_CONNECT_WAKE_LOCK_MS) return null
+            timedHoldsOpen++
+            return object : OnePlusCpuLease.Hold {
+                private var held = true
+                override fun release() {
+                    if (held) timedHoldsOpen--
+                    held = false
+                }
+            }
+        }
+    }
+
+    private fun session(
+        gatt: OnePlusGattClient,
+        auth: OnePlusSessionAuth,
+        alarm: OnePlusWakeAlarm?,
+        cpuLease: OnePlusCpuLease? = null,
+    ) =
         OnePlusBleSessionSkeleton(
+            cpuLease = cpuLease,
             gatt = gatt,
             auth = auth,
             reconnectPolicy = NoRetryPause,
@@ -141,6 +167,55 @@ class OnePlusBleSessionTimedConnectTest {
         session.startWithPairingCode(sensor, "1234")
 
         assertEquals(listOf(false) + List(1 + retries) { false } + listOf(true), real.autoConnects)
+    }
+
+    /**
+     * In a full train the watch fell asleep between two tries: they came 4.5 s, 7.6 s and 11.9 s
+     * apart, and the last one was placed when the sensor was asleep again.
+     */
+    @Test
+    fun `the watch stays awake from the wake-up until the last retry of the timed connect`() {
+        val real = FakeOnePlusGatt().apply { linkDownStatus = OnePlusBleSessionCyclePolicy.GATT_STATUS_PEER_TERMINATED }
+        val retries = OnePlusBleSessionCyclePolicy.TIMED_CONNECT_RETRIES
+        val lease = CountingLease()
+        val heldAtConnect = mutableListOf<Int>()
+        val gatt = GattWithSilentConnects(real, failing = 2..(2 + retries), stopAt = 3 + retries) {
+            heldAtConnect += lease.timedHoldsOpen
+        }
+        val auth = FailingAuth(stopAt = Int.MAX_VALUE)
+        val session = session(gatt, auth, FakeWakeAlarm(), lease)
+        auth.session = session
+        gatt.session = session
+        session.noteReading(now())
+
+        session.startWithPairingCode(sensor, "1234")
+
+        // Not held for the link from a sighting, held for the timed connect and each retry, and
+        // given back before the standing connect, which may wait for minutes.
+        assertEquals(listOf(0) + List(1 + retries) { 1 } + listOf(0), heldAtConnect)
+    }
+
+    @Test
+    fun `the lock of the timed connect is given back when the link comes up`() {
+        val gatt = FakeOnePlusGatt().apply { linkDownStatus = OnePlusBleSessionCyclePolicy.GATT_STATUS_PEER_TERMINATED }
+        val lease = CountingLease()
+        val heldAtAuth = mutableListOf<Int>()
+        val auth = object : OnePlusSessionAuth {
+            lateinit var session: OnePlusBleSession
+            override fun authenticate(pairingCode: String, savedSharedKey: ByteArray?): AuthResult {
+                heldAtAuth += lease.timedHoldsOpen
+                if (heldAtAuth.size >= 2) session.stop("test done")
+                return AuthResult(ok = false, message = "ONEPLUS_AUTH: GATT disconnected")
+            }
+        }
+        val session = session(gatt, auth, FakeWakeAlarm(), lease)
+        auth.session = session
+        session.noteReading(now())
+
+        session.startWithPairingCode(sensor, "1234")
+
+        // The second handshake follows the timed connect: its link is up, so the lock is back.
+        assertEquals(listOf(0, 0), heldAtAuth)
     }
 
     @Test

@@ -212,6 +212,15 @@ internal object OnePlusBleSessionCyclePolicy {
     const val TIMED_CONNECT_RETRIES = 3
 
     /**
+     * How long the processor is kept awake at most from the wake-up for a timed connect until the
+     * link is up or its retries are used up. Each connect holds its own lock, but between a failed
+     * connect and the next one nothing did, and the watch fell asleep there: in a full train the
+     * retries came 4.5 s, 7.6 s and 11.9 s apart, and the last one was placed when the sensor was
+     * asleep again. The limit is the late limit plus the time the last connect may take.
+     */
+    const val TIMED_CONNECT_WAKE_LOCK_MS = 30_000L
+
+    /**
      * Whether a timed connect that just failed is placed again at once, as a direct connect.
      *
      * Measured on a Galaxy Watch 5: in 13 of 108 cycles the direct connect ended with status 133
@@ -614,6 +623,14 @@ class OnePlusBleSessionSkeleton(
     /** How many times the timed connect of this cycle was placed again, see `retryTimedConnect`. */
     private var timedConnectRetries = 0
 
+    /** Keeps the watch awake between the tries of a timed connect, see `TIMED_CONNECT_WAKE_LOCK_MS`. */
+    private var timedConnectHold: OnePlusCpuLease.Hold? = null
+
+    private fun releaseTimedConnectHold() {
+        timedConnectHold?.release()
+        timedConnectHold = null
+    }
+
     /** A reading arrived: its time plans the watch's next timed connect. Backfill is older and changes nothing. */
     internal fun noteReading(timestampMs: Long) {
         if (timestampMs > newestReadingAtMs) newestReadingAtMs = timestampMs
@@ -629,6 +646,7 @@ class OnePlusBleSessionSkeleton(
      */
     private fun waitForSensorDue(): Boolean {
         timedConnectPlannedAtMs = 0L
+        releaseTimedConnectHold()
         val alarm = wakeAlarm ?: return false
         val connectAtMs = OnePlusBleSessionCyclePolicy.timedConnectAtMs(
             newestReadingAtMs = newestReadingAtMs,
@@ -663,6 +681,7 @@ class OnePlusBleSessionSkeleton(
         OnePlusLog.i("${OnePlusLogMarkers.SESSION}: [$slot] awake for the timed connect, ${lateMs}ms after the planned moment")
         timedConnectPlannedAtMs = connectAtMs
         timedConnectRetries = 0
+        timedConnectHold = cpuLease?.hold(OnePlusBleSessionCyclePolicy.TIMED_CONNECT_WAKE_LOCK_MS)
         return true
     }
 
@@ -967,7 +986,10 @@ class OnePlusBleSessionSkeleton(
             autoConnectFromAttempt = profile.autoConnectFromAttempt,
         )
         lastConnectUsedAutoConnect = useAutoConnect
-        if (!prep.timed) timedConnectPlannedAtMs = 0L
+        if (!prep.timed) {
+            timedConnectPlannedAtMs = 0L
+            releaseTimedConnectHold()
+        }
         cycleLinkReadyAtMs = 0L
         OnePlusLog.i(
             "${OnePlusLogMarkers.SESSION}: [$slot] connect decision advFresh=${prep.advFresh} " +
@@ -1008,6 +1030,8 @@ class OnePlusBleSessionSkeleton(
                 wakeLock?.release()
                 wakeLock = cpuLease?.hold(AUTH_WAKE_LOCK_MS)
             }
+            // The link is up: the lock of this cycle covers the rest.
+            releaseTimedConnectHold()
 
             if (!running) return CycleOutcome.Stopped
             cycleLinkReadyAtMs = Clock.System.now().toEpochMilliseconds()
@@ -1177,6 +1201,8 @@ class OnePlusBleSessionSkeleton(
                 prep = OnePlusConnectPrep(advFresh = false, blindFallback = true, timed = true),
             )
         }
+        // No more tries of the timed connect: what follows may wait for minutes.
+        releaseTimedConnectHold()
         val retry = OnePlusBleSessionCyclePolicy.retryAfterFailure(
             sensorReached = sensorReachedAtMs != 0L,
             linkDownStatus = linkDownStatus,
