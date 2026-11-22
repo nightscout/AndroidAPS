@@ -45,11 +45,14 @@ interface OnePlusBleSession {
  *   2026-08-03: 18 min of `target ADV absent — remain waiting`, no glucose, no error, no retry).
  * @param foreignAdv redacted label of the strongest *other* ONE+ heard while the target stayed
  *   silent — the stale-stored-MAC signature.
+ * @param timed the watch woke for the sensor's next cycle: connect directly, not with a standing
+ *   connect. Always together with [blindFallback], because no sighting is in hand.
  */
 data class OnePlusConnectPrep(
     val advFresh: Boolean = false,
     val blindFallback: Boolean = false,
     val foreignAdv: String? = null,
+    val timed: Boolean = false,
 )
 
 /** Next persistent-ADV retry: raised strategy index plus the connect prep to use. */
@@ -160,6 +163,76 @@ internal object OnePlusBleSessionCyclePolicy {
 
     /** Margin on the lock that covers the guard before a standing connect; the placing has its own. */
     const val STANDING_CONNECT_GUARD_WAKE_LOCK_MARGIN_MS = 2_000L
+
+    /** A G7 / ONE+ takes a reading and wakes its radio every 5 minutes, to the second. */
+    const val SENSOR_CYCLE_MS = 300_000L
+
+    /**
+     * How long before the sensor's next reading time the watch places its timed connect (see
+     * `wakeAlarm` of [OnePlusBleSessionSkeleton]).
+     *
+     * Measured on a Galaxy Watch 5: the sensor starts to advertise about 2 s after its reading time,
+     * and placing the connect takes about half a second. The margin is for an alarm that comes late.
+     */
+    const val TIMED_CONNECT_LEAD_MS = 4_000L
+
+    /**
+     * A watch that woke later than this after the planned moment does not place the timed connect:
+     * the sensor advertises for about 20 s and is asleep again by then, so the fast connect would
+     * only keep the watch awake for nothing. The standing connect takes over.
+     */
+    const val TIMED_CONNECT_LATE_LIMIT_MS = 20_000L
+
+    /**
+     * When the watch should place a fast connect for the sensor's next cycle, or null when it
+     * cannot be planned: no reading yet, or the newest one is not from the cycle that just ended.
+     *
+     * The time comes from the sensor's own reading time, not from when the watch connected: a link
+     * that came up late would move every later connect late with it.
+     */
+    fun timedConnectAtMs(
+        newestReadingAtMs: Long,
+        nowMs: Long,
+        cycleMs: Long = SENSOR_CYCLE_MS,
+        leadMs: Long = TIMED_CONNECT_LEAD_MS,
+    ): Long? {
+        if (newestReadingAtMs <= 0L || newestReadingAtMs > nowMs) return null
+        val at = newestReadingAtMs + cycleMs - leadMs
+        return if (at > nowMs) at else null
+    }
+
+    /** Whether a watch that reached [nowMs] may still place the timed connect planned for [plannedAtMs]. */
+    fun timedConnectStillInTime(plannedAtMs: Long, nowMs: Long, lateLimitMs: Long = TIMED_CONNECT_LATE_LIMIT_MS): Boolean =
+        nowMs - plannedAtMs <= lateLimitMs
+
+    /**
+     * How many times a timed connect that failed before the link came up is placed again in the
+     * same cycle of the sensor.
+     */
+    const val TIMED_CONNECT_RETRIES = 3
+
+    /**
+     * Whether a timed connect that just failed is placed again at once, as a direct connect.
+     *
+     * Measured on a Galaxy Watch 5: in 13 of 108 cycles the direct connect ended with status 133
+     * two to three seconds after it was placed, just as the sensor woke. The standing connect that
+     * followed came up 7 to 24 s after the reading time, and missed the sensor once. The sensor is
+     * still awake after such a fast failure, so a second direct connect reaches it.
+     *
+     * Not after a link that came up: a failure after that is about the handshake, and its own rules
+     * decide when the sensor may be asked again.
+     *
+     * @param plannedAtMs when the failed timed connect was planned; 0 = the failed connect was not a timed one.
+     */
+    fun retryTimedConnect(
+        plannedAtMs: Long,
+        nowMs: Long,
+        retriesDone: Int,
+        sensorReached: Boolean,
+        lateLimitMs: Long = TIMED_CONNECT_LATE_LIMIT_MS,
+    ): Boolean =
+        plannedAtMs > 0L && !sensorReached && retriesDone < TIMED_CONNECT_RETRIES &&
+            timedConnectStillInTime(plannedAtMs, nowMs, lateLimitMs)
 
     /**
      * A cycle that proved the link works ends in the persistent ADV wait instead of the bounded
@@ -448,7 +521,24 @@ class OnePlusBleSessionSkeleton(
     private val standingConnectMinGapMs: Long = OnePlusBleSessionCyclePolicy.STANDING_CONNECT_MIN_GAP_MS,
     /** [OnePlusBleSessionCyclePolicy.STANDING_CONNECT_STARTUP_SCAN_MS]; a test changes it, the app never does. */
     private val standingConnectStartupScanMs: Long = OnePlusBleSessionCyclePolicy.STANDING_CONNECT_STARTUP_SCAN_MS,
-) : OnePlusBleSession {
+    /**
+     * Wakes the watch for the sensor's next cycle. Used only together with [standingConnectWait].
+     *
+     * A standing connect alone listens too little: on a Galaxy Watch 5 its link came up more than
+     * 15 s after the sensor's reading time in a quarter of the rounds, and in 10 of 146 rounds not
+     * at all, while the sensor advertises for about 20 s. So after a reading the watch sleeps with
+     * no connect in place, wakes [timedConnectLeadMs] before the next reading is due, and connects
+     * directly, which listens hard for a short time.
+     *
+     * A connect that fails before the link is up is placed again a few times while the sensor can
+     * still be awake (`retryTimedConnect`). After that the standing connect follows, as without this.
+     * Null, or an alarm that cannot be set, leaves the standing connect as the only wait.
+     */
+    private val wakeAlarm: OnePlusWakeAlarm? = null,
+    /** [OnePlusBleSessionCyclePolicy.SENSOR_CYCLE_MS]; a test shortens it, the app never does. */
+    private val sensorCycleMs: Long = OnePlusBleSessionCyclePolicy.SENSOR_CYCLE_MS,
+    /** [OnePlusBleSessionCyclePolicy.TIMED_CONNECT_LEAD_MS]; a test shortens it, the app never does. */
+    private val timedConnectLeadMs: Long = OnePlusBleSessionCyclePolicy.TIMED_CONNECT_LEAD_MS,) : OnePlusBleSession {
 
     @Volatile
     private var up = false
@@ -514,6 +604,67 @@ class OnePlusBleSessionSkeleton(
 
     /** When the watch's start-up scan began, see [startupScanRuns]; 0 = not yet. */
     private var startupScanStartedAtMs = 0L
+
+    /** The sensor's own time of the newest reading of this session, see [waitForSensorDue]; 0 = none yet. */
+    private var newestReadingAtMs = 0L
+
+    /** The planned moment of the timed connect that is being placed; 0 = the connect is not a timed one. */
+    private var timedConnectPlannedAtMs = 0L
+
+    /** How many times the timed connect of this cycle was placed again, see `retryTimedConnect`. */
+    private var timedConnectRetries = 0
+
+    /** A reading arrived: its time plans the watch's next timed connect. Backfill is older and changes nothing. */
+    internal fun noteReading(timestampMs: Long) {
+        if (timestampMs > newestReadingAtMs) newestReadingAtMs = timestampMs
+    }
+
+    /**
+     * Sleep until just before the sensor's next cycle, with no connect in place and no wake lock.
+     * The alarm wakes the processor; the sleep below then sees that the time has come.
+     *
+     * @return true when the watch is awake in time and should connect directly now. False when the
+     *   moment cannot be planned, no alarm can be set, or the watch woke too late: the caller then
+     *   places a standing connect.
+     */
+    private fun waitForSensorDue(): Boolean {
+        timedConnectPlannedAtMs = 0L
+        val alarm = wakeAlarm ?: return false
+        val connectAtMs = OnePlusBleSessionCyclePolicy.timedConnectAtMs(
+            newestReadingAtMs = newestReadingAtMs,
+            nowMs = nowMs(),
+            cycleMs = sensorCycleMs,
+            leadMs = timedConnectLeadMs,
+        ) ?: return false
+        if (!alarm.wakeAt(connectAtMs)) {
+            OnePlusLog.w(
+                "${OnePlusLogMarkers.SESSION}: [$slot] no exact alarm on this device — " +
+                    "the standing connect waits for the sensor",
+            )
+            return false
+        }
+        val waitMs = connectAtMs - nowMs()
+        OnePlusLog.i(
+            "${OnePlusLogMarkers.SESSION}: [$slot] timed connect in ${waitMs / 1000}s — " +
+                "sleeping until the sensor is due, nothing in place",
+        )
+        if (!sleepWhileRunning(waitMs)) {
+            alarm.cancel()
+            return false
+        }
+        val lateMs = nowMs() - connectAtMs
+        if (!OnePlusBleSessionCyclePolicy.timedConnectStillInTime(connectAtMs, nowMs())) {
+            OnePlusLog.w(
+                "${OnePlusLogMarkers.SESSION}: [$slot] woke ${lateMs / 1000}s late for the timed connect — " +
+                    "the standing connect waits for the sensor",
+            )
+            return false
+        }
+        OnePlusLog.i("${OnePlusLogMarkers.SESSION}: [$slot] awake for the timed connect, ${lateMs}ms after the planned moment")
+        timedConnectPlannedAtMs = connectAtMs
+        timedConnectRetries = 0
+        return true
+    }
 
     /**
      * True while the watch still looks for the sensor by scanning, as the phone does, and places no
@@ -808,16 +959,19 @@ class OnePlusBleSessionSkeleton(
         // Fresh ADV in hand → fast direct connect (fail-fast status 133 → quick retry). Otherwise fall
         // back to the OEM autoConnect policy (Samsung parks a background connect when the sensor is
         // quiet — that park cost ~48 s in the field log; the handoff avoids it when a sighting exists).
-        val useAutoConnect = OnePlusBleSessionCyclePolicy.useAutoConnect(
+        // A timed connect of the watch is direct too: the sensor is due in a few seconds, and a
+        // direct connect listens hard for the short time that takes.
+        val useAutoConnect = !prep.timed && OnePlusBleSessionCyclePolicy.useAutoConnect(
             advFresh = prep.advFresh,
             attempt = attempt,
             autoConnectFromAttempt = profile.autoConnectFromAttempt,
         )
         lastConnectUsedAutoConnect = useAutoConnect
+        if (!prep.timed) timedConnectPlannedAtMs = 0L
         cycleLinkReadyAtMs = 0L
         OnePlusLog.i(
             "${OnePlusLogMarkers.SESSION}: [$slot] connect decision advFresh=${prep.advFresh} " +
-                "autoConnect=$useAutoConnect attempt=$attempt profile=${profile.id}",
+                "autoConnect=$useAutoConnect timed=${prep.timed} attempt=$attempt profile=${profile.id}",
         )
         // Hold the CPU awake through settle, scan→connect handoff, connectGatt and discovery.
         // The wait clock freezes under suspend (Android sleeps on CLOCK_MONOTONIC): field log 26/08/2026
@@ -925,6 +1079,7 @@ class OnePlusBleSessionSkeleton(
                 onGlucose = { sample ->
                     sessionProvedHealthy = true
                     everProvedControlChannel = true
+                    noteReading(sample.timestampMs)
                     onGlucose(sample)
                 },
                 onError = onError,
@@ -1004,6 +1159,24 @@ class OnePlusBleSessionSkeleton(
             staleMacReportedThisSilence = false
         }
         val linkDownStatus = gatt.lastLinkDownStatus()
+        if (OnePlusBleSessionCyclePolicy.retryTimedConnect(
+                plannedAtMs = timedConnectPlannedAtMs,
+                nowMs = nowMs(),
+                retriesDone = timedConnectRetries,
+                sensorReached = sensorReachedAtMs != 0L,
+            )
+        ) {
+            timedConnectRetries++
+            OnePlusLog.i(
+                "${OnePlusLogMarkers.RECONNECT}: [$slot] the timed connect failed before the link came up " +
+                    "(status $linkDownStatus) — placing it again, retry $timedConnectRetries of " +
+                    "${OnePlusBleSessionCyclePolicy.TIMED_CONNECT_RETRIES}",
+            )
+            return PersistentRetry(
+                attempt = nextAttempt,
+                prep = OnePlusConnectPrep(advFresh = false, blindFallback = true, timed = true),
+            )
+        }
         val retry = OnePlusBleSessionCyclePolicy.retryAfterFailure(
             sensorReached = sensorReachedAtMs != 0L,
             linkDownStatus = linkDownStatus,
@@ -1111,7 +1284,9 @@ class OnePlusBleSessionSkeleton(
             if (!sleepWhileRunning(postCycleQuietMs)) return null
         }
         if (standingConnectWait && sensorWasJustHere) {
-            return OnePlusConnectPrep(advFresh = false, blindFallback = true)
+            val timed = waitForSensorDue()
+            if (!running) return null
+            return OnePlusConnectPrep(advFresh = false, blindFallback = true, timed = timed)
         }
         return awaitFreshAdvertisement(deviceAddress)
     }
