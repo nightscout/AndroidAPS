@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.wear.comm.DataHandlerWear
 import app.aaps.wear.comm.DataLayerListenerServiceWear
 import app.aaps.wear.comm.ExceptionHandlerWear
+import app.aaps.wear.comm.ForegroundStart
 import app.aaps.wear.complications.cwf.CwfComplicationUpdater
 import app.aaps.wear.di.WearGraph
 import app.aaps.wear.events.EventWearPreferenceChange
@@ -76,6 +77,15 @@ class WearApp : Application(), MetroMemberInjector {
         // Direct-to-watch: listens for the phone turning it on, and picks a set-up sensor up again after a restart
         watchDirect.start()
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(preferenceChangeListener)
-        startForegroundService(Intent(this, DataLayerListenerServiceWear::class.java))
+        ForegroundStart.startService(this, Intent(this, DataLayerListenerServiceWear::class.java), aapsLogger)
+    }
+
+    /**
+     * From the alarm of [ForegroundStart], after Android refused a start in the background. Not
+     * tried again from here when it is refused once more.
+     */
+    fun startForegroundServices() {
+        ForegroundStart.startService(this, Intent(this, DataLayerListenerServiceWear::class.java), aapsLogger, retryWhenRefused = false)
+        watchDirect.startServiceAgain()
     }
 }

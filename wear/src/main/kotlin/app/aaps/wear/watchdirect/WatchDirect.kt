@@ -193,11 +193,24 @@ class WatchDirect(
                     connectAsked = link.pairAgain()
                     if (connectAsked) aapsLogger.info(LTag.WEAR, "Direct to watch: not paired yet, pairing started again after a restart")
                 }
-                WatchDirectService.start(context)
+                startService()
                 watchTheLink()
             }
             report(describe())
         }
+    }
+
+    /** True while direct to watch is on and its foreground service should run. */
+    @Volatile private var serviceWanted = false
+
+    private fun startService() {
+        serviceWanted = true
+        WatchDirectService.start(context, aapsLogger)
+    }
+
+    /** Android refused the service while the app was in the background: start it from the alarm of `ForegroundStart`. */
+    fun startServiceAgain() {
+        if (serviceWanted) WatchDirectService.start(context, aapsLogger, retryWhenRefused = false)
     }
 
     /**
@@ -284,7 +297,7 @@ class WatchDirect(
                         connectAsked = true
                     }
                 }
-                WatchDirectService.start(context)
+                startService()
                 if (!link.isConnected()) watchTheLink()
             }
         } else {
@@ -299,6 +312,7 @@ class WatchDirect(
             connectAsked = false
             refusal = null
             stopWatchingTheLink()
+            serviceWanted = false
             WatchDirectService.stop(context)
             clearLowAlarm()
         }
