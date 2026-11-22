@@ -82,6 +82,7 @@ alert_bookings|StringNonKey|false
 alert_choices|StringNonKey|true
 alert_kinds|UiIntentKey|false
 alert_override_dnd|BooleanKey|true
+alert_pauses|StringNonKey|false
 allow_hardware_pump|BooleanNonKey|true
 always_use_shortavg|BooleanKey|true
 app_expiration_%s|LongComposedKey|true

@@ -191,6 +191,28 @@ interface Alerts {
     fun setChoice(kind: AlertKind, choice: AlertChoice)
 
     /**
+     * The pauses on this phone: kind id to the end of its pause (epoch ms). A paused kind that rings is
+     * [AlertChoice.SILENT] until then - its card is shown, nothing rings - and what is still active of it rings when
+     * the pause ends. A pause that ended is gone from the map.
+     */
+    val pauses: StateFlow<Map<String, Long>>
+
+    /**
+     * Pauses [kinds] on this phone until [until] (`_docs/ALARMS.md`, step 2d): before sport or a meal. Pausing a
+     * kind again moves the end. A protected kind is never paused; "until switched on again" is the Silent choice.
+     */
+    fun pause(kinds: Collection<AlertKind>, until: Long)
+
+    /** Ends the pause of [kinds] now: what is active of them rings, when the kind rings. */
+    fun resume(kinds: Collection<AlertKind>)
+
+    /**
+     * Until when (epoch ms) the active alert of [source] and [key] is silenced, or 0 when it is not silenced or not
+     * active. For a raiser that extends a silence itself, as the BG alarms' smart silence does.
+     */
+    fun silencedUntil(source: String, key: String): Long
+
+    /**
      * The alert whose card is ringing now, or null.
      *
      * For the surfaces where the user cannot pick one - the watch's Silence and Mute, the Mute action on the

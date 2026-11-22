@@ -119,6 +119,7 @@ fun OverviewScreen(
     val calcProgress by mainViewModel.calcProgressFlow.collectAsStateWithLifecycle()
     val notifications by notificationManager.notifications.collectAsStateWithLifecycle()
     val alertKindChoices by builtInSearchables.alertKindsSettings.choices.collectAsStateWithLifecycle()
+    val alertKindPauses by builtInSearchables.alertKindsSettings.pauses.collectAsStateWithLifecycle()
     val quickLaunchItems by mainViewModel.quickLaunchItems.collectAsStateWithLifecycle()
     val permState by permissionsViewModel.uiState.collectAsStateWithLifecycle()
     val bolusState by bolusProgressData.state.collectAsStateWithLifecycle()
@@ -235,7 +236,8 @@ fun OverviewScreen(
         onNotificationActionClick = onNotificationActionClick,
         autoShowNotificationSheet = autoShowNotificationSheet,
         onAutoShowConsumed = onAutoShowConsumed,
-        silentAlertKinds = alertKindChoices.size,
+        // A paused kind counts as a silent one, once also when the user chose Silent for it
+        silentAlertKinds = (alertKindChoices.keys + alertKindPauses.keys).size,
         onOpenAlertKinds = onOpenAlertKinds.takeIf { builtInSearchables.alertKindsSettings.settingsItem != null },
         pumpSetupPlugin = pumpSetupPlugin,
         bgSetupPlugin = bgSetupPlugin,

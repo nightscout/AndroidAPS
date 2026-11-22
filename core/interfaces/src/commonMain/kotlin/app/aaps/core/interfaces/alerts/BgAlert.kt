@@ -42,6 +42,15 @@ enum class BgAlert(private val idName: String, override val title: TextRef, over
 
         /** The source every BG alarm is raised under. */
         const val SOURCE = "bg"
+
+        /** What "pause the lows" pauses (`_docs/ALARMS.md`, step 2d). Never urgent low. */
+        val LOWS: List<BgAlert> get() = listOf(LOW, FALLING_FAST, PREDICTED_LOW)
+
+        /** What "pause the highs" pauses. */
+        val HIGHS: List<BgAlert> get() = listOf(HIGH, PERSISTENT_HIGH, RISING_FAST)
+
+        /** What "pause all" pauses: every BG alarm but urgent low. */
+        val PAUSABLE: List<BgAlert> get() = entries.filterNot { it.isProtected }
     }
 }
 

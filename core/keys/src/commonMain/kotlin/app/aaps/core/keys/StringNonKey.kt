@@ -133,6 +133,9 @@ enum class StringNonKey(
     // What the user chose for each kind of alert on this phone (Alerts): Silent or Off by kind id, Ring is not stored.
     // Exported with this phone's settings; not synced, because each phone decides whether it rings.
     AlertChoices(key = "alert_choices", defaultValue = "{}", exportable = true),
+    // The alert kinds paused on this phone (Alerts.pause), kind id to the end of the pause. Not exportable and not
+    // synced: a pause belongs to this phone and this moment.
+    AlertPauses(key = "alert_pauses", defaultValue = "{}", exportable = false),
     // The alerts booked to ring at a time (Alerts.schedule), so one booked before the process ended still rings. Not
     // exportable: a booking belongs to this phone and this moment.
     AlertBookings(key = "alert_bookings", defaultValue = "[]", exportable = false),

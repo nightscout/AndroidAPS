@@ -70,6 +70,9 @@ class BgUnits(
  * list is shown and cannot be changed ([readOnly]).
  *
  * Every change is saved at once ([onSave] with the whole list), as on the alert kinds screen: there is no Save button.
+ *
+ * On top, the pause of this phone (step 2d), also on a client: a pause is each phone's own, as its choice to ring.
+ * [pauses] is kind id to the end of its pause; [timeText] shows such an end as a time of day.
  */
 @Composable
 fun BgAlarmRulesScreen(
@@ -78,6 +81,10 @@ fun BgAlarmRulesScreen(
     units: BgUnits,
     newId: () -> String,
     onSave: (List<BgAlarmRule>) -> Unit,
+    pauses: Map<String, Long>,
+    timeText: (Long) -> String,
+    onPause: (List<BgAlert>, Int) -> Unit,
+    onResume: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -126,6 +133,7 @@ fun BgAlarmRulesScreen(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
+            item { PauseCard(pauses = pauses, timeText = timeText, onPause = onPause, onResume = onResume) }
             items(sorted(rules), key = { it.id }) { rule ->
                 RuleCard(
                     rule = rule,
@@ -390,4 +398,76 @@ private fun RuleDialog(
             }
         }
     )
+}
+
+/** The groups a pause takes, in the order of the chips. */
+private enum class PauseGroup(val kinds: List<BgAlert>) {
+
+    LOWS(BgAlert.LOWS),
+    HIGHS(BgAlert.HIGHS),
+    ALL(BgAlert.PAUSABLE)
+}
+
+/** How long a pause can last, in minutes. */
+private val pauseLengths = listOf(30, 60, 120, 240)
+
+/**
+ * The pause of this phone: pick the lows, the highs or all, and how long. While paused, their alarms come as a card
+ * with no sound; what is still on rings when the pause ends. Urgent low is never paused.
+ */
+@Composable
+private fun PauseCard(pauses: Map<String, Long>, timeText: (Long) -> String, onPause: (List<BgAlert>, Int) -> Unit, onResume: () -> Unit) {
+    var group by remember { mutableStateOf(PauseGroup.LOWS) }
+    var minutes by remember { mutableStateOf(60) }
+    val paused = BgAlert.PAUSABLE.filter { pauses[it.id] != null }
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.fillMaxWidth().padding(AapsSpacing.extraLarge), verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+            Text(stringResource(UiStrings.bg_alarm_pause_title), style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(UiStrings.bg_alarm_pause_hint), style = MaterialTheme.typography.bodyMedium)
+            // Each pause end with the kinds it holds; the kinds each their own text, not a joined sentence
+            paused.groupBy { pauses.getValue(it.id) }.entries.sortedBy { it.key }.forEach { (until, kinds) ->
+                Text(stringResource(UiStrings.bg_alarm_paused_until, timeText(until)), style = MaterialTheme.typography.labelLarge)
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+                    kinds.forEach { Text(stringResource(it.title), style = MaterialTheme.typography.bodyMedium) }
+                }
+            }
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+                PauseGroup.entries.forEach { g ->
+                    FilterChip(
+                        selected = group == g,
+                        onClick = { group = g },
+                        label = {
+                            Text(
+                                stringResource(
+                                    when (g) {
+                                        PauseGroup.LOWS  -> UiStrings.bg_alarm_pause_lows
+                                        PauseGroup.HIGHS -> UiStrings.bg_alarm_pause_highs
+                                        PauseGroup.ALL   -> UiStrings.bg_alarm_pause_all
+                                    }
+                                )
+                            )
+                        }
+                    )
+                }
+            }
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+                pauseLengths.forEach { m ->
+                    FilterChip(
+                        selected = minutes == m,
+                        onClick = { minutes = m },
+                        label = {
+                            Text(
+                                if (m >= 60 && m % 60 == 0) stringResource(CoreUiStrings.format_hours_only, m / 60)
+                                else stringResource(CoreUiStrings.format_mins, m)
+                            )
+                        }
+                    )
+                }
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+                Button(onClick = { onPause(group.kinds, minutes) }) { Text(stringResource(UiStrings.bg_alarm_pause)) }
+                if (paused.isNotEmpty()) TextButton(onClick = onResume) { Text(stringResource(UiStrings.bg_alarm_resume)) }
+            }
+        }
+    }
 }

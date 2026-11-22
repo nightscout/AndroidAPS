@@ -415,6 +415,14 @@
     <string name="bg_alarm_rule_low_title">Low alarm</string>
     <string name="bg_alarm_rule_high_title">High alarm</string>
     <string name="bg_alarm_rule_add">Add rule</string>
+    <string name="bg_alarm_pause_title">Pause on this phone</string>
+    <string name="bg_alarm_pause_hint">While paused, these alarms come as a card with no sound. If one is still on when the pause ends, it rings then. Urgent low is never paused.</string>
+    <string name="bg_alarm_pause_lows" comment="Choice of which glucose alarms to pause: low, falling fast and predicted low">Lows</string>
+    <string name="bg_alarm_pause_highs" comment="Choice of which glucose alarms to pause: high, persistent high and rising fast">Highs</string>
+    <string name="bg_alarm_pause_all" comment="Choice of which glucose alarms to pause: every one but urgent low">All but urgent low</string>
+    <string name="bg_alarm_pause" comment="Button: pause the chosen glucose alarms for the chosen time">Pause</string>
+    <string name="bg_alarm_paused_until" comment="Heading of the paused glucose alarms. %1$s=the time the pause ends, as HH:MM">Paused until %1$s</string>
+    <string name="bg_alarm_resume" comment="Button: end the pause of the glucose alarms now">Resume</string>
     <string name="bg_alarm_rule_persistent_high" comment="Title of a persistent high glucose alarm rule. %1$s=the threshold with its unit, for example: 10.0 mmol/l">Persistent high above %1$s</string>
     <string name="bg_alarm_rule_falling" comment="Title of a falling fast glucose alarm rule. %1$s=the change in one minute with its unit, for example: 0.17 mmol/l">Falling faster than %1$s per minute</string>
     <string name="bg_alarm_rule_rising" comment="Title of a rising fast glucose alarm rule. %1$s=the change in one minute with its unit, for example: 0.17 mmol/l">Rising faster than %1$s per minute</string>

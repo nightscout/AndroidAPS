@@ -130,6 +130,7 @@ class AlertsImplTest : TestBase() {
     private var storedSilences = "[]"
     private var storedChoices = "{}"
     private var storedBookings = "[]"
+    private var storedPauses = "{}"
 
     private lateinit var notificationManager: CommonNotificationManager
     private lateinit var sut: AlertsImpl
@@ -145,6 +146,8 @@ class AlertsImplTest : TestBase() {
         doAnswer { storedChoices = it.arguments[1] as String; Unit }.whenever(preferences).put(eq(StringNonKey.AlertChoices), any<String>())
         whenever(preferences.get(StringNonKey.AlertBookings)).thenAnswer { storedBookings }
         doAnswer { storedBookings = it.arguments[1] as String; Unit }.whenever(preferences).put(eq(StringNonKey.AlertBookings), any<String>())
+        whenever(preferences.get(StringNonKey.AlertPauses)).thenAnswer { storedPauses }
+        doAnswer { storedPauses = it.arguments[1] as String; Unit }.whenever(preferences).put(eq(StringNonKey.AlertPauses), any<String>())
         // A booking is raised only after the app start
         whenever(config.appInitialized).thenReturn(true)
         whenever(activePlugin.activePump).thenReturn(pump)
@@ -808,5 +811,107 @@ class AlertsImplTest : TestBase() {
         sut.schedule(reminder(), now + minute)
 
         assertThat(alertPlatform.bookings["automation-timer"]).isEqualTo((now + minute) to false)
+    }
+
+    // ---- pauses (step 2d) ---------------------------------------------------------------------------
+
+    @Test
+    fun `a paused kind shows its card with no sound and no alarm screen`() {
+        val a = alert()
+        sut.pause(listOf(a.kind), now + 60 * 60_000L)
+
+        sut.raise(a)
+
+        assertThat(card().sound).isNull()
+        assertThat(card().level).isEqualTo(NotificationLevel.IMPORTANT)
+        assertThat(alertPlatform.screens).isEmpty()
+        // The end of the pause is booked: it rings then, also when the app does not run
+        assertThat(alertPlatform.snoozes).containsExactly("occlusion" to now + 60 * 60_000L)
+    }
+
+    @Test
+    fun `pausing a ringing kind quiets it at once`() {
+        val a = alert()
+        sut.raise(a)
+
+        sut.pause(listOf(a.kind), now + 60 * 60_000L)
+
+        assertThat(card().sound).isNull()
+        assertThat(sut.sounding).isNull()
+    }
+
+    @Test
+    fun `when the pause ends what is still on rings`() {
+        val a = alert()
+        sut.pause(listOf(a.kind), now + 60 * 60_000L)
+        sut.raise(a)
+
+        now += 60 * 60_000L
+        sut.checkSilences()
+
+        assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
+        assertThat(alertPlatform.screens).containsExactly("occlusion")
+        assertThat(sut.pauses.value).isEmpty()
+    }
+
+    @Test
+    fun `resume rings at once`() {
+        val a = alert()
+        sut.pause(listOf(a.kind), now + 60 * 60_000L)
+        sut.raise(a)
+
+        sut.resume(listOf(a.kind))
+
+        assertThat(alertPlatform.screens).containsExactly("occlusion")
+        assertThat(sut.pauses.value).isEmpty()
+    }
+
+    /** A silence the user gave holds after the pause: the pause end does not ring over it. */
+    @Test
+    fun `a silence longer than the pause still holds when the pause ends`() {
+        val a = alert()
+        sut.raise(a)
+        sut.silence("pump", "occlusion", 120)
+        sut.pause(listOf(a.kind), now + 60 * 60_000L)
+
+        now += 60 * 60_000L
+        sut.checkSilences()
+
+        assertThat(card().sound).isNull()
+        assertThat(alertPlatform.screens).containsExactly("occlusion")
+    }
+
+    @Test
+    fun `a protected kind is never paused`() {
+        val a = alert(kind = TestKind("pump", AlertOrigin.PUMP, "occlusion", isProtected = true))
+        sut.pause(listOf(a.kind), now + 60 * 60_000L)
+
+        sut.raise(a)
+
+        assertThat(sut.pauses.value).isEmpty()
+        assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
+    }
+
+    @Test
+    fun `a pause survives a restart, an ended one does not`() {
+        val a = alert()
+        sut.pause(listOf(a.kind), now + 60 * 60_000L)
+
+        val restarted = newAlerts()
+        assertThat(restarted.pauses.value).containsExactly(a.kind.id, now + 60 * 60_000L)
+
+        now += 61 * 60_000L
+        assertThat(newAlerts().pauses.value).isEmpty()
+    }
+
+    @Test
+    fun `silencedUntil tells the end of a silence, and 0 when there is none`() {
+        sut.raise(alert())
+        assertThat(sut.silencedUntil("pump", "occlusion")).isEqualTo(0L)
+
+        sut.silence("pump", "occlusion", 60)
+
+        assertThat(sut.silencedUntil("pump", "occlusion")).isEqualTo(now + 60 * 60_000L)
+        assertThat(sut.silencedUntil("pump", "other")).isEqualTo(0L)
     }
 }

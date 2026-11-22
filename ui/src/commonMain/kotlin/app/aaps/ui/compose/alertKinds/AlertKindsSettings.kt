@@ -9,8 +9,10 @@ import app.aaps.core.interfaces.alerts.AlertKindCatalogue
 import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlarmRules
+import app.aaps.core.interfaces.alerts.BgAlert
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.ui.compose.bgAlarms.BgAlarmRulesScreen
 import app.aaps.ui.compose.bgAlarms.BgUnits
@@ -42,6 +44,9 @@ interface AlertKindsSettings {
     /** The user's choices on this phone, by kind id; its size is how many kinds are silent or off. */
     val choices: StateFlow<Map<String, AlertChoice>>
 
+    /** The kinds paused on this phone, by kind id, with the end of the pause. Counted with the silent kinds. */
+    val pauses: StateFlow<Map<String, Long>>
+
     /** The screen of the user's own BG level rules, or null where there are no alerts. */
     val bgAlarmRulesItem: PreferenceItem? get() = null
 
@@ -54,6 +59,7 @@ object AbsentAlertKindsSettings : AlertKindsSettings {
 
     override val settingsItem: PreferenceItem? = null
     override val choices: StateFlow<Map<String, AlertChoice>> = MutableStateFlow<Map<String, AlertChoice>>(emptyMap()).asStateFlow()
+    override val pauses: StateFlow<Map<String, Long>> = MutableStateFlow<Map<String, Long>>(emptyMap()).asStateFlow()
 }
 
 /** Bound by each platform that has alerts, next to its [Alerts]. */
@@ -66,12 +72,14 @@ class AlertKindsSettingsImpl(
     private val bgAlarmRules: BgAlarmRules,
     private val profileUtil: ProfileUtil,
     private val decimalFormatter: DecimalFormatter,
+    private val dateUtil: DateUtil,
     private val config: Config
 ) : AlertKindsSettings {
 
     override val bgAlarmRulesItem: PreferenceItem = UiIntentKey.BgAlarmRules.withCompose(
         ComposeScreenContent { onBack ->
             val rules by bgAlarmRules.rules.collectAsState()
+            val pauses by alerts.pauses.collectAsState()
             BgAlarmRulesScreen(
                 rules = rules,
                 // The rules are the master's: a client shows them only
@@ -90,12 +98,17 @@ class AlertKindsSettingsImpl(
                 ),
                 newId = { Uuid.random().toString() },
                 onSave = { bgAlarmRules.save(it) },
+                pauses = pauses,
+                timeText = { dateUtil.timeString(it) },
+                onPause = { kinds, minutes -> alerts.pause(kinds, dateUtil.now() + minutes * 60_000L) },
+                onResume = { alerts.resume(BgAlert.PAUSABLE) },
                 onBack = onBack
             )
         }
     )
 
     override val choices: StateFlow<Map<String, AlertChoice>> get() = alerts.choices
+    override val pauses: StateFlow<Map<String, Long>> get() = alerts.pauses
 
     override val settingsItem: PreferenceItem = UiIntentKey.AlertKinds.withCompose(
         ComposeScreenContent { onBack ->

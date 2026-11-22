@@ -312,6 +312,29 @@ class BgAlarmsImpl(
         }
         current[slot] = level to raisedAt
         alerts.raise(alertOf(level, key, raisedAt, data))
+        smartSilence(slot, level, data)
+    }
+
+    /**
+     * Smart silence (`_docs/ALARMS.md`, step 2d): a silenced low or high does not ring again while BG already moves
+     * back towards the range. When the silence ends before the next reading can tell ([SMART_SILENCE_WINDOW_MS]), and
+     * both the average over the last [RATE_WINDOW_MS] and the last step move back by at least
+     * [SMART_SILENCE_MGDL_PER_MINUTE], the silence is made [SMART_SILENCE_EXTEND_MINUTES] longer than its end. It is
+     * checked again at every reading, so the alert rings once BG stops coming back. Never for urgent low, and not for
+     * a rate or a prediction: those end by themselves when BG turns.
+     */
+    private fun smartSilence(slot: Slot, level: Level, data: Data) {
+        if (slot !in SMART_SILENCE_SLOTS || level.id == URGENT_LOW_ID) return
+        val until = alerts.silencedUntil(BgAlert.SOURCE, slot.key)
+        if (until == 0L || until - data.now > SMART_SILENCE_WINDOW_MS) return
+        val average = averageRate(data.readings, RATE_WINDOW_MS, RATE_MIN_SPAN_MS) ?: return
+        val step = averageRate(data.readings, STEP_WINDOW_MS, STEP_MIN_SPAN_MS) ?: return
+        // Towards the range: up for a low, down for a high
+        val towardsRange = if (level.direction == BgDirection.LOW) 1.0 else -1.0
+        if (average * towardsRange < SMART_SILENCE_MGDL_PER_MINUTE || step * towardsRange < SMART_SILENCE_MGDL_PER_MINUTE) return
+        val minutes = ((until - data.now) / 60_000L).toInt() + SMART_SILENCE_EXTEND_MINUTES
+        aapsLogger.info(LTag.BGSOURCE, "BG alarm ${slot.key}: BG moves back to the range, silence longer by $SMART_SILENCE_EXTEND_MINUTES min")
+        alerts.snooze(BgAlert.SOURCE, slot.key, minutes)
     }
 
     /** How strong a rule is in its slot: the further from the range or the faster, the stronger; urgent low the strongest. */
@@ -495,6 +518,17 @@ class BgAlarmsImpl(
 
         /** A rate alert stays on while the average rate is still this part of the rule's rate. */
         const val KEEP_RATE_FACTOR = 0.75
+
+        /** Smart silence: BG must move back to the range at least this fast (15 mg/dl an hour). */
+        const val SMART_SILENCE_MGDL_PER_MINUTE = 0.25
+
+        /** Smart silence acts when the silence ends within this time: before the next 5-minute reading could tell. */
+        const val SMART_SILENCE_WINDOW_MS = 6 * 60_000L
+
+        /** Smart silence makes the silence this much longer than its end; the next reading decides again. */
+        const val SMART_SILENCE_EXTEND_MINUTES = 5
+
+        private val SMART_SILENCE_SLOTS = setOf(Slot.LOW, Slot.HIGH, Slot.PERSISTENT_HIGH)
 
         /** Persistent high does not start while BG comes down faster than this (30 mg/dl an hour): it is being treated. */
         const val FALLING_MGDL_PER_MINUTE = 0.5

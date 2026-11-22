@@ -107,6 +107,8 @@ class AlertsImpl(
     private val entries = LinkedHashMap<Pair<String, String>, Entry>()
     private var silences: MutableList<Silence>? = null
     private var choiceMap: MutableMap<String, AlertChoice>? = null
+    private var pauseMap: MutableMap<String, Long>? = null
+    private var pauseEnd: Job? = null
     private var bookings: MutableMap<Pair<String, String>, Booking>? = null
     private var observing = false
 
@@ -120,6 +122,41 @@ class AlertsImpl(
             lock.withLock { storedChoices() }
             return choicesView
         }
+
+    private val _pauses = MutableStateFlow<Map<String, Long>>(emptyMap())
+    private val pausesView = _pauses.asStateFlow()
+    override val pauses: StateFlow<Map<String, Long>>
+        get() {
+            lock.withLock { storedPauses() }
+            return pausesView
+        }
+
+    override fun pause(kinds: Collection<AlertKind>, until: Long): Unit = lock.withLock {
+        if (until <= dateUtil.now()) return@withLock
+        val ids = kinds.filterNot { it.isProtected }.map { it.id }.toSet()
+        if (ids.isEmpty()) return@withLock
+        val map = storedPauses()
+        ids.forEach { map[it] = until }
+        savePauses(map)
+        aapsLogger.info(LTag.NOTIFICATION, "Alert kinds $ids paused on this phone until ${dateUtil.dateAndTimeString(until)}")
+        // Quiet at once; showCard books the pause end, so it rings then also when the app does not run
+        entries.values.filter { it.alert.kind.id in ids }.forEach { showCard(it, ring = false) }
+        schedulePauseEnd()
+    }
+
+    override fun resume(kinds: Collection<AlertKind>): Unit = lock.withLock {
+        val map = storedPauses()
+        val ids = kinds.map { it.id }.filter { map.remove(it) != null }.toSet()
+        if (ids.isEmpty()) return@withLock
+        savePauses(map)
+        aapsLogger.info(LTag.NOTIFICATION, "Alert kinds $ids no longer paused on this phone")
+        ringAfterPause(ids)
+        schedulePauseEnd()
+    }
+
+    override fun silencedUntil(source: String, key: String): Long = lock.withLock {
+        entries[source to key]?.silencedUntil?.takeIf { it > dateUtil.now() } ?: 0L
+    }
 
     override val sounding: Alert?
         get() = lock.withLock {
@@ -245,7 +282,44 @@ class AlertsImpl(
      */
     fun checkSilences() = lock.withLock {
         val now = dateUtil.now()
+        // The silences first: one that ends with a pause still on stays quiet, and the pause's end rings it once
         entries.values.filter { it.silencedUntil in 1..now }.forEach { endSilence(it) }
+        endPauses(now)
+    }
+
+    /** Caller holds [lock]. The pauses that are over end: what is active of their kinds rings. */
+    private fun endPauses(now: Long) {
+        val map = storedPauses()
+        val ended = map.filterValues { it <= now }.keys
+        if (ended.isEmpty()) return
+        ended.forEach { map.remove(it) }
+        savePauses(map)
+        aapsLogger.info(LTag.NOTIFICATION, "Pause of alert kinds $ended over on this phone")
+        ringAfterPause(ended)
+        schedulePauseEnd()
+    }
+
+    /** Caller holds [lock]. The pause of [ids] is over: their active alerts ring, unless the user silenced one. */
+    private fun ringAfterPause(ids: Set<String>) {
+        val now = dateUtil.now()
+        entries.values.filter { it.alert.kind.id in ids }.forEach { entry ->
+            if (entry.silencedUntil > now) showCard(entry, ring = false)
+            else {
+                platform.withdrawn(entry.alert.source, entry.alert.key)
+                showCard(entry, ring = true)
+            }
+        }
+    }
+
+    /** Caller holds [lock]. A timer for the next pause end, while the process runs; the platform wakes it otherwise. */
+    private fun schedulePauseEnd() {
+        pauseEnd?.cancel()
+        pauseEnd = null
+        val next = storedPauses().values.minOrNull() ?: return
+        pauseEnd = appScope.launch {
+            delay(next - dateUtil.now())
+            checkSilences()
+        }
     }
 
     // ---- the bookings (`_docs/ALARMS.md`, step 1e) ----------------------------------------------
@@ -370,7 +444,10 @@ class AlertsImpl(
             tellWatch = alert.tellWatch,
             breakThroughDnd = alert.breakThroughDnd
         )
+        val pausedUntil = storedPauses()[alert.kind.id] ?: 0L
         when {
+            // Paused: the end of the pause rings it, booked so it does also when the app does not run then
+            quiet && pausedUntil > dateUtil.now()                   -> platform.snoozed(alert, maxOf(pausedUntil, entry.silencedUntil))
             quiet                                                   -> Unit
             silenced                                                -> scheduleSilenceEnd(entry)
             !ring                                                   -> Unit
@@ -557,8 +634,40 @@ class AlertsImpl(
         }
 
     /** Caller holds [lock]. What this phone does with [alert]; a protected kind always rings. */
-    private fun choiceFor(alert: Alert): AlertChoice =
-        if (alert.kind.isProtected) AlertChoice.RING else storedChoices()[alert.kind.id] ?: AlertChoice.RING
+    /** Caller holds [lock]. A paused kind that rings is Silent while its pause lasts. */
+    private fun choiceFor(alert: Alert): AlertChoice {
+        if (alert.kind.isProtected) return AlertChoice.RING
+        val chosen = storedChoices()[alert.kind.id] ?: AlertChoice.RING
+        val paused = (storedPauses()[alert.kind.id] ?: 0L) > dateUtil.now()
+        return if (chosen == AlertChoice.RING && paused) AlertChoice.SILENT else chosen
+    }
+
+    // ---- the pauses -----------------------------------------------------------------------------
+
+    /** Caller holds [lock]. The stored pauses, read on first use; one that ended while the app did not run is gone. */
+    private fun storedPauses(): MutableMap<String, Long> =
+        pauseMap ?: loadPauses().also {
+            pauseMap = it
+            _pauses.value = it.toMap()
+            if (it.isNotEmpty()) schedulePauseEnd()
+        }
+
+    private fun loadPauses(): MutableMap<String, Long> = try {
+        val now = dateUtil.now()
+        Json.parseToJsonElement(preferences.get(StringNonKey.AlertPauses)).jsonObject
+            .mapValues { it.value.jsonPrimitive.long }
+            .filterValues { it > now }
+            .toMutableMap()
+    } catch (e: Exception) {
+        aapsLogger.error(LTag.NOTIFICATION, "Stored alert pauses unreadable, nothing paused", e)
+        mutableMapOf()
+    }
+
+    /** Caller holds [lock]. */
+    private fun savePauses(map: Map<String, Long>) {
+        preferences.put(StringNonKey.AlertPauses, buildJsonObject { map.forEach { (id, until) -> put(id, until) } }.toString())
+        _pauses.value = map.toMap()
+    }
 
     private fun loadChoices(): MutableMap<String, AlertChoice> = try {
         Json.parseToJsonElement(preferences.get(StringNonKey.AlertChoices)).jsonObject

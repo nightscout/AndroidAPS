@@ -61,6 +61,10 @@ class CarelevoAlarmNotifierTest {
         override val sounding: Alert? get() = _active.value.lastOrNull()
         override val choices: StateFlow<Map<String, AlertChoice>> = MutableStateFlow(emptyMap())
         override fun setChoice(kind: AlertKind, choice: AlertChoice) {}
+        override val pauses: StateFlow<Map<String, Long>> = MutableStateFlow(emptyMap())
+        override fun pause(kinds: Collection<AlertKind>, until: Long) {}
+        override fun resume(kinds: Collection<AlertKind>) {}
+        override fun silencedUntil(source: String, key: String): Long = 0L
         val raised = mutableListOf<Alert>()
         val resolved = mutableListOf<String>()
 

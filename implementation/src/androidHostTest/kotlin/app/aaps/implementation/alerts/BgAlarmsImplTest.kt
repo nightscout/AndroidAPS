@@ -69,7 +69,18 @@ class BgAlarmsImplTest : TestBase() {
 
         override fun resolveAll(source: String) {}
         override fun silence(source: String, key: String, minutes: Int?) {}
-        override fun snooze(source: String, key: String, minutes: Int) {}
+
+        /** Until when each key is silenced, as the test sets it. */
+        val silenced = mutableMapOf<String, Long>()
+        val snoozed = mutableListOf<Pair<String, Int>>()
+        override fun snooze(source: String, key: String, minutes: Int) {
+            snoozed += key to minutes
+        }
+
+        override val pauses: StateFlow<Map<String, Long>> = MutableStateFlow(emptyMap())
+        override fun pause(kinds: Collection<AlertKind>, until: Long) {}
+        override fun resume(kinds: Collection<AlertKind>) {}
+        override fun silencedUntil(source: String, key: String): Long = silenced[key] ?: 0L
         override fun act(source: String, key: String) {}
         val booked = mutableListOf<Pair<Alert, Long>>()
         val unbooked = mutableListOf<String>()
@@ -587,5 +598,63 @@ class BgAlarmsImplTest : TestBase() {
         val rules = impl.parse("""[{"id":"a","type":"PREDICTED_LOW","direction":"HIGH","thresholdMgdl":70.0,"severity":"WARNING"}]""")
 
         assertThat(rules).isEmpty()
+    }
+
+    // ---- smart silence (step 2d) --------------------------------------------------------------------
+
+    @Test
+    fun `a silenced low does not ring again while BG comes back up`() {
+        ruleList.value = listOf(low(70.0))
+        readings(60.0, 62.0, 64.0, 66.0, 68.0)
+        alerts.silenced[BgAlarmsImpl.KEY_LOW] = now + 3 * minute
+
+        evaluate()
+
+        assertThat(alerts.snoozed).containsExactly(BgAlarmsImpl.KEY_LOW to 3 + BgAlarmsImpl.SMART_SILENCE_EXTEND_MINUTES)
+    }
+
+    @Test
+    fun `a silenced high does not ring again while BG comes down`() {
+        ruleList.value = listOf(high(250.0))
+        readings(290.0, 285.0, 280.0, 275.0, 270.0)
+        alerts.silenced[BgAlarmsImpl.KEY_HIGH] = now + 2 * minute
+
+        evaluate()
+
+        assertThat(alerts.snoozed.single().first).isEqualTo(BgAlarmsImpl.KEY_HIGH)
+    }
+
+    @Test
+    fun `a silenced low rings again when BG does not come back`() {
+        ruleList.value = listOf(low(70.0))
+        readings(65.0, 65.0, 66.0, 65.0, 65.0)
+        alerts.silenced[BgAlarmsImpl.KEY_LOW] = now + 3 * minute
+
+        evaluate()
+
+        assertThat(alerts.snoozed).isEmpty()
+    }
+
+    /** Only at the end of the silence: before that the next readings decide. */
+    @Test
+    fun `smart silence waits for the end of the silence`() {
+        ruleList.value = listOf(low(70.0))
+        readings(60.0, 62.0, 64.0, 66.0, 68.0)
+        alerts.silenced[BgAlarmsImpl.KEY_LOW] = now + 20 * minute
+
+        evaluate()
+
+        assertThat(alerts.snoozed).isEmpty()
+    }
+
+    @Test
+    fun `urgent low is never silenced longer`() {
+        readings(40.0, 42.0, 44.0, 46.0, 48.0)
+        alerts.silenced[BgAlarmsImpl.KEY_LOW] = now + 3 * minute
+
+        evaluate()
+
+        assertThat(alerts.raised.last().kind).isEqualTo(BgAlert.URGENT_LOW)
+        assertThat(alerts.snoozed).isEmpty()
     }
 }

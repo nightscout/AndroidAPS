@@ -320,9 +320,19 @@ rings because of it (decided 2026-11-21: acceptable).
   - All three are rule types in the same list as the level rules (`BgRuleType`), each its own alert kind, so each
     phone chooses Ring, Silent or Off for it.
 - **Smart silence.** A silenced level alert does not ring again while BG already moves back towards the range, judged
-  from AAPS's trend per minute. It is part of the BG rules, not of the alert core (decision 9).
+  from AAPS's trend per minute. It is part of the BG rules, not of the alert core (decision 9). Built (2d): when the
+  silence of a low, high or persistent high ends within 6 minutes and both the 15-minute rate and the last step move
+  back to the range by at least 0.25 mg/dl per minute, the BG alarms make the silence 5 minutes longer than its end;
+  the next reading decides again. Never for urgent low. The core only tells until when an alert is silenced
+  (`Alerts.silencedUntil`).
 - **Pause.** All BG alarms, the lows or the highs, for a time or until switched on again; and a silence set before an
   alert rings (before sport or a meal). A pause never includes urgent low. Pauses show in the "N alerts silent" mark.
+  Built (2d) as a timed Silent choice in the core (`Alerts.pause`, `resume`, `pauses`), per phone, not synced: the
+  card is shown, nothing rings, and what is still on rings when the pause ends (booked, so also when the app does not
+  run); a silence longer than the pause still holds. "Until switched on again" is the Silent choice in Alert kinds.
+  The pause before an alert rings is the same pause. It is on top of the BG alarm rules screen, also on a client:
+  lows (low, falling fast, predicted low), highs (high, persistent high, rising fast) or all but urgent low, for 30
+  minutes to 4 hours.
 - **Noisy readings** may be marked on the alert, but never hold back urgent low.
 
 #### The ringing (each phone's own)
@@ -419,8 +429,8 @@ The order matters: step 3 must not come before step 2.
    low and high rules with their screen (`BgAlarmsImpl`, `BgAlarmRules`); 2b stale data as a booked alert at the last
    reading plus the threshold, with a 5-minute grace after a start (replaces `checkStaleBGAlert` and
    `IosMissedReadingAlarm`; the setting "Alert if no BG data is received" and its threshold stay); 2c persistent high,
-   falling and rising fast and predicted low as rule types of the same screen. Still to come: 2d smart silence and
-   pause, 2e sounds and the Test button, 2f the shared silence. The escalation comes
+   falling and rising fast and predicted low as rule types of the same screen; 2d smart silence and the pause. Still
+   to come: 2e sounds and the Test button, 2f the shared silence. The escalation comes
    later, after the basics work.
 3. The Nightscout alarms removed; announcements as a WARNING alert.
 4. The core's sounding cards to alerts (the table above).
