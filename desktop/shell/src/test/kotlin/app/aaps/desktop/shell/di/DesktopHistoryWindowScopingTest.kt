@@ -1,11 +1,9 @@
 package app.aaps.desktop.shell.di
 
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
-import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.ui.compose.overview.OverviewDataCacheImpl
-import dev.zacsweers.metro.createGraphFactory
+import dev.zacsweers.metro.createGraph
 import kotlin.test.Test
 import kotlin.test.assertNotSame
 import kotlin.test.assertSame
@@ -29,7 +27,7 @@ import kotlin.test.assertSame
  */
 class DesktopHistoryWindowScopingTest {
 
-    private val graph = createGraphFactory<DesktopAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
+    private val graph = createGraph<DesktopAppGraph>()
 
     /** The History Browser used to get a placeholder that threw on first use, which crashed the window. */
     @Test

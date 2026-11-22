@@ -86,26 +86,26 @@ class InsulinMigrationTest {
 
         val legacy = sut().readLegacyInsulin(store)
 
-        assertThat(legacy?.peakTime).isEqualTo(InsulinType.OREF_ULTRA_RAPID_ACTING.insulinPeakTime)
+        assertThat(legacy.peakTime).isEqualTo(InsulinType.OREF_ULTRA_RAPID_ACTING.insulinPeakTime)
     }
 
     @Test fun `free peak takes the peak the user set`() {
         val store = storeOf("ConfigBuilder_Enabled_INSULIN_InsulinOrefFreePeakPlugin" to true, "insulin_oref_peak" to 55)
 
-        assertThat(sut().readLegacyInsulin(store)?.peakTime).isEqualTo(55L * 60 * 1000)
+        assertThat(sut().readLegacyInsulin(store).peakTime).isEqualTo(55L * 60 * 1000)
     }
 
     @Test fun `free peak reads a peak stored as text`() {
         // The v3 preference screen was an edit box, so the value can be text rather than an Int.
         val store = storeOf("ConfigBuilder_Enabled_INSULIN_InsulinOrefFreePeakPlugin" to true, "insulin_oref_peak" to "55")
 
-        assertThat(sut().readLegacyInsulin(store)?.peakTime).isEqualTo(55L * 60 * 1000)
+        assertThat(sut().readLegacyInsulin(store).peakTime).isEqualTo(55L * 60 * 1000)
     }
 
     @Test fun `free peak without a stored peak uses the v3 default`() {
         val store = storeOf("ConfigBuilder_Enabled_INSULIN_InsulinOrefFreePeakPlugin" to true)
 
-        assertThat(sut().readLegacyInsulin(store)?.peakTime).isEqualTo(75L * 60 * 1000)
+        assertThat(sut().readLegacyInsulin(store).peakTime).isEqualTo(75L * 60 * 1000)
     }
 
     // ── harvestProfileDia: the DIA each v3 profile was using ────────────────────────────────────────

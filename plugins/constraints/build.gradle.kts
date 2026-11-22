@@ -73,8 +73,7 @@ kotlin {
                 implementation(libs.com.google.truth)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.org.robolectric)
-                implementation(project.dependencies.platform(libs.androidx.compose.bom))
-                implementation(libs.androidx.compose.ui.test.junit4)
+                implementation(libs.jetbrains.compose.ui.test.junit4)
                 implementation(libs.androidx.compose.ui.test.manifest)
                 // The real org.json: isReturnDefaultValues makes the platform stub answer null rather
                 // than throwing, which NPEs the shared profile fixtures in TestBaseWithProfile.

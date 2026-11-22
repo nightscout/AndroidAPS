@@ -20,7 +20,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":pump:dana:common"))
     implementation(project(":pump:dana:danar:emulator"))
-    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.jetbrains.compose.ui.tooling)
 
     testImplementation(project(":shared:tests"))
 

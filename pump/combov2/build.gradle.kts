@@ -21,7 +21,7 @@ dependencies {
     implementation(project(":pump:combov2:comboctl"))
 
     api(libs.kotlinx.datetime)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.jetbrains.compose.ui.tooling.preview)
+    debugImplementation(libs.jetbrains.compose.ui.tooling)
 
 }

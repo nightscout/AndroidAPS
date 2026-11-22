@@ -1133,7 +1133,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(smbResult).isNotNull()
         assertThat(smbResult!!.success).isFalse()
         // Not a delivery failure: the loop runs again, and no bolus error alarm
-        assertThat(smbResult!!.cancelled).isTrue()
+        assertThat(smbResult.cancelled).isTrue()
         // The progress belongs to the manual bolus now
         assertThat(bolusProgressData.state.value?.isSMB).isFalse()
     }
@@ -1222,7 +1222,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(commandQueue.size()).isEqualTo(0)
         assertThat(smbResult!!.success).isFalse()
         // Not a delivery failure: the loop runs again with a temp basal, and no alarm rings
-        assertThat(smbResult!!.cancelled).isTrue()
+        assertThat(smbResult.cancelled).isTrue()
     }
 
     @Test
@@ -1829,7 +1829,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(commandQueue.size()).isEqualTo(0)
         assertThat(result).isNotNull()
         assertThat(result!!.success).isFalse()
-        assertThat(result!!.enacted).isFalse()
+        assertThat(result.enacted).isFalse()
     }
 
     /**
@@ -1922,7 +1922,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
         assertThat(failed!!.cancelled).isTrue()
         assertThat(noOp!!.cancelled).isTrue()
-        assertThat(noOp!!.success).isTrue()
+        assertThat(noOp.success).isTrue()
     }
 
     /**
@@ -1940,7 +1940,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         yield()
 
         assertThat(result!!.success).isFalse()
-        assertThat(result!!.cancelled).isFalse()
+        assertThat(result.cancelled).isFalse()
     }
 
     // region stuck command alarm (#5209)
@@ -2025,7 +2025,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(result).isNotNull()
         assertThat(result!!.success).isFalse()
         // A stop by the user is not a delivery failure, so it must not ring the bolus error alarm.
-        assertThat(result!!.cancelled).isTrue()
+        assertThat(result.cancelled).isTrue()
         verify(persistenceLayer, never()).insertOrUpdateCarbs(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
     }
 
@@ -2044,7 +2044,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(commandQueue.size()).isEqualTo(1)
         assertThat(replaced).isNotNull()
         assertThat(replaced!!.success).isFalse()
-        assertThat(replaced!!.cancelled).isTrue()
+        assertThat(replaced.cancelled).isTrue()
         verify(persistenceLayer, never()).insertOrUpdateCarbs(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
     }
 

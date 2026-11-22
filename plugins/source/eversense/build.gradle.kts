@@ -49,9 +49,8 @@ kotlin {
             api(libs.androidx.core)
             implementation(libs.io.ktor.client.okhttp)
             implementation(libs.androidx.appcompat)
-            implementation(project.dependencies.platform(libs.androidx.compose.bom))
-            implementation(libs.androidx.compose.material3)
-            implementation(libs.androidx.compose.runtime)
+            implementation(libs.jetbrains.compose.material3)
+            implementation(libs.jetbrains.compose.runtime)
             implementation(libs.androidx.lifecycle.runtime.compose)
         }
         jvmMain.dependencies {
@@ -79,8 +78,7 @@ kotlin {
             implementation(libs.org.robolectric)
             // The real org.json: the platform stub answers null under isReturnDefaultValues
             implementation(libs.org.json.android)
-            implementation(project.dependencies.platform(libs.androidx.compose.bom))
-            implementation(libs.androidx.compose.ui.test.junit4)
+            implementation(libs.jetbrains.compose.ui.test.junit4)
             implementation(libs.androidx.compose.ui.test.manifest)
             implementation(libs.com.squareup.okhttp3.mockwebserver)
             runtimeOnly(libs.org.junit.vintage.engine)

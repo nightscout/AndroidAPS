@@ -2,10 +2,8 @@ package app.aaps.ios.shell.di
 
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.implementation.logging.AAPSLoggerIos
 import app.aaps.ios.shell.prefs.TestStorage
-import app.aaps.shared.clientbindings.ClientGraphBindings
 import dev.zacsweers.metro.createGraphFactory
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -27,7 +25,7 @@ class IosProbeGraphTest {
         TestStorage.install()
     }
 
-    private fun graph() = createGraphFactory<IosProbeGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings, NoCrashReporter)
+    private fun graph() = createGraphFactory<IosProbeGraph.Factory>().create(NoCrashReporter)
 
     @Test
     fun `the graph can be created`() {

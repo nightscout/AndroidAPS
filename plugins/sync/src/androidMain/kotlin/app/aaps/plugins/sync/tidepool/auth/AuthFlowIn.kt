@@ -36,8 +36,8 @@ class AuthFlowIn : MetroAppCompatActivity() {
 
     private var coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    public override fun onCreate(savedInstanceBundle: Bundle?) {
-        super.onCreate(savedInstanceBundle)
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         aapsLogger.debug(LTag.TIDEPOOL, "Auth callback received")
         processResponse(intent)
         finish()

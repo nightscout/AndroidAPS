@@ -1,10 +1,8 @@
 package app.aaps.ios.shell.di
 
-import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.ios.shell.prefs.TestStorage
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocket
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
-import app.aaps.shared.clientbindings.ClientGraphBindings
 import dev.zacsweers.metro.createGraphFactory
 import kotlin.test.Test
 import kotlin.test.assertNotSame
@@ -37,7 +35,7 @@ class IosHistoryWindowScopingTest {
         TestStorage.install()
     }
 
-    private val graph = createGraphFactory<IosAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings, NoSockets, NoCrashReporter)
+    private val graph = createGraphFactory<IosAppGraph.Factory>().create(NoSockets, NoCrashReporter)
 
     @Test
     fun `a window does not share the app's calculation objects`() {

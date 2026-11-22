@@ -1,9 +1,7 @@
 package app.aaps.desktop.shell.di
 
-import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
-import app.aaps.shared.clientbindings.ClientGraphBindings
-import dev.zacsweers.metro.createGraphFactory
+import dev.zacsweers.metro.createGraph
 import kotlin.test.Test
 import kotlin.test.assertIs
 import kotlin.test.assertSame
@@ -20,7 +18,7 @@ import kotlin.test.assertSame
  */
 class DesktopBgQualityCheckWiringTest {
 
-    private val graph = createGraphFactory<DesktopAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
+    private val graph = createGraph<DesktopAppGraph>()
 
     @Test
     fun `the BgQualityCheck binding is the plugin in the list`() {

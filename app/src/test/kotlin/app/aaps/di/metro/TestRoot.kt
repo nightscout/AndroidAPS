@@ -4,7 +4,6 @@ import android.content.Context
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
-import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.database.di.DatabaseConfig
 import app.aaps.di.ExternalOptionsOverride
 import app.aaps.settingsstore.AndroidStorage
@@ -40,7 +39,6 @@ fun testRoot(): AppRootGraph {
         mock<MetroMemberInjector>(defaultAnswer = Answers.RETURNS_MOCKS),
         DatabaseConfig.IN_MEMORY,
         ExternalOptionsOverride.NONE,
-        PumpEmulators(),
-        CoreObjectsGraph
+        PumpEmulators()
     )
 }

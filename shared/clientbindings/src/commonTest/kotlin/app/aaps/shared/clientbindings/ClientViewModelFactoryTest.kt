@@ -8,6 +8,7 @@ import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
 import kotlin.reflect.KClass
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
+import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
 /**
@@ -47,7 +48,7 @@ class ClientViewModelFactoryTest {
         val first = factory.create(FakeViewModel::class, CreationExtras.Empty)
         val second = factory.create(FakeViewModel::class, CreationExtras.Empty)
 
-        assertTrue(first is FakeViewModel)
+        assertIs<FakeViewModel>(first)
         // A provider, not a singleton: each screen gets its own.
         assertTrue(first !== second)
     }
@@ -74,6 +75,6 @@ class ClientViewModelFactoryTest {
 
         current = provided
 
-        assertTrue(factory.create(FakeViewModel::class, CreationExtras.Empty) is FakeViewModel)
+        assertIs<FakeViewModel>(factory.create(FakeViewModel::class, CreationExtras.Empty))
     }
 }

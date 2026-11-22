@@ -7,6 +7,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.BooleanVar
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -36,7 +37,7 @@ import kotlin.time.Clock
  * reach, the same place the settings exports go (see [IosPrefsFileAccess]). The zip is written by
  * [StoredZip], because iOS has no zip API to call.
  */
-@OptIn(ExperimentalForeignApi::class)
+@OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
 @Inject

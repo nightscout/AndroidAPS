@@ -60,9 +60,8 @@ kotlin {
 
         androidMain {
             dependencies {
-                api(project.dependencies.platform(libs.androidx.compose.bom))
-                api(libs.androidx.ui)
-                implementation(libs.androidx.compose.ui.tooling)
+                api(libs.jetbrains.compose.ui)
+                implementation(libs.jetbrains.compose.ui.tooling)
                 implementation(libs.androidx.lifecycle.process)
             }
         }
@@ -78,8 +77,7 @@ kotlin {
                 implementation(libs.org.mockito.kotlin)
                 implementation(libs.com.google.truth)
                 implementation(libs.kotlinx.coroutines.test)
-                implementation(project.dependencies.platform(libs.androidx.compose.bom))
-                implementation(libs.androidx.compose.ui.test.junit4)
+                implementation(libs.jetbrains.compose.ui.test.junit4)
                 implementation(libs.androidx.compose.ui.test.manifest)
                 implementation(libs.org.robolectric)
                 runtimeOnly(libs.org.junit.vintage.engine)
