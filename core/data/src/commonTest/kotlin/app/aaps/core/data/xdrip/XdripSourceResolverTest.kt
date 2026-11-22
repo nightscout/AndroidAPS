@@ -22,6 +22,7 @@ class XdripSourceResolverTest {
         assertEquals(SourceSensor.DEXCOM_G6, XdripSourceResolver.fromNightscoutDevice("xDrip-DexcomG5 G6 Native"))
         assertEquals(SourceSensor.DEXCOM_G6, XdripSourceResolver.fromNightscoutDevice("xDrip-DexcomG5 G6 Native::Backfill"))
         assertEquals(SourceSensor.LIBRE_2, XdripSourceResolver.fromNightscoutDevice("xDrip-LibreReceiver Libre2 Native"))
+        assertEquals(SourceSensor.LIBRE_3, XdripSourceResolver.fromNightscoutDevice("xDrip-Li3 Li3"))
     }
 
     @Test
@@ -41,6 +42,7 @@ class XdripSourceResolverTest {
         assertEquals(SourceSensor.LIBRE_2, XdripSourceResolver.fromNightscoutDevice("xDrip-LibreReceiver"))
         assertEquals(SourceSensor.LIBRE_1, XdripSourceResolver.fromNightscoutDevice("xDrip-LimiTTer"))
         assertEquals(SourceSensor.LIBRE_1, XdripSourceResolver.fromNightscoutDevice("xDrip-LibreWifi"))
+        assertEquals(SourceSensor.LIBRE_3, XdripSourceResolver.fromNightscoutDevice("xDrip-Li3"))
     }
 
     @Test
