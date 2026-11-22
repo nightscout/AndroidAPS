@@ -51,11 +51,25 @@ val generateAppStringOwners = tasks.register<GenerateStringOwnerRegistryTask>("g
     outputDir.set(layout.buildDirectory.dir("generated/stringOwners"))
 }
 
+/** The `aapsclient` flavours link no pump driver (see the dependencies below), so they cannot import its strings. */
+val generateClientStringOwners = tasks.register<GenerateStringOwnerRegistryTask>("generateClientStringOwners") {
+    owners.set(StringOwnerModules.ALL.filterNot { it.pumpDriver })
+    packageName.set("app.aaps.di")
+    objectName.set("GeneratedStringOwners")
+    useResourceIds.set(true)
+    outputDir.set(layout.buildDirectory.dir("generated/stringOwnersClient"))
+}
+
 // AGP will not take a Provider through the SourceSet API, so the directory is attached per variant.
 // addGeneratedSourceDirectory also wires the task dependency, which a bare srcDir would not.
+// The flavours with pump drivers are the ones that get them as dependencies: full and pumpcontrol.
 androidComponents {
     onVariants { variant ->
-        variant.sources.kotlin?.addGeneratedSourceDirectory(generateAppStringOwners, GenerateStringOwnerRegistryTask::outputDir)
+        val withPumps = variant.flavorName == "full" || variant.flavorName == "pumpcontrol"
+        variant.sources.kotlin?.addGeneratedSourceDirectory(
+            if (withPumps) generateAppStringOwners else generateClientStringOwners,
+            GenerateStringOwnerRegistryTask::outputDir
+        )
     }
 }
 android {
