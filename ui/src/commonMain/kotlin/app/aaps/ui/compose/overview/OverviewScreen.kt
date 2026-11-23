@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -106,6 +107,13 @@ fun OverviewScreen(
     queueStatusText: AnnotatedString? = null,
     isPumpCommunicating: Boolean = false,
     onStopBolus: () -> Unit = {},
+    /**
+     * Called with true while the one-column layout is shown. It has its own strip for the calculation
+     * progress and the version, and the main screen can hide the top bar over it.
+     */
+    onStackedLayout: (Boolean) -> Unit = {},
+    /** Opens the menu while the top bar is hidden over the one-column layout, null while it shows. */
+    onCompactMenuClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     var showNotificationSheet by remember { mutableStateOf(false) }
@@ -147,12 +155,19 @@ fun OverviewScreen(
     val isLandscape = isLandscape()
     val isTablet = smallestScreenWidthDp() >= TABLET_MIN_SW_DP
 
+    // The tablet layout shows no "time ago" in the BG circle, so the progress keeps its line there
+    var progressInBgCircle by remember { mutableStateOf(true) }
     Box(modifier = modifier.fillMaxSize()) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
             // Two columns only where each one gets the width of a phone column. The text scale keeps that
             // true for the larger tablet text (see `typographyScaleFor`). Without the width check a nearly
             // square tablet window got two columns narrower than any phone has.
             val twoColumns = isLandscape && maxWidth >= SPLIT_LAYOUT_MIN_WIDTH
+            val currentOnStackedLayout by rememberUpdatedState(onStackedLayout)
+            LaunchedEffect(twoColumns, isTablet) {
+                progressInBgCircle = !(twoColumns && isTablet)
+                currentOnStackedLayout(!twoColumns)
+            }
             if (twoColumns && isTablet) {
                 OverviewScreenTablet(
                     profileName = profileName,
@@ -233,7 +248,8 @@ fun OverviewScreen(
                     commandsAllowed = commandsAllowed,
                     formatDuration = formatDuration,
                     eatReminderBanner = eatReminderBanner,
-                    overlaidBarsHeight = overlaidBarsHeight
+                    overlaidBarsHeight = overlaidBarsHeight,
+                    calcProgress = calcProgress
                 )
             } else {
                 OverviewScreenStacked(
@@ -274,7 +290,9 @@ fun OverviewScreen(
                     commandsAllowed = commandsAllowed,
                     formatDuration = formatDuration,
                     eatReminderBanner = eatReminderBanner,
-                    overlaidBarsHeight = overlaidBarsHeight
+                    overlaidBarsHeight = overlaidBarsHeight,
+                    calcProgress = calcProgress,
+                    onCompactMenuClick = onCompactMenuClick
                 )
             }
         }
@@ -282,7 +300,7 @@ fun OverviewScreen(
         // Calculation progress (IOB / graph data). Overlaid on top of content so it never reflows
         // the layout — previously a flow child of the content Column which caused the screen to jump.
         AnimatedVisibility(
-            visible = calcProgress < 100,
+            visible = calcProgress < 100 && !progressInBgCircle,
             enter = fadeIn(),
             exit = fadeOut(),
             modifier = Modifier

@@ -82,6 +82,8 @@ fun OverviewScreenSplit(
     eatReminderBanner: @Composable () -> Unit = {},
     /** Height of the bars drawn over the content in preview mode; both columns need it as extra space at their end. */
     overlaidBarsHeight: Dp = 0.dp,
+    /** Progress of the IOB / graph calculation, 100 when done. Shown behind "time ago" in the BG circle. */
+    calcProgress: Int = 100,
     modifier: Modifier = Modifier
 ) {
     val config = LocalConfig.current
@@ -132,7 +134,8 @@ fun OverviewScreenSplit(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         BgInfoSection(
                             bgInfo = bgInfoState.bgInfo,
-                            timeAgoText = bgInfoState.timeAgoText
+                            timeAgoText = bgInfoState.timeAgoText,
+                            updateProgress = if (calcProgress in 1..99) calcProgress / 100f else 0f
                         )
                     }
 
