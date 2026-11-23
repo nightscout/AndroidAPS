@@ -59,7 +59,6 @@ class NsFrameHandlerSettingsRoutingTest : TestBaseWithProfile() {
         whenever(masterDocVerifier.open(any(), any())).thenReturn(MasterDocVerifier.Opened(NSRunningConfiguration(version = "1.0"), null))
         sut = NsFrameHandler(
             aapsLogger = aapsLogger,
-            preferences = preferences,
             config = config,
             nsClientV3Plugin = { nsClientV3Plugin },
             nsIncomingDataProcessor = { nsIncomingDataProcessor },
@@ -68,10 +67,8 @@ class NsFrameHandlerSettingsRoutingTest : TestBaseWithProfile() {
             clientKeyExchange = { clientKeyExchange },
             masterDocVerifier = { masterDocVerifier },
             storeDataForDb = storeDataForDb,
-            notificationManager = notificationManager,
             nsClientRepository = NSClientRepositoryImpl(rxBus, aapsLogger),
             nsDeviceStatusHandler = nsDeviceStatusHandler,
-            dateUtil = dateUtil,
             appScope = CoroutineScope(Dispatchers.Unconfined)
         )
     }

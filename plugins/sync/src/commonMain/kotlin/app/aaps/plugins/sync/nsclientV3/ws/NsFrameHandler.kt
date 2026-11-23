@@ -3,26 +3,14 @@ package app.aaps.plugins.sync.nsclientV3.ws
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.AlarmSound
-import app.aaps.core.interfaces.notifications.NotificationAction
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
-import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.LongComposedKey
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.mapper.toCalibrationMbg
 import app.aaps.core.nssdk.mapper.toNSDeviceStatus
 import app.aaps.core.nssdk.mapper.toNSFood
 import app.aaps.core.nssdk.mapper.toNSSgvV3
 import app.aaps.core.nssdk.mapper.toNSTreatment
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.sync.nsclientV3.NSAlarmObject
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
@@ -44,10 +32,11 @@ import kotlinx.serialization.json.JsonObject
  * This used to exist twice: once in `NSClientV3Service` parsing with `org.json`, once in
  * [SocketNsConnection] parsing with kotlinx. The duplication was not free. `settings` was added to
  * the subscribe list of both and given a branch in only one, so client control - pairing included -
- * was silently dead on iOS and desktop; the per-level alarm snooze was honoured on Android and
- * ignored elsewhere; and the snooze buttons that write that preference existed only on Android, so
- * the two halves could never meet. None of it failed loudly, because a `when` with no matching
+ * was silently dead on iOS and desktop. None of it failed loudly, because a `when` with no matching
  * branch is not an error.
+ *
+ * Nightscout's alarms and announcements on its alarm socket are not handled any more (`_docs/ALARMS.md`,
+ * step 3): every phone has its own BG alarms, and an announcement arrives as a treatment.
  *
  * The split that remains is the one that is real: **who owns the socket**. Android keeps it in a
  * bound service holding a wake lock so it survives doze and backgrounding, which is why its
@@ -66,7 +55,6 @@ import kotlinx.serialization.json.JsonObject
 @Inject
 class NsFrameHandler(
     private val aapsLogger: AAPSLogger,
-    private val preferences: Preferences,
     private val config: Config,
     // Deferred: the plugin owns the connection that owns this, the processor reaches the plugin as
     // its `NsClient`, and the client-control pair reach the plugin too. Nothing is looked up while
@@ -78,10 +66,8 @@ class NsFrameHandler(
     private val clientKeyExchange: () -> ClientKeyExchange,
     private val masterDocVerifier: () -> MasterDocVerifier,
     private val storeDataForDb: StoreDataForDb,
-    private val notificationManager: NotificationManager,
     private val nsClientRepository: NSClientRepository,
     private val nsDeviceStatusHandler: NSDeviceStatusHandler,
-    private val dateUtil: DateUtil,
     private val appScope: CoroutineScope
 ) {
 
@@ -219,97 +205,6 @@ class NsFrameHandler(
                 storeDataForDb.addToDeleteGlucoseValue(identifier)
                 storeDataForDb.requestUpdateDeletedGlucoseValues()
             }
-        }
-    }
-
-    fun onAnnouncement(raw: String) {
-        val data = parse(raw) ?: return drop("announcement", raw)
-        aapsLogger.debug(LTag.NSCLIENT, data.toString())
-        nsClientRepository.addLog("◄ ANNOUNCEMENT", data.str("message") ?: "")
-        // No snooze check here, matching Android: an announcement is not an alarm.
-        if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)) post(NSAlarmObject(data))
-    }
-
-    fun onAlarm(raw: String) = alarm(raw, "◄ ALARM")
-
-    /** Same gate and same handling as [onAlarm]; kept apart so the log says which one fired. */
-    fun onUrgentAlarm(raw: String) = alarm(raw, "◄ URGENT ALARM")
-
-    private fun alarm(raw: String, logLabel: String) {
-        val data = parse(raw) ?: return drop("alarm", raw)
-        aapsLogger.debug(LTag.NSCLIENT, data.toString())
-        // The message body, not the title: it carries the BG/IOB/COB text a user is asked to
-        // screenshot when reporting an alarm.
-        nsClientRepository.addLog(logLabel, data.str("message") ?: "")
-        if (!preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) return
-        // The per-level snooze. Without it an alarm the user explicitly silenced comes back on the
-        // next push, which is worse than not showing it: an alarm that ignores its own snooze
-        // teaches people to ignore the alarm. Composed with the level, so snoozing a warning does
-        // not silence an urgent one. A missing key reads as 0, meaning never snoozed.
-        val snoozedTo = preferences.get(LongComposedKey.NotificationSnoozedTo, data.str("level") ?: "")
-        if (snoozedTo == 0L || dateUtil.now() > snoozedTo) post(NSAlarmObject(data))
-    }
-
-    fun onClearAlarm(raw: String) {
-        val data = parse(raw) ?: return drop("clear alarm", raw)
-        aapsLogger.debug(LTag.NSCLIENT, data.toString())
-        nsClientRepository.addLog("◄ CLEARALARM", data.str("title") ?: "")
-        notificationManager.dismiss(NotificationId.NS_ALARM)
-        notificationManager.dismiss(NotificationId.NS_URGENT_ALARM)
-    }
-
-    /**
-     * The snooze buttons offered on an alarm notification.
-     *
-     * The only writer of [LongComposedKey.NotificationSnoozedTo], which [alarm] reads, and the only
-     * caller of `handleClearAlarm`, which acknowledges the alarm back to Nightscout.
-     */
-    private fun snoozeActions(alarm: NSAlarm): List<NotificationAction> =
-        listOf(15, 30, 60).map { minutes ->
-            val label = when (minutes) {
-                15   -> CoreUiStrings.snooze_15m
-                30   -> CoreUiStrings.snooze_30m
-                else -> CoreUiStrings.snooze_60m
-            }
-            NotificationAction(label) {
-                val snoozeMs = minutes * 60 * 1000L
-                nsClientV3Plugin().handleClearAlarm(alarm, snoozeMs)
-                // Cascade across all levels. Nightscout cascades a level-2 ack down to level 1 but
-                // keeps emitting lower-level forecast alarms that would otherwise slip past a
-                // single-level snooze and re-alarm. This also makes the read above work: it looks
-                // the snooze up by the frame's level.
-                val snoozedUntil = dateUtil.now() + snoozeMs
-                for (level in 0..2)
-                    preferences.put(LongComposedKey.NotificationSnoozedTo, level.toString(), value = snoozedUntil)
-            }
-        }
-
-    /** Level decides the notification. */
-    private fun post(alarm: NSAlarm) {
-        when (alarm.level) {
-            0    -> notificationManager.post(
-                id = NotificationId.NS_ANNOUNCEMENT,
-                text = alarm.message,
-                level = NotificationLevel.ANNOUNCEMENT,
-                validMinutes = 60,
-                actions = snoozeActions(alarm)
-            )
-
-            1    -> notificationManager.post(
-                id = NotificationId.NS_ALARM,
-                text = alarm.title,
-                sound = AlarmSound.ALARM,
-                actions = snoozeActions(alarm)
-            )
-
-            2    -> notificationManager.post(
-                id = NotificationId.NS_URGENT_ALARM,
-                text = alarm.title,
-                sound = AlarmSound.URGENT_ALARM,
-                actions = snoozeActions(alarm)
-            )
-
-            else -> Unit
         }
     }
 

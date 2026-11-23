@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.nsclientV3.ws
 
-import app.aaps.core.interfaces.nsclient.NSAlarm
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -66,6 +65,4 @@ interface NsConnection {
      */
     fun stop()
 
-    /** Tells Nightscout an alarm was seen, so it stops re-raising it for [silenceForMillis]. */
-    fun acknowledgeAlarm(alarm: NSAlarm, silenceForMillis: Long)
 }

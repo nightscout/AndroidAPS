@@ -3,6 +3,7 @@ package app.aaps.plugins.sync.nsclientV3
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.alerts.NightscoutAnnouncements
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
@@ -25,6 +26,7 @@ import app.aaps.core.nssdk.localmodel.treatment.NSOfflineEvent
 import app.aaps.core.nssdk.localmodel.treatment.NSProfileSwitch
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
+import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSBolusWizard
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -56,6 +58,7 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
     @Mock lateinit var nsClientRepository: NSClientRepository
     @Mock lateinit var nsClient: NsClient
     @Mock lateinit var dataSyncSelector: DataSyncSelector
+    @Mock lateinit var nightscoutAnnouncements: NightscoutAnnouncements
     private val nsiCfg = NSICfg(insulinLabel = "Fake", insulinEndTime = 9 * 3600 * 1000, insulinPeakTime = 60 * 60 * 1000, concentration = 1.0)
 
     @BeforeEach
@@ -79,7 +82,7 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
             storeDataForDb = storeDataForDb,
             config = config,
             profileStoreProvider = { profileStoreProvider() },
-            notificationManager = notificationManager,
+            nightscoutAnnouncements = { nightscoutAnnouncements },
             nsClientRepository = nsClientRepository
         )
     }
@@ -937,5 +940,73 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
         processor.processFood(emptyArray)
 
         verify(storeDataForDb, times(2)).addToFoods(argThat { isEmpty() })
+    }
+
+    // ---- announcements (_docs/ALARMS.md, step 3) ----------------------------------------------
+
+    private fun announcement(at: Long, note: String = "Hello") = NSTherapyEvent(
+        date = at, identifier = "ann_$at", units = null, utcOffset = null, isValid = true, eventType = EventType.ANNOUNCEMENT,
+        notes = note, pumpId = null, endId = null, pumpType = null, pumpSerial = null, duration = 0L
+    )
+
+    @Test
+    fun `an announcement is raised with its time and text`() {
+        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(true)
+        val at = now - T.mins(2).msecs()
+
+        processor.processTreatments(listOf(announcement(at, "Dinner ready")), doFullSync = false)
+
+        verify(nightscoutAnnouncements).announce(at, "Dinner ready")
+    }
+
+    @Test
+    fun `an announcement that arrives again does not ring again`() {
+        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(true)
+        val at = now - T.mins(2).msecs()
+
+        processor.processTreatments(listOf(announcement(at)), doFullSync = false)
+        processor.processTreatments(listOf(announcement(at)), doFullSync = false)
+
+        verify(nightscoutAnnouncements, times(1)).announce(any(), any())
+    }
+
+    @Test
+    fun `two announcements are two alerts`() {
+        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(true)
+
+        processor.processTreatments(listOf(announcement(now - T.mins(5).msecs()), announcement(now - T.mins(1).msecs())), doFullSync = false)
+
+        verify(nightscoutAnnouncements, times(2)).announce(any(), any())
+
+    }
+
+    @Test
+    fun `an announcement older than an hour is history and does not ring`() {
+        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(true)
+
+        processor.processTreatments(listOf(announcement(now - T.mins(61).msecs())), doFullSync = false)
+
+        verify(nightscoutAnnouncements, never()).announce(any(), any())
+    }
+
+    @Test
+    fun `no announcement rings when the user does not take them`() {
+        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(false)
+
+        processor.processTreatments(listOf(announcement(now - T.mins(1).msecs())), doFullSync = false)
+
+        verify(nightscoutAnnouncements, never()).announce(any(), any())
+    }
+
+    /** The alarm socket is gone, so a treatment is the only way an announcement arrives. */
+    @Test
+    fun `an announcement rings also when therapy events are not stored`() {
+        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(true)
+        whenever(preferences.get(BooleanKey.NsClientAcceptTherapyEvent)).thenReturn(false)
+
+        processor.processTreatments(listOf(announcement(now - T.mins(1).msecs())), doFullSync = false)
+
+        verify(nightscoutAnnouncements).announce(any(), any())
+        verify(storeDataForDb, never()).addToTherapyEvents(any())
     }
 }

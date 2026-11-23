@@ -1,10 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.ws
 
-import app.aaps.core.interfaces.notifications.NotificationAction
-import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
-import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
@@ -22,8 +18,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.mockingDetails
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -60,7 +54,6 @@ class NsFrameHandlerTest : TestBaseWithProfile() {
         whenever(nsClientV3Plugin.lastLoadedSrvModified).thenReturn(lastModified)
         sut = NsFrameHandler(
             aapsLogger = aapsLogger,
-            preferences = preferences,
             config = config,
             nsClientV3Plugin = { nsClientV3Plugin },
             nsIncomingDataProcessor = { nsIncomingDataProcessor },
@@ -69,10 +62,8 @@ class NsFrameHandlerTest : TestBaseWithProfile() {
             clientKeyExchange = { mock() },
             masterDocVerifier = { mock() },
             storeDataForDb = storeDataForDb,
-            notificationManager = notificationManager,
             nsClientRepository = NSClientRepositoryImpl(rxBus, aapsLogger),
             nsDeviceStatusHandler = nsDeviceStatusHandler,
-            dateUtil = dateUtil,
             appScope = CoroutineScope(Dispatchers.Unconfined)
         )
     }
@@ -274,148 +265,5 @@ class NsFrameHandlerTest : TestBaseWithProfile() {
         assertThat(mockingDetails(storeDataForDb).invocations).isEmpty()
     }
 
-    // ------------------------------------------------------------------------- alarms
 
-    @Test
-    fun `alarm is ignored when alarm notifications are switched off`() = runTest {
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(false)
-
-        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
-
-        assertThat(mockingDetails(notificationManager).invocations).isEmpty()
-    }
-
-    @Test
-    fun `alarm is shown when notifications are on`() = runTest {
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
-
-        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
-
-        assertThat(mockingDetails(notificationManager).invocations).isNotEmpty()
-    }
-
-    /**
-     * An alarm the user silenced must stay silenced. This implementation used to check only the
-     * on/off preference, so a snoozed alarm came back on the next push - on iOS and desktop only,
-     * because Android has always read [LongComposedKey.NotificationSnoozedTo].
-     */
-    @Test
-    fun `alarm is suppressed while its snooze is still running`() = runTest {
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
-        whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(2_000L)
-        whenever(dateUtil.now()).thenReturn(1_000L)   // still inside the snooze
-
-        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
-
-        assertThat(mockingDetails(notificationManager).invocations).isEmpty()
-    }
-
-    /** ...and comes back once the snooze has run out. */
-    @Test
-    fun `alarm is shown again after its snooze has expired`() = runTest {
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
-        whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(2_000L)
-        whenever(dateUtil.now()).thenReturn(3_000L)   // past it
-
-        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
-
-        assertThat(mockingDetails(notificationManager).invocations).isNotEmpty()
-    }
-
-    /**
-     * The key is composed with the level, so silencing a warning must not silence an urgent alarm.
-     * Pinned because the composed argument is easy to drop in a refactor and nothing else would say.
-     */
-    @Test
-    fun `the snooze is looked up per alarm level`() = runTest {
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
-        whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(0L)
-
-        sut.onAlarm("""{"level":2,"title":"Urgent HIGH","message":"m"}""")
-
-        verify(preferences).get(LongComposedKey.NotificationSnoozedTo, "2")
-    }
-
-    // ------------------------------------------------------------------ snooze actions
-
-    /**
-     * Ported from Android. Without these there was no way to snooze or acknowledge a Nightscout
-     * alarm anywhere but Android: this is the only writer of the snooze key that [onAlarm] reads,
-     * and the only caller of `handleClearAlarm`, which acks the alarm back to Nightscout.
-     */
-    @Test
-    fun `an alarm offers three snooze actions`() = runTest {
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
-        whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(0L)
-
-        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
-
-        val actions = argumentCaptor<List<NotificationAction>>()
-        verify(notificationManager).post(
-            id = eq(NotificationId.NS_ALARM), text = any(), level = any(),
-            validMinutes = any(), sound = any(), actions = actions.capture(), validityCheck = anyOrNull()
-        )
-        assertThat(actions.firstValue).hasSize(3)
-    }
-
-    /** Acting on one acks the alarm back to Nightscout with the chosen interval. */
-    @Test
-    fun `snoozing acknowledges the alarm with the chosen interval`() = runTest {
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
-        whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(0L)
-        whenever(dateUtil.now()).thenReturn(1_000L)
-
-        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
-        capturedAlarmActions().first().action()   // the 15 minute button
-
-        verify(nsClientV3Plugin).handleClearAlarm(any(), eq(15 * 60 * 1000L))
-    }
-
-    /**
-     * The snooze is written for every level, not just the one that fired. Nightscout cascades a
-     * level-2 ack down to level 1 but keeps emitting lower-level forecast alarms, which would
-     * otherwise slip past a single-level snooze and re-alarm.
-     *
-     * This is also what makes the read in [onAlarm] work at all: it looks the snooze up by the
-     * frame's level, so a level-1 alarm only stays quiet because "1" was written here too.
-     */
-    @Test
-    fun `snoozing writes the deadline for every alarm level`() = runTest {
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
-        whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(0L)
-        whenever(dateUtil.now()).thenReturn(1_000L)
-
-        sut.onAlarm("""{"level":2,"title":"Urgent HIGH","message":"m"}""")
-        capturedAlarmActions()[1].action()   // the 30 minute button
-
-        val deadline = 1_000L + 30 * 60 * 1000L
-        for (level in 0..2)
-            verify(preferences).put(LongComposedKey.NotificationSnoozedTo, level.toString(), value = deadline)
-    }
-
-    private fun capturedAlarmActions(): List<NotificationAction> {
-        val actions = argumentCaptor<List<NotificationAction>>()
-        verify(notificationManager).post(
-            id = any(), text = any(), level = any(),
-            validMinutes = any(), sound = any(), actions = actions.capture(), validityCheck = anyOrNull()
-        )
-        return actions.firstValue
-    }
-
-    @Test
-    fun `announcement is ignored when announcement notifications are switched off`() = runTest {
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(false)
-
-        sut.onAnnouncement("""{"level":0,"title":"t","message":"m"}""")
-
-        assertThat(mockingDetails(notificationManager).invocations).isEmpty()
-    }
-
-    @Test
-    fun `clear alarm dismisses both the alarm and the urgent alarm`() = runTest {
-        sut.onClearAlarm("""{"clear":true,"title":"All Clear","message":"m"}""")
-
-        verify(notificationManager).dismiss(NotificationId.NS_ALARM)
-        verify(notificationManager).dismiss(NotificationId.NS_URGENT_ALARM)
-    }
 }

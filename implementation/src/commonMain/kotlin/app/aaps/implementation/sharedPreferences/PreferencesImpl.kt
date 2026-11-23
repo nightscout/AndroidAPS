@@ -521,7 +521,6 @@ class PreferencesImpl(
         if (key.calculatedDefaultValue)
             when (key) {
                 BooleanKey.OverviewKeepScreenOn                    -> config.AAPSCLIENT
-                BooleanKey.NsClientNotificationsFromAlarms         -> config.AAPSCLIENT
                 BooleanKey.NsClientNotificationsFromAnnouncements  -> config.AAPSCLIENT
                 BooleanKey.NsClientLogAppStart                     -> config.APS
                 BooleanKey.NsClientCreateAnnouncementsFromErrors   -> config.APS

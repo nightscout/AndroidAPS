@@ -77,7 +77,6 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
         sut.initializeWebSockets("Test")
 
         assertThat(sut.storageSocket).isNull()
-        assertThat(sut.alarmSocket).isNull()
         assertThat(sut.wsConnected).isFalse()
     }
 
@@ -85,47 +84,12 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
     fun `initializeWebSockets creates storage socket when URL is valid and allowed`() {
         whenever(preferences.get(StringKey.NsClientUrl)).thenReturn("http://something")
         whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(true)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(false)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(false)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(nsClientV3Plugin.isAllowed).thenReturn(true)
 
         sut.initializeWebSockets("Test")
 
         assertThat(sut.storageSocket).isNotNull()
-        assertThat(sut.alarmSocket).isNull()
-        sut.shutdownWebsockets()
-    }
-
-    @Test
-    fun `initializeWebSockets creates both sockets when notifications enabled`() {
-        whenever(preferences.get(StringKey.NsClientUrl)).thenReturn("http://something")
-        whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(true)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(true)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(false)
-        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
-        whenever(nsClientV3Plugin.isAllowed).thenReturn(true)
-
-        sut.initializeWebSockets("Test")
-
-        assertThat(sut.storageSocket).isNotNull()
-        assertThat(sut.alarmSocket).isNotNull()
-        sut.shutdownWebsockets()
-    }
-
-    @Test
-    fun `initializeWebSockets creates alarm socket when alarms enabled`() {
-        whenever(preferences.get(StringKey.NsClientUrl)).thenReturn("http://something")
-        whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(true)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(false)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
-        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
-        whenever(nsClientV3Plugin.isAllowed).thenReturn(true)
-
-        sut.initializeWebSockets("Test")
-
-        assertThat(sut.storageSocket).isNotNull()
-        assertThat(sut.alarmSocket).isNotNull()
         sut.shutdownWebsockets()
     }
 
@@ -137,15 +101,12 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
         sut.initializeWebSockets("Test")
 
         assertThat(sut.storageSocket).isNull()
-        assertThat(sut.alarmSocket).isNull()
     }
 
     @Test
     fun `initializeWebSockets skips when storage socket already initialized`() {
         whenever(preferences.get(StringKey.NsClientUrl)).thenReturn("http://something")
         whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(true)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(false)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(false)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(nsClientV3Plugin.isAllowed).thenReturn(true)
 
@@ -173,7 +134,6 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
         val logs = nsClientMvvmRepository.logList.value
         assertThat(logs.any { it.action == "● WS" && it.text == "paused" }).isTrue()
         assertThat(sut.storageSocket).isNull()
-        assertThat(sut.alarmSocket).isNull()
     }
 
     @Test
@@ -188,15 +148,12 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
         val logs = nsClientMvvmRepository.logList.value
         assertThat(logs.any { it.action == "● WS" && it.text == "No network connection" }).isTrue()
         assertThat(sut.storageSocket).isNull()
-        assertThat(sut.alarmSocket).isNull()
     }
 
     @Test
     fun `initializeWebSockets normalizes URL by removing trailing slash`() {
         whenever(preferences.get(StringKey.NsClientUrl)).thenReturn("HTTP://SOMETHING/")
         whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(true)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(false)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(false)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(nsClientV3Plugin.isAllowed).thenReturn(true)
 
@@ -213,30 +170,25 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
     fun `shutdownWebsockets clears sockets and sets wsConnected to false`() {
         whenever(preferences.get(StringKey.NsClientUrl)).thenReturn("http://something")
         whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(true)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(true)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(nsClientV3Plugin.isAllowed).thenReturn(true)
 
         sut.initializeWebSockets("Test")
         assertThat(sut.storageSocket).isNotNull()
-        assertThat(sut.alarmSocket).isNotNull()
 
         sut.shutdownWebsockets()
 
         assertThat(sut.storageSocket).isNull()
-        assertThat(sut.alarmSocket).isNull()
         assertThat(sut.wsConnected).isFalse()
     }
 
     @Test
     fun `shutdownWebsockets handles null sockets gracefully`() {
         assertThat(sut.storageSocket).isNull()
-        assertThat(sut.alarmSocket).isNull()
 
         sut.shutdownWebsockets()
 
         assertThat(sut.storageSocket).isNull()
-        assertThat(sut.alarmSocket).isNull()
         assertThat(sut.wsConnected).isFalse()
     }
 
@@ -246,19 +198,16 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
         // onDestroy will call it again — verify the second call is a safe no-op.
         whenever(preferences.get(StringKey.NsClientUrl)).thenReturn("http://something")
         whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(true)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(true)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(nsClientV3Plugin.isAllowed).thenReturn(true)
 
         sut.initializeWebSockets("Test")
         assertThat(sut.storageSocket).isNotNull()
-        assertThat(sut.alarmSocket).isNotNull()
 
         sut.shutdownWebsockets()
         sut.shutdownWebsockets()
 
         assertThat(sut.storageSocket).isNull()
-        assertThat(sut.alarmSocket).isNull()
         assertThat(sut.wsConnected).isFalse()
     }
 
@@ -267,8 +216,6 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
         // Simulates the restartOnChange cycle: init → URL change → shutdown → init.
         // The "already initialized" guard must not block re-creation after a clean shutdown.
         whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(true)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(false)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(false)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(nsClientV3Plugin.isAllowed).thenReturn(true)
 
@@ -295,8 +242,6 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
         // but onServiceConnected does. The guard must prevent a duplicate subscribe.
         whenever(preferences.get(StringKey.NsClientUrl)).thenReturn("http://something")
         whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(true)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(false)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(false)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(nsClientV3Plugin.isAllowed).thenReturn(true)
 
@@ -338,10 +283,9 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `initializeWebSockets sends connect events`() {
+    fun `initializeWebSockets connects only the storage socket`() {
         whenever(preferences.get(StringKey.NsClientUrl)).thenReturn("http://something")
         whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(true)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(true)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(nsClientV3Plugin.isAllowed).thenReturn(true)
 
@@ -349,7 +293,7 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
 
         val logs = nsClientMvvmRepository.logList.value
         assertThat(logs.any { it.action == "► WS" && it.text?.contains("do connect storage TestReason") ?: false }).isTrue()
-        assertThat(logs.any { it.action == "► WS" && it.text?.contains("do connect alarm TestReason") ?: false }).isTrue()
+        assertThat(requestedUrls).containsExactly("http://something/storage")
         sut.shutdownWebsockets()
     }
 }

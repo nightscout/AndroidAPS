@@ -188,6 +188,8 @@
     <string name="alert_kind_bg_persistent_high" comment="Name of a kind of glucose alarm, and the title of its alarm: glucose high for a long time and not coming down">Persistent high</string>
     <string name="alert_kind_bg_falling_fast" comment="Name of a kind of glucose alarm, and the title of its alarm: glucose going down quickly">Falling fast</string>
     <string name="alert_kind_bg_rising_fast" comment="Name of a kind of glucose alarm, and the title of its alarm: glucose going up quickly">Rising fast</string>
+    <string name="alert_kinds_group_nightscout" comment="Heading of the group of the alerts that come from Nightscout in the alert settings">Nightscout</string>
+    <string name="alert_kind_ns_announcement" comment="Name of a kind of alert in the alert settings, and the title of its card: an announcement someone wrote in the careportal of Nightscout">Nightscout announcement</string>
     <string name="alert_kind_bg_predicted_low" comment="Name of a kind of glucose alarm, and the title of its alarm: the loop predicts a low glucose soon">Predicted low</string>
     <string name="bg_alarm_rate_text" comment="Text of a falling or rising fast alarm. %1$s=the glucose with its unit, %2$s=how much it changes in one minute, %3$s=the unit. Example: BG 6.2 mmol/l, 0.17 mmol/l per minute">BG %1$s, %2$s %3$s per minute</string>
     <string name="bg_alarm_predicted_text" comment="Text of a predicted low alarm. %1$s=the time the low is predicted, as HH:MM, %2$s=the predicted glucose with its unit. Example: Low predicted at 14:35: 3.6 mmol/l">Low predicted at %1$s: %2$s</string>

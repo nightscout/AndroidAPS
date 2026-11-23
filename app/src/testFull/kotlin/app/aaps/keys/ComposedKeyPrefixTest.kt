@@ -30,10 +30,10 @@ import org.junit.jupiter.api.Test
  *
  * ## What this does NOT check
  *
- * Two prefixes end without a separator: `snoozedTo` (`LongComposedKey`) and `dana_ble5_pairingkey`
- * (`DanaStringComposedKey`). Neither collides today, so neither is asserted here - but both are one
- * new key away from colliding, and this test is what would catch it. Do not "fix" them by renaming
- * without a migration: the stored values are live.
+ * One prefix ends without a separator: `dana_ble5_pairingkey` (`DanaStringComposedKey`). It does
+ * not collide today, so it is not asserted here - but it is one new key away from colliding, and
+ * this test is what would catch it. Do not "fix" it by renaming without a migration: the stored
+ * values are live.
  */
 class ComposedKeyPrefixTest {
 

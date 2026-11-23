@@ -1,9 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.services
 
-import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
-import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
 import app.aaps.core.nssdk.remotemodel.LastModified
@@ -81,7 +78,6 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
             // against the one implementation that replaced it.
             it.nsFrameHandler = NsFrameHandler(
                 aapsLogger = aapsLogger,
-                preferences = preferences,
                 config = config,
                 nsClientV3Plugin = { nsClientV3Plugin },
                 nsIncomingDataProcessor = { nsIncomingDataProcessor },
@@ -90,10 +86,8 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
                 clientKeyExchange = { mock() },
                 masterDocVerifier = { masterDocVerifier },
                 storeDataForDb = storeDataForDb,
-                notificationManager = notificationManager,
                 nsClientRepository = NSClientRepositoryImpl(rxBus, aapsLogger),
                 nsDeviceStatusHandler = nsDeviceStatusHandler,
-                dateUtil = dateUtil,
                 appScope = CoroutineScope(Dispatchers.Unconfined)
             )
         }
@@ -317,52 +311,5 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
         assertThat(mockingDetails(storeDataForDb).invocations).isEmpty()
     }
 
-    // ------------------------------------------------------------------------- alarms
 
-    @Test
-    fun `alarm is ignored when alarm notifications are switched off`() = runTest {
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(false)
-
-        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
-
-        assertThat(mockingDetails(notificationManager).invocations).isEmpty()
-    }
-
-    @Test
-    fun `alarm is shown when notifications are on and it is not snoozed`() = runTest {
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
-        whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any())).thenReturn(0L)
-
-        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
-
-        assertThat(mockingDetails(notificationManager).invocations).isNotEmpty()
-    }
-
-    @Test
-    fun `alarm is suppressed while its snooze is still running`() = runTest {
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(true)
-        whenever(preferences.get(eq(LongComposedKey.NotificationSnoozedTo), any()))
-            .thenReturn(System.currentTimeMillis() + 60_000L)
-
-        sut.onAlarm("""{"level":1,"title":"Warning HIGH","message":"m"}""")
-
-        assertThat(mockingDetails(notificationManager).invocations).isEmpty()
-    }
-
-    @Test
-    fun `announcement is ignored when announcement notifications are switched off`() = runTest {
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(false)
-
-        sut.onAnnouncement("""{"level":0,"title":"Announcement","message":"m"}""")
-
-        assertThat(mockingDetails(notificationManager).invocations).isEmpty()
-    }
-
-    @Test
-    fun `clear alarm dismisses both the alarm and the urgent alarm`() = runTest {
-        sut.onClearAlarm("""{"clear":true,"title":"All Clear","message":"m"}""")
-
-        verify(notificationManager).dismiss(NotificationId.NS_ALARM)
-        verify(notificationManager).dismiss(NotificationId.NS_URGENT_ALARM)
-    }
 }

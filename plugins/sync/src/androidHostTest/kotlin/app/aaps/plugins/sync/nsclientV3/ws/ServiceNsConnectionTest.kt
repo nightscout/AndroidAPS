@@ -4,7 +4,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
@@ -16,7 +15,6 @@ import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -154,23 +152,6 @@ class ServiceNsConnectionTest : TestBase() {
 
         whenever(service.storageSocket).thenReturn(mockSocket())
         assertThat(sut.hasLiveSocket).isTrue()
-    }
-
-    @Test
-    fun `acknowledging an alarm passes it to the service`() {
-        val alarm = org.mockito.kotlin.mock<NSAlarm>()
-        bindAndConnect()
-
-        sut.acknowledgeAlarm(alarm, 600_000L)
-
-        verify(service).handleClearAlarm(eq(alarm), eq(600_000L))
-    }
-
-    @Test
-    fun `acknowledging an alarm with nothing bound is ignored`() {
-        sut.acknowledgeAlarm(org.mockito.kotlin.mock(), 600_000L)
-
-        verify(service, never()).handleClearAlarm(any(), any())
     }
 
     private fun mockSocket(): NsSocket = org.mockito.kotlin.mock()

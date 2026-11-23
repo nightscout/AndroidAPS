@@ -2,7 +2,6 @@ package app.aaps.plugins.sync.nsclientV3.ws
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
@@ -87,7 +86,6 @@ class SocketNsConnection(
 ) : NsConnection {
 
     private var storageSocket: NsSocket? = null
-    private var alarmSocket: NsSocket? = null
 
     private val _connected = MutableStateFlow(false)
     override val connected: StateFlow<Boolean> = _connected.asStateFlow()
@@ -155,41 +153,16 @@ class SocketNsConnection(
         storage.on("delete") { raw -> onDataDelete(raw) }
         nsClientRepository.addLog("► WS", "do connect storage $reason")
         storage.connect()
-
-        if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements) ||
-            preferences.get(BooleanKey.NsClientNotificationsFromAlarms)
-        ) {
-            val alarm = nsSocketFactory.create("$base/alarm")
-            if (alarm == null) {
-                stop()
-                nsClientRepository.addLog("● WS", "Wrong URL syntax")
-                return
-            }
-            alarmSocket = alarm
-            alarm.on(NsSocket.EVENT_CONNECT) { onConnectAlarms() }
-            alarm.on(NsSocket.EVENT_DISCONNECT) { reason -> nsConnectHandler.onDisconnectAlarm(reason) }
-            alarm.on("announcement") { raw -> onAnnouncement(raw) }
-            alarm.on("alarm") { raw -> onAlarm(raw) }
-            alarm.on("urgent_alarm") { raw -> onUrgentAlarm(raw) }
-            alarm.on("clear_alarm") { raw -> onClearAlarm(raw) }
-            nsClientRepository.addLog("► WS", "do connect alarm $reason")
-            alarm.connect()
-        }
     }
+
 
     /** Sockets close before the fields are cleared, so a quick restart cannot find the old ones. */
     override fun stop() {
         storageSocket?.close()
-        alarmSocket?.close()
         _connected.value = false
         storageSocket = null
-        alarmSocket = null
     }
 
-    override fun acknowledgeAlarm(alarm: NSAlarm, silenceForMillis: Long) {
-        alarmSocket?.emitAlarmAck(alarm.level, alarm.group, silenceForMillis)
-        nsClientRepository.addLog("► ALARMACK ", "${alarm.level} ${alarm.group} $silenceForMillis")
-    }
 
     // ---------------------------------------------------------------------------------------------
     // Storage socket
@@ -199,20 +172,12 @@ class SocketNsConnection(
 
     private fun onDisconnectStorage(reason: String) = nsConnectHandler.onDisconnectStorage(reason) { _connected.value = false }
 
-    // ---------------------------------------------------------------------------------------------
-    // Alarm socket
-    // ---------------------------------------------------------------------------------------------
-
-    private fun onConnectAlarms() = nsConnectHandler.onConnectAlarms(alarmSocket)
 
     // Frame handling is shared with Android - see NsFrameHandler. These stay as delegates so the
     // characterization tests written against this class still exercise the real routing.
     internal fun onDataCreateUpdate(raw: String) = nsFrameHandler.onDataCreateUpdate(raw)
     internal fun onDataDelete(raw: String) = nsFrameHandler.onDataDelete(raw)
-    internal fun onAnnouncement(raw: String) = nsFrameHandler.onAnnouncement(raw)
-    internal fun onAlarm(raw: String) = nsFrameHandler.onAlarm(raw)
-    internal fun onUrgentAlarm(raw: String) = nsFrameHandler.onUrgentAlarm(raw)
-    internal fun onClearAlarm(raw: String) = nsFrameHandler.onClearAlarm(raw)
+
 
 
     // ---------------------------------------------------------------------------------------------

@@ -16,7 +16,7 @@ How a pump alert works is in `PUMP_DESIGN.md` (sections 2 and 8). How a CGM rais
 | 2 | **Pump alerts** | `Alerts.raise(Alert)`. Severity CRITICAL, WARNING or INFO; lifetime CONDITION or EVENT | A card. CRITICAL: the alarm screen. WARNING: one chime as an Android notification. Silence is a 30-minute snooze that survives a restart; the watch is told | CRITICAL rings until answered, WARNING once | Android, iOS | Carelevo, and the `runAlarm` shim (row 3) |
 | 3 | **App alarms** | `UiInteraction.runAlarm(...)`. Now a shim: it raises an EVENT pump alert with the source `"aaps"` | As row 2: the alarm screen until it is answered | `BOLUS_ERROR`, `EAT_REMINDER`, `ALARM` | Android, iOS | A bolus error (command queue, overview, main activity), the eat reminder, the automation reminder, and the drivers' own alarms: DanaR v2, DanaRS, Diaconn, EOPatch, Medtronic, Omnipod Dash and Eros |
 | 4 | **Local alerts** | `LocalAlertUtils` | An URGENT card: **pump unreachable** (also a therapy event and an SMS), **missed BG readings** (off by default) | `ALARM` | Android, iOS (`IosMissedReadingAlarm`) | Core |
-| 5 | **Nightscout alarms** | `NsFrameHandler`, `NsIncomingDataProcessor` | Alarms and announcements from Nightscout as URGENT cards (the setting `ns_alarms`) | `ALARM`, `URGENT_ALARM` | Android, iOS | NS client |
+| 5 | **Nightscout announcements** | `NsIncomingDataProcessor` | A careportal announcement as a WARNING alert (source `"nightscout"`), when "NS announcements" is on. Nightscout's level 1 and 2 alarms were removed on 2026-11-23 (step 3) | One chime | Android, iOS | NS client |
 | 6 | **Automation** | `ActionNotification`, `ActionAlarm`, `ActionSendSMS` | A card (`AUTOMATION_MESSAGE`); an alarm (a reminder, then row 3); an SMS | The alarm only | Android, iOS (a booked alert since 2026-11-22) | The user's rules |
 | 7 | **Loop notifier** | `LoopNotifier` (`AndroidLoopNotifier`, `IosLoopNotifier`) | A system notification: an open-loop suggestion, carbs required | The channel's sound; silent while Do Not Disturb is on and its override is off | Android, iOS | Loop |
 | 8 | **Ongoing notification** | `NotificationHolder`, `PersistentNotificationPlugin` | The permanent notification of the foreground service, with BG, IOB and the loop status | None | Android | Services, the persistent notification plugin |
@@ -71,7 +71,7 @@ ding) and a card of a Silent kind dinged.
 
 - **Pump alerts are new.** Only Carelevo and the `runAlarm` shim use them. Seven drivers still ring through
   `runAlarm`, and Insight has its own channel. Each driver moves when it is next reworked (`PUMP_DESIGN.md`, section 5).
-- **Some cards ring outside the alert path.** Pump unreachable, missed BG readings, the Nightscout alarms and
+- **Some cards ring outside the alert path.** Pump unreachable and
   Eversense are URGENT cards with a sound, not pump alerts. The sound owner is the same (the notification list), but
   the silence is not: "mute all" stops them all, while a pump alert's silence is for that alert only and it rings
   again after 30 minutes.
@@ -84,7 +84,8 @@ ding) and a card of a Silent kind dinged.
   Pixel, Android 16: `BAL_ALLOW_SAW_PERMISSION`). It is optional: AAPS does not ask for it.
 - **Eversense** posts plain cards today, its transmitter's glucose alarms included. AAPS has no low or high glucose
   alarm of its own yet, so those cards are the only glucose alarm an Eversense user gets (the vendor app is stopped).
-- **Nightscout alarms** are the glucose alarms of an AAPSClient today. They come from the Nightscout server's plugins.
+- **Nightscout alarms** were the glucose alarms of an AAPSClient until 2026-11-23. Every phone has its own BG alarms
+  now, so they were removed (step 3).
 
 ## 6. Target design (decided 2026-11-21, not built)
 
@@ -223,8 +224,8 @@ and the other BG sources (about 45 ids) are reviewed when each one moves.
 **Become BG alarms** (source `"bg"`): `BG_READINGS_MISSED` becomes the stale-data rule. Urgent low, the level rules,
 persistent high, the rate rules and predictive low are new.
 
-**Become a Nightscout alert:** `NS_ANNOUNCEMENT` (the level-0 message and the careportal announcement), WARNING,
-EVENT. **Removed** after the BG alarms: `NS_ALARM`, `NS_URGENT_ALARM`.
+**Become a Nightscout alert:** `NS_ANNOUNCEMENT` (the careportal announcement), WARNING, EVENT. **Removed** after the
+BG alarms: `NS_ALARM`, `NS_URGENT_ALARM`. All three done 2026-11-23 (step 3).
 
 **Become driver kinds:**
 
@@ -276,7 +277,7 @@ rings because of it (decided 2026-11-21: acceptable).
 | `"aaps"`: the core | Bolus delivery failed (master and client), carbs not saved after a bolus (`CARBS_STORE_FAILED`, a silent URGENT card today), profile update failed, basal far from the profile, a hard limit hit, a plugin that failed to start or work | EVENT | CRITICAL or WARNING |
 | `"aaps"`: the core | The eat reminder, an automation alarm | EVENT, scheduled | CRITICAL |
 | `"aaps"`: the loop | Carbs required | CONDITION | WARNING |
-| `"nightscout"` | An announcement (careportal, or a level-0 message) | EVENT | WARNING: one chime and a card |
+| `"nightscout"` | A careportal announcement | EVENT | WARNING: one chime and a card |
 
 ### BG alarms
 
@@ -415,9 +416,24 @@ or after it. Until then they are the only glucose alarm its user has.
 ### Nightscout
 
 - **The alarms of level 1 and 2 are removed**, with their snooze that acknowledged them in Nightscout. **Only after**
-  the BG alarms run on clients: removing them first would leave a follower with no alarm at all.
-- **Announcements** arrive as a WARNING alert: one chime and a card, ended by the user's answer. Today a careportal
-  announcement rings with the alarm sound.
+  the BG alarms run on clients: removing them first would leave a follower with no alarm at all. Done 2026-11-23,
+  with the setting "NS alarms" and the whole alarm socket (`/alarm`), which carried only these alarms and the
+  announcements.
+- **Announcements** arrive as a WARNING alert (`NightscoutAlert.ANNOUNCEMENT`, source `"nightscout"`): one chime and
+  a card, ended by the user's answer. Built 2026-11-23. Until then a careportal announcement rang with the alarm
+  sound. It comes from the treatment only: the alarm socket sent the same announcement a second time.
+  - One alert per announcement, so a second one does not hide the first; one written more than an hour ago does not
+    ring; one that arrives again (a reload, a reconnect) does not ring again while the app runs.
+  - It rings also when the phone does not store therapy events, as before with the alarm socket.
+  - The setting "NS announcements" stays: whether this phone takes them at all (on by default on a client, off on
+    the master). The user's Ring, Silent or Off for the kind is on top of it.
+  - Its origin is `AlertOrigin.NIGHTSCOUT`: the core writes no announcement for it, or it would come back as a new
+    one.
+  - It is raised through `NightscoutAnnouncements`, bound where the alerts are (Android, iOS). The desktop has no
+    alert core, so there it is absent and only logged; before, the desktop showed the announcement as a card.
+- **A BG alarm writes no announcement** (decided 2026-11-23). Every phone raises its own from the same readings and
+  rules, so a client would hear the master's low twice: its own alarm and the chime of the announcement. The master's
+  other alerts (the pump, the app) are still written, so a parent's client still hears the master's pump alerts.
 - What AAPS sends to Nightscout (announcements from errors and from carbs required) does not change.
 
 ### Cards and short messages
@@ -463,7 +479,7 @@ The order matters: step 3 must not come before step 2.
    falling and rising fast and predicted low as rule types of the same screen; 2d smart silence and the pause;
    2e the sound per kind and the Test button; 2f the silence on every phone. The escalation comes
    later, after the basics work.
-3. The Nightscout alarms removed; announcements as a WARNING alert.
+3. The Nightscout alarms removed; announcements as a WARNING alert. Built 2026-11-23: see "Nightscout" above.
 4. The core's sounding cards to alerts (the table above).
 5. Eversense: its device alarms to alerts, and its glucose alarms dropped (step 2 is done by then).
 6. Carbs required as an alert.

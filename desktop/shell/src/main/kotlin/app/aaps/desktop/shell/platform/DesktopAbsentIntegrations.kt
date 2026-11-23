@@ -1,6 +1,7 @@
 package app.aaps.desktop.shell.platform
 
 import app.aaps.core.interfaces.alerts.BgAlarms
+import app.aaps.core.interfaces.alerts.NightscoutAnnouncements
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
@@ -123,6 +124,17 @@ class DesktopAbsentBgAlarms(private val aapsLogger: AAPSLogger) : BgAlarms {
 
     override fun start() {
         aapsLogger.debug(LTag.CORE, "No BG alarms on the desktop: it has no alert core")
+    }
+}
+
+/** No Nightscout announcements on the desktop: an announcement is an alert, and the desktop has no alert core. */
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
+@Inject
+class DesktopAbsentNightscoutAnnouncements(private val aapsLogger: AAPSLogger) : NightscoutAnnouncements {
+
+    override fun announce(timestamp: Long, note: String) {
+        aapsLogger.info(LTag.NSCLIENT, "Nightscout announcement not shown: the desktop has no alert core")
     }
 }
 

@@ -30,15 +30,6 @@ interface NsSocket {
      */
     fun emitWithAck(event: String, payload: String, ack: (response: String) -> Unit)
 
-    /**
-     * Acknowledges an alarm, which keeps Nightscout from raising it again for
-     * [silenceForMillis].
-     *
-     * Spelled out as its own method rather than a general "send these arguments" one: Nightscout
-     * wants the three values as three separate arguments, not as one document, and this is the only
-     * place that needs it.
-     */
-    fun emitAlarmAck(level: Int, group: String, silenceForMillis: Long)
 
     companion object {
 

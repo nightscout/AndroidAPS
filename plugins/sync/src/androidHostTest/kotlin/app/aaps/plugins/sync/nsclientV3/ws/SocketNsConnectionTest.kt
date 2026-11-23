@@ -58,8 +58,6 @@ class SocketNsConnectionTest : TestBaseWithProfile() {
         whenever(preferences.get(StringKey.NsClientUrl)).thenReturn("https://ns.example.com")
         whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(true)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)).thenReturn(false)
-        whenever(preferences.get(BooleanKey.NsClientNotificationsFromAlarms)).thenReturn(false)
 
         // `isAllowed` reads this. The plugin is final, so a real one with a mocked delegate is the
         // way to get a true out of it - the same construction the scheduling test uses.

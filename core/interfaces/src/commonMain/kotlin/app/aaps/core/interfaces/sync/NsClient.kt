@@ -1,6 +1,5 @@
 package app.aaps.core.interfaces.sync
 
-import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.keys.interfaces.ClientRole
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -167,13 +166,6 @@ interface NsClient : Sync {
      */
     fun updateLatestTreatmentReceivedIfNewer(latestReceived: Long)
 
-    /**
-     * Send alarm confirmation to NS
-     *
-     * @param originalAlarm alarm to be cleared
-     * @param silenceTimeInMilliseconds silence alarm for specified duration
-     */
-    fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long)
 
     /**
      * Clear synchronization status

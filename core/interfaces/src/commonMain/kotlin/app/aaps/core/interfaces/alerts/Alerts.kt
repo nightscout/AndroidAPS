@@ -56,7 +56,13 @@ enum class AlertOrigin {
     PUMP,
 
     /** The app itself (`"aaps"`): the announcement is the app's own, with no pump identity. */
-    APP
+    APP,
+
+    /**
+     * Nightscout: the alert came from a record that is already there. Nothing is written, or the announcement would
+     * come back as a new one.
+     */
+    NIGHTSCOUT
 }
 
 /**

@@ -122,7 +122,6 @@
     <string name="pref_summary_ns_receive_running_mode">Accept running mode changes from Nightscout.</string>
     <string name="pref_title_ns_receive_tbr_eb">Receive TBR/EB from NS</string>
     <string name="pref_summary_ns_receive_tbr_eb">Accept temp basal rates and extended boluses from Nightscout.</string>
-    <string name="pref_title_ns_notifications_from_alarms">NS alarms</string>
     <string name="pref_title_ns_notifications_from_announcements">NS announcements</string>
     <string name="pref_title_ns_use_cellular">Use cellular data</string>
     <string name="pref_title_ns_use_roaming">Use roaming</string>

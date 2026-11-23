@@ -48,9 +48,6 @@ class SocketIoNsSocket(url: String) : NsSocket {
         socket.emit(event, JSONObject(payload), Ack { args -> ack(firstPayload(args)) })
     }
 
-    override fun emitAlarmAck(level: Int, group: String, silenceForMillis: Long) {
-        socket.emit("ack", level, group, silenceForMillis)
-    }
 
     /**
      * socket.io hands over an argument array. Every event we listen for carries one argument at

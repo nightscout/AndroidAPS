@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertPlatform
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlarms
+import app.aaps.core.interfaces.alerts.NightscoutAnnouncements
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.notifications.AlarmSound
@@ -56,6 +57,10 @@ object AlertsIosBindings {
     /** The BG alarms raise through the alerts, so they are here where the alerts are. */
     @Provides
     fun bgAlarms(impl: BgAlarmsImpl): BgAlarms = impl
+
+    /** A Nightscout announcement is an alert, so it is here where the alerts are. */
+    @Provides
+    fun nightscoutAnnouncements(impl: NightscoutAnnouncementsImpl): NightscoutAnnouncements = impl
 }
 
 /** Which alert the alarm screen should be showing. */

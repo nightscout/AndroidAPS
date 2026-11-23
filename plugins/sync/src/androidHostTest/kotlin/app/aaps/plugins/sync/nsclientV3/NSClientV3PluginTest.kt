@@ -18,13 +18,10 @@ import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TrendArrow
-import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.source.NSClientSource
@@ -58,7 +55,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withTimeout
-import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -909,63 +905,4 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         assertThat(sut.firstLoadContinueTimestamp.collections.treatments).isEqualTo(0L)
     }
 
-    @Test
-    fun `handleClearAlarm delegates to service when plugin and upload are enabled`() {
-        // Arrange
-        //1. Mock the original alarm object
-        val mockAlarm: NSAlarm = mock()
-        val silenceDuration = T.mins(15).msecs()
-        val lastModified = Json.encodeToString(LastModified.serializer(), LastModified(LastModified.Collections()))
-
-        // 2. Ensure both the plugin and the upload preference are enabled.
-        whenever(preferences.get(NsclientStringKey.V3LastModified)).thenReturn(lastModified)
-        whenever(preferences.get(BooleanKey.NsClientUploadData)).thenReturn(true)
-        whenever(receiverDelegate.blockingReason).thenReturn("Block")
-        sut.setPluginEnabledBlocking(PluginType.SYNC, true)
-
-        // Act
-        sut.handleClearAlarm(mockAlarm, silenceDuration)
-
-        // Assert
-        // Verify that the call was passed through to the connection with the correct parameters.
-        verify(nsConnection).acknowledgeAlarm(mockAlarm, silenceDuration)
-    }
-
-    @Test
-    fun `handleClearAlarm does nothing when plugin is disabled`() {
-        // Arrange
-        val mockAlarm: NSAlarm = mock()
-        val silenceDuration = T.mins(15).msecs()
-        val lastModified = Json.encodeToString(LastModified.serializer(), LastModified(LastModified.Collections()))
-
-        // 2. Ensure both the plugin and the upload preference are enabled.
-        whenever(preferences.get(NsclientStringKey.V3LastModified)).thenReturn(lastModified)
-        whenever(preferences.get(BooleanKey.NsClientUploadData)).thenReturn(true) // Upload is still enabled
-        whenever(receiverDelegate.blockingReason).thenReturn("Block")
-        sut.setPluginEnabledBlocking(PluginType.SYNC, false)
-
-        // Act
-        sut.handleClearAlarm(mockAlarm, silenceDuration)
-
-        // Assert
-        // Verify that the service was never called.
-        verify(nsConnection, never()).acknowledgeAlarm(any(), any())
-    }
-
-    @Test
-    fun `handleClearAlarm does nothing and logs when upload is disabled`() {
-        // Arrange
-        val mockAlarm: NSAlarm = mock()
-        val silenceDuration = T.mins(15).msecs()
-
-        // 2. Ensure the plugin is enabled, but the upload preference is disabled.
-        whenever(preferences.get(BooleanKey.NsClientUploadData)).thenReturn(false)
-
-        // Act
-        sut.handleClearAlarm(mockAlarm, silenceDuration)
-
-        // Assert
-        // 1. Verify that the service was never called.
-        verify(nsConnection, never()).acknowledgeAlarm(any(), any())
-    }
 }

@@ -6,14 +6,11 @@ import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.alerts.NightscoutAnnouncements
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.AlarmSound
-import app.aaps.core.interfaces.notifications.NotificationAction
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -40,7 +37,6 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.sync.nsclientV3.extensions.toBolus
 import app.aaps.plugins.sync.nsclientV3.extensions.toBolusCalculatorResult
 import app.aaps.plugins.sync.nsclientV3.extensions.toCAL
@@ -72,7 +68,8 @@ class NsIncomingDataProcessor(
     private val storeDataForDb: StoreDataForDb,
     private val config: Config,
     private val profileStoreProvider: () -> ProfileStore,
-    private val notificationManager: NotificationManager,
+    // A provider: the alert core reaches the Nightscout client through the shared silence link
+    private val nightscoutAnnouncements: () -> NightscoutAnnouncements,
     private val nsClientRepository: NSClientRepository
 ) {
 
@@ -90,6 +87,23 @@ class NsIncomingDataProcessor(
      * landed earlier in it.
      */
     private fun fallbackICfg(): ICfg = profileFunction.runningICfg.value ?: InsulinType.OREF_RAPID_ACTING.iCfg
+
+    /** The time of the newest announcement raised, so one that arrives again (a reload, a reconnect) does not ring again. */
+    private var lastAnnouncementAt = 0L
+
+    /**
+     * A careportal announcement as a WARNING alert: one chime and a card, ended by the user's answer
+     * (`_docs/ALARMS.md`, step 3). Only one from the last hour: an older one is history, not news.
+     */
+    private fun announce(therapyEvent: TE) {
+        if (!preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)) return
+        val now = dateUtil.now()
+        if (therapyEvent.timestamp + T.mins(ANNOUNCEMENT_VALID_MINUTES).msecs() <= now) return
+        if (therapyEvent.timestamp <= lastAnnouncementAt) return
+        lastAnnouncementAt = therapyEvent.timestamp
+        nightscoutAnnouncements().announce(therapyEvent.timestamp, therapyEvent.note ?: "")
+
+    }
 
     /**
      * Whether BG from Nightscout is taken: when Nightscout is the BG source, when the user accepts CGM data
@@ -133,11 +147,6 @@ class NsIncomingDataProcessor(
         }
         if (glucoseValues.isNotEmpty()) {
             if (advanceInitialLoadCursor) nsClient.updateLatestBgReceivedIfNewer(latestDateInReceivedData)
-            // Was that sgv more less 5 mins ago ?
-            if (T.msecs(dateUtil.now() - latestDateInReceivedData).mins() < 5L) {
-                notificationManager.dismiss(NotificationId.NS_ALARM)
-                notificationManager.dismiss(NotificationId.NS_URGENT_ALARM)
-            }
             storeDataForDb.addToGlucoseValues(glucoseValues)
         }
         return glucoseValues.isNotEmpty()
@@ -226,22 +235,13 @@ class NsIncomingDataProcessor(
                                 storeDataForDb.addToBolusCalculatorResults(bolusCalculatorResult)
                             }
 
-                    is NSTherapyEvent           ->
+                    is NSTherapyEvent           -> {
+                        val therapyEvent = treatment.toTherapyEvent()
                         if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.AAPSCLIENT || doFullSync)
-                            treatment.toTherapyEvent().let { therapyEvent ->
-                                storeDataForDb.addToTherapyEvents(therapyEvent)
-                                if (therapyEvent.type == TE.Type.ANNOUNCEMENT &&
-                                    preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements) &&
-                                    therapyEvent.timestamp + T.mins(60).msecs() > dateUtil.now()
-                                )
-                                    notificationManager.post(
-                                        id = NotificationId.NS_ANNOUNCEMENT,
-                                        text = therapyEvent.note ?: "",
-                                        validTo = dateUtil.now() + T.mins(60).msecs(),
-                                        sound = AlarmSound.ALARM,
-                                        actions = listOf(NotificationAction(CoreUiStrings.snooze) { })
-                                    )
-                            }
+                            storeDataForDb.addToTherapyEvents(therapyEvent)
+                        // Shown also when therapy events are not stored: this is the only way an announcement arrives
+                        if (therapyEvent.type == TE.Type.ANNOUNCEMENT) announce(therapyEvent)
+                    }
 
                     is NSOfflineEvent           ->
                         if (preferences.get(BooleanKey.NsClientAcceptRunningMode) || config.AAPSCLIENT || doFullSync)
@@ -313,5 +313,11 @@ class NsIncomingDataProcessor(
                 aapsLogger.debug(LTag.PROFILE, "Received profileStore: $profileJson")
             }
         }
+    }
+
+    private companion object {
+
+        /** How long after it was written an announcement still rings. */
+        const val ANNOUNCEMENT_VALID_MINUTES = 60L
     }
 }

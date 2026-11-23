@@ -739,9 +739,13 @@ class AlertsImpl(
      * Only on the master: an announcement a client wrote would reach Nightscout and come back to the master as a
      * second one. A pump's alert is filed under the active pump, with its type and serial; any other one is the app's
      * own, with no pump identity (`_docs/ALARMS.md`, section 6).
+     *
+     * Not for a BG alarm: every phone raises its own from the same readings and rules, so a client would hear it twice
+     * (decided 2026-11-23). Not for an alert from Nightscout either: its record is already there.
      */
     private fun announce(alert: Alert) {
         if (!config.APS) return
+        if (alert.source == BgAlert.SOURCE || alert.origin == AlertOrigin.NIGHTSCOUT) return
         val note = cardText(alert)
         appScope.launch {
             try {
@@ -764,6 +768,8 @@ class AlertsImpl(
                         note = note,
                         listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
                     )
+
+                    AlertOrigin.NIGHTSCOUT -> Unit
                 }
             } catch (e: CancellationException) {
                 throw e

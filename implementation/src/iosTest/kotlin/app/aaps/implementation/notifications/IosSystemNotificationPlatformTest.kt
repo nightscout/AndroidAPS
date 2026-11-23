@@ -100,7 +100,7 @@ class IosSystemNotificationPlatformTest {
     // ---------------------------------------------------------------------------------------------
 
     private fun notification(instanceKey: Int, withActions: Boolean) = AapsNotification(
-        id = NotificationId.NS_ALARM,
+        id = NotificationId.PUMP_UNREACHABLE,
         instanceKey = instanceKey,
         text = "test",
         level = NotificationLevel.URGENT,
@@ -301,7 +301,7 @@ class IosSystemNotificationPlatformTest {
     fun `an ordinary notification stays silent in the background`() {
         platform.onAppForeground(false)
         val plain = AapsNotification(
-            id = NotificationId.NS_ALARM,
+            id = NotificationId.PUMP_UNREACHABLE,
             instanceKey = 7,
             text = "test",
             level = NotificationLevel.NORMAL,

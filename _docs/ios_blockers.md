@@ -417,7 +417,7 @@ the nine load/upload bodies and all three screens now build for `iosArm64`.
 
 What is still on Android is there because it has to be: the nine `Worker` shims, `NSClientV3Service`
 (wake lock + `START_STICKY`), `SocketIoNsSocket`, `JsonBridge` (org.json), `StoreDataForDbImpl`,
-`NSAlarmObject`, and the Android halves of the two ports below.
+and the Android halves of the two ports below.
 
 ### Three interfaces need an iOS implementation
 
@@ -426,7 +426,7 @@ Nothing else blocks the NS client on iOS. All three are in
 
 | interface | what it does | iOS side |
 |---|---|---|
-| `NsSocket` | one Nightscout websocket namespace. `on(event, listener)`, `connect`, `close`, `emitWithAck`, `emitAlarmAck`. Payloads cross as **JSON text**, so no socket.io types leak | a Ktor websocket client. `SocketIoNsSocket` shows the exact event names and the ack shape |
+| `NsSocket` | one Nightscout websocket namespace. `on(event, listener)`, `connect`, `close`, `emitWithAck`. Payloads cross as **JSON text**, so no socket.io types leak | a Ktor websocket client. `SocketIoNsSocket` shows the exact event names and the ack shape |
 | `NsLoadExecutor` | runs the load round: `runChain(steps)`, `runReplacing`, `runDetached`, `cancel`, `isRunning`, `idle` | a coroutine sequence over `NsLoadStep`, calling the shared `XxxRunner` for each step. `CoroutineCalculationExecutor` in `:workflow` is the same shape |
 | `NsConnection` | owns the connection's lifetime: `start`, `stop`, `connected`, `socketConnected`, `hasLiveSocket` | **needs a product decision first - see below** |
 

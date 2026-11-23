@@ -7,7 +7,6 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
@@ -97,7 +96,4 @@ class ServiceNsConnection(
         service = null
     }
 
-    override fun acknowledgeAlarm(alarm: NSAlarm, silenceForMillis: Long) {
-        service?.handleClearAlarm(alarm, silenceForMillis)
-    }
 }

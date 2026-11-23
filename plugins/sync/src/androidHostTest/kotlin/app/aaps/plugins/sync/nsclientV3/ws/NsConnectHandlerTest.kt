@@ -36,7 +36,6 @@ class NsConnectHandlerTest : TestBaseWithProfile() {
         override fun on(event: String, listener: (payload: String) -> Unit) = Unit
         override fun connect() = Unit
         override fun close() = Unit
-        override fun emitAlarmAck(level: Int, group: String, silenceForMillis: Long) = Unit
 
         override fun emitWithAck(event: String, payload: String, ack: (response: String) -> Unit) {
             emittedEvent = event
@@ -133,24 +132,6 @@ class NsConnectHandlerTest : TestBaseWithProfile() {
         assertThat(called).isFalse()
     }
 
-    // ---- alarms -----------------------------------------------------------------------------
-
-    @Test
-    fun `the alarm subscribe carries the token and nothing else`() {
-        val socket = FakeSocket(success())
-
-        sut.onConnectAlarms(socket)
-
-        assertThat(socket.emittedEvent).isEqualTo("subscribe")
-        assertThat(socket.emittedPayload).contains("token")
-        assertThat(socket.emittedPayload).doesNotContain("collections")
-    }
-
-    @Test
-    fun `a missing alarm socket is survived`() {
-        sut.onConnectAlarms(null)
-    }
-
     // ---- disconnects ------------------------------------------------------------------------
 
     /** Whatever arrived while the socket was up may now be behind, so the next load starts over. */
@@ -164,14 +145,5 @@ class NsConnectHandlerTest : TestBaseWithProfile() {
         verify(nsClientV3Plugin).initialLoadFinished = false
     }
 
-    /**
-     * Android logged this and the other platforms did not, so an alarm socket dropping was invisible
-     * on iOS and the desktop. Nothing else depends on it - being able to read it is the point.
-     */
-    @Test
-    fun `an alarm disconnect is survived and does not touch the load state`() {
-        sut.onDisconnectAlarm("ping timeout")
 
-        verify(nsClientV3Plugin, never()).executeLoop(any())
-    }
 }

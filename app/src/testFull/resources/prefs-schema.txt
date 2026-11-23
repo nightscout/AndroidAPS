@@ -313,7 +313,6 @@ nextPumpDisconnectedAlarm|LocalAlertLongKey|false
 notification_reader_dedup_state|StringNonKey|true
 ns_alarm_stale_data_value|IntKey|true
 ns_alarm_urgent_stale_data_value|IntKey|true
-ns_alarms|BooleanKey|true
 ns_allow_client_control|BooleanKey|true
 ns_allow_roaming|BooleanKey|true
 ns_announcements|BooleanKey|true
@@ -471,7 +470,6 @@ smscommunicator_report_pump_unreachable|BooleanKey|true
 sn_input|MedtrumStringNonKey|true
 snooze_dst_in24h|DstHelperLongKey|true
 snooze_loop_disabled|DstHelperLongKey|true
-snoozedTo%s|LongComposedKey|true
 startupwizard_processed|BooleanNonKey|true
 stats_tab|StringNonKey|false
 statuslights_bage_critical|IntKey|true

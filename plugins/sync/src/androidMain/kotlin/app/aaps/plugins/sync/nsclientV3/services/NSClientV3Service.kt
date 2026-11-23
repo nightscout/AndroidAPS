@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -90,7 +89,6 @@ class NSClientV3Service : MetroService() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int = START_STICKY
 
     var storageSocket: NsSocket? = null
-    var alarmSocket: NsSocket? = null
 
     /**
      * WS connection state. Pass-through to [ServiceNsConnection] — that is the singleton which
@@ -105,10 +103,8 @@ class NSClientV3Service : MetroService() {
     fun shutdownWebsockets() {
         // close() drops the listeners and disconnects; the socket is not reused afterwards.
         storageSocket?.close()
-        alarmSocket?.close()
         wsConnected = false
         storageSocket = null
-        alarmSocket = null
     }
 
     @Suppress("SameParameterValue")
@@ -136,9 +132,7 @@ class NSClientV3Service : MetroService() {
             return
         }
         val urlStorage = preferences.get(StringKey.NsClientUrl).lowercase().replace(Regex("/$"), "") + "/storage"
-        val urlAlarm = preferences.get(StringKey.NsClientUrl).lowercase().replace(Regex("/$"), "") + "/alarm"
         try {
-            // java io.client doesn't support multiplexing. create 2 sockets.
             // Assign the field BEFORE attaching listeners / connecting: the socket is already in
             // socket.io's process-static, never-pruned Manager.nsps cache once it exists, so if
             // anything below throws it must still be reachable by shutdownWebsockets(). Otherwise the
@@ -159,25 +153,7 @@ class NSClientV3Service : MetroService() {
             storage.on("delete", onDataDelete)
             nsClientRepository.addLog("► WS", "do connect storage $reason")
             storage.connect()
-            if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements) ||
-                preferences.get(BooleanKey.NsClientNotificationsFromAlarms)
-            ) {
-                val alarm = nsSocketFactory.create(urlAlarm)
-                if (alarm == null) {
-                    shutdownWebsockets()
-                    nsClientRepository.addLog("● WS", "Wrong URL syntax")
-                    return
-                }
-                alarmSocket = alarm
-                alarm.on(NsSocket.EVENT_CONNECT, onConnectAlarms)
-                alarm.on(NsSocket.EVENT_DISCONNECT, onDisconnectAlarm)
-                alarm.on("announcement", onAnnouncement)
-                alarm.on("alarm", onAlarm)
-                alarm.on("urgent_alarm", onUrgentAlarm)
-                alarm.on("clear_alarm", onClearAlarm)
-                nsClientRepository.addLog("► WS", "do connect alarm $reason")
-                alarm.connect()
-            }
+
         } catch (e: RuntimeException) {
             shutdownWebsockets()
             nsClientRepository.addLog("● WS", "RuntimeException: ${e.message}")
@@ -186,17 +162,8 @@ class NSClientV3Service : MetroService() {
 
     private val onConnectStorage: (String) -> Unit = { nsConnectHandler.onConnectStorage(storageSocket) { ok -> wsConnected = ok } }
 
-    private val onConnectAlarms: (String) -> Unit = { nsConnectHandler.onConnectAlarms(alarmSocket) }
-
     private val onDisconnectStorage: (String) -> Unit = { reason -> nsConnectHandler.onDisconnectStorage(reason) { wsConnected = false } }
 
-    private val onDisconnectAlarm: (String) -> Unit = { reason -> nsConnectHandler.onDisconnectAlarm(reason) }
-
-    /** Acking an alarm back to Nightscout needs the alarm socket, which this service owns. */
-    fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long) {
-        alarmSocket?.emitAlarmAck(originalAlarm.level, originalAlarm.group, silenceTimeInMilliseconds)
-        nsClientRepository.addLog("► ALARMACK ", "${originalAlarm.level} ${originalAlarm.group} $silenceTimeInMilliseconds")
-    }
 
     // Frame handling is shared with every other platform - see NsFrameHandler. These stay as
     // properties with the same names and shapes so the socket wiring above and the characterization
@@ -204,8 +171,5 @@ class NSClientV3Service : MetroService() {
     // routing, which is what proves it still does what this service used to do.
     internal val onDataCreateUpdate: (String) -> Unit = { raw -> nsFrameHandler.onDataCreateUpdate(raw) }
     internal val onDataDelete: (String) -> Unit = { raw -> nsFrameHandler.onDataDelete(raw) }
-    internal val onAnnouncement: (String) -> Unit = { raw -> nsFrameHandler.onAnnouncement(raw) }
-    internal val onAlarm: (String) -> Unit = { raw -> nsFrameHandler.onAlarm(raw) }
-    internal val onUrgentAlarm: (String) -> Unit = { raw -> nsFrameHandler.onUrgentAlarm(raw) }
-    internal val onClearAlarm: (String) -> Unit = { raw -> nsFrameHandler.onClearAlarm(raw) }
+
 }

@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.alerts.AlertPlatform
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.AlertSound
 import app.aaps.core.interfaces.alerts.BgAlert
+import app.aaps.core.interfaces.alerts.NightscoutAlert
 import app.aaps.core.interfaces.alerts.SharedSilence
 import app.aaps.core.interfaces.alerts.SharedSilenceLink
 import app.aaps.core.interfaces.alerts.Alerts
@@ -276,6 +277,26 @@ class AlertsImplTest : TestBase() {
 
         sut.raise(alert(severity = AlertSeverity.WARNING))
         sut.raise(alert(source = "aaps", origin = AlertOrigin.APP, key = "bolus", lifetime = AlertLifetime.EVENT))
+        scope.runCurrent()
+
+        verifyNoPumpAnnouncement()
+        verifyNoAppAnnouncement()
+    }
+
+    /** Every phone raises its own BG alarm from the same readings: an announcement would make a client hear it twice. */
+    @Test
+    fun `a BG alarm writes no announcement`() {
+        sut.raise(alert(source = BgAlert.SOURCE, origin = AlertOrigin.APP, key = "low", severity = AlertSeverity.WARNING))
+        scope.runCurrent()
+
+        verifyNoPumpAnnouncement()
+        verifyNoAppAnnouncement()
+    }
+
+    /** Its record is already in Nightscout: written again, it would come back as a new announcement. */
+    @Test
+    fun `an alert from Nightscout writes no announcement`() {
+        sut.raise(alert(source = NightscoutAlert.SOURCE, origin = AlertOrigin.NIGHTSCOUT, key = "announcement.1", severity = AlertSeverity.WARNING, lifetime = AlertLifetime.EVENT))
         scope.runCurrent()
 
         verifyNoPumpAnnouncement()
