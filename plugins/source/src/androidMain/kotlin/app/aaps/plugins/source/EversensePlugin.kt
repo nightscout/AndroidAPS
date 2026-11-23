@@ -19,10 +19,14 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.plugins.eversense.models.ActiveAlarm
 import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -524,6 +528,33 @@ class EversensePlugin(
             alarm.code.isWarning -> NotificationLevel.NORMAL
             alarm.code.isInfo -> NotificationLevel.INFO
             else -> NotificationLevel.URGENT
+        }
+        val therapyEventType = when (alarm.code) {
+            EversenseAlarm.PREDICTIVE_LOW -> TE.Type.PREDICTED_LOW
+            EversenseAlarm.PREDICTIVE_HIGH -> TE.Type.PREDICTED_HIGH
+            EversenseAlarm.LOW_GLUCOSE -> TE.Type.LOW_GLUCOSE
+            EversenseAlarm.HIGH_GLUCOSE -> TE.Type.HIGH_GLUCOSE
+            else -> null
+        }
+        if (therapyEventType != null) {
+            val timestamp = System.currentTimeMillis()
+            ioScope.launch {
+                persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                    therapyEvent = TE(
+                        timestamp = timestamp,
+                        type = therapyEventType,
+                        duration = 0,
+                        note = title,
+                        enteredBy = "AAPS",
+                        glucoseUnit = GlucoseUnit.MGDL
+                    ),
+                    timestamp = timestamp,
+                    action = Action.CAREPORTAL,
+                    source = Sources.Eversense,
+                    note = title,
+                    listValues = listOf(ValueWithUnit.TEType(therapyEventType))
+                )
+            }
         }
         mainHandler.post {
             notificationManager.post(

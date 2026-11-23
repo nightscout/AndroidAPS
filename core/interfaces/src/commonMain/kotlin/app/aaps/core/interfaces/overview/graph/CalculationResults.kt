@@ -280,6 +280,10 @@ enum class TherapyEventType {
     MBG,                   // Manual blood glucose
     FINGER_STICK,          // Finger stick BG check
     ANNOUNCEMENT,          // Announcement
+    PREDICTED_LOW,         // Predicted low glucose
+    PREDICTED_HIGH,        // Predicted high glucose
+    LOW_GLUCOSE,           // Low glucose alarm
+    HIGH_GLUCOSE,          // High glucose alarm
     SETTINGS_EXPORT,       // Settings export
     EXERCISE,              // Exercise
     GENERAL,               // General event (no duration)

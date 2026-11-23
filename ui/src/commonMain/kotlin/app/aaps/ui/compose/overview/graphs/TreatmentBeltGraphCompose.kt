@@ -2,6 +2,8 @@ package app.aaps.ui.compose.overview.graphs
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,6 +32,8 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.icons.IcActivity
 import app.aaps.core.ui.compose.icons.IcAnnouncement
+import app.aaps.core.ui.compose.icons.IcArrowFortyfiveDown
+import app.aaps.core.ui.compose.icons.IcArrowFortyfiveUp
 import app.aaps.core.ui.compose.icons.IcBgCheck
 import app.aaps.core.ui.compose.icons.IcClinicalNotes
 import app.aaps.core.ui.compose.icons.IcNote
@@ -118,6 +122,10 @@ fun TreatmentBeltGraphCompose(
 
     // Icon painters for therapy events
     val announcementPainter = rememberVectorPainter(TherapyEventType.ANNOUNCEMENT.beltIcon())
+    val predictedLowPainter = rememberVectorPainter(IcArrowFortyfiveDown)
+    val predictedHighPainter = rememberVectorPainter(IcArrowFortyfiveUp)
+    val lowGlucosePainter = rememberVectorPainter(Icons.Default.Error)
+    val highGlucosePainter = rememberVectorPainter(Icons.Default.Error)
     val activityPainter = rememberVectorPainter(TherapyEventType.EXERCISE.beltIcon())
     val notePainter = rememberVectorPainter(TherapyEventType.GENERAL.beltIcon())
     val clinicalNotesPainter = rememberVectorPainter(TherapyEventType.SETTINGS_EXPORT.beltIcon())
@@ -141,6 +149,10 @@ fun TreatmentBeltGraphCompose(
     val renderedModeSegmentsState = remember { mutableStateOf<List<Triple<Double, Double, RM.Mode>>>(emptyList()) }
     val modeSegmentCountState = remember { mutableIntStateOf(0) }
     val hasAnnouncementState = remember { mutableStateOf(false) }
+    val hasPredictedLowState = remember { mutableStateOf(false) }
+    val hasPredictedHighState = remember { mutableStateOf(false) }
+    val hasLowGlucoseState = remember { mutableStateOf(false) }
+    val hasHighGlucoseState = remember { mutableStateOf(false) }
     val hasSettingsExportState = remember { mutableStateOf(false) }
     val hasGeneralState = remember { mutableStateOf(false) }
     val exerciseDurationCountState = remember { mutableIntStateOf(0) }
@@ -162,6 +174,10 @@ fun TreatmentBeltGraphCompose(
             }
             modeSegmentCountState.intValue = 0
             hasAnnouncementState.value = false
+            hasPredictedLowState.value = false
+            hasPredictedHighState.value = false
+            hasLowGlucoseState.value = false
+            hasHighGlucoseState.value = false
             hasSettingsExportState.value = false
             hasGeneralState.value = false
             exerciseDurationCountState.intValue = 0
@@ -200,6 +216,18 @@ fun TreatmentBeltGraphCompose(
         val generalPoints = therapyEvents
             .filter { it.eventType == TherapyEventType.GENERAL }
             .map { timestampToX(it.timestamp, minTimestamp) to 0.5 }
+        val predictedLowPoints = therapyEvents
+            .filter { it.eventType == TherapyEventType.PREDICTED_LOW }
+            .map { timestampToX(it.timestamp, minTimestamp) to 0.5 }
+        val predictedHighPoints = therapyEvents
+            .filter { it.eventType == TherapyEventType.PREDICTED_HIGH }
+            .map { timestampToX(it.timestamp, minTimestamp) to 0.5 }
+        val lowGlucosePoints = therapyEvents
+            .filter { it.eventType == TherapyEventType.LOW_GLUCOSE }
+            .map { timestampToX(it.timestamp, minTimestamp) to 0.5 }
+        val highGlucosePoints = therapyEvents
+            .filter { it.eventType == TherapyEventType.HIGH_GLUCOSE }
+            .map { timestampToX(it.timestamp, minTimestamp) to 0.5 }
 
         // Duration events — each gets its own 2-point series
         val exerciseDurationSeries = therapyEvents
@@ -226,6 +254,10 @@ fun TreatmentBeltGraphCompose(
             }
 
         var hasAnnouncement = false
+        var hasPredictedLow = false
+        var hasPredictedHigh = false
+        var hasLowGlucose = false
+        var hasHighGlucose = false
         var hasSettingsExport = false
         var hasGeneral = false
 
@@ -241,6 +273,26 @@ fun TreatmentBeltGraphCompose(
                 if (annFiltered.isNotEmpty()) {
                     series(x = annFiltered.map { it.first }, y = annFiltered.map { it.second })
                     hasAnnouncement = true
+                }
+                val predictedLowFiltered = filterToRange(predictedLowPoints, minX, maxX)
+                if (predictedLowFiltered.isNotEmpty()) {
+                    series(x = predictedLowFiltered.map { it.first }, y = predictedLowFiltered.map { it.second })
+                    hasPredictedLow = true
+                }
+                val predictedHighFiltered = filterToRange(predictedHighPoints, minX, maxX)
+                if (predictedHighFiltered.isNotEmpty()) {
+                    series(x = predictedHighFiltered.map { it.first }, y = predictedHighFiltered.map { it.second })
+                    hasPredictedHigh = true
+                }
+                val lowGlucoseFiltered = filterToRange(lowGlucosePoints, minX, maxX)
+                if (lowGlucoseFiltered.isNotEmpty()) {
+                    series(x = lowGlucoseFiltered.map { it.first }, y = lowGlucoseFiltered.map { it.second })
+                    hasLowGlucose = true
+                }
+                val highGlucoseFiltered = filterToRange(highGlucosePoints, minX, maxX)
+                if (highGlucoseFiltered.isNotEmpty()) {
+                    series(x = highGlucoseFiltered.map { it.first }, y = highGlucoseFiltered.map { it.second })
+                    hasHighGlucose = true
                 }
                 val seFiltered = filterToRange(settingsExportPoints, minX, maxX)
                 if (seFiltered.isNotEmpty()) {
@@ -270,6 +322,10 @@ fun TreatmentBeltGraphCompose(
         renderedModeSegmentsState.value = modeSegmentSeries
         modeSegmentCountState.intValue = modeSegmentSeries.size
         hasAnnouncementState.value = hasAnnouncement
+        hasPredictedLowState.value = hasPredictedLow
+        hasPredictedHighState.value = hasPredictedHigh
+        hasLowGlucoseState.value = hasLowGlucose
+        hasHighGlucoseState.value = hasHighGlucose
         hasSettingsExportState.value = hasSettingsExport
         hasGeneralState.value = hasGeneral
         exerciseDurationCountState.intValue = exerciseDurationSeries.size
@@ -320,6 +376,42 @@ fun TreatmentBeltGraphCompose(
             )
         )
     }
+    val predictedLowLine = remember(careportalColor, predictedLowPainter) {
+        LineCartesianLayer.Line(
+            fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
+            areaFill = null,
+            pointProvider = LineCartesianLayer.PointProvider.single(
+                LineCartesianLayer.Point(component = PainterComponent(predictedLowPainter, tint = careportalColor), size = 16.dp)
+            )
+        )
+    }
+    val predictedHighLine = remember(careportalColor, predictedHighPainter) {
+        LineCartesianLayer.Line(
+            fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
+            areaFill = null,
+            pointProvider = LineCartesianLayer.PointProvider.single(
+                LineCartesianLayer.Point(component = PainterComponent(predictedHighPainter, tint = careportalColor), size = 16.dp)
+            )
+        )
+    }
+    val lowGlucoseLine = remember(careportalColor, lowGlucosePainter) {
+        LineCartesianLayer.Line(
+            fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
+            areaFill = null,
+            pointProvider = LineCartesianLayer.PointProvider.single(
+                LineCartesianLayer.Point(component = PainterComponent(lowGlucosePainter, tint = careportalColor), size = 16.dp)
+            )
+        )
+    }
+    val highGlucoseLine = remember(careportalColor, highGlucosePainter) {
+        LineCartesianLayer.Line(
+            fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
+            areaFill = null,
+            pointProvider = LineCartesianLayer.PointProvider.single(
+                LineCartesianLayer.Point(component = PainterComponent(highGlucosePainter, tint = careportalColor), size = 16.dp)
+            )
+        )
+    }
 
     // Duration event line styles (with icons at endpoints)
     val exerciseDurationLine = remember(exerciseColor, activityPainter) {
@@ -353,6 +445,10 @@ fun TreatmentBeltGraphCompose(
     // Build lines list dynamically — MUST match series order from LaunchedEffect
     val modeSegmentCount by modeSegmentCountState
     val hasAnnouncement by hasAnnouncementState
+    val hasPredictedLow by hasPredictedLowState
+    val hasPredictedHigh by hasPredictedHighState
+    val hasLowGlucose by hasLowGlucoseState
+    val hasHighGlucose by hasHighGlucoseState
     val hasSettingsExport by hasSettingsExportState
     val hasGeneral by hasGeneralState
     val exerciseDurationCount by exerciseDurationCountState
@@ -360,9 +456,11 @@ fun TreatmentBeltGraphCompose(
 
     val lines = remember(
         modeSegmentCount, renderedModeSegments,
-        hasAnnouncement, hasSettingsExport, hasGeneral,
+        hasAnnouncement, hasPredictedLow, hasPredictedHigh, hasLowGlucose, hasHighGlucose,
+        hasSettingsExport, hasGeneral,
         exerciseDurationCount, generalDurationCount,
-        announcementLine, settingsExportLine, generalLine,
+        announcementLine, predictedLowLine, predictedHighLine, lowGlucoseLine, highGlucoseLine,
+        settingsExportLine, generalLine,
         exerciseDurationLine, generalDurationLine, normalizerLine
     ) {
         buildList {
@@ -372,6 +470,10 @@ fun TreatmentBeltGraphCompose(
             }
             // 2. Non-duration therapy event lines
             if (hasAnnouncement) add(announcementLine)
+            if (hasPredictedLow) add(predictedLowLine)
+            if (hasPredictedHigh) add(predictedHighLine)
+            if (hasLowGlucose) add(lowGlucoseLine)
+            if (hasHighGlucose) add(highGlucoseLine)
             if (hasSettingsExport) add(settingsExportLine)
             if (hasGeneral) add(generalLine)
             // 3. Duration event lines
@@ -462,6 +564,10 @@ internal fun TherapyEventGraphPoint.isOnBelt(): Boolean =
 /** The belt's icon for an event, also used in the inspect pill. */
 internal fun TherapyEventType.beltIcon(): ImageVector = when (this) {
     TherapyEventType.ANNOUNCEMENT          -> IcAnnouncement
+    TherapyEventType.PREDICTED_LOW         -> IcArrowFortyfiveDown
+    TherapyEventType.PREDICTED_HIGH        -> IcArrowFortyfiveUp
+    TherapyEventType.LOW_GLUCOSE,
+    TherapyEventType.HIGH_GLUCOSE          -> Icons.Default.Error
     TherapyEventType.SETTINGS_EXPORT       -> IcClinicalNotes
     TherapyEventType.EXERCISE              -> IcActivity
     TherapyEventType.GENERAL,
@@ -473,6 +579,10 @@ internal fun TherapyEventType.beltIcon(): ImageVector = when (this) {
 /** The belt's colour for an event, also used in the inspect pill. */
 internal fun TherapyEventType.beltColor(colors: ElementColors): Color = when (this) {
     TherapyEventType.ANNOUNCEMENT          -> colors.announcement
+    TherapyEventType.PREDICTED_LOW,
+    TherapyEventType.PREDICTED_HIGH,
+    TherapyEventType.LOW_GLUCOSE,
+    TherapyEventType.HIGH_GLUCOSE          -> colors.careportal
     TherapyEventType.EXERCISE              -> colors.exercise
     TherapyEventType.SETTINGS_EXPORT,
     TherapyEventType.GENERAL,

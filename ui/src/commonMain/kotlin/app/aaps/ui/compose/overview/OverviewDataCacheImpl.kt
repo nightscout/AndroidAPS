@@ -943,6 +943,10 @@ class OverviewDataCacheImpl(
                     te.type == TE.Type.NS_MBG                -> TherapyEventType.MBG
                     te.type == TE.Type.FINGER_STICK_BG_VALUE -> TherapyEventType.FINGER_STICK
                     te.type == TE.Type.ANNOUNCEMENT          -> TherapyEventType.ANNOUNCEMENT
+                    te.type == TE.Type.PREDICTED_LOW         -> TherapyEventType.PREDICTED_LOW
+                    te.type == TE.Type.PREDICTED_HIGH        -> TherapyEventType.PREDICTED_HIGH
+                    te.type == TE.Type.LOW_GLUCOSE           -> TherapyEventType.LOW_GLUCOSE
+                    te.type == TE.Type.HIGH_GLUCOSE          -> TherapyEventType.HIGH_GLUCOSE
                     te.type == TE.Type.SETTINGS_EXPORT       -> TherapyEventType.SETTINGS_EXPORT
                     te.type == TE.Type.EXERCISE              -> TherapyEventType.EXERCISE
                     te.duration > 0                          -> TherapyEventType.GENERAL_WITH_DURATION
