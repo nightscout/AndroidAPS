@@ -147,6 +147,20 @@ fun OverviewScreenStacked(
             )
         }
 
+        // On a client, the client status card comes before the status lights
+        if (config.AAPSCLIENT) {
+            val nsClientStatus by graphViewModel.nsClientStatusFlow.collectAsStateWithLifecycle()
+            val flavorTint = when {
+                config.AAPSCLIENT3 -> AapsTheme.generalColors.flavorClient3Tint
+                config.AAPSCLIENT2 -> AapsTheme.generalColors.flavorClient2Tint
+                else               -> AapsTheme.generalColors.flavorClient1Tint
+            }
+            AapsClientStatusCard(
+                statusData = nsClientStatus,
+                flavorTint = flavorTint
+            )
+        }
+
         OverviewStatusSection(
             sensorStatus = statusState.sensorStatus,
             insulinStatus = statusState.insulinStatus,
@@ -160,19 +174,6 @@ fun OverviewScreenStacked(
             expanded = statusExpanded,
             onExpandedChange = { statusExpanded = it }
         )
-
-        if (config.AAPSCLIENT) {
-            val nsClientStatus by graphViewModel.nsClientStatusFlow.collectAsStateWithLifecycle()
-            val flavorTint = when {
-                config.AAPSCLIENT3 -> AapsTheme.generalColors.flavorClient3Tint
-                config.AAPSCLIENT2 -> AapsTheme.generalColors.flavorClient2Tint
-                else               -> AapsTheme.generalColors.flavorClient1Tint
-            }
-            AapsClientStatusCard(
-                statusData = nsClientStatus,
-                flavorTint = flavorTint
-            )
-        }
 
         GraphsSection(
             graphViewModel = graphViewModel, isSimpleMode = isSimpleMode, iobText = iobUiState.text, cobText = cobUiState.text,
