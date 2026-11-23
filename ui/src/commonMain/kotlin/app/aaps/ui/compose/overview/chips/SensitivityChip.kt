@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
@@ -58,7 +59,8 @@ internal fun SensitivityChip(
     val autosensOff = stringResource(CoreUiStrings.autosens_state_off)
     Surface(
         shape = RoundedCornerShape(AapsSpacing.chipCornerRadius),
-        color = ElementType.SENSITIVITY.color().copy(alpha = 0.2f),
+        // A value, not a state: no fill, the icon carries the colour. See chipShade
+        color = Color.Transparent,
         modifier = modifier
             .heightIn(min = AapsSpacing.chipHeight)
             .clickable(onClick = onClick)

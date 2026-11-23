@@ -64,7 +64,6 @@ internal fun CobChip(
         Modifier
     }
 
-    val hasValue = state.cobValue != 0.0
     // Name the whole chip, not the icon. state.text is only a bare value like "45 g", which says
     // nothing about what it measures. It goes on the Surface because the icon is dropped when the
     // row is too narrow and no carbs are required (see IobCobChips) and the label would go with it.
@@ -75,7 +74,8 @@ internal fun CobChip(
     val chipDescription = stringResource(CoreUiStrings.cob)
     Surface(
         shape = RoundedCornerShape(AapsSpacing.chipCornerRadius),
-        color = if (hasValue) ElementType.COB.color().copy(alpha = 0.2f) else Color.Transparent,
+        // A value, not a state: no fill, the icon carries the colour. See chipShade
+        color = Color.Transparent,
         modifier = modifier
             .heightIn(min = AapsSpacing.chipHeight)
             // This chip has no onClick, so unlike its siblings it does not merge on its own.

@@ -121,6 +121,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.math.abs
+import kotlin.math.roundToInt
 import kotlin.math.max
 
 /**
@@ -787,7 +788,10 @@ class OverviewDataCacheImpl(
         _tbrFlow.value = TbrDisplayData(
             state = state,
             timestamp = activeTb?.timestamp ?: 0L,
-            duration = activeTb?.duration ?: 0L
+            duration = activeTb?.duration ?: 0L,
+            // From the actual rate and the profile basal, so it is the same for pumps that set a TBR
+            // in % and in U/h
+            percent = if (state != TbrState.NONE && basalData.basal > 0.0) (basalData.tempBasalAbsolute / basalData.basal * 100).roundToInt() else null
         )
     }
 
