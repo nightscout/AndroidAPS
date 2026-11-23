@@ -1047,8 +1047,11 @@ class O5PumpPlugin @Inject constructor(
         profile: PumpProfile,
         historyType: OmnipodCommandType
     ): PumpEnactResult {
-        if (podStateManager.ltk == null) {
-            // Pod not paired yet - deferred, not an actual write, same as Dash. enacted=false => no PROFILE_SET_OK.
+        if (!podStateManager.isActivationCompleted) {
+            // Pod not activated yet - deferred, not an actual write, same as Dash. The second activation step programs
+            // the basal itself. A write between the two steps reached a real pod on 2026-11-16: the pod ran the basal
+            // before the cannula step, and its records came under a pump AAPS did not know yet.
+            // enacted=false => no PROFILE_SET_OK.
             return pumpEnactResultProvider.get().success(true).enacted(false)
         }
         if (!pendingDoseResolved()) return unresolvedDoseResult()
@@ -1108,7 +1111,8 @@ class O5PumpPlugin @Inject constructor(
     }
 
     override fun isThisProfileSet(profile: PumpProfile): Boolean {
-        if (podStateManager.ltk == null) return true
+        // No basal write is asked for before the activation is done, same as Dash: see setNewBasalProfileLocked.
+        if (!podStateManager.isActivationCompleted) return true
         if (podStateManager.deliverySuspended) return false
         return mapProfileToBasalProgram(profile, PumpType.OMNIPOD_5) == podStateManager.basalProgram
     }

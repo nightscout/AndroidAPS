@@ -30,6 +30,12 @@ abstract class AbstractOmnipodPumpUnderTest<W : OmnipodWizardViewModel>(private 
     var initializePodFailures = 0
         private set
 
+    /**
+     * Runs once between the two activation steps: the first one ended well and the second has not started. null unless
+     * a test wants to do something to a pod that is paired and primed, but not active yet.
+     */
+    var betweenActivationSteps: ((PumpScenario) -> Unit)? = null
+
     /** How far the driver's pod state says the activation is. NOT_STARTED when no pod is paired. */
     protected abstract fun activationProgress(): ActivationProgress
 
@@ -47,6 +53,7 @@ abstract class AbstractOmnipodPumpUnderTest<W : OmnipodWizardViewModel>(private 
             while (wizard.currentStep.value != OmnipodWizardStep.POD_ACTIVATED) {
                 val step = wizard.currentStep.value
                 if (step == OmnipodWizardStep.INITIALIZE_POD || step == OmnipodWizardStep.INSERT_CANNULA) runAction(scenario, wizard)
+                if (step == OmnipodWizardStep.INITIALIZE_POD) betweenActivationSteps?.invoke(scenario)
                 scenario.onMain { wizard.moveToNext() }
                 scenario.awaitTrue("the wizard leaves the step $step") { wizard.currentStep.value != step }
             }
