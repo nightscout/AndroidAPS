@@ -5,6 +5,7 @@ import app.aaps.core.nssdk.exceptions.InvalidFormatNightscoutException
 import app.aaps.core.nssdk.localmodel.entry.Direction
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
+import app.aaps.core.nssdk.localmodel.treatment.NSOfflineEvent
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
@@ -59,6 +60,34 @@ class NsSdkResponseContractTest {
         isValid = true, sgv = 120.0, units = NsUnits.MG_DL, direction = Direction.FLAT,
         noise = null, filtered = null, unfiltered = null
     )
+
+    @Test
+    fun `rounded LGS sentinel preserves the event and adjacent treatments on both read paths`() = runTest {
+        val page = """{"result":[
+            {"identifier":"before","date":1000,"insulin":1.0},
+            {"identifier":"lgs","date":2000,"eventType":"OpenAPS Offline","mode":"CLOSED_LOOP_LGS",
+             "duration":0,"autoForced":true,"originalDuration":9223372036854776000},
+            {"identifier":"after","date":3000,"carbs":10}
+        ]}"""
+        repeat(2) { server.enqueue(MockResponse.Builder().code(200).body(page).build()) }
+
+        val initial = client.getTreatmentsNewerThan("1970-01-01T00:00:00.000Z", 3)
+        val history = client.getTreatmentsModifiedSince(0, 3)
+        for (response in listOf(initial, history)) {
+            assertThat(response.values.map { it.identifier }).containsExactly("before", "lgs", "after").inOrder()
+            assertThat((response.values[1] as NSOfflineEvent).originalDuration).isEqualTo(Long.MAX_VALUE)
+        }
+    }
+
+    @Test
+    fun `invalid treatment page fails while an empty result ends the read`() = runTest {
+        val invalid = """{"result":[{"eventType":"Profile Switch","originalDuration":9223372036854776000}]}"""
+        server.enqueue(MockResponse.Builder().code(200).body(invalid).build())
+        server.enqueue(MockResponse.Builder().code(200).body("""{"result":[]}""").build())
+
+        assertThrows<InvalidFormatNightscoutException> { client.getTreatmentsModifiedSince(0, 500) }
+        assertThat(client.getTreatmentsModifiedSince(0, 500).values).isEmpty()
+    }
 
     // ================================================================ ETag
 

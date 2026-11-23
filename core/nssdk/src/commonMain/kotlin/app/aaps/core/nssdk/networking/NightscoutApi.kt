@@ -9,6 +9,7 @@ import app.aaps.core.nssdk.remotemodel.RemoteDeviceStatus
 import app.aaps.core.nssdk.remotemodel.RemoteEntry
 import app.aaps.core.nssdk.remotemodel.RemoteFood
 import app.aaps.core.nssdk.remotemodel.RemoteStatusResponse
+import app.aaps.core.nssdk.remotemodel.IncomingTreatmentSerializer
 import app.aaps.core.nssdk.remotemodel.RemoteTreatment
 import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
@@ -143,7 +144,7 @@ internal class NightscoutApi(
 
     // ---------------------------------------------------------------- treatments
 
-    private val treatmentListSerializer = NSResponse.serializer(ListSerializer(RemoteTreatment.serializer()))
+    private val treatmentListSerializer = NSResponse.serializer(ListSerializer(IncomingTreatmentSerializer))
 
     suspend fun getTreatmentsNewerThan(createdAt: String, limit: Int) = call(HttpMethod.Get, treatmentListSerializer) {
         nsUrl("v3", "treatments") {

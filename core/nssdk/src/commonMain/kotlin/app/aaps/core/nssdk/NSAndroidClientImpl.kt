@@ -31,6 +31,7 @@ import app.aaps.core.nssdk.networking.NsHttpResponse
 import app.aaps.core.nssdk.networking.NsKtorClient
 import app.aaps.core.nssdk.networking.NsUrl
 import app.aaps.core.nssdk.remotemodel.LastModified
+import app.aaps.core.nssdk.remotemodel.NSResponse
 import app.aaps.core.nssdk.remotemodel.RemoteDeviceStatus
 import app.aaps.core.nssdk.remotemodel.RemoteEntry
 import app.aaps.core.nssdk.remotemodel.RemoteFood
@@ -337,6 +338,12 @@ class NSAndroidClientImpl(
             throw UnsuccessfulNightscoutException(response.errorBody() ?: response.message())
     }
 
+    private fun NsHttpResponse<NSResponse<List<RemoteTreatment>>>.readTreatments(): List<NSTreatment> {
+        if (code == 204) return emptyList()
+        val rows = body()?.result ?: throw InvalidFormatNightscoutException("Invalid Nightscout treatments response (HTTP $code)")
+        return rows.mapNotNull(RemoteTreatment::toTreatment)
+    }
+
     override suspend fun getTreatmentsNewerThan(createdAt: String, limit: Int): NSAndroidClient.ReadResponse<List<NSTreatment>> = callWrapper(dispatcher) {
 
         val response = api.getTreatmentsNewerThan(createdAt, limit)
@@ -344,7 +351,7 @@ class NSAndroidClientImpl(
             return@callWrapper NSAndroidClient.ReadResponse(
                 code = response.code,
                 lastServerModified = 0,
-                values = response.body()?.result?.map(RemoteTreatment::toTreatment).toNotNull()
+                values = response.readTreatments()
             )
         } else if (response.code in 400..499)
             throw InvalidParameterNightscoutException(response.errorBody() ?: response.message())
@@ -358,8 +365,7 @@ class NSAndroidClientImpl(
         if (response.isSuccessful) {
             val eTag = response.eTagAsLong()
             return@callWrapper NSAndroidClient.ReadResponse(
-                code = response.code, lastServerModified = eTag, values = response.body()?.result?.map
-                    (RemoteTreatment::toTreatment).toNotNull()
+                code = response.code, lastServerModified = eTag, values = response.readTreatments()
             )
         } else if (response.code in 400..499)
             throw InvalidParameterNightscoutException(response.errorBody() ?: response.message())

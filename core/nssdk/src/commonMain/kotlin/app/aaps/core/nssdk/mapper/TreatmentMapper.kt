@@ -14,6 +14,7 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.core.nssdk.nsSdkJson
+import app.aaps.core.nssdk.remotemodel.IncomingTreatmentSerializer
 import app.aaps.core.nssdk.remotemodel.RemoteTreatment
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
@@ -28,7 +29,7 @@ fun NSTreatment.convertToRemoteAndBack(): NSTreatment? =
     toRemoteTreatment()?.toTreatment()
 
 fun String.toNSTreatment(): NSTreatment? =
-    nsSdkJson.decodeFromString(RemoteTreatment.serializer(), this).toTreatment()
+    nsSdkJson.decodeFromString(IncomingTreatmentSerializer, this).toTreatment()
 
 internal fun RemoteTreatment.toTreatment(): NSTreatment? {
     val treatmentTimestamp = timestamp()
