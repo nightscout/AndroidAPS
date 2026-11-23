@@ -58,9 +58,9 @@
     <string name="carelevo_insulin_refill_step1">1. Patch blister ambalajının arkasındaki kâğıdı soyun.</string>
     <string name="carelevo_insulin_refill_step2">2. İnsülin flakonunun lastik kapağını alkollü pamukla dezenfekte edin.</string>
     <string name="carelevo_insulin_refill_step3">3. İnsülin şırıngasının iğne koruma kapağını düz bir şekilde çekerek çıkarın.</string>
-    <string name="carelevo_insulin_refill_step4">4. Pistonu geri çekerek şırıngaya yaklaşık 2 mL hava doldurun.</string>
+    <string name="carelevo_insulin_refill_step4">4. Pistonu geri çekerek şırıngaya yaklaşık 1 mL hava doldurun.</string>
     <string name="carelevo_insulin_refill_step5">5. Hava dolu şırıngayı insülin flakonuna batırın ve havayı flakona verin.</string>
-    <string name="carelevo_insulin_refill_step6">6. Şırınga takılıyken flakonu ve şırıngayı birlikte ters çevirin ve basınçtan yararlanarak şırıngaya yaklaşık 2 mL insülin çekin.</string>
+    <string name="carelevo_insulin_refill_step6">6. Şırınga takılıyken flakonu ve şırıngayı birlikte ters çevirin ve basınçtan yararlanarak şırıngaya yaklaşık 1 mL insülin çekin.</string>
     <string name="carelevo_insulin_refill_step7">7. Şırınga iğnesini Patch\'in insülin doldurma girişine (①) dik olarak, dibe ulaşana kadar batırın. Pistonu sonuna kadar yukarı çekin, sonra bırakın. Şırıngayı doldurma girişinden çıkarın.</string>
     <string name="carelevo_insulin_refill_step8">8. Şırıngayı dik tutun ve tüm hava kabarcıklarını üstte toplamak için yanına hafifçe vurun.</string>
     <string name="carelevo_insulin_refill_step9">9. İğneyi tekrar insülin flakonuna batırın, tüm havayı flakona verin ve ardından Patch\'in kullanım süresi boyunca kullanacağınız insülin miktarını çekin.</string>
