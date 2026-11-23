@@ -200,7 +200,9 @@ fun MainScreen(
                 showExit = mainViewModel.showExit
             )
         },
-        gesturesEnabled = true,
+        // Opened only from the menu button. A swipe from the left edge opened it while the user was
+        // dragging a graph to scroll it back in time. A swipe still closes it once it is open.
+        gesturesEnabled = drawerState.isOpen,
         modifier = modifier
     ) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
