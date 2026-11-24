@@ -56,7 +56,7 @@ class SensorGlucoseElementTest {
 
     @Test
     fun `single element has type cbg and units mgdl`() {
-        // The source hardcodes units = "mg/dL" and type = "cbg"; value is bgReading.value.toInt() (NO mmol/L conversion).
+        // The source hardcodes units = "mg/dL" and type = "cbg"; value is bgReading.value rounded (NO mmol/L conversion).
         val element = SensorGlucoseElement(bgReading(100, 120.0), dateUtil)
 
         assertThat(element.type).isEqualTo("cbg")
@@ -70,14 +70,18 @@ class SensorGlucoseElementTest {
     }
 
     @Test
-    fun `value is truncated to int from the double bg value`() {
-        // value = bgReading.value.toInt() -> toInt() truncates toward zero, no rounding.
-        assertThat(SensorGlucoseElement(bgReading(100, 99.9), dateUtil).value).isEqualTo(99)
+    fun `value is rounded from the double bg value as AAPS shows it`() {
+        // Rounded half-even, as AAPS shows BG (#5639). Truncated, 99.9 was stored in Tidepool as 99.
+        assertThat(SensorGlucoseElement(bgReading(100, 99.9), dateUtil).value).isEqualTo(100)
         assertThat(SensorGlucoseElement(bgReading(100, 100.0), dateUtil).value).isEqualTo(100)
-        assertThat(SensorGlucoseElement(bgReading(100, 154.7), dateUtil).value).isEqualTo(154)
+        assertThat(SensorGlucoseElement(bgReading(100, 154.7), dateUtil).value).isEqualTo(155)
+        assertThat(SensorGlucoseElement(bgReading(100, 154.2), dateUtil).value).isEqualTo(154)
+        // An exact tie goes to the even number, as in the text AAPS shows
+        assertThat(SensorGlucoseElement(bgReading(100, 121.5), dateUtil).value).isEqualTo(122)
+        assertThat(SensorGlucoseElement(bgReading(100, 122.5), dateUtil).value).isEqualTo(122)
 
         val obj = json(SensorGlucoseElement(bgReading(100, 99.9), dateUtil))
-        assertThat(obj.get("value").asInt).isEqualTo(99)
+        assertThat(obj.get("value").asInt).isEqualTo(100)
     }
 
     @Test
