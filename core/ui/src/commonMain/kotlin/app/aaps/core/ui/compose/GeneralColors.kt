@@ -50,9 +50,9 @@ import androidx.compose.ui.graphics.Color
  * @property uamPrediction Color for UAM (unannounced meals) predictions (yellow)
  * @property ztPrediction Color for zero-temp predictions (cyan)
  * @property graphGrid Color for the grid lines on the overview graphs, translucent so a band drawn under them shows through
- * @property graphBgInRange In-range readings and the LOW and HIGH lines on the BG graph: a softer green than [bgInRange], which stays for the big BG number
- * @property graphBgHigh High readings on the BG graph: as soft as [graphBgInRange], [bgHigh] stays for the big BG number
- * @property graphBgLow Low readings on the BG graph: as soft as [graphBgInRange], [bgLow] stays for the big BG number
+ * @property graphBgInRange In-range readings on the BG graph: a softer green than [bgInRange], which stays for the big BG number
+ * @property graphBgHigh High readings and the HIGH band on the BG graph: as soft as [graphBgInRange], [bgHigh] stays for the big BG number
+ * @property graphBgLow Low readings and the LOW band on the BG graph: as soft as [graphBgInRange], [bgLow] stays for the big BG number
  */
 data class GeneralColors(
     val activeInsulinText: Color,
@@ -206,7 +206,7 @@ val DarkGeneralColors = GeneralColors(
     aCobPrediction = Color(0x80FFB74D),      // lighter orange for absorbed COB (50% alpha, dark mode)
     uamPrediction = Color(0xFFE6D39A),       // lighter yellow for UAM predictions (dark mode)
     ztPrediction = Color(0xFF4DD4D4),        // lighter cyan for zero-temp predictions (dark mode)
-    graphGrid = Color(0x40938F99),           // Material outline at 25%: outlineVariant at 50% was barely visible on the dark surface
+    graphGrid = Color(0x66938F99),           // Material outline at 40%, about as strong as a Material divider on the dark surface: at 25% the grid almost disappeared
     graphBgInRange = Color(0xFF5CD66A),      // soft green: pure green looks neon on the dark surface
     graphBgHigh = Color(0xFFE3D45A),         // soft yellow
     graphBgLow = Color(0xFFEF6060),          // soft red

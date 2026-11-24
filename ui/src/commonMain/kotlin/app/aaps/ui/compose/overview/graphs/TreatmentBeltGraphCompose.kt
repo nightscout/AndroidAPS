@@ -44,7 +44,6 @@ import com.patrykandpatrick.vico.compose.cartesian.VicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.VicoZoomState
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisTickComponent
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
@@ -57,7 +56,6 @@ import com.patrykandpatrick.vico.compose.common.DrawingContext
 import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.Position
 import com.patrykandpatrick.vico.compose.common.component.Component
-import com.patrykandpatrick.vico.compose.common.component.LineComponent
 import com.patrykandpatrick.vico.compose.common.component.TextComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.data.ExtraStore
@@ -66,8 +64,6 @@ import kotlinx.coroutines.delay
 /** How near to an icon a tap has to be to show that icon's event: half the icon and a little more. */
 private val BELT_ICON_TAP_RADIUS = 12.dp
 
-/** The COB failover bar in the carbs colour at a little more than half its strength, like the basal on BG. */
-private const val COB_FAILOVER_ALPHA = 0.6f
 
 /**
  * The COB failover stretches of a model, for [CobFailoverBar]. Carried in the model, so the bar always
@@ -372,7 +368,8 @@ fun TreatmentBeltGraphCompose(
         }
     }
     val carbsColor = elementColors.carbs
-    val cobFailoverBar = remember(carbsColor) { CobFailoverBar(carbsColor.copy(alpha = COB_FAILOVER_ALPHA)) }
+    // In the carbs colour of the second tier, like the basal on BG
+    val cobFailoverBar = remember(carbsColor) { CobFailoverBar(carbsColor.copy(alpha = SECOND_TIER_ALPHA)) }
     val beltIcons = remember(eventIconColor, announcementPainter, clinicalNotesPainter, notePainter) {
         BeltIcons(
             icons = mapOf(
@@ -406,7 +403,8 @@ fun TreatmentBeltGraphCompose(
                     style = TextStyle(color = Color.Transparent),
                     minWidth = TextComponent.MinWidth.fixed(30.dp)
                 ),
-                tick = rememberAxisTickComponent(fill = Fill(Color.Transparent)),
+                // No tick, as on the graphs: then all the left axes have the same width and the hour lines line up
+                tick = null,
                 itemPlacer = remember { VerticalAxis.ItemPlacer.count({ 2 }) },
                 // No frame and no axis lines: the belt is a strip of icons and mode colours
                 line = null,
@@ -418,8 +416,8 @@ fun TreatmentBeltGraphCompose(
                 label = null,
                 tick = null,
                 line = null,
-                // The hour lines in the grid colour of the BG graph, so they run on into it
-                guideline = LineComponent(fill = Fill(AapsTheme.generalColors.graphGrid))
+                // The hour lines, dotted as on the BG graph, so they run on into it
+                guideline = rememberGridLine()
             ),
             getXStep = { _, _, _ -> 1.0 }
         ),
@@ -537,7 +535,8 @@ private class CobFailoverBar(private val color: Color) : Decoration {
             fun canvasX(x: Double): Float =
                 layerBounds.left + layerDimensions.startPadding +
                     layerDimensions.xSpacing * ((x - ranges.minX) / ranges.xStep).toFloat() - scroll
-            val height = AapsSpacing.small.pixels
+            // Thin: the bar runs as long as the guess, and 4 dp high it read as a stripe across the belt
+            val height = AapsSpacing.extraSmall.pixels
             for (stretch in stretches) {
                 val left = canvasX(stretch.start).coerceAtLeast(layerBounds.left)
                 val right = canvasX(stretch.endInclusive).coerceAtMost(layerBounds.right)

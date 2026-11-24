@@ -199,7 +199,7 @@ no axis of its own must not move them.
 | room below | `lowMark - bgNice.min` |
 
 On the BG graph the anchor is the low mark rather than the axis floor, because the low mark is the
-dashed green LOW line: a horizontal reference the eye already uses, with the room
+LOW band: a horizontal reference the eye already uses, with the room
 between it and the axis floor left over for the rare negative excursion, which then reads as "below
 the green".
 
@@ -222,7 +222,7 @@ The BG graph shows what AAPS 3 showed under the curve, so no graph below BG is n
 - **The BG axis starts at 0.** The top is still windowed (`niceScale(0.0, dataMax)`).
 - **Basal** is drawn in BG units: 0 U/h at BG 0, and the highest basal of the visible window
   (`basalWindowMax`, `GraphUtils.kt`) at `BASAL_TOP_OF_LOW_MARK` (0.6) of the low mark, so it stays
-  under the LOW line. It is the first layer, so a low reading is drawn over it. The step
+  under the LOW band. It is the first layer, so a low reading is drawn over it. The step
   series reach the right edge of the axis (`processStepPoints`).
 - **Manual boluses and carbs** are markers on the curve (`TreatmentMarkers.kt`). A bolus has its
   amount above it, carbs below. A label that would not fit inside the graph is left out.

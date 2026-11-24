@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.ui.MarkerTier
 import app.aaps.core.interfaces.overview.graph.GraphDataPoint
+import app.aaps.core.ui.compose.AapsTheme
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.CartesianMeasuringContext
 import com.patrykandpatrick.vico.compose.cartesian.Scroll
@@ -38,7 +39,9 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.compose.cartesian.decoration.Decoration
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
+import com.patrykandpatrick.vico.compose.common.DashedShape
 import com.patrykandpatrick.vico.compose.common.Fill
+import com.patrykandpatrick.vico.compose.common.component.LineComponent
 import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -714,6 +717,47 @@ fun rememberNowLine(minTimestamp: Long, nowTimestamp: Long, color: Color): NowLi
 }
 
 /**
+ * The second tier of the overview graphs, at a little more than half the strength of its colour: what
+ * the loop calculates or guesses. On BG the basal, the SMBs and the profile switch, on the belt the COB
+ * failover bar, and every series line on the graphs below BG (IOB, COB and the others). BG, boluses,
+ * carbs and meter values are the first tier, at full colour. A line that runs the whole width at full
+ * colour has more ink than all the BG dots together, and drew the eye away from BG.
+ */
+internal const val SECOND_TIER_ALPHA = 0.6f
+
+/** Size of a dot of the grid, see [rememberGridLine]. */
+private val GRID_DOT_SIZE = 1.dp
+
+/** Space between two dots of the grid, see [rememberGridLine]. */
+private val GRID_DOT_GAP = 6.dp
+
+/**
+ * The grid dots are this many times as strong as the theme's grid colour, which is made for solid lines
+ * (the baselines and the ticks keep it). A dot covers far less than a line, so it can be crisp, and the
+ * gaps keep the grid light.
+ */
+private const val GRID_DOT_STRENGTH = 1.5f
+
+/**
+ * The grid of the overview graphs, the lines at the axis labels and the hour lines: round dots in the
+ * grid colour with space between them. Much less ink than a solid line, while each dot stays crisp, so
+ * the grid is there when you look for it and does not pull the eye. Round dots and not dashes, so it is
+ * not mistaken for the dashed "now" line or the profile basal. The baselines (BG 0, the zero line) stay
+ * solid: they are the floor the areas stand on, not grid.
+ */
+@Composable
+internal fun rememberGridLine(): LineComponent {
+    val color = AapsTheme.generalColors.graphGrid
+    return remember(color) {
+        LineComponent(
+            fill = Fill(color.copy(alpha = (color.alpha * GRID_DOT_STRENGTH).coerceAtMost(1f))),
+            thickness = GRID_DOT_SIZE,
+            shape = DashedShape(shape = CircleShape, dashLength = GRID_DOT_SIZE, gapLength = GRID_DOT_GAP)
+        )
+    }
+}
+
+/**
  * Holder for the latest visible x-range, written from [VisibleRangeReporter.drawOverLayers] on
  * every draw pass.
  *
@@ -1059,7 +1103,7 @@ fun activityOverlayScale(
     // This has to be caught before the nice-ification: zeroFloorNiceRange(0.0, 0.0) comes back as
     // 0..1, because niceScale widens a zero-width range by 1 so that the axis never collapses.
     // That would give a positive scale and draw a flat line on [zeroLevel] — on the BG graph
-    // that is the low mark, the dashed LOW line, where it reads as a second
+    // that is the low mark, the LOW band, where it reads as a second
     // target line.
     if (activityMin == 0.0 && activityMax == 0.0) return ActivityOverlayScale(zeroLevel, 0.0)
     val nice = zeroFloorNiceRange(activityMin, activityMax)

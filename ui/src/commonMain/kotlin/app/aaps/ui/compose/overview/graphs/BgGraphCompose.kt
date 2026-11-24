@@ -68,19 +68,37 @@ import kotlin.concurrent.Volatile
 
 /**
  * Top of the basal on the BG graph, as a share of the low mark. Basal starts at BG 0, and the highest
- * basal in view reaches this share of the low mark, so it stays under the LOW line. The same
+ * basal in view reaches this share of the low mark, so it stays under the LOW band. The same
  * as in AAPS 3, where the axis also started at 0.
  */
 private const val BASAL_TOP_OF_LOW_MARK = 0.6
 
-/** The dashed LOW and HIGH lines and the target line at half the strength of their colour. */
-private const val RANGE_AND_TARGET_ALPHA = 0.5f
+/** The line from a meter value to the sensor curve at half the strength of its colour. */
+private const val METER_LINE_ALPHA = 0.5f
 
 /**
- * The second layer of the graph at a little more than half the strength of its colour: the basal, the
- * SMBs and the profile switch. BG, boluses, carbs and meter values are the strongest marks.
+ * Width of the soft bands at the target, the LOW and the HIGH value. A value that means something is a
+ * band, wide and faint like a highlighter stroke, and the grid is the only thin line. As thin lines they
+ * all looked like the grid, and the graph read as one table of lines. Dashed, next to the dots of the
+ * readings and the predictions, the LOW and HIGH lines read as more data.
  */
-private const val LOOP_LAYER_ALPHA = 0.6f
+private val BAND_WIDTH = 4.dp
+
+/** The target band: grey, with no core line, which would look like the grid again. */
+private const val TARGET_BAND_ALPHA = 0.2f
+
+/** The LOW and HIGH bands, in the colour of the readings beyond them. Their colour comes from the core, see [RANGE_CORE_ALPHA]. */
+private const val RANGE_BAND_ALPHA = 0.2f
+
+/**
+ * The thin core line in the middle of the LOW and HIGH bands, like a pen line in a highlighter stroke. Faint
+ * yellow turns olive and faint red turns brown on the dark background, so the clean colour and the exact
+ * value come from this line, and the band only gives the form.
+ */
+private const val RANGE_CORE_ALPHA = 0.6f
+
+/** Width of the core line of the LOW and HIGH bands, see [RANGE_CORE_ALPHA]. */
+private val RANGE_CORE_WIDTH = 0.5.dp
 
 /** Series identifiers */
 private const val SERIES_REGULAR = "regular"
@@ -163,7 +181,9 @@ private class MutableYRangeProvider(
  *
  * Layer 0 (start axis): Basal — actual delivered (solid step + area fill) + profile (dashed step).
  *   First, so a low reading is drawn over the basal and not under its fill.
- * Layer 1 (start axis): BG readings — regular (outlined circles) + bucketed (filled, range-colored)
+ * Layer 1 (start axis): the soft bands at the target, LOW and HIGH. A layer, so the grid passes behind
+ *   them, and before BG, so the readings stay on top.
+ * Layer 2 (start axis): BG readings — regular (outlined circles) + bucketed (filled, range-colored)
  * Layer 5 (start axis): treatment markers — a manual bolus above the reading pointing down at it,
  * carbs below it pointing up, and a measured value (calibration, BG check) sits on its own value. See
  * [treatmentMarkers] for the placement rules.
@@ -224,15 +244,15 @@ fun BgGraphCompose(
     val lowColor = AapsTheme.generalColors.graphBgLow
     val inRangeColor = AapsTheme.generalColors.graphBgInRange
     val highColor = AapsTheme.generalColors.graphBgHigh
-    // Neutral, so it does not read as a second range next to the green LOW and HIGH lines
+    // Neutral, so it does not read as a second range next to the LOW and HIGH bands
     val targetLineColor = MaterialTheme.colorScheme.onSurfaceVariant
     val activityColor = AapsTheme.elementColors.activity
     val insulinColor = AapsTheme.elementColors.insulin
     // Basal and SMBs are insulin too: the same colour as a bolus. Both are weaker: the basal line runs the
     // whole width of the graph, and the SMBs come every few minutes, so at full colour they would compete
     // with the curve and the bolus. Together they read as one quiet strip of what the loop did.
-    val basalColor = insulinColor.copy(alpha = LOOP_LAYER_ALPHA)
-    val smbColor = insulinColor.copy(alpha = LOOP_LAYER_ALPHA)
+    val basalColor = insulinColor.copy(alpha = SECOND_TIER_ALPHA)
+    val smbColor = insulinColor.copy(alpha = SECOND_TIER_ALPHA)
     val carbsColor = AapsTheme.elementColors.carbs
     val bgCheckColor = AapsTheme.elementColors.bgCheck
 
@@ -290,7 +310,7 @@ fun BgGraphCompose(
     val bottomAxisItemPlacer = rememberBottomAxisItemPlacer(minTimestamp)
 
     // =========================================================================
-    // BG layer lines (layer 1)
+    // BG layer lines (layer 2)
     // =========================================================================
 
     val regularLine = remember(regularColor) {
@@ -378,19 +398,30 @@ fun BgGraphCompose(
     }
 
     // =========================================================================
-    // Target line (layer 2) — single line on start (BG) axis
+    // Reference bands (layer 1) — the target, LOW and HIGH on the start (BG) axis
     // =========================================================================
 
-    val targetLine = remember(targetLineColor) {
-        LineCartesianLayer.Line(
-            fill = LineCartesianLayer.LineFill.single(Fill(targetLineColor.copy(alpha = RANGE_AND_TARGET_ALPHA))),
-            stroke = LineCartesianLayer.LineStroke.Continuous(thickness = 1.dp),
+    // A soft band at each value that means something: the target in grey, LOW and HIGH in the colour of the
+    // readings beyond them, as Trio draws its lines, so a band also says which side is bad. LOW and HIGH get a
+    // thin core line in that colour. Only the edges of the range: a filled area between LOW and HIGH tinted
+    // every reading and marker inside it. A layer and not a decoration: the layers are drawn after the grid,
+    // and this one before BG, so the grid passes behind the bands and the readings stay on top of them.
+    // The order of the lines is the order of the series in submitBgModel.
+    val bandLines = remember(targetLineColor, lowColor, highColor) {
+        fun band(color: Color, alpha: Float, width: Dp) = LineCartesianLayer.Line(
+            fill = LineCartesianLayer.LineFill.single(Fill(color.copy(alpha = alpha))),
+            stroke = LineCartesianLayer.LineStroke.Continuous(thickness = width),
             areaFill = null,
             interpolator = Square
         )
+        listOf(
+            band(targetLineColor, TARGET_BAND_ALPHA, BAND_WIDTH),
+            band(lowColor, RANGE_BAND_ALPHA, BAND_WIDTH),
+            band(highColor, RANGE_BAND_ALPHA, BAND_WIDTH),
+            band(lowColor, RANGE_CORE_ALPHA, RANGE_CORE_WIDTH),
+            band(highColor, RANGE_CORE_ALPHA, RANGE_CORE_WIDTH)
+        )
     }
-
-    val targetLines = remember(targetLine) { listOf(targetLine) }
 
     // =========================================================================
     // EPS layer lines (layer 3) — profile icon points
@@ -405,7 +436,7 @@ fun BgGraphCompose(
             areaFill = null,
             pointProvider = LineCartesianLayer.PointProvider.single(
                 LineCartesianLayer.Point(
-                    component = PainterComponent(profilePainter, tint = profileSwitchColor.copy(alpha = LOOP_LAYER_ALPHA)),
+                    component = PainterComponent(profilePainter, tint = profileSwitchColor.copy(alpha = SECOND_TIER_ALPHA)),
                     size = 16.dp
                 )
             )
@@ -492,14 +523,6 @@ fun BgGraphCompose(
     val nowLineColor = MaterialTheme.colorScheme.onSurface
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
 
-    // The target range: dashed lines at lowMark and highMark on the BG axis, in the in-range colour at
-    // half strength, so the green readings stay stronger than the lines
-    val lowMark = chartConfig.lowMark
-    val highMark = chartConfig.highMark
-    val inRangeBox = remember(lowMark, highMark, inRangeColor) {
-        InRangeLines(low = lowMark, high = highMark, color = inRangeColor.copy(alpha = RANGE_AND_TARGET_ALPHA))
-    }
-
     val inspectMarker = remember(inspect) { inspect?.let { SilentInspectMarker } }
     // Always called, so the composable calls do not depend on inspect
     val defaultMarkerController = CartesianMarkerController.rememberShowOnPress()
@@ -514,8 +537,8 @@ fun BgGraphCompose(
             profileUtil.fromMgdlToStringInUnits(profileUtil.convertToMgdl(value, profileUtil.units))
         }
     }
-    val decorations = remember(inRangeBox, nowLine, clockChanges, treatmentLabels, inspectLine) {
-        listOfNotNull(inRangeBox, nowLine, clockChanges, treatmentLabels, inspectLine)
+    val decorations = remember(nowLine, clockChanges, treatmentLabels, inspectLine) {
+        listOfNotNull(nowLine, clockChanges, treatmentLabels, inspectLine)
     }
 
     // =========================================================================
@@ -537,15 +560,15 @@ fun BgGraphCompose(
                 rangeProvider = startAxisRangeProvider,
                 verticalAxisPosition = Axis.Position.Vertical.Start
             ),
-            // Layer 1: BG (start axis, visible)
+            // Layer 1: Target, LOW and HIGH bands (start axis — shares BG Y-axis range; before BG, so under it)
             rememberLineCartesianLayer(
-                lineProvider = LineCartesianLayer.LineProvider.series(bgLines),
+                lineProvider = LineCartesianLayer.LineProvider.series(bandLines),
                 rangeProvider = startAxisRangeProvider,
                 verticalAxisPosition = Axis.Position.Vertical.Start
             ),
-            // Layer 2: Target line (start axis — shares BG Y-axis range)
+            // Layer 2: BG (start axis, visible)
             rememberLineCartesianLayer(
-                lineProvider = LineCartesianLayer.LineProvider.series(targetLines),
+                lineProvider = LineCartesianLayer.LineProvider.series(bgLines),
                 rangeProvider = startAxisRangeProvider,
                 verticalAxisPosition = Axis.Position.Vertical.Start
             ),
@@ -573,8 +596,15 @@ fun BgGraphCompose(
                     style = TextStyle(color = MaterialTheme.colorScheme.onSurface),
                     minWidth = TextComponent.MinWidth.fixed(30.dp)
                 ),
-                // No horizontal grid: the LOW, HIGH and target lines are the horizontal reference
-                guideline = null
+                // A dotted grid at every label, as on the graphs below, so the labels line up with something
+                // (see rememberGridLine). The target, LOW and HIGH are soft bands (BAND_WIDTH), so the grid
+                // passes behind them and is not mistaken for them. No axis line and no ticks: the default
+                // near-white line was the strongest line on the graph that is not data. The same on every
+                // graph, so the hour lines stay aligned (Vico counts the tick and the line in the axis width
+                // only when they exist).
+                line = null,
+                tick = null,
+                guideline = rememberGridLine()
             ),
             bottomAxis = HorizontalAxis.rememberBottom(
                 valueFormatter = timeFormatter,
@@ -582,7 +612,10 @@ fun BgGraphCompose(
                 label = rememberTextComponent(
                     style = TextStyle(color = MaterialTheme.colorScheme.onSurface)
                 ),
-                guideline = LineComponent(fill = Fill(AapsTheme.generalColors.graphGrid))
+                // A quiet solid baseline in the grid colour, not the default near-white line; dotted hour lines
+                line = LineComponent(fill = Fill(AapsTheme.generalColors.graphGrid)),
+                tick = LineComponent(fill = Fill(AapsTheme.generalColors.graphGrid)),
+                guideline = rememberGridLine()
             ),
             decorations = decorations,
             getXStep = { _, _, _ -> 1.0 },
@@ -682,7 +715,7 @@ private suspend fun submitBgModel(
     )
     val basalToBg = if (basalMax > 0.0) chartConfig.lowMark * BASAL_TOP_OF_LOW_MARK / basalMax else 0.0
 
-    // Activity overlay: zero anchored on the low mark (the dashed green LOW line),
+    // Activity overlay: zero anchored on the low mark (the LOW band),
     // scaled from the visible window like every other curve. The BG axis above is never changed
     // to fit it — the activity is fitted into the room the BG axis already leaves on each side
     // of the low mark. Below the low mark only down to the top of the basal, which has the rest.
@@ -718,7 +751,7 @@ private suspend fun submitBgModel(
     )
 
     // Note: do NOT early-return when there are no BG points. With a clean DB the chart must
-    // still build its frame (axes, now-line, LOW and HIGH lines) via the normalizer + dummy layers,
+    // still build its frame (axes, now-line, LOW and HIGH bands) via the normalizer + dummy layers,
     // matching the COB graph. The per-layer logic below already handles empty series.
 
     modelProducer.runTransaction {
@@ -730,7 +763,25 @@ private suspend fun submitBgModel(
             }
         }
 
-        // Block 2 → BG layer (layer 1, start axis)
+        // Block 2 → Target, LOW and HIGH bands (layer 1, start axis), in the order of bandLines: the target,
+        // the LOW and the HIGH band, then the LOW and the HIGH core line over them
+        lineModel {
+            if (input.targetData.targets.size >= 2) {
+                val pts = input.targetData.targets
+                    .map { timestampToX(it.timestamp, minTimestamp) to it.value }
+                    .sortedBy { it.first }
+                series(x = pts.map { it.first }, y = pts.map { it.second })
+            } else {
+                // Dummy series - invisible at y=0
+                series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
+            }
+            val fullWidth = listOf(0.0, input.maxX)
+            for (value in listOf(chartConfig.lowMark, chartConfig.highMark, chartConfig.lowMark, chartConfig.highMark)) {
+                series(x = fullWidth, y = listOf(value, value))
+            }
+        }
+
+        // Block 3 → BG layer (layer 2, start axis)
         lineModel {
             val withData = mutableListOf<String>()
 
@@ -768,19 +819,6 @@ private suspend fun submitBgModel(
             activeSeries.value = withData.toList()
         }
 
-        // Block 3 → Target line layer (layer 2, start axis)
-        lineModel {
-            if (input.targetData.targets.size >= 2) {
-                val pts = input.targetData.targets
-                    .map { timestampToX(it.timestamp, minTimestamp) to it.value }
-                    .sortedBy { it.first }
-                series(x = pts.map { it.first }, y = pts.map { it.second })
-            } else {
-                // Dummy series - invisible at y=0
-                series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
-            }
-        }
-
         // Block 4 → EPS layer (layer 3, start axis — Y based on profile %, scaled into BG coordinate space)
         // Same principle as legacy (originalPercentage/100 * baseline), but measured on the axis that
         // is drawn, so the icon keeps its height while the graph is scrolled and zoomed, and a strong
@@ -798,7 +836,7 @@ private suspend fun submitBgModel(
         }
 
         // Block 5 → Activity layer (layer 4, start axis — Y-values mapped into BG coordinate space)
-        // Zero activity is drawn at the low mark, the dashed green LOW line:
+        // Zero activity is drawn at the low mark, the LOW band:
         // a natural horizontal reference, with the room between it and the BG axis floor left
         // for the rare negative excursion. Scale comes from the visible window only — see
         // activityOverlayScale and activityScale above.
@@ -880,43 +918,6 @@ private fun createMarkerLine(color: Color, shapeOf: (tipInset: Float) -> Shape, 
 }
 
 /**
- * The edges of the target range: a dashed line at [low] and one at [high] on the BG axis, drawn under
- * the layers. A filled band between them tinted every reading and marker inside it, so the lines
- * mark the range without adding a colour area to the graph.
- */
-private data class InRangeLines(private val low: Double, private val high: Double, private val color: Color) : Decoration {
-
-    override fun drawUnderLayers(context: CartesianDrawingContext) {
-        with(context) {
-            val yRange = ranges.getYRange(Axis.Position.Vertical.Start)
-            if (yRange.length == 0.0) return
-            val strokeWidth = RANGE_LINE_WIDTH.pixels
-            val dash = RANGE_LINE_DASH.pixels
-            val dashEffect = PathEffect.dashPathEffect(floatArrayOf(dash, dash))
-            for (value in listOf(low, high)) {
-                if (value < yRange.minY || value > yRange.maxY) continue
-                val y = layerBounds.bottom - ((value - yRange.minY) / yRange.length).toFloat() * layerBounds.height
-                with(mutableDrawScope) {
-                    drawLine(
-                        color = this@InRangeLines.color,
-                        start = Offset(layerBounds.left, y),
-                        end = Offset(layerBounds.right, y),
-                        strokeWidth = strokeWidth,
-                        pathEffect = dashEffect
-                    )
-                }
-            }
-        }
-    }
-
-    private companion object {
-
-        val RANGE_LINE_WIDTH = 1.dp
-        val RANGE_LINE_DASH = 4.dp
-    }
-}
-
-/**
  * The amount at each treatment marker: the insulin above its marker and the carbs below theirs, so
  * the text sits on the side away from the reading. A measured glucose value (calibration, BG check)
  * gets its value beside its icon, and a dotted line to the sensor curve at the same moment, so the
@@ -948,7 +949,7 @@ private class TreatmentLabels(
             if (markers.calibrations.isEmpty()) return
             val dash = MEASURED_CONNECTOR_DASH.pixels
             val effect = PathEffect.dashPathEffect(floatArrayOf(dash, dash))
-            val color = measuredColor.copy(alpha = RANGE_AND_TARGET_ALPHA)
+            val color = measuredColor.copy(alpha = METER_LINE_ALPHA)
             for (marker in markers.calibrations) {
                 val sensorY = marker.sensorY ?: continue
                 val x = canvasX(marker.x)

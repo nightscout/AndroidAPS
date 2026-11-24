@@ -436,7 +436,11 @@ fun SecondaryGraphCompose(
             style = TextStyle(color = MaterialTheme.colorScheme.onSurface),
             minWidth = TextComponent.MinWidth.fixed(30.dp)
         ),
-        guideline = LineComponent(fill = Fill(AapsTheme.generalColors.graphGrid))
+        // No axis line and no ticks, as on the BG graph: the labels show the scale, and the default
+        // near-white line made an empty graph a heavy box
+        line = null,
+        tick = null,
+        guideline = rememberGridLine()
     )
     // The right axis has its labels inside the plot, in the color of its series, and no line, tick or
     // grid of its own. So it takes no width, and the hour lines stay under those of the BG graph.
@@ -453,8 +457,10 @@ fun SecondaryGraphCompose(
     val bottomAxis = HorizontalAxis.rememberBottom(
         itemPlacer = bottomAxisItemPlacer,
         label = null,
+        // The zero line, solid and quiet in the grid colour; dotted hour lines
+        line = LineComponent(fill = Fill(AapsTheme.generalColors.graphGrid)),
         tick = null,
-        guideline = LineComponent(fill = Fill(AapsTheme.generalColors.graphGrid))
+        guideline = rememberGridLine()
     )
 
     // Press and hold works here too. The marker draws nothing, it only hands the time under the
@@ -646,10 +652,18 @@ fun rememberSeriesColors(): SeriesColors {
     }
 }
 
+/**
+ * The line of a series on the graphs below BG: its colour at the strength of the second tier, see
+ * [SECOND_TIER_ALPHA]. Only the line: the axis labels keep the full colour, and an area fill starts
+ * from the full colour at [AREA_FILL_ALPHA].
+ */
+private fun seriesLineFill(color: Color): LineCartesianLayer.LineFill =
+    LineCartesianLayer.LineFill.single(Fill(color.copy(alpha = SECOND_TIER_ALPHA)))
+
 /** DevSlope min line — magenta, no fill (matches @color/devSlopeNeg #FF00FF) */
 private fun createDevSlopeMinLine(): LineCartesianLayer.Line {
     return LineCartesianLayer.Line(
-        fill = LineCartesianLayer.LineFill.single(Fill(Color(0xFFFF00FF))),
+        fill = seriesLineFill(Color(0xFFFF00FF)),
         areaFill = null
     )
 }
@@ -660,7 +674,7 @@ fun createSeriesLine(type: SeriesType, colors: SeriesColors): LineCartesianLayer
     return when (type) {
         // Step function with area fill (like IOB)
         SeriesType.ABS_IOB                                                       -> LineCartesianLayer.Line(
-            fill = LineCartesianLayer.LineFill.single(Fill(color)),
+            fill = seriesLineFill(color),
             areaFill = LineCartesianLayer.AreaFill.single(
                 Fill(Brush.verticalGradient(listOf(color.copy(alpha = AREA_FILL_ALPHA), Color.Transparent)))
             ),
@@ -668,19 +682,19 @@ fun createSeriesLine(type: SeriesType, colors: SeriesColors): LineCartesianLayer
         )
         // Line only, no fill
         SeriesType.DEV_SLOPE, SeriesType.SENSITIVITY, SeriesType.VAR_SENSITIVITY -> LineCartesianLayer.Line(
-            fill = LineCartesianLayer.LineFill.single(Fill(color)),
+            fill = seriesLineFill(color),
             areaFill = null
         )
         // Thin curved line, no fill, so it reads well over the steps columns
         SeriesType.HEART_RATE                                                    -> LineCartesianLayer.Line(
-            fill = LineCartesianLayer.LineFill.single(Fill(color)),
+            fill = seriesLineFill(color),
             stroke = LineCartesianLayer.LineStroke.Continuous(thickness = 1.5.dp),
             areaFill = null,
             interpolator = LineCartesianLayer.Interpolator.cubic()
         )
         // Default: smooth line with gradient area fill
         else                                                                     -> LineCartesianLayer.Line(
-            fill = LineCartesianLayer.LineFill.single(Fill(color)),
+            fill = seriesLineFill(color),
             areaFill = LineCartesianLayer.AreaFill.single(
                 Fill(Brush.verticalGradient(listOf(color.copy(alpha = AREA_FILL_ALPHA), Color.Transparent)))
             )
@@ -721,14 +735,15 @@ fun rememberIobLineStyles(): IobLineStyles {
     return remember(iobColor, extBolusColor, extBolusLabelComponent, extBolusValueFormatter) {
         IobLineStyles(
             iobLine = LineCartesianLayer.Line(
-                fill = LineCartesianLayer.LineFill.single(Fill(iobColor)),
+                fill = seriesLineFill(iobColor),
                 areaFill = LineCartesianLayer.AreaFill.single(
                     Fill(Brush.verticalGradient(listOf(iobColor.copy(alpha = AREA_FILL_ALPHA), Color.Transparent)))
                 ),
                 interpolator = Square
             ),
+            // The line in the second tier, its amount labels at full colour like a bolus on BG
             extBolusLine = LineCartesianLayer.Line(
-                fill = LineCartesianLayer.LineFill.single(Fill(extBolusColor)),
+                fill = seriesLineFill(extBolusColor),
                 areaFill = null,
                 dataLabel = extBolusLabelComponent,
                 dataLabelPosition = Position.Vertical.Top,
@@ -742,13 +757,16 @@ fun rememberIobLineStyles(): IobLineStyles {
 // COB line
 // =========================================================================
 
-/** The COB line: an orange adaptive-step line with the area fill of every series, see [AREA_FILL_ALPHA]. */
+/**
+ * The COB line: an orange adaptive-step line in the second tier ([SECOND_TIER_ALPHA]) with the area fill of
+ * every series, see [AREA_FILL_ALPHA].
+ */
 @Composable
 fun rememberCobLine(): LineCartesianLayer.Line {
     val cobColor = AapsTheme.generalColors.cobPrediction
     return remember(cobColor) {
         LineCartesianLayer.Line(
-            fill = LineCartesianLayer.LineFill.single(Fill(cobColor)),
+            fill = seriesLineFill(cobColor),
             areaFill = LineCartesianLayer.AreaFill.single(
                 Fill(Brush.verticalGradient(listOf(cobColor.copy(alpha = AREA_FILL_ALPHA), Color.Transparent)))
             ),
