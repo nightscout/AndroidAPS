@@ -112,6 +112,17 @@ interface PersistenceLayer {
     /** [migrateProfileSwitchInsulinConfig] for the boluses. */
     suspend fun migrateBolusInsulinConfig(label: String, end: Long, peak: Long, concentration: Double): Int
 
+    /**
+     * Gives the profile switches that kept their own DIA but lost the peak in the database 33 migration (what a 3.x
+     * AAPSClient stored for every profile switch from Nightscout) this peak and label. Their DIA stays (#5625). A
+     * start-up migration only, before [migrateProfileSwitchInsulinConfig].
+     * @return how many records were changed
+     */
+    suspend fun fillMissingProfileSwitchInsulinPeak(label: String, peak: Long): Int
+
+    /** [fillMissingProfileSwitchInsulinPeak] for the effective profile switches. */
+    suspend fun fillMissingEffectiveProfileSwitchInsulinPeak(label: String, peak: Long): Int
+
     // Flow-based change observation
     /**
      * Observe changes for a specific domain type

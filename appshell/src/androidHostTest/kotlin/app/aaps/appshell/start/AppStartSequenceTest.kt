@@ -113,6 +113,8 @@ class AppStartSequenceTest {
             whenever(persistenceLayer.migrateProfileSwitchInsulinConfig(any(), any(), any(), any())).thenReturn(0)
             whenever(persistenceLayer.migrateEffectiveProfileSwitchInsulinConfig(any(), any(), any(), any())).thenReturn(0)
             whenever(persistenceLayer.migrateBolusInsulinConfig(any(), any(), any(), any())).thenReturn(0)
+            whenever(persistenceLayer.fillMissingProfileSwitchInsulinPeak(any(), any())).thenReturn(0)
+            whenever(persistenceLayer.fillMissingEffectiveProfileSwitchInsulinPeak(any(), any())).thenReturn(0)
         }
         whenever(insulinManager.seedFromMigration(any())).thenAnswer { it.arguments[0] }
     }
@@ -139,6 +141,9 @@ class AppStartSequenceTest {
         // The migrations before anything reads the settings...
         order.verify(preferences).reloadFromStore()
         order.verify(profileRepository).reset()
+        // ...the old records get their insulin before the Nightscout client can sync new ones in (#5625)...
+        order.verify(persistenceLayer).fillMissingProfileSwitchInsulinPeak(any(), any())
+        order.verify(persistenceLayer).migrateProfileSwitchInsulinConfig(any(), any(), any(), any())
         // ...then the plugins...
         order.verify(pluginStore).plugins = plugins
         order.verify(configBuilder).initialize()
@@ -149,7 +154,6 @@ class AppStartSequenceTest {
         order.verify(automationRuntime).start()
         order.verify(eatReminder).restore()
         order.verify(bgAlarms).start()
-        order.verify(persistenceLayer).migrateProfileSwitchInsulinConfig(any(), any(), any(), any())
         order.verify(platform).startServices()
         // The pre-snooze before the keep-alive, whose first check can run at once.
         order.verify(localAlertUtils).preSnoozeAlarms()
@@ -281,6 +285,27 @@ class AppStartSequenceTest {
         assertThat(postedNotifications()).contains(NotificationId.INSULIN_MIGRATION_DEFAULT_USED)
         verify(insulinManager).seedFromMigration(any())
         verify(profileFunction).invalidateCache()
+    }
+
+    /** What a 3.x client stored: profile switches with their DIA but no peak. They are counted as migrated (#5625). */
+    @Test fun `profile switches that lost only the peak are filled and counted`() = runTest {
+        runBlocking { whenever(persistenceLayer.fillMissingProfileSwitchInsulinPeak(any(), any())).thenReturn(4) }
+
+        sequence().run(plugins, platform)
+
+        verify(profileFunction).invalidateCache()
+    }
+
+    /** The insulin list syncs both ways: a client seeding it would send its own result to the master's list. */
+    @Test fun `a client stamps its records but does not seed the insulin list`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        store = FileKeyValueStore(mapOf("ConfigBuilder_Enabled_INSULIN_InsulinLyumjevPlugin" to true))
+        whenever(persistenceLayer.migrateBolusInsulinConfig(any(), any(), any(), any())).thenReturn(3)
+
+        sequence().run(plugins, platform)
+
+        verify(insulinManager, never()).seedFromMigration(any())
+        verify(persistenceLayer).migrateBolusInsulinConfig(any(), any(), any(), any())
     }
 
     @Test fun `the version record waits 10 s and leaves out the git data of a build without git`() = runTest {

@@ -129,12 +129,13 @@ class AppStartSequence(
      * The DIA each v3 profile was using, with the raw keys those values came from still in the old store.
      *
      * The keys used to be removed as they were read, which put the only copy of the DIA values in a field, in
-     * memory. [migrateRecords] is the only consumer and runs much later, after the vacuum (which can take the
-     * process down below the JVM, where no `catch` reaches) and after the plugins start. A death anywhere in
-     * that gap lost the DIA values for good: the next start found no keys and stamped the old records with a
+     * memory. [migrateRecords] is the only consumer, and it used to run much later, after the vacuum (which can
+     * take the process down below the JVM, where no `catch` reaches) and after the plugins start. A death anywhere
+     * in that gap lost the DIA values for good: the next start found no keys and stamped the old records with a
      * guess instead. That is wrong IOB on historical records, and it is one-way.
      *
-     * So the keys are removed only once the value they carry is safely in the insulin list.
+     * It now runs right after the preference migrations, so the gap is short, but there still is one. So the keys
+     * are removed only once the value they carry is safely in the insulin list.
      */
     private var profileDia: ProfileDiaHarvest = ProfileDiaHarvest(emptyMap(), emptyList())
 
@@ -166,13 +167,18 @@ class AppStartSequence(
             // and an old profile when something was.
             profileRepository.reset()
 
+            // Before the plugins, and that is the point: the Nightscout client syncs as soon as it starts, and a
+            // record from Nightscout that has no insulin gets the running insulin. Until the records are stamped
+            // that is the database 33 mark, so they got the 8 h default instead, for good (#5625). It needs only
+            // the database, the old preferences and the insulin list. Before the vacuum too, so the vacuum
+            // defragments what this changed.
+            migrateRecords()
+
             vacuumDatabaseIfDue()
 
             config.updateInitProgress(rh.gs(ImplementationStrings.initializing_plugins))
             startPlugins(plugins)
             startAfterPlugins()
-
-            migrateRecords()
 
             config.updateInitProgress(rh.gs(CoreUiStrings.initializing))
             finish(platform)
@@ -376,6 +382,14 @@ class AppStartSequence(
      * no profile is given out until then.
      */
     internal suspend fun migrateRecords() {
+        // First the rows that kept their own DIA but lost the peak: what a 3.x AAPSClient stored for every profile
+        // switch it got from Nightscout. Each keeps its DIA and gets the peak of the v3 insulin selection. Before
+        // the plan, so the running record is a whole insulin again and answers it - on a client it is the only
+        // answer, because a client has no local profile to harvest (#5625).
+        val missingPeak = insulinMigration.insulinForMissingPeak(legacyInsulin)
+        val filledPs = persistenceLayer.fillMissingProfileSwitchInsulinPeak(missingPeak.nickname, missingPeak.peakTime)
+        val filledEps = persistenceLayer.fillMissingEffectiveProfileSwitchInsulinPeak(missingPeak.nickname, missingPeak.peakTime)
+
         val plan = insulinMigration.plan(
             recordICfg = profileFunction.getRunningOrRequestedICfg(),
             legacy = legacyInsulin,
@@ -389,8 +403,12 @@ class AppStartSequence(
         // NO_LEGACY_DATA is the exception, because of a new install: nothing from v3, no profile yet and no
         // records to stamp all look the same from here. So that plan is used for the stamping below, which then
         // changes nothing, and the list is left alone.
+        //
+        // A client is the other exception. Its list is the master's: the insulin configuration syncs both ways, so
+        // seeding it here sent the client's own result to the master's list. The client takes the list from the
+        // master, and only its records are stamped.
         val runningICfg =
-            if (plan.source == InsulinMigrationPlan.Source.NO_LEGACY_DATA) plan.iCfg
+            if (plan.source == InsulinMigrationPlan.Source.NO_LEGACY_DATA || config.AAPSCLIENT) plan.iCfg
             else insulinManager.seedFromMigration(plan.iCfg)
 
         // The DIA these keys carry is in the insulin list now, so the old copies can go.
@@ -411,7 +429,7 @@ class AppStartSequence(
         config.updateInitProgress(rh.gs(ImplementationStrings.migrating_boluses))
         val migratedBoluses = persistenceLayer.migrateBolusInsulinConfig(label, end, peak, concentration)
 
-        val totalMigrated = migratedPs + migratedEps + migratedBoluses
+        val totalMigrated = filledPs + filledEps + migratedPs + migratedEps + migratedBoluses
         if (totalMigrated > 0) {
             // Part of the value was made up, and records really got it, so say so. The count keeps this quiet
             // on an install with nothing to migrate.

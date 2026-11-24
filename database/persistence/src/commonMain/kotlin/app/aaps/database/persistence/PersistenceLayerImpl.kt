@@ -198,6 +198,14 @@ class PersistenceLayerImpl(
         repository.bulkMigrateBolusInsulinConfig(label, end, peak, concentration)
     }
 
+    override suspend fun fillMissingProfileSwitchInsulinPeak(label: String, peak: Long): Int = withContext(aapsIoDispatcher) {
+        repository.fillMissingProfileSwitchInsulinPeak(label, peak)
+    }
+
+    override suspend fun fillMissingEffectiveProfileSwitchInsulinPeak(label: String, peak: Long): Int = withContext(aapsIoDispatcher) {
+        repository.fillMissingEffectiveProfileSwitchInsulinPeak(label, peak)
+    }
+
     // Flow-based change observation
     @Suppress("UNCHECKED_CAST")
     override fun <T : Any> observeChanges(type: KClass<T>): Flow<List<T>> {
