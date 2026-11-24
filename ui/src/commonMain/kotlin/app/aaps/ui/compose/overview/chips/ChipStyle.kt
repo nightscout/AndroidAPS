@@ -4,14 +4,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.unit.LayoutDirection
 
 // How the overview chips show their state. A chip has no fill. Its state is in its icon and text: the
 // colour of the temp target icon, the profile star and its percentage, the TBR direction and percent.
 //
 // A chip that runs out (a temp target, a profile or a running mode with an end, a TBR) gets a faint
-// neutral track over the whole chip, and a darker shade grows over it from the left with the time that
-// has passed, like a progress bar. A chip with no end gets neither: the box means one thing only, that
+// neutral track over the whole chip, and a darker shade grows over it from the start (the right in a
+// right-to-left language) with the time that has passed, like a progress bar. A chip with no end gets
+// neither: the box means one thing only, that
 // this runs out. Only a problem gets a filled colour: no profile, a suspended or disconnected pump.
 //
 // Before, every chip with a value had a fill in its own colour, five or six tinted boxes next to the BG
@@ -38,7 +41,10 @@ internal fun Modifier.chipShade(progress: Float): Modifier {
     val passed = progress.coerceAtMost(1f)
     return drawBehind {
         drawRect(color = track)
-        drawRect(color = shade, size = Size(size.width * passed, size.height))
+        val width = size.width * passed
+        // From the start of the reading direction
+        val left = if (layoutDirection == LayoutDirection.Rtl) size.width - width else 0f
+        drawRect(color = shade, topLeft = Offset(left, 0f), size = Size(width, size.height))
     }
 }
 

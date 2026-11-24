@@ -2,12 +2,12 @@ package app.aaps.ui.compose.overview
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -94,7 +94,7 @@ fun OverviewScreenStacked(
     eatReminderBanner: @Composable () -> Unit = {},
     /** Height of the bars drawn over the content in preview mode (a short window, e.g. split screen); added to the end space. */
     overlaidBarsHeight: Dp = 0.dp,
-    /** Progress of the IOB / graph calculation, 100 when done. Shown behind "time ago" in the BG circle. */
+    /** Progress of the IOB / graph calculation, 100 when done. Shown as a thin ring inside the BG ring. */
     calcProgress: Int = 100,
     /**
      * Opens the menu while the top bar is hidden: then the menu button sits in the empty top left corner
@@ -113,124 +113,145 @@ fun OverviewScreenStacked(
     var statusExpanded by rememberSaveable { mutableStateOf(false) }
 
     // BG, the chips, the client card and the status lights stay at the top; only the graphs scroll, so
-    // all the state stays in view while the graphs are read. Above them the version has its own line,
-    // it was drawn over the top of the content before.
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(paddingValues)
-    ) {
-        // The version above the content, in its own line, so it is not drawn over BG. While the top bar
-        // is hidden the menu button is on the left of this line, its lines level with the version text
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = if (onCompactMenuClick != null) VERSION_LINE_MIN_HEIGHT else 0.dp)
-        ) {
-            VersionOverlay(modifier = Modifier.align(Alignment.CenterEnd))
-            if (onCompactMenuClick != null) CompactMenuButton(onClick = onCompactMenuClick)
-        }
-        ActiveSceneBanner(
-            activeState = activeSceneState,
-            expired = sceneExpired,
-            chainTargetName = activeSceneChainTargetName,
-            onEndClick = onEndScene,
-            onDismiss = onDismissScene,
-            endEnabled = endSceneEnabled,
-            formatDuration = formatDuration
-        )
-        eatReminderBanner()
-        // Right under the strip and at the top of the row: BG is the first thing on the screen. The
-        // chips column is taller than the circle, so bottom alignment pushed the circle down.
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 8.dp, end = 8.dp, top = 2.dp, bottom = 8.dp),
-            verticalAlignment = Alignment.Top
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                BgInfoSection(
-                    bgInfo = bgInfoState.bgInfo,
-                    timeAgoText = bgInfoState.timeAgoText,
-                    updateProgress = if (calcProgress in 1..99) calcProgress / 100f else 0f
-                )
-            }
-
-            OverviewChipsColumn(
-                runningMode = runningMode,
-                runningModeText = runningModeText,
-                runningModeRemaining = runningModeRemaining,
-                runningModeProgress = runningModeProgress,
-                runningModeSceneManaged = runningModeSceneManaged,
-                smbEnabled = smbEnabled,
-                profileName = profileName,
-                isProfileModified = isProfileModified,
-                profileProgress = profileProgress,
-                profileSceneManaged = profileSceneManaged,
-                tempTargetText = tempTargetText,
-                tempTargetState = tempTargetState,
-                tempTargetProgress = tempTargetProgress,
-                tempTargetReason = tempTargetReason,
-                tempTargetSceneManaged = tempTargetSceneManaged,
-                tbrState = tbrState,
-                tbrText = tbrText,
-                tbrProgress = tbrProgress,
-                iobUiState = iobUiState,
-                cobUiState = cobUiState,
-                sensitivityUiState = sensitivityUiState,
-                onNavigate = onNavigate,
-                onTbrChipClick = onTbrChipClick,
-                onIobChipClick = onIobChipClick,
-                commandsAllowed = commandsAllowed,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 8.dp)
-            )
-        }
-
-        // On a client, the client status card comes before the status lights
-        if (config.AAPSCLIENT) {
-            val nsClientStatus by graphViewModel.nsClientStatusFlow.collectAsStateWithLifecycle()
-            val flavorTint = when {
-                config.AAPSCLIENT3 -> AapsTheme.generalColors.flavorClient3Tint
-                config.AAPSCLIENT2 -> AapsTheme.generalColors.flavorClient2Tint
-                else               -> AapsTheme.generalColors.flavorClient1Tint
-            }
-            AapsClientStatusCard(
-                statusData = nsClientStatus,
-                flavorTint = flavorTint
-            )
-        }
-
-        OverviewStatusSection(
-            sensorStatus = statusState.sensorStatus,
-            insulinStatus = statusState.insulinStatus,
-            cannulaStatus = statusState.cannulaStatus,
-            batteryStatus = statusState.batteryStatus,
-            showFill = statusState.showFill,
-            showPumpBatteryChange = statusState.showPumpBatteryChange,
-            commandsAllowed = commandsAllowed,
-            onNavigate = onNavigate,
-            statusLightsDef = statusLightsDef,
-            expanded = statusExpanded,
-            onExpandedChange = { statusExpanded = it }
-        )
-
-        // Only the graphs scroll
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-        ) {
+    // all the state stays in view while the graphs are read. That needs height, see PINNED_LAYOUT_MIN_HEIGHT:
+    // in a short window everything scrolls together. Measured outside the padding, so showing and hiding
+    // the top bar does not switch it. Above them the version has its own line, so it is not drawn over BG.
+    BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+        val pinned = maxHeight >= PINNED_LAYOUT_MIN_HEIGHT
+        val scrollState = rememberScrollState()
+        val graphs: @Composable () -> Unit = {
             GraphsSection(
                 graphViewModel = graphViewModel, isSimpleMode = isSimpleMode, iobText = iobUiState.text, cobText = cobUiState.text,
                 overlaidBarsHeight = overlaidBarsHeight
             )
         }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .then(if (pinned) Modifier else Modifier.verticalScroll(scrollState))
+        ) {
+            // The version above the content, in its own line, so it is not drawn over BG. While the top bar
+            // is hidden the menu button is on the left of this line, its lines level with the version text
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = if (onCompactMenuClick != null) VERSION_LINE_MIN_HEIGHT else 0.dp)
+            ) {
+                VersionOverlay(modifier = Modifier.align(Alignment.CenterEnd))
+                if (onCompactMenuClick != null) CompactMenuButton(onClick = onCompactMenuClick)
+            }
+            ActiveSceneBanner(
+                activeState = activeSceneState,
+                expired = sceneExpired,
+                chainTargetName = activeSceneChainTargetName,
+                onEndClick = onEndScene,
+                onDismiss = onDismissScene,
+                endEnabled = endSceneEnabled,
+                formatDuration = formatDuration
+            )
+            eatReminderBanner()
+            // Right under the version line and at the top of the row: BG is the first thing on the screen. The
+            // chips column is taller than the circle, so bottom alignment pushed the circle down.
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp, top = 2.dp, bottom = 8.dp),
+                verticalAlignment = Alignment.Top
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    BgInfoSection(
+                        bgInfo = bgInfoState.bgInfo,
+                        timeAgoText = bgInfoState.timeAgoText,
+                        updateProgress = if (calcProgress in 1..99) calcProgress / 100f else 0f
+                    )
+                }
+
+                OverviewChipsColumn(
+                    runningMode = runningMode,
+                    runningModeText = runningModeText,
+                    runningModeRemaining = runningModeRemaining,
+                    runningModeProgress = runningModeProgress,
+                    runningModeSceneManaged = runningModeSceneManaged,
+                    smbEnabled = smbEnabled,
+                    profileName = profileName,
+                    isProfileModified = isProfileModified,
+                    profileProgress = profileProgress,
+                    profileSceneManaged = profileSceneManaged,
+                    tempTargetText = tempTargetText,
+                    tempTargetState = tempTargetState,
+                    tempTargetProgress = tempTargetProgress,
+                    tempTargetReason = tempTargetReason,
+                    tempTargetSceneManaged = tempTargetSceneManaged,
+                    tbrState = tbrState,
+                    tbrText = tbrText,
+                    tbrProgress = tbrProgress,
+                    iobUiState = iobUiState,
+                    cobUiState = cobUiState,
+                    sensitivityUiState = sensitivityUiState,
+                    onNavigate = onNavigate,
+                    onTbrChipClick = onTbrChipClick,
+                    onIobChipClick = onIobChipClick,
+                    commandsAllowed = commandsAllowed,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp)
+                )
+            }
+
+            // On a client, the client status card comes before the status lights
+            if (config.AAPSCLIENT) {
+                val nsClientStatus by graphViewModel.nsClientStatusFlow.collectAsStateWithLifecycle()
+                val flavorTint = when {
+                    config.AAPSCLIENT3 -> AapsTheme.generalColors.flavorClient3Tint
+                    config.AAPSCLIENT2 -> AapsTheme.generalColors.flavorClient2Tint
+                    else               -> AapsTheme.generalColors.flavorClient1Tint
+                }
+                AapsClientStatusCard(
+                    statusData = nsClientStatus,
+                    flavorTint = flavorTint
+                )
+            }
+
+            OverviewStatusSection(
+                sensorStatus = statusState.sensorStatus,
+                insulinStatus = statusState.insulinStatus,
+                cannulaStatus = statusState.cannulaStatus,
+                batteryStatus = statusState.batteryStatus,
+                showFill = statusState.showFill,
+                showPumpBatteryChange = statusState.showPumpBatteryChange,
+                commandsAllowed = commandsAllowed,
+                onNavigate = onNavigate,
+                statusLightsDef = statusLightsDef,
+                expanded = statusExpanded,
+                onExpandedChange = { statusExpanded = it }
+            )
+
+            if (pinned) {
+                // Only the graphs scroll
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(scrollState)
+                ) {
+                    graphs()
+                }
+            } else {
+                graphs()
+            }
+        }
     }
 }
+
+/**
+ * Least height of the whole overview area, also under the top and bottom bars, for BG, the chips and the
+ * status lights to stay at the top while only the graphs scroll. Phones in portrait have it. Landscape
+ * that is too narrow for two columns and split screen do not: there the pinned part left the graphs
+ * almost no room, so the whole overview scrolls.
+ */
+private val PINNED_LAYOUT_MIN_HEIGHT = 600.dp
 
 /**
  * The menu button while the top bar is hidden, on the left of the version line. It takes no space in

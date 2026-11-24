@@ -82,7 +82,7 @@ fun OverviewScreenSplit(
     eatReminderBanner: @Composable () -> Unit = {},
     /** Height of the bars drawn over the content in preview mode; both columns need it as extra space at their end. */
     overlaidBarsHeight: Dp = 0.dp,
-    /** Progress of the IOB / graph calculation, 100 when done. Shown behind "time ago" in the BG circle. */
+    /** Progress of the IOB / graph calculation, 100 when done. Shown as a thin ring inside the BG ring. */
     calcProgress: Int = 100,
     modifier: Modifier = Modifier
 ) {
