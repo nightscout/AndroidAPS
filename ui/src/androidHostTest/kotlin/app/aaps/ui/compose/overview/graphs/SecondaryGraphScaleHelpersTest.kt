@@ -21,28 +21,6 @@ import org.mockito.kotlin.mock
 internal class SecondaryGraphScaleHelpersTest {
 
     @Nested
-    inner class WindowedYTest {
-
-        @Test
-        fun `filters points to the visible window`() {
-            val points = listOf(0.0 to 1.0, 5.0 to 2.0, 10.0 to 3.0)
-            assertThat(windowedY(points, 4.0, 11.0)).containsExactly(2.0, 3.0)
-        }
-
-        @Test
-        fun `falls back to the full list when the window has no points`() {
-            val points = listOf(0.0 to 1.0, 5.0 to 2.0)
-            assertThat(windowedY(points, 100.0, 200.0)).containsExactly(1.0, 2.0)
-        }
-
-        @Test
-        fun `null window bounds return every point unfiltered`() {
-            val points = listOf(0.0 to 1.0, 5.0 to 2.0)
-            assertThat(windowedY(points, null, null)).containsExactly(1.0, 2.0)
-        }
-    }
-
-    @Nested
     inner class StepValueAtTest {
 
         @Test
@@ -182,8 +160,8 @@ internal class SecondaryGraphScaleHelpersTest {
     @Nested
     inner class WindowedValuesTest {
 
-        private fun spec(vararg points: Pair<Double, Double>, slot: SeriesSlot = SeriesSlot.IobLine, countsForRange: Boolean = true) =
-            SeriesSpec(points.map { it.first }, points.map { it.second }, slot, countsForRange)
+        private fun spec(vararg points: Pair<Double, Double>, slot: SeriesSlot = SeriesSlot.IobLine) =
+            SeriesSpec(points.map { it.first }, points.map { it.second }, slot)
 
         @Test
         fun `unions the values of the series of one axis, windowed`() {
@@ -205,18 +183,15 @@ internal class SecondaryGraphScaleHelpersTest {
         }
 
         /**
-         * Carb markers count towards the axis, because they are drawn on it.
-         *
-         * That gap is open on every cold start: carb markers come straight from the database while
-         * COB waits for the calculation workflow. Measured on a Pixel with COB+ABS after a restart -
-         * `primaryY=[null..null] n=0` against `modelY=[0.0..43.0] slots=[CarbsMarker]` - and the COB
-         * curve, once it arrived at 148, was drawn straight through the top of a 0..44 axis.
+         * Every series counts towards the axis, also one that is only drawn at its amount, like an
+         * extended bolus on IOB. The carbs markers that were on COB showed why. Carbs came straight from the database while COB
+         * waited for the calculation, and an axis sized without them cut them off after a restart.
          */
         @Test
-        fun `carb markers alone still give the axis something to scale to`() {
-            val carbs = spec(6.0 to 36.0, 8.0 to 43.0, slot = SeriesSlot.CarbsMarker)
+        fun `an extended bolus alone still gives the axis something to scale to`() {
+            val extended = spec(6.0 to 3.0, 8.0 to 3.0, slot = SeriesSlot.ExtBolus)
 
-            assertThat(windowedValues(listOf(carbs), 5.0, 10.0)).containsExactly(36.0, 43.0)
+            assertThat(windowedValues(listOf(extended), 5.0, 10.0)).containsExactly(3.0, 3.0)
         }
 
         @Test
@@ -226,22 +201,13 @@ internal class SecondaryGraphScaleHelpersTest {
 
             assertThat(windowedValues(listOf(iob, cob), 1000.0, 2000.0)).containsExactly(1.0, 2.0, 5.0, 6.0)
         }
-
-        // The activity overlay is drawn in IOB units, scaled from the IOB axis: counting it would be circular
-        @Test
-        fun `a series drawn in the units of another one does not count`() {
-            val iob = spec(0.0 to 1.0, 10.0 to 2.0)
-            val overlay = spec(0.0 to 9.0, slot = SeriesSlot.ActivityOverlay, countsForRange = false)
-
-            assertThat(windowedValues(listOf(iob, overlay), null, null)).containsExactly(1.0, 2.0)
-        }
     }
 
     @Nested
     inner class GraphSidesTest {
 
         /** The series a user can put on a graph below BG. */
-        private val configurable = SeriesType.entries - SeriesType.IOB - SeriesType.PREDICTIONS
+        private val configurable = SeriesType.entries - SeriesType.PREDICTIONS
 
         // #5376: DEV was moved to the left, COB drew a plain line on the right and the numbers were DEV's
         @Test
@@ -391,20 +357,12 @@ internal class SecondaryGraphScaleHelpersTest {
 
         @Test
         fun `a graph without values gets an empty frame`() {
-            assertThat(graphAxes(null, null, basalBand = false)).isEqualTo(GraphAxes(EMPTY_AXIS, null))
-        }
-
-        @Test
-        fun `the IOB graph leaves the top of its height to the basal band`() {
-            val axes = graphAxes(AxisRange(0.0, 3.0, 0.0), null, basalBand = true)
-
-            assertThat(axes.left).isEqualTo(AxisBounds(0.0, 3.0 / IOB_HEIGHT_FRACTION))
-            assertThat(axes.right).isNull()
+            assertThat(graphAxes(null, null)).isEqualTo(GraphAxes(EMPTY_AXIS, null))
         }
 
         @Test
         fun `one series keeps its own range`() {
-            assertThat(graphAxes(AxisRange(0.0, 90.0, 0.0), null, basalBand = false)).isEqualTo(GraphAxes(AxisBounds(0.0, 90.0), null))
+            assertThat(graphAxes(AxisRange(0.0, 90.0, 0.0), null)).isEqualTo(GraphAxes(AxisBounds(0.0, 90.0), null))
         }
 
         @Test
@@ -414,7 +372,7 @@ internal class SecondaryGraphScaleHelpersTest {
 
             val (left, right) = alignReferences(cob, deviations)
 
-            assertThat(graphAxes(cob, deviations, basalBand = false)).isEqualTo(GraphAxes(left, right))
+            assertThat(graphAxes(cob, deviations)).isEqualTo(GraphAxes(left, right))
         }
     }
 
@@ -433,7 +391,7 @@ internal class SecondaryGraphScaleHelpersTest {
 
         @Test
         fun `labels come from the axis range and stop at labelMax`() {
-            // The IOB/BAS axis of a 2.9 U IOB: 0..4, the IOB itself up to 3
+            // An IOB axis of 0..4 for a 2.9 U IOB, the IOB itself up to 3
             val placer = NiceVerticalAxisItemPlacer(labelMax = 3.0)
 
             assertThat(placer.getLabelValues(context(0.0, 4.0), 200f, 20f, Axis.Position.Vertical.Start)).containsExactly(0.0, 1.0, 2.0, 3.0).inOrder()

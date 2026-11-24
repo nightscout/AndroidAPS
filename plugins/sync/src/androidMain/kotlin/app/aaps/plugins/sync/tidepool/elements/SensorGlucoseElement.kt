@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import com.google.gson.annotations.Expose
 import java.util.LinkedList
 import java.util.UUID
+import kotlin.math.round
 
 class SensorGlucoseElement(bgReading: GV, dateUtil: DateUtil) :
     BaseElement(bgReading.timestamp, UUID.nameUUIDFromBytes(("AAPS-cgm" + bgReading.timestamp).toByteArray()).toString(), dateUtil) {
@@ -17,7 +18,9 @@ class SensorGlucoseElement(bgReading: GV, dateUtil: DateUtil) :
 
     init {
         this.type = "cbg"
-        value = bgReading.value.toInt()
+        // Rounded, half-even as AAPS shows it. toInt() cut the decimals off, and a source that delivers
+        // them (one that converts from mmol/L, or BG from Nightscout) was stored up to 1 mg/dL low
+        value = round(bgReading.value).toInt()
     }
 
     companion object {

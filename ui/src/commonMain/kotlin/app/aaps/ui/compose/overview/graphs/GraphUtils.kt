@@ -24,8 +24,11 @@ import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.input.pointer.util.addPointerInputChange
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.ui.MarkerTier
+import app.aaps.core.interfaces.overview.graph.GraphDataPoint
+import app.aaps.core.ui.compose.AapsTheme
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.CartesianMeasuringContext
 import com.patrykandpatrick.vico.compose.cartesian.Scroll
@@ -34,12 +37,12 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.Axis
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
-import com.patrykandpatrick.vico.compose.cartesian.data.LineCartesianLayerModel
 import com.patrykandpatrick.vico.compose.cartesian.decoration.Decoration
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
+import com.patrykandpatrick.vico.compose.common.DashedShape
 import com.patrykandpatrick.vico.compose.common.Fill
+import com.patrykandpatrick.vico.compose.common.component.LineComponent
 import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
-import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -124,12 +127,12 @@ fun rememberTimeFormatter(minTimestamp: Long): CartesianValueFormatter {
 }
 
 /**
- * Creates an item placer for X-axis that shows labels at whole hour intervals.
+ * Creates an item placer for the X axis that shows labels at whole hours, and at half or quarter
+ * hours when the graph is zoomed in far enough for them, see [ZoomAwareTimeItemPlacer].
  *
  * Calculates offset from minTimestamp to align labels with whole hours (e.g., 12:00, 13:00).
  *
  * @param minTimestamp The reference timestamp for calculating hour alignment
- * @return HorizontalAxis.ItemPlacer with 60-minute spacing aligned to whole hours
  */
 @OptIn(ExperimentalTime::class)
 @Composable
@@ -140,11 +143,61 @@ fun rememberBottomAxisItemPlacer(minTimestamp: Long): HorizontalAxis.ItemPlacer 
         val localDateTime = instant.toLocalDateTime(timeZone)
         val minutesIntoHour = localDateTime.minute
         val offsetToNextHour = if (minutesIntoHour == 0) 0 else 60 - minutesIntoHour
+        ZoomAwareTimeItemPlacer(offsetToNextHour)
+    }
+}
 
-        HorizontalAxis.ItemPlacer.aligned(
-            spacing = { 60 },  // 60 minutes between labels
-            offset = { offsetToNextHour }
-        )
+/** Steps the time labels can use, in minutes: whole hours, half hours and quarter hours. */
+private val TIME_LABEL_STEPS = listOf(60, 30, 15)
+
+/**
+ * Least room from one time label to the next, so that labels such as "21:30" do not touch. In sp, so it
+ * grows with the font size like the labels do.
+ */
+private val MIN_TIME_LABEL_SPACING = 56.sp
+
+/**
+ * The step of the time labels: the shortest of [TIME_LABEL_STEPS] that still leaves [minSpacingPx]
+ * between two labels at [pxPerMinute]. Whole hours when even they are closer than that; then Vico
+ * leaves out labels by itself, as before.
+ */
+internal fun timeLabelStep(pxPerMinute: Float, minSpacingPx: Float): Int =
+    TIME_LABEL_STEPS.lastOrNull { it * pxPerMinute >= minSpacingPx } ?: TIME_LABEL_STEPS.first()
+
+/**
+ * The x values of the time labels every [step] minutes from [visibleStart] to [visibleEnd], with one
+ * more on each side so a label does not pop in at the edge while scrolling, inside [minX]..[maxX].
+ * [hourOffset] is the x of the first whole hour, so the labels fall on whole, half or quarter hours.
+ */
+internal fun timeLabelValues(visibleStart: Double, visibleEnd: Double, minX: Double, maxX: Double, hourOffset: Int, step: Int): List<Double> {
+    val offset = hourOffset % step
+    val first = floor((visibleStart - offset) / step) * step + offset
+    return generateSequence(first) { it + step }
+        .takeWhile { it <= visibleEnd + step }
+        .filter { it in minX..maxX }
+        .toList()
+}
+
+/**
+ * Time labels at whole hours, as Vico's aligned placer drew them, and at half or quarter hours when
+ * the graph is zoomed in. Zoomed in to an hour or two, whole hours alone left one label on the
+ * whole axis, and nobody could tell when something happened. The hour lines follow the labels.
+ */
+private class ZoomAwareTimeItemPlacer(
+    private val hourOffset: Int,
+    private val hourly: HorizontalAxis.ItemPlacer = HorizontalAxis.ItemPlacer.aligned(spacing = { 60 }, offset = { hourOffset })
+) : HorizontalAxis.ItemPlacer by hourly {
+
+    override fun getLabelValues(
+        context: CartesianDrawingContext,
+        visibleXRange: ClosedFloatingPointRange<Double>,
+        fullXRange: ClosedFloatingPointRange<Double>,
+        maxLabelWidth: Float
+    ): List<Double> = with(context) {
+        val pxPerMinute = (layerDimensions.xSpacing / ranges.xStep).toFloat()
+        val step = timeLabelStep(pxPerMinute, with(density) { MIN_TIME_LABEL_SPACING.toPx() })
+        if (step == TIME_LABEL_STEPS.first()) hourly.getLabelValues(context, visibleXRange, fullXRange, maxLabelWidth)
+        else timeLabelValues(visibleXRange.start, visibleXRange.endInclusive, ranges.minX, ranges.maxX, hourOffset, step)
     }
 }
 
@@ -317,28 +370,78 @@ fun Modifier.stopsBgFling(forwarder: BgScrollForwarder): Modifier = pointerInput
     }
 }
 
-/**
- * Fraction of the graph height occupied by the basal overlay.
- *
- * The basal layer lives on its own (end) axis: basal axis max = `maxBasal / BASAL_HEIGHT_FRACTION`,
- * so the highest basal of the visible window plots at this fraction of the height. BgGraphCompose
- * draws it up from the bottom, SecondaryGraphCompose down from the top.
- *
- * e.g. 0.5 → basal occupies half the height.
- */
-const val BASAL_HEIGHT_FRACTION = 0.5
+/** The two series a basal layer always needs, for a basal with fewer than two points. */
+internal val EMPTY_BASAL = listOf(0.0, 1.0) to listOf(0.0, 0.0)
 
 /**
- * Fraction of the IOB/BAS graph height for IOB and the bolus markers, counted from the bottom.
- * IOB axis max = `dataMax / IOB_HEIGHT_FRACTION`.
- *
- * It overlaps the basal band from the top ([BASAL_HEIGHT_FRACTION]), between 50% and 75% of the
- * height. Both meet there only when a high temp basal runs with a high IOB; the loop sets a low or
- * zero temp most of the time, and basal then stays at the top. IOB gets the room in return: with
- * no overlap it had only the lower half. The free quarter above holds the label of a bolus given
- * at the IOB peak.
+ * Value in effect at [x] for a sparse change-point-only step series — [points] only stores a new
+ * entry when the value changes (see `rebuildBasalGraph`), so a narrow zoom window can contain zero
+ * literal points even though the series has a well-defined value throughout it. The value actually
+ * in effect at any [x] is whatever the most recent point at-or-before [x] holds (falls back to the
+ * first point if [x] precedes all of them).
  */
-const val IOB_HEIGHT_FRACTION = 0.75
+internal fun stepValueAt(points: List<Pair<Double, Double>>, x: Double): Double? =
+    points.lastOrNull { it.first <= x }?.second ?: points.firstOrNull()?.second
+
+/**
+ * The points of a step series as (x, value), like `processPoints` in SecondaryGraphCompose.kt, for
+ * a step series that has to reach the right edge of the axis. Used for the basal on the BG graph.
+ *
+ * A step series stores a point only where the value changes (see `rebuildBasalGraph`), plus one
+ * closing point at the end of the range it was built for. That closing point is the only thing that
+ * carries the line from the last change to the edge, and it is regularly **outside** [maxX]:
+ * `OverviewDataCacheImpl.graphEndTime` ends the basal at the newest prediction time, while the axis
+ * ends at `TimeRange.toTime` whenever the predictions overlay is off. [filterToRange] then drops it
+ * and the line simply stops at the last change - up to an hour short of the edge, because
+ * `OverviewData.toTime` is the current time rounded **up** to a whole hour.
+ *
+ * So the last point is clamped to [maxX] instead of dropped, carrying the value that
+ * [stepValueAt] says is in effect there. That is correct however far the producer overshoots, and
+ * it cannot fall out of step with the axis again: the producer's end is always at or past [maxX]
+ * (equal to it when predictions are on), never before it.
+ *
+ * Only for step series. On a sampled line (IOB, COB, activity) the same clamp would invent a
+ * reading that was never taken.
+ */
+internal fun processStepPoints(points: List<GraphDataPoint>, minTimestamp: Long, minX: Double, maxX: Double): List<Pair<Double, Double>> {
+    val pts = points.map { timestampToX(it.timestamp, minTimestamp) to it.value }.sortedBy { it.first }
+    val inRange = filterToRange(pts, minX, maxX)
+    if (inRange.isEmpty() || inRange.last().first >= maxX) return inRange
+    val edgeValue = stepValueAt(pts, maxX) ?: return inRange
+    return inRange + (maxX to edgeValue)
+}
+
+/**
+ * The highest basal rate in the visible window, in U/h, or 0.0 when there is no basal. The BG graph
+ * scales basal to it, so the highest basal in view has the same height whatever was given earlier
+ * in the day.
+ *
+ * [profile] and [actual] are the processed step series (see [processStepPoints]).
+ *
+ * They are stored sparsely, only where the rate changes (see `rebuildBasalGraph`). A zoom window
+ * inside one constant segment, for example a long zero temp, has no point of either series. So the
+ * points in the window are not enough: the rate in effect at the window start ([stepValueAt]) counts
+ * too, for both series. A high temp basal that started one minute before the window and runs for two
+ * hours is drawn across the whole window, but has no point inside it. There is deliberately no
+ * fallback to the whole day's values, which flattened the basal when the window held no point.
+ * [maxBasal] is used only when the window holds no basal above zero.
+ */
+internal fun basalWindowMax(
+    profile: List<Pair<Double, Double>>,
+    actual: List<Pair<Double, Double>>,
+    visibleMinX: Double?,
+    visibleMaxX: Double?,
+    maxBasal: Double
+): Double {
+    if (maxBasal <= 0.0) return 0.0
+    fun inWindow(x: Double) = visibleMinX == null || visibleMaxX == null || x in visibleMinX..visibleMaxX
+    val inside = (profile + actual).filter { inWindow(it.first) }.map { it.second }
+    val atStart = listOfNotNull(
+        visibleMinX?.let { stepValueAt(profile, it) },
+        visibleMinX?.let { stepValueAt(actual, it) }
+    )
+    return (inside + atStart).maxOfOrNull { abs(it) }?.takeIf { it > 0.0 } ?: maxBasal
+}
 
 /**
  * Height of the profile icon of a 100% profile on the BG graph, as a fraction of the axis height.
@@ -454,16 +557,9 @@ val TriangleShape: Shape = GenericShape { size, _ ->
 }
 
 /**
- * Inverted triangle shape pointing downward (flat base at top, apex at bottom).
- *
- * Used for a manual bolus on the BG and IOB graphs, and for carbs on the COB graph. The apex sits at the data point's
- * y-coordinate with the base above it, so it points at the value.
- */
-val InvertedTriangleShape: Shape = invertedTriangleShape()
-
-/**
- * [InvertedTriangleShape] with its apex [tipInset] of the box above the box centre, so the tip
- * stops short of the data point. The base is narrowed by the same share: in a box grown by twice
+ * Inverted triangle shape pointing downward (flat base at top, apex at bottom), for a manual bolus
+ * on the BG graph. The apex sits [tipInset] of the box above the box centre, so the tip stops short
+ * of the data point; with no inset it is at the data point's y-coordinate. The base is narrowed by the same share: in a box grown by twice
  * the inset the triangle keeps the proportions of the plain shape and only moves away from the
  * point. The BG graph uses it to keep a marker's tip outside the reading dot.
  */
@@ -481,9 +577,9 @@ fun invertedTriangleShape(tipInset: Float = 0f): Shape = GenericShape { size, _ 
  * y-coordinate, flat base below it.
  *
  * Vico centers a point component on its data point, and both [TriangleShape] and
- * [InvertedTriangleShape] draw in the upper half of the box, so neither can sit below a point.
+ * [invertedTriangleShape] draw in the upper half of the box, so neither can sit below a point.
  * This one does, which is what the carbs half of a treatment marker on the BG graph needs: the
- * bolus points down at the reading from above ([InvertedTriangleShape]) and the carbs point up at
+ * bolus points down at the reading from above ([invertedTriangleShape]) and the carbs point up at
  * it from below, so both tips meet at the moment on the curve.
  * Same proportions as the other two.
  */
@@ -510,34 +606,26 @@ internal val MarkerTier.markerSize: Dp
         MarkerTier.LARGE  -> 22.dp
     }
 
-/**
- * Draws every point of a treatment series in the size of its amount: [tierOf] against the largest
- * amount of its kind in the loaded range, which the chart model carries under [maxAmountKey]. The
- * y of a point is its amount.
- *
- * One series with a size per point, not one series per size: Vico shortens a label only against
- * its neighbours in the same series, so with three series the labels of two close boluses of
- * different size would be drawn over each other.
- */
-internal data class TieredPointProvider(
-    private val shape: Shape,
-    private val color: Color,
-    private val maxAmountKey: ExtraStore.Key<Double>
-) : LineCartesianLayer.PointProvider {
-
-    private val points = MarkerTier.entries.associateWith { tier ->
-        LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(color), shape = shape), size = tier.markerSize)
+/** Size of an SMB marker on the bottom edge of the BG graph, per [MarkerTier]. */
+internal val MarkerTier.smbSize: Dp
+    get() = when (this) {
+        MarkerTier.SMALL  -> 10.dp
+        MarkerTier.MEDIUM -> 16.dp
+        MarkerTier.LARGE  -> 22.dp
     }
 
-    override fun getPoint(entry: LineCartesianLayerModel.Entry, extraStore: ExtraStore): LineCartesianLayer.Point =
-        points.getValue(tierOf(entry.y, extraStore.getOrNull(maxAmountKey)))
+/**
+ * The prediction dots at a little more than half the strength of their colour. BG, boluses and carbs
+ * are the strongest marks on the graph; a forecast is a weaker layer, like the basal and the SMBs.
+ */
+private const val PREDICTION_ALPHA = 0.6f
 
-    override fun getLargestPoint(extraStore: ExtraStore): LineCartesianLayer.Point = points.getValue(MarkerTier.LARGE)
-}
+/** The prediction dots a little smaller than the BG dots, so the forecast trails off the curve. */
+private val PREDICTION_DOT_SIZE = 3.dp
 
 /**
  * Creates a line for BG prediction series.
- * Transparent connecting line with small filled circle points in the given color.
+ * Transparent connecting line with small filled circle points in the given color, see [PREDICTION_ALPHA].
  * Each prediction type (IOB, COB, UAM, ZT, aCOB) uses a different color.
  */
 fun createPredictionLine(color: Color): LineCartesianLayer.Line =
@@ -547,10 +635,10 @@ fun createPredictionLine(color: Color): LineCartesianLayer.Line =
         pointProvider = LineCartesianLayer.PointProvider.single(
             LineCartesianLayer.Point(
                 component = ShapeComponent(
-                    fill = Fill(color),
+                    fill = Fill(color.copy(alpha = PREDICTION_ALPHA)),
                     shape = CircleShape
                 ),
-                size = 4.dp
+                size = PREDICTION_DOT_SIZE
             )
         )
     )
@@ -625,6 +713,47 @@ class NowLine(
 fun rememberNowLine(minTimestamp: Long, nowTimestamp: Long, color: Color): NowLine {
     return remember(minTimestamp, nowTimestamp, color) {
         NowLine(nowX = timestampToX(nowTimestamp, minTimestamp), color = color)
+    }
+}
+
+/**
+ * The second tier of the overview graphs, at a little more than half the strength of its colour: what
+ * the loop calculates or guesses. On BG the basal, the SMBs and the profile switch, on the belt the COB
+ * failover bar, and every series line on the graphs below BG (IOB, COB and the others). BG, boluses,
+ * carbs and meter values are the first tier, at full colour. A line that runs the whole width at full
+ * colour has more ink than all the BG dots together, and drew the eye away from BG.
+ */
+internal const val SECOND_TIER_ALPHA = 0.6f
+
+/** Size of a dot of the grid, see [rememberGridLine]. */
+private val GRID_DOT_SIZE = 1.dp
+
+/** Space between two dots of the grid, see [rememberGridLine]. */
+private val GRID_DOT_GAP = 6.dp
+
+/**
+ * The grid dots are this many times as strong as the theme's grid colour, which is made for solid lines
+ * (the baselines and the ticks keep it). A dot covers far less than a line, so it can be crisp, and the
+ * gaps keep the grid light.
+ */
+private const val GRID_DOT_STRENGTH = 1.5f
+
+/**
+ * The grid of the overview graphs, the lines at the axis labels and the hour lines: round dots in the
+ * grid colour with space between them. Much less ink than a solid line, while each dot stays crisp, so
+ * the grid is there when you look for it and does not pull the eye. Round dots and not dashes, so it is
+ * not mistaken for the dashed "now" line or the profile basal. The baselines (BG 0, the zero line) stay
+ * solid: they are the floor the areas stand on, not grid.
+ */
+@Composable
+internal fun rememberGridLine(): LineComponent {
+    val color = AapsTheme.generalColors.graphGrid
+    return remember(color) {
+        LineComponent(
+            fill = Fill(color.copy(alpha = (color.alpha * GRID_DOT_STRENGTH).coerceAtMost(1f))),
+            thickness = GRID_DOT_SIZE,
+            shape = DashedShape(shape = CircleShape, dashLength = GRID_DOT_SIZE, gapLength = GRID_DOT_GAP)
+        )
     }
 }
 
@@ -952,11 +1081,9 @@ data class ActivityOverlayScale(val zeroLevel: Double, val scale: Double) {
  * A window holding only negative activity is scaled by its negative side alone.
  *
  * When [roomBelow] is 0 the negative side is ignored and the positive side keeps its full scale;
- * the negative tail is then clipped at the host's floor. This is the usual case on the BG graph: the
- * BG axis floor is `dataMin` rounded down to a grid of about a tenth of the range, and `dataMin` is
- * itself floored at the low mark, so the floor lands on the low mark (70/80/90/100 mg/dL, 4.0/5.0
- * mmol/L) or just under it whenever the visible window holds no BG below it. Accepted: the
- * alternative would move the BG scale, which must stay untouched.
+ * the negative tail is then clipped at the host's floor. On the BG graph [roomBelow] is the space
+ * between the low mark and the top of the basal, which takes the bottom of the graph: the tail
+ * stops above the basal instead of being drawn over it.
  *
  * [activityMin] and [activityMax] are taken from the visible window only, like every other scale in
  * these graphs. They are nice-ified ([zeroFloorNiceRange]) even though no label is ever drawn from
@@ -976,7 +1103,7 @@ fun activityOverlayScale(
     // This has to be caught before the nice-ification: zeroFloorNiceRange(0.0, 0.0) comes back as
     // 0..1, because niceScale widens a zero-width range by 1 so that the axis never collapses.
     // That would give a positive scale and draw a flat line on [zeroLevel] — on the BG graph
-    // that is the low mark, the bottom edge of the in-range belt, where it reads as a second
+    // that is the low mark, the LOW band, where it reads as a second
     // target line.
     if (activityMin == 0.0 && activityMax == 0.0) return ActivityOverlayScale(zeroLevel, 0.0)
     val nice = zeroFloorNiceRange(activityMin, activityMax)

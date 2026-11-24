@@ -619,6 +619,18 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(lastAction()).isEqualTo(BatchAction.RunningMode(RM.Mode.SUSPENDED_BY_USER, 180))
     }
 
+    /** An old BG with decimals is shown as AAPS shows a BG, rounded, not as the bare number "121.8" (#5639). */
+    @Test fun lastBgIsFormattedLikeTheActualBg() = runTest {
+        val reading = GV(raw = 0.0, noise = 0.0, value = 121.8, timestamp = 1514766900000, sourceSensor = SourceSensor.UNKNOWN, trendArrow = TrendArrow.FLAT)
+        whenever(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue.fromGv(reading))
+
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(Sms("1234", "BG"))
+
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("Last BG: 122")
+        assertThat(smsCommunicatorPlugin.messages[1].text).doesNotContain("121.8")
+    }
+
     @Test fun processProfileTest() = runTest {
 
         //PROFILE

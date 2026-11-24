@@ -251,6 +251,8 @@ class MainViewModel(
             runningModeProgress = chip.runningModeProgress,
             runningModeRecordId = chip.runningModeRecordId,
             tbrState = chip.tbrState,
+            tbrText = chip.tbrText,
+            tbrProgress = chip.tbrProgress,
             smbEnabled = ev.smbEnabled
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MainUiState())
@@ -296,6 +298,11 @@ class MainViewModel(
         val tbrExpired = tbrData != null && tbrData.state != TbrState.NONE && tbrData.duration > 0
             && now >= tbrData.timestamp + tbrData.duration
         if (tbrExpired) overviewDataCache.refreshTbr()
+        val tbrRunning = tbrData != null && tbrData.state != TbrState.NONE && !tbrExpired
+        val tbrProgress = if (tbrRunning && tbrData.duration > 0) {
+            ((now - tbrData.timestamp).toFloat() / tbrData.duration.toFloat()).coerceIn(0f, 1f)
+        } else 0f
+        val tbrText = if (tbrRunning) tbrData.percent?.let { rh.gs(CoreUiStrings.formatPercent, it.toDouble()) } ?: "" else ""
 
         // TT progress and display text
         val ttProgress = if (ttIsFinite && !ttExpired) {
@@ -364,7 +371,9 @@ class MainViewModel(
             runningModeRemaining = rmRemaining,
             runningModeProgress = rmProgress,
             runningModeRecordId = if (rmExpired) 0 else rmData?.recordId ?: 0,
-            tbrState = if (tbrExpired) TbrState.NONE else tbrData?.state ?: TbrState.NONE
+            tbrState = if (tbrExpired) TbrState.NONE else tbrData?.state ?: TbrState.NONE,
+            tbrText = tbrText,
+            tbrProgress = tbrProgress
         )
     }
 
@@ -929,5 +938,7 @@ private data class ChipState(
     val runningModeRemaining: String = "",
     val runningModeProgress: Float = 0f,
     val runningModeRecordId: Long = 0,
-    val tbrState: TbrState = TbrState.NONE
+    val tbrState: TbrState = TbrState.NONE,
+    val tbrText: String = "",
+    val tbrProgress: Float = 0f
 )

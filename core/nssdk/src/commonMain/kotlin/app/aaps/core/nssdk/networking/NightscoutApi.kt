@@ -143,7 +143,8 @@ internal class NightscoutApi(
 
     // ---------------------------------------------------------------- treatments
 
-    private val treatmentListSerializer = NSResponse.serializer(ListSerializer(RemoteTreatment.serializer()))
+    // Row by row: one unreadable treatment must not lose the rest of its page, see RowByRowListSerializer
+    private val treatmentListSerializer = NSResponse.serializer(RowByRowListSerializer(RemoteTreatment.serializer()))
 
     suspend fun getTreatmentsNewerThan(createdAt: String, limit: Int) = call(HttpMethod.Get, treatmentListSerializer) {
         nsUrl("v3", "treatments") {

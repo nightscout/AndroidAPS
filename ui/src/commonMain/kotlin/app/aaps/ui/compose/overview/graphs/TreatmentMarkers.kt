@@ -29,15 +29,59 @@ internal const val MARKER_MAX_READING_GAP_MS = 15 * 60_000L
 /** A bolus and a carbs entry this close apart are one meal and are drawn at the same height. */
 internal const val MARKER_PAIR_MS = 5 * 60_000L
 
-/** One treatment marker. [x] is minutes from minTimestamp, [y] is in the BG axis' units. */
-data class TreatmentMarker(val x: Double, val y: Double, val tier: MarkerTier)
+/**
+ * One treatment marker. [x] is minutes from minTimestamp, [y] is in the BG axis' units. [amount] is
+ * the insulin in U or the carbs in g, shown as the marker's label.
+ */
+data class TreatmentMarker(val x: Double, val y: Double, val tier: MarkerTier, val amount: Double)
+
+/**
+ * One measured glucose value (a calibration or a BG check). [x] is minutes from minTimestamp, [y] is
+ * where it is drawn, kept inside the axis. [value] is the measured value as entered, for its label,
+ * in the user's units. [sensorY] is the sensor curve at the same moment, for the line that shows how
+ * far the sensor is off; null in a sensor gap, where there is no curve to compare with.
+ */
+data class MeasuredMarker(val x: Double, val y: Double, val value: Double, val sensorY: Double?)
 
 /** The markers of one rebuild, split by kind because each kind has its own shape and color. */
 data class TreatmentMarkers(
     val insulin: List<TreatmentMarker>,
     val carbs: List<TreatmentMarker>,
-    val calibrations: List<Pair<Double, Double>>
+    val calibrations: List<MeasuredMarker>,
+    /** SMBs, on the axis floor. Sized against the largest SMB, not against the manual boluses. */
+    val smb: List<TreatmentMarker>
 )
+
+/** The step of the carbs absorption calculation, one failover point per step at most. */
+internal const val COB_FAILOVER_STEP_MS = 5 * 60_000L
+
+/**
+ * The stretches in which carbs absorption fell back to the minimum rate, as x ranges in minutes from
+ * [minTimestamp], for the bar the treatment belt draws along its bottom edge.
+ *
+ * Each point stands for one calculation step, so it covers half a step on each side, and points no
+ * more than one and a half steps apart join into one stretch: a missed step does not split it, a
+ * real pause does. [timestamps] do not have to be sorted.
+ */
+internal fun cobFailoverStretches(timestamps: List<Long>, minTimestamp: Long): List<ClosedFloatingPointRange<Double>> {
+    if (timestamps.isEmpty()) return emptyList()
+    val half = COB_FAILOVER_STEP_MS / 2
+    // Exact minutes, not timestampToX: that rounds down to a whole minute and would lose the half step
+    fun x(timestamp: Long): Double = (timestamp - minTimestamp) / 60_000.0
+    val stretches = mutableListOf<ClosedFloatingPointRange<Double>>()
+    val sorted = timestamps.sorted()
+    var start = sorted.first()
+    var last = start
+    for (timestamp in sorted.drop(1)) {
+        if (timestamp - last > COB_FAILOVER_STEP_MS + half) {
+            stretches += x(start - half)..x(last + half)
+            start = timestamp
+        }
+        last = timestamp
+    }
+    stretches += x(start - half)..x(last + half)
+    return stretches
+}
 
 /**
  * Every measured glucose value in the loaded range, as (timestamp, value in the user's units):
@@ -63,9 +107,12 @@ internal fun measuredGlucosePoints(
  * sensor gap there is no honest height for a marker, so the caller falls back to the bottom of the
  * graph instead of inventing a value. [readings] does not have to be sorted.
  */
-internal fun interpolatedBgAt(timestamp: Long, readings: List<BgDataPoint>): Double? {
-    if (readings.isEmpty()) return null
-    val sorted = readings.sortedBy { it.timestamp }
+internal fun interpolatedBgAt(timestamp: Long, readings: List<BgDataPoint>): Double? =
+    interpolatedBgAtSorted(timestamp, readings.sortedBy { it.timestamp })
+
+/** [interpolatedBgAt] for [sorted] readings, so a caller with many treatments sorts only once. */
+private fun interpolatedBgAtSorted(timestamp: Long, sorted: List<BgDataPoint>): Double? {
+    if (sorted.isEmpty()) return null
     val before = sorted.lastOrNull { it.timestamp <= timestamp }
     val after = sorted.firstOrNull { it.timestamp >= timestamp }
     val gapBefore = before?.let { timestamp - it.timestamp } ?: Long.MAX_VALUE
@@ -108,10 +155,10 @@ internal fun tierOf(amount: Double, max: Double?): MarkerTier = MarkerSizeClasse
 /**
  * Builds the markers for the BG graph.
  *
- * Only manual boluses are drawn: an SMB every few minutes would turn the curve into a picket
- * fence, and SMBs are on the IOB graph with their own markers. Insulin sits [gap] above the
- * reading and carbs the same distance below it, both pointing at it, so a meal with its bolus is
- * one marker with a thin seam at the reading. Calibrations and BG checks are drawn at
+ * A manual bolus sits [gap] above the reading and carbs the same distance below it, both pointing
+ * at it, so a meal with its bolus is one marker with a thin seam at the reading. An SMB is in
+ * [TreatmentMarkers.smb] on the axis floor [minY], drawn as a small triangle pointing up, as on the
+ * zero line of the IOB graph: an SMB every few minutes on the curve would hide the readings. Calibrations and BG checks are drawn at
  * their own measured value, which is the information they carry, with no interpolation.
  *
  * @param readings the series the curve is drawn from, used for the height of a marker
@@ -138,6 +185,7 @@ fun treatmentMarkers(
     val carbsTimes = validCarbs.map { it.timestamp }
     val bolusAmounts = validBoluses.map { it.amount }
     val carbsAmounts = validCarbs.map { it.amount }
+    val sortedReadings = readings.sortedBy { it.timestamp }
 
     /**
      * Height of the pair a treatment belongs to. Both halves of one meal are drawn at the height of
@@ -148,7 +196,7 @@ fun treatmentMarkers(
             .filter { abs(it - timestamp) <= MARKER_PAIR_MS }
             .minByOrNull { abs(it - timestamp) }
         val anchor = if (partner != null && partner < timestamp) partner else timestamp
-        return interpolatedBgAt(anchor, readings) ?: fallbackY
+        return interpolatedBgAtSorted(anchor, sortedReadings) ?: fallbackY
     }
 
     fun inRange(x: Double) = x in minX..maxX
@@ -159,7 +207,8 @@ fun treatmentMarkers(
         TreatmentMarker(
             x = x,
             y = (pairedY(bolus.timestamp, carbsTimes) + gap).coerceIn(minY, maxY),
-            tier = tierOf(bolus.amount, bolusAmounts)
+            tier = tierOf(bolus.amount, bolusAmounts),
+            amount = bolus.amount
         )
     }
     val carbsMarkers = validCarbs.mapNotNull { entry ->
@@ -168,20 +217,41 @@ fun treatmentMarkers(
         TreatmentMarker(
             x = x,
             y = (pairedY(entry.timestamp, bolusTimes) - gap).coerceIn(minY, maxY),
-            tier = tierOf(entry.amount, carbsAmounts)
+            tier = tierOf(entry.amount, carbsAmounts),
+            amount = entry.amount
+        )
+    }
+
+    // Sized against the largest SMB of the loaded range, the same as on the IOB graph
+    val validSmbs = boluses.filter { it.isValid && it.bolusType == BolusType.SMB }
+    val smbAmounts = validSmbs.map { it.amount }
+    val smbMarkers = validSmbs.mapNotNull { smb ->
+        val x = timestampToX(smb.timestamp, minTimestamp)
+        if (!inRange(x)) return@mapNotNull null
+        TreatmentMarker(
+            x = x,
+            y = minY,
+            tier = tierOf(smb.amount, smbAmounts),
+            amount = smb.amount
         )
     }
 
     val calibrationPoints = measuredGlucosePoints(calibrations, therapyEvents).mapNotNull { (timestamp, value) ->
         val x = timestampToX(timestamp, minTimestamp)
         if (!inRange(x)) return@mapNotNull null
-        x to value.coerceIn(minY, maxY)
+        MeasuredMarker(
+            x = x,
+            y = value.coerceIn(minY, maxY),
+            value = value,
+            sensorY = interpolatedBgAtSorted(timestamp, sortedReadings)?.coerceIn(minY, maxY)
+        )
     }
 
     // Sorted by x: Vico needs every series in ascending x order
     return TreatmentMarkers(
         insulin = insulin.sortedBy { it.x },
         carbs = carbsMarkers.sortedBy { it.x },
-        calibrations = calibrationPoints.sortedBy { it.first }
+        calibrations = calibrationPoints.sortedBy { it.x },
+        smb = smbMarkers.sortedBy { it.x }
     )
 }

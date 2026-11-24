@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,6 +66,8 @@ fun OverviewScreen(
     runningModeProgress: Float,
     runningModeRecordId: Long = 0,
     tbrState: TbrState,
+    tbrText: String = "",
+    tbrProgress: Float = 0f,
     smbEnabled: Boolean,
     isSimpleMode: Boolean,
     calcProgress: Int,
@@ -106,6 +109,16 @@ fun OverviewScreen(
     queueStatusText: AnnotatedString? = null,
     isPumpCommunicating: Boolean = false,
     onStopBolus: () -> Unit = {},
+    /**
+     * Called with true while the one-column layout is shown. It has its own line for the version and the
+     * calculation progress in the BG circle, and the main screen can hide the top bar over it.
+     */
+    onStackedLayout: (Boolean) -> Unit = {},
+    /**
+     * Opens the menu while the top bar is hidden: over the one-column layout, and in preview mode (a phone
+     * in landscape) over the two-column layout too. Null while it shows.
+     */
+    onCompactMenuClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     var showNotificationSheet by remember { mutableStateOf(false) }
@@ -153,6 +166,10 @@ fun OverviewScreen(
             // true for the larger tablet text (see `typographyScaleFor`). Without the width check a nearly
             // square tablet window got two columns narrower than any phone has.
             val twoColumns = isLandscape && maxWidth >= SPLIT_LAYOUT_MIN_WIDTH
+            val currentOnStackedLayout by rememberUpdatedState(onStackedLayout)
+            LaunchedEffect(twoColumns) {
+                currentOnStackedLayout(!twoColumns)
+            }
             if (twoColumns && isTablet) {
                 OverviewScreenTablet(
                     profileName = profileName,
@@ -170,6 +187,8 @@ fun OverviewScreen(
                     runningModeProgress = runningModeProgress,
                     runningModeSceneManaged = runningModeSceneManaged,
                     tbrState = tbrState,
+                    tbrText = tbrText,
+                    tbrProgress = tbrProgress,
                     smbEnabled = smbEnabled,
                     isSimpleMode = isSimpleMode,
                     graphViewModel = graphViewModel,
@@ -209,6 +228,8 @@ fun OverviewScreen(
                     runningModeProgress = runningModeProgress,
                     runningModeSceneManaged = runningModeSceneManaged,
                     tbrState = tbrState,
+                    tbrText = tbrText,
+                    tbrProgress = tbrProgress,
                     smbEnabled = smbEnabled,
                     isSimpleMode = isSimpleMode,
                     graphViewModel = graphViewModel,
@@ -229,7 +250,9 @@ fun OverviewScreen(
                     commandsAllowed = commandsAllowed,
                     formatDuration = formatDuration,
                     eatReminderBanner = eatReminderBanner,
-                    overlaidBarsHeight = overlaidBarsHeight
+                    overlaidBarsHeight = overlaidBarsHeight,
+                    calcProgress = calcProgress,
+                    onCompactMenuClick = onCompactMenuClick
                 )
             } else {
                 OverviewScreenStacked(
@@ -248,6 +271,8 @@ fun OverviewScreen(
                     runningModeProgress = runningModeProgress,
                     runningModeSceneManaged = runningModeSceneManaged,
                     tbrState = tbrState,
+                    tbrText = tbrText,
+                    tbrProgress = tbrProgress,
                     smbEnabled = smbEnabled,
                     isSimpleMode = isSimpleMode,
                     graphViewModel = graphViewModel,
@@ -268,28 +293,32 @@ fun OverviewScreen(
                     commandsAllowed = commandsAllowed,
                     formatDuration = formatDuration,
                     eatReminderBanner = eatReminderBanner,
-                    overlaidBarsHeight = overlaidBarsHeight
+                    overlaidBarsHeight = overlaidBarsHeight,
+                    calcProgress = calcProgress,
+                    onCompactMenuClick = onCompactMenuClick
                 )
             }
-        }
 
-        // Calculation progress (IOB / graph data). Overlaid on top of content so it never reflows
-        // the layout — previously a flow child of the content Column which caused the screen to jump.
-        AnimatedVisibility(
-            visible = calcProgress < 100,
-            enter = fadeIn(),
-            exit = fadeOut(),
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(paddingValues)
-                .fillMaxWidth()
-        ) {
-            LinearProgressIndicator(
-                progress = { calcProgress / 100f },
+            // Calculation progress (IOB / graph data) of the tablet layout, whose BG circle has no "time ago":
+            // a line over the top of the content, so it never reflows the layout. The other layouts show it
+            // as a ring inside the BG circle. Decided here, in the same pass as the layout, so it is not one
+            // frame late.
+            AnimatedVisibility(
+                visible = calcProgress < 100 && twoColumns && isTablet,
+                enter = fadeIn(),
+                exit = fadeOut(),
                 modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(paddingValues)
                     .fillMaxWidth()
-                    .height(4.dp)
-            )
+            ) {
+                LinearProgressIndicator(
+                    progress = { calcProgress / 100f },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(4.dp)
+                )
+            }
         }
 
         PumpActivityFab(

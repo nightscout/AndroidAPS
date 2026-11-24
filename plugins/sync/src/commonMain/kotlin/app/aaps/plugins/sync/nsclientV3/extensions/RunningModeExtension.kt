@@ -24,6 +24,10 @@ fun NSOfflineEvent.Mode?.toMode(): RM.Mode =
 
 fun RM.toNSOfflineEvent(): NSOfflineEvent =
     when (mode) {
+        // The same open-ended mark as DISABLED_LOOP below: 0. LoopPlugin.runningModePreCheck forces OPEN_LOOP
+        // and CLOSED_LOOP_LGS with duration Long.MAX_VALUE, which Nightscout rounded to a number too large
+        // to read back (#5626). Nightscout reads neither duration of these modes, they only end a
+        // disabled loop. An auto-forced mode coming back as 0 is no cut, so the master keeps its own.
         RM.Mode.OPEN_LOOP,
         RM.Mode.CLOSED_LOOP,
         RM.Mode.CLOSED_LOOP_LGS   ->
@@ -33,7 +37,7 @@ fun RM.toNSOfflineEvent(): NSOfflineEvent =
                 date = timestamp,
                 utcOffset = T.msecs(utcOffset).mins(),
                 duration = 0,
-                originalDuration = duration,
+                originalDuration = if (duration == Long.MAX_VALUE) 0L else duration,
                 reason = NSOfflineEvent.Reason.OTHER, // Unused
                 mode = mode.toMode(),
                 autoForced = autoForced,

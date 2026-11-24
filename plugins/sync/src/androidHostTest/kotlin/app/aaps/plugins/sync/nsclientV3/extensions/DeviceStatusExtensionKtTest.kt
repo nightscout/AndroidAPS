@@ -94,4 +94,24 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
         assertThat(nsDeviceStatus2.pump?.battery).isEqualTo(nsDeviceStatus.pump?.battery)
         assertThat(nsDeviceStatus2.openaps?.enacted?.toString()).isEqualTo(nsDeviceStatus.openaps?.enacted?.toString())
     }
+
+    /**
+     * What the master sends for a pod above its measuring range (`PumpStatusProviderImpl`) goes through
+     * Nightscout and reaches a client with the override, so the client can show "50+ U" (#5572).
+     */
+    @Test
+    fun `a reservoir above the measuring range reaches the client with its override`() {
+        val deviceStatus = DS(
+            timestamp = 10000,
+            device = "openaps://samsung SM-G970F",
+            pump = """{"reservoir":50,"reservoir_display_override":"50+ U","clock":"2023-01-02T15:25:05.826Z"}""",
+            uploaderBattery = 60,
+            isCharging = false
+        )
+
+        nsDeviceStatusHandler.handleNewData(arrayOf(deviceStatus.toNSDeviceStatus().convertToRemoteAndBack()))
+
+        assertThat(processedDeviceStatusData.pumpData!!.reservoir).isEqualTo(50.0)
+        assertThat(processedDeviceStatusData.pumpData!!.reservoirDisplayOverride).isEqualTo("50+ U")
+    }
 }

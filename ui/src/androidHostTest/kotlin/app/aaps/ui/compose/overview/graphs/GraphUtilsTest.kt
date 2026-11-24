@@ -209,7 +209,7 @@ internal class GraphUtilsTest {
     @Nested
     inner class NiceAxisLabelValuesTest {
 
-        /** The IOB axis of a 2.9 U IOB: top 3 U, divided by IOB_HEIGHT_FRACTION. Labels stop at the IOB top. */
+        /** An IOB axis of 0..4 U whose labels stop at an IOB top of 3 U. */
         private fun iobLabels(axisHeight: Float) = niceAxisLabelValues(0.0, 4.0, axisHeight, labelHeight = 20f, labelMax = 3.0)
 
         @Test
@@ -250,15 +250,15 @@ internal class GraphUtilsTest {
         @Test
         fun `labels come closer rather than leave a single one`() {
             assertThat(niceAxisLabelValues(0.0, 6.0, axisHeight = 148f, labelHeight = 42f, labelMax = 4.5)).containsExactly(0.0, 2.0, 4.0).inOrder()
-            // And a high IOB of 9.4 U, top 9.5
-            assertThat(niceAxisLabelValues(0.0, 9.5 / IOB_HEIGHT_FRACTION, axisHeight = 148f, labelHeight = 42f, labelMax = 9.5)).containsExactly(0.0, 5.0).inOrder()
+            // And a high IOB of 9.4 U, top 9.5, on an axis that goes on above it
+            assertThat(niceAxisLabelValues(0.0, 9.5 / 0.75, axisHeight = 148f, labelHeight = 42f, labelMax = 9.5)).containsExactly(0.0, 5.0).inOrder()
         }
 
         @Test
         fun `labels never overlap, and an axis from zero always gets at least two`() {
-            // From zero: IOB-like, with labels to the top or, as on the IOB/BAS graph, to the IOB top only
+            // From zero: IOB-like, with labels to the top or only to a top below the axis end
             val fromZero = listOf(0.0 to 0.7, 0.0 to 4.0, -0.05 to 13.3)
-                .flatMap { (min, max) -> listOf(Triple(min, max, max), Triple(min, max, max * IOB_HEIGHT_FRACTION)) }
+                .flatMap { (min, max) -> listOf(Triple(min, max, max), Triple(min, max, max * 0.75)) }
             val free = listOf(3.5 to 10.0, 40.0 to 260.0, 95.0 to 105.0).map { (min, max) -> Triple(min, max, max) }
             for (axisHeight in listOf(60f, 100f, 170f, 250f, 600f)) {
                 for ((min, max, labelMax) in fromZero + free) {
