@@ -246,6 +246,9 @@ fun MainScreen(
                         if (!overviewStacked || searchActive) return Offset.Zero
                         when {
                             consumed.y < -TOP_BAR_SCROLL_THRESHOLD_PX                                               -> topBarHidden = true
+                            // A push up that the content could not take: only the graphs scroll, and a short
+                            // set of graphs fits without scrolling. The bar must hide then too
+                            source == NestedScrollSource.UserInput && available.y < -TOP_BAR_SCROLL_THRESHOLD_PX -> topBarHidden = true
                             // A drag down that the content could not take: it is at its top already
                             source == NestedScrollSource.UserInput && available.y > TOP_BAR_SCROLL_THRESHOLD_PX -> topBarHidden = false
                         }

@@ -112,9 +112,9 @@ fun OverviewScreenStacked(
 
     var statusExpanded by rememberSaveable { mutableStateOf(false) }
 
-    // BG and the chips stay at the top; only what is under them scrolls, so BG stays in view while the
-    // graphs are read. Above them a thin strip of its own holds the calculation progress and the version,
-    // which were drawn over the top of the content before.
+    // BG, the chips, the client card and the status lights stay at the top; only the graphs scroll, so
+    // all the state stays in view while the graphs are read. Above them the version has its own line,
+    // it was drawn over the top of the content before.
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -190,39 +190,40 @@ fun OverviewScreenStacked(
             )
         }
 
+        // On a client, the client status card comes before the status lights
+        if (config.AAPSCLIENT) {
+            val nsClientStatus by graphViewModel.nsClientStatusFlow.collectAsStateWithLifecycle()
+            val flavorTint = when {
+                config.AAPSCLIENT3 -> AapsTheme.generalColors.flavorClient3Tint
+                config.AAPSCLIENT2 -> AapsTheme.generalColors.flavorClient2Tint
+                else               -> AapsTheme.generalColors.flavorClient1Tint
+            }
+            AapsClientStatusCard(
+                statusData = nsClientStatus,
+                flavorTint = flavorTint
+            )
+        }
+
+        OverviewStatusSection(
+            sensorStatus = statusState.sensorStatus,
+            insulinStatus = statusState.insulinStatus,
+            cannulaStatus = statusState.cannulaStatus,
+            batteryStatus = statusState.batteryStatus,
+            showFill = statusState.showFill,
+            showPumpBatteryChange = statusState.showPumpBatteryChange,
+            commandsAllowed = commandsAllowed,
+            onNavigate = onNavigate,
+            statusLightsDef = statusLightsDef,
+            expanded = statusExpanded,
+            onExpandedChange = { statusExpanded = it }
+        )
+
+        // Only the graphs scroll
         Column(
             modifier = Modifier
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
         ) {
-            // On a client, the client status card comes before the status lights
-            if (config.AAPSCLIENT) {
-                val nsClientStatus by graphViewModel.nsClientStatusFlow.collectAsStateWithLifecycle()
-                val flavorTint = when {
-                    config.AAPSCLIENT3 -> AapsTheme.generalColors.flavorClient3Tint
-                    config.AAPSCLIENT2 -> AapsTheme.generalColors.flavorClient2Tint
-                    else               -> AapsTheme.generalColors.flavorClient1Tint
-                }
-                AapsClientStatusCard(
-                    statusData = nsClientStatus,
-                    flavorTint = flavorTint
-                )
-            }
-
-            OverviewStatusSection(
-                sensorStatus = statusState.sensorStatus,
-                insulinStatus = statusState.insulinStatus,
-                cannulaStatus = statusState.cannulaStatus,
-                batteryStatus = statusState.batteryStatus,
-                showFill = statusState.showFill,
-                showPumpBatteryChange = statusState.showPumpBatteryChange,
-                commandsAllowed = commandsAllowed,
-                onNavigate = onNavigate,
-                statusLightsDef = statusLightsDef,
-                expanded = statusExpanded,
-                onExpandedChange = { statusExpanded = it }
-            )
-
             GraphsSection(
                 graphViewModel = graphViewModel, isSimpleMode = isSimpleMode, iobText = iobUiState.text, cobText = cobUiState.text,
                 overlaidBarsHeight = overlaidBarsHeight
