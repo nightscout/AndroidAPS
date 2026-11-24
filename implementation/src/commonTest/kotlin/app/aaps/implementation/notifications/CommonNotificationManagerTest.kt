@@ -344,10 +344,10 @@ class CommonNotificationManagerTest {
     fun `the watch is told of the alarm that sounds`() = runTest {
         val sut = createSut()
 
-        sut.post(NotificationId.PUMP_UNREACHABLE, "Pump unreachable", sound = AlarmSound.ALARM)
+        sut.post(NotificationId.PUMP_ERROR, "Pump error", sound = AlarmSound.ALARM)
 
         val ringing = toWear().single() as EventData.AlarmRinging
-        assertEquals("Pump unreachable", ringing.status)
+        assertEquals("Pump error", ringing.status)
         assertEquals("title", ringing.title)
         assertEquals(false, ringing.canMute)
     }

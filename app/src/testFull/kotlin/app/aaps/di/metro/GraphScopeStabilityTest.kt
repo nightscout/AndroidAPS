@@ -97,6 +97,7 @@ class GraphScopeStabilityTest {
             "activeSceneManager",
             "activeSceneSync",
             "alarmSoundPlayer",
+            "alerts",
             "androidActivities",
             "appRepository",
             "appScope",

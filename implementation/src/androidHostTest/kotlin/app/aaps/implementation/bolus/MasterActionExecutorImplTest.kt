@@ -18,6 +18,11 @@ import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertLifetime
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
@@ -29,9 +34,6 @@ import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.AlarmSound
-import app.aaps.core.interfaces.notifications.NotificationAction
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -66,8 +68,8 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.isNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -92,13 +94,14 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
     @Mock lateinit var bolusProgressData: BolusProgressData
     @Mock lateinit var masterRecordWriter: MasterRecordWriter
     @Mock lateinit var eatReminder: EatReminder
+    @Mock lateinit var alerts: Alerts
 
     // Real: the tests below read whether a pause is on, and confirm() checks it.
     private val smbPause by lazy { SmbPauseImpl(aapsLogger, dateUtil) }
 
     private fun create() = MasterActionExecutorImpl(
         aapsLogger, baseText, config, quickWizard, bolusWizardProvider, profileFunction, profileRepository, iobCobCalculator, constraintsChecker, activePlugin,
-        runningModeGuard, commandQueue, persistenceLayer, uel, loop, dateUtil, decimalFormatter, profileUtil, automation, notificationManager, bolusProgressData,
+        runningModeGuard, commandQueue, persistenceLayer, uel, loop, dateUtil, decimalFormatter, profileUtil, automation, alerts, bolusProgressData,
         CoroutineScope(Dispatchers.Unconfined), masterRecordWriter, smbPause, eatReminder
     )
 
@@ -1743,22 +1746,24 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun bolus_onCommandFailure_postsUrgentBolusFailedAlarm() = runTest {
+    fun bolus_onCommandFailure_raisesTheBolusFailedAlarm() = runTest {
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
         whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(false))
         val executor = create()
 
         executor.deliverInsulin(insulin = 1.0, note = null, source = Sources.QuickWizard, onError = { })
 
-        // The async delivery failure raises the single URGENT alarm from the executor (not the now-gone dialog).
-        verify(notificationManager).post(
-            eq(NotificationId.BOLUS_DELIVERY_FAILED), any<String>(), any<NotificationLevel>(), any<Int>(),
-            anyOrNull<AlarmSound>(), any<List<NotificationAction>>(), anyOrNull<() -> Boolean>()
-        )
+        // The async delivery failure raises the single alarm from the executor (not the now-gone dialog): CRITICAL,
+        // with the bolus-error sound, ended by the user's answer
+        val alert = raised().single()
+        assertThat(alert.kind).isEqualTo(CoreAlert.BOLUS_FAILED)
+        assertThat(alert.severity).isEqualTo(AlertSeverity.CRITICAL)
+        assertThat(alert.lifetime).isEqualTo(AlertLifetime.EVENT)
+        assertThat(alert.sound).isEqualTo(AlarmSound.BOLUS_ERROR)
     }
 
     @Test
-    fun bolus_onCommandFailure_whenStopPressed_doesNotPostAlarm() = runTest {
+    fun bolus_onCommandFailure_whenStopPressed_doesNotRaiseAnAlert() = runTest {
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
         whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(false))
         whenever(bolusProgressData.isStopPressed).thenReturn(true)
@@ -1766,11 +1771,8 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
 
         executor.deliverInsulin(insulin = 1.0, note = null, source = Sources.QuickWizard, onError = { })
 
-        // A user-initiated cancel is not a failure: no URGENT alarm even though the command result is unsuccessful.
-        verify(notificationManager, never()).post(
-            eq(NotificationId.BOLUS_DELIVERY_FAILED), any<String>(), any<NotificationLevel>(), any<Int>(),
-            anyOrNull<AlarmSound>(), any<List<NotificationAction>>(), anyOrNull<() -> Boolean>()
-        )
+        // A user-initiated cancel is not a failure: no alarm even though the command result is unsuccessful.
+        verify(alerts, never()).raise(any())
     }
 
     /**
@@ -1779,22 +1781,25 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
      * button, no insulin was given, and the entry dialog is already gone.
      */
     @Test
-    fun bolus_whenDroppedFromQueue_postsSilentCancelledNoticeNotTheAlarm() = runTest {
+    fun bolus_whenDroppedFromQueue_raisesTheCancelledWarningNotTheAlarm() = runTest {
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
         whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(false).cancelled(true).comment("import"))
         val executor = create()
 
         executor.deliverInsulin(insulin = 1.0, note = null, source = Sources.QuickWizard, onError = { })
 
-        verify(notificationManager, never()).post(
-            eq(NotificationId.BOLUS_DELIVERY_FAILED), any<String>(), any<NotificationLevel>(), any<Int>(),
-            anyOrNull<AlarmSound>(), any<List<NotificationAction>>(), anyOrNull<() -> Boolean>()
-        )
-        // BOLUS_CANCELLED is declared IMPORTANT, which is silent by definition — no sound is passed at the post site.
-        verify(notificationManager).post(
-            eq(NotificationId.BOLUS_CANCELLED), any<String>(), any<NotificationLevel>(), any<Int>(),
-            isNull(), any<List<NotificationAction>>(), anyOrNull<() -> Boolean>()
-        )
+        // A WARNING: one chime and a card, no alarm screen
+        val alert = raised().single()
+        assertThat(alert.kind).isEqualTo(CoreAlert.BOLUS_CANCELLED)
+        assertThat(alert.severity).isEqualTo(AlertSeverity.WARNING)
+        assertThat(alert.lifetime).isEqualTo(AlertLifetime.EVENT)
+    }
+
+    /** Every alert the executor raised. */
+    private fun raised(): List<Alert> {
+        val captor = argumentCaptor<Alert>()
+        verify(alerts, atLeast(0)).raise(captor.capture())
+        return captor.allValues
     }
 
     /**

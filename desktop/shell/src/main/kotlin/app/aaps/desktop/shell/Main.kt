@@ -53,6 +53,7 @@ import app.aaps.desktop.shell.platform.openFolder
 import app.aaps.implementation.maintenance.DesktopFolders
 import app.aaps.shared.clientbindings.ClientViewModelFactory
 import app.aaps.shared.impl.sharedPreferences.StoreUnreadableException
+import app.aaps.ui.activities.AlertScreen
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.loopSheet.LoopActionViewModel
@@ -415,6 +416,19 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
             onNavControllerReady = {},
             onClose = { logger.error(LTag.CORE, "Initialization failed and the window was asked to close") }
         ) { navController ->
+            // The alarm screen of a ringing alert, in place of the app, as on iOS: the same shared screen and buttons
+            val alarmScreen by graph.alertPlatform.alarmScreen.collectAsState()
+            alarmScreen?.let { alert ->
+                AlertScreen(
+                    alerts = graph.alerts,
+                    source = alert.source,
+                    key = alert.key,
+                    uel = graph.uel,
+                    onClose = { graph.alertPlatform.alarmScreenClosed(alert.source, alert.key) }
+                )
+                return@AapsAppRoot
+            }
+
             // Resolved here rather than inside the NavHost: appNavGraph is a builder, not a
             // composable, so a view model cannot be asked for from within it.
             // The overview and the drawer must share one instance, or a menu action would talk to a

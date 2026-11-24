@@ -4,6 +4,7 @@ import android.content.Context
 import app.aaps.appshell.start.AppStartSequence
 import app.aaps.appshell.start.PluginSource
 import app.aaps.appshell.start.mergePlugins
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.autotune.Autotune
@@ -276,6 +277,7 @@ class MetroGraphs(
     val appRepository: AppRepository get() = root.appRepository
     val constraintsChecker: ConstraintsChecker get() = root.constraintsChecker
     val notificationManager: NotificationManager get() = root.notificationManager
+    val alerts: Alerts get() = root.alerts
     val uiRestart: UiRestart get() = root.uiRestart
     val appStartSequence: AppStartSequence get() = root.appStartSequence
     val activePlugin: ActivePlugin get() = root.activePlugin

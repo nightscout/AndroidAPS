@@ -1,27 +1,26 @@
 package app.aaps.implementation.alerts
 
-import app.aaps.core.data.model.GV
-import app.aaps.core.data.model.SourceSensor
-import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertLifetime
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.implementation.alerts.keys.LocalAlertLongKey
 import app.aaps.shared.tests.TestBase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeAll
@@ -29,10 +28,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 
 class LocalAlertUtilsImplTest : TestBase() {
@@ -43,13 +42,11 @@ class LocalAlertUtilsImplTest : TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var smsCommunicator: SmsCommunicator
     @Mock lateinit var config: Config
-    @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var dateUtil: DateUtil
-    @Mock lateinit var notificationManager: NotificationManager
+    @Mock lateinit var alerts: Alerts
     @Mock lateinit var pump: PumpWithConcentration
     @Mock lateinit var pumpDescription: PumpDescription
 
-    private val testScope = CoroutineScope(Dispatchers.Unconfined)
     private lateinit var localAlertUtils: LocalAlertUtilsImpl
 
     private val now = 100000000L
@@ -83,19 +80,61 @@ class LocalAlertUtilsImplTest : TestBase() {
             profileFunction,
             smsCommunicator,
             config,
-            persistenceLayer,
             dateUtil,
-            notificationManager,
-            testScope
+            { alerts }
         )
         whenever(dateUtil.now()).thenReturn(now)
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.pumpDescription).thenReturn(pumpDescription)
         whenever(pumpDescription.hasCustomUnreachableAlertCheck).thenReturn(false)
-        runTest {
-            whenever(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), any(), any(), any()))
-                .thenReturn(PersistenceLayer.TransactionResult())
-        }
+        whenever(alerts.active).thenReturn(MutableStateFlow(emptyList<Alert>()))
+    }
+
+    /** The pump was not reached for longer than the threshold: the alarm rings until it is answered. */
+    @Test
+    fun `an unreachable pump raises the pump unreachable alarm`() {
+        givenUnreachableAlarmOn()
+
+        localAlertUtils.checkPumpUnreachableAlarm(lastConnection = now - T.mins(60).msecs(), isStatusOutdated = true, isDisconnected = false)
+
+        val captor = argumentCaptor<Alert>()
+        verify(alerts).raise(captor.capture())
+        assertThat(captor.firstValue.kind).isEqualTo(CoreAlert.PUMP_UNREACHABLE)
+        assertThat(captor.firstValue.severity).isEqualTo(AlertSeverity.CRITICAL)
+        assertThat(captor.firstValue.lifetime).isEqualTo(AlertLifetime.CONDITION)
+    }
+
+    /** Found again at the next threshold, the same condition keeps its time, so it does not ring again. */
+    @Test
+    fun `a pump that stays unreachable keeps the time of its alarm`() {
+        givenUnreachableAlarmOn()
+        val since = now - T.mins(30).msecs()
+        whenever(alerts.active).thenReturn(
+            MutableStateFlow(listOf(CoreAlert.PUMP_UNREACHABLE.alert(AlertSeverity.CRITICAL, AlertLifetime.CONDITION, null, since)))
+        )
+
+        localAlertUtils.checkPumpUnreachableAlarm(lastConnection = now - T.mins(60).msecs(), isStatusOutdated = true, isDisconnected = false)
+
+        val captor = argumentCaptor<Alert>()
+        verify(alerts).raise(captor.capture())
+        assertThat(captor.firstValue.raisedAt).isEqualTo(since)
+    }
+
+    @Test
+    fun `a pump that is reached again ends the alarm`() {
+        givenUnreachableAlarmOn()
+
+        localAlertUtils.checkPumpUnreachableAlarm(lastConnection = now - T.mins(1).msecs(), isStatusOutdated = false, isDisconnected = false)
+
+        verify(alerts, never()).raise(any())
+        verify(alerts).resolve(UiInteraction.SOURCE, CoreAlert.PUMP_UNREACHABLE.key)
+    }
+
+    private fun givenUnreachableAlarmOn() {
+        whenever(config.APS).thenReturn(true)
+        whenever(preferences.get(BooleanKey.AlertPumpUnreachable)).thenReturn(true)
+        whenever(preferences.get(IntKey.AlertsPumpUnreachableThreshold)).thenReturn(30)
+        whenever(preferences.get(LocalAlertLongKey.NextPumpDisconnectedAlarm)).thenReturn(now - 1000)
     }
 
     @Test

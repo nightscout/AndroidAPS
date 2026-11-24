@@ -3,6 +3,9 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol
 import app.aaps.core.data.json.OrgJsonCompat.optJsonObjectCompat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.clientcontrol.FailureReason
@@ -11,8 +14,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpInsulin
@@ -90,7 +91,7 @@ class ClientControlRoundTrip(
     private val nsClientRepository: NSClientRepository,
     private val config: Config,
     private val dateUtil: DateUtil,
-    private val notificationManager: NotificationManager,
+    private val alerts: Alerts,
     private val rh: TextResolver,
     private val bolusProgressData: BolusProgressData,
     private val aapsLogger: AAPSLogger,
@@ -145,14 +146,15 @@ class ClientControlRoundTrip(
     private var progressWatchdogJob: Job? = null
 
     init {
-        // Client→master alarm-clear (one-directional, by design): when the user dismisses/mutes the relayed
+        // Client→master alarm-clear (one-directional, by design): when the user answers the relayed
         // bolus-delivery-failure alarm HERE, tell the master to clear its own copy. The reverse is deliberately NOT
         // done — the master silencing its alarm must not rob the remote initiator of its failed-bolus notice. Best-effort
         // fire-and-forget; app-lifetime scope (singleton, no cancel). Gated to clients so a master never signals itself.
         if (config.AAPSCLIENT) appScope.launch {
             var present = false
-            notificationManager.notifications.collect { list ->
-                val showing = list.any { it.id == NotificationId.BOLUS_DELIVERY_FAILED }
+            alerts.active.collect { list ->
+                // An event alert leaves the list when the user answers it
+                val showing = list.any { it.kind == CoreAlert.BOLUS_FAILED }
                 if (present && !showing) {
                     val result = publisher.publish(ClientControlMessage.DismissAlarm)
                     nsClientRepository.addLog("► CLIENTCTL", "dismiss_alarm relay: ${result::class.simpleName}")
@@ -190,19 +192,20 @@ class ClientControlRoundTrip(
             ack.payload?.let { runCatching { json.decodeFromString(PongPayload.serializer(), it) }.getOrNull() }?.signingKey
                 ?.let { masterDocVerifier.keepKey(it) }
         // A late Delivery/Failed ack relays an async bolus failure the master only learned AFTER its Done ack —
-        // raise an URGENT alarm here. It is NOT a round-trip response (the commit already terminated), so it does
+        // raise the alarm here. It is NOT a round-trip response (the commit already terminated), so it does
         // not feed ackEvents; the master itself alarmed locally too (executor, phase 1a).
         if (ack.phase == AckPhase.Delivery) {
             if (ack.status == AckStatus.Failed) {
                 // payload is the master-authored full text ("title\n<pump detail>"); show it as-is, don't re-prefix the title.
-                val text = ack.payload ?: rh.gs(CoreUiStrings.treatmentdeliveryerror)
+                val text = ack.payload?.let { TextRef.Literal(it) } ?: CoreUiStrings.treatmentdeliveryerror
                 // A command the master dropped on purpose (its queue was cleared by a settings import) did not fail
-                // on the pump, so it must not alarm here either — the master itself only posts a silent notice. It
-                // still has to be shown: nothing re-sends a bolus.
+                // on the pump, so it must not alarm here either — the master itself only chimes once. It still has
+                // to be shown: nothing re-sends a bolus.
+                val now = dateUtil.now()
                 if (ack.reason.toFailureReason() == FailureReason.Cancelled)
-                    notificationManager.post(NotificationId.BOLUS_CANCELLED, text)
+                    CoreAlert.BOLUS_CANCELLED.raiseEvent(alerts, AlertSeverity.WARNING, text, now)
                 else
-                    notificationManager.post(NotificationId.BOLUS_DELIVERY_FAILED, text, validMinutes = 0, sound = AlarmSound.BOLUS_ERROR)
+                    CoreAlert.BOLUS_FAILED.raiseEvent(alerts, AlertSeverity.CRITICAL, text, now, AlarmSound.BOLUS_ERROR)
             }
             return
         }

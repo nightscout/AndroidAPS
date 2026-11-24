@@ -1,16 +1,16 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertLifetime
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.AlarmSound
-import app.aaps.core.interfaces.notifications.NotificationAction
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpInsulin
@@ -49,7 +49,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
@@ -71,7 +71,7 @@ internal class ClientControlRoundTripTest {
     @Mock private lateinit var nsClientRepository: NSClientRepository
     @Mock private lateinit var config: Config
     @Mock private lateinit var dateUtil: DateUtil
-    @Mock private lateinit var notificationManager: NotificationManager
+    @Mock private lateinit var alerts: Alerts
     @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var bolusProgressData: BolusProgressData
     @Mock private lateinit var aapsLogger: AAPSLogger
@@ -84,7 +84,7 @@ internal class ClientControlRoundTripTest {
     private val json = Json { ignoreUnknownKeys = true }
 
     private lateinit var reachable: MutableStateFlow<Boolean>
-    private val notifications = MutableStateFlow<List<AapsNotification>>(emptyList())
+    private val active = MutableStateFlow<List<Alert>>(emptyList())
     private lateinit var sut: ClientControlRoundTrip
 
     // Scope injected into the SUT — cancelled in tearDown() so the progress-stall watchdog (a delayed
@@ -109,22 +109,37 @@ internal class ClientControlRoundTripTest {
         whenever(nsClientV3Plugin.masterReachable).thenReturn(reachable)
         whenever(nsClientV3Plugin.nsAndroidClient).thenReturn(nsAndroidClient)
         whenever(config.AAPSCLIENT).thenReturn(true)
-        whenever(notificationManager.notifications).thenReturn(notifications)
+        whenever(alerts.active).thenReturn(active)
         whenever(bolusProgressData.state).thenReturn(MutableStateFlow(null))
         appScope = CoroutineScope(Dispatchers.Unconfined)
-        sut = ClientControlRoundTrip(publisher, pairingRepository, { nsClientV3Plugin }, nsClientRepository, config, dateUtil, notificationManager, rh, bolusProgressData, aapsLogger, masterDocVerifier, appScope)
+        sut = ClientControlRoundTrip(publisher, pairingRepository, { nsClientV3Plugin }, nsClientRepository, config, dateUtil, alerts, rh, bolusProgressData, aapsLogger, masterDocVerifier, appScope)
     }
 
     @Test
-    fun onAckDoc_deliveryFailed_raisesUrgentAlarm() = runTest {
-        // A late Delivery/Failed ack (an async bolus failure the master relays after its Done ack) → URGENT alarm.
+    fun onAckDoc_deliveryFailed_raisesTheBolusFailedAlarm() = runTest {
+        // A late Delivery/Failed ack (an async bolus failure the master relays after its Done ack) → the alarm.
         // The master-authored payload (title + pump detail) is shown as-is — not re-prefixed with the title.
         sut.onAckDoc(ackDoc(AckPhase.Delivery, AckStatus.Failed, reason = "ExecutionFailed", payload = "Treatment delivery error\npump fault"))
 
-        verify(notificationManager).post(
-            eq(NotificationId.BOLUS_DELIVERY_FAILED), any<String>(), any<NotificationLevel>(), any<Int>(),
-            anyOrNull<AlarmSound>(), any<List<NotificationAction>>(), anyOrNull<() -> Boolean>()
-        )
+        val captor = argumentCaptor<Alert>()
+        verify(alerts).raise(captor.capture())
+        val alert = captor.firstValue
+        assertThat(alert.kind).isEqualTo(CoreAlert.BOLUS_FAILED)
+        assertThat(alert.severity).isEqualTo(AlertSeverity.CRITICAL)
+        assertThat(alert.lifetime).isEqualTo(AlertLifetime.EVENT)
+        assertThat(alert.sound).isEqualTo(AlarmSound.BOLUS_ERROR)
+        assertThat(alert.text).isEqualTo(TextRef.Literal("Treatment delivery error\npump fault"))
+    }
+
+    /** A bolus the master dropped on purpose (a settings import) did not fail on the pump: one chime, not the alarm. */
+    @Test
+    fun onAckDoc_deliveryCancelled_raisesTheCancelledWarning() = runTest {
+        sut.onAckDoc(ackDoc(AckPhase.Delivery, AckStatus.Failed, reason = FailureReason.Cancelled.name, payload = "No insulin given"))
+
+        val captor = argumentCaptor<Alert>()
+        verify(alerts).raise(captor.capture())
+        assertThat(captor.firstValue.kind).isEqualTo(CoreAlert.BOLUS_CANCELLED)
+        assertThat(captor.firstValue.severity).isEqualTo(AlertSeverity.WARNING)
     }
 
     /** A pong signed with the pairing secret carries the master's key for its settings docs: the client keeps it. */
@@ -156,18 +171,18 @@ internal class ClientControlRoundTripTest {
     @Test
     fun clientDismissingBolusFailedAlarm_relaysDismissToMaster() = runTest {
         whenever(publisher.publish(ClientControlMessage.DismissAlarm)).thenReturn(ClientControlSendResult.NotPaired)
-        // The relayed alarm shows on the client, then the user clears it → one fire-and-forget DismissAlarm to the master.
-        notifications.value = listOf(AapsNotification(NotificationId.BOLUS_DELIVERY_FAILED, instanceKey = 0, text = "x", level = NotificationLevel.URGENT))
-        notifications.value = emptyList()
+        // The relayed alarm rings on the client, then the user answers it → one fire-and-forget DismissAlarm to the master.
+        active.value = listOf(CoreAlert.BOLUS_FAILED.alert(AlertSeverity.CRITICAL, AlertLifetime.EVENT, TextRef.Literal("x"), now))
+        active.value = emptyList()
 
         verify(publisher).publish(ClientControlMessage.DismissAlarm)
     }
 
     @Test
     fun clientDismissingUnrelatedAlarm_doesNotRelay() = runTest {
-        // Only the bolus-delivery-failure alarm relays; clearing any other notification must NOT signal the master.
-        notifications.value = listOf(AapsNotification(NotificationId.PUMP_ERROR, instanceKey = 0, text = "x", level = NotificationLevel.URGENT))
-        notifications.value = emptyList()
+        // Only the bolus-delivery-failure alarm relays; answering any other alert must NOT signal the master.
+        active.value = listOf(CoreAlert.COMMAND_FAILED.alert(AlertSeverity.CRITICAL, AlertLifetime.EVENT, TextRef.Literal("x"), now))
+        active.value = emptyList()
 
         verify(publisher, never()).publish(ClientControlMessage.DismissAlarm)
     }

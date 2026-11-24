@@ -1,12 +1,12 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.notifications.AapsNotification
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -113,7 +113,7 @@ class ClientControlUplinkIntegrationTest {
     @Mock private lateinit var runningConfigurationPublisher: RunningConfigurationPublisher
     @Mock private lateinit var persistenceLayer: PersistenceLayer
     @Mock private lateinit var masterActionExecutor: MasterActionExecutor
-    @Mock private lateinit var notificationManager: NotificationManager
+    @Mock private lateinit var alerts: Alerts
     private val rh = generatedTextResolver("sync" to SyncStringsValues::textOf)
     @Mock private lateinit var masterConfig: Config
     @Mock private lateinit var bolusProgressData: BolusProgressData
@@ -198,7 +198,7 @@ class ClientControlUplinkIntegrationTest {
         // ---------- real components ----------
         clientPairingRepository = ClientPairingRepository(clientPrefs, secureEncrypt, aapsLogger)
         clientControlPublisher = ClientControlPublisher(clientPairingRepository, { nsClientV3Plugin }, nsClientRepository, dateUtil, aapsLogger)
-        whenever(notificationManager.notifications).thenReturn(MutableStateFlow(emptyList<AapsNotification>()))
+        whenever(alerts.active).thenReturn(MutableStateFlow(emptyList<Alert>()))
         whenever(bolusProgressData.state).thenReturn(MutableStateFlow<BolusProgressState?>(null))
         clientScope = CoroutineScope(Dispatchers.Unconfined)
         val clientControlRoundTrip =
@@ -209,7 +209,7 @@ class ClientControlUplinkIntegrationTest {
                 nsClientRepository,
                 clientConfig,
                 dateUtil,
-                notificationManager,
+                alerts,
                 rh,
                 bolusProgressData,
                 aapsLogger,
@@ -222,7 +222,7 @@ class ClientControlUplinkIntegrationTest {
         masterScope = CoroutineScope(Dispatchers.Unconfined)
         masterReceiver = ClientControlReceiver(
             masterAuthorizedRepository, { nsClientV3Plugin }, nsClientRepository, sceneAutomationApi,
-            offerPublisher, masterPrefs, dateUtil, uel, runningConfigurationPublisher, persistenceLayer, masterActionExecutor, notificationManager, masterConfig, bolusProgressData, commandQueue, rh, aapsLogger,
+            offerPublisher, masterPrefs, dateUtil, uel, runningConfigurationPublisher, persistenceLayer, masterActionExecutor, { alerts }, masterConfig, bolusProgressData, commandQueue, rh, aapsLogger,
             masterScope, clientTokens, mock<MasterSigningKey>(), mock()
         )
         clientKeyExchange = ClientKeyExchange(clientPairingRepository, { clientControlRoundTrip }, clientPrefs, nsClientRepository, aapsLogger)

@@ -13,10 +13,10 @@ How a pump alert works is in `PUMP_DESIGN.md` (sections 2 and 8). How a CGM rais
 | # | Kind | API | What the user gets | Sound | Platforms | Used by |
 |---|---|---|---|---|---|---|
 | 1 | **In-app notification card** | `NotificationManager.post(NotificationId, text, level, sound?)` | A card in the overview list. Levels: URGENT, IMPORTANT, NORMAL, LOW, INFO, ANNOUNCEMENT | Only URGENT **with** a sound: a rising volume and the alarm screen | Android, iOS, desktop | Most modules; on 2026-11-21 about 70 files in 28 modules, most of them in core, DanaR, DanaRS, sync and constraints |
-| 2 | **Pump alerts** | `Alerts.raise(Alert)`. Severity CRITICAL, WARNING or INFO; lifetime CONDITION or EVENT | A card. CRITICAL: the alarm screen. WARNING: one chime as an Android notification. Silence is a 30-minute snooze that survives a restart; the watch is told | CRITICAL rings until answered, WARNING once | Android, iOS | Carelevo, and the `runAlarm` shim (row 3) |
-| 3 | **App alarms** | `UiInteraction.runAlarm(...)`. Now a shim: it raises an EVENT pump alert with the source `"aaps"` | As row 2: the alarm screen until it is answered | `BOLUS_ERROR`, `EAT_REMINDER`, `ALARM` | Android, iOS | A bolus error (command queue, overview, main activity), the eat reminder, the automation reminder, and the drivers' own alarms: DanaR v2, DanaRS, Diaconn, EOPatch, Medtronic, Omnipod Dash and Eros |
-| 4 | **Local alerts** | `LocalAlertUtils` | An URGENT card: **pump unreachable** (also a therapy event and an SMS), **missed BG readings** (off by default) | `ALARM` | Android, iOS (`IosMissedReadingAlarm`) | Core |
-| 5 | **Nightscout announcements** | `NsIncomingDataProcessor` | A careportal announcement as a WARNING alert (source `"nightscout"`), when "NS announcements" is on. Nightscout's level 1 and 2 alarms were removed on 2026-11-23 (step 3) | One chime | Android, iOS | NS client |
+| 2 | **Alerts** | `Alerts.raise(Alert)`. Severity CRITICAL, WARNING or INFO; lifetime CONDITION or EVENT | A card. CRITICAL: the alarm screen. WARNING: one chime as an Android notification. Silence is a 30-minute snooze that survives a restart; the watch is told | CRITICAL rings until answered, WARNING once | Android, iOS, desktop (since 2026-11-24) | Carelevo, the `runAlarm` shim (row 3), the BG alarms, Nightscout announcements, and the core's own alarms (step 4: `CoreAlert`) |
+| 3 | **App alarms** | `UiInteraction.runAlarm(...)`. Now a shim: it raises an EVENT alert with the source `"aaps"` | As row 2: the alarm screen until it is answered | `BOLUS_ERROR`, `EAT_REMINDER`, `ALARM` | Android, iOS, desktop | A command that failed (overview, main activity), an insulin change not written, the eat reminder, the automation reminder, and the drivers' own alarms: DanaR v2, DanaRS, Diaconn, EOPatch, Medtronic, Omnipod Dash and Eros |
+| 4 | **Local alerts** | `LocalAlertUtils` | **Pump unreachable** as a CRITICAL alert since step 4 (also an SMS) | `ALARM` | Android, iOS, desktop | Core |
+| 5 | **Nightscout announcements** | `NsIncomingDataProcessor` | A careportal announcement as a WARNING alert (source `"nightscout"`), when "NS announcements" is on. Nightscout's level 1 and 2 alarms were removed on 2026-11-23 (step 3) | One chime | Android, iOS, desktop | NS client |
 | 6 | **Automation** | `ActionNotification`, `ActionAlarm`, `ActionSendSMS` | A card (`AUTOMATION_MESSAGE`); an alarm (a reminder, then row 3); an SMS | The alarm only | Android, iOS (a booked alert since 2026-11-22) | The user's rules |
 | 7 | **Loop notifier** | `LoopNotifier` (`AndroidLoopNotifier`, `IosLoopNotifier`) | A system notification: an open-loop suggestion, carbs required | The channel's sound; silent while Do Not Disturb is on and its override is off | Android, iOS | Loop |
 | 8 | **Ongoing notification** | `NotificationHolder`, `PersistentNotificationPlugin` | The permanent notification of the foreground service, with BG, IOB and the loop status | None | Android | Services, the persistent notification plugin |
@@ -67,14 +67,19 @@ ding) and a card of a Silent kind dinged.
 | `IosEatReminderAlarm` | The eat reminder |
 | `IosLoopNotifier` | The loop's notifications |
 
+The desktop runs the same alert core since 2026-11-24 (step 4), with `DesktopAlertPlatform`: the shared alarm screen
+drawn by the window, a tray message and a beep for a WARNING, and the core's own timers for a silence and a booking,
+which ring only while the app runs. Its only sound is the system beep.
+
 ## 5. What is not uniform yet
 
 - **Pump alerts are new.** Only Carelevo and the `runAlarm` shim use them. Seven drivers still ring through
   `runAlarm`, and Insight has its own channel. Each driver moves when it is next reworked (`PUMP_DESIGN.md`, section 5).
-- **Some cards ring outside the alert path.** Pump unreachable and
-  Eversense are URGENT cards with a sound, not pump alerts. The sound owner is the same (the notification list), but
-  the silence is not: "mute all" stops them all, while a pump alert's silence is for that alert only and it rings
-  again after 30 minutes.
+- **Some cards ring outside the alert path.** Plugin start failed, plugin work failed, Eversense and the drivers'
+  own cards are URGENT cards with a sound, not alerts. The sound owner is the same (the notification list), but the
+  silence is not: "mute all" stops them all, while an alert's silence is for that alert only and it rings again after
+  30 minutes. The two plugin cards stay so (decided 2026-11-24): `PluginBase` posts them, and about 50 plugins would
+  have to pass the alert core to it.
 - **Every card in the tray makes a sound** (section 2): any card without buttons, at any level, dings with the
   phone's notification sound while the tray setting is on. Only the cards of alerts do not.
 - **The alarm screen over another app (Android).** Android does not let an app in the background put a screen over
@@ -143,7 +148,8 @@ Alerts keep their three severities: CRITICAL, WARNING, INFO. The list of cards h
   - Moved onto it: the automation reminder (`AlertReminderScheduler`, Android and iOS) and the "time to eat" alarm
     (`EatReminderAlarm`, Android keeps its countdown notification). On iOS both are real alerts for the first time:
     card, alarm screen, announcement, and the user's Ring, Silent or Off. Its stored "the alarm rang" mark went:
-    after the end time, Stop and +5 min silence its own alarm. The desktop has no alert core and keeps its own.
+    after the end time, Stop and +5 min silence its own alarm. The desktop, which runs the alert core since step 4,
+    still has its own two timers for these, which post a card.
   - Not yet: the missed readings alarm moves with the BG alarms (step 2, stale data), and the iOS ring after a
     silence stays in `IosAlertPlatform.snoozed`, which already works.
 - **The announcement is written under the alert's own source.** Today every alert is written through `PumpSync` with
@@ -220,6 +226,19 @@ and the other BG sources (about 45 ids) are reviewed when each one moves.
 | Carbs required | `CARBS_REQUIRED` and the loop notifier | WARNING | CONDITION | No |
 | Eat reminder | `runAlarm` | CRITICAL | EVENT, scheduled | No |
 | Automation alarm | `ActionAlarm` through `runAlarm` | CRITICAL | EVENT, scheduled | No |
+
+Built 2026-11-24 (step 4), as in the table, with these differences:
+
+- **Plugin start failed and plugin work failed stay URGENT cards with a sound** (decided 2026-11-24). `PluginBase`
+  posts them and has only `NotificationManager`; giving it the alert core would change about 50 plugins and their
+  tests. Two interfaces stay: cards in `NotificationManager`, noise in `Alerts`.
+- **Carbs required** moves in step 6.
+- A condition that a check finds again and again (pump unreachable, zero basal, profile, pump driver not responding)
+  keeps the time it began while it is active (`CoreAlert.raiseCondition`), so it rings once and a silence holds. It
+  rings again after its silence while it lasts. The zero basal alarm's own "again every 15 min" went with it.
+- Pump unreachable and the hard limit no longer write their own announcement: the core writes one for each alert,
+  on the master. Pump unreachable used to follow "Create announcements from errors"; the core does not read it.
+- The alert's text where the old card had text that only repeated the title: none (pump unreachable).
 
 **Become BG alarms** (source `"bg"`): `BG_READINGS_MISSED` becomes the stale-data rule. Urgent low, the level rules,
 persistent high, the rate rules and predictive low are new.
@@ -429,8 +448,8 @@ or after it. Until then they are the only glucose alarm its user has.
     the master). The user's Ring, Silent or Off for the kind is on top of it.
   - Its origin is `AlertOrigin.NIGHTSCOUT`: the core writes no announcement for it, or it would come back as a new
     one.
-  - It is raised through `NightscoutAnnouncements`, bound where the alerts are (Android, iOS). The desktop has no
-    alert core, so there it is absent and only logged; before, the desktop showed the announcement as a card.
+  - It is raised through `NightscoutAnnouncements`, bound where the alerts are (Android, iOS, and the desktop since
+    step 4).
 - **A BG alarm writes no announcement** (decided 2026-11-23). Every phone raises its own from the same readings and
   rules, so a client would hear the master's low twice: its own alarm and the chime of the announcement. The master's
   other alerts (the pump, the app) are still written, so a parent's client still hears the master's pump alerts.
@@ -462,13 +481,13 @@ or after it. Until then they are the only glucose alarm its user has.
 The order matters: step 3 must not come before step 2.
 
 0. At any time, on its own: delete the 7 unused `NotificationId`s, `fromOrdinal` and the out-of-date "append at the
-   END" comments.
+   END" comments. Done before step 4 (found already done on 2026-11-24).
 
 1. The core: the rename to `Alerts` (done 2026-11-21), the announcement under its own source (done 2026-11-22:
    `AlertOrigin`, one announcement per alert, on the master only), the alert kinds and the choices with their screen
    (done 2026-11-22: Settings > Local alerts settings > Alert kinds, a "Silence this kind on this phone" button on
-   the alarm screen of a kind that is not protected, and a line in the notification sheet; on Android and iOS only,
-   as the desktop has no alerts) (`AlertKind`, `CoreAlert`) with the user's Ring, Silent or Off
+   the alarm screen of a kind that is not protected, and a line in the notification sheet; on Android and iOS, and
+   on the desktop since step 4) (`AlertKind`, `CoreAlert`) with the user's Ring, Silent or Off
    per phone and its settings screen, the silence length and its choice (done 2026-11-22), the announcement under its
    own source, the scheduled alerts (done 2026-11-22).
 2. The BG alarms, stale data included, on the master and the clients, with the shared silence. Built 2026-11-22:
@@ -480,7 +499,8 @@ The order matters: step 3 must not come before step 2.
    2e the sound per kind and the Test button; 2f the silence on every phone. The escalation comes
    later, after the basics work.
 3. The Nightscout alarms removed; announcements as a WARNING alert. Built 2026-11-23: see "Nightscout" above.
-4. The core's sounding cards to alerts (the table above).
+4. The core's sounding cards to alerts (the table above). Built 2026-11-24, with the desktop on the alert core: see
+   "Review of today's notification ids". The ids that lost their last user went with it.
 5. Eversense: its device alarms to alerts, and its glucose alarms dropped (step 2 is done by then).
 6. Carbs required as an alert.
 7. The cleanups, after the other drivers: the `sound` parameter and the URGENT level of the public `post`, the

@@ -1,7 +1,9 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
-import app.aaps.core.interfaces.alerts.SharedSilence
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlert
+import app.aaps.core.interfaces.alerts.CoreAlert
+import app.aaps.core.interfaces.alerts.SharedSilence
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
@@ -15,8 +17,6 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -25,6 +25,7 @@ import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
@@ -99,7 +100,7 @@ internal class ClientControlReceiverTest {
     @Mock private lateinit var runningConfigurationPublisher: RunningConfigurationPublisher
     @Mock private lateinit var persistenceLayer: PersistenceLayer
     @Mock private lateinit var masterActionExecutor: MasterActionExecutor
-    @Mock private lateinit var notificationManager: NotificationManager
+    @Mock private lateinit var alerts: Alerts
     @Mock private lateinit var config: Config
     @Mock private lateinit var bolusProgressData: BolusProgressData
     @Mock private lateinit var commandQueue: CommandQueue
@@ -187,7 +188,7 @@ internal class ClientControlReceiverTest {
             runningConfigurationPublisher,
             persistenceLayer,
             masterActionExecutor,
-            notificationManager,
+            { alerts },
             config,
             bolusProgressData,
             commandQueue,
@@ -724,7 +725,7 @@ internal class ClientControlReceiverTest {
         // Fire-and-forget (wantsAck = false): the client cleared the relayed alarm → master clears its own copy, no ack.
         sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = ClientControlMessage.DismissAlarm, counter = 5L)))
 
-        verify(notificationManager).dismiss(NotificationId.BOLUS_DELIVERY_FAILED)
+        verify(alerts).resolve(UiInteraction.SOURCE, CoreAlert.BOLUS_FAILED.key)
         assertThat(acks).isEmpty()
     }
 
@@ -1296,7 +1297,7 @@ internal class ClientControlReceiverTest {
         sendWith(clientId, secret, ClientControlMessage.DismissAlarm, subject = "mujtelefon", counter = 3L)
 
         assertThat(acks.last().reason).isEqualTo(FailureReason.OtherToken.name)
-        verify(notificationManager, never()).dismiss(NotificationId.BOLUS_DELIVERY_FAILED)
+        verify(alerts, never()).resolve(UiInteraction.SOURCE, CoreAlert.BOLUS_FAILED.key)
     }
 
     @Test
@@ -1307,7 +1308,7 @@ internal class ClientControlReceiverTest {
 
         sendWith(clientId, secret, ClientControlMessage.DismissAlarm, subject = "aaps-phone", counter = 3L)
 
-        verify(notificationManager).dismiss(NotificationId.BOLUS_DELIVERY_FAILED)
+        verify(alerts).resolve(UiInteraction.SOURCE, CoreAlert.BOLUS_FAILED.key)
     }
 
     /** The ping still passes with another token: the phone stays online and can show why its commands are refused. */
@@ -1333,7 +1334,7 @@ internal class ClientControlReceiverTest {
 
         sendWith(clientId, secret, ClientControlMessage.DismissAlarm, subject = "mujtelefon", counter = 2L)
 
-        verify(notificationManager).dismiss(NotificationId.BOLUS_DELIVERY_FAILED)
+        verify(alerts).resolve(UiInteraction.SOURCE, CoreAlert.BOLUS_FAILED.key)
         assertThat(authorizedRepository.current(now).single().ownToken).isNull()
     }
 
@@ -1391,7 +1392,7 @@ internal class ClientControlReceiverTest {
         )
 
         verify(commandQueue, never()).cancelAllBoluses(anyOrNull())
-        verify(notificationManager, never()).dismiss(NotificationId.BOLUS_DELIVERY_FAILED)
+        verify(alerts, never()).resolve(UiInteraction.SOURCE, CoreAlert.BOLUS_FAILED.key)
     }
 
     @Test

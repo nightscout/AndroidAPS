@@ -1,16 +1,10 @@
 package app.aaps.desktop.shell.platform
 
-import app.aaps.core.interfaces.alerts.BgAlarms
-import app.aaps.core.interfaces.alerts.NightscoutAnnouncements
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.AlarmSound
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.widget.WidgetUpdater
 import dev.zacsweers.metro.AppScope
@@ -111,79 +105,4 @@ class DesktopWidgetUpdater(
     override fun update(from: String) {
         aapsLogger.debug(LTag.CORE, "No desktop widget to update (from $from)")
     }
-}
-
-/**
- * No BG alarms on the desktop: it has no alert core to ring them. Absent, not present and dead - nothing on the
- * desktop offers them (the alert settings are not shown here).
- */
-@ContributesBinding(AppScope::class)
-@SingleIn(AppScope::class)
-@Inject
-class DesktopAbsentBgAlarms(private val aapsLogger: AAPSLogger) : BgAlarms {
-
-    override fun start() {
-        aapsLogger.debug(LTag.CORE, "No BG alarms on the desktop: it has no alert core")
-    }
-}
-
-/** No Nightscout announcements on the desktop: an announcement is an alert, and the desktop has no alert core. */
-@ContributesBinding(AppScope::class)
-@SingleIn(AppScope::class)
-@Inject
-class DesktopAbsentNightscoutAnnouncements(private val aapsLogger: AAPSLogger) : NightscoutAnnouncements {
-
-    override fun announce(timestamp: Long, note: String) {
-        aapsLogger.info(LTag.NSCLIENT, "Nightscout announcement not shown: the desktop has no alert core")
-    }
-}
-
-/**
- * The parts of `UiInteraction` a desktop can do, and honest failure for the parts it cannot.
- *
- * The alarms are real: they go to the same notification registry every other alarm uses, so an
- * urgent condition still reaches the user through the system tray.
- *
- * The two activity classes are not. They exist so Android code can build an `Intent`, which has no
- * meaning here; nothing on this platform reads them, and they return this class so the type is
- * satisfied. If one of these ever turns up in a stack trace, the caller is Android-only code that
- * should not have been reached.
- */
-@ContributesBinding(AppScope::class)
-@SingleIn(AppScope::class)
-@Inject
-class DesktopUiInteraction(
-    private val aapsLogger: AAPSLogger,
-    private val notificationManager: NotificationManager
-) : UiInteraction {
-
-    override fun runAlarm(key: String, status: String, title: String, sound: AlarmSound?) {
-        aapsLogger.debug(LTag.CORE, "Alarm $key: $title - $status")
-        notificationManager.post(NotificationId.TOAST_ALARM, status, sound = sound, alarmTitle = title)
-    }
-
-    override fun runEatReminderAlarm(status: String, title: String) =
-        runAlarm(UiInteraction.KEY_EAT_REMINDER, status, title, AlarmSound.EAT_REMINDER)
-
-    /**
-     * Not here: booking an alarm is the alert core's, which the desktop has not. Its reminders and the "time to eat"
-     * alarm have their own schedulers (`DesktopReminderScheduler`, `DesktopEatReminderAlarm`), so nothing on the
-     * desktop calls this; false tells a caller that would.
-     */
-    override fun scheduleAlarm(at: Long, key: String, status: String, title: String, sound: AlarmSound?): Boolean {
-        aapsLogger.error(LTag.CORE, "Alarm $key not booked: the desktop has no alert core")
-        return false
-    }
-
-    override fun scheduleEatReminderAlarm(at: Long, status: String, title: String): Boolean =
-        scheduleAlarm(at, UiInteraction.KEY_EAT_REMINDER, status, title, AlarmSound.EAT_REMINDER)
-
-    override fun cancelScheduledAlarm(key: String) = Unit
-
-    override fun stopAlarm(reason: String) {
-        aapsLogger.debug(LTag.CORE, "Alarm stopped: $reason")
-        notificationManager.dismiss(NotificationId.TOAST_ALARM)
-    }
-
-    override fun stopEatReminderAlarm() = stopAlarm("Eat reminder")
 }

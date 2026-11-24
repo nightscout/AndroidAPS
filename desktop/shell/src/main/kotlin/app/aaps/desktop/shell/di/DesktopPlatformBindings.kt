@@ -86,9 +86,13 @@ object DesktopPlatformBindings {
         post: () -> PostCalculationRunner
     ): CalculationExecutor = LazyCalculationExecutor(scope, aapsLogger, { prepare() }, { post() }, wakeLock = null)
 
+    /** The tray. The concrete class too, because the alert platform also shows a message and beeps through it. */
     @Provides
     @SingleIn(AppScope::class)
-    fun systemNotificationPlatform(logger: AAPSLogger, config: Config, rh: TextResolver): SystemNotificationPlatform =
+    fun desktopTray(logger: AAPSLogger, config: Config, rh: TextResolver): DesktopSystemNotificationPlatform =
         DesktopSystemNotificationPlatform(logger, rh.gs(config.appName), loadAwtAppIcon(appIconResource(config)))
+
+    @Provides
+    fun systemNotificationPlatform(tray: DesktopSystemNotificationPlatform): SystemNotificationPlatform = tray
 
 }

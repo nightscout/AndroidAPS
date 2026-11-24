@@ -5,17 +5,19 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.notifications.AlarmSound
-import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.ui.R
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
@@ -28,6 +30,7 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -39,6 +42,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
 
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var commandQueue: CommandQueue
+    @Mock lateinit var alerts: Alerts
 
     private lateinit var reconciler: RunningModeReconciler
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
@@ -46,6 +50,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
     @BeforeEach
     fun prepare() {
         whenever(config.APS).thenReturn(true)
+        whenever(alerts.active).thenReturn(MutableStateFlow(emptyList<Alert>()))
         whenever(persistenceLayer.observeChanges(anyOrNull<KClass<*>>())).thenReturn(emptyFlow())
         runBlocking {
             whenever(commandQueue.cancelTempBasal(anyBoolean(), anyBoolean())).thenReturn(pumpEnactResultProvider().success(true))
@@ -63,7 +68,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
             aapsLogger = aapsLogger,
             rxBus = rxBus,
             rh = rh,
-            notificationManager = notificationManager,
+            alerts = { alerts },
             appScope = testScope
         )
     }
@@ -492,7 +497,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `alarm rings after the zero TBR stays missing for 10 min and repeats every 15 min`() = runTest {
+    fun `alarm rings after the zero TBR stays missing for 10 min and is raised once`() = runTest {
         stubZeroDeliveryPump()
         val start = now
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(temporaryMode(RM.Mode.DISCONNECTED_PUMP, timestamp = start, durationMs = T.hours(2).msecs()))
@@ -509,13 +514,14 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
         checkAt(start + T.mins(15).msecs())
         verifyAlarmPosted(count =1)
 
+        // Raised once: the alert core rings it until it is answered, and again after its silence
         checkAt(start + T.mins(25).msecs())
-        verifyAlarmPosted(count =2)
+        verifyAlarmPosted(count =1)
 
         // The zero TBR finally got through: the alarm goes away
         whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong())).thenReturn(zeroTbr(start = start + T.mins(30).msecs(), minutes = 120))
         checkAt(start + T.mins(30).msecs())
-        verify(notificationManager).dismiss(NotificationId.ZERO_DELIVERY_NOT_SET)
+        verify(alerts).resolve(UiInteraction.SOURCE, CoreAlert.ZERO_DELIVERY_NOT_SET.key)
     }
 
     @Test
@@ -560,9 +566,7 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
     )
 
     private fun verifyAlarmPosted(count: Int) {
-        verify(notificationManager, times(count)).post(
-            eq(NotificationId.ZERO_DELIVERY_NOT_SET), any<TextRef>(), any(), any(), any(), any(), eq(AlarmSound.ALARM), any(), anyOrNull()
-        )
+        verify(alerts, times(count)).raise(argThat { kind == CoreAlert.ZERO_DELIVERY_NOT_SET })
     }
 
     @Suppress("SameParameterValue")

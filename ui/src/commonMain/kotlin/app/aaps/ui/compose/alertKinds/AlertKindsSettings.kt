@@ -30,16 +30,9 @@ import app.aaps.ui.keys.UiIntentKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
-/**
- * The alert kinds in the settings and in the notification sheet (`_docs/ALARMS.md`, section 6).
- *
- * Only a platform with alerts (Android, iOS) has them. The desktop has no alert core, so it binds
- * [AbsentAlertKindsSettings] and shows neither the list nor the line.
- */
+/** The alert kinds in the settings and in the notification sheet (`_docs/ALARMS.md`, section 6). */
 interface AlertKindsSettings {
 
     /** The settings item that opens the list, or null where there are no alerts. */
@@ -58,15 +51,7 @@ interface AlertKindsSettings {
     val platformItems: List<PreferenceItem> get() = emptyList()
 }
 
-/** For a platform with no alerts: nothing to show. */
-object AbsentAlertKindsSettings : AlertKindsSettings {
-
-    override val settingsItem: PreferenceItem? = null
-    override val choices: StateFlow<Map<String, AlertChoice>> = MutableStateFlow<Map<String, AlertChoice>>(emptyMap()).asStateFlow()
-    override val pauses: StateFlow<Map<String, Long>> = MutableStateFlow<Map<String, Long>>(emptyMap()).asStateFlow()
-}
-
-/** Bound by each platform that has alerts, next to its [Alerts]. */
+/** Bound by each platform next to its [Alerts]. */
 @OptIn(ExperimentalUuidApi::class)
 @SingleIn(AppScope::class)
 @Inject

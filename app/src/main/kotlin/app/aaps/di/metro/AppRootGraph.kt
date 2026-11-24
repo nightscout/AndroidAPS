@@ -3,6 +3,7 @@ package app.aaps.di.metro
 import android.content.Context
 import androidx.work.WorkManager
 import app.aaps.appshell.start.AppStartSequence
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensData
@@ -355,6 +356,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     /** The one application scope. */
     @ApplicationScope val appScope: CoroutineScope
     val notificationManager: NotificationManager
+    val alerts: Alerts
     val apsResult: APSResult
     val pumpEnactResult: PumpEnactResult
     val profileSwitchSilentGate: ProfileSwitchSilentGate

@@ -4,7 +4,9 @@ import app.aaps.core.data.json.OrgJsonCompat.optJsonObjectCompat
 import app.aaps.core.data.json.OrgJsonCompat.optStringCompat
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlert
+import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.alerts.EatReminderAction
 import app.aaps.core.interfaces.alerts.SharedSilence
@@ -17,8 +19,6 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.BolusProgressState
@@ -121,7 +121,8 @@ class ClientControlReceiver(
     private val runningConfigurationPublisher: RunningConfigurationPublisher,
     private val persistenceLayer: PersistenceLayer,
     private val masterActionExecutor: MasterActionExecutor,
-    private val notificationManager: NotificationManager,
+    // A provider: the alert core reaches the Nightscout client, which reaches this class
+    private val alerts: () -> Alerts,
     config: Config,
     private val bolusProgressData: BolusProgressData,
     private val commandQueue: CommandQueue,
@@ -545,14 +546,14 @@ class ClientControlReceiver(
     }
 
     /**
-     * Client dismissed/muted the relayed bolus-delivery-failure alarm on its side → clear the master's own copy.
+     * Client answered the relayed bolus-delivery-failure alarm on its side → end the master's own copy.
      * Fire-and-forget (the client sends wantsAck=false) so the returned outcome is never written as an ack. ONE-WAY by
-     * design: the master clearing its alarm does NOT push back to the client (the remote initiator must acknowledge its
-     * own failed bolus). dismiss() is a no-op when nothing of that id is showing.
+     * design: the master ending its alarm does NOT push back to the client (the remote initiator must acknowledge its
+     * own failed bolus). Harmless when no such alarm is active.
      */
     private suspend fun onVerifiedDismissAlarm(entry: AuthorizedClient, envelope: SignedEnvelope, now: Long): AckOutcome {
         authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
-        notificationManager.dismiss(NotificationId.BOLUS_DELIVERY_FAILED)
+        CoreAlert.BOLUS_FAILED.resolve(alerts())
         nsClientRepository.addLog("◄ CLIENTCTL", "dismiss_alarm from ${entry.name}")
         return AckOutcome(AckStatus.Ok, null)
     }

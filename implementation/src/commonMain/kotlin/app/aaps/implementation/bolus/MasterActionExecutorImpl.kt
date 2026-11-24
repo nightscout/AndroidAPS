@@ -16,6 +16,9 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -33,8 +36,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.AlarmSound
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -100,7 +101,7 @@ class MasterActionExecutorImpl(
     private val decimalFormatter: DecimalFormatter,
     private val profileUtil: ProfileUtil,
     private val automation: Automation,
-    private val notificationManager: NotificationManager,
+    private val alerts: Alerts,
     private val bolusProgressData: BolusProgressData,
     // Plain CoroutineScope, the same object as @ApplicationScope:
     // AppCoroutineBindings.unqualifiedAppScope binds the very same scope without it.
@@ -1589,14 +1590,15 @@ class MasterActionExecutorImpl(
                 // Two different things, two different messages. A command DROPPED ON PURPOSE (a settings import
                 // clears the queue) is not a pump failure, so it must not ring the alarm. But it must still be
                 // said: the user pressed bolus, no insulin was given, and nothing re-sends it — a temp basal the
-                // loop re-issues next cycle, a bolus nobody does. Hence a silent IMPORTANT notification, not
+                // loop re-issues next cycle, a bolus nobody does. Hence a WARNING alert, one chime, not
                 // silence. Either way it reaches onError below, or the caller is told a dose was delivered.
                 val errorText =
                     if (result.cancelled) rh.gs(CoreUiStrings.bolus_cancelled_no_insulin, result.comment)
                     else rh.gs(CoreUiStrings.treatmentdeliveryerror) + "\n" + result.comment
                 if (detailedBolusInfo.bolusType != BS.Type.SMB) {
-                    if (result.cancelled) notificationManager.post(NotificationId.BOLUS_CANCELLED, errorText)
-                    else notificationManager.post(NotificationId.BOLUS_DELIVERY_FAILED, errorText, validMinutes = 0, sound = AlarmSound.BOLUS_ERROR)
+                    val now = dateUtil.now()
+                    if (result.cancelled) CoreAlert.BOLUS_CANCELLED.raiseEvent(alerts, AlertSeverity.WARNING, TextRef.Literal(errorText), now)
+                    else CoreAlert.BOLUS_FAILED.raiseEvent(alerts, AlertSeverity.CRITICAL, TextRef.Literal(errorText), now, AlarmSound.BOLUS_ERROR)
                 }
                 onError(MasterActionExecutor.Failure(errorText, result.cancelled))
             } else

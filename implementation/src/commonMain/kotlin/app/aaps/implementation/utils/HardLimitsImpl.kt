@@ -1,14 +1,9 @@
 package app.aaps.implementation.utils
 
-import app.aaps.core.data.model.TE
-import app.aaps.core.data.ue.Action
-import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.notifications.AlarmSound
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
@@ -17,14 +12,11 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.min
 
@@ -33,13 +25,12 @@ import kotlin.math.min
 @Inject
 class HardLimitsImpl(
     private val aapsLogger: AAPSLogger,
-    private val notificationManager: NotificationManager,
+    // A provider: the alert core reaches much of the app, and is needed only when a limit is hit
+    private val alerts: () -> Alerts,
     private val preferences: Preferences,
     private val rh: TextResolver,
-    private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
-    private val rxBus: RxBus,
-    private val appScope: CoroutineScope
+    private val rxBus: RxBus
 ) : HardLimits {
 
     private fun loadAge(): HardLimits.AgeType {
@@ -85,18 +76,9 @@ class HardLimitsImpl(
             msg += ".\n"
             msg += rh.gs(CoreUiStrings.valuelimitedto, value, newValue)
             aapsLogger.error(msg)
-            appScope.launch {
-                persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-                    therapyEvent = TE.asAnnouncement(msg),
-                    timestamp = dateUtil.now(),
-                    action = Action.CAREPORTAL,
-                    source = Sources.Aaps,
-                    note = msg,
-                    listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
-                )
-            }
             rxBus.send(EventShowSnackbar(msg, EventShowSnackbar.Type.Warning))
-            notificationManager.post(NotificationId.TOAST_ALARM, msg, sound = AlarmSound.ERROR)
+            // One chime and a card. The alert core writes its announcement, on the master.
+            CoreAlert.HARD_LIMIT.raiseEvent(alerts(), AlertSeverity.WARNING, TextRef.Literal(msg), dateUtil.now())
         }
         return newValue
     }

@@ -19,6 +19,8 @@ import app.aaps.plugins.smoothing.AvgSmoothingPlugin
 import app.aaps.plugins.smoothing.ExponentialSmoothingPlugin
 import app.aaps.plugins.smoothing.NoSmoothingPlugin
 import app.aaps.plugins.smoothing.UnscentedKalmanFilterPlugin
+import app.aaps.plugins.sync.nsclientV3.ws.NsSocket
+import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
@@ -99,6 +101,16 @@ interface IosProbeGraph {
     @Provides
     @SingleIn(AppScope::class)
     fun repository(): AppRepository = IosAppDatabaseBuilder().provideAppRepository("aaps-ios-graph.db")
+
+    /**
+     * No sockets: a probe connects to nothing. Needed since the alert core is reachable here (`HardLimits` raises
+     * through it), and the core reaches the Nightscout client for the silences shared between phones. The app graph
+     * gets the real factory from Swift.
+     */
+    @Provides
+    fun nsSocketFactory(): NsSocketFactory = object : NsSocketFactory {
+        override fun create(url: String): NsSocket? = null
+    }
 
     @DependencyGraph.Factory
     fun interface Factory {

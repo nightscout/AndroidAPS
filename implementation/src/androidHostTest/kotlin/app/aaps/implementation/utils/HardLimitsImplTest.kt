@@ -1,10 +1,10 @@
 package app.aaps.implementation.utils
 
-import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.notifications.NotificationAction
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertLifetime
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
@@ -12,35 +12,27 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 class HardLimitsImplTest : TestBase() {
 
-    @Mock lateinit var notificationManager: NotificationManager
+    @Mock lateinit var alerts: Alerts
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var dateUtil: DateUtil
 
-    private val testScope = CoroutineScope(Dispatchers.Unconfined)
     private lateinit var hardLimits: HardLimitsImpl
 
     @BeforeEach
     fun setup() {
-        hardLimits = HardLimitsImpl(aapsLogger, notificationManager, preferences, rh, persistenceLayer, dateUtil, rxBus, testScope)
+        hardLimits = HardLimitsImpl(aapsLogger, { alerts }, preferences, rh, dateUtil, rxBus)
         whenever(dateUtil.now()).thenReturn(1000L)
-        runTest {
-            whenever(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), any(), any(), any())).thenReturn(PersistenceLayer.TransactionResult())
-        }
         whenever(rh.gs(any<Int>())).thenReturn("")
         whenever(rh.gs(any<Int>(), any())).thenReturn("")
     }
@@ -201,13 +193,15 @@ class HardLimitsImplTest : TestBase() {
     }
 
     @Test
-    fun `verifyHardLimits logs error and shows notification when value is out of range`() {
+    fun `a value out of range raises the hard limit warning`() {
         hardLimits.verifyHardLimits(15.0, app.aaps.core.interfaces.R.string.bolus, 0.0, 10.0)
 
-        verify(notificationManager).post(any<NotificationId>(), any<String>(), any<NotificationLevel>(), any<Int>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull())
-        runTest {
-            verify(persistenceLayer).insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), any(), any(), any())
-        }
+        // One chime and a card, ended by the user. Its announcement is the alert core's.
+        val captor = argumentCaptor<Alert>()
+        verify(alerts).raise(captor.capture())
+        assertThat(captor.firstValue.kind).isEqualTo(CoreAlert.HARD_LIMIT)
+        assertThat(captor.firstValue.severity).isEqualTo(AlertSeverity.WARNING)
+        assertThat(captor.firstValue.lifetime).isEqualTo(AlertLifetime.EVENT)
     }
 
     @Test

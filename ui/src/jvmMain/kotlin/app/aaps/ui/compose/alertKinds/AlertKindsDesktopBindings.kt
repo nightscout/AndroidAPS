@@ -5,11 +5,11 @@ import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 
-/** The desktop has no alert core, so it shows no alert kinds: no settings item, no line in the sheet. */
+/** The desktop has alerts (`AlertsDesktopBindings`), so it has the list of alert kinds. */
 @ContributesTo(AppScope::class)
 @BindingContainer
 object AlertKindsDesktopBindings {
 
     @Provides
-    fun alertKindsSettings(): AlertKindsSettings = AbsentAlertKindsSettings
+    fun alertKindsSettings(impl: AlertKindsSettingsImpl): AlertKindsSettings = impl
 }

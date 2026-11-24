@@ -1,6 +1,7 @@
 package app.aaps.desktop.shell.di
 
 import app.aaps.appshell.start.AppStartSequence
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
@@ -9,6 +10,7 @@ import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.PrefsFileInfo
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.overview.OverviewData
@@ -39,6 +41,7 @@ import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.database.AppRepository
 import app.aaps.database.di.JvmAppDatabaseBuilder
+import app.aaps.desktop.shell.platform.DesktopAlertPlatform
 import app.aaps.implementation.maintenance.DesktopFolders
 import app.aaps.implementation.maintenance.PeriodicMaintenance
 import app.aaps.implementation.maintenance.cloud.AuthBrowser
@@ -150,6 +153,14 @@ interface DesktopAppGraph : MetroViewModelMultibindings {
 
     /** Where a Google sign in is shown. Not [urlOpener] - see `AuthBrowser` for why they differ. */
     val authBrowser: AuthBrowser
+
+    /**
+     * The alarm screen, which the window draws: [DesktopAlertPlatform.alarmScreen] says which alert wants it, and the
+     * shared `AlertScreen` shows it with [alerts] and, for its buttons, [uel].
+     */
+    val alerts: Alerts
+    val alertPlatform: DesktopAlertPlatform
+    val uel: UserEntryLogger
 
     /**
      * Assisted rather than contributed: both are built with the overview data cache instead of

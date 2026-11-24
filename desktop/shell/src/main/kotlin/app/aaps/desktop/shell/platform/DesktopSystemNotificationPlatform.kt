@@ -51,13 +51,21 @@ class DesktopSystemNotificationPlatform(
             .getOrNull()
     }
 
-    override fun show(notification: AapsNotification, title: String) {
+    override fun show(notification: AapsNotification, title: String) = toast(title, notification.text)
+
+    /** One message in the tray. Also used by `DesktopAlertPlatform` for the one sound of a WARNING alert. */
+    fun toast(title: String, text: String) {
         val icon = trayIcon
         if (icon == null) {
-            aapsLogger.info(LTag.CORE, "Notification (no tray): $title - ${notification.text}")
+            aapsLogger.info(LTag.CORE, "Notification (no tray): $title - $text")
             return
         }
-        icon.displayMessage(title, notification.text, TrayIcon.MessageType.INFO)
+        icon.displayMessage(title, text, TrayIcon.MessageType.INFO)
+    }
+
+    /** The platform beep: the only sound a desktop has. */
+    fun beep() {
+        runCatching { Toolkit.getDefaultToolkit().beep() }
     }
 
     override fun cancel(instanceKey: Int) {
@@ -72,7 +80,7 @@ class DesktopSystemNotificationPlatform(
     override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean, ringtoneUri: String?) {
         // Called again with the same key means "keep playing", and a single beep has already
         // finished, so there is nothing to keep. Only a new alarm that carries a sound beeps.
-        if (instanceKey != null && sound != null) runCatching { Toolkit.getDefaultToolkit().beep() }
+        if (instanceKey != null && sound != null) beep()
     }
 
     override fun onDismissed(callback: (instanceKey: Int) -> Unit) {

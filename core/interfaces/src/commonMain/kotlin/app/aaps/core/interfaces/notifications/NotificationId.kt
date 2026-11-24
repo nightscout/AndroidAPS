@@ -36,8 +36,8 @@ enum class NotificationId(
     // Profile
     PROFILE_SET_OK(INFO, PROFILE),
 
-    // Basal profile failed to write to the pump (wrong basal until fixed). Also covers the old
-    // DanaR-only PROFILE_SET_FAILED, which was merged here.
+    // Omnipod Dash only: its own card for a basal program the pod did not take. The queue's "profile not set in the
+    // pump" is an alert (`CoreAlert.PROFILE_UPDATE_FAILED`); this goes when Dash moves to alerts.
     FAILED_UPDATE_PROFILE(URGENT, PROFILE),
     INVALID_PROFILE_NOT_ACCEPTED(NORMAL, PROFILE),
 
@@ -45,23 +45,13 @@ enum class NotificationId(
     EXTENDED_BOLUS_DISABLED(IMPORTANT, PUMP),
     PUMP_ERROR(URGENT, PUMP),
 
-    // Equil low-battery alarm. MUST stay on its own id (historically it mis-used FAILED_UPDATE_PROFILE): the
-    // unified profile-set logic may dismiss FAILED_UPDATE_PROFILE on a successful write, which would otherwise
-    // silently clear a live Equil battery alarm.
+    // Equil low-battery alarm. Its own id: it once used FAILED_UPDATE_PROFILE, and a profile write that worked took
+    // the battery alarm away with it.
     EQUIL_LOW_BATTERY(URGENT, PUMP),
 
-    // A user/remote (non-SMB) bolus failed to deliver — surfaced once, here, from the executor (the entry
-    // dialog is gone by the time the async result arrives). SMB failures stay silent (the loop self-corrects).
-    BOLUS_DELIVERY_FAILED(URGENT, PUMP),
-
-    // The same bolus never reached the pump, but because the queue was cleared on purpose (a settings import) —
-    // nothing failed on the pump, so this is NOT the alarm tier. It still has to be said: the user pressed bolus,
-    // no insulin was given, and nobody re-sends it (unlike a temp basal, which the loop re-issues next cycle).
-    BOLUS_CANCELLED(IMPORTANT, PUMP),
     WRONG_SERIAL_NUMBER(NORMAL, PUMP),
     WRONG_BASAL_STEP(NORMAL, PUMP),
     WRONG_DRIVER(NORMAL, PUMP),
-    PUMP_UNREACHABLE(URGENT, PUMP),
     UNSUPPORTED_FIRMWARE(IMPORTANT, PUMP),
     MINIMAL_BASAL_VALUE_REPLACED(NORMAL, PUMP),
     BASAL_PROFILE_NOT_ALIGNED_TO_HOURS(NORMAL, PUMP),
@@ -75,9 +65,8 @@ enum class NotificationId(
     PATCH_NOT_ACTIVE(NORMAL, PUMP),
     PUMP_SETTINGS_FAILED(NORMAL, PUMP),
 
-    // Pump clock / time-zone update failed (Medtrum, Omnipod Eros). MUST stay on its own id (Eros historically
-    // mis-used FAILED_UPDATE_PROFILE): the unified profile-set logic dismisses FAILED_UPDATE_PROFILE on a successful
-    // write, which would otherwise silently clear a live time-update-failed card (and vice-versa).
+    // Pump clock / time-zone update failed (Medtrum, Omnipod Eros). Its own id: Eros once used FAILED_UPDATE_PROFILE,
+    // and the two cards removed each other.
     PUMP_TIMEZONE_UPDATE_FAILED(NORMAL, PUMP),
     BLUETOOTH_NOT_SUPPORTED(IMPORTANT, PUMP),
     PUMP_WARNING(NORMAL, PUMP),
@@ -193,9 +182,6 @@ enum class NotificationId(
     SCENE_CHAINED(INFO, AUTOMATION, allowMultiple = true),
     SCENE_CHAIN_ERROR(IMPORTANT, AUTOMATION, allowMultiple = true),
 
-    /** Bolus succeeded but the accompanying carbs could not be persisted — the user must re-enter them. */
-    CARBS_STORE_FAILED(URGENT, PUMP),
-
     // A plugin's onStart threw. It stays ENABLED on purpose - disabling a failed pump driver makes
     // ActivePlugin.activePumpInternal throw "No pump selected" - so this alarm is how the user finds out
     // that a plugin is running only half built.
@@ -210,14 +196,6 @@ enum class NotificationId(
     // plugin did start - it is a polling loop or a queued command that died, so the text has to say
     // something else. Same reasons for allowMultiple.
     PLUGIN_WORK_FAILED(URGENT, SYSTEM, allowMultiple = true),
-
-    // The pump is disconnected (or a super bolus runs) in AAPS, but the zero temp basal that stops the
-    // insulin is not on the pump, and sending it again did not help. The pump may still give basal
-    // while the user believes it does not.
-    ZERO_DELIVERY_NOT_SET(URGENT, PUMP),
-
-    // One command has been running in the queue for too long, so nothing else reaches the pump (#5209).
-    PUMP_DRIVER_NOT_RESPONDING(URGENT, PUMP),
 
     // The Combo reported an error, so the driver does not connect until the user has handled it. Its own
     // id, so that this hint does not replace the card that names the error (COMBO_PUMP_ALARM) (#5263).

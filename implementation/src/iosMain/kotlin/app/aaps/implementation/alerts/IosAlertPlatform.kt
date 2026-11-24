@@ -63,9 +63,6 @@ object AlertsIosBindings {
     fun nightscoutAnnouncements(impl: NightscoutAnnouncementsImpl): NightscoutAnnouncements = impl
 }
 
-/** Which alert the alarm screen should be showing. */
-data class AlertId(val source: String, val key: String)
-
 /**
  * The iOS side of pump alerts beyond the notification list, which already owns the card and the ramping sound.
  *

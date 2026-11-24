@@ -5,14 +5,14 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.AlarmSound
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpSync
@@ -24,7 +24,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.aps.ApsStrings
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler.Companion.ALARM_AFTER_MS
-import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler.Companion.ALARM_REPEAT_MS
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler.Companion.RENEW_BEFORE_END_MS
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -67,7 +66,8 @@ class RunningModeReconciler(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val rh: TextResolver,
-    private val notificationManager: NotificationManager,
+    // A provider: the alert core reaches the active pump
+    private val alerts: () -> Alerts,
     private val appScope: CoroutineScope
 ) {
 
@@ -75,10 +75,10 @@ class RunningModeReconciler(
     // commands, so without it the two could each send their own zero TBR.
     private val mutex = Mutex()
 
-    // Guarded by [mutex]. When the zero TBR was first seen missing in a zero-delivery mode, and when the
-    // alarm was last raised. Both null while everything is fine.
+    // Guarded by [mutex]. When the zero TBR was first seen missing in a zero-delivery mode (null while everything is
+    // fine), and whether its alarm is raised.
     private var zeroTbrMissingSince: Long? = null
-    private var lastZeroTbrAlarm: Long? = null
+    private var zeroTbrAlarmRaised = false
 
     // The first two are written and read from different threads; [reconciledMode] / [reconciledRowId] expose them to
     // instrumented tests that poll from a different thread than the appScope coroutine writing them;
@@ -126,7 +126,7 @@ class RunningModeReconciler(
         lastReconciledDuration = -1L
         lastReconciledTimestamp = 0L
         zeroTbrMissingSince = null
-        lastZeroTbrAlarm = null
+        zeroTbrAlarmRaised = false
     }
 
     /**
@@ -217,8 +217,8 @@ class RunningModeReconciler(
      *
      * Sends the zero TBR again when it is missing, or when it ends within [RENEW_BEFORE_END_MS] while
      * the mode goes on longer (a pump whose maximum TBR is shorter than the mode, or a mode without
-     * end). Raises [NotificationId.ZERO_DELIVERY_NOT_SET] when the zero TBR stays missing for
-     * [ALARM_AFTER_MS], and repeats it every [ALARM_REPEAT_MS] until it is in place.
+     * end). Raises [CoreAlert.ZERO_DELIVERY_NOT_SET] when the zero TBR stays missing for
+     * [ALARM_AFTER_MS]. It rings until it is answered, and again after its silence, until the zero TBR is in place.
      *
      * The running mode is never changed here. It is what the user asked for; the job is to make the
      * pump match it, and to say so loudly when that does not work.
@@ -247,7 +247,7 @@ class RunningModeReconciler(
     }
 
     /**
-     * Raises or clears [NotificationId.ZERO_DELIVERY_NOT_SET] for [activeMode]. The alarm is not raised
+     * Raises or ends [CoreAlert.ZERO_DELIVERY_NOT_SET] for [activeMode]. The alarm is not raised
      * at the first miss: the next checks send the zero TBR again first, which fixes most short
      * connection problems.
      */
@@ -260,18 +260,17 @@ class RunningModeReconciler(
         val tbr = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
         if (!zeroTbrExpected || (tbr != null && isEffectivelyZero(tbr))) {
             zeroTbrMissingSince = null
-            if (lastZeroTbrAlarm != null) {
-                lastZeroTbrAlarm = null
-                notificationManager.dismiss(NotificationId.ZERO_DELIVERY_NOT_SET)
+            if (zeroTbrAlarmRaised) {
+                zeroTbrAlarmRaised = false
+                CoreAlert.ZERO_DELIVERY_NOT_SET.resolve(alerts())
             }
             return
         }
         val missingSince = zeroTbrMissingSince ?: now.also { zeroTbrMissingSince = it }
-        val lastAlarm = lastZeroTbrAlarm
-        if (now - missingSince >= ALARM_AFTER_MS && (lastAlarm == null || now - lastAlarm >= ALARM_REPEAT_MS)) {
+        if (now - missingSince >= ALARM_AFTER_MS && !zeroTbrAlarmRaised) {
             aapsLogger.error(LTag.APS, "RunningModeReconciler: no zero-TBR in ${activeMode.mode} for ${(now - missingSince) / 60_000L} min, raising alarm")
-            lastZeroTbrAlarm = now
-            notificationManager.post(NotificationId.ZERO_DELIVERY_NOT_SET, ApsStrings.zero_basal_not_set, sound = AlarmSound.ALARM)
+            zeroTbrAlarmRaised = true
+            CoreAlert.ZERO_DELIVERY_NOT_SET.raiseCondition(alerts(), AlertSeverity.CRITICAL, ApsStrings.zero_basal_not_set, now)
         }
     }
 
@@ -408,6 +407,5 @@ class RunningModeReconciler(
 
         // Two more checks try to send the zero TBR again before the alarm rings.
         private val ALARM_AFTER_MS = T.mins(10).msecs()
-        private val ALARM_REPEAT_MS = T.mins(15).msecs()
     }
 }

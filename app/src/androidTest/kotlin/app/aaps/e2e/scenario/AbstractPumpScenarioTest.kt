@@ -185,7 +185,7 @@ abstract class AbstractPumpScenarioTest {
         // A status read compares what the pump runs with what AAPS has.
         assertWithMessage("status read").that(scenario.readStatus().success).isTrue()
         scenario.checkTempBasal()
-        scenario.checkNoAlarm(NotificationId.UNSUPPORTED_ACTION_IN_PUMP)
+        scenario.checkNoCard(NotificationId.UNSUPPORTED_ACTION_IN_PUMP)
     }
 
     /** The pump runs the bolus and its answer is lost. AAPS must count the insulin, at the latest after a status read. */

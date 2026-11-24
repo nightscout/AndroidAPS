@@ -18,6 +18,8 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.interfaces.alerts.AlertKind
+import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -291,7 +293,7 @@ class PumpScenario(private val pump: PumpUnderTest) {
         awaitTrue("the write of the profile at $percentage % ends", PROFILE_TIMEOUT) {
             val running = runBlocking { testGraphs.persistenceLayer.getEffectiveProfileSwitchActiveAt(testGraphs.dateUtil.now()) }
             done = running?.originalPercentage == percentage
-            done || NotificationId.FAILED_UPDATE_PROFILE in shownNotifications()
+            done || CoreAlert.PROFILE_UPDATE_FAILED in activeAlerts()
         }
         awaitQueueIdle()
         return done
@@ -342,7 +344,7 @@ class PumpScenario(private val pump: PumpUnderTest) {
 
     /**
      * A bolus as the user gives it from the insulin dialog, to its end: through `MasterActionExecutor`, the one place
-     * that raises the BOLUS_DELIVERY_FAILED alarm when the pump does not give a bolus. True when it went through, also
+     * that raises the "bolus failed" alarm when the pump does not give a bolus. True when it went through, also
      * when the user stopped it.
      */
     fun userBolus(units: Double): Boolean = await(startUserBolus(units))
@@ -512,18 +514,31 @@ class PumpScenario(private val pump: PumpUnderTest) {
         return stored.size == given.size && stored.zip(given).all { (record, gave) -> record >= gave && record - gave <= over }
     }
 
-    /** AAPS does not show [id]. Only a [userBolus] can raise BOLUS_DELIVERY_FAILED, a bolus of [bolus] never does. */
-    fun checkNoAlarm(id: NotificationId = NotificationId.BOLUS_DELIVERY_FAILED) {
-        assertWithMessage("alarm $id").that(shownNotifications()).doesNotContain(id)
+    /** AAPS does not show the card [id]. */
+    fun checkNoCard(id: NotificationId) {
+        assertWithMessage("card $id").that(shownNotifications()).doesNotContain(id)
     }
 
-    /** AAPS shows [id]. The executor posts it once the queue has answered, so it may come a moment after that answer. */
-    fun checkAlarm(id: NotificationId = NotificationId.BOLUS_DELIVERY_FAILED) {
+    /** AAPS shows the card [id]. It may come a moment after the queue has answered. */
+    fun checkCard(id: NotificationId) {
         awaitValue(RECORD_TIMEOUT) { (id in shownNotifications()).takeIf { it } }
-        assertWithMessage("alarm $id").that(shownNotifications()).contains(id)
+        assertWithMessage("card $id").that(shownNotifications()).contains(id)
+    }
+
+    /** No alert of [kind] is active. Only a [userBolus] can raise "bolus failed", a bolus of [bolus] never does. */
+    fun checkNoAlarm(kind: AlertKind = CoreAlert.BOLUS_FAILED) {
+        assertWithMessage("alarm ${kind.id}").that(activeAlerts()).doesNotContain(kind)
+    }
+
+    /** An alert of [kind] is active. The executor raises it once the queue has answered, so it may come a moment after that answer. */
+    fun checkAlarm(kind: AlertKind = CoreAlert.BOLUS_FAILED) {
+        awaitValue(RECORD_TIMEOUT) { (kind in activeAlerts()).takeIf { it } }
+        assertWithMessage("alarm ${kind.id}").that(activeAlerts()).contains(kind)
     }
 
     private fun shownNotifications(): List<NotificationId> = testGraphs.notificationManager.notifications.value.map { it.id }
+
+    private fun activeAlerts(): List<AlertKind> = testGraphs.alerts.active.value.map { it.kind }
 
     /**
      * AAPS raised an alarm the user hears at [since] or later: a notification at [NotificationLevel.URGENT] that

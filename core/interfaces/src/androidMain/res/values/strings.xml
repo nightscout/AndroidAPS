@@ -172,6 +172,15 @@
     <string name="alert_kind_eat_reminder" comment="Name of a kind of alarm in the alert settings: the timer that says it is time to eat">Time to eat</string>
     <string name="alert_kind_automation_alarm" comment="Name of a kind of alarm in the alert settings: the Alarm action of an automation rule">Automation alarm</string>
     <string name="alert_kind_pump_driver_alarm" comment="Name of a kind of alarm in the alert settings: an alarm of a pump driver that has no alert kinds of its own yet">Pump driver alarm</string>
+    <string name="alert_kind_profile_update_failed" comment="Name of a kind of alarm in the alert settings, and the title of its alarm: the profile could not be written to the pump">Profile not set in the pump</string>
+    <string name="alert_kind_basal_far_from_profile" comment="Name of a kind of alarm in the alert settings, and the title of its alarm: after a profile was set, the pump reports a basal rate far from that profile">Pump basal far from the profile</string>
+    <string name="alert_kind_bolus_failed" comment="Name of a kind of alarm in the alert settings, and the title of its alarm: insulin the user asked for was not given">Bolus failed</string>
+    <string name="alert_kind_bolus_cancelled" comment="Name of a kind of alert in the alert settings, and the title of its card: a bolus was stopped before all of it was given">Bolus stopped</string>
+    <string name="alert_kind_carbs_not_saved" comment="Name of a kind of alert in the alert settings, and the title of its card: the bolus was given, but the carbs entered with it were not saved">Carbs not saved</string>
+    <string name="alert_kind_pump_unreachable" comment="Name of a kind of alarm in the alert settings, and the title of its alarm: the app has not reached the pump for a long time">Pump unreachable</string>
+    <string name="alert_kind_pump_driver_not_responding" comment="Name of a kind of alarm in the alert settings, and the title of its alarm: a command to the pump has not ended for a long time, so no other command can run">Pump driver not responding</string>
+    <string name="alert_kind_zero_delivery_not_set" comment="Name of a kind of alarm in the alert settings, and the title of its alarm: the loop is suspended or disconnected, but the zero temporary basal is not on the pump">Zero basal not set</string>
+    <string name="alert_kind_hard_limit" comment="Name of a kind of alert in the alert settings, and the title of its card: a value was outside a safety limit and was changed to the limit">Hard limit</string>
     <string name="alert_kinds_group_bg" comment="Heading of the group of the glucose alarms in the alert settings">BG alarms</string>
     <string name="alert_kind_bg_urgent_low" comment="Name of a kind of glucose alarm, and the title of its alarm: glucose below the urgent low threshold">Urgent low</string>
     <string name="alert_kind_bg_low" comment="Name of a kind of glucose alarm, and the title of its alarm: glucose below a low threshold the user set">Low</string>

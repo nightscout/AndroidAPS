@@ -214,7 +214,7 @@ class BolusProgressData(
      * either executes. The SMB then executes first and, without this guard, its terminal unconditional
      * [clear] would null the state the still-pending manual bolus depends on. Every subsequent
      * [updateProgress] frame would then be a no-op (state == null), so the driver's deliverTreatment reads
-     * delivered = 0 and raises a false BOLUS_DELIVERY_FAILED even though the pump delivered in full.
+     * delivered = 0 and raises a false "bolus failed" alarm even though the pump delivered in full.
      *
      * [start] (enqueue thread, under the queue's lock) and this clear (queue-worker thread) can run
      * concurrently, so the check-and-null is done atomically via [MutableStateFlow.update]: the generation
