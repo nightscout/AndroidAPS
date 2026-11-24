@@ -224,6 +224,20 @@ How to move a module is in the `kmp-module-flip` skill. The pump-specific rules,
 
 ## 4. What each driver changes for pump alerts
 
+**The rule for every driver (decided 2026-11-24, Eversense first, `CGM_DESIGN.md` section 5):** sort each event by
+what it does to dosing (`DosingEffect`). For a pump, dosing is affected when it gives no insulin or not what AAPS
+thinks it gives (occlusion, empty reservoir, pod or patch stopped, delivery unknown).
+
+| Effect | Severity | Kind |
+|---|---|---|
+| NOW: dosing is affected now | CRITICAL | protected |
+| SOON: dosing will be affected unless the user acts (reservoir or battery nearly empty) | WARNING | protected |
+| ACTION: not dosing, but the user has to act (the patch ends in some hours) | WARNING | the user may set Silent or Off |
+| INFO: the rest | INFO | the user may set Silent or Off |
+
+One kind per alarm name the user sees; a kind is protected when one of its events affects dosing. The driver's own
+classes of its alarms (a grade, a tier) are an input to this, not a replacement for it.
+
 | Driver | Change |
 |---|---|
 | Carelevo | `handleAlarms` and `CarelevoAlarmNotifier` raise and resolve. Clear and discard become the action. Delete `CarelevoSystemNotifier`. `CarelevoAppForeground` stays only for the alarm refresh when the app comes to the front. |

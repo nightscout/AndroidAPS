@@ -1,5 +1,6 @@
 package app.aaps.plugins.eversense.enums
 
+import app.aaps.core.interfaces.alerts.DosingEffect
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.eversense.EversenseStrings
 
@@ -90,19 +91,29 @@ enum class EversenseAlarm(val code: Int) {
         UNKNOWN -> EversenseStrings.eversense_alarm_unknown
     }
 
-    val isInfo: Boolean get() = this in listOf(
-        BATTERY_STATUS, ONE_CAL, TWO_CAL, SENSOR_SYNC_CONFIRMED,
-        SENSOR_RETIRING_SOON_1, SENSOR_RETIRING_SOON_3, SENSOR_RETIRING_SOON_4,
-        SENSOR_RETIRING_SOON_5, SENSOR_RETIRING_SOON_6, SENSOR_RETIRING_SOON_7
-    )
+    /** What the alarm does to dosing, which decides how it rings (`_docs/CGM_DESIGN.md`, section 5). */
+    val effect: DosingEffect get() = when (this) {
+        // No reading, or a reading that cannot be trusted, now
+        CRITICAL_FAULT, SENSOR_RETIRED, EMPTY_BATTERY, SENSOR_TEMPERATURE, SENSOR_LOW_TEMPERATURE, READER_TEMPERATURE,
+        SENSOR_AWOL, INVALID_SENSOR, CALIBRATION_REQUIRED, CALIBRATION_EXPIRED, INVALID_CLOCK, SENSOR_STABILITY,
+        TRANSMITTER_DISCONNECTED, MSP_ALARM, CALIBRATION_FAILED, CALIBRATION_SUSPICIOUS, CALIBRATION_SUSPICIOUS_2,
+        TRANSMITTER_EOL_396, BATTERY_ERROR, SENSOR_CONNECTION, EARLY_SENSOR_RETIREMENT, GENERAL_GLUCOSE_SUSPENDED,
+        UNKNOWN                                                                                  -> DosingEffect.NOW
 
-    val isCritical: Boolean get() = !isWarning && !isInfo
+        // The same soon, unless the user acts
+        SENSOR_GRACE, CALIBRATION_GRACE_PERIOD, CALIBRATION_NOW, VERY_LOW_BATTERY                -> DosingEffect.SOON
 
-    val isWarning: Boolean get() = this in listOf(
-        CALIBRATION_NOW, CALIBRATION_FAILED, CALIBRATION_SUSPICIOUS, CALIBRATION_SUSPICIOUS_2,
-        INVALID_CLOCK, INVALID_SENSOR, PREDICTIVE_HIGH, PREDICTIVE_LOW,
-        RATE_FALLING, RATE_RISING, TRANSMITTER_EOL_330, TRANSMITTER_EOL_366, TRANSMITTER_EOL_395
-    )
+        // Not dosing, but the user has to do something
+        TRANSMITTER_EOL_330, TRANSMITTER_EOL_366, TRANSMITTER_EOL_395, VIBRATION_CURRENT          -> DosingEffect.ACTION
+
+        SENSOR_RETIRING_SOON_1, SENSOR_RETIRING_SOON_3, SENSOR_RETIRING_SOON_4, SENSOR_RETIRING_SOON_5,
+        SENSOR_RETIRING_SOON_6, SENSOR_RETIRING_SOON_7, ONE_CAL, TWO_CAL, BATTERY_STATUS,
+        SENSOR_SYNC_CONFIRMED                                                                    -> DosingEffect.INFO
+
+        // AAPS raises its own BG alarms from the readings, for every source
+        SERIOUSLY_LOW, SERIOUSLY_HIGH, LOW_GLUCOSE, HIGH_GLUCOSE, PREDICTIVE_LOW, PREDICTIVE_HIGH, RATE_FALLING,
+        RATE_RISING                                                                              -> DosingEffect.GLUCOSE
+    }
 
     companion object {
         fun from(code: Int): EversenseAlarm =

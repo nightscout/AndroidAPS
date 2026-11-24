@@ -121,7 +121,7 @@ transmitter refuses is a failed calibration, not a lost link.
 - A registration that needs the vendor server (the first pairing of a 365) sends nothing while offline, neither to
   the server nor over Bluetooth.
 
-## 5. CGM alarms through the alert core (decided 2026-11-21, not built)
+## 5. CGM alarms through the alert core (decided 2026-11-21, built for Eversense 2026-11-24)
 
 A CGM driver raises its transmitter's alarms through the alert core, as a pump driver does (`PUMP_DESIGN.md`, section
 2). The core then shows, rings, silences, raises again after a restart and tells the watch, with no code of the
@@ -138,16 +138,25 @@ why, and the core's stale-data rule rings for the missing readings.
 driver drops its transmitter's glucose alarms only in the same change that brings the core BG alarms, or after it.
 Until then they ring as they do now.
 
-- **Severity.**
-  - CRITICAL: a fault after which no reading comes (sensor failed, battery empty).
-  - WARNING: the user must act soon (calibration due, battery low, the sensor ends soon, transmitter off the sensor).
+- **Severity, by what the event does to dosing** (`DosingEffect`, decided 2026-11-24, the rule for every driver):
+  - NOW, CRITICAL: no reading, or a reading that cannot be trusted, now (sensor failed, battery empty, temperature,
+    calibration expired or failed, wrong clock, transmitter off the sensor).
+  - SOON, WARNING: the same soon, unless the user acts (battery low, calibration due).
+  - ACTION, WARNING: not dosing, but the user has to act (the transmitter ends in some days).
   - INFO: the rest.
-  - Where the transmitter has its own classes (Eversense: warning and info), they decide.
+  - GLUCOSE: a glucose alarm of the transmitter. Not raised: the core's BG alarms raise it.
+  - A kind with an event that affects dosing (NOW or SOON) is protected: it cannot be set Silent or Off. One kind
+    per alarm name, as Carelevo has; a kind is protected when one of its events is.
+  - The transmitter's own classes (Eversense: warning and info) are not used for it: they say how the vendor app
+    shows an alarm, not what it does to dosing.
+  - Where they overlap, the transmitter's alert rings at once with the reason, and the core's stale-data rule rings
+    after its threshold if still no reading comes.
 - **`raisedAt`** is the transmitter's time of the alarm, or the time the driver stored when it first saw it, never
   the time of the call.
-- **Lifetime.** CONDITION when the driver can read the transmitter's active alarms (the 365 can), so the alert ends
-  when the transmitter drops it. EVENT when the transmitter only pushes an alarm and never says it ended; then the
-  user's answer ends it.
+- **Lifetime.** CONDITION when the driver can read the transmitter's active alarms (the 365 can) and the event
+  affects dosing now, so the alert rings until the transmitter drops it. The others, and every alarm of a
+  transmitter that only pushes (the E3), are EVENT: the user's answer ends them; the 365's list still ends one that
+  left it. An alarm is raised when it is new in the list, so an answered one does not come back at the next sync.
 - **The action** (confirm the alarm on the transmitter, where there is one) runs on the driver's thread; a CGM has no
   command queue.
 - **The end.** `resolveAll(source)` when the driver stops, the transmitter is unpaired or another source is chosen.
@@ -155,12 +164,12 @@ Until then they ring as they do now.
 What changes in core:
 
 1. Done 2026-11-22: an alert carries its `AlertOrigin`, and only a pump's alert is filed under the active pump; the
-   app's own is written with no pump identity. A CGM driver adds `AlertOrigin.CGM` when it moves to alerts.
+   app's own is written with no pump identity. `AlertOrigin.CGM` added 2026-11-24, written as the app's own.
 2. Done 2026-11-21: the KDoc of `AlertSeverity` and `AlertAction` covers CGMs too.
 3. Nothing else is known to depend on a pump; check this again when it is built.
 
-Today Eversense posts one plain card per alarm, with the alarm sound for the critical ones, and nothing removes a
-card when the alarm ends.
+Eversense raises its alarms so since 2026-11-24; its transmitter's glucose alarms went in the same change. The details
+are in `plugins/source/eversense/TECHNICAL.md`.
 
 ## 6. A driver in shared code (KMP)
 

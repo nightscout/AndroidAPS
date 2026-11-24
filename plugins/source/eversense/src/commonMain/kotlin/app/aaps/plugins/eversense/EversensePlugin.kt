@@ -5,13 +5,15 @@ import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertLifetime
+import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.DosingEffect
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.AlarmSound
-import app.aaps.core.interfaces.notifications.NotificationHandle
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -29,8 +31,10 @@ import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.core.ui.compose.icons.IcPluginEversense
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.plugins.eversense.alerts.EversenseAlertKind
 import app.aaps.plugins.eversense.callbacks.EversenseWatcher
 import app.aaps.plugins.eversense.cloud.EversenseCloudUploader
 import app.aaps.plugins.eversense.di.EversenseCentral
@@ -89,7 +93,9 @@ class EversensePlugin(
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
     @param:EversenseCentral private val bleCentral: BleCentral,
-    private val pairing: EversensePairing
+    private val pairing: EversensePairing,
+    // A provider: the alert core reaches the plugins, this one among them
+    private val alerts: () -> Alerts
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -121,6 +127,12 @@ class EversensePlugin(
         internal const val BATTERY_LOW_PERCENT = 10
         private const val BATTERY_REARM_PERCENT = 20
 
+        // The keys of the alerts AAPS raises itself; a transmitter alarm's key is its code (keyOf)
+        internal const val KEY_PLACEMENT = "placement"
+        internal const val KEY_BATTERY_LOW = "battery_low"
+        internal const val KEY_CALIBRATION_DUE = "calibration_due"
+        internal const val KEY_SENSOR_EXPIRY = "sensor_expiry"
+
     }
 
 
@@ -139,8 +151,11 @@ class EversensePlugin(
         /** Readings in a row with no sensor signal: three mean the transmitter is not over the sensor. */
         var consecutiveNoSignalReadings = 0
 
-        /** The card of each transmitter alarm on screen, so a repeat replaces it and other alarms stay */
-        val alarmCards = mutableMapOf<EversenseAlarm, NotificationHandle>()
+        /**
+         * The 365's active alarms at its last sync. An alarm new in the list is raised, and one that left it ends: the
+         * 365 says when an alarm ends. The E3 only pushes its alarms, so this stays empty for it.
+         */
+        val activeAlarms = mutableSetOf<EversenseAlarm>()
     }
 
     @Volatile private var running: Running? = null
@@ -189,6 +204,10 @@ class EversensePlugin(
         running = Running(scope, newCloudUploader(scope))
         eversense.addWatcher(this)
         eversense.start()
+        // Unpaired: the transmitter's alerts are of a transmitter that is gone
+        pairing.attention.filter { it == CgmAttention.NOT_PAIRED }
+            .onEach { alerts().resolveAll(EversenseAlertKind.SOURCE) }
+            .launchIn(scope)
         // Android can leave out the disconnect callback while Bluetooth is off: reconnect when it is back on. The
         // current state is skipped, the start above has just connected.
         bleCentral.adapterState.drop(1).filter { it == AdapterState.ON }
@@ -201,8 +220,8 @@ class EversensePlugin(
 
     /**
      * Drops everything [onStart] built: the coroutines with the cloud upload in progress, the link and its retries
-     * (the driver's stop), the counters, and the notices this plugin clears itself when their condition ends - once
-     * stopped, it no longer could. Readings and the upload queue are stored and stay.
+     * (the driver's stop), the counters, and the transmitter's alerts - once stopped, nothing could end them. Readings
+     * and the upload queue are stored and stay.
      */
     override suspend fun onStop() {
         super.onStop()
@@ -211,7 +230,7 @@ class EversensePlugin(
         eversense.removeWatcher(this)
         eversense.stop()
         sensorBatteryLevel = -1
-        notificationManager.dismiss(NotificationId.EVERSENSE_PLACEMENT)
+        alerts().resolveAll(EversenseAlertKind.SOURCE)
     }
 
     // ── CgmDriver ── The user enters the finger-stick value in the AAPS calibration dialog; the master's
@@ -339,10 +358,11 @@ class EversensePlugin(
             }
         } else {
             running.consecutiveNoSignalReadings = 0
-            notificationManager.dismiss(NotificationId.EVERSENSE_PLACEMENT)
+            resolve(KEY_PLACEMENT)
         }
 
-        // Show sensor expiry notifications at 60, 30, and 10 days remaining — once each, at noon, keyed to insertionDate
+        // Sensor expiry at 60, 30, and 10 days remaining — once each, at noon, keyed to insertionDate. Not dosing: the
+        // sensor works until its end, which the transmitter says itself (Sensor replacement).
         if (state.insertionDate > 0) {
             val sensorLifetimeMs = if (eversense.is365()) 365L * 24 * 60 * 60 * 1000 else 180L * 24 * 60 * 60 * 1000
             val expiryMs = state.insertionDate + sensorLifetimeMs
@@ -351,46 +371,50 @@ class EversensePlugin(
 
             if (isAfterNoon && daysRemaining in 31..60 && !isSensorExpiryDismissed(state.insertionDate, 60)) {
                 setSensorExpiryDismissed(state.insertionDate, 60)
-                notificationManager.post(
-                    NotificationId.EVERSENSE_SENSOR_EXPIRY,
-                    rh.gs(EversenseStrings.eversense_sensor_expiry_plan, daysRemaining),
-                    level = NotificationLevel.INFO
-                )
+                raiseSensorExpiry(DosingEffect.INFO, EversenseStrings.eversense_sensor_expiry_plan.withArgs(daysRemaining))
             } else if (isAfterNoon && daysRemaining in 11..30 && !isSensorExpiryDismissed(state.insertionDate, 30)) {
                 setSensorExpiryDismissed(state.insertionDate, 30)
-                notificationManager.post(
-                    NotificationId.EVERSENSE_SENSOR_EXPIRY,
-                    rh.gs(EversenseStrings.eversense_sensor_expiry_soon, daysRemaining)
-                )
+                raiseSensorExpiry(DosingEffect.INFO, EversenseStrings.eversense_sensor_expiry_soon.withArgs(daysRemaining))
             } else if (isAfterNoon && daysRemaining in 1..10 && !isSensorExpiryDismissed(state.insertionDate, daysRemaining)) {
                 setSensorExpiryDismissed(state.insertionDate, daysRemaining)
-                // Days ahead, not an acute danger: important, but not the alarm tier
-                notificationManager.post(
-                    NotificationId.EVERSENSE_SENSOR_EXPIRY,
-                    rh.gs(EversenseStrings.eversense_sensor_expiry_urgent, daysRemaining),
-                    level = NotificationLevel.IMPORTANT
-                )
+                // The user has to get a new sensor in these days: one chime
+                raiseSensorExpiry(DosingEffect.ACTION, EversenseStrings.eversense_sensor_expiry_urgent.withArgs(daysRemaining))
             }
         }
 
-        // Battery low: once per discharge. The transmitter is recharged often, so the notice is armed again when the
-        // battery is back above the limit. At any hour: an empty transmitter gives no readings.
+        // Battery low: once per discharge. The transmitter is recharged often, so the alert is armed again when the
+        // battery is back above the limit. At any hour: an empty transmitter gives no readings, so dosing soon.
         if (state.batteryPercentage in 1..BATTERY_LOW_PERCENT && !isBatteryLowDismissed()) {
             setBatteryLowDismissed(true)
-            notificationManager.post(NotificationId.EVERSENSE_BATTERY_LOW, rh.gs(EversenseStrings.eversense_battery_low, state.batteryPercentage))
+            raise(
+                key = KEY_BATTERY_LOW, alarm = EversenseAlarm.VERY_LOW_BATTERY, effect = DosingEffect.SOON,
+                text = EversenseStrings.eversense_battery_low.withArgs(state.batteryPercentage), lifetime = AlertLifetime.EVENT
+            )
         } else if (state.batteryPercentage > BATTERY_REARM_PERCENT && isBatteryLowDismissed()) {
             setBatteryLowDismissed(false)
-            notificationManager.dismiss(NotificationId.EVERSENSE_BATTERY_LOW)
+            resolve(KEY_BATTERY_LOW)
         }
 
-        // Calibration due notification — fires once per calibration day
-        // Round to day boundary so clock drift doesn't cause duplicate notifications
+        // Calibration due — once per calibration day. Rounded to the day so clock drift does not raise it twice.
+        // Dosing soon: without a calibration the transmitter stops giving readings.
         val calDueDay = (state.nextCalibrationDate / 86400000L) * 86400000L
         if (state.nextCalibrationDate > 0
             && dateUtil.now() >= state.nextCalibrationDate
             && !isCalibrationDueDismissed(calDueDay)) {
             setCalibrationDueDismissed(calDueDay)
-            notificationManager.post(NotificationId.EVERSENSE_CALIBRATION_DUE, rh.gs(EversenseStrings.eversense_calibration_due))
+            raise(
+                key = KEY_CALIBRATION_DUE, alarm = EversenseAlarm.CALIBRATION_NOW, effect = DosingEffect.SOON,
+                text = EversenseStrings.eversense_calibration_due, lifetime = AlertLifetime.EVENT
+            )
+        }
+
+        // The 365 lists its active alarms at each sync, so an alarm that left the list has ended
+        if (eversense.is365()) {
+            val active = state.activeAlarms.map { it.code }.toSet()
+            (active - running.activeAlarms).forEach { onTransmitterAlarm(it) }
+            (running.activeAlarms - active).forEach { resolve(keyOf(it)) }
+            running.activeAlarms.clear()
+            running.activeAlarms.addAll(active)
         }
 
         // Show firmware notification only once per unique firmware version
@@ -405,13 +429,13 @@ class EversensePlugin(
         }
     }
 
+    /** No readings while it is so: dosing now. Ends when the signal is back. */
     override fun onTransmitterNotPlaced() {
-        aapsLogger.warn(LTag.BGSOURCE, "Transmitter not placed — firing placement warning notification")
+        aapsLogger.warn(LTag.BGSOURCE, "Transmitter not placed — raising the placement alert")
         if (running == null) return
-        notificationManager.post(
-            NotificationId.EVERSENSE_PLACEMENT,
-            rh.gs(EversenseStrings.eversense_transmitter_not_placed),
-            level = NotificationLevel.URGENT
+        raise(
+            key = KEY_PLACEMENT, kind = EversenseAlertKind.PLACEMENT, title = EversenseStrings.eversense_placement_title,
+            effect = DosingEffect.NOW, text = EversenseStrings.eversense_transmitter_not_placed, lifetime = AlertLifetime.CONDITION
         )
     }
 
@@ -427,19 +451,6 @@ class EversensePlugin(
 
     override fun onAlarmReceived(alarm: ActiveAlarm) {
         aapsLogger.info(LTag.BGSOURCE, "Eversense alarm received: ${alarm.code.name}")
-        // CRITICAL_FAULT (code 0) is sent for both hardware faults and calibration-overdue events.
-        // If the stored next calibration date has already passed, treat it as a calibration alarm.
-        val title = if (alarm.code == EversenseAlarm.CRITICAL_FAULT) {
-            val stateJson = securePrefs.getString(StorageKeys.STATE, null)
-            val state = stateJson?.let { json.decodeFromString<EversenseState>(it) }
-            if (state != null && state.nextCalibrationDate > 0 && state.nextCalibrationDate < dateUtil.now()) {
-                rh.gs(EversenseStrings.eversense_calibration_due_now)
-            } else {
-                rh.gs(alarm.code.title)
-            }
-        } else {
-            rh.gs(alarm.code.title)
-        }
         // The transmitter pushes an alarm code with no EversenseAlarm mapping (-> UNKNOWN) within
         // ~1-2s of us exiting diagnostic/positioning mode (confirmed from device logs: signal/
         // battery/calibration all healthy at the time - this is a mode-transition status push, not
@@ -452,22 +463,64 @@ class EversensePlugin(
             aapsLogger.info(LTag.BGSOURCE, "Suppressing unrecognized alarm (code ${alarm.codeRaw}) received shortly after exiting positioning mode")
             return
         }
-        val level = when {
-            alarm.code.isWarning -> NotificationLevel.NORMAL
-            alarm.code.isInfo -> NotificationLevel.INFO
-            else -> NotificationLevel.URGENT
-        }
         val running = running ?: return
-        // AAPS holds the transmitter link, so the vendor app is not there to sound it: a critical alarm rings here.
-        // One card per alarm: a repeat replaces its own card, and a second alarm does not silence the first.
-        running.alarmCards.remove(alarm.code)?.let { notificationManager.dismiss(it) }
-        running.alarmCards[alarm.code] = notificationManager.post(
-            NotificationId.EVERSENSE_ALARM,
-            title,
-            level = level,
-            sound = if (level == NotificationLevel.URGENT) AlarmSound.ALARM else null
+        // On the 365 the next sync lists it too: kept here, so that list does not raise it a second time
+        if (eversense.is365()) running.activeAlarms.add(alarm.code)
+        onTransmitterAlarm(alarm.code)
+    }
+
+    /**
+     * A transmitter alarm as an alert (`_docs/CGM_DESIGN.md`, section 5). AAPS holds the transmitter link, so the
+     * vendor app is not there to sound it. One alert per alarm: a repeat updates its own alert, and a second alarm does
+     * not silence the first. A glucose alarm raises nothing: AAPS's own BG alarms raise those from the readings.
+     *
+     * CRITICAL_FAULT (code 0) is sent both for a hardware fault and for a calibration that is overdue. When the next
+     * calibration date has passed, it is shown as the calibration alarm.
+     */
+    private fun onTransmitterAlarm(code: EversenseAlarm) {
+        if (code.effect == DosingEffect.GLUCOSE) {
+            aapsLogger.info(LTag.BGSOURCE, "Eversense glucose alarm ${code.name}: left to the BG alarms of AAPS")
+            return
+        }
+        val calibrationOverdue = code == EversenseAlarm.CRITICAL_FAULT && calibrationOverdue()
+        val shownAs = if (calibrationOverdue) EversenseAlarm.CALIBRATION_REQUIRED else code
+        // The 365 says when an alarm ends, so one that stops dosing lasts until then. The rest end with the user's answer.
+        val lifetime = if (shownAs.effect == DosingEffect.NOW && eversense.is365()) AlertLifetime.CONDITION else AlertLifetime.EVENT
+        raise(
+            key = keyOf(code), alarm = shownAs, effect = shownAs.effect,
+            text = if (calibrationOverdue) EversenseStrings.eversense_calibration_due_now else null, lifetime = lifetime
         )
     }
+
+    private fun calibrationOverdue(): Boolean {
+        val state = securePrefs.getString(StorageKeys.STATE, null)?.let { json.decodeFromString<EversenseState>(it) }
+        return state != null && state.nextCalibrationDate > 0 && state.nextCalibrationDate < dateUtil.now()
+    }
+
+    /** The key of a transmitter alarm's alert: its own code, also when it is shown as another alarm. */
+    private fun keyOf(code: EversenseAlarm) = "alarm.${code.name}"
+
+    /** Raises the alert of one of the transmitter's alarms, shown as [alarm]: its kind and its title. */
+    private fun raise(key: String, alarm: EversenseAlarm, effect: DosingEffect, text: TextRef?, lifetime: AlertLifetime) {
+        val kind = EversenseAlertKind.of(alarm) ?: return
+        raise(key, kind, alarm.title, effect, text, lifetime)
+    }
+
+    private fun raiseSensorExpiry(effect: DosingEffect, text: TextRef) =
+        raise(KEY_SENSOR_EXPIRY, EversenseAlarm.SENSOR_RETIRING_SOON_1, effect, text, AlertLifetime.EVENT)
+
+    /**
+     * Raises an alert of the transmitter. While one with the same key is active it keeps that one's time, so the same
+     * alarm again updates it and does not ring again; a silence given to it still holds.
+     */
+    private fun raise(key: String, kind: EversenseAlertKind, title: TextRef, effect: DosingEffect, text: TextRef?, lifetime: AlertLifetime) {
+        val severity = effect.severity ?: return
+        val alerts = alerts()
+        val since = alerts.active.value.firstOrNull { it.source == EversenseAlertKind.SOURCE && it.key == key }?.raisedAt ?: dateUtil.now()
+        alerts.raise(Alert(kind = kind, key = key, severity = severity, title = title, text = text, raisedAt = since, lifetime = lifetime))
+    }
+
+    private fun resolve(key: String) = alerts().resolve(EversenseAlertKind.SOURCE, key)
 
     override fun onCGMRead(type: EversenseType, readings: List<EversenseCGMResult>) {
         val running = running ?: return   // stopped: a reading of the old link is not stored

@@ -185,18 +185,33 @@ minutes later.
 
 ## Notices and alarms
 
-| Notice | Id | When |
-| --- | --- | --- |
-| Transmitter alarm | `EVERSENSE_ALARM` | Pushed or active alarm; critical ones ring (`AlarmSound.ALARM`), since the vendor app is not there to |
-| Battery low | `EVERSENSE_BATTERY_LOW` | 10 % or less, once per discharge; armed again above 20 % |
-| Sensor expiry | `EVERSENSE_SENSOR_EXPIRY` | 60, 30 and the last 10 days, after noon |
-| Calibration due | `EVERSENSE_CALIBRATION_DUE` | Once per calibration day |
-| Transmitter not placed | `EVERSENSE_PLACEMENT` | Three readings without signal |
-| New firmware | `EVERSENSE_FIRMWARE` | Once per version |
+Everything that needs an answer is an alert of the alert core, source `"eversense"` (`EversenseAlertKind`, one kind
+per alarm name in the alert settings). AAPS holds the transmitter link, so the vendor app is not there to sound it.
 
-Each has its own card, so a reminder never replaces an open alarm. Each transmitter alarm has its own card too: a
-repeat replaces the card of the same alarm, and a second alarm does not remove or silence the first. Alarm names are
-translated. An unknown alarm code right after the placement guide closes is dropped (a mode change, not a fault).
+Each event is sorted by what it does to dosing (`DosingEffect`, `EversenseAlarm.effect`, decided 2026-11-24):
+
+| Effect | Severity | Examples |
+| --- | --- | --- |
+| No reading, or one that cannot be trusted, now | CRITICAL, protected | Transmitter error, sensor temperature, no sensor, calibration expired, empty battery, wrong clock, calibration failed or suspicious, glucose suspended, transmitter not placed |
+| The same soon, unless the user acts | WARNING, protected | Low battery, calibration past due or due now |
+| Not dosing, but the user has to act | WARNING | Transmitter end of life, vibration motor, sensor ends in 1 to 10 days |
+| Information | INFO (a card) | Sensor retiring soon, calibration phase, battery status, sensor ends in 11 to 60 days |
+| Glucose alarm (low, high, out of range, rate, predicted) | none | AAPS's own BG alarms raise those from the readings |
+
+A protected kind cannot be set Silent or Off. How each one ends:
+
+| Alert | Key | Ends |
+| --- | --- | --- |
+| Transmitter alarm | `alarm.<code>` | 365: when its list of active alarms drops it; one that stops dosing rings until then (CONDITION). E3: the user's answer (it only pushes) |
+| Transmitter not placed | `placement` | When the signal is back (three readings without signal raise it) |
+| Battery low | `battery_low` | The user's answer; 10 % or less, once per discharge, armed again above 20 % |
+| Calibration due | `calibration_due` | The user's answer; once per calibration day |
+| Sensor expiry | `sensor_expiry` | The user's answer; 60, 30 and the last 10 days, after noon |
+
+A repeat of an active alarm keeps its time, so it does not ring again. A stop of the plugin and an unpair end every
+alert of the transmitter. An unknown alarm code right after the placement guide closes is dropped (a mode change, not
+a fault). Code 0 with a calibration overdue is shown as the calibration alarm. The new firmware is still a plain card
+(`EVERSENSE_FIRMWARE`, once per version): information, not an event.
 
 ## Cloud upload
 

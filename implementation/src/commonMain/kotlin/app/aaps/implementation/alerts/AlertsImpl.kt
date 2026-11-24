@@ -766,7 +766,9 @@ class AlertsImpl(
                         )
                     }
 
-                    AlertOrigin.APP  -> persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                    // A CGM's alert has no pump identity either
+                    AlertOrigin.APP,
+                    AlertOrigin.CGM  -> persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                         therapyEvent = TE.asAnnouncement(note).copy(timestamp = alert.raisedAt),
                         action = Action.CAREPORTAL,
                         source = Sources.Aaps,

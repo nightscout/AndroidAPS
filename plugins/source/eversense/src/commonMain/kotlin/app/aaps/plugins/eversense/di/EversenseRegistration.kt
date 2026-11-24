@@ -1,6 +1,7 @@
 package app.aaps.plugins.eversense.di
 
 import androidx.lifecycle.ViewModel
+import app.aaps.core.interfaces.alerts.AlertKindCatalogue
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -10,6 +11,7 @@ import app.aaps.core.interfaces.pump.ble.BleCentral
 import app.aaps.core.interfaces.pump.ble.EmulatedBleCentral
 import app.aaps.core.interfaces.pump.emulator.PumpEmulators
 import app.aaps.plugins.eversense.EversensePlugin
+import app.aaps.plugins.eversense.alerts.EversenseAlertCatalogue
 import app.aaps.plugins.eversense.emulator.EversenseE3Peripheral
 import app.aaps.plugins.eversense.emulator.EversenseTransmitterEmulator
 import app.aaps.plugins.eversense.pairing.EversensePairing
@@ -22,6 +24,7 @@ import app.aaps.plugins.eversense.ui.EversenseStatusViewModel
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.IntoMap
+import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
@@ -57,6 +60,11 @@ object EversenseRegistration {
             val transmitter = emulators.getOrCreate(EversenseTransmitterEmulator.KEY) { EversenseTransmitterEmulator() }
             EmulatedBleCentral(aapsLogger).also { it.add(EversenseE3Peripheral(transmitter, aapsLogger)) }
         } else phone
+
+    /** Its kinds of alert, for the alert settings (`_docs/ALARMS.md`, section 6). */
+    @Provides
+    @IntoSet
+    fun alertKinds(catalogue: EversenseAlertCatalogue): AlertKindCatalogue = catalogue
 
     @Provides
     fun pairing(pairing: EversensePairingImpl): EversensePairing = pairing

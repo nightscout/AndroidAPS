@@ -75,7 +75,7 @@ which ring only while the app runs. Its only sound is the system beep.
 
 - **Pump alerts are new.** Only Carelevo and the `runAlarm` shim use them. Seven drivers still ring through
   `runAlarm`, and Insight has its own channel. Each driver moves when it is next reworked (`PUMP_DESIGN.md`, section 5).
-- **Some cards ring outside the alert path.** Plugin start failed, plugin work failed, Eversense and the drivers'
+- **Some cards ring outside the alert path.** Plugin start failed, plugin work failed and the drivers'
   own cards are URGENT cards with a sound, not alerts. The sound owner is the same (the notification list), but the
   silence is not: "mute all" stops them all, while an alert's silence is for that alert only and it rings again after
   30 minutes. The two plugin cards stay so (decided 2026-11-24): `PluginBase` posts them, and about 50 plugins would
@@ -87,8 +87,8 @@ which ring only while the app runs. Its only sound is the system beep.
   opened. On a locked phone the screen wake brings it up. Since 2026-11-22 the user can allow "Display over other
   apps" (Settings > Local alerts), and then the alarm screen opens at once also over another app (checked on the
   Pixel, Android 16: `BAL_ALLOW_SAW_PERMISSION`). It is optional: AAPS does not ask for it.
-- **Eversense** posts plain cards today, its transmitter's glucose alarms included. AAPS has no low or high glucose
-  alarm of its own yet, so those cards are the only glucose alarm an Eversense user gets (the vendor app is stopped).
+- **Eversense** raises its transmitter's alarms as alerts since 2026-11-24 (step 5), sorted by what they do to
+  dosing. Its glucose alarms went: AAPS's own BG alarms raise those.
 - **Nightscout alarms** were the glucose alarms of an AAPSClient until 2026-11-23. Every phone has its own BG alarms
   now, so they were removed (step 3).
 
@@ -252,9 +252,9 @@ BG alarms: `NS_ALARM`, `NS_URGENT_ALARM`. All three done 2026-11-23 (step 3).
 - Carelevo (`CarelevoAlert`): its pump alerts already are alerts; their keys become the enum. Its
   `PUMP_WARNING` card "the pump was not reached" at the removal (`PUMP_DRIVER_ACCEPTANCE.md` D9) becomes a WARNING
   EVENT alert: the user has to take the pump off, and today it is a silent card.
-- Eversense (`EversenseAlert`): `EVERSENSE_ALARM` for the device and error alarms (and its glucose alarms, until the
-  BG alarms exist); `EVERSENSE_SENSOR_EXPIRY`, `EVERSENSE_BATTERY_LOW`, `EVERSENSE_CALIBRATION_DUE` and
-  `EVERSENSE_PLACEMENT` (transmitter off the sensor) as WARNING CONDITION alerts.
+- Eversense (`EversenseAlertKind`): built 2026-11-24 (step 5). The device and error alarms, sensor expiry, battery
+  low, calibration due and the transmitter off the sensor are alerts, with the severity of what they do to dosing
+  (`DosingEffect`, below); its glucose alarms went. The five ids went with it; `EVERSENSE_FIRMWARE` stays a card.
 
 **Stay cards**, at the target level:
 
@@ -502,7 +502,8 @@ The order matters: step 3 must not come before step 2.
 3. The Nightscout alarms removed; announcements as a WARNING alert. Built 2026-11-23: see "Nightscout" above.
 4. The core's sounding cards to alerts (the table above). Built 2026-11-24, with the desktop on the alert core: see
    "Review of today's notification ids". The ids that lost their last user went with it.
-5. Eversense: its device alarms to alerts, and its glucose alarms dropped (step 2 is done by then).
+5. Eversense: its device alarms to alerts, and its glucose alarms dropped (step 2 is done by then). Built
+   2026-11-24, with the rule of decision 14; Eversense is the example for the other drivers.
 6. Carbs required as an alert.
 7. The cleanups, after the other drivers: the `sound` parameter and the URGENT level of the public `post`, the
    silent tray channel with only IMPORTANT cards, the tray setting's name, `ToastUtils`.
@@ -527,6 +528,10 @@ The order matters: step 3 must not come before step 2.
 11. **A silence is shared between the phones**, and each phone chooses whether it takes silences from the others.
 12. **Escalation** (a client rings when the master did not answer, an SMS) is designed now and built later.
 13. **The sound per kind, per phone:** a bundled AAPS sound, or on Android any ringtone of the phone.
+14. **A driver sorts its events by what they do to dosing** (2026-11-24, `DosingEffect`): dosing affected now is
+    CRITICAL, affected soon unless the user acts is WARNING, both protected; an action that does not affect dosing is
+    WARNING, the rest INFO, and the user may set those Silent or Off. A CGM's glucose alarms are not raised. One kind
+    per alarm name. Eversense was the first; every other driver follows when it moves (`PUMP_DESIGN.md`, section 4).
 
 Open, with a recommendation:
 

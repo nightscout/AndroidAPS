@@ -58,6 +58,9 @@ enum class AlertOrigin {
     /** The app itself (`"aaps"`): the announcement is the app's own, with no pump identity. */
     APP,
 
+    /** A CGM driver (`"eversense"`): the announcement is written as the app's own, with no pump identity. */
+    CGM,
+
     /**
      * Nightscout: the alert came from a record that is already there. Nothing is written, or the announcement would
      * come back as a new one.
@@ -84,7 +87,8 @@ interface AlertKind {
     val title: TextRef
 
     /**
-     * A safety kind: urgent low, or insulin delivery stopped or not safe. It always rings: the user cannot set it to
+     * A safety kind: urgent low, or a kind with an event that affects dosing ([DosingEffect.affectsDosing]: insulin
+     * delivery stopped or not safe, no BG or a BG that cannot be trusted). It always rings: the user cannot set it to
      * Silent or Off. A ringing one is still silenced for a while, as every alert.
      */
     val isProtected: Boolean
