@@ -21,7 +21,9 @@ import dev.zacsweers.metro.Inject
  *
  * 1. **The record itself.** v3 wrote the insulin onto every profile switch - the plugin's label and peak
  *    plus `insulinEndTime = pureProfile.dia * 3600 * 1000` - and `migration32to33` now carries those three
- *    columns across. So most installs are answered by the row and nothing below runs.
+ *    columns across. So most installs are answered by the row and nothing below runs. A 3.x AAPSClient stored
+ *    the switches it got from Nightscout with the DIA but no peak; the migration keeps that DIA, and
+ *    [insulinForMissingPeak] names the peak, so those rows answer here too.
  * 2. **The dead v3 preference names**, for the records the row cannot answer: boluses, which v3 never
  *    stamped, and any row whose own value was missing. [readLegacyInsulin] recovers the plugin selection and
  *    [harvestProfileDia] the DIA each local profile was using.
@@ -151,9 +153,7 @@ class InsulinMigration(
      */
     fun plan(recordICfg: ICfg?, legacy: LegacyInsulin?, harvest: ProfileDiaHarvest, activeProfileName: String?): InsulinMigrationPlan {
         if (recordICfg?.isUsable == true) return plan(recordICfg, InsulinMigrationPlan.Source.RECORD)
-        // Null only if nothing read the store, which the start-up order rules out. Same treatment as an
-        // install with no row: v3's own default.
-        val insulin = legacy ?: LegacyInsulin(rh.gs(InsulinType.OREF_RAPID_ACTING.label), InsulinType.OREF_RAPID_ACTING.insulinPeakTime, fromExplicitKey = false)
+        val insulin = insulinForMissingPeak(legacy)
         val dia = harvest.diaFor(activeProfileName)
         // Concentration is 1.0 by construction, not a guess: these records predate concentration entirely,
         // so 1.0 is the identity that leaves historical doses unscaled. The label is left blank on purpose -
@@ -171,6 +171,18 @@ class InsulinMigration(
         }
         return plan(iCfg, source)
     }
+
+    /**
+     * The insulin whose peak goes onto the rows that kept their own DIA but lost the peak, and onto the rows
+     * that have nothing, when the record cannot answer.
+     *
+     * The rows without a peak are what a 3.x AAPSClient stored for every profile switch it got from Nightscout:
+     * the DIA came with the profile, the peak was its own insulin plugin's. So the v3 selection is the right
+     * peak for them. [legacy] is null only if nothing read the store, which the start-up order rules out; it is
+     * then treated like an install with no row, as v3's own default.
+     */
+    fun insulinForMissingPeak(legacy: LegacyInsulin?): LegacyInsulin =
+        legacy ?: LegacyInsulin(rh.gs(InsulinType.OREF_RAPID_ACTING.label), InsulinType.OREF_RAPID_ACTING.insulinPeakTime, fromExplicitKey = false)
 
     private fun plan(iCfg: ICfg, source: InsulinMigrationPlan.Source): InsulinMigrationPlan {
         aapsLogger.info(LTag.CORE, "Insulin migration: ${iCfg.peak} min peak, ${iCfg.dia} h DIA, from $source")

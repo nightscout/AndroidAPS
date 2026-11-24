@@ -534,7 +534,7 @@ private fun PeakPresetChips(
 
     if (showInfo) {
         val parts = presets.map { preset ->
-            Triple(stringResource(preset.label), stringResource(preset.comment), stringResource(CoreUiStrings.format_mins, preset.iCfg.peak))
+            Triple(stringResource(preset.label), stringResource(preset.comment), stringResource(CoreUiStrings.format_mins, preset.peakMinutes))
         }
         val message = buildAnnotatedString {
             parts.forEachIndexed { index, (label, comment, peak) ->

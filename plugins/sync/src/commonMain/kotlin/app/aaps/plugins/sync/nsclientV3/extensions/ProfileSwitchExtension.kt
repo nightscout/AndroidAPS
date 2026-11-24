@@ -14,9 +14,15 @@ import app.aaps.core.nssdk.localmodel.treatment.NSProfileSwitch
 import app.aaps.core.objects.extensions.getCustomizedName
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.utils.lenientDoubleOrNull
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
 
-/** [insulinFallback] stamps records uploaded without one — see `NsIncomingDataProcessor.fallbackICfg`. */
-fun NSProfileSwitch.toProfileSwitch(profileRepository: ProfileRepository, dateUtil: DateUtil, insulinFallback: ICfg): PS? {
+/**
+ * [insulinFallback] stamps records uploaded without one — see `NsIncomingDataProcessor.fallbackICfg`. It gets
+ * the DIA the record carries itself, see [diaInProfileJson].
+ */
+fun NSProfileSwitch.toProfileSwitch(profileRepository: ProfileRepository, dateUtil: DateUtil, insulinFallback: (recordDia: Double?) -> ICfg): PS? {
     val pureProfile =
         profileJson?.let { pureProfileFromJson(it, dateUtil) ?: return null }
             ?: profileRepository.profile.value?.getSpecificProfile(profile) ?: return null
@@ -25,8 +31,7 @@ fun NSProfileSwitch.toProfileSwitch(profileRepository: ProfileRepository, dateUt
     val iCfg =
         iCfg?.let {
             ICfg(insulinLabel = it.insulinLabel, insulinEndTime = it.insulinEndTime, insulinPeakTime = it.insulinPeakTime, concentration = it.concentration)
-        } ?: insulinFallback
-
+        } ?: insulinFallback(diaInProfileJson(profileJson))
 
     return PS(
         isValid = isValid,
@@ -48,6 +53,19 @@ fun NSProfileSwitch.toProfileSwitch(profileRepository: ProfileRepository, dateUt
         ids = IDs(nightscoutId = identifier, pumpId = pumpId, pumpType = PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )
 }
+
+/**
+ * The DIA in hours that a profile switch uploaded by AAPS 3.x carries in its profile JSON, or null.
+ *
+ * Up to 3.x the DIA belonged to the profile, so `ProfileSealed.toPureNsJson` wrote it as `"dia"` into every
+ * profile switch and effective profile switch it uploaded. 4.0 moved it to the insulin and sends it as `iCfg`,
+ * so this is read only for a record that came without one. It is the DIA that record was dosed with.
+ */
+internal fun diaInProfileJson(profileJson: String?): Double? =
+    profileJson
+        ?.let { runCatching { Json.parseToJsonElement(it) as? JsonObject }.getOrNull() }
+        .lenientDoubleOrNull("dia")
+        ?.takeIf { it > 0.0 }
 
 fun PS.toNSProfileSwitch(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): NSProfileSwitch {
     val unmodifiedCustomizedName = getCustomizedName(decimalFormatter)

@@ -59,4 +59,8 @@ internal interface EffectiveProfileSwitchDao : TraceableDao<EffectiveProfileSwit
 
     @Query("UPDATE $TABLE_EFFECTIVE_PROFILE_SWITCHES SET insulinLabel = :label, insulinEndTime = :end, insulinPeakTime = :peak, concentration = :conc WHERE insulinEndTime = -1 AND referenceId IS NULL")
     suspend fun bulkMigrateInsulinConfig(label: String, end: Long, peak: Long, conc: Double): Int
+
+    /** Rows the migration to v33 left with their own DIA but no peak. Each keeps its DIA. */
+    @Query("UPDATE $TABLE_EFFECTIVE_PROFILE_SWITCHES SET insulinLabel = :label, insulinPeakTime = :peak WHERE insulinEndTime > 0 AND insulinPeakTime = -1 AND referenceId IS NULL")
+    suspend fun fillMissingInsulinPeak(label: String, peak: Long): Int
 }

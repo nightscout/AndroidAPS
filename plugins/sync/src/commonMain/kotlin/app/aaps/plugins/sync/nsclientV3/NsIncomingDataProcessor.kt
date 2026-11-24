@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
@@ -73,7 +74,8 @@ class NsIncomingDataProcessor(
     private val config: Config,
     private val profileStoreProvider: () -> ProfileStore,
     private val notificationManager: NotificationManager,
-    private val nsClientRepository: NSClientRepository
+    private val nsClientRepository: NSClientRepository,
+    private val rh: TextResolver
 ) {
 
     /**
@@ -84,12 +86,26 @@ class NsIncomingDataProcessor(
      * The running profile's insulin is the best available answer, but it is still only a guess: for a record
      * from months ago the correct value is whatever was in force *then*, which would need a suspending,
      * per-record `getProfile(timestamp)` — and on the full sync of a fresh install that history has not been
-     * imported yet anyway. [OREF_RAPID_ACTING] backstops exactly that case (nothing in force, because the very
-     * profile switches that would establish it are arriving in this same batch); it matches what a fresh
-     * install seeds. Read per record, not hoisted, so records later in a batch pick up a profile switch that
-     * landed earlier in it.
+     * imported yet anyway. [InsulinType.OREF_RAPID_ACTING] backstops exactly that case (nothing in force,
+     * because the very profile switches that would establish it are arriving in this same batch); it matches
+     * what a fresh install seeds, with the same translated name. Read per record, not hoisted, so records later
+     * in a batch pick up a profile switch that landed earlier in it.
+     *
+     * [recordDia] is the DIA a profile switch from AAPS 3.x carries itself, and it wins: it is the DIA that
+     * record was dosed with. Then the running insulin's name cannot go with it, because a name carries its
+     * curve ("… 75m 6h U100"), so the insulin is named after its peak. The concentration is 1.0: a record
+     * from 3.x is older than concentration, and 1.0 leaves its doses as they were.
      */
-    private fun fallbackICfg(): ICfg = profileFunction.runningICfg.value ?: InsulinType.OREF_RAPID_ACTING.iCfg
+    private fun fallbackICfg(recordDia: Double? = null): ICfg {
+        val running = profileFunction.runningICfg.value ?: InsulinType.OREF_RAPID_ACTING.getICfg(rh)
+        if (recordDia == null) return running
+        return ICfg(
+            insulinLabel = rh.gs(InsulinType.fromPeak(running.insulinPeakTime).label),
+            insulinEndTime = (recordDia * 3600 * 1000).toLong(),
+            insulinPeakTime = running.insulinPeakTime,
+            concentration = 1.0
+        )
+    }
 
     /**
      * Whether BG from Nightscout is taken: when Nightscout is the BG source, when the user accepts CGM data
@@ -207,14 +223,14 @@ class NsIncomingDataProcessor(
 
                     is NSEffectiveProfileSwitch ->
                         if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT || doFullSync) {
-                            treatment.toEffectiveProfileSwitch(dateUtil, fallbackICfg())?.let { effectiveProfileSwitch ->
+                            treatment.toEffectiveProfileSwitch(dateUtil, ::fallbackICfg)?.let { effectiveProfileSwitch ->
                                 storeDataForDb.addToEffectiveProfileSwitches(effectiveProfileSwitch)
                             }
                         }
 
                     is NSProfileSwitch          ->
                         if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT || doFullSync) {
-                            treatment.toProfileSwitch(profileRepository, dateUtil, fallbackICfg())?.let { profileSwitch ->
+                            treatment.toProfileSwitch(profileRepository, dateUtil, ::fallbackICfg)?.let { profileSwitch ->
                                 storeDataForDb.addToProfileSwitches(profileSwitch)
                             }
                         }
