@@ -44,8 +44,9 @@ import app.aaps.ui.compose.scenes.ActiveSceneBanner
 /**
  * Tablet variant of the overview screen.
  *
- * Differs from [OverviewScreenSplit] (phone landscape) by a larger [LargeClock] that carries the age
- * of the BG reading, so the BG circle leaves its own age line out. Both put the clock above the chips.
+ * Differs from [OverviewScreenSplit] (phone landscape) by a [LargeClock] above the chips, which carries
+ * the age of the BG reading, so the BG circle leaves its own age line out. At night a tablet is a clock
+ * and BG display. The split layout has no large clock: it is lower than 600 dp.
  */
 @Composable
 fun OverviewScreenTablet(

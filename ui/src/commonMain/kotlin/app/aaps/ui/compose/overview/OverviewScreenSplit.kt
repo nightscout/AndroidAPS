@@ -136,11 +136,15 @@ fun OverviewScreenSplit(
                         .padding(end = 4.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
+                    // No large clock here, unlike the tablet layout: this layout is lower than 600 dp (a phone in
+                    // landscape, a small window), and the clock row took about a fifth of that height for a time
+                    // the status bar already shows, and pushed BG down. At the top of the row, as in portrait:
+                    // BG is the first thing on the screen.
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 4.dp),
-                        verticalAlignment = Alignment.Bottom
+                        verticalAlignment = Alignment.Top
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             BgInfoSection(
@@ -155,14 +159,6 @@ fun OverviewScreenSplit(
                                 .weight(1f)
                                 .padding(start = 8.dp)
                         ) {
-                            // Above the chips, as in the tablet layout. Beside them it had only the width the
-                            // chips left over and was cut off on a narrow screen ("23:36("). No BG age: the
-                            // BG circle here already shows it.
-                            LargeClock(
-                                bgTimestamp = bgInfoState.bgInfo?.timestamp,
-                                showBgAge = false,
-                                modifier = Modifier.fillMaxWidth()
-                            )
                             OverviewChipsColumn(
                                 runningMode = runningMode,
                                 runningModeText = runningModeText,
