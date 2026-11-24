@@ -60,6 +60,72 @@ class NsSdkResponseContractTest {
         noise = null, filtered = null, unfiltered = null
     )
 
+    // ================================================================ treatment pages
+
+    private fun enqueuePage(rows: String, times: Int = 1) =
+        repeat(times) { server.enqueue(MockResponse.Builder().code(200).body("""{"result":[$rows]}""").build()) }
+
+    private suspend fun bothReads() = listOf(
+        client.getTreatmentsNewerThan("1970-01-01T00:00:00.000Z", 500),
+        client.getTreatmentsModifiedSince(0, 500)
+    )
+
+    /**
+     * One row that cannot be read is left out and named, the rest of its page arrives. Read as one list it
+     * failed the page, and the first load took the failed page for the end of the history (#5626).
+     */
+    @Test
+    fun `an unreadable treatment is left out and the rest of the page arrives`() = runTest {
+        enqueuePage(
+            """{"identifier":"before","date":1000,"eventType":"Correction Bolus","insulin":1.0},
+               {"identifier":"bad","date":2000,"eventType":"Correction Bolus","insulin":"a lot"},
+               {"identifier":"after","date":3000,"eventType":"Carb Correction","carbs":10}""",
+            times = 2
+        )
+
+        for (response in bothReads()) {
+            assertThat(response.values.map { it.identifier }).containsExactly("before", "after").inOrder()
+            assertThat(response.unreadable).hasSize(1)
+            assertThat(response.unreadable.single()).contains("\"bad\"")
+        }
+    }
+
+    /**
+     * What an older AAPS left in Nightscout for "no end" no longer stops the page, in any event type. The
+     * therapy event is the one a scene without a duration wrote, as a real Nightscout returned it on
+     * 2026-11-24: both durations rounded, minutes too (Long.MAX_VALUE ms is an infinite Duration, whose
+     * minutes are Long.MAX_VALUE again).
+     */
+    @Test
+    fun `entries without an end from an older AAPS do not stop the page`() = runTest {
+        enqueuePage(
+            """{"identifier":"before","date":1000,"eventType":"Correction Bolus","insulin":1.0},
+               {"identifier":"lgs","date":2000,"eventType":"OpenAPS Offline","mode":"CLOSED_LOOP_LGS","duration":0,"autoForced":true,"originalDuration":9223372036854776000},
+               {"identifier":"open","date":2100,"eventType":"OpenAPS Offline","mode":"OPEN_LOOP","duration":0,"autoForced":true,"originalDuration":9223372036854776000},
+               {"identifier":"tt","date":2200,"eventType":"Temporary Target","units":"mg/dl","targetBottom":80,"targetTop":80,"duration":9223372036854776000,"durationInMilliseconds":9223372036854776000},
+               {"identifier":"te","date":2300,"eventType":"Exercise","duration":9223372036854776000,"durationInMilliseconds":9223372036854776000},
+               {"identifier":"after","date":3000,"eventType":"Carb Correction","carbs":10}""",
+            times = 2
+        )
+
+        for (response in bothReads()) {
+            assertThat(response.values.map { it.identifier }).containsExactly("before", "lgs", "open", "tt", "te", "after").inOrder()
+            assertThat(response.unreadable).isEmpty()
+        }
+    }
+
+    /** A body that is not a page is an error now: read as an empty page, it ended the first load early. */
+    @Test
+    fun `a body that is not a page is an error, an empty page is not`() = runTest {
+        server.enqueue(MockResponse.Builder().code(200).body("<html>proxy error</html>").build())
+        server.enqueue(MockResponse.Builder().code(200).body("""{"result":[]}""").build())
+        server.enqueue(MockResponse.Builder().code(204).build())
+
+        assertThrows<InvalidFormatNightscoutException> { client.getTreatmentsModifiedSince(0, 500) }
+        assertThat(client.getTreatmentsModifiedSince(0, 500).values).isEmpty()
+        assertThat(client.getTreatmentsModifiedSince(0, 500).values).isEmpty()
+    }
+
     // ================================================================ ETag
 
     /**

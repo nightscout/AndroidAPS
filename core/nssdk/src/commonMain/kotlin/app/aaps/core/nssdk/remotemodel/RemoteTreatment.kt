@@ -51,9 +51,11 @@ internal data class RemoteTreatment(
     @SerialName("protein") val protein: Int? = null,               // number... Amount of protein given.
     @SerialName("fat") val fat: Int? = null,                       // number... Amount of fat given.
     @SerialName("insulin") val insulin: Double? = null,            // number... Amount of insulin, if any.
-    /** Duration in minutes */
+    /** Duration in minutes. Read and written as [WireDurationSerializer], like the other durations. */
+    @Serializable(with = WireDurationSerializer::class)
     @SerialName("duration") val duration: Long? = null,             // number... Duration in minutes.
-    /** Duration in milliseconds */
+    /** Duration in milliseconds. [Long.MAX_VALUE] ("no end") travels through JavaScript, see [WireDurationSerializer]. */
+    @Serializable(with = WireDurationSerializer::class)
     @SerialName("durationInMilliseconds") val durationInMilliseconds: Long? = null, // number... Duration in milliseconds.
     @SerialName("preBolus") val preBolus: Int? = null,             // number... How many minutes the bolus was given before the meal started.
     @SerialName("splitNow") val splitNow: Int? = null,             // number... Immediate part of combo bolus (in percent).
@@ -84,6 +86,8 @@ internal data class RemoteTreatment(
     @SerialName("originalCustomizedName") val originalCustomizedName: String? = null, // string "Effective Profile Switch"
     @SerialName("originalTimeshift") val originalTimeshift: Long? = null,  // long "Effective Profile Switch"
     @SerialName("originalPercentage") val originalPercentage: Int? = null, // int "Effective Profile Switch"
+    /** In milliseconds. [Long.MAX_VALUE] ("no end") travels through JavaScript, see [WireDurationSerializer]. */
+    @Serializable(with = WireDurationSerializer::class)
     @SerialName("originalDuration") val originalDuration: Long? = null,    // long "Effective Profile Switch", RunningMode
     @SerialName("originalEnd") val originalEnd: Long? = null,              // long "Effective Profile Switch"
     @SerialName("icfg") val iCfg: RemoteICfg? = null,              // long "Effective Profile Switch"
