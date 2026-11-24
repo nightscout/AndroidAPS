@@ -229,7 +229,8 @@ fun MainScreen(
             // states, shown or hidden, never half. A push up in the scrolling part hides it; a pull down
             // when that part is already at its top shows it again. The content moves down and up by its
             // height, nothing is drawn over anything. At the start of the app it shows, then hides (a
-            // peek), so everyone sees where it is. It stays while a search is open.
+            // peek), so everyone sees where it is. It stays while a search is open. A tap on the menu
+            // button left while it is hidden shows it again too, behind the opening menu.
             var overviewStacked by remember { mutableStateOf(false) }
             var topBarHidden by remember { mutableStateOf(false) }
             var topBarPeekDone by rememberSaveable { mutableStateOf(false) }
@@ -371,11 +372,15 @@ fun MainScreen(
                         isPumpCommunicating = isPumpCommunicating,
                         onStopBolus = onStopBolus,
                         onStackedLayout = { overviewStacked = it },
-                        // While the full bar is hidden the menu button stays, in the corner of the BG circle
+                        // While the full bar is hidden the menu button stays, in the corner of the BG circle.
+                        // A tap opens the menu and shows the bar again behind it: when the menu closes, search
+                        // and settings are there, which reminds where they live. The menu still takes one tap.
+                        // The bar comes after the menu is open: shown at the tap, it stopped the menu opening.
                         onCompactMenuClick = if (showChrome && !topBarShown) {
                             {
                                 scope.launch {
                                     drawerState.open()
+                                    topBarHidden = false
                                     onMenuClick()
                                 }
                             }
