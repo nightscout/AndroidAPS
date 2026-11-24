@@ -48,6 +48,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
@@ -205,6 +206,31 @@ internal class StatusViewModelTest {
         // back to Main. tearDown() then resets Main, the resume crashes, and the next runTest in this
         // JVM fails with UncaughtExceptionsBeforeTest (seen on CI in an unrelated test class).
         awaitValue(finished, 1)
+        screen.cancelAndJoin()
+    }
+
+    /**
+     * The master sends its patch pump's limit with a display override when the reservoir is above what the
+     * pump can measure. The client shows it with a "+", as the master does, not as a measured 50 U (#5572).
+     */
+    @Test
+    fun `AAPSClient shows a reservoir above the master's measuring range with a plus`() = runBlocking<Unit> {
+        Dispatchers.setMain(UnconfinedTestDispatcher())
+        givenStatusData()
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        whenever(processedDeviceStatusData.pumpData).thenReturn(ProcessedDeviceStatusData.PumpData().apply {
+            reservoir = 50.0
+            reservoirDisplayOverride = "50+ U"
+        })
+        // doReturn: whenever(...) would call to0Decimal here, and that call counts as a finished refresh
+        doReturn("50").whenever(decimalFormatter).to0Decimal(50.0)
+        whenever(rh.gs(eq(CoreUiStrings.value_with_unit), eq("50+"), any())).thenReturn("50+ U")
+        val viewModel = newViewModel()
+
+        val screen = show(viewModel)
+        awaitValue(finished, 1)
+
+        assertThat(viewModel.uiState.value.insulinStatus?.level).isEqualTo("50+ U")
         screen.cancelAndJoin()
     }
 
