@@ -1150,7 +1150,6 @@
     <string name="graph_bg">Graf glykémie</string>
     <string name="graph_height">Výška grafu [dp]</string>
     <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
-    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAZ</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
     <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
     <string name="activity_shortname" comment="Short label for Activity graph series">AKT</string>
