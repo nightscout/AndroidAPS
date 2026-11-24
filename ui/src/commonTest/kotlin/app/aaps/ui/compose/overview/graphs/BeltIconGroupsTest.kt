@@ -22,7 +22,7 @@ class BeltIconGroupsTest {
     }
 
     @Test
-    fun `an icon is measured against the one drawn, so a long row does not join into one`() {
+    fun `an icon is measured against the one drawn so a long row does not join into one`() {
         // 10 and 15 overlap, 20 is 10 minutes from the drawn 10 and stands alone
         assertEquals(listOf(0 to 2, 2 to 1), beltIconGroups(listOf(10.0, 15.0, 20.0), pxPerX, iconWidthPx))
     }
