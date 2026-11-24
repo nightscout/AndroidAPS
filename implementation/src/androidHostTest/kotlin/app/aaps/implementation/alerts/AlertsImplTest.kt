@@ -35,6 +35,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
@@ -182,6 +183,8 @@ class AlertsImplTest : TestBase() {
         whenever(pump.serialNumber()).thenReturn("serial")
         // The phone that runs the loop; a client is the exception, set in its own test
         whenever(config.APS).thenReturn(true)
+        // Its default on the phone that runs the loop
+        whenever(preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors)).thenReturn(true)
         notificationManager = CommonNotificationManager(aapsLogger, rh, systemPlatform, eventBus, scope)
         sut = newAlerts()
     }
@@ -281,6 +284,21 @@ class AlertsImplTest : TestBase() {
 
         verifyNoPumpAnnouncement()
         verifyNoAppAnnouncement()
+    }
+
+    /** "Create announcements from errors" off: the user wants no announcements in Nightscout, from any alert. */
+    @Test
+    fun `no announcement when the user turned announcements from errors off`() {
+        whenever(preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors)).thenReturn(false)
+
+        sut.raise(alert(severity = AlertSeverity.WARNING))
+        sut.raise(alert(source = "aaps", origin = AlertOrigin.APP, key = "bolus", lifetime = AlertLifetime.EVENT))
+        scope.runCurrent()
+
+        verifyNoPumpAnnouncement()
+        verifyNoAppAnnouncement()
+        // The alert itself is not changed by it
+        assertThat(sut.active.value.map { it.key }).containsExactly("occlusion", "bolus")
     }
 
     /** Every phone raises its own BG alarm from the same readings: an announcement would make a client hear it twice. */

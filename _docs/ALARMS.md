@@ -237,7 +237,8 @@ Built 2026-11-24 (step 4), as in the table, with these differences:
   keeps the time it began while it is active (`CoreAlert.raiseCondition`), so it rings once and a silence holds. It
   rings again after its silence while it lasts. The zero basal alarm's own "again every 15 min" went with it.
 - Pump unreachable and the hard limit no longer write their own announcement: the core writes one for each alert,
-  on the master. Pump unreachable used to follow "Create announcements from errors"; the core does not read it.
+  on the master, while "Create announcements from errors" is on (decided 2026-11-24: the setting is for every alert,
+  as pump unreachable followed it before; the hard limit wrote one whatever the setting said).
 - The alert's text where the old card had text that only repeated the title: none (pump unreachable).
 
 **Become BG alarms** (source `"bg"`): `BG_READINGS_MISSED` becomes the stale-data rule. Urgent low, the level rules,

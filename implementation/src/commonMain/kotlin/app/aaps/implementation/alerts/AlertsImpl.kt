@@ -38,6 +38,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
@@ -742,9 +743,13 @@ class AlertsImpl(
      *
      * Not for a BG alarm: every phone raises its own from the same readings and rules, so a client would hear it twice
      * (decided 2026-11-23). Not for an alert from Nightscout either: its record is already there.
+     *
+     * Not when the user turned off "Create announcements from errors" (decided 2026-11-24): the setting is for every
+     * alert, as pump unreachable followed it before it was an alert.
      */
     private fun announce(alert: Alert) {
         if (!config.APS) return
+        if (!preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors)) return
         if (alert.source == BgAlert.SOURCE || alert.origin == AlertOrigin.NIGHTSCOUT) return
         val note = cardText(alert)
         appScope.launch {
