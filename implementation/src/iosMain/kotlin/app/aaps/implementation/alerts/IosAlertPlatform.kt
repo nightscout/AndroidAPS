@@ -4,13 +4,17 @@ import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertLifetime
 import app.aaps.core.interfaces.alerts.AlertPlatform
+import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlarms
 import app.aaps.core.interfaces.alerts.NightscoutAnnouncements
+import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.IosNotificationDelegate
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.lifecycle.observeAppForeground
 import app.aaps.implementation.ui.UiInteractionImpl
 import dev.zacsweers.metro.AppScope
@@ -31,6 +35,8 @@ import platform.Foundation.timeIntervalSinceNow
 import platform.UserNotifications.UNAuthorizationOptionAlert
 import platform.UserNotifications.UNAuthorizationOptionSound
 import platform.UserNotifications.UNMutableNotificationContent
+import platform.UserNotifications.UNNotificationAction
+import platform.UserNotifications.UNNotificationCategory
 import platform.UserNotifications.UNNotificationInterruptionLevel.UNNotificationInterruptionLevelTimeSensitive
 import platform.UserNotifications.UNNotificationRequest
 import platform.UserNotifications.UNNotificationSound
@@ -145,7 +151,8 @@ class IosAlertPlatform(
 
     // The system sound: iOS cannot play an mp3 as a notification sound, so the chosen [sound] is the alarm's only.
     // [ringtoneUri] is never set on iOS: an app can play only the sounds it ships.
-    override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?) = post(chimeId(alert.source, alert.key), alert, trigger = null)
+    override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?) =
+        post(chimeId(alert.source, alert.key), alert, trigger = null, category = categoryOf(alert))
 
     override fun snoozed(alert: Alert, until: Long) {
         val seconds = secondsFromNow(until)
@@ -155,7 +162,10 @@ class IosAlertPlatform(
             return
         }
         aapsLogger.debug(LTag.NOTIFICATION, "Pump alert ${alert.source}/${alert.key} rings again in ${seconds.toLong()}s")
-        post(snoozeId(alert.source, alert.key), alert, UNTimeIntervalNotificationTrigger.triggerWithTimeInterval(seconds, repeats = false))
+        post(
+            snoozeId(alert.source, alert.key), alert, UNTimeIntervalNotificationTrigger.triggerWithTimeInterval(seconds, repeats = false),
+            category = categoryOf(alert)
+        )
     }
 
     override fun withdrawn(source: String, key: String) {
@@ -214,12 +224,13 @@ class IosAlertPlatform(
      * calls this), and that goes through `IosSystemNotificationPlatform`, which asks once. If it was refused this
      * fails with the reason in the log rather than disappearing.
      */
-    private fun post(identifier: String, alert: Alert, trigger: UNNotificationTrigger?, sound: Boolean = true) {
+    private fun post(identifier: String, alert: Alert, trigger: UNNotificationTrigger?, sound: Boolean = true, category: String? = null) {
         val content = UNMutableNotificationContent().apply {
             setTitle(rh.gs(alert.title))
             alert.text?.let { setBody(rh.gs(it)) }
             if (sound) setSound(UNNotificationSound.defaultSound())
             setInterruptionLevel(UNNotificationInterruptionLevelTimeSensitive)
+            category?.let { setCategoryIdentifier(it) }
         }
         val request = UNNotificationRequest.requestWithIdentifier(identifier, content, trigger)
         center.addNotificationRequest(request) { error ->
@@ -237,9 +248,45 @@ class IosAlertPlatform(
      */
     internal fun secondsFromNow(until: Long): Double = NSDate.dateWithTimeIntervalSince1970(until / 1000.0).timeIntervalSinceNow
 
-    private fun chimeId(source: String, key: String) = "$CHIME_PREFIX$source/$key"
-    private fun snoozeId(source: String, key: String) = "$SNOOZE_PREFIX$source/$key"
+    private fun chimeId(source: String, key: String) = chimeIdOf(source, key)
+    private fun snoozeId(source: String, key: String) = snoozeIdOf(source, key)
     private fun bookingId(source: String, key: String) = "$BOOKING_PREFIX$source/$key"
+
+    /**
+     * The category of a WARNING alert that lasts: its notification has the silence buttons (5, 15, 30 min,
+     * [Alerts.NOTIFICATION_SILENCE_MINUTES], decided 2026-11-24). Registered on first use, so building the graph does
+     * not touch the notification centre. A button silences the alert named by the notification's identifier.
+     */
+    private val silenceButtons: Unit by lazy {
+        IosNotificationDelegate.register(setOf(warningCategory())) { actionId, notificationId ->
+            val minutes = silenceMinutesOf(actionId) ?: return@register false
+            val alert = alertOf(notificationId) ?: return@register false
+            aapsLogger.debug(LTag.NOTIFICATION, "Alert ${alert.source}/${alert.key} silenced from its notification for $minutes min")
+            alerts().silence(alert.source, alert.key, minutes)
+            true
+        }
+    }
+
+    private fun warningCategory(): UNNotificationCategory =
+        UNNotificationCategory.categoryWithIdentifier(
+            identifier = CATEGORY_WARNING,
+            actions = Alerts.NOTIFICATION_SILENCE_MINUTES.map { minutes ->
+                UNNotificationAction.actionWithIdentifier(
+                    identifier = "$SILENCE_PREFIX$minutes",
+                    title = rh.gs(CoreUiStrings.alarm_silence_for, rh.gs(CoreUiStrings.format_mins, minutes)),
+                    options = 0u
+                )
+            },
+            intentIdentifiers = emptyList<Any>(),
+            options = 0u
+        )
+
+    /** The category of [alert]'s notification: the silence buttons for a WARNING that lasts, else none. */
+    private fun categoryOf(alert: Alert): String? =
+        if (alert.severity == AlertSeverity.WARNING && alert.lifetime == AlertLifetime.CONDITION) {
+            silenceButtons
+            CATEGORY_WARNING
+        } else null
 
     companion object {
 
@@ -247,5 +294,25 @@ class IosAlertPlatform(
         private const val CHIME_PREFIX = "pump-alert-chime-"
         private const val SNOOZE_PREFIX = "pump-alert-snooze-"
         internal const val BOOKING_PREFIX = "alert-booking-"
+
+        internal const val CATEGORY_WARNING = "aaps-alert-warning"
+        internal const val SILENCE_PREFIX = "aaps-alert-silence-"
+
+        /** The minutes of a silence button, or null when [actionId] is not one of ours. */
+        internal fun silenceMinutesOf(actionId: String): Int? =
+            Alerts.NOTIFICATION_SILENCE_MINUTES.firstOrNull { actionId == "$SILENCE_PREFIX$it" }
+
+        /** The alert a chime or a ring after a silence is for, read from its notification's identifier. */
+        internal fun alertOf(notificationId: String): AlertId? {
+            val rest = listOf(CHIME_PREFIX, SNOOZE_PREFIX).firstOrNull { notificationId.startsWith(it) }
+                ?.let { notificationId.removePrefix(it) } ?: return null
+            val slash = rest.indexOf('/')
+            if (slash <= 0 || slash == rest.length - 1) return null
+            return AlertId(rest.substring(0, slash), rest.substring(slash + 1))
+        }
+
+        /** Test access to the identifier of a chime and of a ring after a silence. */
+        internal fun chimeIdOf(source: String, key: String) = "$CHIME_PREFIX$source/$key"
+        internal fun snoozeIdOf(source: String, key: String) = "$SNOOZE_PREFIX$source/$key"
     }
 }

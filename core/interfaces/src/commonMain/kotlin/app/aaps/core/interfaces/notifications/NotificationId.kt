@@ -127,7 +127,8 @@ enum class NotificationId(
     // Loop / APS
     EASY_MODE_ENABLED(IMPORTANT, LOOP),
     UD_MODE_ENABLED(IMPORTANT, LOOP),
-    CARBS_REQUIRED(NORMAL, LOOP),
+    // Desktop only: the open loop suggestion as a card, where Android and iOS show a system notification
+    OPEN_LOOP_SUGGESTION(NORMAL, LOOP),
     SMB_FALLBACK(NORMAL, LOOP),
     DYN_ISF_FALLBACK(NORMAL, LOOP),
 

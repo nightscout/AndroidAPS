@@ -1,10 +1,10 @@
 package app.aaps.di.metro
 
+import app.aaps.implementation.alerts.AlertSilenceReceiver
 import app.aaps.implementation.alerts.EatReminderReceiver
 import app.aaps.persistentNotification.DummyService
 import app.aaps.plugins.automation.services.LocationService
 import app.aaps.receivers.AutoStartReceiver
-import app.aaps.receivers.CarbSuggestionReceiver
 import app.aaps.receivers.DataReceiver
 import app.aaps.receivers.SmsReceiver
 import com.google.common.truth.Truth.assertThat
@@ -45,7 +45,13 @@ class ReceiverInjectorsTest {
         // DummyService is a Service, not a receiver. It reaches the same class-keyed map through
         // `MetroService`, and a missing entry would only show as a crash when the foreground
         // notification starts.
-        assertThat(injectors.keys).containsAtLeast(DummyService::class, CarbSuggestionReceiver::class)
+        assertThat(injectors.keys).contains(DummyService::class)
+    }
+
+    /** The silence buttons on a warning's notification; a missing entry is a crash when one is tapped. */
+    @Test
+    fun `the alert silence receiver has an injector`() {
+        assertThat(injectors.keys).contains(AlertSilenceReceiver::class)
     }
 
     /**

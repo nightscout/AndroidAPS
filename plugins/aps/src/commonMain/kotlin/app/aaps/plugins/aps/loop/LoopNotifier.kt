@@ -1,28 +1,21 @@
 package app.aaps.plugins.aps.loop
 
 /**
- * The loop's own system notifications - the ones with action buttons, not AAPS in-app notifications.
+ * The loop's own system notification: the open loop suggestion, which opens the app when tapped.
  *
- * Separate from [app.aaps.core.interfaces.notifications.NotificationManager] on purpose: these carry
- * tap actions that reach back into the app ("ignore for 15 minutes", "open the app here"), which that
- * interface has no way to express.
+ * Separate from [app.aaps.core.interfaces.notifications.NotificationManager] on purpose: it carries a tap action that
+ * reaches back into the app, which that interface has no way to express. Carbs required used to be here too, with
+ * three "ignore" buttons; it is an alert of the core now (`_docs/ALARMS.md`, step 6), and those buttons became the
+ * silence buttons of every warning.
  *
- * Only the **decision** lives in `LoopPlugin`; everything about how a notification looks and what its
- * buttons do belongs to the platform. Titles, icons and the ignore-button labels are resolved by the
- * implementation, so the plugin passes nothing but the text it computed.
+ * Only the **decision** lives in `LoopPlugin`; everything about how the notification looks belongs to the platform.
+ * The title and icon are resolved by the implementation, so the plugin passes nothing but the text it computed.
  *
- * **A silent implementation would be a safety problem here.** These tell the user the loop wants
- * carbs, or has a suggestion waiting that open loop will not apply on its own. A target that cannot
- * post them should say so rather than accept the call and do nothing.
+ * **A silent implementation would be a safety problem here.** It tells the user open loop has a suggestion waiting
+ * that it will not apply on its own. A target that cannot post it should say so rather than accept the call and do
+ * nothing.
  */
 interface LoopNotifier {
-
-    /**
-     * The loop needs carbs. Carries three "ignore for N minutes" actions.
-     *
-     * @param text what to show - already formatted, including the amount and the window
-     */
-    fun carbsRequired(text: String)
 
     /**
      * Open loop has a suggestion the user has to accept. Tapping it opens the app.
@@ -31,6 +24,6 @@ interface LoopNotifier {
      */
     fun openLoopSuggestion(text: String, localOnly: Boolean)
 
-    /** Take down whichever of the two is showing. */
+    /** Take the suggestion down. */
     fun dismiss()
 }

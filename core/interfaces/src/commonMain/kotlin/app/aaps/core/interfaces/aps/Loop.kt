@@ -105,8 +105,6 @@ interface Loop {
      */
     suspend fun minutesToEndOfSuspend(): Int
 
-    fun disableCarbSuggestions(durationMinutes: Int)
-
     /**
      * Schedule building of device status before sending to NS
      *

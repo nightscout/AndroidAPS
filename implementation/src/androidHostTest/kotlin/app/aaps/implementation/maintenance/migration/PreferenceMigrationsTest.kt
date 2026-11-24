@@ -1,6 +1,8 @@
 package app.aaps.implementation.maintenance.migration
 
 import app.aaps.core.data.model.RM
+import app.aaps.core.interfaces.alerts.AlertChoice
+import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -46,6 +48,29 @@ class PreferenceMigrationsTest {
     private fun storeOf(vararg pairs: Pair<String, Any?>) = FileKeyValueStore(mapOf(*pairs))
 
     private val schedule = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":3}]"
+
+    // ----- "Alert on carbs required" became the alert kind's choice (`_docs/ALARMS.md`, step 6) -----
+
+    /** A phone that had it off gets the kind set to Off, so nothing starts to chime there; its other choices stay. */
+    @Test fun `carbs required alert off becomes the kind turned off`() = runTest {
+        val store = storeOf("enable_carbs_required_alert_local" to false, "alert_choices" to """{"aaps.hard_limit":"SILENT"}""")
+
+        sut().migrate(store)
+
+        assertThat(store.contains("enable_carbs_required_alert_local")).isFalse()
+        assertThat(store.getString("alert_choices", "{}"))
+            .isEqualTo("""{"aaps.hard_limit":"SILENT","${CoreAlert.CARBS_REQUIRED.id}":"${AlertChoice.OFF.name}"}""")
+    }
+
+    /** On was the default, and Ring is the kind's default: nothing is written, only the old key goes. */
+    @Test fun `carbs required alert on leaves the choices alone`() = runTest {
+        val store = storeOf("enable_carbs_required_alert_local" to true)
+
+        sut().migrate(store)
+
+        assertThat(store.contains("enable_carbs_required_alert_local")).isFalse()
+        assertThat(store.contains("alert_choices")).isFalse()
+    }
 
     // ----- The renames -----
 

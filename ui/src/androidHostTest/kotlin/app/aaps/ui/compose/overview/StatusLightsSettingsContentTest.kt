@@ -75,7 +75,7 @@ class StatusLightsSettingsContentTest {
         val switches = listOf(
             BooleanKey.AlertMissedBgReading,
             BooleanKey.AlertPumpUnreachable,
-            BooleanKey.AlertCarbsRequired,
+            BooleanKey.AlertIncreaseVolume,
             BooleanKey.OverviewShowTreatmentButton,
             BooleanKey.OverviewShowWizardButton,
             BooleanKey.OverviewShowInsulinButton,

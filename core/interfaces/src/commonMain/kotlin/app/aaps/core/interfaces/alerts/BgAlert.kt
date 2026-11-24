@@ -38,6 +38,9 @@ enum class BgAlert(private val idName: String, override val title: TextRef, over
     override val source: String get() = SOURCE
     override val origin: AlertOrigin get() = AlertOrigin.APP
 
+    // Every phone raises its own from the same readings: an announcement would make a client hear it twice
+    override val announced: Boolean get() = false
+
     companion object {
 
         /** The source every BG alarm is raised under. */

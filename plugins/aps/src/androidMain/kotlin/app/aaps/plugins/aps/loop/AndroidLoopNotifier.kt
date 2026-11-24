@@ -8,7 +8,6 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.notifications.DoNotDisturbRule
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.ui.CarbSuggestionActions
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.aps.R
@@ -22,8 +21,7 @@ import android.app.NotificationManager as AndroidNotificationManager
  * The Android half of [LoopNotifier]. All of this used to sit inside `LoopPlugin`, and it was the only
  * thing keeping a ~1000-line loop algorithm out of `commonMain`.
  *
- * One notification id for both shapes, as before: the carbs and open-loop notifications replace each
- * other rather than stacking, and [dismiss] takes down whichever is showing.
+ * The open loop suggestion only: carbs required is an alert of the core now (`_docs/ALARMS.md`, step 6).
  *
  * The notification is `CATEGORY_ALARM`, so Do Not Disturb lets it ring when the profile allows alarms.
  * While Do Not Disturb is on and "Override Do Not Disturb mode" is off it goes to a channel that only
@@ -36,8 +34,7 @@ class AndroidLoopNotifier(
     private val context: Context,
     private val rh: ResourceHelper,
     private val preferences: Preferences,
-    private val notificationHolder: NotificationHolder,
-    private val carbSuggestionActions: CarbSuggestionActions
+    private val notificationHolder: NotificationHolder
 ) : LoopNotifier {
 
     private val notificationManager
@@ -71,18 +68,6 @@ class AndroidLoopNotifier(
         notificationManager.createNotificationChannel(silentChannel)
     }
 
-    override fun carbsRequired(text: String) {
-        channel
-        val builder = baseBuilder(rh.gs(R.string.carbs_suggestion), text)
-        // Request codes 1..3 must stay distinct, or the three intents collide and Android hands back
-        // the first one for all of them.
-        builder
-            .addAction(ignoreAction(R.string.ignore5m, "Ignore 5m", minutes = 5, requestCode = 1))
-            .addAction(ignoreAction(R.string.ignore15m, "Ignore 15m", minutes = 15, requestCode = 2))
-            .addAction(ignoreAction(R.string.ignore30m, "Ignore 30m", minutes = 30, requestCode = 3))
-        notificationManager.notify(Constants.NOTIFICATION_ID, builder.build())
-    }
-
     override fun openLoopSuggestion(text: String, localOnly: Boolean) {
         channel
         val builder = baseBuilder(rh.gs(R.string.open_loop_new_suggestion), text)
@@ -108,13 +93,6 @@ class AndroidLoopNotifier(
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-
-    private fun ignoreAction(label: Int, fallback: String, minutes: Int, requestCode: Int) =
-        NotificationCompat.Action(
-            app.aaps.core.ui.R.drawable.ic_notif_aaps,
-            rh.gs(label, fallback),
-            carbSuggestionActions.ignoreFor(minutes = minutes, requestCode = requestCode)
-        )
 
     private companion object {
 

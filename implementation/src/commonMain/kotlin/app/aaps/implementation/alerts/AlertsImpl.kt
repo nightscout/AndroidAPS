@@ -741,8 +741,9 @@ class AlertsImpl(
      * second one. A pump's alert is filed under the active pump, with its type and serial; any other one is the app's
      * own, with no pump identity (`_docs/ALARMS.md`, section 6).
      *
-     * Not for a BG alarm: every phone raises its own from the same readings and rules, so a client would hear it twice
-     * (decided 2026-11-23). Not for an alert from Nightscout either: its record is already there.
+     * Not for a kind that is not [app.aaps.core.interfaces.alerts.AlertKind.announced]: a BG alarm (every phone raises
+     * its own from the same readings and rules, so a client would hear it twice, decided 2026-11-23), an alert from
+     * Nightscout (its record is already there) and carbs required (the loop writes its own).
      *
      * Not when the user turned off "Create announcements from errors" (decided 2026-11-24): the setting is for every
      * alert, as pump unreachable followed it before it was an alert.
@@ -750,7 +751,7 @@ class AlertsImpl(
     private fun announce(alert: Alert) {
         if (!config.APS) return
         if (!preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors)) return
-        if (alert.source == BgAlert.SOURCE || alert.origin == AlertOrigin.NIGHTSCOUT) return
+        if (!alert.kind.announced) return
         val note = cardText(alert)
         appScope.launch {
             try {

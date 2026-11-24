@@ -301,10 +301,20 @@ class AlertsImplTest : TestBase() {
         assertThat(sut.active.value.map { it.key }).containsExactly("occlusion", "bolus")
     }
 
+    /** The loop writes the announcement of carbs required itself, under its own setting: the core writes none. */
+    @Test
+    fun `carbs required writes no announcement of the core`() {
+        sut.raise(alert(key = CoreAlert.CARBS_REQUIRED.key, severity = AlertSeverity.WARNING, kind = CoreAlert.CARBS_REQUIRED))
+        scope.runCurrent()
+
+        verifyNoPumpAnnouncement()
+        verifyNoAppAnnouncement()
+    }
+
     /** Every phone raises its own BG alarm from the same readings: an announcement would make a client hear it twice. */
     @Test
     fun `a BG alarm writes no announcement`() {
-        sut.raise(alert(source = BgAlert.SOURCE, origin = AlertOrigin.APP, key = "low", severity = AlertSeverity.WARNING))
+        sut.raise(alert(key = "low", severity = AlertSeverity.WARNING, kind = BgAlert.LOW))
         scope.runCurrent()
 
         verifyNoPumpAnnouncement()
@@ -314,7 +324,7 @@ class AlertsImplTest : TestBase() {
     /** Its record is already in Nightscout: written again, it would come back as a new announcement. */
     @Test
     fun `an alert from Nightscout writes no announcement`() {
-        sut.raise(alert(source = NightscoutAlert.SOURCE, origin = AlertOrigin.NIGHTSCOUT, key = "announcement.1", severity = AlertSeverity.WARNING, lifetime = AlertLifetime.EVENT))
+        sut.raise(alert(key = "announcement.1", severity = AlertSeverity.WARNING, lifetime = AlertLifetime.EVENT, kind = NightscoutAlert.ANNOUNCEMENT))
         scope.runCurrent()
 
         verifyNoPumpAnnouncement()

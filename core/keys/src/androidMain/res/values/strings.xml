@@ -31,7 +31,6 @@
     <!-- Alert preferences -->
     <string name="pref_title_alert_missed_bg_reading">Alert if no BG data is received</string>
     <string name="pref_title_alert_pump_unreachable">Alert if pump is unreachable</string>
-    <string name="pref_title_alert_carbs_required">Alert on carbs required</string>
     <string name="pref_title_alert_urgent_as_android_notification">Raise urgent alarms as Android notifications</string>
     <string name="pref_title_alert_increase_volume">Gradually increase notification volume</string>
     <string name="pref_title_alert_override_dnd">Override Do Not Disturb mode</string>

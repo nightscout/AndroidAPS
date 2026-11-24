@@ -13,6 +13,9 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.alerts.AlertSeverity
+import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.aps.Loop.LastRun
@@ -28,7 +31,6 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -59,6 +61,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.aps.IsfForCarbs
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.asAnnouncement
@@ -129,7 +132,8 @@ class LoopPlugin(
     private val loopNotifier: LoopNotifier,
     private val runningModeReconciler: RunningModeReconciler,
     private val smbPause: SmbPause,
-
+    // A provider: the alert core reaches the plugins, this one among them
+    private val alerts: () -> Alerts,
     @ApplicationScope private val appScope: CoroutineScope
 ) : PluginBase(
     PluginDescription()
@@ -158,8 +162,6 @@ class LoopPlugin(
     // Volatile: this is now the only gate against a second automatic loop run for the same BG. It is
     // written by the calculation worker thread and read by the next one, which may be a different one.
     @Volatile override var lastBgTriggeredRun: Long = 0
-    private var carbsSuggestionsSuspendedUntil: Long = 0
-    private var prevCarbsreq = 0
     override var lastRun: LastRun? = null
     override var closedLoopEnabled: Constraint<Boolean>? = null
 
@@ -606,7 +608,6 @@ class LoopPlugin(
             resultAfterConstraints.smbConstraint = ConstraintObject(resultAfterConstraints.smb, aapsLogger)
             resultAfterConstraints.smb = constraintChecker.applyBolusConstraints(resultAfterConstraints.smbConstraint!!).value()
 
-            prevCarbsreq = lastRun?.constraintsProcessed?.carbsReq ?: prevCarbsreq
             if (lastRun == null) lastRun = LastRun()
             lastRun?.let { lastRun ->
                 lastRun.request = apsResult
@@ -627,55 +628,18 @@ class LoopPlugin(
                     // Take back an open loop suggestion shown before the pause, on the phone and on
                     // the watch. It cannot be accepted any more (#5192), so it must not be offered.
                     if (allowNotification) dismissSuggestion()
+                    // Nor does the loop say it wants carbs while it does not run
+                    CoreAlert.CARBS_REQUIRED.resolve(alerts())
                     return@withContext
                 }
                 // Store reasons
                 closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
+                // Carbs required only in closed loop and LGS, where the loop acts on its own
+                if (!runningMode().isClosedLoopOrLgs()) CoreAlert.CARBS_REQUIRED.resolve(alerts())
                 if (runningMode().isClosedLoopOrLgs()) {
                     if (allowNotification) {
-                        if (resultAfterConstraints.isCarbsRequired && carbsSuggestionsSuspendedUntil < dateUtil.now() && !treatmentTimeThreshold(-15)
-                        ) {
-                            if (preferences.get(BooleanKey.AlertCarbsRequired) && !preferences.get(BooleanKey.AlertUrgentAsAndroidNotification)
-                            ) {
-                                notificationManager.post(NotificationId.CARBS_REQUIRED, resultAfterConstraints.carbsRequiredText)
-                            }
-                            if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromCarbsReq) && config.APS) {
-                                persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-                                    therapyEvent = TE.asAnnouncement(resultAfterConstraints.carbsRequiredText),
-                                    timestamp = dateUtil.now(),
-                                    action = Action.TREATMENT,
-                                    source = Sources.Loop,
-                                    note = resultAfterConstraints.carbsRequiredText,
-                                    listValues = listOf()
-                                )
-                            }
-                            if (preferences.get(BooleanKey.AlertCarbsRequired) && preferences.get(BooleanKey.AlertUrgentAsAndroidNotification)
-                            ) {
-                                loopNotifier.carbsRequired(resultAfterConstraints.carbsRequiredText)
-                                uel.log(
-                                    action = Action.CAREPORTAL,
-                                    source = Sources.Loop,
-                                    note = rh.gs(CoreUiStrings.carbsreq, resultAfterConstraints.carbsReq, resultAfterConstraints.carbsReqWithin),
-                                    listValues = listOf(
-                                        ValueWithUnit.Gram(resultAfterConstraints.carbsReq),
-                                        ValueWithUnit.Minute(resultAfterConstraints.carbsReqWithin)
-                                    )
-                                )
-                                rxBus.send(EventNewOpenLoopNotification())
-
-                                //only send to wear if Native notifications are turned off
-                                if (!preferences.get(BooleanKey.AlertUrgentAsAndroidNotification)) {
-                                    // Send to Wear
-                                    sendToWear(resultAfterConstraints.carbsRequiredText)
-                                }
-                            }
-                        } else {
-                            //If carbs were required previously, but are no longer needed, dismiss notifications
-                            if (prevCarbsreq > 0) {
-                                dismissSuggestion()
-                                notificationManager.dismiss(NotificationId.CARBS_REQUIRED)
-                            }
-                        }
+                        if (resultAfterConstraints.isCarbsRequired && !treatmentTimeThreshold(-15)) carbsRequired(resultAfterConstraints)
+                        else CoreAlert.CARBS_REQUIRED.resolve(alerts())
                     }
                     // `isHeld()` is the settings-import hold. Do NOT start an enactment under it: the
                     // executor will not pick the commands up, so the temp basal and the SMB would sit in
@@ -767,10 +731,35 @@ class LoopPlugin(
         }
     }
 
-    override fun disableCarbSuggestions(durationMinutes: Int) {
-        carbsSuggestionsSuspendedUntil = dateUtil.now() + durationMinutes * 60 * 1000
-        aapsLogger.debug(LTag.CORE, "CarbSuggestion disabled until ${dateUtil.dateAndTimeAndSecondsString(carbsSuggestionsSuspendedUntil)}")
-        dismissSuggestion()
+    /**
+     * The loop wants carbs: a WARNING alert (`_docs/ALARMS.md`, step 6), one chime and a card, the amount updated at
+     * every run. It ends when carbs are no longer needed. Its notification has the silence buttons of a warning that
+     * lasts (5, 15, 30 min); the user's choice for the kind (Ring, Silent, Off) replaced the setting
+     * "Alert on carbs required".
+     *
+     * Its announcement and the user entry are written once, when it is new: the loop writes the announcement under its
+     * own setting, not the core.
+     */
+    private suspend fun carbsRequired(result: APSResult) {
+        val alerts = alerts()
+        val isNew = alerts.active.value.none { it.kind == CoreAlert.CARBS_REQUIRED }
+        CoreAlert.CARBS_REQUIRED.raiseCondition(alerts, AlertSeverity.WARNING, TextRef.Literal(result.carbsRequiredText), dateUtil.now())
+        if (!isNew) return
+        uel.log(
+            action = Action.CAREPORTAL,
+            source = Sources.Loop,
+            note = rh.gs(CoreUiStrings.carbsreq, result.carbsReq, result.carbsReqWithin),
+            listValues = listOf(ValueWithUnit.Gram(result.carbsReq), ValueWithUnit.Minute(result.carbsReqWithin))
+        )
+        if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromCarbsReq) && config.APS)
+            persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                therapyEvent = TE.asAnnouncement(result.carbsRequiredText),
+                timestamp = dateUtil.now(),
+                action = Action.TREATMENT,
+                source = Sources.Loop,
+                note = result.carbsRequiredText,
+                listValues = listOf()
+            )
     }
 
     private fun presentSuggestion(contentText: String) {

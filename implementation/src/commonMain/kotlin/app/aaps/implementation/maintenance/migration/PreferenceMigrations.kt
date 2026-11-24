@@ -7,6 +7,8 @@ import app.aaps.core.data.model.TTPreset
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.alerts.AlertChoice
+import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -24,6 +26,10 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.UnitDoubleKey
 import dev.zacsweers.metro.Inject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.jsonObject
 
 /**
  * The preference migrations, as an ordered list of functions over the store they are given.
@@ -118,6 +124,26 @@ class PreferenceMigrations(
         tempTargetPresets(sp)
         activityMonitorRetired(sp)
         smsCommunicatorType(sp)
+        carbsRequiredAlert(sp)
+    }
+
+    /**
+     * "Alert on carbs required" became the choice of the alert kind "Carbs required" (2026-11-24, `_docs/ALARMS.md`,
+     * step 6). A phone that had it off gets the kind set to Off, so nothing starts to chime there. On was the default,
+     * and Ring is the kind's default, so that needs nothing. The old key goes either way.
+     */
+    private fun carbsRequiredAlert(sp: KeyValueStore) {
+        if (!sp.contains(CARBS_REQUIRED_ALERT)) return
+        if (LegacyPreferenceValue.asBoolean(sp.getAll()[CARBS_REQUIRED_ALERT]) == false) {
+            val choices = try {
+                Json.parseToJsonElement(sp.getString(ALERT_CHOICES, "{}")).jsonObject
+            } catch (_: Exception) {
+                // An unreadable list rings every kind (`AlertsImpl`), so it is replaced rather than kept
+                JsonObject(emptyMap())
+            }
+            sp.putString(ALERT_CHOICES, JsonObject(choices + (CoreAlert.CARBS_REQUIRED.id to JsonPrimitive(AlertChoice.OFF.name))).toString())
+        }
+        sp.remove(CARBS_REQUIRED_ALERT)
     }
 
     /**
@@ -519,6 +545,10 @@ class PreferenceMigrations(
         )
 
         val TEMP_TARGET_PRESETS = StringNonKey.TempTargetPresets.key
+
+        /** The key of "Alert on carbs required", which the kind "Carbs required" replaced. */
+        const val CARBS_REQUIRED_ALERT = "enable_carbs_required_alert_local"
+        val ALERT_CHOICES = StringNonKey.AlertChoices.key
 
         /** The three counters the activity monitor kept for each activity. */
         val MONITOR_COUNTERS = listOf("start", "resumed", "total")

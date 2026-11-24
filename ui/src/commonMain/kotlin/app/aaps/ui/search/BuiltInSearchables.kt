@@ -190,11 +190,10 @@ class BuiltInSearchables(
             IntKey.AlertsStaleDataThreshold,
             BooleanKey.AlertPumpUnreachable,
             IntKey.AlertsPumpUnreachableThreshold,
-            BooleanKey.AlertCarbsRequired,
             BooleanKey.AlertUrgentAsAndroidNotification,
             BooleanKey.AlertIncreaseVolume,
             BooleanKey.AlertOverrideDoNotDisturb
-            // Ring, Silent or Off per kind of alert, and the BG alarms, where this platform has alerts (not on the desktop)
+            // Ring, Silent or Off per kind of alert (carbs required too, which had a setting of its own), and the BG alarms
         ) + listOfNotNull(
             UnitDoubleKey.AlertUrgentLow.takeIf { alertKindsSettings.settingsItem != null },
             alertKindsSettings.bgAlarmRulesItem,

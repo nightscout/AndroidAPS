@@ -92,6 +92,13 @@ interface AlertKind {
      * Silent or Off. A ringing one is still silenced for a while, as every alert.
      */
     val isProtected: Boolean
+
+    /**
+     * Whether the core writes the announcement of an alert of this kind (on the master, while "Create announcements
+     * from errors" is on). False for a BG alarm (every phone raises its own), an alert from Nightscout (its record is
+     * there already) and carbs required (the loop writes its own, under its own setting).
+     */
+    val announced: Boolean get() = true
 }
 
 /** What the user chose for a kind of alert, on this phone only. */
@@ -328,6 +335,13 @@ interface Alerts {
 
         /** The silence lengths the alarm screen offers, in minutes (decided 2026-11-22). */
         private val SILENCE_LENGTHS = listOf(15, 30, 60, 120, 240)
+
+        /**
+         * The silence buttons on the notification of a WARNING alert that lasts (CONDITION), in minutes: the three
+         * "ignore" buttons the loop's carbs notification had, for every warning (decided 2026-11-24). An EVENT
+         * has none: answering it ends it, whatever the length.
+         */
+        val NOTIFICATION_SILENCE_MINUTES = listOf(5, 15, 30)
 
         /** The silence lengths the alarm screen offers for an alert of [kind]: a protected kind only the short ones. */
         fun silenceLengths(kind: AlertKind): List<Int> =

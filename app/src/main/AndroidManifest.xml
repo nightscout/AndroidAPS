@@ -105,6 +105,11 @@
             android:name="app.aaps.implementation.alerts.EatReminderReceiver"
             android:exported="false" />
 
+        <!-- The silence buttons (5, 15, 30 min) on the notification of a warning that lasts -->
+        <receiver
+            android:name="app.aaps.implementation.alerts.AlertSilenceReceiver"
+            android:exported="false" />
+
         <!-- Receive new BG readings from other local apps -->
         <receiver
             android:name="app.aaps.receivers.DataReceiver"
@@ -154,11 +159,6 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-
-        <!-- Receive ignore 5m, 15m, 30m requests for carb notifications -->
-        <receiver
-            android:name="app.aaps.receivers.CarbSuggestionReceiver"
-            android:exported="false" />
 
         <!-- Auto start -->
         <receiver

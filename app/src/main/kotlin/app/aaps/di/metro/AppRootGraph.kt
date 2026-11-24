@@ -94,7 +94,6 @@ import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.XDripBroadcast
-import app.aaps.core.interfaces.ui.CarbSuggestionActions
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.AndroidActivities
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -309,7 +308,6 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val fabricPrivacy: FabricPrivacy
     val uiInteraction: UiInteraction
     val androidActivities: AndroidActivities
-    val carbSuggestionActions: CarbSuggestionActions
     val temporaryBasalStorage: TemporaryBasalStorage
     val detailedBolusInfoStorage: DetailedBolusInfoStorage
     val blePreCheck: BlePreCheck

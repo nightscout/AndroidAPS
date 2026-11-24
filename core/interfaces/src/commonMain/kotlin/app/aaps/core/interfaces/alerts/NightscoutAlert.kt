@@ -20,6 +20,9 @@ enum class NightscoutAlert(private val idName: String, override val title: TextR
     override val origin: AlertOrigin get() = AlertOrigin.NIGHTSCOUT
     override val isProtected: Boolean get() = false
 
+    // Its record is in Nightscout already: written again, it would come back as a new announcement
+    override val announced: Boolean get() = false
+
     companion object {
 
         /** The source every alert from Nightscout is raised under. */

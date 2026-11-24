@@ -1,15 +1,15 @@
 package app.aaps.di.metro
 
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
-import app.aaps.implementation.alerts.EatReminderReceiver
+import app.aaps.implementation.alerts.AlertSilenceReceiver
 import app.aaps.implementation.alerts.AlertWakeReceiver
+import app.aaps.implementation.alerts.EatReminderReceiver
 import app.aaps.implementation.receivers.BTReceiver
 import app.aaps.implementation.receivers.ChargingStateReceiver
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
 import app.aaps.persistentNotification.DummyService
 import app.aaps.receivers.AutoStartReceiver
-import app.aaps.receivers.CarbSuggestionReceiver
 import app.aaps.receivers.DataReceiver
 import app.aaps.receivers.SmsReceiver
 import dev.zacsweers.metro.AppScope
@@ -69,11 +69,12 @@ object AppReceiversBindings {
     @ClassKey(BTReceiver::class)
     fun bindBTReceiver(injector: MembersInjector<BTReceiver>): MembersInjector<*> = injector
 
+    // The silence buttons on the notification of a warning that lasts
     @Provides
     @FeatureMemberInjectors
     @IntoMap
-    @ClassKey(CarbSuggestionReceiver::class)
-    fun bindCarbSuggestionReceiver(injector: MembersInjector<CarbSuggestionReceiver>): MembersInjector<*> = injector
+    @ClassKey(AlertSilenceReceiver::class)
+    fun bindAlertSilenceReceiver(injector: MembersInjector<AlertSilenceReceiver>): MembersInjector<*> = injector
 
     @Provides
     @FeatureMemberInjectors

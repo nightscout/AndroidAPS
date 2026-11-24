@@ -357,7 +357,14 @@ class AlarmNotificationManager(
      * ringtone plays once, for [CHIME_RINGTONE_MS] at most: a channel's sound is fixed when it is made, so it cannot be
      * the ringtone. A ringtone that cannot be opened chimes with [sound] instead.
      */
-    fun postChime(chimeKey: Int, title: String, body: String, sound: AlarmSound = AlarmSound.ALARM, ringtoneUri: String? = null) {
+    fun postChime(
+        chimeKey: Int,
+        title: String,
+        body: String,
+        sound: AlarmSound = AlarmSound.ALARM,
+        ringtoneUri: String? = null,
+        actions: List<NotificationCompat.Action> = emptyList()
+    ) {
         channels // created on first post, see the field
         val overrideDnd = preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
         val quiet = DoNotDisturbRule.staysQuiet(overrideDnd, mgr.currentInterruptionFilter)
@@ -373,6 +380,7 @@ class AlarmNotificationManager(
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .setContentIntent(notificationHolderProvider().openAppIntent())
+            .also { builder -> actions.forEach { builder.addAction(it) } }
             .build()
         try {
             mgr.notify(CHIME_ID_OFFSET + chimeKey, notification)

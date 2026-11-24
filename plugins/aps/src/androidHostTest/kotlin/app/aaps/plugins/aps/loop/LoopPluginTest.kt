@@ -11,6 +11,8 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.Constraint
@@ -38,6 +40,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
@@ -79,12 +82,14 @@ class LoopPluginTest : TestBaseWithProfile() {
     @Mock lateinit var loopNotifier: LoopNotifier
     @Mock lateinit var runningModeReconciler: RunningModeReconciler
     @Mock lateinit var smbPause: SmbPause
+    @Mock lateinit var alerts: Alerts
 
     private lateinit var loopPlugin: LoopPlugin
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
 
     @BeforeEach fun prepare() {
         whenever(config.APS).thenReturn(true)
+        whenever(alerts.active).thenReturn(MutableStateFlow(emptyList<Alert>()))
         loopPlugin = buildLoopPlugin()
         whenever(activePlugin.activePump).thenReturn(virtualPumpPlugin)
     }
@@ -103,7 +108,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         // The shared test base hands out a plain `() -> PumpEnactResult`, which other tests rely on;
         // LoopPlugin takes Metro's Provider, so it is adapted here rather than changing the base.
         persistenceLayer, notificationManager, { pumpEnactResultProvider() },
-        pumpStatusProvider, ch, loopNotifier, runningModeReconciler, smbPause, testScope
+        pumpStatusProvider, ch, loopNotifier, runningModeReconciler, smbPause, { alerts }, testScope
     )
 
     /**

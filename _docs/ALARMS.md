@@ -18,7 +18,7 @@ How a pump alert works is in `PUMP_DESIGN.md` (sections 2 and 8). How a CGM rais
 | 4 | **Local alerts** | `LocalAlertUtils` | **Pump unreachable** as a CRITICAL alert since step 4 (also an SMS) | `ALARM` | Android, iOS, desktop | Core |
 | 5 | **Nightscout announcements** | `NsIncomingDataProcessor` | A careportal announcement as a WARNING alert (source `"nightscout"`), when "NS announcements" is on. Nightscout's level 1 and 2 alarms were removed on 2026-11-23 (step 3) | One chime | Android, iOS, desktop | NS client |
 | 6 | **Automation** | `ActionNotification`, `ActionAlarm`, `ActionSendSMS` | A card (`AUTOMATION_MESSAGE`); an alarm (a reminder, then row 3); an SMS | The alarm only | Android, iOS (a booked alert since 2026-11-22) | The user's rules |
-| 7 | **Loop notifier** | `LoopNotifier` (`AndroidLoopNotifier`, `IosLoopNotifier`) | A system notification: an open-loop suggestion, carbs required | The channel's sound; silent while Do Not Disturb is on and its override is off | Android, iOS | Loop |
+| 7 | **Loop notifier** | `LoopNotifier` (`AndroidLoopNotifier`, `IosLoopNotifier`, `DesktopLoopNotifier`) | A system notification: the open-loop suggestion. Carbs required is an alert since step 6 | The channel's sound; silent while Do Not Disturb is on and its override is off | Android, iOS, desktop (a card) | Loop |
 | 8 | **Ongoing notification** | `NotificationHolder`, `PersistentNotificationPlugin` | The permanent notification of the foreground service, with BG, IOB and the loop status | None | Android | Services, the persistent notification plugin |
 | 9 | **Eat reminder countdown** | `AndroidEatReminderAlarm`, `IosEatReminderAlarm` | A quiet countdown notification, then the alarm (row 3) with "+5 min" | At the end | Android, iOS, watch | The wizard's "time to eat" |
 | 10 | **Watch** | `PhoneAlarmWatch`, `DataHandlerWear`, `EatReminderWatch` | The phone's alarm on the watch with Silence and Mute, the bolus progress, open-loop suggestions, the eat timer | The watch's channels | Wear OS | Rows 2, 3, 7 and 9 |
@@ -51,7 +51,7 @@ ding) and a card of a Silent kind dinged.
 | Alarm: standard, bolus error, error, urgent, eat reminder | `AlarmNotificationManager` (one per `AlarmSound`, in one group) | HIGH | Sounding cards and alerts |
 | Alarm silent, silent urgent | `AlarmNotificationManager` | HIGH | The same, while Do Not Disturb is on and its override is off (`DoNotDisturbRule`) |
 | Ongoing | `NotificationHolderImpl` | HIGH | The foreground service and the status notification |
-| Loop, loop silent | `AndroidLoopNotifier` | HIGH | The open-loop suggestion, carbs required |
+| Loop, loop silent | `AndroidLoopNotifier` | HIGH | The open-loop suggestion |
 | Eat reminder | `AndroidEatReminderAlarm` | LOW | The countdown |
 | Insight alert | `InsightPlugin` | HIGH | Insight's own alerts |
 | Watch: phone alarm (and silent), bolus progress (and silent), open loop, eat reminder (and silent), the service | The wear module | HIGH or LOW | On the watch |
@@ -232,7 +232,18 @@ Built 2026-11-24 (step 4), as in the table, with these differences:
 - **Plugin start failed and plugin work failed stay URGENT cards with a sound** (decided 2026-11-24). `PluginBase`
   posts them and has only `NotificationManager`; giving it the alert core would change about 50 plugins and their
   tests. Two interfaces stay: cards in `NotificationManager`, noise in `Alerts`.
-- **Carbs required** moves in step 6.
+- **Carbs required** moved in step 6 (built 2026-11-24): `CoreAlert.CARBS_REQUIRED`, WARNING, CONDITION, not
+  protected. One chime and a card, the amount updated at each loop run, ended when carbs are no longer needed, when
+  the loop is paused or not in closed loop or LGS. User decisions (2026-11-24):
+  - The setting "Alert on carbs required" went: the kind's Ring, Silent or Off decides. A phone that had it off gets
+    the kind set to Off (`PreferenceMigrations.carbsRequiredAlert`).
+  - The three "Ignore 5 / 15 / 30 min" buttons of the loop's notification became silence buttons on the
+    notification of **every WARNING alert that lasts** (CONDITION), on Android (`AlertSilenceReceiver`) and iOS (a
+    notification category). An EVENT has none: answering it ends it.
+  - The loop notifier's carbs notification, its ignore receiver and `Loop.disableCarbSuggestions` went.
+  - The announcement keeps its own setting ("Create announcements from carbs required"), now once per occurrence
+    instead of at every loop run; the core writes none for this kind (`AlertKind.announced`). The user entry is also
+    written once per occurrence.
 - A condition that a check finds again and again (pump unreachable, zero basal, profile, pump driver not responding)
   keeps the time it began while it is active (`CoreAlert.raiseCondition`), so it rings once and a silence holds. It
   rings again after its silence while it lasts. The zero basal alarm's own "again every 15 min" went with it.
@@ -454,7 +465,8 @@ or after it. Until then they are the only glucose alarm its user has.
 - **A BG alarm writes no announcement** (decided 2026-11-23). Every phone raises its own from the same readings and
   rules, so a client would hear the master's low twice: its own alarm and the chime of the announcement. The master's
   other alerts (the pump, the app) are still written, so a parent's client still hears the master's pump alerts.
-- What AAPS sends to Nightscout (announcements from errors and from carbs required) does not change.
+- What AAPS sends to Nightscout (announcements from errors and from carbs required) does not change, except that
+  carbs required is written once per occurrence now (step 6), not at every loop run.
 
 ### Cards and short messages
 
@@ -504,7 +516,7 @@ The order matters: step 3 must not come before step 2.
    "Review of today's notification ids". The ids that lost their last user went with it.
 5. Eversense: its device alarms to alerts, and its glucose alarms dropped (step 2 is done by then). Built
    2026-11-24, with the rule of decision 14; Eversense is the example for the other drivers.
-6. Carbs required as an alert.
+6. Carbs required as an alert. Built 2026-11-24: see "Review of today's notification ids".
 7. The cleanups, after the other drivers: the `sound` parameter and the URGENT level of the public `post`, the
    silent tray channel with only IMPORTANT cards, the tray setting's name, `ToastUtils`.
 

@@ -118,7 +118,6 @@ class GraphScopeStabilityTest {
             "calculationSignals",
             "calculationSignalsEmitter",
             "calculationWorkflow",
-            "carbSuggestionActions",
             "clientControlActionDispatcher",
             "clientControlPublisher",
             "clientPairingRepository",

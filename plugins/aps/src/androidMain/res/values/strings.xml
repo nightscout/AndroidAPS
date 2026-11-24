@@ -51,10 +51,6 @@
     <string name="zero_basal_not_set">The pump did not accept the zero temp basal. It may still be giving basal insulin. Check the pump.</string>
     <string name="description_loop">Activate or deactivate the implementation triggering the loop.</string>
     <string name="no_aps_selected">NO APS SELECTED OR PROVIDED RESULT</string>
-    <string name="ignore5m">Ignore 5m</string>
-    <string name="ignore15m">Ignore 15m</string>
-    <string name="ignore30m">Ignore 30m</string>
-    <string name="carbs_suggestion">Carbs Suggestion</string>
     <string name="open_loop_new_suggestion">New suggestion available</string>
     <string name="loop_notification_channel_name">Loop suggestions</string>
     <string name="loop_notification_channel_silent_name">Loop suggestions during Do Not Disturb</string>

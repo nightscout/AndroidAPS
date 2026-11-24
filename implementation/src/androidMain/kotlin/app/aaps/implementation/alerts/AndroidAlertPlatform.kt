@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -14,13 +15,16 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmIntent
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.alerts.Alert
+import app.aaps.core.interfaces.alerts.AlertLifetime
 import app.aaps.core.interfaces.alerts.AlertPlatform
+import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlarms
 import app.aaps.core.interfaces.alerts.NightscoutAnnouncements
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.ui.AndroidActivities
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.androidNotification.AlarmNotificationManager
 import app.aaps.implementation.ui.UiInteractionImpl
 import dev.zacsweers.metro.AppScope
@@ -72,7 +76,9 @@ class AndroidAlertPlatform(
     private val rh: TextResolver,
     // Providers: both reach Android when they are built, which must not happen while the graph is built.
     private val androidActivities: () -> AndroidActivities,
-    private val alarmNotificationManager: () -> AlarmNotificationManager
+    private val alarmNotificationManager: () -> AlarmNotificationManager,
+    // A provider: the alert core takes this class
+    private val alerts: () -> Alerts
 ) : AlertPlatform {
 
     private val mainHandler by lazy { Handler(Looper.getMainLooper()) }
@@ -139,8 +145,38 @@ class AndroidAlertPlatform(
             body = alert.text?.let { rh.gs(it) } ?: "",
             // The sound the core chose: the user's for this kind on this phone, else the alert's own
             sound = sound,
-            ringtoneUri = ringtoneUri
+            ringtoneUri = ringtoneUri,
+            actions = silenceButtons(alert)
         )
+    }
+
+    /**
+     * The silence buttons of a WARNING alert that lasts (decided 2026-11-24): 5, 15 and 30 min, as the loop's carbs
+     * notification had. An EVENT has none: answering it ends it, whatever the length.
+     */
+    private fun silenceButtons(alert: Alert): List<NotificationCompat.Action> {
+        if (alert.severity != AlertSeverity.WARNING || alert.lifetime != AlertLifetime.CONDITION) return emptyList()
+        return Alerts.NOTIFICATION_SILENCE_MINUTES.map { minutes ->
+            val intent = Intent(context, AlertSilenceReceiver::class.java)
+                .setAction(AlertSilenceReceiver.actionOf(minutes))
+                .putExtra(AlertSilenceReceiver.EXTRA_SOURCE, alert.source)
+                .putExtra(AlertSilenceReceiver.EXTRA_KEY, alert.key)
+                .putExtra(AlertSilenceReceiver.EXTRA_MINUTES, minutes)
+            NotificationCompat.Action(
+                0,
+                rh.gs(CoreUiStrings.alarm_silence_for, rh.gs(CoreUiStrings.format_mins, minutes)),
+                PendingIntent.getBroadcast(
+                    context, requestCode(alert.source, alert.key), intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            )
+        }
+    }
+
+    /** A silence button of [chime]'s notification was tapped: the alert is silenced, and its notification goes. */
+    fun silenceFromNotification(source: String, key: String, minutes: Int) {
+        aapsLogger.debug(LTag.NOTIFICATION, "Alert $source/$key silenced from its notification for $minutes min")
+        alerts().silence(source, key, minutes)
+        alarmNotificationManager().cancelChime(requestCode(source, key))
     }
 
     override fun snoozed(alert: Alert, until: Long) {

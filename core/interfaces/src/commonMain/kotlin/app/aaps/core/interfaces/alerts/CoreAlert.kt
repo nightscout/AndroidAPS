@@ -54,6 +54,9 @@ enum class CoreAlert(private val idName: String, override val title: TextRef, ov
     /** A value was outside a hard limit and was set to the limit. */
     HARD_LIMIT("hard_limit", InterfacesStrings.alert_kind_hard_limit, isProtected = false),
 
+    /** The loop predicts a low that less insulin cannot prevent: the user has to eat. */
+    CARBS_REQUIRED("carbs_required", InterfacesStrings.alert_kind_carbs_required, isProtected = false),
+
     /**
      * An alarm of a pump driver that has no alert kinds of its own yet and rings through `UiInteraction.runAlarm`.
      * Protected, because the app cannot tell which of those alarms are safe to silence. It goes when the last such
@@ -64,6 +67,9 @@ enum class CoreAlert(private val idName: String, override val title: TextRef, ov
     override val id: String = "${UiInteraction.SOURCE}.$idName"
     override val source: String get() = UiInteraction.SOURCE
     override val origin: AlertOrigin get() = AlertOrigin.APP
+
+    // The loop writes the announcement of carbs required itself, under its own setting
+    override val announced: Boolean get() = this != CARBS_REQUIRED
 
     /** The key of its alert: one alert of a kind at a time. Raised again while it is active, it does not ring again. */
     val key: String get() = idName
