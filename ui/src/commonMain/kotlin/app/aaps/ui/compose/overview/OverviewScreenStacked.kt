@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.overview
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -9,15 +8,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,9 +18,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.layout
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -36,12 +27,10 @@ import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.overview.graph.TbrState
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.compose.main.TempTargetChipState
 import app.aaps.ui.compose.main.VersionOverlay
 import app.aaps.ui.compose.manageSheet.ManageViewModel
@@ -139,7 +128,9 @@ fun OverviewScreenStacked(
                     .heightIn(min = if (onCompactMenuClick != null) VERSION_LINE_MIN_HEIGHT else 0.dp)
             ) {
                 VersionOverlay(modifier = Modifier.align(Alignment.CenterEnd))
-                if (onCompactMenuClick != null) CompactMenuButton(onClick = onCompactMenuClick)
+                if (onCompactMenuClick != null) {
+                    CompactMenuButton(onClick = onCompactMenuClick, modifier = ZeroSizeInLine, iconLift = COMPACT_MENU_ICON_LIFT)
+                }
             }
             ActiveSceneBanner(
                 activeState = activeSceneState,
@@ -254,32 +245,13 @@ fun OverviewScreenStacked(
 private val PINNED_LAYOUT_MIN_HEIGHT = 600.dp
 
 /**
- * The menu button while the top bar is hidden, on the left of the version line. It takes no space in
- * the layout: its touch area reaches down over the empty top left corner of the round BG circle. The
- * icon is moved up so its three lines span the height of the version line.
+ * The menu button on the left of the version line. It takes no space in the line, so the line does not
+ * grow: its touch area reaches down over the empty top left corner of the round BG circle. The icon is
+ * moved up so its three lines span the height of the version line.
  */
-@Composable
-private fun CompactMenuButton(onClick: () -> Unit) {
-    Box(
-        contentAlignment = Alignment.TopStart,
-        modifier = Modifier
-            // No size of its own in the line, so the line does not grow
-            .layout { measurable, _ ->
-                val placeable = measurable.measure(Constraints())
-                layout(0, 0) { placeable.place(0, 0) }
-            }
-            .size(COMPACT_MENU_BUTTON_SIZE)
-            .clip(CircleShape)
-            .clickable(role = Role.Button, onClick = onClick)
-    ) {
-        Icon(
-            imageVector = Icons.Default.Menu,
-            contentDescription = stringResource(CoreUiStrings.open_navigation),
-            modifier = Modifier
-                .padding(start = COMPACT_MENU_ICON_START)
-                .offset(y = -COMPACT_MENU_ICON_LIFT)
-        )
-    }
+private val ZeroSizeInLine = Modifier.layout { measurable, _ ->
+    val placeable = measurable.measure(Constraints())
+    layout(0, 0) { placeable.place(0, 0) }
 }
 
 /** Least height of the version line while the menu button is on it, also in a build that shows no version. */
@@ -290,13 +262,3 @@ private val VERSION_LINE_MIN_HEIGHT = 12.dp
  * version text; lifted more, the top line went under the status bar.
  */
 private val COMPACT_MENU_ICON_LIFT = 2.dp
-
-/**
- * Touch area of the menu button over the corner of the BG circle, the usual size. The icon has its usual
- * size too, the same as in the full bar: its lines fill only the middle of its box, so they stay clear of
- * the ring when the icon sits in the top left of this area.
- */
-private val COMPACT_MENU_BUTTON_SIZE = 48.dp
-
-/** The icon's lines start 3 dp into its box: this puts them 8 dp from the screen edge, in line with the rest. */
-private val COMPACT_MENU_ICON_START = 5.dp

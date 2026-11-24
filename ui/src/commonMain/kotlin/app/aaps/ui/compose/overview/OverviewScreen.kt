@@ -112,7 +112,10 @@ fun OverviewScreen(
      * calculation progress in the BG circle, and the main screen can hide the top bar over it.
      */
     onStackedLayout: (Boolean) -> Unit = {},
-    /** Opens the menu while the top bar is hidden over the one-column layout, null while it shows. */
+    /**
+     * Opens the menu while the top bar is hidden: over the one-column layout, and in preview mode (a phone
+     * in landscape) over the two-column layout too. Null while it shows.
+     */
     onCompactMenuClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
@@ -246,7 +249,8 @@ fun OverviewScreen(
                     formatDuration = formatDuration,
                     eatReminderBanner = eatReminderBanner,
                     overlaidBarsHeight = overlaidBarsHeight,
-                    calcProgress = calcProgress
+                    calcProgress = calcProgress,
+                    onCompactMenuClick = onCompactMenuClick
                 )
             } else {
                 OverviewScreenStacked(

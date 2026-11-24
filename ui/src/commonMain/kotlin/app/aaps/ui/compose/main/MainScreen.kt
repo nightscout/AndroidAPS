@@ -5,8 +5,6 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
@@ -46,7 +44,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalAccessibilityManager
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Dp
@@ -218,7 +217,6 @@ fun MainScreen(
             val previewMode = maxHeight < PREVIEW_MODE_MIN_HEIGHT
             var chromeVisible by remember { mutableStateOf(false) }
             val showChrome = !previewMode || chromeVisible
-            val interactionSource = remember { MutableInteractionSource() }
             val accessibilityManager = LocalAccessibilityManager.current
 
             // Measure actual bar heights for content padding in non-preview mode
@@ -231,10 +229,16 @@ fun MainScreen(
             // height, nothing is drawn over anything. At the start of the app it shows, then hides (a
             // peek), so everyone sees where it is. It stays while a search is open. A tap on the menu
             // button left while it is hidden shows it again too, behind the opening menu.
+            //
+            // In preview mode (a short window, a phone in landscape) the same gestures show and hide all
+            // the bars, which then lie over the content, and the menu button stays in the top left corner.
+            // The content takes every touch: a layer over it that only woke the bars ate the first touch,
+            // so a swipe on the graphs did not scroll them.
             var overviewStacked by remember { mutableStateOf(false) }
             var topBarHidden by remember { mutableStateOf(false) }
             var topBarPeekDone by rememberSaveable { mutableStateOf(false) }
             val searchActive by rememberUpdatedState(searchUiState.isSearchActive)
+            val inPreviewMode by rememberUpdatedState(previewMode)
             LaunchedEffect(overviewStacked) {
                 if (!overviewStacked || topBarPeekDone) return@LaunchedEffect
                 delay(TOP_BAR_PEEK_MS)
@@ -244,28 +248,35 @@ fun MainScreen(
             val topBarScrollConnection = remember {
                 object : NestedScrollConnection {
                     override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
-                        if (!overviewStacked || searchActive) return Offset.Zero
-                        when {
-                            consumed.y < -TOP_BAR_SCROLL_THRESHOLD_PX                                               -> topBarHidden = true
-                            // A push up that the content could not take: only the graphs scroll, and a short
-                            // set of graphs fits without scrolling. The bar must hide then too
-                            source == NestedScrollSource.UserInput && available.y < -TOP_BAR_SCROLL_THRESHOLD_PX -> topBarHidden = true
-                            // A drag down that the content could not take: it is at its top already
-                            source == NestedScrollSource.UserInput && available.y > TOP_BAR_SCROLL_THRESHOLD_PX -> topBarHidden = false
+                        if (searchActive) return Offset.Zero
+                        val userInput = source == NestedScrollSource.UserInput
+                        // A push up that the content took, or one it could not take: only the graphs scroll,
+                        // and a short set of graphs fits without scrolling. The bar must hide then too
+                        val pushUp = consumed.y < -TOP_BAR_SCROLL_THRESHOLD_PX || (userInput && available.y < -TOP_BAR_SCROLL_THRESHOLD_PX)
+                        // A drag down that the content could not take: it is at its top already
+                        val pullDown = userInput && available.y > TOP_BAR_SCROLL_THRESHOLD_PX
+                        if (inPreviewMode) {
+                            if (pushUp) chromeVisible = false else if (pullDown) chromeVisible = true
+                        } else if (overviewStacked) {
+                            if (pushUp) topBarHidden = true else if (pullDown) topBarHidden = false
                         }
                         return Offset.Zero
                     }
                 }
             }
-            val topBarShown = showChrome && !(overviewStacked && topBarHidden && !searchUiState.isSearchActive)
+            // In preview mode the top bar comes and goes with the other bars
+            val topBarShown = if (previewMode) showChrome
+            else showChrome && !(overviewStacked && topBarHidden && !searchUiState.isSearchActive)
 
-            // Auto-hide chrome after timeout, reset when leaving preview mode
-            LaunchedEffect(chromeVisible, previewMode) {
+            // Auto-hide chrome after timeout, reset when leaving preview mode. Not while the menu or a search
+            // is open: the bars shown behind the menu are there when it closes, and the timeout starts then
+            val drawerOpen = drawerState.isOpen
+            LaunchedEffect(chromeVisible, previewMode, drawerOpen, searchUiState.isSearchActive) {
                 if (!previewMode) {
                     chromeVisible = false
                     return@LaunchedEffect
                 }
-                if (chromeVisible) {
+                if (chromeVisible && !drawerOpen && !searchUiState.isSearchActive) {
                     // Honours the system "Time to take action" setting: a screen reader user moving
                     // through the bars needs longer than 3 s before they hide again.
                     delay(accessibilityManager?.calculateRecommendedTimeoutMillis(AUTO_HIDE_DELAY_MS, containsIcons = true, containsControls = true) ?: AUTO_HIDE_DELAY_MS)
@@ -307,7 +318,19 @@ fun MainScreen(
                 val masterOrPairedClient by mainViewModel.masterOrPairedClient.collectAsStateWithLifecycle()
                 // (Probe-while-offline is now global — see ComposeMainActivity. This screen still reads
                 // masterReachable for its own gating.)
-                Box(modifier = Modifier.fillMaxSize().nestedScroll(topBarScrollConnection)) {
+                // In preview mode with the bars hidden, a screen reader user gets them back with an action of the
+                // overview: a scroll gesture is hard to make with one, and the action keeps its name
+                val showControls = stringResource(UiStrings.a11y_show_controls)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .nestedScroll(topBarScrollConnection)
+                        .semantics {
+                            if (previewMode && !chromeVisible) {
+                                customActions = listOf(CustomAccessibilityAction(showControls) { chromeVisible = true; true })
+                            }
+                        }
+                ) {
                     // Main content
                     OverviewScreen(
                         profileName = uiState.profileName,
@@ -373,14 +396,15 @@ fun MainScreen(
                         onStopBolus = onStopBolus,
                         onStackedLayout = { overviewStacked = it },
                         // While the full bar is hidden the menu button stays, in the corner of the BG circle.
-                        // A tap opens the menu and shows the bar again behind it: when the menu closes, search
-                        // and settings are there, which reminds where they live. The menu still takes one tap.
-                        // The bar comes after the menu is open: shown at the tap, it stopped the menu opening.
-                        onCompactMenuClick = if (showChrome && !topBarShown) {
+                        // A tap opens the menu and shows the bar again behind it (in preview mode all the bars):
+                        // when the menu closes, search and settings are there, which reminds where they live.
+                        // The menu still takes one tap. The bar comes after the menu is open: shown at the tap,
+                        // it stopped the menu opening.
+                        onCompactMenuClick = if (!topBarShown) {
                             {
                                 scope.launch {
                                     drawerState.open()
-                                    topBarHidden = false
+                                    if (inPreviewMode) chromeVisible = true else topBarHidden = false
                                     onMenuClick()
                                 }
                             }
@@ -554,22 +578,6 @@ fun MainScreen(
                         QuickLaunchToolbar(
                             items = quickLaunchItems,
                             onActionClick = onQuickLaunchActionClick,
-                        )
-                    }
-
-                    // Tap overlay to restore chrome in preview mode (only when hidden)
-                    if (previewMode && !chromeVisible) {
-                        // Named: the top bar, menu and toolbar come back only through this, and a
-                        // screen reader announced it as a nameless control.
-                        val showControls = stringResource(UiStrings.a11y_show_controls)
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clickable(
-                                    interactionSource = interactionSource,
-                                    indication = null
-                                ) { chromeVisible = true }
-                                .semantics { contentDescription = showControls }
                         )
                     }
                 }
