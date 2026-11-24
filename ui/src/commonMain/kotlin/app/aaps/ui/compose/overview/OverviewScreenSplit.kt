@@ -28,13 +28,13 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.ui.compose.main.TempTargetChipState
 import app.aaps.ui.compose.manageSheet.ManageViewModel
 import app.aaps.ui.compose.overview.aapsClient.AapsClientStatusCard
+import app.aaps.ui.compose.overview.aapsClient.aapsClientStatusTint
 import app.aaps.ui.compose.overview.chips.ChipsViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.compose.overview.graphs.GraphsSection
@@ -192,14 +192,9 @@ fun OverviewScreenSplit(
                     // On a client, the client status card comes before the status lights
                     if (config.AAPSCLIENT) {
                         val nsClientStatus by graphViewModel.nsClientStatusFlow.collectAsStateWithLifecycle()
-                        val flavorTint = when {
-                            config.AAPSCLIENT3 -> AapsTheme.generalColors.flavorClient3Tint
-                            config.AAPSCLIENT2 -> AapsTheme.generalColors.flavorClient2Tint
-                            else               -> AapsTheme.generalColors.flavorClient1Tint
-                        }
                         AapsClientStatusCard(
                             statusData = nsClientStatus,
-                            flavorTint = flavorTint
+                            flavorTint = aapsClientStatusTint()
                         )
                     }
 

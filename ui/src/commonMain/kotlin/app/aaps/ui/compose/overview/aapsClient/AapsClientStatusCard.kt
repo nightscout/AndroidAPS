@@ -33,8 +33,25 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.overview.graph.AapsClientStatusData
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
+import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.core.ui.compose.stringResource
+
+/**
+ * The color behind the header row of [AapsClientStatusCard]. The second and the third client have
+ * a tint, which tells the three clients apart. The first one has none: its row has the plain card
+ * color, as the status lights row below it.
+ */
+@Composable
+fun aapsClientStatusTint(): Color {
+    val config = LocalConfig.current
+    return when {
+        config.AAPSCLIENT3 -> AapsTheme.generalColors.flavorClient3Tint
+        config.AAPSCLIENT2 -> AapsTheme.generalColors.flavorClient2Tint
+        else               -> Color.Transparent
+    }
+}
 
 /**
  * @see AapsClientStatusCardCollapsedPreview
