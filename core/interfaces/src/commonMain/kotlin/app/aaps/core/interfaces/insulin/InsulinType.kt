@@ -15,10 +15,16 @@ enum class InsulinType(val value: Int, val insulinEndTime: Long, val insulinPeak
     OREF_FREE_PEAK(4, 8 * 3600 * 1000, 50 * 60000, InterfacesStrings.free_peak_oref, InterfacesStrings.insulin_peak_time),
     OREF_LYUMJEV(5, 8 * 3600 * 1000, 45 * 60000, InterfacesStrings.lyumjev, InterfacesStrings.lyumjev);
 
-    val iCfg: ICfg
-        get() = ICfg(this.name, insulinEndTime, insulinPeakTime, 1.0)
+    /** The peak in minutes, as `ICfg.peak` gives it. */
+    val peakMinutes: Int
+        get() = (insulinPeakTime / 60000).toInt()
 
-    /** Provide iCfg with a default friendly name on insulin creation from template */
+    /**
+     * The template as an insulin, with its translated name.
+     *
+     * There is no variant without [rh] on purpose. One that took the enum name as the label existed, and the
+     * Nightscout fallback stamped records with it, so users saw "OREF_RAPID_ACTING" as their insulin (#5625).
+     */
     fun getICfg(rh: TextResolver): ICfg = ICfg(rh.gs(this.label), insulinEndTime, insulinPeakTime, 1.0)
 
     companion object {

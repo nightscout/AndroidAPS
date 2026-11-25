@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_calibration_name">Ingen kalibrering</string>
+    <string name="description_no_calibration">"Ingen kalibrering anvendes. Sensorværdierne bruges, som de er. Brug dette, når sensoren allerede er fabrikskalibreret og præcis."</string>
+    <string name="linear_calibration_name">Lineær kalibrering</string>
+    <string name="description_linear_calibration">"Lineær kalibrering pr. sensor (hældning og forskydning), beregnet ud fra dine fingerprik-målinger. Nye målinger vægtes højere. Kalibreringen anvendes efter start af den aktuelle sensorsession; de første 2 timer springes over som opvarmning."</string>
+    <string name="sensor_change_detected_text">Muligt sensorskift registreret %1$s. Marker som ny sensor?</string>
+    <string name="sensor_change_detected_action">Marker sensorskift</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Registrer et sensorskift for at aktivere kalibrering.</string>
+    <string name="cal_status_warmup">Sensoropvarmning — kalibrering aktiv efter %1$s.</string>
+    <string name="cal_status_need_more_entries">Der skal være mindst 2 fingerprik-målinger (lige nu %1$d).</string>
+    <string name="cal_status_unsafe_fit">Tilpasning uden for sikkert område — kalibrering ikke anvendt.</string>
+    <string name="cal_status_applied">Kalibrering anvendt.</string>
+    <string name="cal_status_applied_offset_only">Kun forskydning anvendt — sensorområdet er for smalt til hældning.</string>
+    <string name="cal_status_applied_slope_clamped">Kalibrering anvendt — hældningen er begrænset til sikkert område. Tilføj flere målinger for at løsne grænsen.</string>
+    <string name="cal_slope_offset">Hældning %1$.2f, korrektion midt i området %2$s</string>
+    <string name="cal_session_started">Session startet: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Registrer sensorskift</string>
+    <string name="cal_add_calibration">Tilføj kalibrering</string>
+    <string name="cal_entries_header">Fingerprik-målinger (%1$d)</string>
+    <string name="cal_no_entries">Ingen fingerprik-målinger endnu.</string>
+    <string name="cal_entry_pair">Fingerprik %1$s → sensor %2$s (Δ %3$s)</string>
+    <string name="cal_chart_entry_readout">Måling %1$d/%2$d · %3$s · sensor %4$s → BS %5$s</string>
 </resources>

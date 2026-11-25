@@ -50,17 +50,15 @@ window). The only place this is reliably computable is at **draw time**, via
 ### Applied to every axis-range case in `SecondaryGraphCompose`
 
 All of the following now compute their min/max from the windowed (visible-only) data via two
-shared helpers, `windowedY` and `windowedPrimaryY`, falling back to the full unwindowed data
+shared helper, `windowedValues` (`SecondaryGraphCompose.kt`), falling back to the full unwindowed data
 only when the visible window currently contains no points (e.g. scrolled into a future gap):
 
-- IOB/BAS combo (`primaryYMax`)
 - Dual-axis zero-alignment (`dualAxisRanges`)
 - Single-axis auto-range (`primaryAutoRange`)
 - COB-alone nice scale (`primaryCobScale`)
 - Zero-floor series alone: BGI/DEVIATIONS/ACTIVITY/STEPS (`primaryZeroFloorScale`)
 - Free-range series alone: VAR_SENSITIVITY/HEART_RATE (`primaryFreeRangeScale`)
 - Pivot-centered series alone: SENSITIVITY/DEV_SLOPE (`primaryPivotScale`)
-- Basal overlay range (`basalMaxY`)
 
 `BgGraphCompose`'s own axis is windowed the same way, but sourced differently — see
 Bug Fix #1.
@@ -98,19 +96,13 @@ as the data: an IOB of 2.9 U got an axis up to 4 U, and up to 5 U with a hair of
 view. The requested tick counts are gone with that.
 
 The placer's `labelMin` / `labelMax` keep labels off a part of the axis the series does not
-reach. Two situations:
-1. IOB/BAS: the axis goes on above the real IOB data, to leave room above IOB (see below);
-   labels must stop at the real data max.
-2. Dual-axis combos where the zero-floor side's axis is pushed below its own real floor purely
-   to align its zero with the other side's pivot — labels must stop at its own real floor
-   instead of showing a fake negative tick for a series that can never go negative.
+reach: in dual-axis combos the zero-floor side's axis is pushed below its own real floor purely
+to align its zero with the other side's pivot, and labels must stop at its own real floor instead
+of showing a fake negative tick for a series that can never go negative.
 
-**IOB/BAS layout.** IOB and the bolus markers fill the lower 75% of the height
-(`IOB_HEIGHT_FRACTION`); basal hangs down from the top over 50% (`BASAL_HEIGHT_FRACTION`). The two
-overlap between 50% and 75%. They meet there only when a high temp basal runs with a high IOB;
-the loop sets a low or zero temp most of the time, and basal then stays at the top. Before, the
-two did not overlap, and IOB had only the lower half. The free top quarter holds the label of a
-bolus given at the IOB peak.
+(There used to be a fixed IOB/BAS graph, with IOB in the lower 75% and basal hanging down from the
+top. It is gone: basal is on the BG graph now, see section 5, and IOB is an ordinary series of a
+graph below BG.)
 
 ---
 
@@ -147,10 +139,11 @@ directions (which one is primary vs. secondary), neither curve loses its real ma
 ## 4. The insulin activity overlay
 
 The yellow insulin-activity curve is the one curve that is never the primary series of a graph.
-It is always drawn on top of another series — BG on the main graph, IOB on the IOB/BAS graph —
-and its own axis is never shown. Vico only has a start and an end vertical axis, and on both of
-those graphs they are already taken, so the activity curve cannot have a range of its own: its
-points must be converted into the host axis' units before they reach the model.
+On the BG graph it is drawn on top of BG and its own axis is never shown. Vico only has a start and
+an end vertical axis, so the activity curve cannot have a range of its own there: its points must
+be converted into the BG axis' units before they reach the model. (On a graph below BG, Activity is
+an ordinary series with its own axis. It used to be an overlay of the fixed IOB/BAS graph too; that
+graph is gone, and an old config with that overlay on gets a graph of IOB and Activity instead.)
 
 That conversion was the one scale left out of the visible-window work above. It used to be:
 
@@ -197,56 +190,51 @@ axis already leaves on each side of the anchor, and the curve is fitted inside i
 deliberate constraint: the BG and IOB scales are what the user actually reads, and an overlay with
 no axis of its own must not move them.
 
-### The two anchors
+### The anchor
 
-| | BG graph | IOB/BAS graph |
-|---|---|---|
-| zero anchor | the **low mark** | IOB zero |
-| room above | `bgNice.max - lowMark` | `primaryDataNiceRange.max` (the IOB top, below the free top quarter) |
-| room below | `lowMark - bgNice.min` | IOB's own negative sliver, usually none |
-
-On the IOB/BAS graph this is the ordinary vertical zero alignment — activity zero on IOB zero.
-
-The IOB room comes from `primaryDataNiceRange`, the windowed nice range of the primary layer, and
-not from the IOB+basal axis itself. That axis only exists when basal is drawn (single-axis IOB),
-so reading the room from it would make the overlay disappear with no other symptom if IOB were
-ever paired with a second series on its own axis. Today `GraphsSection` always builds the IOB
-graph from `listOf(SeriesType.IOB)` alone, so the paired case is unreachable — but it is one
-config change away, and a silently missing curve is the wrong failure. In the paired case the real
-axis is the zero-aligned dual-axis range, which always contains this nice range (no clipping is a
-property of `fractionAlignedNiceRange`), so the curve is sized a little conservatively and still
-sits in frame with its zero on the axis' zero.
+| | BG graph |
+|---|---|
+| zero anchor | the **low mark** |
+| room above | `bgNice.max - lowMark` |
+| room below | `lowMark - bgNice.min` |
 
 On the BG graph the anchor is the low mark rather than the axis floor, because the low mark is the
-bottom edge of the green in-range belt: a horizontal reference the eye already uses, with the band
+LOW band: a horizontal reference the eye already uses, with the room
 between it and the axis floor left over for the rare negative excursion, which then reads as "below
 the green".
 
-### Where the negative tail is clipped
+### The negative tail
 
-The BG axis floor is `dataMin` rounded down to the bound grid (about a tenth of the range), and
-`dataMin` is itself floored at the low mark. While the visible window holds no BG below the low
-mark, the floor therefore lands on the low mark or just under it, and there is little or no room:
-
-| lowMark | highMark | BG axis | room below lowMark |
-|---|---|---|---|
-| 72 (default) | 180 | 70..180 | 2 mg/dL (1.8%) |
-| **70** | **180** | **70..180** | **0** |
-| 75 | 180 | 70..180 | 5 (4.5%) |
-| **80** | **180** | **80..180** | **0** |
-| **90** | **140** | **90..140** | **0** |
-| **100** | any | **100..** | **0** |
-| 3.9 mmol | 10.0 | 3.5..10.0 | 0.4 (6.2%) |
-| **4.0 mmol** | **10.0** | **4.0..10.0** | **0** |
-| **5.0 mmol** | **9.0** | **5.0..9.0** | **0** |
-
-So the negative tail is clipped at the axis floor in most setups, and the positive side
-deliberately keeps its full scale — it is not shrunk to compensate. The alternative would be to
-move the BG scale, which is exactly what the rule above forbids. (With the coarser rounding the BG
-axis used before, most setups left 10–25% of the height under the low mark.)
+The BG axis starts at 0 (see section 5). The room below the low mark goes down to the top of the
+basal, `lowMark × (1 − BASAL_TOP_OF_LOW_MARK)`, so a negative activity tail stops above the basal
+instead of being drawn over it. (Before the axis went back to 0, its floor sat on or just
+under the low mark in most setups, and the tail was clipped there.)
 
 `ActivityGraphData.maxActivity` (a `max(|activity|)` over the whole loaded day, computed in
 `PrepareGraphDataRunner`) was the only input to the old formulas and was removed with them.
+
+---
+
+## 5. Basal and treatments on the BG graph
+
+The BG graph shows what AAPS 3 showed under the curve, so no graph below BG is needed by default:
+
+- **The BG axis starts at 0.** The top is still windowed (`niceScale(0.0, dataMax)`).
+- **Basal** is drawn in BG units: 0 U/h at BG 0, and the highest basal of the visible window
+  (`basalWindowMax`, `GraphUtils.kt`) at `BASAL_TOP_OF_LOW_MARK` (0.6) of the low mark, so it stays
+  under the LOW band. It is the first layer, so a low reading is drawn over it. The step
+  series reach the right edge of the axis (`processStepPoints`).
+- **Manual boluses and carbs** are markers on the curve (`TreatmentMarkers.kt`). A bolus has its
+  amount above it, carbs below. A label that would not fit inside the graph is left out.
+- **SMBs** are small triangles standing on the bottom edge, as on the zero line of the old IOB
+  graph, sized against the largest SMB, with no label. On the curve, one every few minutes hid the
+  readings.
+- **COB failover** is a thin bar in the carbs colour along the bottom of the treatment belt, one
+  segment per stretch (`cobFailoverStretches`). On the bottom edge of BG it covered the SMBs.
+
+The default BG height is 200 dp (`DEFAULT_BG_GRAPH_HEIGHT_DP`), because the axis from 0 needs the
+room. The stored graph config has a version: version 2 moved a BG height still at the old default
+of 100 to 200, version 3 turned the fixed IOB graph into the first graph below BG.
 
 ---
 
@@ -269,12 +257,13 @@ rebuilt mid-gesture.
 A related, smaller instance of the same class of bug: attaching a `VisibleRangeReporter`
 decoration directly to BG's own chart (to window its own axis) was also found to disturb its
 gesture handling, even though decorations are normally passive draw-time overlays. Fix: BG does
-not observe its own visible window at all — it sources it from the fixed IOB graph's own
-(already debounced) visible range instead, since IOB's scroll/zoom is synced to BG's anyway
-(`GraphsSection.kt`, `iobVisibleRange` → `iobVisibleRangeSettled`, debounced an additional 400ms
-specifically before feeding BG — secondary graphs are non-interactive and tolerate the shorter
-30ms debounce fine, but updating BG's axis geometry on every ~80ms tick during an active gesture
-kept changing its Y-axis label width mid-gesture and broke pinch-zoom).
+not observe its own visible window at all — it sources it from the treatment belt's visible range
+instead. The belt is always shown and its scroll/zoom is synced to BG's anyway
+(`GraphsSection.kt`, `beltVisibleRange` → `beltVisibleRangeSettled`, debounced an additional 400ms
+specifically before feeding BG — the other graphs are non-interactive and tolerate the shorter
+debounce fine, but updating BG's axis geometry on every ~80ms tick during an active gesture
+kept changing its Y-axis label width mid-gesture and broke pinch-zoom). It used to come from the
+fixed IOB graph, which is gone; with no graph below BG at all there would have been no source.
 
 ### 2. BG viewport snapped to the wrong zoom/scroll after an auto-reset
 

@@ -263,8 +263,10 @@ class PersistentNotificationPlugin(
                         1 // max fraction digits
                     )
                 } else {
+                    // Rounded half-even, as the text of the same notification (bgStatusChipText). toInt() cut
+                    // the decimals off, and 121.8 showed as 121 next to "122" (#5639)
                     FixedInt(
-                        fromMgdlToUnits.toInt(),
+                        round(fromMgdlToUnits).toInt(),
                         null // unit
                     )
                 }

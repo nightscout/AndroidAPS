@@ -34,8 +34,8 @@ dependencies {
     testImplementation(libs.org.robolectric)
     testRuntimeOnly(libs.org.junit.vintage.engine)
 
-    implementation(libs.androidx.ui.tooling.preview)
-    debugImplementation(libs.androidx.ui.tooling)
+    implementation(libs.jetbrains.compose.ui.tooling.preview)
+    debugImplementation(libs.jetbrains.compose.ui.tooling)
     implementation(libs.com.github.bumptech.glide.compose)
     implementation(libs.com.google.code.gson)
 

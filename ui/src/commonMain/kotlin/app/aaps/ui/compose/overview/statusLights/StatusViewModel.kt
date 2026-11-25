@@ -211,9 +211,17 @@ class StatusViewModel(
             // The same when the pump has not told it yet.
             profileFunction.getProfile()?.let { activePlugin.activePump.reservoirLevel.value?.iU(it.insulinConcentration()) } ?: 0.0
         }
+        // A patch pump measures its reservoir only up to maxReading, so above it the value is shown as "50+".
+        // AAPSClient cannot know the master's pump: there the master sends its limit as the reservoir, with a
+        // display override that marks it (PumpStatusProviderImpl).
+        val aboveMeasuringRange: Double? = when {
+            config.AAPSCLIENT                           -> reservoirLevel.takeIf { processedDeviceStatusData.pumpData?.reservoirDisplayOverride?.isNotEmpty() == true }
+            isPatchPump && reservoirLevel >= maxReading -> maxReading
+            else                                        -> null
+        }
         val level: String? = if (reservoirLevel > 0) {
-            if (!config.AAPSCLIENT && isPatchPump && reservoirLevel >= maxReading) {
-                rh.gs(CoreUiStrings.value_with_unit, decimalFormatter.to0Decimal(maxReading) + "+", rh.gs(CoreUiStrings.insulin_unit_shortname))
+            if (aboveMeasuringRange != null) {
+                rh.gs(CoreUiStrings.value_with_unit, decimalFormatter.to0Decimal(aboveMeasuringRange) + "+", rh.gs(CoreUiStrings.insulin_unit_shortname))
             } else {
                 rh.gs(CoreUiStrings.value_with_unit, decimalFormatter.to0Decimal(reservoirLevel), rh.gs(CoreUiStrings.insulin_unit_shortname))
             }

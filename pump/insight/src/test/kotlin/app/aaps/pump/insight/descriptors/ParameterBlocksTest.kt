@@ -42,7 +42,7 @@ class ParameterBlocksTest {
     @Test
     fun everyBlockExceptTheProfileOnesCanBeAskedForItsDataStraightAway() {
         val needFillingIn = ParameterBlocks.entries.filter { e ->
-            runCatching { e.type.getDeclaredConstructor().newInstance()!!.data }.isFailure
+            runCatching { e.type.getDeclaredConstructor().newInstance().data }.isFailure
         }.map { it.name }
 
         assertThat(needFillingIn).containsExactly(

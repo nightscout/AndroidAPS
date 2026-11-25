@@ -1,19 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Naredba se izvršava upravo sada</string>
+    <string name="smb_being_delivered">Isporuka SMB-a u tijeku. Pokušajte ponovno kada završi.</string>
     <string name="basal_value_below_minimum">Bazalna vrijednost ispod minimuma. Profil nije postavljen!</string>
+    <string name="concentration_change_failed_title">Promjena inzulina nije uspjela</string>
+    <string name="concentration_change_failed">Novi inzulin je u pumpi, ali AAPS nije mogao upisati profil u pumpu. Pumpa daje pogrešnu količinu inzulina. Odmah odspojite ili skinite pumpu, provjerite GUK i, ako je potrebno, dajte inzulin na drugi način. Pumpu ponovno spojite tek kada profil bude upisan.</string>
+    <string name="concentration_change_pending">Profil s novim inzulinom još nije upisan u pumpu. Inzulin se ne može dati dok se profil ne upiše.</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Bazalni profil u pumpi je ažuriran. Pumpa zaokružuje bazal na vlastiti korak: daje %1$s dnevno umjesto %2$s.</string>
+    <string name="basal_reported_far_from_profile">Pumpa javlja bazal koji jako odstupa od profila. AAPS zadržava bazal iz profila. Provjerite bazalne stope u pumpi.</string>
     <!--       Stats -->
+    <string name="carbs_short" comment="max 6 characters">UH</string>
     <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">Zadnja veza: prije %1$d min</string>
+    <string name="short_status_last_bolus">Zadnji bolus: %1$sJ @ %2$s</string>
+    <string name="short_status_temp_basal">Privremeni bazal: %1$s</string>
+    <string name="short_status_battery">Baterija: %1$d%%</string>
+    <string name="short_status_not_initialized">Pumpa nije inicijalizirana</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">Optimizacija baterije</string>
+    <string name="permission_battery_description">Aplikaciju je potrebno izuzeti iz optimizacije baterije kako bi pouzdano radila u pozadini</string>
+    <string name="permission_directory_title">AAPS mapa</string>
+    <string name="permission_directory_description">Odaberite mapu za postavke aplikacije i datoteke dnevnika</string>
+    <string name="permission_notifications_title">Obavijesti</string>
+    <string name="permission_notifications_description">Potrebno za prikaz upozorenja, alarma i ažuriranja statusa pumpe</string>
+    <string name="permission_schedule_exact_alarm_title">Alarmi i podsjetnici</string>
+    <string name="permission_schedule_exact_alarm_description">Potrebno kako bi alarmi mogli uključiti zaslon dok AAPS radi u pozadini i kako bi se podsjetnici oglasili na vrijeme</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">AAPS alarmi</string>
+    <string name="alarm_channel_standard">Standardni alarm</string>
+    <string name="alarm_channel_bolus_error">Greška bolusa</string>
+    <string name="alarm_channel_error">Opća pogreška</string>
+    <string name="alarm_channel_urgent">Hitni alarm</string>
+    <string name="alarm_channel_eat_reminder">Vrijeme za jelo</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (zaobilazi način rada „Ne ometaj“)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (poštuje način rada „Ne ometaj“)</string>
+    <string name="alarm_channel_silent_urgent">Hitni alarm (postupno pojačavanje glasnoće)</string>
+    <string name="alarm_channel_silent">Alarm (postupno pojačavanje glasnoće)</string>
+    <string name="alarm_channel_silent_description">Koristi se kada je uključena opcija „Postupno pojačavaj glasnoću obavijesti“. Zvuk se reproducira na zaslonu alarma.</string>
+    <string name="ongoing_channel_name">Trenutačni status</string>
+    <string name="eat_reminder_channel">Odbrojavanje podsjetnika za jelo</string>
+    <string name="eat_reminder_channel_description">Prikazuje preostalo vrijeme do jela. Ne oglašava se zvukom; zvuk daje alarm na kraju.</string>
+    <string name="notifications_channel_name">AAPS obavijesti</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0J (%2$.1f\u00a0µl)</string>
+    <string name="insulin_concentration">J%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Postavke su uspješno izvezene u pohranu u oblaku</string>
+    <string name="export_to_cloud_failed">Izvoz u pohranu u oblaku nije uspio</string>
+    <string name="csv_uploaded_to_cloud">CSV korisničkih unosa uspješno je prenesen u pohranu u oblaku</string>
+    <string name="exported">Postavke izvezene</string>
+    <string name="exported_failed">Izvoz postavki nije uspio!</string>
     <string name="filenotfound">Datoteka nije pronađena</string>
+    <string name="ue_exported">Korisnički unosi izvezeni</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">izvezeno prije %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">izvezeno u %1$s</string>
-    <string name="exported_less_than_hour_ago">izvezeno prije manje od sat vremena</string>
+    <string name="exported_less_than_hour_ago">izvezeno prije manje od sata</string>
     <string name="metadata_warning_different_flavour">Postavke su stvorene s drugom varijantom AAPS-a (%1$s) dok vi imate: %2$s.\n\nNeke postavke možda nedostaju ili su nevažeće - nakon uvoza provjerite i ažurirajte svoje postavke.</string>
     <string name="metadata_warning_different_device">Postavke su stvorene na drugom uređaju. U redu je ako uvozite sa starijeg/drugog telefona, ali provjerite jesu li uvezene postavke točne!</string>
-    <string name="metadata_warning_old_export">Uvezene postavke stare su već %1$s dana! Možda imate ažurnije postavke ili ste odabrali pogrešnu datoteku? Ne zaboravite redovito izvoziti postavke!</string>
+    <string name="metadata_warning_old_export">Uvezene postavke stare su već %1$s dana! Možda imate novije postavke ili ste odabrali pogrešnu datoteku? Ne zaboravite redovito izvoziti postavke!</string>
     <string name="metadata_warning_date_format">Nevažeći format datuma i vremena!</string>
     <string name="metadata_warning_different_version">Postavke iz različite manje verzije aplikacije. U redu je ako uvozite nakon nadogradnje, ali nakon uvoza provjerite jesu li postavke još uvijek točne!</string>
     <string name="metadata_urgent_different_version">Postavke iz različitih glavnih verzija aplikacije. Glavne verzije se značajno razlikuju i mogu imati nekompatibilne postavke! Provjerite jesu li postavke još uvijek točne nakon uvoza!</string>
@@ -28,4 +78,37 @@
     <string name="prefdecrypt_issue_wrong_pass">Pogreška dešifriranja, navedena lozinka je nevažeća ili je datoteka postavki izmijenjena! Može se dogoditi da je uvezena datoteka izvezena s drugom glavnom lozinkom.</string>
     <string name="prefdecrypt_issue_wrong_format">Nedostaje konfiguracija enkripcije, format postavki nije valjan!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritam šifriranja nije podržan ili nije naveden!</string>
+    <string name="metadata_label_format">Format datoteke</string>
+    <string name="metadata_label_created_at">Stvoreno</string>
+    <string name="metadata_label_aaps_version">Verzija AAPS-a</string>
+    <string name="metadata_label_aaps_flavour">Varijanta builda</string>
+    <string name="metadata_label_device_name">Ime pacijenta na uređaju koji je izvezao</string>
+    <string name="metadata_label_device_model">Model uređaja koji je izvezao</string>
+    <string name="metadata_label_encryption">Šifriranje datoteke</string>
+    <string name="metadata_format_new">Novi šifrirani format</string>
+    <string name="metadata_format_other">Nepoznat format izvoza</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Pogreška pri pristupu datotečnom sustavu. Ispravno odaberite AAPS mapu.</string>
+    <string name="storage_google_drive">Google disk</string>
+    <string name="backup_to_google_drive">Sigurnosna kopija na Google disk</string>
+    <string name="csv_upload_failed">Prijenos CSV-a korisničkih unosa u pohranu u oblaku nije uspio</string>
+    <string name="csv_upload_error">Došlo je do pogreške prilikom prijenosa CSV datoteke u oblak</string>
+    <string name="uploading_to_cloud">Prijenos u oblak...</string>
+    <string name="cloud_directory_path">Mapa u oblaku: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Nije moguće osvježiti pristupni token za Google disk</string>
+    <string name="google_drive_token_refresh_error">Nije moguće osvježiti pristupni token za Google disk: %1$s</string>
+    <string name="google_drive_connection_test_failed">Test veze s Google diskom nije uspio</string>
+    <string name="google_drive_connect_error">Nije moguće povezati se s Google diskom: %1$s</string>
+    <string name="google_drive_list_folders_failed">Nije uspjelo dohvaćanje popisa mapa na Google disku</string>
+    <string name="google_drive_list_folders_error">Pogreška pri dohvaćanju popisa mapa: %1$s</string>
+    <string name="google_drive_upload_no_id">Prijenos je uspio, ali ID nije vraćen</string>
+    <string name="google_drive_upload_verify_failed">Provjera prijenosa nije uspjela</string>
+    <string name="google_drive_upload_failed">Prijenos nije uspio: %1$s</string>
+    <string name="google_drive_upload_error">Pogreška pri prijenosu datoteke: %1$s</string>
+    <string name="google_drive_folder_access_error">Nije moguće stvoriti odredišnu mapu ili joj pristupiti: %1$s</string>
+    <string name="google_drive_list_settings_failed">Dohvaćanje popisa datoteka postavki nije uspjelo</string>
+    <string name="google_drive_list_settings_error">Pogreška pri dohvaćanju popisa datoteka postavki: %1$s</string>
+    <string name="google_drive_download_failed">Preuzimanje datoteke nije uspjelo</string>
+    <string name="google_drive_download_error">Pogreška pri preuzimanju datoteke: %1$s</string>
+    <string name="google_drive_authorized">Google disk autoriziran</string>
+    <string name="google_drive_reauth_required">Molimo izbrišite postavke i ponovno autorizirajte Google disk</string>
 </resources>

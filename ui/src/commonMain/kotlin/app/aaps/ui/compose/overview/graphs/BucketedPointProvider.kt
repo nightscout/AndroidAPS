@@ -34,7 +34,9 @@ class BucketedPointProvider(
             fill = Fill(color),
             shape = CircleShape
         ),
-        size = 6.dp
+        // The strongest marks on the graph with the boluses and carbs, bigger than the 3 dp predictions;
+        // small enough that 5-minute readings still read as a curve, not a bead chain
+        size = 5.dp
     )
 
     override fun getPoint(

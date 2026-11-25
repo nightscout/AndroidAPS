@@ -81,14 +81,27 @@ class InsulinConfigMigration33Test {
     }
 
     @Test
-    fun `a row with a DIA but no peak gets the sentinel`() {
+    fun `a row with a DIA but no peak keeps the DIA and marks only the peak missing`() {
         createV32Tables()
         insertProfileSwitch(label = RAPID, endTime = DIA_6H, peak = 0)
 
         migrate32to33()
 
-        // All three together or none: half a curve computes an IOB that looks plausible and is not.
-        assertThat(insulinColumnsOf(TABLE_PROFILE_SWITCHES)).isEqualTo(SENTINEL)
+        // The DIA cannot be rebuilt later, the peak can. The row is still not an insulin (ICfg.isUsable is false
+        // with a peak of -1), so no IOB is computed from half a curve before MainApp fills the peak.
+        assertThat(insulinColumnsOf(TABLE_PROFILE_SWITCHES)).isEqualTo(Insulin("", DIA_6H, -1, 1.0))
+    }
+
+    @Test
+    fun `an effective profile switch a 3x client got from Nightscout keeps its DIA`() {
+        createV32Tables()
+        // Exactly what a 3.x AAPSClient stored: ProfileSealed.Pure built the insulin as ICfg("", dia, 0). It used
+        // to become the sentinel, so the client lost the 5 h the master dosed with and got a guess (#5625).
+        insertEffectiveProfileSwitch(label = "", endTime = DIA_5H, peak = 0)
+
+        migrate32to33()
+
+        assertThat(insulinColumnsOf(TABLE_EFFECTIVE_PROFILE_SWITCHES)).isEqualTo(Insulin("", DIA_5H, -1, 1.0))
     }
 
     @Test

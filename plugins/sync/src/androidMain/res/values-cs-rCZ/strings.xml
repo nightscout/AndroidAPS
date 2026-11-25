@@ -3,7 +3,6 @@
     <!-- AAPSClient -->
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Nastavení připojení</string>
-    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="description_ns_client_v3">Synchronizuje vaše data s Nightscoutem pomocí v3 API</string>
     <string name="blocked_by_charging">Zablokováno možností nabíjení</string>
     <string name="blocked_by_connectivity">Zablokováno možností připojení</string>
@@ -116,7 +115,7 @@
     <string name="status_label">Stav:</string>
     <string name="clear_log">Vymazat log</string>
     <string name="full_sync">Plná synchronizace</string>
-    <string name="full_sync_comment">Úplná synchronizace? Může to trvat mnoho hodin a dokud neskončíte, nová data v NS neuvidíte.</string>
+    <string name="full_sync_comment">Úplná synchronizace? Může to trvat mnoho hodin a dokud neskončí, neuvidíte v NS nová data.</string>
     <string name="ns_sync_options">Synchronizace</string>
     <string name="ns_alarm_options">Nastavení alarmů</string>
     <string name="ns_remote_control_options">Vzdálené ovládání</string>

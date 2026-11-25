@@ -14,5 +14,4 @@ import platform.Foundation.localTimeZone
  */
 actual fun systemUtcOffsetAt(timestamp: Long): Long =
     NSTimeZone.localTimeZone
-        .secondsFromGMTForDate(NSDate.dateWithTimeIntervalSince1970(timestamp / 1000.0))
-        .toLong() * 1000L
+        .secondsFromGMTForDate(NSDate.dateWithTimeIntervalSince1970(timestamp / 1000.0)) * 1000L

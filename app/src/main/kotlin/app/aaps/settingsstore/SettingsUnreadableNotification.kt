@@ -13,8 +13,9 @@ import app.aaps.implementation.R as ImplementationR
 /**
  * The notification that says AAPS is not running because its settings cannot be opened.
  *
- * It cannot be swiped away: with the app closed, it is the only sign that the loop is not running. It goes
- * through the channel of the app's other urgent notifications, and opens [SettingsUnreadableActivity].
+ * Marked ongoing: with the app closed, it is the only sign that the loop is not running. On Android 14 and
+ * newer the user can still swipe it away, which is fine, because then it was seen. It goes through the
+ * channel of the app's other urgent notifications, and opens [SettingsUnreadableActivity].
  */
 object SettingsUnreadableNotification {
 

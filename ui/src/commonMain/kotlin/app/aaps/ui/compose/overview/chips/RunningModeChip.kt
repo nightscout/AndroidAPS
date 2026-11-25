@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -73,9 +72,13 @@ fun RunningModeChip(
     enabled: Boolean = true,
     onClick: () -> Unit = {}
 ) {
-    val isTemporary = mode?.mustBeTemporary() == true
     val iconColor = mode?.toColor() ?: MaterialTheme.colorScheme.onSurfaceVariant
-    val containerColor = if (isTemporary) iconColor.copy(alpha = 0.2f) else Color.Transparent
+    // A suspended or disconnected pump is a problem and gets a fill. Another temporary mode (super
+    // bolus) only its icon. A mode with an end gets a shade for the time passed, over the fill too, see chipShade
+    val isProblem = mode == RM.Mode.DISCONNECTED_PUMP || mode == RM.Mode.SUSPENDED_BY_PUMP ||
+        mode == RM.Mode.SUSPENDED_BY_USER || mode == RM.Mode.SUSPENDED_BY_DST
+    val containerColor = if (isProblem) iconColor.copy(alpha = CHIP_PROBLEM_FILL_ALPHA) else Color.Transparent
+
     val haptic = LocalHapticFeedback.current
 
     // Disable the clickable Surface's 48dp minimum interactive size so this content-width chip
@@ -94,6 +97,7 @@ fun RunningModeChip(
                 modifier = Modifier
                     .width(IntrinsicSize.Max)
                     .fillMaxHeight()
+                    .chipShade(progress)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -131,30 +135,6 @@ fun RunningModeChip(
                     }
                     if (sceneManaged) {
                         SceneBadge(modifier = Modifier.padding(start = AapsSpacing.small))
-                    }
-                }
-                // Progress bar overlaid at the bottom (out of flow) so the Row above stays vertically
-                // centered — consistent with the other chips. Manual track/fill instead of
-                // LinearProgressIndicator: the indicator's large (~240dp) intrinsic width would drive
-                // this chip's IntrinsicSize.Max width to full width. Empty Boxes add no intrinsic width.
-                if (progress > 0f) {
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .fillMaxWidth()
-                            .height(AapsSpacing.chipProgressHeight)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(iconColor.copy(alpha = 0.3f))
-                        )
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth(progress)
-                                .height(AapsSpacing.chipProgressHeight)
-                                .background(iconColor)
-                        )
                     }
                 }
             }

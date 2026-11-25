@@ -21,41 +21,6 @@ repositories {
     google()
 }
 
-// `--exclude=ios-testflight-*`, because such a tag names one past iOS submission rather than this
-// build. `git describe` takes the nearest annotated tag whatever the distance, so a single TestFlight
-// tag made every later build announce itself as "ios-testflight-20260906-085036-44-g45d9d88" - in the
-// About dialog and in every log line. All four shells exclude it, iOS included: 53 commits past that
-// submission, calling yourself by its name is wrong there too.
-fun generateGitBuild(): String {
-    try {
-        val processBuilder = ProcessBuilder("git", "describe", "--always", "--abbrev=7", "--exclude=ios-testflight-*")
-        val output = File.createTempFile("git-build", "")
-        processBuilder.redirectOutput(output)
-        val process = processBuilder.start()
-        // The exit code decides, not the text. git run outside a work tree exits non-zero with
-        // empty output, and reading that as an answer silently reported no commit at all.
-        if (process.waitFor() != 0) return "NoGitSystemAvailable"
-        return output.readText().trim().ifEmpty { "NoGitSystemAvailable" }
-    } catch (_: Exception) {
-        return "NoGitSystemAvailable"
-    }
-}
-
-fun generateGitRemote(): String {
-    try {
-        val processBuilder = ProcessBuilder("git", "remote", "get-url", "origin")
-        val output = File.createTempFile("git-remote", "")
-        processBuilder.redirectOutput(output)
-        val process = processBuilder.start()
-        // The exit code decides, not the text. git run outside a work tree exits non-zero with
-        // empty output, and reading that as an answer silently reported no remote at all.
-        if (process.waitFor() != 0) return "NoGitSystemAvailable"
-        return output.readText().trim().ifEmpty { "NoGitSystemAvailable" }
-    } catch (_: Exception) {
-        return "NoGitSystemAvailable"
-    }
-}
-
 fun generateDate(): String {
     val stringBuilder: StringBuilder = StringBuilder()
     // showing only date prevents app to rebuild everytime
@@ -65,36 +30,10 @@ fun generateDate(): String {
 
 fun isMaster(): Boolean = !Versions.appVersion.contains("-")
 
-fun gitAvailable(): Boolean {
-    try {
-        val processBuilder = ProcessBuilder("git", "--version")
-        val output = File.createTempFile("git-version", "")
-        processBuilder.redirectOutput(output)
-        val process = processBuilder.start()
-        process.waitFor()
-        return output.readText().isNotEmpty()
-    } catch (_: Exception) {
-        return false
-    }
-}
-
-fun allCommitted(): Boolean {
-    try {
-        val processBuilder = ProcessBuilder("git", "status", "-s")
-        val output = File.createTempFile("git-comited", "")
-        processBuilder.redirectOutput(output)
-        val process = processBuilder.start()
-        // An ignored failure here was the worse one: empty output read as a clean tree, so a
-        // build could claim its sources matched the commit it names. Empty output with a zero
-        // exit really is clean, so only the exit code can tell the two apart.
-        if (process.waitFor() != 0) return false
-        return output.readText().replace(Regex("""(?m)^\s*(M|A|D|\?\?)\s*.*?\.idea\/codeStyles\/.*?\s*$"""), "")
-            // ignore all files added to project dir but not staged/known to GIT
-            .replace(Regex("""(?m)^\s*(\?\?)\s*.*?\s*$"""), "").trim().isEmpty()
-    } catch (_: Exception) {
-        return false
-    }
-}
+// The git facts come from buildSrc `Git.kt`, shared with the other shells. Read once each, because
+// every read starts git.
+val gitBuild = providers.gitDescribe()
+val gitAllCommitted = providers.gitAllCommitted()
 
 
 /**
@@ -128,10 +67,10 @@ android {
         targetSdk = Versions.targetSdk
 
         buildConfigField("String", "VERSION", "\"$version\"")
-        buildConfigField("String", "BUILDVERSION", "\"${generateGitBuild()}-${generateDate()}\"")
-        buildConfigField("String", "REMOTE", "\"${generateGitRemote()}\"")
-        buildConfigField("String", "HEAD", "\"${generateGitBuild()}\"")
-        buildConfigField("String", "COMMITTED", "\"${allCommitted()}\"")
+        buildConfigField("String", "BUILDVERSION", "\"$gitBuild-${generateDate()}\"")
+        buildConfigField("String", "REMOTE", "\"${providers.gitRemoteUrl()}\"")
+        buildConfigField("String", "HEAD", "\"$gitBuild\"")
+        buildConfigField("String", "COMMITTED", "\"$gitAllCommitted\"")
 
         // Runner for instrumentation tests in this module.
         testInstrumentationRunner = "app.aaps.runners.AapsTestRunner"
@@ -304,12 +243,13 @@ dependencies {
 
 println("-------------------")
 println("isMaster: ${isMaster()}")
-println("gitAvailable: ${gitAvailable()}")
-println("allCommitted: ${allCommitted()}")
+val gitAvailable = providers.gitAvailable()
+println("gitAvailable: $gitAvailable")
+println("allCommitted: $gitAllCommitted")
 println("-------------------")
-if (!gitAvailable()) {
+if (!gitAvailable) {
     throw GradleException("GIT system is not available. On Windows try to run Android Studio as an Administrator. Check if GIT is installed and Studio have permissions to use it")
 }
-if (isMaster() && !allCommitted()) {
+if (isMaster() && !gitAllCommitted) {
     throw GradleException("There are uncommitted changes. Clone sources again as described in wiki and do not allow gradle update")
 }

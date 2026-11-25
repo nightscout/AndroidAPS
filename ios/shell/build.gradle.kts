@@ -124,54 +124,11 @@ tasks.matching { it.name.startsWith("linkDebugFramework") }.configureEach { depe
 fun buildStamp(): String = gitHead() + "-" + SimpleDateFormat("yyyy.MM.dd").format(Date())
 
 /**
- * Runs a git command and returns its trimmed output, or null if the command did not succeed.
- *
- * The exit code is what decides, not the output. git that is installed but has nothing to say -
- * run outside a work tree, or asked for an `origin` that is not configured - exits non-zero with
- * an empty stdout, and reading that as an answer gave an empty commit and an empty `status` that
- * looked like a clean tree.
- *
- * Empty output with a zero exit is still an answer, and a real one: that is exactly what
- * `git status -s` prints for a clean tree. So the two cases have to be told apart here rather than
- * by looking at the text, which is the trap this used to fall into.
+ * The short commit, the same shape `:app` puts in BuildConfig.HEAD. From buildSrc `Git.kt`, shared
+ * with the other shells, so it excludes the `ios-testflight-*` tags too: such a tag names one past
+ * submission, not this build.
  */
-fun git(vararg args: String): String? = try {
-    val out = File.createTempFile("git-ios", "")
-    val process = ProcessBuilder(listOf("git") + args).redirectOutput(out).start()
-    if (process.waitFor() == 0) out.readText().trim() else null
-} catch (_: Exception) {
-    null
-}
-
-/**
- * The short commit, the same shape `:app` puts in BuildConfig.HEAD.
- *
- * `--exclude=ios-testflight-*` for the same reason as in `:app`. It is tempting to keep these on
- * the iOS side, since the tag was made by this platform's own release - but the tag names one past
- * submission, not this build. `git describe` reports the nearest one whatever the distance, so a
- * build 53 commits later still called itself "ios-testflight-20260906-085036-53-g4dddae0", which
- * reads as that TestFlight build and is not.
- */
-fun gitHead(): String = git("describe", "--always", "--abbrev=7", "--exclude=ios-testflight-*")?.ifEmpty { null } ?: "NoGitSystemAvailable"
-
-/** Where this was cloned from, so a crash report can say whether it came from a fork. */
-fun gitRemoteUrl(): String = git("remote", "get-url", "origin")?.ifEmpty { null } ?: "NoGitSystemAvailable"
-
-/**
- * Whether the working tree was clean, by the same rule `:app` uses.
- *
- * Untracked files do not count - a clone usually has some, and treating them as changes would mark
- * every build dirty and make the flag say nothing. Returns false when git cannot be reached, so an
- * unknown answer never reads as "clean".
- */
-fun allCommitted(): Boolean {
-    val status = git("status", "-s") ?: return false
-    return status
-        .replace(Regex("""(?m)^\s*(M|A|D|\?\?)\s*.*?\.idea/codeStyles/.*?\s*$"""), "")
-        .replace(Regex("""(?m)^\s*(\?\?)\s*.*?\s*$"""), "")
-        .trim()
-        .isEmpty()
-}
+fun gitHead(): String = providers.gitDescribe()
 
 /** The version this build reports, from the same constant the Android app uses. */
 val generateIosBuildInfo = tasks.register<GenerateBuildInfoTask>("generateIosBuildInfo") {
@@ -182,8 +139,8 @@ val generateIosBuildInfo = tasks.register<GenerateBuildInfoTask>("generateIosBui
     // So a crash report names the commit, the repository and whether the tree was clean - the three
     // things that tell an upstream report from a fork's. Android has sent these since 2019.
     head.set(gitHead())
-    gitRemote.set(gitRemoteUrl())
-    committed.set(allCommitted())
+    gitRemote.set(providers.gitRemoteUrl())
+    committed.set(providers.gitAllCommitted())
     outputDir.set(layout.buildDirectory.dir("generated/buildInfo"))
 }
 

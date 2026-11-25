@@ -3,7 +3,7 @@
     <!-- Medtronic (MDT) - Base -->
     <string name="description_pump_medtronic">Интеграция с помпой Medtronic требует устройства RileyLink и специфическую модель помпы</string>
     <!-- MDT Configuration -->
-    <string name="medtronic_serial_number">Серийный номер помы</string>
+    <string name="medtronic_serial_number">Серийный номер помпы</string>
     <string name="medtronic_pump_type">Тип помпы</string>
     <string name="medtronic_pump_frequency">Частота помпы</string>
     <string name="medtronic_pump_bolus_delay">Задержка перед подачей болюса (сек)</string>
@@ -11,6 +11,7 @@
     <string name="medtronic_pump_max_basal">Макс. базал на помпе (ед/ч)</string>
     <string name="medtronic_custom_action_wake_and_tune">Пробуждение и настройка</string>
     <string name="medtronic_custom_action_clear_bolus_block">Очистить блок болюса</string>
+    <string name="medtronic_custom_action_reset_rileylink">Сбросить RileyLink</string>
     <string name="medtronic_pump_battery_select">Тип батареи (по мощности)</string>
     <string name="medtronic_pump_battery_no">Не выбрано (Простой вид)</string>
     <string name="medtronic_pump_battery_alkaline">Щелочная (Подробный вид)</string>
@@ -18,12 +19,19 @@
     <string name="medtronic_pump_battery_nizn">NiZn (Подробный вид)</string>
     <string name="medtronic_pump_battery_nimh">Никель-металлогидридная (подробно)</string>
     <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">Другое (не поддерживается)</string>
     <string name="medtronic_pump_type_512">512</string>
     <string name="medtronic_pump_type_712">712</string>
     <string name="medtronic_pump_type_515">515</string>
     <string name="medtronic_pump_type_715">715</string>
     <string name="medtronic_pump_type_522">522</string>
     <string name="medtronic_pump_type_722">722</string>
+    <string name="medtronic_pump_type_523_24a">523 (Fw 2.4A или ниже)</string>
+    <string name="medtronic_pump_type_723_24a">723 (Fw 2.4A или ниже)</string>
+    <string name="medtronic_pump_type_554_eu">554 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_eu">754 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_554_ca">554 (CA Fw. &lt;= 2.7A)</string>
+    <string name="medtronic_pump_type_754_ca">754 (CA Fw. &lt;= 2.7A)</string>
     <!-- Bolus delay entries -->
     <string name="medtronic_bolus_delay_5s">5 сек</string>
     <string name="medtronic_bolus_delay_10s">10 сек</string>

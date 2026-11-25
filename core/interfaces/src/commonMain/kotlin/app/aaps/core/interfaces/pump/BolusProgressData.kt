@@ -72,7 +72,9 @@ class BolusProgressData(
     private val startLock = AtomicInt(0)
 
     private inline fun <T> startLocked(block: () -> T): T {
-        while (!startLock.compareAndSet(0, 1)) Unit
+        while (!startLock.compareAndSet(0, 1)) {
+            // spin until the other thread has finished its start
+        }
         try {
             return block()
         } finally {

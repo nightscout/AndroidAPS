@@ -1,21 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Ordre executant-se ara mateix</string>
+    <string name="smb_being_delivered">Ara mateix s\'està lliurant un SMB. Torneu-ho a provar quan hagi acabat.</string>
     <string name="basal_value_below_minimum">Valor de basal per sota del mínim. Perfil no definit!</string>
+    <string name="concentration_change_failed_title">Error en el canvi d\'insulina</string>
+    <string name="concentration_change_failed">La nova insulina és a la bomba, però AAPS no hi ha pogut escriure el perfil. La bomba està lliurant una quantitat d\'insulina incorrecta. Desconnecteu o retireu la bomba ara, comproveu la glucèmia i, si cal, administreu insulina d\'una altra manera. Torneu a connectar la bomba només quan s\'hagi escrit el perfil.</string>
+    <string name="concentration_change_pending">El perfil amb la nova insulina encara no s\'ha escrit a la bomba. No es pot lliurar insulina fins que s\'escrigui.</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Perfil basal de la bomba actualitzat. La bomba arrodoneix la basal al seu propi pas: lliura %1$s per dia en lloc de %2$s.</string>
+    <string name="basal_reported_far_from_profile">La bomba informa d\'una basal molt diferent de la del perfil. AAPS manté la basal del perfil. Comproveu les taxes basals a la bomba.</string>
     <!--       Stats -->
+    <string name="carbs_short" comment="max 6 characters">Carbs</string>
     <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">ÚltConn: fa %1$d min</string>
+    <string name="short_status_last_bolus">ÚltBolus: %1$sU @ %2$s</string>
+    <string name="short_status_temp_basal">Temp: %1$s</string>
+    <string name="short_status_battery">Bat: %1$d%%</string>
+    <string name="short_status_not_initialized">Bomba no iniciada</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">Optimització de la bateria</string>
+    <string name="permission_battery_description">Cal excloure l\'aplicació de l\'optimització de la bateria perquè funcioni de manera fiable en segon pla</string>
+    <string name="permission_directory_title">Directori AAPS</string>
+    <string name="permission_directory_description">Seleccioneu un directori per a la configuració de l\'aplicació i els fitxers de registre</string>
+    <string name="permission_notifications_title">Notificacions</string>
+    <string name="permission_notifications_description">Cal per mostrar alertes, alarmes i actualitzacions de l\'estat de la bomba</string>
+    <string name="permission_schedule_exact_alarm_title">Alarmes i recordatoris</string>
+    <string name="permission_schedule_exact_alarm_description">Cal perquè les alarmes puguin encendre la pantalla mentre AAPS és en segon pla, i perquè els recordatoris sonin a l\'hora</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">Alarmes AAPS</string>
+    <string name="alarm_channel_standard">Alarma estàndard</string>
+    <string name="alarm_channel_bolus_error">Error de bolus</string>
+    <string name="alarm_channel_error">Error general</string>
+    <string name="alarm_channel_urgent">Alarma urgent</string>
+    <string name="alarm_channel_eat_reminder">Hora de menjar</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (ignora No molestis)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (respecta No molestis)</string>
+    <string name="alarm_channel_silent_urgent">Alarma urgent (mode de volum progressiu)</string>
+    <string name="alarm_channel_silent">Alarma (mode de volum progressiu)</string>
+    <string name="alarm_channel_silent_description">S\'utilitza quan \'Augmentar gradualment el volum dels avisos\' està activat. La pantalla d\'alarma reprodueix el so.</string>
+    <string name="ongoing_channel_name">Estat en curs</string>
+    <string name="eat_reminder_channel">Compte enrere del recordatori per menjar</string>
+    <string name="eat_reminder_channel_description">Mostra el temps que falta fins que sigui hora de menjar. No fa cap so; l\'alarma del final sí que en fa.</string>
+    <string name="notifications_channel_name">Avisos AAPS</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Configuració exportada correctament a l\'emmagatzematge al núvol</string>
+    <string name="export_to_cloud_failed">Error en exportar a l\'emmagatzematge al núvol</string>
+    <string name="csv_uploaded_to_cloud">CSV d\'entrades d\'usuari enviat correctament a l\'emmagatzematge al núvol</string>
     <string name="exported">Configuració exportada</string>
+    <string name="exported_failed">Error en exportar la configuració!</string>
     <string name="filenotfound">Arxiu no trobat</string>
     <string name="ue_exported">Entrades d\'usuari exportades</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportat fa %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exportat a les %1$s</string>
     <string name="exported_less_than_hour_ago">exportat fa menys d\'una hora</string>
     <string name="metadata_warning_different_flavour">La configuració va ser creada amb una altra versió d\'AAPS (%1$s) i ara teniu la: %2$s.\n\nAlguns dels valors poden faltar o no ser vàlids - si us plau, comproveu la configuració després d\'importar.</string>
     <string name="metadata_warning_different_device">La configuració va ser creada en un altre dispositiu. No hi ha problema si esteu important des d\'un telèfon més antic/diferent però comproveu que la configuració importada és correcta!</string>
-    <string name="metadata_warning_old_export">La configuració importada és de fa %1$s dies! Potser teniu una configuració més recent o heu escollit el fitxer incorrecte? Recordeu exportar la configuració regularment!</string>
+    <string name="metadata_warning_old_export">La configuració importada ja té %1$s dies! Potser teniu una configuració més actual o heu triat un fitxer equivocat? Recordeu exportar la configuració regularment!</string>
     <string name="metadata_warning_date_format">Format de data-hora incorrecte!</string>
     <string name="metadata_warning_different_version">Configuració d\'una versió menor diferent. Cap problema si esteu important després d\'una actualització, però comproveu després d\'importar que la configuració encara sigui correcta!</string>
     <string name="metadata_urgent_different_version">Configuració d\'una versió major diferent. Les versions majors poden tenir grans diferències i tenir configuracions incompatibles! Comproveu després d\'importar que la configuració encara sigui correcta!</string>
@@ -30,6 +78,7 @@
     <string name="prefdecrypt_issue_wrong_pass">Error de desencriptació, la clau proporcionada no és vàlida o l\'arxiu de configuració ha estat alterat! Pot donar-se si l\'arxiu importat va ser exportat amb una clau mestra diferent.</string>
     <string name="prefdecrypt_issue_wrong_format">Falta la configuració per encriptar, el format de la configuració és incorrecte!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritme d\'encriptació no compatible o no especificat!</string>
+    <string name="metadata_label_format">Format del fitxer</string>
     <string name="metadata_label_created_at">Creat:</string>
     <string name="metadata_label_aaps_version">Versió d\'AAPS</string>
     <string name="metadata_label_aaps_flavour">Variant de compilació</string>
@@ -38,4 +87,28 @@
     <string name="metadata_label_encryption">Encriptació d\'arxius</string>
     <string name="metadata_format_new">Format nou d\'encriptació</string>
     <string name="metadata_format_other">Format d\'exportació desconegut</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Error en accedir al sistema de fitxers. Seleccioneu correctament el directori AAPS.</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">Còpia de seguretat a Google Drive</string>
+    <string name="csv_upload_failed">Error en enviar el CSV d\'entrades d\'usuari a l\'emmagatzematge al núvol</string>
+    <string name="csv_upload_error">S\'ha produït un error en enviar el CSV al núvol</string>
+    <string name="uploading_to_cloud">Enviant al núvol...</string>
+    <string name="cloud_directory_path">Directori al núvol: %1$s</string>
+    <string name="google_drive_token_refresh_failed">No s\'ha pogut actualitzar el testimoni d\'accés de Google Drive</string>
+    <string name="google_drive_token_refresh_error">No s\'ha pogut actualitzar el testimoni d\'accés de Google Drive: %1$s</string>
+    <string name="google_drive_connection_test_failed">La prova de connexió amb Google Drive ha fallat</string>
+    <string name="google_drive_connect_error">No s\'ha pogut connectar a Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">Error en llistar les carpetes de Google Drive</string>
+    <string name="google_drive_list_folders_error">Error en llistar les carpetes: %1$s</string>
+    <string name="google_drive_upload_no_id">L\'enviament s\'ha fet, però no s\'ha retornat cap id</string>
+    <string name="google_drive_upload_verify_failed">Ha fallat la verificació de l\'enviament</string>
+    <string name="google_drive_upload_failed">Error en l\'enviament: %1$s</string>
+    <string name="google_drive_upload_error">Error en enviar el fitxer: %1$s</string>
+    <string name="google_drive_folder_access_error">No es pot crear la carpeta de destinació o accedir-hi: %1$s</string>
+    <string name="google_drive_list_settings_failed">Error en llistar els fitxers de configuració</string>
+    <string name="google_drive_list_settings_error">Error en llistar els fitxers de configuració: %1$s</string>
+    <string name="google_drive_download_failed">Error en descarregar el fitxer</string>
+    <string name="google_drive_download_error">Error en descarregar el fitxer: %1$s</string>
+    <string name="google_drive_authorized">Google Drive autoritzat</string>
+    <string name="google_drive_reauth_required">Esborreu la configuració i torneu a autoritzar Google Drive</string>
 </resources>

@@ -1,13 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">Integració nativa per a les bombes Accu-Chek Combo</string>
+    <string name="combov2_could_not_connect">No s\'ha pogut connectar amb la bomba</string>
+    <string name="combov2_not_paired">No emparellat amb cap bomba</string>
+    <string name="combov2_warning">Avís Combo</string>
+    <string name="combov2_error">Error Combo</string>
+    <string name="combov2_warning_4">Truqueu a l\'assistència per actualitzar</string>
+    <string name="combov2_warning_10">Error de Bluetooth; torneu a emparellar</string>
+    <string name="combov2_error_1">Reservori buit</string>
     <string name="combov2_error_2">Bateria esgotada</string>
     <string name="combov2_error_4">Oclusió</string>
+    <string name="combov2_error_5">Fi del funcionament de la bomba de reserva</string>
     <string name="combov2_error_6">Error mecànic</string>
+    <string name="combov2_error_7">Error electrònic</string>
+    <string name="combov2_error_8">Interrupció d\'alimentació</string>
+    <string name="combov2_error_9">Fi del funcionament de la bomba de préstec</string>
+    <string name="combov2_error_10">Error del reservori</string>
+    <string name="combov2_error_11">Equip d\'infusió no encebat</string>
+    <string name="combov2_extended_bolus_not_supported">El bolus estès no és compatible</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
+    <string name="combov2_pair_with_pump_title">Emparellar amb la bomba</string>
+    <string name="combov2_unpair_pump_title">Desemparellar la bomba</string>
+    <string name="combov2_driver_state_label">Estat del controlador</string>
     <string name="bluetooth_address">Adreça Bluetooth</string>
-    <string name="combov2_suspended">En pausa</string>
+    <string name="combov2_start_pairing">Iniciar emparellament</string>
+    <string name="combov2_pairing_in_progress">Emparellament amb la Combo en curs</string>
+    <string name="combov2_pairing_start_steps">Passos per emparellar la Combo:\n\n
+1. A la bomba, aneu a la configuració de Bluetooth\n
+2. Comproveu si ja hi ha un dispositiu emparellat; si és així, aneu a la pantalla \"Delete device\" de la bomba per eliminar/desemparellar aquest dispositiu\n
+3. Aneu a la pantalla \"Add device\" de la bomba i inicieu l\'emparellament a la bomba\n
+4. Premeu el botó \"Iniciar emparellament\" de sota per iniciar l\'emparellament a AndroidAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Al cap d\'una estona, el nom del telèfon apareix a la pantalla de la bomba; premeu CHECK per confirmar.\n\n
+Quan l\'emparellament s\'hagi completat correctament, confirmeu-lo a la bomba i torneu a la pantalla principal de la bomba prement el botó CHECK dues vegades.\n\n
+Si no s\'estableix connexió al cap de més de ~5 minuts:\n\n
+1. Premeu Enrere o el botó \"Cancel·lar emparellament\"\n
+2. Cancel·leu l\'emparellament a la Combo (premeu alhora els botons UP i MENU per cancel·lar l\'emparellament)\n
+3. Torneu a intentar l\'emparellament</string>
+    <string name="combov2_enter_pin">Introduir PIN</string>
+    <string name="combov2_cancel_pairing">Cancel·lar emparellament</string>
+    <string name="combov2_confirm_cancel_pairing_message">Segur que voleu cancel·lar l\'emparellament?</string>
+    <string name="combov2_confirm_unpair_message">Segur que voleu desemparellar la bomba?</string>
+    <string name="combov2_pin_hint">PIN de 10 dígits</string>
+    <string name="combov2_pairing_finished_successfully">Combo emparellada correctament</string>
+    <string name="combov2_pairing_cancelled">Emparellament amb la Combo cancel·lat per l\'usuari</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">S\'ha esgotat el temps de cerca de la Combo</string>
+    <string name="combov2_pairing_failed_due_to_error">L\'emparellament ha fallat per un error: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">Emparellament interromput per motius desconeguts</string>
+    <string name="combov2_scanning_for_pump">Cercant la bomba</string>
+    <string name="combov2_establishing_bt_connection">Establint connexió Bluetooth (intent núm. %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">Negociant la connexió amb la bomba (handshake)</string>
+    <string name="combov2_pairing_pump_requests_pin">La bomba demana un PIN de 10 dígits</string>
+    <string name="combov2_pairing_finishing">Finalitzant l\'emparellament</string>
+    <string name="combov2_no_connection_for_n_mins">Sense connexió durant %1$d minuts</string>
+    <string name="combov2_less_than_one_minute_ago">Fa menys d\'1 minut</string>
+    <string name="combov2_setting_current_pump_time">Establint l\'hora actual de la bomba</string>
+    <string name="combov2_setting_current_pump_date">Establint la data actual de la bomba</string>
+    <string name="combov2_not_initialized">No inicialitzat</string>
+    <string name="combov2_checking_pump">Comprovant la bomba</string>
+    <string name="combov2_ready">A punt</string>
+    <string name="combov2_suspended">Suspesa</string>
+    <string name="combov2_pump_is_suspended">La bomba està suspesa</string>
+    <string name="combov2_executing_command">Executant ordre</string>
+    <string name="combov2_getting_basal_profile_cmddesc">Obtenint perfil basal</string>
     <string name="combov2_setting_basal_profile_cmddesc">Establint perfil basal</string>
+    <string name="combov2_setting_tbr_cmddesc">Establint TBR del %1$d%% durant %2$d minuts</string>
+    <string name="combov2_cancelling_tbr">Cancel·lant la TBR en curs</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">Obtenint historial de TDD</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">Actualitzant data i hora de la bomba</string>
+    <string name="combov2_updating_pump_status_cmddesc">Actualitzant estat de la bomba</string>
+    <string name="combov2_pairing_pin_failure">El PIN no ha funcionat. Comproveu si hi ha cap error d\'escriptura. Si torna a passar, cancel·leu i torneu a intentar l\'emparellament.</string>
+    <string name="combov2_discovery_duration">Durada de la cerca (en segons)</string>
+    <string name="combov2_verbose_logging">Activar registre detallat de la Combo</string>
+    <string name="combov2_getting_basal_profile">Obtenint perfil basal; %1$d factor(s) llegit(s)</string>
+    <string name="combov2_setting_basal_profile">Establint perfil basal; %1$d factor(s) escrit(s)</string>
+    <string name="combov2_delivering_bolus">Lliurant bolus (%1$.1f de %2$.1f U lliurades)</string>
+    <string name="combov2_cannot_deliver_pump_suspended">No es pot lliurar el tractament - la bomba està suspesa</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">Insulina insuficient al reservori</string>
     <string name="combov2_bolus_cancelled">Bolus cancel·lat</string>
-    <string name="combov2_bolus_delivery_failed">Error en lliurar bolus. Sembla que no s\'ha lliurat cap bolus. Per estar segurs, comproveu-ho a la bomba, i així evitareu un possible bolus doble. Per raons de seguretat, els bolus no es reintenten automàticament.</string>
+    <string name="combov2_bolus_delivery_failed">Error en lliurar el bolus. Sembla que no s\'ha lliurat cap bolus. Per estar segurs, comproveu la bomba per evitar un bolus doble i després torneu a fer el bolus. Per protegir-vos d\'errors, els bolus no es tornen a intentar automàticament.</string>
+    <string name="combov2_bolus_not_delivered">Bolus no lliurat</string>
+    <string name="combov2_cannot_access_pump_data">No es pot accedir a les dades de la bomba; cal tornar a emparellar la bomba</string>
+    <string name="combov2_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">S\'ha perdut la connexió amb la bomba durant el bolus. Fins aleshores la bomba havia lliurat %1$s, i encara pot lliurar la resta. No torneu a posar un bolus. AAPS llegirà la quantitat real de la bomba a la propera connexió.</string>
+    <string name="combov2_bolus_stopped_history_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">La bomba ha aturat el bolus després de %1$s. Després s\'ha perdut la connexió i AAPS no ha pogut llegir l\'historial de la bomba. AAPS llegirà la quantitat real a la propera connexió. Comproveu la bomba abans del proper bolus.</string>
+    <string name="combov2_bolus_stopped_after_error" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Un error ha aturat el bolus després de %1$s. Comproveu la bomba abans del proper bolus.</string>
+    <string name="combov2_bolus_request_outcome_unknown">S\'ha perdut la connexió amb la bomba mentre AAPS enviava el bolus, així que no se sap si la bomba l\'ha rebut. Comproveu l\'historial de bolus a la bomba abans del proper bolus. AAPS llegirà la quantitat real de la bomba a la propera connexió.</string>
+    <string name="combov2_unknown_bolus_in_history">L\'historial de la bomba té un bolus que AAPS no coneixia. El bolus sol·licitat no s\'ha lliurat, perquè s\'havia calculat sense aquesta insulina. Comproveu l\'historial de bolus a la bomba i l\'IOB a AAPS. Si encara cal un bolus, torneu-lo a calcular.</string>
+    <string name="combov2_bolus_given_other_boluses_found">El bolus s\'ha lliurat, però l\'historial de la bomba també tenia altres bolus que AAPS no coneixia. Ara ja estan registrats. Comproveu l\'IOB abans del proper bolus.</string>
+    <string name="combov2_incorrect_active_basal_profile">Perfil basal actiu incorrecte; el perfil 1 ha de ser l\'actiu, no el perfil %1$d</string>
+    <string name="combov2_unrecognized_alert">Alerta de la Combo no reconeguda</string>
+    <string name="combov2_combo_alert">Alerta de la Combo</string>
     <string name="combov2_current_tbr">%1$d%% (queden %2$d min)</string>
-    <string name="combov2_battery_low_warning">Bateria baixa</string>
+    <string name="combov2_current_tbr_less_than_1min">%1$d%% (queda menys d\'1 min)</string>
+    <string name="combov2_load_tdds_cancelled">Càrrega de TDD cancel·lada</string>
+    <string name="combov2_retrieving_tdds_failed">Error en obtenir les TDD</string>
+    <string name="combov2_battery_empty">Buida</string>
+    <string name="combov2_battery_low">Baixa</string>
+    <string name="combov2_battery_full">Plena</string>
+    <string name="combov2_battery_low_warning">Pila de la bomba baixa</string>
+    <string name="combov2_reservoir_low_warning">Nivell baix del reservori de la bomba</string>
+    <string name="combov2_setting_tbr_succeeded">TBR establerta correctament</string>
+    <string name="combov2_setting_tbr_failed">Error en establir la TBR</string>
+    <string name="combov2_set_emulated_100_tbr">Establir TBR emulada del 100%</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">Deixant acabar la TBR emulada del 100% en curs</string>
+    <string name="combov2_ignoring_redundant_100_tbr">Ignorant la petició redundant de TBR del 100%</string>
+    <string name="combov2_hit_unexpected_tbr_limit">S\'ha trobat un límit inesperat en ajustar la TBR: el percentatge objectiu era %1$d%%, s\'ha arribat a un límit al %2$d%%</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">No es pot establir una TBR absoluta si la taxa basal base és zero</string>
+    <string name="combov2_unpair_pump_summary">Desemparellar AAPS i Android de la bomba Accu-Chek Combo emparellada actualment</string>
+    <string name="combov2_unknown_tbr_detected">S\'ha detectat i aturat una TBR desconeguda; percentatge: %1$d%%; durada restant: %2$s</string>
+    <string name="combov2_connection_error">Error de connexió: %1$s</string>
+    <string name="combov2_short_status_alert">Alerta: %s</string>
+    <string name="combov2_automatic_reservoir_entry">Detectar i registrar automàticament el canvi de reservori d\'insulina</string>
+    <string name="combov2_automatic_battery_entry">Detectar i registrar automàticament el canvi de pila</string>
+    <string name="combov2_timezone_changed">Zona horària canviada</string>
+    <string name="combov2_datetime_changed">Data i/o hora canviades</string>
+    <string name="combov2_dst_started">Ha començat l\'horari d\'estiu (DST)</string>
+    <string name="combov2_dst_ended">Ha acabat l\'horari d\'estiu (DST)</string>
+    <string name="combov2_cannot_connect_pump_error_observed">No es pot connectar amb la bomba perquè la bomba ha informat d\'un error. L\'usuari ha de gestionar l\'error i després esperar 5 minuts o prémer el botó Actualitzar a la pestanya del controlador.</string>
+    <string name="combov2_refresh_pump_status_after_error">Actualitzant l\'estat de la bomba després que la bomba informés d\'un error</string>
+    <string name="combov2_go_back">Tornar enrere</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">No es pot fer l\'emparellament perquè el controlador no està inicialitzat. Normalment passa perquè no s\'han concedit els permisos de Bluetooth necessaris. Torneu enrere, concediu els permisos de Bluetooth i torneu a intentar l\'emparellament.</string>
+    <string name="combov2_bluetooth_disabled">No es pot iniciar el controlador - el Bluetooth està desactivat</string>
+    <string name="combov2_bluetooth_not_supported">El controlador no pot funcionar - aquest dispositiu no és compatible amb Bluetooth</string>
 </resources>

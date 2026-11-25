@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    compileSdk = Versions.compileSdk
+    compileSdk { version = release(Versions.compileSdk) { minorApiLevel = Versions.compileSdkMinor } }
     defaultConfig {
         multiDexEnabled = true
         versionCode = Versions.versionCode

@@ -108,6 +108,16 @@ class BloodGlucoseElementTest {
         assertThat(obj.get("units").asString).isEqualTo("mg/dL")
     }
 
+    /** 11.6 mmol/L is 208.8 mg/dL with the stubbed conversion: rounded 209, as AAPS shows it. Truncated it was 208 (#5639). */
+    @Test
+    fun `an mmol value with decimals is rounded, not cut off`() {
+        val events = listOf(te(timestamp = 1000L, type = TE.Type.FINGER_STICK_BG_VALUE, glucose = 11.6, glucoseUnit = GlucoseUnit.MMOL))
+
+        val result = BloodGlucoseElement.fromCareportalEvents(events, dateUtil, profileUtil)
+
+        assertThat(json(result.single()).get("value").asInt).isEqualTo(209)
+    }
+
     @Test
     fun `non blood-glucose events are filtered out`() {
         val events = listOf(

@@ -25,8 +25,8 @@ dependencies {
     implementation(project(":core:ui"))
 
     implementation(libs.kotlinx.datetime)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.jetbrains.compose.ui.tooling.preview)
+    debugImplementation(libs.jetbrains.compose.ui.tooling)
 
     api(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)

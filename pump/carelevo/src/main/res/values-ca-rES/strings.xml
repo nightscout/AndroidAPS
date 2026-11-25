@@ -1,16 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_description">Integració de bomba per a Carelevo</string>
+    <string name="carelevo_alarm_channel_name">Alarmes Carelevo</string>
+    <string name="carelevo_alarm_channel_description">Notificacions de les alarmes del patch Carelevo</string>
+    <string name="common_btn_ok">OK</string>
+    <string name="carelevo_bluetooth_state_key">Estat Bluetooth</string>
+    <string name="carelevo_serial_number_key">Nr. de sèrie</string>
+    <string name="carelevo_boot_date_time_key">Hora d\'activació</string>
+    <string name="carelevo_expiration_key">Caducitat</string>
+    <string name="carelevo_basal_rate_key">Taxa basal</string>
+    <string name="carelevo_temp_basal_rate_key">Taxa basal temporal</string>
+    <string name="carelevo_insulin_remain_key">Insulina restant</string>
+    <string name="carelevo_running_remain_time">Temps restant del patch</string>
+    <string name="carelevo_total_insulin_key">Insulina total lliurada</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%1$d h %2$d min</string>
+    <string name="common_label_unit_value_minute">%d min</string>
+    <string name="common_label_unit_value_duration_hour">%d h</string>
+    <string name="common_label_unit_value_dose_with_space">%s U</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f U/h</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">Voleu reprendre la infusió?</string>
+    <string name="carelevo_pump_resume_description">La infusió es reprendrà quan premeu Confirmar.</string>
+    <string name="carelevo_pump_stop_duration_title">Establiu el temps de pausa de la infusió.</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 minuts</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 hora</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 hora 30 minuts</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 hores</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 hores 30 minuts</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 hores</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 hores 30 minuts</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 hores</string>
+    <string name="common_unit_value_day_hour_min">%1$d dies %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">Queden %1$d min %2$02d s</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">Guia de la insulina</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">Desactivar patch</string>
+    <string name="carelevo_btn_input_search_patch">Cercar patch</string>
+    <string name="carelevo_btn_retry">Reintentar</string>
+    <string name="carelevo_btn_next">Següent</string>
+    <string name="carelevo_btn_safety_check">Control de seguretat</string>
+    <string name="carelevo_btn_cancel">Cancel·lar</string>
+    <string name="carelevo_btn_confirm">Confirmar</string>
+    <string name="carelevo_btn_research">Tornar a cercar</string>
+    <string name="carelevo_btn_needle_insert_check">Confirmar inserció</string>
+    <string name="carelevo_state_none_value">Cap patch actiu</string>
+    <string name="carelevo_state_disconnected_value">Desconnectat</string>
+    <string name="carelevo_state_connected_value">Connectat</string>
+    <string name="carelevo_overview_connect_btn_label">Activar patch</string>
+    <string name="carelevo_overview_pump_discard_btn_label">Descartar patch</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">Suspendre infusió</string>
+    <string name="carelevo_overview_pump_resume_btn_label">Reprendre infusió</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">Seleccioneu la quantitat omplerta.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Rang: %1$d ~ %2$d U</string>
+    <string name="carelevo_insulin_refill_step1">1. Traieu el paper protector del blíster del patch.</string>
+    <string name="carelevo_insulin_refill_step2">2. Desinfecteu el tap de goma del vial d\'insulina amb un tovalló amb alcohol.</string>
+    <string name="carelevo_insulin_refill_step3">3. Traieu el tap protector de l\'agulla de la xeringa d\'insulina estirant-lo en línia recta.</string>
+    <string name="carelevo_insulin_refill_step5">5. Inseriu la xeringa plena d\'aire al vial d\'insulina i injecteu l\'aire dins del vial.</string>
+    <string name="carelevo_insulin_refill_step7">7. Inseriu l\'agulla de la xeringa en vertical al port d\'emplenament d\'insulina del patch (①) fins que arribi al fons. Estireu l\'èmbol del tot cap amunt i després deixeu-lo anar. Traieu la xeringa del port d\'emplenament.</string>
+    <string name="carelevo_insulin_refill_step8">8. Manteniu la xeringa en vertical i doneu-hi copets suaus al costat per reunir totes les bombolles d\'aire a dalt.</string>
+    <string name="carelevo_insulin_refill_step9">9. Torneu a inserir l\'agulla al vial d\'insulina, empenyeu tot l\'aire dins del vial i després carregueu la quantitat exacta d\'insulina que fareu servir durant la vida del patch.</string>
+    <string name="carelevo_insulin_refill_step10">10. Traieu la xeringa del vial. Si hi ha bombolles d\'aire, manteniu la xeringa en vertical, doneu copets al costat per portar les bombolles a dalt i expulseu tot l\'aire de la xeringa.</string>
+    <string name="carelevo_insulin_refill_step11">11. Alineeu la part superior de l\'èmbol amb la marca de l\'escala per ajustar amb precisió la dosi d\'insulina.</string>
+    <string name="carelevo_insulin_refill_step12">12. Inseriu l\'agulla en vertical al port d\'emplenament d\'insulina del patch (①) fins que arribi al fons i empenyeu l\'èmbol lentament per injectar tota la insulina dins del patch.</string>
+    <string name="carelevo_connect_prepare_title">Patch iniciat</string>
+    <string name="carelevo_connect_patch_title">Connectar patch</string>
+    <string name="carelevo_connect_safety_check_title">Control de seguretat</string>
+    <string name="carelevo_connect_patch_attach_title">Col·locar patch</string>
+    <string name="carelevo_connect_needle_check_title">Inserir agulla</string>
+    <string name="carelevo_patch_buzzer_alarm_title">Alarma d\'informació del patch</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">Avís d\'insulina baixa</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">Avís de temps d\'ús del patch</string>
+    <string name="carelevo_title_fill_insulin">Omplir el patch amb insulina</string>
+    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Ompliu el patch amb insulina (%1$d–%2$d U) tenint en compte el temps d\'ús (fins a 168 hores). Toqueu [Quantitat omplerta] per indicar la insulina que hi heu posat.</string>
+    <string name="carelevo_patch_step_1">PAS 1.</string>
+    <string name="carelevo_patch_step_2">PAS 2.</string>
+    <string name="carelevo_patch_step_3">PAS 3.</string>
+    <string name="carelevo_patch_connect_step_1_title">Treure el tap de l\'agulla</string>
+    <string name="carelevo_patch_connect_step_1_desc">Traieu el patch del blíster i traieu el tap de l\'agulla.</string>
+    <string name="carelevo_patch_connect_step_2_title">Engegar i connectar</string>
+    <string name="carelevo_patch_connect_step_2_desc">Premeu el botó d\'engegada durant més d\'1 segon. Després del bip, toqueu el botó [Cercar patch] de sota.</string>
+    <string name="carelevo_patch_safety_check_start_title">Control de seguretat</string>
+    <string name="carelevo_patch_safety_check_end_title">Control de seguretat completat</string>
+    <string name="carelevo_patch_safety_check_start_desc">El patch s\'ha connectat correctament.\nPremeu el botó [Control de seguretat].</string>
+    <string name="carelevo_patch_safety_check_progress_desc">Control de seguretat en curs.</string>
+    <string name="carelevo_patch_safety_check_end_desc">Control de seguretat completat.\nPremeu el botó Següent.</string>
+    <string name="carelevo_patch_safety_check_desc_warning">Comproveu si s\'ha format una gota d\'insulina a la punta de l\'agulla.</string>
+    <string name="carelevo_patch_safety_check_retry_desc">Si no veieu cap gota d\'insulina, premeu el botó [Reintentar].</string>
+    <string name="carelevo_patch_attach_step1_title">Desinfectar el lloc del patch</string>
+    <string name="carelevo_patch_attach_step1_desc">Netegeu-lo bé amb un tovalló amb alcohol.</string>
+    <string name="carelevo_patch_attach_step2_title">Treure la cinta protectora</string>
+    <string name="carelevo_patch_attach_step2_desc">Traieu el patch del blíster i traieu el tap de l\'agulla.</string>
+    <string name="carelevo_patch_attach_step3_title">Col·locar patch</string>
+    <string name="carelevo_patch_attach_step3_desc">Enganxeu el patch a la pell amb el punt marcat cap amunt.</string>
+    <string name="carelevo_patch_attach_step4_desc">Després d\'enganxar el patch, premeu Següent.</string>
+    <string name="carelevo_patch_needle_insertion_step1_title">Treure el tap de seguretat</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">Gireu el tap de seguretat en la direcció de la fletxa i traieu-lo.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">Inserir agulla</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">Premeu el botó de l\'aplicador fins al fons. Sentireu un bip quan la inserció s\'hagi fet correctament.</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">Manteniu-lo premut durant 10 segons.</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">Intents restants per inserir l\'agulla: %d</string>
+    <string name="carelevo_dialog_patch_discard_message_title">Voleu desactivar el patch i iniciar-ne un de nou?</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">Si premeu el botó [OK], s\'aturarà la insulina.</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">Voleu acabar sense iniciar el lliurament?</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">Si premeu el botó [OK], aquest patch ja no es podrà fer servir.</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">Voleu cancel·lar l\'activació del patch?</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">Si premeu el botó [OK], es descartarà el que heu introduït.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">Si el patch detectat a continuació és el correcte, toqueu el botó Confirmar.</string>
+    <string name="carelevo_dialog_patch_connect_needle_injected">Inserció de l\'agulla completada i retirada de l\'aplicador</string>
+    <string name="carelevo_dialog_connect_detached">Aplicador retirat</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">Premeu les pestanyes dels dos costats de l\'aplicador per separar-lo del patch\ni després premeu el botó `Aplicador retirat`. Començarà el lliurament d\'insulina.</string>
     <!-- Connection -->
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">El Bluetooth no està activat. Comproveu-ho.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">No hi ha cap patch connectat.</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">El patch encara no està connectat. Torneu-ho a provar d\'aquí a un moment.</string>
+    <string name="carelevo_toast_msg_scan_failed">La cerca ha fallat. Torneu-ho a provar.</string>
+    <string name="carelevo_toast_msg_patch_not_found">No s\'ha trobat cap patch. Torneu-ho a provar.</string>
+    <string name="carelevo_toast_msg_connect_failed">La connexió amb el patch ha fallat. Torneu-ho a provar.</string>
     <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">El perfil no està establert.</string>
     <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_check_failed">La comprovació de l\'agulla ha fallat.</string>
     <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_failed">No s\'ha pogut descartar el patch. Torneu-ho a provar.</string>
+    <string name="carelevo_discarded_not_reached">No s\'ha pogut contactar amb el patch. S\'ha eliminat d\'AAPS però no s\'ha aturat, i pot ser que encara lliuri insulina. Traieu-vos-el.</string>
     <!-- Basal Delivery -->
+    <string name="carelevo_toast_msg_set_basal_failed">La sol·licitud de lliurament de basal ha fallat. Torneu-ho a provar.</string>
     <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_fail">No s\'ha pogut reprendre el lliurament. Torneu-ho a provar.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">No s\'ha pogut suspendre el lliurament. Torneu-ho a provar.</string>
     <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_failed">El control de seguretat ha fallat.</string>
     <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">Insulina baixa</string>
+    <string name="alarm_feat_title_warning_expired_patch">Patch caducat</string>
+    <string name="alarm_feat_title_warning_low_battery">Bateria baixa</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">Temperatura alta/baixa</string>
+    <string name="alarm_feat_title_warning_not_used_app">Apagada automàtica</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">BLE no connectat</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">Temps de col·locació del patch esgotat</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">Autodiagnòstic fallit</string>
+    <string name="alarm_feat_title_warning_patch_error">Error del patch</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">Oclusió</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">Error d\'inserció de l\'agulla</string>
     <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">Insulina baixa</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase2">Vida útil del patch esgotada</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase1">El patch caducarà aviat</string>
+    <string name="alarm_feat_title_alert_low_battery">Bateria baixa</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">Temperatura alta/baixa</string>
+    <string name="alarm_feat_title_alert_not_used_app">Apagada automàtica</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">BLE no connectat</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">Activació del patch incompleta</string>
+    <string name="alarm_feat_title_alert_resume_infusion">Iniciar insulina</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">Activar el Bluetooth</string>
     <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_low_insulin">Insulina baixa</string>
+    <string name="alarm_feat_title_notice_expired_patch">Avís de temps d\'ús del patch</string>
+    <string name="alarm_feat_title_notice_check_patch">Avís de comprovació del patch</string>
+    <string name="alarm_feat_title_notice_change_time_zone">Canvi de zona horària</string>
+    <string name="alarm_feat_title_notice_check_bg">Comproveu la glucèmia</string>
+    <string name="alarm_feat_title_notice_lgs_started">LGS iniciat</string>
+    <string name="alarm_feat_title_notice_lgs_ended">LGS finalitzat</string>
+    <string name="alarm_feat_title_notice_lgs_error">LGS no disponible</string>
+    <string name="alarm_feat_title_notice_unknown">Error del patch</string>
+    <string name="alarm_feat_desc_unknown">Error inesperat del patch.</string>
     <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">Desactivar patch</string>
+    <string name="alarm_feat_btn_patch_force_discard">Descartar patch</string>
+    <string name="alarm_feat_btn_resume_infusion">Iniciar insulina</string>
     <!-- General Messages -->
+    <string name="alarm_feat_msg_check_patch_connect">Comproveu la connexió del patch.</string>
+    <string name="carelevo_bolus_rejected_exceed_limit" comment="%1$s=bolus the patch can still deliver now, with unit (e.g. 2.80 U)">No es pot lliurar el bolus. Bolus disponible: %1$s</string>
+    <string name="carelevo_bolus_rejected_exceed_limit_none">No es pot lliurar el bolus. No queda prou insulina.</string>
     <!--    notification -->
+    <string name="alarm_notification_desc_warning_low_insulin">Queden menys de 10 U d\'insulina; el lliurament d\'insulina s\'ha aturat. Toqueu el botó [Desactivar patch] i canvieu el patch ara.</string>
+    <string name="alarm_notification_desc_warning_expired_patch">Patch caducat; el lliurament d\'insulina s\'ha aturat. Toqueu el botó [Desactivar patch] i canvieu el patch ara.</string>
+    <string name="alarm_notification_desc_warning_low_battery">Bateria baixa; el lliurament d\'insulina s\'ha aturat. Toqueu el botó [Descartar patch] i canvieu el patch ara.</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">El lliurament d\'insulina s\'ha aturat. Aneu ara a un lloc amb una temperatura adequada (40℉–99℉).</string>
+    <string name="alarm_notification_desc_warning_not_used_app">El lliurament d\'insulina s\'ha aturat. Toqueu el botó [Iniciar insulina] i reinicieu el lliurament de basal.</string>
+    <string name="alarm_notification_desc_warning_incomplete_patch_setting">S\'ha esgotat el temps per col·locar el patch. Toqueu el botó [Desactivar patch] i canvieu el patch ara.</string>
+    <string name="alarm_notification_desc_warning_failed_safety_check">L\'autodiagnòstic ha fallat. Toqueu el botó [Desactivar patch] i canvieu el patch ara.</string>
+    <string name="alarm_notification_desc_warning_patch_error">El lliurament d\'insulina s\'ha aturat per un error inesperat. Toqueu el botó [Desactivar patch] i canvieu el patch ara.</string>
+    <string name="alarm_notification_desc_warning_infusion_clogged">El lliurament d\'insulina s\'ha aturat per una oclusió. Toqueu el botó [Desactivar patch] i canvieu el patch ara.</string>
+    <string name="alarm_notification_desc_warning_needle_injection_error">No s\'ha pogut inserir l\'agulla. Toqueu el botó [Desactivar patch] i canvieu el patch ara.</string>
+    <string name="alarm_notification_desc_alert_low_insulin">Queden menys de %s U d\'insulina. Prepareu-vos per canviar el patch.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase2">Patch caducat. Canvieu el patch ara.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase1">El patch caducarà aviat. Canvieu el patch ara.</string>
+    <string name="alarm_notification_desc_alert_low_battery">La bateria és baixa. Prepareu-vos per canviar el patch.</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">El lliurament d\'insulina s\'ha pausat per una temperatura extrema. Aneu a un lloc entre 40℉ i 99℉ per reprendre\'l.</string>
+    <string name="alarm_notification_desc_alert_not_used_app">Toqueu [OK]. Si l\'ignoreu, passarà a ser una alarma crítica i el lliurament d\'insulina s\'aturarà.</string>
+    <string name="alarm_notification_desc_alert_incomplete_patch_setting">Toqueu el botó [OK] per completar l\'activació del patch.</string>
+    <string name="alarm_notification_desc_alert_resume_infusion">La pausa d\'insulina ha acabat. Toqueu [Iniciar insulina] per iniciar-la.</string>
+    <string name="alarm_notification_desc_alert_off_bluetooth">Cal el Bluetooth per fer servir el patch. Toqueu [OK] i activeu el Bluetooth.</string>
+    <string name="alarm_notification_desc_notice_low_insulin">Queden menys de %s U d\'insulina. Prepareu-vos per canviar el patch.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">El temps d\'ús del patch és de %1$s dies %2$s hores. Tingueu-ho en compte durant l\'ús.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">La zona horària ha canviat de %1$s (UTC %2$s) a %3$s (UTC %4$s).</string>
+    <string name="alarm_notification_desc_notice_check_bg">Han passat %s des del bolus. Comproveu la glucèmia.</string>
+    <string name="alarm_notification_desc_notice_lgs_started">LGS iniciat.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS finalitzat per desconnexió del patch o del CGM.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS finalitzat per una pausa de l\'LGS.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_time_over">LGS finalitzat perquè ha passat el temps programat.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">LGS finalitzat perquè s\'ha desactivat l\'LGS.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">LGS finalitzat perquè el valor del CGM ha superat el llindar establert.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS finalitzat per un motiu desconegut.</string>
+    <string name="alarm_notification_desc_notice_lgs_error">Comproveu la connexió del patch i del CGM.</string>
+    <string name="carelevo_profile_update_skip_comment">Omès: actualització massa aviat.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">El patch no ha confirmat l\'aturada. S\'espera que acabi el bolus…</string>
+    <string name="carelevo_bolus_rejected_missed_bolus_recorded">S\'ha afegit ara un bolus que no s\'havia registrat. Comproveu l\'IOB i torneu-ho a provar.</string>
+    <string name="carelevo_bolus_outcome_unknown">El patch no ha respost al bolus. Es compta el bolus sencer fins que el patch indiqui quanta insulina ha lliurat.</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">El patch no ha confirmat l\'aturada. Es registra el bolus complet de %1$s.</string>
+    <string name="carelevo_bolus_stopped_by_patch" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The patch stopped the bolus. Given: 0.50 U of 2.00 U">El patch ha aturat el bolus. Lliurat: %1$s de %2$s</string>
 </resources>

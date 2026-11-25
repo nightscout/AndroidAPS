@@ -26,7 +26,7 @@ actual object NumberFormatPlatform {
     actual val SEPARATOR_DOT: Char = '.'
 
     actual val localeSeparator: Char
-        get() = formatter().decimalSeparator?.firstOrNull() ?: SEPARATOR_DOT
+        get() = formatter().decimalSeparator.firstOrNull() ?: SEPARATOR_DOT
 
     actual fun format(format: NumberFormat, value: Double): String = format(format, value, localeSeparator)
 

@@ -3,6 +3,9 @@
     <string name="executing_right_now">Командата се изпълнява в момента</string>
     <string name="smb_being_delivered">В момента се доставя SMB. Опитайте отново, когато приключи.</string>
     <string name="basal_value_below_minimum">Базалните стойности са под минимума. Не е зададен профил!</string>
+    <string name="concentration_change_failed_title">Смяната на инсулина е неуспешна</string>
+    <string name="concentration_change_failed">Новият инсулин е в помпата, но AAPS не успя да запише профила в нея. Помпата доставя грешно количество инсулин. Разкачете или свалете помпата сега, проверете КЗ и при нужда поставете инсулин по друг начин. Свържете помпата отново едва след като профилът е записан.</string>
+    <string name="concentration_change_pending">Профилът с новия инсулин все още не е записан в помпата. Не може да се доставя инсулин, докато профилът не бъде записан.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Базалният профил в помпата е обновен. Помпата закръглява базала до собствената си стъпка: подава %1$s на ден вместо %2$s.</string>
     <string name="basal_reported_far_from_profile">Помпата отчита базал, който е далеч от профила. AAPS запазва базала от профила. Проверете базалните стойности в помпата.</string>
     <!--       Stats -->
@@ -57,10 +60,10 @@
     <string name="ue_exported">Потребителските данни експортирани</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">от преди %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">от %1$s</string>
-    <string name="exported_less_than_hour_ago">от преди по-малко от час</string>
+    <string name="exported_less_than_hour_ago">експортирани преди по-малко от час</string>
     <string name="metadata_warning_different_flavour">Настройките са създадени с различен вариант на AAPS (%1$s) докато Вие сте с: %2$s.\n\nНякои настройки може да липсват или са невалидни! След импортиране, моля, проверете и актуализирайте своите настройки.</string>
     <string name="metadata_warning_different_device">Настройките са създадени на друго устройство. Това е ОК, ако импортирате от по-стар/различен телефон, но се уверете, че тези настройки са правилни!</string>
-    <string name="metadata_warning_old_export">Импортираните настройки са на %1$s дни! Може би имате по-актуални настройки или сте избрали грешен файл? Не забравяйте да експортирате настройки редовно!</string>
+    <string name="metadata_warning_old_export">Импортираните настройки са вече на %1$s дни! Може би имате по-нови настройки или сте избрали грешен файл? Не забравяйте да експортирате настройките редовно!</string>
     <string name="metadata_warning_date_format">Невалиден формат на датата!</string>
     <string name="metadata_warning_different_version">Настройки от различна подверсия на приложението. Това е ОК, ако импортирате след надстройка, но проверете след импорта дали настройките са все още правилни!</string>
     <string name="metadata_urgent_different_version">Настройки от различна главна версия на приложението. Основните версии се различават значително и могат да имат несъвместими настройки! Уверете се, че след импорта настройките са все още правилни!</string>
@@ -87,7 +90,7 @@
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Грешка при достъп до директория. Изберете правилната AAPS директория.</string>
     <string name="storage_google_drive">Google Drive</string>
     <string name="backup_to_google_drive">Архивиране в Google Drive</string>
-    <string name="csv_upload_failed">Неуспешно експортиране в клауда</string>
+    <string name="csv_upload_failed">Неуспешно качване на CSV с потребителските данни в клауда</string>
     <string name="csv_upload_error">Грешка при експорта на CSV в клауда</string>
     <string name="uploading_to_cloud">Качване в клауда...</string>
     <string name="cloud_directory_path">Клауд директория: %1$s</string>

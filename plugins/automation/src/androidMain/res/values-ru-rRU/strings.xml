@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation">Автоматизация</string>
+    <string name="automation_enabled">Включено</string>
+    <string name="automation_read_only">Только чтение</string>
+    <string name="automation_new_rule">Новое правило</string>
+    <string name="automation_empty_desc">Создайте правило, чтобы автоматически выполнять действия по триггерам.</string>
+    <string name="automation_edit_rule">Редактировать правило</string>
+    <string name="automation_discard_title">Сбросить изменения?</string>
+    <string name="automation_discard_message">Правило заполнено не полностью и не может быть сохранено. Сбросить изменения?</string>
+    <string name="automation_discard_confirm">Сбросить</string>
+    <string name="automation_category_time">Время и расписание</string>
+    <string name="automation_category_glucose">Глюкоза и терапия</string>
+    <string name="automation_category_device">Состояние устройства</string>
+    <string name="automation_category_sensors">Сенсоры и связь</string>
+    <string name="automation_category_other">Другое</string>
+    <string name="automation_choose_trigger">Добавить триггер</string>
+    <string name="automation_add_group">Группа</string>
+    <string name="automation_choose_action">Добавить действие</string>
+    <string name="automation_category_targets">Цели</string>
+    <string name="automation_category_profile">Профиль</string>
+    <string name="automation_category_loop">Цикл и инсулин</string>
+    <string name="automation_category_alerts">Оповещения</string>
+    <string name="automation_category_system">Система</string>
+    <string name="automation_category_scenes">Сценарии</string>
+    <string name="action_run_scene">Запустить сценарий</string>
+    <string name="action_run_scene_short">Запустить сценарий: %1$s</string>
+    <string name="action_enable_scene">Включить сценарий</string>
+    <string name="action_enable_scene_short">Включить сценарий: %1$s</string>
+    <string name="action_disable_scene">Отключить сценарий</string>
+    <string name="action_disable_scene_short">Отключить сценарий: %1$s</string>
+    <string name="action_scene_label">Сценарий</string>
+    <string name="trigger_scene_active">Сценарий</string>
+    <string name="trigger_scene_active_compared">Сценарий %1$s</string>
+    <string name="action_scene_not_found">Сценарий не найден</string>
+    <string name="action_scene_disabled">Сценарий отключен</string>
+    <string name="automation_unit_meters">м</string>
+    <string name="automation_unit_bpm">уд/мин</string>
     <string name="automation_missing_task_name">Введите название задачи.</string>
     <string name="automation_missing_trigger">Укажите хотя бы один триггер.</string>
     <string name="automation_missing_action">Укажите хотя бы одно действие.</string>
@@ -48,11 +83,12 @@
     <string name="location_outside">Когда вы вне зоны</string>
     <string name="location_going_in">Когда вы входите в названную зону</string>
     <string name="location_going_out">Когда вы покидаете названную зону</string>
+    <string name="time_range">Диапазон времени</string>
     <string name="timerange_value">Время между %1$s и %2$s</string>
     <string name="add_short">ДОБАВИТЬ</string>
     <string name="temptargetcompared">Врем цель %1$s</string>
     <string name="btdevicecompared">Подключение Bluetooth к устройству %1$s %2$s</string>
-    <string name="btdevice">Соединение с устройством Bluetooth </string>
+    <string name="btdevice">Подключение к устройству Bluetooth</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Автосенс %1$s %2$s %%</string>
     <string name="autosenslabel">Автосенс %</string>
@@ -72,6 +108,8 @@
     <string name="triggerCannulaAgeDesc">Отработанное катетером время %1$s %2$.1f час</string>
     <string name="triggerPodChangeLabel">Активация Pod\'а</string>
     <string name="triggerPodChangeDesc">Pod активирован</string>
+    <string name="triggerUnknownLabel">Неизвестный триггер</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Неизвестный триггер %1$s - никогда не выполняется</string>
     <string name="triggerInsulinAgeLabel">Инсулин проработал</string>
     <string name="triggerInsulinAgeDesc">Время отработанное инсулином %1$s %2$.1f час</string>
     <string name="triggerPumpBatteryAgeLabel">Время отработанное батареей помпы</string>
@@ -94,8 +132,8 @@
     <string name="add_automation">Добавить правило</string>
     <string name="stop_processing">Остановить обработку</string>
     <!--    Reminders-->
-    <string name="time_to_eat">Пора есть!\n Запустите помощник болюса снова для подсчета.</string>
-    <string name="time_to_bolus">Пора дать болюс!\nЗапустите помощник болюса и повторите расчет.</string>
+    <string name="time_to_eat">Пора есть!\nЗапустите мастер болюса и повторите расчет.</string>
+    <string name="time_to_bolus">Пора дать болюс!\nЗапустите мастер болюса и повторите расчет.</string>
     <string name="error_setting_reminder">Ошибка при настройке будущего оповещения</string>
     <!--    Autotune-->
     <string name="autotune_profile_name">Профиль автотюн %1$s</string>
@@ -108,6 +146,7 @@
     <string name="triggerStepsCountLabel">Количество шагов</string>
     <string name="triggerStepsCountDesc">Количество шагов за %1$s минут %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Продолжительность измерения</string>
+    <string name="automation_log_entry" comment="One line of the automation run log. %1$s=time, %2$s=a symbol for success or failure, %3$s=rule name (bold), %4$s=what the action did, %5$s=its result. Example: 21:15 ☺ Night low: Start temp target: 8.0mmol/L@60 min(Automation): OK">%1$s %2$s %3$s: %4$s: %5$s</string>
     <!--    SMB mode-->
     <string name="changeSmbState">Включить/выключить SMB</string>
     <string name="changeSmbTo">Изменить SMB на %1$s</string>
@@ -115,6 +154,17 @@
     <string name="on">ВКЛ</string>
     <string name="off">ВЫКЛ</string>
     <!--    Smoothing-->
+    <string name="change_smoothing">Изменить сглаживание</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">Изменить сглаживание на %1$s</string>
+    <string name="smoothing_label">Сглаживание</string>
+    <string name="precondition_smoothing_not_active_name">Сглаживание не активно</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">Сглаживание %1$s не активно</string>
     <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Выбрать на карте</string>
+    <string name="tap_to_select_location">Нажмите на карту, чтобы выбрать место</string>
+    <string name="selected_coords">Выбрано: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
+    <string name="permission_location_title">Местоположение</string>
+    <string name="permission_location_description">Нужно для триггеров автоматизации по местоположению и для определения сети WiFi</string>
+    <string name="permission_background_location_description">Нужно, чтобы триггеры автоматизации работали, когда приложение работает в фоне</string>
 </resources>

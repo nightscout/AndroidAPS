@@ -190,6 +190,13 @@ private val migration31to32 = object : Migration(31, 32) {
  * `MainApp` still stamps the rows that really have nothing. `concentration` is 1.0 by construction: these
  * records predate concentration entirely, and 1.0 is the identity that leaves historical doses unscaled.
  *
+ * A row with a DIA but no peak keeps its DIA, and only the peak is marked missing with -1. That is how a 3.x
+ * AAPSClient stored every profile switch it got from Nightscout: `ProfileSealed.Pure` built the insulin as
+ * `ICfg("", dia, 0)`. The DIA is the one the master dosed with, and turning the row into the sentinel threw
+ * it away, so the client was later stamped with a guess (#5625). `MainApp.dataMigrations` fills the peak
+ * from the v3 insulin selection before anything reads these rows, and until then `ICfg.isUsable` rejects
+ * them, so no IOB is computed from half a curve.
+ *
  * `boluses` goes through the same expression and in practice always lands on the sentinel: `BS.icfg` is
  * null by default and no v3 code ever assigned it, so those three columns are NULL on every v3 bolus row.
  * The expression is shared anyway - one rule, and it picks a value up if one is ever there.
@@ -199,16 +206,17 @@ private val migration32to33 = object : Migration(32, 33) {
     /**
      * `insulinLabel, insulinEndTime, insulinPeakTime, concentration` read out of the v32 columns.
      *
-     * All three are taken together or none is: a DIA without a peak is not an insulin, and half a curve
-     * would compute an IOB that looks plausible and is not. A NULL compares as neither `> 0`, so a NULL
-     * column falls to the sentinel on its own.
+     * The label and the peak are taken only together with a DIA. A DIA is taken on its own too, with the peak
+     * marked missing (-1), because the DIA is the part a peak cannot be rebuilt from: see the KDoc above. Such
+     * a row is not an insulin yet, and `ICfg.isUsable` says so until `MainApp` fills the peak. A NULL compares
+     * as neither `> 0`, so a NULL column falls to the sentinel on its own.
      *
      * One line on purpose. The statements below are `trimIndent()`ed after interpolation, so a value with
      * its own line breaks would decide their common indent.
      */
     private val carryInsulinColumns =
         "CASE WHEN insulinEndTime > 0 AND peak > 0 THEN insulinLabel ELSE '' END, " +
-            "CASE WHEN insulinEndTime > 0 AND peak > 0 THEN insulinEndTime ELSE -1 END, " +
+            "CASE WHEN insulinEndTime > 0 THEN insulinEndTime ELSE -1 END, " +
             "CASE WHEN insulinEndTime > 0 AND peak > 0 THEN peak ELSE -1 END, " +
             "1.0"
 

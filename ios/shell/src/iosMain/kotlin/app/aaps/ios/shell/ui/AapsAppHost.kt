@@ -47,7 +47,6 @@ import app.aaps.core.interfaces.resources.TextRefValueRegistry
 import app.aaps.core.interfaces.utils.fabric.CrashReporter
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
-import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalMetroViewModelFactory
 import app.aaps.core.ui.compose.LocalSnackbarHostState
@@ -70,7 +69,6 @@ import app.aaps.ios.shell.platform.notOnThisPlatform
 import app.aaps.ios.shell.prefs.IosStorage
 import app.aaps.plugins.sync.nsclientV3.ws.IosForegroundWatcher
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
-import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.shared.clientbindings.ClientViewModelFactory
 import app.aaps.shared.impl.sharedPreferences.StoreUnreadableException
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
@@ -241,7 +239,7 @@ private fun startApp(nsSocketFactory: NsSocketFactory, crashReporter: CrashRepor
     val store = IosStorage.open()
     // Built once, outside the composition: a graph rebuilt on each recomposition would hand out new
     // singletons every frame - a new database wrapper, a new preference store.
-    val graph = createGraphFactory<IosAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings, nsSocketFactory, crashReporter)
+    val graph = createGraphFactory<IosAppGraph.Factory>().create(nsSocketFactory, crashReporter)
     val viewModelFactory = ClientViewModelFactory(graph)
     val logger = graph.logger
 

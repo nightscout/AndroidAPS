@@ -40,6 +40,7 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.reflect.KClass
 import kotlin.test.assertIs
@@ -147,6 +148,29 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
         val result = sut.doWorkAndLog()
 
         assertIs<ListenableWorker.Result.Success>(result)
+    }
+
+    /**
+     * A row of the page that could not be read is named in the NSClient log, and the load goes on with the
+     * rest. Before, one such row lost the whole page and ended the first load there (#5626).
+     */
+    @Test
+    fun `an unreadable treatment is logged and the load goes on`() = runTest(timeout = 30.seconds) {
+        val carbs = CA(timestamp = 10000, isValid = true, amount = 20.0, duration = 0, ids = IDs(nightscoutId = "nightscoutId"))
+        whenever(workManager.beginUniqueWork(anyString(), anyOrNull(), anyOrNull<OneTimeWorkRequest>())).thenReturn(workContinuation)
+        whenever(workContinuation.then(org.mockito.kotlin.any<OneTimeWorkRequest>())).thenReturn(workContinuation)
+        nsClientV3Plugin.nsAndroidClient = nsAndroidClient
+        nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = 0L // first load
+        nsClientV3Plugin.firstLoadContinueTimestamp.collections.treatments = now - 1000
+        nsClientV3Plugin.newestDataOnServer?.collections?.treatments = now // the server has newer data
+        sut = buildSut()
+        whenever(nsAndroidClient.getTreatmentsNewerThan(anyString(), anyInt()))
+            .thenReturn(NSAndroidClient.ReadResponse(200, 0, listOf(carbs.toNSCarbs()), unreadable = listOf("bad row")))
+
+        val result = sut.doWorkAndLog()
+
+        assertIs<ListenableWorker.Result.Success>(result)
+        verify(nsClientRepository).addLog("◄ SKIP", "bad row")
     }
 
     @Test
