@@ -29,6 +29,7 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -105,7 +106,14 @@ class ObjectivesViewModel(
         }
     }
 
-    private suspend fun updateState() = withContext(Dispatchers.Default) {
+    /**
+     * Where the screen's state is built: off the main thread. A test sets its own dispatcher, or the work outlives the
+     * test on a real thread, reads mocks that are already cleared and fails an unrelated test in the module
+     * (`UncaughtExceptionsBeforeTest` in `StorageConstraintPluginTest` on CI, 2026-11-21 and 2026-11-24).
+     */
+    internal var computeDispatcher: CoroutineDispatcher = Dispatchers.Default
+
+    private suspend fun updateState() = withContext(computeDispatcher) {
         val objectives = objectivesPlugin.objectives.mapIndexed { index, objective ->
             val tasks = objective.tasks
                 .filter { !it.shouldBeIgnored() }

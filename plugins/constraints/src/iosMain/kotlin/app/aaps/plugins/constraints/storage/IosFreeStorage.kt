@@ -13,21 +13,20 @@ import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.value
-import platform.Foundation.NSApplicationSupportDirectory
 import platform.Foundation.NSError
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSFileSystemFreeSize
+import platform.Foundation.NSHomeDirectory
 import platform.Foundation.NSNumber
-import platform.Foundation.NSSearchPathForDirectoriesInDomains
 import platform.Foundation.NSURL
 import platform.Foundation.NSURLVolumeAvailableCapacityForImportantUsageKey
-import platform.Foundation.NSUserDomainMask
 
 /**
  * The space left on the volume that holds the app's database.
  *
  * Android measures the data partition with `StatFs`. The iOS counterpart is the volume the app
- * container sits on, which is the same thing said in Apple's words.
+ * container sits on, which is the same thing said in Apple's words. It is asked through the app's home
+ * directory, the root of that container, because that one always exists.
  *
  * ## Why the "important usage" number and not the plain free size
  *
@@ -61,10 +60,12 @@ class IosFreeStorage(
 
     @OptIn(ExperimentalForeignApi::class)
     override fun availableMb(): Long {
-        val path = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, true)
-            .firstOrNull() as? String
-        if (path == null) {
-            aapsLogger.error(LTag.CONSTRAINTS, "No Application Support directory, so the free space is unknown")
+        // The app's home, not Application Support where the database is: the same volume, but iOS does not create
+        // Application Support (the database builder does), and a path that does not exist has no volume to ask. On a
+        // fresh simulator in CI that answered nothing, so this reported 0 - which switches the closed loop off.
+        val path = NSHomeDirectory()
+        if (path.isEmpty()) {
+            aapsLogger.error(LTag.CONSTRAINTS, "No home directory, so the free space is unknown")
             return 0
         }
 

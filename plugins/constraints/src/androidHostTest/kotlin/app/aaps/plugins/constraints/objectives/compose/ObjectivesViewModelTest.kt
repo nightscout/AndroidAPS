@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.objectives.compose
 
+import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
@@ -21,6 +22,7 @@ import app.aaps.plugins.constraints.objectives.objectives.Objective.UITask
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.runBlocking
@@ -73,10 +75,17 @@ internal class ObjectivesViewModelTest {
         sut = ObjectivesViewModel(
             objectivesPlugin, rxBus, rh, dateUtil, sntpClient, receiverStatusStore, aapsLogger, uel, preferences
         )
+        // Before anything runs: on Dispatchers.Default the state update outlived the test, read cleared mocks and
+        // failed the next runTest of the module on CI.
+        sut.computeDispatcher = dispatcher
     }
 
     @AfterEach
-    fun tearDown() = Dispatchers.resetMain()
+    fun tearDown() {
+        // The minute timer and the flows would otherwise stay alive after the test.
+        sut.viewModelScope.cancel()
+        Dispatchers.resetMain()
+    }
 
     @Test
     fun `default uiState is empty and not in fake mode`() {
