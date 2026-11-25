@@ -642,7 +642,8 @@ class AlertsImpl(
             alarmTitle = alert.notificationTitle ?: rh.gs(alert.title),
             canMute = alert.canMute,
             tellWatch = alert.tellWatch,
-            breakThroughDnd = alert.breakThroughDnd
+            breakThroughDnd = alert.breakThroughDnd,
+            systemText = systemText(alert)
         )
         val pausedUntil = storedPauses()[alert.kind.id] ?: 0L
         when {
@@ -715,11 +716,19 @@ class AlertsImpl(
     }
 
     /**
-     * What the card says.
+     * The text of the system notification and the watch, which show the alert's title above it: the alert's text
+     * alone, empty when it has none, so the title is not shown twice. Null for an alarm whose caller gave its own
+     * title: its card text is already the text alone.
+     */
+    private fun systemText(alert: Alert): String? =
+        if (alert.notificationTitle != null) null else alert.text?.let { rh.gs(it) } ?: ""
+
+    /**
+     * What the card in the app says.
      *
-     * Title and text together, because a pump alert's card is titled by its level ("Urgent alarm") and would
-     * otherwise lose which alert it is. An alarm that brought its own title does not need that: the title is already
-     * on the card and on the watch, so repeating it in the body would say the same thing twice.
+     * Title and text together, because the card in the app has no title line and would otherwise lose which alert it
+     * is; the system notification and the watch get the text alone ([systemText]). An alarm that brought its own title
+     * does not need that: the title is already on the card and on the watch, so repeating it would say it twice.
      */
     private fun cardText(alert: Alert): String {
         val text = alert.text ?: return rh.gs(alert.title)

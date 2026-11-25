@@ -134,7 +134,7 @@ class IosSystemNotificationPlatform(
         val breakThroughFocus = breaksThroughFocus(notification.level)
         val content = UNMutableNotificationContent().apply {
             setTitle(title)
-            setBody(notification.text)
+            setBody(notification.systemBody)
             // Silent while the app is in front, where setAudibleAlarm drives the ramping player instead; audible when
             // it is not, where that player cannot start. See onAppForeground.
             if (audibleInBackground(notification)) setSound(UNNotificationSound.defaultSound())

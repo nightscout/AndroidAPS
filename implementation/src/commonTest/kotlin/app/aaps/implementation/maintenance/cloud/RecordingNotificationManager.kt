@@ -52,7 +52,8 @@ class RecordingNotificationManager : NotificationManager {
         canMute: Boolean,
         tellWatch: Boolean,
         breakThroughDnd: Boolean,
-        ringtoneUri: String?
+        ringtoneUri: String?,
+        systemText: String?
     ): NotificationHandle {
         posted += id to null
         return NotificationHandle(posted.size)

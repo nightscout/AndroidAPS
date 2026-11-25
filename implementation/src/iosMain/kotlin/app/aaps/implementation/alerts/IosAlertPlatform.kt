@@ -151,8 +151,12 @@ class IosAlertPlatform(
 
     // The system sound: iOS cannot play an mp3 as a notification sound, so the chosen [sound] is the alarm's only.
     // [ringtoneUri] is never set on iOS: an app can play only the sounds it ships.
-    override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?) =
+    override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?) {
+        // Logged, so a chime raised at a start a moment before a tap that started the app silences it can be seen.
+        // Accepted as it is (decided 2026-11-25): the core does not hold an alert back (ALARMS.md, decision 9).
+        aapsLogger.debug(LTag.NOTIFICATION, "Pump alert chime: ${alert.source}/${alert.key}")
         post(chimeId(alert.source, alert.key), alert, trigger = null, category = categoryOf(alert))
+    }
 
     override fun snoozed(alert: Alert, until: Long) {
         val seconds = secondsFromNow(until)

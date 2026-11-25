@@ -110,14 +110,15 @@ class CommonNotificationManager(
         canMute: Boolean,
         tellWatch: Boolean,
         breakThroughDnd: Boolean,
-        ringtoneUri: String?
+        ringtoneUri: String?,
+        systemText: String?
     ): NotificationHandle =
         postInternal(
             id = id, text = text, level = level,
             date = date, validTo = validTo,
             sound = sound, actions = actions, validityCheck = validityCheck,
             alarmTitle = alarmTitle, canMute = canMute, tellWatch = tellWatch, breakThroughDnd = breakThroughDnd,
-            ringtoneUri = ringtoneUri
+            ringtoneUri = ringtoneUri, systemText = systemText
         )
 
     override fun post(
@@ -151,7 +152,8 @@ class CommonNotificationManager(
         canMute: Boolean = false,
         tellWatch: Boolean = true,
         breakThroughDnd: Boolean = false,
-        ringtoneUri: String? = null
+        ringtoneUri: String? = null,
+        systemText: String? = null
     ): NotificationHandle = lock.withLock {
         // Clean up expired notifications piggyback on writes.
         removeExpired()
@@ -181,7 +183,8 @@ class CommonNotificationManager(
             canMute = canMute,
             tellWatch = tellWatch,
             breakThroughDnd = breakThroughDnd,
-            ringtoneUri = ringtoneUri
+            ringtoneUri = ringtoneUri,
+            systemText = systemText
         )
         current.add(notification)
         current.sortBy { it.level.priority }
@@ -293,7 +296,7 @@ class CommonNotificationManager(
                         EventData.AlarmRinging(
                             now(),
                             title = top.alarmTitle ?: rh.gs(CoreUiStrings.urgent_alarm),
-                            status = top.text,
+                            status = top.systemBody,
                             canMute = top.canMute
                         )
                     )

@@ -80,7 +80,8 @@ class PluginBaseStartFailureTest {
             canMute: Boolean,
             tellWatch: Boolean,
             breakThroughDnd: Boolean,
-            ringtoneUri: String?
+            ringtoneUri: String?,
+            systemText: String?
         ): NotificationHandle = record(id, text, level, sound)
 
         override fun post(

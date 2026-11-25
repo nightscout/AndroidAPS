@@ -89,7 +89,7 @@ class AndroidSystemNotificationPlatform(
             alarmNotificationManager().postSilentAlarmNotification(
                 notificationKey = notification.instanceKey,
                 title = title,
-                body = notification.text,
+                body = notification.systemBody,
                 urgent = true,
                 // Mute and a swipe both mean "answered", and both reach the registry as a dismissal of this one
                 // card, so they act on this alarm alone rather than silencing everything.
@@ -168,8 +168,8 @@ class AndroidSystemNotificationPlatform(
             .setSmallIcon(iconsProvider.getNotificationIcon())
             .setLargeIcon(largeIcon)
             .setContentTitle(title)
-            .setContentText(n.text)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(n.text))
+            .setContentText(n.systemBody)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(n.systemBody))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setDeleteIntent(deleteIntent(n.instanceKey))
             .setContentIntent(notificationHolder().openAppIntent())

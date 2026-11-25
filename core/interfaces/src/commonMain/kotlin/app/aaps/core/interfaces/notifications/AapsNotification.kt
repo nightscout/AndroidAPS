@@ -42,5 +42,15 @@ data class AapsNotification(
      * Android: a ringtone of the phone the user chose for this alarm (`_docs/ALARMS.md`, step 2e), played instead of
      * [sound]. [sound] stays the fallback: a ringtone that was deleted or cannot be read must not leave the alarm silent.
      */
-    val ringtoneUri: String? = null
-)
+    val ringtoneUri: String? = null,
+    /**
+     * The text of the system notification and the watch, when it is not [text]. An alert's card starts its text with
+     * the alert's title, because the card in the app has no title line; the system notification and the watch show
+     * that title above the text already ([alarmTitle]), so they get the alert's text alone. Only the alarm path sets it.
+     */
+    val systemText: String? = null
+) {
+
+    /** What the system notification and the watch show under the title. */
+    val systemBody: String get() = systemText ?: text
+}

@@ -687,6 +687,23 @@ class AlertsImplTest : TestBase() {
         assertThat(card().alarmTitle).isEqualTo("low")
     }
 
+    /** The system notification shows the title above its text: the text must not start with it again. */
+    @Test
+    fun `the system notification gets the alert's text alone`() {
+        sut.raise(Alert(kind = TestKind("pump", AlertOrigin.PUMP, "low"), key = "low", severity = AlertSeverity.WARNING,
+                        title = TextRef.Literal("Low"), text = TextRef.Literal("BG 67 mg/dL"), raisedAt = 500L))
+
+        assertThat(card().systemBody).isEqualTo("BG 67 mg/dL")
+        assertThat(card().text).isNotEqualTo("BG 67 mg/dL")
+    }
+
+    @Test
+    fun `an alert with no text has an empty system notification text`() {
+        sut.raise(alert(key = "low", severity = AlertSeverity.WARNING))
+
+        assertThat(card().systemBody).isEmpty()
+    }
+
     @Test
     fun `a title the caller gave is kept`() {
         sut.raise(

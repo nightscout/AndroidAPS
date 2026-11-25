@@ -51,7 +51,7 @@ class DesktopSystemNotificationPlatform(
             .getOrNull()
     }
 
-    override fun show(notification: AapsNotification, title: String) = toast(title, notification.text)
+    override fun show(notification: AapsNotification, title: String) = toast(title, notification.systemBody)
 
     /** One message in the tray. Also used by `DesktopAlertPlatform` for the one sound of a WARNING alert. */
     fun toast(title: String, text: String) {
