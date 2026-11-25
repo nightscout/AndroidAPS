@@ -18,6 +18,7 @@
     <string name="settings_unreadable_keystore_explanation">L\'archivio chiavi del telefono non ha risposto, quindi AAPS non ha potuto aprire le sue impostazioni.</string>
     <string name="settings_unreadable_not_running">AAPS non è in esecuzione e non controlla il micro. Una basale temporanea in corso finisce alla sua scadenza, poi il micro eroga la sua basale.</string>
     <string name="settings_unreadable_what_to_do">Riprova chiude AAPS e lo avvia di nuovo. Se non aiuta, riavvia il telefono. Scegli Ricomincia da capo solo quando nient\'altro aiuta: le impostazioni illeggibili vengono messe da parte e AAPS si avvia con impostazioni vuote. Poi importa la tua ultima esportazione delle impostazioni nella configurazione guidata.</string>
+    <string name="settings_unreadable_keystore_what_to_do">Riprova a chiudere AAPS e riavviarlo. Se questo non aiuta, riavvia il telefono. Il file delle impostazioni viene mantenuto com\'è.</string>
     <string name="settings_unreadable_start_fresh">Ricomincia da capo</string>
     <string name="settings_unreadable_confirm_title">Iniziare con impostazioni vuote?</string>
     <string name="settings_unreadable_confirm_text">Il file delle impostazioni illeggibili viene rinominato e conservato. Tutte le impostazioni tornano ai valori predefiniti. Poi configuri di nuovo AAPS o importi un\'esportazione delle impostazioni.</string>
