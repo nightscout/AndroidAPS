@@ -391,11 +391,12 @@ class AlertsImpl(
                 // Not posted again when nothing on the card changed: a raiser repeats itself (the BG alarms 5 times in
                 // 30 ms at a start), and on iOS the removal of each old card lost the race with the new one, so the
                 // old cards stayed in the tray after the alert ended (2026-11-25).
-                if (existing.card != null && changed) {
-                    showCard(existing, ring = false)
+                if (changed) {
+                    if (existing.card != null) showCard(existing, ring = false)
                     // A silenced alert rings again from a booking made with the text it had then (iOS showed a BG of
-                    // the time of the silence, 2026-11-25): booked again, the booking replaces the old one.
-                    if (existing.silencedUntil > dateUtil.now()) platform.snoozed(alert, existing.silencedUntil)
+                    // the time of the silence, 2026-11-25): booked again, the booking replaces the old one. Also while
+                    // its card is hidden: the re-ring brings the card back.
+                    if (existing.silencedUntil > dateUtil.now() && choiceFor(alert) != AlertChoice.OFF) platform.snoozed(alert, existing.silencedUntil)
                 }
             } else {
                 existing?.let { removeCard(it) }
@@ -711,6 +712,22 @@ class AlertsImpl(
     }
 
     /** Caller holds [lock]. */
+    /**
+     * Caller holds [lock]. [entry] has no card now and keeps none until its silence ends: silenced for its usual length
+     * unless it already is, its chime taken back with the card, and its re-ring booked. When the silence ends,
+     * [endSilence] shows the card again and rings.
+     */
+    private fun hideUntilSilenceEnds(entry: Entry) {
+        if (entry.silencedUntil <= dateUtil.now()) {
+            entry.silencedUntil = dateUtil.now() + entry.alert.silenceMinutes * 60_000L
+            rememberSilence(entry.alert, entry.silencedUntil)
+        }
+        // Withdrawn first: it takes the booking of the re-ring as well, which is then made again
+        platform.withdrawn(entry.alert.source, entry.alert.key)
+        platform.snoozed(entry.alert, entry.silencedUntil)
+        scheduleSilenceEnd(entry)
+    }
+
     private fun scheduleSilenceEnd(entry: Entry) {
         entry.silenceEnd?.cancel()
         val wait = entry.silencedUntil - dateUtil.now()
@@ -781,8 +798,17 @@ class AlertsImpl(
                 // Read, and nothing to do about it.
                 alert.severity == AlertSeverity.INFO && alert.action == null -> Unit
 
-                else                                                             -> {
-                    aapsLogger.debug(LTag.PUMP, "Pump alert card removed while active, shown again silenced: ${alert.source}/${alert.key}")
+                // A kind the user may silence: removing its card means "not now". It stays away while it is silenced
+                // and comes back with the ring when the silence ends, if it is still active. Shown again at once, the
+                // carbs required card could not be cleared at all (decided 2026-11-25).
+                !alert.kind.isProtected                                      -> {
+                    aapsLogger.debug(LTag.NOTIFICATION, "Alert card removed, hidden until its silence ends: ${alert.source}/${alert.key}")
+                    hideUntilSilenceEnds(entry)
+                }
+
+                // A safety kind keeps its card for as long as it lasts.
+                else                                                         -> {
+                    aapsLogger.debug(LTag.NOTIFICATION, "Protected alert card removed while active, shown again silenced: ${alert.source}/${alert.key}")
                     if (entry.silencedUntil > dateUtil.now()) showCard(entry, ring = false)
                     else silenceEntry(entry, alert.silenceMinutes)
                 }

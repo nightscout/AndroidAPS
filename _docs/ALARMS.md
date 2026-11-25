@@ -529,7 +529,9 @@ The order matters: step 3 must not come before step 2.
    with the silence buttons and the card without them (found on iOS 2026-11-25; since then the card is titled by
    the alert, no longer "Info"; the system notification has the alert's text alone under it). Done on the way
    (2026-11-25): the cards a previous run left in the tray are cleared at start (`NotificationManager.clearLeftovers`),
-   and a silenced alert whose text changes books its re-ring again, so the re-ring shows the latest value.
+   and a silenced alert whose text changes books its re-ring again, so the re-ring shows the latest value. And
+   Dismiss on the card of a kind that is not protected hides it until its silence ends (30 min), like the old
+   "Ignore 30 min" of carbs required; a protected kind keeps its card.
 
 ### Decisions (2026-11-21)
 

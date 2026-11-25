@@ -577,9 +577,10 @@ class AlertsImplTest : TestBase() {
         assertThat(cards()).hasSize(1)
     }
 
+    /** A safety kind keeps its card for as long as it lasts. */
     @Test
     fun `a card cleared by another alarm screen comes back silenced`() {
-        sut.raise(alert())
+        sut.raise(alert(kind = TestKind("pump", AlertOrigin.PUMP, "occlusion", isProtected = true)))
         scope.runCurrent()
 
         // OK on the alarm screen of some other alarm clears every ringing card.
@@ -838,15 +839,62 @@ class AlertsImplTest : TestBase() {
         assertThat(cards()).isEmpty()
     }
 
-    /** The pump still holds it, so the card comes back - silenced, not ringing. */
+    /** The pump still holds it, and it is a safety kind, so the card comes back - silenced, not ringing. */
     @Test
     fun `a condition alert whose card is removed comes back without sound`() {
-        sut.raise(alert())
+        sut.raise(alert(kind = TestKind("pump", AlertOrigin.PUMP, "occlusion", isProtected = true)))
         notificationManager.muteAllAlarms()
         scope.runCurrent()
 
         assertThat(sut.active.value.map { it.key }).containsExactly("occlusion")
         assertThat(card().sound).isNull()
+    }
+
+    /** Carbs required could not be cleared: its card came back at once (2026-11-25). Dismiss means "not now". */
+    @Test
+    fun `a dismissed card of a kind that may be silenced stays away until its silence ends`() {
+        sut.raise(alert(key = "carbs", source = "aaps", severity = AlertSeverity.WARNING))
+        scope.runCurrent()
+
+        notificationManager.dismiss(NotificationId.ALERT)
+        scope.runCurrent()
+
+        assertThat(cards()).isEmpty()
+        assertThat(sut.active.value.map { it.key }).containsExactly("carbs")
+        assertThat(sut.silencedUntil("aaps", "carbs")).isEqualTo(now + Alerts.SILENCE_MINUTES * 60_000L)
+        assertThat(alertPlatform.withdrawals).contains("carbs")
+        assertThat(alertPlatform.snoozes.last()).isEqualTo("carbs" to now + Alerts.SILENCE_MINUTES * 60_000L)
+    }
+
+    @Test
+    fun `a hidden card comes back with the ring when the silence ends`() {
+        sut.raise(alert(key = "carbs", source = "aaps", severity = AlertSeverity.WARNING))
+        scope.runCurrent()
+        notificationManager.dismiss(NotificationId.ALERT)
+        scope.runCurrent()
+
+        now += Alerts.SILENCE_MINUTES * 60_000L
+        scope.advanceTimeBy(Alerts.SILENCE_MINUTES * 60_000L + 1)
+
+        assertThat(cards()).hasSize(1)
+        assertThat(alertPlatform.chimes).containsExactly("carbs", "carbs")
+    }
+
+    /** A new value while hidden must not bring the card back early; the booked re-ring takes the new text. */
+    @Test
+    fun `a hidden card stays hidden when its text changes and its re-ring is booked again`() {
+        val kind = TestKind("aaps", AlertOrigin.APP, "carbs")
+        sut.raise(Alert(kind = kind, key = "carbs", severity = AlertSeverity.WARNING, title = TextRef.Literal("carbs"), text = TextRef.Literal("42 g"), raisedAt = 500L))
+        scope.runCurrent()
+        notificationManager.dismiss(NotificationId.ALERT)
+        scope.runCurrent()
+        val booked = alertPlatform.snoozes.size
+
+        sut.raise(Alert(kind = kind, key = "carbs", severity = AlertSeverity.WARNING, title = TextRef.Literal("carbs"), text = TextRef.Literal("44 g"), raisedAt = 500L))
+        scope.runCurrent()
+
+        assertThat(cards()).isEmpty()
+        assertThat(alertPlatform.snoozes).hasSize(booked + 1)
     }
 
     /**

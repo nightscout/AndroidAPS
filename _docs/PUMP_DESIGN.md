@@ -183,7 +183,9 @@ for the callers that are not pumps until those move too.
   back. On false the alert stays and the user sees that the pump did not confirm.
 - **Silence.** Silence is a snooze of 30 minutes; `snooze` takes another length. When the window ends and the alert
   is still active, it rings again. Any other way the card goes away while the alert is still active (OK on another
-  alarm screen, a swipe) counts as a silence, and the card comes back without sound.
+  alarm screen, a swipe, Dismiss) counts as a silence. The card of a protected kind comes back at once without sound;
+  the card of any other kind stays away until the silence ends and comes back with the ring (2026-11-25: the carbs
+  required card could not be cleared).
 - **Restart.** The core does not store alerts: the pump and the driver are the truth. It stores only the silences
   (`source`, `key`, `raisedAt`, until when), so an alert raised again after a restart keeps the rest of its window.
   `raisedAt` is part of it: a new occurrence of the same condition has a new time and rings at once.

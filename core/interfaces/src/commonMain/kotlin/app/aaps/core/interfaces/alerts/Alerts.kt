@@ -31,9 +31,10 @@ enum class AlertSeverity {
 enum class AlertLifetime {
 
     /**
-     * The raiser owns it: it lasts until the pump drops it or its action clears it. Removing its card - a swipe,
-     * "mute all alarms", the sheet closing - does not end it; it counts as a silence and the card comes back without
-     * sound, because the condition is still there. Every pump alert is one of these.
+     * The raiser owns it: it lasts until the pump drops it or its action clears it. Removing its card - Dismiss, a
+     * swipe, "mute all alarms" - does not end it; it counts as a silence. A protected kind's card comes back at once
+     * without sound, because the condition is still there; any other kind's card stays away until the silence ends
+     * and comes back with the ring (decided 2026-11-25). Every pump alert is one of these.
      */
     CONDITION,
 
