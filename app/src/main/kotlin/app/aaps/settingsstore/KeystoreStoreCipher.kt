@@ -1,12 +1,14 @@
 package app.aaps.settingsstore
 
+import android.annotation.SuppressLint
+import android.security.KeyStoreException
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import android.security.keystore.UserNotAuthenticatedException
 import app.aaps.core.interfaces.sharedPreferences.SealedDataUnreadableException
 import app.aaps.core.interfaces.sharedPreferences.StoreCipher
 import java.security.InvalidKeyException
 import java.security.KeyStore
-import java.security.UnrecoverableEntryException
 import java.security.UnrecoverableKeyException
 import javax.crypto.AEADBadTagException
 import javax.crypto.Cipher
@@ -39,7 +41,10 @@ class KeystoreStoreCipher(private val keys: Keys) : StoreCipher {
     /** Where the key lives: the Android Keystore in the app, memory in a test. */
     interface Keys {
 
-        /** The key, or null when there is none. Throws [SealedDataUnreadableException] for a key that exists but cannot be used. */
+        /**
+         * The key, or null when there is none. Throws [SealedDataUnreadableException] for a key that exists but
+         * cannot be used. Any other exception is a Keystore failure, and it is tried again.
+         */
         fun load(): SecretKey?
 
         fun create(): SecretKey
@@ -70,6 +75,8 @@ class KeystoreStoreCipher(private val keys: Keys) : StoreCipher {
             } catch (e: AEADBadTagException) {
                 throw SealedDataUnreadableException("The settings store does not open with the key in the Keystore", e)
             } catch (e: InvalidKeyException) {
+                // A Keystore failure comes as this too. It can pass, so it is tried again.
+                if (e.isKeystoreFailure()) throw e
                 // The key is there but cannot be used, which waiting does not change.
                 throw SealedDataUnreadableException("The Keystore key of the settings store cannot be used", e)
             }
@@ -115,10 +122,12 @@ class AndroidKeystoreKeys(private val alias: String) : KeystoreStoreCipher.Keys 
     private fun keyStore(): KeyStore = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
 
     override fun load(): SecretKey? = try {
-        (keyStore().getEntry(alias, null) as? KeyStore.SecretKeyEntry)?.secretKey
-    } catch (e: UnrecoverableEntryException) {
-        throw SealedDataUnreadableException("The Keystore key of the settings store cannot be loaded", e)
+        // getKey, not getEntry. getEntry first asks whether the alias exists, and the Keystore answers "no"
+        // when it fails, so a Keystore failure looked like a missing key (issue #5412). getKey returns null
+        // only when there is no key, and passes a failure on as UnrecoverableKeyException with the cause.
+        keyStore().getKey(alias, null) as? SecretKey
     } catch (e: UnrecoverableKeyException) {
+        if (e.isKeystoreFailure()) throw e
         throw SealedDataUnreadableException("The Keystore key of the settings store cannot be loaded", e)
     }
 
@@ -131,13 +140,22 @@ class AndroidKeystoreKeys(private val alias: String) : KeystoreStoreCipher.Keys 
         return KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEYSTORE).apply { init(spec) }.generateKey()
     }
 
-    override fun delete() {
-        val keyStore = keyStore()
-        if (keyStore.containsAlias(alias)) keyStore.deleteEntry(alias)
-    }
+    // No check first whether the key exists: the Keystore answers "no" when it fails, and then the key stayed
+    // without a word. deleteEntry does nothing when there is no key, and throws when the Keystore fails.
+    override fun delete() = keyStore().deleteEntry(alias)
 
     private companion object {
 
         const val ANDROID_KEYSTORE = "AndroidKeyStore"
     }
 }
+
+/**
+ * The Keystore failed, which can pass, rather than the key being gone or broken. The Keystore's own error,
+ * [KeyStoreException] of `android.security`, is then among the causes. [UserNotAuthenticatedException]
+ * means a locked Keystore here, because this key does not need the user to unlock it.
+ */
+// The class is public from API 33, but it is in Android 12 and 12L too, so the check works on all supported versions.
+@SuppressLint("NewApi")
+private fun Throwable.isKeystoreFailure(): Boolean =
+    generateSequence(this) { it.cause }.any { it is KeyStoreException || it is UserNotAuthenticatedException }
