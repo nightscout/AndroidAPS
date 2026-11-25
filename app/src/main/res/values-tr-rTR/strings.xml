@@ -18,6 +18,7 @@
     <string name="settings_unreadable_keystore_explanation">Telefonun anahtar deposu yanıt vermedi; bu nedenle AAPS, ayarlarını açamadı.</string>
     <string name="settings_unreadable_not_running">AAPS çalışmıyor ve pompayı kontrol etmiyor. Devam etmekte olan geçici bazal doz, süresi dolduğunda sona erer; sonrasında pompa kendi bazal dozunu uygulamaya devam eder.</string>
     <string name="settings_unreadable_what_to_do">Tekrar dene seçeneği AAPS\'i kapatır ve yeniden başlatır. Bu işe yaramazsa, telefonu yeniden başlatın. Yalnızca başka hiçbir şey yardımcı olmadığında \"Sıfırdan başla\" seçeneğini seçin: okunamayan ayarları bir kenara bırakır ve AAPS boş ayarlarla başlar. Ardından kurulum sihirbazında son ayar dışa aktarımınızı içe aktarın.</string>
+    <string name="settings_unreadable_keystore_what_to_do">Tekrar dene AAPS\'i kapatıp tekrar başlatır. Eğer bu işe yaramazsa, telefonu yeniden başlatın. Ayar dosyanız olduğu gibi korunur.</string>
     <string name="settings_unreadable_start_fresh">Sıfırdan başla</string>
     <string name="settings_unreadable_confirm_title">Boş ayarlarla mı başlansın?</string>
     <string name="settings_unreadable_confirm_text">Okunamayan ayar dosyası yeniden adlandırılarak saklanır. Tüm ayarlar varsayılan değerlerine döner. Ardından AAPS\'i yeniden yapılandırabilir veya daha önce dışa aktardığınız ayarları içe aktarabilirsiniz.</string>
