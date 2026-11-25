@@ -382,7 +382,9 @@ class AlertsImpl(
      * hour later would be telling them about something they have already read.
      */
     override fun silence(source: String, key: String, minutes: Int?) {
-        val alert = lock.withLock { entries[source to key]?.alert } ?: return
+        // A button of a notification left from before a restart, tapped before the raiser raised its alert again.
+        val alert = lock.withLock { entries[source to key]?.alert }
+            ?: return aapsLogger.warn(LTag.NOTIFICATION, "Alert $source/$key is not active, nothing to silence")
         // Outside the lock: neither call may be made while holding it, it is not reentrant.
         if (alert.lifetime == AlertLifetime.EVENT) resolve(source, key)
         else snooze(source, key, minutes ?: alert.silenceMinutes)

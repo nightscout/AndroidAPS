@@ -240,7 +240,7 @@ classes of its alarms (a grade, a tier) are an input to this, not a replacement 
 
 | Driver | Change |
 |---|---|
-| Carelevo | `handleAlarms` and `CarelevoAlarmNotifier` raise and resolve. Clear and discard become the action. Delete `CarelevoSystemNotifier`. `CarelevoAppForeground` stays only for the alarm refresh when the app comes to the front. |
+| Carelevo | `handleAlarms` and `CarelevoAlarmNotifier` raise and resolve. Clear and discard become the action. Delete `CarelevoSystemNotifier`. `CarelevoAppForeground` stays only for the alarm refresh when the app comes to the front. Sorted by the rule above on 2026-11-25 (`AlarmCause.effect`): every WARNING of the patch, a pause for the temperature, an activation not finished, a delivery waiting to be started again and an unknown code are NOW; the ALERTs before the stop and the low insulin notice are SOON; the reminders the user set (patch age, check the patch, check the BG) are ACTION; the time zone and LGS notices are INFO (AAPS never turns LGS on). A patch removed without being reached is a CRITICAL alert of its own kind (`NOT_STOPPED`) that the user's answer ends, no longer a silent card. |
 | EOPatch | `AlarmManager`/`AlarmRegistry` raise and resolve. The actions of `AlarmProcess` run through the queue. `restartAll` becomes the raise on start. |
 | Equil | The alarm cards raise. The rule that old history alarms do not ring stays in the driver (raise them as INFO). No action: the pump has no clear command. |
 | Medtrum | The alarm cards in `MedtrumService` raise; a pump state change resolves. `clearAlarms` becomes the action. |

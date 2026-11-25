@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertAction
+import app.aaps.core.interfaces.alerts.AlertLifetime
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.resources.TextResolver
@@ -13,7 +14,6 @@ import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.type.AlarmCause
-import app.aaps.pump.carelevo.domain.type.AlarmType.Companion.isCritical
 import app.aaps.pump.carelevo.ext.transformNotificationStringResources
 import app.aaps.pump.carelevo.presentation.model.AlarmEvent
 import dev.zacsweers.metro.AppScope
@@ -93,16 +93,36 @@ class CarelevoAlarmNotifier @Inject constructor(
 
     /**
      * Every stored alarm is one pump alert, keyed by its alarm id; one no longer stored has ended. An alarm raised again
-     * keeps its id and its creation time, so the core does not ring it again, also not after a restart.
+     * keeps its id and its creation time, so the core does not ring it again, also not after a restart. The patch that
+     * was not stopped is not a stored alarm, so it is left as it is.
      */
     fun showAlerts(alarms: List<CarelevoAlarmInfo>) {
         val keys = alarms.map { it.alarmId }.toSet()
-        alerts.active.value.filter { it.source == SOURCE && it.key !in keys }.forEach { alerts.resolve(SOURCE, it.key) }
+        alerts.active.value
+            .filter { it.source == SOURCE && it.kind != CarelevoAlertKind.NOT_STOPPED && it.key !in keys }
+            .forEach { alerts.resolve(SOURCE, it.key) }
         alarms.forEach { alerts.raise(toAlert(it)) }
     }
 
     /** The patch is gone or the driver stops: none of its alerts is left. */
     fun clearAlerts() = alerts.resolveAll(SOURCE)
+
+    /**
+     * The patch was removed from AAPS without being reached, so it was not told to stop and may still give insulin
+     * that AAPS does not count. It rings until the user answers, and the answer ends it: nothing on the patch side
+     * will ever end it.
+     */
+    fun patchNotStopped(now: Long) = alerts.raise(
+        Alert(
+            kind = CarelevoAlertKind.NOT_STOPPED,
+            key = NOT_STOPPED_KEY,
+            severity = AlertSeverity.CRITICAL,
+            title = CarelevoAlertKind.NOT_STOPPED.title,
+            text = CarelevoStrings.carelevo_discarded_not_reached,
+            raisedAt = now,
+            lifetime = AlertLifetime.EVENT
+        )
+    )
 
     internal fun toAlert(alarm: CarelevoAlarmInfo): Alert {
         val (titleRes, descRes, btnRes) = alarm.cause.transformNotificationStringResources()
@@ -110,8 +130,8 @@ class CarelevoAlarmNotifier @Inject constructor(
         return Alert(
             kind = CarelevoAlertKind.of(alarm.cause),
             key = alarm.alarmId,
-            // WARNING and ALERT stop the insulin or end the patch; a NOTICE only informs.
-            severity = if (alarm.alarmType.isCritical()) AlertSeverity.CRITICAL else AlertSeverity.INFO,
+            // A pump has no glucose alarm, so every cause has a severity.
+            severity = alarm.cause.effect.severity ?: AlertSeverity.CRITICAL,
             title = titleRes,
             text = descRes?.let { if (descArgs.isEmpty()) it else it.withArgs(*descArgs.toTypedArray()) },
             raisedAt = raisedAt(alarm),
@@ -179,5 +199,8 @@ class CarelevoAlarmNotifier @Inject constructor(
 
         /** The source of every Carelevo pump alert. */
         const val SOURCE = "carelevo"
+
+        /** The key of the alert for a patch that was removed without being stopped. A stored alarm's id is a UUID or a time in ms. */
+        const val NOT_STOPPED_KEY = "not_stopped"
     }
 }

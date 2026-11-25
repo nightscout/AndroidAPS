@@ -23,16 +23,6 @@ enum class AlarmType(val code: Int) {
         fun fromAlarmType(type: AlarmType): Int {
             return type.code
         }
-
-        /**
-         * True for the tiers that must take the STRONGEST surfacing path (global alarm sound +
-         * full-screen, never a silent banner): both pump-fault tiers, WARNING and ALERT.
-         *
-         * DEVICE-VERIFY: confirm against vendor protocol docs that no ALERT cause is intentionally
-         * low-priority.
-         */
-        fun AlarmType.isCritical(): Boolean =
-            this == WARNING || this == ALERT
     }
 }
 

@@ -170,9 +170,12 @@ that fails rings before the next try succeeds.
     through `runAlarm` with its own key gets one protected kind, "pump driver alarm", because the app cannot tell
     which of its alarms are safe to silence.
   - Carelevo has one kind per title the user sees, not per alarm cause: several causes share a title, and two rows
-    of the same name, one of them silenced, would only confuse. Its id is the title's string name. A kind is protected
-    when one of its causes is of the WARNING or ALERT tier, which the driver treats as "the insulin stops or the patch
-    ends"; so only its NOTICE kinds can be made silent or turned off.
+    of the same name, one of them silenced, would only confuse. Its id is the title's string name. Since 2026-11-25 a
+    kind is protected when one of its causes affects dosing (decision 14, `AlarmCause.effect`), so the reminders the
+    user set (patch age, check the patch, check the BG), the time zone and the LGS notices can be made silent or
+    turned off. The patch removed without being stopped has a kind of its own, protected.
+    Six names still show two or three times ("Low Insulin", "Low Battery", "Patch Error", ...) because the patch has
+    a string per tier; every such row is protected, so none can be silenced without its twin.
   - The ids are pinned by tests (`CoreAlertTest`, `CarelevoAlertKindTest`): a renamed id would drop what users chose.
 - **Three choices per kind:** Ring (the default), Silent (a card, no sound, no alarm screen, the watch not told), Off
   (not shown). A silent card is IMPORTANT at most, never URGENT. An alert that is off stays in `Alerts.active`, so its
@@ -292,7 +295,9 @@ rings because of it (decided 2026-11-21: acceptable).
   `TOAST_ALARM` two unrelated ones (a hard limit; the dev-branch closed loop). As kinds they are split, so a user can
   silence one without the other.
 - `CARBS_STORE_FAILED` is URGENT but has no sound: today it is heard only through the tray's ding (section 2).
-- Carelevo's "the pump was not reached" at the removal is a silent card, though the user must act.
+- Carelevo's "the pump was not reached" at the removal was a silent card, though the user must act. Since
+  2026-11-25 it is a CRITICAL alert that the user's answer ends (`CarelevoAlarmNotifier.patchNotStopped`): the patch
+  was not told to stop and may still give insulin that AAPS does not count.
 - The comments in `NotificationId` that say a new id must be "appended at the END", because "`fromOrdinal` maps a stored
   ordinal back", are out of date: nothing calls `fromOrdinal`. They go with the unused ids, and a new id can go where
   it belongs.

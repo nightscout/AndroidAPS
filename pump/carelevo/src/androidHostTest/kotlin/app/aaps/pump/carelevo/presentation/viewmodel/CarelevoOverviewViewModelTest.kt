@@ -4,9 +4,6 @@ import android.content.Context
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -25,6 +22,7 @@ import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.command.CmdDiscard
 import app.aaps.pump.carelevo.command.CmdPumpStop
+import app.aaps.pump.carelevo.common.CarelevoAlarmNotifier
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.latestValueFlow
 import app.aaps.pump.carelevo.common.model.Event
@@ -141,7 +139,7 @@ class CarelevoOverviewViewModelTest {
     private val context: Context = RuntimeEnvironment.getApplication()
 
     private lateinit var rh: ResourceHelper
-    private lateinit var notificationManager: NotificationManager
+    private lateinit var alarmNotifier: CarelevoAlarmNotifier
     private lateinit var dateUtil: DateUtil
     private lateinit var commandQueue: CommandQueue
     private lateinit var aapsLogger: AAPSLogger
@@ -306,7 +304,7 @@ class CarelevoOverviewViewModelTest {
         deleteInfusionInfoUseCase = mock()
         patchInfoRepository = mock()
         rxBus = mock()
-        notificationManager = mock()
+        alarmNotifier = mock()
         decimalFormatter = mock()
         // Deterministic, locale-independent 2-decimal text (the real impl is locale aware).
         whenever(decimalFormatter.to2Decimal(any<Double>())).thenAnswer { inv -> "%.2f".format(Locale.US, inv.getArgument<Double>(0)) }
@@ -353,7 +351,7 @@ class CarelevoOverviewViewModelTest {
 
         sut = CarelevoOverviewViewModel(
             rh = rh,
-            notificationManager = notificationManager,
+            alarmNotifier = alarmNotifier,
             dateUtil = dateUtil,
             commandQueue = commandQueue,
             aapsLogger = aapsLogger,
@@ -1113,7 +1111,7 @@ class CarelevoOverviewViewModelTest {
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
         assertThat(events).isEmpty()
         // The patch was not told to stop: the user is told to take it off (D9).
-        verify(notificationManager).post(eq(NotificationId.PUMP_WARNING), any<String>(), eq(NotificationLevel.IMPORTANT), any<Int>(), anyOrNull(), any(), anyOrNull())
+        verify(alarmNotifier).patchNotStopped(nowMillis)
     }
 
     @Test

@@ -303,6 +303,11 @@ private fun startApp(nsSocketFactory: NsSocketFactory, crashReporter: CrashRepor
     IosLanguage.apply(graph.preferences)
     logger.debug(LTag.CORE, "Language: ${TextRefValueRegistry.locale ?: "English"}")
 
+    // The silence buttons of a warning notification. After the language, which their titles are in, and before the
+    // install below, which publishes only the categories registered by then: a warning left in Notification Centre
+    // from before a relaunch keeps its buttons, and a tap that launches the app finds its handler.
+    graph.alertPlatform.registerSilenceButtons()
+
     // Attach to the notification centre. Registering a category only records it now, so that building
     // the graph does not need an app bundle - see `IosNotificationDelegate.install`. It is done here
     // rather than inside the start sequence because only the real app reaches this function, and

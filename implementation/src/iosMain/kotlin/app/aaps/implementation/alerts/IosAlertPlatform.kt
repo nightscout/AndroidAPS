@@ -253,11 +253,19 @@ class IosAlertPlatform(
     private fun bookingId(source: String, key: String) = "$BOOKING_PREFIX$source/$key"
 
     /**
-     * The category of a WARNING alert that lasts: its notification has the silence buttons (5, 15, 30 min,
-     * [Alerts.NOTIFICATION_SILENCE_MINUTES], decided 2026-11-24). Registered on first use, so building the graph does
-     * not touch the notification centre. A button silences the alert named by the notification's identifier.
+     * Registers the category of a WARNING alert that lasts: its notification has the silence buttons (5, 15, 30 min,
+     * [Alerts.NOTIFICATION_SILENCE_MINUTES], decided 2026-11-24). A button silences the alert named by the
+     * notification's identifier.
+     *
+     * The app host calls it at every start, once the language is set (the button titles are resolved here) and before
+     * [IosNotificationDelegate.install]. `install` replaces the whole set of categories with what is registered so
+     * far, so a category registered only with the first warning was missing after every relaunch: a warning still in
+     * Notification Centre lost its buttons, and a tap that launched the app found no handler. Registering only
+     * records, so a test binary can still build this class. Called again, it does nothing.
      */
-    private val silenceButtons: Unit by lazy {
+    fun registerSilenceButtons() {
+        if (silenceButtonsRegistered) return
+        silenceButtonsRegistered = true
         IosNotificationDelegate.register(setOf(warningCategory())) { actionId, notificationId ->
             val minutes = silenceMinutesOf(actionId) ?: return@register false
             val alert = alertOf(notificationId) ?: return@register false
@@ -266,6 +274,8 @@ class IosAlertPlatform(
             true
         }
     }
+
+    private var silenceButtonsRegistered = false
 
     private fun warningCategory(): UNNotificationCategory =
         UNNotificationCategory.categoryWithIdentifier(
@@ -283,10 +293,7 @@ class IosAlertPlatform(
 
     /** The category of [alert]'s notification: the silence buttons for a WARNING that lasts, else none. */
     private fun categoryOf(alert: Alert): String? =
-        if (alert.severity == AlertSeverity.WARNING && alert.lifetime == AlertLifetime.CONDITION) {
-            silenceButtons
-            CATEGORY_WARNING
-        } else null
+        if (alert.severity == AlertSeverity.WARNING && alert.lifetime == AlertLifetime.CONDITION) CATEGORY_WARNING else null
 
     companion object {
 

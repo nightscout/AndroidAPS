@@ -10,9 +10,6 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -32,6 +29,7 @@ import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.command.CmdDiscard
 import app.aaps.pump.carelevo.command.CmdPumpStop
+import app.aaps.pump.carelevo.common.CarelevoAlarmNotifier
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.MutableEventFlow
 import app.aaps.pump.carelevo.common.asEventFlow
@@ -95,7 +93,7 @@ import kotlin.time.Instant
 @OptIn(ExperimentalAtomicApi::class)
 class CarelevoOverviewViewModel @Inject constructor(
     private val rh: TextResolver,
-    private val notificationManager: NotificationManager,
+    private val alarmNotifier: CarelevoAlarmNotifier,
     private val dateUtil: DateUtil,
     private val commandQueue: CommandQueue,
     private val aapsLogger: AAPSLogger,
@@ -562,9 +560,9 @@ class CarelevoOverviewViewModel @Inject constructor(
     private fun startPatchForceDiscard() {
         val address = carelevoPatch.getPatchInfoAddress()
         val patch = carelevoPatch
-        val notifications = notificationManager
+        val notifier = alarmNotifier
+        val clock = dateUtil
         val logger = aapsLogger
-        val notReached = rh.gs(CarelevoStrings.carelevo_discarded_not_reached)
         val useCase = patchForceDiscardUseCase
         val removal = removalScope.async {
             val response = withTimeoutOrNull(REMOVAL_TIMEOUT) { useCase.execute() }
@@ -572,7 +570,7 @@ class CarelevoOverviewViewModel @Inject constructor(
             if (response is ResponseResult.Success) {
                 patch.discardTeardown(address)
                 // The patch was not told to stop, so the user must take it off.
-                notifications.post(NotificationId.PUMP_WARNING, notReached, level = NotificationLevel.IMPORTANT)
+                notifier.patchNotStopped(clock.now())
             }
             response
         }

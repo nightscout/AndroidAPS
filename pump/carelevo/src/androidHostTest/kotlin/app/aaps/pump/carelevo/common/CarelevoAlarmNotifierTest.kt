@@ -7,11 +7,13 @@ import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertChoice
 import app.aaps.core.interfaces.alerts.SharedSilence
 import app.aaps.core.interfaces.alerts.AlertKind
+import app.aaps.core.interfaces.alerts.AlertLifetime
 import app.aaps.core.interfaces.alerts.AlertSound
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.ContextResourceHelper
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
@@ -184,19 +186,63 @@ class CarelevoAlarmNotifierTest {
     }
 
     @Test
-    fun `a WARNING alarm is a critical pump alert`() {
+    fun `an alarm that stopped the insulin rings`() {
         assertThat(shown(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED)).severity).isEqualTo(AlertSeverity.CRITICAL)
     }
 
+    /** An ALERT is not always the step before the stop: a pause for the temperature has stopped the insulin already. */
     @Test
-    fun `an ALERT alarm is a critical pump alert`() {
-        whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)).thenReturn(25)
-        assertThat(shown(alarm(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)).severity).isEqualTo(AlertSeverity.CRITICAL)
+    fun `an alert that paused the insulin rings`() {
+        assertThat(shown(alarm(AlarmCause.ALARM_ALERT_INVALID_TEMPERATURE)).severity).isEqualTo(AlertSeverity.CRITICAL)
     }
 
     @Test
-    fun `a NOTICE alarm is an info pump alert`() {
+    fun `an alarm before the insulin stops chimes once`() {
+        whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)).thenReturn(25)
+        assertThat(shown(alarm(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)).severity).isEqualTo(AlertSeverity.WARNING)
+    }
+
+    @Test
+    fun `a reminder the user set chimes once`() {
+        assertThat(shown(alarm(AlarmCause.ALARM_NOTICE_BG_CHECK, value = 120)).severity).isEqualTo(AlertSeverity.WARNING)
+    }
+
+    @Test
+    fun `an LGS notice is only shown`() {
         assertThat(shown(alarm(AlarmCause.ALARM_NOTICE_LGS_START)).severity).isEqualTo(AlertSeverity.INFO)
+    }
+
+    @Test
+    fun `an unknown alarm rings, because it may have stopped the insulin`() {
+        assertThat(shown(alarm(AlarmCause.ALARM_UNKNOWN)).severity).isEqualTo(AlertSeverity.CRITICAL)
+    }
+
+    // ---- the patch that was not stopped -------------------------------------------------------
+
+    @Test
+    fun `a patch removed without being stopped rings until the user answers`() {
+        sut.patchNotStopped(1_000L)
+
+        val alert = alerts.raised.single()
+        assertThat(alert.kind).isSameInstanceAs(CarelevoAlertKind.NOT_STOPPED)
+        assertThat(alert.key).isEqualTo(CarelevoAlarmNotifier.NOT_STOPPED_KEY)
+        assertThat(alert.severity).isEqualTo(AlertSeverity.CRITICAL)
+        assertThat(alert.lifetime).isEqualTo(AlertLifetime.EVENT)
+        assertThat(alert.raisedAt).isEqualTo(1_000L)
+        assertThat(alert.text).isEqualTo(CarelevoStrings.carelevo_discarded_not_reached)
+        assertThat(alert.textShown()).contains("Take it off")
+    }
+
+    /** It is not one of the stored alarms, so the store emptying after the removal must not end it. */
+    @Test
+    fun `the stored alarms do not end the patch that was not stopped`() {
+        sut.showAlerts(listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED, id = "b")))
+        sut.patchNotStopped(1_000L)
+
+        sut.showAlerts(emptyList())
+
+        assertThat(alerts.resolved).containsExactly("b")
+        assertThat(alerts.active.value.map { it.key }).containsExactly(CarelevoAlarmNotifier.NOT_STOPPED_KEY)
     }
 
     /** The silence of the core holds for one occurrence, so the time must be the stored one, the same after a restart. */

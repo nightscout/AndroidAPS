@@ -1,6 +1,7 @@
 package app.aaps.pump.carelevo.common
 
 import app.aaps.core.interfaces.alerts.AlertOrigin
+import app.aaps.core.interfaces.alerts.DosingEffect
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.AlarmType
@@ -34,21 +35,50 @@ class CarelevoAlertKindTest {
     /** Causes with the same title are one kind: two rows of the same name, one silenced, would only confuse. */
     @Test
     fun `causes that share a title are one kind`() {
-        CarelevoAlertKind.all.forEach { kind ->
+        (CarelevoAlertKind.all - CarelevoAlertKind.NOT_STOPPED).forEach { kind ->
             assertThat(kind.causes.map { it.stringResources().titleRes }.toSet()).containsExactly(kind.title)
         }
         assertThat(CarelevoAlertKind.of(AlarmCause.ALARM_WARNING_PATCH_EXPIRED_PHASE_1))
             .isSameInstanceAs(CarelevoAlertKind.of(AlarmCause.ALARM_WARNING_PATCH_EXPIRED))
     }
 
-    /** The driver treats WARNING and ALERT as "the insulin stops or the patch ends": those the user cannot silence. */
+    /** Decided 2026-11-24 for every driver: a kind with an event that affects dosing cannot be set Silent or Off. */
     @Test
-    fun `a kind is protected when one of its causes is of a critical tier`() {
-        CarelevoAlertKind.all.forEach { kind ->
-            val critical = kind.causes.any { it.alarmType == AlarmType.WARNING || it.alarmType == AlarmType.ALERT }
-            assertThat(kind.isProtected).isEqualTo(critical)
+    fun `a kind is protected when one of its causes affects dosing`() {
+        (CarelevoAlertKind.all - CarelevoAlertKind.NOT_STOPPED).forEach { kind ->
+            assertThat(kind.isProtected).isEqualTo(kind.causes.any { it.effect.affectsDosing })
         }
         assertThat(CarelevoAlertKind.of(AlarmCause.ALARM_WARNING_PUMP_CLOGGED).isProtected).isTrue()
+        // A reservoir nearly empty: the insulin stops unless the user acts.
+        assertThat(CarelevoAlertKind.of(AlarmCause.ALARM_NOTICE_LOW_INSULIN).isProtected).isTrue()
+        // Reminders the user set.
         assertThat(CarelevoAlertKind.of(AlarmCause.ALARM_NOTICE_BG_CHECK).isProtected).isFalse()
+        assertThat(CarelevoAlertKind.of(AlarmCause.ALARM_NOTICE_PATCH_EXPIRED).isProtected).isFalse()
+        assertThat(CarelevoAlertKind.of(AlarmCause.ALARM_NOTICE_LGS_START).isProtected).isFalse()
+        // The patch may still give insulin that AAPS does not count.
+        assertThat(CarelevoAlertKind.NOT_STOPPED.isProtected).isTrue()
+    }
+
+    /** A pump has no glucose alarm: every cause has a severity, so none is dropped. */
+    @Test
+    fun `every cause has a severity`() {
+        AlarmCause.entries.forEach { cause ->
+            assertThat(cause.effect).isNotEqualTo(DosingEffect.GLUCOSE)
+        }
+    }
+
+    /** Every WARNING of the patch says the insulin has stopped, so the patch's tier alone is enough there. */
+    @Test
+    fun `every WARNING of the patch affects dosing now`() {
+        AlarmCause.entries.filter { it.alarmType == AlarmType.WARNING }.forEach { cause ->
+            assertThat(cause.effect).isEqualTo(DosingEffect.NOW)
+        }
+    }
+
+    /** The user's choice is stored under the id: a change loses it. */
+    @Test
+    fun `the id of the patch that was not stopped is pinned`() {
+        assertThat(CarelevoAlertKind.NOT_STOPPED.id).isEqualTo("carelevo.carelevo_alert_not_stopped")
+        assertThat(CarelevoAlertKind.all).contains(CarelevoAlertKind.NOT_STOPPED)
     }
 }
