@@ -121,6 +121,11 @@ class AlertsImpl(
 
     /** Silences given on another phone for an alert this phone has not raised yet; used by [raise]. Guarded by [lock]. */
     private val pendingShared = mutableListOf<SharedSilence>()
+
+    /** A silence tapped on a notification for an alert not raised (again) yet. See [takePendingTap]. */
+    private class PendingTap(val source: String, val key: String, val minutes: Int?, val at: Long)
+
+    private val pendingTaps = mutableListOf<PendingTap>()
     private var pauseEnd: Job? = null
     private var bookings: MutableMap<Pair<String, String>, Booking>? = null
     private var observing = false
@@ -306,6 +311,36 @@ class AlertsImpl(
         return until
     }
 
+    /**
+     * Caller holds [lock]. The end of a silence tapped for [alert] before it was raised again, used up, or 0.
+     *
+     * The notification names only the source and the key, not the occurrence, so a tap is matched by those and kept
+     * only [PENDING_TAP_MINUTES]: long enough for the raiser to raise again after the start, too short to silence a new
+     * occurrence the user did not see. The length counts from the tap.
+     */
+    private fun takePendingTap(alert: Alert): Long {
+        val now = dateUtil.now()
+        pendingTaps.removeAll { now - it.at > PENDING_TAP_MINUTES * 60_000L }
+        val match = pendingTaps.firstOrNull { it.source == alert.source && it.key == alert.key } ?: return 0L
+        pendingTaps.remove(match)
+        // Silence answers an event, it does not quiet it: kept, it would hide a new one
+        if (alert.lifetime == AlertLifetime.EVENT) return 0L
+        val minutes = match.minutes ?: alert.silenceMinutes
+        val length = if (alert.kind.isProtected) minOf(minutes, Alerts.PROTECTED_SILENCE_MAX_MINUTES) else minutes
+        val until = match.at + length * 60_000L
+        if (until <= now) return 0L
+        rememberSilence(alert, until)
+        platform.snoozed(alert, until)
+        aapsLogger.info(LTag.NOTIFICATION, "Alert ${alert.source}/${alert.key} raised silenced: silenced from its notification until ${dateUtil.timeString(until)}")
+        return until
+    }
+
+    /** Caller holds [lock]. Whether [new] shows anything on its card that [old] did not. */
+    private fun cardChanged(old: Alert, new: Alert): Boolean =
+        old.severity != new.severity || cardText(old) != cardText(new) || rh.gs(old.title) != rh.gs(new.title) ||
+            old.notificationTitle != new.notificationTitle || old.action?.label?.let { rh.gs(it) } != new.action?.label?.let { rh.gs(it) } ||
+            old.canMute != new.canMute || old.tellWatch != new.tellWatch || old.breakThroughDnd != new.breakThroughDnd
+
     override fun silencedUntil(source: String, key: String): Long = lock.withLock {
         entries[source to key]?.silencedUntil?.takeIf { it > dateUtil.now() } ?: 0L
     }
@@ -350,12 +385,16 @@ class AlertsImpl(
             // Published before the card, so the alarm screen the card may open finds the alert in [active].
             if (existing != null && existing.alert.raisedAt == alert.raisedAt) {
                 // The same occurrence again: new text or action perhaps, but it does not ring again.
+                val changed = cardChanged(existing.alert, alert)
                 existing.alert = alert
                 publish()
-                if (existing.card != null) showCard(existing, ring = false)
+                // Not posted again when nothing on the card changed: a raiser repeats itself (the BG alarms 5 times in
+                // 30 ms at a start), and on iOS the removal of each old card lost the race with the new one, so the
+                // old cards stayed in the tray after the alert ended (2026-11-25).
+                if (existing.card != null && changed) showCard(existing, ring = false)
             } else {
                 existing?.let { removeCard(it) }
-                val entry = Entry(alert, silencedUntil = maxOf(storedSilence(alert), takePendingShared(alert)))
+                val entry = Entry(alert, silencedUntil = maxOf(storedSilence(alert), takePendingShared(alert), takePendingTap(alert)))
                 entries[id] = entry
                 publish()
                 showCard(entry, ring = true)
@@ -382,9 +421,15 @@ class AlertsImpl(
      * hour later would be telling them about something they have already read.
      */
     override fun silence(source: String, key: String, minutes: Int?) {
-        // A button of a notification left from before a restart, tapped before the raiser raised its alert again.
-        val alert = lock.withLock { entries[source to key]?.alert }
-            ?: return aapsLogger.warn(LTag.NOTIFICATION, "Alert $source/$key is not active, nothing to silence")
+        val alert = lock.withLock {
+            entries[source to key]?.alert ?: run {
+                // A button of a notification left from before a restart, tapped before the raiser raised its alert again:
+                // iOS starts the app for the tap. Kept for that raise, as a silence from another phone is.
+                pendingTaps.removeAll { it.source == source && it.key == key }
+                pendingTaps += PendingTap(source, key, minutes, dateUtil.now())
+                null
+            }
+        } ?: return aapsLogger.info(LTag.NOTIFICATION, "Alert $source/$key is not active yet, its silence is kept for $PENDING_TAP_MINUTES min")
         // Outside the lock: neither call may be made while holding it, it is not reentrant.
         if (alert.lifetime == AlertLifetime.EVENT) resolve(source, key)
         else snooze(source, key, minutes ?: alert.silenceMinutes)
@@ -987,5 +1032,8 @@ class AlertsImpl(
 
         /** The key of a test chime. */
         const val TEST_KEY = "test"
+
+        /** How long a silence tapped for an alert not raised yet waits for its raise. */
+        const val PENDING_TAP_MINUTES = 2
     }
 }

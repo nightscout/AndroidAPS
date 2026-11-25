@@ -612,6 +612,73 @@ class AlertsImplTest : TestBase() {
         assertThat(alertPlatform.screens).isEmpty()
     }
 
+    /** On iOS the removal of each old card lost the race with the new one, and the old cards stayed in the tray. */
+    @Test
+    fun `the same occurrence again with nothing new does not post its card again`() {
+        sut.raise(alert(severity = AlertSeverity.WARNING))
+        val first = card().instanceKey
+
+        repeat(4) { sut.raise(alert(severity = AlertSeverity.WARNING)) }
+
+        assertThat(card().instanceKey).isEqualTo(first)
+        assertThat(alertPlatform.chimes).containsExactly("occlusion")
+    }
+
+    @Test
+    fun `the same occurrence with a new text posts its card again without ringing`() {
+        sut.raise(alert(severity = AlertSeverity.WARNING))
+        val first = card().instanceKey
+
+        sut.raise(Alert(kind = TestKind("pump", AlertOrigin.PUMP, "occlusion"), key = "occlusion", severity = AlertSeverity.WARNING,
+                        title = TextRef.Literal("occlusion"), text = TextRef.Literal("now 5 g"), raisedAt = 500L))
+
+        assertThat(card().instanceKey).isNotEqualTo(first)
+        assertThat(alertPlatform.chimes).containsExactly("occlusion")
+    }
+
+    /** iOS starts the app for a tap on a notification left from before; the tap comes before the raiser raises again. */
+    @Test
+    fun `a silence tapped before the alert is raised again holds when it is raised`() {
+        sut.silence("pump", "occlusion", 15)
+
+        sut.raise(alert(severity = AlertSeverity.WARNING))
+
+        assertThat(alertPlatform.chimes).isEmpty()
+        assertThat(card().sound).isNull()
+        assertThat(sut.silencedUntil("pump", "occlusion")).isEqualTo(now + 15 * 60_000L)
+    }
+
+    @Test
+    fun `a silence tapped long before the raise is not used`() {
+        sut.silence("pump", "occlusion", 15)
+        now += 3 * 60_000L
+
+        sut.raise(alert(severity = AlertSeverity.WARNING))
+
+        assertThat(alertPlatform.chimes).containsExactly("occlusion")
+        assertThat(sut.silencedUntil("pump", "occlusion")).isEqualTo(0L)
+    }
+
+    @Test
+    fun `a silence tapped before the raise is used once`() {
+        sut.silence("pump", "occlusion", 15)
+        sut.raise(alert(severity = AlertSeverity.WARNING))
+        sut.resolve("pump", "occlusion")
+
+        sut.raise(alert(severity = AlertSeverity.WARNING, raisedAt = 900L))
+
+        assertThat(alertPlatform.chimes).containsExactly("occlusion")
+    }
+
+    @Test
+    fun `a silence tapped before the raise of a protected kind is short`() {
+        sut.silence("pump", "occlusion", 240)
+
+        sut.raise(alert(severity = AlertSeverity.WARNING, kind = TestKind("pump", AlertOrigin.PUMP, "occlusion", isProtected = true)))
+
+        assertThat(sut.silencedUntil("pump", "occlusion")).isEqualTo(now + Alerts.PROTECTED_SILENCE_MAX_MINUTES * 60_000L)
+    }
+
     /** Named by its level, a warning reached the phone's tray and the watch as "Info". */
     @Test
     fun `the card is announced with the alert's own title`() {

@@ -522,7 +522,8 @@ The order matters: step 3 must not come before step 2.
 5. Eversense: its device alarms to alerts, and its glucose alarms dropped (step 2 is done by then). Built
    2026-11-24, with the rule of decision 14; Eversense is the example for the other drivers.
 6. Carbs required as an alert. Built 2026-11-24: see "Review of today's notification ids".
-7. The cleanups, after the other drivers: the `sound` parameter and the URGENT level of the public `post`, the
+7. The cleanups, after the other drivers. Those move to alerts when each is reworked for shared code and the new
+   acceptance file; until then the alert work only must not break them (decided 2026-11-25). The `sound` parameter and the URGENT level of the public `post`, the
    silent tray channel with only IMPORTANT cards, the tray setting's name, `ToastUtils`. Also whether an alert's card
    goes to the tray when the alert has its own system notification: a WARNING shows two entries today, the chime
    with the silence buttons and the card without them (found on iOS 2026-11-25; since then the card is titled by
