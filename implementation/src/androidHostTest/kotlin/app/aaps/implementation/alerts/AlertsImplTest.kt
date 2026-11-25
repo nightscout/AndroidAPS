@@ -612,6 +612,26 @@ class AlertsImplTest : TestBase() {
         assertThat(alertPlatform.screens).isEmpty()
     }
 
+    /** Named by its level, a warning reached the phone's tray and the watch as "Info". */
+    @Test
+    fun `the card is announced with the alert's own title`() {
+        sut.raise(alert(key = "low", severity = AlertSeverity.WARNING))
+
+        assertThat(card().alarmTitle).isEqualTo("low")
+    }
+
+    @Test
+    fun `a title the caller gave is kept`() {
+        sut.raise(
+            Alert(
+                kind = TestKind("aaps", AlertOrigin.APP, "bolus"), key = "bolus", severity = AlertSeverity.CRITICAL,
+                title = TextRef.Literal("bolus failed"), raisedAt = 500L, notificationTitle = "AAPS"
+            )
+        )
+
+        assertThat(card().alarmTitle).isEqualTo("AAPS")
+    }
+
     @Test
     fun `an info alert is a normal card with no sound`() {
         sut.raise(alert(severity = AlertSeverity.INFO))

@@ -143,8 +143,8 @@ class Alert(
     /** Default [AlertLifetime.CONDITION], because a pump driver always raises one. */
     val lifetime: AlertLifetime = AlertLifetime.CONDITION,
     /**
-     * Shown on the card and sent to the watch. A pump alert leaves it null and the card is titled by its severity, as
-     * every other notification is; the app's own alarms pass the title their caller gave, which the watch shows.
+     * The title of the system notification and of the watch's alarm. A pump alert leaves it null and is shown with
+     * its [title]; the app's own alarms pass the title their caller gave, and then the card text is [text] alone.
      */
     val notificationTitle: String? = null,
     /**

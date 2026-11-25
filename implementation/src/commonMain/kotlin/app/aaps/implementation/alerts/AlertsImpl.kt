@@ -592,9 +592,9 @@ class AlertsImpl(
             ringtoneUri = if (alert.severity == AlertSeverity.CRITICAL && !silenced && !quiet) ringtoneFor(alert) else null,
             actions = alert.action?.let { listOf(NotificationAction(it.label) { act(alert.source, alert.key) }) } ?: emptyList(),
             validityCheck = null,
-            // What the system notification and the watch announce it as. A pump alert passes nothing and is named by
-            // its level, as every card was before; the app's own alarms carry the title their caller gave.
-            alarmTitle = alert.notificationTitle,
+            // What the system notification and the watch announce it as: the title the caller gave, else the alert's
+            // own ("Low", "Occlusion"). Named by its level instead, a WARNING reached the tray as "Info" (2026-11-25).
+            alarmTitle = alert.notificationTitle ?: rh.gs(alert.title),
             canMute = alert.canMute,
             tellWatch = alert.tellWatch,
             breakThroughDnd = alert.breakThroughDnd
