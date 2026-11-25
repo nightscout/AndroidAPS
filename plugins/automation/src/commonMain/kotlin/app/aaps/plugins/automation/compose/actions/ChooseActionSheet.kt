@@ -37,12 +37,14 @@ import app.aaps.plugins.automation.actions.ActionProfileSwitchPercent
 import app.aaps.plugins.automation.actions.ActionRunAutotune
 import app.aaps.plugins.automation.actions.ActionRunScene
 import app.aaps.plugins.automation.actions.ActionSMBChange
+import app.aaps.plugins.automation.actions.ActionSMBMaxMinutesChange
 import app.aaps.plugins.automation.actions.ActionSendSMS
 import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionSmoothingChange
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.actions.ActionStopProcessing
 import app.aaps.plugins.automation.actions.ActionStopTempTarget
+import app.aaps.plugins.automation.actions.ActionUAMSMBMaxMinutesChange
 import app.aaps.plugins.automation.compose.iconColor
 import kotlin.reflect.KClass
 
@@ -65,6 +67,8 @@ private fun actionCategoryOf(cls: KClass<*>): ActionCategory = when (cls) {
 
     ActionSMBChange::class,
     ActionSmoothingChange::class,
+    ActionSMBMaxMinutesChange::class,
+    ActionUAMSMBMaxMinutesChange::class,
     ActionStopProcessing::class,
     ActionRunAutotune::class -> ActionCategory.Loop
 
