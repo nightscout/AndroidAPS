@@ -59,6 +59,7 @@ import app.aaps.wear.interaction.menus.StatusMenuActivity
 import app.aaps.wear.interaction.menus.TileMenuActivity
 import app.aaps.wear.tile.ActionsTileService
 import app.aaps.wear.tile.ActionsTileSettingsActivity
+import app.aaps.wear.tile.BGTileService
 import app.aaps.wear.tile.BgGraphTileService
 import app.aaps.wear.tile.BgGraphTileSettingsActivity
 import app.aaps.wear.tile.QuickWizardTileService
@@ -132,6 +133,12 @@ object WearMemberInjectors {
     @IntoMap
     @ClassKey(BgGraphComplication::class)
     fun bindBgGraphComplication(injector: MembersInjector<BgGraphComplication>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(BGTileService::class)
+    fun bindBGTileService(injector: MembersInjector<BGTileService>): MembersInjector<*> = injector
 
     @Provides
     @FeatureMemberInjectors

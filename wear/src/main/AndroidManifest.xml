@@ -861,6 +861,20 @@
                 android:resource="@drawable/bg_graph_tile" />
         </service>
 
+        <service
+            android:name=".tile.BGTileService"
+            android:exported="true"
+            android:label="AAPS(BG)"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/bg_tile_preview" />
+        </service>
+
         <!-- Transparent activity to handle complication taps reliably on Android 12+ -->
         <activity
             android:name=".complications.ComplicationTapActivity"
