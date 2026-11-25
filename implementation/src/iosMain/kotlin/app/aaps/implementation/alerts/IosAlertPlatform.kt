@@ -166,8 +166,12 @@ class IosAlertPlatform(
             return
         }
         aapsLogger.debug(LTag.NOTIFICATION, "Pump alert ${alert.source}/${alert.key} rings again in ${seconds.toLong()}s")
+        // The booking is for a suspended app only. A running app ends the silence on time itself and takes the booking
+        // back (`withdrawn`); booked for the same second, both rang, and the tray had the card, the chime and the
+        // booking (2026-11-25). So it is booked a little later: a suspended app re-rings that much late.
         post(
-            snoozeId(alert.source, alert.key), alert, UNTimeIntervalNotificationTrigger.triggerWithTimeInterval(seconds, repeats = false),
+            snoozeId(alert.source, alert.key), alert,
+            UNTimeIntervalNotificationTrigger.triggerWithTimeInterval(seconds + REBOOK_LATER_SECONDS, repeats = false),
             category = categoryOf(alert)
         )
     }
@@ -305,6 +309,9 @@ class IosAlertPlatform(
         private const val CHIME_PREFIX = "pump-alert-chime-"
         private const val SNOOZE_PREFIX = "pump-alert-snooze-"
         internal const val BOOKING_PREFIX = "alert-booking-"
+
+        /** How much later than the end of a silence its booked re-ring fires; see [snoozed]. */
+        private const val REBOOK_LATER_SECONDS = 5.0
 
         internal const val CATEGORY_WARNING = "aaps-alert-warning"
         internal const val SILENCE_PREFIX = "aaps-alert-silence-"
