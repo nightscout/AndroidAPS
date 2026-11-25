@@ -77,6 +77,14 @@ interface NotificationManager {
      */
     fun muteAllAlarms()
 
+    /**
+     * Takes out of the system tray the cards a previous run of the app left there. Called once, at the start of the
+     * app's start. The cards live in memory, so after a restart (a crash, an update, iOS ending the app) nothing
+     * removes the old ones, and an alert raised again puts a second card next to its old one. What is still active
+     * is raised again and gets a new card.
+     */
+    fun clearLeftovers()
+
     companion object {
 
         /**

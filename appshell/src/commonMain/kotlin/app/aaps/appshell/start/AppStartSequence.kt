@@ -153,6 +153,9 @@ class AppStartSequence(
         }
         started = true
         try {
+            // The cards a previous run left in the system tray, before this run posts any (ALARMS.md, 2026-11-25).
+            notificationManager.clearLeftovers()
+
             // A snackbar sent while no screen shows one becomes a notification instead of being lost.
             // First, so that messages sent during the start are covered too.
             snackbarNotificationFallback.start()

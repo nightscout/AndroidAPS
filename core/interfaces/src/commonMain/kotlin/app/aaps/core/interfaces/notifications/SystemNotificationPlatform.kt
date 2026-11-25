@@ -62,4 +62,11 @@ interface SystemNotificationPlatform {
      * notification away. Called once during start up.
      */
     fun onDismissed(callback: (instanceKey: Int) -> Unit)
+
+    /**
+     * Take out of the system tray the card notifications of a previous run of the app, leaving every key for which
+     * [isCurrent] is true: those are this run's own. Only cards: not a chime, a booked alert or the notification of a
+     * running service. Called once at start; see `NotificationManager.clearLeftovers`.
+     */
+    fun clearLeftovers(isCurrent: (instanceKey: Int) -> Boolean)
 }

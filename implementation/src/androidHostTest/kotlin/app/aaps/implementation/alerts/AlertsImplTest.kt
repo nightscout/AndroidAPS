@@ -83,6 +83,7 @@ class AlertsImplTest : TestBase() {
         }
 
         override fun onDismissed(callback: (Int) -> Unit) {}
+        override fun clearLeftovers(isCurrent: (Int) -> Boolean) {}
     }
 
     private class RecordingAlertPlatform : AlertPlatform {
@@ -634,6 +635,34 @@ class AlertsImplTest : TestBase() {
 
         assertThat(card().instanceKey).isNotEqualTo(first)
         assertThat(alertPlatform.chimes).containsExactly("occlusion")
+    }
+
+    /** The re-ring of a silenced alert is booked with its text; a new text must reach the booking (iOS showed an old BG). */
+    @Test
+    fun `a silenced alert with a new text books its re-ring again`() {
+        val kind = TestKind("pump", AlertOrigin.PUMP, "occlusion")
+        sut.raise(Alert(kind = kind, key = "occlusion", severity = AlertSeverity.WARNING, title = TextRef.Literal("occlusion"),
+                        text = TextRef.Literal("BG 136"), raisedAt = 500L))
+        sut.silence("pump", "occlusion", 15)
+        val booked = alertPlatform.snoozes.size
+
+        sut.raise(Alert(kind = kind, key = "occlusion", severity = AlertSeverity.WARNING, title = TextRef.Literal("occlusion"),
+                        text = TextRef.Literal("BG 170"), raisedAt = 500L))
+
+        assertThat(alertPlatform.snoozes).hasSize(booked + 1)
+        assertThat(alertPlatform.snoozes.last()).isEqualTo("occlusion" to now + 15 * 60_000L)
+        assertThat(alertPlatform.chimes).containsExactly("occlusion")
+    }
+
+    @Test
+    fun `a silenced alert raised again with nothing new is not booked again`() {
+        sut.raise(alert(severity = AlertSeverity.WARNING))
+        sut.silence("pump", "occlusion", 15)
+        val booked = alertPlatform.snoozes.size
+
+        sut.raise(alert(severity = AlertSeverity.WARNING))
+
+        assertThat(alertPlatform.snoozes).hasSize(booked)
     }
 
     /** iOS starts the app for a tap on a notification left from before; the tap comes before the raiser raises again. */

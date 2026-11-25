@@ -337,7 +337,7 @@ class AlertsImpl(
 
     /** Caller holds [lock]. Whether [new] shows anything on its card that [old] did not. */
     private fun cardChanged(old: Alert, new: Alert): Boolean =
-        old.severity != new.severity || cardText(old) != cardText(new) || rh.gs(old.title) != rh.gs(new.title) ||
+        old.severity != new.severity || cardText(old) != cardText(new) || systemText(old) != systemText(new) || rh.gs(old.title) != rh.gs(new.title) ||
             old.notificationTitle != new.notificationTitle || old.action?.label?.let { rh.gs(it) } != new.action?.label?.let { rh.gs(it) } ||
             old.canMute != new.canMute || old.tellWatch != new.tellWatch || old.breakThroughDnd != new.breakThroughDnd
 
@@ -391,7 +391,12 @@ class AlertsImpl(
                 // Not posted again when nothing on the card changed: a raiser repeats itself (the BG alarms 5 times in
                 // 30 ms at a start), and on iOS the removal of each old card lost the race with the new one, so the
                 // old cards stayed in the tray after the alert ended (2026-11-25).
-                if (existing.card != null && changed) showCard(existing, ring = false)
+                if (existing.card != null && changed) {
+                    showCard(existing, ring = false)
+                    // A silenced alert rings again from a booking made with the text it had then (iOS showed a BG of
+                    // the time of the silence, 2026-11-25): booked again, the booking replaces the old one.
+                    if (existing.silencedUntil > dateUtil.now()) platform.snoozed(alert, existing.silencedUntil)
+                }
             } else {
                 existing?.let { removeCard(it) }
                 val entry = Entry(alert, silencedUntil = maxOf(storedSilence(alert), takePendingShared(alert), takePendingTap(alert)))

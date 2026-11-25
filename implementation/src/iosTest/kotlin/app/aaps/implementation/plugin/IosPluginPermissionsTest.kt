@@ -99,6 +99,7 @@ class IosPluginPermissionsTest {
         override fun dismiss(id: NotificationId) {}
         override fun dismiss(handle: NotificationHandle) {}
         override fun muteAllAlarms() {}
+        override fun clearLeftovers() {}
     }
 
     private class FakePlugin(

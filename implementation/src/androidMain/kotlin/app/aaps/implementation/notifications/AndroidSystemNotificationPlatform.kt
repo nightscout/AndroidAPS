@@ -131,6 +131,27 @@ class AndroidSystemNotificationPlatform(
         }
     }
 
+    /**
+     * The cards a previous run left: a plain card on the general channel (its id is its key), and a sounding card on
+     * the silent alarm channels (`SOUND_ID_OFFSET` + its key). A chime (`CHIME_ID_OFFSET` and up) is left: the same
+     * alert posts it again under the same id. Android removes an app's notifications when it is updated or force
+     * stopped, but not after a crash or when the system ends the process.
+     */
+    override fun clearLeftovers(isCurrent: (instanceKey: Int) -> Boolean) {
+        val active = try {
+            notificationManager.activeNotifications
+        } catch (e: RuntimeException) {
+            aapsLogger.error(LTag.NOTIFICATION, "Cannot read the notifications left from before", e)
+            return
+        }
+        active.forEach { sbn ->
+            val key = leftoverCardKey(sbn.notification.channelId, sbn.id) ?: return@forEach
+            if (isCurrent(key)) return@forEach
+            notificationManager.cancel(sbn.id)
+            aapsLogger.debug(LTag.NOTIFICATION, "Card left from before removed: ${sbn.id}")
+        }
+    }
+
     /** Just remembers the callback. The receiver it feeds is registered by [ensureStarted]. */
     override fun onDismissed(callback: (instanceKey: Int) -> Unit) {
         dismissCallback = callback
@@ -203,4 +224,17 @@ class AndroidSystemNotificationPlatform(
          */
         const val EXTRA_INSTANCE_KEY = "instanceKey"
     }
+}
+
+/**
+ * The key of a card's system notification, from its channel and id, or null when it is not a card: the running
+ * service has a channel of its own, and a chime is above the sounding cards' ids.
+ */
+internal fun leftoverCardKey(channelId: String?, id: Int): Int? = when {
+    channelId == NotificationManager.CHANNEL_ID && id in 0 until AlarmNotificationManager.SOUND_ID_OFFSET -> id
+
+    (channelId == AlarmNotificationManager.CHANNEL_SILENT || channelId == AlarmNotificationManager.CHANNEL_SILENT_URGENT) &&
+        id in AlarmNotificationManager.SOUND_ID_OFFSET until AlarmNotificationManager.CHIME_ID_OFFSET -> id - AlarmNotificationManager.SOUND_ID_OFFSET
+
+    else                                                                                                  -> null
 }

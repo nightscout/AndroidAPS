@@ -227,6 +227,16 @@ class IosSystemNotificationPlatformTest {
         assertEquals(emptyList<String>(), platform.ownIdentifiers(listOf("other-app-42", "42")))
     }
 
+    /** After a restart a card left from before goes; this run's own cards, a chime and a booking stay. */
+    @Test
+    fun `only the cards left from before are cleared at start`() {
+        val delivered = listOf(platform.identifier(10_000), platform.identifier(10_001), "pump-alert-chime-bg/low", "alert-booking-bg/low", "aaps-loop")
+
+        val cleared = platform.leftoverIdentifiers(delivered) { key -> key == 10_001 }
+
+        assertEquals(listOf(platform.identifier(10_000)), cleared)
+    }
+
     // ---------------------------------------------------------------------------------------------
     // Alarm audio
     // ---------------------------------------------------------------------------------------------

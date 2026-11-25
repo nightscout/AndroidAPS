@@ -87,4 +87,8 @@ class DesktopSystemNotificationPlatform(
         // Kept for the shape of the contract. AWT gives no dismissal callback, so this never fires.
         aapsLogger.debug(LTag.CORE, "Desktop cannot report notification dismissals")
     }
+
+    override fun clearLeftovers(isCurrent: (instanceKey: Int) -> Boolean) {
+        // Nothing to clear: a tray toast expires on its own and its tray icon goes with the process.
+    }
 }

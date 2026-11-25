@@ -527,7 +527,9 @@ The order matters: step 3 must not come before step 2.
    silent tray channel with only IMPORTANT cards, the tray setting's name, `ToastUtils`. Also whether an alert's card
    goes to the tray when the alert has its own system notification: a WARNING shows two entries today, the chime
    with the silence buttons and the card without them (found on iOS 2026-11-25; since then the card is titled by
-   the alert, no longer "Info").
+   the alert, no longer "Info"; the system notification has the alert's text alone under it). Done on the way
+   (2026-11-25): the cards a previous run left in the tray are cleared at start (`NotificationManager.clearLeftovers`),
+   and a silenced alert whose text changes books its re-ring again, so the re-ring shows the latest value.
 
 ### Decisions (2026-11-21)
 

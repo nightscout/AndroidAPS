@@ -98,6 +98,19 @@ class AndroidSystemNotificationPlatformTest {
         verify(preferences, never()).get(any<BooleanKey>())
     }
 
+    /** After a restart only cards go: never the running service, never a chime the alert posts again under its id. */
+    @Test
+    fun `a card left from before is told from everything else by channel and id`() {
+        assertThat(leftoverCardKey(NotificationManager.CHANNEL_ID, 10_003)).isEqualTo(10_003)
+        assertThat(leftoverCardKey(AlarmNotificationManager.CHANNEL_SILENT_URGENT, AlarmNotificationManager.SOUND_ID_OFFSET + 10_003)).isEqualTo(10_003)
+        assertThat(leftoverCardKey(AlarmNotificationManager.CHANNEL_SILENT, AlarmNotificationManager.SOUND_ID_OFFSET + 5)).isEqualTo(5)
+        // A chime, on the same silent channel
+        assertThat(leftoverCardKey(AlarmNotificationManager.CHANNEL_SILENT, AlarmNotificationManager.CHIME_ID_OFFSET + 7)).isNull()
+        // The running service and anything on another channel
+        assertThat(leftoverCardKey("AndroidAPS-Ongoing", 4711)).isNull()
+        assertThat(leftoverCardKey("AAPS-OpenLoop-v2", 10_003)).isNull()
+    }
+
     @Test
     fun `without the preference nothing is shown at all`() {
         whenever(preferences.get(BooleanKey.AlertUrgentAsAndroidNotification)).thenReturn(false)

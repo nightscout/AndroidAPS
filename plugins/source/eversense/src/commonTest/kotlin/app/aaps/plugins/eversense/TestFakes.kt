@@ -275,4 +275,5 @@ internal class RecordingNotificationManager : NotificationManager {
     }
 
     override fun muteAllAlarms() {}
+    override fun clearLeftovers() {}
 }

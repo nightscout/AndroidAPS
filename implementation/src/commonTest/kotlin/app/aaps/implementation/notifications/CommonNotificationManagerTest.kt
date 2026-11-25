@@ -73,6 +73,12 @@ class CommonNotificationManagerTest {
         }
 
         override fun onDismissed(callback: (Int) -> Unit) {}
+
+        /** What [clearLeftovers] was told counts as this run's own. */
+        var isCurrent: ((Int) -> Boolean)? = null
+        override fun clearLeftovers(isCurrent: (Int) -> Boolean) {
+            this.isCurrent = isCurrent
+        }
     }
 
     /** Returns the literal for a [TextRef.Literal] and a fixed marker for anything else. */
@@ -140,6 +146,21 @@ class CommonNotificationManagerTest {
 
         assertEquals(listOf("over the limit"), texts(sut))
         assertContains(platform.calls, "show:${handle.instanceKey}:over the limit:urgent=true")
+    }
+
+    /**
+     * A card this run has posted is its own and stays; any other key the platform finds is left from before. Asked
+     * when the platform looks, so a card posted between the start of the clearing and the look also stays.
+     */
+    @Test
+    fun `clearing the leftovers keeps the cards of this run`() = runTest {
+        val sut = createSut()
+        sut.clearLeftovers()
+        val handle = sut.post(NotificationId.TOAST_ALARM, "over the limit")
+
+        val isCurrent = platform.isCurrent!!
+        assertEquals(true, isCurrent(handle.instanceKey))
+        assertEquals(false, isCurrent(handle.instanceKey + 1))
     }
 
     /** allowMultiple = false, so a second post of the same id replaces the first rather than adding. */

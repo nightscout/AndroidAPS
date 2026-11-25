@@ -125,6 +125,7 @@ class PluginBaseStartFailureTest {
         }
 
         override fun muteAllAlarms() {}
+        override fun clearLeftovers() {}
     }
 
     /**

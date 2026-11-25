@@ -230,6 +230,9 @@ class CommonNotificationManager(
         aapsLogger.debug(LTag.NOTIFICATION, "Muted all alarms")
     }
 
+    // A key in the list now is this run's own, also one posted while the platform still looks: it stays.
+    override fun clearLeftovers() = platform.clearLeftovers { key -> _notifications.value.any { it.instanceKey == key } }
+
     /** Caller must hold [lock]. */
     private fun removeMatching(logLine: String, predicate: (AapsNotification) -> Boolean) {
         val current = _notifications.value

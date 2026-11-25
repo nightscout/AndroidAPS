@@ -182,5 +182,6 @@ class SnackbarNotificationFallbackTest {
         override fun dismiss(handle: NotificationHandle) {}
 
         override fun muteAllAlarms() {}
+        override fun clearLeftovers() {}
     }
 }

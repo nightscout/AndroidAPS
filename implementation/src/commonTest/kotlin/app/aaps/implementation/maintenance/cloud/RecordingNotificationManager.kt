@@ -77,4 +77,5 @@ class RecordingNotificationManager : NotificationManager {
     override fun dismiss(id: NotificationId) = Unit
     override fun dismiss(handle: NotificationHandle) = Unit
     override fun muteAllAlarms() = Unit
+    override fun clearLeftovers() = Unit
 }

@@ -64,6 +64,7 @@ class ComboV2PluginErrorLockoutTest {
         override fun dismiss(handle: NotificationHandle) {}
 
         override fun muteAllAlarms() {}
+        override fun clearLeftovers() {}
 
         private fun record(id: NotificationId, level: NotificationLevel, validityCheck: (() -> Boolean)?): NotificationHandle {
             posts += Post(id, level, validityCheck)

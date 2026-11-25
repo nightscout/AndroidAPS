@@ -243,6 +243,27 @@ class IosSystemNotificationPlatform(
     }
 
     /**
+     * The cards of a previous run of the app. Every card here is named by its key, which starts again in every run,
+     * so an old card is not replaced by the new one of the same alert and stayed in the tray after a restart. Only
+     * delivered ones: this class never books a card for later. The look is done by iOS later, so a card this run
+     * posts in between is kept through [isCurrent].
+     */
+    override fun clearLeftovers(isCurrent: (instanceKey: Int) -> Boolean) {
+        center.getDeliveredNotificationsWithCompletionHandler { delivered ->
+            val posted = delivered.orEmpty().mapNotNull { (it as? UNNotification)?.request?.identifier }
+            val ids = leftoverIdentifiers(posted, isCurrent)
+            if (ids.isNotEmpty()) {
+                center.removeDeliveredNotificationsWithIdentifiers(ids)
+                aapsLogger.debug(LTag.NOTIFICATION, "Cards left from before removed: $ids")
+            }
+        }
+    }
+
+    /** Of [identifiers], the cards of this class that [isCurrent] does not claim. Without a centre, for a test. */
+    internal fun leftoverIdentifiers(identifiers: List<String>, isCurrent: (instanceKey: Int) -> Boolean): List<String> =
+        ownIdentifiers(identifiers).filter { id -> instanceKeyOf(id)?.let { !isCurrent(it) } ?: false }
+
+    /**
      * The identifiers [cancelAll] is allowed to remove.
      *
      * Split out so it can be checked without a notification centre, which a test binary has no
