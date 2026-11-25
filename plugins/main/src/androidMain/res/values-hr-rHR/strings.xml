@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="nav_history_browser">Preglednik povijesti</string>
     <string name="sensor_label">Senzor</string>
     <string name="insulin_label">Inzulin</string>
+    <string name="pb_label">Baterija pumpe</string>
+    <string name="cannula">Kanila</string>
+    <string name="patch_pump">Pumpa bez katetera</string>
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
     <string name="basal_shortname">BAZAL</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
-    <string name="description_persistent_notification">Prikazuje tekuće obavijesti sa kratkim pregledom što loop radi</string>
+    <string name="description_persistent_notification">Prikazuje stalnu obavijest s kratkim pregledom onoga što vaša petlja radi</string>
+    <string name="old_data">STARI PODACI</string>
+    <string name="notification_iob_short">%1$.1fJ</string>
 </resources>

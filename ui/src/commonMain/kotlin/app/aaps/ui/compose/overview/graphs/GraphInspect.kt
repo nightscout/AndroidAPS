@@ -616,7 +616,7 @@ private fun PillTriangleItem(pointsUp: Boolean, text: String, color: Color) {
 }
 
 /**
- * Same proportions as [TriangleShape] and [InvertedTriangleShape]. Those only fill the top half of
+ * Same proportions as [TriangleShape] and [invertedTriangleShape]. Those only fill the top half of
  * their box, so the triangle is drawn here to be centered.
  */
 @Composable

@@ -3,6 +3,9 @@
     <string name="executing_right_now">Команда виконується зараз</string>
     <string name="smb_being_delivered">Зараз вводиться SMB. Спробуйте ще раз, коли введення завершиться.</string>
     <string name="basal_value_below_minimum">Базальне значення нижче мінімального. Профіль не встановлено!</string>
+    <string name="concentration_change_failed_title">Не вдалося змінити інсулін</string>
+    <string name="concentration_change_failed">Новий інсулін уже в помпі, але AAPS не зміг записати в неї профіль. Помпа вводить неправильну кількість інсуліну. Негайно від’єднайте або зніміть помпу, перевірте ГК і за потреби введіть інсулін іншим способом. Підключайте помпу знову лише після того, як профіль буде записано.</string>
+    <string name="concentration_change_pending">Профіль із новим інсуліном ще не записано в помпу. Інсулін не можна вводити, доки профіль не буде записано.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Базальний профіль у помпі оновлено. Помпа округлює базал до власного кроку: вона вводить %1$s на добу замість %2$s.</string>
     <string name="basal_reported_far_from_profile">Помпа повідомляє базал, який сильно відрізняється від профілю. AAPS залишає базал профілю. Перевірте базальні швидкості в помпі.</string>
     <!--       Stats -->

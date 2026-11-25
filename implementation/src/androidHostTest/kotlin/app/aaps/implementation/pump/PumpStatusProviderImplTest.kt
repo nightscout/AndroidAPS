@@ -1,9 +1,12 @@
 package app.aaps.implementation.pump
 
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -124,6 +127,53 @@ class PumpStatusProviderImplTest : TestBaseWithProfile() {
         testPumpPlugin.reservoir = PumpInsulin(0.0)
 
         assertThat(status().getInt("reservoir")).isEqualTo(0)
+    }
+
+    /**
+     * A pod measures only up to 50 U and the driver keeps 75 U above that. Nightscout showed the 75 as measured
+     * (#5572). It gets the 50 the pod can measure, and "50+ U" to show.
+     */
+    @Test
+    fun `a patch pump above its measuring range sends the limit and the text to show`() = runTest {
+        testPumpPlugin.pumpDescription = PumpDescription().fillFor(PumpType.OMNIPOD_DASH)
+        testPumpPlugin.reservoir = PumpInsulin(75.0)
+
+        val json = status()
+
+        assertThat(json.getInt("reservoir")).isEqualTo(50)
+        assertThat(json.getString("reservoir_display_override")).isEqualTo("50+ U")
+    }
+
+    @Test
+    fun `a patch pump inside its measuring range sends the number only`() = runTest {
+        testPumpPlugin.pumpDescription = PumpDescription().fillFor(PumpType.OMNIPOD_DASH)
+        testPumpPlugin.reservoir = PumpInsulin(32.5)
+
+        val json = status()
+
+        assertThat(json.getInt("reservoir")).isEqualTo(32)
+        assertThat(json.has("reservoir_display_override")).isFalse()
+    }
+
+    /** The limit comes from the pump type, not from one driver: a Medtrum measures up to 200 U. */
+    @Test
+    fun `the limit is the one of the pump in use`() = runTest {
+        testPumpPlugin.pumpDescription = PumpDescription().fillFor(PumpType.MEDTRUM_NANO)
+        testPumpPlugin.reservoir = PumpInsulin(150.0)
+
+        assertThat(status().getInt("reservoir")).isEqualTo(150)
+        assertThat(status().has("reservoir_display_override")).isFalse()
+    }
+
+    /** A pump with a tube has no such limit: its default of 50 must not cut a full reservoir. */
+    @Test
+    fun `a pump that is no patch pump sends what it has`() = runTest {
+        testPumpPlugin.reservoir = PumpInsulin(180.0)
+
+        val json = status()
+
+        assertThat(json.getInt("reservoir")).isEqualTo(180)
+        assertThat(json.has("reservoir_display_override")).isFalse()
     }
 
     /** A battery level of null must not appear as 0%. */

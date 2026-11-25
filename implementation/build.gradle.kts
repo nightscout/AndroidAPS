@@ -120,8 +120,7 @@ kotlin {
 
                 // Everything here was `api` on the old android library, so it must stay exported.
                 api(libs.androidx.datastore.preferences)
-                api(project.dependencies.platform(libs.androidx.compose.bom))
-                api(libs.androidx.compose.runtime)
+                api(libs.jetbrains.compose.runtime)
 
                 // Protection
                 implementation(libs.androidx.biometric)
@@ -151,8 +150,7 @@ kotlin {
                 implementation(libs.com.google.truth)
                 implementation(libs.org.skyscreamer.jsonassert)
 
-                implementation(project.dependencies.platform(libs.androidx.compose.bom))
-                implementation(libs.androidx.compose.ui.test.junit4)
+                implementation(libs.jetbrains.compose.ui.test.junit4)
                 implementation(libs.org.robolectric)
                 // Was debugImplementation: supplies the manifest holding the activity that
                 // createComposeRule() launches. The multiplatform library target has no build types.

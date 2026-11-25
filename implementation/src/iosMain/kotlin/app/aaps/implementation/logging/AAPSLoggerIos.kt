@@ -3,6 +3,7 @@ package app.aaps.implementation.logging
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDate
 import platform.Foundation.NSDocumentDirectory
@@ -41,7 +42,7 @@ import platform.Foundation.writeData
  * and it does not keep a dated history, which the Android side does - that belongs with whatever
  * ends up sharing logs off the phone, and there is no such path on iOS yet.
  */
-@OptIn(ExperimentalForeignApi::class)
+@OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 class AAPSLoggerIos(
     private val fileName: String = "aaps.log",
     private val maxBytes: Long = 5L * 1024 * 1024,

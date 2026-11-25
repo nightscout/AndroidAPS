@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -63,11 +62,8 @@ fun TempTargetChip(
         TempTargetChipState.None     -> MaterialTheme.colorScheme.onSurfaceVariant
     }
     val textColor = MaterialTheme.colorScheme.onSurfaceVariant
-    val containerColor = when (state) {
-        TempTargetChipState.Active   -> iconColor.copy(alpha = 0.2f)
-        TempTargetChipState.Adjusted -> iconColor.copy(alpha = 0.2f)
-        TempTargetChipState.None     -> Color.Transparent
-    }
+    // No fill: the icon colour tells a temp target and an adjusted target apart, and a temp target with
+    // an end gets a shade for the time passed, see chipShade
     val haptic = LocalHapticFeedback.current
 
     // Why a temp target is running was carried only by which of the four icons was drawn, so
@@ -84,7 +80,7 @@ fun TempTargetChip(
         onClick = { haptic.performHapticFeedback(HapticFeedbackType.LongPress); onClick() },
         enabled = enabled,
         shape = RoundedCornerShape(AapsSpacing.chipCornerRadius),
-        color = containerColor,
+        color = Color.Transparent,
         modifier = modifier
             .fillMaxWidth()
             .height(AapsSpacing.chipHeight * LocalAapsScale.current)
@@ -93,7 +89,7 @@ fun TempTargetChip(
                 else Modifier
             )
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize().chipShade(progress)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -122,17 +118,6 @@ fun TempTargetChip(
                 if (sceneManaged) {
                     SceneBadge(modifier = Modifier.padding(start = AapsSpacing.small))
                 }
-            }
-            if (progress > 0f) {
-                LinearProgressIndicator(
-                    progress = { progress },
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .height(AapsSpacing.chipProgressHeight),
-                    color = iconColor,
-                    trackColor = iconColor.copy(alpha = 0.3f)
-                )
             }
         }
     }

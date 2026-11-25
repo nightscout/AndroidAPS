@@ -35,7 +35,7 @@ internal class ExceptionHandlerWearTest {
             ExceptionHandlerWear(rxBus).register()
             val installed = Thread.getDefaultUncaughtExceptionHandler()
 
-            installed.uncaughtException(Thread.currentThread(), RuntimeException("boom"))
+            installed!!.uncaughtException(Thread.currentThread(), RuntimeException("boom"))
 
             val captor = argumentCaptor<Event>()
             verify(rxBus).send(captor.capture())

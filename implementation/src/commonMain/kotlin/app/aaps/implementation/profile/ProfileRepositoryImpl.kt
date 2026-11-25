@@ -104,9 +104,8 @@ class ProfileRepositoryImpl(
     private val notificationManager: NotificationManager,
     // Hosts the [StringNonKey.LocalProfileData] collector: the repository is a @Singleton that lives
     // as long as the process, so the collector must live that long too.
-    // Unqualified on purpose: @ApplicationScope is a javax.inject.Qualifier, so it cannot cross
-    // into commonMain. The graph hands out the very same scope object, so
-    // this is the same instance the qualifier used to select.
+    // Unqualified: the graph binds the one application scope with and without @ApplicationScope
+    // (AppCoroutineBindings), so this is the same instance.
     private val appScope: CoroutineScope
 ) : ProfileRepository {
 

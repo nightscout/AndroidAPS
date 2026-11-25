@@ -37,7 +37,6 @@ wear/watchfacepush/*Cwf/*
 *.preferences_pb
 /buildSrc/.kotlin
 .claude/settings.local.json
-.claude/CLAUDE_COMMANDS.md
 tmpclaude-*
 ios/app/Signing.local.xcconfig
 ios/app/build*/

@@ -1,16 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_description">Pumpeintegration til Carelevo</string>
+    <string name="carelevo_alarm_channel_name">Carelevo-alarmer</string>
+    <string name="carelevo_alarm_channel_description">Notifikationer for alarmer fra Carelevo-patchen</string>
+    <string name="common_btn_ok">OK</string>
+    <string name="carelevo_bluetooth_state_key">Bluetooth-status</string>
+    <string name="carelevo_serial_number_key">Serienr.</string>
+    <string name="carelevo_boot_date_time_key">Aktiveringstid</string>
+    <string name="carelevo_expiration_key">Udløb</string>
+    <string name="carelevo_basal_rate_key">Basalrate</string>
+    <string name="carelevo_temp_basal_rate_key">Midlertidig basalrate</string>
+    <string name="carelevo_insulin_remain_key">Resterende insulin</string>
+    <string name="carelevo_running_remain_time">Resterende tid for patch</string>
+    <string name="carelevo_total_insulin_key">Samlet leveret insulin</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%1$d t %2$d min</string>
+    <string name="common_label_unit_value_minute">%d min</string>
+    <string name="common_label_unit_value_duration_hour">%d t</string>
+    <string name="common_label_unit_value_dose_with_space">%s IE</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f E/t</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">Vil du genoptage insulintilførslen?</string>
+    <string name="carelevo_pump_resume_description">Insulintilførslen genoptages, når du trykker på Bekræft.</string>
+    <string name="carelevo_pump_stop_duration_title">Vælg, hvor længe insulintilførslen skal sættes på pause.</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 minutter</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 time</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 time 30 minutter</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 timer</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 timer 30 minutter</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 timer</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 timer 30 minutter</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 timer</string>
+    <string name="common_unit_value_day_hour_min">%1$d dage %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">%1$d min %2$02d sek tilbage</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">Insulinvejledning</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">Deaktiver patch</string>
+    <string name="carelevo_btn_input_search_patch">Søg efter patch</string>
+    <string name="carelevo_btn_retry">Prøv igen</string>
+    <string name="carelevo_btn_next">Næste</string>
+    <string name="carelevo_btn_safety_check">Sikkerhedstjek</string>
+    <string name="carelevo_btn_cancel">Annuller</string>
+    <string name="carelevo_btn_confirm">Bekræft</string>
+    <string name="carelevo_btn_research">Søg igen</string>
+    <string name="carelevo_btn_needle_insert_check">Bekræft indstik</string>
+    <string name="carelevo_state_none_value">Ingen aktiv patch</string>
+    <string name="carelevo_state_disconnected_value">Forbindelse afbrudt</string>
+    <string name="carelevo_state_connected_value">Tilsluttet</string>
+    <string name="carelevo_overview_connect_btn_label">Aktiver patch</string>
+    <string name="carelevo_overview_pump_discard_btn_label">Kassér patch</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">Sæt tilførsel på pause</string>
+    <string name="carelevo_overview_pump_resume_btn_label">Genoptag tilførsel</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">Vælg den påfyldte mængde.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Område: %1$d ~ %2$d IE</string>
+    <string name="carelevo_insulin_refill_step1">1. Træk beskyttelsespapiret af patchens blisterpakning.</string>
+    <string name="carelevo_insulin_refill_step2">2. Desinficer gummiproppen på insulinhætteglasset med en spritserviet.</string>
+    <string name="carelevo_insulin_refill_step3">3. Tag nålehætten af insulinsprøjten ved at trække den lige af.</string>
+    <string name="carelevo_insulin_refill_step5">5. Stik den luftfyldte sprøjte ind i insulinhætteglasset, og sprøjt luften ind i hætteglasset.</string>
+    <string name="carelevo_insulin_refill_step7">7. Stik sprøjtens nål lodret ind i patchens påfyldningsport til insulin (①), til den når bunden. Træk stemplet helt op, og slip det så. Tag sprøjten ud af påfyldningsporten.</string>
+    <string name="carelevo_insulin_refill_step8">8. Hold sprøjten lodret, og bank let på siden, så alle luftbobler samles i toppen.</string>
+    <string name="carelevo_insulin_refill_step9">9. Stik nålen ind i insulinhætteglasset igen, tryk al luften ind i hætteglasset, og træk derefter præcis den mængde insulin op, som du vil bruge i patchens brugsperiode.</string>
+    <string name="carelevo_insulin_refill_step10">10. Tag sprøjten ud af hætteglasset. Hvis der er luftbobler, så hold sprøjten lodret, bank på siden, så boblerne går op i toppen, og tryk al luften ud af sprøjten.</string>
+    <string name="carelevo_insulin_refill_step11">11. Placer toppen af stemplet ud for stregen på skalaen for at indstille insulindosen præcist.</string>
+    <string name="carelevo_insulin_refill_step12">12. Stik nålen lodret ind i patchens påfyldningsport til insulin (①), til den når bunden, og tryk langsomt stemplet ind, så al insulinen sprøjtes ind i patchen.</string>
+    <string name="carelevo_connect_prepare_title">Patch startet</string>
+    <string name="carelevo_connect_patch_title">Tilslut patch</string>
+    <string name="carelevo_connect_safety_check_title">Sikkerhedstjek</string>
+    <string name="carelevo_connect_patch_attach_title">Sæt patch på</string>
+    <string name="carelevo_connect_needle_check_title">Stik nålen ind</string>
+    <string name="carelevo_patch_buzzer_alarm_title">Info-alarm fra patch</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">Notifikation om lavt insulinniveau</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">Notifikation om patchens brugstid</string>
+    <string name="carelevo_title_fill_insulin">Fyld patchen med insulin</string>
+    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Fyld patchen med insulin (%1$d–%2$d IE), og tænk på brugsperioden (op til 168 timer). Tryk på [Fyldmængde] for at angive den påfyldte insulin.</string>
+    <string name="carelevo_patch_step_1">TRIN 1.</string>
+    <string name="carelevo_patch_step_2">TRIN 2.</string>
+    <string name="carelevo_patch_step_3">TRIN 3.</string>
+    <string name="carelevo_patch_connect_step_1_title">Fjern nålehætten</string>
+    <string name="carelevo_patch_connect_step_1_desc">Tag patchen ud af blisterpakningen, og fjern nålehætten.</string>
+    <string name="carelevo_patch_connect_step_2_title">Tænd og tilslut</string>
+    <string name="carelevo_patch_connect_step_2_desc">Tryk på tænd/sluk-knappen i mere end 1 sekund. Tryk efter bippet på knappen [Søg efter patch] nedenfor.</string>
+    <string name="carelevo_patch_safety_check_start_title">Sikkerhedstjek</string>
+    <string name="carelevo_patch_safety_check_end_title">Sikkerhedstjek gennemført</string>
+    <string name="carelevo_patch_safety_check_start_desc">Patchen er tilsluttet.\nTryk på knappen [Sikkerhedstjek].</string>
+    <string name="carelevo_patch_safety_check_progress_desc">Sikkerhedstjek i gang.</string>
+    <string name="carelevo_patch_safety_check_end_desc">Sikkerhedstjek gennemført.\nTryk på knappen Næste.</string>
+    <string name="carelevo_patch_safety_check_desc_warning">Kontroller, om der er kommet en dråbe insulin på nålespidsen.</string>
+    <string name="carelevo_patch_safety_check_retry_desc">Hvis du ikke kan se en dråbe insulin, så tryk på knappen [Prøv igen].</string>
+    <string name="carelevo_patch_attach_step1_title">Desinficer stedet til patchen</string>
+    <string name="carelevo_patch_attach_step1_desc">Rens grundigt med en spritserviet.</string>
+    <string name="carelevo_patch_attach_step2_title">Fjern beskyttelsestapen</string>
+    <string name="carelevo_patch_attach_step2_desc">Tag patchen ud af blisterpakningen, og fjern nålehætten.</string>
+    <string name="carelevo_patch_attach_step3_title">Sæt patch på</string>
+    <string name="carelevo_patch_attach_step3_desc">Sæt patchen på huden med den markerede prik opad.</string>
+    <string name="carelevo_patch_attach_step4_desc">Tryk på Næste, når du har sat patchen på.</string>
+    <string name="carelevo_patch_needle_insertion_step1_title">Fjern sikkerhedshætten</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">Drej sikkerhedshætten i pilens retning, og tag den af.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">Stik nålen ind</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">Tryk applikatorens trykknap helt ned. Der lyder et bip, når nålen er stukket ind.</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">Tryk og hold i 10 sekunder.</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">%d forsøg tilbage til indstik af nålen.</string>
+    <string name="carelevo_dialog_patch_discard_message_title">Deaktiver patchen og start en ny patch?</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">Når du trykker på knappen [OK], stopper insulinen.</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">Afslut uden at starte tilførslen?</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">Når du trykker på knappen [OK], kan denne patch ikke bruges mere.</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">Annuller aktivering af patch?</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">Når du trykker på knappen [OK], slettes det, du har indtastet.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">Hvis patchen, der er fundet nedenfor, er den rigtige, så tryk på knappen Bekræft.</string>
+    <string name="carelevo_dialog_patch_connect_needle_injected">Nålen er stukket ind, og applikatoren er fjernet</string>
+    <string name="carelevo_dialog_connect_detached">Applikator fjernet</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">Tryk på grebene på begge sider af applikatoren for at tage den af patchen,\nog tryk så på knappen `Applikator fjernet`. Insulintilførslen starter.</string>
     <!-- Connection -->
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth er ikke slået til. Kontroller det.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">Ingen patch tilsluttet.</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">Patchen er ikke tilsluttet endnu. Prøv igen om lidt.</string>
+    <string name="carelevo_toast_msg_scan_failed">Søgning mislykkedes. Prøv igen.</string>
+    <string name="carelevo_toast_msg_patch_not_found">Der blev ikke fundet nogen patch. Prøv igen.</string>
+    <string name="carelevo_toast_msg_connect_failed">Tilslutning af patch mislykkedes. Prøv igen.</string>
     <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">Profil er ikke indstillet.</string>
     <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_check_failed">Kontrol af nål mislykkedes.</string>
     <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_failed">Kassering af patch mislykkedes. Prøv igen.</string>
+    <string name="carelevo_discarded_not_reached">Der kunne ikke oprettes forbindelse til patchen. Den er fjernet fra AAPS, men ikke stoppet, og den kan stadig give insulin. Tag den af.</string>
     <!-- Basal Delivery -->
+    <string name="carelevo_toast_msg_set_basal_failed">Anmodning om basallevering mislykkedes. Prøv igen.</string>
     <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_fail">Kunne ikke genoptage tilførslen. Prøv igen.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">Kunne ikke sætte tilførslen på pause. Prøv igen.</string>
     <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_failed">Sikkerhedstjek mislykkedes.</string>
     <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">Lavt insulin</string>
+    <string name="alarm_feat_title_warning_expired_patch">Patch udløbet</string>
+    <string name="alarm_feat_title_warning_low_battery">Lavt batteri</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">Høj/lav temperatur</string>
+    <string name="alarm_feat_title_warning_not_used_app">Automatisk slukning</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">BLE ikke forbundet</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">Tiden til påsætning af patch er udløbet</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">Selvtest mislykkedes</string>
+    <string name="alarm_feat_title_warning_patch_error">Patch-fejl</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">Tilstopning</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">Fejl ved indstik af nål</string>
     <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">Lavt insulin</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase2">Patchens brugstid er udløbet</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase1">Patchen udløber snart</string>
+    <string name="alarm_feat_title_alert_low_battery">Lavt batteri</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">Høj/lav temperatur</string>
+    <string name="alarm_feat_title_alert_not_used_app">Automatisk slukning</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">BLE ikke forbundet</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">Aktivering af patch ikke færdig</string>
+    <string name="alarm_feat_title_alert_resume_infusion">Start insulin</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">Slå Bluetooth til</string>
     <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_low_insulin">Lavt insulin</string>
+    <string name="alarm_feat_title_notice_expired_patch">Notifikation om patchens brugstid</string>
+    <string name="alarm_feat_title_notice_check_patch">Notifikation om kontrol af patch</string>
+    <string name="alarm_feat_title_notice_change_time_zone">Skift af tidszone</string>
+    <string name="alarm_feat_title_notice_check_bg">Kontroller blodsukker</string>
+    <string name="alarm_feat_title_notice_lgs_started">LGS startet</string>
+    <string name="alarm_feat_title_notice_lgs_ended">LGS afsluttet</string>
+    <string name="alarm_feat_title_notice_lgs_error">LGS ikke tilgængelig</string>
+    <string name="alarm_feat_title_notice_unknown">Patch-fejl</string>
+    <string name="alarm_feat_desc_unknown">Uventet fejl i patchen.</string>
     <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">Deaktiver patch</string>
+    <string name="alarm_feat_btn_patch_force_discard">Kassér patch</string>
+    <string name="alarm_feat_btn_resume_infusion">Start insulin</string>
     <!-- General Messages -->
+    <string name="alarm_feat_msg_check_patch_connect">Kontroller forbindelsen til patchen.</string>
+    <string name="carelevo_bolus_rejected_exceed_limit" comment="%1$s=bolus the patch can still deliver now, with unit (e.g. 2.80 U)">Bolus kan ikke leveres. Mulig bolus: %1$s</string>
+    <string name="carelevo_bolus_rejected_exceed_limit_none">Bolus kan ikke leveres. Der er ikke nok insulin tilbage.</string>
     <!--    notification -->
+    <string name="alarm_notification_desc_warning_low_insulin">Under 10 IE insulin tilbage; insulintilførslen er stoppet. Tryk på knappen [Deaktiver patch], og skift patch nu.</string>
+    <string name="alarm_notification_desc_warning_expired_patch">Patchen er udløbet; insulintilførslen er stoppet. Tryk på knappen [Deaktiver patch], og skift patch nu.</string>
+    <string name="alarm_notification_desc_warning_low_battery">Lavt batteri; insulintilførslen er stoppet. Tryk på knappen [Kassér patch], og skift patch nu.</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">Insulintilførslen er stoppet. Gå til et sted med en passende temperatur nu (40℉–99℉).</string>
+    <string name="alarm_notification_desc_warning_not_used_app">Insulintilførslen er stoppet. Tryk på knappen [Start insulin], og start basallevering igen.</string>
+    <string name="alarm_notification_desc_warning_incomplete_patch_setting">Tiden til påsætning af patchen er udløbet. Tryk på knappen [Deaktiver patch], og skift patch nu.</string>
+    <string name="alarm_notification_desc_warning_failed_safety_check">Selvtest mislykkedes. Tryk på knappen [Deaktiver patch], og skift patch nu.</string>
+    <string name="alarm_notification_desc_warning_patch_error">Insulintilførslen er stoppet på grund af en uventet fejl. Tryk på knappen [Deaktiver patch], og skift patch nu.</string>
+    <string name="alarm_notification_desc_warning_infusion_clogged">Insulintilførslen er stoppet på grund af tilstopning. Tryk på knappen [Deaktiver patch], og skift patch nu.</string>
+    <string name="alarm_notification_desc_warning_needle_injection_error">Nålen kunne ikke stikkes ind. Tryk på knappen [Deaktiver patch], og skift patch nu.</string>
+    <string name="alarm_notification_desc_alert_low_insulin">Under %s IE insulin tilbage. Gør klar til at skifte patch.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase2">Patchen er udløbet. Skift patch nu.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase1">Patchen udløber snart. Skift patch nu.</string>
+    <string name="alarm_notification_desc_alert_low_battery">Batteriet er lavt. Gør klar til at skifte patch.</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">Insulintilførslen er sat på pause på grund af ekstrem temperatur. Gå til et sted med 40℉–99℉ for at genoptage.</string>
+    <string name="alarm_notification_desc_alert_not_used_app">Tryk på [OK]. Hvis du ignorerer den, bliver den til en kritisk alarm, og insulintilførslen stopper.</string>
+    <string name="alarm_notification_desc_alert_incomplete_patch_setting">Tryk på knappen [OK] for at gøre aktiveringen af patchen færdig.</string>
+    <string name="alarm_notification_desc_alert_resume_infusion">Pausen i insulintilførslen er slut. Tryk på [Start insulin] for at starte.</string>
+    <string name="alarm_notification_desc_alert_off_bluetooth">Bluetooth skal være slået til for at bruge patchen. Tryk på [OK], og slå Bluetooth til.</string>
+    <string name="alarm_notification_desc_notice_low_insulin">Under %s IE insulin tilbage. Gør klar til at skifte patch.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">Patchen har været i brug i %1$s dage %2$s timer. Hold øje med det, mens du bruger den.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">Tidszonen er skiftet fra %1$s(UTC %2$s) til %3$s(UTC %4$s).</string>
+    <string name="alarm_notification_desc_notice_check_bg">Der er gået %s siden din bolus. Kontroller dit blodsukker.</string>
+    <string name="alarm_notification_desc_notice_lgs_started">LGS er startet.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS er afsluttet, fordi forbindelsen til patch/CGM er afbrudt.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS er afsluttet, fordi LGS er sat på pause.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_time_over">LGS er afsluttet, fordi den planlagte tid er gået.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">LGS er afsluttet, fordi LGS blev slået fra.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">LGS er afsluttet, fordi CGM-værdien er over den indstillede grænse.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS er afsluttet af en ukendt årsag.</string>
+    <string name="alarm_notification_desc_notice_lgs_error">Kontroller forbindelsen til patch og CGM.</string>
+    <string name="carelevo_profile_update_skip_comment">Sprunget over: opdatering for tidligt.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">Patchen bekræftede ikke stoppet. Venter på, at bolussen slutter…</string>
+    <string name="carelevo_bolus_rejected_missed_bolus_recorded">En bolus, der ikke var registreret, er tilføjet nu. Kontroller IOB, og prøv så igen.</string>
+    <string name="carelevo_bolus_outcome_unknown">Patchen svarede ikke på bolussen. Hele bolussen tæller, indtil patchen oplyser, hvor meget den gav.</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Patchen bekræftede ikke stoppet. Hele bolussen på %1$s er registreret.</string>
+    <string name="carelevo_bolus_stopped_by_patch" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The patch stopped the bolus. Given: 0.50 U of 2.00 U">Patchen stoppede bolussen. Givet: %1$s af %2$s</string>
 </resources>

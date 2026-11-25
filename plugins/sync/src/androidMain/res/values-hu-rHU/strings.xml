@@ -2,7 +2,6 @@
 <resources>
     <!-- AAPSClient -->
     <!-- ns_wifi_ssids moved to core:keys module -->
-    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="unsupported_ns_version">Nem támogatott Nightscout verzió</string>
     <!-- AAPSClient -->
     <!-- Authorized clients (paired devices that can issue signed commands) -->

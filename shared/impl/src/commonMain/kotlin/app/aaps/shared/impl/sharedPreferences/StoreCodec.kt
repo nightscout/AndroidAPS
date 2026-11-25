@@ -51,6 +51,10 @@ object StoreCodec {
      * Throws [CorruptionException] when the data is not a store, has an unknown version, cannot be
      * opened with this device's key, or does not parse. Any other exception comes from the cipher not
      * being able to reach its key right now, and is passed on unchanged: the file may be fine.
+     *
+     * When the data does not open with the key, the message also gives the size of the file and the number
+     * of zero bytes at its end. A damaged file and a wrong key fail in the same way, and these facts in the
+     * log can tell them apart.
      */
     fun decode(bytes: ByteArray, cipher: StoreCipher): Map<String, Any> {
         if (bytes.size < HEADER_SIZE || !bytes.copyOfRange(0, MAGIC.size).contentEquals(MAGIC))
@@ -60,7 +64,7 @@ object StoreCodec {
         val plain = try {
             cipher.decrypt(bytes.copyOfRange(HEADER_SIZE, bytes.size))
         } catch (e: SealedDataUnreadableException) {
-            throw CorruptionException("The settings store cannot be opened with the key of this device", e)
+            throw CorruptionException("The settings store cannot be opened with the key of this device (${fileFacts(bytes)})", e)
         }
         return try {
             Json.parseToJsonElement(plain.decodeToString()).jsonObject.mapValues { (_, element) ->
@@ -72,6 +76,15 @@ object StoreCodec {
         } catch (e: Exception) {
             throw CorruptionException("The settings store does not parse", e)
         }
+    }
+
+    /**
+     * A hard reboot can keep the length of a file but not its last data, and then the end of the file is
+     * zeros (issue #5562). The part after the last full 8 KiB is the part that was at risk.
+     */
+    private fun fileFacts(bytes: ByteArray): String {
+        val zerosAtEnd = bytes.size - 1 - bytes.indexOfLast { it != 0.toByte() }
+        return "${bytes.size} bytes, ${bytes.size % 8192} after the last full 8 KiB, $zerosAtEnd zero bytes at the end"
     }
 
     private fun typeOf(key: String, value: Any): String = when (value) {

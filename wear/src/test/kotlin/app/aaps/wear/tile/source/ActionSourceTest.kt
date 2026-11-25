@@ -141,7 +141,7 @@ internal class ActionSourceTest {
 
         // Returned actions follow the configured slot order
         assertThat(selected).hasSize(4)
-        assertThat((selected as List<StaticAction>).map { it.settingName })
+        assertThat(selected.filterIsInstance<StaticAction>().map { it.settingName })
             .containsExactly("wizard", "treatment", "ecarbs", "temp_target")
             .inOrder()
     }
@@ -157,7 +157,7 @@ internal class ActionSourceTest {
         val selected = actionSource.getSelectedActions()
 
         // 'none' and unknown slots filtered out, valid ones kept in order
-        assertThat((selected as List<StaticAction>).map { it.settingName })
+        assertThat(selected.filterIsInstance<StaticAction>().map { it.settingName })
             .containsExactly("bolus", "carbs")
             .inOrder()
         // Defaults must not overwrite existing config
@@ -177,7 +177,7 @@ internal class ActionSourceTest {
 
         // Empty result path -> fall back to getActions().take(4)
         assertThat(selected).hasSize(4)
-        assertThat((selected as List<StaticAction>).map { it.settingName })
+        assertThat(selected.filterIsInstance<StaticAction>().map { it.settingName })
             .containsExactly("wizard", "treatment", "bolus", "carbs")
             .inOrder()
     }

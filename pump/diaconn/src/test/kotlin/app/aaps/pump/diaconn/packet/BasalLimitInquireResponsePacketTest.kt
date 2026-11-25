@@ -42,7 +42,7 @@ class BasalLimitInquireResponsePacketTest : TestBaseWithProfile() {
 
         // When
         packet.handleMessage(data)
-2
+
         // Then
         assertThat(packet.failed).isFalse()
         assertThat(diaconnG8Pump.maxBasalPerHours).isWithin(0.01).of(3.5)

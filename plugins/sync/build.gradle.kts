@@ -92,12 +92,11 @@ kotlin {
             dependencies {
                 implementation(project(":shared:impl"))
 
-                api(project.dependencies.platform(libs.androidx.compose.bom))
-                api(libs.androidx.compose.material3)
-                api(libs.androidx.compose.material.icons.extended)
+                api(libs.jetbrains.compose.material3)
+                api(libs.jetbrains.compose.material.icons.extended)
                 api(libs.androidx.lifecycle.runtime.compose)
-                api(libs.androidx.ui.tooling.preview)
-                implementation(libs.androidx.compose.ui.tooling)
+                api(libs.jetbrains.compose.ui.tooling.preview)
+                implementation(libs.jetbrains.compose.ui.tooling)
 
                 // OpenHumans
                 api(libs.com.squareup.okhttp3.okhttp)
@@ -147,8 +146,7 @@ kotlin {
                 implementation(libs.joda.time)
                 implementation(libs.org.skyscreamer.jsonassert)
                 implementation(libs.org.robolectric)
-                implementation(project.dependencies.platform(libs.androidx.compose.bom))
-                implementation(libs.androidx.compose.ui.test.junit4)
+                implementation(libs.jetbrains.compose.ui.test.junit4)
                 implementation(libs.androidx.compose.ui.test.manifest)
                 // The real org.json: isReturnDefaultValues makes the platform stub answer null
                 // rather than throwing, which NPEs the shared profile fixtures.

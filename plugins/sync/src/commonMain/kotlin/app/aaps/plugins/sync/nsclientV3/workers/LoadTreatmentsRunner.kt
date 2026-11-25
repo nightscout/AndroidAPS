@@ -59,6 +59,11 @@ class LoadTreatmentsRunner(
                     }
                     treatments = response.values
                     aapsLogger.debug(LTag.NSCLIENT, "TREATMENTS: $treatments")
+                    // Left out of the page, which still goes on: one bad document stopped the history here before
+                    for (unreadable in response.unreadable) {
+                        aapsLogger.error(LTag.NSCLIENT, "Unreadable treatment left out: $unreadable")
+                        nsClientRepository.addLog("◄ SKIP", unreadable)
+                    }
                     if (treatments.isNotEmpty()) {
                         val action = if (isFirstLoad) "RCV-F" else "RCV"
                         nsClientRepository.addLog("◄ $action", "${treatments.size} TRs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}")

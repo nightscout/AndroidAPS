@@ -101,7 +101,19 @@ class PumpStatusProviderImpl(
 
         return buildJsonObject {
             // Left out when not known: a 0 would read as an empty reservoir in Nightscout. A real 0 is sent.
-            pump.reservoirLevel.value?.let { put("reservoir", it.iU(profile.insulinConcentration()).toInt()) }
+            pump.reservoirLevel.value?.let { level ->
+                val reservoir = level.iU(profile.insulinConcentration())
+                // A patch pump measures its reservoir only up to maxReservoirReading. Above that a driver keeps
+                // a stand-in (75 U for a pod), which Nightscout showed as if measured (#5572). Send the highest
+                // value the pump can measure, which is true, and the text Nightscout shows in its place. The
+                // number stays: with an override and no number, Nightscout fails to show the pump. Same limit
+                // as the status lights, and written as Nightscout writes it for a pod.
+                val maxReading = pump.pumpDescription.maxReservoirReading
+                if (pump.pumpDescription.isPatchPump && reservoir >= maxReading) {
+                    put("reservoir", maxReading)
+                    put("reservoir_display_override", "$maxReading+ U")
+                } else put("reservoir", reservoir.toInt())
+            }
             put("clock", dateUtil.toISOString(now))
             putJsonObject("battery") {
                 putIfThereIsValue("percent", pump.batteryLevel.value)

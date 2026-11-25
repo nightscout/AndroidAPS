@@ -14,8 +14,7 @@ plugins {
     id("com.android.library")
 }
 
-testImplementationPlatformFromCatalog("androidx-compose-bom")
-testImplementationFromCatalog("androidx-compose-ui-test-junit4")
+testImplementationFromCatalog("jetbrains-compose-ui-test-junit4")
 testImplementationFromCatalog("org-robolectric")
 testRuntimeOnlyFromCatalog("org-junit-vintage-engine")
 debugImplementationFromCatalog("androidx-compose-ui-test-manifest")

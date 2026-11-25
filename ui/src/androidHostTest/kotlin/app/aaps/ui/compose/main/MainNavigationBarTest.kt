@@ -1,6 +1,8 @@
 package app.aaps.ui.compose.main
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasStateDescription
@@ -27,8 +29,8 @@ import org.robolectric.annotation.GraphicsMode
  * What the badges in [MainNavigationBar] say to a screen reader.
  *
  * Material3's `NavigationBarItem` wraps its whole icon slot in `clearAndSetSemantics {}` whenever the
- * item has a label, and every item here has one, so no badge can be read: the count, the progress and
- * the warning dot are all dropped before they reach the user. A blind user heard "Objectives" with no
+ * item has a label, and every item here has one, so no badge can be read: the progress and the dots
+ * are all dropped before they reach the user. A blind user heard "Objectives" with no
  * idea why the button was on her screen. Each badge's meaning is therefore set as a state on the item
  * itself, outside the cleared slot, and these tests pin that down - asserting on the badge's own text
  * would pass against the unmerged tree while a screen reader still heard nothing.
@@ -41,7 +43,7 @@ class MainNavigationBarTest {
     @get:Rule
     val compose = createComposeRule()
 
-    private lateinit var availableThree: String
+    private lateinit var actionNeeded: String
     private lateinit var objectivesProgress: String
 
     @Before
@@ -52,7 +54,7 @@ class MainNavigationBarTest {
         val app = RuntimeEnvironment.getApplication()
         // Taken from the resources rather than hard coded, so editing the wording cannot make the
         // test lie about what is spoken.
-        availableThree = app.getString(R.string.a11y_badge_available, 3)
+        actionNeeded = app.getString(R.string.a11y_badge_attention)
         objectivesProgress = app.getString(R.string.a11y_objectives_progress, 9, 10)
     }
 
@@ -80,28 +82,34 @@ class MainNavigationBarTest {
         compose.onNode(hasStateDescription(objectivesProgress)).assertIsDisplayed()
     }
 
+    /** The waiting loop suggestion shows a green dot, with no number: there is nothing to count. */
     @Test
-    fun aCountingBadgeIsSpokenAsAStateOnTheItem() {
+    fun theLoopSuggestionDotIsSpokenAsActionNeeded() {
         compose.setContent {
             MaterialTheme {
-                MainNavigationBar(onManageClick = {}, onTreatmentClick = {}, quickWizardCount = 3)
+                MainNavigationBar(onManageClick = {}, onTreatmentClick = {}, loopActionAvailable = true)
             }
         }
 
-        compose.onNode(hasStateDescription(availableThree)).assertIsDisplayed()
+        compose.onNode(hasStateDescription(actionNeeded)).assertIsDisplayed()
     }
 
+    /**
+     * Treatments, Scenes and Manage have no badge. Treatments and Scenes used to show a green count of
+     * what could be started, which users did not want. A state on any of them would be read out on
+     * every pass over the bar for no reason.
+     */
     @Test
-    fun anItemWithoutABadgeGetsNoState() {
+    fun itemsWithoutABadgeGetNoState() {
         compose.setContent {
             MaterialTheme {
-                MainNavigationBar(onManageClick = {}, onTreatmentClick = {}, quickWizardCount = 0)
+                MainNavigationBar(onManageClick = {}, onTreatmentClick = {}, automationTotal = 3)
             }
         }
 
-        // Treatments has no badge at a count of zero, and Manage never has one. A state on either
-        // would be read out on every pass over the bar for no reason.
-        val availableZero = RuntimeEnvironment.getApplication().getString(R.string.a11y_badge_available, 0)
-        compose.onAllNodes(hasStateDescription(availableZero)).assertCountEquals(0)
+        compose.onAllNodes(hasStateDescription(actionNeeded)).assertCountEquals(0)
+        compose.onAllNodes(hasAnyStateDescription()).assertCountEquals(0)
     }
+
+    private fun hasAnyStateDescription() = SemanticsMatcher("has a state description") { it.config.contains(SemanticsProperties.StateDescription) }
 }

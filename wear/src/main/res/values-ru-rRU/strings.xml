@@ -3,8 +3,12 @@
     <string name="label_watchface_circle">AAPS (круглый)</string>
     <string name="label_watchface_digital_style">AAPS (ЦифровойСтиль)</string>
     <string name="label_watchface_custom">AAPS (настраиваемый)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(Custom) в режиме «всегда вкл.»</string>
     <string name="label_actions_tile">Действия</string>
     <string name="label_temp_target_tile">Временная цель</string>
+    <string name="label_quick_wizard_tile">Мастер быстрых настроек</string>
+    <string name="label_user_action_tile">Действия пользователя</string>
+    <string name="label_scene_tile">Сценарий</string>
     <string name="msg_warning_sync">Нет данных начиная с %1$s! Убедитесь, что AAPS на телефоне отправляет данные на часы</string>
     <string name="msg_warning_old">Данные AAPS отстают на %1$s! Проверьте сенсор, xDrip+, NS, конфигурацию AAPS, другое!</string>
     <string name="pref_vibrate_on_bolus">Вибрировать при болюсе</string>
@@ -38,7 +42,7 @@
     <string name="pref_dark" comment="Enables dark visual theme">Тёмная</string>
     <string name="pref_highlight_basals">Выделить базалы</string>
     <string name="pref_prediction_lines">Отображать прогнозы</string>
-    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Соответствующий делитель</string>
+    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Соответствующий разделитель</string>
     <string name="pref_chart_timeframe">Временной диапазон графика</string>
     <string name="pref_1_hour">1 час</string>
     <string name="pref_2_hours">2 часа</string>
@@ -57,7 +61,10 @@
     <string name="pref_prime_in_menu">Первичное заполнение в меню</string>
     <string name="pref_single_target">Единичная цель</string>
     <string name="pref_wizard_percentage">Процент калькулятора</string>
-    <string name="pref_complication_tap_action">Действия при нажатии кнопки расширений</string>
+    <string name="pref_wizard_carbs_type">Тип приема пищи в калькуляторе</string>
+    <string name="pref_wizard_carb_time">Время приема углеводов в калькуляторе</string>
+    <string name="pref_complication_tap_action">Действие при нажатии на дополнение</string>
+    <string name="pref_complication_bg_graph_hours">Временной диапазон графика ГК</string>
     <string name="duration_1_hour">1 час</string>
     <string name="duration_3_hours">3 часа</string>
     <string name="duration_6_hours">6 часов</string>
@@ -81,23 +88,30 @@
     <string name="menu_prime_fill">Прайм/заполнение</string>
     <string name="menu_install_watchface">Установить циферблат</string>
     <string name="menu_installing_watchface">Установка циферблата…</string>
+    <string name="watchface_installed_active">Циферблат установлен и выбран как активный</string>
+    <string name="watchface_installed_select">Циферблат установлен, выберите его в списке циферблатов</string>
+    <string name="watchface_install_failed">Не удалось установить циферблат</string>
     <string name="menu_none">Не показывать</string>
     <string name="menu_default">По умолчанию</string>
     <string name="menu_menu">Меню</string>
     <string name="action_tempt_confirmation">Требуется Временная Цель</string>
-    <string name="action_quick_wizard_confirmation">Запрошен мастер настройки</string>
+    <string name="action_quick_wizard_confirmation">Запрошен мастер быстрых настроек</string>
     <string name="action_user_action_confirmation">Запрошено действие пользователя</string>
+    <string name="action_scene_confirmation">Запрошен сценарий</string>
+    <string name="scene_end">Завершить</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Пропустить</string>
     <string name="action_treatment_confirmation">Запрошена терапия</string>
     <string name="action_bolus_confirmation">Запрошен болюс</string>
     <string name="action_wizard_confirmation">Расчет запрошен</string>
     <string name="action_fill_confirmation">Заполнение запрошено</string>
     <string name="action_ecarb_confirmation">Углеводы запрошены</string>
-    <string name="action_profile_switch_confirmation">Запрос на смену профиля</string>
+    <string name="action_profile_switch_confirmation">Запрошено переключение профиля</string>
     <string name="action_target_unit" comment="In temp target menu, single target value">Цель [%s]</string>
     <string name="action_low_unit" comment="In temp target menu, lower value from range">Низкие [%s]</string>
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Высокие [%s]</string>
     <string name="action_carbs">Углеводы</string>
     <string name="action_carbs_gram">Углеводы [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Макс. удаление: %1$d г (COB)</string>
     <string name="action_ecarbs">Растянутые углеводы eCarbs </string>
     <string name="action_percentage">Процент\n[%]</string>
     <string name="action_start_minutes">Начало\n[minutes]</string>
@@ -106,6 +120,7 @@
     <string name="action_duration_hours_minutes_format">%1$d ч %2$d мин</string>
     <string name="action_minutes_format">%1$d мин</string>
     <string name="ecarbs_start_format">%1$d мин</string>
+    <string name="action_confirm_timeshift">Временной сдвиг: %1$s</string>
     <string name="action_insulin">Инсулин</string>
     <string name="action_insulin_units">Инсулин [ед]</string>
     <string name="action_preset_1">Предустановка 1</string>
@@ -119,7 +134,7 @@
     <string name="cancel_bolus">ОТМЕНИТЬ БОЛЮС</string>
     <string name="status_pump">Помпа</string>
     <string name="status_loop">Замкнутый цикл</string>
-    <string name="status_profile_switch">Смена профиля</string>
+    <string name="status_profile_switch">Переключение профиля</string>
     <string name="status_tdd">TDD/общая суточная доза</string>
     <string name="activity_carb">Углеводы</string>
     <string name="activity_IOB">IOB</string>
@@ -148,8 +163,23 @@
     <string name="pref_simplify_ui">Упростить интерфейс</string>
     <string name="pref_vibrate_hourly">Почасовая вибрация</string>
     <string name="pref_show_weeknumber">Показывать номер недели</string>
+    <string name="pref_complication_1">Дополнение 1</string>
+    <string name="pref_complication_2">Дополнение 2</string>
+    <string name="pref_complication_3">Дополнение 3</string>
+    <string name="pref_complication_4">Дополнение 4</string>
+    <string name="pref_complication_5">Дополнение 5</string>
+    <string name="complication_summary_none">Нажмите, чтобы выбрать источник данных</string>
+    <string name="pref_complication_type_priority">Приоритет типа дополнения</string>
+    <string name="pref_complication_type_priority_all">По умолчанию для всех слотов</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Изменение здесь применится, когда вы в следующий раз выберете источник данных. Выбрать тот же источник еще раз недостаточно: сначала выберите другой источник данных, а затем нужный.</string>
+    <string name="complication_type_priority_value">Значение или шкала</string>
+    <string name="complication_type_priority_text">Текст</string>
+    <string name="complication_type_priority_icon">Иконка</string>
+    <string name="complication_type_priority_use_default">Использовать по умолчанию</string>
+    <string name="cwf_complication_layout">Расположение дополнений</string>
+    <string name="cwf_complication_layout_description">Положение и размер дополнений, взятые из загруженного пользовательского циферблата.</string>
     <string name="pref_include_external">Включить внешние представления в шаблон</string>
-    <string name="pref_switch_external">Включить внешние данные на циферблате</string>
+    <string name="pref_switch_external">Переключать внешние данные на циферблате</string>
     <string name="custom_pref_show_seconds">Показывать секунды</string>
     <string name="digitalstyle_pref_your_style">Ваш стиль</string>
     <string name="digitalstyle_style_none">без стиля</string>
@@ -163,6 +193,8 @@
     <string name="bolus_progress_silent_channel_name">Беззвучный ввод болюса</string>
     <string name="bolus_progress_channel_description">Ввод и отмена болюса</string>
     <string name="bolus_progress_silent_channel_description">Введение и отмена болюса с меньшими вибрациями</string>
+    <string name="open_loop_channel_name">AAPS Открытый цикл</string>
+    <string name="open_loop_channel_description">Уведомление о запросе открытого цикла</string>
     <string name="simple_ui_off">Выкл</string>
     <string name="simple_ui_charging">Во время зарядки</string>
     <string name="simple_ui_always_on">Режим: всегда вкл</string>
@@ -188,6 +220,7 @@
     <string name="week_short">н</string>
     <string name="day_short">д</string>
     <string name="hour_short">ч</string>
+    <string name="minute_short">мин</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s%2$s%3$s</string>
     <string name="error">Ошибка</string>
@@ -202,6 +235,12 @@
     <string name="tile_action_2">Действие 2</string>
     <string name="tile_action_3">Действие 3</string>
     <string name="tile_action_4">Действие 4</string>
+    <string name="tile_scene_1">Сценарий 1</string>
+    <string name="tile_scene_2">Сценарий 2</string>
+    <string name="tile_scene_3">Сценарий 3</string>
+    <string name="tile_scene_4">Сценарий 4</string>
+    <string name="tile_scene_auto">Автоматически</string>
+    <string name="tile_scene_unavailable">Недоступно</string>
     <string name="datalayer_notification_title">Передача данных в режиме переднего плана</string>
     <string name="datalayer_notification_text">AAPS запущен на переднем плане. Чтобы скрыть уведомление, перейдите в Настройки разработчика, Уведомления приложений, Разрешенные приложения для просмотра, выберите AAPS, Отключите уведомление канала службы переднего плана уровня данных.</string>
     <string name="on">ВКЛ</string>
@@ -209,13 +248,22 @@
     <string name="complication_full_status">Полная информация о статусе</string>
     <string name="complication_full_status_flipped">Полный статус (в обратном виде)</string>
     <string name="complication_blood_glucose">Гликемия</string>
+    <string name="complication_blood_glucose_large">Глюкоза крови (больш.)</string>
     <string name="complication_blood_glucose_ext1">ГК усл1</string>
     <string name="complication_blood_glucose_ext2">ГК усл2</string>
+    <string name="complication_bg_graph">График ГК</string>
+    <string name="complication_cwf_image">Пользовательский циферблат</string>
+    <string name="complication_cwf_ambient_bg">Пользовательский циферблат: ГК в режиме «всегда вкл.»</string>
+    <string name="complication_cwf_ambient_status">Пользовательский циферблат: статус в режиме «всегда вкл.»</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Пользовательский циферблат: фон</string>
+    <string name="complication_cwf_upper">Пользовательский циферблат: часы</string>
     <string name="complication_br_cob_iob">База, актУг &amp; актИнс</string>
-    <string name="complication_br_cob_iob_ext1">СкБаз, АктгУ&amp; АктИнсУсл1</string>
-    <string name="complication_br_cob_iob_ext2">СкБаз, АктгУ&amp; АктИнсУсл2</string>
-    <string name="complication_br_iob">BR &amp; IoB</string>
+    <string name="complication_br_cob_iob_ext1">СкБаз, АктУг &amp; АктИнсУсл1</string>
+    <string name="complication_br_cob_iob_ext2">СкБаз, АктУг &amp; АктИнсУсл2</string>
+    <string name="complication_br_iob">База &amp; актИнс</string>
     <string name="complication_br">Базальная скорость</string>
+    <string name="complication_br_tt">БС &amp; Цель</string>
     <string name="complication_target">Цель</string>
     <string name="complication_cob_iob">АктУг &amp; актИнс</string>
     <string name="complication_cob_icon">Иконка актУг</string>
@@ -223,13 +271,51 @@
     <string name="complication_iob_icon">Иконка актИнс</string>
     <string name="complication_iob_detailed">АктИнс подробно</string>
     <string name="complication_uploader_phone_battery">Батарея загрузчика/телефона</string>
+    <string name="running_mode_resume">Возобновить цикл</string>
+    <string name="running_mode_reconnect">Подключить помпу</string>
     <string name="label_running_mode_title">Режим работы</string>
     <string name="label_bg_graph_tile">График ГК</string>
+    <string name="tile_tap_action">Действие по тапу</string>
+    <string name="tile_graph_time_range">Временной диапазон</string>
+    <string name="tile_tap_bg_graph">График ГК</string>
+    <string name="tile_tap_main_menu">Главное меню</string>
+    <string name="tile_tap_loop_status">Статус цикла</string>
+    <string name="action_running_mode_selected">Запрошен режим работы</string>
+    <string name="title_activity_disconnect_pump">Отключить помпу</string>
+    <string name="title_activity_suspend_loop">Приостановить цикл</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d г</string>
+    <string name="wizard_carbs_type">Тип приема пищи</string>
+    <string name="wizard_carbs_type_bread">Хлеб</string>
+    <string name="wizard_carbs_type_cake">Торт</string>
+    <string name="wizard_carbs_type_pizza">Пицца</string>
+    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">Время еды\n[мин]</string>
+    <string name="wizard_carb_time_now">Сейчас</string>
+    <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
+    <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d мин</string>
+    <string name="wizard_set_alarm">Установить сигнал</string>
+    <string name="eat_reminder_title">Пора есть</string>
+    <string name="eat_reminder_silence">Без звука</string>
+    <string name="eat_reminder_stop">Стоп</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Сигнал в %1$s</string>
+    <string name="eat_reminder_countdown_channel">Пора есть, идет отсчет</string>
+    <string name="eat_reminder_channel_silent">Пора есть в режиме «Не беспокоить»</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d мин</string>
+    <string name="phone_alarm_channel">Сигналы тревоги с телефона</string>
+    <string name="phone_alarm_channel_silent">Сигналы тревоги с телефона в режиме «Не беспокоить»</string>
+    <string name="phone_alarm_silence">Без звука</string>
+    <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">Без звука %1$d мин</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d г</string>
     <string name="insulin_unit_short">ед</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d г</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f ед</string>
     <string name="wizard_confirmation_sent">Отправлено</string>
+    <string name="contacting_master">Связь с основным телефоном…</string>
+    <string name="contacting_master_unknown">Состояние неизвестно — проверьте телефон</string>
     <string name="tile_settings">Настройки плиток</string>
     <string name="loop_status_error">Не удалось загрузить статус</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f ед/ч (%2$d%%)</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">Осталось %1$s</string>
     <string name="loop_status_tbr_continues">Временный базал продолжается</string>
     <string name="loop_status_tbr_cancel">Установка обычного базала</string>
     <string name="loop_status_smb">%1$.2f ед</string>
@@ -237,8 +323,10 @@
     <string name="loop_status_closed">Замкнутый цикл</string>
     <string name="loop_status_open">Открытый цикл</string>
     <string name="loop_status_lgs">Приостановка помпы на низкой ГК</string>
-    <string name="loop_status_disabled">Цикличность неактивирована</string>
-    <string name="loop_status_suspended">ЗЦикл остановлен</string>
+    <string name="loop_status_disabled">Цикл выключен</string>
+    <string name="loop_status_suspended">Цикл приостановлен</string>
+    <string name="loop_status_pump_suspended">Помпа приостановлена</string>
+    <string name="loop_status_dst_suspended">Приостановлено при переходе времени</string>
     <string name="loop_status_disconnected">Связь с помпой отключена</string>
     <string name="loop_status_superbolus">Суперболюс</string>
     <string name="loop_status_unknown">Неизвестно</string>
@@ -246,7 +334,7 @@
     <string name="loop_status_last_run_enact">Последний запуск &amp; Вкл</string>
     <string name="loop_status_last_run">Последний запуск</string>
     <string name="loop_status_last_enact">Последнее включение</string>
-    <string name="loop_status_smb_text">SMB / СМБ</string>
+    <string name="loop_status_smb_text">SMB</string>
     <string name="loop_status_basal_rate">Скорость</string>
     <string name="loop_status_duration">Продолжительность</string>
     <string name="loop_status_oaps_reason">OpenAPS Причина</string>
@@ -254,7 +342,39 @@
     <string name="loop_status_temp_target">Врем. цель</string>
     <string name="loop_status_target_range">Диапазон</string>
     <string name="loop_status_target">Целевое значение ГК:</string>
+    <string name="loop_status_adjusted_target">Скорректированная цель</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">До завершения</string>
+    <string name="loop_status_scene_ended">Завершен</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Следующий</string>
+    <string name="loop_status_profile">Профиль</string>
+    <string name="loop_status_no_profile">Профиль не задан</string>
+    <string name="loop_status_profile_percentage">Процент</string>
+    <string name="loop_status_profile_timeshift">Временной сдвиг</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Возврат к</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+d ч</string>
+    <string name="loop_status_sensitivity">Чувствительность</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Задано активным сценарием</string>
     <string name="loop_status">Статус цикла</string>
+    <string name="loop_status_refresh">Обновить</string>
+    <string name="confirm">Подтвердить</string>
     <string name="request">Запросить</string>
     <string name="constraint_applied">Применено ограничение!</string>
+    <string name="wizard_total_insulin">Всего инсулина</string>
+    <string name="wizard_calculation">Расчет</string>
+    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
+    <string name="wizard_result_bg">ГК</string>
+    <string name="wizard_result_bg_tt">ГК (ВЦ: %1$s)</string>
+    <string name="wizard_result_trend">Тренд 15 мин</string>
+    <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">Новый IOB: %1$s ед</string>
+    <string name="wizard_result_cob">COB (%1$.1f г)</string>
+    <string name="wizard_result_carbs">Углеводы (%1$d г)</string>
+    <string name="wizard_result_subtotal">Подытог</string>
+    <string name="wizard_result_correction">Коррекция</string>
+    <string name="wizard_result_total">Итого</string>
+    <string name="wizard_insulin_format">%1$s ед</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d г (%2$s мин)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d г / %2$d ч (+%3$d мин)</string>
 </resources>

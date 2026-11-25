@@ -88,7 +88,7 @@
     <string name="add_short">AJOUT</string>
     <string name="temptargetcompared">Cible Temp. %1$s</string>
     <string name="btdevicecompared">Connexion Bluetooth à l\'appareil %1$s %2$s</string>
-    <string name="btdevice">Connecter à un appareil Bluetooth </string>
+    <string name="btdevice">Connexion à un appareil Bluetooth</string>
     <string name="wifissidcompared">SSID WiFi %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>

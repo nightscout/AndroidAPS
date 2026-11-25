@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -43,12 +42,12 @@ fun ProfileChip(
     isNoProfile: Boolean = false,
     enabled: Boolean = true
 ) {
-    val containerColor = when {
-        isNoProfile -> MaterialTheme.colorScheme.errorContainer
-        isModified  -> AapsTheme.generalColors.inProgress.copy(alpha = 0.2f)
-        else        -> Color.Transparent
-    }
-    val contentColor = when {
+    // No profile is a problem and keeps its fill. A changed profile (a percentage, a time shift, a
+    // temporary profile) is a choice: the icon in the in-progress colour, the name in the normal text
+    // colour, and a shade for the time passed when it has an end, see chipShade
+    val containerColor = if (isNoProfile) MaterialTheme.colorScheme.errorContainer else Color.Transparent
+    val contentColor = if (isNoProfile) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSurfaceVariant
+    val accentColor = when {
         isNoProfile -> MaterialTheme.colorScheme.onErrorContainer
         isModified  -> AapsTheme.generalColors.inProgress
         else        -> MaterialTheme.colorScheme.onSurfaceVariant
@@ -64,7 +63,7 @@ fun ProfileChip(
             .fillMaxWidth()
             .height(AapsSpacing.chipHeight * LocalAapsScale.current)
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize().chipShade(progress)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -74,7 +73,7 @@ fun ProfileChip(
                 Icon(
                     imageVector = ElementType.PROFILE_MANAGEMENT.icon(),
                     contentDescription = stringResourceOrNull(ElementType.PROFILE_MANAGEMENT.label()),
-                    tint = contentColor,
+                    tint = accentColor,
                     modifier = Modifier.size(AapsSpacing.chipIconSize)
                 )
                 // One line: the chip has a fixed height, so a second line was cut in half. The weight
@@ -92,17 +91,6 @@ fun ProfileChip(
                 if (sceneManaged) {
                     SceneBadge(modifier = Modifier.padding(start = AapsSpacing.small))
                 }
-            }
-            if (progress > 0f) {
-                LinearProgressIndicator(
-                    progress = { progress },
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .height(AapsSpacing.chipProgressHeight),
-                    color = contentColor,
-                    trackColor = contentColor.copy(alpha = 0.3f)
-                )
             }
         }
     }

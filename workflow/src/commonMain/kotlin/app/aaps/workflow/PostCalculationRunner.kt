@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
+import app.aaps.core.interfaces.overview.liveGraphWindowEnd
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.interfaces.overview.graph.BgType
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -22,14 +23,10 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.WorkOutcome
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CancellationException
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.time.Clock
-import kotlin.time.Duration.Companion.hours
 
 /**
  * Merged tail-of-chain worker covering: APS loop invocation, widget update,
@@ -123,18 +120,15 @@ class PostCalculationRunner(
     private fun preparePredictions(data: PostCalculationData) {
         val apsResult = if (config.APS) loop.lastRun?.constraintsProcessed else processedDeviceStatusData.getAPSResult()
         val predictionsAvailable = if (config.APS) loop.lastRun?.request?.hasPredictions == true else config.AAPSCLIENT
-        // Align to the next local hour boundary. Local, not UTC: zones like +05:30 do not line up
-        // with UTC hours, and this is what the Calendar version did.
-        val zone = SystemTimeZone.current()
-        val nowLocal = Clock.System.now().toLocalDateTime(zone)
-        val nextHour = LocalDateTime(nowLocal.year, nowLocal.month, nowLocal.day, nowLocal.hour, 0)
-            .toInstant(zone) + 1.hours
+        // The prepare pass of a live run already moved toTime here (see moveLiveWindowTo); it is
+        // written again because this pass also runs alone, for predictions received from the master.
+        val windowEnd = liveGraphWindowEnd(Clock.System.now(), SystemTimeZone.current())
         if (predictionsAvailable && apsResult != null) {
             var predictionHours = (ceil(apsResult.latestPredictionsTime - Clock.System.now().toEpochMilliseconds().toDouble()) / (60 * 60 * 1000)).toInt()
             predictionHours = min(PREDICTION_WINDOW_HOURS, predictionHours)
             predictionHours = max(0, predictionHours)
             val hoursToFetch = Constants.GRAPH_TIME_RANGE_HOURS - predictionHours
-            data.overviewData.toTime = nextHour.toEpochMilliseconds() + 100000 // GraphView-era nudge, retained while workers still consume this shape
+            data.overviewData.toTime = windowEnd
             data.overviewData.fromTime = data.overviewData.toTime - T.hours(hoursToFetch.toLong()).msecs()
             // The newest prediction, not the clamped window share. The axis is already
             // max(newest point, endTime), so this widens nothing - it only makes endTime agree with
@@ -142,7 +136,7 @@ class PostCalculationRunner(
             // above stays where it belongs: it decides how much history to fetch, not where to stop.
             data.overviewData.endTime = max(data.overviewData.toTime, apsResult.latestPredictionsTime)
         } else {
-            data.overviewData.toTime = nextHour.toEpochMilliseconds() + 100000
+            data.overviewData.toTime = windowEnd
             data.overviewData.fromTime = data.overviewData.toTime - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
             data.overviewData.endTime = data.overviewData.toTime
         }

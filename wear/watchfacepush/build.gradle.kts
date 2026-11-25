@@ -33,7 +33,7 @@ repositories {
 android {
     enableKotlin = false
     namespace = "info.nightscout.androidaps.watchfacepush"
-    compileSdk = Versions.compileSdk
+    compileSdk { version = release(Versions.compileSdk) { minorApiLevel = Versions.compileSdkMinor } }
 
     defaultConfig {
         minSdk = 33

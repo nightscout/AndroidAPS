@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.overview
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -57,6 +58,8 @@ fun OverviewScreenSplit(
     runningModeProgress: Float,
     runningModeSceneManaged: Boolean = false,
     tbrState: TbrState,
+    tbrText: String = "",
+    tbrProgress: Float = 0f,
     smbEnabled: Boolean,
     isSimpleMode: Boolean,
     graphViewModel: GraphViewModel,
@@ -80,6 +83,13 @@ fun OverviewScreenSplit(
     eatReminderBanner: @Composable () -> Unit = {},
     /** Height of the bars drawn over the content in preview mode; both columns need it as extra space at their end. */
     overlaidBarsHeight: Dp = 0.dp,
+    /** Progress of the IOB / graph calculation, 100 when done. Shown as a thin ring inside the BG ring. */
+    calcProgress: Int = 100,
+    /**
+     * Opens the menu while the bars are hidden (preview mode, e.g. a phone in landscape): then the menu
+     * button sits in the top left corner of the left column, over the BG circle. Null while the bars show.
+     */
+    onCompactMenuClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val config = LocalConfig.current
@@ -112,98 +122,107 @@ fun OverviewScreenSplit(
                 .fillMaxSize()
                 .padding(horizontal = 4.dp)
         ) {
-            // Left column — BG + chips + status + NS card, own scroll
-            Column(
+            // Left column — BG + chips + status + NS card, own scroll. The menu button lies over its top left
+            // corner while the bars are hidden, fixed, not scrolling with the column
+            Box(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .verticalScroll(rememberScrollState())
-                    .padding(end = 4.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Row(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 4.dp),
-                    verticalAlignment = Alignment.Bottom
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(end = 4.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        BgInfoSection(
-                            bgInfo = bgInfoState.bgInfo,
-                            timeAgoText = bgInfoState.timeAgoText
-                        )
-                    }
-
-                    Column(
+                    // No large clock here, unlike the tablet layout: this layout is lower than 600 dp (a phone in
+                    // landscape, a small window), and the clock row took about a fifth of that height for a time
+                    // the status bar already shows, and pushed BG down. At the top of the row, as in portrait:
+                    // BG is the first thing on the screen.
+                    Row(
                         modifier = Modifier
-                            .weight(1f)
-                            .padding(start = 8.dp)
+                            .fillMaxWidth()
+                            .padding(horizontal = 4.dp),
+                        verticalAlignment = Alignment.Top
                     ) {
-                        // Above the chips, as in the tablet layout. Beside them it had only the width the
-                        // chips left over and was cut off on a narrow screen ("23:36("). No BG age: the
-                        // BG circle here already shows it.
-                        LargeClock(
-                            bgTimestamp = bgInfoState.bgInfo?.timestamp,
-                            showBgAge = false,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        OverviewChipsColumn(
-                            runningMode = runningMode,
-                            runningModeText = runningModeText,
-                            runningModeRemaining = runningModeRemaining,
-                            runningModeProgress = runningModeProgress,
-                            runningModeSceneManaged = runningModeSceneManaged,
-                            smbEnabled = smbEnabled,
-                            profileName = profileName,
-                            isProfileModified = isProfileModified,
-                            profileProgress = profileProgress,
-                            profileSceneManaged = profileSceneManaged,
-                            tempTargetText = tempTargetText,
-                            tempTargetState = tempTargetState,
-                            tempTargetProgress = tempTargetProgress,
-                            tempTargetReason = tempTargetReason,
-                            tempTargetSceneManaged = tempTargetSceneManaged,
-                            tbrState = tbrState,
-                            iobUiState = iobUiState,
-                            cobUiState = cobUiState,
-                            sensitivityUiState = sensitivityUiState,
-                            onNavigate = onNavigate,
-                            onTbrChipClick = onTbrChipClick,
-                            onIobChipClick = onIobChipClick,
-                            commandsAllowed = commandsAllowed
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            BgInfoSection(
+                                bgInfo = bgInfoState.bgInfo,
+                                timeAgoText = bgInfoState.timeAgoText,
+                                updateProgress = if (calcProgress in 1..99) calcProgress / 100f else 0f
+                            )
+                        }
+
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(start = 8.dp)
+                        ) {
+                            OverviewChipsColumn(
+                                runningMode = runningMode,
+                                runningModeText = runningModeText,
+                                runningModeRemaining = runningModeRemaining,
+                                runningModeProgress = runningModeProgress,
+                                runningModeSceneManaged = runningModeSceneManaged,
+                                smbEnabled = smbEnabled,
+                                profileName = profileName,
+                                isProfileModified = isProfileModified,
+                                profileProgress = profileProgress,
+                                profileSceneManaged = profileSceneManaged,
+                                tempTargetText = tempTargetText,
+                                tempTargetState = tempTargetState,
+                                tempTargetProgress = tempTargetProgress,
+                                tempTargetReason = tempTargetReason,
+                                tempTargetSceneManaged = tempTargetSceneManaged,
+                                tbrState = tbrState,
+                                tbrText = tbrText,
+                                tbrProgress = tbrProgress,
+                                iobUiState = iobUiState,
+                                cobUiState = cobUiState,
+                                sensitivityUiState = sensitivityUiState,
+                                onNavigate = onNavigate,
+                                onTbrChipClick = onTbrChipClick,
+                                onIobChipClick = onIobChipClick,
+                                commandsAllowed = commandsAllowed
+                            )
+                        }
+                    }
+
+                    // On a client, the client status card comes before the status lights
+                    if (config.AAPSCLIENT) {
+                        val nsClientStatus by graphViewModel.nsClientStatusFlow.collectAsStateWithLifecycle()
+                        val flavorTint = when {
+                            config.AAPSCLIENT3 -> AapsTheme.generalColors.flavorClient3Tint
+                            config.AAPSCLIENT2 -> AapsTheme.generalColors.flavorClient2Tint
+                            else               -> AapsTheme.generalColors.flavorClient1Tint
+                        }
+                        AapsClientStatusCard(
+                            statusData = nsClientStatus,
+                            flavorTint = flavorTint
                         )
                     }
-                }
 
-                OverviewStatusSection(
-                    sensorStatus = statusState.sensorStatus,
-                    insulinStatus = statusState.insulinStatus,
-                    cannulaStatus = statusState.cannulaStatus,
-                    batteryStatus = statusState.batteryStatus,
-                    showFill = statusState.showFill,
-                    showPumpBatteryChange = statusState.showPumpBatteryChange,
-                    commandsAllowed = commandsAllowed,
-                    onNavigate = onNavigate,
-                    statusLightsDef = statusLightsDef,
-                    expanded = statusExpanded,
-                    onExpandedChange = { statusExpanded = it }
-                )
-
-                if (config.AAPSCLIENT) {
-                    val nsClientStatus by graphViewModel.nsClientStatusFlow.collectAsStateWithLifecycle()
-                    val flavorTint = when {
-                        config.AAPSCLIENT3 -> AapsTheme.generalColors.flavorClient3Tint
-                        config.AAPSCLIENT2 -> AapsTheme.generalColors.flavorClient2Tint
-                        else               -> AapsTheme.generalColors.flavorClient1Tint
-                    }
-                    AapsClientStatusCard(
-                        statusData = nsClientStatus,
-                        flavorTint = flavorTint
+                    OverviewStatusSection(
+                        sensorStatus = statusState.sensorStatus,
+                        insulinStatus = statusState.insulinStatus,
+                        cannulaStatus = statusState.cannulaStatus,
+                        batteryStatus = statusState.batteryStatus,
+                        showFill = statusState.showFill,
+                        showPumpBatteryChange = statusState.showPumpBatteryChange,
+                        commandsAllowed = commandsAllowed,
+                        onNavigate = onNavigate,
+                        statusLightsDef = statusLightsDef,
+                        expanded = statusExpanded,
+                        onExpandedChange = { statusExpanded = it }
                     )
+                    // The QuickLaunch toolbar is centred over both columns, so this one needs space at its end too,
+                    // like the graphs column has
+                    Spacer(Modifier.height(AapsSpacing.fabClearance + overlaidBarsHeight))
                 }
-                // The QuickLaunch toolbar is centred over both columns, so this one needs space at its end too,
-                // like the graphs column has
-                Spacer(Modifier.height(AapsSpacing.fabClearance + overlaidBarsHeight))
+                if (onCompactMenuClick != null) {
+                    CompactMenuButton(onClick = onCompactMenuClick, modifier = Modifier.align(Alignment.TopStart))
+                }
             }
 
             // Right column — graphs, own scroll

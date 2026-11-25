@@ -117,15 +117,19 @@ fun InputDateTimeEditor(
         }
     }
     if (showDate) {
-        val dpState = rememberDatePickerState(initialSelectedDateMillis = timeMillis)
+        // The date picker works in UTC: a day is given and returned as midnight UTC of that day.
+        // So the local date goes in as midnight UTC, and the pick is read back in UTC. Reading or
+        // writing it in the local zone moves the date by one day west of UTC.
+        val dpState = rememberDatePickerState(
+            initialSelectedDateMillis = LocalDateTime(local.date, LocalTime(0, 0)).toInstant(TimeZone.UTC).toEpochMilliseconds()
+        )
         DatePickerDialog(
             onDismissRequest = { showDate = false },
             confirmButton = {
                 TextButton(onClick = {
                     dpState.selectedDateMillis?.let { sel ->
-                        // Read back in the same zone the display uses, so the day the user tapped is the
-                        // day that gets stored. Keeps the time of day untouched.
-                        val pickedDate = Instant.fromEpochMilliseconds(sel).toLocalDateTime(zone).date
+                        // The day the user tapped, joined with the local time of day, which stays untouched.
+                        val pickedDate = Instant.fromEpochMilliseconds(sel).toLocalDateTime(TimeZone.UTC).date
                         onChange(LocalDateTime(pickedDate, local.time).toInstant(zone).toEpochMilliseconds())
                     }
                     showDate = false

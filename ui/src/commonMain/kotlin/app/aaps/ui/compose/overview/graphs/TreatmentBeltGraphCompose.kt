@@ -9,7 +9,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -20,12 +22,14 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.endOf
 import app.aaps.core.interfaces.overview.graph.TherapyEventGraphPoint
 import app.aaps.core.interfaces.overview.graph.TherapyEventType
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.icons.IcActivity
@@ -35,31 +39,52 @@ import app.aaps.core.ui.compose.icons.IcClinicalNotes
 import app.aaps.core.ui.compose.icons.IcNote
 import app.aaps.core.ui.compose.navigation.ElementColors
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.VicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.VicoZoomState
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisTickComponent
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
+import com.patrykandpatrick.vico.compose.cartesian.decoration.Decoration
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarkerController
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.common.DrawingContext
 import com.patrykandpatrick.vico.compose.common.Fill
+import com.patrykandpatrick.vico.compose.common.Position
 import com.patrykandpatrick.vico.compose.common.component.Component
 import com.patrykandpatrick.vico.compose.common.component.TextComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
+import com.patrykandpatrick.vico.compose.common.data.ExtraStore
+import kotlinx.coroutines.delay
 
 /** How near to an icon a tap has to be to show that icon's event: half the icon and a little more. */
 private val BELT_ICON_TAP_RADIUS = 12.dp
+
+
+/**
+ * The COB failover stretches of a model, for [CobFailoverBar]. Carried in the model, so the bar always
+ * belongs to the model that is on screen, never a newer one that Vico has not applied yet.
+ */
+private val COB_FAILOVER_KEY = ExtraStore.Key<List<ClosedFloatingPointRange<Double>>>()
+
+/** The events of a model that have one moment, no duration, as (x, type), for [BeltIcons]. */
+private val BELT_ICONS_KEY = ExtraStore.Key<List<Pair<Double, TherapyEventType>>>()
+
+/** Size of an event icon on the belt. */
+private val BELT_ICON_SIZE = 16.dp
+
+/** Size of the number on an icon that stands for more events. */
+private val BELT_ICON_COUNT_FONT_SIZE = 10.sp
 
 /**
  * Treatment Belt Graph — thin graph above BG graph showing:
  * - Running mode background colors (colored rectangles per mode segment)
  * - Therapy event icons (Announcement, Exercise, notes, etc.)
+ * - COB failover: a thin bar along the bottom where carbs absorption was guessed, see [CobFailoverBar]
  *
  * An event that carries a glucose value (a meter value, a BG check) is NOT here: it is drawn inside
  * the BG graph at its own value, where it can be compared with the sensor curve. Such an event
@@ -71,19 +96,16 @@ private val BELT_ICON_TAP_RADIUS = 12.dp
  * Architecture:
  * - Fixed Y range (0.0 to 1.0) — all events plotted at Y=0.5
  * - Running mode segments: 2-point area-fill series per segment (Y=1.0, full height)
- * - Therapy events: point markers grouped by type
+ * - Therapy events with one moment: icons drawn by [BeltIcons], which joins icons that would overlap
  * - Duration events: 2-point line series per event
  * - No axis labels (clean belt appearance)
  * - Same 3 pillars as other graphs: fixed X range, getXStep = { _, _, _ -> 1.0 }, normalizer line
  *
  * Dynamic series order (must match lines list):
  *   1. Running mode segments (0..N, each = 2-point at Y=1.0 with area fill)
- *   2. Announcement points (conditional)
- *   3. Settings Export points (conditional)
- *   4. General event points (conditional)
- *   5. Exercise duration lines (0..M, each = 2-point at Y=1.0, top)
- *   6. General with duration lines (0..K, each = 2-point at Y=1.0, top)
- *   7. Normalizer (always last)
+ *   2. Exercise duration lines (0..M, each = 2-point at Y=1.0, top)
+ *   3. General with duration lines (0..K, each = 2-point at Y=1.0, top)
+ *   4. Normalizer (always last)
  */
 @Composable
 fun TreatmentBeltGraphCompose(
@@ -94,12 +116,19 @@ fun TreatmentBeltGraphCompose(
     nowTimestamp: Long,
     /** The line at the inspected time, and a hold or a tap on the belt shows the pill. Null turns both off. */
     inspect: GraphInspectState? = null,
+    /**
+     * The visible x window of this graph, in minutes from the start of the axis. The belt follows the
+     * scroll and zoom of BG and is always shown, so the BG graph takes its own window from here: a
+     * decoration on BG's own chart broke its pinch-zoom.
+     */
+    onVisibleRangeChanged: ((Pair<Double, Double>?) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val dateUtil = LocalDateUtil.current
     // Collect flows independently
     val runningModeData by viewModel.runningModeGraphFlow.collectAsStateWithLifecycle()
     val treatmentGraphData by viewModel.treatmentGraphFlow.collectAsStateWithLifecycle()
+    val cobData by viewModel.cobGraphFlow.collectAsStateWithLifecycle()
 
     val hasRealTimeRange = derivedTimeRange != null
     val (minTimestamp, maxTimestamp) = derivedTimeRange ?: run {
@@ -110,11 +139,12 @@ fun TreatmentBeltGraphCompose(
 
     val modelProducer = remember { CartesianChartModelProducer() }
 
-    // Colors from theme
+    // Colors from theme. The event icons are one neutral grey: the icon shape tells the event, and the
+    // belt stays quiet above the BG graph. The inspect pill still shows each event in its own colour
     val elementColors = AapsTheme.elementColors
-    val announcementColor = TherapyEventType.ANNOUNCEMENT.beltColor(elementColors)
-    val careportalColor = TherapyEventType.GENERAL.beltColor(elementColors)
-    val exerciseColor = TherapyEventType.EXERCISE.beltColor(elementColors)
+    val eventIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+    val careportalColor = eventIconColor
+    val exerciseColor = eventIconColor
 
     // Icon painters for therapy events
     val announcementPainter = rememberVectorPainter(TherapyEventType.ANNOUNCEMENT.beltIcon())
@@ -140,9 +170,6 @@ fun TreatmentBeltGraphCompose(
     // Track which series are present (for dynamic line matching)
     val renderedModeSegmentsState = remember { mutableStateOf<List<Triple<Double, Double, RM.Mode>>>(emptyList()) }
     val modeSegmentCountState = remember { mutableIntStateOf(0) }
-    val hasAnnouncementState = remember { mutableStateOf(false) }
-    val hasSettingsExportState = remember { mutableStateOf(false) }
-    val hasGeneralState = remember { mutableStateOf(false) }
     val exerciseDurationCountState = remember { mutableIntStateOf(0) }
     val generalDurationCountState = remember { mutableIntStateOf(0) }
 
@@ -152,7 +179,7 @@ fun TreatmentBeltGraphCompose(
         lastRunningModeData.value = runningModeData
     }
 
-    LaunchedEffect(runningModeData, treatmentGraphData, stableTimeRange) {
+    LaunchedEffect(runningModeData, treatmentGraphData, cobData, stableTimeRange) {
         // Don't skip when hasRealTimeRange is false — always populate model to avoid flicker.
         // Use fallback time range so the chart skeleton (axes/border) always renders.
         if (!hasRealTimeRange && lastRunningModeData.value.segments.isEmpty() && lastTreatmentData.value.therapyEvents.isEmpty()) {
@@ -161,9 +188,6 @@ fun TreatmentBeltGraphCompose(
                 lineModel { series(x = normalizerX(maxX), y = NORMALIZER_Y) }
             }
             modeSegmentCountState.intValue = 0
-            hasAnnouncementState.value = false
-            hasSettingsExportState.value = false
-            hasGeneralState.value = false
             exerciseDurationCountState.intValue = 0
             generalDurationCountState.intValue = 0
             return@LaunchedEffect
@@ -190,16 +214,12 @@ fun TreatmentBeltGraphCompose(
         // No gap-filling needed here.
         val modeSegmentSeries = rawModeSegments
 
-        // Group therapy events by type (non-duration events)
-        val announcementPoints = therapyEvents
-            .filter { it.eventType == TherapyEventType.ANNOUNCEMENT }
-            .map { timestampToX(it.timestamp, minTimestamp) to 0.5 }
-        val settingsExportPoints = therapyEvents
-            .filter { it.eventType == TherapyEventType.SETTINGS_EXPORT }
-            .map { timestampToX(it.timestamp, minTimestamp) to 0.5 }
-        val generalPoints = therapyEvents
-            .filter { it.eventType == TherapyEventType.GENERAL }
-            .map { timestampToX(it.timestamp, minTimestamp) to 0.5 }
+        // Events with one moment, drawn by BeltIcons
+        val iconEvents = therapyEvents
+            .filter { it.eventType in BELT_ICON_TYPES }
+            .map { timestampToX(it.timestamp, minTimestamp) to it.eventType }
+            .filter { it.first in minX..maxX }
+            .sortedBy { it.first }
 
         // Duration events — each gets its own 2-point series
         val exerciseDurationSeries = therapyEvents
@@ -225,9 +245,8 @@ fun TreatmentBeltGraphCompose(
                 cStart to cEnd
             }
 
-        var hasAnnouncement = false
-        var hasSettingsExport = false
-        var hasGeneral = false
+        // Stretches where carbs absorption fell back to the minimum rate
+        val failoverStretches = cobFailoverStretches(cobData.failOverPoints.map { it.timestamp }, minTimestamp)
 
         modelProducer.runTransaction {
             lineModel {
@@ -236,24 +255,7 @@ fun TreatmentBeltGraphCompose(
                     series(x = listOf(start, end), y = listOf(1.0, 1.0))
                 }
 
-                // 2. Non-duration therapy events (grouped by type)
-                val annFiltered = filterToRange(announcementPoints, minX, maxX)
-                if (annFiltered.isNotEmpty()) {
-                    series(x = annFiltered.map { it.first }, y = annFiltered.map { it.second })
-                    hasAnnouncement = true
-                }
-                val seFiltered = filterToRange(settingsExportPoints, minX, maxX)
-                if (seFiltered.isNotEmpty()) {
-                    series(x = seFiltered.map { it.first }, y = seFiltered.map { it.second })
-                    hasSettingsExport = true
-                }
-                val genFiltered = filterToRange(generalPoints, minX, maxX)
-                if (genFiltered.isNotEmpty()) {
-                    series(x = genFiltered.map { it.first }, y = genFiltered.map { it.second })
-                    hasGeneral = true
-                }
-
-                // 3. Duration events — one series per event (top of graph)
+                // 2. Duration events — one series per event (top of graph)
                 for ((start, end) in exerciseDurationSeries) {
                     series(x = listOf(start, end), y = listOf(1.0, 1.0))
                 }
@@ -261,17 +263,18 @@ fun TreatmentBeltGraphCompose(
                     series(x = listOf(start, end), y = listOf(1.0, 1.0))
                 }
 
-                // 4. Normalizer (always last)
+                // 3. Normalizer (always last)
                 series(x = normalizerX(maxX), y = NORMALIZER_Y)
+            }
+            extras {
+                it[COB_FAILOVER_KEY] = failoverStretches
+                it[BELT_ICONS_KEY] = iconEvents
             }
         }
 
         // Update state after transaction
         renderedModeSegmentsState.value = modeSegmentSeries
         modeSegmentCountState.intValue = modeSegmentSeries.size
-        hasAnnouncementState.value = hasAnnouncement
-        hasSettingsExportState.value = hasSettingsExport
-        hasGeneralState.value = hasGeneral
         exerciseDurationCountState.intValue = exerciseDurationSeries.size
         generalDurationCountState.intValue = generalDurationSeries.size
     }
@@ -282,44 +285,6 @@ fun TreatmentBeltGraphCompose(
 
     // Use the rendered segments (with gap fills) for building lines — must match series order
     val renderedModeSegments by renderedModeSegmentsState
-
-    // Therapy event icon point styles
-    val announcementLine = remember(announcementColor, announcementPainter) {
-        LineCartesianLayer.Line(
-            fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
-            areaFill = null,
-            pointProvider = LineCartesianLayer.PointProvider.single(
-                LineCartesianLayer.Point(
-                    component = PainterComponent(announcementPainter, tint = announcementColor),
-                    size = 16.dp
-                )
-            )
-        )
-    }
-    val settingsExportLine = remember(careportalColor, clinicalNotesPainter) {
-        LineCartesianLayer.Line(
-            fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
-            areaFill = null,
-            pointProvider = LineCartesianLayer.PointProvider.single(
-                LineCartesianLayer.Point(
-                    component = PainterComponent(clinicalNotesPainter, tint = careportalColor),
-                    size = 16.dp
-                )
-            )
-        )
-    }
-    val generalLine = remember(careportalColor, notePainter) {
-        LineCartesianLayer.Line(
-            fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
-            areaFill = null,
-            pointProvider = LineCartesianLayer.PointProvider.single(
-                LineCartesianLayer.Point(
-                    component = PainterComponent(notePainter, tint = careportalColor),
-                    size = 16.dp
-                )
-            )
-        )
-    }
 
     // Duration event line styles (with icons at endpoints)
     val exerciseDurationLine = remember(exerciseColor, activityPainter) {
@@ -352,17 +317,12 @@ fun TreatmentBeltGraphCompose(
 
     // Build lines list dynamically — MUST match series order from LaunchedEffect
     val modeSegmentCount by modeSegmentCountState
-    val hasAnnouncement by hasAnnouncementState
-    val hasSettingsExport by hasSettingsExportState
-    val hasGeneral by hasGeneralState
     val exerciseDurationCount by exerciseDurationCountState
     val generalDurationCount by generalDurationCountState
 
     val lines = remember(
         modeSegmentCount, renderedModeSegments,
-        hasAnnouncement, hasSettingsExport, hasGeneral,
         exerciseDurationCount, generalDurationCount,
-        announcementLine, settingsExportLine, generalLine,
         exerciseDurationLine, generalDurationLine, normalizerLine
     ) {
         buildList {
@@ -370,14 +330,10 @@ fun TreatmentBeltGraphCompose(
             for ((_, _, mode) in renderedModeSegments) {
                 add(createModeSegmentLine(mode.beltColor(elementColors)))
             }
-            // 2. Non-duration therapy event lines
-            if (hasAnnouncement) add(announcementLine)
-            if (hasSettingsExport) add(settingsExportLine)
-            if (hasGeneral) add(generalLine)
-            // 3. Duration event lines
+            // 2. Duration event lines
             repeat(exerciseDurationCount) { add(exerciseDurationLine) }
             repeat(generalDurationCount) { add(generalDurationLine) }
-            // 4. Normalizer (always last)
+            // 3. Normalizer (always last)
             add(normalizerLine)
         }
     }
@@ -400,7 +356,33 @@ fun TreatmentBeltGraphCompose(
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
     val inspectLine = rememberInspectLine(inspect)
     val clockChanges = rememberClockChangeDecoration(minTimestamp, maxTimestamp, bgReadings)
-    val beltDecorations = remember(nowLine, clockChanges, inspectLine) { listOfNotNull(nowLine, clockChanges, inspectLine) }
+    // The reporter writes into a StateFlow on every draw pass, see VisibleRangeHolder. The delay limits
+    // the updates to 20 per second during a scroll or a zoom.
+    val visibleRangeHolder = remember { VisibleRangeHolder() }
+    val visibleRangeReporter = rememberVisibleRangeReporter(visibleRangeHolder)
+    val currentOnVisibleRangeChanged by rememberUpdatedState(onVisibleRangeChanged)
+    LaunchedEffect(visibleRangeHolder) {
+        visibleRangeHolder.value.collect {
+            currentOnVisibleRangeChanged?.invoke(it)
+            delay(50)
+        }
+    }
+    val carbsColor = elementColors.carbs
+    // In the carbs colour of the second tier, like the basal on BG
+    val cobFailoverBar = remember(carbsColor) { CobFailoverBar(carbsColor.copy(alpha = SECOND_TIER_ALPHA)) }
+    val beltIcons = remember(eventIconColor, announcementPainter, clinicalNotesPainter, notePainter) {
+        BeltIcons(
+            icons = mapOf(
+                TherapyEventType.ANNOUNCEMENT to PainterComponent(announcementPainter, tint = eventIconColor),
+                TherapyEventType.SETTINGS_EXPORT to PainterComponent(clinicalNotesPainter, tint = eventIconColor),
+                TherapyEventType.GENERAL to PainterComponent(notePainter, tint = eventIconColor)
+            ),
+            countText = TextComponent(textStyle = TextStyle(color = eventIconColor, fontSize = BELT_ICON_COUNT_FONT_SIZE))
+        )
+    }
+    val beltDecorations = remember(cobFailoverBar, beltIcons, nowLine, visibleRangeReporter, clockChanges, inspectLine) {
+        listOfNotNull(cobFailoverBar, beltIcons, nowLine, visibleRangeReporter, clockChanges, inspectLine)
+    }
 
     val rangeProvider = remember(maxX) {
         CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = 0.0, maxY = 1.0)
@@ -421,14 +403,21 @@ fun TreatmentBeltGraphCompose(
                     style = TextStyle(color = Color.Transparent),
                     minWidth = TextComponent.MinWidth.fixed(30.dp)
                 ),
-                tick = rememberAxisTickComponent(fill = Fill(Color.Transparent)),
-                itemPlacer = remember { VerticalAxis.ItemPlacer.count({ 2 }) }
+                // No tick, as on the graphs: then all the left axes have the same width and the hour lines line up
+                tick = null,
+                itemPlacer = remember { VerticalAxis.ItemPlacer.count({ 2 }) },
+                // No frame and no axis lines: the belt is a strip of icons and mode colours
+                line = null,
+                guideline = null
             ),
             bottomAxis = HorizontalAxis.rememberBottom(
                 valueFormatter = timeFormatter,
                 itemPlacer = bottomAxisItemPlacer,
                 label = null,
-                tick = null
+                tick = null,
+                line = null,
+                // The hour lines, dotted as on the BG graph, so they run on into it
+                guideline = rememberGridLine()
             ),
             getXStep = { _, _, _ -> 1.0 }
         ),
@@ -442,14 +431,15 @@ fun TreatmentBeltGraphCompose(
 }
 
 /**
- * Creates an invisible line with semi-transparent area fill for a running mode segment.
+ * Creates an invisible line with a light area fill for a running mode segment: light, so a long
+ * stretch in one mode does not outweigh the BG graph below. The inspect pill shows the full colour.
  * The line sits at Y=1.0 with area fill extending to Y=0 (full chart height).
  */
 private fun createModeSegmentLine(color: Color): LineCartesianLayer.Line =
     LineCartesianLayer.Line(
         fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
         areaFill = if (color == Color.Transparent) null
-        else LineCartesianLayer.AreaFill.single(Fill(color.copy(alpha = 0.3f)))
+        else LineCartesianLayer.AreaFill.single(Fill(color.copy(alpha = 0.15f)))
     )
 
 /**
@@ -522,6 +512,88 @@ internal class PainterComponent(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+/**
+ * A thin bar in the carbs colour along the bottom of the belt, one segment for each stretch in which
+ * carbs absorption fell back to the minimum rate ("guessed" absorption). The belt is always shown, so
+ * this is seen without a COB graph. On the belt, not on the bottom edge of BG, where it covered the SMBs.
+ *
+ * Drawn under the layers, so an event icon stays on top of it. The running mode fills are light
+ * enough to let it show through.
+ */
+private class CobFailoverBar(private val color: Color) : Decoration {
+
+    override fun drawUnderLayers(context: CartesianDrawingContext) {
+        with(context) {
+            if (ranges.xStep == 0.0) return
+            val stretches = model.extraStore.getOrNull(COB_FAILOVER_KEY) ?: return
+            if (stretches.isEmpty()) return
+            fun canvasX(x: Double): Float =
+                layerBounds.left + layerDimensions.startPadding +
+                    layerDimensions.xSpacing * ((x - ranges.minX) / ranges.xStep).toFloat() - scroll
+            // Thin: the bar runs as long as the guess, and 4 dp high it read as a stripe across the belt
+            val height = AapsSpacing.extraSmall.pixels
+            for (stretch in stretches) {
+                val left = canvasX(stretch.start).coerceAtLeast(layerBounds.left)
+                val right = canvasX(stretch.endInclusive).coerceAtMost(layerBounds.right)
+                if (right <= left) continue
+                with(mutableDrawScope) {
+                    drawRect(color = color, topLeft = Offset(left, layerBounds.bottom - height), size = Size(right - left, height))
+                }
+            }
+        }
+    }
+}
+
+/** The event types [BeltIcons] draws: the ones with one moment and no duration. */
+private val BELT_ICON_TYPES = setOf(TherapyEventType.ANNOUNCEMENT, TherapyEventType.SETTINGS_EXPORT, TherapyEventType.GENERAL)
+
+/**
+ * Which of the [events] (x, sorted by x) are drawn, as (index of the event drawn, how many events it
+ * stands for). An event closer than [iconWidthPx] to the one drawn before it would overlap it, so it
+ * joins that one. [pxPerX] turns x into pixels at the current zoom, so zooming in pulls them apart.
+ */
+internal fun beltIconGroups(events: List<Double>, pxPerX: Float, iconWidthPx: Float): List<Pair<Int, Int>> {
+    val groups = mutableListOf<Pair<Int, Int>>()
+    for ((index, x) in events.withIndex()) {
+        val last = groups.lastOrNull()
+        if (last != null && (x - events[last.first]) * pxPerX < iconWidthPx) groups[groups.size - 1] = last.first to last.second + 1
+        else groups += index to 1
+    }
+    return groups
+}
+
+/**
+ * The icons of the events with one moment. Drawn here and not as Vico points, so icons that would
+ * overlap at the current zoom become one icon with the number of events next to it. On top of each
+ * other they read as a grey blob. Zooming in pulls them apart. A tap shows the event nearest to the
+ * finger, see `beltTapTimestamp`.
+ */
+private class BeltIcons(
+    private val icons: Map<TherapyEventType, PainterComponent>,
+    private val countText: TextComponent
+) : Decoration {
+
+    override fun drawOverLayers(context: CartesianDrawingContext) {
+        with(context) {
+            if (ranges.xStep == 0.0) return
+            val events = model.extraStore.getOrNull(BELT_ICONS_KEY) ?: return
+            if (events.isEmpty()) return
+            val pxPerX = (layerDimensions.xSpacing / ranges.xStep).toFloat()
+            val size = BELT_ICON_SIZE.pixels
+            val half = size / 2
+            val centerY = (layerBounds.top + layerBounds.bottom) / 2
+            for ((index, count) in beltIconGroups(events.map { it.first }, pxPerX, size)) {
+                val (x, type) = events[index]
+                val px = layerBounds.left + layerDimensions.startPadding + pxPerX * (x - ranges.minX).toFloat() - scroll
+                // Only an icon fully inside the belt, so neither it nor its number reaches over the axis column
+                if (px - half < layerBounds.left || px + half > layerBounds.right) continue
+                icons[type]?.draw(context, px - half, centerY - half, px + half, centerY + half)
+                if (count > 1) countText.draw(context, count.toString(), px + half, centerY - half, horizontalPosition = Position.Horizontal.End)
             }
         }
     }

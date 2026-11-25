@@ -25,8 +25,8 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
     implementation(project(":core:keys"))
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.jetbrains.compose.ui.tooling.preview)
+    debugImplementation(libs.jetbrains.compose.ui.tooling)
 
     implementation(libs.androidx.lifecycle.process)
 

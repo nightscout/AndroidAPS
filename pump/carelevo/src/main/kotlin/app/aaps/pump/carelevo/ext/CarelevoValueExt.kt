@@ -15,7 +15,7 @@ internal fun ByteArray.convertBytesToHex(): String {
 internal fun String.convertHexToByteArray(): ByteArray {
     var returnData: List<Byte> = ArrayList()
 
-    val str = toString().replace(" ", "")
+    val str = replace(" ", "")
     var hex = str.replace("0x", "")
 
     hex = hex.uppercase()

@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Test
  * which is exactly how `PumpDriverBucketTest` once went red on a follower unnoticed.
  * ## Why identity rather than annotations
  * Reading the annotation would only re-state the source. This reads the **graph**, so it is true
- * regardless of how ownership is spelled - a `@SingleIn` class, a scoped `@Provides` in a binding
- * container, or interop reading a javax scope all look the same from here, which is the point when the
- * whole change is swapping one spelling for another.
+ * regardless of how ownership is spelled - a `@SingleIn` class or a scoped `@Provides` in a binding
+ * container look the same from here, which is the point when the whole change is swapping one
+ * spelling for another.
  * ## Reading the lists
  * [SINGLE_INSTANCE] is what must stay stable. [FRESH_EACH_READ] is deliberately unscoped - a value
  * object or a lookup where a second one costs nothing. Both are pinned: a type moving between them
@@ -99,6 +99,9 @@ class GraphScopeStabilityTest {
             "alarmSoundPlayer",
             "appRepository",
             "appScope",
+            // Since Metro 1.6.0 the graph keeps one map of providers. Each provider still makes a new
+            // view model on every call - `ContributedViewModelsTest` checks that.
+            "assistedFactoryProviders",
             "authFlowOut",
             "authorizedClientsRepository",
             "automation",
@@ -231,6 +234,7 @@ class GraphScopeStabilityTest {
             "userEntryLogger",
             "userEntryPresentationHelper",
             "versionCheckerUtils",
+            "viewModelProviders", // one map since Metro 1.6.0, see assistedFactoryProviders
             "visibilityContext",
             "wearPlugin",
             "wizardExecutor",
@@ -243,7 +247,6 @@ class GraphScopeStabilityTest {
         /** Deliberately a new instance per read. */
         val FRESH_EACH_READ = setOf(
             "apsResult",
-            "assistedFactoryProviders",
             "autosensData",
             "bolusWizard",
             "cloudStorageProviders",
@@ -259,7 +262,6 @@ class GraphScopeStabilityTest {
             "pumpSync",
             "pumpWithConcentration",
             "sourceGraph",
-            "viewModelProviders",
             "workersGraph",
         )
 

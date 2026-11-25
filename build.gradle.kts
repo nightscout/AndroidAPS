@@ -1,5 +1,6 @@
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
@@ -50,6 +51,12 @@ allprojects {
             // flag is now redundant and the compiler warns about it on every module.
             jvmTarget.set(Versions.jvmTarget)
         }
+    }
+    // Every Kotlin compile, the native ones too, not only the JVM ones above. expect/actual classes are
+    // still Beta, and without this every module that has one (AapsLock, NumberFormatPlatform, Room's
+    // generated AppDatabaseConstructor) warns about it on every target.
+    tasks.withType<KotlinCompilationTask<*>>().configureEach {
+        compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
     }
     // The build cache may replay compilation. It may not replay test results.
     //

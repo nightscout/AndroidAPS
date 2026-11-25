@@ -89,4 +89,43 @@ internal class RunningModeExtensionKtTest {
         assertThat(runningMode2.reasons).isEqualTo("constraint denied")
         assertThat(runningMode.ids.contentEqualsTo(runningMode2.ids)).isTrue()
     }
+
+    /**
+     * LoopPlugin.runningModePreCheck forces OPEN_LOOP and CLOSED_LOOP_LGS with duration Long.MAX_VALUE too.
+     * Sent as it is, Nightscout rounded it to a number too large to read back, and a client or a new install
+     * stopped loading treatments there (#5626). They get the open-ended mark 0, as DISABLED_LOOP does.
+     */
+    @Test
+    fun `a forced loop mode goes to Nightscout with the open-ended mark`() {
+        for (mode in listOf(RM.Mode.OPEN_LOOP, RM.Mode.CLOSED_LOOP_LGS)) {
+            val runningMode = RM(
+                timestamp = 10000,
+                isValid = true,
+                mode = mode,
+                duration = Long.MAX_VALUE,
+                autoForced = true,
+                reasons = "constraint",
+                ids = IDs(nightscoutId = "nightscoutId")
+            )
+
+            val sent = runningMode.toNSOfflineEvent()
+            assertThat(sent.originalDuration).isEqualTo(0L)
+
+            val back = (sent.convertToRemoteAndBack() as NSOfflineEvent).toRunningMode()
+            assertThat(back.mode).isEqualTo(mode)
+            assertThat(back.duration).isEqualTo(0L)
+            assertThat(back.autoForced).isTrue()
+            assertThat(back.reasons).isEqualTo("constraint")
+        }
+    }
+
+    /** A loop mode with a real end keeps it. */
+    @Test
+    fun `a loop mode with an end keeps its duration`() {
+        val runningMode = RM(timestamp = 10000, isValid = true, mode = RM.Mode.CLOSED_LOOP_LGS, duration = 3_600_000L, ids = IDs(nightscoutId = "nightscoutId"))
+
+        val back = (runningMode.toNSOfflineEvent().convertToRemoteAndBack() as NSOfflineEvent).toRunningMode()
+
+        assertThat(back.duration).isEqualTo(3_600_000L)
+    }
 }

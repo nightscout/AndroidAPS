@@ -8,7 +8,7 @@ metadata:
 `OverviewScreenStacked` / `OverviewScreenSplit` / `OverviewScreenTablet` (all already in
 `ui/src/commonMain/.../compose/overview/`) are covered by
 `ui/src/androidHostTest/.../compose/overview/OverviewScreenVariantsTest.kt` - 10 tests, each proven
-to fail by a mutation of the file in `commonMain`. `:ui` went 485 -> 495 tests.
+to fail by a mutation of the file in `commonMain`.
 
 **What is pinned** - only what differs between the three, because that is what a careless merge of
 "three nearly identical files" would break:
@@ -29,4 +29,5 @@ them as untested. `manageViewModel` is a **parameter of all three screens and re
 them**; that is worth raising with the user before anyone deletes it, because zero callers here has
 already meant a lost caller elsewhere in this repo.
 
-Related: [[ui-screen-test-fixture]], [[ui-twelve-file-batch-moved]], [[mutation-restore-proof]]
+Related: [[ui-screen-test-fixture]], [[lessons-from-finished-moves]], and the "Mutation must be
+atomic" section of the agent definition.

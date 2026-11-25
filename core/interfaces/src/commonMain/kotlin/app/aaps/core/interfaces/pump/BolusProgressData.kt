@@ -23,10 +23,10 @@ import kotlin.concurrent.atomics.incrementAndFetch
  * Lifecycle is managed by the command queue (start/complete/clear),
  * pump drivers only report progress via [updateProgress].
  *
- * Deliberately carries no DI annotations. `javax.inject` is a JVM library and does not resolve in
- * commonMain, so a class meant to be shared cannot be annotated - the Android graph provides it
- * instead (a scoped binding, which keeps the single instance and
- * supplies the application-scoped CoroutineScope).
+ * Carries no DI annotations: `ImplementationBindings` provides it (a scoped binding, which keeps the
+ * single instance and supplies the application-scoped CoroutineScope). It was written that way when
+ * the DI annotations were javax and could not be used in commonMain. Metro's can, so it could now be
+ * annotated directly instead.
  */
 @OptIn(ExperimentalAtomicApi::class)
 class BolusProgressData(
@@ -72,7 +72,9 @@ class BolusProgressData(
     private val startLock = AtomicInt(0)
 
     private inline fun <T> startLocked(block: () -> T): T {
-        while (!startLock.compareAndSet(0, 1)) Unit
+        while (!startLock.compareAndSet(0, 1)) {
+            // spin until the other thread has finished its start
+        }
         try {
             return block()
         } finally {

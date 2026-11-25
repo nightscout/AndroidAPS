@@ -10,7 +10,6 @@
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Koju pumpu želite da koristite sa AAPS-om?</string>
     <string name="configbuilder_aps_description">Koji APS algoritam treba da izvrši prilagođavanja terapije?</string>
-    <string name="configbuilder_bgsource_description">Odakle AAPS treba da dobija svoje podatke?</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->

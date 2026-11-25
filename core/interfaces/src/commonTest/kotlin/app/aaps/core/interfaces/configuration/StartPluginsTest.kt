@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -28,6 +29,7 @@ import kotlin.time.Duration.Companion.seconds
  * event sent before the start jobs finish reaches nobody and the graph stays empty until the next
  * glucose reading (nightscout/AndroidAPS#5485).
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 class StartPluginsTest {
 
     private class RecordingBus : RxBus {

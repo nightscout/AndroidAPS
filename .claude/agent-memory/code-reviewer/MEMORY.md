@@ -7,8 +7,10 @@
 - `clearFocusOnTap` in `app.aaps.core.ui.compose.Modifiers.kt`. Required for screens with text
   fields.
 - `ComposablePluginContent` in
-  `core/ui/src/main/kotlin/app/aaps/core/ui/compose/ComposablePluginContent.kt`.
-- `PluginBase.scope` is private; plugins must declare their own `CoroutineScope`.
+  `core/ui/src/commonMain/kotlin/app/aaps/core/ui/compose/ComposablePluginContent.kt`.
+- `PluginBase.pluginScope` is protected and lives as long as the process. Work that must stop with
+  the plugin goes in a scope the plugin creates in `onStart()` and cancels in `onStop()`. Every
+  `pluginScope.launch` is listed in `PluginLifetimeWorkScanTest` (app testFull).
 - Previews MUST use `MaterialTheme` wrapper (NOT `AapsTheme` — crashes in preview tool).
 
 ## DI Patterns
@@ -16,56 +18,31 @@
 - **One framework everywhere: Metro.** A view model is registered with
   `@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())` + `@ViewModelKey`, and read
   in Compose with `metroViewModel()`.
-- `ComposablePluginContent` receives `viewModelFactory` and calls
-  `ViewModelProvider(viewModelStoreOwner, viewModelFactory)[...]`. Instantiating via `remember {}`
-  is a latent lifecycle bug (viewModelScope never cancelled correctly).
 - **ComposeContent constructor**: Always constructed manually in the plugin, receives only
-  non-ViewModel deps (e.g., `protectionCheck`, `blePreCheck`) as constructor params.
   non-ViewModel deps (e.g., `protectionCheck`, `blePreCheck`) as constructor params.
 
 ## Recurring Bugs Across Pump Compose Migrations
 
-- `BlePreCheckHost` + wizard screen render simultaneously — wizard shows before BLE check completes.
-  Need a separate `isCheckingBle` state to gate wizard rendering. (EOPatch2, Equil) — STILL OPEN in
-  Equil.
-- `SharedFlow` event branches left empty (`// handled inline`) when they are actually NOT handled.
-  (Equil: `ShowMessage` in `EquilComposeContent` swallows unpair errors)
-- Public `val rh: ResourceHelper` on ViewModels — should always be `private val`. (EOPatch2,
-  Equil) — FIXED in Equil.
-- `canGoBack` implemented as a plain Kotlin computed property reading `StateFlow.value` instead of
-  a derived `StateFlow` — not reactive in Compose. (Equil) — FIXED.
-- Step composables accessing ViewModel data via plain function calls instead of `StateFlow`. (
-  Equil) — FIXED.
-- Step count (`totalSteps`) mismatch when shared steps (AIR, CONFIRM) are reused across workflows
-  without updating the workflow's declared `totalSteps`. (Equil: CHANGE_INSULIN declares 4 but
-  runs 6 steps) — FIXED (count correct), but comment in EquilWizardStep.kt line 15 not updated.
-- Duplicate therapy event insertion in activation confirm step — check all `insertTherapyEvent`
-  calls when porting confirm logic. (Equil: double CANNULA_CHANGE event) — RESOLVED, not duplicated.
-- Air removal step: "Finish" button must be disabled until the removal command has been sent and
-  succeeded. Easy to forget when porting from XML (button was initially disabled via alpha). (
-  Equil) — FIXED.
-- Callback.run() in commandQueue executes on background HandlerThread — all MutableStateFlow.value
-  assignments from callbacks are safe (StateFlow is thread-safe), but plain `var` fields (
-  autoFillActive,
-  fillStepCount) accessed from callbacks are NOT safe without @Volatile.
-- Empty password allowed through SerialNumberStep — `isPasswordValid = password.isEmpty() || ...`
-  lets user pair with no password, which is stored and used for future unpair.
-- Resource strings with embedded stray characters: equil_install has trailing `"`,
-  equil_unbind_content
-  has full-width `！`. Always check string values not just keys.
-- `GIF_MAX_HEIGHT = 300.dp` duplicated in 4 step files — WizardGifImage.kt was planned but not
-  created.
+- `BlePreCheckHost` and the wizard screen render at the same time, so the wizard shows before the
+  BLE check is done. Gate the wizard on a separate "BLE ready" state.
+- `SharedFlow` event branches left empty (`// handled inline`) when they are NOT handled anywhere.
+  Check every branch really handles its event.
+- Public `val rh: ResourceHelper` on ViewModels — should always be `private val`.
+- `canGoBack` as a plain computed property reading `StateFlow.value` is not reactive in Compose.
+  Derive a `StateFlow` instead.
+- Step composables must read ViewModel data from `StateFlow`, not from plain function calls.
+- Step counts (`totalSteps`) must come from the workflow's step list, not from a number written
+  next to it: shared steps reused across workflows made the two disagree.
+- When porting a confirm step, check every `insertTherapyEvent` call for a duplicate event.
+- A "Finish" button must stay disabled until the command it waits for has been sent and succeeded.
+  Easy to forget when porting from XML, where the button was only made transparent.
+- A plain `var` written from another thread or coroutine needs `@Volatile`, or a `StateFlow`.
+- Check string values, not just keys: stray quotes and full-width punctuation slip in.
 
 ## Architecture Notes
 
-- `WizardGifImage.kt` / `WizardImage` in `core/ui/compose/pump/` — shared GIF/image wrapper for
-  wizards. Step composables should use this instead of copy-pasting `GlideImage` boilerplate.
-- `WizardStepLayout`, `StepProgressIndicator`, `WizardButton` in `core/ui/compose/pump/` — shared
-  wizard chrome components.
-- `BlePreCheckHost` in `core/ui/compose/pump/BlePreCheckHost.kt` — async, renders wizard at same
-  time unless guarded.
-
-## See Also
-
-- Earlier migration reviews (NSClient, Tidepool, Wear, SMS, Preferences, EOPatch2): see conversation
-  history from 2026-03-01 and 2026-03-02.
+- `WizardStepLayout`, `StepProgressIndicator`, `WizardButton` in
+  `core/ui/src/commonMain/kotlin/app/aaps/core/ui/compose/pump/WizardStepLayout.kt` — shared wizard
+  chrome components.
+- `BlePreCheckHost` in `core/ui/src/androidMain/kotlin/app/aaps/core/ui/compose/pump/BlePreCheckHost.kt`
+  — async, renders the wizard at the same time unless guarded.

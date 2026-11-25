@@ -38,6 +38,7 @@ class SourceSensorTest {
         assertEquals(SourceSensor.DEXCOM_G7, SourceSensor.fromString("G7 Native"))
         assertEquals(SourceSensor.DEXCOM_G7, SourceSensor.fromString("G7"))
         assertEquals(SourceSensor.GLUPRO, SourceSensor.fromString("GluPro"))
+        assertEquals(SourceSensor.LIBRE_3, SourceSensor.fromString("Li3"))
     }
 
     @Test

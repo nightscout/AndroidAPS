@@ -292,27 +292,26 @@ internal fun TreatmentSettingsContent(
     settingsDef: PreferenceSubScreenDef,
     onBack: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .consumeOverscroll()
-            .verticalScroll(rememberScrollState())
-            .padding(bottom = 24.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 12.dp, end = 24.dp, top = 12.dp, bottom = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = onBack) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(CoreUiStrings.back)
-                )
+    // It scrolls itself, so the back button goes in its header rather than a scrolling column around it.
+    PreferenceSheetContent(
+        settingsDef = settingsDef,
+        modifier = Modifier.padding(bottom = 24.dp),
+        header = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 12.dp, end = 24.dp, top = 12.dp, bottom = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(CoreUiStrings.back)
+                    )
+                }
             }
         }
-        PreferenceSheetContent(settingsDef = settingsDef)
-    }
+    )
 }
 
 @Composable

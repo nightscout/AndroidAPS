@@ -3,6 +3,9 @@
     <string name="executing_right_now">现在命令被执行了</string>
     <string name="smb_being_delivered">当前正在输注 SMB。请在其完成后再试。</string>
     <string name="basal_value_below_minimum">基础率值低于泵支持的最小值。配置文件没有设定</string>
+    <string name="concentration_change_failed_title">胰岛素变更失败</string>
+    <string name="concentration_change_failed">新胰岛素已装入泵中，但 AAPS 无法将配置文件写入泵。泵正在输注错误剂量的胰岛素。请立即断开或移除泵，检查您的血糖，并在需要时通过其他方式输注胰岛素。只有在配置文件写入成功后才能重新连接泵。</string>
+    <string name="concentration_change_pending">包含新胰岛素的配置文件尚未写入泵。在写入之前，无法输注胰岛素。</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">泵中的基础率配置文件已更新。泵会将基础率舍入到其自身的步进值：它每天输注 %1$s，而非 %2$s。</string>
     <string name="basal_reported_far_from_profile">泵报告的基础率与配置文件相差甚远。AAPS 将保持配置文件中的基础率。请检查泵中的基础率。</string>
     <!--       Stats -->

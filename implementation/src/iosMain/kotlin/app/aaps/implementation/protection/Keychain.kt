@@ -1,5 +1,6 @@
 package app.aaps.implementation.protection
 
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.COpaquePointer
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.alloc
@@ -89,7 +90,7 @@ class KeychainUnavailableException(val status: Int) : Exception("The Keychain di
  * values - the service and account strings, the key bytes - are bridged, then released once the
  * dictionary has retained them.
  */
-@OptIn(ExperimentalForeignApi::class, ExperimentalEncodingApi::class)
+@OptIn(ExperimentalForeignApi::class, BetaInteropApi::class, ExperimentalEncodingApi::class)
 class AppleKeychain(private val service: String = "app.aaps.secureencrypt") : Keychain {
 
     override fun load(alias: String): ByteArray? =

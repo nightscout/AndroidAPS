@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -17,6 +18,7 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 /** The notification is updated once for a burst of the frequent events, see `frequentUpdates`. */
+@OptIn(ExperimentalCoroutinesApi::class)
 class PersistentNotificationPluginTest : TestBase() {
 
     private lateinit var sut: PersistentNotificationPlugin

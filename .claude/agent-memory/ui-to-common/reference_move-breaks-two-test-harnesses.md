@@ -11,7 +11,8 @@ both, and check for them **before** promising "tests pass unchanged".
 
 **1. Robolectric Compose tests go red because nobody registered the string owner.**
 `app.aaps.core.ui.compose.stringResource(TextRef.Named)` resolves through `TextRefIdRegistry`, which
-is populated by `MainApp` / `BaseTestApp` - neither of which runs in a module's `androidHostTest`.
+the app fills with `GeneratedStringOwners.registerAll()` from `MainApp` and the instrumented
+`BaseTestApp` - neither of which runs in a module's `androidHostTest`.
 So every label renders as its **raw name** and the assertion reads
 `The component with Text ... contains 'Last run' ... is not displayed!`.
 Fix is one line in `@Before`, and there is precedent in `ObjectivesScreenTest`:
@@ -24,11 +25,15 @@ Note a test that only asserts *absence* stays green, so the failure count unders
 `gs(TextRef)` form with `""` or `null` - the null then NPEs in the state data class ctor, pointing at
 `LoopUiState.<init>` and looking like a production bug. Fix is `stubTextRefResolution(rh)` from
 `:shared:tests` right after the mock exists; it routes the TextRef form back to the `gs(Int)` stubs
-the test already writes.
+the test already writes. **That works only for the five owners it knows** - `keys`, `coreUi`,
+`interfaces`, `implementation` and `aps`. For any other owner it throws `Unresolved string` on
+purpose, because answering with the raw name once hid wrong assertions. There, use
+`generatedTextResolver("<owner>" to <Owner>StringsValues::textOf)` for the real English text, or
+stub the ref the test needs on the mock.
 
 **Write the safety-net test so it is immune to both.** A hand written fake that answers the id form
 and the `TextRef` form with the *same* word survives the move untouched and pins the produced text
 rather than the overload - see `LoopViewModelFormattingTest.FakeTextResources`. That is what lets you
 prove the strings did not change.
 
-Related: [[cmp-what-crosses-unchanged]], [[aps-loop-move]]
+Related: [[cmp-what-crosses-unchanged]], [[lessons-from-finished-moves]]

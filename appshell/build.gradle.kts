@@ -69,7 +69,6 @@ kotlin {
 
         androidMain {
             dependencies {
-                api(project.dependencies.platform(libs.androidx.compose.bom))
                 implementation(libs.androidx.activity.compose)
             }
         }
@@ -86,8 +85,7 @@ kotlin {
                 // com.android.library, which AGP 9 refuses next to the multiplatform plugin.
                 // createComposeRule() is a JUnit4 rule, so the vintage engine bridges these onto the
                 // JUnit Platform beside the Jupiter tests.
-                implementation(project.dependencies.platform(libs.androidx.compose.bom))
-                implementation(libs.androidx.compose.ui.test.junit4)
+                implementation(libs.jetbrains.compose.ui.test.junit4)
                 implementation(libs.org.robolectric)
                 // Supplies the manifest holding the activity createComposeRule() launches.
                 implementation(libs.androidx.compose.ui.test.manifest)

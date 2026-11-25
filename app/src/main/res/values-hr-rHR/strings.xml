@@ -1,2 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="authorizationfailed">Autorizacija nije uspjela</string>
+    <string name="identification_not_set">Identifikacija nije postavljena u razvojnom načinu rada</string>
+    <string name="select">Odaberi</string>
+    <string name="set">Postavi</string>
+    <string name="migrating_preferences">Migracija postavki…</string>
+    <string name="optimizing_database">Optimizacija baze podataka…</string>
+    <string name="initializing_plugins">Inicijalizacija dodataka…</string>
+    <string name="initializing">Inicijalizacija…</string>
+    <string name="migrating_profile_switches">Migracija zamjena profila…</string>
+    <string name="migrating_effective_profile_switches">Migracija efektivnih zamjena profila…</string>
+    <string name="migrating_boluses">Migracija bolusa…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Stariji zapisi nisu imali konfiguraciju inzulina i nijedan profil nije bio aktivan, stoga je za njih korišten %1$s. Provjerite postavke inzulina — zapisi koji su već preneseni naknadno se ne ažuriraju.</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">Stariji zapisi nisu sadržavali trajanje djelovanja inzulina, stoga je za %2$s korištena vrijednost od %1$.1f sati. Provjerite svoje postavke inzulina — zapisi koji su već preneseni naknadno se ne ažuriraju.</string>
+    <string name="settings_unreadable_title">Postavke AAPS-a ne mogu se pročitati</string>
+    <string name="settings_unreadable_key_explanation">Postavke na ovom telefonu šifrirane su ključem koji Android čuva za AAPS, a taj ključ ih više ne može otvoriti. Do toga može doći nakon što je spremište ključeva na telefonu resetirano.</string>
+    <string name="settings_unreadable_keystore_explanation">Spremište ključeva na telefonu nije odgovorilo, stoga AAPS nije mogao otvoriti svoje postavke.</string>
+    <string name="settings_unreadable_not_running">AAPS ne radi i ne upravlja pumpom. Privremeni bazal koji je u tijeku završava u svoje vrijeme, a zatim pumpa daje svoj vlastiti bazal.</string>
+    <string name="settings_unreadable_what_to_do">„Pokušaj ponovno“ zatvara AAPS i ponovno ga pokreće. Ako to ne pomogne, ponovno pokrenite telefon. „Počni ispočetka“ odaberite samo kada ništa drugo ne pomaže: nečitljive postavke spremaju se sa strane, a AAPS se pokreće s praznim postavkama. Zatim u čarobnjaku za postavljanje uvezite svoj zadnji izvoz postavki.</string>
+    <string name="settings_unreadable_start_fresh">Počni ispočetka</string>
+    <string name="settings_unreadable_confirm_title">Pokrenuti s praznim postavkama?</string>
+    <string name="settings_unreadable_confirm_text">Datoteka s nečitljivim postavkama preimenuje se i čuva. Sve postavke vraćaju se na zadane vrijednosti. Zatim ponovno postavite AAPS ili uvezite izvezene postavke.</string>
+    <string name="settings_unreadable_notification">AAPS ne radi. Otvorite AAPS da vidite što učiniti.</string>
+</resources>

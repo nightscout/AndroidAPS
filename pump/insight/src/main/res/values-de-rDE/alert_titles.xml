@@ -16,7 +16,7 @@
     <string name="alert_m21_title">Ampulle leer</string>
     <string name="alert_m22_title">Batterie leer</string>
     <string name="alert_m23_title">Sicherheitsabschaltung - Pumpe gestoppt</string>
-    <string name="alert_m24_title">Verstopfung</string>
+    <string name="alert_m24_title">Verschluss</string>
     <string name="alert_m25_title">Leihdauer abgelaufen - Laufzeitende</string>
     <string name="alert_m26_title">Ampullenwechsel nicht korrekt abgeschlossen</string>
     <string name="alert_m27_title">Datenübertragung fehlgeschlagen</string>

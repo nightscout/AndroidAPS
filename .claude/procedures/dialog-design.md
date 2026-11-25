@@ -12,7 +12,7 @@
 - Full-width `Button` with `imePadding()` — stays above keyboard
 - Shows result text when available (e.g., "2.50 U 25 g")
 - Always visible, **disabled** when no result/action available
-- Fallback text: `stringResource(CoreUiR.string.ok)` when disabled
+- Fallback text: `stringResource(CoreUiStrings.ok)` when disabled
 
 ### Card Structure
 - Use **2 cards maximum**: one for calculation/info (if applicable), one for all inputs
@@ -21,9 +21,12 @@
 
 ### Gap-as-Divider Pattern
 - Outer wrapper: `Card(containerColor = surface)` — provides elevation, gap color
-- Inner: `Column(verticalArrangement = Arrangement.spacedBy(2.dp))`
-- Each item: `itemModifier` = `Modifier.fillMaxWidth().clip(RoundedCornerShape(4.dp)).background(surfaceContainer).padding(horizontal = 16.dp, vertical = 8.dp)`
-- No `HorizontalDivider` — the 2dp gap shows `surface` color through
+- Inner: `Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall))`
+- Each item: `itemModifier` = `Modifier.fillMaxWidth().clip(RoundedCornerShape(AapsSpacing.small)).background(surfaceContainer).padding(horizontal = AapsSpacing.extraLarge, vertical = AapsSpacing.medium)`
+- No `HorizontalDivider` — the `extraSmall` (2dp) gap shows `surface` color through
+- Spacing comes from `AapsSpacing` (`extraSmall` 2dp, `small` 4dp, `medium` 8dp, `large` 12dp,
+  `extraLarge` 16dp), never a written dp value. Some older screens still have the dp values; use the
+  names when you touch them.
 - Define `itemModifier` once and reuse across items
 
 ### Primary and secondary inputs
@@ -74,17 +77,17 @@
 - Free text input accepted (no step rounding on typed values, only +/- buttons use step)
 
 ### Calculation Section (Wizard-specific)
-- Expandable with arrow icon (show/hide details pattern — different from "Change" pattern)
+- Expandable with arrow icon (show/hide details pattern — different from the folded rows above)
 - Result summary always visible in header row
 - Toggles (BG, TT, Trend, IOB, COB) always visible using MultiChoiceSegmentedButtonRow
 - Default M3 styling for toggle selection (no custom icon tints)
 - `checked` must account for `enabled` conditions (e.g., `checked = uiState.useTT && uiState.hasTempTarget`)
 
 ### Space Savings
-- Top-level `verticalArrangement = Arrangement.spacedBy(8.dp)` between cards
-- Bottom spacer: `8.dp`
+- Top-level `verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)` between cards
+- Bottom spacer: `AapsSpacing.medium`
 - No extra vertical padding in NumberInputRow
-- Card internal padding: `padding(horizontal = 16.dp, vertical = 8.dp)`
+- Card internal padding: `padding(horizontal = AapsSpacing.extraLarge, vertical = AapsSpacing.medium)`
 
 ### Dark Mode
 - `secondaryContainer` adjusted to `#635F6A` for better SegmentedButton contrast
@@ -92,31 +95,24 @@
 
 ### Related Items
 - Group related inputs in one item block (e.g., carbs + quick-add buttons, carb time + alarm)
-- Use `padding(top = 4.dp)` for sub-elements within an item (e.g., food selector below carbs)
+- Use `padding(top = AapsSpacing.small)` for sub-elements within an item (e.g., food selector below carbs)
 
-## Screens to Update
+## Screens that follow these rules
 
-| # | Screen | Status | Path |
-|---|---|---|---|
-| 1 | WizardDialogScreen | ✅ Done | `ui/.../wizardDialog/` |
-| 2 | TreatmentDialogScreen | ✅ Done | `ui/.../treatmentDialog/` |
-| 3 | TempBasalDialogScreen | ✅ Done | `ui/.../tempBasalDialog/` |
-| 4 | InsulinDialogScreen | ✅ Done | `ui/.../insulinDialog/` |
-| 5 | FillDialogScreen | ✅ Done | `ui/.../fillDialog/` |
-| 6 | ExtendedBolusDialogScreen | ✅ Done | `ui/.../extendedBolusDialog/` |
-| 7 | CareDialogScreen | ✅ Done | `ui/.../careDialog/` |
-| 8 | CarbsDialogScreen | ✅ Done | `ui/.../carbsDialog/` |
-| 9 | ProfileActivationScreen | ✅ Done | `ui/.../profileManagement/` |
-| 10 | ProfileHelperScreen | ✅ Done | `ui/.../profileHelper/` |
-| 11 | InsulinManagementScreen | ✅ Done | `ui/.../insulinManagement/` |
-| 12 | DanaUserOptionsScreen | ✅ Done | `pump/dana/common/.../compose/` |
-| 13 | CalibrationDialogScreen | ✅ New | `ui/.../calibrationDialog/` |
+All of them already do. Use them as examples, and keep them in line when you change the rules.
 
-## Review Findings (2026-03-28)
-
-### Fixed
-- Duplicate comment in NumberInputRow (line 255)
-- Dead `SectionHeader` functions removed from CarbsDialog and InsulinDialog
-- InsulinDialog confirmation + bolus timestamp: now uses `state.eventTime` instead of `now() + offset`
-- CalibrationDialog button: shows BG value + unit when valid
-- WizardDialog BG expand: starts collapsed, auto-expands via `LaunchedEffect(bgIsOld)` reactively
+| Screen | Path |
+|---|---|
+| WizardDialogScreen | `ui/.../wizardDialog/` |
+| TreatmentDialogScreen | `ui/.../treatmentDialog/` |
+| TempBasalDialogScreen | `ui/.../tempBasalDialog/` |
+| InsulinDialogScreen | `ui/.../insulinDialog/` |
+| FillDialogScreen | `ui/.../fillDialog/` |
+| ExtendedBolusDialogScreen | `ui/.../extendedBolusDialog/` |
+| CareDialogScreen | `ui/.../careDialog/` |
+| CarbsDialogScreen | `ui/.../carbsDialog/` |
+| ProfileActivationScreen | `ui/.../profileManagement/` |
+| ProfileHelperScreen | `ui/.../profileHelper/` |
+| InsulinManagementScreen | `ui/.../insulinManagement/` |
+| DanaUserOptionsScreen | `pump/dana/common/.../compose/` |
+| CalibrationDialogScreen | `ui/.../calibrationDialog/` |

@@ -54,8 +54,8 @@ class OrphanDetector(
     private val rh: TextResolver,
     private val config: Config,
     private val aapsLogger: AAPSLogger,
-    // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
-    // commonMain. AppCoroutineBindings.unqualifiedAppScope provides the same scope unqualified.
+    // Plain CoroutineScope, the same object as @ApplicationScope:
+    // AppCoroutineBindings.unqualifiedAppScope provides the same scope unqualified.
     private val appScope: CoroutineScope
 ) {
 

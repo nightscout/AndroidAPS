@@ -78,7 +78,7 @@ kotlin {
                 // Dependency Injection
 
                 api(libs.androidx.appcompat)
-                api(libs.androidx.compose.ui)
+                api(libs.jetbrains.compose.ui)
                 api(libs.androidx.documentfile)
 
                 api(libs.org.apache.commons.lang3)

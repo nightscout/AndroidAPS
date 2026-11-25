@@ -20,8 +20,19 @@ internal class StoreFileSerializer(private val cipher: StoreCipher) : OkioSerial
 
     override suspend fun writeTo(t: Map<String, Any>, sink: BufferedSink) {
         sink.write(StoreCodec.encode(t, cipher))
+        // The flush is needed. The sink passes only full 8 KiB segments on to the file and keeps the rest,
+        // and DataStore syncs the file before it closes the sink. Without this, the last part of the file
+        // (with the GCM tag in it) is written after the sync, and a hard reboot can leave zeros there
+        // (issue #5562).
+        sink.flush()
     }
 }
+
+/**
+ * The file system the store file lives on: [FileSystem.SYSTEM], except on iOS, where a file is synced
+ * before it is moved (`SyncingFileSystem`). On Android and the JVM, okio's flush syncs already.
+ */
+internal expect val storeFileSystem: FileSystem
 
 /**
  * Opens the encrypted store kept in the file at [path] (absolute), running [migrations] first if they
@@ -29,8 +40,10 @@ internal class StoreFileSerializer(private val cipher: StoreCipher) : OkioSerial
  *
  * DataStore's okio file storage, the same on every platform: it is the only one DataStore has on iOS.
  * It writes a sibling `.tmp` file, syncs it and moves it over the real one, so a crash leaves the old
- * content or the new, never half of it. There is deliberately no corruption handler - DataStore's would
- * replace an unreadable file with an empty one.
+ * content or the new, never half of it. The sync covers the whole file only because [StoreFileSerializer]
+ * flushes its sink itself. On iOS okio's flush does not sync at all, so there [storeFileSystem] syncs the
+ * file before the move. There is deliberately no corruption handler - DataStore's would replace an
+ * unreadable file with an empty one.
  *
  * The store and its DataStore live in [scope], which the caller owns. DataStore refuses a second
  * instance on a file while the first is alive, so to open the same file again - after a failed open,
@@ -43,7 +56,7 @@ fun openEncryptedStore(
     scope: CoroutineScope,
     onSaveFailure: (Throwable) -> Unit
 ): EncryptedKeyValueStore {
-    val storage = OkioStorage(FileSystem.SYSTEM, StoreFileSerializer(cipher)) { path.toPath() }
+    val storage = OkioStorage(storeFileSystem, StoreFileSerializer(cipher)) { path.toPath() }
     val dataStore = DataStoreFactory.create(storage = storage, migrations = migrations, scope = scope)
     return EncryptedKeyValueStore.open(dataStore, scope, onSaveFailure)
 }
