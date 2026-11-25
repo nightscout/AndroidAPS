@@ -238,8 +238,8 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     /**
      * The settings could not be opened ([AndroidStorage] says why), so AAPS does not start: no plugins, so no
      * loop, and nothing written to the database. The app runs on an empty store that lives in memory only,
-     * which keeps its parts from crashing without writing over the unreadable file. A notification that
-     * cannot be swiped away says so, and SettingsUnreadableActivity shows the way out.
+     * which keeps its parts from crashing without writing over the unreadable file. An ongoing notification
+     * says so, and SettingsUnreadableActivity shows the way out.
      */
     private fun startWithoutSettings(failure: Exception, notes: List<String>) {
         GeneratedStringOwners.registerAll()

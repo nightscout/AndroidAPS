@@ -2,6 +2,7 @@ package app.aaps.shared.impl.sharedPreferences
 
 import androidx.datastore.core.CorruptionException
 import kotlin.test.Test
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
@@ -64,6 +65,16 @@ class StoreCodecTest {
         val bytes = StoreCodec.encode(mapOf("a" to 1), FakeStoreCipher(key = 0x11))
 
         assertFailsWith<CorruptionException> { StoreCodec.decode(bytes, cipher) }
+    }
+
+    @Test
+    fun `a store that does not open says its size and how many zero bytes are at its end`() {
+        val bytes = StoreCodec.encode(mapOf("a" to 1), FakeStoreCipher(key = 0x11)) + ByteArray(5)
+
+        val thrown = assertFailsWith<CorruptionException> { StoreCodec.decode(bytes, cipher) }
+
+        assertContains(thrown.message.orEmpty(), "(${bytes.size} bytes,")
+        assertContains(thrown.message.orEmpty(), ", 5 zero bytes at the end")
     }
 
     @Test
