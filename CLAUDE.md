@@ -98,10 +98,10 @@ On 2026-11-19 there were 21 populated test source sets in 17 modules:
   `core/utils`, `database/impl`, `database/persistence`, `implementation`, `plugins/aps`,
   `plugins/sync`, `shared/clientbindings`, `shared/impl`, `ui`, `workflow`
 - `iosTest`: `core/interfaces`, `implementation`, `ios/shell`, `plugins/aps`, `plugins/automation`,
-  `plugins/sync`
+  `plugins/sync`, and since 2026-11-25 `shared/impl`
 
-`.github/workflows/ios-ci.yml` runs the simulator tests of 8 of these modules: the six `iosTest`
-modules plus `core/data` and `core/nssdk`. The other 9 have only `commonTest`, and their tests run
+`.github/workflows/ios-ci.yml` runs the simulator tests of 9 of these modules: the seven `iosTest`
+modules plus `core/data` and `core/nssdk`. The other 8 have only `commonTest`, and their tests run
 on Apple only when you run them on the Mac. Re-derive the list rather than trusting this one when
 it matters:
 `find . -maxdepth 5 -type d \( -name commonTest -o -name iosTest \) -not -path "*/build/*"` - and

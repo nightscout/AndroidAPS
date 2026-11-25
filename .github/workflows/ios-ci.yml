@@ -190,7 +190,7 @@ jobs:
             :core:interfaces:iosSimulatorArm64Test \
             :implementation:iosSimulatorArm64Test :ios:shell:iosSimulatorArm64Test \
             :plugins:sync:iosSimulatorArm64Test :plugins:aps:iosSimulatorArm64Test \
-            :plugins:automation:iosSimulatorArm64Test \
+            :plugins:automation:iosSimulatorArm64Test :shared:impl:iosSimulatorArm64Test \
             | tee test.log
 
       # Every module that HAS iOS tests is checked by name. A module added to the run above but not
@@ -224,6 +224,7 @@ jobs:
           check ":plugins:sync" plugins/sync
           check ":plugins:aps" plugins/aps
           check ":plugins:automation" plugins/automation
+          check ":shared:impl" shared/impl
           exit $fail
 
       # The list above is written by hand, which is how three modules came to be missed: a module
