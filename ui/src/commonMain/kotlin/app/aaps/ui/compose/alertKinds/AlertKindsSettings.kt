@@ -125,10 +125,12 @@ class AlertKindsSettingsImpl(
             if (showBgRules) bgAlarmRulesContent.Content(onBack = { showBgRules = false })
             else {
                 val current by alerts.choices.collectAsState()
+                val pauses by alerts.pauses.collectAsState()
                 val sounds by alerts.sounds.collectAsState()
                 AlertKindsScreen(
                     sections = alertSettingsSections(catalogues, current),
-                    silentOrOff = silentOrOff(current, emptyMap()),
+                    // The same count as the line in the notification sheet
+                    silentOrOff = silentOrOff(current, pauses),
                     onChoice = { setting, choice -> alerts.setChoice(setting, choice) },
                     onClear = { kind -> alerts.clearChoice(kind) },
                     sounds = sounds,

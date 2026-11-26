@@ -94,8 +94,12 @@ class AlertsImplTest : TestBase() {
         val chimeSounds = mutableListOf<AlarmSound?>()
         val snoozes = mutableListOf<Pair<String, Long>>()
         val withdrawals = mutableListOf<String>()
+
+        /** The screens and withdrawals in the order they came, for a test of the order. */
+        val calls = mutableListOf<String>()
         override fun showAlarmScreen(alert: Alert) {
             screens += alert.key
+            calls += "screen:${alert.key}"
         }
 
         val chimeRingtones = mutableListOf<String?>()
@@ -111,6 +115,7 @@ class AlertsImplTest : TestBase() {
 
         override fun withdrawn(source: String, key: String) {
             withdrawals += key
+            calls += "withdrawn:$key"
         }
 
         val bookings = mutableMapOf<String, Pair<Long, Boolean>>()
@@ -430,6 +435,23 @@ class AlertsImplTest : TestBase() {
         assertThat(restarted.choices.value).containsExactly(occlusion.id, AlertChoice.SILENT)
         restarted.raise(alert(kind = occlusion))
         assertThat(card().sound).isNull()
+    }
+
+    /**
+     * A low that became an urgent low under the same key: the platform's booked re-ring and chime of the low go before
+     * the urgent low shows, or iOS showed the low's old BG next to it later (2026-11-26).
+     */
+    @Test
+    fun `a new occurrence takes back what the platform holds for the old one`() {
+        sut.raise(alert(key = "low", severity = AlertSeverity.WARNING, raisedAt = 500L))
+        sut.snooze("pump", "low", 30)
+        alertPlatform.calls.clear()
+
+        sut.raise(alert(key = "low", severity = AlertSeverity.CRITICAL, raisedAt = 600L))
+
+        assertThat(alertPlatform.calls).containsAtLeast("withdrawn:low", "screen:low").inOrder()
+        // The new occurrence is not silenced by the old one's silence
+        assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
     }
 
     // ---- groups and exceptions (decided 2026-11-26) -------------------------------------------------

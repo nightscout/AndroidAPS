@@ -419,7 +419,13 @@ class AlertsImpl(
                     if (existing.silencedUntil > dateUtil.now() && choiceFor(alert) != AlertChoice.OFF) platform.snoozed(alert, existing.silencedUntil)
                 }
             } else {
-                existing?.let { removeCard(it) }
+                // A new occurrence replaces the old one. What the platform holds for the old one goes too, before the
+                // new one's silence and card: its booked re-ring came back with the old text on iOS, and on Android its
+                // chime stayed in the tray (a "Low, BG 95" next to the urgent low at BG 48, 2026-11-26).
+                existing?.let {
+                    removeCard(it)
+                    platform.withdrawn(it.alert.source, it.alert.key)
+                }
                 val entry = Entry(alert, silencedUntil = maxOf(storedSilence(alert), takePendingShared(alert), takePendingTap(alert)))
                 entries[id] = entry
                 publish()
@@ -731,7 +737,6 @@ class AlertsImpl(
         showCard(entry, ring = true)
     }
 
-    /** Caller holds [lock]. */
     /**
      * Caller holds [lock]. [entry] has no card now and keeps none until its silence ends: silenced for its usual length
      * unless it already is, its chime taken back with the card, and its re-ring booked. When the silence ends,
@@ -748,6 +753,7 @@ class AlertsImpl(
         scheduleSilenceEnd(entry)
     }
 
+    /** Caller holds [lock]. */
     private fun scheduleSilenceEnd(entry: Entry) {
         entry.silenceEnd?.cancel()
         val wait = entry.silencedUntil - dateUtil.now()

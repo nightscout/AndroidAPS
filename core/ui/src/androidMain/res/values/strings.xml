@@ -45,9 +45,6 @@
     <string name="skip">Skip</string>
     <string name="switch_to_edit">Edit</string>
     <string name="snooze">Snooze</string>
-    <string name="snooze_15m">Snooze 15m</string>
-    <string name="snooze_30m">Snooze 30m</string>
-    <string name="snooze_60m">Snooze 60m</string>
     <string name="virtual_pump">Virtual Pump</string>
     <string name="constraints">Constraints</string>
     <string name="superbolus">Superbolus</string>
