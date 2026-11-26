@@ -193,6 +193,10 @@ that fails rings before the next try succeeds.
     The rules and the urgent low threshold are the same on every phone, so the card says so and draws a line above
     "On this phone"; on a client without the Admin role they are read-only, how it rings is not. The Pause card is on
     top. The urgent low threshold and the missed readings left Local alerts, and the BG alarm rules screen is this one.
+    **Default rules** (decided 2026-11-26): a phone that never stored rules has low below 70 mg/dl as an alarm, high
+    above 250 mg/dl and predicted low below 70 within 20 minutes with one sound (`BgAlarmRules.DEFAULT`, fixed ids);
+    also a phone updated from a version without rules. A list the user emptied stays empty. "Reset rules to default"
+    (asks first, hidden on a read-only client) stores them, so they sync as any change does.
   - **AAPS**: the app's other alerts, one row each (time to eat, automation alarm, carbs not saved, hard limit, carbs
     required), and the Nightscout announcement.
   - Alert kinds is a list of these four parts, each opening its own screen, as the settings of AAPS are (decided
@@ -607,7 +611,8 @@ The order matters: step 3 must not come before step 2.
 17. **When and how, side by side** (2026-11-26, section 6): Alert kinds is a list of four parts, each its own screen.
     The BG alarms part holds the rules, the urgent low threshold and the missed readings minutes next to how this
     phone rings each; nothing of the BG alarms is left in Local alerts. Missed readings has no switch of its own: Off
-    is its default choice. The Test plays also in Do Not Disturb: the user asked for it.
+    is its default choice. The Test plays also in Do Not Disturb: the user asked for it. A phone with no rules of its
+    own has the default ones (low, high, predicted low), also after an update, and they can be reset to.
 
 Open, with a recommendation:
 

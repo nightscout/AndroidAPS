@@ -2,6 +2,7 @@ package app.aaps.implementation.alerts
 
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.BgAlarmRule
+import app.aaps.core.interfaces.alerts.BgAlarmRules
 import app.aaps.core.interfaces.alerts.BgDirection
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -41,6 +42,30 @@ class BgAlarmRulesImplTest : TestBase() {
     @Test
     fun `nothing readable means no rules`() {
         assertThat(sut.parse("not json")).isEmpty()
+    }
+
+    /** A phone that never stored rules has the default ones (decided 2026-11-26), the same on every phone. */
+    @Test
+    fun `never stored means the default rules`() {
+        assertThat(sut.parse("")).isEqualTo(BgAlarmRules.DEFAULT)
+    }
+
+    /** A list the user emptied is theirs: it is not filled again. */
+    @Test
+    fun `an emptied list stays empty`() {
+        assertThat(sut.parse(sut.toJson(emptyList()))).isEmpty()
+    }
+
+    /** "Reset rules to default" stores them, so they sync as any change does. */
+    @Test
+    fun `the default rules are stored and read back as they are`() {
+        assertThat(sut.parse(sut.toJson(BgAlarmRules.DEFAULT))).isEqualTo(BgAlarmRules.DEFAULT)
+    }
+
+    /** The ids are stored with the user's silences and edits: pinned, so a rename is not quiet. */
+    @Test
+    fun `the default rules keep their ids`() {
+        assertThat(BgAlarmRules.DEFAULT.map { it.id }).containsExactly("default.low", "default.high", "default.predicted_low").inOrder()
     }
 
     /**

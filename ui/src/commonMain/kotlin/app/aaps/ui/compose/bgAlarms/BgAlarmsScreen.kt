@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -43,6 +44,7 @@ import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.AlertSound
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlarmRule
+import app.aaps.core.interfaces.alerts.BgAlarmRules
 import app.aaps.core.interfaces.alerts.BgAlert
 import app.aaps.core.interfaces.alerts.BgDirection
 import app.aaps.core.interfaces.alerts.BgRuleType
@@ -121,6 +123,7 @@ fun BgAlarmsScreen(
     var editing by remember { mutableStateOf<BgAlarmRule?>(null) }
     var editingUrgentLow by remember { mutableStateOf(false) }
     var editingStale by remember { mutableStateOf(false) }
+    var resetting by remember { mutableStateOf(false) }
 
     AlertSectionScreen(
         section = section,
@@ -164,7 +167,40 @@ fun BgAlarmsScreen(
 
                 else                -> Unit
             }
+        },
+        // Only where the rules may be changed, and when they are not the default ones already
+        footer = {
+            if (!readOnly && rules != BgAlarmRules.DEFAULT) item(key = "reset") {
+                TextButton(onClick = { resetting = true }, contentPadding = LinedUpButtonPadding) {
+                    Icon(Icons.Filled.Refresh, contentDescription = null)
+                    Text(stringResource(UiStrings.bg_alarms_reset))
+                }
+            }
         }
+    )
+
+    // It replaces every rule, on every phone: it says what comes instead and asks first
+    if (resetting) AlertDialog(
+        onDismissRequest = { resetting = false },
+        title = { Text(stringResource(UiStrings.bg_alarms_reset)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+                Text(stringResource(UiStrings.bg_alarms_reset_text), style = MaterialTheme.typography.bodyMedium)
+                BgAlarmRules.DEFAULT.forEach { rule ->
+                    Column {
+                        Text(ruleTitle(rule, units), style = MaterialTheme.typography.bodyLarge)
+                        RuleDetails(rule)
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                onSave(BgAlarmRules.DEFAULT)
+                resetting = false
+            }) { Text(stringResource(CoreUiStrings.reset)) }
+        },
+        dismissButton = { TextButton(onClick = { resetting = false }) { Text(stringResource(CoreUiStrings.cancel)) } }
     )
 
     editing?.let { rule ->
@@ -388,20 +424,26 @@ private fun RuleRow(rule: BgAlarmRule, units: BgUnits, readOnly: Boolean, onClic
     ) {
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall)) {
             Text(ruleTitle(rule, units), style = MaterialTheme.typography.bodyLarge)
-            // Each detail its own text: the details are not one sentence a translator could order
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
-                val detail = MaterialTheme.typography.bodyMedium
-                val color = MaterialTheme.colorScheme.onSurfaceVariant
-                Text(stringResource(severityLabel(rule.severity)), style = detail, color = color)
-                Text(windowText(rule), style = detail, color = color)
-                when (rule.type) {
-                    BgRuleType.PREDICTED_LOW -> Text(stringResource(UiStrings.bg_alarm_rule_within, rule.durationMinutes), style = detail, color = color)
-                    BgRuleType.RATE          -> Unit
-                    else                     -> if (rule.durationMinutes > 0) Text(stringResource(UiStrings.bg_alarm_rule_lasts, rule.durationMinutes), style = detail, color = color)
-                }
-            }
+            RuleDetails(rule)
         }
         Switch(checked = rule.enabled, onCheckedChange = onEnabled, enabled = !readOnly)
+    }
+}
+
+/** How a rule rings, when, and how long it waits or looks ahead. */
+@Composable
+private fun RuleDetails(rule: BgAlarmRule) {
+    // Each detail its own text: the details are not one sentence a translator could order
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+        val detail = MaterialTheme.typography.bodyMedium
+        val color = MaterialTheme.colorScheme.onSurfaceVariant
+        Text(stringResource(severityLabel(rule.severity)), style = detail, color = color)
+        Text(windowText(rule), style = detail, color = color)
+        when (rule.type) {
+            BgRuleType.PREDICTED_LOW -> Text(stringResource(UiStrings.bg_alarm_rule_within, rule.durationMinutes), style = detail, color = color)
+            BgRuleType.RATE          -> Unit
+            else                     -> if (rule.durationMinutes > 0) Text(stringResource(UiStrings.bg_alarm_rule_lasts, rule.durationMinutes), style = detail, color = color)
+        }
     }
 }
 

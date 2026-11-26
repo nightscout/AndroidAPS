@@ -86,4 +86,23 @@ interface BgAlarmRules {
      * Admin only and sends them to every phone; the screen lets only the master and an Admin client edit.
      */
     fun save(rules: List<BgAlarmRule>)
+
+    companion object {
+
+        /**
+         * The rules of a phone that never stored any (decided 2026-11-26): the usual CGM defaults - low below 70 mg/dl as
+         * an alarm, high above 250 mg/dl with one sound - and a predicted low below 70 mg/dl within 20 minutes with one
+         * sound. Every phone computes the same list with the same ids, so the master and its clients agree without the
+         * sync. A list the user changed, also one emptied, is stored and synced; "Reset rules to default" stores this one.
+         * The ids are stored: never change one.
+         */
+        val DEFAULT: List<BgAlarmRule> = listOf(
+            BgAlarmRule(id = "default.low", direction = BgDirection.LOW, thresholdMgdl = 70.0, severity = AlertSeverity.CRITICAL),
+            BgAlarmRule(id = "default.high", direction = BgDirection.HIGH, thresholdMgdl = 250.0, severity = AlertSeverity.WARNING, silenceMinutes = 120),
+            BgAlarmRule(
+                id = "default.predicted_low", direction = BgDirection.LOW, thresholdMgdl = 70.0, severity = AlertSeverity.WARNING, durationMinutes = 20,
+                type = BgRuleType.PREDICTED_LOW
+            )
+        )
+    }
 }

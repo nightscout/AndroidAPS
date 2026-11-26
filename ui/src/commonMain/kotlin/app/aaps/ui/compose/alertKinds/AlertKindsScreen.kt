@@ -131,7 +131,8 @@ private fun SectionCard(section: AlertSettingsSection, silentOrOff: Int, onClick
  * plays it as an alarm for a few seconds, also in Do Not Disturb, or vibrates on a row set to Vibrate. [onTest] returns
  * false when nothing was played: an alarm is ringing.
  *
- * The BG alarms add what is set for every phone: [header] above the cards, and [extra] in a row's card under its title.
+ * The BG alarms add what is set for every phone: [header] above the cards, [extra] in a row's card under its title, and
+ * [footer] under the cards.
  */
 @Composable
 fun AlertSectionScreen(
@@ -145,7 +146,8 @@ fun AlertSectionScreen(
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState(),
     header: LazyListScope.() -> Unit = {},
-    extra: @Composable ColumnScope.(AlertSettingRow) -> Unit = {}
+    extra: @Composable ColumnScope.(AlertSettingRow) -> Unit = {},
+    footer: LazyListScope.() -> Unit = {}
 ) {
     var addingTo by remember { mutableStateOf<AlertSettingRow?>(null) }
     Scaffold(topBar = { BackTopBar(stringResource(section.section.title()), onBack) }) { paddingValues ->
@@ -168,6 +170,7 @@ fun AlertSectionScreen(
             items(section.rows, key = { it.setting.id }) { row ->
                 SettingCard(row, sounds[row.setting.id], onChoice, onClear, onSound, onTest, onAddException = { addingTo = row }) { extra(row) }
             }
+            footer()
         }
     }
     addingTo?.let { row ->

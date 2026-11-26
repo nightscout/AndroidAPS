@@ -148,7 +148,8 @@ enum class StringNonKey(
     AlertBookings(key = "alert_bookings", defaultValue = "[]", exportable = false),
     // The user's own BG rules (BgAlarmRules), a JSON list. One list for every phone, so a silence given everywhere is
     // for the same alarm (step 2f): set on the master or by an Admin client (Bidirectional, the master decides last
-    // writer wins) and synced to every phone; exported with the master's settings.
-    BgAlarmRules(key = "bg_alarm_rules", defaultValue = "[]", exportable = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    // writer wins) and synced to every phone; exported with the master's settings. Empty: never set, so the default
+    // rules (`BgAlarmRules.DEFAULT`, decided 2026-11-26); "[]" is a list the user emptied, which stays empty.
+    BgAlarmRules(key = "bg_alarm_rules", defaultValue = "", exportable = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
 
 }

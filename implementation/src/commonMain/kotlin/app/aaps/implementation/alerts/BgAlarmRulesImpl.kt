@@ -34,7 +34,8 @@ import kotlinx.serialization.json.put
 
 /**
  * The user's BG level rules, stored as a JSON list in [StringNonKey.BgAlarmRules]. The key is synced from the master,
- * so a client sees the master's rules here too, and a change from the master comes through [rules].
+ * so a client sees the master's rules here too, and a change from the master comes through [rules]. Never stored: the
+ * default rules ([BgAlarmRules.DEFAULT]); a list the user emptied stays empty.
  *
  * Read on first use, not when the object graph is built.
  */
@@ -57,7 +58,7 @@ class BgAlarmRulesImpl(
         preferences.put(StringNonKey.BgAlarmRules, toJson(rules))
     }
 
-    internal fun parse(raw: String): List<BgAlarmRule> = try {
+    internal fun parse(raw: String): List<BgAlarmRule> = if (raw.isEmpty()) BgAlarmRules.DEFAULT else try {
         Json.parseToJsonElement(raw).jsonArray.mapNotNull { element ->
             val o = element.jsonObject
             // One rule that cannot be read is dropped, not the whole list

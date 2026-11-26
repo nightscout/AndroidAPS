@@ -429,6 +429,8 @@
     <string name="bg_alarms_no_rules">No rule yet: nothing rings.</string>
     <string name="bg_alarms_stale_after" comment="When the missed BG readings alarm rings. %1$d=minutes. Example: After 30 min without a reading">After %1$d min without a reading</string>
     <string name="bg_alarms_stale_minutes">Minutes without a reading</string>
+    <string name="bg_alarms_reset" comment="Button and dialog title: replace the user's glucose alarm rules with the default rules of AAPS">Reset rules to default</string>
+    <string name="bg_alarms_reset_text">On every phone, all rules are replaced by these:</string>
     <string name="bg_alarm_rule_low" comment="Title of a low glucose alarm rule. %1$s=the threshold with its unit, for example: 3.9 mmol/l">Low below %1$s</string>
     <string name="bg_alarm_rule_high" comment="Title of a high glucose alarm rule. %1$s=the threshold with its unit, for example: 13.9 mmol/l">High above %1$s</string>
     <string name="bg_alarm_rule_low_title">Low alarm</string>
