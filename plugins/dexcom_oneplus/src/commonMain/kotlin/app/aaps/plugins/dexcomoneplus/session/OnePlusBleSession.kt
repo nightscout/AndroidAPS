@@ -455,6 +455,20 @@ class OnePlusBleSessionSkeleton(
     private var cycleLinkReadyAtMs = 0L
 
     override fun startWithPairingCode(deviceAddress: String, pairingCode: String) {
+        try {
+            runUntilEnded(deviceAddress, pairingCode)
+        } finally {
+            // However the session ended, its link must not stay behind. A GATT client that is left
+            // open keeps connecting to the sensor each time it wakes, with nobody listening
+            // (field log 26/11/2026: two of them, for hours).
+            try {
+                gatt.disconnect()
+            } catch (_: Throwable) {
+            }
+        }
+    }
+
+    private fun runUntilEnded(deviceAddress: String, pairingCode: String) {
         val codeError = OnePlusSessionStart.validationError(pairingCode)
         if (codeError != null) {
             fail(codeError, fatal = false)
@@ -761,7 +775,20 @@ class OnePlusBleSessionSkeleton(
             if (!running) return CycleOutcome.Stopped
             cycleLinkReadyAtMs = Clock.System.now().toEpochMilliseconds()
 
-            val authResult = auth.authenticate(pairingCode, savedSharedKeyProvider())
+            // A write that fails because the sensor drops the link in the middle of the handshake
+            // throws. Uncaught, it ended the whole session and nothing started a new one: no
+            // glucose until the app was restarted (field log 26/11/2026, `write Auth status=257`).
+            // It is a failed cycle like a failed connect, so the session tries again.
+            val authResult = try {
+                auth.authenticate(pairingCode, savedSharedKeyProvider())
+            } catch (t: Throwable) {
+                if (!running) return CycleOutcome.Stopped
+                val msg = t.message ?: "ONEPLUS_AUTH_FAILED"
+                OnePlusLog.e("${OnePlusLogMarkers.ERROR}: [$slot] $msg attempt=$attempt", t)
+                onError(msg, false)
+                enterReconnecting(msg)
+                return CycleOutcome.RetryableFailure
+            }
             if (!running) return CycleOutcome.Stopped
             if (!authResult.ok) {
                 val msg = authResult.message ?: "ONEPLUS_AUTH_FAILED"
