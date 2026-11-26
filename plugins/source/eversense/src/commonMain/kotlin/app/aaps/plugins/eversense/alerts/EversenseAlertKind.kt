@@ -1,5 +1,6 @@
 package app.aaps.plugins.eversense.alerts
 
+import app.aaps.core.interfaces.alerts.AlertGroup
 import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.DosingEffect
@@ -15,8 +16,9 @@ import app.aaps.plugins.eversense.enums.EversenseAlarm
  * only confuse. The id is the title's string name, which stays as it is because a renamed string loses its
  * translations.
  *
- * Protected when one of its events affects dosing ([DosingEffect.affectsDosing], decided 2026-11-24). The glucose
- * alarms of the transmitter have no kind: AAPS's own BG alarms raise those.
+ * Protected when one of its events affects dosing ([DosingEffect.affectsDosing], decided 2026-11-24). In the settings
+ * it is a member of the CGM's group of its effects ([AlertGroup.of]), not a row of its own. The glucose alarms of the
+ * transmitter have no kind: AAPS's own BG alarms raise those.
  */
 class EversenseAlertKind private constructor(
     override val title: TextRef,
@@ -28,6 +30,7 @@ class EversenseAlertKind private constructor(
     override val source: String get() = SOURCE
     override val origin: AlertOrigin get() = AlertOrigin.CGM
     override val isProtected: Boolean = effects.any { it.affectsDosing }
+    override val group: AlertGroup = AlertGroup.of(origin, effects)
 
     companion object {
 

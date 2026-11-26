@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertChoice
 import app.aaps.core.interfaces.alerts.SharedSilence
 import app.aaps.core.interfaces.alerts.AlertKind
+import app.aaps.core.interfaces.alerts.AlertSetting
 import app.aaps.core.interfaces.alerts.AlertSound
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
@@ -58,7 +59,8 @@ class BgAlarmsImplTest : TestBase() {
         val raised = mutableListOf<Alert>()
         val resolved = mutableListOf<String>()
 
-        override fun setChoice(kind: AlertKind, choice: AlertChoice) {}
+        override fun setChoice(setting: AlertSetting, choice: AlertChoice) {}
+        override fun clearChoice(kind: AlertKind) {}
         override fun raise(alert: Alert) {
             raised += alert
             _active.value = _active.value.filterNot { it.source == alert.source && it.key == alert.key } + alert
@@ -83,7 +85,7 @@ class BgAlarmsImplTest : TestBase() {
         override fun pause(kinds: Collection<AlertKind>, until: Long) {}
         override fun resume(kinds: Collection<AlertKind>) {}
         override val sounds: StateFlow<Map<String, AlertSound>> = MutableStateFlow(emptyMap())
-        override fun setSound(kind: AlertKind, sound: AlertSound?) {}
+        override fun setSound(setting: AlertSetting, sound: AlertSound?) {}
         override fun test(kind: AlertKind, severity: AlertSeverity): Boolean = true
         override fun silenceEverywhere(source: String, key: String, minutes: Int) {}
         override fun canSilenceEverywhere(alert: Alert): Boolean = false

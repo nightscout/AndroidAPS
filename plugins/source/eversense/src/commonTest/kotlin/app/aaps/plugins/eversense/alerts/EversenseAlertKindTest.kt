@@ -1,5 +1,6 @@
 package app.aaps.plugins.eversense.alerts
 
+import app.aaps.core.interfaces.alerts.AlertGroup
 import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.DosingEffect
 import app.aaps.plugins.eversense.enums.EversenseAlarm
@@ -34,6 +35,16 @@ class EversenseAlertKindTest {
                 .map { "eversense.eversense_alarm_$it" },
             EversenseAlertKind.all.filter { !it.isProtected }.map { it.id }
         )
+    }
+
+    /** In the settings a kind follows the CGM's group of what it does to dosing (decided 2026-11-26). */
+    @Test
+    fun eachKindIsInTheCgmGroupOfItsEffects() {
+        EversenseAlertKind.all.forEach { kind ->
+            assertEquals(AlertGroup.of(AlertOrigin.CGM, kind.effects), kind.group, kind.id)
+            assertEquals(kind.group.isProtected, kind.isProtected, kind.id)
+        }
+        assertEquals(AlertGroup.CGM_CRITICAL, EversenseAlertKind.PLACEMENT.group)
     }
 
     /** Every alarm has a kind, except the glucose alarms: AAPS's own BG alarms raise those. */

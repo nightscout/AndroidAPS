@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.alerts.AlertKindCatalogue
 import app.aaps.core.interfaces.alerts.AlertLifetime
 import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.AlertPlatform
+import app.aaps.core.interfaces.alerts.AlertSetting
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.AlertSound
 import app.aaps.core.interfaces.alerts.BgAlert
@@ -180,10 +181,10 @@ class AlertsImpl(
             return soundsView
         }
 
-    override fun setSound(kind: AlertKind, sound: AlertSound?): Unit = lock.withLock {
+    override fun setSound(setting: AlertSetting, sound: AlertSound?): Unit = lock.withLock {
         val map = storedSounds()
-        if (map[kind.id] == sound) return@withLock
-        if (sound == null) map.remove(kind.id) else map[kind.id] = sound
+        if (map[setting.id] == sound) return@withLock
+        if (sound == null) map.remove(setting.id) else map[setting.id] = sound
         preferences.put(StringNonKey.AlertSounds, buildJsonObject {
             map.forEach { (id, s) ->
                 when (s) {
@@ -196,7 +197,7 @@ class AlertsImpl(
             }
         }.toString())
         _sounds.value = map.toMap()
-        aapsLogger.info(LTag.NOTIFICATION, "Alert kind ${kind.id} sound on this phone: ${sound ?: "its own"}")
+        aapsLogger.info(LTag.NOTIFICATION, "Alert setting ${setting.id} sound on this phone: ${sound ?: "its own"}")
     }
 
     override fun test(kind: AlertKind, severity: AlertSeverity): Boolean {
@@ -226,14 +227,18 @@ class AlertsImpl(
     }
 
     /**
-     * Caller holds [lock]. The bundled sound an alert plays on this phone: the user's for its kind, else its own. With a
-     * ringtone chosen, the alert's own: the fallback when the ringtone cannot be played.
+     * Caller holds [lock]. The bundled sound an alert plays on this phone: the user's for its kind's group, or for the
+     * kind when it has none, else its own. With a ringtone chosen, the alert's own: the fallback when the ringtone
+     * cannot be played.
      */
     private fun soundFor(alert: Alert): AlarmSound =
-        (storedSounds()[alert.kind.id] as? AlertSound.Bundled)?.sound ?: alert.sound ?: AlarmSound.ALARM
+        (storedSounds()[soundId(alert.kind)] as? AlertSound.Bundled)?.sound ?: alert.sound ?: AlarmSound.ALARM
 
     /** Caller holds [lock]. The phone ringtone the user chose for the alert's kind (Android), or null. */
-    private fun ringtoneFor(alert: Alert): String? = (storedSounds()[alert.kind.id] as? AlertSound.Ringtone)?.uri
+    private fun ringtoneFor(alert: Alert): String? = (storedSounds()[soundId(alert.kind)] as? AlertSound.Ringtone)?.uri
+
+    /** Where the sound of [kind] is stored: a kind of a group has its group's, there is no exception for a sound. */
+    private fun soundId(kind: AlertKind): String = kind.group?.id ?: kind.id
 
     /** Caller holds [lock]. The stored sound choices, read on first use. */
     private fun storedSounds(): MutableMap<String, AlertSound> =
@@ -357,24 +362,39 @@ class AlertsImpl(
                 ?.alert
         }
 
-    override fun setChoice(kind: AlertKind, choice: AlertChoice) {
-        if (kind.isProtected) {
-            aapsLogger.warn(LTag.NOTIFICATION, "Alert kind ${kind.id} is protected, it always rings: $choice ignored")
+    override fun setChoice(setting: AlertSetting, choice: AlertChoice) {
+        if (setting.isProtected) {
+            aapsLogger.warn(LTag.NOTIFICATION, "Alert setting ${setting.id} is protected, it always rings: $choice ignored")
             return
         }
-        lock.withLock {
-            val map = storedChoices()
-            // Not the same choice again: below, a kind set to Ring rings what is active of it
-            if ((map[kind.id] ?: AlertChoice.RING) == choice) return
-            if (choice == AlertChoice.RING) map.remove(kind.id) else map[kind.id] = choice
-            saveChoices(map)
-            _choices.value = map.toMap()
-            aapsLogger.info(LTag.NOTIFICATION, "Alert kind ${kind.id} is now $choice on this phone")
-            // At once for what is active now. A kind set back to Ring rings as a new alert does, with the alarm screen,
-            // because sound with nothing on the screen to answer it is worse than both. One the user has answered is
-            // silenced and stays quiet until its silence ends.
-            entries.values.filter { it.alert.kind.id == kind.id }.forEach { showCard(it, ring = choice == AlertChoice.RING) }
+        // An exception is kept also as Ring: it is set against its group's choice
+        val exception = setting is AlertKind && setting.group != null
+        changeChoices("Alert setting ${setting.id} is now $choice on this phone${if (exception) ", an exception" else ""}") { map ->
+            if (choice == AlertChoice.RING && !exception) map.remove(setting.id) else map[setting.id] = choice
         }
+    }
+
+    override fun clearChoice(kind: AlertKind) =
+        changeChoices("Alert kind ${kind.id} follows ${kind.group?.id ?: "the default"} again on this phone") { it.remove(kind.id) }
+
+    /**
+     * Changes the stored choices with [change] and applies the result at once to what is active now. An alert whose
+     * choice became Ring rings as a new alert does, with the alarm screen, because sound with nothing on the screen to
+     * answer it is worse than both. One the user has answered is silenced and stays quiet until its silence ends.
+     */
+    private fun changeChoices(log: String, change: (MutableMap<String, AlertChoice>) -> Unit): Unit = lock.withLock {
+        val map = storedChoices()
+        val before = map.toMap()
+        change(map)
+        // Not the same choice again: below, an alert that rings now rings what is active of it
+        if (map == before) return@withLock
+        val wasChoice = entries.values.associateWith { choiceFor(it.alert, before) }
+        saveChoices(map)
+        _choices.value = map.toMap()
+        aapsLogger.info(LTag.NOTIFICATION, log)
+        entries.values
+            .filter { choiceFor(it.alert) != wasChoice[it] }
+            .forEach { showCard(it, ring = choiceFor(it.alert) == AlertChoice.RING) }
     }
 
     override fun raise(alert: Alert) {
@@ -894,12 +914,16 @@ class AlertsImpl(
             _choices.value = it.toMap()
         }
 
-    /** Caller holds [lock]. What this phone does with [alert]; a protected kind always rings. */
-    /** Caller holds [lock]. A paused kind that rings is Silent while its pause lasts. */
-    private fun choiceFor(alert: Alert): AlertChoice {
-        if (alert.kind.isProtected) return AlertChoice.RING
-        val chosen = storedChoices()[alert.kind.id] ?: AlertChoice.RING
-        val paused = (storedPauses()[alert.kind.id] ?: 0L) > dateUtil.now()
+    /**
+     * Caller holds [lock]. What this phone does with [alert] by [choices]: its kind's own choice (an exception, or the
+     * choice of a kind with no group), else its group's, else Ring. A protected kind always rings. A paused kind that
+     * rings is Silent while its pause lasts.
+     */
+    private fun choiceFor(alert: Alert, choices: Map<String, AlertChoice> = storedChoices()): AlertChoice {
+        val kind = alert.kind
+        if (kind.isProtected) return AlertChoice.RING
+        val chosen = choices[kind.id] ?: kind.group?.let { choices[it.id] } ?: AlertChoice.RING
+        val paused = (storedPauses()[kind.id] ?: 0L) > dateUtil.now()
         return if (chosen == AlertChoice.RING && paused) AlertChoice.SILENT else chosen
     }
 
@@ -932,8 +956,8 @@ class AlertsImpl(
 
     private fun loadChoices(): MutableMap<String, AlertChoice> = try {
         Json.parseToJsonElement(preferences.get(StringNonKey.AlertChoices)).jsonObject
+            // Ring stays: it is how an exception rings while its group does not
             .mapNotNull { (id, value) -> AlertChoice.entries.firstOrNull { it.name == value.jsonPrimitive.content }?.let { id to it } }
-            .filter { it.second != AlertChoice.RING }
             .toMap(mutableMapOf())
     } catch (e: Exception) {
         aapsLogger.error(LTag.NOTIFICATION, "Stored alert choices unreadable, every kind rings", e)

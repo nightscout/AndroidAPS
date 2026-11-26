@@ -6,17 +6,24 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.TextRef
 
 /**
- * The kinds of the app's own alerts (source [UiInteraction.SOURCE]), as the user sees them in the alert settings
- * (`_docs/ALARMS.md`, section 6, the review of the notification ids). The ids are stored with the user's choice: never
- * change one.
+ * The kinds of the app's own alerts (source [UiInteraction.SOURCE]) (`_docs/ALARMS.md`, section 6, the review of the
+ * notification ids). The ids are stored with the user's choice: never change one.
+ *
+ * The ones about the pump are in the pump's groups: for the user they are the pump's alerts, whoever raises them. The
+ * others are each a row of their own.
  */
-enum class CoreAlert(private val idName: String, override val title: TextRef, override val isProtected: Boolean) : AlertKind {
+enum class CoreAlert(
+    private val idName: String,
+    override val title: TextRef,
+    override val isProtected: Boolean,
+    override val group: AlertGroup? = null
+) : AlertKind {
 
     /** A command the user started that the pump did not carry out, shown from the overview or the main screen. */
-    COMMAND_FAILED("command_failed", InterfacesStrings.alert_kind_command_failed, isProtected = false),
+    COMMAND_FAILED("command_failed", InterfacesStrings.alert_kind_command_failed, isProtected = false, AlertGroup.PUMP_ACTION),
 
     /** The new insulin is in the pump and the old program runs: the basal is wrong until the write works. */
-    INSULIN_CHANGE_FAILED("insulin_change_failed", InterfacesStrings.alert_kind_insulin_change_failed, isProtected = true),
+    INSULIN_CHANGE_FAILED("insulin_change_failed", InterfacesStrings.alert_kind_insulin_change_failed, isProtected = true, AlertGroup.PUMP_CRITICAL),
 
     /** The "time to eat" timer. */
     EAT_REMINDER("eat_reminder", InterfacesStrings.alert_kind_eat_reminder, isProtected = false),
@@ -28,28 +35,28 @@ enum class CoreAlert(private val idName: String, override val title: TextRef, ov
      * The profile could not be written to the pump, so the pump gives another basal. Not protected: a pump that cannot
      * take every profile (Combo) would ring for something the user knows.
      */
-    PROFILE_UPDATE_FAILED("profile_update_failed", InterfacesStrings.alert_kind_profile_update_failed, isProtected = false),
+    PROFILE_UPDATE_FAILED("profile_update_failed", InterfacesStrings.alert_kind_profile_update_failed, isProtected = false, AlertGroup.PUMP_ACTION),
 
     /** After a profile was set, the pump reports a basal far from it. */
-    BASAL_FAR_FROM_PROFILE("basal_far_from_profile", InterfacesStrings.alert_kind_basal_far_from_profile, isProtected = false),
+    BASAL_FAR_FROM_PROFILE("basal_far_from_profile", InterfacesStrings.alert_kind_basal_far_from_profile, isProtected = false, AlertGroup.PUMP_ACTION),
 
     /** Insulin the user asked for was not given. */
-    BOLUS_FAILED("bolus_failed", InterfacesStrings.alert_kind_bolus_failed, isProtected = true),
+    BOLUS_FAILED("bolus_failed", InterfacesStrings.alert_kind_bolus_failed, isProtected = true, AlertGroup.PUMP_CRITICAL),
 
     /** A bolus was stopped before all of it was given. */
-    BOLUS_CANCELLED("bolus_cancelled", InterfacesStrings.alert_kind_bolus_cancelled, isProtected = false),
+    BOLUS_CANCELLED("bolus_cancelled", InterfacesStrings.alert_kind_bolus_cancelled, isProtected = false, AlertGroup.PUMP_ACTION),
 
     /** The bolus was given, but its carbs were not saved: COB and IOB are wrong until they are entered again. */
     CARBS_NOT_SAVED("carbs_not_saved", InterfacesStrings.alert_kind_carbs_not_saved, isProtected = false),
 
     /** The pump was not reached for longer than the setting allows. Optional: the user turns it on. */
-    PUMP_UNREACHABLE("pump_unreachable", InterfacesStrings.alert_kind_pump_unreachable, isProtected = false),
+    PUMP_UNREACHABLE("pump_unreachable", InterfacesStrings.alert_kind_pump_unreachable, isProtected = false, AlertGroup.PUMP_ACTION),
 
     /** A command has not ended for a long time, so the queue waits: no bolus, no temp basal until it ends. */
-    PUMP_DRIVER_NOT_RESPONDING("pump_driver_not_responding", InterfacesStrings.alert_kind_pump_driver_not_responding, isProtected = false),
+    PUMP_DRIVER_NOT_RESPONDING("pump_driver_not_responding", InterfacesStrings.alert_kind_pump_driver_not_responding, isProtected = false, AlertGroup.PUMP_ACTION),
 
     /** The running mode stops the insulin, but its zero temp basal is not on the pump: the pump may still give basal. */
-    ZERO_DELIVERY_NOT_SET("zero_delivery_not_set", InterfacesStrings.alert_kind_zero_delivery_not_set, isProtected = true),
+    ZERO_DELIVERY_NOT_SET("zero_delivery_not_set", InterfacesStrings.alert_kind_zero_delivery_not_set, isProtected = true, AlertGroup.PUMP_CRITICAL),
 
     /** A value was outside a hard limit and was set to the limit. */
     HARD_LIMIT("hard_limit", InterfacesStrings.alert_kind_hard_limit, isProtected = false),
@@ -62,7 +69,7 @@ enum class CoreAlert(private val idName: String, override val title: TextRef, ov
      * Protected, because the app cannot tell which of those alarms are safe to silence. It goes when the last such
      * driver has moved to alerts.
      */
-    PUMP_DRIVER_ALARM("pump_driver_alarm", InterfacesStrings.alert_kind_pump_driver_alarm, isProtected = true);
+    PUMP_DRIVER_ALARM("pump_driver_alarm", InterfacesStrings.alert_kind_pump_driver_alarm, isProtected = true, AlertGroup.PUMP_CRITICAL);
 
     override val id: String = "${UiInteraction.SOURCE}.$idName"
     override val source: String get() = UiInteraction.SOURCE

@@ -166,7 +166,7 @@
     <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">Plugin %1$s hit an error and part of it has stopped. Please restart AAPS.</string>
 
     <!-- Kinds of alert, as named in the alert settings, where the user chooses Ring, Silent or Off for each -->
-    <string name="alert_kinds_group_app" comment="Heading of the group of the app's own alarms in the alert settings; the other groups are named after a pump or CGM driver">AAPS</string>
+    <string name="alert_kinds_group_app" comment="Heading of the part of the alert settings with the app's own alerts; the other parts are Pump, CGM and BG alarms">AAPS</string>
     <string name="alert_kind_command_failed" comment="Name of a kind of alarm in the alert settings: a command the user started (for example a bolus) did not work">Command failed</string>
     <string name="alert_kind_insulin_change_failed" comment="Name of a kind of alarm in the alert settings: a new insulin is in the pump, but its basal program could not be written">Insulin change not written to the pump</string>
     <string name="alert_kind_eat_reminder" comment="Name of a kind of alarm in the alert settings: the timer that says it is time to eat">Time to eat</string>
@@ -183,6 +183,17 @@
     <string name="alert_kind_hard_limit" comment="Name of a kind of alert in the alert settings, and the title of its card: a value was outside a safety limit and was changed to the limit">Hard limit</string>
     <string name="alert_kind_carbs_required" comment="Name of a kind of alert in the alert settings, and the title of its card: the loop says the user has to eat carbs to avoid a low">Carbs required</string>
     <string name="alert_kinds_group_bg" comment="Heading of the group of the glucose alarms in the alert settings">BG alarms</string>
+    <!-- Groups of kinds in the alert settings: one choice for every kind in the group -->
+    <string name="alert_group_critical" comment="Group of the alerts of the pump or the CGM in the alert settings: insulin or glucose is affected">Critical</string>
+    <string name="alert_group_critical_summary">Insulin or glucose is affected now, or soon unless you act</string>
+    <string name="alert_group_action" comment="Group of the alerts of the pump or the CGM in the alert settings: reminders and things the user has to do or check">Needs action</string>
+    <string name="alert_group_action_summary">Reminders and things to check. Insulin and glucose are not affected.</string>
+    <string name="alert_group_info" comment="Group of the alerts of the pump or the CGM in the alert settings: for information only">Info</string>
+    <string name="alert_group_info_summary">For information only, never with sound</string>
+    <string name="alert_group_lows" comment="Group of the glucose alarms in the alert settings: every alarm about low glucose except urgent low">Lows</string>
+    <string name="alert_group_lows_summary">Low, falling fast and predicted low</string>
+    <string name="alert_group_highs" comment="Group of the glucose alarms in the alert settings: every alarm about high glucose">Highs</string>
+    <string name="alert_group_highs_summary">High, persistent high and rising fast</string>
     <string name="alert_kind_bg_urgent_low" comment="Name of a kind of glucose alarm, and the title of its alarm: glucose below the urgent low threshold">Urgent low</string>
     <string name="alert_kind_bg_low" comment="Name of a kind of glucose alarm, and the title of its alarm: glucose below a low threshold the user set">Low</string>
     <string name="alert_kind_bg_high" comment="Name of a kind of glucose alarm, and the title of its alarm: glucose above a high threshold the user set">High</string>

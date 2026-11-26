@@ -70,13 +70,20 @@ enum class AlertOrigin {
 }
 
 /**
- * A kind of alert, as the user sees it in the alert settings. On each phone the user chooses [AlertChoice] per kind
- * (`_docs/ALARMS.md`, section 6). Each raiser has its own catalogue: [CoreAlert] for the app, one for each driver.
+ * A kind of alert. On each phone the user chooses [AlertChoice] for its [group], or for the kind itself when it has no
+ * group or is an exception (`_docs/ALARMS.md`, section 6). Each raiser has its own catalogue: [CoreAlert] for the app,
+ * one for each driver.
  */
-interface AlertKind {
+interface AlertKind : AlertSetting {
 
-    /** Unique in the whole app and stable: the user's choice is stored under it. Never change it. */
-    val id: String
+    /** Unique in the whole app and stable: an exception the user set for it is stored under it. Never change it. */
+    override val id: String
+
+    /** The group whose choice and sound it follows, or null for a kind that is its own row in the settings. */
+    val group: AlertGroup? get() = null
+
+    /** Where the settings show it: its group's section, else the app's. */
+    val section: AlertSection get() = group?.section ?: AlertSection.APP
 
     /** Who raises alerts of this kind: "aaps", or a driver's id ("carelevo"). */
     val source: String
@@ -85,14 +92,14 @@ interface AlertKind {
     val origin: AlertOrigin
 
     /** Its name in the alert settings. */
-    val title: TextRef
+    override val title: TextRef
 
     /**
      * A safety kind: urgent low, or a kind with an event that affects dosing ([DosingEffect.affectsDosing]: insulin
      * delivery stopped or not safe, no BG or a BG that cannot be trusted). It always rings: the user cannot set it to
-     * Silent or Off. A ringing one is still silenced for a while, as every alert.
+     * Silent or Off. A ringing one is still silenced for a while, as every alert. The same as its group's.
      */
-    val isProtected: Boolean
+    override val isProtected: Boolean
 
     /**
      * Whether the core writes the announcement of an alert of this kind (on the master, while "Create announcements
@@ -199,14 +206,22 @@ interface Alerts {
      */
     val active: StateFlow<List<Alert>>
 
-    /** The user's choices on this phone, by [AlertKind.id]. A kind that is not in it rings. */
+    /**
+     * The user's choices on this phone, by [AlertSetting.id]: of a group, of a kind with no group, and of a kind set
+     * apart from its group (an exception, which may also be Ring). A kind rings unless its own entry, else its group's,
+     * says otherwise.
+     */
     val choices: StateFlow<Map<String, AlertChoice>>
 
     /**
-     * Sets what this phone does with alerts of [kind], and applies it at once to the ones that are active. A protected
-     * kind always rings, so the call is ignored for it.
+     * Sets what this phone does with alerts of [setting], and applies it at once to the ones that are active. For a
+     * kind of a group it is an exception, kept until [clearChoice]. A protected one always rings, so the call is
+     * ignored for it.
      */
-    fun setChoice(kind: AlertKind, choice: AlertChoice)
+    fun setChoice(setting: AlertSetting, choice: AlertChoice)
+
+    /** Removes the exception of [kind]: it follows its group again, or rings when it has none. Applied at once. */
+    fun clearChoice(kind: AlertKind)
 
     /**
      * The pauses on this phone: kind id to the end of its pause (epoch ms). A paused kind that rings is
@@ -225,18 +240,19 @@ interface Alerts {
     fun resume(kinds: Collection<AlertKind>)
 
     /**
-     * The sound the user chose for each kind on this phone (`_docs/ALARMS.md`, step 2e), by kind id. A kind that is not
-     * in it plays its alert's own sound. Each phone its own, as the choice to ring.
+     * The sound the user chose on this phone (`_docs/ALARMS.md`, step 2e), by [AlertSetting.id]: a kind of a group
+     * plays its group's, any other kind its own. One that is not in it plays its alert's own sound. Each phone its own,
+     * as the choice to ring.
      */
     val sounds: StateFlow<Map<String, AlertSound>>
 
-    /** Sets the sound of [kind] on this phone; null: the alert's own sound again. It applies from the next ring. */
-    fun setSound(kind: AlertKind, sound: AlertSound?)
+    /** Sets the sound of [setting] on this phone; null: the alert's own sound again. It applies from the next ring. */
+    fun setSound(setting: AlertSetting, sound: AlertSound?)
 
     /**
-     * Plays [kind]'s sound on this phone as an alert of [severity] would ring, for [TEST_SECONDS]: CRITICAL the alarm
-     * sound, WARNING the chime. It follows the same Do Not Disturb rule as a real alert. Nothing is played while an
-     * alarm is sounding: a test must never stop a real one.
+     * Plays [kind]'s sound on this phone (its group's, when it has one) as an alert of [severity] would ring, for
+     * [TEST_SECONDS]: CRITICAL the alarm sound, WARNING the chime. It follows the same Do Not Disturb rule as a real
+     * alert. Nothing is played while an alarm is sounding: a test must never stop a real one.
      *
      * @return false when nothing was played because an alarm is sounding
      */

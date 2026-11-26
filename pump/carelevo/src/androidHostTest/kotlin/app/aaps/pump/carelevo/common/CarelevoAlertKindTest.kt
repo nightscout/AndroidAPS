@@ -1,5 +1,6 @@
 package app.aaps.pump.carelevo.common
 
+import app.aaps.core.interfaces.alerts.AlertGroup
 import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.DosingEffect
 import app.aaps.core.keys.interfaces.TextRef
@@ -57,6 +58,18 @@ class CarelevoAlertKindTest {
         assertThat(CarelevoAlertKind.of(AlarmCause.ALARM_NOTICE_LGS_START).isProtected).isFalse()
         // The patch may still give insulin that AAPS does not count.
         assertThat(CarelevoAlertKind.NOT_STOPPED.isProtected).isTrue()
+    }
+
+    /** In the settings a kind follows the pump's group of what it does to dosing (decided 2026-11-26). */
+    @Test
+    fun `a kind is in the pump group of its effects`() {
+        CarelevoAlertKind.all.forEach { kind ->
+            assertThat(kind.group).isEqualTo(AlertGroup.of(AlertOrigin.PUMP, kind.effects))
+            assertThat(kind.isProtected).isEqualTo(kind.group.isProtected)
+        }
+        assertThat(CarelevoAlertKind.of(AlarmCause.ALARM_WARNING_PUMP_CLOGGED).group).isEqualTo(AlertGroup.PUMP_CRITICAL)
+        assertThat(CarelevoAlertKind.of(AlarmCause.ALARM_NOTICE_BG_CHECK).group).isEqualTo(AlertGroup.PUMP_ACTION)
+        assertThat(CarelevoAlertKind.of(AlarmCause.ALARM_NOTICE_LGS_START).group).isEqualTo(AlertGroup.PUMP_INFO)
     }
 
     /** A pump has no glucose alarm: every cause has a severity, so none is dropped. */

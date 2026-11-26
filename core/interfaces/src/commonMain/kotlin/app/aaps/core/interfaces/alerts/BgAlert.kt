@@ -7,36 +7,42 @@ import app.aaps.core.keys.interfaces.TextRef
  * The kinds of the core's own BG alarms (source [SOURCE]), evaluated on every stored reading on the master and on
  * every client (`_docs/ALARMS.md`, step 2). The ids are stored with the user's choice: never change one.
  */
-enum class BgAlert(private val idName: String, override val title: TextRef, override val isProtected: Boolean) : AlertKind {
+enum class BgAlert(
+    private val idName: String,
+    override val title: TextRef,
+    override val isProtected: Boolean,
+    override val group: AlertGroup? = null
+) : AlertKind {
 
     /** Always on, always rings, and also in Do Not Disturb. The user sets only its threshold. */
     URGENT_LOW("urgent_low", InterfacesStrings.alert_kind_bg_urgent_low, isProtected = true),
 
     /** The user's own low rules ([BgAlarmRule], [BgDirection.LOW]). */
-    LOW("low", InterfacesStrings.alert_kind_bg_low, isProtected = false),
+    LOW("low", InterfacesStrings.alert_kind_bg_low, isProtected = false, AlertGroup.BG_LOWS),
 
     /** The user's own high rules. */
-    HIGH("high", InterfacesStrings.alert_kind_bg_high, isProtected = false),
+    HIGH("high", InterfacesStrings.alert_kind_bg_high, isProtected = false, AlertGroup.BG_HIGHS),
 
     /** No reading for longer than the stale data threshold: a booked alert, booked again at every reading (step 2b). */
     STALE("stale", InterfacesStrings.alert_kind_bg_stale, isProtected = false),
 
     /** The user's persistent high rules ([BgRuleType.PERSISTENT_HIGH], step 2c). */
-    PERSISTENT_HIGH("persistent_high", InterfacesStrings.alert_kind_bg_persistent_high, isProtected = false),
+    PERSISTENT_HIGH("persistent_high", InterfacesStrings.alert_kind_bg_persistent_high, isProtected = false, AlertGroup.BG_HIGHS),
 
     /** The user's falling fast rules ([BgRuleType.RATE], [BgDirection.LOW]). */
-    FALLING_FAST("falling_fast", InterfacesStrings.alert_kind_bg_falling_fast, isProtected = false),
+    FALLING_FAST("falling_fast", InterfacesStrings.alert_kind_bg_falling_fast, isProtected = false, AlertGroup.BG_LOWS),
 
     /** The user's rising fast rules ([BgRuleType.RATE], [BgDirection.HIGH]). */
-    RISING_FAST("rising_fast", InterfacesStrings.alert_kind_bg_rising_fast, isProtected = false),
+    RISING_FAST("rising_fast", InterfacesStrings.alert_kind_bg_rising_fast, isProtected = false, AlertGroup.BG_HIGHS),
 
     /** The user's predicted low rules ([BgRuleType.PREDICTED_LOW]): from the loop's prediction. */
-    PREDICTED_LOW("predicted_low", InterfacesStrings.alert_kind_bg_predicted_low, isProtected = false);
+    PREDICTED_LOW("predicted_low", InterfacesStrings.alert_kind_bg_predicted_low, isProtected = false, AlertGroup.BG_LOWS);
 
     // A getter: the companion object is not there yet while the entries are built
     override val id: String get() = "$SOURCE.$idName"
     override val source: String get() = SOURCE
     override val origin: AlertOrigin get() = AlertOrigin.APP
+    override val section: AlertSection get() = AlertSection.BG
 
     // Every phone raises its own from the same readings: an announcement would make a client hear it twice
     override val announced: Boolean get() = false

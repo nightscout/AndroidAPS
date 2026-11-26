@@ -1,5 +1,6 @@
 package app.aaps.pump.carelevo.common
 
+import app.aaps.core.interfaces.alerts.AlertGroup
 import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.DosingEffect
@@ -16,7 +17,8 @@ import app.aaps.pump.carelevo.ext.stringResources
  * title's string name, which stays as it is because a renamed string loses its translations.
  *
  * Protected when one of its causes affects dosing ([DosingEffect.affectsDosing], decided 2026-11-24, as for
- * Eversense): those the user cannot set to Silent or Off.
+ * Eversense): those the user cannot set to Silent or Off. In the settings it is a member of the pump's group of its
+ * effects ([AlertGroup.of]), not a row of its own.
  */
 class CarelevoAlertKind private constructor(
     override val title: TextRef,
@@ -30,6 +32,7 @@ class CarelevoAlertKind private constructor(
     override val source: String get() = CarelevoAlarmNotifier.SOURCE
     override val origin: AlertOrigin get() = AlertOrigin.PUMP
     override val isProtected: Boolean = effects.any { it.affectsDosing }
+    override val group: AlertGroup = AlertGroup.of(origin, effects)
 
     companion object {
 

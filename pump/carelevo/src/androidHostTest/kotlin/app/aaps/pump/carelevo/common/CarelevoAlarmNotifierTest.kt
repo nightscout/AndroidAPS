@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.alerts.AlertChoice
 import app.aaps.core.interfaces.alerts.SharedSilence
 import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertLifetime
+import app.aaps.core.interfaces.alerts.AlertSetting
 import app.aaps.core.interfaces.alerts.AlertSound
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
@@ -64,12 +65,13 @@ class CarelevoAlarmNotifierTest {
         override val active: StateFlow<List<Alert>> = _active
         override val sounding: Alert? get() = _active.value.lastOrNull()
         override val choices: StateFlow<Map<String, AlertChoice>> = MutableStateFlow(emptyMap())
-        override fun setChoice(kind: AlertKind, choice: AlertChoice) {}
+        override fun setChoice(setting: AlertSetting, choice: AlertChoice) {}
+        override fun clearChoice(kind: AlertKind) {}
         override val pauses: StateFlow<Map<String, Long>> = MutableStateFlow(emptyMap())
         override fun pause(kinds: Collection<AlertKind>, until: Long) {}
         override fun resume(kinds: Collection<AlertKind>) {}
         override val sounds: StateFlow<Map<String, AlertSound>> = MutableStateFlow(emptyMap())
-        override fun setSound(kind: AlertKind, sound: AlertSound?) {}
+        override fun setSound(setting: AlertSetting, sound: AlertSound?) {}
         override fun test(kind: AlertKind, severity: AlertSeverity): Boolean = true
         override fun silenceEverywhere(source: String, key: String, minutes: Int) {}
         override fun canSilenceEverywhere(alert: Alert): Boolean = false

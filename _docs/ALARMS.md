@@ -177,6 +177,24 @@ that fails rings before the next try succeeds.
     Six names still show two or three times ("Low Insulin", "Low Battery", "Patch Error", ...) because the patch has
     a string per tier; every such row is protected, so none can be silenced without its twin.
   - The ids are pinned by tests (`CoreAlertTest`, `CarelevoAlertKindTest`): a renamed id would drop what users chose.
+- **Groups, not one row per kind** (decided 2026-11-26). One row per kind was 78 rows, most of them vendor names and
+  most of them protected. The settings now have four sections:
+  - **Pump** and **CGM**, each with three groups (`AlertGroup`):
+    - Critical: dosing affected now or soon, protected.
+    - Needs action: a reminder, something to check.
+    - Info: Show or Off only, because an info card has no sound.
+
+    A driver's kind is in the group of its effects (`AlertGroup.of`, decision 14), so a new driver needs no settings
+    of its own, and the settings stay when the user changes the pump. The app's own alerts about the pump (bolus
+    failed, profile not set, pump unreachable, ...) are in the pump's groups: for the user they are the pump's alerts.
+  - **BG alarms**: urgent low (protected), the lows and the highs as groups (the same sets the Pause buttons pause),
+    missed readings. A link opens the BG rules.
+  - **AAPS**: the app's other alerts, one row each (time to eat, automation alarm, carbs not saved, hard limit, carbs
+    required), and the Nightscout announcement.
+  - **Exceptions:** one kind of a group can be set apart, from the alarm screen ("Silence this kind") or with "Add
+    exception" in its section. Its own choice wins over its group's, also when it is Ring. The ✕ removes it. The
+    choice of a kind is its exception, else its group's, else Ring (`AlertsImpl.choiceFor`). Choices and sounds of
+    groups and kinds share the same stored maps, under the `AlertSetting` id; a group's id starts with `group.`.
 - **Three choices per kind:** Ring (the default), Silent (a card, no sound, no alarm screen, the watch not told), Off
   (not shown). A silent card is IMPORTANT at most, never URGENT. An alert that is off stays in `Alerts.active`, so its
   raiser resolves it as any other. A choice changed while the alert is active applies at once. Stored in
@@ -190,7 +208,7 @@ that fails rings before the next try succeeds.
 - **Applied in one place**, the alert core. A driver or a rule does nothing for it.
 - **Off is not lost.** An alert that is off is still written to the log and the history; it is only not shown.
 - **Visible.** The alert settings and a line at the top of the notification sheet say how many kinds are silent or
-  off, so a choice is not forgotten (decided 2026-11-22: the sheet, not a new icon on the overview). The line leads to
+  off (since 2026-11-26: groups, kinds and exceptions that are not Ring, and paused kinds), so a choice is not forgotten (decided 2026-11-22: the sheet, not a new icon on the overview). The line leads to
   the list. It shows only while the sheet has cards, because the sheet does not open without them.
 - **Where the user chooses** (decided 2026-11-22): the list in the settings, and on the alarm screen of a kind that is
   not protected, "Silence this kind on this phone": the moment it rings is when the user wants to say "not this
@@ -544,7 +562,7 @@ The order matters: step 3 must not come before step 2.
 5. **A Nightscout announcement is a WARNING alert:** one chime and a card.
 6. **Four card levels:** URGENT (only from the alert core), IMPORTANT (orange), NORMAL, INFO. LOW and ANNOUNCEMENT go.
 7. **The user chooses Ring, Silent or Off per kind of alert, per phone**, from a catalogue of alert kinds (an enum per
-   module behind `AlertKind`).
+   module behind `AlertKind`). Since 2026-11-26 (decision 15) mostly per group of kinds, with exceptions per kind.
 8. **The safety kinds are protected:** urgent low and insulin delivery stopped or not safe can be neither silenced
    nor turned off.
 9. **No "raise after" delay in the alert core.** Noise for one user is that user's choice to silence.
@@ -552,11 +570,16 @@ The order matters: step 3 must not come before step 2.
     per direction.
 11. **A silence is shared between the phones**, and each phone chooses whether it takes silences from the others.
 12. **Escalation** (a client rings when the master did not answer, an SMS) is designed now and built later.
-13. **The sound per kind, per phone:** a bundled AAPS sound, or on Android any ringtone of the phone.
+13. **The sound per kind, per phone:** a bundled AAPS sound, or on Android any ringtone of the phone. Since 2026-11-26
+    a kind of a group plays its group's sound; there is no sound per exception.
 14. **A driver sorts its events by what they do to dosing** (2026-11-24, `DosingEffect`): dosing affected now is
     CRITICAL, affected soon unless the user acts is WARNING, both protected; an action that does not affect dosing is
     WARNING, the rest INFO, and the user may set those Silent or Off. A CGM's glucose alarms are not raised. One kind
     per alarm name. Eversense was the first; every other driver follows when it moves (`PUMP_DESIGN.md`, section 4).
+15. **The settings are groups, with exceptions** (2026-11-26, section 6): the pump and the CGM by Critical, Needs
+    action and Info (from decision 14), the BG alarms by urgent low, lows, highs and missed readings, and the app's
+    other alerts one by one. The app's alerts about the pump are in the pump's groups. One kind can be set apart from
+    its group, from the alarm screen or the settings.
 
 Open, with a recommendation:
 

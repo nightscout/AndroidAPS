@@ -6,6 +6,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertAction
 import app.aaps.core.interfaces.alerts.AlertChoice
+import app.aaps.core.interfaces.alerts.AlertGroup
 import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertKindCatalogue
 import app.aaps.core.interfaces.alerts.AlertLifetime
@@ -204,7 +205,8 @@ class AlertsImplTest : TestBase() {
         override val source: String,
         override val origin: AlertOrigin,
         val name: String,
-        override val isProtected: Boolean = false
+        override val isProtected: Boolean = false,
+        override val group: AlertGroup? = null
     ) : AlertKind {
 
         override val id: String get() = "$source.$name"
@@ -428,6 +430,100 @@ class AlertsImplTest : TestBase() {
         assertThat(restarted.choices.value).containsExactly(occlusion.id, AlertChoice.SILENT)
         restarted.raise(alert(kind = occlusion))
         assertThat(card().sound).isNull()
+    }
+
+    // ---- groups and exceptions (decided 2026-11-26) -------------------------------------------------
+
+    private val reminder = TestKind("pump", AlertOrigin.PUMP, "reminder", group = AlertGroup.PUMP_ACTION)
+    private fun reminderAlert() = alert(key = "reminder", kind = reminder)
+
+    @Test
+    fun `a kind follows the choice of its group`() {
+        sut.setChoice(AlertGroup.PUMP_ACTION, AlertChoice.SILENT)
+
+        sut.raise(reminderAlert())
+
+        assertThat(card().sound).isNull()
+        assertThat(alertPlatform.screens).isEmpty()
+    }
+
+    @Test
+    fun `a group changed while its alert is active applies at once`() {
+        sut.raise(reminderAlert())
+
+        sut.setChoice(AlertGroup.PUMP_ACTION, AlertChoice.OFF)
+
+        assertThat(cards()).isEmpty()
+    }
+
+    /** "Pump, needs action: Off", but this one reminder rings: an exception wins, also when it is Ring. */
+    @Test
+    fun `an exception wins over its group, also as Ring`() {
+        sut.setChoice(AlertGroup.PUMP_ACTION, AlertChoice.OFF)
+        sut.setChoice(reminder, AlertChoice.RING)
+
+        sut.raise(reminderAlert())
+
+        assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
+        assertThat(sut.choices.value).containsExactly(AlertGroup.PUMP_ACTION.id, AlertChoice.OFF, reminder.id, AlertChoice.RING)
+    }
+
+    @Test
+    fun `an exception set to Ring is kept for the next start`() {
+        sut.setChoice(AlertGroup.PUMP_ACTION, AlertChoice.SILENT)
+        sut.setChoice(reminder, AlertChoice.RING)
+
+        assertThat(newAlerts().choices.value).containsExactly(AlertGroup.PUMP_ACTION.id, AlertChoice.SILENT, reminder.id, AlertChoice.RING)
+    }
+
+    @Test
+    fun `a removed exception follows its group again at once`() {
+        sut.setChoice(AlertGroup.PUMP_ACTION, AlertChoice.OFF)
+        sut.setChoice(reminder, AlertChoice.RING)
+        sut.raise(reminderAlert())
+
+        sut.clearChoice(reminder)
+
+        assertThat(cards()).isEmpty()
+        assertThat(sut.choices.value).containsExactly(AlertGroup.PUMP_ACTION.id, AlertChoice.OFF)
+    }
+
+    /** A kind with no group set back to Ring is just a kind that rings: nothing is kept for it. */
+    @Test
+    fun `a kind with no group set to Ring keeps no entry`() {
+        sut.setChoice(CoreAlert.HARD_LIMIT, AlertChoice.SILENT)
+
+        sut.setChoice(CoreAlert.HARD_LIMIT, AlertChoice.RING)
+
+        assertThat(sut.choices.value).isEmpty()
+    }
+
+    @Test
+    fun `a protected group always rings`() {
+        sut.setChoice(AlertGroup.PUMP_CRITICAL, AlertChoice.OFF)
+
+        sut.raise(alert(kind = TestKind("pump", AlertOrigin.PUMP, "occlusion", isProtected = true, group = AlertGroup.PUMP_CRITICAL)))
+
+        assertThat(sut.choices.value).isEmpty()
+        assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
+    }
+
+    @Test
+    fun `a kind of a group plays the sound of its group`() {
+        sut.setSound(AlertGroup.PUMP_ACTION, AlertSound.Bundled(AlarmSound.ERROR))
+
+        sut.raise(reminderAlert())
+
+        assertThat(card().sound).isEqualTo(AlarmSound.ERROR)
+    }
+
+    @Test
+    fun `the test of a kind of a group plays the sound of its group`() {
+        sut.setSound(AlertGroup.PUMP_ACTION, AlertSound.Bundled(AlarmSound.BOLUS_ERROR))
+
+        sut.test(reminder, AlertSeverity.CRITICAL)
+
+        verify(soundPlayer).play(eq(AlarmSound.BOLUS_ERROR), any(), eq(false), eq(null))
     }
 
     @Test

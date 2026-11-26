@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.alertKinds
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,15 +11,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
@@ -34,8 +42,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.alerts.AlertChoice
+import app.aaps.core.interfaces.alerts.AlertGroup
 import app.aaps.core.interfaces.alerts.AlertKind
+import app.aaps.core.interfaces.alerts.AlertSection
+import app.aaps.core.interfaces.alerts.AlertSetting
 import app.aaps.core.interfaces.alerts.AlertSound
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.keys.interfaces.TextRef
@@ -46,24 +58,32 @@ import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 
 /**
- * Ring, Silent or Off for each kind of alert, on this phone (`_docs/ALARMS.md`, section 6). A change applies at once,
- * so there is no Save: the back arrow only goes back. A protected kind shows that it always rings, with no choice.
+ * Ring, Silent or Off on this phone (`_docs/ALARMS.md`, section 6), in four sections: the pump and the CGM by level
+ * (critical, needs action, info), the BG alarms (lows, highs) and the app's own alerts one by one (decided 2026-11-26).
+ * A change applies at once, so there is no Save: the back arrow only goes back. A protected row shows that it always
+ * rings, with no choice.
  *
- * Each kind also has its sound on this phone ([sounds], by kind id; not in it: the alert's own) - one AAPS ships, or
- * on Android any sound of the phone - and a Test button,
- * which plays it as an alarm for a few seconds. [onTest] returns false when nothing was played: an alarm is ringing.
+ * A kind of a group can be set apart from it as an exception: the alarm screen's "Silence this kind" makes one, and
+ * "Add exception" here. Each row that makes a sound has its sound on this phone ([sounds], by group or kind id; not in
+ * it: the alert's own) - one AAPS ships, or on Android any sound of the phone - and a Test button, which plays it as an
+ * alarm for a few seconds. [onTest] returns false when nothing was played: an alarm is ringing.
  */
 @Composable
 fun AlertKindsScreen(
-    groups: List<AlertKindGroup>,
+    sections: List<AlertSettingsSection>,
     silentOrOff: Int,
-    onChoice: (AlertKind, AlertChoice) -> Unit,
+    onChoice: (AlertSetting, AlertChoice) -> Unit,
+    onClear: (AlertKind) -> Unit,
     sounds: Map<String, AlertSound>,
-    onSound: (AlertKind, AlertSound?) -> Unit,
+    onSound: (AlertSetting, AlertSound?) -> Unit,
     onTest: (AlertKind) -> Boolean,
+    onBgRules: () -> Unit,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    /** Held by the caller, so the list is where it was when the user comes back from the BG rules. */
+    listState: LazyListState = rememberLazyListState()
 ) {
+    var addingTo by remember { mutableStateOf<AlertSettingsSection?>(null) }
     Scaffold(
         topBar = {
             AapsTopAppBar(
@@ -77,6 +97,7 @@ fun AlertKindsScreen(
         }
     ) { paddingValues ->
         LazyColumn(
+            state = listState,
             modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues),
@@ -90,30 +111,72 @@ fun AlertKindsScreen(
                         Text(stringResource(UiStrings.alert_kinds_silent_or_off, silentOrOff), style = MaterialTheme.typography.bodyMedium)
                 }
             }
-            groups.forEach { group ->
-                item(key = "group:" + group.rows.first().kind.source) {
-                    Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
-                        HorizontalDivider()
-                        Text(stringResource(group.title), style = MaterialTheme.typography.titleMedium)
+            sections.forEach { section ->
+                item(key = "section:" + section.section.name) { SectionHeading(section, onBgRules) }
+                items(section.rows, key = { it.setting.id }) { row -> SettingRowView(row, sounds[row.setting.id], onChoice, onSound, onTest) }
+                if (section.exceptions.isNotEmpty())
+                    item(key = "exceptions:" + section.section.name) {
+                        Text(stringResource(UiStrings.alert_kind_exceptions), style = MaterialTheme.typography.titleSmall)
                     }
-                }
-                items(group.rows, key = { it.kind.id }) { row -> AlertKindRowView(row, sounds[row.kind.id], onChoice, onSound, onTest) }
+                items(section.exceptions, key = { "exception:" + it.kind.id }) { row -> ExceptionRowView(row, onChoice, onClear) }
+                if (section.candidates.isNotEmpty())
+                    item(key = "add:" + section.section.name) {
+                        TextButton(onClick = { addingTo = section }) {
+                            Icon(Icons.Filled.Add, contentDescription = null)
+                            Text(stringResource(UiStrings.alert_kind_add_exception))
+                        }
+                    }
             }
         }
+    }
+    addingTo?.let { section ->
+        AddExceptionDialog(
+            candidates = section.candidates,
+            onPick = { kind ->
+                addingTo = null
+                kind.group?.let { group ->
+                    val groupChoice = section.rows.firstOrNull { it.setting == group }?.choice ?: AlertChoice.RING
+                    onChoice(kind, firstExceptionChoice(group, groupChoice))
+                }
+            },
+            onDismiss = { addingTo = null }
+        )
     }
 }
 
 @Composable
-private fun AlertKindRowView(
-    row: AlertKindRow,
+private fun SectionHeading(section: AlertSettingsSection, onBgRules: () -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
+        HorizontalDivider()
+        Text(stringResource(section.section.title()), style = MaterialTheme.typography.titleMedium)
+        section.devices.forEach { device ->
+            Text(stringResource(device), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        // The levels themselves are the rules, the same on every phone; here only how this phone rings
+        if (section.section == AlertSection.BG)
+            TextButton(onClick = onBgRules) {
+                Text(stringResource(UiStrings.bg_alarm_rules_title))
+                Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null)
+            }
+    }
+}
+
+@Composable
+private fun SettingRowView(
+    row: AlertSettingRow,
     sound: AlertSound?,
-    onChoice: (AlertKind, AlertChoice) -> Unit,
-    onSound: (AlertKind, AlertSound?) -> Unit,
+    onChoice: (AlertSetting, AlertChoice) -> Unit,
+    onSound: (AlertSetting, AlertSound?) -> Unit,
     onTest: (AlertKind) -> Boolean
 ) {
+    val setting = row.setting
     Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
-        Text(stringResource(row.kind.title), style = MaterialTheme.typography.bodyLarge)
-        if (row.kind.isProtected) {
+        Column {
+            Text(stringResource(setting.title), style = MaterialTheme.typography.bodyLarge)
+            if (setting is AlertGroup)
+                Text(stringResource(setting.summary), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        if (setting.isProtected) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
                 Icon(Icons.Filled.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text(
@@ -122,29 +185,69 @@ private fun AlertKindRowView(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-        } else {
-            SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-                AlertChoice.entries.forEachIndexed { index, choice ->
-                    SegmentedButton(
-                        selected = row.choice == choice,
-                        onClick = { onChoice(row.kind, choice) },
-                        shape = SegmentedButtonDefaults.itemShape(index = index, count = AlertChoice.entries.size),
-                        icon = {}
-                    ) {
-                        Text(stringResource(choice.label()), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    }
-                }
-            }
-        }
-        SoundRow(row.kind, sound, onSound, onTest)
+        } else ChoiceButtons(row.choices, row.choice) { onChoice(setting, it) }
+        row.testKind?.let { SoundRow(setting, it, sound, onSound, onTest) }
     }
 }
 
-/** The kind's sound on this phone, to pick from the sounds AAPS ships or, on Android, the phone's; and its Test. */
+/** A kind set apart from its group: its name, the button that removes the exception, and its own choice. */
 @Composable
-private fun SoundRow(kind: AlertKind, sound: AlertSound?, onSound: (AlertKind, AlertSound?) -> Unit, onTest: (AlertKind) -> Boolean) {
+private fun ExceptionRowView(row: AlertExceptionRow, onChoice: (AlertSetting, AlertChoice) -> Unit, onClear: (AlertKind) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(stringResource(row.kind.title), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+            IconButton(onClick = { onClear(row.kind) }) {
+                Icon(Icons.Filled.Close, contentDescription = stringResource(UiStrings.alert_kind_remove_exception))
+            }
+        }
+        ChoiceButtons(row.group.choices, row.choice) { onChoice(row.kind, it) }
+    }
+}
+
+/** Ring, Silent and Off; for a row that makes no sound, Show and Off. */
+@Composable
+private fun ChoiceButtons(choices: List<AlertChoice>, selected: AlertChoice, onPick: (AlertChoice) -> Unit) {
+    val quiet = AlertChoice.SILENT !in choices
+    SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+        choices.forEachIndexed { index, choice ->
+            SegmentedButton(
+                selected = selected == choice,
+                onClick = { onPick(choice) },
+                shape = SegmentedButtonDefaults.itemShape(index = index, count = choices.size),
+                icon = {}
+            ) {
+                Text(stringResource(choice.label(quiet)), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            }
+        }
+    }
+}
+
+/** The kinds that can be set apart from their group; picking one adds its exception. */
+@Composable
+private fun AddExceptionDialog(candidates: List<AlertKind>, onPick: (AlertKind) -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(UiStrings.alert_kind_add_exception)) },
+        text = {
+            LazyColumn {
+                items(candidates, key = { it.id }) { kind ->
+                    ListItem(
+                        headlineContent = { Text(stringResource(kind.title)) },
+                        modifier = Modifier.clickable { onPick(kind) }
+                    )
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.cancel)) } }
+    )
+}
+
+/** The sound of a row on this phone, to pick from the sounds AAPS ships or, on Android, the phone's; and its Test. */
+@Composable
+private fun SoundRow(setting: AlertSetting, testKind: AlertKind, sound: AlertSound?, onSound: (AlertSetting, AlertSound?) -> Unit, onTest: (AlertKind) -> Boolean) {
     var picking by remember { mutableStateOf(false) }
-    val ringtonePicker = rememberRingtonePicker { uri, title -> onSound(kind, AlertSound.Ringtone(uri, title)) }
+    val ringtonePicker = rememberRingtonePicker { uri, title -> onSound(setting, AlertSound.Ringtone(uri, title)) }
     var refused by remember { mutableStateOf(false) }
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
         Text(stringResource(UiStrings.alert_kind_sound), style = MaterialTheme.typography.bodyMedium)
@@ -165,7 +268,7 @@ private fun SoundRow(kind: AlertKind, sound: AlertSound?, onSound: (AlertKind, A
                     text = { Text(stringResource(UiStrings.alert_kind_sound_own)) },
                     onClick = {
                         picking = false
-                        onSound(kind, null)
+                        onSound(setting, null)
                     }
                 )
                 AlarmSound.entries.forEach { s ->
@@ -173,7 +276,7 @@ private fun SoundRow(kind: AlertKind, sound: AlertSound?, onSound: (AlertKind, A
                         text = { Text(stringResource(s.title)) },
                         onClick = {
                             picking = false
-                            onSound(kind, AlertSound.Bundled(s))
+                            onSound(setting, AlertSound.Bundled(s))
                         }
                     )
                 }
@@ -189,13 +292,20 @@ private fun SoundRow(kind: AlertKind, sound: AlertSound?, onSound: (AlertKind, A
             }
         }
         Spacer(modifier = Modifier.weight(1f))
-        TextButton(onClick = { refused = !onTest(kind) }) { Text(stringResource(UiStrings.alert_kind_sound_test)) }
+        TextButton(onClick = { refused = !onTest(testKind) }) { Text(stringResource(UiStrings.alert_kind_sound_test)) }
     }
     if (refused) Text(stringResource(UiStrings.alert_kind_sound_test_refused), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
 }
 
-private fun AlertChoice.label(): TextRef = when (this) {
-    AlertChoice.RING   -> UiStrings.alert_choice_ring
+private fun AlertChoice.label(quiet: Boolean): TextRef = when (this) {
+    AlertChoice.RING   -> if (quiet) UiStrings.alert_choice_show else UiStrings.alert_choice_ring
     AlertChoice.SILENT -> UiStrings.alert_choice_silent
     AlertChoice.OFF    -> UiStrings.alert_choice_off
+}
+
+private fun AlertSection.title(): TextRef = when (this) {
+    AlertSection.PUMP -> CoreUiStrings.pump
+    AlertSection.CGM  -> CoreUiStrings.cgm
+    AlertSection.BG   -> InterfacesStrings.alert_kinds_group_bg
+    AlertSection.APP  -> InterfacesStrings.alert_kinds_group_app
 }
