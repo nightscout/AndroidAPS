@@ -24,6 +24,8 @@ import app.aaps.wear.comm.ForegroundStart
  * Not always enough on its own: some watches still freeze the app when the screen dims unless its
  * battery use is unrestricted, see [WatchDirect.isBatteryUnrestricted]. The link itself lives in
  * [WatchDirect]; this service only holds the foreground state.
+ *
+ * Fixes by olorinmaia (#250, #251).
  */
 class WatchDirectService : Service() {
 

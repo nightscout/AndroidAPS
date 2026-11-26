@@ -433,6 +433,8 @@ internal object OnePlusBleSessionCyclePolicy {
  * reconnect retries after GATT drop / connect-auth failure. After a successful EGV cycle, the
  * transmitter's disconnect is treated as normal duty cycling: wait persistently for its next ADV
  * instead of consuming the finite failure budget while the radio is asleep.
+ *
+ * A handshake that fails is retried like a failed connect: olorinmaia, #256.
  */
 class OnePlusBleSessionSkeleton(
     private val gatt: OnePlusGattClient,

@@ -179,6 +179,21 @@ copied:
 
 
 -------------------------------------------------------------------------------
+5. Contributors
+-------------------------------------------------------------------------------
+
+GitHub handles, with the pull requests on github.com/MTR93600/OpenApsAIMI.
+
+  - t1dude: nightscout/AndroidAPS pull request 5397 (Dexcom G7 direct), the
+    source of the ideas listed at the end of section 4.
+  - olorinmaia: #250 (simpler plugin screens, fixes for direct to watch),
+    #251 (direct to watch: timed connect, the watch sleeps between readings),
+    #256 (session/OnePlusBleSession.kt: a handshake that fails is retried, and
+    the GATT link is closed however the session ends).
+  - stavlor: fix for direct to watch (commit 6422f69cae).
+
+
+-------------------------------------------------------------------------------
 Reviewer verification points (not legal advice — maintainer/counsel to confirm)
 -------------------------------------------------------------------------------
   a. SPDX GPL-3.0-only vs GPL-3.0-or-later — Juggluco is GPL-3.0-or-later (section 2);

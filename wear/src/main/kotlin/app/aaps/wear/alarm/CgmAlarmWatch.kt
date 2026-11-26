@@ -36,8 +36,8 @@ import dev.zacsweers.metro.SingleIn
  * which acknowledges the alarm there too. The phone takes the notification down with
  * [EventData.CgmAlarmCancel] when the alarm is over.
  *
- * Adapted from `CgmAlarmWear` in nightscout/AndroidAPS pull request 5397 (commit `bec1b16ba20`), see
- * the NOTICE file of this module.
+ * Adapted from `CgmAlarmWear` in nightscout/AndroidAPS pull request 5397 by t1dude (commit
+ * `bec1b16ba20`), see the NOTICE file of this module.
  */
 @SingleIn(AppScope::class)
 @Inject

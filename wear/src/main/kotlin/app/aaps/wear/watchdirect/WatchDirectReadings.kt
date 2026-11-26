@@ -20,8 +20,8 @@ import kotlin.math.abs
  * Every value built here has [EventData.SingleBg.fromSensor] set. Such a value is for the faces,
  * complications and tiles of this watch only: nothing in the watch app sends it to the phone.
  *
- * Adapted from `G7WatchReadings` in nightscout/AndroidAPS pull request 5397 (commit `bec1b16ba20`),
- * see the NOTICE file of this module.
+ * Adapted from `G7WatchReadings` in nightscout/AndroidAPS pull request 5397 by t1dude (commit
+ * `bec1b16ba20`), see the NOTICE file of this module. Fixes by olorinmaia (#250).
  */
 object WatchDirectReadings {
 

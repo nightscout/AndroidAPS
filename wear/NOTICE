@@ -19,7 +19,7 @@ THIRD-PARTY NOTICE — :wear, direct-to-watch
 
 The watch side of direct-to-watch (package app.aaps.wear.watchdirect) follows
 the behaviour of nightscout/AndroidAPS pull request 5397, "Dexcom G7 direct"
-(author t1dude / Magnus), at commit bec1b16ba20:
+(author t1dude), at commit bec1b16ba20:
 
   - wear/src/main/kotlin/app/aaps/wear/g7/G7WatchReadings.kt
       -> WatchDirectReadings.kt (closely ported: the same rules for which
@@ -68,3 +68,16 @@ here because the pull request carries that notice for its G7 code.
 Pull request 5397 is part of nightscout/AndroidAPS, which is distributed under
 the GNU Affero General Public License v3; this code is distributed under the
 same terms (AGPL-3.0-or-later).
+
+
+Contributors
+------------
+GitHub handles, with the pull requests on github.com/MTR93600/OpenApsAIMI.
+
+  - t1dude: nightscout/AndroidAPS pull request 5397, the design the watch side
+    of direct-to-watch and the watch alarm follow (see above).
+  - olorinmaia: #250 (fixes for direct to watch: readings reach the face, the
+    graph keeps the watch's own readings, pairing comes back after a restart),
+    #251 (the watch sleeps between readings and wakes just before the sensor;
+    WatchDirectRestart).
+  - stavlor: fix for direct to watch (commit 6422f69cae).

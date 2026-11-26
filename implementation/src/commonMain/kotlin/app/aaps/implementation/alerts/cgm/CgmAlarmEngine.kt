@@ -93,7 +93,7 @@ data class CgmAlarmStep(
 
 /**
  * Decides when the CGM alarms go off. The rules are the ones of the Dexcom G7 app, as nightscout/AndroidAPS
- * pull request 5397 has them, with its two open review points fixed:
+ * pull request 5397 by t1dude has them, with its two open review points fixed:
  *
  * - An alarm goes off when its condition holds (for its delay, if it has one).
  * - Not acknowledged: it goes off again every [REMINDER_MS], with sound, until acknowledged or the

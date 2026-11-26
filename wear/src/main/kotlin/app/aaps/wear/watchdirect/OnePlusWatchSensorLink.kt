@@ -24,6 +24,8 @@ import app.aaps.plugins.dexcomoneplus.identity.OnePlusSensorIdentity
  *
  * The driver's readings stop here. They are turned into [WatchSensorReading], which only the watch
  * faces see.
+ *
+ * The timed connect (sleep between readings, wake just before the sensor): olorinmaia, #251.
  */
 class OnePlusWatchSensorLink(context: Context) : WatchSensorLink {
 

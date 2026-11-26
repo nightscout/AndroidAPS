@@ -12,6 +12,8 @@ package app.aaps.wear.watchdirect
  * started from here: each one can end in a refusal by the sensor, and four refusals in a row lock a
  * G7 / ONE+ for everyone, the phone and the loop too. The driver counts refusals and stops in time,
  * and a resume respects that count. A pairing started again and again would not.
+ *
+ * Written by olorinmaia (#251).
  */
 object WatchDirectRestart {
 

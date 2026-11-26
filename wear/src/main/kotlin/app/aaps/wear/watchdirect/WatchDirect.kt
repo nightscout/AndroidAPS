@@ -56,9 +56,10 @@ import kotlinx.coroutines.launch
  * The link needs Android 12 (the Bluetooth permissions it uses); an older watch reports
  * [EventData.CgmWatchState.NOT_SUPPORTED], so the phone shows it as not possible.
  *
- * Behaviour follows `G7WatchDirect` in nightscout/AndroidAPS pull request 5397 (commit
+ * Behaviour follows `G7WatchDirect` in nightscout/AndroidAPS pull request 5397 by t1dude (commit
  * `bec1b16ba20`), re-built on our own driver through [WatchSensorLink]. See the NOTICE file of this
- * module.
+ * module. Fixes by stavlor, and by olorinmaia: #250, and #251 (the watch sleeps between readings
+ * and wakes just before the sensor).
  */
 @SingleIn(AppScope::class)
 @Inject

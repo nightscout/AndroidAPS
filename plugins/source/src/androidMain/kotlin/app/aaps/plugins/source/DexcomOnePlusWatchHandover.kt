@@ -48,7 +48,7 @@ data class DexcomOnePlusWatchReport(val status: EventData.CgmWatchStatus, val re
  *
  * The watch's readings never come back here. Nothing in this class receives a glucose value.
  *
- * Behaviour follows `G7WatchHandover` in nightscout/AndroidAPS pull request 5397.
+ * Behaviour follows `G7WatchHandover` in nightscout/AndroidAPS pull request 5397 by t1dude.
  *
  * @param transport null on a phone without a watch link, which makes every call here a no-op.
  * @param productionSession reads the production slot's stored sensor, live, on every call.
