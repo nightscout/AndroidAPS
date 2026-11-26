@@ -22,7 +22,7 @@ class BgAlarmRulesImplTest : TestBase() {
 
     private val night = BgAlarmRule(
         id = "n", direction = BgDirection.LOW, thresholdMgdl = 72.0, severity = AlertSeverity.CRITICAL,
-        fromMinute = 22 * 60, toMinute = 7 * 60, durationMinutes = 10, silenceMinutes = 20, enabled = false
+        fromMinute = 22 * 60, toMinute = 7 * 60, durationMinutes = 10, enabled = false
     )
     private val high = BgAlarmRule(id = "h", direction = BgDirection.HIGH, thresholdMgdl = 250.0)
 

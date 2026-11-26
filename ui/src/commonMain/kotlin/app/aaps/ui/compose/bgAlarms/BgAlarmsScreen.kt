@@ -45,7 +45,6 @@ import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertSetting
 import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.AlertSound
-import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlarmRule
 import app.aaps.core.interfaces.alerts.BgAlarmRules
 import app.aaps.core.interfaces.alerts.BgAlert
@@ -90,11 +89,11 @@ class BgUnits(
  *
  * Every change is saved at once ([onSave] with the whole list of rules): there is no Save button.
  *
- * The pause of this phone (step 2d), also on a client: a pause is each phone's own, as its choice to ring. So it is in
- * each card under the choice, "Pause for…" or "Paused until" with Resume, and "Pause all for…" is on top (decided
- * 2026-11-26: two rows of chips picked in advance looked as if something was paused). [pauses] is kind id to the end
- * of its pause; [timeText] shows such an end as a time of day. [onRuleTest] plays a rule's kind as it rings at the
- * severity in its dialog, on this phone; false: not played, an alarm is ringing.
+ * The pause of this phone (step 2d), also on a client: a pause is each phone's own, as its choice to ring. Only the one
+ * planned ahead is here, "Pause all for…" on top, with "Paused until" and Resume while it lasts; a ringing alarm is
+ * silenced from its own screen, one tap (decided 2026-11-26). [pauses] is kind id to the end of its pause; [timeText]
+ * shows such an end as a time of day. [onRuleTest] plays a rule's kind as it rings at the severity in its dialog, on
+ * this phone; false: not played, an alarm is ringing.
  */
 @Composable
 fun BgAlarmsScreen(
@@ -141,17 +140,9 @@ fun BgAlarmsScreen(
         listState = listState,
         header = {
             if (readOnly) item(key = "readOnly") { Text(stringResource(UiStrings.bg_alarms_read_only), style = MaterialTheme.typography.bodyMedium) }
-            item(key = "pauseAll") { PauseAll { minutes -> onPause(BgAlert.PAUSABLE, minutes) } }
-        },
-        // The pause is how this phone rings for a while: in each card, under its choice (decided 2026-11-26)
-        afterChoice = { row ->
-            val kinds = when (row.setting) {
-                AlertGroup.BG_LOWS  -> BgAlert.LOWS
-                AlertGroup.BG_HIGHS -> BgAlert.HIGHS
-                BgAlert.STALE       -> listOf(BgAlert.STALE)
-                else                -> null
+            item(key = "pauseAll") {
+                PauseAll(pauses = pauses, timeText = timeText, onPause = { minutes -> onPause(BgAlert.PAUSABLE, minutes) }, onResume = { onResume(BgAlert.PAUSABLE) })
             }
-            if (kinds != null) PauseLine(kinds, rings = row.choice.rings, pauses = pauses, timeText = timeText, onPause = onPause, onResume = onResume)
         },
         extra = { row ->
             when (row.setting) {
@@ -424,8 +415,7 @@ private fun newRule(id: String, kind: RuleKind) = BgAlarmRule(
         RuleKind.PERSISTENT_HIGH -> 60
         RuleKind.PREDICTED_LOW   -> 30
         else                     -> 0
-    },
-    silenceMinutes = if (kind == RuleKind.HIGH || kind == RuleKind.PERSISTENT_HIGH) 120 else Alerts.SILENCE_MINUTES
+    }
 )
 
 @Composable
@@ -511,7 +501,6 @@ private fun RuleDialog(
     var from by remember { mutableStateOf(clock(rule.fromMinute ?: (22 * 60))) }
     var to by remember { mutableStateOf(clock(rule.toMinute ?: (7 * 60))) }
     var duration by remember { mutableStateOf(rule.durationMinutes.toString()) }
-    var silence by remember { mutableStateOf(rule.silenceMinutes) }
     var testRefused by remember { mutableStateOf(false) }
 
     val thresholdMgdl = units.toMgdl(threshold)?.takeIf { it in kind.limits }
@@ -582,21 +571,7 @@ private fun RuleDialog(
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
-                Text(stringResource(CoreUiStrings.alarm_silence_length), style = MaterialTheme.typography.labelLarge)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
-                    Alerts.silenceLengths(kind.alert).forEach { m ->
-                        FilterChip(
-                            selected = silence == m,
-                            onClick = { silence = m },
-                            label = {
-                                Text(
-                                    if (m >= 60 && m % 60 == 0) stringResource(CoreUiStrings.format_hours_only, m / 60)
-                                    else stringResource(CoreUiStrings.format_mins, m)
-                                )
-                            }
-                        )
-                    }
-                }
+                // How long it is silenced is answered on the alarm itself, not decided here (decided 2026-11-26)
             }
         },
         confirmButton = {
@@ -609,8 +584,7 @@ private fun RuleDialog(
                             severity = severity,
                             fromMinute = if (allDay) null else fromMinute,
                             toMinute = if (allDay) null else toMinute,
-                            durationMinutes = durationMinutes ?: return@TextButton,
-                            silenceMinutes = silence
+                            durationMinutes = durationMinutes ?: return@TextButton
                         )
                     )
                 }
@@ -629,14 +603,22 @@ private fun RuleDialog(
 private val pauseLengths = listOf(30, 60, 120, 240)
 
 /**
- * "Pause all for…" on top: the lows, the highs and missed readings for a while, never urgent low; nothing is picked
- * before the user picks it, so nothing looks paused that is not. Under it, once, how a pause works.
+ * The pause of this phone, planned ahead, as before sport: "Pause all for…" - the lows, the highs and missed readings
+ * for a while, never urgent low; nothing is picked before the user picks it, so nothing looks paused that is not.
+ * While a pause lasts, also one given from a ringing alarm ("Silence all BG alarms"), it says until when, with
+ * Resume. Under it, once, how a pause works. Snoozing one alarm is done on the alarm itself (decided 2026-11-26).
  */
 @Composable
-private fun PauseAll(onPause: (Int) -> Unit) {
+private fun PauseAll(pauses: Map<String, Long>, timeText: (Long) -> String, onPause: (Int) -> Unit, onResume: () -> Unit) {
     var choosing by remember { mutableStateOf(false) }
+    val until = BgAlert.PAUSABLE.mapNotNull { pauses[it.id] }.maxOrNull()
     Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
-        Box(modifier = Modifier.fillMaxWidth()) {
+        if (until != null) Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+            Icon(Icons.Filled.Pause, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+            Text(stringResource(UiStrings.bg_alarm_paused_until, timeText(until)), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+            TextButton(onClick = onResume) { Text(stringResource(UiStrings.bg_alarm_resume)) }
+        }
+        else Box(modifier = Modifier.fillMaxWidth()) {
             OutlinedButton(onClick = { choosing = true }, modifier = Modifier.fillMaxWidth()) {
                 Icon(Icons.Filled.Pause, contentDescription = null)
                 Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
@@ -648,38 +630,6 @@ private fun PauseAll(onPause: (Int) -> Unit) {
             }
         }
         Text(stringResource(UiStrings.bg_alarm_pause_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-    }
-}
-
-/**
- * The pause of one card's [kinds] on this phone: "Paused until 21:30" with Resume while it lasts, else "Pause for…"
- * where the card rings ([rings]); a card that is silent or off has nothing to pause.
- */
-@Composable
-private fun PauseLine(
-    kinds: List<BgAlert>,
-    rings: Boolean,
-    pauses: Map<String, Long>,
-    timeText: (Long) -> String,
-    onPause: (List<BgAlert>, Int) -> Unit,
-    onResume: (List<BgAlert>) -> Unit
-) {
-    var choosing by remember { mutableStateOf(false) }
-    val until = kinds.mapNotNull { pauses[it.id] }.maxOrNull()
-    if (until != null) Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
-        Icon(Icons.Filled.Pause, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-        Text(stringResource(UiStrings.bg_alarm_paused_until, timeText(until)), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
-        TextButton(onClick = { onResume(kinds) }) { Text(stringResource(UiStrings.bg_alarm_resume)) }
-    }
-    else if (rings) Box {
-        TextButton(onClick = { choosing = true }, contentPadding = LinedUpButtonPadding) {
-            Icon(Icons.Filled.Pause, contentDescription = null)
-            Text(stringResource(UiStrings.bg_alarms_pause_for))
-        }
-        PauseLengthMenu(expanded = choosing, onDismiss = { choosing = false }) { minutes ->
-            choosing = false
-            onPause(kinds, minutes)
-        }
     }
 }
 

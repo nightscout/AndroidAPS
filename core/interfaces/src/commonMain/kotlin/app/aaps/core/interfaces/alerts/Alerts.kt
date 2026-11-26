@@ -362,8 +362,14 @@ interface Alerts {
         /** The longest silence of a protected kind: insulin delivery stopped or not safe must not wait long. */
         const val PROTECTED_SILENCE_MAX_MINUTES = 30
 
-        /** The silence lengths the alarm screen offers, in minutes (decided 2026-11-22). */
-        private val SILENCE_LENGTHS = listOf(15, 30, 60, 120, 240)
+        /**
+         * The silence lengths the alarm screen offers, in minutes: one button each, one tap silences and closes
+         * (decided 2026-11-26; it was a row of five to pick from, then a button).
+         */
+        private val SILENCE_LENGTHS = listOf(15, 30, 60)
+
+        /** How long "Silence all BG alarms" on the alarm screen pauses them, in minutes (decided 2026-11-26). */
+        const val SILENCE_ALL_MINUTES = 60
 
         /**
          * The silence buttons on the notification of a WARNING alert that lasts (CONDITION), in minutes: the three

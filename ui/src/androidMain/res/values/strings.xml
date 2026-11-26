@@ -418,7 +418,8 @@
     <string name="alert_kind_exceptions" comment="Heading of a list of single kinds of alert that the user set differently from their group">Exceptions</string>
     <string name="alert_kind_add_exception" comment="Button: pick one kind of alert and set it differently from its group">Add exception</string>
     <string name="alert_kind_remove_exception" comment="Button (an X icon, read by the screen reader): the kind of alert follows its group again">Remove exception</string>
-    <string name="alarm_silence_everywhere_for_and_close" comment="Button on the alarm screen of a glucose alarm: silence it on this phone and on every other phone (master and clients), and close. %1$s=how long, for example: 30 min">Silence for %1$s on every phone and close</string>
+    <string name="alarm_silence_on_every_phone" comment="Checkbox on the alarm screen of a glucose alarm, under the silence buttons: when ticked, the alarm is silenced also on every other phone (master and clients)">On every phone</string>
+    <string name="alarm_silence_all_bg" comment="Button on the alarm screen of a glucose alarm: no glucose alarm makes a sound on this phone for a time, except urgent low. %1$s=how long, for example: 1 h">Silence all BG alarms for %1$s</string>
     <string name="alert_kind_sound" comment="Label before the sound an alert kind plays on this phone">Sound</string>
     <string name="alert_kind_sound_own" comment="Sound choice of an alert kind: the sound the alert itself asks for, as before">Its own sound</string>
     <string name="alert_kind_sound_phone" comment="Sound choice of an alert kind: opens the phone's list of sounds (ringtones, notification sounds, alarms)">Sound of the phone…</string>
@@ -442,7 +443,6 @@
     <string name="bg_alarm_rule_high_title">High alarm</string>
     <string name="bg_alarm_rule_add">Add rule</string>
     <string name="bg_alarm_pause_hint">While paused, these alarms come as a card with no sound. If one is still on when the pause ends, it rings then. Urgent low is never paused.</string>
-    <string name="bg_alarms_pause_for" comment="Button in the card of one group of glucose alarms (lows, highs or missed readings): opens a list of times (30 min, 1 h, 2 h, 4 h) to pause them on this phone">Pause for…</string>
     <string name="bg_alarms_pause_all_for" comment="Button on top of the glucose alarms: opens a list of times (30 min, 1 h, 2 h, 4 h) to pause every glucose alarm but urgent low on this phone">Pause all for…</string>
     <string name="bg_alarm_paused_until" comment="Heading of the paused glucose alarms. %1$s=the time the pause ends, as HH:MM">Paused until %1$s</string>
     <string name="bg_alarm_resume" comment="Button: end the pause of the glucose alarms now">Resume</string>

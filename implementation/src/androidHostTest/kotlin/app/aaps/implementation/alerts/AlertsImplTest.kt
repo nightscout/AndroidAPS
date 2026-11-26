@@ -683,7 +683,8 @@ class AlertsImplTest : TestBase() {
     fun `the alarm screen offers a protected kind only the short silences`() {
         val stopped = TestKind("pump", AlertOrigin.PUMP, "occlusion", isProtected = true)
 
-        assertThat(Alerts.silenceLengths(occlusion)).containsExactly(15, 30, 60, 120, 240).inOrder()
+        // One button each, one tap (decided 2026-11-26)
+        assertThat(Alerts.silenceLengths(occlusion)).containsExactly(15, 30, 60).inOrder()
         assertThat(Alerts.silenceLengths(stopped)).containsExactly(15, 30).inOrder()
         assertThat(Alerts.silenceLengths(occlusion)).contains(Alerts.SILENCE_MINUTES)
     }

@@ -135,6 +135,12 @@ Alerts keep their three severities: CRITICAL, WARNING, INFO. The list of cards h
   15 and 30 min, and the core never silences it for longer than 30 min, whoever asks. A swipe, the watch and the card
   silence for 30 min. One of the app's own alarms ends when it is answered, so it has no row. The alert's own
   default (a high longer, an urgent low shorter) comes with the BG alarms, its first user.
+  Changed 2026-11-26 (the user: "you have to decide upfront snooze time"): one button per length, 15 min, 30 min and
+  1 h (a protected kind 15 and 30), and one tap silences and closes; no row to pick from, no Mute 5 min. A BG alarm
+  adds "On every phone", a checkbox for those buttons, and "Silence all BG alarms for 1 h", a pause of this phone
+  that never takes urgent low (`AlertScreen`). A rule has no silence length any more: where there is no button (a
+  swipe, the watch, Mute), the BG kind decides (`BgAlert.silenceMinutes`: urgent low 15 min, lows and missed
+  readings 30 min, highs 1 h). The pause planned ahead is only "Pause all for…" on top of the BG alarms.
 - **Scheduled alerts: ring at a time, unless cancelled before.** The platform books it in advance (a local
   notification on iOS, `AlarmManager` on Android), so it rings also when the app cannot run. It replaces four
   mechanisms of their own: `IosMissedReadingAlarm`, the eat reminder alarms, the automation reminder
@@ -193,9 +199,10 @@ that fails rings before the next try succeeds.
     missed readings. Each card holds when the alarm rings next to how this phone rings it (decided 2026-11-26, it
     was in three places): urgent low its threshold, the lows and the highs their rules, missed readings its minutes.
     The rules and the urgent low threshold are the same on every phone, so the card says so and draws a line above
-    "On this phone"; on a client without the Admin role they are read-only, how it rings is not. The pause is in each
-    card under its choice ("Pause for…", then "Paused until" with Resume), and "Pause all for…" is on top (decided
-    2026-11-26: a card of chips picked in advance looked as if something was paused). The urgent low threshold and the missed readings left Local alerts, and the BG alarm rules screen is this one.
+    "On this phone"; on a client without the Admin role they are read-only, how it rings is not. The pause planned
+    ahead is "Pause all for…" on top, "Paused until" with Resume while it lasts (decided 2026-11-26: a card of chips
+    picked in advance looked as if something was paused; a pause per card went again the same day, as a ringing
+    alarm is silenced from its own screen). The urgent low threshold and the missed readings left Local alerts, and the BG alarm rules screen is this one.
     **Default rules** (decided 2026-11-26): a phone that never stored rules has low below 70 mg/dl as an alarm, high
     above 250 mg/dl and predicted low below 70 within 20 minutes with one sound (`BgAlarmRules.DEFAULT`, fixed ids);
     also a phone updated from a version without rules. A list the user emptied stays empty. "Reset rules to default"
@@ -416,9 +423,9 @@ rings because of it (decided 2026-11-21: acceptable).
   Built (2d) as a timed Silent choice in the core (`Alerts.pause`, `resume`, `pauses`), per phone, not synced: the
   card is shown, nothing rings, and what is still on rings when the pause ends (booked, so also when the app does not
   run); a silence longer than the pause still holds. "Until switched on again" is the Silent choice in Alert kinds.
-  The pause before an alert rings is the same pause. It is on the BG alarms screen, also on a client: in the card of
-  the lows (low, falling fast, predicted low), of the highs (high, persistent high, rising fast) or of missed
-  readings, or all but urgent low on top, for 30 minutes to 4 hours.
+  The pause before an alert rings is the same pause. It is on top of the BG alarms screen, also on a client: all
+  but urgent low, for 30 minutes to 4 hours. "Silence all BG alarms for 1 h" on a ringing BG alarm gives the same
+  pause.
 - **Noisy readings** may be marked on the alert, but never hold back urgent low.
 
 #### The ringing (each phone's own)
@@ -628,6 +635,7 @@ Open, with a recommendation:
 
 Decided: the silence lengths the alarm screen offers (2026-11-22): 15 min to 4 h, a protected kind 15 and 30 min
 only (xDrip offers 10 minutes to 12 hours, with 35 minutes for a low and 2 hours for a high as the defaults).
+Changed 2026-11-26: 15 min, 30 min and 1 h, one tap each, and "Silence all BG alarms for 1 h" (section above).
 
 ## 7. How to find them again
 

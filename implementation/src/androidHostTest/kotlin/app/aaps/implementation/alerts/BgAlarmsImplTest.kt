@@ -154,7 +154,7 @@ class BgAlarmsImplTest : TestBase() {
         assertThat(alert.severity).isEqualTo(AlertSeverity.CRITICAL)
         // Rings also in Do Not Disturb, and is silenced only briefly
         assertThat(alert.breakThroughDnd).isTrue()
-        assertThat(alert.silenceMinutes).isEqualTo(BgAlarmsImpl.URGENT_LOW_SILENCE_MINUTES)
+        assertThat(alert.silenceMinutes).isEqualTo(15)
     }
 
     @Test
@@ -214,13 +214,14 @@ class BgAlarmsImplTest : TestBase() {
     // ---- the user's own rules (step 2a-2) ----------------------------------------------------------
 
     private fun low(threshold: Double, id: String = "low$threshold", duration: Int = 0, severity: AlertSeverity = AlertSeverity.WARNING) =
-        BgAlarmRule(id = id, direction = BgDirection.LOW, thresholdMgdl = threshold, severity = severity, durationMinutes = duration, silenceMinutes = 45)
+        BgAlarmRule(id = id, direction = BgDirection.LOW, thresholdMgdl = threshold, severity = severity, durationMinutes = duration)
 
     private fun high(threshold: Double, duration: Int = 0) =
-        BgAlarmRule(id = "high$threshold", direction = BgDirection.HIGH, thresholdMgdl = threshold, durationMinutes = duration, silenceMinutes = 120)
+        BgAlarmRule(id = "high$threshold", direction = BgDirection.HIGH, thresholdMgdl = threshold, durationMinutes = duration)
 
+    /** The silence where the user does not pick one is the kind's (decided 2026-11-26), not a setting of the rule. */
     @Test
-    fun `a low rule rings as the low kind with its own severity and silence`() {
+    fun `a low rule rings as the low kind with its own severity and the kind's silence`() {
         ruleList.value = listOf(low(70.0))
         readings(80.0, 75.0, 68.0)
 
@@ -230,7 +231,7 @@ class BgAlarmsImplTest : TestBase() {
         assertThat(alert.kind).isEqualTo(BgAlert.LOW)
         assertThat(alert.key).isEqualTo(BgAlarmsImpl.KEY_LOW)
         assertThat(alert.severity).isEqualTo(AlertSeverity.WARNING)
-        assertThat(alert.silenceMinutes).isEqualTo(45)
+        assertThat(alert.silenceMinutes).isEqualTo(30)
         assertThat(alert.breakThroughDnd).isFalse()
     }
 
@@ -243,6 +244,8 @@ class BgAlarmsImplTest : TestBase() {
 
         assertThat(alerts.raised.single().kind).isEqualTo(BgAlert.HIGH)
         assertThat(alerts.raised.single().key).isEqualTo(BgAlarmsImpl.KEY_HIGH)
+        // A high can wait longer than a low
+        assertThat(alerts.raised.single().silenceMinutes).isEqualTo(60)
     }
 
     @Test

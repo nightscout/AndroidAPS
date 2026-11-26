@@ -5,13 +5,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -19,14 +20,16 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.CoreUiStrings
@@ -35,9 +38,11 @@ import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 
 /**
- * Modal-style screen rendered over a scrim when an urgent alarm fires. Displays the alarm title/status and three
- * actions, each saying what it does: mute for 5 minutes (+5 min for the "time to eat" timer), silence, and silence
- * and close.
+ * Modal-style screen rendered over a scrim when an urgent alarm fires. Displays the alarm title/status and its
+ * actions, each saying what it does. An alert that lasts until its cause is gone has one button per silence length,
+ * each silencing and closing in one tap, and a BG alarm "On every phone" and "Silence all BG alarms" (decided
+ * 2026-11-26). An alarm that ends when it is answered has mute for 5 minutes (+5 min for the "time to eat" timer),
+ * silence, and silence and close.
  *
  * Shared code, because iOS needs the same screen: `ErrorActivity` hosts it on Android, and the Compose host of the
  * iOS app shows it for a pump alert through [AlertScreen]. Nothing in here is platform specific any more; the one
@@ -66,23 +71,26 @@ fun ErrorScreen(
     actionLabel: String? = null,
     onAction: () -> Unit = {},
     /**
-     * A pump alert: the lengths its silence may have, shown as a row to pick from. Null: no row, and the two silence
-     * buttons say nothing of time, as for one of the app's own alarms, which ends when it is answered.
+     * An alert that lasts until its cause is gone: the lengths its silence may have, one button each, and one tap
+     * silences for that long and closes ([onSilenceFor], decided 2026-11-26: it was a row to pick from, then a
+     * button). Null: the buttons of an alarm that ends when it is answered, Mute 5 min and the two Silence buttons.
      */
     silenceLengths: List<Int>? = null,
-    /** The length picked in the row, in minutes; the two silence buttons use it. */
-    silenceMinutes: Int = 0,
-    onSilenceMinutes: (Int) -> Unit = {},
+    onSilenceFor: (minutes: Int) -> Unit = {},
+    /**
+     * "On every phone" of a BG alarm (`_docs/ALARMS.md`, step 2f), ticked or not: the silence buttons then silence it
+     * on the other phones too. Null: not offered, as for an alarm of this phone only or with no link.
+     */
+    silenceEverywhere: Boolean? = null,
+    onSilenceEverywhere: (Boolean) -> Unit = {},
+    /** "Silence all BG alarms" for [silenceAllMinutes], on a BG alarm the user may silence. Null: no such button. */
+    onSilenceAll: (() -> Unit)? = null,
+    silenceAllMinutes: Int = 0,
     /**
      * Makes alerts of this kind silent on this phone from now on, for a kind the user may silence
      * (`_docs/ALARMS.md`, section 6). Null: no such button, as for a protected kind or an alarm that is no alert.
      */
     onSilenceKind: (() -> Unit)? = null,
-    /**
-     * "Silence everywhere" of a BG alarm (`_docs/ALARMS.md`, step 2f): silences it for the picked length here at once
-     * and on every other phone, and closes. Null: not offered, as for an alarm of this phone only or with no link.
-     */
-    onSilenceEverywhere: (() -> Unit)? = null,
     /**
      * Drawn small over the error icon, to say which AAPS this is. Android passes its flavour launcher icon, which is
      * a drawable id and so cannot be a parameter of shared code. Null: no badge, which is what iOS shows.
@@ -171,75 +179,70 @@ fun ErrorScreen(
                     Spacer(modifier = Modifier.height(12.dp))
                 }
 
-                // Mute 5 min: the alarm goes quiet and comes back in five minutes
-                if (showMute5Min) {
-                    Button(
-                        onClick = onMute5Min,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(stringResource(CoreUiStrings.mute5min))
-                    }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-                }
-
-                // How long the two buttons below silence it, the alert's default picked
                 if (silenceLengths != null) {
+                    // One tap: silenced for that long, and the screen closes. At night that is all there is to do.
                     Text(
-                        text = stringResource(CoreUiStrings.alarm_silence_length),
+                        text = stringResource(CoreUiStrings.alarm_silence_for_label),
                         style = MaterialTheme.typography.labelLarge,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    // Three in a row: five do not fit on a phone, and a last one alone on its line looks lost
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium, Alignment.CenterHorizontally),
-                        maxItemsInEachRow = 3,
+                    Spacer(modifier = Modifier.height(AapsSpacing.medium))
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         silenceLengths.forEach { minutes ->
-                            FilterChip(
-                                selected = minutes == silenceMinutes,
-                                onClick = { onSilenceMinutes(minutes) },
-                                label = { Text(silenceLength(minutes)) }
-                            )
+                            Button(onClick = { onSilenceFor(minutes) }, modifier = Modifier.weight(1f)) {
+                                Text(silenceLength(minutes), maxLines = 1)
+                            }
                         }
                     }
-                    Spacer(modifier = Modifier.height(AapsSpacing.medium))
-                }
+                    // For the buttons above: the same answer for every phone, here at once, then for the others
+                    if (silenceEverywhere != null) Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth().toggleable(value = silenceEverywhere, role = Role.Checkbox, onValueChange = onSilenceEverywhere)
+                    ) {
+                        Checkbox(checked = silenceEverywhere, onCheckedChange = null)
+                        Text(stringResource(UiStrings.alarm_silence_on_every_phone))
+                    }
+                    // Leave me alone for a while: all the BG alarms, never urgent low
+                    if (onSilenceAll != null) {
+                        Spacer(modifier = Modifier.height(AapsSpacing.medium))
+                        OutlinedButton(onClick = onSilenceAll, modifier = Modifier.fillMaxWidth()) {
+                            Text(stringResource(UiStrings.alarm_silence_all_bg, silenceLength(silenceAllMinutes)), textAlign = TextAlign.Center)
+                        }
+                    }
+                } else {
+                    // Mute 5 min: the alarm goes quiet and comes back in five minutes
+                    if (showMute5Min) {
+                        Button(
+                            onClick = onMute5Min,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(stringResource(CoreUiStrings.mute5min))
+                        }
 
-                // Silence button: the sound stops, this screen stays open
-                Button(
-                    onClick = onMute,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        if (silenceLengths != null) stringResource(CoreUiStrings.alarm_silence_for, silenceLength(silenceMinutes))
-                        else stringResource(CoreUiStrings.alarm_silence)
-                    )
-                }
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
 
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Silence and close button
-                Button(
-                    onClick = onOk,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        if (silenceLengths != null) stringResource(CoreUiStrings.alarm_silence_for_and_close, silenceLength(silenceMinutes))
-                        else stringResource(CoreUiStrings.alarm_silence_and_close)
-                    )
-                }
-
-                // The same answer for every phone: here at once, then for the others
-                if (onSilenceEverywhere != null) {
-                    Spacer(modifier = Modifier.height(12.dp))
+                    // Silence button: the sound stops, this screen stays open
                     Button(
-                        onClick = onSilenceEverywhere,
+                        onClick = onMute,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(stringResource(UiStrings.alarm_silence_everywhere_for_and_close, silenceLength(silenceMinutes)))
+                        Text(stringResource(CoreUiStrings.alarm_silence))
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Silence and close button
+                    Button(
+                        onClick = onOk,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(CoreUiStrings.alarm_silence_and_close))
                     }
                 }
 

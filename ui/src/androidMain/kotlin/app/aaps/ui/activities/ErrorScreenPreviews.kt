@@ -49,7 +49,7 @@ internal fun ErrorScreenShortPreview() {
     }
 }
 
-/** The pump-alert shape of the same screen: an action button first, the silence lengths, and the two silence buttons naming the time. */
+/** The pump-alert shape of the same screen: an action button first, then one button per silence length. */
 @Preview(showBackground = true, widthDp = 360, heightDp = 720)
 @Composable
 internal fun ErrorScreenAlertPreview() {
@@ -61,8 +61,28 @@ internal fun ErrorScreenAlertPreview() {
             onMute = {},
             onMute5Min = {},
             actionLabel = "Deactivate Patch",
-            silenceLengths = listOf(15, 30, 60, 120, 240),
-            silenceMinutes = 30,
+            silenceLengths = listOf(15, 30),
+            badge = badge
+        )
+    }
+}
+
+/** A BG alarm: one tap per length, "On every phone", and "Silence all BG alarms". */
+@Preview(showBackground = true, widthDp = 360, heightDp = 720)
+@Composable
+internal fun ErrorScreenBgAlarmPreview() {
+    MaterialTheme {
+        ErrorScreen(
+            title = "Low",
+            status = "3.7 mmol/l",
+            onOk = {},
+            onMute = {},
+            onMute5Min = {},
+            silenceLengths = listOf(15, 30, 60),
+            silenceEverywhere = false,
+            onSilenceAll = {},
+            silenceAllMinutes = 60,
+            onSilenceKind = {},
             badge = badge
         )
     }

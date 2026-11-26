@@ -132,7 +132,7 @@ private fun SectionCard(section: AlertSettingsSection, silentOrOff: Int, onClick
  * false when nothing was played: an alarm is ringing.
  *
  * The BG alarms add what is set for every phone: [header] above the cards, [extra] in a row's card under its title, and
- * [footer] under the cards; and their pause, [afterChoice] in a row's card under its choice.
+ * [footer] under the cards.
  */
 @Composable
 fun AlertSectionScreen(
@@ -147,7 +147,6 @@ fun AlertSectionScreen(
     listState: LazyListState = rememberLazyListState(),
     header: LazyListScope.() -> Unit = {},
     extra: @Composable ColumnScope.(AlertSettingRow) -> Unit = {},
-    afterChoice: @Composable ColumnScope.(AlertSettingRow) -> Unit = {},
     footer: LazyListScope.() -> Unit = {}
 ) {
     var addingTo by remember { mutableStateOf<AlertSettingRow?>(null) }
@@ -169,10 +168,7 @@ fun AlertSectionScreen(
             }
             header()
             items(section.rows, key = { it.setting.id }) { row ->
-                SettingCard(
-                    row, sounds[row.setting.id], onChoice, onClear, onSound, onTest, onAddException = { addingTo = row },
-                    extra = { extra(row) }, afterChoice = { afterChoice(row) }
-                )
+                SettingCard(row, sounds[row.setting.id], onChoice, onClear, onSound, onTest, onAddException = { addingTo = row }) { extra(row) }
             }
             footer()
         }
@@ -203,7 +199,7 @@ private fun BackTopBar(title: String, onBack: () -> Unit) {
 
 /**
  * One row as a card: its title, the choice, its sound with the Test, and for a group the kinds set apart from it, so
- * all that belongs to it is seen together. [extra] comes under the title, [afterChoice] under the choice.
+ * all that belongs to it is seen together. [extra] comes under the title.
  */
 @Composable
 private fun SettingCard(
@@ -214,8 +210,7 @@ private fun SettingCard(
     onSound: (AlertSetting, AlertSound?) -> Unit,
     onTest: (kind: AlertKind, vibrate: Boolean) -> Boolean,
     onAddException: () -> Unit,
-    extra: @Composable ColumnScope.() -> Unit,
-    afterChoice: @Composable ColumnScope.() -> Unit
+    extra: @Composable ColumnScope.() -> Unit
 ) {
     val setting = row.setting
     AapsCard(modifier = Modifier.fillMaxWidth()) {
@@ -238,7 +233,6 @@ private fun SettingCard(
                     )
                 }
             } else ChoiceButtons(row.choices, row.choice) { onChoice(setting, it) }
-            afterChoice()
             // The Test does what the row's choice does: on Vibrate it vibrates
             row.testKind?.let { kind -> SoundRow(setting, sound, onSound) { onTest(kind, row.choice == AlertChoice.VIBRATE) } }
             if (row.exceptions.isNotEmpty()) {

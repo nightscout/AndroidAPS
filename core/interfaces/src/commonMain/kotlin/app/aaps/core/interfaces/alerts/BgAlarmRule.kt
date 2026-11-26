@@ -43,7 +43,9 @@ enum class BgRuleType {
  * @param toMinute end of its window; a window may cross midnight (a night rule from 22:00 to 07:00)
  * @param durationMinutes for a level rule and persistent high: how long the readings must stay past the threshold
  *   before it rings (0: at once). For predicted low: how far ahead it looks. Not used by a rate rule
- * @param silenceMinutes how long Silence lasts when the user does not pick
+ *
+ * How long a silence lasts is not a rule's: the alarm screen has buttons for it, and elsewhere its kind decides
+ * ([BgAlert.silenceMinutes], decided 2026-11-26). A length stored with an older rule is not read.
  */
 data class BgAlarmRule(
     val id: String,
@@ -53,7 +55,6 @@ data class BgAlarmRule(
     val fromMinute: Int? = null,
     val toMinute: Int? = null,
     val durationMinutes: Int = 0,
-    val silenceMinutes: Int = Alerts.SILENCE_MINUTES,
     val enabled: Boolean = true,
     val type: BgRuleType = BgRuleType.LEVEL
 ) {
@@ -98,7 +99,7 @@ interface BgAlarmRules {
          */
         val DEFAULT: List<BgAlarmRule> = listOf(
             BgAlarmRule(id = "default.low", direction = BgDirection.LOW, thresholdMgdl = 70.0, severity = AlertSeverity.CRITICAL),
-            BgAlarmRule(id = "default.high", direction = BgDirection.HIGH, thresholdMgdl = 250.0, severity = AlertSeverity.WARNING, silenceMinutes = 120),
+            BgAlarmRule(id = "default.high", direction = BgDirection.HIGH, thresholdMgdl = 250.0, severity = AlertSeverity.WARNING),
             BgAlarmRule(
                 id = "default.predicted_low", direction = BgDirection.LOW, thresholdMgdl = 70.0, severity = AlertSeverity.WARNING, durationMinutes = 20,
                 type = BgRuleType.PREDICTED_LOW

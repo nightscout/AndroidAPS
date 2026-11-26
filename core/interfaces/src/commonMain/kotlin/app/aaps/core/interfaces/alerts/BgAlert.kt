@@ -51,6 +51,17 @@ enum class BgAlert(
     // Every phone raises its own from the same readings: an announcement would make a client hear it twice
     override val announced: Boolean get() = false
 
+    /**
+     * How long a silence lasts where the user does not pick one: a swipe, the watch, Mute (decided 2026-11-26, it was a
+     * setting of each rule). Urgent low comes back soon, a high can wait an hour. The alarm screen has its own buttons.
+     */
+    val silenceMinutes: Int
+        get() = when (this) {
+            URGENT_LOW                              -> 15
+            HIGH, PERSISTENT_HIGH, RISING_FAST      -> 60
+            LOW, FALLING_FAST, PREDICTED_LOW, STALE -> 30
+        }
+
     companion object {
 
         /** The source every BG alarm is raised under. */

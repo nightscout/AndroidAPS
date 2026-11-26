@@ -132,7 +132,6 @@ class BgAlarmsImpl(
         val thresholdMgdl: Double,
         val severity: AlertSeverity,
         val durationMinutes: Int,
-        val silenceMinutes: Int,
         val breakThroughDnd: Boolean
     )
 
@@ -263,7 +262,8 @@ class BgAlarmsImpl(
         text = InterfacesStrings.bg_alarm_stale_text.withArgs(dateUtil.timeString(last.timestamp)),
         // The time of the gap: the same gap is the same alert, so a silence of it holds
         raisedAt = at,
-        lifetime = AlertLifetime.CONDITION
+        lifetime = AlertLifetime.CONDITION,
+        silenceMinutes = BgAlert.STALE.silenceMinutes
     )
 
     private fun slotOf(rule: BgAlarmRule): Slot = when (rule.type) {
@@ -280,7 +280,7 @@ class BgAlarmsImpl(
             .map {
                 Level(
                     id = it.id, kind = slot.kind, type = it.type, direction = it.direction, thresholdMgdl = it.thresholdMgdl,
-                    severity = it.severity, durationMinutes = it.durationMinutes, silenceMinutes = it.silenceMinutes, breakThroughDnd = false
+                    severity = it.severity, durationMinutes = it.durationMinutes, breakThroughDnd = false
                 )
             }
         val all = if (slot == Slot.LOW) listOf(urgentLow()) + own else own
@@ -290,7 +290,7 @@ class BgAlarmsImpl(
     private fun urgentLow() = Level(
         id = URGENT_LOW_ID, kind = BgAlert.URGENT_LOW, type = BgRuleType.LEVEL, direction = BgDirection.LOW,
         thresholdMgdl = profileUtil.convertToMgdlDetect(preferences.get(UnitDoubleKey.AlertUrgentLow)),
-        severity = AlertSeverity.CRITICAL, durationMinutes = 0, silenceMinutes = URGENT_LOW_SILENCE_MINUTES, breakThroughDnd = true
+        severity = AlertSeverity.CRITICAL, durationMinutes = 0, breakThroughDnd = true
     )
 
     private fun evaluate(slot: Slot, levels: List<Level>, data: Data) {
@@ -450,7 +450,7 @@ class BgAlarmsImpl(
             text = text,
             raisedAt = raisedAt,
             lifetime = AlertLifetime.CONDITION,
-            silenceMinutes = level.silenceMinutes,
+            silenceMinutes = level.kind.silenceMinutes,
             breakThroughDnd = level.breakThroughDnd
         )
     }
@@ -513,9 +513,6 @@ class BgAlarmsImpl(
 
         /** An alarm ends this far inside its threshold, so readings around it do not ring again and again. */
         const val END_MARGIN_MGDL = 5.0
-
-        /** Urgent low is silenced only briefly (`_docs/ALARMS.md`: "an urgent low 15 minutes"). */
-        const val URGENT_LOW_SILENCE_MINUTES = 15
 
         /** The rate is the average over this time ... */
         const val RATE_WINDOW_MS = 15 * 60_000L

@@ -1,7 +1,6 @@
 package app.aaps.implementation.alerts
 
 import app.aaps.core.interfaces.alerts.AlertSeverity
-import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlarmRule
 import app.aaps.core.interfaces.alerts.BgAlarmRules
 import app.aaps.core.interfaces.alerts.BgDirection
@@ -77,7 +76,7 @@ class BgAlarmRulesImpl(
         fromMinute = get("fromMinute")?.jsonPrimitive?.int,
         toMinute = get("toMinute")?.jsonPrimitive?.int,
         durationMinutes = get("durationMinutes")?.jsonPrimitive?.int ?: 0,
-        silenceMinutes = get("silenceMinutes")?.jsonPrimitive?.int ?: Alerts.SILENCE_MINUTES,
+        // "silenceMinutes" of an older rule is not read: the kind decides now (BgAlert.silenceMinutes)
         enabled = get("enabled")?.jsonPrimitive?.boolean ?: true,
         // Stored before there were types: a level rule
         type = get("type")?.jsonPrimitive?.content?.let { BgRuleType.valueOf(it) } ?: BgRuleType.LEVEL
@@ -93,7 +92,6 @@ class BgAlarmRulesImpl(
                 r.fromMinute?.let { put("fromMinute", it) }
                 r.toMinute?.let { put("toMinute", it) }
                 put("durationMinutes", r.durationMinutes)
-                put("silenceMinutes", r.silenceMinutes)
                 put("enabled", r.enabled)
                 put("type", r.type.name)
             })

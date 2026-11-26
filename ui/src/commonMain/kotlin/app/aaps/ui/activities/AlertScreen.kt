@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import app.aaps.core.data.ue.Action
@@ -12,10 +12,12 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.alerts.AlertChoice
 import app.aaps.core.interfaces.alerts.AlertLifetime
 import app.aaps.core.interfaces.alerts.Alerts
+import app.aaps.core.interfaces.alerts.BgAlert
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.ui.compose.stringResource
 import kotlinx.coroutines.flow.first
+import kotlin.time.Clock
 
 /**
  * The alarm screen of one pump alert, for every pump driver and every platform.
@@ -55,23 +57,31 @@ fun AlertScreen(
         onClose()
     }
 
-    // The length the user picked for the two silence buttons; a new alarm on the same screen starts from its own default.
-    var silenceMinutes by rememberSaveable(source, key) { mutableIntStateOf(alert?.silenceMinutes ?: Alerts.SILENCE_MINUTES) }
+    // "On every phone", ticked or not; a new alarm on the same screen starts unticked
+    var everywhere by rememberSaveable(source, key) { mutableStateOf(false) }
 
     // The alert ended; the effect above is closing the host. Drawing a card with no content would only flash.
     if (alert == null) return
+
+    // "Silence for 30 min" is a promise, and only an alert that lasts keeps it: one that ends when it is answered
+    // (most of the app's own) gets plain Silence rather than a time it will not come back after.
+    val lasts = alert.lifetime == AlertLifetime.CONDITION
+    val canEverywhere = lasts && alerts.canSilenceEverywhere(alert)
+    val silence: (Int) -> Unit = { minutes ->
+        if (canEverywhere && everywhere) alerts.silenceEverywhere(source, key, minutes) else alerts.silence(source, key, minutes)
+    }
 
     ErrorScreen(
         title = stringResource(alert.title),
         status = alert.text?.let { stringResource(it) } ?: "",
         onOk = {
             uel.log(Action.ERROR_DIALOG_OK, Sources.Unknown)
-            alerts.silence(source, key, silenceMinutes)
+            alerts.silence(source, key)
             onClose()
         },
         onMute = {
             uel.log(Action.ERROR_DIALOG_MUTE, Sources.Unknown)
-            alerts.silence(source, key, silenceMinutes)
+            alerts.silence(source, key)
         },
         onMute5Min = {
             uel.log(Action.ERROR_DIALOG_MUTE_5MIN, Sources.Unknown)
@@ -82,12 +92,26 @@ fun AlertScreen(
         actionLabel = alert.action?.let { stringResource(it.label) },
         // The screen stays until the alert ends, so a failure of the action shows here.
         onAction = { alerts.act(source, key) },
-        // "Silence for 30 min" is a promise, and only a pump's alert keeps it: one of the app's own is over when
-        // it is answered, so its buttons say plain Silence rather than naming a time it will not come back after.
-        // The alert's own default is always offered, also when it is not one of the usual lengths
-        silenceLengths = if (alert.lifetime == AlertLifetime.CONDITION) (Alerts.silenceLengths(alert.kind) + alert.silenceMinutes).distinct().sorted() else null,
-        silenceMinutes = silenceMinutes,
-        onSilenceMinutes = { silenceMinutes = it },
+        // One tap: silenced for that long, and closed (decided 2026-11-26)
+        silenceLengths = if (lasts) Alerts.silenceLengths(alert.kind) else null,
+        onSilenceFor = { minutes ->
+            uel.log(Action.ERROR_DIALOG_OK, Sources.Unknown)
+            silence(minutes)
+            onClose()
+        },
+        silenceEverywhere = if (canEverywhere) everywhere else null,
+        onSilenceEverywhere = { everywhere = it },
+        // All the BG alarms for a while, from the one that rings: a pause of this phone, never urgent low. With "On every
+        // phone" this alarm is silenced on the others too; a pause stays this phone's own.
+        onSilenceAll = if (lasts && alert.kind is BgAlert && !alert.kind.isProtected) {
+            {
+                uel.log(Action.ERROR_DIALOG_OK, Sources.Unknown)
+                if (canEverywhere && everywhere) alerts.silenceEverywhere(source, key, Alerts.SILENCE_ALL_MINUTES)
+                alerts.pause(BgAlert.PAUSABLE, Clock.System.now().toEpochMilliseconds() + Alerts.SILENCE_ALL_MINUTES * 60_000L)
+                onClose()
+            }
+        } else null,
+        silenceAllMinutes = Alerts.SILENCE_ALL_MINUTES,
         // The moment it rings is when the user wants to say "not this again". Not for a protected kind, which always
         // rings. It also answers this alarm, as Silence does, so setting the kind back to Ring later does not ring it
         // again: a pump's alert stays as a card with no sound, one of the app's own is over.
@@ -98,13 +122,6 @@ fun AlertScreen(
                 onClose()
             }
         },
-        onSilenceEverywhere = if (alert.lifetime == AlertLifetime.CONDITION && alerts.canSilenceEverywhere(alert)) {
-            {
-                uel.log(Action.ERROR_DIALOG_OK, Sources.Unknown)
-                alerts.silenceEverywhere(source, key, silenceMinutes)
-                onClose()
-            }
-        } else null,
         badge = badge
     )
 }
