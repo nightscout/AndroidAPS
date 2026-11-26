@@ -1,158 +1,183 @@
 package app.aaps.pump.aaruy.compose
 
+import android.os.CountDownTimer
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.data.ue.Sources
-import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
-import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.ui.compose.pump.ProfileGateStepHost
-import app.aaps.core.ui.compose.pump.activateProfileFromGate
-import app.aaps.pump.aaruy.comm.AaruyBleClient
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.code.ConnectionState
+import app.aaps.pump.aaruy.event.EventAaruyDeviceChange
+import app.aaps.pump.aaruy.keys.AaruyStringKey
 import app.aaps.pump.aaruy.services.AaruyBLE
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.dropWhile
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
-enum class AaruyPairStep {
-
-    /** Only when no profile runs: a new pump needs a basal profile. */
-    PROFILE_GATE,
+enum class AaruyPairWizardStep {
     BLE_SCAN,
-
-    /** A real pump does not pair until its button is pressed. Android gives up after 30 s, and the driver tries again. */
-    PRESS_BUTTON,
     COMPLETE
 }
 
+data class AaruyPairWizardUiState(
+    val step: AaruyPairWizardStep = AaruyPairWizardStep.BLE_SCAN,
+    val devices: List<ScannedDevice> = emptyList()
+)
+
+sealed class AaruyPairWizardEvent {
+    data object PairFinish : AaruyPairWizardEvent()
+}
+
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 @Inject
 class AaruyPairWizardViewModel(
-    private val aaruyBle: AaruyBLE,
-    private val aaruyPump: AaruyPump,
     private val aapsLogger: AAPSLogger,
-    private val rh: TextResolver,
+    private val preferences: Preferences,
     private val rxBus: RxBus,
-    private val dateUtil: DateUtil,
-    private val profileFunction: ProfileFunction,
-    private val profileRepository: ProfileRepository,
-    private val insulinManager: InsulinManager
-) : ViewModel(), ProfileGateStepHost {
+    private val aaruyPump: AaruyPump,
+    private val aaruyBle: AaruyBLE
+) : ViewModel() {
 
-    /** Null until it is known whether the profile step is needed. */
-    private val _step = MutableStateFlow<AaruyPairStep?>(null)
-    val step: StateFlow<AaruyPairStep?> = _step
-    private val _steps = MutableStateFlow(AaruyPairStep.entries.filter { it != AaruyPairStep.PROFILE_GATE })
-    val steps: StateFlow<List<AaruyPairStep>> = _steps
-    val devices: StateFlow<List<ScannedDevice>> = aaruyBle.scannedDevices
+    val showLoading = mutableStateOf(false)
+    private val _uiState = MutableStateFlow(AaruyPairWizardUiState())
+    val uiState: StateFlow<AaruyPairWizardUiState> = _uiState
 
-    /** The profile step was left with Cancel. */
-    private val _cancelled = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
-    val cancelled: SharedFlow<Unit> = _cancelled
+    private val _events = MutableSharedFlow<AaruyPairWizardEvent>(extraBufferCapacity = 5)
+    val events: SharedFlow<AaruyPairWizardEvent> = _events
 
-    private val _availableProfiles = MutableStateFlow<List<String>>(emptyList())
-    override val availableProfiles: StateFlow<List<String>> = _availableProfiles
-    private val _selectedProfile = MutableStateFlow<String?>(null)
-    override val selectedProfile: StateFlow<String?> = _selectedProfile
+    private val _scannedDevices = MutableStateFlow<List<ScannedDevice>>(emptyList())
+    val scannedDevices: StateFlow<List<ScannedDevice>> = _scannedDevices.asStateFlow()
+    private var scanJob: Job? = null
 
-    private var waitForPairing: Job? = null
+    lateinit var countDownTimer: CountDownTimer
+    private var clickToConnect = false
 
     init {
-        begin()
-    }
-
-    /** The view model lives as long as the pump screen. Without this a second pairing opens at "Pump paired". */
-    fun reset() {
-        waitForPairing?.cancel()
-        stopScan()
-        _pinForUser.value = null
-        _step.value = null
-        begin()
-    }
-
-    private fun begin() {
         viewModelScope.launch {
-            if (profileFunction.getRequestedProfile() == null) {
-                val names = profileRepository.profiles.value.map { it.name }
-                _availableProfiles.value = names
-                val activeName = profileFunction.getOriginalProfileName()
-                _selectedProfile.value = activeName.takeIf { it in names } ?: names.firstOrNull()
-                _steps.value = AaruyPairStep.entries
-                _step.value = AaruyPairStep.PROFILE_GATE
-            } else {
-                _steps.value = AaruyPairStep.entries.filter { it != AaruyPairStep.PROFILE_GATE }
-                _step.value = AaruyPairStep.BLE_SCAN
+            aaruyPump.connectionStateFlow.collect { state ->
+                aapsLogger.debug(LTag.PUMP, "AaruyViewModel connectionStateFlow: $state")
+                when (state) {
+                    ConnectionState.CONNECTING    -> {
+
+                    }
+
+                    ConnectionState.CONNECTED     -> {
+                        if (clickToConnect) {
+                            clickToConnect = false
+                            aaruyBle.requestHistoryData(aaruyPump.lastHistoryTime)
+                            cancelCountDown()
+                            showLoading.value = true
+                            delay(5000.milliseconds)
+                            showLoading.value = false
+                            rxBus.send(EventAaruyDeviceChange())
+                            _uiState.update { it.copy(step = AaruyPairWizardStep.COMPLETE) }
+                        }
+                    }
+
+                    ConnectionState.DISCONNECTED  -> {
+
+                    }
+
+                    ConnectionState.DISCONNECTING -> {
+
+                    }
+                }
+
             }
         }
     }
 
-    fun startScan() = aaruyBle.startScan()
-    fun stopScan() = aaruyBle.stopScan()
-
-    /** The PIN to type when the phone asks for it, or null where the driver gives it by itself (Android). */
-    private val _pinForUser = MutableStateFlow<String?>(null)
-    val pinForUser: StateFlow<String?> = _pinForUser
-
-    fun selectDevice(device: ScannedDevice) {
-        stopScan()
-        _pinForUser.value = if (aaruyBle.userTypesPin) AaruyBleClient.pinFromDeviceName(device.name) else null
-        _step.value = AaruyPairStep.PRESS_BUTTON
-        // A link that is up now goes to the old pump, and pair() closes it later, on the pump thread: wait for a new one.
-        val oldLinkUp = aaruyPump.connectionState == ConnectionState.CONNECTED
-        aaruyBle.pair(device)
-        waitForPairing?.cancel()
-        waitForPairing = viewModelScope.launch {
-            aaruyPump.connectionStateFlow
-                .dropWhile { oldLinkUp && it == ConnectionState.CONNECTED }
-                .first { it == ConnectionState.CONNECTED }
-            _step.value = AaruyPairStep.COMPLETE
+    fun startDeviceScan() {
+        _scannedDevices.value = emptyList()
+        aaruyBle.scanDevice()
+        scanJob = viewModelScope.launch {
+            aaruyBle.scannedDevices.collect { device ->
+                _scannedDevices.value = device
+            }
         }
     }
 
-    override fun selectProfile(name: String) {
-        _selectedProfile.value = name
+    fun stopDeviceScan() {
+        aaruyBle.stopScan()
+        scanJob?.cancel()
+        scanJob = null
     }
 
-    override fun activateSelectedProfile() {
-        val name = _selectedProfile.value ?: return
-        val store = profileRepository.profile.value ?: return
-        val iCfg = insulinManager.insulins.firstOrNull() ?: return
-        val source = if (aaruyPump.pumpType() == PumpType.AARUY_BASE) Sources.AaruyBase else Sources.AaruyFull
-        viewModelScope.launch {
-            // A refused switch says why and keeps the step on screen.
-            if (activateProfileFromGate(profileFunction, rh, rxBus, store, name, iCfg, source, dateUtil.now())) _step.value = AaruyPairStep.BLE_SCAN
-            else aapsLogger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
+    fun countDown(
+        millisInFuture: Long = 5000,
+        countDownInterval: Long = 1000,
+        onTick: (millisUntilFinished: Long) -> Unit,
+        onFinish: () -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.Main) {
+            if (::countDownTimer.isInitialized) {
+                countDownTimer.cancel()
+            }
+            countDownTimer = object : CountDownTimer(millisInFuture, countDownInterval) {
+                override fun onTick(millisUntilFinished: Long) {
+                    onTick(millisUntilFinished)
+                }
+
+                override fun onFinish() {
+                    onFinish.invoke()
+
+                }
+            }
+            countDownTimer.start()
         }
     }
 
-    override fun cancelGate() {
-        _cancelled.tryEmit(Unit)
+    fun cancelCountDown() {
+        if (::countDownTimer.isInitialized) {
+            countDownTimer.cancel()
+        }
     }
 
-    /** Leaving before the pump paired: no half paired pump stays behind. */
-    fun cancel() {
-        stopScan()
-        if (_step.value == AaruyPairStep.PRESS_BUTTON) aaruyBle.unbindDeviceInBackground()
+    fun onDeviceSelected(device: ScannedDevice) {
+        clickToConnect = true
+        showLoading.value = true
+
+        aaruyPump.canSaveHistory = false
+        // aaruyPump.lastHistoryTime = 0
+        aaruyPump.lastHistoryDailyTime = System.currentTimeMillis()
+
+        stopDeviceScan()
+        preferences.put(AaruyStringKey.MacAddress, device.address)
+        preferences.put(AaruyStringKey.PumpName, device.name)
+        aaruyBle.connectDevice(device)
+        startDeviceScan()
+
+        cancelCountDown()
+        countDown(millisInFuture = 15000, onTick = {
+
+        }) {
+            showLoading.value = false
+        }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        stopScan()
+    fun finish() {
+        clickToConnect = false
+        _events.tryEmit(AaruyPairWizardEvent.PairFinish)
     }
+
 }

@@ -1,10 +1,7 @@
 package app.aaps.pump.aaruy.compose
 
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.pump.aaruy.AaruyStrings
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import android.content.Context
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bluetooth
@@ -17,35 +14,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import app.aaps.pump.aaruy.resources.Res
-import app.aaps.pump.aaruy.resources.ic_aaruy_128
-import org.jetbrains.compose.resources.painterResource
-import app.aaps.core.ui.compose.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigationevent.NavigationEventInfo
-import androidx.navigationevent.compose.NavigationBackHandler
-import androidx.navigationevent.compose.rememberNavigationEventState
+import androidx.compose.ui.res.stringResource
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.metroViewModel
-import app.aaps.core.ui.compose.pump.PumpOverviewScreen
-
-private val PUMP_IMAGE_HEIGHT = 128.dp
+import app.aaps.core.ui.compose.pump.BlePreCheckHost
+import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
+import app.aaps.pump.aaruy.R
+import app.aaps.core.ui.R as CoreUiR
 
 private enum class AaruyScreen {
     OVERVIEW,
     PAIR_WIZARD,
-    REPLACE_WIZARD,
-    HISTORY
+    HISTORY,
+    REPLACE_STEP
 }
 
 class AaruyComposeContent(
     private val pluginName: String,
-    private val bleReadyCheck: AaruyBleReadyCheck
+    private val context: Context,
+    private val blePreCheck: BlePreCheck
 ) : ComposablePluginContent {
 
     @Composable
@@ -55,137 +45,148 @@ class AaruyComposeContent(
         onSettings: (() -> Unit)?
     ) {
         val overviewViewModel: AaruyOverviewViewModel = metroViewModel()
+
+        // Navigation state
         var currentScreen by remember { mutableStateOf(AaruyScreen.OVERVIEW) }
+
+        // Dialogs
         var showUnpairDialog by remember { mutableStateOf(false) }
 
-        // One question: a pump the queue cannot reach is removed anyway, and a card tells the user to take it off.
-        if (showUnpairDialog) OkCancelDialog(
-            title = pluginName,
-            icon = Icons.Filled.Bluetooth,
-            message = stringResource(AaruyStrings.actions_pump_disconnect_prompt, overviewViewModel.pumpName),
-            onConfirm = {
-                overviewViewModel.unpair()
-                showUnpairDialog = false
-            },
-            onDismiss = { showUnpairDialog = false }
-        )
+        if (showUnpairDialog) {
+            OkCancelDialog(
+                title = stringResource(CoreUiR.string.pump_unpair_confirm_title),
+                icon = Icons.Filled.Bluetooth,
+                message = String.format(
+                    stringResource(R.string.actions_pump_disconnect_prompt),
+                    overviewViewModel.pumpSn
+                ),
+                onConfirm = {
+                    overviewViewModel.performUnpair()
+                    showUnpairDialog = false
+                },
+                onDismiss = { showUnpairDialog = false }
+            )
+        }
 
-        val pairingTitle = stringResource(AaruyStrings.aaruy_pairing)
-        val replaceTitle = stringResource(AaruyStrings.replace_bat_rescv_label)
-        val historyTitle = stringResource(CoreUiStrings.pump_history)
-        val backDescription = stringResource(CoreUiStrings.back)
-        val settingsDescription = stringResource(CoreUiStrings.settings)
+        // Toolbar configuration
+        val historyTitle = stringResource(CoreUiR.string.pump_history)
+        val replaceTitle = stringResource(R.string.replace_bat_rescv_label)
+        val pairingTitle = stringResource(R.string.aaruy_pairing)
 
-        // A wizard sets the toolbar itself, so that its back arrow asks before it leaves.
-        LaunchedEffect(currentScreen) {
-            if (currentScreen == AaruyScreen.HISTORY) {
-                setToolbarConfig(
-                    ToolbarConfig(
-                        title = historyTitle,
-                        navigationIcon = {
-                            IconButton(onClick = { currentScreen = AaruyScreen.OVERVIEW }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = backDescription) }
-                        },
-                        actions = {}
-                    )
-                )
+        val overviewNavIcon: @Composable () -> Unit = {
+            IconButton(onClick = onNavigateBack) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
             }
-            if (currentScreen == AaruyScreen.OVERVIEW) {
-                setToolbarConfig(
-                    ToolbarConfig(
-                        title = pluginName,
-                        navigationIcon = {
-                            IconButton(onClick = onNavigateBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = backDescription) }
-                        },
-                        actions = {
-                            onSettings?.let { action ->
-                                IconButton(onClick = action) { Icon(Icons.Filled.Settings, contentDescription = settingsDescription) }
-                            }
-                        }
-                    )
-                )
+        }
+        val subScreenNavIcon: @Composable () -> Unit = {
+            IconButton(onClick = { currentScreen = AaruyScreen.OVERVIEW }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
+            }
+        }
+        val settingsAction: @Composable RowScope.() -> Unit = {
+            onSettings?.let { action ->
+                IconButton(onClick = action) {
+                    Icon(Icons.Filled.Settings, contentDescription = stringResource(app.aaps.core.ui.R.string.settings))
+                }
             }
         }
 
+        LaunchedEffect(currentScreen) {
+            setToolbarConfig(
+                when (currentScreen) {
+                    AaruyScreen.OVERVIEW     -> ToolbarConfig(title = pluginName, navigationIcon = overviewNavIcon, actions = settingsAction)
+                    AaruyScreen.PAIR_WIZARD  -> ToolbarConfig(title = pairingTitle, navigationIcon = subScreenNavIcon, actions = {})
+                    AaruyScreen.HISTORY      -> ToolbarConfig(title = historyTitle, navigationIcon = subScreenNavIcon, actions = {})
+                    AaruyScreen.REPLACE_STEP -> ToolbarConfig(title = replaceTitle, navigationIcon = subScreenNavIcon, actions = {})
+                }
+            )
+        }
+
+        // Handle one-time events from overview
         LaunchedEffect(overviewViewModel) {
             overviewViewModel.events.collect { event ->
                 when (event) {
-                    is AaruyOverviewEvent.StartPairWizard -> currentScreen = AaruyScreen.PAIR_WIZARD
-                    is AaruyOverviewEvent.StartReplace    -> currentScreen = AaruyScreen.REPLACE_WIZARD
-                    is AaruyOverviewEvent.StartHistory    -> currentScreen = AaruyScreen.HISTORY
-                    is AaruyOverviewEvent.ConfirmUnpair   -> showUnpairDialog = true
+                    is AaruyOverviewEvent.StartHistory      -> currentScreen = AaruyScreen.HISTORY
+                    is AaruyOverviewEvent.StartReplaceSettings -> currentScreen = AaruyScreen.REPLACE_STEP
+
+                    is AaruyOverviewEvent.StartPairWizard   -> {
+                        currentScreen = AaruyScreen.PAIR_WIZARD
+                    }
+
+                    is AaruyOverviewEvent.ConfirmUnpair     -> showUnpairDialog = true
                 }
             }
         }
 
         when (currentScreen) {
-            AaruyScreen.OVERVIEW    -> {
-                val uiState by overviewViewModel.uiState.collectAsStateWithLifecycle()
-                PumpOverviewScreen(
-                    state = uiState,
-                    customContent = {
-                        Image(
-                            painter = painterResource(Res.drawable.ic_aaruy_128),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(PUMP_IMAGE_HEIGHT),
-                            contentScale = ContentScale.Fit
-                        )
-                    }
+            AaruyScreen.OVERVIEW -> {
+                AaruyOverviewScreen(
+                    viewModel = overviewViewModel
                 )
             }
 
-            AaruyScreen.HISTORY -> {
-                // The system back button returns to the pump screen too, as the arrow in the toolbar does.
-                NavigationBackHandler(
-                    state = rememberNavigationEventState(NavigationEventInfo.None),
-                    isBackEnabled = true,
-                    onBackCompleted = { currentScreen = AaruyScreen.OVERVIEW }
-                )
-                AaruyHistoryScreen(viewModel = metroViewModel())
-            }
+            AaruyScreen.PAIR_WIZARD  -> {
+                KeepScreenOnEffect()
 
-            AaruyScreen.REPLACE_WIZARD -> {
-                KeepScreenOn()
-                val replaceViewModel: AaruyReplaceWizardViewModel = metroViewModel()
-                AaruyReplaceWizardScreen(
-                    viewModel = replaceViewModel,
-                    title = replaceTitle,
-                    setToolbarConfig = setToolbarConfig,
-                    onFinish = {
-                        // It lives as long as the pump screen: the next run must start at the first step.
-                        replaceViewModel.reset()
-                        currentScreen = AaruyScreen.OVERVIEW
-                    }
-                )
-            }
-
-            AaruyScreen.PAIR_WIZARD -> {
-                KeepScreenOn()
-                // The scan needs the Bluetooth permissions, so show the wizard only after the check.
+                // The wizard starts a BLE scan as soon as it is shown. Without the Bluetooth
+                // permissions that scan crashes the app, so show the wizard only after the check.
                 var bleReady by remember { mutableStateOf(false) }
                 if (!bleReady) {
-                    bleReadyCheck.Check(
+                    BlePreCheckHost(
+                        blePreCheck = blePreCheck,
                         onReady = { bleReady = true },
                         onFailed = { currentScreen = AaruyScreen.OVERVIEW }
                     )
                 } else {
-                    val pairViewModel: AaruyPairWizardViewModel = metroViewModel()
+                    val pumpBindViewModel: AaruyPairWizardViewModel = metroViewModel()
+
+                    LaunchedEffect(pumpBindViewModel) {
+                        pumpBindViewModel.events.collect { event ->
+                            when (event) {
+                                is AaruyPairWizardEvent.PairFinish -> currentScreen = AaruyScreen.REPLACE_STEP
+                            }
+                        }
+                    }
+
                     AaruyPairWizardScreen(
-                        viewModel = pairViewModel,
-                        title = pairingTitle,
-                        setToolbarConfig = setToolbarConfig,
-                        onFinish = {
-                            pairViewModel.reset()
-                            currentScreen = AaruyScreen.OVERVIEW
-                        },
+                        viewModel = pumpBindViewModel,
+                        onFinish = { currentScreen = AaruyScreen.OVERVIEW },
                         onCancel = {
-                            pairViewModel.reset()
+                            // pumpBindViewModel.cancel()
                             currentScreen = AaruyScreen.OVERVIEW
                         }
                     )
                 }
             }
+
+            AaruyScreen.HISTORY      -> {
+                val pumpHistoryViewModel: AaruyHistoryViewModel = metroViewModel()
+                AaruyHistoryScreen(viewModel = pumpHistoryViewModel)
+            }
+
+            AaruyScreen.REPLACE_STEP -> {
+                val pumpReplaceViewModel: AaruyReplaceWizardViewModel = metroViewModel()
+                pumpReplaceViewModel.resetData()
+
+                LaunchedEffect(pumpReplaceViewModel) {
+                    pumpReplaceViewModel.events.collect { event ->
+                        when (event) {
+                            is AaruyReplaceWizardEvent.RepalceFinish -> currentScreen = AaruyScreen.OVERVIEW
+                        }
+                    }
+                }
+
+                AaruyReplaceWizardScreen(
+                    viewModel = pumpReplaceViewModel,
+                    onFinish = {
+                        currentScreen = AaruyScreen.OVERVIEW
+                    }
+                ) {
+                    currentScreen = AaruyScreen.OVERVIEW
+                }
+            }
         }
+
     }
+
 }

@@ -1,268 +1,311 @@
 package app.aaps.pump.aaruy
 
-import app.aaps.core.ui.CoreUiStrings
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
+import android.text.format.DateFormat
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.data.time.T
-import app.aaps.core.data.pump.defs.TimeChangeType
-import app.aaps.core.data.time.SystemTimeZone
-import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
-import app.aaps.core.interfaces.constraints.PumpPluginConstraints
-import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.constraints.Constraint
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.pump.aaruy.compose.AaruyBleReadyCheck
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.Aaruy
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpPluginBase
-import app.aaps.core.interfaces.pump.PumpProfile
-import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
-import app.aaps.core.interfaces.pump.defs.fillFor
-import app.aaps.core.interfaces.pump.mapState
+import app.aaps.core.interfaces.pump.actions.CustomAction
+import app.aaps.core.interfaces.pump.actions.CustomActionType
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
-import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.collectResilient
-import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
+import app.aaps.core.interfaces.rx.events.EventAppExit
+import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.compose.icons.IcPluginAaruy
-import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
-import app.aaps.pump.aaruy.compose.AaruyComposeContent
-import app.aaps.pump.aaruy.compose.AaruyHistoryTypes
 import app.aaps.pump.aaruy.database.AaruyHistoryDatabase
-import app.aaps.pump.aaruy.events.EventAaruyDeviceChange
 import app.aaps.pump.aaruy.keys.AaruyBooleanKey
 import app.aaps.pump.aaruy.keys.AaruyDoubleKey
-import app.aaps.pump.aaruy.keys.AaruyDoublePreferenceKey
 import app.aaps.pump.aaruy.keys.AaruyIntKey
-import app.aaps.pump.aaruy.keys.AaruyIntPreferenceKey
 import app.aaps.pump.aaruy.keys.AaruyLongKey
 import app.aaps.pump.aaruy.keys.AaruyStringKey
-import app.aaps.pump.aaruy.services.AaruyAlerts
-import app.aaps.pump.aaruy.services.AaruyBLE
-import app.aaps.pump.aaruy.services.AaruyBolusOutcome
-import app.aaps.pump.aaruy.services.AaruyCommands
-import app.aaps.pump.aaruy.services.AaruyConfirmAlarmsCommand
-import app.aaps.pump.aaruy.services.AaruyEmulatorTriggers
-import app.aaps.pump.aaruy.services.AaruyReplaceSteps
-import app.aaps.pump.aaruy.services.AaruyUnpairCommand
+import app.aaps.pump.aaruy.services.AaruyService
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import kotlin.math.abs
+import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpProfile
+import app.aaps.core.interfaces.pump.PumpRate
+import app.aaps.core.interfaces.pump.defs.fillFor
+import app.aaps.core.interfaces.pump.mapState
+import app.aaps.core.interfaces.rx.collectResilient
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.compose.icons.IcPluginAaruy
+import app.aaps.core.ui.compose.icons.IcPluginMedtrum
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.pump.aaruy.compose.AaruyComposeContent
+import app.aaps.pump.aaruy.keys.AaruyIntentKey
+import app.aaps.pump.common.driver.refresh.PumpDataRefreshType
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
-import kotlin.math.min
-import kotlin.math.abs
-import kotlin.time.Clock
-import kotlinx.datetime.toLocalDateTime
+import dev.zacsweers.metro.IntKey as MetroIntKey
 
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@PumpDriver
+@MetroIntKey(1195)
 @SingleIn(AppScope::class)
 @Inject
 class AaruyPlugin(
     aapsLogger: AAPSLogger,
-    override val rh: TextResolver,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val rxBus: RxBus,
-    private val aaruyCommands: AaruyCommands,
-    private val emulatorTriggers: AaruyEmulatorTriggers,
+    private val context: Context,
+    private val constraintChecker: ConstraintsChecker,
     private val aaruyPump: AaruyPump,
+    private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val temporaryBasalStorage: TemporaryBasalStorage,
+    private val bolusProgressData: BolusProgressData,
     private val dateUtil: DateUtil,
     private val aaruyHistoryDatabase: AaruyHistoryDatabase,
+    private val blePreCheck: BlePreCheck,
     private val pumpEnactResultProvider: () -> PumpEnactResult,
-    private val aaruyBle: AaruyBLE,
-    private val replaceSteps: AaruyReplaceSteps,
-    private val aaruyAlerts: AaruyAlerts,
-    private val bleReadyCheck: AaruyBleReadyCheck,
-    private val pumpSync: PumpSync,
-    private val ch: ConcentrationHelper,
     notificationManager: NotificationManager
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
-        .composeContent { _ -> AaruyComposeContent(rh.gs(AaruyStrings.aaruy_pump), bleReadyCheck) }
         .icon(IcPluginAaruy)
-        .pluginName(AaruyStrings.aaruy_pump)
-        .description(AaruyStrings.aaruy_pump_description),
-    ownPreferences = AaruyStringKey.entries + AaruyIntKey.entries + AaruyLongKey.entries + AaruyDoubleKey.entries + AaruyBooleanKey.entries +
-        AaruyDoublePreferenceKey.entries + AaruyIntPreferenceKey.entries,
+        .pluginName(TextRef.AndroidRes(R.string.aaruy_pump))
+        .description(TextRef.AndroidRes(R.string.aaruy_pump_shortname))
+        .composeContent { _ ->
+            AaruyComposeContent(
+                pluginName = rh.gs(R.string.aaruy_pump),
+                context = context,
+                blePreCheck = blePreCheck
+            )
+        },
+    ownPreferences = AaruyStringKey.entries + AaruyIntKey.entries + AaruyLongKey.entries + AaruyDoubleKey.entries +
+        AaruyBooleanKey.entries + AaruyIntentKey.entries,
     aapsLogger, rh, preferences, commandQueue, notificationManager
-), Pump, PumpPluginConstraints, OwnDatabasePlugin {
+), Pump, Aaruy, PluginConstraints, OwnDatabasePlugin {
 
+    private val disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
+    private var aaruyService: AaruyService? = null
     private var mDeviceAddress = ""
     var mDeviceName = ""
-
-    /** The adb hooks of the emulator are registered once per app run. */
-    private var emulatorTriggersStarted = false
 
     override suspend fun onStart() {
         super.onStart()
         aaruyPump.loadVarsFromSP()
-        // The stored pump log has the last bolus, so it is not kept as a setting.
-        withContext(aapsIoDispatcher) { aaruyHistoryDatabase.historyUnitInfoDao().newest(AaruyHistoryTypes.BOLUS.toInt()) }?.let {
-            aaruyPump.lastBolusTime = it.time
-            aaruyPump.lastBolusAmount = it.data / 1000.0
-        }
-        val newScope = CoroutineScope(aapsIoDispatcher + SupervisorJob())
+        val intent = Intent(context, AaruyService::class.java)
+        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
+        // Own scope on IO, like the io scheduler used before, cancelled in onStop like the
+        // CompositeDisposable was cleared. UNDISPATCHED because RxBus has no replay, so a scheduled
+        // collector could miss an event sent before it starts.
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        aaruyCommands.start()
-        // The alarms the pump still holds, from the store, with their first time (acceptance A4).
-        aaruyAlerts.start(newScope)
-        // UNDISPATCHED because RxBus has no replay, so a scheduled collector could miss an event sent before it starts.
-        rxBus.toFlow(EventAaruyDeviceChange::class)
-            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) {
-                pumpSync.connectNewPump()
-                changePump(newPump = true)
-            }
-        // A changed setting reaches the pump through the status read, which compares and writes.
-        merge(
-            *AaruyDoublePreferenceKey.entries.map { preferences.observe(it).drop(1) }.toTypedArray(),
-            *AaruyIntPreferenceKey.entries.map { preferences.observe(it).drop(1) }.toTypedArray()
-        )
-            .onEach { if (isConfigured()) commandQueue.readStatus(rh.gs(AaruyStrings.param_refresh)) }
-            .launchIn(newScope)
-        aaruyBle.start()
-        // Only with the emulator, which the `emulate_aaruy` file in the AAPS extra folder turns on.
-        aaruyBle.emulator?.let { emulator ->
-            if (!emulatorTriggersStarted) emulatorTriggers.start(emulator)
-            emulatorTriggersStarted = true
-        }
-        changePump(newPump = false) // load device name
+        rxBus.toFlow(EventAppExit::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { context.unbindService(mConnection) }
+        rxBus.toFlow(EventConfigBuilderChange::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { aaruyPump.reset() }
+        changePump() // load device name on app start
     }
 
     override suspend fun onStop() {
-        // Another pump is chosen: this one must not connect or write into the database any more.
-        aaruyBle.stop()
-        scope?.cancel()
-        scope = null
-        aaruyCommands.stop()
-        aaruyAlerts.stop()
+        context.unbindService(mConnection)
+        disposable.clear()
         super.onStop()
     }
 
-    /** @param newPump paired or unpaired, not an app start */
-    suspend fun changePump(newPump: Boolean) {
-        mDeviceAddress = preferences.get(AaruyStringKey.MacAddress)
-        mDeviceName = preferences.get(AaruyStringKey.PumpName)
-        aaruyPump.pumpSN = mDeviceName
-        aaruyPump.reset(newPump)
-        // Not waited for. At an app start this runs in onStart, and the app start waited for the whole read: during a
-        // bolus for 30 s, and the pump log it read was written before the app could store it.
-        if (isConfigured()) scope?.launch { commandQueue.readStatus(rh.gs(CoreUiStrings.device_changed)) }
+    private val mConnection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceDisconnected(name: ComponentName) {
+            aapsLogger.debug(LTag.PUMP, "Service is disconnected")
+            aaruyService = null
+        }
+
+        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            aapsLogger.debug(LTag.PUMP, "Service is connected")
+            val mLocalBinder = service as AaruyService.LocalBinder
+            aaruyService = mLocalBinder.serviceInstance
+        }
     }
 
+    fun changePump() {
+        val newAddress = preferences.get(AaruyStringKey.MacAddress)
+        val newName = preferences.get(AaruyStringKey.PumpName)
+
+        mDeviceAddress = newAddress
+        mDeviceName = newName
+        aaruyPump.pumpSN = mDeviceName
+        aaruyPump.reset()
+
+        // Use different message for app start vs actual device change
+        val reason =
+            rh.gs(app.aaps.core.ui.R.string.device_changed)
+        pluginScope.launch { commandQueue.readStatus(reason) }
+    }
+
+    fun getService(): AaruyService? {
+        return aaruyService
+    }
+
+    // Pump Interface
     override fun connect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Aaruy connect from: $reason")
         mDeviceAddress = preferences.get(AaruyStringKey.MacAddress)
         mDeviceName = preferences.get(AaruyStringKey.PumpName)
-        if (mDeviceAddress != "" && mDeviceName != "") aaruyCommands.connect(reason, mDeviceAddress)
+        aaruyPump.pumpSN = mDeviceName
+        if (aaruyService != null && mDeviceAddress != "" && mDeviceName != "") {
+            val success = aaruyService?.connect(reason, mDeviceAddress) ?: false
+            if (!success) rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.ble_not_supported), EventShowSnackbar.Type.Error))
+        }
     }
 
-    override fun isConnected(): Boolean = aaruyCommands.isConnected
-    override fun isConnecting(): Boolean = aaruyCommands.isConnecting
+    override fun isConnected(): Boolean {
+        // aapsLogger.debug(LTag.PUMP, "Aaruy isConnected: ${aaruyService?.isConnected}")
+        return aaruyService?.isConnected ?: false
+    }
+    override fun isConnecting(): Boolean {
+        // aapsLogger.debug(LTag.PUMP, "Aaruy isConnecting: ${aaruyService?.isConnecting}")
+        return aaruyService?.isConnecting ?: false
+    }
     override fun isHandshakeInProgress(): Boolean = false
 
     override fun disconnect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Aaruy disconnect from: $reason")
-        aaruyCommands.disconnect(reason)
+        aaruyService?.disconnect(reason)
+    }
+
+    fun unbindPump() {
+        aaruyService?.unbindDevice()
+        aaruyPump.clearAlarmState()
+        pluginScope.launch {commandQueue.clearAlarms()}
     }
 
     override fun stopConnecting() {
-        aaruyCommands.stopConnecting()
+        aaruyService?.stopConnecting()
     }
 
     override suspend fun getPumpStatus(reason: String) {
-        aaruyCommands.readPumpStatus()
+        aaruyService?.readPumpStatus()
+        aaruyService?.verifyConfiguration()
     }
 
-    override fun isConfigured(): Boolean =
-        preferences.get(AaruyStringKey.MacAddress).isNotEmpty() && preferences.get(AaruyStringKey.PumpName).isNotEmpty()
+    override fun isInitialized(): Boolean {
+        return aaruyPump.pumpState != AaruyPumpState.FIRST_INIT
+    }
 
-    override fun isInitialized(): Boolean = isConfigured() && aaruyPump.pumpState != AaruyPumpState.FIRST_INIT
-
-    /** Before the first status the state is not known. That is no stop: it would write SUSPENDED_BY_PUMP at each start of the app. */
-    override fun isSuspended(): Boolean =
-        aaruyPump.pumpState != AaruyPumpState.FIRST_INIT && (aaruyPump.pumpState < AaruyPumpState.BASALRATE_RUNNING || aaruyPump.pumpState > AaruyPumpState.PUSHFORWARD_RUNNING)
+    override fun isSuspended(): Boolean {
+        return aaruyPump.pumpState < AaruyPumpState.BASALRATE_RUNNING || aaruyPump.pumpState > AaruyPumpState.PUSHFORWARD_RUNNING
+    }
 
     override fun isBusy(): Boolean = false
 
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         val result = pumpEnactResultProvider()
         if (!isInitialized()) {
-            // Deferred and not a real error: it is sent again at reconnect. Profile notifications are owned by the command queue.
             result.success = true
-            result.comment = rh.gs(CoreUiStrings.pump_not_initialized_profile_not_set)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
             return result
         }
-        return if (aaruyCommands.updateBasalsInPump(profile)) {
+
+        return if (aaruyService?.updateBasalsInPump(profile) == true) {
             result.success = true
             result.enacted = true
             result.comment = "OK"
             result
         } else {
-            result.comment = rh.gs(CoreUiStrings.failed_update_basal_profile)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile)
             result
         }
     }
 
     override fun isThisProfileSet(profile: PumpProfile): Boolean {
         if (!isInitialized()) return true
-        return aaruyPump.isBasalInPump(profile)
+        var result = false
+        val profileBytes = aaruyPump.buildAaruyProfileArray(profile)
+        if (profileBytes.size == aaruyPump.actualBasalProfile.size) {
+            result = true
+            for (i in profileBytes.indices) {
+                if (profileBytes[i] != aaruyPump.actualBasalProfile[i]) {
+                    result = false
+                    break
+                }
+            }
+        }
+
+        return result
     }
 
-    override fun deliveredBasal(): List<Profile.ProfileValue>? = aaruyPump.deliveredBasal()
-
     override val baseBasalRate: PumpRate
-        get() = Clock.System.now().toLocalDateTime(SystemTimeZone.current()).let { PumpRate(aaruyPump.baseBasalRateAt(it.hour * 3600 + it.minute * 60)) }
-    override val reservoirLevel: StateFlow<PumpInsulin?> = aaruyPump.reservoirFlow.mapState { it?.let(::PumpInsulin) }
-    override val batteryLevel: StateFlow<Int?> = aaruyPump.remainBatteryFlow.mapState { it?.toInt() }
+        get() = PumpRate(if (aaruyPump.lastBasalRate < 0.025) 0.025 else aaruyPump.lastBasalRate)
+    override val reservoirLevel: StateFlow<PumpInsulin>
+        get() = aaruyPump.reservoirFlow.mapState(::PumpInsulin)
+    override val batteryLevel: StateFlow<Int?>
+        get() = aaruyPump.remainBatteryFlow
     override val lastDataTime: StateFlow<Long> = aaruyPump.lastConnectionFlow
-    override val lastBolusTime: StateFlow<Long?> = aaruyPump.lastBolusTimeFlow.mapState { if (it == 0L) null else it }
-    override val lastBolusAmount: StateFlow<PumpInsulin?> = aaruyPump.lastBolusAmountFlow.mapState { if (it == 0.0) null else PumpInsulin(it) }
+    override val lastBolusTime: StateFlow<Long?> get() = aaruyPump.lastBolusTimeFlow
+    override val lastBolusAmount: StateFlow<PumpInsulin?> get() = aaruyPump.lastBolusAmountFlow.mapState { it?.let(::PumpInsulin) }
 
     override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+        // Insulin value must be greater than 0
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
 
-        // Already limited by the command queue and PumpPluginConstraints. The service stores the bolus info once the start was sent.
-        val outcome = aaruyCommands.setBolus(detailedBolusInfo)
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
+        detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
+        var connectionOK = false
+        if (detailedBolusInfo.insulin > 0) connectionOK = aaruyService?.setBolus(detailedBolusInfo) == true
         val result = pumpEnactResultProvider()
-        result.success = outcome == AaruyBolusOutcome.FINISHED
-        result.enacted = outcome != AaruyBolusOutcome.NOT_STARTED
-        result.bolusDelivered = aaruyPump.bolusDelivered
-        result.comment = when (outcome) {
-            AaruyBolusOutcome.FINISHED    -> rh.gs(CoreUiStrings.ok)
-            AaruyBolusOutcome.CUT_SHORT   -> rh.gs(AaruyStrings.aaruy_bolus_cut_short, ch.insulinAmountString(PumpInsulin(result.bolusDelivered)))
-            AaruyBolusOutcome.NOT_STARTED -> rh.gs(AaruyStrings.alarm_bolus_run_fail)
-            AaruyBolusOutcome.UNKNOWN     -> rh.gs(AaruyStrings.aaruy_bolus_outcome_unknown, ch.insulinAmountString(PumpInsulin(result.bolusDelivered)))
-        }
-        aapsLogger.debug(LTag.PUMP, "deliverTreatment: $outcome. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
+        result.success = connectionOK
+        result.bolusDelivered = bolusProgressData.state.value?.delivered?.cU ?: 0.0
+
+        if (result.success) result.enacted = true
+        if (!result.success) {
+            result.comment = rh.gs(R.string.alarm_bolus_run_fail)
+        } else result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
+        aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
         return result
     }
 
@@ -270,8 +313,7 @@ class AaruyPlugin(
         if (!isInitialized()) return
 
         aapsLogger.info(LTag.PUMP, "stopBolusDelivering")
-        // The stop waits for the answer of the pump, and the caller can be the main thread.
-        (scope ?: CoroutineScope(aapsIoDispatcher)).launch { aaruyCommands.stopBolus() }
+        aaruyService?.stopBolus()
     }
 
     override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
@@ -283,11 +325,13 @@ class AaruyPlugin(
         }
 
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - absoluteRate: $absoluteRate, durationInMinutes: $durationInMinutes, enforceNew: $enforceNew")
-        temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), absoluteRate, true, tbrType, 0L, 0L))
-        val connectionOK = aaruyCommands.setTempBasal(absoluteRate, durationInMinutes)
+        // round rate to pump rate
+        val pumpRate = absoluteRate
+        temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), pumpRate, true, tbrType, 0L, 0L))
+        val connectionOK = aaruyService?.setTempBasal(pumpRate, durationInMinutes) ?: false
         return if (connectionOK
             && aaruyPump.isTempBasalInProgress
-            && abs(aaruyPump.tempBasalAbsoluteRate - PumpRate(absoluteRate).iU(ch.concentration, true)) <= 0.025
+            && abs(aaruyPump.tempBasalAbsoluteRate - pumpRate) <= 0.025
         ) {
             result.success = true
             result.enacted = true
@@ -300,7 +344,7 @@ class AaruyPlugin(
             aapsLogger.error(
                 LTag.PUMP,
                 "setTempBasalAbsolute failed, connectionOK: $connectionOK, tempBasalInProgress: ${aaruyPump.isTempBasalInProgress}, " +
-                    "tempBasalAbsoluteRate: ${aaruyPump.tempBasalAbsoluteRate}, pumpRate is $absoluteRate"
+                    "tempBasalAbsoluteRate: ${aaruyPump.tempBasalAbsoluteRate}, pumpRate is $pumpRate"
             )
             result.success = false
             result.enacted = false
@@ -318,81 +362,227 @@ class AaruyPlugin(
         return result
     }
 
-    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult =
-        pumpEnactResultProvider().success(false).enacted(false).comment("Aaruy driver does not support extended boluses")
+    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
+        val result = pumpEnactResultProvider()
+        if (!isInitialized()) {
+            result.success = false
+            result.enacted = false
+            return result
+        }
+
+        if (aaruyPump.pumpType() == PumpType.AARUY_BASE) {
+            aapsLogger.info(LTag.PUMP, "setExtendedBolus - insulin: $insulin, durationInMinutes: $durationInMinutes")
+            result.success = false
+            result.enacted = false
+            result.comment = "Aaruy base driver does not support extended boluses"
+            return result
+        }
+
+        var insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
+        // needs to be rounded
+        insulinAfterConstraint = Round.roundTo(insulinAfterConstraint, pumpDescription.extendedBolusStep)
+
+        if (aaruyPump.isExtendedInProgress && abs(aaruyPump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
+            aapsLogger.debug(LTag.PUMP, "setExtendedBolus: Correct extended bolus already set. Current: " + aaruyPump.extendedBolusAmount + " Asked: " + insulinAfterConstraint)
+            return  pumpEnactResultProvider().enacted(false).success(true).comment(rh.gs(app.aaps.core.ui.R.string.ok)).duration(aaruyPump.extendedBolusRemainingMinutes)
+                .absolute(aaruyPump.extendedBolusAbsoluteRate).isPercent(false).isTempCancel(false)
+        }
+        val sendOK = aaruyService?.extendedBolus(insulinAfterConstraint, durationInMinutes)
+            ?: false
+
+        if (sendOK) {
+            aapsLogger.debug(LTag.PUMP, "setExtendedBolus: OK")
+            return  pumpEnactResultProvider().enacted(true).success(true).comment(rh.gs(app.aaps.core.ui.R.string.ok)).duration(aaruyPump.extendedBolusRemainingMinutes)
+                .absolute(aaruyPump.extendedBolusAbsoluteRate).bolusDelivered(aaruyPump.extendedBolusAmount).isPercent(false)
+        }
+
+        result.enacted = false
+        result.success = false
+        aapsLogger.error("setExtendedBolus: Failed to extended bolus")
+        return result
+    }
 
     override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        if (!isInitialized()) return pumpEnactResultProvider().success(false).enacted(false)
+        if (!isInitialized()) return  pumpEnactResultProvider().success(false).enacted(false)
 
         aapsLogger.info(LTag.PUMP, "cancelTempBasal - enforceNew: $enforceNew")
-        val connectionOK = aaruyCommands.cancelTempBasal()
+        val connectionOK = aaruyService?.cancelTempBasal() ?: false
         return if (connectionOK && !aaruyPump.isTempBasalInProgress) {
-            pumpEnactResultProvider().success(true).enacted(true).isTempCancel(true)
+             pumpEnactResultProvider().success(true).enacted(true).isTempCancel(true)
         } else {
             aapsLogger.error(LTag.PUMP, "cancelTempBasal failed, connectionOK: $connectionOK, tempBasalInProgress: ${aaruyPump.isTempBasalInProgress}")
-            pumpEnactResultProvider().success(false).enacted(false).comment("Aaruy cancelTempBasal failed")
+             pumpEnactResultProvider().success(false).enacted(false).comment("Aaruy cancelTempBasal failed")
         }
     }
 
-    override suspend fun cancelExtendedBolus(): PumpEnactResult = pumpEnactResultProvider()
+    override suspend fun cancelExtendedBolus(): PumpEnactResult {
+        if (!isInitialized()) return  pumpEnactResultProvider().success(false).enacted(false)
 
-    /** The queue runs them with the link open, as every command. */
-    override fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult? = when (customCommand) {
-        is AaruyConfirmAlarmsCommand -> pumpEnactResultProvider().also { it.success = aaruyBle.confirmAlarms() }
-        // Without a link nothing is forgotten here: the screen asks whether to forget a pump that was not told.
-        is AaruyUnpairCommand        -> pumpEnactResultProvider().also { it.success = aaruyBle.isConnected && aaruyBle.unbindDevice() }
-        // The steps wait for the motor. The queue runs one command at a time, on its own thread.
-        else                         -> runBlocking { replaceSteps.execute(customCommand, pumpEnactResultProvider()) }
+        val connectionOK = aaruyService?.cancelExtendedBolus() ?: false
+        return if (connectionOK && !aaruyPump.isExtendedInProgress) {
+             pumpEnactResultProvider().success(true).enacted(true)
+        } else {
+            aapsLogger.error(LTag.PUMP, "cancelExtendedBolus failed, connectionOK: $connectionOK, isExtendedInProgress: ${aaruyPump.isExtendedInProgress}")
+             pumpEnactResultProvider().success(false).enacted(false).comment("Aaruy extendedBolus failed")
+        }
     }
+
+    // override fun getJSONStatus(profile: Profile, profileName: String, version: String): JSONObject {
+    //     val now = System.currentTimeMillis()
+    //     if (aaruyPump.lastConnection + 60 * 60 * 1000L < System.currentTimeMillis()) {
+    //         return JSONObject()
+    //     }
+    //     val pumpJson = JSONObject()
+    //     val battery = JSONObject()
+    //     val status = JSONObject()
+    //     val extended = JSONObject()
+    //     try {
+    //         status.put(
+    //             "status", if (!isSuspended()) "normal"
+    //             else if (isInitialized() && isSuspended()) "suspended"
+    //             else "no active patch"
+    //         )
+    //
+    //         battery.put("percent", aaruyPump.remainBattery.toInt())
+    //         status.put("timestamp", dateUtil.toISOString(aaruyPump.lastConnection))
+    //         extended.put("Version", version)
+    //         if (aaruyPump.lastBolusTime != 0L) {
+    //             extended.put("LastBolus", dateUtil.dateAndTimeString(aaruyPump.lastBolusTime))
+    //             extended.put("LastBolusAmount", aaruyPump.lastBolusAmount)
+    //         }
+    //         val tb = pumpSync.expectedPumpState().temporaryBasal
+    //         if (tb != null) {
+    //             extended.put("TempBasalAbsoluteRate", tb.convertedToAbsolute(now, profile))
+    //             extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.timestamp))
+    //             extended.put("TempBasalRemaining", tb.plannedRemainingMinutes)
+    //         }
+    //         val eb = pumpSync.expectedPumpState().extendedBolus
+    //         if (eb != null) {
+    //             extended.put("ExtendedBolusAbsoluteRate", eb.rate)
+    //             extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.timestamp))
+    //             extended.put("ExtendedBolusRemaining", eb.plannedRemainingMinutes)
+    //         }
+    //         extended.put("BaseBasalRate", baseBasalRate)
+    //         try {
+    //             extended.put("ActiveProfile", profileFunction.getProfileName())
+    //         } catch (e: Exception) {
+    //             aapsLogger.error("Unhandled exception", e)
+    //         }
+    //         pumpJson.put("battery", battery)
+    //         pumpJson.put("status", status)
+    //         pumpJson.put("extended", extended)
+    //         pumpJson.put("reservoir", aaruyPump.reservoir.toInt())
+    //         pumpJson.put("clock", dateUtil.toISOString(now))
+    //     } catch (e: JSONException) {
+    //         aapsLogger.error("Unhandled exception", e)
+    //     }
+    //     return pumpJson
+    // }
 
     override fun manufacturer(): ManufacturerType = ManufacturerType.Aaruy
-    override fun model(): PumpType = aaruyPump.pumpType()
-    override fun serialNumber(): String = aaruyPump.pumpSN
-    override val pumpDescription: PumpDescription get() = PumpDescription().fillFor(aaruyPump.pumpType()).also { it.bolusStep = aaruyPump.bolusStepUnits }
-    override val isFakingTempsByExtendedBoluses: Boolean = false
-
-    /** The day of the pump starts at midnight in China, so it gives no TDD of a local day. AAPS calculates its own. */
-    override suspend fun loadTDDs(): PumpEnactResult = pumpEnactResultProvider()
-
-    override fun canHandleDST(): Boolean = true
-
-    /**
-     * The profile goes to the pump in a moved form, so a new time zone needs it again. Asked at once, as the keep alive worker
-     * does: seen on a real pump, its next check came only minutes later, and the pump ran the old times until then. The
-     * queue sends the profile only when the pump does not have it.
-     */
-    override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
-        aapsLogger.info(LTag.PUMP, "Time or time zone changed: $timeChangeType")
-        commandQueue.readStatus(rh.gs(AaruyStrings.aaruy_time_changed))
-        rxBus.send(EventProfileChangeRequested())
+    override fun model(): PumpType {
+        return aaruyPump.pumpType()
     }
 
-    /** Room has no shared clearAllTables(), so each table is emptied by its DAO. */
-    override fun clearAllTables() = runBlocking {
-        aaruyHistoryDatabase.historyUnitInfoDao().deleteAll()
-        aaruyHistoryDatabase.historyDailyUnitInfoDao().deleteAll()
+    override fun serialNumber(): String {
+        return aaruyPump.pumpSN
+    }
+
+    override val pumpDescription = PumpDescription().fillFor(aaruyPump.pumpType())
+
+    // override fun shortStatus(veryShort: Boolean): String {
+    //     var ret = ""
+    //     if (aaruyPump.lastConnection != 0L) {
+    //         val agoMillis = System.currentTimeMillis() - aaruyPump.lastConnection
+    //         val agoMin = (agoMillis / 60.0 / 1000.0).toInt()
+    //         ret += "LastConn: $agoMin minago\n"
+    //     }
+    //     if (aaruyPump.lastBolusTime != 0L)
+    //         ret += "LastBolus: ${decimalFormatter.to2Decimal(aaruyPump.lastBolusAmount)}U @${DateFormat.format("HH:mm", aaruyPump.lastBolusTime)}"
+    //
+    //     if (aaruyPump.isTempBasalInProgress)
+    //         ret += "Temp: ${aaruyPump.temporaryBasalToString()}"
+    //
+    //     if (aaruyPump.isExtendedInProgress)
+    //         ret += "Extended: ${aaruyPump.extendedBolusToString()}\n"
+    //
+    //     if (!veryShort) {
+    //         ret += "TDD: ${decimalFormatter.to0Decimal(aaruyPump.dailyTotalUnits)} / ${aaruyPump.maxDailyTotalUnits} U"
+    //     }
+    //     ret += "Reserv: ${decimalFormatter.to0Decimal(aaruyPump.reservoir)} U"
+    //     ret += "Batt: ${aaruyPump.remainBattery}"
+    //     return ret
+    // }
+
+    override val isFakingTempsByExtendedBoluses: Boolean = false
+
+    override suspend fun loadTDDs(): PumpEnactResult {
+        if (!(aaruyService?.isConnected!!) || !aaruyPump.canSaveHistory) return pumpEnactResultProvider().success(false)
+        aaruyService?.requestHistoryData()
+        return pumpEnactResultProvider().success(true)
+    }
+
+    override fun getCustomActions(): List<CustomAction>? {
+        return null
+    }
+
+    override fun executeCustomAction(customActionType: CustomActionType) {
+        // Unused
+    }
+
+    override fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult? {
+        return null
+    }
+
+    override fun canHandleDST(): Boolean {
+        return true
+    }
+
+    // Aaruy Pump
+    override fun clearAlarms(): PumpEnactResult {
+        if (!isInitialized()) return  pumpEnactResultProvider().success(false).enacted(false)
+        val connectionOK = aaruyService?.clearAlarms() ?: false
+        return  pumpEnactResultProvider().success(connectionOK)
+    }
+
+    override fun clearAllTables() = aaruyHistoryDatabase.clearAllTables()
+
+    // Constraints interface
+    override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
+        absoluteRate.setIfSmaller(aaruyPump.maxBasal, rh.gs(app.aaps.core.ui.R.string.limitingbasalratio, aaruyPump.maxBasal, rh.gs(app.aaps.core.ui.R.string.pumplimit)), this)
+        return absoluteRate
+    }
+
+    override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
+        percentRate.setIfGreater(0, rh.gs(app.aaps.core.ui.R.string.limitingpercentrate, 0, rh.gs(app.aaps.core.ui.R.string.itmustbepositivevalue)), this)
+        percentRate.setIfSmaller(
+            pumpDescription.maxTempPercent,
+            rh.gs(app.aaps.core.ui.R.string.limitingpercentrate, pumpDescription.maxTempPercent, rh.gs(app.aaps.core.ui.R.string.pumplimit)),
+            this
+        )
+        return percentRate
+    }
+
+    override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
+        insulin.setIfSmaller(aaruyPump.maxBolus, rh.gs(app.aaps.core.ui.R.string.limitingbolus, aaruyPump.maxBolus, rh.gs(app.aaps.core.ui.R.string.pumplimit)), this)
+        return insulin
+    }
+
+    override fun applyExtendedBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
+        return applyBolusConstraints(insulin)
     }
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
-        key = "aaruy_settings",
-        title = AaruyStrings.aaruy_pump,
+        key = "aaruy_pump_settings",
+        titleResId = R.string.aaruy_pump,
         items = listOf(
-            AaruyDoublePreferenceKey.MaxBasal,
-            AaruyDoublePreferenceKey.MaxBolus,
-            AaruyDoublePreferenceKey.LowReservoir,
-            AaruyIntPreferenceKey.BolusStep,
-            AaruyIntPreferenceKey.SoundPrompt,
-            AaruyIntPreferenceKey.SoundAlarm
+            AaruyDoubleKey.PumpPrefMaxBasal,
+            AaruyDoubleKey.PumpPrefMaxBolus,
+            AaruyDoubleKey.PumpPrefLowAlert,
+            AaruyIntKey.PumpPrefBolusStep,
+            AaruyIntKey.PumpPrefSoundRemind,
+            AaruyIntKey.PumpPrefSoundAlarm
         ),
         icon = pluginDescription.icon
     )
-
-    // cU-domain pump limits: folded into the IU scan by ConstraintsChecker.
-    // The lower of pump and setting: a lowered setting counts at once, and a raised one only when the pump has it.
-    override fun applyBasalConstraints(absoluteRate: PumpRate): PumpRate =
-        PumpRate(absoluteRate.cU.coerceAtMost(min(aaruyPump.maxBasal, preferences.get(AaruyDoublePreferenceKey.MaxBasal))))
-
-    override fun applyBolusConstraints(insulin: PumpInsulin): PumpInsulin =
-        PumpInsulin(insulin.cU.coerceAtMost(min(aaruyPump.maxBolus, preferences.get(AaruyDoublePreferenceKey.MaxBolus))))
-    override fun applyExtendedBolusConstraints(insulin: PumpInsulin): PumpInsulin = applyBolusConstraints(insulin)
 }

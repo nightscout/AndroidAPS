@@ -1,8 +1,5 @@
 package app.aaps.pump.aaruy.compose
 
-import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.pump.aaruy.AaruyStrings
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,22 +8,29 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.pump.PumpHistoryRecord
 import app.aaps.core.ui.compose.pump.PumpHistoryType
 import app.aaps.core.ui.compose.pump.PumpHistoryUiState
 import app.aaps.pump.aaruy.AaruyPump
+import app.aaps.pump.aaruy.R
 import app.aaps.pump.aaruy.common.enums.AlarmState
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.database.HistoryUnitInfo
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import app.aaps.core.ui.R as CoreUiR
 
 /** Types of the pump log, and [DAILY] for its daily totals, which come from their own list. */
 object AaruyHistoryTypes {
@@ -55,13 +59,16 @@ data class AaruyHistoryRecord(
     override val dailyBolus: Double = 0.0,
     override val alarm: String = "",
     /** The pump of a [AaruyHistoryTypes.NEW_PUMP] row. */
-    val pumpName: String = ""
+    val pumpName: String = "",
+    val primeDose: Double = 0.0    // 推杆定位剂量
 ) : PumpHistoryRecord
 
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 @Inject
 class AaruyHistoryViewModel(
-    private val rh: TextResolver,
+    private val rh: ResourceHelper,
     private val commandQueue: CommandQueue,
     private val aaruyPump: AaruyPump,
     private val historyDao: HistoryUnitInfoDao,
@@ -75,12 +82,12 @@ class AaruyHistoryViewModel(
 
     init {
         val types = listOf(
-            PumpHistoryType(AaruyHistoryTypes.BOLUS, rh.gs(AaruyStrings.bolus_title)),
-            PumpHistoryType(AaruyHistoryTypes.TEMP_BASAL, rh.gs(AaruyStrings.temp_basal_title)),
-            PumpHistoryType(AaruyHistoryTypes.BASAL, rh.gs(AaruyStrings.basal_rate_title)),
-            PumpHistoryType(AaruyHistoryTypes.ALARM, rh.gs(AaruyStrings.history_alarm)),
-            PumpHistoryType(AaruyHistoryTypes.REPLACED, rh.gs(AaruyStrings.replace_label)),
-            PumpHistoryType(AaruyHistoryTypes.DAILY, rh.gs(AaruyStrings.daily_total))
+            PumpHistoryType(AaruyHistoryTypes.BOLUS, rh.gs(R.string.bolus_title)),
+            PumpHistoryType(AaruyHistoryTypes.TEMP_BASAL, rh.gs(R.string.temp_basal_title)),
+            PumpHistoryType(AaruyHistoryTypes.BASAL, rh.gs(R.string.basal_rate_title)),
+            PumpHistoryType(AaruyHistoryTypes.ALARM, rh.gs(R.string.history_alarm)),
+            PumpHistoryType(AaruyHistoryTypes.REPLACED, rh.gs(R.string.replace_label)),
+            PumpHistoryType(AaruyHistoryTypes.DAILY, rh.gs(R.string.daily_total))
         )
         _uiState.value = PumpHistoryUiState(availableTypes = types, selectedType = types.first())
         viewModelScope.launch { load(types.first().type) }
@@ -96,7 +103,7 @@ class AaruyHistoryViewModel(
         _uiState.update { it.copy(isLoading = true, statusMessage = "") }
         viewModelScope.launch {
             // Through the queue, which owns the link. Its status read ends when the log is written.
-            commandQueue.readStatus(rh.gs(CoreUiStrings.user_request))
+            commandQueue.readStatus(rh.gs(CoreUiR.string.user_request))
             load(type.type)
             _uiState.update { it.copy(isLoading = false) }
         }
@@ -104,7 +111,7 @@ class AaruyHistoryViewModel(
 
     private suspend fun load(type: Byte) {
         val since = dateUtil.now() - T.months(1).msecs()
-        val records = withContext(aapsIoDispatcher) {
+        val records = withContext(Dispatchers.IO) {
             if (type == AaruyHistoryTypes.DAILY) dailyDao.queryAll().filter { it.dateTimestamp >= since }.map {
                 AaruyHistoryRecord(timestamp = it.dateTimestamp, code = type, dailyBolus = it.dailyBolus / 10.0, dailyBasal = (it.dailyTotal - it.dailyBolus) / 10.0)
             }
@@ -128,12 +135,13 @@ class AaruyHistoryViewModel(
             item.time, type,
             stringValue = rh.gs(
                 when (item.type) {
-                    AaruyHistoryTypes.REWIND.toInt()   -> AaruyStrings.aaruy_rewind
-                    AaruyHistoryTypes.NEW_PUMP.toInt() -> AaruyStrings.aaruy_pairing_successful
-                    else                               -> AaruyStrings.actions_reservoir_prime
+                    AaruyHistoryTypes.REWIND.toInt()   -> R.string.notification_text_rewinding
+                    AaruyHistoryTypes.NEW_PUMP.toInt() -> R.string.change_pump
+                    else                               -> R.string.actions_reservoir_prime
                 }
             ),
-            pumpName = if (item.type == AaruyHistoryTypes.NEW_PUMP.toInt()) item.blueName else ""
+            pumpName = if (item.type == AaruyHistoryTypes.NEW_PUMP.toInt()) item.blueName else "",
+            primeDose = if (item.type == AaruyHistoryTypes.PRIME.toInt()) item.data/100.0 else 0.0
         )
 
         // A bolus has an amount now and an extended part, in thousandths of a unit.
@@ -148,7 +156,7 @@ class AaruyHistoryViewModel(
     fun timeText(record: AaruyHistoryRecord): String {
         if (record.code != AaruyHistoryTypes.DAILY) return dateUtil.dateAndTimeString(record.timestamp)
         val end = record.timestamp + T.days(1).msecs()
-        return rh.gs(AaruyStrings.aaruy_history_pump_day, dateUtil.dateStringShort(record.timestamp), dateUtil.timeString(record.timestamp), dateUtil.dateStringShort(end), dateUtil.timeString(end))
+        return rh.gs(R.string.aaruy_history_pump_day, dateUtil.dateStringShort(record.timestamp), dateUtil.timeString(record.timestamp), dateUtil.dateStringShort(end), dateUtil.timeString(end))
     }
 
     /** The pump counts in its own units. With insulin that is not U100 they differ from insulin units, so both are shown. */
@@ -162,12 +170,20 @@ class AaruyHistoryViewModel(
 
     fun detailText(record: AaruyHistoryRecord): String = when (record.code) {
         AaruyHistoryTypes.DAILY -> rh.gs(
-            AaruyStrings.aaruy_history_daily_parts,
+            R.string.aaruy_history_daily_parts,
             ch.insulinAmountString(PumpInsulin(record.dailyBolus)),
             ch.insulinAmountString(PumpInsulin(record.dailyBasal))
         )
-        AaruyHistoryTypes.BASAL, AaruyHistoryTypes.TEMP_BASAL -> rh.gs(CoreUiStrings.format_mins, record.durationMinutes)
-        AaruyHistoryTypes.REPLACED -> record.pumpName
+        AaruyHistoryTypes.BASAL, AaruyHistoryTypes.TEMP_BASAL -> rh.gs(CoreUiR.string.format_mins, record.durationMinutes)
+        AaruyHistoryTypes.REPLACED -> {
+            val realPrimeDose = record.primeDose
+            if (record.pumpName.isNotEmpty()) record.pumpName
+            else if (realPrimeDose > 0.012) {
+                ch.insulinAmountString(PumpInsulin(record.primeDose))
+            } else {
+                ""
+            }
+        }
         else                    -> ""
     }
 }

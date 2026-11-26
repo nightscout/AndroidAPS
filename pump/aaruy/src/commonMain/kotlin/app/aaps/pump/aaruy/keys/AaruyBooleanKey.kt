@@ -1,14 +1,24 @@
 package app.aaps.pump.aaruy.keys
 
-import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.LongPreferenceKey
+import app.aaps.core.keys.interfaces.StringPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.pump.aaruy.R
 
-/** Only what the pump cannot tell again after an app restart is kept. What only this phone knows is not exported. */
 enum class AaruyBooleanKey(
     override val key: String,
     override val defaultValue: Boolean,
-    override val exportable: Boolean = true,
-) : BooleanNonPreferenceKey {
+    private val titleResId: Int? = null,
+    private val summaryResId: Int? = null,
+    private val entriesResIds: Map<Int, Int> = emptyMap(),
+) : BooleanPreferenceKey {
+    PumpSaveHistory("key_aaruy_save_history", false),
+    PumpAlreadyBack("key_already_back", false),
+    ;
 
-    /** False after pairing until the old log of the pump is skipped. */
-    PumpSaveHistory("key_aaruy_save_history", false, exportable = false),
+
+    override val title: TextRef = TextRef.AndroidRes(titleResId?:R.string.aaruy_pump_setting)
+    override val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
 }
