@@ -10,7 +10,9 @@ import app.aaps.plugins.dexcomoneplus.oem.OemDeviceProfile
 import app.aaps.plugins.dexcomoneplus.scan.OnePlusBleScanner
 import app.aaps.plugins.dexcomoneplus.scan.OnePlusBleScannerAndroid
 import app.aaps.plugins.dexcomoneplus.session.OnePlusAndroidCpuLease
+import app.aaps.plugins.dexcomoneplus.session.OnePlusAndroidWakeAlarm
 import app.aaps.plugins.dexcomoneplus.session.OnePlusCpuLease
+import app.aaps.plugins.dexcomoneplus.session.OnePlusWakeAlarm
 
 /**
  * [OnePlusPlatform] on Android: the same four pieces the driver used to build from a `Context`
@@ -30,6 +32,8 @@ class OnePlusAndroidPlatform(context: Context) : OnePlusPlatform {
         OnePlusGattClientAndroid(appContext, profile)
 
     override fun cpuLease(slot: String): OnePlusCpuLease = OnePlusAndroidCpuLease(appContext, slot)
+
+    override fun wakeAlarm(slot: String): OnePlusWakeAlarm = OnePlusAndroidWakeAlarm(appContext, slot)
 }
 
 /**

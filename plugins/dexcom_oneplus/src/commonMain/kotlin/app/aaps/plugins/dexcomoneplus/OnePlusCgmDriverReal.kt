@@ -25,6 +25,7 @@ import app.aaps.plugins.dexcomoneplus.session.OnePlusCalibrationQueue
 import app.aaps.plugins.dexcomoneplus.session.OnePlusConnectPrep
 import app.aaps.plugins.dexcomoneplus.session.OnePlusSessionAuthKeks
 import app.aaps.plugins.dexcomoneplus.session.OnePlusSessionStart
+import app.aaps.plugins.dexcomoneplus.session.OnePlusWakeAlarm
 import app.aaps.plugins.dexcomoneplus.warmup.OnePlusWarmupClock
 import kotlin.concurrent.Volatile
 import kotlin.concurrent.atomics.AtomicInt
@@ -132,6 +133,10 @@ class OnePlusCgmDriverReal(
 
     @Volatile
     private var profile: OemDeviceProfile = DeviceProfileRegistry.GenericFallback
+
+    /** Wakes the watch for the sensor's next cycle. Null on the phone, and on a host without one. */
+    @Volatile
+    private var wakeAlarm: OnePlusWakeAlarm? = null
 
     @Volatile
     private var sensorStore: OnePlusSensorStore? = null
@@ -277,8 +282,10 @@ class OnePlusCgmDriverReal(
         val store = storeFor(platform, storeNamespace)
         sensorStore = store
         scanner = platform.scanner(hint = store.load(), slot = slot)
-        // The OEM profiles are tuned for phones. A watch takes the generic one.
-        profile = if (watchMode) DeviceProfileRegistry.GenericFallback else DeviceProfileRegistry.resolve()
+        // The OEM profiles are tuned for phones. A watch takes the generic one, with a longer autoConnect.
+        profile = if (watchMode) DeviceProfileRegistry.Watch else DeviceProfileRegistry.resolve()
+        // One alarm for the life of the driver, not one per session: each holds a receiver.
+        wakeAlarm = if (watchMode) platform.wakeAlarm(slot) else null
     }
 
     private fun storeFor(platform: OnePlusPlatform, namespace: String?): OnePlusSensorStore =
@@ -761,6 +768,10 @@ class OnePlusCgmDriverReal(
                 }
             },
             warmupMs = { sensorWarmupMs() },
+            // A phone scans for the sensor between two readings. A watch has no battery for that.
+            standingConnectWait = watchMode,
+            // And it wakes for the sensor's next cycle, so it can connect the fast way in time.
+            wakeAlarm = wakeAlarm,
         )
         return created
     }

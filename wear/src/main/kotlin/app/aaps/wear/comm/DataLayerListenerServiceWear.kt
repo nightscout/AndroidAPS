@@ -77,7 +77,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
     override fun onCreate() {
         injectMetroMembers(this)
         super.onCreate()
-        startForegroundService()
+        enterForeground()
         handler.post { updateTranscriptionCapability() }
         // scope is Main.immediate, which is the right lifetime. The two sends observed on io and talk
         // to the Data Layer, so those bodies go back to IO; the preference one observed on main and
@@ -153,6 +153,9 @@ class DataLayerListenerServiceWear : WearableListenerService() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // Refused in onCreate when the phone's link created this service in the background: this is
+        // the start from the alarm, or from a screen of the app, and now it is allowed.
+        enterForeground()
         when (intent?.action) {
 
             INTENT_CANCEL_BOLUS        -> {
@@ -168,8 +171,12 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         return START_STICKY
     }
 
-    private fun startForegroundService() {
-        startForeground(FOREGROUND_NOTIF_ID, foregroundNotification(this))
+    /** False until Android let this service be a foreground one, see [ForegroundStart]. */
+    private var inForeground = false
+
+    private fun enterForeground() {
+        if (inForeground) return
+        inForeground = ForegroundStart.attempt(this, aapsLogger) { startForeground(FOREGROUND_NOTIF_ID, foregroundNotification(this)) }
     }
 
     private fun updateHeartRateListener() {

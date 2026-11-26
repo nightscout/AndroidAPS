@@ -6,6 +6,7 @@ import app.aaps.plugins.dexcomoneplus.identity.OnePlusStoredSession
 import app.aaps.plugins.dexcomoneplus.oem.OemDeviceProfile
 import app.aaps.plugins.dexcomoneplus.scan.OnePlusBleScanner
 import app.aaps.plugins.dexcomoneplus.session.OnePlusCpuLease
+import app.aaps.plugins.dexcomoneplus.session.OnePlusWakeAlarm
 
 /**
  * Everything the driver needs from the phone it is running on.
@@ -41,4 +42,10 @@ interface OnePlusPlatform {
 
     /** Keeps the processor awake while [slot] connects and authenticates. */
     fun cpuLease(slot: String): OnePlusCpuLease
+
+    /**
+     * Wakes the processor for [slot] at a set time, or null on a platform that has no such thing.
+     * Null is an honest answer: the driver then waits in a way that needs no wake-up.
+     */
+    fun wakeAlarm(slot: String): OnePlusWakeAlarm? = null
 }

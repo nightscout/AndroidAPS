@@ -11,6 +11,13 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Direct-to-watch: the watch sleeps between two readings and wakes a few seconds before the
+         sensor does. That needs an alarm at an exact time. The "time to eat" timer and the phone's
+         alarm on the watch set exact alarms too. An app that targets Android 12 needs this
+         permission for them; without it each of these calls throws.
+         When the app targets Android 13 or newer: give this one maxSdkVersion 32 and add
+         USE_EXACT_ALARM, which is only honoured from that target on. -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.BODY_SENSORS" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
@@ -924,6 +931,10 @@
             android:exported="false"
             android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
+        <!-- Starts the foreground services again after Android refused them in the background -->
+        <receiver
+            android:name=".comm.ForegroundStartReceiver"
+            android:exported="false" />
         <!-- The "time to eat" timer: its alarm, and the buttons of its notification -->
         <receiver
             android:name=".eatreminder.EatReminderReceiver"
