@@ -191,8 +191,9 @@ that fails rings before the next try succeeds.
     missed readings. Each card holds when the alarm rings next to how this phone rings it (decided 2026-11-26, it
     was in three places): urgent low its threshold, the lows and the highs their rules, missed readings its minutes.
     The rules and the urgent low threshold are the same on every phone, so the card says so and draws a line above
-    "On this phone"; on a client without the Admin role they are read-only, how it rings is not. The Pause card is on
-    top. The urgent low threshold and the missed readings left Local alerts, and the BG alarm rules screen is this one.
+    "On this phone"; on a client without the Admin role they are read-only, how it rings is not. The pause is in each
+    card under its choice ("Pause for…", then "Paused until" with Resume), and "Pause all for…" is on top (decided
+    2026-11-26: a card of chips picked in advance looked as if something was paused). The urgent low threshold and the missed readings left Local alerts, and the BG alarm rules screen is this one.
     **Default rules** (decided 2026-11-26): a phone that never stored rules has low below 70 mg/dl as an alarm, high
     above 250 mg/dl and predicted low below 70 within 20 minutes with one sound (`BgAlarmRules.DEFAULT`, fixed ids);
     also a phone updated from a version without rules. A list the user emptied stays empty. "Reset rules to default"
@@ -409,9 +410,9 @@ rings because of it (decided 2026-11-21: acceptable).
   Built (2d) as a timed Silent choice in the core (`Alerts.pause`, `resume`, `pauses`), per phone, not synced: the
   card is shown, nothing rings, and what is still on rings when the pause ends (booked, so also when the app does not
   run); a silence longer than the pause still holds. "Until switched on again" is the Silent choice in Alert kinds.
-  The pause before an alert rings is the same pause. It is on top of the BG alarms screen, also on a client:
-  lows (low, falling fast, predicted low), highs (high, persistent high, rising fast) or all but urgent low, for 30
-  minutes to 4 hours.
+  The pause before an alert rings is the same pause. It is on the BG alarms screen, also on a client: in the card of
+  the lows (low, falling fast, predicted low), of the highs (high, persistent high, rising fast) or of missed
+  readings, or all but urgent low on top, for 30 minutes to 4 hours.
 - **Noisy readings** may be marked on the alert, but never hold back urgent low.
 
 #### The ringing (each phone's own)

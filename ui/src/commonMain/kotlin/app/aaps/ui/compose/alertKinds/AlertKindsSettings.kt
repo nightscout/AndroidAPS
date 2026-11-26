@@ -24,7 +24,6 @@ import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.AlertSound
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlarmRules
-import app.aaps.core.interfaces.alerts.BgAlert
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
@@ -166,7 +165,7 @@ class AlertKindsSettingsImpl(
             pauses = pauses,
             timeText = { dateUtil.timeString(it) },
             onPause = { kinds, minutes -> alerts.pause(kinds, dateUtil.now() + minutes * 60_000L) },
-            onResume = { alerts.resume(BgAlert.PAUSABLE) },
+            onResume = { kinds -> alerts.resume(kinds) },
             onRuleTest = { kind, severity -> alerts.test(kind, severity) },
             onChoice = { setting, choice -> alerts.setChoice(setting, choice) },
             onClear = { kind -> alerts.clearChoice(kind) },
