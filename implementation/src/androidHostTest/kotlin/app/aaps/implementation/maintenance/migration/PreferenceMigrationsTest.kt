@@ -2,6 +2,7 @@ package app.aaps.implementation.maintenance.migration
 
 import app.aaps.core.data.model.RM
 import app.aaps.core.interfaces.alerts.AlertChoice
+import app.aaps.core.interfaces.alerts.BgAlert
 import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -70,6 +71,47 @@ class PreferenceMigrationsTest {
 
         assertThat(store.contains("enable_carbs_required_alert_local")).isFalse()
         assertThat(store.contains("alert_choices")).isFalse()
+    }
+
+    // ----- "Alert if no BG data is received" became the kind's choice (the BG alarms screen, 2026-11-26) -----
+
+    /** The kind is Off unless chosen: a phone that had the switch on gets Ring stored, its other choices stay. */
+    @Test fun `missed BG readings alert on becomes the kind ringing`() = runTest {
+        val store = storeOf("enable_missed_bg_readings" to true, "alert_choices" to """{"aaps.hard_limit":"SILENT"}""")
+
+        sut().migrate(store)
+
+        assertThat(store.contains("enable_missed_bg_readings")).isFalse()
+        assertThat(store.getString("alert_choices", "{}"))
+            .isEqualTo("""{"aaps.hard_limit":"SILENT","${BgAlert.STALE.id}":"${AlertChoice.RING.name}"}""")
+    }
+
+    /** The switch on and the kind set to Silent: the user's choice of the kind stays. */
+    @Test fun `missed BG readings alert on keeps the kind's own choice`() = runTest {
+        val store = storeOf("enable_missed_bg_readings" to true, "alert_choices" to """{"${BgAlert.STALE.id}":"SILENT"}""")
+
+        sut().migrate(store)
+
+        assertThat(store.getString("alert_choices", "{}")).isEqualTo("""{"${BgAlert.STALE.id}":"SILENT"}""")
+    }
+
+    /** Off was the default, and Off is the kind's default: nothing is written, only the old key goes. */
+    @Test fun `missed BG readings alert off leaves the choices alone`() = runTest {
+        val store = storeOf("enable_missed_bg_readings" to false)
+
+        sut().migrate(store)
+
+        assertThat(store.contains("enable_missed_bg_readings")).isFalse()
+        assertThat(store.contains("alert_choices")).isFalse()
+    }
+
+    /** A choice of the kind did nothing while the switch was off: dropped, so the kind stays Off and does not ring. */
+    @Test fun `missed BG readings alert off drops a choice that would ring`() = runTest {
+        val store = storeOf("enable_missed_bg_readings" to false, "alert_choices" to """{"${BgAlert.STALE.id}":"SILENT","aaps.hard_limit":"OFF"}""")
+
+        sut().migrate(store)
+
+        assertThat(store.getString("alert_choices", "{}")).isEqualTo("""{"aaps.hard_limit":"OFF"}""")
     }
 
     // ----- The renames -----

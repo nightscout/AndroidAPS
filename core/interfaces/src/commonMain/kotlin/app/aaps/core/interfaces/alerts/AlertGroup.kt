@@ -17,6 +17,13 @@ interface AlertSetting {
 
     /** It always rings: the user cannot set it to Silent or Off. */
     val isProtected: Boolean
+
+    /**
+     * What this phone does with it while the user chose nothing: Ring, but Off for an alert that was off until the
+     * user turned it on (missed BG readings, decided 2026-11-26). A choice equal to it is not stored, unless it is an
+     * exception, which is set against its group.
+     */
+    val defaultChoice: AlertChoice get() = AlertChoice.RING
 }
 
 /** The parts of the alert settings, in the order they are shown. */

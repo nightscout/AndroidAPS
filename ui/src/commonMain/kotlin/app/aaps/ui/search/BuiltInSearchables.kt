@@ -186,19 +186,14 @@ class BuiltInSearchables(
         key = "alerts",
         title = CoreUiStrings.localalertsettings_title,
         items = listOf(
-            BooleanKey.AlertMissedBgReading,
-            IntKey.AlertsStaleDataThreshold,
             BooleanKey.AlertPumpUnreachable,
             IntKey.AlertsPumpUnreachableThreshold,
             BooleanKey.AlertUrgentAsAndroidNotification,
             BooleanKey.AlertIncreaseVolume,
             BooleanKey.AlertOverrideDoNotDisturb
-            // Ring, Silent or Off per kind of alert (carbs required too, which had a setting of its own), and the BG alarms
-        ) + listOfNotNull(
-            UnitDoubleKey.AlertUrgentLow.takeIf { alertKindsSettings.settingsItem != null },
-            alertKindsSettings.bgAlarmRulesItem,
-            alertKindsSettings.settingsItem
-        ) + alertKindsSettings.platformItems,
+            // How each alert rings, and the BG alarms with their rules, the urgent low threshold and the missed readings
+            // (decided 2026-11-26: when an alarm rings is set next to how it rings)
+        ) + listOfNotNull(alertKindsSettings.settingsItem) + alertKindsSettings.platformItems,
         icon = Icons.Default.Notifications
     )
 

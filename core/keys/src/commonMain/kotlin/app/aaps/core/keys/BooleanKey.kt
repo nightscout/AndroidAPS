@@ -71,7 +71,6 @@ enum class BooleanKey(
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
 
-    AlertMissedBgReading("enable_missed_bg_readings", false, KeysStrings.pref_title_alert_missed_bg_reading),
     AlertPumpUnreachable("enable_pump_unreachable_alert", true, KeysStrings.pref_title_alert_pump_unreachable),
     // Android only: it decides whether AAPS raises an OS notification at all. iOS gives an app no say
     // in that - the user grants or denies notifications in Settings - so there is nothing here for

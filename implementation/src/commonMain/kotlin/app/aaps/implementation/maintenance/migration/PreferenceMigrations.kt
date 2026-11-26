@@ -8,6 +8,7 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.alerts.AlertChoice
+import app.aaps.core.interfaces.alerts.BgAlert
 import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -125,6 +126,33 @@ class PreferenceMigrations(
         activityMonitorRetired(sp)
         smsCommunicatorType(sp)
         carbsRequiredAlert(sp)
+        missedBgReadingsAlert(sp)
+    }
+
+    /**
+     * "Alert if no BG data is received" became the choice of the alert kind "Missed BG readings" (2026-11-26, the BG
+     * alarms screen). The kind is Off unless chosen otherwise, as the switch was. A phone that had it off ends with the
+     * kind Off: a choice of the kind it had is dropped, as it did nothing then. A phone that had it on rings: its own
+     * choice of the kind stays, else Ring is stored. The old key goes either way.
+     */
+    private fun missedBgReadingsAlert(sp: KeyValueStore) {
+        if (!sp.contains(MISSED_BG_READINGS_ALERT)) return
+        val on = LegacyPreferenceValue.asBoolean(sp.getAll()[MISSED_BG_READINGS_ALERT]) == true
+        val choices = try {
+            Json.parseToJsonElement(sp.getString(ALERT_CHOICES, "{}")).jsonObject
+        } catch (_: Exception) {
+            // An unreadable list rings every kind (`AlertsImpl`), so it is replaced rather than kept
+            JsonObject(emptyMap())
+        }
+        val stale = BgAlert.STALE.id
+        val updated = when {
+            on && stale !in choices -> choices + (stale to JsonPrimitive(AlertChoice.RING.name))
+            // A choice of the kind other than Off did nothing while the switch was off: it would ring now
+            !on && stale in choices -> choices - stale
+            else                    -> null
+        }
+        if (updated != null) sp.putString(ALERT_CHOICES, JsonObject(updated).toString())
+        sp.remove(MISSED_BG_READINGS_ALERT)
     }
 
     /**
@@ -548,6 +576,9 @@ class PreferenceMigrations(
 
         /** The key of "Alert on carbs required", which the kind "Carbs required" replaced. */
         const val CARBS_REQUIRED_ALERT = "enable_carbs_required_alert_local"
+
+        /** The key of "Alert if no BG data is received", which the choice of the kind "Missed BG readings" replaced. */
+        const val MISSED_BG_READINGS_ALERT = "enable_missed_bg_readings"
         val ALERT_CHOICES = StringNonKey.AlertChoices.key
 
         /** The three counters the activity monitor kept for each activity. */

@@ -218,8 +218,8 @@ interface Alerts {
 
     /**
      * The user's choices on this phone, by [AlertSetting.id]: of a group, of a kind with no group, and of a kind set
-     * apart from its group (an exception, which may also be Ring). A kind rings unless its own entry, else its group's,
-     * says otherwise.
+     * apart from its group (an exception, which may also be Ring). A kind does what its own entry, else its group's,
+     * says, else its [AlertSetting.defaultChoice].
      */
     val choices: StateFlow<Map<String, AlertChoice>>
 

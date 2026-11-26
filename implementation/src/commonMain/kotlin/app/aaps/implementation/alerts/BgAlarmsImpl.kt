@@ -35,7 +35,6 @@ import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.rx.events.EventNsClientStatusUpdated
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringNonKey
@@ -175,7 +174,6 @@ class BgAlarmsImpl(
                 persistenceLayer.observeChanges(GV::class).map { },
                 preferences.observe(UnitDoubleKey.AlertUrgentLow).map { },
                 rules.rules.map { },
-                preferences.observe(BooleanKey.AlertMissedBgReading).map { },
                 preferences.observe(IntKey.AlertsStaleDataThreshold).map { },
                 // A new prediction: the loop ran on the master, a device status came on a client
                 merge(rxBus.toFlow(EventLoopUpdateGui::class).map { }, rxBus.toFlow(EventNsClientStatusUpdated::class).map { })
@@ -232,10 +230,11 @@ class BgAlarmsImpl(
      * The stale data alarm (`_docs/ALARMS.md`, step 2b): a booked alert at the last reading plus the threshold, booked
      * again at every reading, so it rings only when no reading came in time - also when the app does not run then
      * (Android wakes it, iOS rings its notification). A new reading ends it. After a start it waits [STALE_GRACE_MS]
-     * for the first reading. Off ("Alert if no BG data is received" off), or no reading at all: nothing booked.
+     * for the first reading. Booked also while its kind is Off on this phone, which is its default: the core then puts
+     * nothing on the phone and shows nothing, and turning it on needs no new reading. No reading at all: nothing booked.
      */
     private fun evaluateStale(last: GV?, now: Long) {
-        if (!preferences.get(BooleanKey.AlertMissedBgReading) || last == null) {
+        if (last == null) {
             if (staleBookedAt != null) {
                 alerts.unschedule(BgAlert.SOURCE, KEY_STALE)
                 staleBookedAt = null

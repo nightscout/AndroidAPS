@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -52,22 +54,18 @@ import app.aaps.core.interfaces.alerts.AlertSound
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 
 /**
- * Ring, Vibrate (where the phone can), Silent or Off on this phone (`_docs/ALARMS.md`, section 6), in four sections: the pump and the CGM by level
- * (critical, needs action, info), the BG alarms (lows, highs) and the app's own alerts one by one (decided 2026-11-26).
- * A change applies at once, so there is no Save: the back arrow only goes back. A protected row shows that it always
- * rings, with no choice.
- *
- * A kind of a group can be set apart from it as an exception: the alarm screen's "Silence this kind" makes one, and
- * "Add exception" here. Each row that makes a sound has its sound on this phone ([sounds], by group or kind id; not in
- * it: the alert's own) - one AAPS ships, or on Android any sound of the phone - and a Test button, which plays it as an
- * alarm for a few seconds, also in Do Not Disturb, or vibrates on a row set to Vibrate. [onTest] returns false when
- * nothing was played: an alarm is ringing.
+ * How each alert rings on this phone (`_docs/ALARMS.md`, section 6): a short list of the four parts - the pump, the CGM,
+ * the BG alarms and the app's own alerts - each opening its own screen, as the settings of AAPS do (decided
+ * 2026-11-26). Each part says the devices it is for and how many of its settings are silent or off here
+ * ([sectionSilentOrOff]), so nothing is hidden by the extra step. On top the choices are explained once, and the count
+ * of the whole phone ([silentOrOff]) is the same as the line in the notification sheet.
  */
 @Composable
 fun AlertKindsScreen(
@@ -75,30 +73,14 @@ fun AlertKindsScreen(
     /** The phone can vibrate, so Vibrate is offered and explained. */
     vibrates: Boolean,
     silentOrOff: Int,
-    onChoice: (AlertSetting, AlertChoice) -> Unit,
-    onClear: (AlertKind) -> Unit,
-    sounds: Map<String, AlertSound>,
-    onSound: (AlertSetting, AlertSound?) -> Unit,
-    onTest: (kind: AlertKind, vibrate: Boolean) -> Boolean,
-    onBgRules: () -> Unit,
+    sectionSilentOrOff: (AlertSettingsSection) -> Int,
+    onOpen: (AlertSection) -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
-    /** Held by the caller, so the list is where it was when the user comes back from the BG rules. */
+    /** Held by the caller, so the list is where it was when the user comes back from a part. */
     listState: LazyListState = rememberLazyListState()
 ) {
-    var addingTo by remember { mutableStateOf<AlertSettingsSection?>(null) }
-    Scaffold(
-        topBar = {
-            AapsTopAppBar(
-                title = { Text(stringResource(UiStrings.alert_kinds_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(CoreUiStrings.back))
-                    }
-                }
-            )
-        }
-    ) { paddingValues ->
+    Scaffold(topBar = { BackTopBar(stringResource(UiStrings.alert_kinds_title), onBack) }) { paddingValues ->
         LazyColumn(
             state = listState,
             modifier = modifier
@@ -115,33 +97,85 @@ fun AlertKindsScreen(
                         Text(stringResource(UiStrings.alert_kinds_silent_or_off, silentOrOff), style = MaterialTheme.typography.bodyMedium)
                 }
             }
-            sections.forEach { section ->
-                item(key = "section:" + section.section.name) { SectionHeading(section, onBgRules) }
-                items(section.rows, key = { it.setting.id }) { row -> SettingRowView(row, sounds[row.setting.id], onChoice, onSound, onTest) }
-                if (section.exceptions.isNotEmpty())
-                    item(key = "exceptions:" + section.section.name) {
-                        Text(stringResource(UiStrings.alert_kind_exceptions), style = MaterialTheme.typography.titleSmall)
+            items(sections, key = { it.section.name }) { section -> SectionCard(section, sectionSilentOrOff(section)) { onOpen(section.section) } }
+        }
+    }
+}
+
+/** One part in the list: its name, the devices it is for or what it holds, and what is silent or off in it. */
+@Composable
+private fun SectionCard(section: AlertSettingsSection, silentOrOff: Int, onClick: () -> Unit) {
+    AapsCard(modifier = Modifier.fillMaxWidth(), onClick = onClick) {
+        Row(modifier = Modifier.fillMaxWidth().padding(AapsSpacing.extraLarge), verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
+                Text(stringResource(section.section.title()), style = MaterialTheme.typography.titleMedium)
+                val detail = MaterialTheme.typography.bodyMedium
+                val detailColor = MaterialTheme.colorScheme.onSurfaceVariant
+                section.devices.forEach { device -> Text(stringResource(device), style = detail, color = detailColor) }
+                section.section.summary()?.let { Text(stringResource(it), style = detail, color = detailColor) }
+                if (silentOrOff > 0) Text(stringResource(UiStrings.alert_kinds_section_silent_or_off, silentOrOff), style = detail)
+            }
+            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null)
+        }
+    }
+}
+
+/**
+ * One part of the alert settings: a card for each of its rows ([AlertSettingsSection.rows]). A change applies at once,
+ * so there is no Save: the back arrow only goes back. A protected row shows that it always rings, with no choice. Each
+ * row is a card, so what belongs to it stays together, as in the other lists of AAPS (decided 2026-11-26).
+ *
+ * A kind of a group can be set apart from it as an exception: the alarm screen's "Silence this kind" makes one, and
+ * "Add exception" in the group's card. Each row that makes a sound has its sound on this phone ([sounds], by group or
+ * kind id; not in it: the alert's own) - one AAPS ships, or on Android any sound of the phone - and a Test button, which
+ * plays it as an alarm for a few seconds, also in Do Not Disturb, or vibrates on a row set to Vibrate. [onTest] returns
+ * false when nothing was played: an alarm is ringing.
+ *
+ * The BG alarms add what is set for every phone: [header] above the cards, and [extra] in a row's card under its title.
+ */
+@Composable
+fun AlertSectionScreen(
+    section: AlertSettingsSection,
+    onChoice: (AlertSetting, AlertChoice) -> Unit,
+    onClear: (AlertKind) -> Unit,
+    sounds: Map<String, AlertSound>,
+    onSound: (AlertSetting, AlertSound?) -> Unit,
+    onTest: (kind: AlertKind, vibrate: Boolean) -> Boolean,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    listState: LazyListState = rememberLazyListState(),
+    header: LazyListScope.() -> Unit = {},
+    extra: @Composable ColumnScope.(AlertSettingRow) -> Unit = {}
+) {
+    var addingTo by remember { mutableStateOf<AlertSettingRow?>(null) }
+    Scaffold(topBar = { BackTopBar(stringResource(section.section.title()), onBack) }) { paddingValues ->
+        LazyColumn(
+            state = listState,
+            modifier = modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            contentPadding = PaddingValues(horizontal = AapsSpacing.extraLarge, vertical = AapsSpacing.medium),
+            verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
+        ) {
+            if (section.devices.isNotEmpty()) item(key = "devices") {
+                Column {
+                    section.devices.forEach { device ->
+                        Text(stringResource(device), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
-                items(section.exceptions, key = { "exception:" + it.kind.id }) { row -> ExceptionRowView(row, onChoice, onClear) }
-                if (section.candidates.isNotEmpty())
-                    item(key = "add:" + section.section.name) {
-                        TextButton(onClick = { addingTo = section }) {
-                            Icon(Icons.Filled.Add, contentDescription = null)
-                            Text(stringResource(UiStrings.alert_kind_add_exception))
-                        }
-                    }
+                }
+            }
+            header()
+            items(section.rows, key = { it.setting.id }) { row ->
+                SettingCard(row, sounds[row.setting.id], onChoice, onClear, onSound, onTest, onAddException = { addingTo = row }) { extra(row) }
             }
         }
     }
-    addingTo?.let { section ->
+    addingTo?.let { row ->
         AddExceptionDialog(
-            candidates = section.candidates,
+            candidates = row.candidates,
             onPick = { kind ->
                 addingTo = null
-                kind.group?.let { group ->
-                    val groupChoice = section.rows.firstOrNull { it.setting == group }?.choice ?: AlertChoice.RING
-                    onChoice(kind, firstExceptionChoice(group, groupChoice))
-                }
+                kind.group?.let { group -> onChoice(kind, firstExceptionChoice(group, row.choice)) }
             },
             onDismiss = { addingTo = null }
         )
@@ -149,51 +183,71 @@ fun AlertKindsScreen(
 }
 
 @Composable
-private fun SectionHeading(section: AlertSettingsSection, onBgRules: () -> Unit) {
-    Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
-        HorizontalDivider()
-        Text(stringResource(section.section.title()), style = MaterialTheme.typography.titleMedium)
-        section.devices.forEach { device ->
-            Text(stringResource(device), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        }
-        // The levels themselves are the rules, the same on every phone; here only how this phone rings
-        if (section.section == AlertSection.BG)
-            TextButton(onClick = onBgRules) {
-                Text(stringResource(UiStrings.bg_alarm_rules_title))
-                Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null)
+private fun BackTopBar(title: String, onBack: () -> Unit) {
+    AapsTopAppBar(
+        title = { Text(title) },
+        navigationIcon = {
+            IconButton(onClick = onBack) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(CoreUiStrings.back))
             }
-    }
+        }
+    )
 }
 
+/**
+ * One row as a card: its title, the choice, its sound with the Test, and for a group the kinds set apart from it, so
+ * all that belongs to it is seen together. [extra] comes under the title.
+ */
 @Composable
-private fun SettingRowView(
+private fun SettingCard(
     row: AlertSettingRow,
     sound: AlertSound?,
     onChoice: (AlertSetting, AlertChoice) -> Unit,
+    onClear: (AlertKind) -> Unit,
     onSound: (AlertSetting, AlertSound?) -> Unit,
-    onTest: (kind: AlertKind, vibrate: Boolean) -> Boolean
+    onTest: (kind: AlertKind, vibrate: Boolean) -> Boolean,
+    onAddException: () -> Unit,
+    extra: @Composable ColumnScope.() -> Unit
 ) {
     val setting = row.setting
-    Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
-        Column {
-            Text(stringResource(setting.title), style = MaterialTheme.typography.bodyLarge)
-            if (setting is AlertGroup)
-                Text(stringResource(setting.summary), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        }
-        if (setting.isProtected) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
-                Icon(Icons.Filled.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text(
-                    stringResource(UiStrings.alert_kind_protected),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+    AapsCard(modifier = Modifier.fillMaxWidth()) {
+        // Less at the bottom: the last line is mostly a button, whose touch area already adds space below its text
+        val padding = PaddingValues(start = AapsSpacing.extraLarge, top = AapsSpacing.extraLarge, end = AapsSpacing.extraLarge, bottom = AapsSpacing.medium)
+        Column(modifier = Modifier.padding(padding), verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+            Column {
+                Text(stringResource(setting.title), style = MaterialTheme.typography.titleMedium)
+                if (setting is AlertGroup)
+                    Text(stringResource(setting.summary), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-        } else ChoiceButtons(row.choices, row.choice) { onChoice(setting, it) }
-        // The Test does what the row's choice does: on Vibrate it vibrates
-        row.testKind?.let { kind -> SoundRow(setting, sound, onSound) { onTest(kind, row.choice == AlertChoice.VIBRATE) } }
+            extra()
+            if (setting.isProtected) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
+                    Icon(Icons.Filled.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(
+                        stringResource(UiStrings.alert_kind_protected),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            } else ChoiceButtons(row.choices, row.choice) { onChoice(setting, it) }
+            // The Test does what the row's choice does: on Vibrate it vibrates
+            row.testKind?.let { kind -> SoundRow(setting, sound, onSound) { onTest(kind, row.choice == AlertChoice.VIBRATE) } }
+            if (row.exceptions.isNotEmpty()) {
+                HorizontalDivider()
+                Text(stringResource(UiStrings.alert_kind_exceptions), style = MaterialTheme.typography.titleSmall)
+                row.exceptions.forEach { ExceptionRowView(it, onChoice, onClear) }
+            }
+            if (row.candidates.isNotEmpty())
+                TextButton(onClick = onAddException, contentPadding = LinedUpButtonPadding) {
+                    Icon(Icons.Filled.Add, contentDescription = null)
+                    Text(stringResource(UiStrings.alert_kind_add_exception))
+                }
+        }
     }
 }
+
+/** A text button with no padding at its start, so its text lines up with the text above it. */
+internal val LinedUpButtonPadding =PaddingValues(top = AapsSpacing.medium, end = AapsSpacing.large, bottom = AapsSpacing.medium)
 
 /** A kind set apart from its group: its name, the button that removes the exception, and its own choice. */
 @Composable
@@ -314,4 +368,11 @@ private fun AlertSection.title(): TextRef = when (this) {
     AlertSection.CGM  -> CoreUiStrings.cgm
     AlertSection.BG   -> InterfacesStrings.alert_kinds_group_bg
     AlertSection.APP  -> InterfacesStrings.alert_kinds_group_app
+}
+
+/** What a part holds, where its devices do not say it. */
+private fun AlertSection.summary(): TextRef? = when (this) {
+    AlertSection.PUMP, AlertSection.CGM -> null
+    AlertSection.BG                     -> UiStrings.alert_kinds_bg_summary
+    AlertSection.APP                    -> UiStrings.alert_kinds_app_summary
 }

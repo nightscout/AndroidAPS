@@ -188,13 +188,26 @@ that fails rings before the next try succeeds.
     of its own, and the settings stay when the user changes the pump. The app's own alerts about the pump (bolus
     failed, profile not set, pump unreachable, ...) are in the pump's groups: for the user they are the pump's alerts.
   - **BG alarms**: urgent low (protected), the lows and the highs as groups (the same sets the Pause buttons pause),
-    missed readings. A link opens the BG rules.
+    missed readings. Each card holds when the alarm rings next to how this phone rings it (decided 2026-11-26, it
+    was in three places): urgent low its threshold, the lows and the highs their rules, missed readings its minutes.
+    The rules and the urgent low threshold are the same on every phone, so the card says so and draws a line above
+    "On this phone"; on a client without the Admin role they are read-only, how it rings is not. The Pause card is on
+    top. The urgent low threshold and the missed readings left Local alerts, and the BG alarm rules screen is this one.
   - **AAPS**: the app's other alerts, one row each (time to eat, automation alarm, carbs not saved, hard limit, carbs
     required), and the Nightscout announcement.
+  - Alert kinds is a list of these four parts, each opening its own screen, as the settings of AAPS are (decided
+    2026-11-26). The entry of a part says its devices or what it holds, and how many of its settings are silent or
+    off on this phone. Each row of a part is a card, as the other lists of AAPS (with only spacing, a row's sound
+    line ran into the next row).
   - **Exceptions:** one kind of a group can be set apart, from the alarm screen ("Silence this kind") or with "Add
-    exception" in its section. Its own choice wins over its group's, also when it is Ring. The ✕ removes it. The
-    choice of a kind is its exception, else its group's, else Ring (`AlertsImpl.choiceFor`). Choices and sounds of
+    exception" in its group's card, where it is then listed. Its own choice wins over its group's, also when it is Ring. The ✕ removes it. The
+    choice of a kind is its exception, else its group's, else its default (`AlertsImpl.choiceFor`): Ring, but Off for
+    missed readings (`AlertSetting.defaultChoice`), which was off until the user turned it on. Choices and sounds of
     groups and kinds share the same stored maps, under the `AlertSetting` id; a group's id starts with `group.`.
+  - **Missed BG readings** lost its switch "Alert if no BG data is received" (decided 2026-11-26): Off is its
+    choice, so it was off twice. A phone that had the switch on gets Ring stored, one that had it off stays Off
+    (`PreferenceMigrations.missedBgReadingsAlert`, also on an import). A kind that is Off books nothing on the phone
+    (`AlertsImpl.bookOnPlatform`): iOS showed a silent notice for it at the booked time.
 - **Vibrate** (decided 2026-11-26), a fourth choice between Ring and Silent: it rings as Ring does (alarm screen,
   urgent card, chime), but the phone and the watch make no sound. An alarm vibrates in a loop until it is answered
   (`AlarmSoundPlayer.vibrate`, on the alarm usage); a chime vibrates once (the silent chime channel); the watch gets
@@ -392,7 +405,7 @@ rings because of it (decided 2026-11-21: acceptable).
   Built (2d) as a timed Silent choice in the core (`Alerts.pause`, `resume`, `pauses`), per phone, not synced: the
   card is shown, nothing rings, and what is still on rings when the pause ends (booked, so also when the app does not
   run); a silence longer than the pause still holds. "Until switched on again" is the Silent choice in Alert kinds.
-  The pause before an alert rings is the same pause. It is on top of the BG alarm rules screen, also on a client:
+  The pause before an alert rings is the same pause. It is on top of the BG alarms screen, also on a client:
   lows (low, falling fast, predicted low), highs (high, persistent high, rising fast) or all but urgent low, for 30
   minutes to 4 hours.
 - **Noisy readings** may be marked on the alert, but never hold back urgent low.
@@ -538,7 +551,8 @@ The order matters: step 3 must not come before step 2.
    2a urgent low (on by default at 54 mg/dl, always rings, also in Do Not Disturb; a one-time card) and the user's own
    low and high rules with their screen (`BgAlarmsImpl`, `BgAlarmRules`); 2b stale data as a booked alert at the last
    reading plus the threshold, with a 5-minute grace after a start (replaces `checkStaleBGAlert` and
-   `IosMissedReadingAlarm`; the setting "Alert if no BG data is received" and its threshold stay); 2c persistent high,
+   `IosMissedReadingAlarm`; the setting "Alert if no BG data is received" and its threshold stayed, until the switch
+   became the choice of the kind on 2026-11-26, section 6); 2c persistent high,
    falling and rising fast and predicted low as rule types of the same screen; 2d smart silence and the pause;
    2e the sound per kind and the Test button; 2f the silence on every phone. The escalation comes
    later, after the basics work.
@@ -590,6 +604,10 @@ The order matters: step 3 must not come before step 2.
     its group, from the alarm screen or the settings.
 16. **Vibrate is a choice** (2026-11-26, section 6): as Ring without sound, on the phone and the watch; an alarm
     vibrates until it is answered. Android only; where the phone cannot vibrate it is not offered and rings.
+17. **When and how, side by side** (2026-11-26, section 6): Alert kinds is a list of four parts, each its own screen.
+    The BG alarms part holds the rules, the urgent low threshold and the missed readings minutes next to how this
+    phone rings each; nothing of the BG alarms is left in Local alerts. Missed readings has no switch of its own: Off
+    is its default choice. The Test plays also in Do Not Disturb: the user asked for it.
 
 Open, with a recommendation:
 

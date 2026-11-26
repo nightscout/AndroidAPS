@@ -1258,6 +1258,63 @@ class AlertsImplTest : TestBase() {
         assertThat(alertPlatform.bookings["automation-timer"]).isEqualTo((now + minute) to false)
     }
 
+    /** Off is not shown: nothing may come on the phone's screen at the booked time either (iOS showed a silent card). */
+    @Test
+    fun `a booking of a kind that is off books nothing on the phone`() {
+        sut.setChoice(CoreAlert.AUTOMATION_ALARM, AlertChoice.OFF)
+
+        assertThat(sut.schedule(reminder(), now + minute)).isTrue()
+
+        assertThat(alertPlatform.bookings).isEmpty()
+        // The core's own timer still raises it, and it is not shown
+        now += minute
+        scope.advanceTimeBy(minute + 1)
+        scope.runCurrent()
+        assertThat(sut.active.value.single().key).isEqualTo("automation-timer")
+        assertThat(cards()).isEmpty()
+    }
+
+    /** The phone holds what was booked with the old choice: a change books it again as it is now. */
+    @Test
+    fun `a choice change books a booking again`() {
+        sut.setChoice(CoreAlert.AUTOMATION_ALARM, AlertChoice.OFF)
+        sut.schedule(reminder(), now + minute)
+
+        sut.setChoice(CoreAlert.AUTOMATION_ALARM, AlertChoice.SILENT)
+        assertThat(alertPlatform.bookings["automation-timer"]).isEqualTo((now + minute) to false)
+
+        sut.setChoice(CoreAlert.AUTOMATION_ALARM, AlertChoice.RING)
+        assertThat(alertPlatform.bookings["automation-timer"]).isEqualTo((now + minute) to true)
+
+        sut.setChoice(CoreAlert.AUTOMATION_ALARM, AlertChoice.OFF)
+        assertThat(alertPlatform.bookings).isEmpty()
+    }
+
+    // ---- a kind that is off until the user turns it on (missed BG readings, 2026-11-26) ------------
+
+    private fun stale() = Alert(kind = BgAlert.STALE, key = "stale", severity = AlertSeverity.CRITICAL, title = BgAlert.STALE.title, raisedAt = 500L)
+
+    @Test
+    fun `missed BG readings is off until the user turns it on`() {
+        sut.raise(stale())
+
+        assertThat(cards()).isEmpty()
+        assertThat(alertPlatform.screens).isEmpty()
+    }
+
+    /** Ring is not its default, so it is stored; Off is, so it is not. */
+    @Test
+    fun `turning missed BG readings on stores Ring, and off removes it`() {
+        sut.setChoice(BgAlert.STALE, AlertChoice.RING)
+        assertThat(sut.choices.value).containsExactly(BgAlert.STALE.id, AlertChoice.RING)
+
+        sut.raise(stale())
+        assertThat(alertPlatform.screens).containsExactly("stale")
+
+        sut.setChoice(BgAlert.STALE, AlertChoice.OFF)
+        assertThat(sut.choices.value).isEmpty()
+    }
+
     // ---- pauses (step 2d) ---------------------------------------------------------------------------
 
     @Test

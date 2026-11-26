@@ -79,7 +79,7 @@ class TreatmentSettingsContentTest {
     @Config(qualifiers = "w360dp-h300dp")
     fun theLastRowCanBeReachedAndChangedInAShortWindow() {
         val switches = listOf(
-            BooleanKey.AlertMissedBgReading,
+            BooleanKey.AlertOverrideDoNotDisturb,
             BooleanKey.AlertPumpUnreachable,
             BooleanKey.AlertIncreaseVolume,
             BooleanKey.OverviewShowTreatmentButton,

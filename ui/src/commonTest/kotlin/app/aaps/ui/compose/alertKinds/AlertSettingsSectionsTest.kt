@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertKindCatalogue
 import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.AlertSection
+import app.aaps.core.interfaces.alerts.AlertSetting
 import app.aaps.core.interfaces.alerts.BgAlert
 import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.alerts.NightscoutAlert
@@ -112,6 +113,26 @@ class AlertSettingsSectionsTest {
         assertEquals(AlertChoice.OFF, sections.of(AlertSection.APP).rows.single { it.setting == CoreAlert.CARBS_REQUIRED }.choice)
     }
 
+    /** Missed BG readings was off until the user turned it on (its old switch): its row shows Off until chosen. */
+    @Test
+    fun missedReadingsShowsOffUntilChosen() {
+        assertEquals(AlertChoice.OFF, sections().of(AlertSection.BG).row(BgAlert.STALE).choice)
+        assertEquals(AlertChoice.RING, sections(mapOf(BgAlert.STALE.id to AlertChoice.RING)).of(AlertSection.BG).row(BgAlert.STALE).choice)
+    }
+
+    /** The entry of each part counts what of it is silent or off, or paused, and nothing of the other parts. */
+    @Test
+    fun eachPartCountsOnlyItsOwnSilentOrOff() {
+        val choices = mapOf(AlertGroup.PUMP_ACTION.id to AlertChoice.SILENT, CoreAlert.HARD_LIMIT.id to AlertChoice.OFF, bgCheck.id to AlertChoice.OFF)
+        val pauses = mapOf(BgAlert.LOW.id to 1L)
+        val sections = sections(choices)
+
+        assertEquals(2, sectionSilentOrOff(sections.of(AlertSection.PUMP), choices, pauses))
+        assertEquals(1, sectionSilentOrOff(sections.of(AlertSection.APP), choices, pauses))
+        assertEquals(1, sectionSilentOrOff(sections.of(AlertSection.BG), choices, pauses))
+        assertEquals(0, sectionSilentOrOff(sections.of(AlertSection.CGM), choices, pauses))
+    }
+
     /** A protected setting always rings, so a choice stored for it is not shown as if it were used. */
     @Test
     fun aProtectedRowShowsRingWhateverIsStored() {
@@ -136,14 +157,26 @@ class AlertSettingsSectionsTest {
         assertEquals(AlertGroup.PUMP_ACTION, action.testKind?.group)
     }
 
+    private fun AlertSettingsSection.row(setting: AlertSetting) = rows.single { it.setting == setting }
+
     /** A kind's own choice, also Ring, is an exception: it is listed, and it is no longer offered to add. */
     @Test
     fun aKindWithItsOwnChoiceIsAnException() {
         val pump = sections(mapOf(AlertGroup.PUMP_ACTION.id to AlertChoice.SILENT, bgCheck.id to AlertChoice.RING)).of(AlertSection.PUMP)
 
-        assertEquals(listOf(AlertExceptionRow(bgCheck, AlertChoice.RING, AlertGroup.PUMP_ACTION.choices)), pump.exceptions)
-        assertTrue(bgCheck !in pump.candidates)
-        assertTrue(lgs in pump.candidates)
+        assertEquals(listOf(AlertExceptionRow(bgCheck, AlertChoice.RING, AlertGroup.PUMP_ACTION.choices)), pump.row(AlertGroup.PUMP_ACTION).exceptions)
+        assertTrue(bgCheck !in pump.row(AlertGroup.PUMP_ACTION).candidates)
+        assertTrue(lgs in pump.row(AlertGroup.PUMP_INFO).candidates)
+    }
+
+    /** Next to the choice it changes: an exception is listed with its own group, and offered only there. */
+    @Test
+    fun anExceptionIsListedWithItsGroup() {
+        val pump = sections(mapOf(lgs.id to AlertChoice.OFF)).of(AlertSection.PUMP)
+
+        assertEquals(listOf(lgs), pump.row(AlertGroup.PUMP_INFO).exceptions.map { it.kind })
+        assertTrue(pump.row(AlertGroup.PUMP_ACTION).exceptions.isEmpty())
+        assertEquals(listOf(bgCheck), pump.row(AlertGroup.PUMP_ACTION).candidates.filter { it.source == "patch" })
     }
 
     /** A protected kind cannot be set apart: it would only look silenced. */
@@ -151,9 +184,9 @@ class AlertSettingsSectionsTest {
     fun aProtectedKindIsNeverAnException() {
         val pump = sections(mapOf(occlusion.id to AlertChoice.OFF)).of(AlertSection.PUMP)
 
-        assertTrue(pump.exceptions.isEmpty())
-        assertTrue(occlusion !in pump.candidates)
-        assertTrue(CoreAlert.BOLUS_FAILED !in pump.candidates)
+        assertTrue(pump.rows.all { it.exceptions.isEmpty() })
+        assertTrue(pump.rows.none { occlusion in it.candidates })
+        assertTrue(pump.rows.none { CoreAlert.BOLUS_FAILED in it.candidates })
     }
 
     /** The app's kinds of their own are rows already: there is nothing to set apart in that section. */
@@ -161,7 +194,7 @@ class AlertSettingsSectionsTest {
     fun theAppSectionHasNoExceptions() {
         val app = sections().of(AlertSection.APP)
 
-        assertTrue(app.candidates.isEmpty())
+        assertTrue(app.rows.all { it.candidates.isEmpty() })
     }
 
     @Test
@@ -189,7 +222,7 @@ class AlertSettingsSectionsTest {
 
         assertEquals(listOf(AlertChoice.RING, AlertChoice.SILENT, AlertChoice.OFF), action.choices)
         assertEquals(AlertChoice.RING, action.choice)
-        assertEquals(AlertExceptionRow(bgCheck, AlertChoice.RING, listOf(AlertChoice.RING, AlertChoice.SILENT, AlertChoice.OFF)), sections.of(AlertSection.PUMP).exceptions.single())
+        assertEquals(AlertExceptionRow(bgCheck, AlertChoice.RING, listOf(AlertChoice.RING, AlertChoice.SILENT, AlertChoice.OFF)), action.exceptions.single())
         assertTrue(sections.of(AlertSection.APP).rows.all { AlertChoice.VIBRATE !in it.choices })
     }
 

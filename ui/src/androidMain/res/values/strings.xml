@@ -398,7 +398,10 @@
 
     <!-- Alert kinds: Ring, Silent or Off for each kind of alert, on this phone -->
     <string name="alert_kinds_title">Alert kinds</string>
-    <string name="alert_kinds_summary">Ring, Silent or Off for each kind of alert, on this phone</string>
+    <string name="alert_kinds_entry_summary">BG alarms, and how each alert rings on this phone</string>
+    <string name="alert_kinds_section_silent_or_off" comment="On the entry of one part of the alert settings (pump, CGM, BG alarms, AAPS). %1$d=how many of its settings are Silent or Off on this phone. Example: Silent or off on this phone: 2">Silent or off on this phone: %1$d</string>
+    <string name="alert_kinds_bg_summary">Your low and high rules, urgent low and missed readings</string>
+    <string name="alert_kinds_app_summary">Reminders, automation alarms and other alerts of AAPS</string>
     <string name="alert_kinds_intro">On this phone only. Silent: a card with no sound. Off: not shown, but still written in the history.</string>
     <string name="alert_kinds_silent_or_off" comment="%1$d=how many kinds of alert the user set to Silent or Off on this phone. Example: Alert kinds silent or off on this phone: 2">Alert kinds silent or off on this phone: %1$d</string>
     <string name="alert_choice_ring" comment="One of three choices for a kind of alert: it rings as usual">Ring</string>
@@ -418,10 +421,14 @@
     <string name="alert_kind_sound_test" comment="Button: play the sound of this alarm for a few seconds, as it will ring">Test</string>
     <string name="alert_kind_sound_test_refused">Not played: an alarm is ringing now.</string>
     <string name="alert_kind_silence_on_this_phone" comment="Button on the alarm screen: from now on, alerts of this kind come as a card with no sound, on this phone">Silence this kind on this phone</string>
-    <string name="bg_alarm_rules_title">BG alarm rules</string>
-    <string name="bg_alarm_rules_summary">Your own low, high, rate and predicted low alarms</string>
-    <string name="bg_alarm_rules_intro">Your own BG alarms: low, high, persistent high, falling or rising fast, and predicted low. Urgent low is always on; its threshold is in Local alerts. The rules are the same on every phone; in Alert kinds each phone chooses how it rings.</string>
-    <string name="bg_alarm_rules_read_only">These rules are the same on every phone. They are changed on the master phone, or here by a client with the Admin role while the master can be reached. In Alert kinds you choose how this phone rings.</string>
+    <string name="bg_alarms_read_only">The rules and the urgent low threshold are the same on every phone. They are changed on the master phone, or here by a client with the Admin role while the master can be reached. How this phone rings you can always change.</string>
+    <string name="bg_alarms_rules_label" comment="Heading of the glucose alarm rules of a group (lows or highs). The rules are synced, so they are the same on the master and on every client phone">Rules, the same on every phone</string>
+    <string name="bg_alarms_on_this_phone" comment="Heading of how this one phone rings an alarm (Ring, Vibrate, Silent, Off and the sound), as opposed to the rules above it, which are the same on every phone">On this phone</string>
+    <string name="bg_alarms_same_on_every_phone" comment="Note under a glucose alarm setting that is synced between the master and the client phones">The same on every phone</string>
+    <string name="bg_alarms_urgent_low_below" comment="The threshold of the urgent low alarm. %1$s=the threshold with its unit, for example: 3.0 mmol/l">Below %1$s</string>
+    <string name="bg_alarms_no_rules">No rule yet: nothing rings.</string>
+    <string name="bg_alarms_stale_after" comment="When the missed BG readings alarm rings. %1$d=minutes. Example: After 30 min without a reading">After %1$d min without a reading</string>
+    <string name="bg_alarms_stale_minutes">Minutes without a reading</string>
     <string name="bg_alarm_rule_low" comment="Title of a low glucose alarm rule. %1$s=the threshold with its unit, for example: 3.9 mmol/l">Low below %1$s</string>
     <string name="bg_alarm_rule_high" comment="Title of a high glucose alarm rule. %1$s=the threshold with its unit, for example: 13.9 mmol/l">High above %1$s</string>
     <string name="bg_alarm_rule_low_title">Low alarm</string>

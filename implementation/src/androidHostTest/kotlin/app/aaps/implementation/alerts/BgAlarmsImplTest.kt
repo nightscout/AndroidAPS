@@ -27,7 +27,6 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -93,15 +92,12 @@ class BgAlarmsImplTest : TestBase() {
         override fun silencedUntil(source: String, key: String): Long = silenced[key] ?: 0L
         override fun act(source: String, key: String) {}
         val booked = mutableListOf<Pair<Alert, Long>>()
-        val unbooked = mutableListOf<String>()
         override fun schedule(alert: Alert, at: Long): Boolean {
             booked += alert to at
             return true
         }
 
-        override fun unschedule(source: String, key: String) {
-            unbooked += key
-        }
+        override fun unschedule(source: String, key: String) {}
     }
 
     private val persistenceLayer: PersistenceLayer = mock()
@@ -327,11 +323,11 @@ class BgAlarmsImplTest : TestBase() {
     // ---- stale data (step 2b) -----------------------------------------------------------------------
 
     private fun staleOn(thresholdMinutes: Int = 30) {
-        whenever(preferences.get(BooleanKey.AlertMissedBgReading)).thenReturn(true)
         whenever(preferences.get(IntKey.AlertsStaleDataThreshold)).thenReturn(thresholdMinutes)
         whenever(dateUtil.timeString(any())).thenReturn("14:35")
     }
 
+    /** Booked whatever this phone chose: its kind is Off by default, and then the core shows nothing and books nothing on the phone. */
     @Test
     fun `the stale data alarm is booked at the last reading plus the threshold`() {
         staleOn()
@@ -382,18 +378,6 @@ class BgAlarmsImplTest : TestBase() {
 
         assertThat(alerts.resolved).contains(BgAlarmsImpl.KEY_STALE)
         assertThat(alerts.booked.single().second).isEqualTo(now + 30 * minute)
-    }
-
-    @Test
-    fun `switched off nothing is booked and a booking is taken back`() {
-        staleOn()
-        readings(100.0)
-        evaluate()
-
-        whenever(preferences.get(BooleanKey.AlertMissedBgReading)).thenReturn(false)
-        evaluate()
-
-        assertThat(alerts.unbooked).containsExactly(BgAlarmsImpl.KEY_STALE)
     }
 
     // ---- persistent high, rate and predicted low (step 2c) -------------------------------------------

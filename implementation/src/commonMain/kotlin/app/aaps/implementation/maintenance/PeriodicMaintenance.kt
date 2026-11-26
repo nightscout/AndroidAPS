@@ -30,8 +30,8 @@ import kotlin.time.Duration.Companion.minutes
  * desktop and was entered on neither. Shared code with a single platform-specific caller looks
  * finished and is not; that is the shape this class exists to remove.
  *
- * What it cost, concretely: [BooleanKey.AlertMissedBgReading] is drawn and searchable on every
- * platform, and off Android it did nothing, so a follower whose CGM stopped was never told. The
+ * What it cost, concretely: the old missed BG readings switch (`AlertMissedBgReading`) was drawn and
+ * searchable on every platform, and off Android it did nothing, so a follower whose CGM stopped was never told. The
  * local database also grew without bound, because nothing trimmed it.
  *
  * ## What is here and what is not

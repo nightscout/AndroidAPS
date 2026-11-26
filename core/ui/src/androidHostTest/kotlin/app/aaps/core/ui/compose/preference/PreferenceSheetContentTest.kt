@@ -66,7 +66,7 @@ class PreferenceSheetContentTest {
 
     /** Eight switches, far more than a 300 dp window holds. The last one is the row the test has to reach. */
     private val switches = listOf(
-        BooleanKey.AlertMissedBgReading,
+        BooleanKey.AlertOverrideDoNotDisturb,
         BooleanKey.AlertPumpUnreachable,
         BooleanKey.AlertIncreaseVolume,
         BooleanKey.OverviewShowTreatmentButton,

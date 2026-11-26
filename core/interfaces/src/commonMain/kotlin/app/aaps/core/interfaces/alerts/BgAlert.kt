@@ -11,7 +11,8 @@ enum class BgAlert(
     private val idName: String,
     override val title: TextRef,
     override val isProtected: Boolean,
-    override val group: AlertGroup? = null
+    override val group: AlertGroup? = null,
+    override val defaultChoice: AlertChoice = AlertChoice.RING
 ) : AlertKind {
 
     /** Always on, always rings, and also in Do Not Disturb. The user sets only its threshold. */
@@ -23,8 +24,11 @@ enum class BgAlert(
     /** The user's own high rules. */
     HIGH("high", InterfacesStrings.alert_kind_bg_high, isProtected = false, AlertGroup.BG_HIGHS),
 
-    /** No reading for longer than the stale data threshold: a booked alert, booked again at every reading (step 2b). */
-    STALE("stale", InterfacesStrings.alert_kind_bg_stale, isProtected = false),
+    /**
+     * No reading for longer than the stale data threshold: a booked alert, booked again at every reading (step 2b).
+     * Off until the user turns it on, as its old switch was.
+     */
+    STALE("stale", InterfacesStrings.alert_kind_bg_stale, isProtected = false, defaultChoice = AlertChoice.OFF),
 
     /** The user's persistent high rules ([BgRuleType.PERSISTENT_HIGH], step 2c). */
     PERSISTENT_HIGH("persistent_high", InterfacesStrings.alert_kind_bg_persistent_high, isProtected = false, AlertGroup.BG_HIGHS),

@@ -374,7 +374,7 @@ class AlertsImpl(
         // An exception is kept also as Ring: it is set against its group's choice
         val exception = setting is AlertKind && setting.group != null
         changeChoices("Alert setting ${setting.id} is now $choice on this phone${if (exception) ", an exception" else ""}") { map ->
-            if (choice == AlertChoice.RING && !exception) map.remove(setting.id) else map[setting.id] = choice
+            if (choice == setting.defaultChoice && !exception) map.remove(setting.id) else map[setting.id] = choice
         }
     }
 
@@ -393,12 +393,15 @@ class AlertsImpl(
         // Not the same choice again: below, an alert that rings now rings what is active of it
         if (map == before) return@withLock
         val wasChoice = entries.values.associateWith { choiceFor(it.alert, before) }
+        val bookingWas = storedBookings().values.associateWith { choiceFor(it.alert, before) }
         saveChoices(map)
         _choices.value = map.toMap()
         aapsLogger.info(LTag.NOTIFICATION, log)
         entries.values
             .filter { choiceFor(it.alert) != wasChoice[it] }
             .forEach { showCard(it, ring = choiceFor(it.alert).rings) }
+        // What the phone holds for a booking was made with the old choice: it rings by itself only as it is now
+        bookingWas.filter { (booking, was) -> choiceFor(booking.alert) != was }.keys.forEach { bookOnPlatform(it.alert, it.at) }
     }
 
     override fun raise(alert: Alert) {
@@ -562,9 +565,7 @@ class AlertsImpl(
     override fun schedule(alert: Alert, at: Long): Boolean = lock.withLock {
         val id = alert.source to alert.key
         val map = storedBookings()
-        // A kind the user made silent or turned off books nothing that rings by itself (iOS); the core still raises it
-        val ring = choiceFor(alert).rings && alert.severity != AlertSeverity.INFO
-        if (!platform.book(alert, at, ring)) {
+        if (!bookOnPlatform(alert, at)) {
             aapsLogger.warn(LTag.NOTIFICATION, "Alert ${alert.source}/${alert.key} not booked: the phone cannot book it")
             return false
         }
@@ -575,6 +576,22 @@ class AlertsImpl(
         startTimer(booking)
         aapsLogger.debug(LTag.NOTIFICATION, "Alert ${alert.source}/${alert.key} booked for ${dateUtil.dateAndTimeString(at)}")
         true
+    }
+
+    /**
+     * Caller holds [lock]. What the phone holds for a booking, by this phone's choice now. A kind the user made silent
+     * books nothing that rings by itself (iOS). A kind that is off books nothing at all: it is not shown, so nothing may
+     * come on the phone's screen at that time either; the core's own timer still raises it. False: the phone cannot
+     * book it.
+     */
+    private fun bookOnPlatform(alert: Alert, at: Long): Boolean {
+        val choice = choiceFor(alert)
+        if (choice == AlertChoice.OFF) {
+            // One booked while the kind was on may still be set on the phone
+            platform.unbook(alert.source, alert.key)
+            return true
+        }
+        return platform.book(alert, at, ring = choice.rings && alert.severity != AlertSeverity.INFO)
     }
 
     override fun unschedule(source: String, key: String) = lock.withLock {
@@ -929,14 +946,15 @@ class AlertsImpl(
 
     /**
      * Caller holds [lock]. What this phone does with [alert] by [choices]: its kind's own choice (an exception, or the
-     * choice of a kind with no group), else its group's, else Ring. A protected kind always rings. Vibrate rings where
+     * choice of a kind with no group), else its group's, else its kind's default (Ring; Off for missed BG readings). A
+     * protected kind always rings. Vibrate rings where
      * the phone cannot vibrate (a choice imported from another phone). A paused kind that rings is Silent while its
      * pause lasts.
      */
     private fun choiceFor(alert: Alert, choices: Map<String, AlertChoice> = storedChoices()): AlertChoice {
         val kind = alert.kind
         if (kind.isProtected) return AlertChoice.RING
-        val stored = choices[kind.id] ?: kind.group?.let { choices[it.id] } ?: AlertChoice.RING
+        val stored = choices[kind.id] ?: kind.group?.let { choices[it.id] } ?: kind.defaultChoice
         val chosen = if (stored == AlertChoice.VIBRATE && !platform.canVibrate) AlertChoice.RING else stored
         val paused = (storedPauses()[kind.id] ?: 0L) > dateUtil.now()
         return if (chosen.rings && paused) AlertChoice.SILENT else chosen

@@ -14,11 +14,11 @@ enum class UiIntentKey(
     override val exportable: Boolean = false
 ) : IntentPreferenceKey {
 
-    /** The list of alert kinds, where the user chooses Ring, Silent or Off for each on this phone (`_docs/ALARMS.md`). */
-    AlertKinds(key = "alert_kinds", title = UiStrings.alert_kinds_title, summary = UiStrings.alert_kinds_summary),
-
-    /** The user's own BG level rules (`_docs/ALARMS.md`, step 2a), set on the master. */
-    BgAlarmRules(key = "bg_alarm_rules_screen", title = UiStrings.bg_alarm_rules_title, summary = UiStrings.bg_alarm_rules_summary),
+    /**
+     * The alert settings (`_docs/ALARMS.md`, section 6): the pump, the CGM, the BG alarms with their rules, and the app's
+     * own alerts, each with how it rings on this phone.
+     */
+    AlertKinds(key = "alert_kinds", title = UiStrings.alert_kinds_title, summary = UiStrings.alert_kinds_entry_summary),
 
     /**
      * Android only: opens Android's "Display over other apps" page for AAPS. With it the alarm screen opens while

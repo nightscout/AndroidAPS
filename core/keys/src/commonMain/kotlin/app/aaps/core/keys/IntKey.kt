@@ -403,7 +403,6 @@ enum class IntKey(
         max = 10000,
         title = KeysStrings.pref_title_stale_data_threshold,
         defaultedBySM = true,
-        dependency = BooleanKey.AlertMissedBgReading,
         unitType = UnitType.MIN
     ),
     AlertsPumpUnreachableThreshold(
