@@ -26,6 +26,7 @@ import app.aaps.pump.aaruy.historyDaoMock
 import app.aaps.pump.aaruy.withEmulatedPumpName
 import app.aaps.pump.aaruy.emulator.AaruyEmulatorPeripheral
 import app.aaps.pump.aaruy.emulator.AaruyPumpEmulator
+import app.aaps.core.keys.DoubleKey
 import app.aaps.pump.aaruy.keys.AaruyDoublePreferenceKey
 import app.aaps.pump.aaruy.keys.AaruyIntPreferenceKey
 import kotlinx.coroutines.runBlocking
@@ -67,6 +68,7 @@ class AaruyUnconfirmedBolusTest {
         // A mock gives 0 for a number, and that would be a limit of 0 U for a bolus.
         AaruyDoublePreferenceKey.entries.forEach { `when`(preferences.get(it)).thenReturn(it.defaultValue) }
         AaruyIntPreferenceKey.entries.forEach { `when`(preferences.get(it)).thenReturn(it.defaultValue) }
+        `when`(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(10.0)
     }
     private val logger = mock(AAPSLogger::class.java)
     private val pump = AaruyPump(

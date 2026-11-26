@@ -34,6 +34,7 @@ import app.aaps.pump.aaruy.testHardLimits
 import app.aaps.pump.aaruy.withEmulatedPumpName
 import app.aaps.pump.aaruy.emulator.AaruyEmulatorPeripheral
 import app.aaps.pump.aaruy.emulator.AaruyPumpEmulator
+import app.aaps.core.keys.DoubleKey
 import app.aaps.pump.aaruy.keys.AaruyDoublePreferenceKey
 import app.aaps.pump.aaruy.keys.AaruyIntKey
 import app.aaps.pump.aaruy.keys.AaruyIntPreferenceKey
@@ -75,6 +76,7 @@ class AaruyBleReconnectTest {
         val preferences = mock(Preferences::class.java).withEmulatedPumpName()
         AaruyDoublePreferenceKey.entries.forEach { `when`(preferences.get(it)).thenReturn(it.defaultValue) }
         AaruyIntPreferenceKey.entries.forEach { `when`(preferences.get(it)).thenReturn(it.defaultValue) }
+        `when`(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(10.0)
         return preferences
     }
 

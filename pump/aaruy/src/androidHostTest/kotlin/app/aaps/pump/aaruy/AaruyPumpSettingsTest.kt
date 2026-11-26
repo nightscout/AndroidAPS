@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.pump.aaruy.comm.BasicParam
@@ -27,14 +28,19 @@ class AaruyPumpSettingsTest {
 
     private val preferences: Preferences = mock()
 
-    /** The hard limit for the age, as the user's age setting would give it. */
+    /** The hard limits for the age, as the user's age setting would give them. */
     private var hardLimitMaxBasal = 2.0
-    private val hardLimits: HardLimits = mock { on { maxBasal() } doAnswer { hardLimitMaxBasal } }
+    private var hardLimitMaxBolus = 17.0
+    private val hardLimits: HardLimits = mock {
+        on { maxBasal() } doAnswer { hardLimitMaxBasal }
+        on { maxBolus() } doAnswer { hardLimitMaxBolus }
+    }
     private val pump = AaruyPump(mock<AAPSLogger>(), mock<ResourceHelper>(), preferences, mock<DateUtil>(), mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>(), hardLimits)
 
+    /** [maxBolus] is the max bolus setting of AAPS. */
     private fun settings(lowReservoir: Double, maxBolus: Double = 10.0, maxBasal: Double = 2.0) {
         whenever(preferences.get(AaruyDoublePreferenceKey.LowReservoir)).thenReturn(lowReservoir)
-        whenever(preferences.get(AaruyDoublePreferenceKey.MaxBolus)).thenReturn(maxBolus)
+        whenever(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(maxBolus)
         hardLimitMaxBasal = maxBasal
         whenever(preferences.get(AaruyIntPreferenceKey.BolusStep)).thenReturn(0)
         whenever(preferences.get(AaruyIntPreferenceKey.SoundPrompt)).thenReturn(0)
@@ -78,6 +84,33 @@ class AaruyPumpSettingsTest {
         assertEquals(AaruyPump.SettingsGap.OTHERS, pump.settingsGap())
         assertTrue(pump.settingsToWrite(AaruyPumpState.BASALRATE_RUNNING))
         assertEquals(2.0, pump.settingsForPump().maxBasal, 0.0)
+    }
+
+    /** The pump gets the max bolus of AAPS: the setting, or the hard limit for the age when that is lower. */
+    @Test
+    fun theMaxBolusOfThePumpIsTheMaxBolusOfAaps() {
+        settings(lowReservoir = 20.0, maxBolus = 8.0)
+        assertEquals(8.0, pump.settingsForPump().maxBolus, 0.0)
+        pump.handleLoadBasicParam(pump.settingsForPump())
+        assertEquals(AaruyPump.SettingsGap.NONE, pump.settingsGap())
+
+        // The user changes the setting: the pump still holds 8 U, so it is written at the next status.
+        settings(lowReservoir = 20.0, maxBolus = 6.5)
+        assertEquals(AaruyPump.SettingsGap.OTHERS, pump.settingsGap())
+        assertEquals(6.5, pump.settingsForPump().maxBolus, 0.0)
+
+        // A child: the hard limit of 5 U is below the setting.
+        hardLimitMaxBolus = 5.0
+        assertEquals(5.0, pump.maxBolusForPump(), 0.0)
+
+        // Pregnant: 60 U is more than the pump holds.
+        settings(lowReservoir = 20.0, maxBolus = 40.0)
+        hardLimitMaxBolus = 60.0
+        assertEquals(25.0, pump.maxBolusForPump(), 0.0)
+
+        // Below 1 U the pump keeps 1 U. AAPS still allows no more than its 0.5 U.
+        settings(lowReservoir = 20.0, maxBolus = 0.5)
+        assertEquals(1.0, pump.maxBolusForPump(), 0.0)
     }
 
     /**

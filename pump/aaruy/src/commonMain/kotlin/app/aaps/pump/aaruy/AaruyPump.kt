@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
@@ -44,6 +45,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlin.math.floor
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 @SingleIn(AppScope::class)
@@ -74,6 +76,10 @@ class AaruyPump(
 
         /** As the protocol rounds: 0.1 * 1000 is 99.99999 in floating point. */
         private const val ROUNDING = 0.000001
+
+        /** The range the max bolus setting of the driver had. UNVERIFIED that the pump takes a value outside it. */
+        private const val PUMP_MAX_BOLUS_LOWEST = 1.0
+        private const val PUMP_MAX_BOLUS_HIGHEST = 25.0
     }
 
     // Connection state flow
@@ -684,6 +690,16 @@ suspend fun syncStopTBRWithPumpId(endTime: Long) {
     fun maxBasalForPump(): Double = floor(hardLimits.maxBasal() * 1000 + ROUNDING) / 1000
 
     /**
+     * The max bolus the pump gets: the max bolus of AAPS, its setting or the hard limit for the age when that is lower, in
+     * the thousandths the pump keeps. Not a setting of the driver, so the two cannot differ. Kept within 1 to 25 U: below
+     * 1 U the pump allows more than AAPS, which still allows no more than its own.
+     */
+    fun maxBolusForPump(): Double {
+        val aaps = min(preferences.get(DoubleKey.SafetyMaxBolus), hardLimits.maxBolus())
+        return floor(aaps.coerceIn(PUMP_MAX_BOLUS_LOWEST, PUMP_MAX_BOLUS_HIGHEST) * 1000 + ROUNDING) / 1000
+    }
+
+    /**
      * The settings as the pump holds them: it keeps the limits in thousandths and the low reservoir alarm in whole
      * units. Otherwise a value like 15.5 U never matches what the pump answers, and the settings are written again and again.
      * This is what is written to the pump. What the pump holds changes only when the pump reports it (review #73).
@@ -693,7 +709,7 @@ suspend fun syncStopTBRWithPumpId(endTime: Long) {
         val soundAlarm = if (preferences.get(AaruyIntPreferenceKey.SoundAlarm) == 1) 1 else 0
         return BasicParam(
             maxBasal = maxBasalForPump(),
-            maxBolus = floor(preferences.get(AaruyDoublePreferenceKey.MaxBolus) * 1000 + ROUNDING) / 1000,
+            maxBolus = maxBolusForPump(),
             bolusStep = if (preferences.get(AaruyIntPreferenceKey.BolusStep) == 1) 2 else 1,
             lowAlert = floor(preferences.get(AaruyDoublePreferenceKey.LowReservoir) + ROUNDING),
             // Only the two low bits are settings. The other bits stay as the pump has them.
