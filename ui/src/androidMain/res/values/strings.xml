@@ -325,6 +325,10 @@
     <string name="permission_sheet_subtitle">Some permissions are needed for the app to work correctly</string>
     <string name="permission_grant">Grant</string>
     <string name="permission_change">Change</string>
+    <string name="permission_sheet_title_recommended" comment="Title of the permissions list when AAPS has every permission it needs, and only a recommended one is left">Permissions</string>
+    <string name="permission_sheet_subtitle_recommended">AAPS has every permission it needs. The ones marked Recommended make it work better.</string>
+    <string name="permission_not_now" comment="Button: decline a permission that AAPS recommends but does not need. It is then not asked for again by itself">Not now</string>
+    <string name="permission_recommended" comment="Small label above a permission that AAPS works without, but recommends">Recommended</string>
     <string name="permission_denied_go_to_settings">Permission permanently denied. Please enable it in app settings.</string>
     <string name="permission_open_settings">Settings</string>
     <string name="permission_directory_picker_error">Unable to launch directory picker. Usually Android or Family Link issue.</string>
@@ -429,6 +433,7 @@
     <string name="bg_alarms_no_rules">No rule yet: nothing rings.</string>
     <string name="bg_alarms_stale_after" comment="When the missed BG readings alarm rings. %1$d=minutes. Example: After 30 min without a reading">After %1$d min without a reading</string>
     <string name="bg_alarms_stale_minutes">Minutes without a reading</string>
+    <string name="bg_alarms_allowed_range" comment="Under a number field: the values it takes. %1$s=the lowest, %2$s=the highest, each with its unit. Example: Allowed: 2.2 mmol/l – 4.4 mmol/l">Allowed: %1$s – %2$s</string>
     <string name="bg_alarms_reset" comment="Button and dialog title: replace the user's glucose alarm rules with the default rules of AAPS">Reset rules to default</string>
     <string name="bg_alarms_reset_text">On every phone, all rules are replaced by these:</string>
     <string name="bg_alarm_rule_low" comment="Title of a low glucose alarm rule. %1$s=the threshold with its unit, for example: 3.9 mmol/l">Low below %1$s</string>

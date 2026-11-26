@@ -661,6 +661,8 @@ private fun AapsApp(app: StartedApp) {
                     onRequestPermission = { group ->
                         group.permissions.firstOrNull()?.let { graph.permissionStatus.ask(it, readPermissions) }
                     },
+                    // iOS has no optional permission today; the answer is kept the same way as on Android if one comes
+                    onDecline = { permissionsViewModel.decline(it) },
                     onDismiss = { permissionsViewModel.dismissSheet() }
                 )
             }

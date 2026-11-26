@@ -151,5 +151,9 @@ enum class StringNonKey(
     // writer wins) and synced to every phone; exported with the master's settings. Empty: never set, so the default
     // rules (`BgAlarmRules.DEFAULT`, decided 2026-11-26); "[]" is a list the user emptied, which stays empty.
     BgAlarmRules(key = "bg_alarm_rules", defaultValue = "", exportable = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    // The optional permissions the user declined with "Not now" on this phone (PermissionGroup.optional), the
+    // permission names one per line. Such a one no longer opens the permissions sheet by itself. Not exportable and not
+    // synced: a permission belongs to this phone.
+    PermissionsDeclined(key = "permissions_declined", defaultValue = "", exportable = false),
 
 }

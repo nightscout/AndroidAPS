@@ -85,8 +85,10 @@ which ring only while the app runs. Its only sound is the system beep.
 - **The alarm screen over another app (Android).** Android does not let an app in the background put a screen over
   another app (#5338): the alarm rings, its notification pops up with Mute, and the alarm screen shows when AAPS is
   opened. On a locked phone the screen wake brings it up. Since 2026-11-22 the user can allow "Display over other
-  apps" (Settings > Local alerts), and then the alarm screen opens at once also over another app (checked on the
-  Pixel, Android 16: `BAL_ALLOW_SAW_PERMISSION`). It is optional: AAPS does not ask for it.
+  apps" (Settings > Alerts), and then the alarm screen opens at once also over another app (checked on the
+  Pixel, Android 16: `BAL_ALLOW_SAW_PERMISSION`). It is optional, but recommended since 2026-11-26: the permissions
+  sheet lists it as "Recommended" with "Not now" (`PermissionGroup.optional`). Declined, it no longer opens the sheet
+  by itself, and stays in the list and under Alerts.
 - **Eversense** raises its transmitter's alarms as alerts since 2026-11-24 (step 5), sorted by what they do to
   dosing. Its glucose alarms went: AAPS's own BG alarms raise those.
 - **Nightscout alarms** were the glucose alarms of an AAPSClient until 2026-11-23. Every phone has its own BG alarms

@@ -39,6 +39,8 @@
     <string name="permission_notifications_description">Required to show alerts, alarms, and pump status updates</string>
     <string name="permission_schedule_exact_alarm_title">Alarms and reminders</string>
     <string name="permission_schedule_exact_alarm_description">Required so alarms can wake the screen while AAPS is in the background, and so reminders ring on time</string>
+    <string name="permission_overlay_title" comment="Name of the Android permission Display over other apps, as AAPS uses it">Alarm screen over other apps</string>
+    <string name="permission_overlay_description">Lets an alarm show its screen over the app you are using, so you can answer it at once. Without it the alarm still rings, and its screen opens when you open AAPS.</string>
 
     <!--    Notification channels, shown in the Android settings-->
     <string name="alarm_channel_group">AAPS alarms</string>

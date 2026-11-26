@@ -37,12 +37,23 @@ internal fun PermissionsSheetContentPreview() {
             ),
             granted = true
         ),
+        PermissionItem(
+            group = PermissionGroup(
+                permissions = listOf("android.permission.SYSTEM_ALERT_WINDOW"),
+                rationaleTitle = UiStrings.permission_recommended,
+                rationaleDescription = UiStrings.permission_sheet_subtitle,
+                special = true,
+                optional = true,
+            ),
+            granted = false
+        ),
     )
     MaterialTheme {
         PermissionsSheetContent(
             items = items,
             snackbarHostState = remember { SnackbarHostState() },
             onRequestPermission = {},
+            onDecline = {},
         )
     }
 }

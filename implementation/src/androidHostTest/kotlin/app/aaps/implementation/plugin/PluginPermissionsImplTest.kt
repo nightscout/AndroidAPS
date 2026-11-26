@@ -68,6 +68,18 @@ class PluginPermissionsImplTest : TestBase() {
         assertThat(group.special).isTrue()
     }
 
+    /**
+     * The alarm screen over other apps (#5338) is recommended, not needed (decided 2026-11-26): it is listed for
+     * everyone, granted on Android's own page, and the user may decline it.
+     */
+    @Test
+    fun `display over other apps is recommended, not needed`() {
+        val group = store(emptySet()).collectAllPermissions().single { Manifest.permission.SYSTEM_ALERT_WINDOW in it.permissions }
+
+        assertThat(group.special).isTrue()
+        assertThat(group.optional).isTrue()
+    }
+
     private fun missingWithExactAlarms(allowed: Boolean): List<String> {
         val alarmManager = mock<AlarmManager>()
         whenever(alarmManager.canScheduleExactAlarms()).thenReturn(allowed)

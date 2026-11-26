@@ -402,6 +402,7 @@ patch_id|MedtrumLongNonKey|true
 patch_primed_flag|MedtrumBooleanNonKey|true
 patch_start_time|MedtrumLongNonKey|true
 patient_name|StringKey|true
+permissions_declined|StringNonKey|false
 pp_ISF_weight|DoubleKey|true
 pref_medtronic_battery_type|MedtronicStringPreferenceKey|true
 pref_medtronic_bolus_delay|MedtronicIntPreferenceKey|true

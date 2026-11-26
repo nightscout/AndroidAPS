@@ -237,6 +237,8 @@ fun BgAlarmsScreen(
     if (editingUrgentLow) NumberDialog(
         title = stringResource(BgAlert.URGENT_LOW.title),
         label = stringResource(UiStrings.bg_alarm_rule_threshold, units.label),
+        // Said, not only shown red: a value out of it gives no other hint why Save does nothing
+        hint = stringResource(UiStrings.bg_alarms_allowed_range, units.format(URGENT_LOW_LIMITS.start), units.format(URGENT_LOW_LIMITS.endInclusive)),
         initial = units.toUnits(urgentLowMgdl),
         decimal = true,
         parse = { text -> units.toMgdl(text)?.takeIf { it in URGENT_LOW_LIMITS } },
@@ -249,6 +251,11 @@ fun BgAlarmsScreen(
     if (editingStale && staleMinutesRange != null) NumberDialog(
         title = stringResource(BgAlert.STALE.title),
         label = stringResource(UiStrings.bg_alarms_stale_minutes),
+        hint = stringResource(
+            UiStrings.bg_alarms_allowed_range,
+            stringResource(CoreUiStrings.format_mins, staleMinutesRange.first),
+            stringResource(CoreUiStrings.format_mins, staleMinutesRange.last)
+        ),
         initial = staleMinutes.toString(),
         decimal = false,
         parse = { text -> text.trim().toIntOrNull()?.takeIf { it in staleMinutesRange }?.toDouble() },
@@ -325,11 +332,12 @@ private fun RuleList(
     OnThisPhone()
 }
 
-/** A number for an alarm: [parse] gives the value, or null when the text is not one it may be. */
+/** A number for an alarm: [parse] gives the value, or null when the text is not one it may be; [hint] says which may. */
 @Composable
 private fun NumberDialog(
     title: String,
     label: String,
+    hint: String,
     initial: String,
     decimal: Boolean,
     parse: (String) -> Double?,
@@ -346,6 +354,7 @@ private fun NumberDialog(
                 value = text,
                 onValueChange = { text = it },
                 label = { Text(label) },
+                supportingText = { Text(hint) },
                 isError = value == null,
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = if (decimal) KeyboardType.Decimal else KeyboardType.Number)

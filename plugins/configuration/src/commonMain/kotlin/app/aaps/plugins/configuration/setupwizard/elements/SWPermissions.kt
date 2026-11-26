@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -89,14 +90,25 @@ private fun PermissionRow(
     //
     // Only the missing case is spoken, matching the status lights and the notification list: saying
     // something about every granted row would bury the rows that still need attention.
-    val missing = if (granted) null else stringResource(CoreUiStrings.warning)
+    //
+    // An optional one (PermissionGroup.optional) is recommended, not needed: no warning, an info icon instead.
+    val warned = !granted && !group.optional
+    val missing = if (warned) stringResource(CoreUiStrings.warning) else null
     ListItem(
         modifier = if (missing != null) Modifier.semantics { stateDescription = missing } else Modifier,
         leadingContent = {
             Icon(
-                imageVector = if (granted) Icons.Default.CheckCircle else Icons.Default.Warning,
+                imageVector = when {
+                    granted        -> Icons.Default.CheckCircle
+                    group.optional -> Icons.Default.Info
+                    else           -> Icons.Default.Warning
+                },
                 contentDescription = null,
-                tint = if (granted) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                tint = when {
+                    granted        -> MaterialTheme.colorScheme.primary
+                    group.optional -> MaterialTheme.colorScheme.onSurfaceVariant
+                    else           -> MaterialTheme.colorScheme.error
+                }
             )
         },
         headlineContent = {

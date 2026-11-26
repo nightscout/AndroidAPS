@@ -116,6 +116,7 @@ import app.aaps.ui.compose.manageSheet.ManageViewModel
 import app.aaps.ui.compose.overview.chips.ChipsViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.compose.overview.statusLights.StatusViewModel
+import app.aaps.ui.compose.alertKinds.openAlarmOverOtherAppsPage
 import app.aaps.ui.compose.permissionsSheet.PermissionsSheet
 import app.aaps.ui.compose.permissionsSheet.PermissionsSideEffect
 import app.aaps.ui.compose.permissionsSheet.PermissionsViewModel
@@ -434,6 +435,10 @@ class ComposeMainActivity : MetroAppCompatActivity() {
 
                             effect.group.permissions.contains(PluginPermissionsImpl.PERMISSION_NOTIFICATION_LISTENER)   ->
                                 startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+
+                            // The same page as the setting under Alerts
+                            effect.group.permissions.contains(Manifest.permission.SYSTEM_ALERT_WINDOW)                  ->
+                                openAlarmOverOtherAppsPage(this@ComposeMainActivity)
                         }
 
                     is PermissionsSideEffect.ShowError ->
@@ -462,6 +467,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                 items = permState.items,
                 snackbarHostState = permissionsSnackbarHostState,
                 onRequestPermission = { permissionsViewModel.requestPermission(it) },
+                onDecline = { permissionsViewModel.decline(it) },
                 onDismiss = { permissionsViewModel.dismissSheet() }
             )
         }

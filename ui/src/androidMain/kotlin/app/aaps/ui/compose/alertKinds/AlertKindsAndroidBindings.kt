@@ -27,27 +27,29 @@ object AlertKindsAndroidBindings {
 }
 
 /**
- * Opens Android's "Display over other apps" page for AAPS. Android does not let an app in the background put a screen
- * over another app, so without it a ringing alarm shows its notification, and its alarm screen only when AAPS is
- * opened (#5338). With it, `AndroidAlertPlatform` starts the alarm screen at once. Optional: AAPS never asks for it.
+ * The "Display over other apps" setting under Alerts. Android does not let an app in the background put a screen over
+ * another app, so without it a ringing alarm shows its notification, and its alarm screen only when AAPS is opened
+ * (#5338). With it, `AndroidAlertPlatform` starts the alarm screen at once. Optional: the permissions sheet recommends
+ * it once (`PermissionGroup.optional`), and here it can be changed at any time.
  */
 @Inject
 class AlarmOverOtherAppsSetting(private val context: Context) {
 
-    val item: PreferenceItem = UiIntentKey.AlarmOverOtherApps.withClick { open() }
+    val item: PreferenceItem = UiIntentKey.AlarmOverOtherApps.withClick { openAlarmOverOtherAppsPage(context) }
+}
 
-    private fun open() {
-        val page = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.fromParts("package", context.packageName, null))
-        try {
-            context.startActivity(page.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-        } catch (_: ActivityNotFoundException) {
-            // A phone with no such page: the app's own page has the same switch on most of them
-            runCatching {
-                context.startActivity(
-                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", context.packageName, null))
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                )
-            }
+/** Opens Android's "Display over other apps" page for AAPS: from the setting above and from the permissions sheet. */
+fun openAlarmOverOtherAppsPage(context: Context) {
+    val page = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.fromParts("package", context.packageName, null))
+    try {
+        context.startActivity(page.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+    } catch (_: ActivityNotFoundException) {
+        // A phone with no such page: the app's own page has the same switch on most of them
+        runCatching {
+            context.startActivity(
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", context.packageName, null))
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            )
         }
     }
 }

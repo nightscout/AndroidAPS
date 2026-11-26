@@ -34,6 +34,9 @@ class PermissionsSheetContentTest {
 
     private lateinit var titleLabel: String
     private lateinit var grantLabel: String
+    private lateinit var notNowLabel: String
+    private lateinit var recommendedLabel: String
+    private lateinit var neutralTitleLabel: String
 
     @Before
     fun setUp() {
@@ -43,6 +46,9 @@ class PermissionsSheetContentTest {
         val ctx: Context = RuntimeEnvironment.getApplication()
         titleLabel = ctx.getString(R.string.permission_sheet_title)
         grantLabel = ctx.getString(R.string.permission_grant)
+        notNowLabel = ctx.getString(R.string.permission_not_now)
+        recommendedLabel = ctx.getString(R.string.permission_recommended)
+        neutralTitleLabel = ctx.getString(R.string.permission_sheet_title_recommended)
     }
 
     @Test
@@ -58,12 +64,65 @@ class PermissionsSheetContentTest {
                 PermissionsSheetContent(
                     items = listOf(PermissionItem(group = group, granted = false)),
                     snackbarHostState = remember { SnackbarHostState() },
-                    onRequestPermission = { requested = it }
+                    onRequestPermission = { requested = it },
+                    onDecline = {}
                 )
             }
         }
         compose.onNodeWithText(titleLabel).assertIsDisplayed()
         compose.onNodeWithText(grantLabel).performClick()
         assertThat(requested).isEqualTo(group)
+        // A needed one cannot be declined
+        compose.onNodeWithText(notNowLabel).assertDoesNotExist()
+    }
+
+    private val optional = PermissionGroup(
+        permissions = listOf("android.permission.SYSTEM_ALERT_WINDOW"),
+        rationaleTitle = TextRef.AndroidRes(R.string.permission_change),
+        rationaleDescription = TextRef.AndroidRes(R.string.permission_sheet_subtitle),
+        special = true,
+        optional = true
+    )
+
+    /** Recommended, not needed: it says so, and it can be answered "Not now" as well as granted. */
+    @Test
+    fun anOptionalOneIsRecommendedAndCanBeDeclined() {
+        var declined: PermissionGroup? = null
+        var requested: PermissionGroup? = null
+        compose.setContent {
+            MaterialTheme {
+                PermissionsSheetContent(
+                    items = listOf(PermissionItem(group = optional, granted = false)),
+                    snackbarHostState = remember { SnackbarHostState() },
+                    onRequestPermission = { requested = it },
+                    onDecline = { declined = it }
+                )
+            }
+        }
+        compose.onNodeWithText(recommendedLabel).assertIsDisplayed()
+        // Nothing needed is missing: the sheet does not say "required"
+        compose.onNodeWithText(neutralTitleLabel).assertIsDisplayed()
+        compose.onNodeWithText(titleLabel).assertDoesNotExist()
+        compose.onNodeWithText(notNowLabel).performClick()
+        assertThat(declined).isEqualTo(optional)
+        compose.onNodeWithText(grantLabel).performClick()
+        assertThat(requested).isEqualTo(optional)
+    }
+
+    /** Declined: still listed with Grant, so it can be granted later, but no "Not now" again. */
+    @Test
+    fun aDeclinedOneKeepsOnlyGrant() {
+        compose.setContent {
+            MaterialTheme {
+                PermissionsSheetContent(
+                    items = listOf(PermissionItem(group = optional, granted = false, declined = true)),
+                    snackbarHostState = remember { SnackbarHostState() },
+                    onRequestPermission = {},
+                    onDecline = {}
+                )
+            }
+        }
+        compose.onNodeWithText(grantLabel).assertIsDisplayed()
+        compose.onNodeWithText(notNowLabel).assertDoesNotExist()
     }
 }

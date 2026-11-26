@@ -14,6 +14,9 @@ import app.aaps.core.keys.interfaces.TextRef
  *   and require a dedicated Settings intent to grant.
  * @param alwaysShowAction true if the action button should be shown even when granted
  *   (e.g. directory selection where the user may want to change the current choice)
+ * @param optional true for a permission that is recommended, not needed: the app works without it, and the user may
+ *   decline it ("Not now"). A declined one is still listed, but no longer opens the permissions sheet by itself
+ *   (decided 2026-11-26, for "display over other apps").
  */
 data class PermissionGroup(
     val permissions: List<String>,
@@ -21,4 +24,5 @@ data class PermissionGroup(
     val rationaleDescription: TextRef,
     val special: Boolean = false,
     val alwaysShowAction: Boolean = false,
+    val optional: Boolean = false,
 )

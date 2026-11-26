@@ -124,6 +124,18 @@ class PluginPermissionsImpl(
                 special = true,
             )
         )
+        // Recommended, not needed (decided 2026-11-26): with it an alarm screen comes up over the app in use
+        // (`AndroidAlertPlatform.showAlarmScreen`, #5338); without it the alarm still rings and its screen waits for
+        // AAPS to be opened. The user may decline it, and finds it again under Alerts.
+        add(
+            PermissionGroup(
+                permissions = listOf(Manifest.permission.SYSTEM_ALERT_WINDOW),
+                rationaleTitle = TextRef.AndroidRes(R.string.permission_overlay_title),
+                rationaleDescription = TextRef.AndroidRes(R.string.permission_overlay_description),
+                special = true,
+                optional = true,
+            )
+        )
     }
 
     private fun isPermissionMissing(context: Context, perm: String): Boolean =
@@ -143,6 +155,10 @@ class PluginPermissionsImpl(
 
             PERMISSION_NOTIFICATION_LISTENER                         ->
                 !isNotificationListenerEnabled(context)
+
+            // Special app access: granted on Android's own page, never through the permission dialog
+            Manifest.permission.SYSTEM_ALERT_WINDOW                  ->
+                !Settings.canDrawOverlays(context)
 
             else                                                     ->
                 ContextCompat.checkSelfPermission(context, perm) != PackageManager.PERMISSION_GRANTED
