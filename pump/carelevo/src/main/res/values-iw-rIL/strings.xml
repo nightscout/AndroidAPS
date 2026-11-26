@@ -58,9 +58,7 @@
     <string name="carelevo_insulin_refill_step1">1. הסירו את נייר המגן מאריזת הפאץ\'.</string>
     <string name="carelevo_insulin_refill_step2">2. חטאו את פקק הגומי של בקבוקון האינסולין באמצעות פד אלכוהול.</string>
     <string name="carelevo_insulin_refill_step3">3. הסירו את מכסה ההגנה מהמחט של מזרק האינסולין במשיכה ישרה.</string>
-    <string name="carelevo_insulin_refill_step4">4. משכו את בוכנת המזרק לאחור ומלאו אותו בכ־2 מ״ל אוויר.</string>
     <string name="carelevo_insulin_refill_step5">5. הכניסו את המזרק המלא באוויר לבקבוקון האינסולין והזריקו את האוויר לתוכו.</string>
-    <string name="carelevo_insulin_refill_step6">6. כשהמזרק עדיין בתוך הבקבוקון, הפכו את הבקבוקון והמזרק והשתמשו בלחץ כדי למלא את המזרק בכ־2 מ״ל אינסולין.</string>
     <string name="carelevo_insulin_refill_step7">7. הכניסו את מחט המזרק בצורה אנכית לפתח מילוי האינסולין של הפאץ\' (①) עד לתחתית. משכו את הבוכנה עד הסוף למעלה ואז שחררו אותה. הוציאו את המזרק מפתח המילוי.</string>
     <string name="carelevo_insulin_refill_step8">8. החזיקו את המזרק זקוף וטפחו בעדינות על צדו כדי לרכז את בועות האוויר בחלק העליון.</string>
     <string name="carelevo_insulin_refill_step9">9. הכניסו שוב את המחט לבקבוקון האינסולין, דחפו את כל האוויר לתוכו ולאחר מכן שאבו את כמות האינסולין הדרושה למשך השימוש בפאץ\'.</string>
@@ -83,7 +81,7 @@
     <string name="carelevo_patch_connect_step_1_title">הסרת מכסה המחט</string>
     <string name="carelevo_patch_connect_step_1_desc">הוציאו את הפאץ\' מהאריזה והסירו את מכסה המחט.</string>
     <string name="carelevo_patch_connect_step_2_title">הפעלה וחיבור</string>
-    <string name="carelevo_patch_connect_step_2_desc">לחצו על לחצן ההפעלה למשך יותר משנייה אחת. לאחר הצפצוף, הקישו על [חיפוש פאץ\'] למטה.</string>
+    <string name="carelevo_patch_connect_step_2_desc">לחצו על לחצן ההפעלה למשך יותר משנייה אחת. לאחר הצפצוף, הקישו על [חיפוש פאץ׳] למטה.</string>
     <string name="carelevo_patch_safety_check_start_title">בדיקת בטיחות</string>
     <string name="carelevo_patch_safety_check_end_title">בדיקת הבטיחות הושלמה</string>
     <string name="carelevo_patch_safety_check_start_desc">הפאץ\' חובר בהצלחה.\nנא ללחוץ על [בדיקת בטיחות].</string>
@@ -113,10 +111,7 @@
     <string name="carelevo_dialog_patch_connect_message_title">אם הפאץ\' שזוהה למטה הוא הנכון, לחצו על אישור.</string>
     <string name="carelevo_dialog_patch_connect_needle_injected">החדרת המחט הושלמה ומתקן ההחדרה הוסר</string>
     <string name="carelevo_dialog_connect_detached">מתקן ההחדרה הוסר</string>
-    <string name="carelevo_dialog_connect_detach_applicator_guide">
-        לחצו על האחיזות משני צדי מתקן ההחדרה כדי לנתק אותו מהפאץ\',\n
-        ולאחר מכן לחצו על `מתקן ההחדרה הוסר`. מתן האינסולין יתחיל.
-    </string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">לחצו על האחיזות משני צדי מתקן ההחדרה כדי לנתק אותו מהפאץ\',\nולאחר מכן לחצו על `מתקן ההחדרה הוסר`. מתן האינסולין יתחיל.</string>
     <!-- Connection -->
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth אינו מופעל. נא לבדוק.</string>
     <string name="carelevo_toast_msg_patch_not_connected">אין פאץ\' מחובר.</string>
@@ -130,6 +125,7 @@
     <string name="carelevo_toast_msg_needle_check_failed">בדיקת המחט נכשלה.</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">השלכת הפאץ\' נכשלה. נא לנסות שוב.</string>
+    <string name="carelevo_discarded_not_reached">לא ניתן היה להתחבר לפאץ\'. הוא הוסר מ-AAPS אבל לא נעצר, וייתכן שהוא עדיין נותן אינסולין. יש להוריד אותו מהגוף.</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">בקשת מתן הבזאלי נכשלה. נא לנסות שוב.</string>
     <!-- Delivery Resume/Suspend -->
@@ -214,5 +210,7 @@
     <string name="carelevo_profile_update_skip_comment">דולג: העדכון הקודם בוצע לפני זמן קצר מדי.</string>
     <string name="carelevo_bolus_stop_not_confirmed">הפאץ׳ לא אישר עצירה. ממתין לסיום הבולוס…</string>
     <string name="carelevo_bolus_rejected_missed_bolus_recorded">בולוס שלא נרשם נוסף כעת. יש לבדוק את ה-IOB ולאחר מכן לנסות שוב.</string>
+    <string name="carelevo_bolus_outcome_unknown">הפאץ\' לא ענה על הבולוס. כל הבולוס נלקח בחשבון עד שהפאץ\' ידווח כמה הוא נתן.</string>
     <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">הפאץ׳ לא אישר את העצירה. נרשם הבולוס המלא של %1$s.</string>
+    <string name="carelevo_bolus_stopped_by_patch" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The patch stopped the bolus. Given: 0.50 U of 2.00 U">הפאץ\' עצר את הבולוס. ניתן: %1$s מתוך %2$s</string>
 </resources>

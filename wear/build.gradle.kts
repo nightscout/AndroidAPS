@@ -18,21 +18,6 @@ repositories {
     google()
 }
 
-// `--exclude=ios-testflight-*` for the same reason as in `:app` - the tag names one past iOS
-// submission, and `git describe` would otherwise report it however far away it is.
-fun generateGitBuild(): String {
-    try {
-        val processBuilder = ProcessBuilder("git", "describe", "--always", "--abbrev=7", "--exclude=ios-testflight-*")
-        val output = File.createTempFile("git-build", "")
-        processBuilder.redirectOutput(output)
-        val process = processBuilder.start()
-        process.waitFor()
-        return output.readText().trim()
-    } catch (_: Exception) {
-        return "NoGitSystemAvailable"
-    }
-}
-
 fun generateDate(): String {
     val stringBuilder: StringBuilder = StringBuilder()
     // showing only date prevents app to rebuild everytime
@@ -48,7 +33,7 @@ android {
         minSdk = Versions.wearMinSdk
         targetSdk = Versions.wearTargetSdk
 
-        buildConfigField("String", "BUILDVERSION", "\"${generateGitBuild()}-${generateDate()}\"")
+        buildConfigField("String", "BUILDVERSION", "\"${providers.gitDescribe()}-${generateDate()}\"")
     }
 
     buildTypes {

@@ -39,13 +39,12 @@ kotlin {
         androidMain {
             dependencies {
 
-                api(project.dependencies.platform(libs.androidx.compose.bom))
-                api(libs.androidx.compose.runtime)
-                api(libs.androidx.ui)
+                api(libs.jetbrains.compose.runtime)
+                api(libs.jetbrains.compose.ui)
 
-                implementation(libs.androidx.compose.ui.tooling.preview)
+                implementation(libs.jetbrains.compose.ui.tooling.preview)
                 // Was debugImplementation; the multiplatform library target has no build types.
-                implementation(libs.androidx.compose.ui.tooling)
+                implementation(libs.jetbrains.compose.ui.tooling)
             }
         }
 
@@ -57,8 +56,7 @@ kotlin {
                 implementation(libs.org.mockito.kotlin)
                 implementation(libs.com.google.truth)
                 implementation(libs.kotlinx.coroutines.test)
-                implementation(project.dependencies.platform(libs.androidx.compose.bom))
-                implementation(libs.androidx.compose.ui.test.junit4)
+                implementation(libs.jetbrains.compose.ui.test.junit4)
                 implementation(libs.org.robolectric)
                 implementation(libs.androidx.compose.ui.test.manifest)
                 runtimeOnly(libs.org.junit.vintage.engine)

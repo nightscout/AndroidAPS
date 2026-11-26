@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.floor
@@ -27,6 +26,7 @@ import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
+import kotlin.time.Instant
 
 @SingleIn(AppScope::class)
 @Inject

@@ -62,6 +62,18 @@
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Показувати рівень заряду, який повідомляє OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">НЕ працює з оригінальним RileyLink. Може не працювати з іншими альтернативами RileyLink.</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d день</item>
+        <item quantity="few">%1$d дні</item>
+        <item quantity="many">%1$d днів</item>
+        <item quantity="other">%1$d днів</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d година</item>
+        <item quantity="few">%1$d години</item>
+        <item quantity="many">%1$d годин</item>
+        <item quantity="other">%1$d годин</item>
+    </plurals>
     <string name="orange_use_scanning_level">Використовувати сканування</string>
     <string name="orange_use_scanning_level_summary">Сканувати перед підключенням до OrangeLink, це має покращити з’єднання (за потреби можна використовувати й з іншими клонами RileyLink)</string>
     <string name="rileylink_pair">Спарувати RileyLink</string>

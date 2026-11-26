@@ -832,7 +832,7 @@ class DataHandlerMobile(
             state?.let { add(EventData.ConfirmActionLine(ConfirmationRole.SCENE.name, it.scene.name)) }
             if (triggerChain) {
                 add(EventData.ConfirmActionLine(ConfirmationRole.NORMAL.name, rh.gs(CoreUiStrings.scene_skip_to_label)))
-                add(EventData.ConfirmActionLine(ConfirmationRole.SCENE.name, chainTarget!!.name))
+                add(EventData.ConfirmActionLine(ConfirmationRole.SCENE.name, chainTarget.name))
             } else {
                 chainTarget?.let { add(EventData.ConfirmActionLine(ConfirmationRole.INFO.name, rh.gs(CoreUiStrings.scene_end_follow_up_not_started, it.name))) }
             }

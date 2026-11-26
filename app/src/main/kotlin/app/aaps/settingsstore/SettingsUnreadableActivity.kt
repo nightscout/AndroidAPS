@@ -21,7 +21,7 @@ import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Shown instead of the app when the settings cannot be opened (see [AndroidStorage]): what happened, and the
- * two ways out - try again, or start fresh.
+ * ways out - try again, or, only when the file does not open with the key, start fresh.
  *
  * Not injected, and not part of the app's graph, on purpose. AAPS is not started in this case, and this
  * screen needs nothing of it. `ComposeMainActivity` hands over to it at once, and the notification opens it.
@@ -38,18 +38,25 @@ class SettingsUnreadableActivity : ComponentActivity() {
             finish()
             return
         }
+        // Start fresh only when the file does not open with the key. After a Keystore failure the file may open
+        // again later, and starting fresh would delete the only key that opens it. Desktop and iOS do the same.
+        val unreadable = failure is StoreUnreadableException
         setContent {
             MaterialTheme(colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()) {
                 val cause = stringResource(
-                    if (failure is StoreUnreadableException) R.string.settings_unreadable_key_explanation
+                    if (unreadable) R.string.settings_unreadable_key_explanation
                     else R.string.settings_unreadable_keystore_explanation
+                )
+                val whatToDo = stringResource(
+                    if (unreadable) R.string.settings_unreadable_what_to_do
+                    else R.string.settings_unreadable_keystore_what_to_do
                 )
                 StartupFailedScreen(
                     title = stringResource(R.string.settings_unreadable_title),
-                    explanation = listOf(cause, stringResource(R.string.settings_unreadable_not_running), stringResource(R.string.settings_unreadable_what_to_do)),
+                    explanation = listOf(cause, stringResource(R.string.settings_unreadable_not_running), whatToDo),
                     error = failure,
                     onRetry = ::restart,
-                    onStartFresh = {
+                    onStartFresh = if (unreadable) ({
                         // Said on the screen, not a crash: the file could not be set aside, so a restart would
                         // only find it again.
                         try {
@@ -58,7 +65,7 @@ class SettingsUnreadableActivity : ComponentActivity() {
                         } catch (e: Exception) {
                             Toast.makeText(this, e.message ?: e::class.simpleName, Toast.LENGTH_LONG).show()
                         }
-                    },
+                    }) else null,
                     labels = StartupFailedLabels(
                         tryAgain = stringResource(CoreUiR.string.retry),
                         startFresh = stringResource(R.string.settings_unreadable_start_fresh),

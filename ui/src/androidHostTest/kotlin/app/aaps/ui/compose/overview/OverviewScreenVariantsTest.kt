@@ -46,9 +46,10 @@ private const val WIDE = "w1280dp-h800dp"
  *  - the status card starts **collapsed** in the stacked (phone portrait) layout and **expanded** in
  *    the two wide ones. Collapsed shows an "expand" affordance and no heading; expanded shows the
  *    "Status" heading and a "collapse" affordance.
- *  - the two wide layouts carry a [LargeClock] and the stacked one does not.
+ *  - only the tablet layout carries a [LargeClock], the night display of clock and BG. The split layout
+ *    (lower than 600 dp) and the stacked one do not: there it took height the screen does not have.
  *  - the tablet layout hides the BG circle's "time ago" line, because its clock already carries one.
- *    The split layout does the opposite: the circle keeps it and the clock shows only the time.
+ *    The split layout keeps it in the circle.
  *  - with no BG reading, the BG circle shows the "---" placeholder rather than nothing.
  *
  * Every label is read from the real resources, so a translation edit cannot make the test lie.
@@ -194,12 +195,13 @@ class OverviewScreenVariantsTest {
 
     @Test
     @Config(qualifiers = WIDE)
-    fun `split layout shows the clock without the age of the BG reading`() {
+    fun `split layout has no large clock`() {
         viewModels.withBg()
         setScreen(Variant.SPLIT)
 
-        // The BG circle beside it already shows the age, see `split layout keeps the BG time ago line`.
-        compose.onNodeWithText(OverviewViewModelFixture.CLOCK_TIME).assertIsDisplayed()
+        // The BG circle shows the age, see `split layout keeps the BG time ago line`, and the time is in the
+        // status bar
+        compose.onNodeWithText(OverviewViewModelFixture.CLOCK_TIME).assertDoesNotExist()
         compose.onNodeWithText(clockText).assertDoesNotExist()
     }
 

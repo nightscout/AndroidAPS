@@ -193,13 +193,14 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
      * The DIA each v3 profile was using, with the raw keys those values came from still in the old store.
      *
      * `doMigrations` used to remove those keys as it read them, which put the only copy of the DIA values
-     * in a field, in memory. `dataMigrations` is the only consumer and runs much later, after
+     * in a field, in memory. `dataMigrations` is the only consumer, and it used to run much later, after
      * `vacuumDatabaseIfDue` (which documents that it can take the process down below the JVM, where no
      * `catch` reaches) and after the plugins start. A death anywhere in that gap lost the DIA values for
      * good: the next start finds no keys and stamps the old records with a guess instead. That is wrong IOB
      * on historical records and it is one-way - the sentinel is consumed and those rows are never revisited.
      *
-     * So they are removed only once the value they carry is safely in the insulin list.
+     * It now runs right after `doMigrations`, so the gap is short, but there still is one. So they are
+     * removed only once the value they carry is safely in the insulin list.
      */
     private var profileDia: ProfileDiaHarvest = ProfileDiaHarvest(emptyMap(), emptyList())
 
@@ -274,6 +275,13 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 // the difference between a right and a stale profile when something was.
                 profileRepository.reset()
 
+                // Data migrations (DB I/O). Before the plugins, and that is the point: NSClient syncs as
+                // soon as it starts, and a record from Nightscout that has no insulin gets the running
+                // insulin. Until the records below are stamped that is the v33 sentinel, so they got the 8 h
+                // default instead, for good (#5625). It needs only the database, the old preferences and the
+                // insulin list. Before the VACUUM too, so it defragments what this changed.
+                dataMigrations()
+
                 // Defragment the DB while it is quiescent: plugins, loop, sync and UI all start
                 // later, so the (memory heavy) VACUUM has the DB to itself. Runs at most monthly.
                 vacuumDatabaseIfDue()
@@ -305,9 +313,6 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 // Master only (gated internally).
                 eatReminder.restore()
 
-                // Data migrations (DB I/O)
-                dataMigrations()
-
                 config.updateInitProgress(getString(R.string.initializing))
                 doInit()
             } catch (e: Exception) {
@@ -320,8 +325,8 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     /**
      * The settings could not be opened ([AndroidStorage] says why), so AAPS does not start: no plugins, so no
      * loop, and nothing written to the database. The app runs on an empty store that lives in memory only,
-     * which keeps its parts from crashing without writing over the unreadable file. A notification that
-     * cannot be swiped away says so, and SettingsUnreadableActivity shows the way out.
+     * which keeps its parts from crashing without writing over the unreadable file. An ongoing notification
+     * says so, and SettingsUnreadableActivity shows the way out.
      */
     private fun startWithoutSettings(failure: Exception, notes: List<String>) {
         GeneratedStringOwners.registerAll()
@@ -767,6 +772,15 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         // The record, not profileFunction.getProfile(): this runs before app init completes, and no profile
         // is handed out until then. getRunningOrRequestedICfg() rejects an unusable iCfg, so a running row
         // that still carries the sentinel falls through instead of writing the sentinel back over itself.
+        //
+        // First the rows that kept their own DIA but lost the peak: what a 3.x AAPSClient stored for every
+        // profile switch it got from Nightscout. Each keeps its DIA and gets the peak of the v3 insulin
+        // selection. Before the plan, so that the running record is a whole insulin again and answers it -
+        // on a client it is the only answer, because a client has no local profile to harvest (#5625).
+        val missingPeak = insulinMigration.insulinForMissingPeak(legacyInsulin)
+        val filledPs = repository.fillMissingProfileSwitchInsulinPeak(missingPeak.nickname, missingPeak.peakTime)
+        val filledEps = repository.fillMissingEffectiveProfileSwitchInsulinPeak(missingPeak.nickname, missingPeak.peakTime)
+
         val plan = insulinMigration.plan(
             recordICfg = profileFunction.getRunningOrRequestedICfg(),
             legacy = legacyInsulin,
@@ -781,8 +795,12 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         // no records to stamp all look the same from here. So that plan is used for the stamping below -
         // which then changes nothing - and the catalogue is left alone, because the default already in it
         // is just as good and a second invented insulin beside the first is not.
+        //
+        // A client is the other exception. Its list is the master's: InsulinConfiguration syncs both ways, so
+        // seeding it here sent the client's own result to the master's list. The client takes the list from
+        // the master, and only its records are stamped.
         val runningICfg =
-            if (plan.source == InsulinMigrationPlan.Source.NO_LEGACY_DATA) plan.iCfg
+            if (plan.source == InsulinMigrationPlan.Source.NO_LEGACY_DATA || config.AAPSCLIENT) plan.iCfg
             else localInsulinManager.seedFromMigration(plan.iCfg)
 
         // The DIA these keys carry is now in the insulin list, so the old copies can go. This is the
@@ -805,7 +823,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         config.updateInitProgress(rh.gs(R.string.migrating_boluses))
         val migratedBoluses = repository.bulkMigrateBolusInsulinConfig(label, end, peak, conc)
 
-        val totalMigrated = migratedPs + migratedEps + migratedBoluses
+        val totalMigrated = filledPs + filledEps + migratedPs + migratedEps + migratedBoluses
         if (totalMigrated > 0) {
             // Part of the value was invented, and records really were stamped with it, so say so. The count
             // is what makes this quiet on an install with nothing to migrate - a fresh one above all, which

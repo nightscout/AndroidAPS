@@ -131,14 +131,41 @@ class TreatmentMarkersTest {
     }
 
     @Test
-    fun smbAndInvalidTreatmentsAreNotDrawn() {
+    fun invalidTreatmentsAreNotDrawn() {
         val result = markers(
-            boluses = listOf(bolus(5, 0.2, type = BolusType.SMB), bolus(5, 2.0, isValid = false)),
+            boluses = listOf(bolus(5, 0.2, type = BolusType.SMB, isValid = false), bolus(5, 2.0, isValid = false)),
             carbsList = listOf(carbs(5, 30.0, isValid = false))
         )
 
         assertTrue(result.insulin.isEmpty())
         assertTrue(result.carbs.isEmpty())
+        assertTrue(result.smb.isEmpty())
+    }
+
+    @Test
+    fun anSmbIsNotAManualBolusAndSitsOnTheAxisFloor() {
+        // Not on the reading: an SMB every few minutes there would hide the curve
+        val result = markers(boluses = listOf(bolus(7, 0.3, type = BolusType.SMB)))
+
+        assertTrue(result.insulin.isEmpty())
+        assertEquals(listOf(7.0), result.smb.map { it.x })
+        assertEquals(minY, result.smb.first().y)
+        assertEquals(0.3, result.smb.first().amount)
+    }
+
+    @Test
+    fun smbsAreSizedAgainstTheLargestSmbNotTheManualBoluses() {
+        // Against the 5 U bolus a 0.5 U SMB would be small; against the largest SMB it is large
+        val result = markers(
+            boluses = listOf(
+                bolus(5, 5.0),
+                bolus(10, 0.5, type = BolusType.SMB),
+                bolus(15, 0.1, type = BolusType.SMB)
+            )
+        )
+
+        assertEquals(MarkerTier.LARGE, result.smb.first { it.x == 10.0 }.tier)
+        assertEquals(MarkerTier.SMALL, result.smb.first { it.x == 15.0 }.tier)
     }
 
     @Test
@@ -178,7 +205,18 @@ class TreatmentMarkersTest {
             therapyEvents = listOf(bgCheck(10, 150.0), bgCheck(15, null))
         )
 
-        assertEquals(listOf(5.0 to 130.0, 10.0 to 150.0), result.calibrations)
+        // Each with the sensor curve at its moment, for the line that shows how far the sensor is off
+        assertEquals(
+            listOf(MeasuredMarker(5.0, 130.0, 130.0, sensorY = 110.0), MeasuredMarker(10.0, 150.0, 150.0, sensorY = 120.0)),
+            result.calibrations
+        )
+    }
+
+    @Test
+    fun aMeasuredValueInASensorGapHasNoSensorValue() {
+        val result = markers(calibrations = listOf(calibration(5, 130.0)), bgReadings = emptyList())
+
+        assertNull(result.calibrations.single().sensorY)
     }
 
     @Test
@@ -192,7 +230,8 @@ class TreatmentMarkersTest {
     fun aMeasuredValueOffTheAxisIsClampedToIt() {
         val result = markers(calibrations = listOf(calibration(5, 400.0)))
 
-        assertEquals(listOf(5.0 to maxY), result.calibrations)
+        // Drawn at the edge, but the label still shows the value that was measured
+        assertEquals(listOf(MeasuredMarker(5.0, maxY, 400.0, sensorY = 110.0)), result.calibrations)
     }
 
     @Test
@@ -247,5 +286,14 @@ class TreatmentMarkersTest {
     @Test
     fun readingsInAnyOrderGiveTheSameHeight() {
         assertEquals(114.0, interpolatedBgAt(minutes(7), readings.reversed()))
+    }
+
+    @Test
+    fun tierAgainstAKnownLargestAmount() {
+        assertEquals(MarkerTier.SMALL, tierOf(0.09, max = 0.3))
+        // A third of the largest is already the middle size
+        assertEquals(MarkerTier.MEDIUM, tierOf(0.1, max = 0.3))
+        assertEquals(MarkerTier.LARGE, tierOf(0.3, max = 0.3))
+        assertEquals(MarkerTier.MEDIUM, tierOf(1.0, max = null))
     }
 }

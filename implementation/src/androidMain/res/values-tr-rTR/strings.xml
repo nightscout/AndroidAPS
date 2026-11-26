@@ -3,6 +3,9 @@
     <string name="executing_right_now">Komut şu anda çalıştırılıyor</string>
     <string name="smb_being_delivered">Şu anda bir SMB iletiliyor. İşlem tamamlandığında tekrar deneyin.</string>
     <string name="basal_value_below_minimum">Bazal değer minimumun altında. Profil ayarlanmadı!</string>
+    <string name="concentration_change_failed_title">İnsülin değişikliği başarısız oldu</string>
+    <string name="concentration_change_failed">Yeni insülin pompaya yüklendi ancak AAPS profili pompaya yazamadı. Pompa, yanlış miktarda insülin veriyor. Pompanın bağlantısını hemen kesin veya pompayı çıkarın; kan şekerinizi kontrol edin ve gerekirse insülini başka bir yolla uygulayın. Pompayı ancak profil başarıyla yazıldıktan sonra tekrar bağlayın.</string>
+    <string name="concentration_change_pending">Yeni insülin içeren profil henüz pompaya yüklenmemiştir. Profil yüklenene kadar insülin verilemez.</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Pompadaki bazal profili güncellendi. Pompa, bazal değerini kendi artış birimine göre yuvarlar: günlük %2$s yerine %1$s değerini uygular.</string>
     <string name="basal_reported_far_from_profile">Pompa, profilden oldukça farklı bir bazal değer bildiriyor. AAPS profildeki bazal değerini koruyor. Pompadaki bazal oranları kontrol edin.</string>
     <!--       Stats -->
@@ -60,7 +63,7 @@
     <string name="exported_less_than_hour_ago">bir saatten kısa süre önce dışa aktarıldı</string>
     <string name="metadata_warning_different_flavour">Sizde: %2$s varken, farklı AAPS (%1$s) türeviyle tercihler oluşturuldu.\n\nBazı ayarlar eksik veya geçersiz olabilir - içe aktardıktan sonra lütfen tercihlerinizi kontrol edin ve güncelleyin.</string>
     <string name="metadata_warning_different_device">Tercihler farklı bir cihazda oluşturuldu. Daha eski/farklı bir telefondan içe aktarıyorsanız sorun değil, ancak içe aktarılan tercihlerin doğru olduğundan emin olun!</string>
-    <string name="metadata_warning_old_export">İçe aktarılan tercihler zaten %1$s günlük! Belki daha güncel tercihleriniz var ya da yanlış dosyayı mı seçiyorsunuz? Tercihleri düzenli olarak dışa aktarmayı unutmayın!</string>
+    <string name="metadata_warning_old_export">İçe aktarılan tercihler zaten %1$s günlük! Belki daha güncel tercihleriniz var ya da yanlış dosyayı mı seçtiniz? Tercihleri düzenli olarak dışa aktarmayı unutmayın!</string>
     <string name="metadata_warning_date_format">Geçersiz tarih-saat biçimi!</string>
     <string name="metadata_warning_different_version">Uygulamanın farklı alt sürümlerinden tercihler. Yükseltmeden sonra içe aktarıyorsanız sorun değil, ancak tercihlerin hala doğru olup olmadığını içe aktarmadan sonra kontrol edin!</string>
     <string name="metadata_urgent_different_version">Uygulamanın farklı ana sürümünden tercihler. Ana sürümler önemli ölçüde farklılık gösterir ve uyumsuz tercihlere sahip olabilir! İçe aktardıktan sonra tercihlerin hala doğru olduğundan emin olun!</string>

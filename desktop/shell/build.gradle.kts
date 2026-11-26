@@ -21,18 +21,7 @@ plugins {
  */
 
 /** The same build stamp `:app` puts in BuildConfig.BUILDVERSION: short commit and date. */
-fun buildStamp(): String {
-    val commit = try {
-        val out = File.createTempFile("git-build", "")
-        // `--exclude=ios-testflight-*` for the same reason as in `:app` - the tag names one past iOS
-        // submission, and `git describe` would otherwise report it however far away it is.
-        ProcessBuilder("git", "describe", "--always", "--abbrev=7", "--exclude=ios-testflight-*").redirectOutput(out).start().waitFor()
-        out.readText().trim()
-    } catch (_: Exception) {
-        "NoGitSystemAvailable"
-    }
-    return "$commit-" + SimpleDateFormat("yyyy.MM.dd").format(Date())
-}
+fun buildStamp(): String = providers.gitDescribe() + "-" + SimpleDateFormat("yyyy.MM.dd").format(Date())
 
 /**
  * The app icon, copied from the one place it lives rather than checked in twice.

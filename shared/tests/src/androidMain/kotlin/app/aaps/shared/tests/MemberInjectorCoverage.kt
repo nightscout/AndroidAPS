@@ -49,7 +49,7 @@ private fun registeredClasses(container: Class<*>): Set<Class<*>> =
 
 /** Every compiled subclass of [base] in the same output as [base] itself. */
 private fun subclassesOf(base: Class<*>): List<Class<*>> {
-    val root = File(base.protectionDomain.codeSource.location.toURI())
+    val root = File(base.protectionDomain!!.codeSource.location.toURI())
     // The Android plugin hands unit tests a jar of the library classes, but a plain directory when the same
     // code is compiled for the JVM. Both shapes have to work.
     val classNames = if (root.isDirectory) classNamesInDirectory(root) else classNamesInJar(root)

@@ -24,7 +24,7 @@ dependencies {
     testImplementation(project(":shared:tests"))
     testImplementation(project(":core:objects"))
 
-    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.jetbrains.compose.ui.tooling.preview)
     implementation(libs.com.google.code.gson)
 
     implementation(libs.com.google.guava)

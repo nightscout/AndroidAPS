@@ -19,8 +19,9 @@ these crossed with **zero** edits, no expect/actual, no adapter:
 - `material3` Button, OutlinedCard, Switch, LinearProgressIndicator, HorizontalDivider.
 
 So an import survey badly overstates the work. In practice the blockers are the small number of
-genuinely Android types: `LocalContext`, `Context` in a signature, and the ViewModel factory
-lookup. Grep for those specifically rather than for `androidx.compose`.
+genuinely Android types: `LocalContext`, `Context` in a signature, and the old inline ViewModel
+factory cast through `LocalContext` (the `metroViewModel()` helper itself is fine - see
+[[metroviewmodel-is-not-a-blocker]]). Grep for those specifically rather than for `androidx.compose`.
 
 Confirm the compile was real, not a no-op: check the log for a bare
 `> Task :<module>:compileKotlinIosArm64` (no `UP-TO-DATE` / `NO-SOURCE`) and that the class appears

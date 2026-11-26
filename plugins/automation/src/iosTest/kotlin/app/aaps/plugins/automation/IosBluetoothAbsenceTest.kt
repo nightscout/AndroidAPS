@@ -56,7 +56,6 @@ class IosBluetoothAbsenceTest {
     fun `paired devices are empty rather than unknown`() {
         val names = IosPairedBtDevices(SilentLogger).names()
 
-        assertTrue(names != null, "null would claim a permission exists that could fix this")
         assertTrue(names.isEmpty())
     }
 
@@ -66,6 +65,6 @@ class IosBluetoothAbsenceTest {
         val devices = IosPairedBtDevices(SilentLogger)
         repeat(3) { devices.names() }
 
-        assertTrue(devices.names()?.isEmpty() == true)
+        assertTrue(devices.names().isEmpty())
     }
 }

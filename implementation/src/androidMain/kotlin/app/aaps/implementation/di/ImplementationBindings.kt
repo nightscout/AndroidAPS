@@ -24,9 +24,10 @@ import kotlinx.coroutines.CoroutineScope
 object ImplementationBindings {
 
     /**
-     * [BolusProgressData] is a plain class rather than an `@Inject constructor` one, because
-     * `javax.inject` cannot be used from code that is meant to reach commonMain. Providing it here
-     * keeps the graph identical: same singleton scope, same application-scoped CoroutineScope.
+     * [BolusProgressData] is a plain class rather than an `@Inject` one. That was needed while the DI
+     * annotations were javax, which commonMain cannot use; Metro's can, so it could now be annotated
+     * instead. Providing it here gives the same graph: one instance, the application-scoped
+     * CoroutineScope.
      */
     @Provides
     @SingleIn(AppScope::class)

@@ -10,6 +10,8 @@ import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
 import app.aaps.plugins.sync.extensions.contentEqualsTo
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -46,7 +48,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             )
         )
 
-        var profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(profileRepository, dateUtil, insulinConfiguration)!!
+        var profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(profileRepository, dateUtil) { insulinConfiguration }!!
         assertThat(profileSwitch.contentEqualsTo(profileSwitch2)).isTrue()
         assertThat(profileSwitch.ids.contentEqualsTo(profileSwitch2.ids)).isTrue()
 
@@ -73,12 +75,12 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             )
         )
 
-        profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(profileRepository, dateUtil, insulinConfiguration)!!
+        profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(profileRepository, dateUtil) { insulinConfiguration }!!
         assertThat(profileSwitch.contentEqualsTo(profileSwitch2)).isTrue()
         assertThat(profileSwitch.ids.contentEqualsTo(profileSwitch2.ids)).isTrue()
     }
 
-    private fun nsProfileSwitch(duration: Long?, originalDuration: Long?) = NSProfileSwitch(
+    private fun nsProfileSwitch(duration: Long?, originalDuration: Long?, profileJson: String = validProfile.toPureNsJson(dateUtil).toString()) = NSProfileSwitch(
         date = 10000,
         identifier = "nightscoutId",
         utcOffset = 0,
@@ -88,7 +90,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
         endId = null,
         pumpType = PumpType.DANA_I.name,
         pumpSerial = "bbbb",
-        profileJson = validProfile.toPureNsJson(dateUtil).toString(),
+        profileJson = profileJson,
         profile = "SomeProfile",
         originalProfileName = "SomeProfile",
         timeShift = 0,
@@ -107,7 +109,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
     fun inflatedLegacyDurationIsIgnoredInFavourOfOriginalDuration() {
         val nineHours = 9 * 3600000L
         val parsed = nsProfileSwitch(duration = nineHours * 60000 * 60000, originalDuration = nineHours)
-            .toProfileSwitch(profileRepository, dateUtil, insulinConfiguration)!!
+            .toProfileSwitch(profileRepository, dateUtil) { insulinConfiguration }!!
         assertThat(parsed.duration).isEqualTo(nineHours)
     }
 
@@ -116,7 +118,33 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
     fun durationIsUsedWhenOriginalDurationIsMissing() {
         val nineHours = 9 * 3600000L
         val parsed = nsProfileSwitch(duration = nineHours, originalDuration = null)
-            .toProfileSwitch(profileRepository, dateUtil, insulinConfiguration)!!
+            .toProfileSwitch(profileRepository, dateUtil) { insulinConfiguration }!!
         assertThat(parsed.duration).isEqualTo(nineHours)
+    }
+
+    /**
+     * AAPS 3.x uploaded no insulin, but the DIA was part of the profile then, so its profile JSON carries
+     * `"dia"`. That is the DIA the record was dosed with, and the fallback gets it (#5625).
+     */
+    @Test
+    fun aProfileSwitchFrom3xHandsItsOwnDiaToTheFallback() {
+        val from3x = JsonObject(validProfile.toPureNsJson(dateUtil) + ("dia" to JsonPrimitive(5.0))).toString()
+        var diaSeen: Double? = null
+
+        nsProfileSwitch(duration = 0, originalDuration = 0, profileJson = from3x)
+            .toProfileSwitch(profileRepository, dateUtil) { dia -> diaSeen = dia; insulinConfiguration }!!
+
+        assertThat(diaSeen).isEqualTo(5.0)
+    }
+
+    /** A profile JSON from 4.0 has no DIA (it is in the insulin), so the fallback gets none. */
+    @Test
+    fun aProfileSwitchWithoutDiaInItsJsonHandsNoneToTheFallback() {
+        var diaSeen: Double? = -1.0
+
+        nsProfileSwitch(duration = 0, originalDuration = 0)
+            .toProfileSwitch(profileRepository, dateUtil) { dia -> diaSeen = dia; insulinConfiguration }!!
+
+        assertThat(diaSeen).isNull()
     }
 }

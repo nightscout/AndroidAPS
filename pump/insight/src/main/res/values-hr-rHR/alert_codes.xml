@@ -1,2 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r1_code">Podsjetnik R1</string>
+    <string name="alert_r2_code">Podsjetnik R2</string>
+    <string name="alert_r3_code">Podsjetnik R3</string>
+    <string name="alert_r4_code">Podsjetnik R4</string>
+    <string name="alert_r7_code">Podsjetnik R7</string>
+    <string name="alert_w31_code">Upozorenje W31</string>
+    <string name="alert_w32_code">Upozorenje W32</string>
+    <string name="alert_w33_code">Upozorenje W33</string>
+    <string name="alert_w34_code">Upozorenje W34</string>
+    <string name="alert_w36_code">Upozorenje W36</string>
+    <string name="alert_w38_code">Upozorenje W38</string>
+    <string name="alert_w39_code">Upozorenje W39</string>
+    <string name="alert_m20_code">Održavanje M20</string>
+    <string name="alert_m21_code">Održavanje M21</string>
+    <string name="alert_m22_code">Održavanje M22</string>
+    <string name="alert_m23_code">Održavanje M23</string>
+    <string name="alert_m24_code">Održavanje M24</string>
+    <string name="alert_m25_code">Održavanje M25</string>
+    <string name="alert_m26_code">Održavanje M26</string>
+    <string name="alert_m27_code">Održavanje M27</string>
+    <string name="alert_m28_code">Održavanje M28</string>
+    <string name="alert_m29_code">Održavanje M29</string>
+    <string name="alert_m30_code">Održavanje M30</string>
+    <string name="alert_e6_code">Greška E6</string>
+    <string name="alert_e10_code">Greška E10</string>
+    <string name="alert_e13_code">Greška E13</string>
+</resources>

@@ -26,6 +26,7 @@ import app.aaps.plugins.calibration.CalibrationFit
 import app.aaps.plugins.calibration.weightFor
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.round
 
 private const val CHART_MIN_BG = 40f
 private const val CHART_MAX_BG = 400f
@@ -172,8 +173,9 @@ private fun DrawScope.drawAxisLabels(
     canvas.drawText(maxLabel, origin.x + size.width - paint.measureText(maxLabel) / 2f, bottomBaseline, paint)
 }
 
+// Rounded, not cut off: an axis edge comes from a smoothed reading or an mmol entry and can be 100.9 (#5639)
 private fun formatAxisLabel(mgdl: Float, glucoseUnit: GlucoseUnit): String = when (glucoseUnit) {
-    GlucoseUnit.MGDL -> mgdl.toInt().toString()
+    GlucoseUnit.MGDL -> round(mgdl).toInt().toString()
     GlucoseUnit.MMOL -> "%.1f".format(mgdl * Constants.MGDL_TO_MMOLL)
 }
 

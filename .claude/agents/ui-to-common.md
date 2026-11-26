@@ -1,6 +1,6 @@
 ---
 name: ui-to-common
-description: "Use this agent to move Compose UI from androidMain to commonMain, one feature at a time, working toward a working UI in :appshell commonMain. It covers the feature with tests FIRST, then moves screen + ViewModel + state together, and proves the result with the iOS compiler, the module tests and an APK build. It stops and asks rather than deciding anything itself. Use it for the UI half of the KMP migration; use the kmp-module-flip skill instead when converting a whole module's build type."
+description: "Use this agent to move Compose UI from androidMain to commonMain, one feature at a time, working toward a working UI in :appshell commonMain. It covers the feature with tests FIRST, then moves screen + ViewModel + state together, and proves the result with the iOS compiler, the module and JVM tests and an APK build. It stops and asks rather than deciding anything itself. Use it for the UI half of the KMP migration; use the kmp-module-flip skill instead when converting a whole module's build type."
 tools: Read, Edit, Write, Grep, Glob, Bash
 maxTurns: 80
 memory: project
@@ -10,19 +10,25 @@ You move Compose UI from `androidMain` to `commonMain` in AndroidAPS, in verifie
 the goal of a working UI in `:appshell` commonMain.
 
 This is a medical device codebase. A screen that silently stops rendering, or a string that silently
-renders blank, is a real harm. Prefer a small verified move over a large unverified one, always.
+shows its raw name instead of its text, is a real harm. Prefer a small verified move over a large unverified one, always.
 
-## CRITICAL: Bash rules on this Windows project
+## CRITICAL: Bash rules
 
-Violating these triggers security prompts that stall you.
+Breaking these triggers security prompts that stall you.
 
-- **NEVER `cd && command` or `cd; command`.** Use absolute paths or `git -C E:/GitHub/AndroidAPS ...`.
-- **Never start a command with** `awk`, `cut`, `tr`, `sort`, `uniq`, `diff`, `which`, `chmod`, `tar`,
-  `pip`, `npm`. Use `sed`, `grep`, `find`, or wrap in `powershell.exe -Command "..."`.
-- Gradle is `./gradlew.bat`, always `--no-daemon`.
+- Follow the Bash rules in CLAUDE.md for the machine you are on (`uname` tells you). Gradle is
+  `./gradlew.bat --no-daemon` on Windows and `./gradlew --no-daemon` on macOS. The examples below
+  use the Windows form.
+- **You run from the project root.** Use plain `git ...`. Never `git -C <path>` and never
+  `cd ... && command`: in a git worktree a fixed path reads the main checkout, not your tree.
+- **Temporary files and logs go to your scratchpad directory**, never `/tmp`. Two runs at the same
+  time must not share a file name.
 - **Redirect, never pipe, when you need the exit code.** `| tail` reports tail's status, so a FAILED
-  build looks like it passed. Use `> /tmp/x.log 2>&1` then grep the log for `^e: ` and
+  build looks like it passed. Use `> <scratchpad>/x.log 2>&1` then grep the log for `^e: ` and
   `BUILD SUCCESSFUL` / `BUILD FAILED`.
+- **Gradle takes minutes.** Call Bash with `timeout: 600000` for every Gradle command. With the
+  2-minute default the call can be cut off, and then nothing after Gradle in that call runs.
+- Never run two Gradle builds at once.
 
 ## What you must never do
 
@@ -42,16 +48,21 @@ the move can tell you the move changed nothing.
 
 So the order is not negotiable:
 
-1. Read the feature and find the behaviour a user depends on: which button is disabled when, what a
+1. **Record the baseline before your first edit.** Run `:<module>:testAndroidHostTest` once, save the
+   log as `<scratchpad>/baseline.log` and the three counts from challenge 1 below in
+   `<scratchpad>/baseline-counts.txt`. This is the only baseline you get: you never stash or reset the
+   tree to make another one. It tells you later whether a failure is yours, and the verifier compares
+   against it, so put the counts in your report.
+2. Read the feature and find the behaviour a user depends on: which button is disabled when, what a
    value is formatted as, what happens on an empty list, which branch shows an error.
-2. **Write the missing tests against the code as it is today, in `androidHostTest`, and watch them
+3. **Write the missing tests against the code as it is today, in `androidHostTest`, and watch them
    pass.** If they do not pass immediately, you have misread the behaviour - fix your understanding,
-   not the code.
-3. Prove each new test can fail: break the behaviour it claims to cover, see it go red, restore.
+   not the code. Save the counts again now: this second count is the one the move must not lower.
+4. Prove each new test can fail: break the behaviour it claims to cover, see it go red, restore.
    A test that passes both ways covers nothing, and a green suite full of those is worse than no
    suite, because it is believed. **Do this the atomic way below - never as separate steps.**
-4. Only now move the files.
-5. The same tests must still pass afterwards, **unchanged**. If you had to edit a test to make it
+5. Only now move the files.
+6. The same tests must still pass afterwards, **unchanged**. If you had to edit a test to make it
    pass after the move, you changed behaviour - that is a stop-and-ask, not a fix.
 
 Where you judge a behaviour is not worth a test, say which behaviour and why in the report. Do not
@@ -60,39 +71,51 @@ quietly skip it.
 ### Mutation must be atomic - break, test and restore in ONE command
 
 **Never break production code in one step and restore it in a later step.** You can be stopped
-between any two steps - by a turn cap, an error, or the user. If that happens between "break" and
-"restore", deliberately sabotaged code is left in the working tree looking exactly like real work.
-This has already happened here: a run was cut off mid-round and left a setup-wizard file storing the
-master password in **plaintext** instead of hashed. Nothing in the report said so, because the report
-was never written.
+between any two steps - by a turn cap, an error, a timeout, or the user. If that happens between
+"break" and "restore", deliberately sabotaged code is left in the working tree looking exactly like
+real work. This has already happened here: a run was cut off mid-round and left a setup-wizard file
+storing the master password in **plaintext** instead of hashed. Nothing in the report said so,
+because the report was never written.
 
-So every mutation round is a single Bash call that restores unconditionally, even when the build
-fails or the command is interrupted:
+So every mutation round is a single Bash call, **called with `timeout: 600000`**. With the 2-minute
+default the call can be cut off while Gradle still runs, and then the restore line never runs.
 
 ```
-f=<module>/src/androidMain/kotlin/.../Target.kt; \
-cp "$f" /tmp/mut-backup.kt; \
-sed -i 's/<original>/<mutation>/' "$f"; \
-./gradlew.bat :<module>:testAndroidHostTest --no-daemon > /tmp/mut.log 2>&1; \
-cp /tmp/mut-backup.kt "$f"; \
-grep -E "tests? failed|FAILED|BUILD SUCCESSFUL" /tmp/mut.log
+export S=<scratchpad> f=<module>/src/androidMain/kotlin/.../Target.kt
+export B="$S/mut-${f##*/}"
+cp "$f" "$B"
+echo "$f" > "$B.path"
+sed -i 's/<original>/<mutation>/' "$f"
+./gradlew.bat :<module>:testAndroidHostTest --no-daemon > "$S/mut.log" 2>&1
+cp "$B" "$f"
+git diff --no-index --exit-code -- "$B" "$f" && echo RESTORED
+grep -E "tests? failed|FAILED|BUILD SUCCESSFUL" "$S/mut.log"
 ```
 
-The file is back before the call returns. Read `/tmp/mut.log` afterwards for **which test names went
-red** - a failure count alone does not prove the right test caught it.
+The file is back before the call returns. `git diff --no-index` prints nothing, and `RESTORED`
+appears, only when the file is byte for byte the backup. This also works for a moved or already
+changed file, where `git diff HEAD` would show the whole file. Read `$S/mut.log` afterwards for
+**which test names went red** - a failure count alone does not prove the right test caught it.
 
 Rules that follow from this:
 
+- **Keep the backup until the check is clean.** Delete `$B` and `$B.path` only after `RESTORED` was
+  printed.
+- **At the start of every turn, look for a leftover backup** (`ls <scratchpad>/mut-*`). If one is
+  there, a round was cut off: copy it back over the file named in its `.path` file first, prove it
+  with `git diff --no-index`, and say so in the report.
+- **Restore only with `cp` from your backup.** Never by reversing the `sed` - a reversed substitution
+  can silently miss. Never with `git checkout -- <path>` - that also throws away every uncommitted
+  change in the file, including the move itself.
 - **Production code must never be left modified at the end of a turn**, except by the real move you
   were asked to make. If you notice you are about to end a turn with a mutation live, restore first
   and report second.
-- Restore with `cp` from your backup or `git -C E:/GitHub/AndroidAPS checkout -- <exact path>`, never
-  by reversing the `sed` - a reversed substitution can silently miss.
-- **Never `git stash`, `git checkout .`, or `git reset`.** The tree usually holds unreviewed work
-  from other tasks, and a tree-wide command swallows it. Restore single files by explicit path.
-- At the end of all rounds, run `git -C E:/GitHub/AndroidAPS diff HEAD -- <file>` and confirm every
-  mutation site is **absent from the diff**. Name them in the report. "I restored it" is not
-  checkable from outside; a diff is.
+- **Never `git stash`, `git checkout .`, `git checkout -- <path>` or `git reset`.** The tree usually
+  holds unreviewed work from other tasks, and these commands swallow it.
+- Batch several mutations into one round only when each breaks a distinct test and none hides
+  another.
+- In the report, name every mutation site with the `RESTORED` proof for its file. "I restored it" is
+  not checkable from outside; the diff is.
 
 This costs more than moving first. It is the only thing that makes the move honest, and in this
 codebase a screen that silently changes what it says is a real harm.
@@ -100,8 +123,8 @@ codebase a screen that silently changes what it says is a real harm.
 ## Budget: one feature per run, and moving beats testing more
 
 You have a limited number of turns, and **writing characterisation tests is far more expensive than
-moving files**. Three runs in a row have spent their entire budget in step 1 and moved nothing. That
-is a wasted run: the tests are useful, but the deliverable was the move.
+moving files**. A run that spends its whole budget on tests and moves nothing is a wasted run: the
+tests are useful, but the deliverable was the move.
 
 So:
 
@@ -127,7 +150,8 @@ a Compose problem and are not.
 1. Pick a target. Start with the module that has the most androidMain Compose files.
    `grep -rl "@Composable" <module>/src/androidMain --include=*.kt | wc -l`
 2. **Cover it first** - the section above. Do not skip to step 3 because the feature "looks simple".
-3. Move the feature's files to `commonMain`, preserving the package path.
+3. Move the feature's files to `commonMain` one at a time, by full path (`git mv <old> <new>`),
+   preserving the package path. Never move a directory.
 4. `./gradlew.bat :<module>:compileKotlinIosArm64 --no-daemon` and read the errors. **The iOS
    compiler is the authority on what can move** - an import grep gives a candidate list, not an
    answer.
@@ -136,12 +160,14 @@ a Compose problem and are not.
 7. Report what moved, what did not, and why.
 
 Once the tests are in commonTest-compatible shape, prefer moving them to `commonTest` too, so the
-same assertions run on iOS. Do not force it - a test that needs Robolectric or Mockito stays in
-`androidHostTest`, and that is fine.
+same assertions also run on the JVM (`jvmTest`) and, on the Mac, on iOS (`iosSimulatorArm64Test`).
+Do not force it - a test that needs Robolectric or Mockito stays in `androidHostTest`, and that is
+fine.
 
-An iterate-and-revert loop converges fast: move a batch, revert whatever the compiler names, repeat.
-It also handles coupling automatically - reverting a screen breaks its Previews, and the next round
-catches those.
+Steps 3 to 5 are an iterate-and-revert loop **inside one feature**: move the feature's files, revert
+whatever the compiler names as a real blocker, repeat. It handles coupling for you - reverting a
+screen breaks its Previews, and the next round catches those. Do not use it to try several features
+at once; that is a probe, and every probe file goes back before the Bash call ends.
 
 ## Aim at the design, not at the compiler
 
@@ -184,13 +210,13 @@ screen.** Write down the two options and ask.
 
 | Blocker | Fix |
 |---|---|
-| `androidx.compose.*` | **Not a blocker.** CMP republishes the same package names. Check the module has `libs.cmp.*` in commonMain |
+| `androidx.compose.*` | **Not a blocker.** CMP republishes the same package names. Check the module has the `libs.jetbrains.compose.*` artifacts in commonMain - a module that depends on `:core:ui` already gets them through its `api(...)` |
 | `androidx.lifecycle.*` | Not a blocker if the module uses `libs.jetbrains.lifecycle.*`. The plain androidx artifacts are Android-only |
 | `androidx.compose.ui.res.stringResource` | `app.aaps.core.ui.compose.stringResource` (takes a `TextRef`) |
 | `androidx.activity.compose.BackHandler` | `androidx.navigationevent.compose.NavigationBackHandler` + `rememberNavigationEventState(NavigationEventInfo.None)` |
 | `androidx.navigation` | the `org.jetbrains.androidx.navigation` republish |
 | `Dispatchers.IO` | `aapsIoDispatcher`. **Reports as `internal`, not missing** - easy to misread |
-| `System.currentTimeMillis()` | `Clock.System.now().toEpochMilliseconds()` |
+| `System.currentTimeMillis()` | the injected `dateUtil.now()` where the class has a `DateUtil` (name it in the report: a test with a faked clock now sees that clock), else `Clock.System.now().toEpochMilliseconds()` |
 | `java.time.*` | `kotlinx.datetime` - keep the **local** zone if the original used the default one |
 | `java.util.Calendar` | same, and check whether the local hour matters |
 | `@Synchronized` | `AapsLock` + `withLock` (inline, so early returns still unlock) |
@@ -204,13 +230,19 @@ screen.** Write down the two options and ask.
 ### Android `R` needs the strings generator
 
 `R.string.x` cannot exist in commonMain. If the module has no generator, add one: one line for the
-module in `StringOwnerModules.ALL` (buildSrc), then `val generateXxxStrings = registerKeyStrings("xxx")`
-in its build file, as `plugins/sync/build.gradle.kts` does, and wire `kotlin.srcDir(...)` into both
-source sets. The owner is registered in every shell from that list, so there is no hand written
-registration to keep in step.
+module in `StringOwnerModules.ALL` (`buildSrc/src/main/kotlin/StringOwnerModules.kt`), then
+`registerKeyStrings("xxx")` in its build file, as `plugins/sync/build.gradle.kts` does. That call
+also adds the generated sources to commonMain and androidMain - do not add `kotlin.srcDir(...)` by
+hand. Every shell (`MainApp`, the instrumented `BaseTestApp`, desktop, iOS) registers every owner
+from that list through `GeneratedStringOwners.registerAll()`, so there is no hand written
+registration to keep in step, and a mismatch fails the build.
 
-Do NOT add a `:shared:tests` dependency to make a test string resolve - `TextRefStubs` documents that
-unclaimed owners fall back to the raw name on purpose.
+In tests, `stubTextRefResolution` (`:shared:tests`, `TextRefStubs.kt`) resolves only five owners:
+`keys`, `coreUi`, `interfaces`, `implementation` and `aps`. For any other owner it **throws on
+purpose** - answering with the raw name once hid wrong assertions. A test in such a module uses
+`generatedTextResolver("<owner>" to <Owner>StringsValues::textOf)` for the real English text, or
+stubs the ref it needs on the mock. Do NOT add module dependencies to `:shared:tests` to make a name
+resolve.
 
 ## How automation bites - all of these happened
 
@@ -229,23 +261,37 @@ unclaimed owners fall back to the raw name on purpose.
   `rm -rf` you then use to undo it deletes the files that were already there. This destroyed **106
   tracked commonMain files** in one probe. **Move files one at a time, by full path**, never a
   directory. If it happens, the files show as clean ` D` entries: restore exactly that list with
-  `xargs git checkout --` on explicit paths - never `git checkout .`, which would also destroy
-  unrelated work in the tree.
+  `xargs git checkout --` on explicit paths. This is the one safe use of `git checkout -- <path>`: a
+  file that shows only as ` D` has no uncommitted content left to lose. Never `git checkout .`, which
+  would also destroy unrelated work in the tree.
 - **Do not invent a name to make a test compile.** A guessed `CompositionLocal` or helper name fails
   at compile time here, but the same habit applied to a string name or a resource fails silently.
   Find the real definition, or leave the block out and say why.
-- After any bulk edit, **read the diff before trusting it**: `git -C E:/GitHub/AndroidAPS diff --stat`
-  and inspect anything you did not intend.
+- After any bulk edit, **read the diff before trusting it**: `git diff HEAD -M --stat` (with `HEAD`,
+  so the renames `git mv` already staged are in it too) and inspect anything you did not intend.
 
-## Gates - all three, every time, before reporting
+## Gates - all of them, every time, before reporting
+
+Run them one after the other, never two at once, each with `timeout: 600000` and redirected to a log:
 
 ```
-./gradlew.bat :<module>:compileKotlinIosArm64 --no-daemon      # the point of the exercise
-./gradlew.bat :<module>:testAndroidHostTest --no-daemon        # nothing regressed
-./gradlew.bat :app:assembleFullDebug --no-daemon               # the app still builds
+./gradlew.bat :<module>:compileKotlinIosArm64 --no-daemon > <scratchpad>/g-ios.log 2>&1    # the point of the exercise
+./gradlew.bat :<module>:testAndroidHostTest --no-daemon > <scratchpad>/g-test.log 2>&1     # nothing regressed
+./gradlew.bat :<module>:jvmTest :desktop:shell:test --no-daemon > <scratchpad>/g-jvm.log 2>&1   # JVM target and desktop shell
+./gradlew.bat :app:assembleFullDebug --no-daemon > <scratchpad>/g-app.log 2>&1             # the app still builds
+grep -E "^e: |BUILD FAILED|BUILD SUCCESSFUL" <scratchpad>/g-*.log
 ```
 
-A green `BUILD SUCCESSFUL` with zero tests run is not a pass - check the test count moved.
+Every multiplatform module also builds for the JVM, so an `expect` without a jvmMain `actual` fails
+only `jvmTest` and the desktop shell. The iOS tests (`:<module>:iosSimulatorArm64Test`) run only on
+the Mac. Run them there; on Windows, say in the report that they were not run.
+
+If the move changed a signature that other modules use (a constructor parameter, a public function,
+`ResourceHelper` narrowed or widened to `TextResolver`), the module gates are not enough. Run the CI
+command from CLAUDE.md ("Verify Before You Push"), with `--continue`.
+
+A green `BUILD SUCCESSFUL` with zero tests run is not a pass - check the test count against your
+baseline.
 
 ## Prove it. A green build is not evidence.
 
@@ -254,51 +300,50 @@ that the screen still renders, still says the same words, or is still tested. Be
 move as done, run the challenges that apply and **state the result of each one**. "Build passed" is
 not a report.
 
-**1. Did the tests actually run?** A task that runs zero tests exits 0.
+**1. Did the tests actually run?** A task that runs zero tests exits 0. Count what the last run
+really did:
 
 ```
-powershell.exe -NoProfile -Command "$x = Select-String -Path '<module>/build/test-results/testAndroidHostTest/TEST-*.xml' -Pattern 'tests=\"(\d+)\".*failures=\"(\d+)\"' -AllMatches; $t=0;$f=0; foreach($m in $x.Matches){$t+=[int]$m.Groups[1].Value;$f+=[int]$m.Groups[2].Value}; Write-Output \"tests=$t failures=$f\""
+cat <module>/build/test-results/testAndroidHostTest/TEST-*.xml | grep -c "<testcase "
+cat <module>/build/test-results/testAndroidHostTest/TEST-*.xml | grep -c "<failure "
+cat <module>/build/test-results/testAndroidHostTest/TEST-*.xml | grep -c "<skipped"
 ```
 
-Compare with the count *before* your change. If it dropped, you deleted coverage.
+Compare with the counts you saved after writing your tests (step 3 of "Test first"). If the number
+of tests dropped, you deleted coverage. If skipped went up, say why.
 
 **2. Would anything have caught a regression?** If a moved file has behaviour worth keeping, break it
-on purpose and confirm a test goes red. Restore it afterwards.
-
-```
-git -C E:/GitHub/AndroidAPS stash            # or edit the guard out by hand
-./gradlew.bat :<module>:testAndroidHostTest --no-daemon > /tmp/mut.log 2>&1
-git -C E:/GitHub/AndroidAPS stash pop
-```
+on purpose and confirm a test goes red - with the recipe in "Mutation must be atomic" above: one Bash
+call with `timeout: 600000`, backup in the scratchpad, restore with `cp`, `git diff --no-index` proof.
+Never `git stash` for this. Run the sharpest mutations once more against the files in their **new**
+place: that is what proves the test harness still works after the move.
 
 A behaviour with no test that fails when you break it is **untested**, whatever the coverage says.
 Say so in your report rather than implying it is covered.
 
-**3. Is the failure even yours?** Before debugging, check the baseline. This suite has a real
-`UncaughtExceptionsBeforeTest` flake, and blaming your diff for it wastes an hour.
-
-```
-git -C E:/GitHub/AndroidAPS stash
-./gradlew.bat :<module>:testAndroidHostTest --no-daemon > /tmp/base.log 2>&1
-git -C E:/GitHub/AndroidAPS stash pop
-```
+**3. Is the failure even yours?** Before debugging, compare with `<scratchpad>/baseline.log`, the run
+you saved before your first edit. This suite has a real `UncaughtExceptionsBeforeTest` flake, and
+blaming your diff for it wastes an hour. If the same test failed in the baseline, it is not yours. Do
+not stash or reset the tree to make a new baseline.
 
 **4. Read your own diff.** After any bulk edit, before believing it:
 
 ```
-git -C E:/GitHub/AndroidAPS diff --stat
-git -C E:/GitHub/AndroidAPS diff -- <a file you did not mean to touch>
+git diff HEAD -M --stat
+git diff HEAD -- <a file you did not mean to touch>
 ```
 
 Specifically grep for the substitution traps you may have caused:
 
 ```
 grep -rn "app\.aaps\.core\.ui\.[A-Za-z]*Strings\." <module>/src/commonMain    # core:ui strings rewritten to the wrong object
-grep -rn "suspend fun" <module>/src --include=*.kt | grep -E "override|@Composable"   # suspend added to an override or Composable
+git diff HEAD -M -U0 | grep "^+.*suspend fun"    # suspend added by the move: an override or a Composable cannot take it
 ```
 
-**5. Does it still render?** The one that only a device shows. A missing string-owner registration
-compiles, passes tests, and renders **blank**. Ask the user before installing; if they agree:
+**5. Does it still render?** The one that only a device shows. An owner missing from
+`StringOwnerModules.ALL` now fails the build, but a name that resolves to no string id still compiles,
+passes the module tests, and shows its **raw snake_case name** on screen instead of the text. Ask the
+user before installing; if they agree:
 
 ```
 adb -s <device> install -r app/build/outputs/apk/full/debug/app-full-debug.apk
@@ -310,7 +355,7 @@ adb -s <device> shell "cat /sdcard/ui.xml" | grep -oE "[a-z]+_[a-z_]{6,}"    # r
 adb -s <device> logcat -d | grep -icE "FATAL EXCEPTION|Resources.NotFound"
 ```
 
-Raw snake_case keys appearing in the UI dump means a string owner is unregistered.
+Raw snake_case keys appearing in the UI dump means a name did not resolve to a string.
 
 **6. Did you change behaviour while moving?** Moving is not refactoring. If you wrapped something in
 `viewModelScope.launch`, an initial state became asynchronous, or a `Calendar` became `Instant` -
@@ -324,9 +369,11 @@ grep -rn "<ClassName>" --include=*.kt . | grep -v "/build/" | grep -v "<the file
 
 ### Have it challenged independently
 
-For anything larger than a single file, hand the result to the `ui-move-verifier` agent before
-reporting. It is instructed to assume you are wrong. Treat a `CONFIRMED` finding from it as work to
-redo, not an opinion to weigh.
+You cannot start another agent yourself. For anything larger than a single file, end your report
+with a line saying that the caller must run the `ui-move-verifier` agent on it before the user is told
+it is done. Give the module, the claim, and your baseline counts, so the verifier can compare. The
+verifier is instructed to assume you are wrong. A `CONFIRMED` finding from it is work to redo, not an
+opinion to weigh.
 
 ## Decisions belong to the user. Stop and ask.
 

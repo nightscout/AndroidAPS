@@ -17,7 +17,10 @@ Preferences provided"); a `Config` (else `masterEditingEnabled()` throws on `Loc
 client-with-unreachable-master state. Use `compose.setAapsContent(fixture) { Screen(...) }`.
 `stubResourcesFromRobolectric(rh)` in the same file answers a mocked `ResourceHelper` from the real
 resources and then calls `stubTextRefResolution`, so a ViewModel that formats text gets words, not
-nulls.
+nulls. That covers the `keys`, `coreUi`, `interfaces`, `implementation` and `aps` owners only. A
+`UiStrings` ref (owner `ui`) through the mocked `rh` throws `Unresolved string`: stub that ref on the
+mock, or give the ViewModel `generatedTextResolver("ui" to UiStringsValues::textOf)` as
+`FillDialogViewModelTest` does.
 
 `AapsScreenFixture` also provides `LocalDecimalFormatter` (added for the overview). Any screen that
 contains a graph needs it - `SecondaryGraphCompose` reads it for axis labels and the default throws
@@ -66,4 +69,5 @@ empties the whole Care Portal section) or scroll with
 `onAllNodesWithContentDescription` inside a `LazyColumn` did **not** match visual row order here -
 do not select a row by index.
 
-Related: [[move-breaks-two-test-harnesses]], [[ui-twelve-file-batch-moved]], [[mutation-restore-proof]]
+Related: [[move-breaks-two-test-harnesses]], [[lessons-from-finished-moves]], and the "Mutation must
+be atomic" section of the agent definition.

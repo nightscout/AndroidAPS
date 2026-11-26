@@ -86,26 +86,26 @@ class InsulinMigrationTest {
 
         val legacy = sut().readLegacyInsulin(store)
 
-        assertThat(legacy?.peakTime).isEqualTo(InsulinType.OREF_ULTRA_RAPID_ACTING.insulinPeakTime)
+        assertThat(legacy.peakTime).isEqualTo(InsulinType.OREF_ULTRA_RAPID_ACTING.insulinPeakTime)
     }
 
     @Test fun `free peak takes the peak the user set`() {
         val store = storeOf("ConfigBuilder_Enabled_INSULIN_InsulinOrefFreePeakPlugin" to true, "insulin_oref_peak" to 55)
 
-        assertThat(sut().readLegacyInsulin(store)?.peakTime).isEqualTo(55L * 60 * 1000)
+        assertThat(sut().readLegacyInsulin(store).peakTime).isEqualTo(55L * 60 * 1000)
     }
 
     @Test fun `free peak reads a peak stored as text`() {
         // The v3 preference screen was an edit box, so the value can be text rather than an Int.
         val store = storeOf("ConfigBuilder_Enabled_INSULIN_InsulinOrefFreePeakPlugin" to true, "insulin_oref_peak" to "55")
 
-        assertThat(sut().readLegacyInsulin(store)?.peakTime).isEqualTo(55L * 60 * 1000)
+        assertThat(sut().readLegacyInsulin(store).peakTime).isEqualTo(55L * 60 * 1000)
     }
 
     @Test fun `free peak without a stored peak uses the v3 default`() {
         val store = storeOf("ConfigBuilder_Enabled_INSULIN_InsulinOrefFreePeakPlugin" to true)
 
-        assertThat(sut().readLegacyInsulin(store)?.peakTime).isEqualTo(75L * 60 * 1000)
+        assertThat(sut().readLegacyInsulin(store).peakTime).isEqualTo(75L * 60 * 1000)
     }
 
     // ── harvestProfileDia: the DIA each v3 profile was using ────────────────────────────────────────
@@ -235,6 +235,37 @@ class InsulinMigrationTest {
         assertThat(plan.iCfg.insulinPeakTime).isEqualTo(InsulinType.OREF_LYUMJEV.insulinPeakTime)
     }
 
+    // ── insulinForMissingPeak: the peak for the rows that kept only their DIA ────────────────────────
+
+    @Test fun `a row without a peak takes the peak of the v3 selection`() {
+        // A 3.x AAPSClient worked out IOB with its own insulin plugin, so its selection is the right peak.
+        val lyumjev = sut().readLegacyInsulin(storeOf("ConfigBuilder_Enabled_INSULIN_InsulinLyumjevPlugin" to true))
+
+        assertThat(sut().insulinForMissingPeak(lyumjev)).isEqualTo(lyumjev)
+    }
+
+    @Test fun `a row without a peak and no store read takes v3's default`() {
+        val insulin = sut().insulinForMissingPeak(null)
+
+        assertThat(insulin.nickname).isEqualTo(rh.gs(InsulinType.OREF_RAPID_ACTING.label))
+        assertThat(insulin.peakTime).isEqualTo(PEAK_75M)
+        assertThat(insulin.fromExplicitKey).isFalse()
+    }
+
+    @Test fun `a 3x client's record answers once its peak is filled`() {
+        // migration32to33 keeps the DIA of the row, and MainApp fills its peak before it makes the plan. So the
+        // record is a whole insulin again. It used to be the sentinel, and a client has no local profile to
+        // harvest, so the DIA became the 9 h guess (#5625).
+        val insulin = sut().insulinForMissingPeak(legacyRapid())
+        val filled = ICfg(insulin.nickname, DIA_5H, insulin.peakTime, 1.0)
+
+        val plan = sut().plan(filled, legacyRapid(), harvestOf(), activeProfileName = null)
+
+        assertThat(plan.source).isEqualTo(InsulinMigrationPlan.Source.RECORD)
+        assertThat(plan.iCfg.dia).isEqualTo(5.0)
+        assertThat(plan.isGuess).isFalse()
+    }
+
     @Test fun `a rebuilt insulin is left unlabelled so the insulin list names it`() {
         val plan = sut().plan(null, legacyRapid(), harvestOf("Adult" to 6.0), activeProfileName = "Adult")
 
@@ -273,6 +304,7 @@ class InsulinMigrationTest {
 
     private companion object {
 
+        const val DIA_5H = 5L * 3600 * 1000
         const val DIA_6H = 6L * 3600 * 1000
         const val PEAK_75M = 75L * 60 * 1000
     }

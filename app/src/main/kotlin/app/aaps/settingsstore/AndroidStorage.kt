@@ -75,7 +75,8 @@ object AndroidStorage {
 
     /**
      * Sets the unreadable store aside and removes its key, so the next start begins with empty settings. The
-     * file is renamed, not deleted. Only for a start whose store could not be opened.
+     * file is renamed, not deleted. Only for a store that does not open with the key
+     * ([StoreUnreadableException]), never after a Keystore failure: the key it removes may still open the file.
      *
      * Returns the file it was moved to.
      */

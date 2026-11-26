@@ -16,6 +16,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
@@ -24,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
@@ -477,7 +480,8 @@ class ComposeMainActivity : MetroAppCompatActivity() {
     private fun AppNavHost(navController: NavHostController) {
         NavHost(
             navController = navController,
-            startDestination = AppRoute.Main.route
+            startDestination = AppRoute.Main.route,
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
         ) {
             appNavGraph(
                 navController = navController,

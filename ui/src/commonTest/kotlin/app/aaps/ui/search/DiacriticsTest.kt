@@ -17,6 +17,7 @@ class DiacriticsTest {
         // Czech, which is what the plugin's own KDoc names as the case that must keep working.
         assertEquals("prumer", "průměr".removeDiacritics())
         assertEquals("Kratkodoby", "Krátkodobý".removeDiacritics())
+        assertEquals("cerveny", "červený".removeDiacritics())
         // German, French, Spanish, Portuguese, Scandinavian.
         assertEquals("uber", "über".removeDiacritics())
         assertEquals("eleve", "élevé".removeDiacritics())
@@ -39,6 +40,11 @@ class DiacriticsTest {
         // "ı", and a search for IOB would then stop matching for Turkish users only.
         assertEquals("IOB", "IOB".removeDiacritics())
         assertEquals("Insulin", "Insulin".removeDiacritics())
+    }
+
+    @Test
+    fun `an accented capital I still matches IOB`() {
+        assertEquals("IOB", "ÍOB".removeDiacritics())
     }
 
     @Test

@@ -79,7 +79,7 @@ class PreferenceKeySnapshotTest {
         val onDisk = snapshot.takeIf { it.exists() }?.readText()?.replace("\r\n", "\n")
 
         if (onDisk != rendered) {
-            snapshot.parentFile.mkdirs()
+            snapshot.parentFile?.mkdirs()
             snapshot.writeText(rendered)
             // Fail on purpose: a rewritten snapshot that passed would be committed by accident, or
             // not committed at all, and CI would then be comparing against a file nobody read.
@@ -102,7 +102,7 @@ class PreferenceKeySnapshotTest {
     }
 
     private fun repoRoot(): File {
-        var dir: File? = File(System.getProperty("user.dir"))
+        var dir: File? = File(System.getProperty("user.dir")!!)
         while (dir != null && !File(dir, "settings.gradle").exists() && !File(dir, "settings.gradle.kts").exists()) dir = dir.parentFile
         return checkNotNull(dir) { "Could not find the repository root above ${System.getProperty("user.dir")}" }
     }

@@ -8,7 +8,7 @@
     <string name="commanderror">Σφάλμα εντολής</string>
     <string name="speederror">Σφάλμα ταχύτητας</string>
     <string name="insulinlimitviolation">Υπέρβαση του ορίου ινσουλίνης</string>
-    <string name="boluserrorcode">Απαιτείται: %1$.2fU Παραδόθηκε: %2$.2fU Κωδικός σφάλματος: %3$s</string>
+    <string name="boluserrorcode">Ζητήθηκε: %1$.2f U Χορηγήθηκε: %2$.2f U Κωδικός σφάλματος: %3$s</string>
     <string name="danai2_bolus_error_no_prime">Δεν έχει γίνει πλήρωση της αντλίας</string>
     <string name="danai2_bolus_error_not_enough_insulin">Δεν υπάρχει αρκετή ινσουλίνη στη δεξαμενή</string>
     <string name="danai2_bolus_error_easy_sleep">Η λειτουργία Easy sleep είναι ενεργή στην αντλία</string>

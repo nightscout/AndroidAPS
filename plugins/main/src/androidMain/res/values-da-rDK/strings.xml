@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_history_browser">Historik browser</string>
+    <string name="nav_history_browser">Historikbrowser</string>
     <string name="sensor_label">Sensor</string>
     <string name="insulin_label">Insulin</string>
-    <string name="pb_label">Pumpe batteri</string>
+    <string name="pb_label">Pumpebatteri</string>
     <string name="cannula">Kanyle</string>
-    <string name="patch_pump">Patch pumpe</string>
+    <string name="patch_pump">Patchpumpe</string>
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
+    <string name="basal_shortname">BAS</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Viser en løbende notifikation med en kort oversigt over, hvad dit loop gør</string>
     <string name="old_data">GAMLE DATA</string>
+    <string name="notification_iob_short">%1$.1fIE</string>
 </resources>

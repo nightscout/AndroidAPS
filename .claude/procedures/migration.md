@@ -4,7 +4,9 @@ When performing large-scale code migrations (e.g., XML→Compose, old API→new 
 
 ## Planning Phase
 
-- **Create a PLAN.md file** to track the entire migration
+- **Write a plan** to track the entire migration. It is working state, so keep it in memory or the
+  scratchpad, not in a file in the repo (see "Memory" in CLAUDE.md): a list of files or a count goes
+  stale within weeks, and someone will plan from it.
     - List all phases (Phase 0: Prerequisites, Phase 1-N: Implementation, Final: Cleanup)
     - Identify and categorize files by complexity (simple → medium → complex)
     - Track file counts and status for each phase
@@ -31,8 +33,10 @@ When performing large-scale code migrations (e.g., XML→Compose, old API→new 
     - Update all subclasses together to avoid compilation errors
 - **Maintain backward compatibility during migration:**
     - Keep both old and new code paths working
-    - Mark old code as `@Deprecated` but don't remove yet
-    - Only remove deprecated code when migration is 100% complete
+    - Old code that callers not yet migrated still use is not dead: mark it `@Deprecated` and keep it
+      until its last caller has moved
+    - Code that a step leaves with **no** caller is dead: remove it in the same change, as CLAUDE.md
+      says. Check first that it does not hide a lost caller
     - Test that both paths work during transition
 
 ## Execution Phase
@@ -54,14 +58,18 @@ When performing large-scale code migrations (e.g., XML→Compose, old API→new 
     - A guard that passes proves nothing until you have watched it fail on a deliberate break.
     - If the guard reads files Gradle does not know are inputs (source scanning, generated output), the
       task stays `UP-TO-DATE` and the guard never fires. Declare them with `inputs.dir(...)`.
-- **Document decisions in PLAN.md:**
+- **Record decisions where they last:** the *why* goes in the commit message, a code comment, a skill
+  or a durable memory - not in a status file:
     - Why certain approaches were chosen
     - What patterns emerged during migration
     - What issues were encountered and how solved
 - **At the end of partial migration ask yourself if it's the best possible pattern independent to
   previous code. Discuss your findings.**
 
-## Cleanup Phase (Only After 100% Migration Complete)
+## Cleanup Phase (After 100% Migration Complete)
+
+What is left here is what had to wait for the last caller: the deprecated paths and fallbacks.
+Anything that became dead earlier was already removed in its own step.
 
 - **Systematic cleanup in specific order:**
     1. Remove `@Deprecated` markers and deprecated functions
@@ -78,11 +86,11 @@ When performing large-scale code migrations (e.g., XML→Compose, old API→new 
 - **Update documentation:**
     - Remove TODOs referencing old code
     - Update comments to reflect new approach
-    - Archive or delete PLAN.md if no longer needed
+    - Delete the plan from memory once the migration is done
 
 ## Key Principles
 
 - **Never claim "done" prematurely** - user will verify
-- **Keep PLAN.md as single source of truth** for migration status
+- **Re-derive status with grep** instead of trusting a stored list or count
 - **Compile frequently** - catch errors early
-- **Cleanup only at the end** - don't mix migration with cleanup
+- **Dead code goes in the step that made it dead**; code still in use waits for the final cleanup

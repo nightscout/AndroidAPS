@@ -16,7 +16,7 @@ plugins {
 
 kotlin {
     android {
-        compileSdk = Versions.compileSdk
+        compileSdk { version = release(Versions.compileSdk) { minorApiLevel = Versions.compileSdkMinor } }
         minSdk = Versions.minSdk
 
         // Same as android-module-dependencies. Without it MissingTranslation would switch on, and the

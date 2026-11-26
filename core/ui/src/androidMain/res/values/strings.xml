@@ -1174,6 +1174,8 @@
     <string name="wiki_search_offline">Documentation search requires internet connection</string>
     <string name="no_search_results">No results found</string>
     <string name="search_plugin_disabled">Plugin %1$s disabled</string>
+    <string name="search_recent">Recent searches</string>
+    <string name="search_history_remove">Remove from recent searches</string>
 
     <!--    Food Management -->
     <string name="food_management">Food</string>
@@ -1257,7 +1259,6 @@
     <string name="graph_bg">BG graph</string>
     <string name="graph_height">Graph height [dp]</string>
     <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
-    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
     <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
     <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>

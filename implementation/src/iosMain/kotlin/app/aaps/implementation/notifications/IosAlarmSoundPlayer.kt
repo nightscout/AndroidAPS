@@ -10,6 +10,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.ObjCObjectVar
 import kotlinx.cinterop.alloc
@@ -52,7 +53,7 @@ import platform.Foundation.NSURL
  * main looper. `play` may be called from any thread - the notification registry calls it while
  * holding its own lock - so nothing here touches [player] outside that dispatcher.
  */
-@OptIn(ExperimentalForeignApi::class)
+@OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 @Inject

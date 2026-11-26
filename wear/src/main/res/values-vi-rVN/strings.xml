@@ -199,8 +199,8 @@
     <string name="simple_ui_charging">Khi đang sạc pin</string>
     <string name="simple_ui_always_on">Chế độ luôn bật</string>
     <string name="simple_ui_always_on_charging">Luôn bật và đang sạc</string>
-    <string name="temp_target_eating_soon">Đang ăn</string>
-    <string name="temp_target_hypo">Hypo</string>
+    <string name="temp_target_eating_soon">Ăn uống</string>
+    <string name="temp_target_hypo">Hạ đường huyết</string>
     <string name="temp_target_activity">Activity</string>
     <string name="temp_target_manual">Thủ công</string>
     <string name="temp_target_cancel">Hủy</string>

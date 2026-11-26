@@ -405,7 +405,8 @@ class SmsCommunicatorPlugin(
         } else if (lastBG != null) {
             val agoMilliseconds = dateUtil.now() - lastBG.timestamp
             val agoMin = (agoMilliseconds / 60.0 / 1000.0).toInt()
-            parts += labelled(SyncStrings.sms_last_bg, rh.gs(CoreUiStrings.value_with_unit, profileUtil.valueInCurrentUnitsDetect(lastBG.recalculated), rh.gs(SyncStrings.sms_min_ago, agoMin)))
+            // Formatted as the actual BG above. The bare number came out as "121.8" or "6.7605555555555555"
+            parts += labelled(SyncStrings.sms_last_bg, rh.gs(CoreUiStrings.value_with_unit, profileUtil.fromMgdlToStringInUnits(lastBG.recalculated), rh.gs(SyncStrings.sms_min_ago, agoMin)))
         }
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         if (glucoseStatus != null) parts += labelled(SyncStrings.sms_delta, rh.gs(CoreUiStrings.value_with_unit, profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta), units))

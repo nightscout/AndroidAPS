@@ -62,7 +62,7 @@ class NsConnectHandler(
             val response = NsWsPayload.parse(raw)
             val ok = response?.let { NsWsPayload.boolean(it, "success") } == true
             if (ok) {
-                nsClientRepository.addLog("◄ WS", "Subscribed for: ${response?.let { NsWsPayload.text(it, "collections") }}")
+                nsClientRepository.addLog("◄ WS", "Subscribed for: ${NsWsPayload.text(response, "collections")}")
                 // Nothing arrives while disconnected, so the next round has to be a catch-up one.
                 nsClientV3Plugin().initialLoadFinished = false
                 nsClientV3Plugin().executeLoop("WS_CONNECT")

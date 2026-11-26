@@ -30,7 +30,9 @@ import app.aaps.core.nssdk.mapper.toTreatment
 import app.aaps.core.nssdk.networking.NsHttpResponse
 import app.aaps.core.nssdk.networking.NsKtorClient
 import app.aaps.core.nssdk.networking.NsUrl
+import app.aaps.core.nssdk.networking.WireRow
 import app.aaps.core.nssdk.remotemodel.LastModified
+import app.aaps.core.nssdk.remotemodel.NSResponse
 import app.aaps.core.nssdk.remotemodel.RemoteDeviceStatus
 import app.aaps.core.nssdk.remotemodel.RemoteEntry
 import app.aaps.core.nssdk.remotemodel.RemoteFood
@@ -337,15 +339,28 @@ class NSAndroidClientImpl(
             throw UnsuccessfulNightscoutException(response.errorBody() ?: response.message())
     }
 
+    /**
+     * The treatments of one page. A row that cannot be read is left out and named in `unreadable`, the
+     * rest of the page still arrives (see `RowByRowListSerializer`). A body that is not a page at all is an
+     * error: it used to read as an empty page, and the first load took that for the end of the history
+     * (#5626). An empty body (204) is an empty page.
+     */
+    private fun NsHttpResponse<NSResponse<List<WireRow<RemoteTreatment>>>>.readTreatments(lastServerModified: Long?): NSAndroidClient.ReadResponse<List<NSTreatment>> {
+        if (bodyText.isEmpty()) return NSAndroidClient.ReadResponse(code = code, lastServerModified = lastServerModified, values = emptyList())
+        val rows = (body() ?: throw InvalidFormatNightscoutException("Invalid Nightscout treatments response (HTTP $code)")).result.orEmpty()
+        return NSAndroidClient.ReadResponse(
+            code = code,
+            lastServerModified = lastServerModified,
+            values = rows.mapNotNull { it.value?.toTreatment() },
+            unreadable = rows.mapNotNull { it.error }
+        )
+    }
+
     override suspend fun getTreatmentsNewerThan(createdAt: String, limit: Int): NSAndroidClient.ReadResponse<List<NSTreatment>> = callWrapper(dispatcher) {
 
         val response = api.getTreatmentsNewerThan(createdAt, limit)
         if (response.isSuccessful) {
-            return@callWrapper NSAndroidClient.ReadResponse(
-                code = response.code,
-                lastServerModified = 0,
-                values = response.body()?.result?.map(RemoteTreatment::toTreatment).toNotNull()
-            )
+            return@callWrapper response.readTreatments(lastServerModified = 0)
         } else if (response.code in 400..499)
             throw InvalidParameterNightscoutException(response.errorBody() ?: response.message())
         else
@@ -356,11 +371,7 @@ class NSAndroidClientImpl(
 
         val response = api.getTreatmentsModifiedSince(from, limit)
         if (response.isSuccessful) {
-            val eTag = response.eTagAsLong()
-            return@callWrapper NSAndroidClient.ReadResponse(
-                code = response.code, lastServerModified = eTag, values = response.body()?.result?.map
-                    (RemoteTreatment::toTreatment).toNotNull()
-            )
+            return@callWrapper response.readTreatments(lastServerModified = response.eTagAsLong())
         } else if (response.code in 400..499)
             throw InvalidParameterNightscoutException(response.errorBody() ?: response.message())
         else

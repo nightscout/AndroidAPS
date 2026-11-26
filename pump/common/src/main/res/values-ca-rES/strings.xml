@@ -3,9 +3,34 @@
     <!-- PumpCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Operació no compatible amb la bomba i/o controlador.</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_suspended">En pausa</string>
+    <string name="pump_status_not_initialized">No inicialitzat</string>
+    <string name="pump_status_initialized">Inicialitzat</string>
+    <string name="pump_status_encrypt">Xifrant la comunicació</string>
+    <string name="pump_status_ready">Preparat</string>
+    <string name="pump_status_busy">Ocupat</string>
+    <string name="pump_status_suspended">Suspesa</string>
+    <string name="pump_status_executing_command">Executant ordre</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Obtenir configuració</string>
+    <string name="pump_cmd_desc_get_firmware">Obtenir firmware de la bomba</string>
+    <string name="pump_cmd_desc_get_basal_profile">Obtenir perfil basal</string>
+    <string name="pump_cmd_desc_set_basal_profile">Establir perfil basal</string>
+    <string name="pump_cmd_desc_get_tbr">Obtenir basal temporal</string>
+    <string name="pump_cmd_desc_cancel_tbr">Cancel·lar basal temporal</string>
+    <string name="pump_cmd_desc_set_tbr">Establir basal temporal</string>
+    <string name="pump_cmd_desc_set_bolus">Establir bolus</string>
+    <string name="pump_cmd_desc_get_bolus">Obtenir bolus</string>
+    <string name="pump_cmd_desc_cancel_bolus">Cancel·lar bolus</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Obtenir insulina restant</string>
+    <string name="pump_cmd_desc_get_battery_status">Obtenir estat bateria</string>
+    <string name="pump_cmd_desc_get_time">Obtenir hora</string>
+    <string name="pump_cmd_desc_set_time">Configurar hora</string>
+    <string name="pump_cmd_desc_get_pump_status">Obtenir estat bomba</string>
+    <string name="pump_cmd_desc_get_history">Obtenir historial</string>
+    <string name="pump_cmd_desc_get_history_params">Obtenir historial %s</string>
+    <string name="pump_cmd_desc_custom">Ordre personalitzada</string>
     <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Basals</string>
     <string name="history_group_configuration">Configuracions</string>
     <string name="history_group_notification">Avisos</string>
     <string name="history_group_statistic">Estadístiques</string>
@@ -15,7 +40,20 @@
     <string name="history_group_prime">Encebaments</string>
     <string name="history_group_alarm">Alarmes</string>
     <string name="history_group_glucose">Glucèmia</string>
+    <string name="history_group_base">Base</string>
     <string name="history_group_other">Altres</string>
+    <string name="history_group_events">Tots els esdeveniments</string>
+    <string name="history_group_events_no_stat">Esdeveniments (sense estadístiques)</string>
     <!-- Time -->
+    <string name="time_today">Avui</string>
+    <string name="time_last_hour">Última hora</string>
+    <string name="time_last_3_hours">Últimes 3 hores</string>
+    <string name="time_last_6_hours">Últimes 6 hores</string>
+    <string name="time_last_12_hours">Últimes 12 hores</string>
+    <string name="time_last_24_hours">Últimes 24 hores</string>
+    <string name="time_last_2_days">Últims 2 dies</string>
+    <string name="time_last_4_days">Últims 4 dies</string>
+    <string name="time_last_week">Última setmana</string>
+    <string name="time_last_month">Últim mes</string>
     <!-- Pump History -->
 </resources>
