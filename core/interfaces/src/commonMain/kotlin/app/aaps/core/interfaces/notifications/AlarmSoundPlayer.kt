@@ -44,6 +44,13 @@ interface AlarmSoundPlayer {
      */
     fun play(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean, ringtoneUri: String? = null)
 
+    /**
+     * As [play], but the phone vibrates in a loop and makes no sound (the user's Vibrate choice,
+     * `app.aaps.core.interfaces.alerts.AlertChoice.VIBRATE`), until [stop]. A player on a phone that cannot vibrate
+     * plays [sound] instead: an alarm must never be quiet because a choice could not be honoured.
+     */
+    fun vibrate(sound: AlarmSound, ownerTag: String)
+
     /** Stop and release playback **only if** [ownerTag] is the current owner. No-op otherwise. */
     fun stop(ownerTag: String)
 

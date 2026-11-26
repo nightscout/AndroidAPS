@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.ui.AndroidActivities
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.androidNotification.AlarmNotificationManager
+import app.aaps.implementation.androidNotification.vibrator
 import app.aaps.implementation.ui.UiInteractionImpl
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
@@ -138,7 +139,10 @@ class AndroidAlertPlatform(
     /** A copy, so the caller starting it cannot change what is held here. Null when nothing is owed. */
     fun unansweredAlarmIntent(): Intent? = unanswered?.let { Intent(it) }
 
-    override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?) {
+    // A tablet may have no vibrator: there Vibrate is not offered, and a stored one rings
+    override val canVibrate: Boolean by lazy { vibrator(context).hasVibrator() }
+
+    override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?, vibrateOnly: Boolean) {
         alarmNotificationManager().postChime(
             chimeKey = requestCode(alert.source, alert.key),
             title = rh.gs(alert.title),
@@ -146,7 +150,8 @@ class AndroidAlertPlatform(
             // The sound the core chose: the user's for this kind on this phone, else the alert's own
             sound = sound,
             ringtoneUri = ringtoneUri,
-            actions = silenceButtons(alert)
+            actions = silenceButtons(alert),
+            vibrateOnly = vibrateOnly
         )
     }
 

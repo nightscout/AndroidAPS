@@ -58,7 +58,7 @@ import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 
 /**
- * Ring, Silent or Off on this phone (`_docs/ALARMS.md`, section 6), in four sections: the pump and the CGM by level
+ * Ring, Vibrate (where the phone can), Silent or Off on this phone (`_docs/ALARMS.md`, section 6), in four sections: the pump and the CGM by level
  * (critical, needs action, info), the BG alarms (lows, highs) and the app's own alerts one by one (decided 2026-11-26).
  * A change applies at once, so there is no Save: the back arrow only goes back. A protected row shows that it always
  * rings, with no choice.
@@ -71,6 +71,8 @@ import app.aaps.ui.UiStrings
 @Composable
 fun AlertKindsScreen(
     sections: List<AlertSettingsSection>,
+    /** The phone can vibrate, so Vibrate is offered and explained. */
+    vibrates: Boolean,
     silentOrOff: Int,
     onChoice: (AlertSetting, AlertChoice) -> Unit,
     onClear: (AlertKind) -> Unit,
@@ -107,6 +109,7 @@ fun AlertKindsScreen(
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
                     Text(stringResource(UiStrings.alert_kinds_intro), style = MaterialTheme.typography.bodyMedium)
+                    if (vibrates) Text(stringResource(UiStrings.alert_kinds_vibrate_intro), style = MaterialTheme.typography.bodyMedium)
                     if (silentOrOff > 0)
                         Text(stringResource(UiStrings.alert_kinds_silent_or_off, silentOrOff), style = MaterialTheme.typography.bodyMedium)
                 }
@@ -200,11 +203,11 @@ private fun ExceptionRowView(row: AlertExceptionRow, onChoice: (AlertSetting, Al
                 Icon(Icons.Filled.Close, contentDescription = stringResource(UiStrings.alert_kind_remove_exception))
             }
         }
-        ChoiceButtons(row.group.choices, row.choice) { onChoice(row.kind, it) }
+        ChoiceButtons(row.choices, row.choice) { onChoice(row.kind, it) }
     }
 }
 
-/** Ring, Silent and Off; for a row that makes no sound, Show and Off. */
+/** Ring, Vibrate (where the phone can), Silent and Off; for a row that makes no sound, Show and Off. */
 @Composable
 private fun ChoiceButtons(choices: List<AlertChoice>, selected: AlertChoice, onPick: (AlertChoice) -> Unit) {
     val quiet = AlertChoice.SILENT !in choices
@@ -298,9 +301,10 @@ private fun SoundRow(setting: AlertSetting, testKind: AlertKind, sound: AlertSou
 }
 
 private fun AlertChoice.label(quiet: Boolean): TextRef = when (this) {
-    AlertChoice.RING   -> if (quiet) UiStrings.alert_choice_show else UiStrings.alert_choice_ring
-    AlertChoice.SILENT -> UiStrings.alert_choice_silent
-    AlertChoice.OFF    -> UiStrings.alert_choice_off
+    AlertChoice.RING    -> if (quiet) UiStrings.alert_choice_show else UiStrings.alert_choice_ring
+    AlertChoice.VIBRATE -> UiStrings.alert_choice_vibrate
+    AlertChoice.SILENT  -> UiStrings.alert_choice_silent
+    AlertChoice.OFF     -> UiStrings.alert_choice_off
 }
 
 private fun AlertSection.title(): TextRef = when (this) {

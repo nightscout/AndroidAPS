@@ -111,14 +111,15 @@ class CommonNotificationManager(
         tellWatch: Boolean,
         breakThroughDnd: Boolean,
         ringtoneUri: String?,
-        systemText: String?
+        systemText: String?,
+        vibrateOnly: Boolean
     ): NotificationHandle =
         postInternal(
             id = id, text = text, level = level,
             date = date, validTo = validTo,
             sound = sound, actions = actions, validityCheck = validityCheck,
             alarmTitle = alarmTitle, canMute = canMute, tellWatch = tellWatch, breakThroughDnd = breakThroughDnd,
-            ringtoneUri = ringtoneUri, systemText = systemText
+            ringtoneUri = ringtoneUri, systemText = systemText, vibrateOnly = vibrateOnly
         )
 
     override fun post(
@@ -153,7 +154,8 @@ class CommonNotificationManager(
         tellWatch: Boolean = true,
         breakThroughDnd: Boolean = false,
         ringtoneUri: String? = null,
-        systemText: String? = null
+        systemText: String? = null,
+        vibrateOnly: Boolean = false
     ): NotificationHandle = lock.withLock {
         // Clean up expired notifications piggyback on writes.
         removeExpired()
@@ -184,7 +186,8 @@ class CommonNotificationManager(
             tellWatch = tellWatch,
             breakThroughDnd = breakThroughDnd,
             ringtoneUri = ringtoneUri,
-            systemText = systemText
+            systemText = systemText,
+            vibrateOnly = vibrateOnly
         )
         current.add(notification)
         current.sortBy { it.level.priority }
@@ -289,7 +292,7 @@ class CommonNotificationManager(
 
             top.instanceKey != soundingKey -> {
                 soundingKey = top.instanceKey
-                platform.setAudibleAlarm(top.instanceKey, top.sound, top.breakThroughDnd, top.ringtoneUri)
+                platform.setAudibleAlarm(top.instanceKey, top.sound, top.breakThroughDnd, top.ringtoneUri, top.vibrateOnly)
                 // Not for an alarm the watch rings by itself: the "time to eat" timer would otherwise show twice.
                 if (top.tellWatch) rxBus.send(
                     EventMobileToWear(
@@ -300,7 +303,8 @@ class CommonNotificationManager(
                             now(),
                             title = top.alarmTitle ?: rh.gs(CoreUiStrings.urgent_alarm),
                             status = top.systemBody,
-                            canMute = top.canMute
+                            canMute = top.canMute,
+                            vibrateOnly = top.vibrateOnly
                         )
                     )
                 )

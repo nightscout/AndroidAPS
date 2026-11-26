@@ -49,7 +49,8 @@ class ComboV2PluginErrorLockoutTest {
             tellWatch: Boolean,
             breakThroughDnd: Boolean,
             ringtoneUri: String?,
-            systemText: String?
+            systemText: String?,
+            vibrateOnly: Boolean
         ): NotificationHandle = record(id, level, validityCheck)
 
         override fun post(

@@ -86,8 +86,9 @@ class DesktopAlertPlatform(
         if (_alarmScreen.value == AlertId(source, key)) _alarmScreen.value = null
     }
 
-    // The desktop has one sound, so [sound] and [ringtoneUri] choose nothing here
-    override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?) {
+    // The desktop has one sound, so [sound] and [ringtoneUri] choose nothing here. Nothing vibrates, so Vibrate is not
+    // offered and [vibrateOnly] is never set.
+    override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?, vibrateOnly: Boolean) {
         tray.toast(rh.gs(alert.title), alert.text?.let { rh.gs(it) } ?: "")
         tray.beep()
     }
@@ -108,6 +109,9 @@ class DesktopAlertPlatform(
 class DesktopAlarmSoundPlayer(private val tray: DesktopSystemNotificationPlatform) : AlarmSoundPlayer {
 
     override fun play(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean, ringtoneUri: String?) = tray.beep()
+
+    // Nothing to vibrate: it beeps, so an alarm is never quiet
+    override fun vibrate(sound: AlarmSound, ownerTag: String) = tray.beep()
 
     override fun stop(ownerTag: String) = Unit
 }

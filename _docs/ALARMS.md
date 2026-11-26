@@ -195,6 +195,13 @@ that fails rings before the next try succeeds.
     exception" in its section. Its own choice wins over its group's, also when it is Ring. The ✕ removes it. The
     choice of a kind is its exception, else its group's, else Ring (`AlertsImpl.choiceFor`). Choices and sounds of
     groups and kinds share the same stored maps, under the `AlertSetting` id; a group's id starts with `group.`.
+- **Vibrate** (decided 2026-11-26), a fourth choice between Ring and Silent: it rings as Ring does (alarm screen,
+  urgent card, chime), but the phone and the watch make no sound. An alarm vibrates in a loop until it is answered
+  (`AlarmSoundPlayer.vibrate`, on the alarm usage); a chime vibrates once (the silent chime channel); the watch gets
+  `AlarmRinging.vibrateOnly` and posts on its vibration-only channel. Offered only where `AlertPlatform.canVibrate`:
+  Android with a vibrator. iOS cannot vibrate without a sound from a background notification and the desktop has
+  nothing to vibrate, so they do not offer it, and a Vibrate that came with settings from another phone rings there
+  (the core maps it to Ring, the players play the sound). Not counted as silent or off.
 - **Three choices per kind:** Ring (the default), Silent (a card, no sound, no alarm screen, the watch not told), Off
   (not shown). A silent card is IMPORTANT at most, never URGENT. An alert that is off stays in `Alerts.active`, so its
   raiser resolves it as any other. A choice changed while the alert is active applies at once. Stored in
@@ -580,6 +587,8 @@ The order matters: step 3 must not come before step 2.
     action and Info (from decision 14), the BG alarms by urgent low, lows, highs and missed readings, and the app's
     other alerts one by one. The app's alerts about the pump are in the pump's groups. One kind can be set apart from
     its group, from the alarm screen or the settings.
+16. **Vibrate is a choice** (2026-11-26, section 6): as Ring without sound, on the phone and the watch; an alarm
+    vibrates until it is answered. Android only; where the phone cannot vibrate it is not offered and rings.
 
 Open, with a recommendation:
 

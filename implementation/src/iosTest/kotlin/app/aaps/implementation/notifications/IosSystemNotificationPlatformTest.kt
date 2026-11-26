@@ -59,6 +59,10 @@ class IosSystemNotificationPlatformTest {
             calls.add("play:${sound.name}")
         }
 
+        override fun vibrate(sound: AlarmSound, ownerTag: String) {
+            calls.add("vibrate:${sound.name}")
+        }
+
         override fun stop(ownerTag: String) {
             calls.add("stop")
         }

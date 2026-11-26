@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.alerts.AlertGroup
 import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertKindCatalogue
 import app.aaps.core.interfaces.alerts.AlertOrigin
+import app.aaps.core.interfaces.alerts.AlertPlatform
 import app.aaps.core.interfaces.alerts.AlertSection
 import app.aaps.core.interfaces.alerts.AlertSetting
 import app.aaps.core.interfaces.alerts.AlertSeverity
@@ -67,6 +68,8 @@ interface AlertKindsSettings {
 @Inject
 class AlertKindsSettingsImpl(
     private val alerts: Alerts,
+    // Only for whether the phone can vibrate: Vibrate is offered only where it can be kept
+    private val alertPlatform: AlertPlatform,
     private val catalogues: Set<AlertKindCatalogue>,
     private val bgAlarmRules: BgAlarmRules,
     private val profileUtil: ProfileUtil,
@@ -128,7 +131,8 @@ class AlertKindsSettingsImpl(
                 val pauses by alerts.pauses.collectAsState()
                 val sounds by alerts.sounds.collectAsState()
                 AlertKindsScreen(
-                    sections = alertSettingsSections(catalogues, current),
+                    sections = alertSettingsSections(catalogues, current, alertPlatform.canVibrate),
+                    vibrates = alertPlatform.canVibrate,
                     // The same count as the line in the notification sheet
                     silentOrOff = silentOrOff(current, pauses),
                     onChoice = { setting, choice -> alerts.setChoice(setting, choice) },
@@ -148,10 +152,10 @@ class AlertKindsSettingsImpl(
 
 /**
  * How many settings are silent or off on this phone, for the line that keeps them from being forgotten: a group, a kind
- * or an exception that is not Ring, and a paused kind. An exception set to Ring is not counted.
+ * or an exception that is Silent or Off, and a paused kind. One that rings, also by vibration, is not counted.
  */
 fun silentOrOff(choices: Map<String, AlertChoice>, pauses: Map<String, Long>): Int =
-    (choices.filterValues { it != AlertChoice.RING }.keys + pauses.keys).size
+    (choices.filterValues { !it.rings }.keys + pauses.keys).size
 
 /**
  * One row of a section: a group of kinds, or a kind that is a row of its own. [choices] are what the user can pick;
@@ -159,8 +163,8 @@ fun silentOrOff(choices: Map<String, AlertChoice>, pauses: Map<String, Long>): I
  */
 data class AlertSettingRow(val setting: AlertSetting, val choice: AlertChoice, val choices: List<AlertChoice>, val testKind: AlertKind?)
 
-/** A kind the user set apart from its group, with its own choice. */
-data class AlertExceptionRow(val kind: AlertKind, val choice: AlertChoice, val group: AlertGroup)
+/** A kind the user set apart from its group, with its own choice and the [choices] of its group. */
+data class AlertExceptionRow(val kind: AlertKind, val choice: AlertChoice, val choices: List<AlertChoice>)
 
 /**
  * One part of the settings. [devices]: the names of the pump or CGM drivers in use, shown under its heading.
@@ -178,9 +182,12 @@ data class AlertSettingsSection(
  * The sections that have kinds in use, in [AlertSection] order (decided 2026-11-26). In a section: its protected kinds
  * of their own (urgent low), then its groups, then its other kinds of their own. A group shows only while one of its
  * kinds is in use, so a pump with no info alerts has no Info row. A protected setting always shows Ring: the user
- * cannot change it, and a choice stored for it would not be used.
+ * cannot change it, and a choice stored for it would not be used. Vibrate is offered only when the phone [canVibrate];
+ * where it cannot, a stored Vibrate shows as Ring, which is what the alert core does with it.
  */
-fun alertSettingsSections(catalogues: Collection<AlertKindCatalogue>, choices: Map<String, AlertChoice>): List<AlertSettingsSection> {
+fun alertSettingsSections(catalogues: Collection<AlertKindCatalogue>, choices: Map<String, AlertChoice>, canVibrate: Boolean): List<AlertSettingsSection> {
+    fun offered(list: List<AlertChoice>) = if (canVibrate) list else list - AlertChoice.VIBRATE
+    fun shown(choice: AlertChoice) = if (choice == AlertChoice.VIBRATE && !canVibrate) AlertChoice.RING else choice
     val used = catalogues.filter { it.inUse() && it.kinds.isNotEmpty() }
         // The app's own first: its kinds of their own come before Nightscout's
         .sortedWith(compareBy({ it.kinds.first().origin != AlertOrigin.APP }, { it.kinds.first().source }))
@@ -191,15 +198,15 @@ fun alertSettingsSections(catalogues: Collection<AlertKindCatalogue>, choices: M
         val own = inSection.filter { it.group == null }
         val groups = AlertGroup.entries.filter { group -> inSection.any { it.group == group } }
         val groupRows = groups.map { group ->
-            AlertSettingRow(group, choiceOf(group, choices), group.choices, testKind = inSection.first { it.group == group }.takeIf { group.makesSound })
+            AlertSettingRow(group, shown(choiceOf(group, choices)), offered(group.choices), testKind = inSection.first { it.group == group }.takeIf { group.makesSound })
         }
-        val ownRows = own.map { AlertSettingRow(it, choiceOf(it, choices), AlertChoice.entries, testKind = it) }
+        val ownRows = own.map { AlertSettingRow(it, shown(choiceOf(it, choices)), offered(AlertChoice.entries), testKind = it) }
         val apart = inSection.filter { !it.isProtected }.mapNotNull { kind -> kind.group?.let { kind to it } }
         AlertSettingsSection(
             section = section,
             devices = used.filter { catalogue -> catalogue.kinds.any { it.section == section && it.origin.isDevice() } }.map { it.title },
             rows = ownRows.filter { it.setting.isProtected } + groupRows + ownRows.filterNot { it.setting.isProtected },
-            exceptions = apart.mapNotNull { (kind, group) -> choices[kind.id]?.let { AlertExceptionRow(kind, it, group) } },
+            exceptions = apart.mapNotNull { (kind, group) -> choices[kind.id]?.let { AlertExceptionRow(kind, shown(it), offered(group.choices)) } },
             candidates = apart.map { it.first }.filter { it.id !in choices }
         )
     }

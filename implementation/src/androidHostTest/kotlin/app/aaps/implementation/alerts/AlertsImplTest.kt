@@ -78,9 +78,11 @@ class AlertsImplTest : TestBase() {
         override fun cancel(instanceKey: Int) {}
         override fun cancelAll() {}
         var breaksThrough = false
-        override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean, ringtoneUri: String?) {
+        var vibrates = false
+        override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean, ringtoneUri: String?, vibrateOnly: Boolean) {
             soundingKey = instanceKey
             breaksThrough = breakThroughDnd
+            vibrates = vibrateOnly
         }
 
         override fun onDismissed(callback: (Int) -> Unit) {}
@@ -103,11 +105,17 @@ class AlertsImplTest : TestBase() {
         }
 
         val chimeRingtones = mutableListOf<String?>()
-        override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?) {
+        val chimeVibrations = mutableListOf<Boolean>()
+        override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?, vibrateOnly: Boolean) {
             chimes += alert.key
             chimeSounds += sound
             chimeRingtones += ringtoneUri
+            chimeVibrations += vibrateOnly
         }
+
+        /** Android can; a test sets it off for a phone that cannot. */
+        var vibrator = true
+        override val canVibrate: Boolean get() = vibrator
 
         override fun snoozed(alert: Alert, until: Long) {
             snoozes += alert.key to until
@@ -528,6 +536,67 @@ class AlertsImplTest : TestBase() {
 
         assertThat(sut.choices.value).isEmpty()
         assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
+    }
+
+    // ---- vibrate only (decided 2026-11-26) ------------------------------------------------------------
+
+    /** As Ring, alarm screen and urgent card included, but the phone and the watch only vibrate, until it is answered. */
+    @Test
+    fun `an alarm of a kind set to vibrate rings without sound`() {
+        sut.setChoice(occlusion, AlertChoice.VIBRATE)
+
+        sut.raise(alert(kind = occlusion))
+
+        assertThat(card().level).isEqualTo(NotificationLevel.URGENT)
+        assertThat(card().vibrateOnly).isTrue()
+        // Still set: it owns the alarm slot, and it is the fallback where the phone cannot vibrate
+        assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
+        assertThat(systemPlatform.vibrates).isTrue()
+        assertThat(alertPlatform.screens).containsExactly("occlusion")
+        assertThat(sut.sounding?.key).isEqualTo("occlusion")
+    }
+
+    @Test
+    fun `a warning of a kind set to vibrate chimes by vibration`() {
+        sut.setChoice(occlusion, AlertChoice.VIBRATE)
+
+        sut.raise(alert(kind = occlusion, severity = AlertSeverity.WARNING))
+
+        assertThat(alertPlatform.chimes).containsExactly("occlusion")
+        assertThat(alertPlatform.chimeVibrations).containsExactly(true)
+    }
+
+    @Test
+    fun `a group set to vibrate makes its kinds vibrate`() {
+        sut.setChoice(AlertGroup.PUMP_ACTION, AlertChoice.VIBRATE)
+
+        sut.raise(reminderAlert())
+
+        assertThat(card().vibrateOnly).isTrue()
+    }
+
+    /** Settings brought from another phone: a phone that cannot vibrate rings rather than stays quiet. */
+    @Test
+    fun `vibrate rings on a phone that cannot vibrate`() {
+        alertPlatform.vibrator = false
+        sut.setChoice(occlusion, AlertChoice.VIBRATE)
+
+        sut.raise(alert(kind = occlusion))
+
+        assertThat(card().vibrateOnly).isFalse()
+        assertThat(systemPlatform.vibrates).isFalse()
+        assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
+    }
+
+    @Test
+    fun `a paused kind set to vibrate is silent while the pause lasts`() {
+        sut.setChoice(BgAlert.LOW, AlertChoice.VIBRATE)
+        sut.pause(listOf(BgAlert.LOW), now + 60 * 60_000L)
+
+        sut.raise(bgLow())
+
+        assertThat(card().sound).isNull()
+        assertThat(card().vibrateOnly).isFalse()
     }
 
     @Test

@@ -166,6 +166,15 @@ class AndroidSystemNotificationPlatformTest {
         verify(alarmSoundPlayer).play(AlarmSound.ALARM, AlarmSoundPlayer.OWNER_INTERNAL, true)
     }
 
+    /** The user chose Vibrate: the player vibrates and plays nothing. */
+    @Test
+    fun `an alarm set to vibrate only vibrates`() {
+        sut.setAudibleAlarm(1, AlarmSound.ALARM, breakThroughDnd = false, ringtoneUri = null, vibrateOnly = true)
+
+        verify(alarmSoundPlayer).vibrate(AlarmSound.ALARM, AlarmSoundPlayer.OWNER_INTERNAL)
+        verify(alarmSoundPlayer, never()).play(any(), any(), any(), anyOrNull())
+    }
+
     @Test
     fun `silence is not repeated when nothing is sounding`() {
         sut.setAudibleAlarm(null, null)

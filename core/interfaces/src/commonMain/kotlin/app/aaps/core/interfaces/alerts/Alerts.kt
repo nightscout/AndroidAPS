@@ -109,17 +109,27 @@ interface AlertKind : AlertSetting {
     val announced: Boolean get() = true
 }
 
-/** What the user chose for a kind of alert, on this phone only. */
+/** What the user chose for a kind of alert, on this phone only. Stored by name: never rename one. */
 enum class AlertChoice {
 
     /** The default: as its severity says. */
     RING,
 
+    /**
+     * As [RING], with the phone and the watch vibrating instead of making a sound (decided 2026-11-26): an alarm
+     * vibrates until it is answered, a chime once. Only where the phone can vibrate ([AlertPlatform.canVibrate]); where
+     * it cannot, it rings.
+     */
+    VIBRATE,
+
     /** A card only: no sound, no alarm screen, and the watch is not told. */
     SILENT,
 
     /** Not shown. It is still written to the log and the history. */
-    OFF
+    OFF;
+
+    /** It rings, by sound or by vibration: its alarm screen and chime come as usual. */
+    val rings: Boolean get() = this == RING || this == VIBRATE
 }
 
 /** A step the user can start from the alert, for example "clear the alarm on the patch" or "+5 min". */
@@ -371,14 +381,21 @@ interface Alerts {
  */
 interface AlertPlatform {
 
+    /**
+     * Whether the phone can vibrate without a sound, also from the background, for [AlertChoice.VIBRATE]. Android
+     * can. iOS cannot (a notification without a sound does not vibrate) and the desktop has nothing to vibrate, so
+     * they do not offer the choice, and a Vibrate stored on another phone rings there.
+     */
+    val canVibrate: Boolean get() = false
+
     /** A CRITICAL alert rings: bring up the alarm screen for it, also when the app is in the background. */
     fun showAlarmScreen(alert: Alert)
 
     /**
      * A WARNING alert: show it as a system notification with one sound: [sound], or on Android the user's ringtone
-     * [ringtoneUri], with [sound] as its fallback.
+     * [ringtoneUri], with [sound] as its fallback. [vibrateOnly]: it vibrates once instead, with no sound.
      */
-    fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String? = null)
+    fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String? = null, vibrateOnly: Boolean = false)
 
     /**
      * The alert is silenced until [until] (epoch ms). The core rings it again itself when the time comes, but only

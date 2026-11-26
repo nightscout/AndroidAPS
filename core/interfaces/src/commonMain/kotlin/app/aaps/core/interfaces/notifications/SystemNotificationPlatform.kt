@@ -54,8 +54,11 @@ interface SystemNotificationPlatform {
      */
     fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?) = setAudibleAlarm(instanceKey, sound, breakThroughDnd = false)
 
-    /** As [setAudibleAlarm]; [breakThroughDnd] plays it in Do Not Disturb whatever the setting says (urgent low). */
-    fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean, ringtoneUri: String? = null)
+    /**
+     * As [setAudibleAlarm]; [breakThroughDnd] plays it in Do Not Disturb whatever the setting says (urgent low).
+     * [vibrateOnly]: the phone vibrates until it is answered instead of playing [sound] ([AlarmSoundPlayer.vibrate]).
+     */
+    fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean, ringtoneUri: String? = null, vibrateOnly: Boolean = false)
 
     /**
      * Register interest in dismissals the user made outside the app, by swiping the system

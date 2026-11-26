@@ -649,9 +649,10 @@ sealed class EventData : Event() {
      * screen ([app.aaps.core.interfaces.ui.UiInteraction.runAlarm], can be muted) and for an urgent notification
      * with a sound, as "Pump unreachable" (cannot: the phone has only Dismiss for those, and such an alarm comes
      * back by itself while its cause lasts). Not sent for the "time to eat" alarm: the watch rings that one by itself.
+     * [vibrateOnly]: the user chose Vibrate for it on the phone, so the watch vibrates and makes no sound either.
      */
     @Serializable
-    data class AlarmRinging(val timeStamp: Long, val title: String, val status: String, val canMute: Boolean) : EventData()
+    data class AlarmRinging(val timeStamp: Long, val title: String, val status: String, val canMute: Boolean, val vibrateOnly: Boolean = false) : EventData()
 
     /** Mobile -> Wear: the alarm shown on the phone was stopped, on the phone or from the watch, or replaced. */
     @Serializable

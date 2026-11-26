@@ -8,6 +8,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.os.VibrationAttributes
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
@@ -62,13 +66,48 @@ class AlarmSoundPlayerImpl(
     /** The phone ringtone the user chose for the sound playing now, or null: the bundled [currentSound]. */
     private var currentRingtone: String? = null
 
+    /** Whether the alarm vibrates now instead of playing ([vibrate]). */
+    private var vibrating = false
+
     override fun play(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean, ringtoneUri: String?) {
         handler.post { doPlay(sound, ownerTag, breakThroughDnd, ringtoneUri) }
+    }
+
+    override fun vibrate(sound: AlarmSound, ownerTag: String) {
+        handler.post { doVibrate(sound, ownerTag) }
     }
 
     override fun stop(ownerTag: String) {
         handler.post { if (currentOwner == ownerTag) doStop() }
     }
+
+    /**
+     * The alarm vibrates in a loop and makes no sound, until [stop]: the user's Vibrate choice. On the alarm usage, so
+     * it comes through Do Not Disturb as far as the Do Not Disturb profile lets alarms through, as a sound would.
+     */
+    private fun doVibrate(sound: AlarmSound, ownerTag: String) {
+        if (vibrating && currentOwner == ownerTag) return
+        doStop()
+        currentSound = sound
+        currentOwner = ownerTag
+        val vibrator = vibrator(context)
+        if (!vibrator.hasVibrator()) {
+            // Not offered then, but a choice may come with settings from another phone: it rings rather than stay quiet
+            aapsLogger.error(LTag.CORE, "AlarmSoundPlayer: the phone cannot vibrate, the alarm plays its sound")
+            doPlay(sound, ownerTag, breakThroughDnd = false, ringtoneUri = null)
+            return
+        }
+        val loop = VibrationEffect.createWaveform(VIBRATION_LOOP, 0)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            vibrator.vibrate(loop, VibrationAttributes.createForUsage(VibrationAttributes.USAGE_ALARM))
+        else vibrateBeforeAndroid13(vibrator, loop)
+        vibrating = true
+    }
+
+    // Android 12 has no VibrationAttributes: the usage comes with AudioAttributes, as the API asked then
+    @Suppress("DEPRECATION")
+    private fun vibrateBeforeAndroid13(vibrator: Vibrator, effect: VibrationEffect) =
+        vibrator.vibrate(effect, AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build())
 
     private fun doPlay(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean, ringtoneUri: String?) {
         // Idempotent: a re-request of the exact same sound by the same owner while it is already playing is a no-op,
@@ -89,6 +128,10 @@ class AlarmSoundPlayerImpl(
     }
 
     private fun doStop() {
+        if (vibrating) {
+            vibrator(context).cancel()
+            vibrating = false
+        }
         handler.removeCallbacks(volumeRamp)
         player?.let { mp ->
             try {
@@ -200,6 +243,9 @@ class AlarmSoundPlayerImpl(
 
     private companion object {
 
+        /** Off, on, off, on... in ms, repeated from the start: as long on as off, like a phone set to vibrate. */
+        val VIBRATION_LOOP = longArrayOf(0, 1000, 1000)
+
         const val VOLUME_INCREASE_STEPS = 40
         const val VOLUME_INCREASE_INITIAL_SILENT_TIME_MILLIS = 3_000L
         const val VOLUME_INCREASE_BASE_DELAY_MILLIS = 15_000L
@@ -207,3 +253,6 @@ class AlarmSoundPlayerImpl(
         const val VOLUME_INCREASE_DELAY_DECREMENT_EXPONENT = 2.0
     }
 }
+
+/** The phone's vibrator. A phone without one (a tablet) reports it with `hasVibrator()`. */
+internal fun vibrator(context: Context): Vibrator = context.getSystemService(VibratorManager::class.java).defaultVibrator

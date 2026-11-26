@@ -38,7 +38,8 @@ import dev.zacsweers.metro.SingleIn
  * between.
  *
  * While the watch is in Do Not Disturb and the phone's "Override Do Not Disturb mode" is off, the notification
- * only vibrates, as the phone's alarm does then, see [DoNotDisturbRule].
+ * only vibrates, as the phone's alarm does then, see [DoNotDisturbRule]. It also only vibrates when the user chose
+ * Vibrate for the alarm's kind on the phone ([EventData.AlarmRinging.vibrateOnly]).
  */
 @SingleIn(AppScope::class)
 @Inject
@@ -60,7 +61,8 @@ class PhoneAlarmWatch(
         sp.putString(R.string.key_phone_alarm_text, alarm.status)
         sp.putLong(R.string.key_phone_alarm_since, System.currentTimeMillis())
         sp.putBoolean(R.string.key_phone_alarm_can_mute, alarm.canMute)
-        post(alarm.title, alarm.status, alarm.canMute)
+        sp.putBoolean(R.string.key_phone_alarm_vibrate_only, alarm.vibrateOnly)
+        post(alarm.title, alarm.status, alarm.canMute, alarm.vibrateOnly)
         scheduleRepeat()
     }
 
@@ -70,7 +72,8 @@ class PhoneAlarmWatch(
         post(
             sp.getString(R.string.key_phone_alarm_title, ""),
             sp.getString(R.string.key_phone_alarm_text, ""),
-            sp.getBoolean(R.string.key_phone_alarm_can_mute, false)
+            sp.getBoolean(R.string.key_phone_alarm_can_mute, false),
+            sp.getBoolean(R.string.key_phone_alarm_vibrate_only, false)
         )
         scheduleRepeat()
     }
@@ -95,6 +98,7 @@ class PhoneAlarmWatch(
         sp.remove(R.string.key_phone_alarm_text)
         sp.remove(R.string.key_phone_alarm_since)
         sp.remove(R.string.key_phone_alarm_can_mute)
+        sp.remove(R.string.key_phone_alarm_vibrate_only)
     }
 
     private fun scheduleRepeat() {
@@ -106,8 +110,9 @@ class PhoneAlarmWatch(
     /**
      * Silence, and Mute 5 min when the phone can honour it, as buttons, and a swipe silences. Posted again on every
      * repeat, so the watch vibrates again: not alert-once on purpose. Our own cancel does not fire the delete intent.
+     * [vibrateOnly]: the user chose Vibrate for it on the phone, so it is on the channel that only vibrates.
      */
-    private fun post(title: String, text: String, canMute: Boolean) {
+    private fun post(title: String, text: String, canMute: Boolean, vibrateOnly: Boolean) {
         notificationManager.createNotificationChannel(
             NotificationChannel(CHANNEL_ID, context.getString(R.string.phone_alarm_channel), NotificationManager.IMPORTANCE_HIGH).apply {
                 enableVibration(true)
@@ -121,7 +126,7 @@ class PhoneAlarmWatch(
                 vibrationPattern = VIBRATION
             }
         )
-        val quiet = DoNotDisturbRule.staysQuiet(preferences.get(BooleanKey.AlertOverrideDoNotDisturb), notificationManager.currentInterruptionFilter)
+        val quiet = vibrateOnly || DoNotDisturbRule.staysQuiet(preferences.get(BooleanKey.AlertOverrideDoNotDisturb), notificationManager.currentInterruptionFilter)
         val builder = NotificationCompat.Builder(context, if (quiet) SILENT_CHANNEL_ID else CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_icon)
             .setContentTitle(title)

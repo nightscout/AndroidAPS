@@ -258,7 +258,8 @@ internal class RecordingNotificationManager : NotificationManager {
     override fun post(
         id: NotificationId, text: String, level: NotificationLevel, date: Long, validTo: Long, sound: AlarmSound?,
         actions: List<NotificationAction>, validityCheck: (() -> Boolean)?, alarmTitle: String?, canMute: Boolean, tellWatch: Boolean, breakThroughDnd: Boolean, ringtoneUri: String?,
-        systemText: String?
+        systemText: String?,
+        vibrateOnly: Boolean
     ): NotificationHandle = record(id, text, level, sound)
 
     override fun post(

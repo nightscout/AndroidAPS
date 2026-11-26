@@ -406,6 +406,8 @@
     <string name="alert_choice_off" comment="One of three choices for a kind of alert: not shown at all">Off</string>
     <string name="alert_kind_protected" comment="Shown instead of the three choices for a kind of alert the user cannot silence, for example insulin delivery stopped">Always rings, for safety</string>
     <string name="alert_choice_show" comment="Choice for alerts that never make a sound (only a card): the card is shown. The other choice is Off">Show</string>
+    <string name="alert_choice_vibrate" comment="One of the choices for a kind of alert (Ring, Vibrate, Silent, Off): it rings as usual, but the phone and the watch only vibrate, no sound">Vibrate</string>
+    <string name="alert_kinds_vibrate_intro">Vibrate: as Ring, but the phone and the watch only vibrate. An alarm vibrates until you answer it.</string>
     <string name="alert_kind_exceptions" comment="Heading of a list of single kinds of alert that the user set differently from their group">Exceptions</string>
     <string name="alert_kind_add_exception" comment="Button: pick one kind of alert and set it differently from its group">Add exception</string>
     <string name="alert_kind_remove_exception" comment="Button (an X icon, read by the screen reader): the kind of alert follows its group again">Remove exception</string>

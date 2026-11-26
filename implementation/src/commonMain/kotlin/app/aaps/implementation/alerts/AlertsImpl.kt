@@ -356,7 +356,7 @@ class AlertsImpl(
             entries.values
                 .filter {
                     it.card != null && it.silencedUntil <= now && it.alert.severity == AlertSeverity.CRITICAL &&
-                        choiceFor(it.alert) == AlertChoice.RING
+                        choiceFor(it.alert).rings
                 }
                 .maxByOrNull { it.alert.raisedAt }
                 ?.alert
@@ -394,7 +394,7 @@ class AlertsImpl(
         aapsLogger.info(LTag.NOTIFICATION, log)
         entries.values
             .filter { choiceFor(it.alert) != wasChoice[it] }
-            .forEach { showCard(it, ring = choiceFor(it.alert) == AlertChoice.RING) }
+            .forEach { showCard(it, ring = choiceFor(it.alert).rings) }
     }
 
     override fun raise(alert: Alert) {
@@ -559,7 +559,7 @@ class AlertsImpl(
         val id = alert.source to alert.key
         val map = storedBookings()
         // A kind the user made silent or turned off books nothing that rings by itself (iOS); the core still raises it
-        val ring = choiceFor(alert) == AlertChoice.RING && alert.severity != AlertSeverity.INFO
+        val ring = choiceFor(alert).rings && alert.severity != AlertSeverity.INFO
         if (!platform.book(alert, at, ring)) {
             aapsLogger.warn(LTag.NOTIFICATION, "Alert ${alert.source}/${alert.key} not booked: the phone cannot book it")
             return false
@@ -651,6 +651,8 @@ class AlertsImpl(
             return
         }
         val quiet = choice == AlertChoice.SILENT
+        // Rings as usual, alarm screen and chime included, but the phone and the watch only vibrate
+        val vibrate = choice == AlertChoice.VIBRATE
         val silenced = entry.silencedUntil > dateUtil.now()
         val level = when {
             // A silent kind is never the alarm tier: an URGENT card is only the card of an alert that rings
@@ -675,7 +677,8 @@ class AlertsImpl(
             canMute = alert.canMute,
             tellWatch = alert.tellWatch,
             breakThroughDnd = alert.breakThroughDnd,
-            systemText = systemText(alert)
+            systemText = systemText(alert),
+            vibrateOnly = vibrate
         )
         val pausedUntil = storedPauses()[alert.kind.id] ?: 0L
         when {
@@ -685,7 +688,7 @@ class AlertsImpl(
             silenced                                                -> scheduleSilenceEnd(entry)
             !ring                                                   -> Unit
             alert.severity == AlertSeverity.CRITICAL -> platform.showAlarmScreen(alert)
-            alert.severity == AlertSeverity.WARNING  -> platform.chime(alert, soundFor(alert), ringtoneFor(alert))
+            alert.severity == AlertSeverity.WARNING  -> platform.chime(alert, soundFor(alert), ringtoneFor(alert), vibrateOnly = vibrate)
             else                                                    -> Unit
         }
     }
@@ -922,15 +925,17 @@ class AlertsImpl(
 
     /**
      * Caller holds [lock]. What this phone does with [alert] by [choices]: its kind's own choice (an exception, or the
-     * choice of a kind with no group), else its group's, else Ring. A protected kind always rings. A paused kind that
-     * rings is Silent while its pause lasts.
+     * choice of a kind with no group), else its group's, else Ring. A protected kind always rings. Vibrate rings where
+     * the phone cannot vibrate (a choice imported from another phone). A paused kind that rings is Silent while its
+     * pause lasts.
      */
     private fun choiceFor(alert: Alert, choices: Map<String, AlertChoice> = storedChoices()): AlertChoice {
         val kind = alert.kind
         if (kind.isProtected) return AlertChoice.RING
-        val chosen = choices[kind.id] ?: kind.group?.let { choices[it.id] } ?: AlertChoice.RING
+        val stored = choices[kind.id] ?: kind.group?.let { choices[it.id] } ?: AlertChoice.RING
+        val chosen = if (stored == AlertChoice.VIBRATE && !platform.canVibrate) AlertChoice.RING else stored
         val paused = (storedPauses()[kind.id] ?: 0L) > dateUtil.now()
-        return if (chosen == AlertChoice.RING && paused) AlertChoice.SILENT else chosen
+        return if (chosen.rings && paused) AlertChoice.SILENT else chosen
     }
 
     // ---- the pauses -----------------------------------------------------------------------------

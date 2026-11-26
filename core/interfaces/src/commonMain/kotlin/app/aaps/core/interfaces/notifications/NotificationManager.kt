@@ -22,8 +22,9 @@ interface NotificationManager {
     ): NotificationHandle
 
     /**
-     * The overload the alarm path uses. [alarmTitle], [canMute] and [systemText] are what an alarm tells the system
-     * notification and the watch beyond its text; see [AapsNotification]. Nothing but an alarm needs to pass them.
+     * The overload the alarm path uses. [alarmTitle], [canMute], [systemText] and [vibrateOnly] are what an alarm tells
+     * the system notification and the watch beyond its text; see [AapsNotification]. Nothing but an alarm needs to
+     * pass them.
      */
     fun post(
         id: NotificationId,
@@ -39,7 +40,8 @@ interface NotificationManager {
         tellWatch: Boolean = true,
         breakThroughDnd: Boolean = false,
         ringtoneUri: String? = null,
-        systemText: String? = null
+        systemText: String? = null,
+        vibrateOnly: Boolean = false
     ): NotificationHandle
 
     /**

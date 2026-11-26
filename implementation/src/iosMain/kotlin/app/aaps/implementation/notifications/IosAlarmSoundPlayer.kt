@@ -74,6 +74,10 @@ class IosAlarmSoundPlayer(
         scope.launch { doPlay(sound, ownerTag, breakThroughDnd) }
     }
 
+    // iOS cannot vibrate without a sound from the background, so Vibrate is not offered here (`IosAlertPlatform`). A
+    // Vibrate that came with the settings of another phone rings: an alarm must never be quiet for a choice it cannot keep.
+    override fun vibrate(sound: AlarmSound, ownerTag: String) = play(sound, ownerTag, breakThroughDnd = false)
+
     override fun stop(ownerTag: String) {
         scope.launch {
             // Owner scoped: the full screen path tearing down must not silence an alarm the

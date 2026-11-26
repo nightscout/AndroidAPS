@@ -48,7 +48,13 @@ data class AapsNotification(
      * the alert's title, because the card in the app has no title line; the system notification and the watch show
      * that title above the text already ([alarmTitle]), so they get the alert's text alone. Only the alarm path sets it.
      */
-    val systemText: String? = null
+    val systemText: String? = null,
+    /**
+     * Its alarm vibrates until it is answered instead of playing [sound], on the phone and on the watch: the user chose
+     * Vibrate for its kind ([app.aaps.core.interfaces.alerts.AlertChoice.VIBRATE]). [sound] is still set, so it is
+     * the alarm that owns the sound slot, and the fallback where the phone cannot vibrate.
+     */
+    val vibrateOnly: Boolean = false
 ) {
 
     /** What the system notification and the watch show under the title. */

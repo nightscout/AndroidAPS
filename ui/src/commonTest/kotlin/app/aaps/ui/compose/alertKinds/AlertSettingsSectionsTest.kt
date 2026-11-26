@@ -46,8 +46,11 @@ class AlertSettingsSectionsTest {
     private val patch = Catalogue("Patch", listOf(occlusion, bgCheck, lgs))
     private val cgm = Catalogue("Sensor", listOf(calibrate))
 
-    private fun sections(choices: Map<String, AlertChoice> = emptyMap(), vararg catalogues: AlertKindCatalogue = arrayOf(nightscout, patch, cgm, bg, app)) =
-        alertSettingsSections(catalogues.toList(), choices)
+    private fun sections(
+        choices: Map<String, AlertChoice> = emptyMap(),
+        vararg catalogues: AlertKindCatalogue = arrayOf(nightscout, patch, cgm, bg, app),
+        canVibrate: Boolean = true
+    ) = alertSettingsSections(catalogues.toList(), choices, canVibrate)
 
     private fun List<AlertSettingsSection>.of(section: AlertSection) = single { it.section == section }
 
@@ -138,7 +141,7 @@ class AlertSettingsSectionsTest {
     fun aKindWithItsOwnChoiceIsAnException() {
         val pump = sections(mapOf(AlertGroup.PUMP_ACTION.id to AlertChoice.SILENT, bgCheck.id to AlertChoice.RING)).of(AlertSection.PUMP)
 
-        assertEquals(listOf(AlertExceptionRow(bgCheck, AlertChoice.RING, AlertGroup.PUMP_ACTION)), pump.exceptions)
+        assertEquals(listOf(AlertExceptionRow(bgCheck, AlertChoice.RING, AlertGroup.PUMP_ACTION.choices)), pump.exceptions)
         assertTrue(bgCheck !in pump.candidates)
         assertTrue(lgs in pump.candidates)
     }
@@ -168,10 +171,35 @@ class AlertSettingsSectionsTest {
         assertEquals(AlertChoice.RING, firstExceptionChoice(AlertGroup.PUMP_ACTION, AlertChoice.OFF))
     }
 
-    /** The line that keeps a choice from being forgotten: an exception set to Ring silences nothing. */
+    /** A phone that can vibrate offers Vibrate wherever there is a sound: not for Info, which has none. */
+    @Test
+    fun vibrateIsOfferedWhereThePhoneCanVibrate() {
+        val pump = sections(mapOf(lgs.id to AlertChoice.OFF)).of(AlertSection.PUMP)
+
+        assertEquals(AlertChoice.entries, pump.rows.single { it.setting == AlertGroup.PUMP_ACTION }.choices)
+        assertEquals(listOf(AlertChoice.RING, AlertChoice.OFF), pump.rows.single { it.setting == AlertGroup.PUMP_INFO }.choices)
+        assertEquals(AlertChoice.entries, sections().of(AlertSection.APP).rows.first().choices)
+    }
+
+    /** iOS and the desktop cannot vibrate without a sound: no Vibrate, and one stored on another phone shows as Ring. */
+    @Test
+    fun vibrateIsNotOfferedWhereThePhoneCannotVibrate() {
+        val sections = sections(mapOf(AlertGroup.PUMP_ACTION.id to AlertChoice.VIBRATE, bgCheck.id to AlertChoice.VIBRATE), canVibrate = false)
+        val action = sections.of(AlertSection.PUMP).rows.single { it.setting == AlertGroup.PUMP_ACTION }
+
+        assertEquals(listOf(AlertChoice.RING, AlertChoice.SILENT, AlertChoice.OFF), action.choices)
+        assertEquals(AlertChoice.RING, action.choice)
+        assertEquals(AlertExceptionRow(bgCheck, AlertChoice.RING, listOf(AlertChoice.RING, AlertChoice.SILENT, AlertChoice.OFF)), sections.of(AlertSection.PUMP).exceptions.single())
+        assertTrue(sections.of(AlertSection.APP).rows.all { AlertChoice.VIBRATE !in it.choices })
+    }
+
+    /** The line that keeps a choice from being forgotten: an exception set to Ring silences nothing, nor does Vibrate. */
     @Test
     fun silentOrOffCountsWhatIsNotRingAndThePauses() {
-        val choices = mapOf(AlertGroup.PUMP_INFO.id to AlertChoice.OFF, bgCheck.id to AlertChoice.RING, CoreAlert.HARD_LIMIT.id to AlertChoice.SILENT)
+        val choices = mapOf(
+            AlertGroup.PUMP_INFO.id to AlertChoice.OFF, bgCheck.id to AlertChoice.RING, CoreAlert.HARD_LIMIT.id to AlertChoice.SILENT,
+            AlertGroup.BG_LOWS.id to AlertChoice.VIBRATE
+        )
 
         assertEquals(2, silentOrOff(choices, emptyMap()))
         assertEquals(3, silentOrOff(choices, mapOf(BgAlert.LOW.id to 1L)))

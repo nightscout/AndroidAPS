@@ -65,9 +65,11 @@ class CommonNotificationManagerTest {
             calls.add("cancelAll")
         }
 
-        override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean, ringtoneUri: String?) {
+        var audibleVibrateOnly = false
+        override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean, ringtoneUri: String?, vibrateOnly: Boolean) {
             audibleKey = instanceKey
             audibleSound = sound
+            audibleVibrateOnly = vibrateOnly
             audibleCallCount++
             calls.add("audible:$instanceKey")
         }
@@ -371,6 +373,17 @@ class CommonNotificationManagerTest {
         assertEquals("Pump error", ringing.status)
         assertEquals("title", ringing.title)
         assertEquals(false, ringing.canMute)
+    }
+
+    /** The user chose Vibrate: the phone's player and the watch both only vibrate. */
+    @Test
+    fun `an alarm set to vibrate tells the platform and the watch`() = runTest {
+        val sut = createSut()
+
+        sut.post(NotificationId.ALERT, "Low", level = NotificationLevel.URGENT, date = 1_000L, sound = AlarmSound.ALARM, vibrateOnly = true)
+
+        assertTrue(platform.audibleVibrateOnly)
+        assertTrue((toWear().single() as EventData.AlarmRinging).vibrateOnly)
     }
 
     /** The watch follows the owner slot: the next alarm after a dismiss and silence at the end. */

@@ -279,7 +279,8 @@ class IosSystemNotificationPlatform(
      * again with the same key must not restart the audio - that is what stops a second alarm
      * cutting the first one off, and why the owner key is compared here rather than in the player.
      */
-    override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean, ringtoneUri: String?) {
+    // [vibrateOnly] is never set on iOS, where Vibrate is not offered; the sound plays either way
+    override fun setAudibleAlarm(instanceKey: Int?, sound: AlarmSound?, breakThroughDnd: Boolean, ringtoneUri: String?, vibrateOnly: Boolean) {
         if (instanceKey == soundingKey) return
         soundingKey = instanceKey
         if (instanceKey == null || sound == null) {
