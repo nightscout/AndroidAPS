@@ -36,6 +36,7 @@ import org.mockito.kotlin.timeout
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * When the work of the Dexcom ONE+ plugin runs.
@@ -225,6 +226,52 @@ class DexcomOnePlusPluginLifetimeTest : TestBase() {
 
         assertThat(noDriverYet.driverRequests).isEqualTo(requestsBefore)
         assertThat(noDriverYet.sessionServiceWanted).contains(false)
+    }
+
+    @Test
+    fun `the reconnect watchdog keeps asking while the session stays down`() = runTest {
+        // The session is down and no new "session down" follows: a new session that fails before its
+        // link is up reports only an error. One question was all the phone asked before.
+        val asked = CountingDriver()
+        val asking = pluginWith(FakeHost(asked))
+        asking.reconnectWatchdogMs = 20L
+        asking.onStart()
+
+        asking.onSession(up = false, reason = "link lost")
+
+        val deadline = System.currentTimeMillis() + 5_000L
+        while (asked.resumeCalls.get() < 3 && System.currentTimeMillis() < deadline) Thread.sleep(10L)
+        assertThat(asked.resumeCalls.get()).isAtLeast(3)
+
+        asking.onStop()
+        assertThat(asking.hasRunningWork()).isFalse()
+    }
+
+    @Test
+    fun `the reconnect watchdog stops asking when the session is up`() = runTest {
+        val asked = CountingDriver()
+        val asking = pluginWith(FakeHost(asked))
+        asking.reconnectWatchdogMs = 20L
+        asking.onStart()
+        asking.onSession(up = false, reason = "link lost")
+
+        asking.onSession(up = true, reason = "session_reconnected")
+
+        assertThat(asking.isReconnectWatchdogArmed()).isFalse()
+        asking.onStop()
+    }
+
+    /** A driver whose session never comes up, and which counts how often it was asked to resume. */
+    private class CountingDriver(inner: OnePlusCgmDriver = OnePlusCgmDriverStub()) : OnePlusCgmDriver by inner {
+
+        val resumeCalls = AtomicInteger(0)
+
+        override fun isSessionUp(): Boolean = false
+
+        override fun resumeStoredSession(): Boolean {
+            resumeCalls.incrementAndGet()
+            return false
+        }
     }
 
     /** A driver whose stop calls all throw, as a broken Bluetooth stack can. */

@@ -185,6 +185,9 @@ class DexcomOnePlusPlugin @Inject constructor(
     /** True while the reconnect watchdog waits. For tests. */
     internal fun isReconnectWatchdogArmed(): Boolean = reconnectWatchdog?.isActive == true
 
+    /** How long the reconnect watchdog waits between two questions. Only a test changes it. */
+    internal var reconnectWatchdogMs = RECONNECT_WATCHDOG_MS
+
     /**
      * The last resort that brings a sensor back.
      *
@@ -835,24 +838,30 @@ class DexcomOnePlusPlugin @Inject constructor(
     }
 
     /**
-     * Asks for a connection again when the session has been down for a while.
+     * Asks for a connection again, and again, while the session stays down.
      *
      * One watch at a time: a new one replaces the old, so a session that flaps does not leave a
      * queue behind. It does nothing when the driver has already brought the session back by itself,
      * which is the normal case, and nothing when no sensor is stored.
+     *
+     * It keeps asking until the session is up. A new session that ends before its link is up
+     * reports an error and no "session down", so nothing would arm a second watch: after one
+     * question the phone waited for ever (field log 26/11/2026).
      */
     private fun armReconnectWatchdog() {
         reconnectWatchdog?.cancel()
         reconnectWatchdog = ioScope()?.launch {
-            delay(RECONNECT_WATCHDOG_MS)
-            if (driver.isSessionUp()) return@launch
-            val real = driver
-            aapsLogger.info(
-                LTag.BGSOURCE,
-                "DEXCOM_ONEPLUS_SESSION: session still down after ${RECONNECT_WATCHDOG_MS / 60_000} min, asking again",
-            )
-            host.attachPlatform(real)
-            real.resumeStoredSession()
+            while (true) {
+                delay(reconnectWatchdogMs)
+                if (driver.isSessionUp()) return@launch
+                val real = driver
+                aapsLogger.info(
+                    LTag.BGSOURCE,
+                    "DEXCOM_ONEPLUS_SESSION: session still down after ${reconnectWatchdogMs / 60_000} min, asking again",
+                )
+                host.attachPlatform(real)
+                real.resumeStoredSession()
+            }
         }
     }
 
@@ -870,17 +879,20 @@ class DexcomOnePlusPlugin @Inject constructor(
      */
     private fun armStagingReconnectWatchdog() {
         val next = ioScope()?.launch {
-            delay(RECONNECT_WATCHDOG_MS)
-            if (stagingDriver.isSessionUp()) return@launch
-            if (!stagingStore.loadSlotPresent()) return@launch
-            aapsLogger.info(
-                LTag.BGSOURCE,
-                "DEXCOM_ONEPLUS_STAGING: session still down after ${RECONNECT_WATCHDOG_MS / 60_000} min, asking again",
-            )
-            val real = stagingDriver
-            host.attachPlatform(real)
-            real.addWatcher(stagingWatcher)
-            real.resumeStoredSession()
+            // Keeps asking, see armReconnectWatchdog.
+            while (true) {
+                delay(reconnectWatchdogMs)
+                if (stagingDriver.isSessionUp()) return@launch
+                if (!stagingStore.loadSlotPresent()) return@launch
+                aapsLogger.info(
+                    LTag.BGSOURCE,
+                    "DEXCOM_ONEPLUS_STAGING: session still down after ${reconnectWatchdogMs / 60_000} min, asking again",
+                )
+                val real = stagingDriver
+                host.attachPlatform(real)
+                real.addWatcher(stagingWatcher)
+                real.resumeStoredSession()
+            }
         } ?: return
         val previous = stagingWatchdogLock.withLock {
             val old = stagingReconnectWatchdog
