@@ -17,4 +17,7 @@ enum class AaruyIntKey(
 
     /** The code of the alarm the driver does not know, kept like the alarm itself, see `AlarmState.PUMP_UNKNOWN_ALARM`. */
     PumpUnknownAlarmCode("key_aaruy_unknown_alarm_code", 0, exportable = false),
+
+    /** What the upload adds to the id of a log entry, for [AaruyStringKey.UploadSerial]. Ids are of this phone only. */
+    UploadIndexOffset("key_aaruy_upload_index_offset", 0, exportable = false),
 }

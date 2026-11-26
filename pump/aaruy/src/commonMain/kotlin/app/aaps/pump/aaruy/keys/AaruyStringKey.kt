@@ -18,4 +18,7 @@ enum class AaruyStringKey(
 
     /** Empty after pairing until the first connection. */
     PumpBoundAddress("key_binded_address", "", exportable = false),
+
+    /** The pump [AaruyIntKey.UploadIndexOffset] was asked for. Empty before the first upload. */
+    UploadSerial("key_aaruy_upload_serial", "", exportable = false),
 }

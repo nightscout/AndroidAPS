@@ -21,6 +21,7 @@ import app.aaps.pump.aaruy.services.AaruyConfirmAlarmsCommand
 import app.aaps.pump.aaruy.services.AaruyMotorResult
 import app.aaps.pump.aaruy.services.AaruyAlerts
 import app.aaps.pump.aaruy.services.AaruyReplaceSteps
+import app.aaps.pump.aaruy.upload.AaruyHistoryUpload
 import app.aaps.pump.aaruy.services.AaruyRewindCommand
 import app.aaps.pump.aaruy.services.AaruyUnpairCommand
 import app.aaps.pump.aaruy.services.toMotorResult
@@ -47,7 +48,7 @@ class AaruyPluginCustomCommandTest {
     private val plugin = AaruyPlugin(
         mock<AAPSLogger>(), mock<ResourceHelper>(), mock<Preferences>(), mock<CommandQueue>(), mock<RxBus>(), mock<AaruyCommands>(), mock<AaruyEmulatorTriggers>(), pump,
         mock<TemporaryBasalStorage>(), mock<DateUtil>(), mock<AaruyHistoryDatabase>(), { FakeResult() },
-        ble, replaceSteps, mock<AaruyAlerts>(), mock<AaruyBleReadyCheck>(), mock<PumpSync>(), mock<ConcentrationHelper>(), mock<NotificationManager>()
+        ble, replaceSteps, mock<AaruyAlerts>(), mock<AaruyBleReadyCheck>(), mock<PumpSync>(), mock<ConcentrationHelper>(), mock<NotificationManager>(), mock<AaruyHistoryUpload>()
     )
 
     /** The steps of a reservoir change wait for the motor. The queue runs them like every other command. */

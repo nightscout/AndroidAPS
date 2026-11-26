@@ -22,6 +22,7 @@ import app.aaps.pump.aaruy.services.AaruyBLE
 import app.aaps.pump.aaruy.services.AaruyBolusOutcome
 import app.aaps.pump.aaruy.services.AaruyAlerts
 import app.aaps.pump.aaruy.services.AaruyReplaceSteps
+import app.aaps.pump.aaruy.upload.AaruyHistoryUpload
 import app.aaps.pump.aaruy.services.AaruyCommands
 import app.aaps.pump.aaruy.services.AaruyEmulatorTriggers
 import kotlinx.coroutines.runBlocking
@@ -44,7 +45,7 @@ class AaruyPluginBolusTest {
     private val plugin = AaruyPlugin(
         mock<AAPSLogger>(), rh, mock<Preferences>(), mock<CommandQueue>(), mock<RxBus>(), service, mock<AaruyEmulatorTriggers>(), pump,
         mock<TemporaryBasalStorage>(), mock<DateUtil>(), mock<AaruyHistoryDatabase>(), { FakeResult() },
-        mock<AaruyBLE>(), mock<AaruyReplaceSteps>(), mock<AaruyAlerts>(), mock<AaruyBleReadyCheck>(), mock<PumpSync>(), ch, mock<NotificationManager>()
+        mock<AaruyBLE>(), mock<AaruyReplaceSteps>(), mock<AaruyAlerts>(), mock<AaruyBleReadyCheck>(), mock<PumpSync>(), ch, mock<NotificationManager>(), mock<AaruyHistoryUpload>()
     ).also { plugin ->
         // Set by the service binding in a running app.
     }

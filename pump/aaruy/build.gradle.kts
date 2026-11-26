@@ -43,6 +43,10 @@ kotlin {
 
                 // The pump log, kept by the driver.
                 api(libs.androidx.room.runtime)
+                // The upload of the pump log to the server of the vendor, when the user turns it on.
+                implementation(libs.io.ktor.client.core)
+                implementation(project.dependencies.platform(libs.kotlinx.serialization.bom))
+                implementation(libs.kotlinx.serialization.json)
 
                 implementation(libs.jetbrains.compose.runtime)
                 implementation(libs.jetbrains.compose.foundation)
@@ -64,6 +68,7 @@ kotlin {
                 implementation(project(":shared:tests"))
                 implementation(kotlin("test"))
                 implementation(libs.kotlinx.coroutines.test)
+                implementation(libs.io.ktor.client.mock)
             }
         }
 
@@ -73,6 +78,13 @@ kotlin {
                 api(libs.androidx.ui)
                 implementation(libs.androidx.compose.ui.tooling)
                 implementation(libs.androidx.sqlite.bundled)
+                implementation(libs.io.ktor.client.okhttp)
+            }
+        }
+
+        jvmMain {
+            dependencies {
+                implementation(libs.io.ktor.client.okhttp)
             }
         }
 
@@ -80,6 +92,7 @@ kotlin {
         iosMain {
             dependencies {
                 implementation(libs.androidx.sqlite.bundled)
+                implementation(libs.io.ktor.client.darwin)
             }
         }
 
@@ -99,6 +112,7 @@ kotlin {
                 implementation(libs.androidx.compose.ui.test.junit4)
                 implementation(libs.androidx.compose.ui.test.manifest)
                 implementation(libs.org.robolectric)
+                implementation(libs.io.ktor.client.mock)
                 runtimeOnly(libs.org.junit.vintage.engine)
                 runtimeOnly(libs.org.junit.platform.launcher)
             }

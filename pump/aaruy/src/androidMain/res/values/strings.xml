@@ -23,6 +23,8 @@
     <string name="setting_inject_sound_alarm">Alarm sound</string>
     <string name="setting_aaruy_on">On</string>
     <string name="setting_aaruy_off">Off</string>
+    <string name="setting_upload_history">Send pump history to AARUY</string>
+    <string name="setting_upload_history_summary" comment="Keep api.aaruy.com as it is: it is the address of the server">Sends the pump history with the serial number of the pump to the server of the pump maker, api.aaruy.com: basal rates, temp basals, boluses, alarms and reservoir changes.</string>
     <string name="aaruy_unpaired_not_reached">The pump could not be reached. It was removed from AAPS but not told, and it may still give insulin. Take it off.</string>
     <string name="actions_pump_disconnect_prompt" comment="%1$s=name of the pump">Unpair the pump %1$s?</string>
     <string name="pump_state_label">Pump state</string>

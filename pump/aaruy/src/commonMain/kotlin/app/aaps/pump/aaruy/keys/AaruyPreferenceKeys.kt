@@ -1,6 +1,7 @@
 package app.aaps.pump.aaruy.keys
 
 import app.aaps.core.keys.PreferenceType
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
@@ -40,5 +41,18 @@ enum class AaruyIntPreferenceKey(
     // 0 is on and 1 is off: the value goes to the pump as "close the sound".
     SoundPrompt("pref_aaruy_sound_remind", 0, title = AaruyStrings.setting_inject_sound_remind, entries = mapOf(0 to AaruyStrings.setting_aaruy_on, 1 to AaruyStrings.setting_aaruy_off)),
     SoundAlarm("pref_aaruy_sound_alarm", 0, title = AaruyStrings.setting_inject_sound_alarm, entries = mapOf(0 to AaruyStrings.setting_aaruy_on, 1 to AaruyStrings.setting_aaruy_off)),
+    ;
+}
+
+/** Settings of the driver, not of the pump. */
+enum class AaruyBooleanPreferenceKey(
+    override val key: String,
+    override val defaultValue: Boolean,
+    override val title: TextRef,
+    override val summary: TextRef? = null,
+) : BooleanPreferenceKey {
+
+    /** Off until the user turns it on: it sends health data to the server of the vendor, see `AaruyHistoryUpload`. */
+    UploadHistory("pref_aaruy_upload_history", false, AaruyStrings.setting_upload_history, AaruyStrings.setting_upload_history_summary),
     ;
 }

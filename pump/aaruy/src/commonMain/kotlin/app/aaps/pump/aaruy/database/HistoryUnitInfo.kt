@@ -37,7 +37,7 @@ class HistoryUnitInfo {
     var reserved: Int = 0
     var blueName: String = ""
 
-    /** Not used by this driver. The vendor app uploaded the rows to its server, AAPS does not. */
+    /** Sent to the vendor server. Only while the user has the upload turned on, see `AaruyHistoryUpload`. */
     var isUploaded: Boolean = false
     var pumpType:Int = 0
 

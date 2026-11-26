@@ -28,6 +28,13 @@ interface HistoryUnitInfoDao {
     @Query("SELECT * FROM history_unit_info WHERE type=:type ORDER BY time DESC LIMIT 1")
     suspend fun newest(type: Int): HistoryUnitInfo?
 
+    /** The entries not sent to the vendor server yet, oldest first. See `AaruyHistoryUpload`. */
+    @Query("SELECT * FROM history_unit_info WHERE isUploaded = 0 ORDER BY id LIMIT :limit")
+    suspend fun notUploaded(limit: Int): List<HistoryUnitInfo>
+
+    @Query("UPDATE history_unit_info SET isUploaded = 1 WHERE id = :id")
+    suspend fun markUploaded(id: Int)
+
     @Query("DELETE FROM history_unit_info")
     suspend fun deleteAll()
 }

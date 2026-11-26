@@ -47,6 +47,7 @@ import app.aaps.pump.aaruy.compose.AaruyHistoryTypes
 import app.aaps.pump.aaruy.database.AaruyHistoryDatabase
 import app.aaps.pump.aaruy.events.EventAaruyDeviceChange
 import app.aaps.pump.aaruy.keys.AaruyBooleanKey
+import app.aaps.pump.aaruy.keys.AaruyBooleanPreferenceKey
 import app.aaps.pump.aaruy.keys.AaruyDoubleKey
 import app.aaps.pump.aaruy.keys.AaruyDoublePreferenceKey
 import app.aaps.pump.aaruy.keys.AaruyIntKey
@@ -61,6 +62,7 @@ import app.aaps.pump.aaruy.services.AaruyConfirmAlarmsCommand
 import app.aaps.pump.aaruy.services.AaruyEmulatorTriggers
 import app.aaps.pump.aaruy.services.AaruyReplaceSteps
 import app.aaps.pump.aaruy.services.AaruyUnpairCommand
+import app.aaps.pump.aaruy.upload.AaruyHistoryUpload
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -102,7 +104,8 @@ class AaruyPlugin(
     private val bleReadyCheck: AaruyBleReadyCheck,
     private val pumpSync: PumpSync,
     private val ch: ConcentrationHelper,
-    notificationManager: NotificationManager
+    notificationManager: NotificationManager,
+    private val historyUpload: AaruyHistoryUpload
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
@@ -111,7 +114,7 @@ class AaruyPlugin(
         .pluginName(AaruyStrings.aaruy_pump)
         .description(AaruyStrings.aaruy_pump_description),
     ownPreferences = AaruyStringKey.entries + AaruyIntKey.entries + AaruyLongKey.entries + AaruyDoubleKey.entries + AaruyBooleanKey.entries +
-        AaruyDoublePreferenceKey.entries + AaruyIntPreferenceKey.entries,
+        AaruyDoublePreferenceKey.entries + AaruyIntPreferenceKey.entries + AaruyBooleanPreferenceKey.entries,
     aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump, PumpPluginConstraints, OwnDatabasePlugin {
 
@@ -150,6 +153,8 @@ class AaruyPlugin(
         )
             .onEach { if (isConfigured()) commandQueue.readStatus(rh.gs(AaruyStrings.param_refresh)) }
             .launchIn(newScope)
+        // Sends nothing until the user turns the upload on.
+        historyUpload.start(newScope)
         aaruyBle.start()
         // Only with the emulator, which the `emulate_aaruy` file in the AAPS extra folder turns on.
         aaruyBle.emulator?.let { emulator ->
@@ -384,7 +389,8 @@ class AaruyPlugin(
             AaruyDoublePreferenceKey.LowReservoir,
             AaruyIntPreferenceKey.BolusStep,
             AaruyIntPreferenceKey.SoundPrompt,
-            AaruyIntPreferenceKey.SoundAlarm
+            AaruyIntPreferenceKey.SoundAlarm,
+            AaruyBooleanPreferenceKey.UploadHistory
         ),
         icon = pluginDescription.icon
     )
