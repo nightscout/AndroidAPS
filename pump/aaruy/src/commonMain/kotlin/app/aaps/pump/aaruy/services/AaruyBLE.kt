@@ -666,6 +666,10 @@ class AaruyBLE(
                     }
                     0x81->{     // An alarm. Seen on a real pump: a blocked motor repeats it until it is confirmed.
                         val alarmState = AlarmState.fromInt(tmpErrCode)
+                        if (alarmState == AlarmState.PUMP_UNKNOWN_ALARM) {
+                            aapsLogger.warn(LTag.PUMPCOMM, "Alarm ${tmpErrCode.toString(16)} is not known to the driver. Taken as a stop of delivery.")
+                            aaruyPump.unknownAlarmCode = tmpErrCode
+                        }
                         // Repeated while it is held, which keeps its first time and does not ring again.
                         if (alarmState != AlarmState.NONE) aaruyPump.addAlarm(alarmState)
                         if (aaruyPump.canSaveHistory)
@@ -1205,10 +1209,11 @@ class AaruyBLE(
             HISTORY_ALARM      -> {
                 // A newer one was announced when it came. Only one from the time without a link is new.
                 if (dateUtil.now() - item.timestamp < ALARM_SEEN_LIVE_MS) return
-                val alarm = AlarmState.fromHistory(item.data.toInt())
+                val code = AlarmState.historyCode(item.data.toInt())
+                val alarm = AlarmState.fromInt(code)
                 // At the time of the alarm, and once: a read brings its last entry again, and a read with a hole is asked again.
                 if (alarm != AlarmState.NONE)
-                    pumpSync.insertTherapyEventIfNewWithTimestamp(item.timestamp, TE.Type.ANNOUNCEMENT, aaruyPump.alarmStateToString(alarm), item.timestamp, aaruyPump.pumpType(), aaruyPump.pumpSN)
+                    pumpSync.insertTherapyEventIfNewWithTimestamp(item.timestamp, TE.Type.ANNOUNCEMENT, aaruyPump.alarmStateToString(alarm, code), item.timestamp, aaruyPump.pumpType(), aaruyPump.pumpSN)
             }
         }
     }

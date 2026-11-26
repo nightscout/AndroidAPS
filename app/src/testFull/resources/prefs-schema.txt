@@ -251,6 +251,7 @@ key_aaruy_last_historyDailyTime|AaruyLongKey|false
 key_aaruy_last_historyTime|AaruyLongKey|false
 key_aaruy_name|AaruyStringKey|true
 key_aaruy_save_history|AaruyBooleanKey|false
+key_aaruy_unknown_alarm_code|AaruyIntKey|false
 key_autotune_last_run|AutotuneStringKey|true
 key_binded_address|AaruyStringKey|false
 key_bolus_storage|StringNonKey|false

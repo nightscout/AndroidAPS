@@ -31,8 +31,16 @@ enum class AlarmState(val state: Int) {
     PUMP_MOTOR_MCU_PLUSES_EXTRA(0x810B),        // The second controller saw more insulin than expected
     PUMP_MOTOR_DESTRUCTIVE_ANOMALY(0x810C),     // The motor slips on the piston thread. The pump cannot deliver any more
     PUMP_MOTOR_FAILED_PLUS(0x810D),             // Motor failed to run, a pump fault
-    PUMP_MOTOR_FAILED_ERROR(0x810E),            // A pump fault, from the vendor code in PR 5589
-    PUMP_MOTOR_AUTO_POWEROFF(0x8114);           // The pump switched itself off
+    PUMP_MOTOR_FAILED_ERROR(0x810E),            // A blocking fault. The pump stops and pulls the piston back (vendor, PR 5589)
+    PUMP_MOTOR_AUTO_POWEROFF(0x8114),           // The pump switched itself off
+
+    /**
+     * Stands for every alarm (0x81..) this driver does not know, so a new one is not lost. The vendor (PR 5589,
+     * 2026-11-25): every alarm above 0x8100 except low battery and low reservoir stops delivery, and only a reservoir
+     * change starts it again. The code the pump sent is kept in `AaruyPump.unknownAlarmCode`, for the text.
+     * Confirmed like any other alarm: the confirm tells the pump only "low battery or low reservoir" or "another alarm".
+     */
+    PUMP_UNKNOWN_ALARM(0x81FF);
 
     /** An alarm (0x81..) the pump holds until the phone confirms it. Seen on a real pump: a blocked motor repeats until then. */
     fun isConfirmedOnThePump(): Boolean = state and 0xFF00 == 0x8100
@@ -45,18 +53,23 @@ enum class AlarmState(val state: Int) {
 
     companion object {
 
+        /** An unknown alarm (0x8101 to 0x81FF) is [PUMP_UNKNOWN_ALARM]. Any other unknown code, also a refused command (0x80..), is [NONE]. */
         fun fromInt(state: Int) = AlarmState.entries.find { it.state == state }
-            ?: NONE
+            ?: if (state in 0x8101..0x81FF) PUMP_UNKNOWN_ALARM else NONE
 
         /**
-         * An alarm from the pump history. Seen on a real pump: only the low byte is kept, a blocked motor (0x8105) is logged as 5.
-         * UNVERIFIED for the other alarms: they are taken as alarms (0x81..) too, as the history has no other kind seen so far.
+         * The code of an alarm from the pump history. Seen on a real pump: only the low byte is kept, a blocked motor
+         * (0x8105) is logged as 5. UNVERIFIED for the other alarms: they are taken as alarms (0x81..) too, as the history
+         * has no other kind seen so far.
          */
-        fun fromHistory(data: Int): AlarmState = if (data in 1..0xFF) fromInt(0x8100 or data) else fromInt(data)
+        fun historyCode(data: Int): Int = if (data in 1..0xFF) 0x8100 or data else data
+
+        /** An alarm from the pump history, see [historyCode]. */
+        fun fromHistory(data: Int): AlarmState = fromInt(historyCode(data))
 
         fun isHighAlarm(state: AlarmState): Boolean {
             return state == PUMP_NO_POWER || state == PUMP_ZERO_RESERVOIR ||
-                (state in PUMP_NO_RESERVOIR..PUMP_MOTOR_AUTO_POWEROFF)
+                (state in PUMP_NO_RESERVOIR..PUMP_MOTOR_AUTO_POWEROFF) || state == PUMP_UNKNOWN_ALARM
         }
 
         fun isLowAlarm(state: AlarmState): Boolean {

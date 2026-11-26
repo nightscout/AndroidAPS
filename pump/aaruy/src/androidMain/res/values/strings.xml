@@ -49,6 +49,7 @@
     <string name="alarm_error4">Pump error 4</string>
     <string name="alarm_error3_plus">Pump error 3+</string>
     <string name="alarm_error_810e" comment="810E is the pump's own error code, keep it as it is">Pump error (code 810E)</string>
+    <string name="alarm_unknown" comment="An alarm that AAPS does not know. %1$s=the pump's own alarm code, in hex. Example: 8115. Keep the code as it is">Pump alarm %1$s: insulin delivery stopped. Change the reservoir to start it again.</string>
     <string name="alarm_motor_busy">Motor busy</string>
     <string name="alarm_motor_repeat">Motor command repeated</string>
     <string name="alarm_bolus_error">Bolus error</string>

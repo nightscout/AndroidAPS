@@ -14,4 +14,7 @@ enum class AaruyIntKey(
 
     /** The model of the paired pump. Records and the pump description need it before the first status. */
     PumpType("key_param_pump_type", 0),
+
+    /** The code of the alarm the driver does not know, kept like the alarm itself, see `AlarmState.PUMP_UNKNOWN_ALARM`. */
+    PumpUnknownAlarmCode("key_aaruy_unknown_alarm_code", 0, exportable = false),
 }

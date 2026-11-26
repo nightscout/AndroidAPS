@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.pump.aaruy.comm.BasalInfo
 import app.aaps.pump.aaruy.comm.BasalItem
 import app.aaps.pump.aaruy.comm.BasalItems
@@ -357,6 +358,15 @@ class AaruyPump(
     fun addAlarm(alarm: AlarmState, raisedAt: Long = dateUtil.now()) = changeAlarms { if (alarm in it) it else it + (alarm to raisedAt) }
 
     /**
+     * The code the pump sent for [AlarmState.PUMP_UNKNOWN_ALARM], for its text. Kept like the held alarms, so the alert
+     * has it after an app restart too. One at a time: a second unknown alarm shows its own code. UNVERIFIED that a pump
+     * holds two.
+     */
+    var unknownAlarmCode: Int
+        get() = preferences.get(AaruyIntKey.PumpUnknownAlarmCode)
+        set(value) = preferences.put(AaruyIntKey.PumpUnknownAlarmCode, value)
+
+    /**
      * A status says the pump is stopped since [since]. The pump says "stopped too long" only in a message while a link is
      * up, so it is raised from the status too. Seen on a real pump (firmware 1.1.0.01, 2026-11-21): stopped by a rewind,
      * it beeped once 12 to 21 minutes later, and the next connection brought no message and no record in its log. The
@@ -384,9 +394,10 @@ class AaruyPump(
         }
     }
 
-    fun alarmStateToString(alarmState: AlarmState): String = rh.gs(alarmText(alarmState))
+    fun alarmStateToString(alarmState: AlarmState, code: Int = unknownAlarmCode): String = rh.gs(alarmText(alarmState, code))
 
-    fun alarmText(alarmState: AlarmState): TextRef =
+    /** [code] is the pump's own code. Only the text of [AlarmState.PUMP_UNKNOWN_ALARM] shows it. */
+    fun alarmText(alarmState: AlarmState, code: Int = unknownAlarmCode): TextRef =
         when (alarmState) {
             AlarmState.NONE                             -> AaruyStrings.alarm_none
             AlarmState.PUMP_ZERO_RESERVOIR              -> AaruyStrings.alarm_zero_dose
@@ -405,6 +416,8 @@ class AaruyPump(
             AlarmState.PUMP_MOTOR_FAILED_PLUS           -> AaruyStrings.alarm_error3_plus
             AlarmState.PUMP_MOTOR_FAILED_ERROR          -> AaruyStrings.alarm_error_810e
             AlarmState.PUMP_MOTOR_AUTO_POWEROFF         -> AaruyStrings.alarm_auto_poweroff
+            // Before the code is known, as after an update from a version that did not keep it: the code it stands for.
+            AlarmState.PUMP_UNKNOWN_ALARM               -> AaruyStrings.alarm_unknown.withArgs((if (code == 0) alarmState.state else code).toString(16).uppercase())
 
             AlarmState.PUMP_RUN_BASAL                   -> AaruyStrings.alarm_basal_run_fail
             AlarmState.PUMP_RUN_TMP_BASAL               -> AaruyStrings.alarm_temp_basal_run_fail

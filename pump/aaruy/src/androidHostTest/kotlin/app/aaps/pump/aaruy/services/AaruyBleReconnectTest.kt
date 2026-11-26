@@ -35,6 +35,7 @@ import app.aaps.pump.aaruy.withEmulatedPumpName
 import app.aaps.pump.aaruy.emulator.AaruyEmulatorPeripheral
 import app.aaps.pump.aaruy.emulator.AaruyPumpEmulator
 import app.aaps.pump.aaruy.keys.AaruyDoublePreferenceKey
+import app.aaps.pump.aaruy.keys.AaruyIntKey
 import app.aaps.pump.aaruy.keys.AaruyIntPreferenceKey
 import app.aaps.pump.aaruy.keys.AaruyStringKey
 import kotlinx.coroutines.CoroutineScope
@@ -52,6 +53,7 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyDouble
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.mockingDetails
+import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever
@@ -924,6 +926,43 @@ class AaruyBleReconnectTest {
         waitFor("the pump answered") { confirmed.get() != null }
         assertTrue(confirmed.get()!!)
         assertFalse(AlarmState.PUMP_LOW_RESERVOIR in pump.activeAlarms)
+        transport.shutdown()
+    }
+
+    /**
+     * An alarm the driver does not know. The vendor: every alarm above 0x8100, except low battery and low reservoir, stops
+     * delivery. It is held with its code, and it ends when the pump answered its confirm, like a known one.
+     */
+    @Test
+    fun anAlarmTheDriverDoesNotKnowIsHeldWithItsCodeAndConfirmed() {
+        val preferences = preferencesWithDefaults()
+        val logger = mock(AAPSLogger::class.java)
+        val pump = AaruyPump(
+            logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java), testHardLimits()
+        )
+        val ble = AaruyBLE(
+            centralFor(AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))),
+            logger, pump, mock(DateUtil::class.java), mock(RxBus::class.java), preferences,
+            historyDaoMock(), mock(HistoryDailyUnitInfoDao::class.java), mock(DetailedBolusInfoStorage::class.java),
+            mock(PumpSync::class.java), tempBasalSyncMock(), mock(NotificationManager::class.java), mock(ResourceHelper::class.java)
+        )
+        val transport = ble.emulator!!
+        ble.connect("first", AaruyEmulatorPeripheral.DEVICE_ADDRESS)
+        waitFor("connected") { pump.connectionState == ConnectionState.CONNECTED }
+        waitFor("status read at connect") { pump.pumpLastState == AaruyPumpState.BASALRATE_RUNNING }
+
+        var alarm = ByteArray(0)
+        transport.onPumpThread { alarm = transport.emulator.raiseAlarm(0x8115) }
+        transport.pumpSends(alarm)
+        waitFor("the alarm is held") { AlarmState.PUMP_UNKNOWN_ALARM in pump.activeAlarms }
+        verify(preferences).put(AaruyIntKey.PumpUnknownAlarmCode, 0x8115)
+
+        val confirmed = AtomicReference<Boolean?>(null)
+        thread { confirmed.set(ble.confirmAlarms()) }
+        waitFor("the pump answered") { confirmed.get() != null }
+        assertTrue(confirmed.get()!!)
+        assertFalse(AlarmState.PUMP_UNKNOWN_ALARM in pump.activeAlarms)
         transport.shutdown()
     }
 }

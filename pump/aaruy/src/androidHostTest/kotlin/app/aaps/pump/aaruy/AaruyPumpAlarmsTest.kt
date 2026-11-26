@@ -4,11 +4,15 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.pump.alerts.PumpAlertSeverity
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.pump.aaruy.common.enums.AlarmState
+import app.aaps.pump.aaruy.keys.AaruyIntKey
 import app.aaps.pump.aaruy.keys.AaruyStringKey
+import app.aaps.pump.aaruy.services.AaruyAlerts
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -120,5 +124,39 @@ class AaruyPumpAlarmsTest {
         assertEquals(AlarmState.PUMP_MOTOR_BLOCK, AlarmState.fromHistory(5))
         assertEquals(AlarmState.PUMP_MOTOR_BLOCK, AlarmState.fromHistory(0x8105))
         assertEquals(AlarmState.NONE, AlarmState.fromHistory(0))
+        assertEquals(0x8115, AlarmState.historyCode(0x15))
+        assertEquals(AlarmState.PUMP_UNKNOWN_ALARM, AlarmState.fromHistory(0x15))
+    }
+
+    /**
+     * Vendor (PR 5589, 2026-11-25): every alarm above 0x8100, except low battery and low reservoir, stops delivery until
+     * the reservoir is changed. So an alarm the driver does not know is such a stop, not nothing. 0x810E was one.
+     */
+    @Test
+    fun anAlarmTheDriverDoesNotKnowIsAStopOfDelivery() {
+        assertEquals(AlarmState.PUMP_UNKNOWN_ALARM, AlarmState.fromInt(0x8115))
+        assertEquals(AlarmState.PUMP_UNKNOWN_ALARM, AlarmState.fromInt(0x81FF))
+        // Not an alarm: 0x8100 itself, and a refused command (0x80..) the driver does not know.
+        assertEquals(AlarmState.NONE, AlarmState.fromInt(0x8100))
+        assertEquals(AlarmState.NONE, AlarmState.fromInt(0x8099))
+        // The known ones stay what they are.
+        assertEquals(AlarmState.PUMP_LOW_POWER, AlarmState.fromInt(0x8101))
+        assertEquals(AlarmState.PUMP_LOW_RESERVOIR, AlarmState.fromInt(0x8103))
+        assertEquals(AlarmState.PUMP_MOTOR_FAILED_ERROR, AlarmState.fromInt(0x810E))
+
+        assertTrue(AlarmState.isHighAlarm(AlarmState.PUMP_UNKNOWN_ALARM))
+        assertEquals(PumpAlertSeverity.CRITICAL, AaruyAlerts.severityOf(AlarmState.PUMP_UNKNOWN_ALARM))
+        assertTrue(AlarmState.PUMP_UNKNOWN_ALARM.isConfirmedOnThePump())
+        assertTrue(AlarmState.PUMP_UNKNOWN_ALARM.isHeld())
+    }
+
+    /** The text has the code the pump sent, kept over an app restart. Without one, the code it stands for. */
+    @Test
+    fun theTextOfAnUnknownAlarmHasItsCode() {
+        assertEquals(AaruyStrings.alarm_unknown.withArgs("8115"), pump.alarmText(AlarmState.PUMP_UNKNOWN_ALARM, 0x8115))
+        assertEquals(AaruyStrings.alarm_unknown.withArgs("81FF"), pump.alarmText(AlarmState.PUMP_UNKNOWN_ALARM, 0))
+
+        whenever(preferences.get(AaruyIntKey.PumpUnknownAlarmCode)).thenReturn(0x8120)
+        assertEquals(AaruyStrings.alarm_unknown.withArgs("8120"), pump.alarmText(AlarmState.PUMP_UNKNOWN_ALARM))
     }
 }
