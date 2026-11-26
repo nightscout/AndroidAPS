@@ -66,7 +66,8 @@ import app.aaps.ui.UiStrings
  * A kind of a group can be set apart from it as an exception: the alarm screen's "Silence this kind" makes one, and
  * "Add exception" here. Each row that makes a sound has its sound on this phone ([sounds], by group or kind id; not in
  * it: the alert's own) - one AAPS ships, or on Android any sound of the phone - and a Test button, which plays it as an
- * alarm for a few seconds. [onTest] returns false when nothing was played: an alarm is ringing.
+ * alarm for a few seconds, also in Do Not Disturb, or vibrates on a row set to Vibrate. [onTest] returns false when
+ * nothing was played: an alarm is ringing.
  */
 @Composable
 fun AlertKindsScreen(
@@ -78,7 +79,7 @@ fun AlertKindsScreen(
     onClear: (AlertKind) -> Unit,
     sounds: Map<String, AlertSound>,
     onSound: (AlertSetting, AlertSound?) -> Unit,
-    onTest: (AlertKind) -> Boolean,
+    onTest: (kind: AlertKind, vibrate: Boolean) -> Boolean,
     onBgRules: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
@@ -170,7 +171,7 @@ private fun SettingRowView(
     sound: AlertSound?,
     onChoice: (AlertSetting, AlertChoice) -> Unit,
     onSound: (AlertSetting, AlertSound?) -> Unit,
-    onTest: (AlertKind) -> Boolean
+    onTest: (kind: AlertKind, vibrate: Boolean) -> Boolean
 ) {
     val setting = row.setting
     Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
@@ -189,7 +190,8 @@ private fun SettingRowView(
                 )
             }
         } else ChoiceButtons(row.choices, row.choice) { onChoice(setting, it) }
-        row.testKind?.let { SoundRow(setting, it, sound, onSound, onTest) }
+        // The Test does what the row's choice does: on Vibrate it vibrates
+        row.testKind?.let { kind -> SoundRow(setting, sound, onSound) { onTest(kind, row.choice == AlertChoice.VIBRATE) } }
     }
 }
 
@@ -248,7 +250,7 @@ private fun AddExceptionDialog(candidates: List<AlertKind>, onPick: (AlertKind) 
 
 /** The sound of a row on this phone, to pick from the sounds AAPS ships or, on Android, the phone's; and its Test. */
 @Composable
-private fun SoundRow(setting: AlertSetting, testKind: AlertKind, sound: AlertSound?, onSound: (AlertSetting, AlertSound?) -> Unit, onTest: (AlertKind) -> Boolean) {
+private fun SoundRow(setting: AlertSetting, sound: AlertSound?, onSound: (AlertSetting, AlertSound?) -> Unit, onTest: () -> Boolean) {
     var picking by remember { mutableStateOf(false) }
     val ringtonePicker = rememberRingtonePicker { uri, title -> onSound(setting, AlertSound.Ringtone(uri, title)) }
     var refused by remember { mutableStateOf(false) }
@@ -295,7 +297,7 @@ private fun SoundRow(setting: AlertSetting, testKind: AlertKind, sound: AlertSou
             }
         }
         Spacer(modifier = Modifier.weight(1f))
-        TextButton(onClick = { refused = !onTest(testKind) }) { Text(stringResource(UiStrings.alert_kind_sound_test)) }
+        TextButton(onClick = { refused = !onTest() }) { Text(stringResource(UiStrings.alert_kind_sound_test)) }
     }
     if (refused) Text(stringResource(UiStrings.alert_kind_sound_test_refused), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
 }

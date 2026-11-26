@@ -106,11 +106,13 @@ class AlertsImplTest : TestBase() {
 
         val chimeRingtones = mutableListOf<String?>()
         val chimeVibrations = mutableListOf<Boolean>()
-        override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?, vibrateOnly: Boolean) {
+        val chimeBreaksThrough = mutableListOf<Boolean>()
+        override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?, vibrateOnly: Boolean, breakThroughDnd: Boolean) {
             chimes += alert.key
             chimeSounds += sound
             chimeRingtones += ringtoneUri
             chimeVibrations += vibrateOnly
+            chimeBreaksThrough += breakThroughDnd
         }
 
         /** Android can; a test sets it off for a phone that cannot. */
@@ -614,7 +616,7 @@ class AlertsImplTest : TestBase() {
 
         sut.test(reminder, AlertSeverity.CRITICAL)
 
-        verify(soundPlayer).play(eq(AlarmSound.BOLUS_ERROR), any(), eq(false), eq(null))
+        verify(soundPlayer).play(eq(AlarmSound.BOLUS_ERROR), any(), eq(true), eq(null))
     }
 
     @Test
@@ -1392,14 +1394,15 @@ class AlertsImplTest : TestBase() {
         assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
     }
 
+    /** The user asked for the test: in Do Not Disturb, with the override off, they would hear nothing and not know why. */
     @Test
-    fun `the test plays the alarm sound for a few seconds`() {
+    fun `the test plays the alarm sound for a few seconds, also in Do Not Disturb`() {
         val kind = TestKind("pump", AlertOrigin.PUMP, "occlusion")
         sut.setSound(kind, AlertSound.Bundled(AlarmSound.BOLUS_ERROR))
 
         assertThat(sut.test(kind, AlertSeverity.CRITICAL)).isTrue()
 
-        verify(soundPlayer).play(eq(AlarmSound.BOLUS_ERROR), any(), eq(false), eq(null))
+        verify(soundPlayer).play(eq(AlarmSound.BOLUS_ERROR), any(), eq(true), eq(null))
         scope.advanceTimeBy(Alerts.TEST_SECONDS * 1000L + 1)
         verify(soundPlayer).stop(any())
         // A test is not an alert: no card, no announcement
@@ -1408,12 +1411,45 @@ class AlertsImplTest : TestBase() {
     }
 
     @Test
-    fun `the test of a warning chimes`() {
+    fun `the test of a warning chimes, also in Do Not Disturb`() {
         val kind = TestKind("pump", AlertOrigin.PUMP, "occlusion")
 
         sut.test(kind, AlertSeverity.WARNING)
 
         assertThat(alertPlatform.chimeSounds).containsExactly(AlarmSound.ALARM)
+        assertThat(alertPlatform.chimeBreaksThrough).containsExactly(true)
+        assertThat(alertPlatform.chimeVibrations).containsExactly(false)
+    }
+
+    /** The Test of a row set to Vibrate does what the row does: it vibrates for a few seconds, with no sound. */
+    @Test
+    fun `the test of vibrate vibrates for a few seconds`() {
+        val kind = TestKind("pump", AlertOrigin.PUMP, "occlusion")
+
+        assertThat(sut.test(kind, AlertSeverity.CRITICAL, vibrate = true)).isTrue()
+
+        verify(soundPlayer).vibrate(eq(AlarmSound.ALARM), any())
+        verify(soundPlayer, never()).play(any(), any(), any(), anyOrNull())
+        scope.advanceTimeBy(Alerts.TEST_SECONDS * 1000L + 1)
+        verify(soundPlayer).stop(any())
+    }
+
+    @Test
+    fun `the test of vibrate as a warning vibrates once`() {
+        sut.test(TestKind("pump", AlertOrigin.PUMP, "occlusion"), AlertSeverity.WARNING, vibrate = true)
+
+        assertThat(alertPlatform.chimeVibrations).containsExactly(true)
+    }
+
+    /** As a real alert: a phone that cannot vibrate plays the sound. */
+    @Test
+    fun `the test of vibrate plays the sound where the phone cannot vibrate`() {
+        alertPlatform.vibrator = false
+
+        sut.test(TestKind("pump", AlertOrigin.PUMP, "occlusion"), AlertSeverity.CRITICAL, vibrate = true)
+
+        verify(soundPlayer).play(eq(AlarmSound.ALARM), any(), eq(true), eq(null))
+        verify(soundPlayer, never()).vibrate(any(), any())
     }
 
     /** The player plays one sound at a time: a test while an alarm rings would stop the alarm. */
@@ -1466,7 +1502,7 @@ class AlertsImplTest : TestBase() {
 
         sut.test(kind, AlertSeverity.CRITICAL)
 
-        verify(soundPlayer).play(eq(AlarmSound.ALARM), any(), eq(false), eq(ringtone.uri))
+        verify(soundPlayer).play(eq(AlarmSound.ALARM), any(), eq(true), eq(ringtone.uri))
     }
 
     @Test

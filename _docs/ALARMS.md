@@ -408,9 +408,10 @@ rings because of it (decided 2026-11-21: acceptable).
   `StringNonKey.AlertSounds`, exported, not synced), in Alert kinds; "Its own sound" is the alert's default. It is
   the alarm's sound, and on Android also the chime's (one channel per sound already exists). On iOS the chime keeps
   the system sound: iOS cannot play an mp3 as a notification sound. `Alerts.test` plays a kind as an alert of a
-  severity would ring, for 5 seconds, with the same Do Not Disturb rule, and nothing while an alarm is sounding
-  (the player plays one sound at a time). Test buttons: per kind in Alert kinds (as an alarm), and in the rule
-  dialog (at the severity picked there). The sound names moved from `:implementation` to `:core:interfaces`
+  severity would ring, for 5 seconds, and nothing while an alarm is sounding (the player plays one sound at a time).
+  Changed 2026-11-26: the user asked for the test, so it sounds also in Do Not Disturb with the override off (it was
+  quiet then, with no word why), and on a row set to Vibrate it vibrates. Test buttons: per kind in Alert kinds (as
+  an alarm), and in the rule dialog (at the severity picked there). The sound names moved from `:implementation` to `:core:interfaces`
   (`AlarmSound.title`). 2e-2: on Android any sound of the phone (the system ringtone picker, "Sound of the phone…";
   `AlertSound.Ringtone` with its uri and name). The alarm player plays it and falls back to the alert's own sound
   when it cannot be opened or fails while playing (deleted, or a file in the phone's storage the app may not read):

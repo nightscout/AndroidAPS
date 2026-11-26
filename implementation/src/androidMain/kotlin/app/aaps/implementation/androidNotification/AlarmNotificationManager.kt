@@ -356,7 +356,8 @@ class AlarmNotificationManager(
      * With the user's [ringtoneUri] (`_docs/ALARMS.md`, step 2e) the notification goes on the silent channel and the
      * ringtone plays once, for [CHIME_RINGTONE_MS] at most: a channel's sound is fixed when it is made, so it cannot be
      * the ringtone. A ringtone that cannot be opened chimes with [sound] instead. [vibrateOnly]: the user chose Vibrate
-     * for its kind, so it only vibrates, as in Do Not Disturb.
+     * for its kind, so it only vibrates, as in Do Not Disturb. [breakThroughDnd]: it sounds in Do Not Disturb whatever
+     * the override says, for a test the user asked for.
      */
     fun postChime(
         chimeKey: Int,
@@ -365,10 +366,11 @@ class AlarmNotificationManager(
         sound: AlarmSound = AlarmSound.ALARM,
         ringtoneUri: String? = null,
         actions: List<NotificationCompat.Action> = emptyList(),
-        vibrateOnly: Boolean = false
+        vibrateOnly: Boolean = false,
+        breakThroughDnd: Boolean = false
     ) {
         channels // created on first post, see the field
-        val overrideDnd = preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
+        val overrideDnd = breakThroughDnd || preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
         val quiet = vibrateOnly || DoNotDisturbRule.staysQuiet(overrideDnd, mgr.currentInterruptionFilter)
         val ringtonePlayed = !quiet && ringtoneUri != null && playRingtoneOnce(ringtoneUri, overrideDnd)
         val channelId =

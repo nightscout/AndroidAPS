@@ -151,8 +151,9 @@ class IosAlertPlatform(
 
     // The system sound: iOS cannot play an mp3 as a notification sound, so the chosen [sound] is the alarm's only.
     // [ringtoneUri] is never set on iOS: an app can play only the sounds it ships. [vibrateOnly] is never set either:
-    // [canVibrate] is false here, because a notification without a sound does not vibrate.
-    override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?, vibrateOnly: Boolean) {
+    // [canVibrate] is false here, because a notification without a sound does not vibrate. [breakThroughDnd] cannot be
+    // honoured: only a critical alert (an entitlement Apple must grant) sounds through a Focus.
+    override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?, vibrateOnly: Boolean, breakThroughDnd: Boolean) {
         // Logged, so a chime raised at a start a moment before a tap that started the app silences it can be seen.
         // Accepted as it is (decided 2026-11-25): the core does not hold an alert back (ALARMS.md, decision 9).
         aapsLogger.debug(LTag.NOTIFICATION, "Pump alert chime: ${alert.source}/${alert.key}")

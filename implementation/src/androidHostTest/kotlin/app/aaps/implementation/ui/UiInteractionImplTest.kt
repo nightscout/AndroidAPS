@@ -55,7 +55,7 @@ class UiInteractionImplTest : TestBase() {
         override fun resume(kinds: Collection<AlertKind>) {}
         override val sounds: StateFlow<Map<String, AlertSound>> = MutableStateFlow(emptyMap())
         override fun setSound(setting: AlertSetting, sound: AlertSound?) {}
-        override fun test(kind: AlertKind, severity: AlertSeverity): Boolean = true
+        override fun test(kind: AlertKind, severity: AlertSeverity, vibrate: Boolean): Boolean = true
         override fun silenceEverywhere(source: String, key: String, minutes: Int) {}
         override fun canSilenceEverywhere(alert: Alert): Boolean = false
         override fun applySharedSilence(silence: SharedSilence) {}

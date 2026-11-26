@@ -261,12 +261,14 @@ interface Alerts {
 
     /**
      * Plays [kind]'s sound on this phone (its group's, when it has one) as an alert of [severity] would ring, for
-     * [TEST_SECONDS]: CRITICAL the alarm sound, WARNING the chime. It follows the same Do Not Disturb rule as a real
-     * alert. Nothing is played while an alarm is sounding: a test must never stop a real one.
+     * [TEST_SECONDS]: CRITICAL the alarm sound, WARNING the chime. The user asked for it, so it sounds also in Do Not
+     * Disturb, whatever the override says (decided 2026-11-26). [vibrate]: it vibrates instead, with no sound, as a
+     * kind set to Vibrate rings; where the phone cannot vibrate it plays the sound. Nothing is played while an alarm
+     * is sounding: a test must never stop a real one.
      *
      * @return false when nothing was played because an alarm is sounding
      */
-    fun test(kind: AlertKind, severity: AlertSeverity): Boolean
+    fun test(kind: AlertKind, severity: AlertSeverity, vibrate: Boolean = false): Boolean
 
     /**
      * "Silence everywhere" (`_docs/ALARMS.md`, step 2f): silences the alert on this phone at once, as [silence] does,
@@ -394,8 +396,9 @@ interface AlertPlatform {
     /**
      * A WARNING alert: show it as a system notification with one sound: [sound], or on Android the user's ringtone
      * [ringtoneUri], with [sound] as its fallback. [vibrateOnly]: it vibrates once instead, with no sound.
+     * [breakThroughDnd]: it sounds in Do Not Disturb whatever the override says, for a test the user asked for.
      */
-    fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String? = null, vibrateOnly: Boolean = false)
+    fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String? = null, vibrateOnly: Boolean = false, breakThroughDnd: Boolean = false)
 
     /**
      * The alert is silenced until [until] (epoch ms). The core rings it again itself when the time comes, but only

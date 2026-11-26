@@ -140,7 +140,7 @@ class AlertKindsSettingsImpl(
                     sounds = sounds,
                     onSound = { setting, sound -> alerts.setSound(setting, sound) },
                     // As an alarm: the sound the user picks it for
-                    onTest = { kind -> alerts.test(kind, AlertSeverity.CRITICAL) },
+                    onTest = { kind, vibrate -> alerts.test(kind, AlertSeverity.CRITICAL, vibrate) },
                     onBgRules = { showBgRules = true },
                     onBack = onBack,
                     listState = listState

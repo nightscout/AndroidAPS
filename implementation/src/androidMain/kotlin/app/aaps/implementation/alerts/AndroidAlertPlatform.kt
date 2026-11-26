@@ -142,7 +142,7 @@ class AndroidAlertPlatform(
     // A tablet may have no vibrator: there Vibrate is not offered, and a stored one rings
     override val canVibrate: Boolean by lazy { vibrator(context).hasVibrator() }
 
-    override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?, vibrateOnly: Boolean) {
+    override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?, vibrateOnly: Boolean, breakThroughDnd: Boolean) {
         alarmNotificationManager().postChime(
             chimeKey = requestCode(alert.source, alert.key),
             title = rh.gs(alert.title),
@@ -151,7 +151,8 @@ class AndroidAlertPlatform(
             sound = sound,
             ringtoneUri = ringtoneUri,
             actions = silenceButtons(alert),
-            vibrateOnly = vibrateOnly
+            vibrateOnly = vibrateOnly,
+            breakThroughDnd = breakThroughDnd
         )
     }
 

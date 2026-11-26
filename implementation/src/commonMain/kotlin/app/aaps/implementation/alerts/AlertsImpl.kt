@@ -200,7 +200,7 @@ class AlertsImpl(
         aapsLogger.info(LTag.NOTIFICATION, "Alert setting ${setting.id} sound on this phone: ${sound ?: "its own"}")
     }
 
-    override fun test(kind: AlertKind, severity: AlertSeverity): Boolean {
+    override fun test(kind: AlertKind, severity: AlertSeverity, vibrate: Boolean): Boolean {
         val testAlert = Alert(kind = kind, key = TEST_KEY, severity = severity, title = kind.title, raisedAt = dateUtil.now())
         // A test must never stop a real alarm: the player plays one sound at a time
         if (sounding != null) {
@@ -208,16 +208,20 @@ class AlertsImpl(
             return false
         }
         val (sound, ringtone) = lock.withLock { soundFor(testAlert) to ringtoneFor(testAlert) }
-        aapsLogger.info(LTag.NOTIFICATION, "Alert test of ${kind.id}: $severity, $sound${ringtone?.let { ", ringtone $it" } ?: ""}")
+        // As a real alert: Vibrate rings where the phone can vibrate
+        val vibrates = vibrate && platform.canVibrate
+        aapsLogger.info(LTag.NOTIFICATION, "Alert test of ${kind.id}: $severity, $sound${ringtone?.let { ", ringtone $it" } ?: ""}${if (vibrates) ", vibrate" else ""}")
+        // The user asked for the test: it sounds in Do Not Disturb too, or they would hear nothing and not know why
         if (severity == AlertSeverity.CRITICAL) {
-            soundPlayer.play(sound, OWNER_TEST, breakThroughDnd = false, ringtoneUri = ringtone)
+            if (vibrates) soundPlayer.vibrate(sound, OWNER_TEST)
+            else soundPlayer.play(sound, OWNER_TEST, breakThroughDnd = true, ringtoneUri = ringtone)
             // Owner-scoped: a real alarm that started meanwhile took the player over and is not stopped here
             appScope.launch {
                 delay(Alerts.TEST_SECONDS * 1000L)
                 soundPlayer.stop(OWNER_TEST)
             }
         } else {
-            platform.chime(testAlert, sound, ringtone)
+            platform.chime(testAlert, sound, ringtone, vibrateOnly = vibrates, breakThroughDnd = true)
             appScope.launch {
                 delay(Alerts.TEST_SECONDS * 1000L)
                 platform.withdrawn(kind.source, TEST_KEY)

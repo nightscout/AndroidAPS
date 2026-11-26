@@ -87,8 +87,8 @@ class DesktopAlertPlatform(
     }
 
     // The desktop has one sound, so [sound] and [ringtoneUri] choose nothing here. Nothing vibrates, so Vibrate is not
-    // offered and [vibrateOnly] is never set.
-    override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?, vibrateOnly: Boolean) {
+    // offered and [vibrateOnly] is never set. There is no Do Not Disturb rule here, so [breakThroughDnd] changes nothing.
+    override fun chime(alert: Alert, sound: AlarmSound, ringtoneUri: String?, vibrateOnly: Boolean, breakThroughDnd: Boolean) {
         tray.toast(rh.gs(alert.title), alert.text?.let { rh.gs(it) } ?: "")
         tray.beep()
     }
