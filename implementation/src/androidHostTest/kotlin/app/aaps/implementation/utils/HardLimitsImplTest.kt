@@ -1,38 +1,38 @@
 package app.aaps.implementation.utils
 
-import app.aaps.core.interfaces.alerts.Alert
-import app.aaps.core.interfaces.alerts.AlertLifetime
-import app.aaps.core.interfaces.alerts.AlertSeverity
-import app.aaps.core.interfaces.alerts.Alerts
-import app.aaps.core.interfaces.alerts.CoreAlert
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.Mockito.mockingDetails
 import org.mockito.kotlin.any
-import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.verify
+import org.mockito.kotlin.anyVararg
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 
 class HardLimitsImplTest : TestBase() {
 
-    @Mock lateinit var alerts: Alerts
+    @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var dateUtil: DateUtil
 
     private lateinit var hardLimits: HardLimitsImpl
 
     @BeforeEach
     fun setup() {
-        hardLimits = HardLimitsImpl(aapsLogger, { alerts }, preferences, rh, dateUtil, rxBus)
-        whenever(dateUtil.now()).thenReturn(1000L)
+        hardLimits = HardLimitsImpl(aapsLogger, { notificationManager }, preferences, rh)
+        // The texts of the cards: an unstubbed mock answers null, which is no text at all
+        whenever(rh.gs(any<TextRef>(), anyVararg<Any>())).thenReturn("out of the limits")
         whenever(rh.gs(any<Int>())).thenReturn("")
         whenever(rh.gs(any<Int>(), any())).thenReturn("")
     }
@@ -192,16 +192,71 @@ class HardLimitsImplTest : TestBase() {
         assertThat(result).isEqualTo(10.0)
     }
 
-    @Test
-    fun `a value out of range raises the hard limit warning`() {
-        hardLimits.verifyHardLimits(15.0, app.aaps.core.interfaces.R.string.bolus, 0.0, 10.0)
+    // ---- the cards (decided 2026-11-26: a card, not an alarm) --------------------------------------
 
-        // One chime and a card, ended by the user. Its announcement is the alert core's.
-        val captor = argumentCaptor<Alert>()
-        verify(alerts).raise(captor.capture())
-        assertThat(captor.firstValue.kind).isEqualTo(CoreAlert.HARD_LIMIT)
-        assertThat(captor.firstValue.severity).isEqualTo(AlertSeverity.WARNING)
-        assertThat(captor.firstValue.lifetime).isEqualTo(AlertLifetime.EVENT)
+    private fun calls(name: String, id: NotificationId) =
+        mockingDetails(notificationManager).invocations.filter { it.method.name == name && it.arguments[0] == id }
+
+    /** The loop does not run: a red card that says what to change, and no alarm. */
+    @Test
+    fun `a check the loop stops on shows the red card`() {
+        assertThat(hardLimits.checkHardLimits(12.0, app.aaps.core.interfaces.R.string.bolus, 0.02, 10.0)).isFalse()
+
+        assertThat(calls("post", NotificationId.HARD_LIMIT_LOOP_STOPPED)).hasSize(1)
+        assertThat(NotificationId.HARD_LIMIT_LOOP_STOPPED.defaultLevel).isEqualTo(NotificationLevel.URGENT)
+        assertThat(calls("post", NotificationId.HARD_LIMIT_VALUE_LIMITED)).isEmpty()
+    }
+
+    /** The loop checks at every run: the same cause is one card, not one at every run. */
+    @Test
+    fun `the same cause is posted once`() {
+        hardLimits.checkHardLimits(12.0, app.aaps.core.interfaces.R.string.bolus, 0.02, 10.0)
+        hardLimits.checkHardLimits(12.0, app.aaps.core.interfaces.R.string.bolus, 0.02, 10.0)
+
+        assertThat(calls("post", NotificationId.HARD_LIMIT_LOOP_STOPPED)).hasSize(1)
+    }
+
+    /** A changed value is a new text: the card is posted again with it. */
+    @Test
+    fun `a changed value posts the card again`() {
+        whenever(rh.gs(eq(CoreUiStrings.hard_limit_loop_stopped), anyVararg<Any>())).thenAnswer { "stopped at ${it.arguments[2]}" }
+
+        hardLimits.checkHardLimits(12.0, app.aaps.core.interfaces.R.string.bolus, 0.02, 10.0)
+        hardLimits.checkHardLimits(13.0, app.aaps.core.interfaces.R.string.bolus, 0.02, 10.0)
+
+        assertThat(calls("post", NotificationId.HARD_LIMIT_LOOP_STOPPED).map { it.arguments[1] }).containsExactly("stopped at 12.0", "stopped at 13.0").inOrder()
+    }
+
+    /** The user fixed the setting: at the next run the value is back and the card goes by itself. */
+    @Test
+    fun `the red card goes when the value is back`() {
+        hardLimits.checkHardLimits(12.0, app.aaps.core.interfaces.R.string.bolus, 0.02, 10.0)
+
+        hardLimits.checkHardLimits(8.0, app.aaps.core.interfaces.R.string.bolus, 0.02, 10.0)
+
+        assertThat(calls("dismiss", NotificationId.HARD_LIMIT_LOOP_STOPPED)).hasSize(1)
+    }
+
+    /** A value the caller limits and goes on with (a target): a plain card, which goes the same way. */
+    @Test
+    fun `a limited value shows a plain card until it is back`() {
+        assertThat(hardLimits.verifyHardLimits(15.0, app.aaps.core.interfaces.R.string.bolus, 0.0, 10.0)).isEqualTo(10.0)
+        assertThat(calls("post", NotificationId.HARD_LIMIT_VALUE_LIMITED)).hasSize(1)
+        assertThat(NotificationId.HARD_LIMIT_VALUE_LIMITED.defaultLevel).isEqualTo(NotificationLevel.NORMAL)
+
+        hardLimits.verifyHardLimits(5.0, app.aaps.core.interfaces.R.string.bolus, 0.0, 10.0)
+
+        assertThat(calls("dismiss", NotificationId.HARD_LIMIT_VALUE_LIMITED)).hasSize(1)
+        assertThat(calls("post", NotificationId.HARD_LIMIT_LOOP_STOPPED)).isEmpty()
+    }
+
+    /** Every run checks values that are fine: nothing to post or take back. */
+    @Test
+    fun `a value in its limits touches no card`() {
+        hardLimits.checkHardLimits(5.0, app.aaps.core.interfaces.R.string.bolus, 0.0, 10.0)
+        hardLimits.verifyHardLimits(5.0, app.aaps.core.interfaces.R.string.bolus, 0.0, 10.0)
+
+        assertThat(mockingDetails(notificationManager).invocations).isEmpty()
     }
 
     @Test

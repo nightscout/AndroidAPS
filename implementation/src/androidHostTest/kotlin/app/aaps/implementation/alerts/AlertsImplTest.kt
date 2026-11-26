@@ -523,9 +523,9 @@ class AlertsImplTest : TestBase() {
     /** A kind with no group set back to Ring is just a kind that rings: nothing is kept for it. */
     @Test
     fun `a kind with no group set to Ring keeps no entry`() {
-        sut.setChoice(CoreAlert.HARD_LIMIT, AlertChoice.SILENT)
+        sut.setChoice(CoreAlert.CARBS_NOT_SAVED, AlertChoice.SILENT)
 
-        sut.setChoice(CoreAlert.HARD_LIMIT, AlertChoice.RING)
+        sut.setChoice(CoreAlert.CARBS_NOT_SAVED, AlertChoice.RING)
 
         assertThat(sut.choices.value).isEmpty()
     }

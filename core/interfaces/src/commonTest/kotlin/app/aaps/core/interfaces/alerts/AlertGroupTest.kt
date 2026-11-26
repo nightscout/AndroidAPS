@@ -66,7 +66,7 @@ class AlertGroupTest {
             CoreAlert.entries.filter { it.group == AlertGroup.PUMP_ACTION }.toSet()
         )
         // The others the user made, or they ask for something only the user knows: a row each
-        listOf(CoreAlert.EAT_REMINDER, CoreAlert.AUTOMATION_ALARM, CoreAlert.CARBS_NOT_SAVED, CoreAlert.HARD_LIMIT, CoreAlert.CARBS_REQUIRED).forEach {
+        listOf(CoreAlert.EAT_REMINDER, CoreAlert.AUTOMATION_ALARM, CoreAlert.CARBS_NOT_SAVED, CoreAlert.CARBS_REQUIRED).forEach {
             assertNull(it.group, it.id)
             assertEquals(AlertSection.APP, it.section, it.id)
         }

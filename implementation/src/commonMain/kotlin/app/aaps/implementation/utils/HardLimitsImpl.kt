@@ -1,13 +1,12 @@
 package app.aaps.implementation.utils
 
-import app.aaps.core.interfaces.alerts.AlertSeverity
-import app.aaps.core.interfaces.alerts.Alerts
-import app.aaps.core.interfaces.alerts.CoreAlert
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventShowSnackbar
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -25,12 +24,10 @@ import kotlin.math.min
 @Inject
 class HardLimitsImpl(
     private val aapsLogger: AAPSLogger,
-    // A provider: the alert core reaches much of the app, and is needed only when a limit is hit
-    private val alerts: () -> Alerts,
+    // A provider: the notifications reach much of the app, and are needed only when a limit is hit or ends
+    private val notificationManager: () -> NotificationManager,
     private val preferences: Preferences,
-    private val rh: TextResolver,
-    private val dateUtil: DateUtil,
-    private val rxBus: RxBus
+    private val rh: TextResolver
 ) : HardLimits {
 
     private fun loadAge(): HardLimits.AgeType {
@@ -52,33 +49,53 @@ class HardLimitsImpl(
 
     // safety checks
     override fun checkHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Boolean =
-        value == verifyHardLimits(value, valueName, lowLimit, highLimit)
+        value == limit(value, rh.gs(TextRef.AndroidRes(valueName)), lowLimit, highLimit, loopStops = true)
 
     override fun checkHardLimits(value: Double, valueName: TextRef, lowLimit: Double, highLimit: Double): Boolean =
-        value == verifyHardLimits(value, valueName, lowLimit, highLimit)
+        value == limit(value, rh.gs(valueName), lowLimit, highLimit, loopStops = true)
 
     override fun verifyHardLimits(value: Double, valueName: TextRef, lowLimit: Double, highLimit: Double): Double =
-        verifyHardLimits(value, rh.gs(valueName), lowLimit, highLimit)
+        limit(value, rh.gs(valueName), lowLimit, highLimit, loopStops = false)
 
     // The resource id form, kept for the call sites that still pass R.string directly. Wrapping the id
     // in a TextRef is what lets this class live in commonMain: TextResolver has no gs(Int), and
     // TextRef.AndroidRes only carries the id, so nothing Android specific leaks in.
     override fun verifyHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Double =
-        verifyHardLimits(value, rh.gs(TextRef.AndroidRes(valueName)), lowLimit, highLimit)
+        limit(value, rh.gs(TextRef.AndroidRes(valueName)), lowLimit, highLimit, loopStops = false)
 
-    /** Both public forms resolve their name first and share this, so the behaviour cannot drift. */
-    private fun verifyHardLimits(value: Double, valueName: String, lowLimit: Double, highLimit: Double): Double {
-        var newValue = value
-        if (newValue !in lowLimit..highLimit) {
-            newValue = max(newValue, lowLimit)
-            newValue = min(newValue, highLimit)
-            var msg = rh.gs(CoreUiStrings.valueoutofrange, valueName)
-            msg += ".\n"
-            msg += rh.gs(CoreUiStrings.valuelimitedto, value, newValue)
-            aapsLogger.error(msg)
-            rxBus.send(EventShowSnackbar(msg, EventShowSnackbar.Type.Warning))
-            // One chime and a card. The alert core writes its announcement, on the master.
-            CoreAlert.HARD_LIMIT.raiseEvent(alerts(), AlertSeverity.WARNING, TextRef.Literal(msg), dateUtil.now())
+    /** What is outside the limits now, by the name of the value: the loop stops for it, or it is limited. */
+    private val stopping = mutableMapOf<String, String>()
+    private val limited = mutableMapOf<String, String>()
+    private val lock = AapsLock()
+
+    /**
+     * Both public forms resolve their name first and share this, so the behaviour cannot drift.
+     *
+     * A value outside the limits is a setting the user just changed in almost every case (patient age, profile, profile
+     * switch, imported settings), so it is a card, not an alarm (decided 2026-11-26). The loop stops on a check
+     * ([loopStops]): a red card with no sound, which says what to change. A value the caller limits and goes on with (a
+     * target): a plain card. The loop checks its values at every run, so a card lasts while one of its values is
+     * outside and goes by itself when they are all back. A card is posted again only when its text changes: once per
+     * cause, not at every run.
+     */
+    private fun limit(value: Double, valueName: String, lowLimit: Double, highLimit: Double, loopStops: Boolean): Double {
+        val newValue = min(max(value, lowLimit), highLimit)
+        val message = when {
+            newValue == value -> null
+            loopStops         -> rh.gs(CoreUiStrings.hard_limit_loop_stopped, valueName, value, lowLimit, highLimit)
+            else              -> rh.gs(CoreUiStrings.hard_limit_value_limited, valueName, value, newValue)
+        }
+        val problems = if (loopStops) stopping else limited
+        val changed = lock.withLock {
+            val before = problems[valueName]
+            if (message == null) problems.remove(valueName) else problems[valueName] = message
+            if (message == before) null else problems.values.toList()
+        }
+        if (changed != null) {
+            message?.let { aapsLogger.error(LTag.CORE, it) }
+            val id = if (loopStops) NotificationId.HARD_LIMIT_LOOP_STOPPED else NotificationId.HARD_LIMIT_VALUE_LIMITED
+            // Each its own sentence, one under the other
+            if (changed.isEmpty()) notificationManager().dismiss(id) else notificationManager().post(id, changed.joinToString("\n"))
         }
         return newValue
     }

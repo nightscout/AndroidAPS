@@ -7,7 +7,10 @@ import kotlin.test.assertTrue
 
 class CoreAlertTest {
 
-    /** The ids are stored with the user's choice: a renamed id would quietly drop what the user chose for it. */
+    /**
+     * The ids are stored with the user's choice: a renamed id would quietly drop what the user chose for it. A retired
+     * one ("aaps.hard_limit", a card since 2026-11-26) has its stored choice removed by a migration.
+     */
     @Test
     fun theIdsStayAsTheyAre() {
         assertEquals(
@@ -15,7 +18,7 @@ class CoreAlertTest {
                 "aaps.command_failed", "aaps.insulin_change_failed", "aaps.eat_reminder", "aaps.automation_alarm",
                 "aaps.profile_update_failed", "aaps.basal_far_from_profile", "aaps.bolus_failed", "aaps.bolus_cancelled",
                 "aaps.carbs_not_saved", "aaps.pump_unreachable", "aaps.pump_driver_not_responding", "aaps.zero_delivery_not_set",
-                "aaps.hard_limit", "aaps.carbs_required", "aaps.pump_driver_alarm"
+                "aaps.carbs_required", "aaps.pump_driver_alarm"
             ),
             CoreAlert.entries.map { it.id }
         )

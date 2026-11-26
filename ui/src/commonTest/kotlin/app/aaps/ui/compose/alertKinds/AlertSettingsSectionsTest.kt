@@ -99,7 +99,7 @@ class AlertSettingsSectionsTest {
         val rows = sections().of(AlertSection.APP).rows
 
         assertEquals(
-            listOf(CoreAlert.EAT_REMINDER, CoreAlert.AUTOMATION_ALARM, CoreAlert.CARBS_NOT_SAVED, CoreAlert.HARD_LIMIT, CoreAlert.CARBS_REQUIRED, NightscoutAlert.ANNOUNCEMENT),
+            listOf(CoreAlert.EAT_REMINDER, CoreAlert.AUTOMATION_ALARM, CoreAlert.CARBS_NOT_SAVED, CoreAlert.CARBS_REQUIRED, NightscoutAlert.ANNOUNCEMENT),
             rows.map { it.setting }
         )
     }
@@ -123,7 +123,7 @@ class AlertSettingsSectionsTest {
     /** The entry of each part counts what of it is silent or off, or paused, and nothing of the other parts. */
     @Test
     fun eachPartCountsOnlyItsOwnSilentOrOff() {
-        val choices = mapOf(AlertGroup.PUMP_ACTION.id to AlertChoice.SILENT, CoreAlert.HARD_LIMIT.id to AlertChoice.OFF, bgCheck.id to AlertChoice.OFF)
+        val choices = mapOf(AlertGroup.PUMP_ACTION.id to AlertChoice.SILENT, CoreAlert.CARBS_NOT_SAVED.id to AlertChoice.OFF, bgCheck.id to AlertChoice.OFF)
         val pauses = mapOf(BgAlert.LOW.id to 1L)
         val sections = sections(choices)
 
@@ -230,13 +230,13 @@ class AlertSettingsSectionsTest {
     @Test
     fun silentOrOffCountsWhatIsNotRingAndThePauses() {
         val choices = mapOf(
-            AlertGroup.PUMP_INFO.id to AlertChoice.OFF, bgCheck.id to AlertChoice.RING, CoreAlert.HARD_LIMIT.id to AlertChoice.SILENT,
+            AlertGroup.PUMP_INFO.id to AlertChoice.OFF, bgCheck.id to AlertChoice.RING, CoreAlert.CARBS_NOT_SAVED.id to AlertChoice.SILENT,
             AlertGroup.BG_LOWS.id to AlertChoice.VIBRATE
         )
 
         assertEquals(2, silentOrOff(choices, emptyMap()))
         assertEquals(3, silentOrOff(choices, mapOf(BgAlert.LOW.id to 1L)))
         // A kind both silent and paused is one
-        assertEquals(2, silentOrOff(choices, mapOf(CoreAlert.HARD_LIMIT.id to 1L)))
+        assertEquals(2, silentOrOff(choices, mapOf(CoreAlert.CARBS_NOT_SAVED.id to 1L)))
     }
 }

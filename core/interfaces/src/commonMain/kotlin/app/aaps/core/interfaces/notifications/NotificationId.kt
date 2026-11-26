@@ -132,6 +132,12 @@ enum class NotificationId(
     SMB_FALLBACK(NORMAL, LOOP),
     DYN_ISF_FALLBACK(NORMAL, LOOP),
 
+    // A setting outside the safety limits (`HardLimits`), decided 2026-11-26: a card, not an alarm, as it comes right
+    // after the user changed something. Red with no sound while the loop does not run; a target limited to the limit,
+    // with the loop going on, is a plain card.
+    HARD_LIMIT_LOOP_STOPPED(URGENT, LOOP),
+    HARD_LIMIT_VALUE_LIMITED(NORMAL, LOOP),
+
     // Sync — Nightscout
     NSCLIENT_VERSION_DOES_NOT_MATCH(NORMAL, SYNC),
     NSCLIENT_PAIRING_ORPHAN(NORMAL, SYNC),

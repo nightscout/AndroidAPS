@@ -103,6 +103,9 @@ fun AllPreferencesScreen(
         // 2. Safety plugin (always enabled)
         getPreferenceContentIfEnabled(activePlugin.activeSafety as PluginBase)?.let { add(it) }
 
+        // 2b. Alerts, right after Safety (decided 2026-11-26): at the end of the list they were missed
+        add(alertsPreferences)
+
         // 3. BG Source plugin — master only: on a client the collector runs on the master and can't
         // be changed or configured locally (mirrors the Configuration screen's category gate)
         if (!config.AAPSCLIENT) {
@@ -207,9 +210,6 @@ fun AllPreferencesScreen(
 
                     // Built-in: Pump settings
                     addPreferenceContent(pumpPreferences, onShowMessage, sectionState)
-
-                    // Built-in: Alerts settings
-                    addPreferenceContent(alertsPreferences, onShowMessage, sectionState)
 
                     // Built-in: Maintenance settings (always last)
                     addPreferenceContent(maintenancePreferences, onShowMessage, sectionState)

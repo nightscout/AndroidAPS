@@ -54,13 +54,13 @@ class PreferenceMigrationsTest {
 
     /** A phone that had it off gets the kind set to Off, so nothing starts to chime there; its other choices stay. */
     @Test fun `carbs required alert off becomes the kind turned off`() = runTest {
-        val store = storeOf("enable_carbs_required_alert_local" to false, "alert_choices" to """{"aaps.hard_limit":"SILENT"}""")
+        val store = storeOf("enable_carbs_required_alert_local" to false, "alert_choices" to """{"aaps.carbs_not_saved":"SILENT"}""")
 
         sut().migrate(store)
 
         assertThat(store.contains("enable_carbs_required_alert_local")).isFalse()
         assertThat(store.getString("alert_choices", "{}"))
-            .isEqualTo("""{"aaps.hard_limit":"SILENT","${CoreAlert.CARBS_REQUIRED.id}":"${AlertChoice.OFF.name}"}""")
+            .isEqualTo("""{"aaps.carbs_not_saved":"SILENT","${CoreAlert.CARBS_REQUIRED.id}":"${AlertChoice.OFF.name}"}""")
     }
 
     /** On was the default, and Ring is the kind's default: nothing is written, only the old key goes. */
@@ -77,13 +77,13 @@ class PreferenceMigrationsTest {
 
     /** The kind is Off unless chosen: a phone that had the switch on gets Ring stored, its other choices stay. */
     @Test fun `missed BG readings alert on becomes the kind ringing`() = runTest {
-        val store = storeOf("enable_missed_bg_readings" to true, "alert_choices" to """{"aaps.hard_limit":"SILENT"}""")
+        val store = storeOf("enable_missed_bg_readings" to true, "alert_choices" to """{"aaps.carbs_not_saved":"SILENT"}""")
 
         sut().migrate(store)
 
         assertThat(store.contains("enable_missed_bg_readings")).isFalse()
         assertThat(store.getString("alert_choices", "{}"))
-            .isEqualTo("""{"aaps.hard_limit":"SILENT","${BgAlert.STALE.id}":"${AlertChoice.RING.name}"}""")
+            .isEqualTo("""{"aaps.carbs_not_saved":"SILENT","${BgAlert.STALE.id}":"${AlertChoice.RING.name}"}""")
     }
 
     /** The switch on and the kind set to Silent: the user's choice of the kind stays. */
@@ -107,11 +107,36 @@ class PreferenceMigrationsTest {
 
     /** A choice of the kind did nothing while the switch was off: dropped, so the kind stays Off and does not ring. */
     @Test fun `missed BG readings alert off drops a choice that would ring`() = runTest {
-        val store = storeOf("enable_missed_bg_readings" to false, "alert_choices" to """{"${BgAlert.STALE.id}":"SILENT","aaps.hard_limit":"OFF"}""")
+        val store = storeOf("enable_missed_bg_readings" to false, "alert_choices" to """{"${BgAlert.STALE.id}":"SILENT","aaps.carbs_not_saved":"OFF"}""")
 
         sut().migrate(store)
 
-        assertThat(store.getString("alert_choices", "{}")).isEqualTo("""{"aaps.hard_limit":"OFF"}""")
+        assertThat(store.getString("alert_choices", "{}")).isEqualTo("""{"aaps.carbs_not_saved":"OFF"}""")
+    }
+
+    // ----- The alert kind "Hard limit" became a card (2026-11-26) -----
+
+    /** Its choice and its sound go; the other kinds' stay. */
+    @Test fun `the hard limit alert's choice and sound are removed`() = runTest {
+        val store = storeOf(
+            "alert_choices" to """{"aaps.hard_limit":"OFF","aaps.carbs_not_saved":"SILENT"}""",
+            "alert_sounds" to """{"aaps.hard_limit":"ERROR"}"""
+        )
+
+        sut().migrate(store)
+
+        assertThat(store.getString("alert_choices", "{}")).isEqualTo("""{"aaps.carbs_not_saved":"SILENT"}""")
+        assertThat(store.getString("alert_sounds", "{}")).isEqualTo("{}")
+    }
+
+    /** Nothing stored for it: nothing is written. */
+    @Test fun `no hard limit choice leaves the choices alone`() = runTest {
+        val store = storeOf("alert_choices" to """{"aaps.carbs_not_saved":"SILENT"}""")
+
+        sut().migrate(store)
+
+        assertThat(store.getString("alert_choices", "{}")).isEqualTo("""{"aaps.carbs_not_saved":"SILENT"}""")
+        assertThat(store.contains("alert_sounds")).isFalse()
     }
 
     // ----- The renames -----

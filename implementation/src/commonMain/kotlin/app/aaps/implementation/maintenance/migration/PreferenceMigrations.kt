@@ -127,6 +127,23 @@ class PreferenceMigrations(
         smsCommunicatorType(sp)
         carbsRequiredAlert(sp)
         missedBgReadingsAlert(sp)
+        hardLimitAlertRetired(sp)
+    }
+
+    /**
+     * The alert kind "Hard limit" became a card (2026-11-26, `HardLimitsImpl`): a choice or sound stored for it is for
+     * nothing now, and a choice that was not Ring would count as silent or off for ever with no row to change it.
+     */
+    private fun hardLimitAlertRetired(sp: KeyValueStore) {
+        listOf(ALERT_CHOICES, ALERT_SOUNDS).forEach { name ->
+            val stored = try {
+                Json.parseToJsonElement(sp.getString(name, "{}")).jsonObject
+            } catch (_: Exception) {
+                // Not this migration's to repair: the alert core replaces an unreadable list itself
+                return@forEach
+            }
+            if (HARD_LIMIT_ALERT in stored) sp.putString(name, JsonObject(stored - HARD_LIMIT_ALERT).toString())
+        }
     }
 
     /**
@@ -579,7 +596,11 @@ class PreferenceMigrations(
 
         /** The key of "Alert if no BG data is received", which the choice of the kind "Missed BG readings" replaced. */
         const val MISSED_BG_READINGS_ALERT = "enable_missed_bg_readings"
+
+        /** The id of the alert kind "Hard limit", which became a card. */
+        const val HARD_LIMIT_ALERT = "aaps.hard_limit"
         val ALERT_CHOICES = StringNonKey.AlertChoices.key
+        val ALERT_SOUNDS = StringNonKey.AlertSounds.key
 
         /** The three counters the activity monitor kept for each activity. */
         val MONITOR_COUNTERS = listOf("start", "resumed", "total")

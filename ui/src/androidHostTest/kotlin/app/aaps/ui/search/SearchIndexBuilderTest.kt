@@ -123,7 +123,7 @@ internal class SearchIndexBuilderTest {
     @Test
     fun `an item a screen shows is found also when no enum registers it`() {
         whenever(preferences.getAllPreferenceKeys()).thenReturn(emptyList())
-        val alertsScreen = PreferenceSubScreenDef(key = "alerts", title = CoreUiStrings.localalertsettings_title, items = listOf(UiIntentKey.AlertKinds))
+        val alertsScreen = PreferenceSubScreenDef(key = "alerts", title = CoreUiStrings.alerts_settings_title, items = listOf(UiIntentKey.AlertKinds))
         val provider = object : SearchableProvider {
             override fun getSearchableItems(): List<SearchableItem> = listOf(SearchableItem.Category(alertsScreen))
         }

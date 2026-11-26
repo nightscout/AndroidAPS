@@ -58,9 +58,6 @@ enum class CoreAlert(
     /** The running mode stops the insulin, but its zero temp basal is not on the pump: the pump may still give basal. */
     ZERO_DELIVERY_NOT_SET("zero_delivery_not_set", InterfacesStrings.alert_kind_zero_delivery_not_set, isProtected = true, AlertGroup.PUMP_CRITICAL),
 
-    /** A value was outside a hard limit and was set to the limit. */
-    HARD_LIMIT("hard_limit", InterfacesStrings.alert_kind_hard_limit, isProtected = false),
-
     /** The loop predicts a low that less insulin cannot prevent: the user has to eat. */
     CARBS_REQUIRED("carbs_required", InterfacesStrings.alert_kind_carbs_required, isProtected = false),
 

@@ -198,8 +198,12 @@ that fails rings before the next try succeeds.
     above 250 mg/dl and predicted low below 70 within 20 minutes with one sound (`BgAlarmRules.DEFAULT`, fixed ids);
     also a phone updated from a version without rules. A list the user emptied stays empty. "Reset rules to default"
     (asks first, hidden on a read-only client) stores them, so they sync as any change does.
-  - **AAPS**: the app's other alerts, one row each (time to eat, automation alarm, carbs not saved, hard limit, carbs
-    required), and the Nightscout announcement.
+  - **AAPS**: the app's other alerts, one row each (time to eat, automation alarm, carbs not saved, carbs required),
+    and the Nightscout announcement. Hard limit is not an alert any more (decided 2026-11-26): it comes right after the
+    user changed a setting (patient age, profile, profile switch, imported settings), so it is a card, not an alarm
+    that chimed at every loop run. A red card with no sound while the loop does not run for it, which says what to
+    change; a plain card for a target limited to the limit; each goes by itself when the value is back
+    (`HardLimitsImpl`). A stored choice of the old kind is removed (`PreferenceMigrations.hardLimitAlertRetired`).
   - Alert kinds is a list of these four parts, each opening its own screen, as the settings of AAPS are (decided
     2026-11-26). The entry of a part says its devices or what it holds, and how many of its settings are silent or
     off on this phone. Each row of a part is a card, as the other lists of AAPS (with only spacing, a row's sound
@@ -613,7 +617,8 @@ The order matters: step 3 must not come before step 2.
     The BG alarms part holds the rules, the urgent low threshold and the missed readings minutes next to how this
     phone rings each; nothing of the BG alarms is left in Local alerts. Missed readings has no switch of its own: Off
     is its default choice. The Test plays also in Do Not Disturb: the user asked for it. A phone with no rules of its
-    own has the default ones (low, high, predicted low), also after an update, and they can be reset to.
+    own has the default ones (low, high, predicted low), also after an update, and they can be reset to. The settings
+    category "Local alerts" is "Alerts" and comes right after Safety: at the end of the list it was missed.
 
 Open, with a recommendation:
 

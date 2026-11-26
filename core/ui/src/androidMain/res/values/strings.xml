@@ -738,8 +738,9 @@
     <string name="insulin_peak">Insulin Peak value</string>
     <string name="profile_max_daily_basal_value">Maximal profile basal value</string>
     <string name="current_basal_value">Current basal value</string>
-    <string name="valuelimitedto">%1$.2f limited to %2$.2f</string>
     <string name="valueoutofrange">»%1$s« is out of hard limits</string>
+    <string name="hard_limit_loop_stopped" comment="Red card when the loop does not run because a setting is outside the safety limits of AAPS. %1$s=name of the value, %2$.2f=its value, %3$.2f=the lowest allowed, %4$.2f=the highest allowed. Example: Loop stopped: »Max daily basal« 12.00 is outside the safety limits 0.02 – 10.00. Change the profile, or the patient age in the safety settings.">Loop stopped: »%1$s« %2$.2f is outside the safety limits %3$.2f – %4$.2f. Change the profile, or the patient age in the safety settings.</string>
+    <string name="hard_limit_value_limited" comment="Card when a value (for example a temp target) is outside the safety limits, and the loop uses the limit instead. %1$s=name of the value, %2$.2f=its value, %3$.2f=the value used. Example: »Temp target« 3.00 is outside the safety limits, so 4.40 is used.">»%1$s« %2$.2f is outside the safety limits, so %3$.2f is used.</string>
 
     <!-- Profile validation -->
     <string name="no_profile_selected">No profile selected</string>
@@ -1032,7 +1033,7 @@
     <string name="quick_launch_configure_desc">Customize quick-action buttons on overview</string>
 
     <!-- Alerts -->
-    <string name="localalertsettings_title">Local alerts</string>
+    <string name="alerts_settings_title" comment="Title of the settings category of all alerts and alarms: BG alarms, how each alert rings, pump unreachable">Alerts</string>
 
     <!-- Actions Screen -->
     <string name="add">Add</string>
