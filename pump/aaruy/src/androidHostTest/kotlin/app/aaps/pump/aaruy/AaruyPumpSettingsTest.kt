@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.pump.aaruy.comm.BasicParam
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
@@ -24,12 +26,16 @@ import org.mockito.kotlin.whenever
 class AaruyPumpSettingsTest {
 
     private val preferences: Preferences = mock()
-    private val pump = AaruyPump(mock<AAPSLogger>(), mock<ResourceHelper>(), preferences, mock<DateUtil>(), mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>())
+
+    /** The hard limit for the age, as the user's age setting would give it. */
+    private var hardLimitMaxBasal = 2.0
+    private val hardLimits: HardLimits = mock { on { maxBasal() } doAnswer { hardLimitMaxBasal } }
+    private val pump = AaruyPump(mock<AAPSLogger>(), mock<ResourceHelper>(), preferences, mock<DateUtil>(), mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>(), hardLimits)
 
     private fun settings(lowReservoir: Double, maxBolus: Double = 10.0, maxBasal: Double = 2.0) {
         whenever(preferences.get(AaruyDoublePreferenceKey.LowReservoir)).thenReturn(lowReservoir)
         whenever(preferences.get(AaruyDoublePreferenceKey.MaxBolus)).thenReturn(maxBolus)
-        whenever(preferences.get(AaruyDoublePreferenceKey.MaxBasal)).thenReturn(maxBasal)
+        hardLimitMaxBasal = maxBasal
         whenever(preferences.get(AaruyIntPreferenceKey.BolusStep)).thenReturn(0)
         whenever(preferences.get(AaruyIntPreferenceKey.SoundPrompt)).thenReturn(0)
         whenever(preferences.get(AaruyIntPreferenceKey.SoundAlarm)).thenReturn(0)
@@ -53,6 +59,25 @@ class AaruyPumpSettingsTest {
     fun aLimitInThousandthsIsNotCutByFloatingPoint() {
         settings(lowReservoir = 20.0, maxBasal = 0.1)
         assertEquals(0.1, pump.settingsForPump().maxBasal, 0.0)
+    }
+
+    /**
+     * The pump refuses a whole profile with a basal above its max basal (vendor, PR 5589). So the pump gets the hard
+     * limit of AAPS for the age, above which AAPS takes no profile and sets no temp basal.
+     */
+    @Test
+    fun theMaxBasalOfThePumpIsTheHardLimitForTheAge() {
+        settings(lowReservoir = 20.0, maxBasal = 10.0)
+        assertEquals(10.0, pump.maxBasalForPump(), 0.0)
+        assertEquals(10.0, pump.settingsForPump().maxBasal, 0.0)
+        pump.handleLoadBasicParam(pump.settingsForPump())
+        assertEquals(AaruyPump.SettingsGap.NONE, pump.settingsGap())
+
+        // The user is now set as a child: 2 U/h. The pump still holds 10 U/h, so it is written at the next status.
+        hardLimitMaxBasal = 2.0
+        assertEquals(AaruyPump.SettingsGap.OTHERS, pump.settingsGap())
+        assertTrue(pump.settingsToWrite(AaruyPumpState.BASALRATE_RUNNING))
+        assertEquals(2.0, pump.settingsForPump().maxBasal, 0.0)
     }
 
     /**

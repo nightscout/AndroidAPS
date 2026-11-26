@@ -33,7 +33,7 @@ class AaruyPumpAlarmsTest {
         dateUtil,
         mock(PumpSync::class.java),
         mock(TemporaryBasalStorage::class.java),
-        mock(BolusProgressData::class.java)
+        mock(BolusProgressData::class.java), testHardLimits()
     )
 
     /** The screen and the alerts follow this flow. Confirmed alarms stayed on it for up to a minute. */

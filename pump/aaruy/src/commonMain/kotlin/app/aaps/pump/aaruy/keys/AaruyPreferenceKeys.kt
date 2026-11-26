@@ -6,7 +6,10 @@ import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.aaruy.AaruyStrings
 
-/** Settings of the pump. They go to the pump at the next status read, see `AaruyPump.syncPrefParam`. */
+/**
+ * Settings of the pump. They go to the pump at the next status read, see `AaruyPump.syncPrefParam`.
+ * Max basal is no setting: the pump gets the hard limit for the age of the user, see `AaruyPump.maxBasalForPump`.
+ */
 enum class AaruyDoublePreferenceKey(
     override val key: String,
     override val defaultValue: Double,
@@ -16,7 +19,6 @@ enum class AaruyDoublePreferenceKey(
     override val calculatedBySM: Boolean = false,
 ) : DoublePreferenceKey {
 
-    MaxBasal("pref_aaruy_max_basal", 2.0, 1.0, 35.0, AaruyStrings.setting_insulin_max_basal),
     MaxBolus("pref_aaruy_max_bolus", 10.0, 1.0, 25.0, AaruyStrings.setting_insulin_max_bolus),
     LowReservoir("pref_aaruy_low_alert", 20.0, 10.0, 50.0, AaruyStrings.setting_insulin_low_reservoir),
     ;

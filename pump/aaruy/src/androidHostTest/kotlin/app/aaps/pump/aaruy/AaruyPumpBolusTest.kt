@@ -27,7 +27,8 @@ class AaruyPumpBolusTest {
         mock(DateUtil::class.java),
         mock(PumpSync::class.java),
         mock(TemporaryBasalStorage::class.java),
-        bolusProgressData
+        bolusProgressData,
+        testHardLimits()
     )
 
     private fun pumpReportsBolusStep(step: Int) =

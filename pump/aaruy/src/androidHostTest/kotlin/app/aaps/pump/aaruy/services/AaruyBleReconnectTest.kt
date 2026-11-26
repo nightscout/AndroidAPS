@@ -30,6 +30,7 @@ import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.database.HistoryUnitInfoDao
 import app.aaps.pump.aaruy.centralFor
 import app.aaps.pump.aaruy.historyDaoMock
+import app.aaps.pump.aaruy.testHardLimits
 import app.aaps.pump.aaruy.withEmulatedPumpName
 import app.aaps.pump.aaruy.emulator.AaruyEmulatorPeripheral
 import app.aaps.pump.aaruy.emulator.AaruyPumpEmulator
@@ -96,7 +97,7 @@ class AaruyBleReconnectTest {
             mock(DateUtil::class.java),
             mock(PumpSync::class.java),
             mock(TemporaryBasalStorage::class.java),
-            mock(BolusProgressData::class.java)
+            mock(BolusProgressData::class.java), testHardLimits()
         )
         val ble = AaruyBLE(
             centralFor(AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))),
@@ -155,7 +156,7 @@ class AaruyBleReconnectTest {
         val logger = mock(AAPSLogger::class.java)
         val pump = AaruyPump(
             logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
-            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java), testHardLimits()
         )
         val ble = AaruyBLE(
             centralFor(AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))),
@@ -193,7 +194,7 @@ class AaruyBleReconnectTest {
         val logger = mock(AAPSLogger::class.java)
         val pump = AaruyPump(
             logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
-            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java), testHardLimits()
         )
         pump.canSaveHistory = saveHistory
         val emulator = AaruyPumpEmulator(keyProvider = { aaruyFrameKey() })
@@ -237,7 +238,7 @@ class AaruyBleReconnectTest {
         val logger = mock(AAPSLogger::class.java)
         val pump = AaruyPump(
             logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
-            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java), testHardLimits()
         )
         val ble = AaruyBLE(
             centralFor(AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))),
@@ -285,7 +286,7 @@ class AaruyBleReconnectTest {
         val logger = mock(AAPSLogger::class.java)
         val pump = AaruyPump(
             logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
-            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java), testHardLimits()
         )
         val ble = AaruyBLE(
             centralFor(AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))),
@@ -329,7 +330,7 @@ class AaruyBleReconnectTest {
         val logger = mock(AAPSLogger::class.java)
         val pump = AaruyPump(
             logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
-            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java), testHardLimits()
         )
         val ble = AaruyBLE(
             centralFor(AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))),
@@ -365,7 +366,7 @@ class AaruyBleReconnectTest {
         val logger = mock(AAPSLogger::class.java)
         val pump = AaruyPump(
             logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
-            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java), testHardLimits()
         )
         val ble = AaruyBLE(
             centralFor(AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))),
@@ -412,7 +413,7 @@ class AaruyBleReconnectTest {
         val progress = BolusProgressData(ch, CoroutineScope(Dispatchers.Default))
         val pump = AaruyPump(
             logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
-            mock(TemporaryBasalStorage::class.java), progress
+            mock(TemporaryBasalStorage::class.java), progress, testHardLimits()
         )
         val ble = AaruyBLE(
             centralFor(AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))),
@@ -455,7 +456,7 @@ class AaruyBleReconnectTest {
         val logger = mock(AAPSLogger::class.java)
         val pump = AaruyPump(
             logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
-            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java), testHardLimits()
         )
         val ble = AaruyBLE(
             centralFor(AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))),
@@ -493,7 +494,7 @@ class AaruyBleReconnectTest {
         val logger = mock(AAPSLogger::class.java)
         val pump = AaruyPump(
             logger, mock(ResourceHelper::class.java), preferences, dateUtil, mock(PumpSync::class.java),
-            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java), testHardLimits()
         )
         val ble = AaruyBLE(
             centralFor(AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }, clock = now))),
@@ -549,7 +550,7 @@ class AaruyBleReconnectTest {
             mock(DateUtil::class.java),
             mock(PumpSync::class.java),
             mock(TemporaryBasalStorage::class.java),
-            mock(BolusProgressData::class.java)
+            mock(BolusProgressData::class.java), testHardLimits()
         )
         val ble = AaruyBLE(
             centralFor(AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))),
@@ -614,7 +615,7 @@ class AaruyBleReconnectTest {
             mock(DateUtil::class.java),
             pumpSync,
             mock(TemporaryBasalStorage::class.java),
-            mock(BolusProgressData::class.java)
+            mock(BolusProgressData::class.java), testHardLimits()
         )
         val ble = AaruyBLE(
             centralFor(AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))),
@@ -671,7 +672,7 @@ class AaruyBleReconnectTest {
         runBlocking { whenever(pumpSync.syncBolusWithTempId(any(), any(), any(), anyOrNull(), anyOrNull(), any(), any())).thenReturn(true) }
         val pump = AaruyPump(
             logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), pumpSync,
-            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java), testHardLimits()
         )
         // Gives nothing back: the info of this bolus was lost with the restart.
         val ble = AaruyBLE(
@@ -730,7 +731,7 @@ class AaruyBleReconnectTest {
             mock(DateUtil::class.java),
             mock(PumpSync::class.java),
             mock(TemporaryBasalStorage::class.java),
-            mock(BolusProgressData::class.java)
+            mock(BolusProgressData::class.java), testHardLimits()
         )
         val ble = AaruyBLE(
             centralFor(AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))),
@@ -776,7 +777,7 @@ class AaruyBleReconnectTest {
             mock(DateUtil::class.java),
             mock(PumpSync::class.java),
             mock(TemporaryBasalStorage::class.java),
-            mock(BolusProgressData::class.java)
+            mock(BolusProgressData::class.java), testHardLimits()
         )
         val ble = AaruyBLE(
             centralFor(AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))),
@@ -818,7 +819,7 @@ class AaruyBleReconnectTest {
             val logger = mock(AAPSLogger::class.java)
             val pump = AaruyPump(
                 logger, mock(ResourceHelper::class.java), preferences, dateUtil, mock(PumpSync::class.java),
-                mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+                mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java), testHardLimits()
             )
             val ble = AaruyBLE(
                 centralFor(AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }, clock = { now }))),
@@ -854,7 +855,7 @@ class AaruyBleReconnectTest {
         val logger = mock(AAPSLogger::class.java)
         val pump = AaruyPump(
             logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
-            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java), testHardLimits()
         )
         val tempBasalSync = tempBasalSyncMock()
         val ble = AaruyBLE(
@@ -891,7 +892,7 @@ class AaruyBleReconnectTest {
         val logger = mock(AAPSLogger::class.java)
         val pump = AaruyPump(
             logger, mock(ResourceHelper::class.java), preferences, mock(DateUtil::class.java), mock(PumpSync::class.java),
-            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+            mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java), testHardLimits()
         )
         val ble = AaruyBLE(
             centralFor(AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))),

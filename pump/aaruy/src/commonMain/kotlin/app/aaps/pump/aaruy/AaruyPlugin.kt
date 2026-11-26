@@ -36,6 +36,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginAaruy
@@ -140,10 +141,12 @@ class AaruyPlugin(
                 pumpSync.connectNewPump()
                 changePump(newPump = true)
             }
-        // A changed setting reaches the pump through the status read, which compares and writes.
+        // A changed setting reaches the pump through the status read, which compares and writes. The age too: it sets the
+        // max basal of the pump.
         merge(
             *AaruyDoublePreferenceKey.entries.map { preferences.observe(it).drop(1) }.toTypedArray(),
-            *AaruyIntPreferenceKey.entries.map { preferences.observe(it).drop(1) }.toTypedArray()
+            *AaruyIntPreferenceKey.entries.map { preferences.observe(it).drop(1) }.toTypedArray(),
+            preferences.observe(StringKey.SafetyAge).drop(1)
         )
             .onEach { if (isConfigured()) commandQueue.readStatus(rh.gs(AaruyStrings.param_refresh)) }
             .launchIn(newScope)
@@ -377,7 +380,6 @@ class AaruyPlugin(
         key = "aaruy_settings",
         title = AaruyStrings.aaruy_pump,
         items = listOf(
-            AaruyDoublePreferenceKey.MaxBasal,
             AaruyDoublePreferenceKey.MaxBolus,
             AaruyDoublePreferenceKey.LowReservoir,
             AaruyIntPreferenceKey.BolusStep,
@@ -389,8 +391,9 @@ class AaruyPlugin(
 
     // cU-domain pump limits: folded into the IU scan by ConstraintsChecker.
     // The lower of pump and setting: a lowered setting counts at once, and a raised one only when the pump has it.
+    // For max basal the "setting" is the hard limit for the age, see AaruyPump.maxBasalForPump.
     override fun applyBasalConstraints(absoluteRate: PumpRate): PumpRate =
-        PumpRate(absoluteRate.cU.coerceAtMost(min(aaruyPump.maxBasal, preferences.get(AaruyDoublePreferenceKey.MaxBasal))))
+        PumpRate(absoluteRate.cU.coerceAtMost(min(aaruyPump.maxBasal, aaruyPump.maxBasalForPump())))
 
     override fun applyBolusConstraints(insulin: PumpInsulin): PumpInsulin =
         PumpInsulin(insulin.cU.coerceAtMost(min(aaruyPump.maxBolus, preferences.get(AaruyDoublePreferenceKey.MaxBolus))))

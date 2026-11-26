@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.AaruyPump
+import app.aaps.pump.aaruy.testHardLimits
 import app.aaps.pump.aaruy.FakeResult
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.comm.aaruyFrameKey
@@ -88,7 +89,7 @@ class AaruyReplaceWizardTest {
         dateUtil,
         pumpSync,
         mock(TemporaryBasalStorage::class.java),
-        mock(BolusProgressData::class.java)
+        mock(BolusProgressData::class.java), testHardLimits()
     )
     private val transport = AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))
     private lateinit var ble: AaruyBLE

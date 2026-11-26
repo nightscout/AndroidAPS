@@ -15,7 +15,7 @@ import org.mockito.kotlin.mock
 /** What an app start forgets, and what only a new pump does. */
 class AaruyPumpResetTest {
 
-    private val pump = AaruyPump(mock<AAPSLogger>(), mock<ResourceHelper>(), mock<Preferences>(), mock<DateUtil>(), mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>())
+    private val pump = AaruyPump(mock<AAPSLogger>(), mock<ResourceHelper>(), mock<Preferences>(), mock<DateUtil>(), mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>(), testHardLimits())
 
     /** The pump-unreachable alarm counts from the last contact. Set to 0 at each app start, it could ring too early. */
     @Test

@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.AaruyPump
+import app.aaps.pump.aaruy.testHardLimits
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.comm.BasicParam
 import app.aaps.pump.aaruy.comm.aaruyFrameKey
@@ -70,7 +71,7 @@ class AaruyUnconfirmedBolusTest {
     private val logger = mock(AAPSLogger::class.java)
     private val pump = AaruyPump(
         logger, mock(ResourceHelper::class.java), preferences, dateUtil, pumpSync,
-        mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+        mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java), testHardLimits()
     )
     private lateinit var ble: AaruyBLE
     private lateinit var transport: AaruyEmulatorPeripheral

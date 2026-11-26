@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.AaruyPump
+import app.aaps.pump.aaruy.testHardLimits
 import app.aaps.pump.aaruy.comm.LogItem
 import app.aaps.pump.aaruy.keys.AaruyLongKey
 import kotlinx.coroutines.runBlocking
@@ -51,7 +52,7 @@ class AaruyTempBasalSyncTest {
     }
     private val pump = AaruyPump(
         mock(AAPSLogger::class.java), mock(ResourceHelper::class.java).also { `when`(it.gs(org.mockito.ArgumentMatchers.anyInt(), org.mockito.ArgumentMatchers.any())).thenReturn("text") },
-        preferences, dateUtil, pumpSync, storage, mock(BolusProgressData::class.java)
+        preferences, dateUtil, pumpSync, storage, mock(BolusProgressData::class.java), testHardLimits()
     )
     private val sync = AaruyTempBasalSync(mock(AAPSLogger::class.java), dateUtil, pump, pumpSync, persistence, ch)
 

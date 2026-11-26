@@ -412,7 +412,6 @@ patient_name|StringKey|true
 pp_ISF_weight|DoubleKey|true
 pref_aaruy_bolus_step|AaruyIntPreferenceKey|true
 pref_aaruy_low_alert|AaruyDoublePreferenceKey|true
-pref_aaruy_max_basal|AaruyDoublePreferenceKey|true
 pref_aaruy_max_bolus|AaruyDoublePreferenceKey|true
 pref_aaruy_sound_alarm|AaruyIntPreferenceKey|true
 pref_aaruy_sound_remind|AaruyIntPreferenceKey|true

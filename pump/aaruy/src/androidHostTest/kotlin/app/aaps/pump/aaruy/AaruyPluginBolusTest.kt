@@ -40,7 +40,7 @@ class AaruyPluginBolusTest {
     private val rh: ResourceHelper = mock()
     private val ch: ConcentrationHelper = mock()
     private val service: AaruyCommands = mock()
-    private val pump = AaruyPump(mock<AAPSLogger>(), rh, mock<Preferences>(), mock<DateUtil>(), mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>())
+    private val pump = AaruyPump(mock<AAPSLogger>(), rh, mock<Preferences>(), mock<DateUtil>(), mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>(), testHardLimits())
     private val plugin = AaruyPlugin(
         mock<AAPSLogger>(), rh, mock<Preferences>(), mock<CommandQueue>(), mock<RxBus>(), service, mock<AaruyEmulatorTriggers>(), pump,
         mock<TemporaryBasalStorage>(), mock<DateUtil>(), mock<AaruyHistoryDatabase>(), { FakeResult() },

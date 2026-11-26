@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.AaruyPump
+import app.aaps.pump.aaruy.testHardLimits
 import app.aaps.pump.aaruy.common.enums.AlarmState
 import app.aaps.pump.aaruy.keys.AaruyStringKey
 import com.google.common.truth.Truth.assertThat
@@ -68,7 +69,7 @@ class AaruyAlertsTest {
     private val commandQueue: CommandQueue = mock(CommandQueue::class.java)
     private val pump = AaruyPump(
         mock(AAPSLogger::class.java), mock(ResourceHelper::class.java), preferences, dateUtil,
-        mock(PumpSync::class.java), mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+        mock(PumpSync::class.java), mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java), testHardLimits()
     )
     private val pumpAlerts = RecordingPumpAlerts()
     private val alerts = AaruyAlerts(pumpAlerts, commandQueue, pump, dateUtil, mock(AAPSLogger::class.java))

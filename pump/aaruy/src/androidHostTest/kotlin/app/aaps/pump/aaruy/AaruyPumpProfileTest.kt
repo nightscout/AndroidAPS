@@ -38,7 +38,7 @@ class AaruyPumpProfileTest {
         mock(DateUtil::class.java),
         mock(PumpSync::class.java),
         mock(TemporaryBasalStorage::class.java),
-        mock(BolusProgressData::class.java)
+        mock(BolusProgressData::class.java), testHardLimits()
     )
 
     private val zoneBefore = TimeZone.getDefault()

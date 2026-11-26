@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.AaruyPump
 import app.aaps.pump.aaruy.code.ConnectionState
+import app.aaps.pump.aaruy.testHardLimits
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -61,7 +62,8 @@ class AaruyServiceBolusTest {
         dateUtil,
         pumpSync,
         mock(TemporaryBasalStorage::class.java),
-        progress
+        progress,
+        testHardLimits()
     )
     private val service = AaruyCommands(
         mock(AAPSLogger::class.java), mock(RxBus::class.java), mock(ResourceHelper::class.java, RETURNS_SMART_NULLS), commandQueue, pump, progress, ble,

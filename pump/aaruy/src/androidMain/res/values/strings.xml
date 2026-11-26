@@ -16,7 +16,6 @@
     <string name="aaruy_state_paused">Paused, no insulin is delivered</string>
     <string name="aaruy_state_stopped">Stopped, no insulin is delivered</string>
     <string name="aaruy_state_unknown">Unknown</string>
-    <string name="setting_insulin_max_basal">Max basal</string>
     <string name="setting_insulin_max_bolus">Max bolus</string>
     <string name="setting_insulin_low_reservoir">Low reservoir alarm</string>
     <string name="setting_insulin_bolus_rate" comment="Title of a setting. The size of one bolus step of the pump, in units. Values: 0.025 or 0.05">Bolus step</string>

@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.aaruy.comm.BasalInfo
@@ -53,7 +54,8 @@ class AaruyPump(
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync,
     private val temporaryBasalStorage: TemporaryBasalStorage,
-    private val bolusProgressData: BolusProgressData
+    private val bolusProgressData: BolusProgressData,
+    private val hardLimits: HardLimits
 )  {
 
     companion object {
@@ -661,7 +663,15 @@ suspend fun syncStopTBRWithPumpId(endTime: Long) {
     }
 
     /**
-     * The user settings as the pump holds them: it keeps the limits in thousandths and the low reservoir alarm in whole
+     * The max basal the pump gets: the hard limit of AAPS for the age of the user, in the thousandths the pump keeps.
+     * AAPS sets no profile basal and no temp basal above it, so the pump never refuses one. A rate above it, after a bug
+     * in AAPS, the pump itself still refuses. Not a setting: the pump refuses a whole profile with a basal above its max
+     * basal (vendor, PR 5589, 2026-11-25), and AAPS would only see that the profile failed.
+     */
+    fun maxBasalForPump(): Double = floor(hardLimits.maxBasal() * 1000 + ROUNDING) / 1000
+
+    /**
+     * The settings as the pump holds them: it keeps the limits in thousandths and the low reservoir alarm in whole
      * units. Otherwise a value like 15.5 U never matches what the pump answers, and the settings are written again and again.
      * This is what is written to the pump. What the pump holds changes only when the pump reports it (review #73).
      */
@@ -669,7 +679,7 @@ suspend fun syncStopTBRWithPumpId(endTime: Long) {
         val soundRemind = if (preferences.get(AaruyIntPreferenceKey.SoundPrompt) == 1) 1 else 0
         val soundAlarm = if (preferences.get(AaruyIntPreferenceKey.SoundAlarm) == 1) 1 else 0
         return BasicParam(
-            maxBasal = floor(preferences.get(AaruyDoublePreferenceKey.MaxBasal) * 1000 + ROUNDING) / 1000,
+            maxBasal = maxBasalForPump(),
             maxBolus = floor(preferences.get(AaruyDoublePreferenceKey.MaxBolus) * 1000 + ROUNDING) / 1000,
             bolusStep = if (preferences.get(AaruyIntPreferenceKey.BolusStep) == 1) 2 else 1,
             lowAlert = floor(preferences.get(AaruyDoublePreferenceKey.LowReservoir) + ROUNDING),

@@ -46,7 +46,7 @@ class AaruyPluginStartTest {
     private val commandQueue: CommandQueue = mock()
     private val rh: ResourceHelper = mock()
     private val rxBus: RxBus = mock()
-    private val pump = AaruyPump(mock<AAPSLogger>(), rh, preferences, mock<DateUtil>(), mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>())
+    private val pump = AaruyPump(mock<AAPSLogger>(), rh, preferences, mock<DateUtil>(), mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>(), testHardLimits())
     private val plugin = AaruyPlugin(
         mock<AAPSLogger>(), rh, preferences, commandQueue, rxBus, mock<AaruyCommands>(), mock<AaruyEmulatorTriggers>(), pump,
         mock<TemporaryBasalStorage>(), mock<DateUtil>(), mock<AaruyHistoryDatabase>(), { mock<PumpEnactResult>() },

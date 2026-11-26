@@ -23,6 +23,7 @@ import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.pump.aaruy.AaruyPump
+import app.aaps.pump.aaruy.testHardLimits
 import app.aaps.pump.aaruy.code.ConnectionState
 import app.aaps.pump.aaruy.common.enums.AaruyPumpState
 import app.aaps.pump.aaruy.common.enums.AlarmState
@@ -62,7 +63,7 @@ class AaruyOverviewViewModelTest {
     private val ble: AaruyBLE = mock()
     private val unpair: AaruyUnpair = mock()
     private val ch: ConcentrationHelper = mock()
-    private val pump = AaruyPump(mock<AAPSLogger>(), rh, mock<Preferences>(), mock<DateUtil>(), mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>())
+    private val pump = AaruyPump(mock<AAPSLogger>(), rh, mock<Preferences>(), mock<DateUtil>(), mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>(), testHardLimits())
 
     @BeforeEach
     fun setUp() {

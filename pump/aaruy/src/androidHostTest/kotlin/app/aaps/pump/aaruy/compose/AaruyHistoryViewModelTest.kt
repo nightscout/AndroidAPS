@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.pump.PumpHistoryType
 import app.aaps.pump.aaruy.AaruyPump
+import app.aaps.pump.aaruy.testHardLimits
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfo
 import app.aaps.pump.aaruy.database.HistoryDailyUnitInfoDao
 import app.aaps.pump.aaruy.database.HistoryUnitInfo
@@ -49,7 +50,7 @@ class AaruyHistoryViewModelTest {
     private val dateUtil: DateUtil = mock()
     private val historyDao: HistoryUnitInfoDao = mock()
     private val dailyDao: HistoryDailyUnitInfoDao = mock()
-    private val pump = AaruyPump(mock<AAPSLogger>(), rh, mock<Preferences>(), dateUtil, mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>())
+    private val pump = AaruyPump(mock<AAPSLogger>(), rh, mock<Preferences>(), dateUtil, mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>(), testHardLimits())
 
     @BeforeEach
     fun setUp() {

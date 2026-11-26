@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.aaruy.AaruyPump
+import app.aaps.pump.aaruy.testHardLimits
 import app.aaps.pump.aaruy.comm.DailyInfo
 import app.aaps.pump.aaruy.comm.DailyItem
 import app.aaps.pump.aaruy.comm.LogInfo
@@ -72,7 +73,7 @@ class AaruyHistorySyncTest {
     private val bolusInfoStorage = mock(DetailedBolusInfoStorage::class.java)
     private val pump = AaruyPump(
         logger, rh, mock(Preferences::class.java), dateUtil, pumpSync,
-        mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java)
+        mock(TemporaryBasalStorage::class.java), mock(BolusProgressData::class.java), testHardLimits()
     )
     private val transport = AaruyEmulatorPeripheral(AaruyPumpEmulator(keyProvider = { aaruyFrameKey() }))
     private lateinit var ble: AaruyBLE

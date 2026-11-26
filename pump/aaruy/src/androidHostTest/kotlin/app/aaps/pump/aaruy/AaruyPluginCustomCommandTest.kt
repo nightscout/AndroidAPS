@@ -43,7 +43,7 @@ class AaruyPluginCustomCommandTest {
 
     private val ble: AaruyBLE = mock()
     private val replaceSteps: AaruyReplaceSteps = mock()
-    private val pump = AaruyPump(mock<AAPSLogger>(), mock<ResourceHelper>(), mock<Preferences>(), mock<DateUtil>(), mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>())
+    private val pump = AaruyPump(mock<AAPSLogger>(), mock<ResourceHelper>(), mock<Preferences>(), mock<DateUtil>(), mock<PumpSync>(), mock<TemporaryBasalStorage>(), mock<BolusProgressData>(), testHardLimits())
     private val plugin = AaruyPlugin(
         mock<AAPSLogger>(), mock<ResourceHelper>(), mock<Preferences>(), mock<CommandQueue>(), mock<RxBus>(), mock<AaruyCommands>(), mock<AaruyEmulatorTriggers>(), pump,
         mock<TemporaryBasalStorage>(), mock<DateUtil>(), mock<AaruyHistoryDatabase>(), { FakeResult() },

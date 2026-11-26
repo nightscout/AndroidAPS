@@ -40,7 +40,7 @@ class AaruyPumpSoundDefaultTest {
             mock(DateUtil::class.java),
             mock(PumpSync::class.java),
             mock(TemporaryBasalStorage::class.java),
-            mock(BolusProgressData::class.java)
+            mock(BolusProgressData::class.java), testHardLimits()
         )
         pump.closeInjectSound = 0
 
