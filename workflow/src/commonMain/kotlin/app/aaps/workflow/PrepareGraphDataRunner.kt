@@ -51,6 +51,7 @@ import app.aaps.core.objects.extensions.combine
 import app.aaps.core.objects.workflow.WorkOutcome
 import app.aaps.workflow.iob.fromCarbs
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -114,11 +115,11 @@ class PrepareGraphDataRunner(
         if (data.liveWindow) data.overviewData.moveLiveWindowTo(Instant.fromEpochMilliseconds(dateUtil.now()), SystemTimeZone.current())
 
         // ===== Phase 2: Bucketed data → cache (was PrepareBucketedDataWorker) =====
-        prepareBucketedData(data)
+        chartStep("bucketed data", data) { prepareBucketedData(data) }
         if (isStopped()) return WorkOutcome.Stopped
 
         // ===== Phase 3: BG readings → cache (was PrepareBgDataWorker) =====
-        prepareBgData(data)
+        chartStep("BG readings", data) { prepareBgData(data) }
 
         data.signals.emitProgress(CalculationWorkflow.ProgressData.DRAW_BG, 100)
         if (isStopped()) return WorkOutcome.Stopped
@@ -129,7 +130,7 @@ class PrepareGraphDataRunner(
         val superseded = { isStopped() || workflowChainData.prepareFor(job, generation) == null }
         if (activePlugin.activeSensitivity.isOref1) runIobCobOref1(data, isStopped, superseded) else runIobCobOref(data, isStopped, superseded)
         if (isStopped()) return WorkOutcome.Stopped
-        prepareIobAutosensGraphData(data, isStopped)
+        chartStep("IOB and autosens graph data", data) { prepareIobAutosensGraphData(data, isStopped) }
         if (isStopped()) return WorkOutcome.Stopped
         data.signals.emitProgress(CalculationWorkflow.ProgressData.DRAW_IOB, 100)
 
@@ -139,6 +140,27 @@ class PrepareGraphDataRunner(
         }
 
         return WorkOutcome.Success
+    }
+
+    /**
+     * Runs one step that only fills chart series in the overview cache.
+     *
+     * A failure here is logged and the run goes on. A failed phase skips the post phase, and that is
+     * where the loop runs: one bad point in a chart series would stop the loop for every reading until
+     * the point leaves the graph window. Missing a loop run is worse than a chart that is one reading
+     * old. The series of the failed step keep the values of the run before.
+     *
+     * Only for steps whose output nothing but the overview reads. The BG load and the IOB/COB pass are
+     * what the loop doses from, so they are not wrapped and their failure still fails the phase.
+     */
+    private inline fun chartStep(name: String, data: PrepareGraphData, step: () -> Unit) {
+        try {
+            step()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.WORKER, "Preparing the $name for the chart failed, the calculation goes on: ${data.reason}", e)
+        }
     }
 
     /**

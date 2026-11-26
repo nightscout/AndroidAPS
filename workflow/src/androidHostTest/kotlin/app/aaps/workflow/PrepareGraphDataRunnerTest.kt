@@ -10,10 +10,12 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.IobTotal
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.ActivityGraphData
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
@@ -23,11 +25,15 @@ import app.aaps.core.interfaces.overview.liveGraphWindowEnd
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
+import app.aaps.core.interfaces.scenes.SceneExpiryCheck
+import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
+import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.MAIN_CALCULATION
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.ProgressData
 import app.aaps.core.objects.workflow.WorkOutcome
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -37,12 +43,15 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
 class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
@@ -57,6 +66,10 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
     @Mock lateinit var cache: OverviewDataCache
     @Mock lateinit var overviewData: OverviewData
     @Mock lateinit var signals: CalculationSignalsEmitter
+    @Mock lateinit var loop: Loop
+    @Mock lateinit var widgetUpdater: WidgetUpdater
+    @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
+    @Mock lateinit var sceneExpiryCheck: SceneExpiryCheck
 
     private val autosensDataProvider = { mock<AutosensData>() }
 
@@ -248,6 +261,157 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
         assertThat(window.toTime).isEqualTo(dayBefore)
         assertThat(window.fromTime).isEqualTo(dayBefore - T.hours(24).msecs())
         assertThat(window.endTime).isEqualTo(dayBefore)
+    }
+
+    // ----- A step that only fills the chart must not fail the phase, and so must not skip the loop -----
+
+    private fun onePointInTheWindow() {
+        // overviewData is a mock, so the window ends at 0 and one minute before that is inside it.
+        whenever(dataAds.getBucketedDataTableCopy()).thenReturn(mutableListOf(InMemoryGlucoseValue(timestamp = -60_000L, value = 150.0)))
+    }
+
+    @Test
+    fun `a failing bucketed chart step does not fail the phase`() = runTest {
+        stubSuspendCalls()
+        onePointInTheWindow()
+        doThrow(IllegalStateException("broken bucketed point")).whenever(cache).updateBucketedData(any())
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = true))
+
+        val result = run()
+
+        assertIs<WorkOutcome.Success>(result)
+        // The steps after it still ran.
+        verify(cache).updateBgReadings(any())
+        verify(cache).updateIobGraph(any())
+        verify(signals).emitProgress(eq(ProgressData.DRAW_FINAL), any())
+    }
+
+    @Test
+    fun `a failing bg readings chart step does not fail the phase`() = runTest {
+        stubSuspendCalls()
+        // Without a reload only the chart step reads the readings from the database.
+        whenever(persistenceLayer.getBgReadingsDataFromTimeToTime(any(), any(), any())).thenThrow(IllegalStateException("broken reading"))
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = true))
+
+        val result = run()
+
+        assertIs<WorkOutcome.Success>(result)
+        verify(cache, never()).updateBgReadings(any())
+        verify(cache).updateIobGraph(any())
+        verify(signals).emitProgress(eq(ProgressData.DRAW_BG), any())
+    }
+
+    @Test
+    fun `a failing iob chart step does not fail the phase`() = runTest {
+        stubSuspendCalls()
+        whenever(persistenceLayer.getVariableSensitivities(any(), any())).thenThrow(IllegalStateException("broken chart point"))
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = true))
+
+        val result = run()
+
+        assertIs<WorkOutcome.Success>(result)
+        verify(cache, never()).updateIobGraph(any())
+        verify(signals).emitProgress(eq(ProgressData.DRAW_IOB), any())
+        verify(signals).emitProgress(eq(ProgressData.DRAW_FINAL), any())
+    }
+
+    /** A cancelled run must end. Only real failures of a chart step are kept away from the phase. */
+    @Test
+    fun `a cancelled chart step still cancels the phase`() = runTest {
+        stubSuspendCalls()
+        doThrow(CancellationException("replaced")).whenever(cache).updateBgReadings(any())
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = true))
+
+        assertFailsWith<CancellationException> { run() }
+    }
+
+    // The safety side: the loop doses from these two steps, so their failure must stay a failure.
+
+    @Test
+    fun `a failing bg load still fails the phase`() = runTest {
+        stubSuspendCalls()
+        whenever(persistenceLayer.getBgReadingsDataFromTimeToTime(any(), any(), any())).thenThrow(IllegalStateException("broken database"))
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = true, emitFinalProgress = true))
+
+        assertFailsWith<IllegalStateException> { run() }
+
+        verify(signals, never()).emitProgress(eq(ProgressData.DRAW_FINAL), any())
+    }
+
+    @Test
+    fun `a failing iob cob pass still fails the phase`() = runTest {
+        stubSuspendCalls()
+        whenever(profileFunction.isProfileValid(any())).thenThrow(IllegalStateException("broken calculation"))
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = true))
+
+        assertFailsWith<IllegalStateException> { run() }
+
+        verify(cache, never()).updateIobGraph(any())
+        verify(signals, never()).emitProgress(eq(ProgressData.DRAW_FINAL), any())
+    }
+
+    // The same two cases through the real executor and the real post phase, up to the loop call.
+
+    private fun postRunner() =
+        PostCalculationRunner(
+            aapsLogger, workflowChainData, iobCobCalculator, loop,
+            widgetUpdater, config, processedDeviceStatusData, profileUtil, preferences, sceneExpiryCheck
+        )
+
+    /** A new BG the loop has not used yet, so the post phase calls the loop when it is reached. */
+    private fun stubPostPhaseWithNewBg() {
+        val ads = mock<AutosensDataStore>()
+        val bg = mock<InMemoryGlucoseValue>()
+        whenever(bg.timestamp).thenReturn(5000L)
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(ads.actualBg()).thenReturn(bg)
+        whenever(loop.lastBgTriggeredRun).thenReturn(0L)
+        whenever(config.APS).thenReturn(false)
+        whenever(workflowChainData.postFor(any(), any())).thenReturn(
+            PostCalculationData(overviewData = overviewData, cache = cache, signals = signals, runLoopAndWidgetPhase = true)
+        )
+    }
+
+    private suspend fun TestScope.runMainChain() {
+        val executor = CoroutineCalculationExecutor(this, aapsLogger, runner(), postRunner(), wakeLock = null)
+        executor.start(MAIN_CALCULATION, generation = 1L, runPost = true)
+        assertThat(executor.awaitIdle(MAIN_CALCULATION, 5.seconds)).isTrue()
+    }
+
+    @Test
+    fun `the loop is still invoked when a chart step fails`() = runTest {
+        stubSuspendCalls()
+        stubPostPhaseWithNewBg()
+        whenever(persistenceLayer.getVariableSensitivities(any(), any())).thenThrow(IllegalStateException("broken chart point"))
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = false))
+
+        runMainChain()
+
+        verify(loop).invoke(any(), any(), any())
+    }
+
+    @Test
+    fun `the loop is not invoked when the iob cob pass fails`() = runTest {
+        stubSuspendCalls()
+        stubPostPhaseWithNewBg()
+        whenever(profileFunction.isProfileValid(any())).thenThrow(IllegalStateException("broken calculation"))
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = false))
+
+        runMainChain()
+
+        verify(loop, never()).invoke(any(), any(), any())
+    }
+
+    @Test
+    fun `the loop is not invoked when the bg load fails`() = runTest {
+        stubSuspendCalls()
+        stubPostPhaseWithNewBg()
+        whenever(persistenceLayer.getBgReadingsDataFromTimeToTime(any(), any(), any())).thenThrow(IllegalStateException("broken database"))
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = true, emitFinalProgress = false))
+
+        runMainChain()
+
+        verify(loop, never()).invoke(any(), any(), any())
     }
 
     @Test
