@@ -368,4 +368,62 @@ class BolusWizardTest : TestBaseWithProfile() {
         assertThat(bw.calculatedTotalInsulin).isWithin(0.001).of(5.0)
         assertThat(bw.totalBeforePercentageAdjustment).isWithin(0.001).of(5.0)
     }
+
+    // ==========================================
+    // Group 5: Super bolus
+    // ==========================================
+
+    /** Basal rate is 0.8 U/h now and 1.2 U/h one hour later, so 2 hours of basal are 2.0 U. */
+    private fun setupBasal(profile: Profile) {
+        whenever(profile.getBasal()).thenReturn(0.8)
+        whenever(profile.getBasal(any())).thenReturn(1.2)
+    }
+
+    @Test
+    fun superBolusAddsTwoHoursOfBasalToTotal() = runBlocking {
+        // carbs=60 → 5.0, super bolus = 0.8 + 1.2 = 2.0, total = 7.0
+        val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
+        setupBasal(profile)
+        val bw = createWizard().doCalc(
+            profile, "", null, carbs = 60, cob = 0.0, bg = 0.0, correction = 0.0, percentageCorrection = 100,
+            useBg = false, useCob = false, includeBolusIOB = false, includeBasalIOB = false,
+            useSuperBolus = true, useTT = false, useTrend = false, useAlarm = false
+        )
+        assertThat(bw.insulinFromSuperBolus).isWithin(0.001).of(2.0)
+        assertThat(bw.data.insulinFromSuperBolus).isWithin(0.001).of(2.0)
+        assertThat(bw.totalBeforePercentageAdjustment).isWithin(0.001).of(7.0)
+        assertThat(bw.calculatedTotalInsulin).isWithin(0.001).of(7.0)
+        assertThat(bw.insulinAfterConstraints).isWithin(0.001).of(7.0)
+    }
+
+    @Test
+    fun superBolusBasalNotScaledByPercentage() = runBlocking {
+        // carbs=60 → 5.0, super bolus = 2.0, pct=50
+        // scaled = 5.0 * 0.5 = 2.5, unscaled = 2.0 (the held back basal is a fact)
+        // total = 2.5 + 2.0 = 4.5
+        val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
+        setupBasal(profile)
+        val bw = createWizard().doCalc(
+            profile, "", null, carbs = 60, cob = 0.0, bg = 0.0, correction = 0.0, percentageCorrection = 50,
+            useBg = false, useCob = false, includeBolusIOB = false, includeBasalIOB = false,
+            useSuperBolus = true, useTT = false, useTrend = false, useAlarm = false
+        )
+        assertThat(bw.insulinFromSuperBolus).isWithin(0.001).of(2.0)
+        assertThat(bw.totalBeforePercentageAdjustment).isWithin(0.001).of(7.0)
+        assertThat(bw.calculatedTotalInsulin).isWithin(0.001).of(4.5)
+    }
+
+    @Test
+    fun noSuperBolusAddsNoBasal() = runBlocking {
+        // Same input with the super bolus off: only the carbs count
+        val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
+        setupBasal(profile)
+        val bw = createWizard().doCalc(
+            profile, "", null, carbs = 60, cob = 0.0, bg = 0.0, correction = 0.0, percentageCorrection = 100,
+            useBg = false, useCob = false, includeBolusIOB = false, includeBasalIOB = false,
+            useSuperBolus = false, useTT = false, useTrend = false, useAlarm = false
+        )
+        assertThat(bw.insulinFromSuperBolus).isWithin(0.001).of(0.0)
+        assertThat(bw.calculatedTotalInsulin).isWithin(0.001).of(5.0)
+    }
 }

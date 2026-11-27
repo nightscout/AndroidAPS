@@ -246,12 +246,14 @@ class BolusWizard(
 
         // Total
         // Suggestion components (BG, Trend, Carbs, COB) are scaled by percentage.
-        // Fact components (IOB, Direct Correction) are NOT scaled — they represent
+        // Fact components (IOB, Direct Correction, Super Bolus) are NOT scaled — they represent
         // actual measured or explicit values, not wizard suggestions.
         // This prevents the compounding overdose bug when splitting carb entries (#2561):
         // previously, IOB was scaled down by percentage, under-counting active insulin.
+        // The super bolus is the basal of the next 2 hours. The SUPER_BOLUS running mode holds
+        // back all of that basal, so the bolus must carry all of it, at any percentage.
         val scaledComponents = insulinFromBG + insulinFromTrend + insulinFromCarbs + insulinFromCOB
-        val unscaledComponents = calculatedTotalIOB + insulinFromCorrection
+        val unscaledComponents = calculatedTotalIOB + insulinFromCorrection + insulinFromSuperBolus
 
         val percentage = if (usePercentage) totalPercentage else percentageCorrection.toDouble()
 
