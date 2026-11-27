@@ -9,6 +9,7 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
+import app.aaps.plugins.sync.nsclientV3.nsClientUrlWithoutSpaces
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -118,7 +119,7 @@ class SocketNsConnection(
             return
         }
 
-        val base = preferences.get(StringKey.NsClientUrl).lowercase().trimEnd('/')
+        val base = nsClientUrlWithoutSpaces(preferences.get(StringKey.NsClientUrl)).lowercase().trimEnd('/')
         // socket.io throws for a URL it can parse but cannot use - an unusable transport, a host it
         // will not accept - rather than reporting it. Android still guards this in
         // `NSClientV3Service` and dev did too; the port kept only the URI-syntax half, which is the

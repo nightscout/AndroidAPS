@@ -24,6 +24,7 @@ import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
+import app.aaps.plugins.sync.nsclientV3.nsClientUrlWithoutSpaces
 import app.aaps.plugins.sync.nsclientV3.ws.NsConnectHandler
 import app.aaps.plugins.sync.nsclientV3.ws.NsFrameHandler
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocket
@@ -135,8 +136,9 @@ class NSClientV3Service : MetroService() {
             nsClientRepository.addLog("● WS", "already initialized, skip $reason")
             return
         }
-        val urlStorage = preferences.get(StringKey.NsClientUrl).lowercase().replace(Regex("/$"), "") + "/storage"
-        val urlAlarm = preferences.get(StringKey.NsClientUrl).lowercase().replace(Regex("/$"), "") + "/alarm"
+        val url = nsClientUrlWithoutSpaces(preferences.get(StringKey.NsClientUrl)).lowercase().replace(Regex("/$"), "")
+        val urlStorage = "$url/storage"
+        val urlAlarm = "$url/alarm"
         try {
             // java io.client doesn't support multiplexing. create 2 sockets.
             // Assign the field BEFORE attaching listeners / connecting: the socket is already in

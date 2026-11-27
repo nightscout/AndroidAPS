@@ -121,8 +121,15 @@ import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import dev.zacsweers.metro.IntKey as MetroIntKey
 
+/**
+ * The Nightscout address as the setting holds it, without spaces. An address never holds a space, but a phone keyboard
+ * easily adds one, often at the end. Ktor throws on a host with a space in it, and that crashed the app (Crashlytics,
+ * 2026-11).
+ */
+internal fun nsClientUrlWithoutSpaces(url: String): String = url.filterNot { it.isWhitespace() }
+
 /** The Nightscout address as the setting holds it, in the form `NSAndroidClientImpl` takes: no scheme, no last slash. */
-internal fun nsClientBaseUrl(url: String): String = url.lowercase().replace("https://", "").replace(Regex("/$"), "")
+internal fun nsClientBaseUrl(url: String): String = nsClientUrlWithoutSpaces(url).lowercase().replace("https://", "").replace(Regex("/$"), "")
 
 // The new atomics are still experimental; pendingLoop/pendingUpload use load/store/compareAndSet.
 @OptIn(ExperimentalAtomicApi::class)
