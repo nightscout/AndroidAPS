@@ -1062,6 +1062,8 @@
     <string name="wiki_search_offline">文档搜索需要互联网连接</string>
     <string name="no_search_results">未找到结果</string>
     <string name="search_plugin_disabled">插件 %1$s 已禁用</string>
+    <string name="search_recent">最近搜索</string>
+    <string name="search_history_remove">从最近搜索中移除</string>
     <!--    Food Management -->
     <string name="food_management">食物</string>
     <string name="food_deleted">食物已删除</string>
