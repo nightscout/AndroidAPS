@@ -759,10 +759,10 @@ class OmnipodDashPumpPlugin(
                 }
             }.toSingle {
                 pumpEnactResultProvider().success(true).enacted(true).bolusDelivered(deliveredBolusAmount)
-            }.onErrorReturnItem(
-                // success if canceled
-                pumpEnactResultProvider().success(bolusCanceled).enacted(false)
-            )
+            }.onErrorReturn { throwable ->
+                // success if canceled. The reason of a failure goes into the comment, as in toPumpEnactResultImpl.
+                pumpEnactResultProvider().success(bolusCanceled).enacted(false).comment(throwable.message ?: "")
+            }
                 .blockingGet()
             aapsLogger.info(
                 LTag.PUMP,
@@ -875,7 +875,7 @@ class OmnipodDashPumpPlugin(
                 if (lastBolus?.historyId != bolusHistoryId()) {
                     // The pod denied this bolus command. Only a confirmed bolus replaces lastBolus, so it is
                     // still the bolus before this one, and its amount must not be reported for this one.
-                    return@defer Single.error(IllegalStateException("The pod did not accept the bolus command"))
+                    return@defer Single.error(IllegalStateException(rh.gs(R.string.omnipod_dash_bolus_not_accepted)))
                 }
                 val deliveredUnits = lastBolus!!.deliveredUnits()
                 if (deliveredUnits == null) {

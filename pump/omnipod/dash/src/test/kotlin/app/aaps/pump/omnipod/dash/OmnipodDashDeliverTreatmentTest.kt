@@ -94,6 +94,18 @@ class OmnipodDashDeliverTreatmentTest {
         assertThat(result.enacted).isFalse()
     }
 
+    /** The bolus error alarm shows the comment of the result, so the reason must be in it. */
+    @Test
+    fun `a bolus the pod never got tells the user why it failed`() = runBlocking<Unit> {
+        givenPod()
+        givenBolusCommandIsSentButNotAnswered(podGetsIt = false)
+
+        val result = sut.deliverTreatment(DetailedBolusInfo().apply { insulin = REQUESTED_UNITS })
+
+        assertThat(result.success).isFalse()
+        assertThat(result.comment).isEqualTo(NOT_ACCEPTED_TEXT)
+    }
+
     /**
      * A guard only: this case failed before the fix too, because there was no earlier bolus to read and the
      * code ran into a null. It must stay a failure.
@@ -258,6 +270,7 @@ class OmnipodDashDeliverTreatmentTest {
 
         val rh: ResourceHelper = mock()
         whenever(rh.gs(any<Int>())).thenReturn("text")
+        whenever(rh.gs(R.string.omnipod_dash_bolus_not_accepted)).thenReturn(NOT_ACCEPTED_TEXT)
 
         val history: DashHistory = mock()
         whenever(history.createRecord(eq(OmnipodCommandType.SET_BOLUS), any(), any(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))
@@ -414,5 +427,6 @@ class OmnipodDashDeliverTreatmentTest {
         const val EARLIER_BOLUS_HISTORY_ID = 3L
         const val EARLIER_BOLUS_UNITS = 2.0
         const val TOLERANCE = 1e-9
+        const val NOT_ACCEPTED_TEXT = "the pod did not accept the bolus"
     }
 }
