@@ -221,6 +221,7 @@ class EquilOverviewViewModel(
                     ScreenAction(
                     label = rh.gs(R.string.equil_common_overview_button_suspend_delivery),
                     icon = IcEquilSuspendDelivery,
+                    iconKeepsColours = true,
                     onClick = { toggleMode() }
                 ))
             } else if (runMode == RunMode.SUSPEND) {
@@ -228,6 +229,7 @@ class EquilOverviewViewModel(
                     ScreenAction(
                     label = rh.gs(R.string.equil_common_overview_button_resume_delivery),
                     icon = IcEquilResumeDelivery,
+                    iconKeepsColours = true,
                     onClick = { toggleMode() }
                 ))
             }
