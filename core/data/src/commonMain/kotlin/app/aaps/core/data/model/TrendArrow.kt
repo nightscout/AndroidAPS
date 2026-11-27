@@ -32,5 +32,23 @@ enum class TrendArrow(val text: String, val symbol: String) {
 
         fun fromString(direction: String?) =
             entries.firstOrNull { it.text == direction } ?: NONE
+
+        /**
+         * The arrow for a glucose change of [mgdlPerMinute].
+         *
+         * One set of limits for every trend that AAPS works out itself: the trend on the main screen
+         * (`TrendCalculator`) and the arrow of a reading whose source gives none. A rise of more than
+         * 40 mg/dL a minute is not a real change, so it has no arrow.
+         */
+        fun fromSlope(mgdlPerMinute: Double): TrendArrow = when {
+            mgdlPerMinute <= -3.5 -> DOUBLE_DOWN
+            mgdlPerMinute <= -2   -> SINGLE_DOWN
+            mgdlPerMinute <= -1   -> FORTY_FIVE_DOWN
+            mgdlPerMinute <= 1    -> FLAT
+            mgdlPerMinute <= 2    -> FORTY_FIVE_UP
+            mgdlPerMinute <= 3.5  -> SINGLE_UP
+            mgdlPerMinute <= 40   -> DOUBLE_UP
+            else                  -> NONE
+        }
     }
 }
