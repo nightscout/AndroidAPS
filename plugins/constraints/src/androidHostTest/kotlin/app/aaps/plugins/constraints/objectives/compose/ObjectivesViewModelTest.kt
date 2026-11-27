@@ -25,10 +25,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -94,6 +97,24 @@ internal class ObjectivesViewModelTest {
         assertThat(state.isFakeMode).isFalse()
         assertThat(state.confirmUnstartDialog).isNull()
         assertThat(sut.scrollToIndex.value).isEqualTo(-1)
+    }
+
+    /**
+     * A screen builds its view model on the main thread, where `viewModelScope` runs a new coroutine at once. The first
+     * update then ran inside the constructor and found `computeDispatcher` still null, because it was declared after
+     * `init`: a NullPointerException on dev41 (Crashlytics, 2026-11). An unconfined Main runs it at once the same way.
+     */
+    @Test
+    fun `the first update runs when the view model is built on the main thread`() {
+        oneObjective()
+        Dispatchers.setMain(UnconfinedTestDispatcher())
+        val onMain = ObjectivesViewModel(objectivesPlugin, rxBus, rh, dateUtil, sntpClient, receiverStatusStore, aapsLogger, uel, preferences)
+        try {
+            val state = runBlocking { withTimeout(5_000) { onMain.uiState.first { it.objectives.isNotEmpty() } } }
+            assertThat(state.objectives).hasSize(1)
+        } finally {
+            onMain.viewModelScope.cancel()
+        }
     }
 
     @Test

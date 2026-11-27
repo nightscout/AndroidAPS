@@ -71,6 +71,18 @@ class ObjectivesViewModel(
     private val _scrollToIndex = MutableStateFlow(-1)
     val scrollToIndex: StateFlow<Int> = _scrollToIndex.asStateFlow()
 
+    /**
+     * Where the screen's state is built: off the main thread. A test sets its own dispatcher, or the work outlives the
+     * test on a real thread, reads mocks that are already cleared and fails an unrelated test in the module
+     * (`UncaughtExceptionsBeforeTest` in `StorageConstraintPluginTest` on CI, 2026-11-21 and 2026-11-24).
+     *
+     * Declared before `init`, because `init` starts the first update. A screen builds this view model on the main
+     * thread, where `viewModelScope` runs a new coroutine at once, so the update ran inside the constructor. Declared
+     * after `init`, this was still null then, and the screen crashed with a NullPointerException (Crashlytics,
+     * 2026-11).
+     */
+    internal var computeDispatcher: CoroutineDispatcher = Dispatchers.Default
+
     init {
         rxBus.toFlow(EventObjectivesUpdateGui::class)
             .onEach { updateState() }
@@ -105,13 +117,6 @@ class ObjectivesViewModel(
             }
         }
     }
-
-    /**
-     * Where the screen's state is built: off the main thread. A test sets its own dispatcher, or the work outlives the
-     * test on a real thread, reads mocks that are already cleared and fails an unrelated test in the module
-     * (`UncaughtExceptionsBeforeTest` in `StorageConstraintPluginTest` on CI, 2026-11-21 and 2026-11-24).
-     */
-    internal var computeDispatcher: CoroutineDispatcher = Dispatchers.Default
 
     private suspend fun updateState() = withContext(computeDispatcher) {
         val objectives = objectivesPlugin.objectives.mapIndexed { index, objective ->
