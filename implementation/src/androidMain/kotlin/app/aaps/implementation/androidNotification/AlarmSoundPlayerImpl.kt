@@ -39,7 +39,8 @@ import kotlin.math.pow
  * though [play] may be invoked from any thread (e.g. NotificationManagerImpl's IO dispatcher).
  *
  * Do Not Disturb: with the override off the sound is not started while Do Not Disturb is on, see
- * [DoNotDisturbRule]. With it on the alarm stream is used, and the Do Not Disturb profile decides.
+ * [DoNotDisturbRule]; the alarm vibrates until it is stopped instead. With it on the alarm stream is used,
+ * and the Do Not Disturb profile decides.
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
@@ -90,18 +91,23 @@ class AlarmSoundPlayerImpl(
         doStop()
         currentSound = sound
         currentOwner = ownerTag
-        val vibrator = vibrator(context)
-        if (!vibrator.hasVibrator()) {
+        if (!startVibrationLoop()) {
             // Not offered then, but a choice may come with settings from another phone: it rings rather than stay quiet
             aapsLogger.error(LTag.CORE, "AlarmSoundPlayer: the phone cannot vibrate, the alarm plays its sound")
             doPlay(sound, ownerTag, breakThroughDnd = false, ringtoneUri = null)
-            return
         }
+    }
+
+    /** The vibration of an alarm, in a loop until [stop], on the alarm usage. False on a phone that cannot vibrate. */
+    private fun startVibrationLoop(): Boolean {
+        val vibrator = vibrator(context)
+        if (!vibrator.hasVibrator()) return false
         val loop = VibrationEffect.createWaveform(VIBRATION_LOOP, 0)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
             vibrator.vibrate(loop, VibrationAttributes.createForUsage(VibrationAttributes.USAGE_ALARM))
         else vibrateBeforeAndroid13(vibrator, loop)
         vibrating = true
+        return true
     }
 
     // Android 12 has no VibrationAttributes: the usage comes with AudioAttributes, as the API asked then
@@ -110,9 +116,10 @@ class AlarmSoundPlayerImpl(
         vibrator.vibrate(effect, AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build())
 
     private fun doPlay(sound: AlarmSound, ownerTag: String, breakThroughDnd: Boolean, ringtoneUri: String?) {
-        // Idempotent: a re-request of the exact same sound by the same owner while it is already playing is a no-op,
-        // so the registry offering the same alarm again does not restart the volume ramp.
-        if (player != null && currentOwner == ownerTag && currentSound == sound && currentBreaksThrough == breakThroughDnd &&
+        // Idempotent: a re-request of the exact same sound by the same owner while it is already playing - or vibrating
+        // in its place in Do Not Disturb - is a no-op, so the registry offering the same alarm again does not restart
+        // the volume ramp or the vibration.
+        if ((player != null || vibrating) && currentOwner == ownerTag && currentSound == sound && currentBreaksThrough == breakThroughDnd &&
             currentRingtone == ringtoneUri
         ) return
 
@@ -151,7 +158,10 @@ class AlarmSoundPlayerImpl(
         // Urgent low rings in Do Not Disturb whatever the user's override says; it plays on the alarm stream for that
         val overrideDnd = currentBreaksThrough || preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
         if (DoNotDisturbRule.staysQuiet(overrideDnd, notificationManager.currentInterruptionFilter)) {
-            aapsLogger.debug(LTag.CORE, "AlarmSoundPlayer: Do Not Disturb is on and the override is off, the alarm stays quiet")
+            // No sound then (decided 2026-10-30), but it vibrates until it is answered, as an alarm set to Vibrate. It
+            // used to stay still after the one buzz of its card, 4 s, easily missed at night (Pixel, 2026-11-27).
+            aapsLogger.debug(LTag.CORE, "AlarmSoundPlayer: Do Not Disturb is on and the override is off, the alarm only vibrates")
+            startVibrationLoop()
             return
         }
         val audioAttrs = AudioAttributes.Builder()

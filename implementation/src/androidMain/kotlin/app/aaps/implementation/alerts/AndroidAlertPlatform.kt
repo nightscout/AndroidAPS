@@ -139,6 +139,12 @@ class AndroidAlertPlatform(
     /** A copy, so the caller starting it cannot change what is held here. Null when nothing is owed. */
     fun unansweredAlarmIntent(): Intent? = unanswered?.let { Intent(it) }
 
+    /** The screen of [source]/[key] is no longer owed; one of another alert stays. */
+    private fun forgetOwedScreen(source: String, key: String) {
+        val owed = unanswered ?: return
+        if (owed.getStringExtra(AlarmIntent.EXTRA_ALERT_KEY) == key && owed.getStringExtra(AlarmIntent.EXTRA_ALERT_SOURCE) == source) unanswered = null
+    }
+
     // A tablet may have no vibrator: there Vibrate is not offered, and a stored one rings
     override val canVibrate: Boolean by lazy { vibrator(context).hasVibrator() }
 
@@ -186,6 +192,10 @@ class AndroidAlertPlatform(
     }
 
     override fun snoozed(alert: Alert, until: Long) {
+        // Silenced or paused: its screen is no longer owed, the re-ring brings it back. Kept, a screen that could not
+        // open in the background came back each time AAPS came to the front, also after the user had silenced it there
+        // (found on the Pixel, 2026-11-27): the core books every silence and pause here, and withdraws none of them.
+        forgetOwedScreen(alert.source, alert.key)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val wake = wakeIntent(alert.source, alert.key)
         try {
@@ -198,10 +208,8 @@ class AndroidAlertPlatform(
     }
 
     override fun withdrawn(source: String, key: String) {
-        // Answered, resolved or silenced: whatever happened, its screen is no longer owed.
-        if (unanswered?.getStringExtra(AlarmIntent.EXTRA_ALERT_KEY) == key &&
-            unanswered?.getStringExtra(AlarmIntent.EXTRA_ALERT_SOURCE) == source
-        ) unanswered = null
+        // Answered or resolved: whatever happened, its screen is no longer owed.
+        forgetOwedScreen(source, key)
         alarmNotificationManager().cancelChime(requestCode(source, key))
         (context.getSystemService(Context.ALARM_SERVICE) as AlarmManager).cancel(wakeIntent(source, key))
     }

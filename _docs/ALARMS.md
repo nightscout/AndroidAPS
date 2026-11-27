@@ -641,7 +641,11 @@ The order matters: step 3 must not come before step 2.
 
 Open, with a recommendation:
 
-- Do Not Disturb: the urgent low always breaks through; the other alarms follow the existing override setting.
+- Do Not Disturb: the urgent low always breaks through; the other alarms follow the existing override setting. With
+  the override off an alarm makes no sound (decided 2026-10-30) and vibrates until it is answered, as one set to
+  Vibrate (2026-11-27: it stayed still after the card's one buzz of 4 s, found on the Pixel).
+- An alarm screen that could not open in the background is owed to the user and opens when AAPS comes to the front.
+  A silence or a pause ends that (2026-11-27: the screen of a silenced alarm kept coming back, found on the Pixel).
 
 Decided: the silence lengths the alarm screen offers (2026-11-22): 15 min to 4 h, a protected kind 15 and 30 min
 only (xDrip offers 10 minutes to 12 hours, with 35 minutes for a low and 2 hours for a high as the defaults).
