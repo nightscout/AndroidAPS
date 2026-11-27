@@ -773,15 +773,22 @@ class MasterActionExecutorImpl(
         // bolus, so the mode starts only when the bolus really holds the 2 hours of basal.
         // This runs before the advisor branch too: the advisor gives the same parked dose, with the basal in it.
         if (p.entry?.useSuperBolus() == QuickWizardEntry.ALWAYS && p.bcr?.wasSuperbolusUsed == true) {
-            profileFunction.getProfile()?.let { profile ->
-                if (loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS))
-                    loop.handleRunningModeChange(
-                        durationInMinutes = 2 * 60,
-                        profile = profile,
-                        newRM = RM.Mode.SUPER_BOLUS,
-                        action = Action.SUPERBOLUS_TBR,
-                        source = source
-                    )
+            val profile = profileFunction.getProfile()
+            val modeStarted = profile != null &&
+                loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS) &&
+                loop.handleRunningModeChange(
+                    durationInMinutes = 2 * 60,
+                    profile = profile,
+                    newRM = RM.Mode.SUPER_BOLUS,
+                    action = Action.SUPERBOLUS_TBR,
+                    source = source
+                )
+            // The dose holds the 2 hours of basal. Without the mode that basal would be given twice, so
+            // nothing is given: the user calculates again, and that dose fits the mode of that moment.
+            if (!modeStarted) {
+                p.smbPause?.let { smbPause.end(it) }
+                onError(MasterActionExecutor.Failure(rh.gs(ImplementationStrings.super_bolus_cannot_start)))
+                return MasterActionExecutor.ConfirmResult.Delivered
             }
         }
 

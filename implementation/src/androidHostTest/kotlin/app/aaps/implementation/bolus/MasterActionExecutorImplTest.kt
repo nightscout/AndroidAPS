@@ -52,6 +52,7 @@ import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.implementation.ImplementationStrings
 import app.aaps.implementation.queue.SmbPauseImpl
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -627,6 +628,7 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
         testPumpPlugin.pumpDescription = PumpDescription().fillFor(PumpType.DANA_RS).also { it.bolusStep = 0.1 }
         whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
         whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.SUPER_BOLUS))
+        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true)
         val entry = mock<QuickWizardEntry>()
         whenever(quickWizard.get("g")).thenReturn(entry)
         whenever(entry.carbs()).thenReturn(20)
@@ -720,6 +722,71 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
 
         assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         verify(commandQueue).bolus(anyOrNull())
+        verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+    }
+
+    // ---- a dose that holds the super bolus basal is not given when the SUPER_BOLUS mode cannot start ----
+
+    /**
+     * Confirms a parked super bolus dose and checks that it was refused: the reason is reported, no bolus is sent,
+     * the entry is not marked as used, the dose is gone and its SMB pause has ended.
+     */
+    private suspend fun confirmIsRefusedBecauseTheModeCannotStart(executor: MasterActionExecutorImpl, bolusId: Long, asAdvisor: Boolean = false) {
+        val entry = quickWizard.get("g")!!
+        val failures = mutableListOf<MasterActionExecutor.Failure>()
+        var succeeded = false
+
+        executor.confirm(bolusId, Sources.QuickWizard, { failures.add(it) }, asAdvisor = asAdvisor, onSuccess = { succeeded = true })
+
+        assertThat(failures.map { it.comment }).containsExactly(baseText.gs(ImplementationStrings.super_bolus_cannot_start))
+        assertThat(succeeded).isFalse()
+        verify(commandQueue, never()).bolus(anyOrNull())
+        verify(entry, never()).markAsUsed()
+        assertThat(smbPause.isActive()).isFalse()
+        assertThat(executor.confirm(bolusId, Sources.QuickWizard, { })).isEqualTo(MasterActionExecutor.ConfirmResult.NoPending)
+    }
+
+    @Test
+    fun confirm_superBolusDose_modeNotAllowedNow_isRefusedAndGivesNothing() = runTest {
+        val executor = create()
+        val prepared = preparedSuperBolusQuickWizard(executor, usedInCalculation = true)
+        // The mode changed after the calculation, for example another super bolus started.
+        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISCONNECTED_PUMP, RM.Mode.RESUME))
+
+        confirmIsRefusedBecauseTheModeCannotStart(executor, prepared.bolusId)
+
+        verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun confirm_superBolusDose_noProfileNow_isRefusedAndGivesNothing() = runTest {
+        val executor = create()
+        val prepared = preparedSuperBolusQuickWizard(executor, usedInCalculation = true)
+        whenever(profileFunction.getProfile()).thenReturn(null)
+
+        confirmIsRefusedBecauseTheModeCannotStart(executor, prepared.bolusId)
+
+        verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun confirm_superBolusDose_modeChangeNotDone_isRefusedAndGivesNothing() = runTest {
+        val executor = create()
+        val prepared = preparedSuperBolusQuickWizard(executor, usedInCalculation = true)
+        // The loop reports that it did not set the mode.
+        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(false)
+
+        confirmIsRefusedBecauseTheModeCannotStart(executor, prepared.bolusId)
+    }
+
+    @Test
+    fun confirm_asAdvisor_superBolusDose_modeNotAllowedNow_isRefusedAndGivesNothing() = runTest {
+        val executor = create()
+        val prepared = preparedSuperBolusQuickWizard(executor, usedInCalculation = true)
+        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISCONNECTED_PUMP, RM.Mode.RESUME))
+
+        confirmIsRefusedBecauseTheModeCannotStart(executor, prepared.bolusId, asAdvisor = true)
+
         verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
     }
 
