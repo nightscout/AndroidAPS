@@ -694,6 +694,35 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
         verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
     }
 
+    @Test
+    fun confirm_asAdvisor_calculationWithSuperBolus_startsTheMode() = runTest {
+        // "Correct now, eat later" gives the whole parked dose, and that dose holds the 2 hours of basal.
+        // So the basal must stop on this path too.
+        val executor = create()
+        val prepared = preparedSuperBolusQuickWizard(executor, usedInCalculation = true)
+
+        val result = executor.confirm(prepared.bolusId, Sources.QuickWizard, { }, asAdvisor = true)
+
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+        val dbiCaptor = argumentCaptor<DetailedBolusInfo>()
+        verify(commandQueue).bolus(dbiCaptor.capture())
+        assertThat(dbiCaptor.firstValue.eventType).isEqualTo(TE.Type.CORRECTION_BOLUS)
+        assertThat(dbiCaptor.firstValue.insulin).isEqualTo(2.0)
+        verify(loop).handleRunningModeChange(eq(RM.Mode.SUPER_BOLUS), eq(Action.SUPERBOLUS_TBR), eq(Sources.QuickWizard), any(), eq(120), any())
+    }
+
+    @Test
+    fun confirm_asAdvisor_calculationWithoutSuperBolus_doesNotStartTheMode() = runTest {
+        val executor = create()
+        val prepared = preparedSuperBolusQuickWizard(executor, usedInCalculation = false)
+
+        val result = executor.confirm(prepared.bolusId, Sources.QuickWizard, { }, asAdvisor = true)
+
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+        verify(commandQueue).bolus(anyOrNull())
+        verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+    }
+
     // ---- manual wizard above the max bolus: capped with a warning, not refused (as the phone wizard did in v3) ----
 
     /** A manual wizard that calculates [calculated] U, of which the constraints leave [afterConstraints] U. */

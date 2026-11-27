@@ -765,8 +765,28 @@ class MasterActionExecutorImpl(
             return if (cancelled) MasterActionExecutor.ConfirmResult.Cancelled else MasterActionExecutor.ConfirmResult.Delivered
         }
 
+        // Super-bolus (a quick-wizard with useSuperBolus): write the SUPER_BOLUS mode change before the
+        // bolus, driven off the CONSUMED entry — never the shared `pending` slot, which a stale unconfirmed
+        // wear prepare could leak into an unrelated bolus.
+        // The flag of the entry is not enough: QuickWizardEntry.doCalc leaves the super bolus out when the
+        // preference is off or the mode already runs. The parked BCR is from the wizard that calculated this
+        // bolus, so the mode starts only when the bolus really holds the 2 hours of basal.
+        // This runs before the advisor branch too: the advisor gives the same parked dose, with the basal in it.
+        if (p.entry?.useSuperBolus() == QuickWizardEntry.ALWAYS && p.bcr?.wasSuperbolusUsed == true) {
+            profileFunction.getProfile()?.let { profile ->
+                if (loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS))
+                    loop.handleRunningModeChange(
+                        durationInMinutes = 2 * 60,
+                        profile = profile,
+                        newRM = RM.Mode.SUPER_BOLUS,
+                        action = Action.SUPERBOLUS_TBR,
+                        source = source
+                    )
+            }
+        }
+
         // High-BG advisor branch (user chose "correct now, eat later"): a correction-only CORRECTION_BOLUS —
-        // no carbs, no eCarbs, no super-bolus, no eat reminder. mg/dL BG comes from the BCR's glucoseValue.
+        // no carbs, no eCarbs, no eat reminder. mg/dL BG comes from the BCR's glucoseValue.
         if (asAdvisor) {
             executeBolusAdvisor(p.insulin, p.bcr?.glucoseValue, p.bcr, notes, source, onError, onSuccess)
             p.entry?.markAsUsed()
@@ -798,24 +818,6 @@ class MasterActionExecutorImpl(
             eventTime += (eCarbsDelay * 60000)
             carbs2 = p.eCarbsGrams
             duration = p.eCarbsDurationHours
-        }
-        // Super-bolus (a quick-wizard with useSuperBolus): write the SUPER_BOLUS mode change before the
-        // bolus, driven off the CONSUMED entry — never the shared `pending` slot, which a stale unconfirmed
-        // wear prepare could leak into an unrelated bolus.
-        // The flag of the entry is not enough: QuickWizardEntry.doCalc leaves the super bolus out when the
-        // preference is off or the mode already runs. The parked BCR is from the wizard that calculated this
-        // bolus, so the mode starts only when the bolus really holds the 2 hours of basal.
-        if (p.entry?.useSuperBolus() == QuickWizardEntry.ALWAYS && p.bcr?.wasSuperbolusUsed == true) {
-            profileFunction.getProfile()?.let { profile ->
-                if (loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS))
-                    loop.handleRunningModeChange(
-                        durationInMinutes = 2 * 60,
-                        profile = profile,
-                        newRM = RM.Mode.SUPER_BOLUS,
-                        action = Action.SUPERBOLUS_TBR,
-                        source = source
-                    )
-            }
         }
         // Canonical: a wear wizard bolus now records identically to the phone (BOLUS_WIZARD + mgdlGlucose).
         // The mg/dL BG comes from the BCR's glucoseValue (== profileUtil.convertToMgdl(bg, units)).
