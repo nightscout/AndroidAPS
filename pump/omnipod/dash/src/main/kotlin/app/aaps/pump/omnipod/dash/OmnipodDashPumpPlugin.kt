@@ -877,7 +877,15 @@ class OmnipodDashPumpPlugin(
                     // still the bolus before this one, and its amount must not be reported for this one.
                     return@defer Single.error(IllegalStateException("The pod did not accept the bolus command"))
                 }
-                return@defer Single.just(lastBolus!!.deliveredUnits()!!)
+                val deliveredUnits = lastBolus!!.deliveredUnits()
+                if (deliveredUnits == null) {
+                    // The pod accepted this bolus, but it is not marked complete yet. This happens when the
+                    // answer to the bolus command was lost and this status read confirmed the command: the
+                    // status is applied first, and lastBolus is made after it. The next read marks it complete.
+                    waitForDelivery(BOLUS_RETRY_INTERVAL_MS)
+                    return@forEach
+                }
+                return@defer Single.just(deliveredUnits)
             }
         }
         Single.just(requestedBolusAmount) // will be updated later!
