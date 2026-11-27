@@ -103,6 +103,7 @@ import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
 import app.aaps.settingsstore.AndroidStorage
 import app.aaps.settingsstore.SettingsUnreadableActivity
+import app.aaps.plugins.sync.nfcCommands.NfcForegroundDispatch
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.loopSheet.LoopActionViewModel
@@ -185,6 +186,8 @@ class ComposeMainActivity : MetroAppCompatActivity() {
     private var accessTree: ActivityResultLauncher<Uri?>? = null
     private var requestMultiplePermissions: ActivityResultLauncher<Array<String>>? = null
     private var onPermissionResultDenied: ((List<String>) -> Unit)? = null
+
+    private val nfcForegroundDispatch by lazy { NfcForegroundDispatch(this, preferences) }
 
     /** Set when this activity is recreated because of a `UiRestart` request, so its view models go too. */
     private var rebuildingForRestart = false
@@ -630,8 +633,19 @@ class ComposeMainActivity : MetroAppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        nfcForegroundDispatch.onResume()
         if (!config.appInitialized) return
         refreshOnResume()
+    }
+
+    override fun onPause() {
+        nfcForegroundDispatch.onPause()
+        super.onPause()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        nfcForegroundDispatch.onNewIntent(intent)
     }
 
     private fun updateButtons() {
@@ -676,6 +690,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                 recreate()
             }
         }
+        nfcForegroundDispatch.observeWarning(lifecycleScope, rxBus, rh)
     }
 
     private fun setupWakeLock() {

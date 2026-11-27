@@ -112,10 +112,10 @@ class ContributedPluginsTest {
     }
 
     @Test
-    fun `only a non-follower build gets the version checker and Tidepool`() {
+    fun `only a non-follower build gets the version checker, Tidepool and NFC`() {
         // 340 (OpenHumans) is also @NotNSClient but comes from its own graph extension, so it joins
         // this bucket in MetroGraphs.notNsClientPlugins() rather than appearing here.
-        assertThat(testRoot().contributedNotNsClientPlugins.keys).containsExactly(300, 320, 810)
+        assertThat(testRoot().contributedNotNsClientPlugins.keys).containsExactly(300, 320, 380, 810)
     }
 
     @Test
