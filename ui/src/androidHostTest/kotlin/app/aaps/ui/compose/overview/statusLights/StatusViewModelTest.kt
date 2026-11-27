@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.overview.statusLights
 
+import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -37,9 +38,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -82,10 +83,13 @@ internal class StatusViewModelTest {
     /** Refreshes that have written the cannula usage, which is the last thing a refresh does. */
     private val finished = AtomicInteger(0)
 
+    /** Every view model a test built, so [tearDown] can stop them. */
+    private val viewModels = mutableListOf<StatusViewModel>()
+
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(UnconfinedTestDispatcher())
         whenever(rxBus.toFlow(EventInitializationChanged::class)).thenReturn(emptyFlow())
         whenever(rxBus.toFlow(EventConfigBuilderChange::class)).thenReturn(emptyFlow())
         whenever(rxBus.toFlow(EventNsClientStatusUpdated::class)).thenReturn(emptyFlow())
@@ -93,13 +97,22 @@ internal class StatusViewModelTest {
         whenever(persistenceLayer.databaseClearedFlow).thenReturn(emptyFlow())
     }
 
+    /**
+     * Stops every view model, and waits for it, before Main is reset. A refresh reads the database on the IO
+     * dispatcher and comes back to Main, and the state flow runs on Main too. Work still on its way back when Main was
+     * reset crashed there, outside any test, and the next runTest in this JVM failed with UncaughtExceptionsBeforeTest:
+     * `ProfileEditorViewModelTest` on CI, 2026-11-26 and 2026-11-27 (this class runs two before it).
+     */
     @AfterEach
-    fun tearDown() = Dispatchers.resetMain()
+    fun tearDown() {
+        runBlocking { withTimeout(20_000) { viewModels.forEach { it.viewModelScope.coroutineContext.job.cancelAndJoin() } } }
+        Dispatchers.resetMain()
+    }
 
     private fun newViewModel() = StatusViewModel(
         rh, activePlugin, profileFunction, config, persistenceLayer, dateUtil, rxBus, preferences,
         tddCalculator, decimalFormatter, processedDeviceStatusData
-    )
+    ).also { viewModels += it }
 
     @Test
     fun `default uiState has no status items and hidden actions`() {
@@ -117,7 +130,6 @@ internal class StatusViewModelTest {
      */
     @Test
     fun `nothing is refreshed while no screen shows the status lights`() = runBlocking<Unit> {
-        Dispatchers.setMain(UnconfinedTestDispatcher())
         givenStatusData()
         newViewModel()
 
@@ -130,7 +142,6 @@ internal class StatusViewModelTest {
 
     @Test
     fun `a screen that starts showing the status lights gets one refresh`() = runBlocking<Unit> {
-        Dispatchers.setMain(UnconfinedTestDispatcher())
         givenStatusData()
         val viewModel = newViewModel()
 
@@ -150,7 +161,6 @@ internal class StatusViewModelTest {
      */
     @Test
     fun `a new reservoir level refreshes, the same level does not`() = runBlocking<Unit> {
-        Dispatchers.setMain(UnconfinedTestDispatcher())
         givenStatusData()
         val viewModel = newViewModel()
         val screen = show(viewModel)
@@ -172,7 +182,6 @@ internal class StatusViewModelTest {
      */
     @Test
     fun `a new refresh cancels the cannula usage calculation still running`() = runBlocking<Unit> {
-        Dispatchers.setMain(UnconfinedTestDispatcher())
         givenStatusData()
         val running = AtomicInteger(0)
         val tddDone = AtomicInteger(0)
@@ -204,10 +213,7 @@ internal class StatusViewModelTest {
         assertThat(awaitValue(running, 0)).isEqualTo(0)
         assertThat(tddDone.get()).isEqualTo(1)
 
-        // Wait until the last refresh is back on Main and has written the usage. `running` drops inside
-        // the IO hop, so without this the test could return while that coroutine is still on its way
-        // back to Main. tearDown() then resets Main, the resume crashes, and the next runTest in this
-        // JVM fails with UncaughtExceptionsBeforeTest (seen on CI in an unrelated test class).
+        // The last refresh writes the usage once it is back on Main. `running` drops inside the IO hop, before that.
         awaitValue(finished, 1)
         screen.cancelAndJoin()
     }
@@ -215,7 +221,6 @@ internal class StatusViewModelTest {
     /** A CGM source that knows its sensor's lifetime sets the sensor age limits: a 365 sensor is orange in its last month. */
     @Test
     fun `a known sensor lifetime sets the sensor age limits`() = runBlocking<Unit> {
-        Dispatchers.setMain(UnconfinedTestDispatcher())
         givenStatusData()
         givenSensorAgeHours(340 * 24)
         whenever(preferences.get(IntNonKey.SensorLifetimeHours)).thenReturn(365 * 24)
@@ -231,7 +236,6 @@ internal class StatusViewModelTest {
     /** With no lifetime known, the limits set in the preferences apply. */
     @Test
     fun `without a sensor lifetime the limits of the preferences apply`() = runBlocking<Unit> {
-        Dispatchers.setMain(UnconfinedTestDispatcher())
         givenStatusData()
         givenSensorAgeHours(228)
         whenever(preferences.get(IntKey.OverviewSageWarning)).thenReturn(216)
@@ -257,7 +261,6 @@ internal class StatusViewModelTest {
      */
     @Test
     fun `AAPSClient shows a reservoir above the master's measuring range with a plus`() = runBlocking<Unit> {
-        Dispatchers.setMain(UnconfinedTestDispatcher())
         givenStatusData()
         whenever(config.AAPSCLIENT).thenReturn(true)
         whenever(processedDeviceStatusData.pumpData).thenReturn(ProcessedDeviceStatusData.PumpData().apply {

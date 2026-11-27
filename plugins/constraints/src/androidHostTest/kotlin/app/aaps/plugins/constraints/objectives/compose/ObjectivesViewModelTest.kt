@@ -276,7 +276,14 @@ internal class ObjectivesViewModelTest {
         // One right option, left unticked: the answer is wrong.
         whenever(task.options).thenReturn(arrayListOf(Option(ConstraintsStrings.wronganswer, isCorrect = true)))
         whenever(objective.tasks).thenReturn(mutableListOf(task))
-        runBlocking { whenever(objective.isCompleted()).thenReturn(false) }
+        // A mocked suspend fun returns null, not false or "". The screen's update, run by runDue(), then threw a
+        // NullPointerException outside any runTest, and the next runTest in the module failed with
+        // UncaughtExceptionsBeforeTest (StorageConstraintPluginTest on CI, nearly every dev41 push 2026-11-25..27).
+        runBlocking {
+            whenever(task.isCompleted()).thenReturn(false)
+            whenever(task.progress()).thenReturn("")
+            whenever(objective.isCompleted()).thenReturn(false)
+        }
         sut.onOpenExam(0, 0)
         runDue()
 
