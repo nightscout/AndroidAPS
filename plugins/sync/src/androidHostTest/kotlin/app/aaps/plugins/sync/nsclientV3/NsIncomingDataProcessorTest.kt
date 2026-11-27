@@ -5,6 +5,7 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.InsulinType
+import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.source.NSClientSource
@@ -134,6 +135,46 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
 
         processor.processSgvs(sgvList, doFullSync = false, advanceInitialLoadCursor = true)
         verify(nsClient).updateLatestBgReceivedIfNewer(sgvTime)
+    }
+
+    /**
+     * The REST load after the first one (entries/history) comes in the order Nightscout stored the records
+     * (srvModified), not in reading time. A backfilled reading, or a change to an older one (a new value, a
+     * removal), comes after a newer reading. Such readings were dropped, and the load cursor moved past them (#5664).
+     */
+    @Test
+    fun `processSgvs keeps readings that are older than a reading before them`() {
+        val newest = now - T.mins(1).msecs()
+        val backfilled1 = now - T.mins(25).msecs()
+        val backfilled2 = now - T.mins(20).msecs()
+
+        val result = processor.processSgvs(listOf(sgvAt(newest), sgvAt(backfilled1), sgvAt(backfilled2)), doFullSync = false, advanceInitialLoadCursor = true)
+
+        assertTrue(result)
+        verify(storeDataForDb).addToGlucoseValues(argThat { map { it.timestamp } == listOf(newest, backfilled1, backfilled2) })
+        // The newest time still moves the cursor and ends the Nightscout alarms, wherever it is in the list.
+        verify(nsClient).updateLatestBgReceivedIfNewer(newest)
+        verify(notificationManager).dismiss(NotificationId.NS_ALARM)
+        verify(notificationManager).dismiss(NotificationId.NS_URGENT_ALARM)
+    }
+
+    @Test
+    fun `processSgvs drops only the readings with a wrong time from a list`() {
+        val good = now - T.mins(5).msecs()
+
+        val result = processor.processSgvs(listOf(sgvAt(now + T.mins(5).msecs()), sgvAt(0), sgvAt(good)), doFullSync = false, advanceInitialLoadCursor = true)
+
+        assertTrue(result)
+        verify(storeDataForDb).addToGlucoseValues(argThat { map { it.timestamp } == listOf(good) })
+        verify(nsClient).updateLatestBgReceivedIfNewer(good)
+    }
+
+    @Test
+    fun `processSgvs keeps the Nightscout alarms when the newest reading is old`() {
+        val result = processor.processSgvs(listOf(sgvAt(now - T.mins(10).msecs()), sgvAt(now - T.mins(30).msecs())), doFullSync = false)
+
+        assertTrue(result)
+        verify(notificationManager, never()).dismiss(NotificationId.NS_ALARM)
     }
 
     @Test

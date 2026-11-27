@@ -59,6 +59,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.serialization.json.JsonObject
+import kotlin.math.max
 
 @SingleIn(AppScope::class)
 @Inject
@@ -138,11 +139,18 @@ class NsIncomingDataProcessor(
 
         if (sgvs is List<*>) { // V3 client
 
+            // Every reading with a time counts, also one older than a reading before it in the list. The REST
+            // load after the first one (entries/history) comes in the order Nightscout stored the records
+            // (srvModified), not in reading time: a backfilled reading, or a change to an older one (a new
+            // value, a removal), comes after a newer reading. The newest time was also used as a filter
+            // here (since a8fc73c8ad, 2023), so those were dropped, and the load cursor moved past them for
+            // good (#5664). The newest time is still tracked, for the first load cursor and the alarms below.
+            val notAfter = dateUtil.now() + T.mins(1).msecs()
             for (i in 0 until sgvs.size) {
                 val sgv = (sgvs[i] as NSSgvV3).toGV()
-                if (sgv.timestamp < dateUtil.now() + T.mins(1).msecs() && sgv.timestamp > latestDateInReceivedData) {
-                    latestDateInReceivedData = sgv.timestamp
+                if (sgv.timestamp in 1..<notAfter) {
                     glucoseValues += sgv
+                    latestDateInReceivedData = max(latestDateInReceivedData, sgv.timestamp)
                 } else
                     aapsLogger.debug(LTag.NSCLIENT, "Ignoring record with wrong timestamp: $sgv")
             }
