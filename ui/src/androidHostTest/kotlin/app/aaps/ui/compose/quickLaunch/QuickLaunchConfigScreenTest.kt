@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasScrollToNodeAction
+import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithContentDescription
@@ -11,6 +12,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.ui.test.performTextReplacement
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.ui.compose.testing.AapsScreenFixture
@@ -43,7 +45,8 @@ import app.aaps.core.ui.R as CoreUiR
  *  - Add and Remove really change the stored list, and the configuration button stays last so the
  *    user can always get back here;
  *  - only a profile entry offers the preset editor, and that editor calls a duration of zero
- *    "permanent" rather than showing a bare 0.
+ *    "permanent" rather than showing a bare 0;
+ *  - OK in that editor saves what the field the user is still in holds, brought into its range.
  *
  * Every label is read from the real resources, so a translation edit cannot make the test lie.
  */
@@ -280,5 +283,27 @@ class QuickLaunchConfigScreenTest {
         // The dialog names the profile it is about, and says what a duration of 0 means.
         compose.onNodeWithText("Morning").assertIsDisplayed()
         compose.onNodeWithText(permanent).assertIsDisplayed()
+    }
+
+    /**
+     * OK used to save the values the dialog last got, without committing the field the user was still in. A
+     * duration typed above the limit showed an error, and OK saved the last value typed that was in range: 2000
+     * for "20000". Found on a device: this OK did not clear the focus before it saved.
+     */
+    @Test
+    fun okInThePresetEditorCommitsTheFieldTheUserIsStillIn() {
+        viewModels.givenSelected(listOf(QuickLaunchAction.ProfileAction("Morning", 100, 0)))
+
+        setScreen()
+        compose.onNodeWithContentDescription(editPreset).performClick()
+        // Percent is the first field, duration the second. Typed key by key, so 2000 is published before
+        // the "20000" that is out of range.
+        val duration = compose.onAllNodes(hasSetTextAction())[1]
+        duration.performClick()
+        listOf("2", "20", "200", "2000", "20000").forEach { duration.performTextReplacement(it) }
+        compose.onNodeWithText(context.getString(CoreUiR.string.ok)).performClick()
+
+        val saved = storedActions().filterIsInstance<QuickLaunchAction.ProfileAction>().single()
+        assertThat(saved.durationMinutes).isEqualTo(10080)
     }
 }

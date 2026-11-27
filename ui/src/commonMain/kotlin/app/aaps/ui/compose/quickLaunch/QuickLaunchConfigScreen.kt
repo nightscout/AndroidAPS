@@ -41,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
@@ -480,7 +481,15 @@ private fun ProfilePresetDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = { onConfirm(percentage, durationMinutes) }) {
+            // Read here, inside the dialog: it has its own window, and with it its own focus manager. Clearing the
+            // focus commits the field the user is still typing in, brought into its range. Without it OK saved the
+            // last value that was in range: 2000 after "20000" was typed with a limit of 10080, while the field
+            // showed an error.
+            val focusManager = LocalFocusManager.current
+            TextButton(onClick = {
+                focusManager.clearFocus()
+                onConfirm(percentage, durationMinutes)
+            }) {
                 Text(stringResource(CoreUiStrings.ok))
             }
         },
