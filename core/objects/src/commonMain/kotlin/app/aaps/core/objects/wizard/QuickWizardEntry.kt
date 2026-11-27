@@ -125,6 +125,9 @@ class QuickWizardEntry(
             superBolus = true
         }
         if (loop.runningMode() == RM.Mode.SUPER_BOLUS) superBolus = false
+        // The dose may hold the 2 hours of basal only when the SUPER_BOLUS mode can start now and stop that
+        // basal. The confirm step does the same check before it starts the mode.
+        if (superBolus && !loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS)) superBolus = false
         // Trend
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         var trend = false
