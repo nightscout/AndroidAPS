@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -27,7 +29,7 @@ import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.overview.graph.TbrState
-import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -35,6 +37,7 @@ import app.aaps.ui.compose.main.TempTargetChipState
 import app.aaps.ui.compose.main.VersionOverlay
 import app.aaps.ui.compose.manageSheet.ManageViewModel
 import app.aaps.ui.compose.overview.aapsClient.AapsClientStatusCard
+import app.aaps.ui.compose.overview.aapsClient.aapsClientStatusTint
 import app.aaps.ui.compose.overview.chips.ChipsViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.compose.overview.graphs.GraphsSection
@@ -195,15 +198,12 @@ fun OverviewScreenStacked(
             // On a client, the client status card comes before the status lights
             if (config.AAPSCLIENT) {
                 val nsClientStatus by graphViewModel.nsClientStatusFlow.collectAsStateWithLifecycle()
-                val flavorTint = when {
-                    config.AAPSCLIENT3 -> AapsTheme.generalColors.flavorClient3Tint
-                    config.AAPSCLIENT2 -> AapsTheme.generalColors.flavorClient2Tint
-                    else               -> AapsTheme.generalColors.flavorClient1Tint
-                }
                 AapsClientStatusCard(
                     statusData = nsClientStatus,
-                    flavorTint = flavorTint
+                    flavorTint = aapsClientStatusTint()
                 )
+                // Without a space the two rows read as one bar when they have the same color
+                Spacer(Modifier.height(AapsSpacing.extraSmall))
             }
 
             OverviewStatusSection(
