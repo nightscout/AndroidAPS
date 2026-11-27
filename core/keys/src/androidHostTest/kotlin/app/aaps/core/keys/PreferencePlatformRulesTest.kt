@@ -55,6 +55,7 @@ class PreferencePlatformRulesTest {
      * left out genuinely cannot honour it rather than merely not having got round to it.
      * - the notification policy switch: iOS gives an app no say in whether an OS notification appears
      * - allow roaming: iOS publishes no roaming state and desktop reports every link as wifi
+     * - glucose as status bar icon: only Android has this ongoing notification and its small icon
      */
     @Test
     fun `restrictions are the exception`() {
@@ -63,7 +64,8 @@ class PreferencePlatformRulesTest {
         assertThat(restricted).containsExactly(
             "raise_urgent_alarms_as_android_notification", AppPlatform.ANDROID_ONLY,
             "keep_screen_on", setOf(AppPlatform.Android, AppPlatform.Ios),
-            "ns_allow_roaming", AppPlatform.ANDROID_ONLY
+            "ns_allow_roaming", AppPlatform.ANDROID_ONLY,
+            "status_bar_bg_icon", AppPlatform.ANDROID_ONLY
         )
     }
 }

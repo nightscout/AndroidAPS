@@ -17,6 +17,8 @@
     <string name="pref_title_show_calibration_button">Show calibration button</string>
     <string name="pref_summary_show_calibration_button">Sends a calibration to xDrip+ (ensure \'Accept Calibrations\' is enabled in xDrip+ under Inter-App settings).</string>
     <string name="pref_title_show_notes_in_dialogs">Show notes in dialogs</string>
+    <string name="pref_title_status_bar_bg_icon">Glucose as status bar icon</string>
+    <string name="pref_summary_status_bar_bg_icon">The status bar icon of the AAPS notification shows the current glucose instead of the AAPS icon. While the live update pill is shown, it shows the glucose itself and the AAPS icon stays. The value is struck through when it is older than 10 minutes.</string>
     <string name="pref_title_use_bolus_advisor">Use bolus advisor</string>
     <string name="pref_summary_use_bolus_advisor">Enable bolus advisor which assists with bolus calculations during higher glycemias.</string>
     <string name="pref_title_use_bolus_reminder">Use bolus reminder</string>
