@@ -240,6 +240,7 @@ fun OverviewScreen(
         onAutoShowConsumed = onAutoShowConsumed,
         silentAlertKinds = silentOrOff(alertKindChoices),
         bgAlarmsPausedUntil = pausedUntil(alertKindPauses),
+        onResumeBgAlarms = { builtInSearchables.alertKindsSettings.resumeBgAlarms() },
         onOpenAlertKinds = onOpenAlertKinds.takeIf { builtInSearchables.alertKindsSettings.settingsItem != null },
         pumpSetupPlugin = pumpSetupPlugin,
         bgSetupPlugin = bgSetupPlugin,

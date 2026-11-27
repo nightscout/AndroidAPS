@@ -138,6 +138,7 @@ fun MainScreen(
     // (none on the desktop)
     silentAlertKinds: Int = 0,
     bgAlarmsPausedUntil: Long? = null,
+    onResumeBgAlarms: (() -> Unit)? = null,
     onOpenAlertKinds: (() -> Unit)? = null,
     // Pump setup
     pumpSetupPlugin: PluginBase? = null,
@@ -374,6 +375,7 @@ fun MainScreen(
                         onAutoShowConsumed = onAutoShowConsumed,
                         silentAlertKinds = silentAlertKinds,
                         bgAlarmsPausedUntil = bgAlarmsPausedUntil,
+                        onResumeBgAlarms = onResumeBgAlarms,
                         onOpenAlertKinds = onOpenAlertKinds,
                         activeSceneState = activeSceneState,
                         sceneExpired = sceneExpired,

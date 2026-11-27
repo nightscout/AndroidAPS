@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.AlertSound
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlarmRules
+import app.aaps.core.interfaces.alerts.BgAlert
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
@@ -57,8 +58,14 @@ interface AlertKindsSettings {
     /** The user's choices on this phone, by group or kind id. Those that are not Ring are counted ([silentOrOff]). */
     val choices: StateFlow<Map<String, AlertChoice>>
 
-    /** The kinds paused on this phone, by kind id, with the end of the pause. Counted with the silent kinds. */
+    /** The kinds paused on this phone, by kind id, with the end of the pause. Not counted: its own line ([pausedUntil]). */
     val pauses: StateFlow<Map<String, Long>>
+
+    /**
+     * Ends the pause of the BG alarms on this phone now, as Resume on the BG alarms screen: what is active of them
+     * rings. For the Resume on the pause line of the notification sheet (2026-11-27: undoing a pause took four taps).
+     */
+    fun resumeBgAlarms()
 
     /** Settings of the alarms that only this platform has, shown after the alert kinds. Android: display over other apps. */
     val platformItems: List<PreferenceItem> get() = emptyList()
@@ -83,6 +90,8 @@ class AlertKindsSettingsImpl(
 
     override val choices: StateFlow<Map<String, AlertChoice>> get() = alerts.choices
     override val pauses: StateFlow<Map<String, Long>> get() = alerts.pauses
+
+    override fun resumeBgAlarms() = alerts.resume(BgAlert.PAUSABLE)
 
     override val settingsItem: PreferenceItem = UiIntentKey.AlertKinds.withCompose(
         ComposeScreenContent { onBack ->

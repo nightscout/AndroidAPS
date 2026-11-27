@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.NotificationsOff
 import androidx.compose.material.icons.filled.NotificationsPaused
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -61,6 +62,8 @@ fun NotificationBottomSheet(
      * a pause of 7 kinds read as 7 changed settings (2026-11-27).
      */
     bgAlarmsPausedUntil: Long? = null,
+    /** Ends that pause now: the Resume on its line, so undoing a pause is one tap. Null: no button. */
+    onResumeBgAlarms: (() -> Unit)? = null,
     /** Opens the list of alert kinds. Null where the platform has no alerts: then the lines are not shown. */
     onOpenAlertKinds: (() -> Unit)? = null
 ) {
@@ -100,6 +103,9 @@ fun NotificationBottomSheet(
                     ListItem(
                         headlineContent = { Text(stringResource(UiStrings.bg_alarms_paused_until, dateUtil.timeString(bgAlarmsPausedUntil))) },
                         leadingContent = { Icon(Icons.Filled.NotificationsPaused, contentDescription = null) },
+                        trailingContent = onResumeBgAlarms?.let { resume ->
+                            { TextButton(onClick = resume) { Text(stringResource(UiStrings.bg_alarm_resume)) } }
+                        },
                         modifier = Modifier.clickable {
                             onDismissSheet()
                             onOpenAlertKinds()
