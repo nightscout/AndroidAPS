@@ -268,6 +268,17 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun `processSgvs ignores a reading with timestamp zero in a list`() {
+        val normal = now - T.mins(2).msecs()
+        val sgvList = listOf(sgvAt(normal), sgvAt(0L))
+
+        val result = processor.processSgvs(sgvList, doFullSync = false)
+
+        assertTrue(result)
+        verify(storeDataForDb).addToGlucoseValues(argThat { map { it.timestamp } == listOf(normal) })
+    }
+
+    @Test
     fun `processSgvs accepts a reading less than one minute in the future`() {
         val slightlyAhead = now + T.secs(30).msecs()
 
