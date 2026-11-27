@@ -16,7 +16,6 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.alerts.EatReminder
@@ -1597,8 +1596,8 @@ class MasterActionExecutorImpl(
                     else rh.gs(CoreUiStrings.treatmentdeliveryerror) + "\n" + result.comment
                 if (detailedBolusInfo.bolusType != BS.Type.SMB) {
                     val now = dateUtil.now()
-                    if (result.cancelled) CoreAlert.BOLUS_CANCELLED.raiseEvent(alerts, AlertSeverity.WARNING, TextRef.Literal(errorText), now)
-                    else CoreAlert.BOLUS_FAILED.raiseEvent(alerts, AlertSeverity.CRITICAL, TextRef.Literal(errorText), now, AlarmSound.BOLUS_ERROR)
+                    if (result.cancelled) CoreAlert.BOLUS_CANCELLED.raiseEvent(alerts, TextRef.Literal(errorText), now)
+                    else CoreAlert.BOLUS_FAILED.raiseEvent(alerts, TextRef.Literal(errorText), now, AlarmSound.BOLUS_ERROR)
                 }
                 onError(MasterActionExecutor.Failure(errorText, result.cancelled))
             } else

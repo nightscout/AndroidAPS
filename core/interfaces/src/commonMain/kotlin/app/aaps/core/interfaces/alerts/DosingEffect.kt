@@ -29,3 +29,6 @@ enum class DosingEffect(
     /** A glucose alarm of a CGM. The driver raises none: AAPS's own BG alarms raise it from the readings. */
     GLUCOSE(null, affectsDosing = false)
 }
+
+/** The levels a device's kind rings with ([AlertKind.levels]): the severities of its events' effects. */
+fun Collection<DosingEffect>.levels(): Set<AlertSeverity> = mapNotNull { it.severity }.toSet()

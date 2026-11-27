@@ -13,7 +13,6 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.aps.APSResult
@@ -743,7 +742,7 @@ class LoopPlugin(
     private suspend fun carbsRequired(result: APSResult) {
         val alerts = alerts()
         val isNew = alerts.active.value.none { it.kind == CoreAlert.CARBS_REQUIRED }
-        CoreAlert.CARBS_REQUIRED.raiseCondition(alerts, AlertSeverity.WARNING, TextRef.Literal(result.carbsRequiredText), dateUtil.now())
+        CoreAlert.CARBS_REQUIRED.raiseCondition(alerts, TextRef.Literal(result.carbsRequiredText), dateUtil.now())
         if (!isNew) return
         uel.log(
             action = Action.CAREPORTAL,

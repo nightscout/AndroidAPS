@@ -107,6 +107,14 @@ interface AlertKind : AlertSetting {
      * there already) and carbs required (the loop writes its own, under its own setting).
      */
     val announced: Boolean get() = true
+
+    /**
+     * The levels its alerts ring with on Ring: [AlertSeverity.CRITICAL] an alarm that rings until answered,
+     * [AlertSeverity.WARNING] one sound, [AlertSeverity.INFO] a card. Shown in the alert settings, so the user knows
+     * before it happens what to expect (decided 2026-11-27: "not clear when I can expect an Alarm and when just a card").
+     * Empty where something else sets it: each BG rule has its own, shown with the rule.
+     */
+    val levels: Set<AlertSeverity> get() = emptySet()
 }
 
 /** What the user chose for a kind of alert, on this phone only. Stored by name: never rename one. */
@@ -380,8 +388,8 @@ interface Alerts {
          */
         private val SILENCE_LENGTHS = listOf(15, 30, 60)
 
-        /** How long "Silence all BG alarms" on the alarm screen pauses them, in minutes (decided 2026-11-26). */
-        const val SILENCE_ALL_MINUTES = 60
+        /** How long "Pause all BG alarms" on the alarm screen pauses them, in minutes (decided 2026-11-26). */
+        const val PAUSE_ALL_MINUTES = 60
 
         /**
          * The silence buttons on the notification of a WARNING alert that lasts (CONDITION), in minutes: the three

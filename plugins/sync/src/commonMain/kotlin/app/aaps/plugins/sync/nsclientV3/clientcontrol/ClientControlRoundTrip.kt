@@ -3,7 +3,6 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol
 import app.aaps.core.data.json.OrgJsonCompat.optJsonObjectCompat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
-import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
@@ -203,9 +202,9 @@ class ClientControlRoundTrip(
                 // to be shown: nothing re-sends a bolus.
                 val now = dateUtil.now()
                 if (ack.reason.toFailureReason() == FailureReason.Cancelled)
-                    CoreAlert.BOLUS_CANCELLED.raiseEvent(alerts, AlertSeverity.WARNING, text, now)
+                    CoreAlert.BOLUS_CANCELLED.raiseEvent(alerts, text, now)
                 else
-                    CoreAlert.BOLUS_FAILED.raiseEvent(alerts, AlertSeverity.CRITICAL, text, now, AlarmSound.BOLUS_ERROR)
+                    CoreAlert.BOLUS_FAILED.raiseEvent(alerts, text, now, AlarmSound.BOLUS_ERROR)
             }
             return
         }

@@ -27,7 +27,7 @@ class CoreAlertTest {
     /** One alert of a kind at a time: its key is the kind's, and the alert carries the kind's title. */
     @Test
     fun anAlertOfAKindHasTheKeyAndTitleOfTheKind() {
-        val alert = CoreAlert.BOLUS_FAILED.alert(AlertSeverity.CRITICAL, AlertLifetime.EVENT, CoreAlert.BOLUS_FAILED.title, raisedAt = 1000L)
+        val alert = CoreAlert.BOLUS_FAILED.alert(AlertLifetime.EVENT, CoreAlert.BOLUS_FAILED.title, raisedAt = 1000L)
         assertEquals("bolus_failed", alert.key)
         assertEquals(CoreAlert.BOLUS_FAILED.title, alert.title)
         assertEquals(UiInteraction.SOURCE, alert.source)

@@ -14,7 +14,6 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
@@ -313,7 +312,7 @@ class CommandQueueImplementation(
         if (result?.cancelled == true) return false
         if (result == null || !result.success) {
             val reason = result?.comment?.takeIf { it.isNotBlank() }?.let { TextRef.Literal(it) } ?: CoreUiStrings.failed_update_basal_profile
-            CoreAlert.PROFILE_UPDATE_FAILED.raiseCondition(alerts(), AlertSeverity.CRITICAL, reason, dateUtil.now(), AlarmSound.BOLUS_ERROR)
+            CoreAlert.PROFILE_UPDATE_FAILED.raiseCondition(alerts(), reason, dateUtil.now(), AlarmSound.BOLUS_ERROR)
             return false
         }
         CoreAlert.PROFILE_UPDATE_FAILED.resolve(alerts())
@@ -369,7 +368,7 @@ class CommandQueueImplementation(
                 "The pump reported a basal far from the profile at $farHour:00 (${blocks.rateInHour(farHour)} instead of ${asked.rateInHour(farHour)} U/h), the profile is kept"
             )
             CoreAlert.BASAL_FAR_FROM_PROFILE.raiseCondition(
-                alerts(), AlertSeverity.CRITICAL, ImplementationStrings.basal_reported_far_from_profile, dateUtil.now(), AlarmSound.BOLUS_ERROR
+                alerts(), ImplementationStrings.basal_reported_far_from_profile, dateUtil.now(), AlarmSound.BOLUS_ERROR
             )
             return BasalReport.Rejected
         }
@@ -532,7 +531,6 @@ class CommandQueueImplementation(
             fabricPrivacy.logCustom("CommandStuckAlarm")
             CoreAlert.PUMP_DRIVER_NOT_RESPONDING.raiseCondition(
                 alerts(),
-                AlertSeverity.CRITICAL,
                 CoreUiStrings.pump_driver_not_responding.withArgs(command.status(), STUCK_COMMAND_ALARM.inWholeMinutes.toInt()),
                 dateUtil.now()
             )
@@ -746,7 +744,7 @@ class CommandQueueImplementation(
                 aapsLogger.error(LTag.PUMPQUEUE, "Failed to store carbs after bolus", e)
                 // The bolus succeeded but the carbs weren't persisted, so COB/IOB would be wrong and the
                 // loss was previously silent (log-only). Alert the user so they can re-enter the carbs.
-                CoreAlert.CARBS_NOT_SAVED.raiseEvent(alerts(), AlertSeverity.WARNING, CoreUiStrings.carbs_not_saved_after_bolus, dateUtil.now())
+                CoreAlert.CARBS_NOT_SAVED.raiseEvent(alerts(), CoreUiStrings.carbs_not_saved_after_bolus, dateUtil.now())
             }
         }
         return result

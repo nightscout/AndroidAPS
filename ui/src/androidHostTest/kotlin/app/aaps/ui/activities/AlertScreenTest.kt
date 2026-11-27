@@ -41,7 +41,7 @@ import app.aaps.core.ui.R as CoreUiR
 /**
  * Robolectric composable test for [AlertScreen] with [ErrorScreen]: what each button of the alarm screen does (decided
  * 2026-11-26). An alert that lasts is silenced in one tap per length, and the tap closes the screen; a BG alarm adds
- * "On every phone" and "Silence all BG alarms"; an alarm that ends when it is answered has Mute 5 min and Silence, and
+ * "On every phone" and "Pause all BG alarms"; an alarm that ends when it is answered has Mute 5 min and Silence, and
  * both close the screen. That the card then stays without sound is the core's, in `AlertsImplTest`.
  */
 @RunWith(RobolectricTestRunner::class)
@@ -74,7 +74,7 @@ class AlertScreenTest {
 
     private fun minutes(m: Int) = ctx.getString(CoreUiR.string.format_mins, m)
     private val oneHour get() = ctx.getString(CoreUiR.string.format_hours_only, 1)
-    private val silenceAll get() = ctx.getString(R.string.alarm_silence_all_bg, oneHour)
+    private val pauseAll get() = ctx.getString(R.string.alarm_pause_all_bg, oneHour)
 
     @Test
     fun `one tap on a length silences a lasting alert for that long and closes the screen`() {
@@ -96,7 +96,7 @@ class AlertScreenTest {
         compose.onNodeWithText(minutes(15)).assertIsDisplayed()
         compose.onNodeWithText(minutes(30)).assertIsDisplayed()
         compose.onNodeWithText(oneHour).assertDoesNotExist()
-        compose.onNodeWithText(silenceAll).assertDoesNotExist()
+        compose.onNodeWithText(pauseAll).assertDoesNotExist()
     }
 
     @Test
@@ -120,11 +120,11 @@ class AlertScreenTest {
     }
 
     @Test
-    fun `Silence all BG alarms pauses every BG alarm but urgent low for 1 h and closes the screen`() {
+    fun `Pause all BG alarms pauses every BG alarm but urgent low for 1 h and closes the screen`() {
         show(alert(BgAlert.LOW))
         val before = System.currentTimeMillis()
 
-        compose.onNodeWithText(silenceAll).performClick()
+        compose.onNodeWithText(pauseAll).performClick()
 
         val until = argumentCaptor<Long>()
         verify(alerts).pause(eq(BgAlert.PAUSABLE), until.capture())
@@ -140,7 +140,7 @@ class AlertScreenTest {
         show(alert(CoreAlert.COMMAND_FAILED))
 
         compose.onNodeWithText(oneHour).assertIsDisplayed()
-        compose.onNodeWithText(silenceAll).assertDoesNotExist()
+        compose.onNodeWithText(pauseAll).assertDoesNotExist()
         compose.onNodeWithText(ctx.getString(R.string.alarm_silence_on_every_phone)).assertDoesNotExist()
     }
 

@@ -2,6 +2,7 @@ package app.aaps.pump.carelevo.common
 
 import app.aaps.core.interfaces.alerts.AlertGroup
 import app.aaps.core.interfaces.alerts.AlertOrigin
+import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.DosingEffect
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.domain.type.AlarmCause
@@ -9,6 +10,7 @@ import app.aaps.pump.carelevo.domain.type.AlarmType
 import app.aaps.pump.carelevo.ext.stringResources
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
+import java.io.File
 
 class CarelevoAlertKindTest {
 
@@ -86,6 +88,32 @@ class CarelevoAlertKindTest {
         AlarmCause.entries.filter { it.alarmType == AlarmType.WARNING }.forEach { cause ->
             assertThat(cause.effect).isEqualTo(DosingEffect.NOW)
         }
+    }
+
+    /**
+     * The alert settings list a group's kinds by name, each with its level. "Low Insulin" was there three times - insulin
+     * stopped, change the patch soon, the user's reminder - with different levels (2026-11-27). Read from the English
+     * strings, the source of every translation.
+     */
+    @Test
+    fun `no two kinds have the same English name`() {
+        val english = Regex("""<string name="([^"]+)"[^>]*>([^<]*)</string>""")
+            .findAll(File("src/androidMain/res/values/strings.xml").readText())
+            .associate { it.groupValues[1] to it.groupValues[2] }
+        val names = CarelevoAlertKind.all.map { english.getValue((it.title as TextRef.Named).name) }
+
+        assertThat(names).containsNoDuplicates()
+    }
+
+    /** What the alert settings say a kind rings with is what its alarms are raised with: their effects' levels. */
+    @Test
+    fun `a kind rings with the levels of its causes`() {
+        (CarelevoAlertKind.all - CarelevoAlertKind.NOT_STOPPED).forEach { kind ->
+            assertThat(kind.levels).isEqualTo(kind.causes.mapNotNull { it.effect.severity }.toSet())
+        }
+        assertThat(CarelevoAlertKind.of(AlarmCause.ALARM_WARNING_LOW_INSULIN).levels).containsExactly(AlertSeverity.CRITICAL)
+        assertThat(CarelevoAlertKind.of(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN).levels).containsExactly(AlertSeverity.WARNING)
+        assertThat(CarelevoAlertKind.NOT_STOPPED.levels).containsExactly(AlertSeverity.CRITICAL)
     }
 
     /** The user's choice is stored under the id: a change loses it. */

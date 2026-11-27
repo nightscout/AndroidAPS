@@ -172,7 +172,7 @@ internal class ClientControlRoundTripTest {
     fun clientDismissingBolusFailedAlarm_relaysDismissToMaster() = runTest {
         whenever(publisher.publish(ClientControlMessage.DismissAlarm)).thenReturn(ClientControlSendResult.NotPaired)
         // The relayed alarm rings on the client, then the user answers it → one fire-and-forget DismissAlarm to the master.
-        active.value = listOf(CoreAlert.BOLUS_FAILED.alert(AlertSeverity.CRITICAL, AlertLifetime.EVENT, TextRef.Literal("x"), now))
+        active.value = listOf(CoreAlert.BOLUS_FAILED.alert(AlertLifetime.EVENT, TextRef.Literal("x"), now))
         active.value = emptyList()
 
         verify(publisher).publish(ClientControlMessage.DismissAlarm)
@@ -181,7 +181,7 @@ internal class ClientControlRoundTripTest {
     @Test
     fun clientDismissingUnrelatedAlarm_doesNotRelay() = runTest {
         // Only the bolus-delivery-failure alarm relays; answering any other alert must NOT signal the master.
-        active.value = listOf(CoreAlert.COMMAND_FAILED.alert(AlertSeverity.CRITICAL, AlertLifetime.EVENT, TextRef.Literal("x"), now))
+        active.value = listOf(CoreAlert.COMMAND_FAILED.alert(AlertLifetime.EVENT, TextRef.Literal("x"), now))
         active.value = emptyList()
 
         verify(publisher, never()).publish(ClientControlMessage.DismissAlarm)

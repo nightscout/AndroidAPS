@@ -1,7 +1,6 @@
 package app.aaps.implementation.alerts
 
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
@@ -61,7 +60,7 @@ class LocalAlertUtilsImpl(
                 // Rings until it is answered, and again after its silence, while the pump stays unreachable. Raised
                 // again at the next threshold, it keeps its time and does not ring again. The alert core writes its
                 // announcement, on the master.
-                CoreAlert.PUMP_UNREACHABLE.raiseCondition(alerts(), AlertSeverity.CRITICAL, text = null, now = dateUtil.now())
+                CoreAlert.PUMP_UNREACHABLE.raiseCondition(alerts(), text = null, now = dateUtil.now())
             }
             if (preferences.get(BooleanKey.SmsReportPumpUnreachable))
                 smsCommunicator.sendNotificationToAllNumbers(rh.gs(CoreUiStrings.pump_unreachable))

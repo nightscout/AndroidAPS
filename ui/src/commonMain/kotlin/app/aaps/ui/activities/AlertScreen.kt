@@ -9,7 +9,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.interfaces.alerts.AlertChoice
 import app.aaps.core.interfaces.alerts.AlertLifetime
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.BgAlert
@@ -101,25 +100,15 @@ fun AlertScreen(
         onSilenceEverywhere = { everywhere = it },
         // All the BG alarms for a while, from the one that rings: a pause of this phone, never urgent low. With "On every
         // phone" this alarm is silenced on the others too; a pause stays this phone's own.
-        onSilenceAll = if (lasts && alert.kind is BgAlert && !alert.kind.isProtected) {
+        onPauseAll = if (lasts && alert.kind is BgAlert && !alert.kind.isProtected) {
             {
                 uel.log(Action.ERROR_DIALOG_OK, Sources.Unknown)
-                if (canEverywhere && everywhere) alerts.silenceEverywhere(source, key, Alerts.SILENCE_ALL_MINUTES)
-                alerts.pause(BgAlert.PAUSABLE, Clock.System.now().toEpochMilliseconds() + Alerts.SILENCE_ALL_MINUTES * 60_000L)
+                if (canEverywhere && everywhere) alerts.silenceEverywhere(source, key, Alerts.PAUSE_ALL_MINUTES)
+                alerts.pause(BgAlert.PAUSABLE, Clock.System.now().toEpochMilliseconds() + Alerts.PAUSE_ALL_MINUTES * 60_000L)
                 onClose()
             }
         } else null,
-        silenceAllMinutes = Alerts.SILENCE_ALL_MINUTES,
-        // The moment it rings is when the user wants to say "not this again". Not for a protected kind, which always
-        // rings. It also answers this alarm, as Silence does, so setting the kind back to Ring later does not ring it
-        // again: a pump's alert stays as a card with no sound, one of the app's own is over.
-        onSilenceKind = if (alert.kind.isProtected) null else {
-            {
-                alerts.silence(source, key)
-                alerts.setChoice(alert.kind, AlertChoice.SILENT)
-                onClose()
-            }
-        },
+        pauseAllMinutes = Alerts.PAUSE_ALL_MINUTES,
         badge = badge
     )
 }

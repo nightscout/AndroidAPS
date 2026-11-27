@@ -3,7 +3,9 @@ package app.aaps.plugins.eversense.alerts
 import app.aaps.core.interfaces.alerts.AlertGroup
 import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertOrigin
+import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.DosingEffect
+import app.aaps.core.interfaces.alerts.levels
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.eversense.EversenseStrings
 import app.aaps.plugins.eversense.enums.EversenseAlarm
@@ -31,6 +33,9 @@ class EversenseAlertKind private constructor(
     override val origin: AlertOrigin get() = AlertOrigin.CGM
     override val isProtected: Boolean = effects.any { it.affectsDosing }
     override val group: AlertGroup = AlertGroup.of(origin, effects)
+
+    // The level of each alert is its effect's (`EversensePlugin`)
+    override val levels: Set<AlertSeverity> = effects.levels()
 
     companion object {
 

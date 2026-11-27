@@ -3,7 +3,9 @@ package app.aaps.pump.carelevo.common
 import app.aaps.core.interfaces.alerts.AlertGroup
 import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertOrigin
+import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.DosingEffect
+import app.aaps.core.interfaces.alerts.levels
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.CarelevoStrings
 import app.aaps.pump.carelevo.domain.type.AlarmCause
@@ -33,6 +35,9 @@ class CarelevoAlertKind private constructor(
     override val origin: AlertOrigin get() = AlertOrigin.PUMP
     override val isProtected: Boolean = effects.any { it.affectsDosing }
     override val group: AlertGroup = AlertGroup.of(origin, effects)
+
+    // The level of each alarm is its effect's (`CarelevoAlarmNotifier`)
+    override val levels: Set<AlertSeverity> = effects.levels()
 
     companion object {
 

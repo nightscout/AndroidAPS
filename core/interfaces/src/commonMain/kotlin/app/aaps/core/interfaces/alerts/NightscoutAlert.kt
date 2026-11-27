@@ -23,6 +23,9 @@ enum class NightscoutAlert(private val idName: String, override val title: TextR
     // Its record is in Nightscout already: written again, it would come back as a new announcement
     override val announced: Boolean get() = false
 
+    // One chime and a card (`NightscoutAnnouncementsImpl`)
+    override val levels: Set<AlertSeverity> get() = setOf(AlertSeverity.WARNING)
+
     companion object {
 
         /** The source every alert from Nightscout is raised under. */

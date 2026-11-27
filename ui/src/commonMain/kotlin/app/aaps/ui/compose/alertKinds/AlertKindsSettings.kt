@@ -196,7 +196,11 @@ data class AlertSettingRow(
     val choices: List<AlertChoice>,
     val testKind: AlertKind?,
     val exceptions: List<AlertExceptionRow> = emptyList(),
-    val candidates: List<AlertKind> = emptyList()
+    val candidates: List<AlertKind> = emptyList(),
+    /** What Ring means for it: the levels its alerts ring with ([AlertKind.levels]), for a group those of its kinds. */
+    val levels: Set<AlertSeverity> = emptySet(),
+    /** A group's kinds in use that say their level, for its list "Its alerts". Empty for a kind of its own. */
+    val members: List<AlertKind> = emptyList()
 )
 
 /** A kind the user set apart from its group, with its own choice and the [choices] of its group. */
@@ -232,18 +236,21 @@ fun alertSettingsSections(catalogues: Collection<AlertKindCatalogue>, choices: M
         val own = inSection.filter { it.group == null }
         val groups = AlertGroup.entries.filter { group -> inSection.any { it.group == group } }
         val groupRows = groups.map { group ->
+            val members = inSection.filter { it.group == group }
             // A protected kind cannot be set apart: it would only look silenced
-            val apart = inSection.filter { it.group == group && !it.isProtected }
+            val apart = members.filter { !it.isProtected }
             AlertSettingRow(
                 setting = group,
                 choice = shown(choiceOf(group, choices)),
                 choices = offered(group.choices),
-                testKind = inSection.first { it.group == group }.takeIf { group.makesSound },
+                testKind = members.first().takeIf { group.makesSound },
                 exceptions = apart.mapNotNull { kind -> choices[kind.id]?.let { AlertExceptionRow(kind, shown(it), offered(group.choices)) } },
-                candidates = apart.filter { it.id !in choices }
+                candidates = apart.filter { it.id !in choices },
+                levels = members.flatMap { it.levels }.toSet(),
+                members = members.filter { it.levels.isNotEmpty() }
             )
         }
-        val ownRows = own.map { AlertSettingRow(it, shown(choiceOf(it, choices)), offered(AlertChoice.entries), testKind = it) }
+        val ownRows = own.map { AlertSettingRow(it, shown(choiceOf(it, choices)), offered(AlertChoice.entries), testKind = it, levels = it.levels) }
         AlertSettingsSection(
             section = section,
             devices = used.filter { catalogue -> catalogue.kinds.any { it.section == section && it.origin.isDevice() } }.map { it.title },

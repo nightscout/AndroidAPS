@@ -11,62 +11,67 @@ import app.aaps.core.keys.interfaces.TextRef
  *
  * The ones about the pump are in the pump's groups: for the user they are the pump's alerts, whoever raises them. The
  * others are each a row of their own.
+ *
+ * Each kind has one [severity], and its alerts are raised with it (decided 2026-11-27). It used to be given at each
+ * raise; kept here, the alert settings can say what to expect ([levels]) and it is true by construction.
  */
 enum class CoreAlert(
     private val idName: String,
     override val title: TextRef,
     override val isProtected: Boolean,
+    /** How its alerts ring: [AlertSeverity.CRITICAL] an alarm until answered, [AlertSeverity.WARNING] one sound. */
+    val severity: AlertSeverity,
     override val group: AlertGroup? = null
 ) : AlertKind {
 
     /** A command the user started that the pump did not carry out, shown from the overview or the main screen. */
-    COMMAND_FAILED("command_failed", InterfacesStrings.alert_kind_command_failed, isProtected = false, AlertGroup.PUMP_ACTION),
+    COMMAND_FAILED("command_failed", InterfacesStrings.alert_kind_command_failed, isProtected = false, AlertSeverity.CRITICAL, AlertGroup.PUMP_ACTION),
 
     /** The new insulin is in the pump and the old program runs: the basal is wrong until the write works. */
-    INSULIN_CHANGE_FAILED("insulin_change_failed", InterfacesStrings.alert_kind_insulin_change_failed, isProtected = true, AlertGroup.PUMP_CRITICAL),
+    INSULIN_CHANGE_FAILED("insulin_change_failed", InterfacesStrings.alert_kind_insulin_change_failed, isProtected = true, AlertSeverity.CRITICAL, AlertGroup.PUMP_CRITICAL),
 
     /** The "time to eat" timer. */
-    EAT_REMINDER("eat_reminder", InterfacesStrings.alert_kind_eat_reminder, isProtected = false),
+    EAT_REMINDER("eat_reminder", InterfacesStrings.alert_kind_eat_reminder, isProtected = false, AlertSeverity.CRITICAL),
 
     /** The Alarm action of an automation rule. */
-    AUTOMATION_ALARM("automation_alarm", InterfacesStrings.alert_kind_automation_alarm, isProtected = false),
+    AUTOMATION_ALARM("automation_alarm", InterfacesStrings.alert_kind_automation_alarm, isProtected = false, AlertSeverity.CRITICAL),
 
     /**
      * The profile could not be written to the pump, so the pump gives another basal. Not protected: a pump that cannot
      * take every profile (Combo) would ring for something the user knows.
      */
-    PROFILE_UPDATE_FAILED("profile_update_failed", InterfacesStrings.alert_kind_profile_update_failed, isProtected = false, AlertGroup.PUMP_ACTION),
+    PROFILE_UPDATE_FAILED("profile_update_failed", InterfacesStrings.alert_kind_profile_update_failed, isProtected = false, AlertSeverity.CRITICAL, AlertGroup.PUMP_ACTION),
 
     /** After a profile was set, the pump reports a basal far from it. */
-    BASAL_FAR_FROM_PROFILE("basal_far_from_profile", InterfacesStrings.alert_kind_basal_far_from_profile, isProtected = false, AlertGroup.PUMP_ACTION),
+    BASAL_FAR_FROM_PROFILE("basal_far_from_profile", InterfacesStrings.alert_kind_basal_far_from_profile, isProtected = false, AlertSeverity.CRITICAL, AlertGroup.PUMP_ACTION),
 
     /** Insulin the user asked for was not given. */
-    BOLUS_FAILED("bolus_failed", InterfacesStrings.alert_kind_bolus_failed, isProtected = true, AlertGroup.PUMP_CRITICAL),
+    BOLUS_FAILED("bolus_failed", InterfacesStrings.alert_kind_bolus_failed, isProtected = true, AlertSeverity.CRITICAL, AlertGroup.PUMP_CRITICAL),
 
     /** A bolus was stopped before all of it was given. */
-    BOLUS_CANCELLED("bolus_cancelled", InterfacesStrings.alert_kind_bolus_cancelled, isProtected = false, AlertGroup.PUMP_ACTION),
+    BOLUS_CANCELLED("bolus_cancelled", InterfacesStrings.alert_kind_bolus_cancelled, isProtected = false, AlertSeverity.WARNING, AlertGroup.PUMP_ACTION),
 
     /** The bolus was given, but its carbs were not saved: COB and IOB are wrong until they are entered again. */
-    CARBS_NOT_SAVED("carbs_not_saved", InterfacesStrings.alert_kind_carbs_not_saved, isProtected = false),
+    CARBS_NOT_SAVED("carbs_not_saved", InterfacesStrings.alert_kind_carbs_not_saved, isProtected = false, AlertSeverity.WARNING),
 
     /** The pump was not reached for longer than the setting allows. Optional: the user turns it on. */
-    PUMP_UNREACHABLE("pump_unreachable", InterfacesStrings.alert_kind_pump_unreachable, isProtected = false, AlertGroup.PUMP_ACTION),
+    PUMP_UNREACHABLE("pump_unreachable", InterfacesStrings.alert_kind_pump_unreachable, isProtected = false, AlertSeverity.CRITICAL, AlertGroup.PUMP_ACTION),
 
     /** A command has not ended for a long time, so the queue waits: no bolus, no temp basal until it ends. */
-    PUMP_DRIVER_NOT_RESPONDING("pump_driver_not_responding", InterfacesStrings.alert_kind_pump_driver_not_responding, isProtected = false, AlertGroup.PUMP_ACTION),
+    PUMP_DRIVER_NOT_RESPONDING("pump_driver_not_responding", InterfacesStrings.alert_kind_pump_driver_not_responding, isProtected = false, AlertSeverity.CRITICAL, AlertGroup.PUMP_ACTION),
 
     /** The running mode stops the insulin, but its zero temp basal is not on the pump: the pump may still give basal. */
-    ZERO_DELIVERY_NOT_SET("zero_delivery_not_set", InterfacesStrings.alert_kind_zero_delivery_not_set, isProtected = true, AlertGroup.PUMP_CRITICAL),
+    ZERO_DELIVERY_NOT_SET("zero_delivery_not_set", InterfacesStrings.alert_kind_zero_delivery_not_set, isProtected = true, AlertSeverity.CRITICAL, AlertGroup.PUMP_CRITICAL),
 
     /** The loop predicts a low that less insulin cannot prevent: the user has to eat. */
-    CARBS_REQUIRED("carbs_required", InterfacesStrings.alert_kind_carbs_required, isProtected = false),
+    CARBS_REQUIRED("carbs_required", InterfacesStrings.alert_kind_carbs_required, isProtected = false, AlertSeverity.WARNING),
 
     /**
      * An alarm of a pump driver that has no alert kinds of its own yet and rings through `UiInteraction.runAlarm`.
      * Protected, because the app cannot tell which of those alarms are safe to silence. It goes when the last such
      * driver has moved to alerts.
      */
-    PUMP_DRIVER_ALARM("pump_driver_alarm", InterfacesStrings.alert_kind_pump_driver_alarm, isProtected = true, AlertGroup.PUMP_CRITICAL);
+    PUMP_DRIVER_ALARM("pump_driver_alarm", InterfacesStrings.alert_kind_pump_driver_alarm, isProtected = true, AlertSeverity.CRITICAL, AlertGroup.PUMP_CRITICAL);
 
     override val id: String = "${UiInteraction.SOURCE}.$idName"
     override val source: String get() = UiInteraction.SOURCE
@@ -75,14 +80,16 @@ enum class CoreAlert(
     // The loop writes the announcement of carbs required itself, under its own setting
     override val announced: Boolean get() = this != CARBS_REQUIRED
 
+    override val levels: Set<AlertSeverity> get() = setOf(severity)
+
     /** The key of its alert: one alert of a kind at a time. Raised again while it is active, it does not ring again. */
     val key: String get() = idName
 
     /**
-     * An alert of this kind, with its key, its title and [text] (null: the title says it all). [sound] is the alarm
-     * sound of a CRITICAL one, null for the one its severity picks.
+     * An alert of this kind, with its key, its title, its [severity] and [text] (null: the title says it all). [sound]
+     * is the alarm sound of a CRITICAL one, null for the one its severity picks.
      */
-    fun alert(severity: AlertSeverity, lifetime: AlertLifetime, text: TextRef?, raisedAt: Long, sound: AlarmSound? = null): Alert =
+    fun alert(lifetime: AlertLifetime, text: TextRef?, raisedAt: Long, sound: AlarmSound? = null): Alert =
         Alert(kind = this, key = key, severity = severity, title = title, text = text, raisedAt = raisedAt, lifetime = lifetime, sound = sound)
 
     /**
@@ -90,14 +97,14 @@ enum class CoreAlert(
      * active it keeps the time it began, so a check that finds the same condition again and again rings once, and a
      * silence the user gave it still holds. [now] is the time of a new one.
      */
-    fun raiseCondition(alerts: Alerts, severity: AlertSeverity, text: TextRef?, now: Long, sound: AlarmSound? = null) {
+    fun raiseCondition(alerts: Alerts, text: TextRef?, now: Long, sound: AlarmSound? = null) {
         val since = alerts.active.value.firstOrNull { it.source == source && it.key == key }?.raisedAt ?: now
-        alerts.raise(alert(severity, AlertLifetime.CONDITION, text, since, sound))
+        alerts.raise(alert(AlertLifetime.CONDITION, text, since, sound))
     }
 
     /** Raises an event of this kind ([AlertLifetime.EVENT]): each one rings, and the user's answer ends it. */
-    fun raiseEvent(alerts: Alerts, severity: AlertSeverity, text: TextRef, now: Long, sound: AlarmSound? = null) =
-        alerts.raise(alert(severity, AlertLifetime.EVENT, text, now, sound))
+    fun raiseEvent(alerts: Alerts, text: TextRef, now: Long, sound: AlarmSound? = null) =
+        alerts.raise(alert(AlertLifetime.EVENT, text, now, sound))
 
     /** The alert of this kind ends, if there is one. */
     fun resolve(alerts: Alerts) = alerts.resolve(source, key)

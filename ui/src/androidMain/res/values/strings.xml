@@ -406,7 +406,6 @@
     <string name="alert_kinds_section_silent_or_off" comment="On the entry of one part of the alert settings (pump, CGM, BG alarms, AAPS). %1$d=how many of its settings are Silent or Off on this phone. Example: Silent or off on this phone: 2">Silent or off on this phone: %1$d</string>
     <string name="alert_kinds_bg_summary">Your low and high rules, urgent low and missed readings</string>
     <string name="alert_kinds_app_summary">Reminders, automation alarms and other alerts of AAPS</string>
-    <string name="alert_kinds_intro">On this phone only. Silent: a card with no sound. Off: not shown, but still written in the history.</string>
     <string name="alert_kinds_silent_or_off" comment="%1$d=how many kinds of alert the user set to Silent or Off on this phone. Example: Alert kinds silent or off on this phone: 2">Alert kinds silent or off on this phone: %1$d</string>
     <string name="alert_choice_ring" comment="One of three choices for a kind of alert: it rings as usual">Ring</string>
     <string name="alert_choice_silent" comment="One of three choices for a kind of alert: a card with no sound">Silent</string>
@@ -414,18 +413,26 @@
     <string name="alert_kind_protected" comment="Shown instead of the three choices for a kind of alert the user cannot silence, for example insulin delivery stopped">Always rings, for safety</string>
     <string name="alert_choice_show" comment="Choice for alerts that never make a sound (only a card): the card is shown. The other choice is Off">Show</string>
     <string name="alert_choice_vibrate" comment="One of the choices for a kind of alert (Ring, Vibrate, Silent, Off): it rings as usual, but the phone and the watch only vibrate, no sound">Vibrate</string>
-    <string name="alert_kinds_vibrate_intro">Vibrate: as Ring, but the phone and the watch only vibrate. An alarm vibrates until you answer it.</string>
     <string name="alert_kind_exceptions" comment="Heading of a list of single kinds of alert that the user set differently from their group">Exceptions</string>
     <string name="alert_kind_add_exception" comment="Button: pick one kind of alert and set it differently from its group">Add exception</string>
     <string name="alert_kind_remove_exception" comment="Button (an X icon, read by the screen reader): the kind of alert follows its group again">Remove exception</string>
+    <string name="alert_cell_rings_until_answered" comment="Cell of the table at the top of the alert settings: an alarm on Ring makes its sound until the user answers it. Keep it short, the column is narrow">Rings until answered</string>
+    <string name="alert_cell_vibrates_until_answered" comment="Cell of the table at the top of the alert settings: an alarm on Vibrate vibrates until the user answers it. Keep it short">Vibrates until answered</string>
+    <string name="alert_cell_one_sound" comment="Cell of the table at the top of the alert settings: a warning on Ring makes one sound. Keep it short">One sound</string>
+    <string name="alert_cell_vibrates_once" comment="Cell of the table at the top of the alert settings: a warning on Vibrate vibrates once. Keep it short">Vibrates once</string>
+    <string name="alert_cell_card" comment="Cell of the table at the top of the alert settings: only a card in the notification list, no sound. Keep it short">A card</string>
+    <string name="alert_cell_not_shown" comment="Cell of the table at the top of the alert settings: the alert is not shown at all. Keep it short">Not shown</string>
+    <string name="alert_kinds_table_note" comment="Under the table at the top of the alert settings">For this phone only. An alarm also opens the alarm screen and rings on the watch. Off: still written in the history. A protected alert always rings. Each alert below says if it is an alarm, a warning or info.</string>
+    <string name="alert_level_alarm_or_warning" comment="The level of an alert kind or group in the alert settings: some of its alerts are alarms (ring until answered), some are warnings (one sound)">Alarm or warning</string>
+    <string name="alert_level_warning_or_info" comment="The level of an alert kind or group in the alert settings: some of its alerts are warnings (one sound), some are info (a card only)">Warning or info</string>
+    <string name="alert_group_its_alerts" comment="Button in a group of the alert settings: shows or hides the list of the alerts in the group, each with its level. %1$d=how many alerts, for example: 12">Its alerts (%1$d)</string>
     <string name="alarm_silence_on_every_phone" comment="Checkbox on the alarm screen of a glucose alarm, under the silence buttons: when ticked, the alarm is silenced also on every other phone (master and clients)">On every phone</string>
-    <string name="alarm_silence_all_bg" comment="Button on the alarm screen of a glucose alarm: no glucose alarm makes a sound on this phone for a time, except urgent low. %1$s=how long, for example: 1 h">Silence all BG alarms for %1$s</string>
+    <string name="alarm_pause_all_bg" comment="Button on the alarm screen of a glucose alarm: pauses every glucose alarm on this phone for a time (cards only, no sound), except urgent low. The same pause as on the BG alarms screen. %1$s=how long, for example: 1 h">Pause all BG alarms for %1$s</string>
     <string name="alert_kind_sound" comment="Label before the sound an alert kind plays on this phone">Sound</string>
     <string name="alert_kind_sound_own" comment="Sound choice of an alert kind: the sound the alert itself asks for, as before">Its own sound</string>
     <string name="alert_kind_sound_phone" comment="Sound choice of an alert kind: opens the phone's list of sounds (ringtones, notification sounds, alarms)">Sound of the phone…</string>
     <string name="alert_kind_sound_test" comment="Button: play the sound of this alarm for a few seconds, as it will ring">Test</string>
     <string name="alert_kind_sound_test_refused">Not played: an alarm is ringing now.</string>
-    <string name="alert_kind_silence_on_this_phone" comment="Button on the alarm screen: from now on, alerts of this kind come as a card with no sound, on this phone">Silence this kind on this phone</string>
     <string name="bg_alarms_read_only">The rules and the urgent low threshold are the same on every phone. They are changed on the master phone, or here by a client with the Admin role while the master can be reached. How this phone rings you can always change.</string>
     <string name="bg_alarms_rules_label" comment="Heading of the glucose alarm rules of a group (lows or highs). The rules are synced, so they are the same on the master and on every client phone">Rules, the same on every phone</string>
     <string name="bg_alarms_on_this_phone" comment="Heading of how this one phone rings an alarm (Ring, Vibrate, Silent, Off and the sound), as opposed to the rules above it, which are the same on every phone">On this phone</string>
@@ -442,7 +449,7 @@
     <string name="bg_alarm_rule_high_title">High alarm</string>
     <string name="bg_alarm_rule_add">Add rule</string>
     <string name="bg_alarm_pause_hint">While paused, these alarms come as a card with no sound. If one is still on when the pause ends, it rings then. Urgent low is never paused.</string>
-    <string name="bg_alarms_pause_all_for" comment="Button at the bottom of the glucose alarms, and the title of its dialog with times (30 min, 1 h, 2 h, 4 h) to pause every glucose alarm but urgent low on this phone">Pause all for…</string>
+    <string name="bg_alarms_pause_all" comment="Button at the bottom of the glucose alarms, and the title of its dialog with times (30 min, 1 h, 2 h, 4 h) to pause every glucose alarm but urgent low on this phone. No dots at the end: they looked like text that was cut">Pause all BG alarms</string>
     <string name="bg_alarm_paused_until" comment="Heading of the paused glucose alarms. %1$s=the time the pause ends, as HH:MM">Paused until %1$s</string>
     <string name="bg_alarm_resume" comment="Button: end the pause of the glucose alarms now">Resume</string>
     <string name="bg_alarm_rule_persistent_high" comment="Title of a persistent high glucose alarm rule. %1$s=the threshold with its unit, for example: 10.0 mmol/l">Persistent high above %1$s</string>

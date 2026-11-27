@@ -5,7 +5,6 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.configuration.Config
@@ -270,7 +269,7 @@ class RunningModeReconciler(
         if (now - missingSince >= ALARM_AFTER_MS && !zeroTbrAlarmRaised) {
             aapsLogger.error(LTag.APS, "RunningModeReconciler: no zero-TBR in ${activeMode.mode} for ${(now - missingSince) / 60_000L} min, raising alarm")
             zeroTbrAlarmRaised = true
-            CoreAlert.ZERO_DELIVERY_NOT_SET.raiseCondition(alerts(), AlertSeverity.CRITICAL, ApsStrings.zero_basal_not_set, now)
+            CoreAlert.ZERO_DELIVERY_NOT_SET.raiseCondition(alerts(), ApsStrings.zero_basal_not_set, now)
         }
     }
 

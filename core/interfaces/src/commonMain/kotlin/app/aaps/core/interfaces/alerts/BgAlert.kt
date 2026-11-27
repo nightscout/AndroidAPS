@@ -51,6 +51,14 @@ enum class BgAlert(
     // Every phone raises its own from the same readings: an announcement would make a client hear it twice
     override val announced: Boolean get() = false
 
+    // Urgent low and missed readings are always alarms (`BgAlarmsImpl`). The others ring as each rule says, shown with
+    // the rule.
+    override val levels: Set<AlertSeverity>
+        get() = when (this) {
+            URGENT_LOW, STALE -> setOf(AlertSeverity.CRITICAL)
+            else              -> emptySet()
+        }
+
     /**
      * How long a silence lasts where the user does not pick one: a swipe, the watch, Mute (decided 2026-11-26, it was a
      * setting of each rule). Urgent low comes back soon, a high can wait an hour. The alarm screen has its own buttons.

@@ -64,7 +64,7 @@ internal fun ErrorScreenAlertPreview() {
     }
 }
 
-/** A BG alarm: one tap per length, "On every phone", and "Silence all BG alarms". */
+/** A BG alarm: one tap per length, "On every phone", and "Pause all BG alarms". */
 @Preview(showBackground = true, widthDp = 360, heightDp = 720)
 @Composable
 internal fun ErrorScreenBgAlarmPreview() {
@@ -76,9 +76,8 @@ internal fun ErrorScreenBgAlarmPreview() {
             onMute5Min = {},
             silenceLengths = listOf(15, 30, 60),
             silenceEverywhere = false,
-            onSilenceAll = {},
-            silenceAllMinutes = 60,
-            onSilenceKind = {},
+            onPauseAll = {},
+            pauseAllMinutes = 60,
             badge = badge
         )
     }

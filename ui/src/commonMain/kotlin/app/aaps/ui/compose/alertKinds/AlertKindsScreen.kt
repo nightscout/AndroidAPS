@@ -21,6 +21,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
@@ -40,6 +42,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,6 +53,7 @@ import app.aaps.core.interfaces.alerts.AlertGroup
 import app.aaps.core.interfaces.alerts.AlertKind
 import app.aaps.core.interfaces.alerts.AlertSection
 import app.aaps.core.interfaces.alerts.AlertSetting
+import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.AlertSound
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.keys.interfaces.TextRef
@@ -66,8 +70,9 @@ import app.aaps.ui.UiStrings
  * How each alert rings on this phone (`_docs/ALARMS.md`, section 6): a short list of the four parts - the pump, the CGM,
  * the BG alarms and the app's own alerts - each opening its own screen, as the settings of AAPS do (decided
  * 2026-11-26). Each part says the devices it is for and how many of its settings are silent or off here
- * ([sectionSilentOrOff]), so nothing is hidden by the extra step. On top the choices are explained once, and the count
- * of the whole phone ([silentOrOff]) is the same as the line in the notification sheet.
+ * ([sectionSilentOrOff]), so nothing is hidden by the extra step. On top a table says what each level (alarm, warning,
+ * info) does with each choice ([LevelTable]), and the count of the whole phone ([silentOrOff]) is the same as the line
+ * in the notification sheet.
  */
 @Composable
 fun AlertKindsScreen(
@@ -92,14 +97,52 @@ fun AlertKindsScreen(
             verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
         ) {
             item {
-                Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
-                    Text(stringResource(UiStrings.alert_kinds_intro), style = MaterialTheme.typography.bodyMedium)
-                    if (vibrates) Text(stringResource(UiStrings.alert_kinds_vibrate_intro), style = MaterialTheme.typography.bodyMedium)
+                Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+                    LevelTable(vibrates)
+                    Text(stringResource(UiStrings.alert_kinds_table_note), style = MaterialTheme.typography.bodyMedium)
                     if (silentOrOff > 0)
                         Text(stringResource(UiStrings.alert_kinds_silent_or_off, silentOrOff), style = MaterialTheme.typography.bodyMedium)
                 }
             }
             items(sections, key = { it.section.name }) { section -> SectionCard(section, sectionSilentOrOff(section)) { onOpen(section.section) } }
+        }
+    }
+}
+
+/**
+ * What an alert does on this phone: its level in the columns, this phone's choice in the rows (decided 2026-11-27, the
+ * user: "not clear how Alarm and Warning map to Ring, Vibrate, Silent, Off"). It replaced three paragraphs that said
+ * the same in words. The Vibrate row only where the phone can vibrate.
+ */
+@Composable
+private fun LevelTable(vibrates: Boolean) {
+    val card = UiStrings.alert_cell_card
+    val notShown = UiStrings.alert_cell_not_shown
+    val rows = buildList {
+        add(UiStrings.alert_choice_ring to listOf(UiStrings.alert_cell_rings_until_answered, UiStrings.alert_cell_one_sound, card))
+        if (vibrates) add(UiStrings.alert_choice_vibrate to listOf(UiStrings.alert_cell_vibrates_until_answered, UiStrings.alert_cell_vibrates_once, card))
+        add(UiStrings.alert_choice_silent to listOf(card, card, card))
+        add(UiStrings.alert_choice_off to listOf(notShown, notShown, notShown))
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
+        LevelTableRow(label = null, cells = listOf(CoreUiStrings.alarm, CoreUiStrings.warning, InterfacesStrings.alert_group_info), header = true)
+        rows.forEach { (choice, cells) ->
+            HorizontalDivider()
+            LevelTableRow(label = choice, cells = cells, header = false)
+        }
+    }
+}
+
+@Composable
+private fun LevelTableRow(label: TextRef?, cells: List<TextRef>, header: Boolean) {
+    Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
+        Text(label?.let { stringResource(it) } ?: "", style = MaterialTheme.typography.labelLarge, modifier = Modifier.weight(0.8f))
+        cells.forEach { cell ->
+            Text(
+                stringResource(cell),
+                style = if (header) MaterialTheme.typography.labelLarge else MaterialTheme.typography.bodySmall,
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }
@@ -127,8 +170,11 @@ private fun SectionCard(section: AlertSettingsSection, silentOrOff: Int, onClick
  * so there is no Save: the back arrow only goes back. A protected row shows that it always rings, with no choice. Each
  * row is a card, so what belongs to it stays together, as in the other lists of AAPS (decided 2026-11-26).
  *
- * A kind of a group can be set apart from it as an exception: the alarm screen's "Silence this kind" makes one, and
- * "Add exception" in the group's card. Each row that makes a sound has its sound on this phone ([sounds], by group or
+ * Each row says what Ring means for it: an alarm that rings until answered, or one sound ([AlertSettingRow.levels]); a
+ * group whose alerts differ lists them with their level ("Its alerts", decided 2026-11-27).
+ *
+ * A kind of a group can be set apart from it as an exception: "Add exception" in the group's card. Each row that makes
+ * a sound has its sound on this phone ([sounds], by group or
  * kind id; not in it: the alert's own) - one AAPS ships, or on Android any sound of the phone - and a Test button, which
  * plays it as an alarm for a few seconds, also in Do Not Disturb, or vibrates on a row set to Vibrate. [onTest] returns
  * false when nothing was played: an alarm is ringing.
@@ -237,7 +283,10 @@ private fun SettingCard(
                 Text(stringResource(setting.title), style = MaterialTheme.typography.titleMedium)
                 if (setting is AlertGroup)
                     Text(stringResource(setting.summary), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                // What Ring means here: an alarm until answered, or one sound
+                levelLine(row.levels)?.let { Text(stringResource(it), style = MaterialTheme.typography.bodyMedium) }
             }
+            if (row.members.isNotEmpty()) MemberLevels(row)
             extra()
             if (setting.isProtected) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
@@ -263,6 +312,48 @@ private fun SettingCard(
                 }
         }
     }
+}
+
+/**
+ * A group's alerts, each with its level, behind "Its alerts": which of them ring until answered and which make one
+ * sound. Closed at first, so a long list of a pump does not push the choice down.
+ */
+@Composable
+private fun MemberLevels(row: AlertSettingRow) {
+    var open by rememberSaveable(row.setting.id) { mutableStateOf(false) }
+    Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
+        TextButton(onClick = { open = !open }, contentPadding = LinedUpButtonPadding) {
+            Text(stringResource(UiStrings.alert_group_its_alerts, row.members.size))
+            Icon(if (open) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown, contentDescription = null)
+        }
+        if (open) row.members.forEach { kind ->
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+                Text(stringResource(kind.title), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+                levelLabel(kind.levels)?.let {
+                    Text(stringResource(it), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
+        }
+    }
+}
+
+/**
+ * The line under a row's title: what Ring means for it. Null for an info row, whose summary says it already, and for one
+ * whose level something else sets (a BG rule shows its own).
+ */
+private fun levelLine(levels: Set<AlertSeverity>): TextRef? = when (levels) {
+    setOf(AlertSeverity.CRITICAL) -> UiStrings.bg_alarm_rule_alarm
+    setOf(AlertSeverity.WARNING)  -> UiStrings.bg_alarm_rule_warning
+    setOf(AlertSeverity.INFO)     -> null
+    else                          -> levelLabel(levels)
+}
+
+/** A level in one or two words: Alarm, Warning, Info, or a mix of them. Null when it is not known here. */
+private fun levelLabel(levels: Set<AlertSeverity>): TextRef? = when {
+    levels.isEmpty()                    -> null
+    AlertSeverity.CRITICAL in levels    -> if (levels.size == 1) CoreUiStrings.alarm else UiStrings.alert_level_alarm_or_warning
+    AlertSeverity.WARNING in levels     -> if (levels.size == 1) CoreUiStrings.warning else UiStrings.alert_level_warning_or_info
+    else                                -> InterfacesStrings.alert_group_info
 }
 
 /** A text button with no padding at its start, so its text lines up with the text above it. */

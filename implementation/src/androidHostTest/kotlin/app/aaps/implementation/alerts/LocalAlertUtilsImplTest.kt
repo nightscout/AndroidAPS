@@ -110,7 +110,7 @@ class LocalAlertUtilsImplTest : TestBase() {
         givenUnreachableAlarmOn()
         val since = now - T.mins(30).msecs()
         whenever(alerts.active).thenReturn(
-            MutableStateFlow(listOf(CoreAlert.PUMP_UNREACHABLE.alert(AlertSeverity.CRITICAL, AlertLifetime.CONDITION, null, since)))
+            MutableStateFlow(listOf(CoreAlert.PUMP_UNREACHABLE.alert(AlertLifetime.CONDITION, null, since)))
         )
 
         localAlertUtils.checkPumpUnreachableAlarm(lastConnection = now - T.mins(60).msecs(), isStatusOutdated = true, isDisconnected = false)

@@ -169,33 +169,33 @@
     <!-- Safety Check -->
     <string name="carelevo_toast_msg_safety_check_failed">Safety check failed.</string>
 
-    <!-- Warning Titles -->
-    <string name="alarm_feat_title_warning_low_insulin">Low Insulin</string>
+    <!-- Warning Titles. Each differs from the alert or notice of the same cause below: the patch's warning means insulin delivery has stopped (2026-11-27: they had the same names) -->
+    <string name="alarm_feat_title_warning_low_insulin" comment="Patch alarm: almost no insulin left, and the patch has stopped insulin delivery">Low Insulin: Delivery Stopped</string>
     <string name="alarm_feat_title_warning_expired_patch">Patch Expired</string>
-    <string name="alarm_feat_title_warning_low_battery">Low Battery</string>
-    <string name="alarm_feat_title_warning_invalid_temperature">High/Low Temperature</string>
-    <string name="alarm_feat_title_warning_not_used_app">Auto-Off</string>
-    <string name="alarm_feat_title_warning_not_connected_ble">BLE Not Connected</string>
+    <string name="alarm_feat_title_warning_low_battery" comment="Patch alarm: the battery is low, and the patch has stopped insulin delivery">Low Battery: Delivery Stopped</string>
+    <string name="alarm_feat_title_warning_invalid_temperature" comment="Patch alarm: too hot or too cold, and the patch has stopped insulin delivery">High/Low Temperature: Delivery Stopped</string>
+    <string name="alarm_feat_title_warning_not_used_app" comment="Patch alarm: the app was not used for a long time, so the patch turned itself off and stopped insulin delivery">Auto-Off: Delivery Stopped</string>
+    <string name="alarm_feat_title_warning_not_connected_ble" comment="Patch alarm: the phone has not reached the patch for too long, and the patch must be changed">Patch Not Connected: Change Patch</string>
     <string name="alarm_feat_title_warning_incomplete_patch_setting">Patch Application Timeout</string>
     <string name="alarm_feat_title_warning_failed_safety_check">Self-Diagnosis Failed</string>
-    <string name="alarm_feat_title_warning_patch_error">Patch Error</string>
+    <string name="alarm_feat_title_warning_patch_error" comment="Patch alarm: an error in the patch stopped insulin delivery">Patch Error: Delivery Stopped</string>
     <string name="alarm_feat_title_warning_infusion_clogged">Occlusion</string>
     <string name="alarm_feat_title_warning_needle_injection_error">Needle Insertion Error</string>
 
-    <!-- Alert Titles -->
-    <string name="alarm_feat_title_alert_low_insulin">Low Insulin</string>
+    <!-- Alert Titles: insulin still flows, the user should act soon -->
+    <string name="alarm_feat_title_alert_low_insulin" comment="Patch alert: little insulin left, insulin still flows. The user should change the patch soon">Low Insulin: Change Patch Soon</string>
     <string name="alarm_feat_title_alert_expired_patch_phase2">Patch Operating Life Expired</string>
     <string name="alarm_feat_title_alert_expired_patch_phase1">Patch Will Expire Soon</string>
-    <string name="alarm_feat_title_alert_low_battery">Low Battery</string>
-    <string name="alarm_feat_title_alert_invalid_temperature">High/Low Temperature</string>
-    <string name="alarm_feat_title_alert_not_used_app">Auto-Off</string>
-    <string name="alarm_feat_title_alert_not_connected_ble">BLE Not Connected</string>
+    <string name="alarm_feat_title_alert_low_battery" comment="Patch alert: the battery is getting low, insulin still flows. The user should change the patch soon">Low Battery: Change Patch Soon</string>
+    <string name="alarm_feat_title_alert_invalid_temperature" comment="Patch alert: too hot or too cold, the patch paused insulin delivery and starts again at a normal temperature">High/Low Temperature: Delivery Paused</string>
+    <string name="alarm_feat_title_alert_not_used_app" comment="Patch alert: the app was not used for a long time; if the user does not tap OK, the patch turns itself off">Auto-Off Soon: Tap OK</string>
+    <string name="alarm_feat_title_alert_not_connected_ble" comment="Patch alert: the phone has not reached the patch for a while">Patch Not Connected</string>
     <string name="alarm_feat_title_alert_incomplete_patch_setting">Patch Activation Incomplete</string>
     <string name="alarm_feat_title_alert_resume_infusion">Start Insulin</string>
     <string name="alarm_feat_title_alert_off_bluetooth">Turn Bluetooth On</string>
 
     <!-- Notice Titles -->
-    <string name="alarm_feat_title_notice_low_insulin">Low Insulin</string>
+    <string name="alarm_feat_title_notice_low_insulin" comment="Patch notice: the insulin left is below the amount the user chose to be told about">Low Insulin Reminder</string>
     <string name="alarm_feat_title_notice_expired_patch">Patch Usage Time Notification</string>
     <string name="alarm_feat_title_notice_check_patch">Patch Check Notification</string>
     <string name="alarm_feat_title_notice_change_time_zone">Time Zone Change</string>
@@ -203,7 +203,7 @@
     <string name="alarm_feat_title_notice_lgs_started">LGS Started</string>
     <string name="alarm_feat_title_notice_lgs_ended">LGS Ended</string>
     <string name="alarm_feat_title_notice_lgs_error">LGS Not Available</string>
-    <string name="alarm_feat_title_notice_unknown">Patch Error</string>
+    <string name="alarm_feat_title_notice_unknown" comment="Patch alarm with a code AAPS does not know">Unknown Patch Alarm</string>
 
     <string name="alarm_feat_desc_unknown">Unexpected patch error.</string>
 

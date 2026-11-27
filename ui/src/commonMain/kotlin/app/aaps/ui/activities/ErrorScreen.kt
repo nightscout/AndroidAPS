@@ -25,7 +25,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,10 +39,15 @@ import app.aaps.ui.UiStrings
 /**
  * Modal-style screen rendered over a scrim when an urgent alarm fires. Displays the alarm title/status and its
  * actions, each saying what it does. An alert that lasts until its cause is gone has one button per silence length,
- * each silencing and closing in one tap, and a BG alarm "On every phone" and "Silence all BG alarms" (decided
+ * each silencing and closing in one tap, and a BG alarm "On every phone" and "Pause all BG alarms" (decided
  * 2026-11-26). An alarm that ends when it is answered has Mute 5 min (+5 min for the "time to eat" timer) and Silence,
  * and both close the screen (decided 2026-11-27: Silence and "Silence and close" had come to do the same, as silence
  * ends such an alarm, and Mute 5 min left the screen open over an alarm that comes back with its screen anyway).
+ *
+ * Only answers to this alarm, nothing that changes a setting (decided 2026-11-27). "Silence this kind on this phone"
+ * was here: a lasting change, one tap in a hurry away, and not clear next to the silence buttons. The alert settings
+ * have it. "Silence all BG alarms" is "Pause all BG alarms" now, the word of the BG alarms screen: "silence" is for
+ * this alarm only.
  *
  * Shared code, because iOS needs the same screen: `ErrorActivity` hosts it on Android, and the Compose host of the
  * iOS app shows it for a pump alert through [AlertScreen]. Nothing in here is platform specific any more; the one
@@ -85,14 +89,9 @@ fun ErrorScreen(
      */
     silenceEverywhere: Boolean? = null,
     onSilenceEverywhere: (Boolean) -> Unit = {},
-    /** "Silence all BG alarms" for [silenceAllMinutes], on a BG alarm the user may silence. Null: no such button. */
-    onSilenceAll: (() -> Unit)? = null,
-    silenceAllMinutes: Int = 0,
-    /**
-     * Makes alerts of this kind silent on this phone from now on, for a kind the user may silence
-     * (`_docs/ALARMS.md`, section 6). Null: no such button, as for a protected kind or an alarm that is no alert.
-     */
-    onSilenceKind: (() -> Unit)? = null,
+    /** "Pause all BG alarms" for [pauseAllMinutes], on a BG alarm the user may silence. Null: no such button. */
+    onPauseAll: (() -> Unit)? = null,
+    pauseAllMinutes: Int = 0,
     /**
      * Drawn small over the error icon, to say which AAPS this is. Android passes its flavour launcher icon, which is
      * a drawable id and so cannot be a parameter of shared code. Null: no badge, which is what iOS shows.
@@ -214,10 +213,10 @@ fun ErrorScreen(
                         Text(stringResource(UiStrings.alarm_silence_on_every_phone))
                     }
                     // Leave me alone for a while: all the BG alarms, never urgent low
-                    if (onSilenceAll != null) {
+                    if (onPauseAll != null) {
                         Spacer(modifier = Modifier.height(AapsSpacing.medium))
-                        OutlinedButton(onClick = onSilenceAll, modifier = Modifier.fillMaxWidth()) {
-                            Text(stringResource(UiStrings.alarm_silence_all_bg, durationText(silenceAllMinutes)), textAlign = TextAlign.Center)
+                        OutlinedButton(onClick = onPauseAll, modifier = Modifier.fillMaxWidth()) {
+                            Text(stringResource(UiStrings.alarm_pause_all_bg, durationText(pauseAllMinutes)), textAlign = TextAlign.Center)
                         }
                     }
                 } else {
@@ -239,17 +238,6 @@ fun ErrorScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(stringResource(CoreUiStrings.alarm_silence))
-                    }
-                }
-
-                // A setting, not an answer to this alarm: from now on a card with no sound, on this phone
-                if (onSilenceKind != null) {
-                    Spacer(modifier = Modifier.height(AapsSpacing.large))
-                    TextButton(
-                        onClick = onSilenceKind,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(stringResource(UiStrings.alert_kind_silence_on_this_phone))
                     }
                 }
             }

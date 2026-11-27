@@ -415,7 +415,7 @@ class AlertsImplTest : TestBase() {
         assertThat(sut.choices.value).isEmpty()
     }
 
-    /** As "Silence this kind" on the alarm screen does it: the alarm is answered, then the kind goes quiet. */
+    /** The alarm is answered, then its kind is made Silent in the alert settings, and later set back to Ring. */
     @Test
     fun `an answered alert stays quiet when its kind is set back to ring`() {
         sut.raise(alert(kind = occlusion))

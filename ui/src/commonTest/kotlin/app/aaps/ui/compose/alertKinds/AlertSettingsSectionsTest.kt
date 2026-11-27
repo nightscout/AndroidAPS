@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.alerts.AlertKindCatalogue
 import app.aaps.core.interfaces.alerts.AlertOrigin
 import app.aaps.core.interfaces.alerts.AlertSection
 import app.aaps.core.interfaces.alerts.AlertSetting
+import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.BgAlert
 import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.alerts.NightscoutAlert
@@ -23,6 +24,7 @@ class AlertSettingsSectionsTest {
         name: String,
         override val origin: AlertOrigin,
         override val group: AlertGroup?,
+        override val levels: Set<AlertSeverity>,
         override val isProtected: Boolean = group?.isProtected ?: false
     ) : AlertKind {
 
@@ -36,10 +38,10 @@ class AlertSettingsSectionsTest {
         override fun inUse(): Boolean = used
     }
 
-    private val occlusion = Kind("patch", "occlusion", AlertOrigin.PUMP, AlertGroup.PUMP_CRITICAL)
-    private val bgCheck = Kind("patch", "bg_check", AlertOrigin.PUMP, AlertGroup.PUMP_ACTION)
-    private val lgs = Kind("patch", "lgs", AlertOrigin.PUMP, AlertGroup.PUMP_INFO)
-    private val calibrate = Kind("cgm", "calibrate", AlertOrigin.CGM, AlertGroup.CGM_ACTION)
+    private val occlusion = Kind("patch", "occlusion", AlertOrigin.PUMP, AlertGroup.PUMP_CRITICAL, setOf(AlertSeverity.CRITICAL))
+    private val bgCheck = Kind("patch", "bg_check", AlertOrigin.PUMP, AlertGroup.PUMP_ACTION, setOf(AlertSeverity.WARNING))
+    private val lgs = Kind("patch", "lgs", AlertOrigin.PUMP, AlertGroup.PUMP_INFO, setOf(AlertSeverity.INFO))
+    private val calibrate = Kind("cgm", "calibrate", AlertOrigin.CGM, AlertGroup.CGM_ACTION, setOf(AlertSeverity.WARNING))
 
     private val app = Catalogue("AAPS", CoreAlert.entries)
     private val bg = Catalogue("BG alarms", BgAlert.entries)
@@ -224,6 +226,48 @@ class AlertSettingsSectionsTest {
         assertEquals(AlertChoice.RING, action.choice)
         assertEquals(AlertExceptionRow(bgCheck, AlertChoice.RING, listOf(AlertChoice.RING, AlertChoice.SILENT, AlertChoice.OFF)), action.exceptions.single())
         assertTrue(sections.of(AlertSection.APP).rows.all { AlertChoice.VIBRATE !in it.choices })
+    }
+
+    /** Each of the app's own rows says what Ring means for it: the eat timer is an alarm, carbs required one sound. */
+    @Test
+    fun aRowOfItsOwnSaysWhatRingMeans() {
+        val app = sections().of(AlertSection.APP)
+
+        assertEquals(setOf(AlertSeverity.CRITICAL), app.row(CoreAlert.EAT_REMINDER).levels)
+        assertEquals(setOf(AlertSeverity.WARNING), app.row(CoreAlert.CARBS_REQUIRED).levels)
+        assertEquals(setOf(AlertSeverity.WARNING), app.row(NightscoutAlert.ANNOUNCEMENT).levels)
+        assertTrue(app.rows.all { it.members.isEmpty() })
+    }
+
+    /**
+     * A group has the levels of its kinds, and lists them: "Needs action" holds the app's failed commands, which are
+     * alarms, next to the patch's reminder, which is one sound (2026-11-27: the user could not tell which ring).
+     */
+    @Test
+    fun aGroupHasTheLevelsOfItsKindsAndListsThem() {
+        val pump = sections().of(AlertSection.PUMP)
+        val action = pump.row(AlertGroup.PUMP_ACTION)
+
+        assertEquals(setOf(AlertSeverity.CRITICAL, AlertSeverity.WARNING), action.levels)
+        assertTrue(CoreAlert.COMMAND_FAILED in action.members)
+        assertTrue(CoreAlert.BOLUS_CANCELLED in action.members)
+        assertTrue(bgCheck in action.members)
+        assertEquals(setOf(AlertSeverity.CRITICAL), pump.row(AlertGroup.PUMP_CRITICAL).levels)
+        assertEquals(setOf(AlertSeverity.INFO), pump.row(AlertGroup.PUMP_INFO).levels)
+    }
+
+    /**
+     * Each BG rule shows its own level, so the lows and highs have none of their own. Urgent low and missed readings
+     * are alarms.
+     */
+    @Test
+    fun theBgRulesShowTheirLevelThemselves() {
+        val bg = sections().of(AlertSection.BG)
+
+        assertTrue(bg.row(AlertGroup.BG_LOWS).levels.isEmpty())
+        assertTrue(bg.row(AlertGroup.BG_LOWS).members.isEmpty())
+        assertEquals(setOf(AlertSeverity.CRITICAL), bg.row(BgAlert.URGENT_LOW).levels)
+        assertEquals(setOf(AlertSeverity.CRITICAL), bg.row(BgAlert.STALE).levels)
     }
 
     /** The line that keeps a choice from being forgotten: an exception set to Ring silences nothing, nor does Vibrate. */

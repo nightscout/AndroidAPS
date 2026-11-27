@@ -3,7 +3,6 @@ package app.aaps.implementation.ui
 import app.aaps.core.interfaces.alerts.Alert
 import app.aaps.core.interfaces.alerts.AlertAction
 import app.aaps.core.interfaces.alerts.AlertLifetime
-import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.Alerts
 import app.aaps.core.interfaces.alerts.CoreAlert
 import app.aaps.core.interfaces.alerts.EatReminder
@@ -109,29 +108,31 @@ class UiInteractionImpl(
         canMute: Boolean,
         tellWatch: Boolean,
         onAnswered: (() -> Unit)? = null
-    ): Alert =
-            Alert(
-                // The app's own kind for this alarm; it is filed as the app's, not under the pump
-                kind = CoreAlert.ofRunAlarmKey(key),
-                key = key,
-                // Always critical: every caller of runAlarm is telling the user that something they rely on did
-                // not happen, and the alarm screen and the ringing card are exactly what they always got.
-                severity = AlertSeverity.CRITICAL,
-                // The caller's title is the headline on the alarm screen and on the notification, and its status is
-                // the message under it - which is how this looked before every alarm became an alert.
-                title = TextRef.Literal(title),
-                text = TextRef.Literal(status),
-                raisedAt = dateUtil.now(),
-                action = action,
-                lifetime = AlertLifetime.EVENT,
-                notificationTitle = title,
-                canMute = canMute,
-                tellWatch = tellWatch,
-                // Null has always meant the default alarm sound here, not silence: the Android path resolved it to
-                // ERROR in the channel and in the player, and only a test ever passed null.
-                sound = sound ?: AlarmSound.ERROR,
-                onAnswered = onAnswered
-            )
+    ): Alert {
+        // The app's own kind for this alarm; it is filed as the app's, not under the pump
+        val kind = CoreAlert.ofRunAlarmKey(key)
+        return Alert(
+            kind = kind,
+            key = key,
+            // The kind's, which is critical for every kind of runAlarm: each caller is telling the user that something
+            // they rely on did not happen, and the alarm screen and the ringing card are what they always got.
+            severity = kind.severity,
+            // The caller's title is the headline on the alarm screen and on the notification, and its status is the
+            // message under it - which is how this looked before every alarm became an alert.
+            title = TextRef.Literal(title),
+            text = TextRef.Literal(status),
+            raisedAt = dateUtil.now(),
+            action = action,
+            lifetime = AlertLifetime.EVENT,
+            notificationTitle = title,
+            canMute = canMute,
+            tellWatch = tellWatch,
+            // Null has always meant the default alarm sound here, not silence: the Android path resolved it to ERROR
+            // in the channel and in the player, and only a test ever passed null.
+            sound = sound ?: AlarmSound.ERROR,
+            onAnswered = onAnswered
+        )
+    }
 
     /**
      * Silence whatever is ringing.

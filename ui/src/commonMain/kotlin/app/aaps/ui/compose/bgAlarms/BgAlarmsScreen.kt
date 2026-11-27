@@ -97,7 +97,7 @@ class BgUnits(
  * Every change is saved at once ([onSave] with the whole list of rules): there is no Save button.
  *
  * The pause of this phone (step 2d), also on a client: a pause is each phone's own, as its choice to ring. Only the one
- * planned ahead is here, "Pause all for…" at the bottom with Reset, as the actions of the pump and sync screens, and
+ * planned ahead is here, "Pause all BG alarms" at the bottom with Reset, as the actions of the pump and sync screens, and
  * while it lasts "Paused until" over them, its button then Resume (decided 2026-11-27); a ringing alarm is silenced from
  * its own screen, one tap (decided 2026-11-26). [pauses] is kind id to the end of its pause; [timeText]
  * shows such an end as a time of day. [onRuleTest] plays a rule's kind as it rings at the severity in its dialog, on
@@ -185,7 +185,7 @@ fun BgAlarmsScreen(
         // found (hidden while the rules were the default ones, nobody knew it was there), greyed when it would change
         // nothing.
         actions = listOf(
-            if (pausedUntil == null) ScreenAction(label = stringResource(UiStrings.bg_alarms_pause_all_for), icon = Icons.Filled.Pause, onClick = { pausing = true })
+            if (pausedUntil == null) ScreenAction(label = stringResource(UiStrings.bg_alarms_pause_all), icon = Icons.Filled.Pause, onClick = { pausing = true })
             else ScreenAction(label = stringResource(UiStrings.bg_alarm_resume), icon = Icons.Filled.PlayArrow, onClick = { onResume(BgAlert.PAUSABLE) }),
             ScreenAction(
                 label = stringResource(UiStrings.bg_alarms_reset),
@@ -633,7 +633,7 @@ private fun RuleDialog(
 private val pauseLengths = listOf(30, 60, 120, 240)
 
 /**
- * While a pause of this phone lasts, also one given from a ringing alarm ("Silence all BG alarms"): until when, over
+ * While a pause of this phone lasts, also one given from a ringing alarm ("Pause all BG alarms"): until when, over
  * Resume. How a pause works is said in its dialog, where it is chosen.
  */
 @Composable
@@ -645,7 +645,7 @@ private fun Paused(until: String) {
 }
 
 /**
- * "Pause all for…", planned ahead, as before sport: the lows, the highs and missed readings for a while, never urgent
+ * "Pause all BG alarms", planned ahead, as before sport: the lows, the highs and missed readings for a while, never urgent
  * low. How a pause works is said here, where it is chosen, and one tap on a length pauses, as on the alarm screen
  * (decided 2026-11-27). Snoozing one alarm is done on the alarm itself.
  */
@@ -653,7 +653,7 @@ private fun Paused(until: String) {
 private fun PauseDialog(onPick: (Int) -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(UiStrings.bg_alarms_pause_all_for)) },
+        title = { Text(stringResource(UiStrings.bg_alarms_pause_all)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
                 Text(stringResource(UiStrings.bg_alarm_pause_hint), style = MaterialTheme.typography.bodyMedium)
