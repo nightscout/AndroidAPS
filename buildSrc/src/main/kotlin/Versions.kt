@@ -13,7 +13,7 @@ object Versions {
     // the one form both the plain Android and the multiplatform library DSL have.
     const val compileSdkMinor = 1
     const val minSdk = 31
-    const val targetSdk = 35
+    const val targetSdk = 36
     const val wearMinSdk = 30
     const val wearTargetSdk = 30
 
