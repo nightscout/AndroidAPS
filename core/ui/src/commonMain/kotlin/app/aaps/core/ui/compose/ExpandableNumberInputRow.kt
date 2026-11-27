@@ -51,6 +51,7 @@ import app.aaps.core.ui.CoreUiStrings
  *   number, such as how old a reading is.
  * @param expandedContent anything that belongs under the field while the row is open, such as the
  *   alarm switch of carb time.
+ * @param publishEmptyAsZero passed to [NumberInputRow]: an empty field is published as 0 at once.
  */
 @Composable
 fun ExpandableNumberInputRow(
@@ -68,7 +69,8 @@ fun ExpandableNumberInputRow(
     expanded: Boolean? = null,
     onExpandedChange: ((Boolean) -> Unit)? = null,
     valueContent: (@Composable FlowRowScope.() -> Unit)? = null,
-    expandedContent: (@Composable ColumnScope.() -> Unit)? = null
+    expandedContent: (@Composable ColumnScope.() -> Unit)? = null,
+    publishEmptyAsZero: Boolean = false
 ) {
     // Saveable, so the row is still open after a rotation.
     var expandedInternally by rememberSaveable { mutableStateOf(false) }
@@ -151,7 +153,8 @@ fun ExpandableNumberInputRow(
                     unitLabel = unitLabel,
                     valueFormat = valueFormat,
                     decimalPlaces = decimalPlaces,
-                    enabled = enabled
+                    enabled = enabled,
+                    publishEmptyAsZero = publishEmptyAsZero
                 )
                 expandedContent?.invoke(this)
             }

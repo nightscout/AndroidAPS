@@ -64,6 +64,9 @@ import kotlin.math.roundToInt
  * @param valueFormat Custom NumberFormat (overrides auto-created from decimalPlaces)
  * @param decimalPlaces Number of decimal places for value display (0 = integer, default). Ignored if valueFormat is set.
  * @param enabled Whether the input is interactive
+ * @param publishEmptyAsZero If true, an empty field is published as 0 at once, while the field still
+ *   has focus. Use it where a result is calculated live from the value, so the result does not keep
+ *   the last digit after the user deleted everything. Only works when 0 is inside [valueRange].
  * @param modifier Modifier for the root Column container
  *
  * @see NumberInputRowBasicPreview
@@ -89,6 +92,7 @@ fun NumberInputRow(
     enabled: Boolean = true,
     compact: Boolean = false,
     displayValue: String? = null,
+    publishEmptyAsZero: Boolean = false,
 ) {
     val effectiveValueFormat = valueFormat ?: remember(decimalPlaces) {
         NumberFormat.withDecimals(decimalPlaces)
@@ -216,6 +220,9 @@ fun NumberInputRow(
                             // Defer publishing until focus loss — avoids a transient 0 while the
                             // user is mid-deletion and about to retype.
                             isError = false
+                            // Opt-in: an empty field means 0, the same as on focus loss. The field
+                            // text stays empty, because `emptyMatches` in the sync effect accepts 0.
+                            if (publishEmptyAsZero && 0.0 in valueRange) onValueChange(0.0)
                         }
 
                         cleaned.toDoubleOrNull() == null  -> {
