@@ -1,6 +1,7 @@
 package app.aaps.workflow
 
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationWakeLock
 import kotlinx.coroutines.CoroutineScope
 import kotlin.time.Duration
@@ -36,13 +37,14 @@ import kotlin.time.Duration
 class LazyCalculationExecutor(
     private val scope: CoroutineScope,
     private val aapsLogger: AAPSLogger,
+    private val fabricPrivacy: FabricPrivacy,
     private val prepare: () -> PrepareGraphDataRunner,
     private val post: () -> PostCalculationRunner,
     private val wakeLock: CalculationWakeLock?
 ) : CalculationExecutor {
 
     private val delegate: CoroutineCalculationExecutor by lazy {
-        CoroutineCalculationExecutor(scope, aapsLogger, prepare(), post(), wakeLock)
+        CoroutineCalculationExecutor(scope, aapsLogger, fabricPrivacy, prepare(), post(), wakeLock)
     }
 
     override suspend fun start(job: String, generation: Long, runPost: Boolean) = delegate.start(job, generation, runPost)

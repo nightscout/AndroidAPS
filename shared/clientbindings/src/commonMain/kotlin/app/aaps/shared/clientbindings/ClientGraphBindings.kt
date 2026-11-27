@@ -28,6 +28,7 @@ import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.interfaces.Preferences
@@ -296,9 +297,10 @@ object ClientGraphBindings {
     fun calculationExecutor(
         @ApplicationScope scope: CoroutineScope,
         aapsLogger: AAPSLogger,
+        fabricPrivacy: FabricPrivacy,
         prepare: () -> PrepareGraphDataRunner,
         post: () -> PostCalculationRunner
-    ): CalculationExecutor = LazyCalculationExecutor(scope, aapsLogger, { prepare() }, { post() }, wakeLock = null)
+    ): CalculationExecutor = LazyCalculationExecutor(scope, aapsLogger, fabricPrivacy, { prepare() }, { post() }, wakeLock = null)
 
     /** Bolus progress. Stated rather than annotated, for the same reason as the calculator. */
     @Provides

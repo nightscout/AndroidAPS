@@ -42,6 +42,7 @@ import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.UnitDoubleKey
@@ -51,6 +52,7 @@ import app.aaps.core.objects.extensions.combine
 import app.aaps.core.objects.workflow.WorkOutcome
 import app.aaps.workflow.iob.fromCarbs
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -65,9 +67,12 @@ import kotlin.time.Instant
  * Merged worker covering: BG load+smooth, bucketed data prep, BG readings prep,
  * IOB/COB autosens (oref1 or oref), and the IOB/autosens graph data pass.
  *
- * [bgDataReload] controls the optional initial DB load+smooth pass.
- * [emitFinalProgress] is set when this phase is the last in the chain (HISTORY);
+ * [PrepareGraphData.bgDataReload] controls the optional initial DB load+smooth pass.
+ * [PrepareGraphData.emitFinalProgress] is set when this phase is the last in the chain (HISTORY);
  * otherwise [PostCalculationRunner] emits the final signal.
+ *
+ * The steps that only fill the graphs run through [graphStep], so an error in them does not stop the
+ * loop.
  */
 @Inject
 class PrepareGraphDataRunner(
@@ -82,9 +87,12 @@ class PrepareGraphDataRunner(
     private val preferences: Preferences,
     private val profiler: Profiler,
     private val decimalFormatter: DecimalFormatter,
+    fabricPrivacy: FabricPrivacy,
     private val scope: CoroutineScope,
     private val autosensDataProvider: () -> AutosensData
 ) : CalculationPhase {
+
+    private val errorReports = CalculationErrorReports(fabricPrivacy)
 
     /**
      * Runs one prepare phase.
@@ -114,11 +122,11 @@ class PrepareGraphDataRunner(
         if (data.liveWindow) data.overviewData.moveLiveWindowTo(Instant.fromEpochMilliseconds(dateUtil.now()), SystemTimeZone.current())
 
         // ===== Phase 2: Bucketed data → cache (was PrepareBucketedDataWorker) =====
-        prepareBucketedData(data)
+        graphStep("prepareBucketedData") { prepareBucketedData(data) }
         if (isStopped()) return WorkOutcome.Stopped
 
         // ===== Phase 3: BG readings → cache (was PrepareBgDataWorker) =====
-        prepareBgData(data)
+        graphStep("prepareBgData") { prepareBgData(data) }
 
         data.signals.emitProgress(CalculationWorkflow.ProgressData.DRAW_BG, 100)
         if (isStopped()) return WorkOutcome.Stopped
@@ -129,7 +137,7 @@ class PrepareGraphDataRunner(
         val superseded = { isStopped() || workflowChainData.prepareFor(job, generation) == null }
         if (activePlugin.activeSensitivity.isOref1) runIobCobOref1(data, isStopped, superseded) else runIobCobOref(data, isStopped, superseded)
         if (isStopped()) return WorkOutcome.Stopped
-        prepareIobAutosensGraphData(data, isStopped)
+        graphStep("prepareIobAutosensGraphData") { prepareIobAutosensGraphData(data, isStopped) }
         if (isStopped()) return WorkOutcome.Stopped
         data.signals.emitProgress(CalculationWorkflow.ProgressData.DRAW_IOB, 100)
 
@@ -139,6 +147,32 @@ class PrepareGraphDataRunner(
         }
 
         return WorkOutcome.Success
+    }
+
+    /**
+     * Runs a step that only fills the graphs, so that an error in it does not stop the loop (#5662).
+     *
+     * The loop runs after this phase, and only when the phase succeeds. It needs the glucose data and the
+     * IOB and COB pass, and these still fail the phase when they throw. It needs nothing that these steps
+     * write: they fill the overview cache, which only the screens read. The IOB graph step also fills the
+     * IOB cache of the calculator, which the loop reads, but a value is stored there only when it is
+     * complete. So an error here should cost the graph, not the loop run for this glucose reading. With
+     * bad data that stays in the graph window, it used to cost every run until the data was out of it.
+     *
+     * The graph then keeps its old values, and nothing on the screen shows it. So the error is logged
+     * every time and sent to Crashlytics once per kind, see [CalculationErrorReports]. Throwable, as in
+     * the executor: whatever the step throws, the graph is all it can cost.
+     */
+    private suspend fun graphStep(step: String, body: suspend () -> Unit) {
+        try {
+            body()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            val message = "Graph step $step failed, the calculation goes on without it"
+            aapsLogger.error(LTag.AUTOSENS, message, e)
+            errorReports.report(message, e)
+        }
     }
 
     /**

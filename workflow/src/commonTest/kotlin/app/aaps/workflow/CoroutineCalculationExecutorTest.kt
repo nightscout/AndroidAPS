@@ -154,7 +154,8 @@ class CoroutineCalculationExecutorTest {
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob() + CoroutineExceptionHandler { _, e -> uncaught.add(e) })
 
     private val wakeLock = CountingWakeLock()
-    private val sut = CoroutineCalculationExecutor(scope, SilentLogger, prepare, post, wakeLock)
+    private val fabricPrivacy = RecordingFabricPrivacy()
+    private val sut = CoroutineCalculationExecutor(scope, SilentLogger, fabricPrivacy, prepare, post, wakeLock)
 
     /**
      * Real time, not the virtual time of runTest: the executor runs on Dispatchers.Default, so the
@@ -488,6 +489,51 @@ class CoroutineCalculationExecutorTest {
         assertEquals(emptyList(), uncaught.all)
     }
 
+    /**
+     * #5662: a failed prepare phase means the loop did not run for that glucose reading, and only the AAPS
+     * log knew. It goes to Crashlytics now, once: the same error comes back on every run while the data
+     * that causes it is in the window.
+     */
+    @Test
+    fun `a throwing prepare phase is reported to Crashlytics once`() = realTime {
+        val error = IllegalStateException("broken calculation")
+        prepareBody = { throw error }
+        sut.start(MAIN_CALCULATION, generation = 1, runPost = true)
+        awaitRuns(1)
+        assertTrue(sut.awaitIdle(MAIN_CALCULATION, 5.seconds))
+        sut.start(MAIN_CALCULATION, generation = 2, runPost = true)
+        awaitRuns(2)
+        assertTrue(sut.awaitIdle(MAIN_CALCULATION, 5.seconds))
+
+        assertEquals(listOf<Any>("Calculation $MAIN_CALCULATION: prepare phase failed", error), fabricPrivacy.sent)
+    }
+
+    @Test
+    fun `a throwing post phase is reported to Crashlytics`() = realTime {
+        val error = IllegalStateException("broken loop")
+        postBody = { throw error }
+        sut.start(MAIN_CALCULATION, generation = 1, runPost = true)
+        awaitRuns(1)
+        assertTrue(sut.awaitIdle(MAIN_CALCULATION, 5.seconds))
+
+        assertEquals(listOf<Any>("Calculation $MAIN_CALCULATION: post phase failed", error), fabricPrivacy.sent)
+    }
+
+    /**
+     * A run ends with a cancellation every time a newer glucose reading replaces it. That is normal, and
+     * reporting it would fill Crashlytics.
+     */
+    @Test
+    fun `a stopped run is not reported`() = realTime {
+        prepareBody = { awaitCancellation() }
+        sut.start(MAIN_CALCULATION, generation = 1, runPost = true)
+        awaitRuns(1)
+        // Waits until both halves of the run have ended, so a report would be in by now
+        sut.stop(MAIN_CALCULATION, "test")
+
+        assertEquals(emptyList(), fabricPrivacy.sent)
+    }
+
     /** The system held a wake lock for a job automatically. A run has to hold its own until it ends. */
     @Test
     fun `a run holds the wake lock until it has ended`() = realTime {
@@ -594,7 +640,7 @@ class CoroutineCalculationExecutorTest {
     /** A platform without a wake lock passes null, and runs work all the same. */
     @Test
     fun `runs work without a wake lock`() = realTime {
-        val noLock = CoroutineCalculationExecutor(scope, SilentLogger, prepare, post, wakeLock = null)
+        val noLock = CoroutineCalculationExecutor(scope, SilentLogger, fabricPrivacy, prepare, post, wakeLock = null)
         noLock.start(MAIN_CALCULATION, generation = 1, runPost = true)
         awaitRuns(1)
         assertTrue(noLock.awaitIdle(MAIN_CALCULATION, 5.seconds))
