@@ -207,6 +207,34 @@ open class OpenAPSSMBPlugin(
 
         fun tddPartsCalculated() = tdd1D != null && tdd7D != null && tddLast24H != null && tddLast4H != null && tddLast8to4H != null
 
+        /**
+         * The autosens ratio of dynamic ISF: the insulin of the last 24 h against the 7 day average, corrected by the
+         * carbs. Without [adjustSensitivity] it is 1.0.
+         *
+         * A TDD of 0 is real data, not missing data: a pump off or under a zero temp basal for a whole day. Then there
+         * is nothing to compare, so the TDD ratio is 1.0 (no adjustment), as the carbs ratio is without its data. It
+         * used to be 0 (or infinite with a 7 day average of 0), and the loop refused to run at all ("invalid ISF
+         * inputs", Crashlytics 2026-11) until there was insulin in the last 24 h again.
+         */
+        fun autosensResult(adjustSensitivity: Boolean): AutosensResult {
+            val last24H = tddLast24H ?: 0.0
+            val average7D = tdd7D ?: 0.0
+            val tddRatio = if (adjustSensitivity && last24H > 0.0 && average7D > 0.0) last24H / average7D else 1.0
+            // Because consumed carbs affects total amount of insulin compensate final ratio by consumed carbs ratio
+            // take only 60% (expecting 40% basal). We cannot use bolus/total because of SMBs
+            val carbsRatio = if (
+                adjustSensitivity &&
+                tddLast24HCarbs != 0.0 &&
+                tdd7DDataCarbs != 0.0 &&
+                tdd7DAllDaysHaveCarbs
+            ) ((tddLast24HCarbs / tdd7DDataCarbs - 1.0) * 0.6) + 1.0 else 1.0
+            return AutosensResult(
+                ratio = tddRatio / carbsRatio,
+                ratioFromTdd = tddRatio,
+                ratioFromCarbs = carbsRatio
+            )
+        }
+
         fun log() =
             "DynIsfResult: tdd1D=$tdd1D tdd7D=$tdd7D tddLast24H=$tddLast24H tddLast4H=$tddLast4H tddLast8to4H=$tddLast8to4H tdd=$tdd variableSensitivity=$variableSensitivity insulinDivisor=$insulinDivisor tdd7DDataCarbs=$tdd7DDataCarbs tdd7DAllDaysHaveCarbs=$tdd7DAllDaysHaveCarbs"
     }
@@ -342,20 +370,7 @@ open class OpenAPSSMBPlugin(
         if (dynIsfMode && dynIsfResult.tddPartsCalculated()) {
             notificationManager.dismiss(NotificationId.SMB_FALLBACK)
             // Compare insulin consumption of last 24h with last 7 days average
-            val tddRatio = if (preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity)) dynIsfResult.tddLast24H!! / dynIsfResult.tdd7D!! else 1.0
-            // Because consumed carbs affects total amount of insulin compensate final ratio by consumed carbs ratio
-            // take only 60% (expecting 40% basal). We cannot use bolus/total because of SMBs
-            val carbsRatio = if (
-                preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity) &&
-                dynIsfResult.tddLast24HCarbs != 0.0 &&
-                dynIsfResult.tdd7DDataCarbs != 0.0 &&
-                dynIsfResult.tdd7DAllDaysHaveCarbs
-            ) ((dynIsfResult.tddLast24HCarbs / dynIsfResult.tdd7DDataCarbs - 1.0) * 0.6) + 1.0 else 1.0
-            autosensResult = AutosensResult(
-                ratio = tddRatio / carbsRatio,
-                ratioFromTdd = tddRatio,
-                ratioFromCarbs = carbsRatio
-            )
+            autosensResult = dynIsfResult.autosensResult(preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity))
         } else {
             if (constraintsChecker.isAutosensModeEnabled().value()) {
                 val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("OpenAPSPlugin")
