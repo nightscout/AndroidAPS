@@ -188,10 +188,19 @@ class PrepareGraphDataRunner(
      * Sends the failure of the chart step [name] to Crashlytics as a non-fatal error, once per step
      * for the life of this runner, which is the life of the app. A cause that stays makes the step
      * fail on every reading, and that would send a report every 5 minutes.
+     *
+     * A report that fails is only logged. If it threw, it would fail the phase and skip the loop, the
+     * very thing [chartStep] is there to prevent.
      */
     private fun reportChartStepFailure(name: String, cause: Exception) {
         if (name in reportedChartSteps.getAndUpdate { it + name }) return
-        fabricPrivacy.logException(ChartStepFailedException("Chart step '$name' failed, its series are not updated", cause))
+        try {
+            fabricPrivacy.logException(ChartStepFailedException("Chart step '$name' failed, its series are not updated", cause))
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.WORKER, "Reporting the failed chart step '$name' failed", e)
+        }
     }
 
     /**

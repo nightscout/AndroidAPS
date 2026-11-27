@@ -431,6 +431,20 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
         assertThat(reported.secondValue.message).contains("IOB and autosens graph data")
     }
 
+    /** The report must not bring the problem back: a failing report would fail the phase and skip the loop. */
+    @Test
+    fun `a report that fails does not fail the phase`() = runTest {
+        stubSuspendCalls()
+        whenever(persistenceLayer.getVariableSensitivities(any(), any())).thenThrow(IllegalStateException("broken chart point"))
+        doThrow(IllegalStateException("broken crash reporter")).whenever(fabricPrivacy).logException(any())
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = true))
+
+        val result = run()
+
+        assertIs<WorkOutcome.Success>(result)
+        verify(signals).emitProgress(eq(ProgressData.DRAW_FINAL), any())
+    }
+
     @Test
     fun `a run without a failure reports nothing`() = runTest {
         stubSuspendCalls()
