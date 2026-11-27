@@ -345,4 +345,24 @@ class EventDataTest {
         assertThat(old).doesNotContain("carbsType")
         assertThat(EventData.deserialize(old)).isEqualTo(EventData.ActionWizardPreCheck(30, 100, CarbsType.BREAD))
     }
+
+    @Test
+    fun wizardDetailWithTheSuperBolusTravelsBetweenOldAndNewBuilds() {
+        val detail = EventData.WizardDetail(
+            totalInsulin = 4.0, carbs = 20, insulinFromBG = 0.0, insulinFromTrend = 0.0, insulinFromCOB = 0.0, insulinFromCarbs = 2.0,
+            insulinFromBolusIOB = 0.0, insulinFromBasalIOB = 0.0, includeBolusIOB = false, includeBasalIOB = false, percentageCorrection = 100,
+            cob = 0.0, tempTargetLabel = null, ic = 10.0, sens = 50.0, insulinFromSuperBolus = 2.0
+        )
+        val action = EventData.ConfirmAction("Meal", "", returnCommand = null, wizardDetail = detail)
+        assertThat(EventData.deserialize(action.serialize())).isEqualTo(action)
+
+        // An older watch does not know the field. It ignores the key and still shows the page.
+        val unknownKey = action.serialize().replace("\"insulinFromSuperBolus\"", "\"aFieldOfALaterBuild\"")
+        assertThat((EventData.deserialize(unknownKey) as EventData.ConfirmAction).wizardDetail).isEqualTo(detail.copy(insulinFromSuperBolus = 0.0))
+
+        // An older phone sends no superbolus: a newer watch reads 0, and the default is not written on the wire.
+        val old = action.copy(wizardDetail = detail.copy(insulinFromSuperBolus = 0.0)).serialize()
+        assertThat(old).doesNotContain("insulinFromSuperBolus")
+        assertThat((EventData.deserialize(old) as EventData.ConfirmAction).wizardDetail?.insulinFromSuperBolus).isEqualTo(0.0)
+    }
 }

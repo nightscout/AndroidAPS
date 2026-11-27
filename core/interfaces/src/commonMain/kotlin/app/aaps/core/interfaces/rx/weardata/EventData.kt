@@ -588,6 +588,8 @@ sealed class EventData : Event() {
         val alarm: Boolean = false,
         val maxBolus: Double = 0.0,
         val bolusStep: Double = 0.0,
+        /** The 2 hours of basal in the dose, not scaled by [percentageCorrection]. 0 without superbolus, and from an older phone. */
+        val insulinFromSuperBolus: Double = 0.0,
     )
 
     @Serializable // returnCommand is sent back to Mobile after confirmation

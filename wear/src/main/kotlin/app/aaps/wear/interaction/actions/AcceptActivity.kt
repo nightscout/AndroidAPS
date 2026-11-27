@@ -647,9 +647,12 @@ private fun WizardDetailPage(detail: EventData.WizardDetail, correctionSteps: In
                             }
                         }
                         val hasIob = totalIob != null && totalIob != 0.0
-                        if (hasIob || correctionU != 0.0) {
+                        // The superbolus is the basal of the next 2 hours. It is not scaled by the percentage.
+                        val hasSuperBolus = detail.insulinFromSuperBolus != 0.0
+                        if (hasIob || hasSuperBolus || correctionU != 0.0) {
                             WizardDetailDivider()
                             if (hasIob) WizardDetailRow(stringResource(R.string.wizard_result_iob), -totalIob, fmt2)
+                            if (hasSuperBolus) WizardDetailRow(stringResource(R.string.wizard_result_superbolus), detail.insulinFromSuperBolus, fmt2)
                             if (correctionU != 0.0) WizardDetailRow(stringResource(R.string.wizard_result_correction), correctionU, fmt2)
                         }
                         WizardDetailDivider()

@@ -459,4 +459,20 @@ class BolusWizardTest : TestBaseWithProfile() {
         // Only the bolus line and the carbs line
         assertThat(bw.buildConfirmationLines(advisor = false)).hasSize(2)
     }
+
+    @Test
+    fun superBolusIsInTheWizardDetail() = runBlocking {
+        // The watch shows the parts of the dose. Without the superbolus they do not add up to the total.
+        val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
+        setupBasal(profile)
+        val bw = createWizard().doCalc(
+            profile, "", null, carbs = 60, cob = 0.0, bg = 0.0, correction = 0.0, percentageCorrection = 100,
+            useBg = false, useCob = false, includeBolusIOB = false, includeBasalIOB = false,
+            useSuperBolus = true, useTT = false, useTrend = false, useAlarm = false
+        )
+
+        val detail = bw.buildWizardDetail()
+        assertThat(detail.insulinFromSuperBolus).isWithin(0.001).of(2.0)
+        assertThat(detail.insulinFromCarbs + detail.insulinFromSuperBolus).isWithin(0.001).of(detail.totalInsulin)
+    }
 }

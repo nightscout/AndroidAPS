@@ -50,6 +50,7 @@ data class WizardDetailDto(
     val alarm: Boolean = false,
     val maxBolus: Double = 0.0,
     val bolusStep: Double = 0.0,
+    val insulinFromSuperBolus: Double = 0.0,
 )
 
 /**

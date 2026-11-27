@@ -466,6 +466,7 @@ class BolusWizard(
             tempTargetLabel = ttLabel,
             ic = ic,
             sens = sens,
+            insulinFromSuperBolus = insulinFromSuperBolus,
         )
     }
 

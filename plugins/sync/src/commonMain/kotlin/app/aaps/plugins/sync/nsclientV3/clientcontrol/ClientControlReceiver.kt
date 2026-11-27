@@ -1051,4 +1051,5 @@ private fun EventData.WizardDetail.toDto() = WizardDetailDto(
     alarm = alarm,
     maxBolus = maxBolus,
     bolusStep = bolusStep,
+    insulinFromSuperBolus = insulinFromSuperBolus,
 )
