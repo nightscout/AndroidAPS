@@ -18,6 +18,7 @@
     <string name="settings_unreadable_keystore_explanation">手机的密钥库无响应，因此 AAPS 无法打开其设置。</string>
     <string name="settings_unreadable_not_running">AAPS 未运行，且不控制泵。正在运行的临时基础率会在其设定时间结束时终止，随后泵将按其自身的基础率输注。</string>
     <string name="settings_unreadable_what_to_do">重试会关闭 AAPS 并重新启动它。如果仍无帮助，请重启手机。仅在无其他办法时才选择‘全新开始’：它会将无法读取的设置搁置一旁，AAPS 将以空设置启动。随后在设置向导中导入您最近一次导出的设置。</string>
+    <string name="settings_unreadable_keystore_what_to_do">重试会关闭 AAPS 并重新启动它。如果仍无帮助，请重启手机。您的设置文件将保持原样。</string>
     <string name="settings_unreadable_start_fresh">重新开始</string>
     <string name="settings_unreadable_confirm_title">以空的设置开始吗？</string>
     <string name="settings_unreadable_confirm_text">无法读取的设置文件将被重命名并保留。所有设置将从默认值开始。随后您可重新设置 AAPS，或导入设置导出文件。</string>

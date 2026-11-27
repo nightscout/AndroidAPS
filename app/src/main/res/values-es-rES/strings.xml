@@ -18,6 +18,7 @@
     <string name="settings_unreadable_keystore_explanation">El almacén de claves del teléfono no respondió, por lo que AAPS no pudo abrir sus ajustes</string>
     <string name="settings_unreadable_not_running">AAPS no se está ejecutando y no controla la bomba. Un basal temporal en curso finalizará a la hora prevista y, a continuación, la bomba administrará su propia tasa basal</string>
     <string name="settings_unreadable_what_to_do">Reintentar cierra AAPS y lo vuelve a iniciar. Si esto no ayuda, reinicia el teléfono. Elige Empezar de nuevo solo cuando nada más funcione: dejará de lado los ajustes ilegibles y AAPS se iniciará con ajustes vacíos. A continuación, importa tu última exportación de ajustes en el asistente de configuración</string>
+    <string name="settings_unreadable_keystore_what_to_do">Reintentar cierra AAPS y lo inicia de nuevo. Si eso no ayuda, reinicie el teléfono. Su archivo de configuración se mantiene tal como está</string>
     <string name="settings_unreadable_start_fresh">Empezar de nuevo</string>
     <string name="settings_unreadable_confirm_title">¿Empezar con ajustes vacíos?</string>
     <string name="settings_unreadable_confirm_text">El archivo de ajustes ilegibles se renombra y se conserva. Todos los ajustes se inician desde sus valores predeterminados. A continuación, configura AAPS de nuevo o importa una exportación de ajustes</string>
