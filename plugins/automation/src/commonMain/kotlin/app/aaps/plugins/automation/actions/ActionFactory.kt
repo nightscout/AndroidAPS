@@ -68,7 +68,7 @@ class ActionFactory(
         actionAlarm(), actionCarePortalEvent(), actionDisableScene(), actionEnableScene(),
         actionNotification(), actionProfileSwitch(), actionProfileSwitchPercent(), actionRunAutotune(),
         actionRunScene(), actionSendSMS(), actionSettingsExport(), actionSMBChange(), actionSmoothingChange(),
-        actionStartTempTarget(), actionStopProcessing(), actionStopTempTarget()
+        actionStartTempTarget(), actionStopProcessing(), actionStopScene(), actionStopTempTarget()
     )
 
     fun actionAlarm() = ActionAlarm(aapsLogger, rh, pumpEnactResultProvider, rxBus, dateUtil, reminderScheduler, config)
@@ -93,6 +93,7 @@ class ActionFactory(
     fun actionSmoothingChange() = ActionSmoothingChange(aapsLogger, rh, pumpEnactResultProvider, activePlugin, configBuilder, triggerDeps)
     fun actionStartTempTarget() = ActionStartTempTarget(aapsLogger, rh, pumpEnactResultProvider, activePlugin, persistenceLayer, profileFunction, dateUtil, profileUtil, triggerDeps)
     fun actionStopProcessing() = ActionStopProcessing(aapsLogger, rh, pumpEnactResultProvider)
+    fun actionStopScene() = ActionStopScene(aapsLogger, rh, pumpEnactResultProvider, sceneApi, sceneIconResolver, triggerDeps)
     fun actionStopTempTarget() = ActionStopTempTarget(aapsLogger, rh, pumpEnactResultProvider, persistenceLayer, dateUtil)
 
     /**
@@ -117,6 +118,7 @@ class ActionFactory(
             ActionSendSMS::class.simpleName              -> actionSendSMS()
             ActionStartTempTarget::class.simpleName      -> actionStartTempTarget()
             ActionStopProcessing::class.simpleName       -> actionStopProcessing()
+            ActionStopScene::class.simpleName            -> actionStopScene()
             ActionStopTempTarget::class.simpleName       -> actionStopTempTarget()
             else                                             -> null
         }

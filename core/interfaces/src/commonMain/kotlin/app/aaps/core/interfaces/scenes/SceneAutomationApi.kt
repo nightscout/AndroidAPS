@@ -57,6 +57,22 @@ interface SceneAutomationApi {
     fun isAnySceneActive(): Boolean
 
     /**
+     * Whether the scene [id] is the one running now. An expired scene does not count, the same as
+     * in [isAnySceneActive].
+     */
+    fun isSceneActive(id: String): Boolean
+
+    /**
+     * End the scene [id], but only when it is the one running now. Does nothing, and returns
+     * Success, when no scene runs, when another scene runs, or when [id] has expired and only its
+     * banner is left. The follow-up scene is not started.
+     *
+     * This is the stop for automation: a rule names the scene it may end, so it cannot end a scene
+     * the user started for another reason. For "end whatever runs" use [stopActiveScene].
+     */
+    suspend fun stopScene(id: String): SceneAutomationResult
+
+    /**
      * Whether [stopActiveScene] has something to act on: a scene that is running, or one that has
      * expired but whose banner has not been dismissed yet (dismissing it is a valid stop).
      *

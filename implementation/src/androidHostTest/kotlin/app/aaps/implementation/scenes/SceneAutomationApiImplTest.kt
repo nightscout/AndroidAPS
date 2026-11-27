@@ -1,11 +1,17 @@
 package app.aaps.implementation.scenes
 
+import app.aaps.core.data.model.ActiveSceneState
+import app.aaps.core.data.model.Scene
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 /**
@@ -54,5 +60,75 @@ class SceneAutomationApiImplTest : TestBase() {
 
         assertThat(createSut().isAnySceneActive()).isFalse()
         assertThat(createSut().hasSceneToStop()).isFalse()
+    }
+
+    // --- stopScene(id): the stop for automation, which may end only the scene it names ---
+
+    private fun givenRunning(sceneId: String, expired: Boolean = false) {
+        givenScene(active = true, expired = expired)
+        whenever(activeSceneManager.getActiveState())
+            .thenReturn(ActiveSceneState(scene = Scene(id = sceneId, name = "Driving"), activatedAt = 0L, durationMs = 0L))
+    }
+
+    @Test
+    fun `only the running scene counts as active by id`() {
+        givenRunning("driving")
+
+        assertThat(createSut().isSceneActive("driving")).isTrue()
+        assertThat(createSut().isSceneActive("sport")).isFalse()
+    }
+
+    @Test
+    fun `an expired scene is not active by id`() {
+        givenRunning("driving", expired = true)
+
+        assertThat(createSut().isSceneActive("driving")).isFalse()
+    }
+
+    @Test
+    fun `stopScene ends the named scene when it runs`() = runTest {
+        givenRunning("driving")
+        whenever(sceneExecutor.deactivate()).thenReturn(SceneExecutionResult(success = true))
+
+        assertThat(createSut().stopScene("driving")).isEqualTo(SceneAutomationResult.Success)
+        verify(sceneExecutor).deactivate()
+    }
+
+    @Test
+    fun `stopScene leaves another running scene alone`() = runTest {
+        // The rule names "driving", but the user runs "sport". Ending it would undo a scene the
+        // user started for another reason.
+        givenRunning("sport")
+
+        assertThat(createSut().stopScene("driving")).isEqualTo(SceneAutomationResult.Success)
+        verify(sceneExecutor, never()).deactivate()
+        verify(sceneExecutor, never()).dismiss()
+    }
+
+    @Test
+    fun `stopScene does not dismiss the banner of an expired scene`() = runTest {
+        // Unlike stopActiveScene, which serves the user's own "Dismiss". A rule must not clear a
+        // banner the user has not seen yet.
+        givenRunning("driving", expired = true)
+
+        assertThat(createSut().stopScene("driving")).isEqualTo(SceneAutomationResult.Success)
+        verify(sceneExecutor, never()).deactivate()
+        verify(sceneExecutor, never()).dismiss()
+    }
+
+    @Test
+    fun `stopScene does nothing when no scene runs`() = runTest {
+        givenScene(active = false, expired = false)
+
+        assertThat(createSut().stopScene("driving")).isEqualTo(SceneAutomationResult.Success)
+        verify(sceneExecutor, never()).deactivate()
+    }
+
+    @Test
+    fun `stopScene reports a failed revert`() = runTest {
+        givenRunning("driving")
+        whenever(sceneExecutor.deactivate()).thenReturn(SceneExecutionResult(success = false, errorMessage = "Some reverts failed"))
+
+        assertThat(createSut().stopScene("driving")).isEqualTo(SceneAutomationResult.Failed("Some reverts failed"))
     }
 }
