@@ -199,10 +199,14 @@ fun ErrorScreen(
                         }
                     }
                     // For the buttons above: the same answer for every phone, here at once, then for the others
+                    // The padding is inside the tap area: away from the buttons, and easy to hit
                     if (silenceEverywhere != null) Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxWidth().toggleable(value = silenceEverywhere, role = Role.Checkbox, onValueChange = onSilenceEverywhere)
+                        horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium, Alignment.CenterHorizontally),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .toggleable(value = silenceEverywhere, role = Role.Checkbox, onValueChange = onSilenceEverywhere)
+                            .padding(vertical = AapsSpacing.large)
                     ) {
                         Checkbox(checked = silenceEverywhere, onCheckedChange = null)
                         Text(stringResource(UiStrings.alarm_silence_on_every_phone))

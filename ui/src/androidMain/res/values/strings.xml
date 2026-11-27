@@ -459,11 +459,9 @@
     <string name="bg_alarm_rule_warning" comment="How a glucose alarm rings: one sound and a card">Warning: one sound</string>
     <string name="bg_alarm_rule_alarm" comment="How a glucose alarm rings: the alarm sound and the alarm screen until the user answers">Alarm: rings until answered</string>
     <string name="bg_alarm_rule_all_day">All day</string>
-    <string name="bg_alarm_rule_window" comment="The time of day a glucose alarm rule applies. %1$s=start, %2$s=end, as HH:MM. Example: 22:00 - 07:00">%1$s - %2$s</string>
+    <string name="bg_alarm_rule_window" comment="The time of day a glucose alarm rule applies. %1$s=start, %2$s=end, in the phone's time format. Example: 22:00 - 07:00">%1$s - %2$s</string>
     <string name="bg_alarm_rule_lasts" comment="A glucose alarm rule rings only after this long past its threshold. %1$d=minutes. Example: after 15 min">after %1$d min</string>
     <string name="bg_alarm_rule_threshold" comment="Label of the threshold field of a glucose alarm rule. %1$s=the unit, mg/dl or mmol/l">Threshold (%1$s)</string>
-    <string name="bg_alarm_rule_from">From (HH:MM)</string>
-    <string name="bg_alarm_rule_to">To (HH:MM)</string>
     <string name="bg_alarm_rule_duration">Rings after (minutes past the threshold)</string>
     <string name="alarm_over_other_apps_title" comment="Settings item that opens the Android page of the same name for AAPS">Display over other apps</string>
     <string name="alarm_over_other_apps_summary">Allow it, and the alarm screen opens also while another app is on the screen. Without it you get the notification, and the alarm screen when you open AAPS.</string>

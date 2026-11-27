@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -33,11 +35,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import app.aaps.core.interfaces.alerts.AlertChoice
 import app.aaps.core.interfaces.alerts.AlertGroup
@@ -53,6 +57,8 @@ import app.aaps.core.interfaces.alerts.BgRuleType
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.LocalDateUtil
+import app.aaps.core.ui.compose.TimeRangePicker
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.alertKinds.AlertSectionScreen
@@ -460,28 +466,19 @@ private fun RuleDetails(rule: BgAlarmRule) {
     }
 }
 
+/** The time of day a rule applies, in the phone's time format, as the picker of its dialog shows it. */
 @Composable
 private fun windowText(rule: BgAlarmRule): String {
     val from = rule.fromMinute
     val to = rule.toMinute
-    return if (from == null || to == null) stringResource(UiStrings.bg_alarm_rule_all_day)
-    else stringResource(UiStrings.bg_alarm_rule_window, clock(from), clock(to))
+    if (from == null || to == null) return stringResource(UiStrings.bg_alarm_rule_all_day)
+    val dateUtil = LocalDateUtil.current
+    val clock = { minute: Int -> dateUtil.timeString(dateUtil.secondsOfTheDayToMillisecondsOfHoursAndMinutes(minute * 60)) }
+    return stringResource(UiStrings.bg_alarm_rule_window, clock(from), clock(to))
 }
 
 private fun severityLabel(severity: AlertSeverity) =
     if (severity == AlertSeverity.CRITICAL) UiStrings.bg_alarm_rule_alarm else UiStrings.bg_alarm_rule_warning
-
-/** Minutes after midnight as "HH:MM". */
-private fun clock(minute: Int): String = (minute / 60).toString().padStart(2, '0') + ":" + (minute % 60).toString().padStart(2, '0')
-
-/** "HH:MM" as minutes after midnight, or null when it is not a time. */
-private fun minuteOf(text: String): Int? {
-    val parts = text.trim().split(":")
-    if (parts.size != 2) return null
-    val h = parts[0].toIntOrNull() ?: return null
-    val m = parts[1].toIntOrNull() ?: return null
-    return if (h in 0..23 && m in 0..59) h * 60 + m else null
-}
 
 @Composable
 private fun RuleDialog(
@@ -498,17 +495,16 @@ private fun RuleDialog(
     var threshold by remember { mutableStateOf(if (isRate) units.rateToUnits(rule.thresholdMgdl) else units.toUnits(rule.thresholdMgdl)) }
     var severity by remember { mutableStateOf(rule.severity) }
     var allDay by remember { mutableStateOf(rule.fromMinute == null || rule.toMinute == null) }
-    var from by remember { mutableStateOf(clock(rule.fromMinute ?: (22 * 60))) }
-    var to by remember { mutableStateOf(clock(rule.toMinute ?: (7 * 60))) }
+    var fromMinute by remember { mutableIntStateOf(rule.fromMinute ?: (22 * 60)) }
+    var toMinute by remember { mutableIntStateOf(rule.toMinute ?: (7 * 60)) }
     var duration by remember { mutableStateOf(rule.durationMinutes.toString()) }
     var testRefused by remember { mutableStateOf(false) }
 
     val thresholdMgdl = units.toMgdl(threshold)?.takeIf { it in kind.limits }
-    val fromMinute = minuteOf(from)
-    val toMinute = minuteOf(to)
     val minutesRange = kind.minutes
     val durationMinutes = if (minutesRange == null) rule.durationMinutes else duration.trim().toIntOrNull()?.takeIf { it in minutesRange }
-    val valid = thresholdMgdl != null && durationMinutes != null && (allDay || (fromMinute != null && toMinute != null && fromMinute != toMinute))
+    // From and To at the same time would be a window of no time at all
+    val valid = thresholdMgdl != null && durationMinutes != null && (allDay || fromMinute != toMinute)
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -549,20 +545,27 @@ private fun RuleDialog(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.error
                 )
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(checked = allDay, onCheckedChange = { allDay = it })
+                // The words answer a tap too, not only the small box
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .toggleable(value = allDay, role = Role.Checkbox, onValueChange = { allDay = it })
+                        .padding(vertical = AapsSpacing.medium)
+                ) {
+                    Checkbox(checked = allDay, onCheckedChange = null)
                     Text(stringResource(UiStrings.bg_alarm_rule_all_day))
                 }
-                if (!allDay) Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
-                    OutlinedTextField(
-                        value = from, onValueChange = { from = it }, singleLine = true, isError = fromMinute == null,
-                        label = { Text(stringResource(UiStrings.bg_alarm_rule_from)) }, modifier = Modifier.weight(1f)
-                    )
-                    OutlinedTextField(
-                        value = to, onValueChange = { to = it }, singleLine = true, isError = toMinute == null,
-                        label = { Text(stringResource(UiStrings.bg_alarm_rule_to)) }, modifier = Modifier.weight(1f)
-                    )
-                }
+                // A tap on a time opens the clock, as for the valid hours of QuickWizard
+                if (!allDay) TimeRangePicker(
+                    label = null,
+                    startSeconds = fromMinute * 60,
+                    endSeconds = toMinute * 60,
+                    onStartChange = { fromMinute = it / 60 },
+                    onEndChange = { toMinute = it / 60 },
+                    modifier = Modifier.fillMaxWidth()
+                )
                 if (minutesRange != null) OutlinedTextField(
                     value = duration,
                     onValueChange = { duration = it },
