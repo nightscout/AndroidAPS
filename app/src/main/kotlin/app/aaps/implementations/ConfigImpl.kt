@@ -97,7 +97,18 @@ class ConfigImpl(
         _initSnackbarFlow.tryEmit(message)
     }
 
-    private val enabledOptionsCache = mutableMapOf<ExternalOptions, Boolean>()
+    /**
+     * The names of the marker files in the extra directory, read once for the life of the process. Reading them lists
+     * the AAPS directory and the extra directory through the Storage Access Framework: binder calls to the document
+     * provider that can take seconds. They used to run once per option, on whatever thread asked first, and the first
+     * one ran on the main thread at app start (ANR, Crashlytics 2026-11). Two threads reading at once both list the
+     * directory and get the same names, so no lock is needed.
+     */
+    @Volatile private var markerFiles: Set<String>? = null
+
+    private fun markerFiles(): Set<String> =
+        markerFiles ?: (fileListProvider().ensureExtraDirExists()?.listFiles()?.mapNotNull { it.name }?.toSet() ?: emptySet())
+            .also { markerFiles = it }
 
     override fun isEngineeringModeOrRelease(): Boolean = if (!APS) true else isEngineeringMode() || !isDev()
     override fun isEngineeringMode(): Boolean = isEnabled(ExternalOptions.ENGINEERING_MODE)
@@ -106,8 +117,5 @@ class ConfigImpl(
     // want between tests, so a cached answer from the first one would stick for the whole run. The file
     // lookup below stays cached - that really is fixed for the life of the process.
     override fun isEnabled(option: ExternalOptions): Boolean =
-        option in externalOptionsOverride.enabled() ||
-            enabledOptionsCache.getOrPut(option) {
-                fileListProvider().ensureExtraDirExists()?.findFile(option.filename) != null
-            }
+        option in externalOptionsOverride.enabled() || option.filename in markerFiles()
 }

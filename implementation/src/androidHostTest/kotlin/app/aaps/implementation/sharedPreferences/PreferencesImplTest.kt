@@ -2,6 +2,7 @@ package app.aaps.implementation.sharedPreferences
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.observeEffective
@@ -14,6 +15,8 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 /**
@@ -56,6 +59,26 @@ class PreferencesImplTest {
             prefs.put(BooleanKey.GeneralSimpleMode, false)
             forcedKeys.forEach { (key, forced) -> prefs.put(key, !forced) }
         }
+
+    /**
+     * isEngineeringMode() looks for a file through the Storage Access Framework, a binder call. A read of an ordinary
+     * key must not ask it: the first read at app start ran on the main thread, and the app did not answer (ANR,
+     * Crashlytics 2026-11). Only a key that is for engineering mode asks.
+     */
+    @Test
+    fun `only an engineering mode key asks for engineering mode`() {
+        val config = mock<Config>()
+        whenever(config.APS).thenReturn(true)
+        whenever(config.platform).thenReturn(AppPlatform.Android)
+        val prefs = PreferencesImpl(FileKeyValueStore(), { mock() }, { mock() }, { mock() }, mock(), config, mock())
+
+        prefs.get(BooleanKey.OverviewShowNotesInDialogs)
+        prefs.get(IntKey.OverviewCarbsButtonIncrement1)
+        verify(config, never()).isEngineeringMode()
+
+        assertThat(prefs.get(BooleanKey.NsClientAcceptTbrEb)).isEqualTo(BooleanKey.NsClientAcceptTbrEb.defaultValue)
+        verify(config).isEngineeringMode()
+    }
 
     /** An observer of a removed key sees what get() returns, the default. The DanaR driver missed every unpair. */
     @Test
