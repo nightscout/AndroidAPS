@@ -3,19 +3,24 @@ package app.aaps.plugins.source.notificationreader
 import android.app.Notification
 import android.os.Bundle
 import android.service.notification.StatusBarNotification
+import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.source.NotificationReaderPlugin
 import app.aaps.shared.tests.AAPSLoggerTest
+import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.timeout
@@ -78,6 +83,31 @@ class NotificationCollectorServiceTest {
         verify(persistenceLayer, never()).insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
     }
 
+    /** A notification that the reader takes as a new reading of 100 mg/dL. */
+    private fun acceptReadingOf100() {
+        whenever(packageConfig.isSupportedPackage(any())).thenReturn(true)
+        whenever(plugin.isEnabled()).thenReturn(true)
+        whenever(parser.extractGlucose(any(), any(), any())).thenReturn(NotificationParser.GlucoseResult(100, SourceSensor.DEXCOM_UNKNOWN))
+        whenever(deduplicator.process(any(), any())).thenReturn(true)
+        runBlocking {
+            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))
+                .thenReturn(PersistenceLayer.TransactionResult())
+        }
+    }
+
+    private fun storedReadings(vararg readings: GV) = runBlocking {
+        whenever(persistenceLayer.getBgReadingsDataFromTimeToTime(any(), any(), any())).thenReturn(readings.toList())
+    }
+
+    /** The reading the service stored. The insert runs on the service's own scope, so this waits for it. */
+    private fun insertedReading(): GV {
+        val inserted = argumentCaptor<List<GV>>()
+        runBlocking {
+            verify(persistenceLayer, timeout(2000)).insertCgmSourceData(anyOrNull(), inserted.capture(), anyOrNull(), anyOrNull())
+        }
+        return inserted.firstValue.single()
+    }
+
     @Test
     fun `unsupported package is ignored`() {
         whenever(packageConfig.isSupportedPackage(any())).thenReturn(false)
@@ -99,20 +129,46 @@ class NotificationCollectorServiceTest {
 
     @Test
     fun `valid glucose notification is inserted`() {
-        whenever(packageConfig.isSupportedPackage(any())).thenReturn(true)
-        whenever(plugin.isEnabled()).thenReturn(true)
-        whenever(parser.extractGlucose(any(), any(), any())).thenReturn(NotificationParser.GlucoseResult(100, SourceSensor.DEXCOM_UNKNOWN))
-        whenever(deduplicator.process(any(), any())).thenReturn(true)
+        acceptReadingOf100()
+        storedReadings()
+
+        service.onNotificationPosted(sbn("com.foo"))
+
+        val reading = insertedReading()
+        assertThat(reading.value).isEqualTo(100.0)
+        // Nothing stored before it, so nothing to take a trend from
+        assertThat(reading.trendArrow).isEqualTo(TrendArrow.NONE)
+    }
+
+    /** #5648: the arrow was always NONE, so Nightscout and every app that follows it showed no trend. */
+    @Test
+    fun `a new reading gets the trend of the readings before it`() {
+        acceptReadingOf100()
+        // 15 mg/dL in 5 minutes is 3 mg/dL a minute
+        storedReadings(
+            GV(
+                timestamp = System.currentTimeMillis() - T.mins(5).msecs(), value = 85.0, raw = null, noise = null,
+                trendArrow = TrendArrow.NONE, sourceSensor = SourceSensor.DEXCOM_UNKNOWN
+            )
+        )
+
+        service.onNotificationPosted(sbn("com.foo"))
+
+        assertThat(insertedReading().trendArrow).isEqualTo(TrendArrow.SINGLE_UP)
+    }
+
+    @Test
+    fun `a reading is stored without an arrow when the readings before it cannot be read`() {
+        acceptReadingOf100()
         runBlocking {
-            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(PersistenceLayer.TransactionResult())
+            whenever(persistenceLayer.getBgReadingsDataFromTimeToTime(any(), any(), any())).thenThrow(IllegalStateException("database closed"))
         }
 
         service.onNotificationPosted(sbn("com.foo"))
 
-        runBlocking {
-            verify(persistenceLayer, timeout(2000)).insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
-        }
+        val reading = insertedReading()
+        assertThat(reading.value).isEqualTo(100.0)
+        assertThat(reading.trendArrow).isEqualTo(TrendArrow.NONE)
     }
 
     @Test

@@ -49,15 +49,6 @@ class TrendCalculatorImpl(
 
         val slopeByMinute = slope * 60000
 
-        return when {
-            slopeByMinute <= -3.5 -> TrendArrow.DOUBLE_DOWN
-            slopeByMinute <= -2   -> TrendArrow.SINGLE_DOWN
-            slopeByMinute <= -1   -> TrendArrow.FORTY_FIVE_DOWN
-            slopeByMinute <= 1    -> TrendArrow.FLAT
-            slopeByMinute <= 2    -> TrendArrow.FORTY_FIVE_UP
-            slopeByMinute <= 3.5  -> TrendArrow.SINGLE_UP
-            slopeByMinute <= 40   -> TrendArrow.DOUBLE_UP
-            else                  -> TrendArrow.NONE
-        }
+        return TrendArrow.fromSlope(slopeByMinute)
     }
 }

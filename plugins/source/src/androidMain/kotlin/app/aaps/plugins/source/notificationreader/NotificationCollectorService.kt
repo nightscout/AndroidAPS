@@ -19,6 +19,7 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.source.NotificationReaderPlugin
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -96,23 +97,38 @@ class NotificationCollectorService : NotificationListenerService() {
             return
         }
 
-        val gv = GV(
-            timestamp = now,
-            value = result.glucoseMgdl.toDouble(),
-            raw = null,
-            noise = null,
-            trendArrow = TrendArrow.NONE,
-            sourceSensor = result.sourceSensor
-        )
-
         scope.launch {
             try {
+                val value = result.glucoseMgdl.toDouble()
+                val gv = GV(
+                    timestamp = now,
+                    value = value,
+                    raw = null,
+                    noise = null,
+                    trendArrow = trendArrow(now, value),
+                    sourceSensor = result.sourceSensor
+                )
                 persistenceLayer.insertCgmSourceData(Sources.NotificationReader, listOf(gv), emptyList(), null)
             } catch (e: Exception) {
                 aapsLogger.error(LTag.BGSOURCE, "Error inserting glucose data", e)
             }
         }
     }
+
+    /**
+     * The arrow of the new reading, from the readings stored before it, see [TrendFromHistory]. The
+     * reading matters more than its arrow, so a failed lookup gives no arrow instead of no reading.
+     */
+    private suspend fun trendArrow(timestamp: Long, valueMgdl: Double): TrendArrow =
+        try {
+            val history = persistenceLayer.getBgReadingsDataFromTimeToTime(timestamp - TrendFromHistory.maxAge, timestamp, false)
+            TrendFromHistory.arrow(timestamp, valueMgdl, history)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.BGSOURCE, "Trend of the new reading could not be worked out", e)
+            TrendArrow.NONE
+        }
 
     /**
      * Extract visible text from notification.
