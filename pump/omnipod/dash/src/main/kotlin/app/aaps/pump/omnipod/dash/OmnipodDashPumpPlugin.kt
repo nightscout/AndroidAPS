@@ -157,6 +157,10 @@ class OmnipodDashPumpPlugin(
     @Volatile var bolusCanceled = false
     @Volatile var bolusDeliveryInProgress = false
 
+    /** How the wait for a bolus delivery passes time. A test replaces it, so it does not wait for real. */
+    @VisibleForTesting
+    internal var waitForDelivery: (millis: Long) -> Unit = { millis -> Thread.sleep(millis) }
+
     private var handler: Handler? = null
     private var statusChecker: Runnable
     private var nextPodWarningCheck: Long = 0
@@ -560,6 +564,7 @@ class OmnipodDashPumpPlugin(
             aapsLogger.info(LTag.PUMP, "Delivering basal correction")
 
             val bolusType = BolusType.BASAL_CORRECTION
+            var bolusHistoryId: Long? = null
             return executeProgrammingCommand(
                 historyEntry = history.createRecord(
                     commandType = OmnipodCommandType.SET_BOLUS,
@@ -569,6 +574,7 @@ class OmnipodDashPumpPlugin(
                     )
                 ),
                 activeCommandEntry = { historyId ->
+                    bolusHistoryId = historyId
                     podStateManager.createActiveCommand(
                         historyId,
                         requestedBolus = requestedInsulinAmount
@@ -580,7 +586,7 @@ class OmnipodDashPumpPlugin(
                     completionBeeps = false
                 ).filter { podEvent -> podEvent.isCommandSent() }
                     .ignoreElements(),
-                post = waitForBolusDeliveryToComplete(requestedInsulinAmount, bolusType)
+                post = waitForBolusDeliveryToComplete(requestedInsulinAmount, bolusType) { bolusHistoryId }
                     .doOnSuccess { delivered ->
                         aapsLogger.info(LTag.PUMP, "Basal correction delivered: $delivered U")
                     }
@@ -698,6 +704,7 @@ class OmnipodDashPumpPlugin(
             }
 
             var deliveredBolusAmount = 0.0
+            var bolusHistoryId: Long? = null
 
             val bolusType = BolusType.fromBolusInfoBolusType(detailedBolusInfo.bolusType)
             val beepsConfigurationKey = if (bolusType == BolusType.SMB)
@@ -719,6 +726,7 @@ class OmnipodDashPumpPlugin(
                     )
                 ),
                 activeCommandEntry = { historyId ->
+                    bolusHistoryId = historyId
                     podStateManager.createActiveCommand(
                         historyId,
                         requestedBolus = requestedBolusAmount
@@ -730,7 +738,7 @@ class OmnipodDashPumpPlugin(
                     bolusBeeps
                 ).filter { podEvent -> podEvent.isCommandSent() }
                     .concatMapCompletable { rxCompletable(Dispatchers.IO) { pumpSyncBolusStart(requestedBolusAmount, detailedBolusInfo.bolusType) } },
-                post = waitForBolusDeliveryToComplete(requestedBolusAmount, bolusType)
+                post = waitForBolusDeliveryToComplete(requestedBolusAmount, bolusType) { bolusHistoryId }
                     .map {
                         deliveredBolusAmount = it
                         aapsLogger.info(LTag.PUMP, "deliverTreatment: deliveredBolusAmount=$deliveredBolusAmount")
@@ -782,9 +790,14 @@ class OmnipodDashPumpPlugin(
         bolusProgressData.updateProgress(percent, TextRef.Literal(msg))
     }
 
+    /**
+     * @param bolusHistoryId gives the history id of the bolus command that was just sent. It is a function
+     * because the id is known only after the history record is made, and this wait runs after that.
+     */
     private fun waitForBolusDeliveryToComplete(
         requestedBolusAmount: Double,
-        bolusType: BolusType
+        bolusType: BolusType,
+        bolusHistoryId: () -> Long?
     ): Single<Double> = Single.defer {
 
         if (bolusCanceled && podStateManager.activeCommand != null) {
@@ -796,7 +809,7 @@ class OmnipodDashPumpPlugin(
                 } catch (err: Throwable) {
                     errorGettingStatus = err
                     aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$errorGettingStatus")
-                    Thread.sleep(BOLUS_RETRY_INTERVAL_MS) // retry every 2 sec
+                    waitForDelivery(BOLUS_RETRY_INTERVAL_MS) // retry every 2 sec
                 }
             }
             if (errorGettingStatus != null) {
@@ -811,7 +824,7 @@ class OmnipodDashPumpPlugin(
         var waited = 0
         while (waited < estimatedDeliveryTimeSeconds && !bolusCanceled) {
             waited += 1
-            Thread.sleep(1000)
+            waitForDelivery(1000)
             if (bolusType == BolusType.SMB) {
                 continue
             }
@@ -839,7 +852,7 @@ class OmnipodDashPumpPlugin(
             } catch (e: Exception) {
                 errorGettingStatus = e
                 aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$errorGettingStatus")
-                Thread.sleep(BOLUS_RETRY_INTERVAL_MS) // retry every 2 sec
+                waitForDelivery(BOLUS_RETRY_INTERVAL_MS) // retry every 2 sec
             }
             if (errorGettingStatus != null) {
                 return@forEach
@@ -855,10 +868,16 @@ class OmnipodDashPumpPlugin(
                     BOLUS_RETRY_INTERVAL_MS
                 else
                     estimateBolusDeliverySeconds(remainingUnits) * 1000L
-                Thread.sleep(sleepMillis)
+                waitForDelivery(sleepMillis)
             } else {
                 // delivery is complete. If pod is Kaput, we are handling this in getPodStatus
-                return@defer Single.just(podStateManager.lastBolus!!.deliveredUnits()!!)
+                val lastBolus = podStateManager.lastBolus
+                if (lastBolus?.historyId != bolusHistoryId()) {
+                    // The pod denied this bolus command. Only a confirmed bolus replaces lastBolus, so it is
+                    // still the bolus before this one, and its amount must not be reported for this one.
+                    return@defer Single.error(IllegalStateException("The pod did not accept the bolus command"))
+                }
+                return@defer Single.just(lastBolus!!.deliveredUnits()!!)
             }
         }
         Single.just(requestedBolusAmount) // will be updated later!
