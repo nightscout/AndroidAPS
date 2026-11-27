@@ -65,7 +65,9 @@ interface MasterActionExecutor {
      * confirm finds the slot empty → [ConfirmResult.NoPending], never a second bolus. For a batch the steps run in
      * Decision-B order: target-RAISING TT (unconditional) → bolus/carbs → target-LOWERING TT (only if the bolus passed
      * the synchronous gate) → ProfileSwitch / RunningMode / InsulinActivate. [onError] reports only SYNCHRONOUS failures
-     * (the running-mode gate or a record-only persist error); an async pump-delivery failure is surfaced by the
+     * (the running-mode gate, a record-only persist error, or a superbolus dose whose SUPER_BOLUS mode cannot start,
+     * which gives and records nothing; the return value is then still [ConfirmResult.Delivered], as for the gate,
+     * so a caller must read [onError]); an async pump-delivery failure is surfaced by the
      * executor's URGENT alarm, NOT via [onError]. A pump command dropped from the queue on purpose also reports its
      * comment through [onError], but returns [ConfirmResult.Cancelled] so the caller can tell it apart from a real
      * failure. [asAdvisor] delivers the correction-only advisor bolus (high-BG "eat later" branch) instead of the
