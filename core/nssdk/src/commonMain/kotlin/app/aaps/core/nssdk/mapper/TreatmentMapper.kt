@@ -27,9 +27,64 @@ import kotlin.time.Duration.Companion.minutes
 fun NSTreatment.convertToRemoteAndBack(): NSTreatment? =
     toRemoteTreatment()?.toTreatment()
 
+/**
+ * Gives the first record of a document only. A document with insulin and carbs gives the bolus here
+ * and the carbs are left out. Code that reads data from Nightscout must use [toNSTreatments].
+ */
 fun String.toNSTreatment(): NSTreatment? =
     nsSdkJson.decodeFromString(RemoteTreatment.serializer(), this).toTreatment()
 
+/** All records of one Nightscout document. See `RemoteTreatment.toTreatments`. */
+fun String.toNSTreatments(): List<NSTreatment> =
+    nsSdkJson.decodeFromString(RemoteTreatment.serializer(), this).toTreatments()
+
+/**
+ * All records of one Nightscout document.
+ *
+ * One document can hold insulin and carbs together, for example a "Meal Bolus" entered in the
+ * Nightscout careportal. AAPS stores a bolus and carbs as two records, so such a document gives an
+ * [NSBolus] and an [NSCarbs]. Both carry the identifier of the document. They go to different
+ * tables, and each table finds its record by that identifier when the document changes or is deleted.
+ *
+ * Every other document gives one record, or none when it cannot be used.
+ */
+internal fun RemoteTreatment.toTreatments(): List<NSTreatment> {
+    val first = toTreatment() ?: return emptyList()
+    val carbsOfBolus = if (first is NSBolus && hasCarbs()) toCarbs(timestamp()) else null
+    return listOfNotNull(first, carbsOfBolus)
+}
+
+private fun RemoteTreatment.hasCarbs(): Boolean = carbs != null && carbs != 0.0
+
+private fun RemoteTreatment.toCarbs(treatmentTimestamp: Long): NSCarbs? {
+    val carbs = this.carbs ?: return null
+    val durationInMilliseconds = this.durationInMilliseconds ?: this.duration?.let { this.duration.minutes.inWholeMilliseconds } ?: 0L
+    return NSCarbs(
+        date = treatmentTimestamp,
+        device = this.device,
+        identifier = this.identifier,
+        units = NsUnits.fromString(this.units),
+        srvModified = this.srvModified,
+        srvCreated = this.srvCreated,
+        utcOffset = this.utcOffset ?: 0,
+        subject = this.subject,
+        isReadOnly = this.isReadOnly == true,
+        isValid = this.isValid != false,
+        eventType = this.eventType ?: EventType.CARBS_CORRECTION,
+        notes = this.notes,
+        pumpId = this.pumpId,
+        endId = this.endId,
+        pumpType = this.pumpType,
+        pumpSerial = this.pumpSerial,
+        carbs = carbs,
+        duration = durationInMilliseconds
+    )
+}
+
+/**
+ * The first record of a document. A document with insulin and carbs gives the bolus only,
+ * [toTreatments] adds the carbs.
+ */
 internal fun RemoteTreatment.toTreatment(): NSTreatment? {
     val treatmentTimestamp = timestamp()
     when {
@@ -57,29 +112,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 iCfg = this.iCfg.toNSICfg()
             )
 
-        carbs != null && carbs != 0.0                                      -> {
-            val durationInMilliseconds = this.durationInMilliseconds ?: this.duration?.let { this.duration.minutes.inWholeMilliseconds } ?: 0L
-            return NSCarbs(
-                date = treatmentTimestamp,
-                device = this.device,
-                identifier = this.identifier,
-                units = NsUnits.fromString(this.units),
-                srvModified = this.srvModified,
-                srvCreated = this.srvCreated,
-                utcOffset = this.utcOffset ?: 0,
-                subject = this.subject,
-                isReadOnly = this.isReadOnly == true,
-                isValid = this.isValid != false,
-                eventType = this.eventType ?: EventType.CARBS_CORRECTION,
-                notes = this.notes,
-                pumpId = this.pumpId,
-                endId = this.endId,
-                pumpType = this.pumpType,
-                pumpSerial = this.pumpSerial,
-                carbs = this.carbs,
-                duration = durationInMilliseconds
-            )
-        }
+        hasCarbs()                                                         -> return toCarbs(treatmentTimestamp)
 
         eventType == EventType.TEMPORARY_TARGET                            -> {
             if (treatmentTimestamp == 0L) return null

@@ -26,7 +26,7 @@ import app.aaps.core.nssdk.mapper.toRemoteEntry
 import app.aaps.core.nssdk.mapper.toRemoteFood
 import app.aaps.core.nssdk.mapper.toRemoteTreatment
 import app.aaps.core.nssdk.mapper.toSgv
-import app.aaps.core.nssdk.mapper.toTreatment
+import app.aaps.core.nssdk.mapper.toTreatments
 import app.aaps.core.nssdk.networking.NsHttpResponse
 import app.aaps.core.nssdk.networking.NsKtorClient
 import app.aaps.core.nssdk.networking.NsUrl
@@ -351,7 +351,7 @@ class NSAndroidClientImpl(
         return NSAndroidClient.ReadResponse(
             code = code,
             lastServerModified = lastServerModified,
-            values = rows.mapNotNull { it.value?.toTreatment() },
+            values = rows.flatMap { it.value?.toTreatments().orEmpty() },
             unreadable = rows.mapNotNull { it.error }
         )
     }

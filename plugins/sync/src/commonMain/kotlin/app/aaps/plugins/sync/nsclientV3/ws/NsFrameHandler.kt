@@ -20,7 +20,7 @@ import app.aaps.core.nssdk.mapper.toCalibrationMbg
 import app.aaps.core.nssdk.mapper.toNSDeviceStatus
 import app.aaps.core.nssdk.mapper.toNSFood
 import app.aaps.core.nssdk.mapper.toNSSgvV3
-import app.aaps.core.nssdk.mapper.toNSTreatment
+import app.aaps.core.nssdk.mapper.toNSTreatments
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.sync.nsclientV3.NSAlarmObject
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
@@ -133,8 +133,9 @@ class NsFrameHandler(
 
             "profile"      -> appScope.launch { nsIncomingDataProcessor().processProfile(doc, doFullSync = false) }
 
-            "treatments"   -> decode(collection, raw) { docString.toNSTreatment() }?.let {
-                nsIncomingDataProcessor().processTreatments(listOf(it), doFullSync = false, advanceInitialLoadCursor = false)
+            // One document can give two records: a bolus and its carbs.
+            "treatments"   -> decode(collection, raw) { docString.toNSTreatments() }?.takeIf { it.isNotEmpty() }?.let {
+                nsIncomingDataProcessor().processTreatments(it, doFullSync = false, advanceInitialLoadCursor = false)
                 storeDataForDb.requestStoreTreatments(fullSync = false)
             }
 

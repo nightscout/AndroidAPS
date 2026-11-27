@@ -28,6 +28,7 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.core.nssdk.mapper.toNSTreatment
+import app.aaps.core.nssdk.mapper.toNSTreatments
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSBolusWizard
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -287,6 +288,33 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
         verify(storeDataForDb).addToBoluses(argThat {
             amount == 2.5 && timestamp == bolusTime
         })
+    }
+
+    /** A "Meal Bolus" from the Nightscout careportal: one document with insulin and carbs. */
+    private fun mealBolusDocument(time: Long) =
+        """{"identifier":"meal-1","eventType":"Meal Bolus","date":$time,"insulin":3,"carbs":40,"utcOffset":60,"isValid":true}"""
+
+    @Test
+    fun `a document with insulin and carbs stores a bolus and carbs`() {
+        val time = now - T.mins(20).msecs()
+
+        val result = processor.processTreatments(mealBolusDocument(time).toNSTreatments(), doFullSync = false)
+
+        assertTrue(result)
+        verify(storeDataForDb).addToBoluses(argThat { amount == 3.0 && timestamp == time && ids.nightscoutId == "meal-1" })
+        verify(storeDataForDb).addToCarbs(argThat { amount == 40.0 && timestamp == time && ids.nightscoutId == "meal-1" })
+    }
+
+    /** The carbs of such a document must not depend on the insulin setting. */
+    @Test
+    fun `a document with insulin and carbs stores the carbs when insulin is not accepted`() {
+        whenever(preferences.get(BooleanKey.NsClientAcceptInsulin)).thenReturn(false)
+        val time = now - T.mins(20).msecs()
+
+        processor.processTreatments(mealBolusDocument(time).toNSTreatments(), doFullSync = false)
+
+        verify(storeDataForDb, never()).addToBoluses(any())
+        verify(storeDataForDb).addToCarbs(argThat { amount == 40.0 && timestamp == time })
     }
 
     // A record uploaded by an older AAPS or a non-AAPS client carries no iCfg, and BS.iCfg is non-null — so the

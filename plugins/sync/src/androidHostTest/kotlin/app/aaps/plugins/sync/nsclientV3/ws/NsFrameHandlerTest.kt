@@ -6,6 +6,9 @@ import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
+import app.aaps.core.nssdk.localmodel.treatment.NSBolus
+import app.aaps.core.nssdk.localmodel.treatment.NSCarbs
+import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
@@ -101,6 +104,31 @@ class NsFrameHandlerTest : TestBaseWithProfile() {
         sut.onDataCreateUpdate(envelope("treatments", doc))
 
         verify(storeDataForDb).requestStoreTreatments(fullSync = false)
+    }
+
+    /** One document with insulin and carbs gives two records, and both must reach the processor. */
+    @Test
+    fun `a treatments document with insulin and carbs is processed as a bolus and carbs`() = runTest {
+        val doc = """{"identifier":"t1","srvModified":1000,"date":1000,"eventType":"Meal Bolus","insulin":3,"carbs":40}"""
+
+        sut.onDataCreateUpdate(envelope("treatments", doc))
+
+        val records = argumentCaptor<List<NSTreatment>>()
+        verify(nsIncomingDataProcessor).processTreatments(records.capture(), eq(false), eq(false))
+        assertThat(records.firstValue).hasSize(2)
+        assertThat(records.firstValue[0]).isInstanceOf(NSBolus::class.java)
+        assertThat(records.firstValue[1]).isInstanceOf(NSCarbs::class.java)
+        verify(storeDataForDb).requestStoreTreatments(fullSync = false)
+    }
+
+    @Test
+    fun `a treatments document that gives no record is not processed`() = runTest {
+        val doc = """{"identifier":"t1","srvModified":1000,"date":1000,"eventType":"Something New"}"""
+
+        sut.onDataCreateUpdate(envelope("treatments", doc))
+
+        verify(nsIncomingDataProcessor, never()).processTreatments(any(), any(), any())
+        verify(storeDataForDb, never()).requestStoreTreatments(any())
     }
 
     /**
