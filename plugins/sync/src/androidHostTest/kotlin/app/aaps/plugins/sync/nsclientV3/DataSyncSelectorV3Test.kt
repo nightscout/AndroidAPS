@@ -1043,23 +1043,48 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         verify(nsClientV3Plugin, Times(0)).nsUpdate(any(), any<DataSyncSelector.PairCarbs>(), any(), anyOrNull())
     }
 
-    /**
-     * Current behaviour, pinned so the risk stays visible. Carbs that came from a Nightscout document
-     * and are removed on the phone go out as an update of a record that is not valid. The client
-     * turns that into a delete of the whole document, also when the document holds insulin too.
+    /*
+     * A Nightscout document with insulin and carbs is stored as a bolus and carbs with one
+     * Nightscout id. The upload of a removed record is a delete of the whole document. The next read
+     * would then remove the other half on this phone too: removing the carbs would remove insulin on
+     * board, and the loop could give more insulin. So the removal of one half is not uploaded while
+     * the other half is still valid.
      */
+
+    /** The current record is removed (id 5), the change is history row 6. */
+    private fun removedCarbsOfDocument() = Pair(
+        CA(id = 5, timestamp = 1000L, amount = 40.0, duration = 0L, isValid = false, ids = IDs(nightscoutId = "meal-1")),
+        CA(id = 6, timestamp = 1000L, amount = 40.0, duration = 0L, ids = IDs(nightscoutId = "meal-1"))
+    )
+
+    private fun bolusOfDocument(id: Long, isValid: Boolean) =
+        BS(id = id, timestamp = 1000L, amount = 3.0, type = BS.Type.NORMAL, isValid = isValid, ids = IDs(nightscoutId = "meal-1"), iCfg = someICfg)
+
+    /** The current record is removed (id 5), the change is history row 6. */
+    private fun removedBolusOfDocument() = Pair(bolusOfDocument(id = 5, isValid = false), bolusOfDocument(id = 6, isValid = true))
+
     @Test
-    fun `removed carbs that came from Nightscout are sent as an update that is not valid - current behaviour, pinned`() = runTest {
+    fun `removed carbs are not uploaded while the bolus with the same Nightscout id is valid`() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(persistenceLayer.getLastCarbsId()).thenReturn(10L)
-        whenever(preferences.get(NsclientLongKey.CarbsLastSyncedId)).thenReturn(5L, 5L, 5L)
+        whenever(preferences.get(NsclientLongKey.CarbsLastSyncedId)).thenReturn(4L, 4L, 4L, 6L)
+        whenever(persistenceLayer.getNextSyncElementCarbs(4L)).thenReturn(removedCarbsOfDocument()).thenReturn(null)
+        whenever(persistenceLayer.getBolusByNSId("meal-1")).thenReturn(bolusOfDocument(id = 3, isValid = true))
 
-        val stored = CA(id = 5, timestamp = 1000L, amount = 40.0, duration = 0L, ids = IDs(nightscoutId = "meal-1"))
-        val removed = CA(id = 6, timestamp = 1000L, amount = 40.0, duration = 0L, isValid = false, ids = IDs(nightscoutId = "meal-1"))
+        sut.processChangedCarbs()
 
-        whenever(persistenceLayer.getNextSyncElementCarbs(5L))
-            .thenReturn(Pair(removed, stored))
-            .thenReturn(null)
+        verify(nsClientV3Plugin, Times(0)).nsUpdate(any(), any<DataSyncSelector.PairCarbs>(), any(), anyOrNull())
+        // The change counts as done, so the next run does not try it again.
+        verify(preferences, Times(1)).put(NsclientLongKey.CarbsLastSyncedId, 6L)
+    }
+
+    @Test
+    fun `removed carbs are uploaded when the bolus with the same Nightscout id is removed too`() = runTest {
+        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
+        whenever(persistenceLayer.getLastCarbsId()).thenReturn(10L)
+        whenever(preferences.get(NsclientLongKey.CarbsLastSyncedId)).thenReturn(4L, 4L, 4L, 6L)
+        whenever(persistenceLayer.getNextSyncElementCarbs(4L)).thenReturn(removedCarbsOfDocument()).thenReturn(null)
+        whenever(persistenceLayer.getBolusByNSId("meal-1")).thenReturn(bolusOfDocument(id = 3, isValid = false))
         whenever(nsClientV3Plugin.nsUpdate(eq("treatments"), any<DataSyncSelector.PairCarbs>(), any(), anyOrNull())).thenReturn(true)
 
         sut.processChangedCarbs()
@@ -1068,6 +1093,66 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         verify(nsClientV3Plugin, Times(1)).nsUpdate(eq("treatments"), sent.capture(), any(), anyOrNull())
         assertThat(sent.firstValue.value.isValid).isFalse()
         assertThat(sent.firstValue.value.ids.nightscoutId).isEqualTo("meal-1")
+    }
+
+    @Test
+    fun `removed carbs are uploaded when no bolus has the same Nightscout id`() = runTest {
+        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
+        whenever(persistenceLayer.getLastCarbsId()).thenReturn(10L)
+        whenever(preferences.get(NsclientLongKey.CarbsLastSyncedId)).thenReturn(4L, 4L, 4L, 6L)
+        whenever(persistenceLayer.getNextSyncElementCarbs(4L)).thenReturn(removedCarbsOfDocument()).thenReturn(null)
+        whenever(persistenceLayer.getBolusByNSId("meal-1")).thenReturn(null)
+        whenever(nsClientV3Plugin.nsUpdate(eq("treatments"), any<DataSyncSelector.PairCarbs>(), any(), anyOrNull())).thenReturn(true)
+
+        sut.processChangedCarbs()
+
+        verify(nsClientV3Plugin, Times(1)).nsUpdate(eq("treatments"), any<DataSyncSelector.PairCarbs>(), any(), anyOrNull())
+    }
+
+    /** Only a removal is held back. A valid change of one half is still uploaded. */
+    @Test
+    fun `changed carbs that are valid are uploaded also when a bolus has the same Nightscout id`() = runTest {
+        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
+        whenever(persistenceLayer.getLastCarbsId()).thenReturn(10L)
+        whenever(preferences.get(NsclientLongKey.CarbsLastSyncedId)).thenReturn(4L, 4L, 4L, 6L)
+        val changed = Pair(removedCarbsOfDocument().first.copy(isValid = true, amount = 50.0), removedCarbsOfDocument().second)
+        whenever(persistenceLayer.getNextSyncElementCarbs(4L)).thenReturn(changed).thenReturn(null)
+        whenever(persistenceLayer.getBolusByNSId("meal-1")).thenReturn(bolusOfDocument(id = 3, isValid = true))
+        whenever(nsClientV3Plugin.nsUpdate(eq("treatments"), any<DataSyncSelector.PairCarbs>(), any(), anyOrNull())).thenReturn(true)
+
+        sut.processChangedCarbs()
+
+        verify(nsClientV3Plugin, Times(1)).nsUpdate(eq("treatments"), any<DataSyncSelector.PairCarbs>(), any(), anyOrNull())
+    }
+
+    @Test
+    fun `a removed bolus is not uploaded while the carbs with the same Nightscout id are valid`() = runTest {
+        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
+        whenever(persistenceLayer.getLastBolusId()).thenReturn(10L)
+        whenever(preferences.get(NsclientLongKey.BolusLastSyncedId)).thenReturn(4L, 4L, 4L, 6L)
+        whenever(persistenceLayer.getNextSyncElementBolus(4L)).thenReturn(removedBolusOfDocument()).thenReturn(null)
+        whenever(persistenceLayer.getCarbsByNSId("meal-1")).thenReturn(removedCarbsOfDocument().second)
+
+        sut.processChangedBoluses()
+
+        verify(nsClientV3Plugin, Times(0)).nsUpdate(any(), any<DataSyncSelector.PairBolus>(), any(), anyOrNull())
+        verify(preferences, Times(1)).put(NsclientLongKey.BolusLastSyncedId, 6L)
+    }
+
+    @Test
+    fun `a removed bolus is uploaded when the carbs with the same Nightscout id are removed too`() = runTest {
+        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
+        whenever(persistenceLayer.getLastBolusId()).thenReturn(10L)
+        whenever(preferences.get(NsclientLongKey.BolusLastSyncedId)).thenReturn(4L, 4L, 4L, 6L)
+        whenever(persistenceLayer.getNextSyncElementBolus(4L)).thenReturn(removedBolusOfDocument()).thenReturn(null)
+        whenever(persistenceLayer.getCarbsByNSId("meal-1")).thenReturn(removedCarbsOfDocument().first)
+        whenever(nsClientV3Plugin.nsUpdate(eq("treatments"), any<DataSyncSelector.PairBolus>(), any(), anyOrNull())).thenReturn(true)
+
+        sut.processChangedBoluses()
+
+        val sent = argumentCaptor<DataSyncSelector.PairBolus>()
+        verify(nsClientV3Plugin, Times(1)).nsUpdate(eq("treatments"), sent.capture(), any(), anyOrNull())
+        assertThat(sent.firstValue.value.isValid).isFalse()
     }
 
     @Test

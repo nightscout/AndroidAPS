@@ -148,6 +148,20 @@ class DataSyncSelectorV3(
         else preferences.remove(NsclientLongKey.DeviceStatusLastSyncedId)
     }
 
+    /*
+     * A Nightscout document with insulin and carbs is stored as a bolus and carbs with the same
+     * Nightscout id. The upload of a removed record is a delete of the whole document, and the next
+     * read would then remove the other half on this phone too: removing the carbs would remove
+     * insulin on board, and the loop could give more insulin. So the removal of one half is not
+     * uploaded while the other half is valid. Nightscout keeps the whole document. When the other
+     * half is removed too, its upload deletes the document.
+     */
+    private suspend fun bolusWithNsIdIsValid(nightscoutId: String?): Boolean =
+        nightscoutId != null && persistenceLayer.getBolusByNSId(nightscoutId)?.isValid == true
+
+    private suspend fun carbsWithNsIdAreValid(nightscoutId: String?): Boolean =
+        nightscoutId != null && persistenceLayer.getCarbsByNSId(nightscoutId)?.isValid == true
+
     @OpenForTesting
     fun confirmLastBolusIdIfGreater(lastSynced: Long) {
         if (lastSynced > preferences.get(NsclientLongKey.BolusLastSyncedId)) {
@@ -191,6 +205,11 @@ class DataSyncSelectorV3(
                     bolus.first.ids.nightscoutId == null                                      -> {
                         cont = nsClientV3Plugin().nsAdd("treatments", DataSyncSelector.PairBolus(bolus.first, bolus.second.id), " $startId/$lastDbId") == true
                         if (cont) added++
+                    }
+                    // removed, but the carbs of its Nightscout document are valid => keep the document
+                    !bolus.first.isValid && carbsWithNsIdAreValid(bolus.first.ids.nightscoutId) -> {
+                        aapsLogger.debug(LTag.NSCLIENT_SYNC, "Ignoring Bolus. Removed, the carbs of its NS document stay: ${bolus.second.id}")
+                        ignored++
                     }
                     // with nsId = update if it's modified record
                     bolus.first.ids.nightscoutId != null && bolus.first.id != bolus.second.id -> {
@@ -250,6 +269,11 @@ class DataSyncSelectorV3(
                     carb.first.ids.nightscoutId == null                                    -> {
                         cont = nsClientV3Plugin().nsAdd("treatments", DataSyncSelector.PairCarbs(carb.first, carb.second.id), "$startId/$lastDbId") == true
                         if (cont) added++
+                    }
+                    // removed, but the bolus of its Nightscout document is valid => keep the document
+                    !carb.first.isValid && bolusWithNsIdIsValid(carb.first.ids.nightscoutId) -> {
+                        aapsLogger.debug(LTag.NSCLIENT_SYNC, "Ignoring Carbs. Removed, the bolus of its NS document stays: ${carb.second.id}")
+                        ignored++
                     }
                     // with nsId = update if it's modified record
                     carb.first.ids.nightscoutId != null && carb.first.id != carb.second.id -> {

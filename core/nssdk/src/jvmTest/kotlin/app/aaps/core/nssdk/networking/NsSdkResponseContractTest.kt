@@ -93,14 +93,14 @@ class NsSdkResponseContractTest {
     }
 
     /**
-     * Current behaviour, pinned so the risk stays visible. A document with insulin and carbs gives
-     * two records with one identifier. When one of them is removed on the phone, the upload is a
-     * DELETE of the whole document, and the next read gives both records as not valid. So removing
-     * the carbs also removes the bolus (less insulin on board), and removing the bolus also removes
-     * the carbs. If a way is added to remove one half only, change this test on purpose.
+     * A document with insulin and carbs gives two records with one identifier. The client sends a
+     * removed record as a DELETE of the whole document, and the next read gives both records as not
+     * valid. This is why the upload selector (`DataSyncSelectorV3`) does not send the removal of one
+     * half while the other half is still valid: removing the carbs would also remove the bolus on the
+     * phone, so less insulin on board. If a way is added to remove one half only, change this test.
      */
     @Test
-    fun `removing the carbs of a document with insulin deletes the whole document - current behaviour, pinned`() = runTest {
+    fun `a removed record of a document with insulin and carbs deletes the whole document`() = runTest {
         enqueuePage("""{"identifier":"meal-1","date":1000,"eventType":"Meal Bolus","insulin":3,"carbs":40,"isValid":true}""")
         val carbs = client.getTreatmentsModifiedSince(0, 500).values.filterIsInstance<NSCarbs>().single()
         server.takeRequest()
