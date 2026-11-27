@@ -37,6 +37,10 @@
     <string name="pref_title_alert_override_dnd">Override Do Not Disturb mode</string>
     <string name="pref_summary_alert_override_dnd">On: alarms ring even when the phone is silent or in Do Not Disturb. Off: alarms do not ring then. In Do Not Disturb they only vibrate.</string>
 
+    <!-- Ongoing notification preferences -->
+    <string name="pref_title_live_update_lock_screen_only">Live update only on lock screen</string>
+    <string name="pref_summary_live_update_lock_screen_only">Show the AAPS live update only when the phone is locked. When the phone is unlocked there is no chip in the status bar, so the icons of other notifications stay visible.</string>
+
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Upload BG data to NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Log sensor change</string>
