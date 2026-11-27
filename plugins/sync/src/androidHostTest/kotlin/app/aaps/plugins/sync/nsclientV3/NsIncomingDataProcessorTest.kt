@@ -6,7 +6,6 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.alerts.NightscoutAnnouncements
 import app.aaps.core.interfaces.insulin.InsulinType
-import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.source.NSClientSource
@@ -155,10 +154,9 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
 
         assertTrue(result)
         verify(storeDataForDb).addToGlucoseValues(argThat { map { it.timestamp } == listOf(newest, backfilled1, backfilled2) })
-        // The newest time still moves the cursor and ends the Nightscout alarms, wherever it is in the list.
+        // The newest time still moves the cursor, wherever it is in the list. Nightscout's own alarms, which this once
+        // ended too, are gone: every phone has its own BG alarms.
         verify(nsClient).updateLatestBgReceivedIfNewer(newest)
-        verify(notificationManager).dismiss(NotificationId.NS_ALARM)
-        verify(notificationManager).dismiss(NotificationId.NS_URGENT_ALARM)
     }
 
     @Test
@@ -170,14 +168,6 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
         assertTrue(result)
         verify(storeDataForDb).addToGlucoseValues(argThat { map { it.timestamp } == listOf(good) })
         verify(nsClient).updateLatestBgReceivedIfNewer(good)
-    }
-
-    @Test
-    fun `processSgvs keeps the Nightscout alarms when the newest reading is old`() {
-        val result = processor.processSgvs(listOf(sgvAt(now - T.mins(10).msecs()), sgvAt(now - T.mins(30).msecs())), doFullSync = false)
-
-        assertTrue(result)
-        verify(notificationManager, never()).dismiss(NotificationId.NS_ALARM)
     }
 
     @Test
