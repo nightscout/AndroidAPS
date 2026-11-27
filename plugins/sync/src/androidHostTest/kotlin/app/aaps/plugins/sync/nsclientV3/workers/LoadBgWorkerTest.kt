@@ -12,6 +12,7 @@ import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -23,6 +24,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.remotemodel.LastModified
+import app.aaps.core.objects.workflow.WorkOutcome
 import app.aaps.plugins.sync.nsclientV3.DataSyncSelectorV3
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
@@ -43,7 +45,9 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.reflect.KClass
 import kotlin.test.assertIs
@@ -209,6 +213,56 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
 
         assertThat(nsClientV3Plugin.lastLoadedSrvModified.collections.entries).isEqualTo(now - 1000)
         assertIs<ListenableWorker.Result.Success>(result)
+    }
+
+    /**
+     * A page of the "modified since" load comes in the order the server stored the records. After
+     * a sensor gap the newest reading is first and the backfilled ones follow. This test runs the
+     * runner with the real processor, so it shows that all readings of such a page are passed on.
+     */
+    @Test
+    fun subsequentLoadKeepsBackfilledReadingsOfAPageInServerOrder() = runTest(timeout = 30.seconds) {
+        val newest = now - T.mins(2).msecs()
+        val backfilled1 = now - T.mins(27).msecs()
+        val backfilled2 = now - T.mins(22).msecs()
+        val page = listOf(newest, backfilled1, backfilled2).map { time ->
+            GV(
+                timestamp = time,
+                isValid = true,
+                raw = 101.0,
+                value = 99.0,
+                trendArrow = TrendArrow.FLAT,
+                noise = 1.0,
+                sourceSensor = SourceSensor.DEXCOM_G6,
+                ids = IDs(nightscoutId = "nightscoutId$time")
+            ).toNSSvgV3()
+        }
+        nsClientV3Plugin.nsAndroidClient = nsAndroidClient
+        nsClientV3Plugin.lastLoadedSrvModified.collections.entries = now - 2000 // Not first load
+        nsClientV3Plugin.newestDataOnServer?.collections?.entries = now
+        whenever(nsAndroidClient.getSgvsModifiedSince(anyLong(), anyInt()))
+            .thenReturn(NSAndroidClient.ReadResponse(200, now - 1000, page), NSAndroidClient.ReadResponse(200, now - 1000, emptyList()))
+        val realProcessor = NsIncomingDataProcessor(
+            aapsLogger = aapsLogger,
+            nsClientSource = nsClientSource,
+            preferences = preferences,
+            dateUtil = dateUtil,
+            nsClient = nsClientV3Plugin,
+            profileFunction = profileFunction,
+            profileRepository = profileRepository,
+            storeDataForDb = storeDataForDb,
+            config = config,
+            profileStoreProvider = { profileStoreProvider() },
+            notificationManager = notificationManager,
+            nsClientRepository = nsClientRepository,
+            rh = baseText
+        )
+        val runner = LoadBgRunner(aapsLogger, preferences, dateUtil, nsClientV3Plugin, nsClientSource, realProcessor, storeDataForDb, nsClientRepository)
+
+        val outcome = runner.run()
+
+        assertIs<WorkOutcome.Success>(outcome)
+        verify(storeDataForDb).addToGlucoseValues(argThat { map { it.timestamp } == listOf(newest, backfilled1, backfilled2) })
     }
 
     @Test

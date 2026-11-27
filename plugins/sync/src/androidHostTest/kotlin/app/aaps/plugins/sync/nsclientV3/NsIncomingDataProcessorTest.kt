@@ -319,9 +319,9 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
     }
 
     /**
-     * Two readings with the same time are both passed on. The database decides: the insert looks
-     * the reading up by time and sensor, so the same reading twice ends as one row, and readings
-     * of two sensors stay two rows. That is also what happens when they come in two lists.
+     * Two readings with the same time are both passed on. This test shows only that. What the
+     * database does with them is not tested here: the insert (`CgmSourceTransaction`) is expected
+     * to look each reading up by time and sensor, as it does when they come in two lists.
      */
     @Test
     fun `processSgvs passes on two readings with the same timestamp`() {
