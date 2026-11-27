@@ -68,19 +68,31 @@ class BgAlarmRulesImpl(
         emptyList()
     }
 
-    private fun JsonObject.toRule() = BgAlarmRule(
-        id = getValue("id").jsonPrimitive.content,
-        direction = BgDirection.valueOf(getValue("direction").jsonPrimitive.content),
-        thresholdMgdl = getValue("thresholdMgdl").jsonPrimitive.double,
-        severity = AlertSeverity.valueOf(getValue("severity").jsonPrimitive.content),
-        fromMinute = get("fromMinute")?.jsonPrimitive?.int,
-        toMinute = get("toMinute")?.jsonPrimitive?.int,
-        durationMinutes = get("durationMinutes")?.jsonPrimitive?.int ?: 0,
-        // "silenceMinutes" of an older rule is not read: the kind decides now (BgAlert.silenceMinutes)
-        enabled = get("enabled")?.jsonPrimitive?.boolean ?: true,
+    private fun JsonObject.toRule(): BgAlarmRule {
+        val direction = BgDirection.valueOf(getValue("direction").jsonPrimitive.content)
         // Stored before there were types: a level rule
-        type = get("type")?.jsonPrimitive?.content?.let { BgRuleType.valueOf(it) } ?: BgRuleType.LEVEL
-    )
+        val type = get("type")?.jsonPrimitive?.content?.let { BgRuleType.valueOf(it) } ?: BgRuleType.LEVEL
+        val duration = get("durationMinutes")?.jsonPrimitive?.int ?: 0
+        // A level rule has no delay any more (decided 2026-11-27). A high stored with one meant "only if it stays
+        // high", which is persistent high now; a low rings at once, the safe side.
+        val delayedHigh = type == BgRuleType.LEVEL && direction == BgDirection.HIGH && duration > 0
+        return BgAlarmRule(
+            id = getValue("id").jsonPrimitive.content,
+            direction = direction,
+            thresholdMgdl = getValue("thresholdMgdl").jsonPrimitive.double,
+            severity = AlertSeverity.valueOf(getValue("severity").jsonPrimitive.content),
+            fromMinute = get("fromMinute")?.jsonPrimitive?.int,
+            toMinute = get("toMinute")?.jsonPrimitive?.int,
+            durationMinutes = when {
+                delayedHigh              -> maxOf(duration, BgAlarmRule.PERSISTENT_HIGH_MIN_MINUTES)
+                type == BgRuleType.LEVEL -> 0
+                else                     -> duration
+            },
+            // "silenceMinutes" of an older rule is not read: the kind decides now (BgAlert.silenceMinutes)
+            enabled = get("enabled")?.jsonPrimitive?.boolean ?: true,
+            type = if (delayedHigh) BgRuleType.PERSISTENT_HIGH else type
+        )
+    }
 
     internal fun toJson(rules: List<BgAlarmRule>): String = buildJsonArray {
         rules.forEach { r ->

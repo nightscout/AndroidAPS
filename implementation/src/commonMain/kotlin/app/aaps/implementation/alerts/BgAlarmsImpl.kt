@@ -357,12 +357,16 @@ class BgAlarmsImpl(
         else                                -> level.thresholdMgdl
     }
 
-    /** Whether [level] starts ringing now. */
+    /**
+     * Whether [level] starts ringing now. A level rule at the first reading past its threshold, never later: a false
+     * low (lying on the sensor) ends by itself when BG is back, and "only if it stays high" is persistent high
+     * (decided 2026-11-27).
+     */
     private fun raises(level: Level, data: Data): Boolean = when (level.type) {
-        BgRuleType.LEVEL           -> lastedLongEnough(level, data)
+        BgRuleType.LEVEL           -> runStart(data.readings, level, margin = 0.0) != null
         BgRuleType.PERSISTENT_HIGH -> {
             val since = runStart(data.readings, level, margin = 0.0)
-            since != null && lastedLongEnough(level, data) && regular(data.readings, since) &&
+            since != null && data.last.timestamp - since >= level.durationMinutes * 60_000L && regular(data.readings, since) &&
                 (averageRate(data.readings, RATE_WINDOW_MS, RATE_MIN_SPAN_MS) ?: 0.0) > -FALLING_MGDL_PER_MINUTE
         }
 
@@ -388,11 +392,6 @@ class BgAlarmsImpl(
     private fun since(level: Level, data: Data): Long = when (level.type) {
         BgRuleType.LEVEL, BgRuleType.PERSISTENT_HIGH -> runStart(data.readings, level, END_MARGIN_MGDL) ?: data.last.timestamp
         BgRuleType.RATE, BgRuleType.PREDICTED_LOW    -> data.last.timestamp
-    }
-
-    private fun lastedLongEnough(level: Level, data: Data): Boolean {
-        val since = runStart(data.readings, level, margin = 0.0) ?: return false
-        return data.last.timestamp - since >= level.durationMinutes * 60_000L
     }
 
     /** Whether the readings from [from] to the newest came without a gap longer than [REGULAR_GAP_MS]. */

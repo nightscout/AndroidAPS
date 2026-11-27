@@ -380,13 +380,15 @@ private enum class RuleKind(val type: BgRuleType, val direction: BgDirection, va
             FALLING, RISING       -> 0.5..10.0
         }
 
-    /** The limits of the minutes field: how long it must last, or for predicted low how far it looks ahead. */
+    /**
+     * The limits of the minutes field: for persistent high how long it must last, for predicted low how far it looks
+     * ahead. None for a low or a high, which ring at once (decided 2026-11-27), nor for a rate.
+     */
     val minutes: IntRange?
         get() = when (this) {
-            LOW, HIGH       -> 0..240
-            PERSISTENT_HIGH -> 15..240
-            PREDICTED_LOW   -> 5..120
-            FALLING, RISING -> null
+            PERSISTENT_HIGH            -> BgAlarmRule.PERSISTENT_HIGH_MIN_MINUTES..240
+            PREDICTED_LOW              -> 5..120
+            LOW, HIGH, FALLING, RISING -> null
         }
 
     companion object {
@@ -449,7 +451,7 @@ private fun RuleRow(rule: BgAlarmRule, units: BgUnits, readOnly: Boolean, onClic
     }
 }
 
-/** How a rule rings, when, and how long it waits or looks ahead. */
+/** How a rule rings, when, and for persistent high how long it waits, for predicted low how far it looks ahead. */
 @Composable
 private fun RuleDetails(rule: BgAlarmRule) {
     // Each detail its own text: the details are not one sentence a translator could order
@@ -459,9 +461,9 @@ private fun RuleDetails(rule: BgAlarmRule) {
         Text(stringResource(severityLabel(rule.severity)), style = detail, color = color)
         Text(windowText(rule), style = detail, color = color)
         when (rule.type) {
-            BgRuleType.PREDICTED_LOW -> Text(stringResource(UiStrings.bg_alarm_rule_within, rule.durationMinutes), style = detail, color = color)
-            BgRuleType.RATE          -> Unit
-            else                     -> if (rule.durationMinutes > 0) Text(stringResource(UiStrings.bg_alarm_rule_lasts, rule.durationMinutes), style = detail, color = color)
+            BgRuleType.PREDICTED_LOW          -> Text(stringResource(UiStrings.bg_alarm_rule_within, rule.durationMinutes), style = detail, color = color)
+            BgRuleType.PERSISTENT_HIGH        -> Text(stringResource(UiStrings.bg_alarm_rule_lasts, rule.durationMinutes), style = detail, color = color)
+            BgRuleType.LEVEL, BgRuleType.RATE -> Unit
         }
     }
 }

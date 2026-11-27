@@ -257,8 +257,8 @@ that fails rings before the next try succeeds.
   its silence ends (found on the Pixel, 2026-11-22).
 - **No delay in the core.** An alert is shown when it is raised. A kind that is noise for one user is silenced by
   that user. The trade-off: a user who silences "profile update failed" also gets a real, lasting failure as a silent
-  card only. (The BG rules keep their own "how long the condition must last"; that is part of a rule, not of the
-  core.)
+  card only. (Persistent high keeps its own "how long the condition must last"; that is part of the rule, not of
+  the core.)
 
 ### Review of today's notification ids (2026-11-21)
 
@@ -386,8 +386,12 @@ rings because of it (decided 2026-11-21: acceptable).
 #### The rules (the master's, synced to the clients)
 
 - **Level rules are a list.** Any number of low and high rules. Each has a threshold, a time-of-day window (all day,
-  or from and to, also across midnight: a night profile), how long the condition must last, its default silence
-  length, and its severity (WARNING or CRITICAL).
+  or from and to, also across midnight: a night profile), and its severity (WARNING or CRITICAL). A level rule rings at
+  the first reading past its threshold and ends by itself once BG is back past it by the end margin: the sound stops,
+  the alarm screen closes, the card goes. Decided 2026-11-27, it had a delay before ("Rings after"), which was taken
+  out: waiting is the worst thing to do with a low, and a false low (lying on the sensor) ends by itself anyway;
+  "only if it stays high" is persistent high. A high stored with a delay is read as persistent high (at least 15
+  minutes), a low stored with one rings at once. The silence length is no longer a rule's either (2026-11-26).
 - **Urgent low is always there.** It is protected: it cannot be set to Silent or Off, and it is not paused. When it
   rings, the user silences it as any alert, for a short time. It is CRITICAL and all day; the user sets only its
   threshold.

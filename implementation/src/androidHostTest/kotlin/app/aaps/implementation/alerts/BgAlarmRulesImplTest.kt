@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.alerts.AlertSeverity
 import app.aaps.core.interfaces.alerts.BgAlarmRule
 import app.aaps.core.interfaces.alerts.BgAlarmRules
 import app.aaps.core.interfaces.alerts.BgDirection
+import app.aaps.core.interfaces.alerts.BgRuleType
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
@@ -22,13 +23,40 @@ class BgAlarmRulesImplTest : TestBase() {
 
     private val night = BgAlarmRule(
         id = "n", direction = BgDirection.LOW, thresholdMgdl = 72.0, severity = AlertSeverity.CRITICAL,
-        fromMinute = 22 * 60, toMinute = 7 * 60, durationMinutes = 10, enabled = false
+        fromMinute = 22 * 60, toMinute = 7 * 60, enabled = false
     )
     private val high = BgAlarmRule(id = "h", direction = BgDirection.HIGH, thresholdMgdl = 250.0)
+    private val persistent = BgAlarmRule(id = "p", type = BgRuleType.PERSISTENT_HIGH, direction = BgDirection.HIGH, thresholdMgdl = 180.0, durationMinutes = 45)
 
     @Test
     fun `the rules are read back as they were written`() {
-        assertThat(sut.parse(sut.toJson(listOf(night, high)))).containsExactly(night, high).inOrder()
+        assertThat(sut.parse(sut.toJson(listOf(night, high, persistent)))).containsExactly(night, high, persistent).inOrder()
+    }
+
+    /**
+     * A level rule has no delay any more (decided 2026-11-27). A high stored with one meant "only if it stays high":
+     * it is read as persistent high, so it does not ring after every meal from now on.
+     */
+    @Test
+    fun `a high stored with a delay is read as persistent high`() {
+        val stored = BgAlarmRule(id = "h", direction = BgDirection.HIGH, thresholdMgdl = 200.0, severity = AlertSeverity.CRITICAL, fromMinute = 60, toMinute = 120, durationMinutes = 30)
+
+        assertThat(sut.parse(sut.toJson(listOf(stored)))).containsExactly(stored.copy(type = BgRuleType.PERSISTENT_HIGH))
+    }
+
+    @Test
+    fun `a high stored with a short delay waits as long as persistent high allows`() {
+        val stored = BgAlarmRule(id = "h", direction = BgDirection.HIGH, thresholdMgdl = 200.0, durationMinutes = 5)
+
+        assertThat(sut.parse(sut.toJson(listOf(stored))).single().durationMinutes).isEqualTo(BgAlarmRule.PERSISTENT_HIGH_MIN_MINUTES)
+    }
+
+    /** Waiting is the worst thing to do with a low: a low stored with a delay rings at once. */
+    @Test
+    fun `a low stored with a delay is read with none`() {
+        val stored = BgAlarmRule(id = "l", direction = BgDirection.LOW, thresholdMgdl = 72.0, durationMinutes = 10)
+
+        assertThat(sut.parse(sut.toJson(listOf(stored)))).containsExactly(stored.copy(durationMinutes = 0))
     }
 
     /** One rule that cannot be read is dropped, not the whole list. */

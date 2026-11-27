@@ -213,8 +213,8 @@ class BgAlarmsImplTest : TestBase() {
 
     // ---- the user's own rules (step 2a-2) ----------------------------------------------------------
 
-    private fun low(threshold: Double, id: String = "low$threshold", duration: Int = 0, severity: AlertSeverity = AlertSeverity.WARNING) =
-        BgAlarmRule(id = id, direction = BgDirection.LOW, thresholdMgdl = threshold, severity = severity, durationMinutes = duration)
+    private fun low(threshold: Double, id: String = "low$threshold", severity: AlertSeverity = AlertSeverity.WARNING) =
+        BgAlarmRule(id = id, direction = BgDirection.LOW, thresholdMgdl = threshold, severity = severity)
 
     private fun high(threshold: Double, duration: Int = 0) =
         BgAlarmRule(id = "high$threshold", direction = BgDirection.HIGH, thresholdMgdl = threshold, durationMinutes = duration)
@@ -248,16 +248,21 @@ class BgAlarmsImplTest : TestBase() {
         assertThat(alerts.raised.single().silenceMinutes).isEqualTo(60)
     }
 
+    /**
+     * A level rule rings at the first reading past its threshold, also one that came with a delay from somewhere
+     * (decided 2026-11-27): a false low ends by itself, "only if it stays high" is persistent high.
+     */
     @Test
-    fun `a rule rings only when it lasted long enough`() {
-        ruleList.value = listOf(high(250.0, duration = 15))
-        readings(200.0, 255.0, 260.0)
+    fun `a level rule rings at the first reading past its threshold whatever delay it has`() {
+        ruleList.value = listOf(high(250.0, duration = 15), low(80.0).copy(durationMinutes = 15))
+        readings(200.0, 255.0)
         evaluate()
-        assertThat(alerts.raised).isEmpty()
+        assertThat(alerts.raised.single().raisedAt).isEqualTo(now)
 
-        readings(200.0, 255.0, 260.0, 262.0, 265.0)
+        alerts.raised.clear()
+        readings(100.0, 75.0)
         evaluate()
-        assertThat(alerts.raised.single().raisedAt).isEqualTo(now - 15 * minute)
+        assertThat(alerts.raised.single().kind).isEqualTo(BgAlert.LOW)
     }
 
     @Test

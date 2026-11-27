@@ -41,8 +41,10 @@ enum class BgRuleType {
  * @param severity CRITICAL rings with the alarm screen, WARNING chimes once
  * @param fromMinute start of its time window, minutes after midnight; null with [toMinute] null: all day
  * @param toMinute end of its window; a window may cross midnight (a night rule from 22:00 to 07:00)
- * @param durationMinutes for a level rule and persistent high: how long the readings must stay past the threshold
- *   before it rings (0: at once). For predicted low: how far ahead it looks. Not used by a rate rule
+ * @param durationMinutes for persistent high: how long the readings must stay past the threshold before it rings. For
+ *   predicted low: how far ahead it looks. Not used by a level rule, which rings at the first reading past its
+ *   threshold and ends by itself once BG is back (decided 2026-11-27: waiting is the worst thing to do with a low; "only
+ *   if it stays high" is persistent high), nor by a rate rule
  *
  * How long a silence lasts is not a rule's: the alarm screen has buttons for it, and elsewhere its kind decides
  * ([BgAlert.silenceMinutes], decided 2026-11-26). A length stored with an older rule is not read.
@@ -70,6 +72,12 @@ data class BgAlarmRule(
         val from = fromMinute ?: return true
         val to = toMinute ?: return true
         return if (from <= to) minuteOfDay in from until to else minuteOfDay >= from || minuteOfDay < to
+    }
+
+    companion object {
+
+        /** The shortest a persistent high waits; shorter would ring after most meals. */
+        const val PERSISTENT_HIGH_MIN_MINUTES = 15
     }
 }
 
