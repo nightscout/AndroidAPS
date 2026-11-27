@@ -47,6 +47,8 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.wizard.QuickWizard
+import app.aaps.core.objects.wizard.QuickWizardEntry
+import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.ui.compose.quickLaunch.QuickLaunchAction
 import app.aaps.ui.compose.quickLaunch.QuickLaunchResolver
 import app.aaps.ui.compose.quickLaunch.QuickLaunchSerializer
@@ -74,6 +76,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -389,5 +392,33 @@ internal class MainViewModelTest {
         val sent = argumentCaptor<Event>()
         verify(rxBus, times(2)).send(sent.capture())
         assertThat((sent.lastValue as EventShowDialog.Ok).message).isEqualTo("The pump cannot take it")
+    }
+
+    /**
+     * The master can refuse a QuickWizard bolus at the commit: a superbolus whose running mode cannot start any
+     * more. Nothing is given, so the phone must say why. The dialog had closed as if the bolus was given.
+     */
+    @Test
+    fun `a QuickWizard bolus that the commit refuses says why`() = runTest {
+        val entry = mock<QuickWizardEntry>()
+        whenever(quickWizard.get("qw-1")).thenReturn(entry)
+        whenever(entry.isActive()).thenReturn(true)
+        whenever(entry.mode()).thenReturn(QuickWizardMode.WIZARD)
+        whenever(entry.buttonText()).thenReturn("Meal")
+        whenever(rh.gs(any<TextRef>())).thenReturn("Deliver bolus")
+        whenever(wizardExecutor.prepare(any(), any())).thenReturn(ActionProgress.Prepared(id = 9L))
+        whenever(wizardExecutor.commit(eq(9L), eq(false), any(), any(), eq(0.0)))
+            .thenReturn(ActionProgress.Rejected(FailureReason.ExecutionFailed, "The superbolus cannot start now"))
+
+        sut.executeQuickWizard("qw-1")
+        advanceUntilIdle()
+        val confirmation = argumentCaptor<Event>()
+        verify(rxBus).send(confirmation.capture())
+        (confirmation.firstValue as EventShowDialog.OkCancel).onOk()
+        advanceUntilIdle()
+
+        val sent = argumentCaptor<Event>()
+        verify(rxBus, times(2)).send(sent.capture())
+        assertThat((sent.lastValue as EventShowDialog.Ok).message).isEqualTo("The superbolus cannot start now")
     }
 }

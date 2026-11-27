@@ -411,7 +411,9 @@ class MainViewModel(
                     onCancel = { wizardExecutor.discard(prepared.id) }
                 ) { asAdvisor ->
                     // The async delivery failure is alarmed once, centrally, from the executor — no local alarm here (it would double).
-                    appScope.launch { wizardExecutor.commit(prepared.id, asAdvisor, Sources.QuickWizard, label) }
+                    // A refusal at the commit has no alarm, for example a superbolus whose mode cannot start any more:
+                    // nothing was given, so it is shown here.
+                    appScope.launch { reportRefusedCommit(wizardExecutor.commit(prepared.id, asAdvisor, Sources.QuickWizard, label), title = entry.buttonText()) }
                 }
             // A master-local compute failure (no modal) or a client offline pre-check surfaces here; a client round-trip failure already showed on the app modal.
             is ActionProgress.Rejected ->
@@ -685,16 +687,17 @@ class MainViewModel(
      * `ProfileManagementViewModel.activateProfile`. Unconfirmed is shown by the app-level modal.
      */
     private fun commitAndReport(id: Long, source: Sources, label: String, title: String) {
-        appScope.launch {
-            val result = batchExecutor.commit(id, source, label)
-            if (result is ActionProgress.Rejected) {
-                if (result.reason.isNotDeliveryError())
-                    rxBus.send(EventShowDialog.Ok(title = title, message = rh.gs(result.reason.failText())))
-                // A client's app-level modal has shown the master's own text already.
-                else if (!config.AAPSCLIENT) result.detail?.let { detail ->
-                    rxBus.send(EventShowDialog.Ok(title = title, message = detail))
-                }
-            }
+        appScope.launch { reportRefusedCommit(batchExecutor.commit(id, source, label), title) }
+    }
+
+    /** Says why a commit was refused, when [result] is a refusal. Anything else is shown elsewhere or needs nothing. */
+    private fun reportRefusedCommit(result: ActionProgress, title: String) {
+        if (result !is ActionProgress.Rejected) return
+        if (result.reason.isNotDeliveryError())
+            rxBus.send(EventShowDialog.Ok(title = title, message = rh.gs(result.reason.failText())))
+        // A client's app-level modal has shown the master's own text already.
+        else if (!config.AAPSCLIENT) result.detail?.let { detail ->
+            rxBus.send(EventShowDialog.Ok(title = title, message = detail))
         }
     }
 
