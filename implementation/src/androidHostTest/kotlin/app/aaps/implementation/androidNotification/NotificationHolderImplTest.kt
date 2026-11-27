@@ -1,6 +1,8 @@
 package app.aaps.implementation.androidNotification
 
 import android.app.Activity
+import android.app.Notification
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
@@ -17,9 +19,9 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 
 /**
- * The intent behind a tap on an AAPS notification.
+ * The placeholder notification, and the intent behind a tap on an AAPS notification.
  *
- * It has to be the same intent the launcher icon sends. Then Android brings a minimized AAPS back as it
+ * The intent has to be the same intent the launcher icon sends. Then Android brings a minimized AAPS back as it
  * is. It used to come from `TaskStackBuilder`, which adds `FLAG_ACTIVITY_CLEAR_TASK`: every tap
  * destroyed the running task, and the overview was built and calculated again from zero.
  */
@@ -52,6 +54,35 @@ class NotificationHolderImplTest {
         assertThat(intent.action).isEqualTo(Intent.ACTION_MAIN)
         assertThat(intent.categories).containsExactly(Intent.CATEGORY_LAUNCHER)
         assertThat(intent.flags and Intent.FLAG_ACTIVITY_NEW_TASK).isNotEqualTo(0)
+    }
+
+    /**
+     * Every service that starts in the foreground reads the notification in Service.onCreate, on the main thread, and
+     * some read it twice. The placeholder was built anew at each read, its channel created and the notification posted
+     * again: binder calls on the main thread at app start (ANR, Crashlytics 2026-11). It is built once, and a read posts
+     * nothing, because startForeground shows it.
+     */
+    @Test
+    fun thePlaceholderIsBuiltOnceAndAReadPostsNothing() {
+        val holder = sut()
+
+        val first = holder.notification
+
+        assertThat(holder.notification).isSameInstanceAs(first)
+        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        assertThat(shadowOf(manager).allNotifications).isEmpty()
+    }
+
+    @Test
+    fun theRealNotificationReplacesThePlaceholder() {
+        val holder = sut()
+        val placeholder = holder.notification
+        val real = Notification()
+
+        holder.notification = real
+
+        assertThat(holder.notification).isSameInstanceAs(real)
+        assertThat(holder.notification).isNotSameInstanceAs(placeholder)
     }
 
     @Test
