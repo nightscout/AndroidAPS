@@ -102,6 +102,7 @@ interface CommandQueue {
     suspend fun cancelTempBasal(enforceNew: Boolean, autoForced: Boolean = false): PumpEnactResult
     suspend fun cancelExtended(): PumpEnactResult
     suspend fun readStatus(reason: String): PumpEnactResult
+    fun cancelReadStatus(): Boolean
     fun statusInQueue(): Boolean
     suspend fun loadHistory(type: Byte): PumpEnactResult
     suspend fun setUserOptions(): PumpEnactResult

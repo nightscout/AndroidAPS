@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The unit test manifest merge sets debuggable=true, and overrides the debuggable=false that the AAR declares -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:debuggable="true"
+        tools:replace="android:debuggable" />
+
+</manifest>

@@ -262,7 +262,11 @@ enum class NotificationId(
     // A real pump is selected, but AAPS has no Bluetooth (Nearby devices) permission, so no command can reach the
     // pump and the queue fails them (#5440). It removes itself once the permission is back. IMPORTANT, not URGENT:
     // a bolus that fails because of it raises its own alarm. Appended at the END for the same reason as above.
-    BLUETOOTH_PERMISSION_MISSING(IMPORTANT, PUMP);
+    BLUETOOTH_PERMISSION_MISSING(IMPORTANT, PUMP),
+
+    // Predicted low BG (AP550 keeps a forecast alert). Appended at the END for the [fromOrdinal] reason above.
+    // defaultLevel is NORMAL; the driver raises the posted level to URGENT for its high-risk tier.
+    HYPOGLYCEMIA_RISK(NORMAL, CGM);
 
     companion object {
 

@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="ap_550" translatable="false">AP550</string>
+    <string name="description_pump_ap550" translatable="false">Integrated with United Imaging uTouch pump</string>
+    <string name="key_ap550_password" translatable="false">ap550_password</string>
+    <string name="no_bt_adapter" translatable="false">No bluetooth adapter found</string>
+    <string name="device_not_found" translatable="false">Selected device not found</string>
+    <string name="waiting_for_time_synchronization" translatable="false">Waiting for time synchronization (%1$d sec)</string>
+    <string name="overview_bolusprogress_delivered" translatable="false">Delivered</string>
+    <string name="overview_bolusprogress_stoped" translatable="false">Stopped</string>
+    <string name="serialnumber" translatable="false">Serial Number</string>
+    <string name="daily_units" translatable="false">Daily Units</string>
+    <string name="maxBolus" translatable="false">Max Bolus</string>
+    <string name="maxBasal" translatable="false">Max Basal</string>
+    <string name="pumperror" translatable="false">Pump Error</string>
+    <string name="pumphistory" translatable="false">Pump History</string>
+    <string name="eventtype" translatable="false">Pump Event Type</string>
+    <string name="pumpshutdown" translatable="false">Pump Shutdown</string>
+    <string name="occlusion" translatable="false">Occlusion</string>
+    <string name="lowbattery" translatable="false">Low Battery</string>
+    <string name="batterydischarged" translatable="false">Pump Battery Discharged</string>
+    <string name="danar_disableeasymode" translatable="false">Disable EasyUI mode in pump</string>
+    <string name="wrongpumppassword" translatable="false">Wrong pump password!</string>
+    <string name="ap550_enableextendedbolus" translatable="false">Enable extended boluses on pump</string>
+    <string name="pumpdrivercorrected" translatable="false">Pump driver corrected</string>
+    <string name="profile_set_failed" translatable="false">Setting of basal profile failed</string>
+    <string name="profile_basal_not_match" translatable="false">basal profile not match</string>
+    <string name="ap550_set_basal_step001" translatable="false">Set basal step to 0.01 U/h</string>
+    <string name="ap550_switch_touch_mode" translatable="false">Change mode from U/d to U/h on pump</string>
+    <string name="getting_pump_status" translatable="false">Getting pump status</string>
+    <string name="getting_temp_basal_status" translatable="false">Getting temporary basal status</string>
+    <string name="getting_temp_basal_absolute_status" translatable="false">Getting temporary basal absolute status</string>
+    <string name="getting_extended_bolus_status" translatable="false">Getting extended bolus status</string>
+    <string name="getting_pump_settings" translatable="false">Getting pump settings</string>
+    <string name="getting_bolus_status" translatable="false">Getting bolus status</string>
+    <string name="getting_pump_time" translatable="false">Getting pump time</string>
+    <string name="approaching_daily_limit" translatable="false">Approaching insulin daily limit</string>
+    <string name="stopping_temp_basal" translatable="false">Stopping temp basal</string>
+    <string name="setting_temp_basal" translatable="false">Setting temp basal</string>
+    <string name="setting_extended_bolus" translatable="false">Setting extended bolus</string>
+    <string name="stopping_extended_bolus" translatable="false">Stopping extended bolus</string>
+    <string name="updating_basal_rates" translatable="false">Updating basal rates</string>
+    <string name="pump_time_updated" translatable="false">Pump time updated</string>
+    <string name="pump_time_updated_failed" translatable="false">Pump time updated failed</string>
+    <string name="pump_1h_time_change_requested" translatable="false">Over 24 hours Time change was requested, please check time of APP and pump.</string>
+
+    <string name="ap550_value_not_set_properly" translatable="false">Value not set properly</string>
+    <string name="ap550_pump" translatable="false">uTouch Pump</string>
+    <string name="bolus_error_content" translatable="false">Asked: %1$.2fU Delivered: %2$.2fU </string>
+    <string name="deliver_treatment_error_code_00" translatable="false">00 Normal injection</string>
+    <string name="deliver_treatment_error_code_01" translatable="false">01 Manually pause injection</string>
+    <string name="deliver_treatment_error_code_02" translatable="false">02 The pump is resetting and filling</string>
+    <string name="deliver_treatment_error_code_03" translatable="false">03 Abnormal pump motor</string>
+    <string name="deliver_treatment_error_code_04" translatable="false">04 Pump power exhausted</string>
+    <string name="deliver_treatment_error_code_05" translatable="false">05 Pump dosage exhausted</string>
+    <string name="deliver_treatment_error_code_06" translatable="false">06 Pump pipeline blockage</string>
+    <string name="deliver_treatment_error_code_07" translatable="false">07 Pump reservoir empty</string>
+    <string name="deliver_treatment_error_code_08" translatable="false">08 Pump pipeline detachment</string>
+    <string name="deliver_treatment_error_code_09" translatable="false">09 The injection volume exceeds the maximum value of the pump</string>
+    <string name="deliver_treatment_error_code_10" translatable="false">10 Low battery level</string>
+    <string name="deliver_treatment_error_code_11" translatable="false">11 Low dosage</string>
+    <string name="deliver_treatment_error_code_12" translatable="false">12 Communication abnormality</string>
+    <string name="deliver_treatment_bolus_error_code_10" translatable="false">A bolus is already being injected on the pump</string>
+    <string name="deliver_treatment_temp_basal_error_code_10" translatable="false">Temporary rate is already being injected</string>
+    <string name="ap550_bt_name_title" translatable="false">uTouch pump Bluetooth device</string>
+    <string name="ap550_password_title" translatable="false">Pump password</string>
+    <string name="ap550_use_extended_title" translatable="false">Enable extended (square-wave) bolus to top up when the suggested dose exceeds 200%.</string>
+    <string name="ap550_visualize_extended_as_percentage_title" translatable="false">Visualize extended bolus as %%</string>
+    <string name="key_ap550_visualize_extended_as_percentage" translatable="false">Visualize_extended_bolus_as</string>
+    <string name="ap550_basal_is_percent_title" translatable="false">Visualize basal as percentage</string>
+    <string name="ap550_use_hypoglycemia_risk_inform_title" translatable="false">Hypoglycemia risk alert</string>
+    <string name="key_ap550_use_hypoglycemia_risk_inform" translatable="false">use_hypoglycemia_risk_inform</string>
+    <string name="ap550_bluetooth_status" translatable="false">Bluetooth status</string>
+    <string name="pump_serial_title" translatable="false">Pump serial number</string>
+    <string name="ap550_iob_label" translatable="false">Pump IOB</string>
+    <string name="ap550s_user_options">User options</string>
+    <string name="basal_step" translatable="false">Basal Step</string>
+    <string name="bolus_step" translatable="false">Bolus Step</string>
+    <string name="virtual_pump_firmware_label" translatable="false">Firmware</string>
+    <string name="virtual_pump_extended_bolus_label" translatable="false">Virtual Pump Extended Bolus</string>
+    <string name="ap550_user_options" translatable="false">User options</string>
+    <string name="resetpairing" translatable="false">Reset pairing information?</string>
+    <string name="ap550_model" comment="%1$s=pump model name, %2$d=firmware major version, %3$02d=firmware minor version. Example: uAP 550S (703)">%1$s (%2$d%3$02d)</string>
+    <string name="ap550_history_alarm" translatable="false">Alarms</string>
+    <string name="ap550_history_basalhours" translatable="false">Temp Basal</string>
+    <string name="ap550_history_bolus" translatable="false">Boluses</string>
+    <string name="ap550_history_carbohydrates" translatable="false">Carbohydrates</string>
+    <string name="ap550_history_dailyinsulin" translatable="false">Daily insulin</string>
+    <string name="ap550_history_errors" translatable="false">Errors</string>
+    <string name="ap550_history_glucose" translatable="false">Glucose</string>
+    <string name="ap550_history_refill" translatable="false">Refill</string>
+    <string name="ap550_history_syspend" translatable="false">Suspend</string>
+    <string name="ap550_history_prime" translatable="false">Prime</string>
+    <string name="ap550_history_param_modify" translatable="false">Parameter modification</string>
+    <string name="ap550_history_basal_modify" translatable="false">Basal modification</string>
+    <string name="ap550_version_before_DCN18" translatable="false">CY8CKIT-062 PSoC 6 BLE Pioneer Kit</string>
+    <string name="ap550_time_display" translatable="false">Display time format</string>
+    <string name="time_format_12h" translatable="false">12h</string>
+    <string name="time_format_24h" translatable="false">24h</string>
+    <string name="ap550_button_scroll" translatable="false">Button scroll</string>
+    <string name="option_on" translatable="false">On</string>
+    <string name="option_off" translatable="false">Off</string>
+    <string name="ap550_beep" translatable="false">Beep on button press</string>
+    <string name="ap550_pump_alarm" translatable="false">Alarm</string>
+    <string name="ap550_pump_alarm_sound" translatable="false">Sound</string>
+    <string name="ap550_pump_alarm_vibrate" translatable="false">Vibrate</string>
+    <string name="ap550_pump_alarm_both" translatable="false">Both</string>
+    <string name="ap550_screen_timeout" translatable="false">LCD on time [seconds]</string>
+    <string name="ap550_back_light" translatable="false">Backlight on time [seconds]</string>
+    <string name="ap550_glucose_units" translatable="false">Glucose units</string>
+    <string name="ap550_shutdown" translatable="false">Shutdown [hours]</string>
+    <string name="ap550_low_reservoir" translatable="false">Low reservoir [Units]</string>
+    <string name="ap550_save_user_options" translatable="false">Save options to pump</string>
+
+    <string name="ap550_ble_config_scan_currently_selected_ap550"  translatable="false">Currently Selected uTouch Pump BT Device</string>
+    <string name="ap550_ble_config_remove_ap550"  translatable="false">Remove</string>
+
+    <string name="ap550_ble_config_scan_title" translatable="false">uTouch Pump Scan</string>
+    <string name="ap550_ble_config_button_scan_start" translatable="false">Scan</string>
+    <string name="ap550_ble_config_scan_stop" translatable="false">Stop</string>
+    <string name="ap550_ble_config_scan_selected" translatable="false">Selected</string>
+
+    <string name="ap550_ble_config_qr_scan_title" translatable="false">QR code scan</string>
+    <string name="ap550_ble_config_qr_scan_summary" translatable="false">Scan the QR code on the back of the pump</string>
+    <string name="ap550_ble_config_bt_scan_title" translatable="false">Bluetooth scan connection</string>
+    <string name="ap550_ble_config_bt_scan_summary" translatable="false">Search for nearby Bluetooth devices</string>
+    <string name="ap550_ble_config_nearby_devices_with_status" comment="%1$s=scan state, e.g. Scanning or Scanning finished. Example: Nearby devices (Scanning)" translatable="false">Nearby devices (%1$s)</string>
+
+    <string name="key_ap550_mac_address" translatable="false">pref_ap550_mac_address</string>
+    <string name="key_ap550_ser_number" translatable="false">pref_ap550_ser_number</string>
+    <string name="key_ap550_bt_device_name" translatable="false">pref_ap550_bt_device_name</string>
+    <string name="ap550_ble_config_scan_scanning" translatable="false">Scanning</string>
+    <string name="ap550_ble_config_scan_finished" translatable="false">Scanning finished</string>
+    <string name="last_get_basal_timestamp" translatable="false">last_get_basal_timestamp</string>
+    <string name="is_basal_same" translatable="false">is_basal_same</string>
+    <string name="is_temp_basal_running_after_disconnect" translatable="false">is_temp_basal_running_after_disconnect</string>
+    <string name="timestamp_temp_basal_running_after_disconnect" translatable="false">timestamp_temp_basal_running_after_disconnect</string>
+    <string name="disconnectTimestamp_temp_basal_running_after_disconnect" translatable="false">disconnectTimestamp_temp_basal_running_after_disconnect</string>
+    <string name="serialNumber_temp_basal_running_after_disconnect" translatable="false">serialNumber_temp_basal_running_after_disconnect</string>
+    <string name="duration_temp_basal_running_after_disconnect" translatable="false">duration_temp_basal_running_after_disconnect</string>
+
+
+    <string name="ap550_ble_config_scan_error" translatable="false">Scanning error: %1$d</string>
+
+    <string name="ap550_ble_config_remove_ap550_confirmation_title" translatable="false">Remove AP550 BT Device</string>
+    <string name="ap550_ble_config_remove_ap550_confirmation" translatable="false">Are you sure that you want to remove your AP550 BT device?</string>
+    <string name="ap550_ble_config_no_ap550_selected" translatable="false">No AP550 BT device selected</string>
+    <string name="ap550_common_yes" translatable="false">Yes</string>
+    <string name="ap550_common_no" translatable="false">No</string>
+
+    <string name="ap550_ble_device_is_selected" translatable="false">Bluetooth device is selected</string>
+    <string name="ap550_ble_device_is_illegal" translatable="false">Bluetooth device is illegal</string>
+
+    <string name="ap550_ble_device_paired_title" translatable="false">Pairing Code</string>
+    <string name="ap550_ble_device_input_pairing_code" translatable="false">Please input pairing code</string>
+    <string name="ap550_ble_device_cancel_pair" translatable="false">cancel</string>
+    <string name="ap550_ble_device_pair" translatable="false">pair</string>
+
+    <string name="ap550_ble_device_pairing_code_input_error" translatable="false">Pairing code input error</string>
+
+    <string name="ap550_pair_with_pump_title">Pair with pump</string>
+    <string name="ap550_confirm_unpair_message" comment="Shown in the confirmation dialog before the driver forgets the paired pump">Unpair from the pump?</string>
+
+    <string name="ap550_ble_bluetooth_is_disconnected" translatable="false">Bluetooth is disconnected</string>
+
+    <string name="ap550_ble_please_waiting" translatable="false">Please waiting...</string>
+    <string name="ap550_ble_is_connecting" translatable="false">Bluetooth is connecting...</string>
+    <string name="ap550_ble_device_paired_code" translatable="false">PairingCode</string>
+
+    <string name="ap550_ble_connection_authentication" translatable="false">Bluetooth connection authentication</string>
+    <string name="ap550_ble_get_pump_status" translatable="false">get pump status...</string>
+
+    <string name="ap550_ble_connect_fail" translatable="false">bluetooth connect fail</string>
+
+    <string name="danar_valuenotsetproperly">Value not set properly</string>
+    <string name="ap550_ble_device_toggle_prompt_tips" translatable="false">Please remove the existing paired device before switching bluetooth</string>
+    <string name="ap550s_daily_value">%1$.2f U</string>
+	
+	    <!-- ConnectionStatus -->
+    <string name="connect_status">Connect Status</string>
+    <string name="ap550s_no_bt_adapter">No Bluetooth Adapter</string>
+    <string name="ap550s_bt_disabled">Bluetooth is disabled</string>
+    <string name="ap550s_pairing">Pump pairing</string>
+    <string name="ap550s_pair_success">Pump pair successes</string>
+    <string name="ap550s_pair_code_error">Pump pair code error</string>
+    <string name="ap550s_pair_cancel">Pump pair cancel</string>
+    <string name="ap550s_connected">Connected</string>
+    <string name="ap550s_connect_fail">Pump Connect Fail</string>
+    <string name="ap550s_disconnected">Disconnected</string>
+    <string name="ap550s_remove_by_user">Remove pump By User</string>
+
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Never contacted</string>
+    <string name="pump_status_sleeping">Sleeping</string>
+    <string name="pump_status_pairing">Pairing</string>
+    <string name="pump_status_waking_up">Waking up</string>
+    <string name="pump_status_active">Active</string>
+    <string name="pump_status_error_comm">Error with communication</string>
+    <string name="pump_status_timeout_comm">Timeout on communication</string>
+    <string name="pump_status_pump_unreachable">Pump unreachable</string>
+    <string name="pump_status_invalid_config">Invalid configuration</string>
+
+    <!-- TargetDevice -->
+    <string name="target_device_AP550s">AP550S Pump</string>
+    <string name="target_device_other">Other Pump</string>
+
+    <string name="profile_basal_dismatch" translatable="false">26 pump basal rate:%1$.2f U/h, please reset profile</string>
+    <string name="tempBasal_absolute_constraint" translatable="false">30 pump temp basal rate:%1$.2f U/h, constraint to %2$.2 U/h</string>
+    <string name="aaps_pump_connected" translatable="false">24 AAPS connect pump</string>
+    <string name="aaps_pump_disconnected" translatable="false">22 AAPS disconnect pump</string>
+    <string name="phone_low_battery">28 Phone low battery</string>
+    <string name="hypoglycemia_risk_inform">Hypoglycemia risk inform</string>
+    <string name="pump_fixed_vent_record">1 Pump fixed vent: %1$.1fU</string>
+    <string name="pump_reset_vent_record" >2 Pump Reset and Filling</string>
+    <string name="pump_vent_without_reset_record" >3 Pump vent without reset</string>
+    <!-- Xiaozhi Transmit -->
+    <string name="remaining_transmitted_data_large" translatable="false">Remaining large amount of data to be transmitted</string>
+    <string name="remaining_transmitted_data_small" translatable="false">Remaining large amall of data to be transmitted</string>
+
+    <string name="time_update">pump time update failed</string>
+    <string name="time_update_success">pump time update success</string>
+
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Scheduled Status Refresh</string>
+    <string name="key_last_check_whether_glucose_lost_time" translatable="false">last_check_whether_glucose_lost_time</string>
+
+    <!-- Text of the pump connection failure notice -->
+    <string name="pump_connect_fail_content">1. Please confirm that the pump is within searchable range\n2. Please confirm that the pump and phone bluetooth are enabled</string>
+
+    <!-- Moved in from core/ui, core/utils and ui, so this module stays self-contained -->
+    <string name="bolus_delivering">Delivering %1$.2f U</string>
+    <string name="failed_update_basal_profile_pump_disconnected">Failed to update basal profile, pump disconnected</string>
+    <string name="ap550_basal_above_pump_max_basal" comment="%1$.2f = maximum basal rate of the pump in U/h. Example: 3.00">Basal rate in the profile is above the pump\'s maximum basal rate (%1$.2f U/h)</string>
+    <string name="format_insulin_units_3">%1$.3f U</string>
+    <string name="format_tb_rate_units">%1$.3f U/h</string>
+    <string name="format_tb_percent_units">%d %%</string>
+    <string name="format_duration_units">%d min</string>
+    <string name="stop_pump_injection">Stop pump Injection</string>
+    <string name="resume_pump_injection">Resume pump Injection</string>
+
+    <!-- Preference keys, read and written through the shared preference store -->
+    <string name="key_dcn_version" translatable="false"></string>
+    <string name="key_active_pump_serial_number" translatable="false">active_pump_serial_number</string>
+    <string name="key_danar_useextended" translatable="false">danar_useextended</string>
+    <string name="key_ap550_basal_is_percent" translatable="false">Visualize_basal_percent</string>
+    <!-- Moved in from core/data keys.xml, so this module stays self-contained -->
+    <string name="key_cloud_user_online_time" translatable="false">cloud_user_online_time</string>
+    <string name="key_cloud_user_pump_offline_time" translatable="false">cloud_user_pump_offline_time</string>
+    <string name="key_cloud_pump_tdd_pending" translatable="false">cloud_pump_tdd_pending</string>
+    <string name="key_last_pump_tdd_sync_date" translatable="false">last_pump_tdd_sync_date</string>
+    <string name="key_last_pump_tdd_fetch_attempt_time" translatable="false">last_pump_tdd_fetch_attempt_time</string>
+    <string name="key_cloud_pump_tdd_raw" translatable="false">cloud_pump_tdd_raw</string>
+
+    <!-- ============================================================
+         English defaults for text that used to be Chinese-only.
+         Every key here MUST also have a values-zh-rCN/strings.xml
+         entry with the original Chinese wording, verbatim.
+         ============================================================ -->
+
+    <!-- QR scan -->
+    <string name="ap550_qr_scan_title" translatable="false">Scan QR code</string>
+    <string name="ap550_qr_scan_hint" translatable="false">Align the QR code with the scan frame</string>
+    <string name="ap550_qr_camera_permission" translatable="false">Camera permission is needed to scan the QR code</string>
+
+    <!-- History table columns -->
+    <string name="ap550_history_col_date" translatable="false">Date</string>
+    <string name="ap550_history_col_basal" translatable="false">Basal rate</string>
+
+    <!-- Pump error codes (ConnectUtil) -->
+    <string name="ap550_pump_error_00" translatable="false">Normal injection</string>
+    <string name="ap550_pump_error_01" translatable="false">Pump manually paused injection</string>
+    <string name="ap550_pump_error_02" translatable="false">Pump is resetting and filling</string>
+    <string name="ap550_pump_error_03" translatable="false">Pump motor error</string>
+    <string name="ap550_pump_error_04" translatable="false">Pump battery exhausted</string>
+    <string name="ap550_pump_error_05" translatable="false">Pump insulin exhausted</string>
+    <string name="ap550_pump_error_06" translatable="false">Pump tubing occlusion</string>
+    <string name="ap550_pump_error_07" translatable="false">Pump reservoir empty</string>
+    <string name="ap550_pump_error_08" translatable="false">Pump tubing detached</string>
+    <string name="ap550_pump_error_09" translatable="false">Injection volume exceeds the pump maximum</string>
+    <string name="ap550_pump_error_10_bolus" translatable="false">A bolus is already being injected on the pump</string>
+    <string name="ap550_pump_error_10_extended" translatable="false">An extended bolus is already being injected on the pump</string>
+    <string name="ap550_pump_error_10_tempbasal" translatable="false">A temporary basal rate is already being injected</string>
+    <string name="ap550_pump_error_12_notenabled" translatable="false">Extended bolus is not enabled on the pump</string>
+    <string name="ap550_pump_error_12_comm" translatable="false">Communication error, please reconnect the pump</string>
+
+    <!-- Bolus / treatment error messages -->
+    <string name="ap550_bolus_delivery_error" translatable="false">Bolus delivery error: %1$s</string>
+    <string name="ap550_bolus_comm_error" translatable="false">Bolus delivery error: AAPS lost communication with the pump, please check on the pump how much bolus was actually delivered</string>
+    <string name="ap550_bolus_exceeds_pump_max" translatable="false">Pump single bolus maximum: %1$sU\n1. Please adjust the dose.\n2. To change the pump\'s single bolus maximum, go to: [Settings] &gt; [Delivery] &gt; [Max bolus].</string>
+    <string name="ap550_bolus_error_reason" translatable="false">Bolus error, reason: %1$s</string>
+    <string name="ap550_extended_bolus_error_reason" translatable="false">Extended bolus error, reason: %1$s</string>
+    <string name="ap550_temp_basal_error_reason" translatable="false">Temp basal error, reason: %1$s</string>
+
+    <!-- Blood glucose loss notification (ExecutionService) -->
+    <string name="ap550_bg_missed_title" translatable="false">AAPS blood glucose data lost</string>
+    <string name="ap550_bg_missed_text" translatable="false">No blood glucose data received for over 10 minutes, please check whether the device is connected properly...</string>
+    <string name="ap550_bg_connected_title" translatable="false">AAPS blood glucose connected</string>
+    <string name="ap550_bg_missed_channel" translatable="false">Blood glucose loss notification</string>
+
+    <!-- Command result comments (ExecutionService) -->
+    <string name="ap550_bt_not_connected" translatable="false">Bluetooth not connected</string>
+    <string name="ap550_pump_no_response" translatable="false">Pump is not responding, communication timeout</string>
+    <string name="ap550_pump_control_failed" translatable="false">Pump control failed</string>
+
+    <!-- Bolus announcement -->
+    <string name="ap550_bolus_comm_interrupted" translatable="false">20 Communication error during bolus delivery, delivery interrupted</string>
+
+    <!-- Extended bolus / temp basal stop results -->
+    <string name="ap550_extended_bolus_stopped_by_aaps" translatable="false">AAPS stopped the extended bolus</string>
+    <string name="ap550_extended_bolus_stopped_by_pump" translatable="false">Pump stopped the extended bolus</string>
+    <string name="ap550_extended_bolus_stop_failed" translatable="false">Failed to stop the extended bolus</string>
+    <string name="ap550_temp_basal_stopped_by_aaps" translatable="false">AAPS stopped the temp basal rate</string>
+    <string name="ap550_temp_basal_stopped_by_pump" translatable="false">Pump stopped the temp basal rate</string>
+    <string name="ap550_temp_basal_stop_failed" translatable="false">Failed to stop the temp basal rate</string>
+
+    <!-- Pump plugin: stop/resume pump and bolus limits -->
+    <string name="ap550_status_refresh_failed" translatable="false">Failed to refresh status, please restart AAPS</string>
+    <string name="ap550_pump_version_too_low" translatable="false">Pump firmware is too old, this feature is not supported</string>
+    <string name="ap550_pump_already_in_status" translatable="false">Pump is already in %1$s delivery state, no need to repeat</string>
+    <string name="ap550_execution_service_not_initialized" translatable="false">ExecutionService not initialized</string>
+    <string name="ap550_pump_action_suspend" translatable="false">suspend</string>
+    <string name="ap550_pump_action_resume" translatable="false">resume</string>
+    <string name="ap550_limit_bolus_4h" translatable="false">4-hour total bolus limit</string>
+    <string name="ap550_limit_bolus_today" translatable="false">Daily total bolus limit</string>
+
+    <!-- Pump fragment UI -->
+    <string name="ap550_confirm_resume_pump" translatable="false">Resume pump delivery?</string>
+    <string name="ap550_resume_pump_failed" translatable="false">Failed to resume pump delivery</string>
+    <string name="ap550_resume_pump_ok" translatable="false">Pump delivery resumed</string>
+    <string name="ap550_confirm_suspend_pump" translatable="false">Suspend pump delivery?</string>
+    <string name="ap550_suspend_pump_failed" translatable="false">Failed to suspend pump delivery</string>
+    <string name="ap550_suspend_pump_ok" translatable="false">Pump delivery suspended</string>
+    <string name="ap550_dialog_notice_title" translatable="false">Notice</string>
+    <string name="ap550_pump_not_connected" translatable="false">Pump is not connected!</string>
+    <string name="ap550_confirm_pump_sound_on" translatable="false">Turn on pump sound?</string>
+    <string name="ap550_confirm_pump_sound_off" translatable="false">Turn off pump sound?</string>
+    <string name="ap550_pump_sound_on_button">Turn pump sound on</string>
+    <string name="ap550_pump_sound_off_button">Turn pump sound off</string>
+    <string name="ap550_status_disconnected" translatable="false">Disconnected</string>
+    <string name="ap550_status_unbound" translatable="false">Insulin pump not bound</string>
+    <string name="ap550_status_connecting" translatable="false">Connecting</string>
+    <string name="ap550_status_disconnecting" translatable="false">Disconnecting</string>
+    <string name="ap550_bind_uis_pump" translatable="false">Please pair the UIS pump</string>
+    <string name="ap550_bind_pump" translatable="false">Please pair the pump!</string>
+    <string name="ap550_tap_to_reconnect" translatable="false">Tap the icon to reconnect the pump</string>
+    <string name="ap550_connect_button_throttled" translatable="false">Please do not tap the connect button repeatedly, fetching data...</string>
+    <string name="ap550_connecting_wait" translatable="false">Connecting, please wait...</string>
+    <string name="ap550_disconnect_failed" translatable="false">Disconnect failed</string>
+    <string name="ap550_disconnecting_wait" translatable="false">Disconnecting, please wait...</string>
+
+    <!-- QR scan / Bluetooth scan activities -->
+    <string name="ap550_qr_unrecognized" translatable="false">Unable to parse the QR code, please scan again</string>
+    <string name="ap550_unknown_device_type" translatable="false">Unrecognized device type</string>
+    <string name="ap550_no_nearby_devices" translatable="false">No nearby devices found</string>
+    <string name="ap550_qr_parse_failed" translatable="false">Failed to parse QR code</string>
+    <string name="ap550_bt_not_ready" translatable="false">Bluetooth is not ready, please run a Bluetooth scan first</string>
+    <string name="ap550_searching_devices" translatable="false">Searching for devices...</string>
+    <string name="ap550_version_mismatch_title" translatable="false">Version error</string>
+    <string name="ap550_version_mismatch_message" translatable="false">AAPS and pump versions do not match, please contact your service provider!\nCurrent AAPS version: %1$d\nCurrent pump version: %2$d</string>
+
+    <!-- Connect status / history activities -->
+    <string name="ap550_do_not_refresh_frequently" translatable="false">Please do not refresh too frequently</string>
+    <string name="ap550_refreshed" translatable="false">Refreshed</string>
+
+    <!-- Hypoglycemia risk levels -->
+    <string name="ap550_risk_no_risk" translatable="false">No risk</string>
+    <string name="ap550_risk_low_risk" translatable="false">Hypoglycemia risk</string>
+    <string name="ap550_risk_high_risk" translatable="false">High hypoglycemia risk</string>
+
+</resources>

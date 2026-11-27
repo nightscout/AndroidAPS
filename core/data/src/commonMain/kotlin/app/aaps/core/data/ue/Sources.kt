@@ -69,6 +69,7 @@ enum class Sources {
     EOPatch2,
     Equil,
     Medtrum,
+    AP550S,
     MDI,
     VirtualPump,
     Random,

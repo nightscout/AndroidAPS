@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="camera_scan_flashlight_margin_top">90dp</dimen>
+</resources>

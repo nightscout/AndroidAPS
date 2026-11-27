@@ -2,6 +2,7 @@ package app.aaps.core.data.pump.defs
 
 enum class ManufacturerType(val description: String) {
     AAPS("AAPS"),
+    ST("AP550s"),
     Medtrum("Medtrum"),
     Medtronic("Medtronic"),
     Sooil("SOOIL"),
