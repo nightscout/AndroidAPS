@@ -278,6 +278,32 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
         verify(storeDataForDb).addToGlucoseValues(argThat { map { it.timestamp } == listOf(normal) })
     }
 
+    // A reading stamped in seconds instead of milliseconds looks like one from 1970
+    @Test
+    fun `processSgvs ignores a reading older than the load window in a list`() {
+        val normal = now - T.mins(2).msecs()
+        val inSeconds = now / 1000
+        val tooOld = now - T.days(101).msecs()
+        val sgvList = listOf(sgvAt(normal), sgvAt(inSeconds), sgvAt(tooOld))
+
+        val result = processor.processSgvs(sgvList, doFullSync = false)
+
+        assertTrue(result)
+        verify(storeDataForDb).addToGlucoseValues(argThat { map { it.timestamp } == listOf(normal) })
+    }
+
+    @Test
+    fun `processSgvs keeps an old reading inside the load window`() {
+        val normal = now - T.mins(2).msecs()
+        val old = now - T.days(99).msecs()
+        val sgvList = listOf(sgvAt(normal), sgvAt(old))
+
+        val result = processor.processSgvs(sgvList, doFullSync = false)
+
+        assertTrue(result)
+        verify(storeDataForDb).addToGlucoseValues(argThat { map { it.timestamp } == listOf(normal, old) })
+    }
+
     @Test
     fun `processSgvs accepts a reading less than one minute in the future`() {
         val slightlyAhead = now + T.secs(30).msecs()

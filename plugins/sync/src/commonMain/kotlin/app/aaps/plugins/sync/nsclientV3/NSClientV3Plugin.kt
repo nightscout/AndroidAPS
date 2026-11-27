@@ -184,6 +184,9 @@ class NSClientV3Plugin(
 
         const val RECORDS_TO_LOAD = 500
 
+        // How far back the loads from Nightscout go. An incoming glucose reading older than this is refused.
+        val MAX_AGE = T.days(100).msecs()
+
         // Rate-limit for requestMasterProbe so screen recompositions / banner flaps / reconnect bursts
         // don't spam pings + settings re-fetches at the master.
         private val PROBE_MIN_INTERVAL_MS = T.secs(5).msecs()
@@ -229,7 +232,7 @@ class NSClientV3Plugin(
     internal val isAllowed get() = receiverDelegate.allowed
     internal val blockingReason get() = receiverDelegate.blockingReason
 
-    val maxAge = T.days(100).msecs()
+    val maxAge = MAX_AGE
     internal var newestDataOnServer: LastModified? = null // timestamp of last modification for every collection provided by server
     internal var lastLoadedSrvModified = LastModified(LastModified.Collections()) // max srvLastModified timestamp of last fetched data for every collection
     internal var firstLoadContinueTimestamp = LastModified(LastModified.Collections()) // timestamp of last fetched data for every collection during initial load

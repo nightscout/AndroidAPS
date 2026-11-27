@@ -140,9 +140,10 @@ class NsIncomingDataProcessor(
 
             for (i in 0 until sgvs.size) {
                 val sgv = (sgvs[i] as NSSgvV3).toGV()
-                // Only a reading without a real time or from the future is refused. The list is not
-                // ordered by reading time: an uploader that fills a gap sends older readings after a newer one.
-                if (sgv.timestamp > 0 && sgv.timestamp < dateUtil.now() + T.mins(1).msecs()) {
+                // Only a reading older than the load window (this covers a missing or wrong time) or
+                // from the future is refused. The list is not ordered by reading time: an uploader
+                // that fills a gap sends older readings after a newer one.
+                if (sgv.timestamp > dateUtil.now() - NSClientV3Plugin.MAX_AGE && sgv.timestamp < dateUtil.now() + T.mins(1).msecs()) {
                     if (sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
                     glucoseValues += sgv
                 } else
