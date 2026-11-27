@@ -802,7 +802,10 @@ class MasterActionExecutorImpl(
         // Super-bolus (a quick-wizard with useSuperBolus): write the SUPER_BOLUS mode change before the
         // bolus, driven off the CONSUMED entry — never the shared `pending` slot, which a stale unconfirmed
         // wear prepare could leak into an unrelated bolus.
-        if (p.entry?.useSuperBolus() == QuickWizardEntry.ALWAYS) {
+        // The flag of the entry is not enough: QuickWizardEntry.doCalc leaves the super bolus out when the
+        // preference is off or the mode already runs. The parked BCR is from the wizard that calculated this
+        // bolus, so the mode starts only when the bolus really holds the 2 hours of basal.
+        if (p.entry?.useSuperBolus() == QuickWizardEntry.ALWAYS && p.bcr?.wasSuperbolusUsed == true) {
             profileFunction.getProfile()?.let { profile ->
                 if (loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS))
                     loop.handleRunningModeChange(

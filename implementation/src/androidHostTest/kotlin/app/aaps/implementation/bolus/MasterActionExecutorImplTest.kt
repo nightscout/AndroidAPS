@@ -603,6 +603,97 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
         assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
     }
 
+    // ---- the SUPER_BOLUS mode starts only when the calculation of this bolus used the super bolus ----
+
+    /** A BCR as the wizard writes it: [used] says if the calculation added the 2 hours of basal. */
+    private fun bcrWithSuperBolus(used: Boolean): BCR = mock<BCR>().also { whenever(it.wasSuperbolusUsed).thenReturn(used) }
+
+    /**
+     * A QuickWizard entry with the super bolus flag on, prepared on [executor]. [usedInCalculation] is what
+     * the wizard really did: `QuickWizardEntry.doCalc` leaves the super bolus out when the preference is off
+     * or the SUPER_BOLUS mode already runs.
+     */
+    private suspend fun preparedSuperBolusQuickWizard(executor: MasterActionExecutorImpl, usedInCalculation: Boolean): MasterActionExecutor.PrepareResult.Preview {
+        whenever(config.appInitialized).thenReturn(true)
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        val ads = mock<AutosensDataStore>()
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(ads.actualBg()).thenReturn(mock())
+        whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
+        whenever(profileFunction.getProfileName()).thenReturn("Test")
+        whenever(constraintsChecker.applyCarbsConstraints(any())).thenAnswer { it.getArgument<Constraint<Int>>(0) }
+        whenever(constraintsChecker.applyBolusConstraints(any())).thenAnswer { it.getArgument<Constraint<Double>>(0) }
+        whenever(constraintsChecker.getMaxBolusAllowed()).thenReturn(ConstraintObject(10.0, aapsLogger))
+        testPumpPlugin.pumpDescription = PumpDescription().fillFor(PumpType.DANA_RS).also { it.bolusStep = 0.1 }
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.SUPER_BOLUS))
+        val entry = mock<QuickWizardEntry>()
+        whenever(quickWizard.get("g")).thenReturn(entry)
+        whenever(entry.carbs()).thenReturn(20)
+        whenever(entry.useSuperBolus()).thenReturn(QuickWizardEntry.ALWAYS)
+        val bw = mock<BolusWizard>()
+        whenever(entry.doCalc(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(bw)
+        whenever(bw.calculatedTotalInsulin).thenReturn(2.0)
+        whenever(bw.unclampedCalculatedInsulin).thenReturn(2.0)
+        whenever(bw.insulinAfterConstraints).thenReturn(2.0)
+        whenever(bw.carbs).thenReturn(20)
+        // Read before the stubbing: dateUtil is a mock too, and a mock call inside thenReturn breaks the stubbing.
+        val now = dateUtil.now()
+        whenever(bw.timeStamp).thenReturn(now)
+        val bcr = bcrWithSuperBolus(usedInCalculation)
+        whenever(bw.createBolusCalculatorResult()).thenReturn(bcr)
+        whenever(bw.buildWizardDetail()).thenReturn(
+            EventData.WizardDetail(
+                totalInsulin = 2.0, carbs = 20, insulinFromBG = 0.0, insulinFromTrend = 0.0, insulinFromCOB = 0.0, insulinFromCarbs = 2.0,
+                insulinFromBolusIOB = 0.0, insulinFromBasalIOB = 0.0, includeBolusIOB = true, includeBasalIOB = true, percentageCorrection = 100, cob = 0.0,
+                tempTargetLabel = null, ic = 10.0, sens = 50.0
+            )
+        )
+        return executor.prepareQuickWizard("g") as MasterActionExecutor.PrepareResult.Preview
+    }
+
+    @Test
+    fun confirm_quickWizardWithSuperBolusFlag_calculationWithoutSuperBolus_doesNotStartTheMode() = runTest {
+        // The entry has the flag, but the calculation left the super bolus out (preference off): the bolus
+        // holds no basal, so the basal must keep running.
+        val executor = create()
+        val prepared = preparedSuperBolusQuickWizard(executor, usedInCalculation = false)
+
+        val result = executor.confirm(prepared.bolusId, Sources.QuickWizard, { })
+
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+        verify(commandQueue).bolus(anyOrNull())
+        verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun confirm_quickWizardWithSuperBolusFlag_calculationWithSuperBolus_startsTheMode() = runTest {
+        val executor = create()
+        val prepared = preparedSuperBolusQuickWizard(executor, usedInCalculation = true)
+
+        val result = executor.confirm(prepared.bolusId, Sources.QuickWizard, { })
+
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+        verify(commandQueue).bolus(anyOrNull())
+        verify(loop).handleRunningModeChange(eq(RM.Mode.SUPER_BOLUS), eq(Action.SUPERBOLUS_TBR), eq(Sources.QuickWizard), any(), eq(120), any())
+    }
+
+    @Test
+    fun confirm_manualWizard_neverStartsTheSuperBolusMode() = runTest {
+        // No QuickWizard entry: the mode must not start by this path, whatever the BCR says.
+        whenever(constraintsChecker.applyBolusConstraints(any())).thenAnswer { it.getArgument<Constraint<Double>>(0) }
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.SUPER_BOLUS))
+        val executor = create()
+        val bcr = bcrWithSuperBolus(used = true)
+        val prepared = preparedManualWizard(calculated = 2.0, afterConstraints = 2.0, executor = executor, bcr = bcr) as MasterActionExecutor.PrepareResult.Preview
+
+        executor.confirm(prepared.bolusId, Sources.WizardDialog, { })
+
+        verify(commandQueue).bolus(anyOrNull())
+        verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+    }
+
     // ---- manual wizard above the max bolus: capped with a warning, not refused (as the phone wizard did in v3) ----
 
     /** A manual wizard that calculates [calculated] U, of which the constraints leave [afterConstraints] U. */
