@@ -42,6 +42,7 @@ import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.UnitDoubleKey
@@ -54,6 +55,8 @@ import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.abs
@@ -83,9 +86,13 @@ class PrepareGraphDataRunner(
     private val preferences: Preferences,
     private val profiler: Profiler,
     private val decimalFormatter: DecimalFormatter,
+    private val fabricPrivacy: FabricPrivacy,
     private val scope: CoroutineScope,
     private val autosensDataProvider: () -> AutosensData
 ) : CalculationPhase {
+
+    /** The chart steps whose failure was already reported, see [reportChartStepFailure]. */
+    private val reportedChartSteps = MutableStateFlow(emptySet<String>())
 
     /**
      * Runs one prepare phase.
@@ -147,11 +154,24 @@ class PrepareGraphDataRunner(
      *
      * A failure here is logged and the run goes on. A failed phase skips the post phase, and that is
      * where the loop runs: one bad point in a chart series would stop the loop for every reading until
-     * the point leaves the graph window. Missing a loop run is worse than a chart that is one reading
-     * old. The series of the failed step keep the values of the run before.
+     * the point leaves the graph window. Missing a loop run is worse than an old chart.
      *
-     * Only for steps whose output nothing but the overview reads. The BG load and the IOB/COB pass are
-     * what the loop doses from, so they are not wrapped and their failure still fails the phase.
+     * The series of the failed step keep the values of the last run that worked. If the cause stays,
+     * for example a bad point inside the graph window, the step fails on every reading and these
+     * series can be many readings old, up to 24 hours. The loop no longer stops then, so nobody would
+     * notice. That is why the first failure of each step is also reported, see [reportChartStepFailure].
+     *
+     * Only for steps that write nothing the loop doses from. Check two things before wrapping a step:
+     *
+     * - Who reads what it writes to the overview cache. Today that is only the UI: the overview
+     *   graphs, the chips (as a signal to refresh), the BG widget and the history browser.
+     * - What else it writes. The IOB graph step also fills the IOB table of the calculator through
+     *   `calculateFromTreatmentsAndTemps`, and the IOB/COB pass of later runs reads that table. This
+     *   is safe because each value is complete before it is stored: a step that fails part way leaves
+     *   fewer values in the table, never a wrong one, and the missing ones are calculated again.
+     *
+     * The BG load and the IOB/COB pass are what the loop doses from, so they are not wrapped and their
+     * failure still fails the phase. Only an `Exception` is kept away: an `Error` fails the phase too.
      */
     private inline fun chartStep(name: String, data: PrepareGraphData, step: () -> Unit) {
         try {
@@ -160,7 +180,18 @@ class PrepareGraphDataRunner(
             throw e
         } catch (e: Exception) {
             aapsLogger.error(LTag.WORKER, "Preparing the $name for the chart failed, the calculation goes on: ${data.reason}", e)
+            reportChartStepFailure(name, e)
         }
+    }
+
+    /**
+     * Sends the failure of the chart step [name] to Crashlytics as a non-fatal error, once per step
+     * for the life of this runner, which is the life of the app. A cause that stays makes the step
+     * fail on every reading, and that would send a report every 5 minutes.
+     */
+    private fun reportChartStepFailure(name: String, cause: Exception) {
+        if (name in reportedChartSteps.getAndUpdate { it + name }) return
+        fabricPrivacy.logException(ChartStepFailedException("Chart step '$name' failed, its series are not updated", cause))
     }
 
     /**
@@ -878,3 +909,6 @@ class PrepareGraphDataRunner(
     }
 
 }
+
+/** What [PrepareGraphDataRunner] reports for a failed chart step. A type of its own, so these reports are easy to find in Crashlytics. */
+internal class ChartStepFailedException(message: String, cause: Throwable) : IllegalStateException(message, cause)

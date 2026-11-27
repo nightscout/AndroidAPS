@@ -1,9 +1,11 @@
 package app.aaps.workflow
 
+import androidx.collection.LongSparseArray
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.SystemTimeZone
 import app.aaps.core.data.time.T
@@ -39,6 +41,8 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
@@ -47,6 +51,7 @@ import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.test.assertFailsWith
@@ -77,7 +82,7 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
         PrepareGraphDataRunner(
             aapsLogger, workflowChainData, dateUtil, mockedRxBus, persistenceLayer,
             activePlugin, profileFunction, profileUtil, preferences, profiler, decimalFormatter,
-            TestScope(), autosensDataProvider
+            fabricPrivacy, TestScope(), autosensDataProvider
         )
 
     // The runner asks this between phases; nothing in these tests stops a run part way.
@@ -338,9 +343,12 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
         verify(signals, never()).emitProgress(eq(ProgressData.DRAW_FINAL), any())
     }
 
-    @Test
-    fun `a failing iob cob pass still fails the phase`() = runTest {
+    // Both IOB/COB passes, so wrapping only one of them by mistake fails a test.
+    @ParameterizedTest
+    @ValueSource(booleans = [true, false])
+    fun `a failing iob cob pass still fails the phase`(isOref1: Boolean) = runTest {
         stubSuspendCalls()
+        whenever(sensitivity.isOref1).thenReturn(isOref1)
         whenever(profileFunction.isProfileValid(any())).thenThrow(IllegalStateException("broken calculation"))
         whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = true))
 
@@ -348,6 +356,89 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
 
         verify(cache, never()).updateIobGraph(any())
         verify(signals, never()).emitProgress(eq(ProgressData.DRAW_FINAL), any())
+    }
+
+    /** Lets the IOB/COB pass get into its bucket loop, where reading the profile of a bucket then throws. */
+    private suspend fun stubIobCobPassFailingInItsBucketLoop() {
+        whenever(profileFunction.isProfileValid(any())).thenReturn(true)
+        whenever(dataIobCob.calculateDetectionStart(any(), any())).thenReturn(0L)
+        whenever(dataAds.bucketedData).thenReturn(MutableList(5) { InMemoryGlucoseValue(timestamp = -it * T.mins(5).msecs(), value = 150.0) })
+        whenever(dataAds.autosensDataTable).thenReturn(LongSparseArray())
+        whenever(persistenceLayer.getTherapyEventDataFromTime(any(), any<TE.Type>(), any())).thenReturn(emptyList())
+        whenever(persistenceLayer.getProfileSwitchesFromTime(any(), any())).thenReturn(emptyList())
+        whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(emptyList())
+        whenever(profileFunction.getProfile(any<Long>())).thenThrow(IllegalStateException("broken bucket"))
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [true, false])
+    fun `an iob cob pass that fails inside its bucket loop still fails the phase`(isOref1: Boolean) = runTest {
+        stubSuspendCalls()
+        whenever(sensitivity.isOref1).thenReturn(isOref1)
+        stubIobCobPassFailingInItsBucketLoop()
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = true))
+
+        val failure = assertFailsWith<IllegalStateException> { run() }
+
+        assertThat(failure.message).isEqualTo("broken bucket")
+        // The loop was reached: the pass reports its progress at the top of each bucket.
+        verify(signals).emitProgress(eq(ProgressData.IOB_COB_OREF), eq(80))
+        verify(cache, never()).updateIobGraph(any())
+        verify(signals, never()).emitProgress(eq(ProgressData.DRAW_FINAL), any())
+    }
+
+    /** Only an `Exception` of a chart step is kept away. An `Error` is not a bad data point, so it fails the phase. */
+    @Test
+    fun `an error in a chart step still fails the phase`() = runTest {
+        stubSuspendCalls()
+        doThrow(NotImplementedError("broken build")).whenever(cache).updateBgReadings(any())
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = true))
+
+        assertFailsWith<NotImplementedError> { run() }
+
+        verify(signals, never()).emitProgress(eq(ProgressData.DRAW_FINAL), any())
+    }
+
+    // ----- A chart step that keeps failing is reported, once per step -----
+
+    @Test
+    fun `a chart step that fails on two runs is reported once`() = runTest {
+        stubSuspendCalls()
+        whenever(persistenceLayer.getVariableSensitivities(any(), any())).thenThrow(IllegalStateException("broken chart point"))
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = true))
+        val runner = runner()
+
+        repeat(2) { assertIs<WorkOutcome.Success>(runner.run(job = "main", generation = 1L, isStopped = { false })) }
+
+        val reported = argumentCaptor<Throwable>()
+        verify(fabricPrivacy, times(1)).logException(reported.capture())
+        assertThat(reported.lastValue.message).contains("IOB and autosens graph data")
+        assertThat(reported.lastValue.cause).hasMessageThat().isEqualTo("broken chart point")
+    }
+
+    @Test
+    fun `each failing chart step gets its own report`() = runTest {
+        stubSuspendCalls()
+        whenever(persistenceLayer.getBgReadingsDataFromTimeToTime(any(), any(), any())).thenThrow(IllegalStateException("broken reading"))
+        whenever(persistenceLayer.getVariableSensitivities(any(), any())).thenThrow(IllegalStateException("broken chart point"))
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = true))
+
+        run()
+
+        val reported = argumentCaptor<Throwable>()
+        verify(fabricPrivacy, times(2)).logException(reported.capture())
+        assertThat(reported.firstValue.message).contains("BG readings")
+        assertThat(reported.secondValue.message).contains("IOB and autosens graph data")
+    }
+
+    @Test
+    fun `a run without a failure reports nothing`() = runTest {
+        stubSuspendCalls()
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = true))
+
+        run()
+
+        verify(fabricPrivacy, never()).logException(any())
     }
 
     // The same two cases through the real executor and the real post phase, up to the loop call.
@@ -390,10 +481,12 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
         verify(loop).invoke(any(), any(), any())
     }
 
-    @Test
-    fun `the loop is not invoked when the iob cob pass fails`() = runTest {
+    @ParameterizedTest
+    @ValueSource(booleans = [true, false])
+    fun `the loop is not invoked when the iob cob pass fails`(isOref1: Boolean) = runTest {
         stubSuspendCalls()
         stubPostPhaseWithNewBg()
+        whenever(sensitivity.isOref1).thenReturn(isOref1)
         whenever(profileFunction.isProfileValid(any())).thenThrow(IllegalStateException("broken calculation"))
         whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = false))
 
