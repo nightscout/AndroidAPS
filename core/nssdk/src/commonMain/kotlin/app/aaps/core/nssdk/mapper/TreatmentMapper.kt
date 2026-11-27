@@ -45,20 +45,28 @@ fun String.toNSTreatments(): List<NSTreatment> =
  * Nightscout careportal. AAPS stores a bolus and carbs as two records, so such a document gives an
  * [NSBolus] and an [NSCarbs]. Both carry the identifier of the document. They go to different
  * tables, and each table finds its record by that identifier when the document changes or is deleted.
+ * The carbs are marked with `fromDocumentWithInsulin`, so the receiver can see that insulin was
+ * given for them.
  *
  * Every other document gives one record, or none when it cannot be used.
  */
 internal fun RemoteTreatment.toTreatments(): List<NSTreatment> {
     val first = toTreatment() ?: return emptyList()
-    val carbsOfBolus = if (first is NSBolus && hasCarbs()) toCarbs(timestamp()) else null
+    val carbsOfBolus = if (first is NSBolus && hasCarbs()) toCarbs(timestamp(), fromDocumentWithInsulin = true) else null
     return listOfNotNull(first, carbsOfBolus)
 }
 
 private fun RemoteTreatment.hasCarbs(): Boolean = carbs != null && carbs != 0.0
 
-private fun RemoteTreatment.toCarbs(treatmentTimestamp: Long): NSCarbs? {
+/**
+ * The carbs of a document. With [fromDocumentWithInsulin] the duration is 0: the duration of such a
+ * document, for example a "Combo Bolus", is the length of the extended insulin and not of the meal.
+ */
+private fun RemoteTreatment.toCarbs(treatmentTimestamp: Long, fromDocumentWithInsulin: Boolean): NSCarbs? {
     val carbs = this.carbs ?: return null
-    val durationInMilliseconds = this.durationInMilliseconds ?: this.duration?.let { this.duration.minutes.inWholeMilliseconds } ?: 0L
+    val durationInMilliseconds =
+        if (fromDocumentWithInsulin) 0L
+        else this.durationInMilliseconds ?: this.duration?.let { this.duration.minutes.inWholeMilliseconds } ?: 0L
     return NSCarbs(
         date = treatmentTimestamp,
         device = this.device,
@@ -77,7 +85,8 @@ private fun RemoteTreatment.toCarbs(treatmentTimestamp: Long): NSCarbs? {
         pumpType = this.pumpType,
         pumpSerial = this.pumpSerial,
         carbs = carbs,
-        duration = durationInMilliseconds
+        duration = durationInMilliseconds,
+        fromDocumentWithInsulin = fromDocumentWithInsulin
     )
 }
 
@@ -112,7 +121,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 iCfg = this.iCfg.toNSICfg()
             )
 
-        hasCarbs()                                                         -> return toCarbs(treatmentTimestamp)
+        hasCarbs()                                                         -> return toCarbs(treatmentTimestamp, fromDocumentWithInsulin = false)
 
         eventType == EventType.TEMPORARY_TARGET                            -> {
             if (treatmentTimestamp == 0L) return null

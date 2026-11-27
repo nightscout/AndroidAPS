@@ -86,6 +86,34 @@ class TreatmentWithInsulinAndCarbsTest {
         assertThat((treatments[0] as NSCarbs).carbs).isEqualTo(4.0)
     }
 
+    /**
+     * In a "Combo Bolus" from the careportal the duration is the length of the extended insulin.
+     * The carbs of that document are a meal eaten now, so they must not be spread over that time.
+     */
+    @Test
+    fun `the carbs of a document with insulin do not take the duration of the document`() {
+        val json = """
+            {"eventType":"Combo Bolus","date":$date,"insulin":2,"carbs":30,"duration":120,
+             "durationInMilliseconds":7200000,"splitNow":50,"splitExt":50,"isValid":true,"identifier":"combo-1"}
+        """.trimIndent()
+
+        val treatments = json.toNSTreatments()
+
+        assertThat(treatments).hasSize(2)
+        assertThat((treatments[1] as NSCarbs).carbs).isEqualTo(30.0)
+        assertThat((treatments[1] as NSCarbs).duration).isEqualTo(0)
+    }
+
+    @Test
+    fun `a document with carbs only keeps its duration`() {
+        val json = """{"eventType":"Carb Correction","date":$date,"carbs":30,"duration":120,"isValid":true,"identifier":"carbs-1"}"""
+
+        val treatments = json.toNSTreatments()
+
+        assertThat(treatments).hasSize(1)
+        assertThat((treatments[0] as NSCarbs).duration).isEqualTo(7200000)
+    }
+
     @Test
     fun `a document with carbs and zero insulin gives one carbs record`() {
         val json = """{"eventType":"Meal Bolus","date":$date,"carbs":40,"insulin":0,"isValid":true,"identifier":"carbs-1"}"""

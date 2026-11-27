@@ -305,15 +305,67 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
         verify(storeDataForDb).addToCarbs(argThat { amount == 40.0 && timestamp == time && ids.nightscoutId == "meal-1" })
     }
 
-    /** The carbs of such a document must not depend on the insulin setting. */
+    /**
+     * The document says "3 U for 40 g". A master that does not take insulin from Nightscout must not
+     * take these carbs alone: with carbs on board and no insulin on board for them, the loop would
+     * dose for the meal a second time.
+     */
     @Test
-    fun `a document with insulin and carbs stores the carbs when insulin is not accepted`() {
+    fun `a document with insulin and carbs stores nothing on a master that does not accept insulin`() {
         whenever(preferences.get(BooleanKey.NsClientAcceptInsulin)).thenReturn(false)
         val time = now - T.mins(20).msecs()
 
         processor.processTreatments(mealBolusDocument(time).toNSTreatments(), doFullSync = false)
 
         verify(storeDataForDb, never()).addToBoluses(any())
+        verify(storeDataForDb, never()).addToCarbs(any())
+    }
+
+    @Test
+    fun `a document with insulin and carbs stores only the bolus when carbs are not accepted`() {
+        whenever(preferences.get(BooleanKey.NsClientAcceptCarbs)).thenReturn(false)
+        val time = now - T.mins(20).msecs()
+
+        processor.processTreatments(mealBolusDocument(time).toNSTreatments(), doFullSync = false)
+
+        verify(storeDataForDb).addToBoluses(argThat { amount == 3.0 && timestamp == time })
+        verify(storeDataForDb, never()).addToCarbs(any())
+    }
+
+    /** A document with carbs only follows the carbs setting alone, as before. */
+    @Test
+    fun `a document with carbs only stores the carbs when insulin is not accepted`() {
+        whenever(preferences.get(BooleanKey.NsClientAcceptInsulin)).thenReturn(false)
+        val time = now - T.mins(20).msecs()
+        val document = """{"identifier":"carbs-1","eventType":"Carb Correction","date":$time,"carbs":40,"utcOffset":60,"isValid":true}"""
+
+        processor.processTreatments(document.toNSTreatments(), doFullSync = false)
+
+        verify(storeDataForDb).addToCarbs(argThat { amount == 40.0 && timestamp == time })
+    }
+
+    @Test
+    fun `a document with insulin and carbs stores both on an AAPSClient`() {
+        whenever(preferences.get(BooleanKey.NsClientAcceptInsulin)).thenReturn(false)
+        whenever(preferences.get(BooleanKey.NsClientAcceptCarbs)).thenReturn(false)
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        val time = now - T.mins(20).msecs()
+
+        processor.processTreatments(mealBolusDocument(time).toNSTreatments(), doFullSync = false)
+
+        verify(storeDataForDb).addToBoluses(argThat { amount == 3.0 && timestamp == time })
+        verify(storeDataForDb).addToCarbs(argThat { amount == 40.0 && timestamp == time })
+    }
+
+    @Test
+    fun `a document with insulin and carbs stores both in a full sync`() {
+        whenever(preferences.get(BooleanKey.NsClientAcceptInsulin)).thenReturn(false)
+        whenever(preferences.get(BooleanKey.NsClientAcceptCarbs)).thenReturn(false)
+        val time = now - T.mins(20).msecs()
+
+        processor.processTreatments(mealBolusDocument(time).toNSTreatments(), doFullSync = true)
+
+        verify(storeDataForDb).addToBoluses(argThat { amount == 3.0 && timestamp == time })
         verify(storeDataForDb).addToCarbs(argThat { amount == 40.0 && timestamp == time })
     }
 

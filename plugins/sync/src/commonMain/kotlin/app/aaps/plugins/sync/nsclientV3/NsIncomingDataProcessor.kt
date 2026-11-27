@@ -116,6 +116,18 @@ class NsIncomingDataProcessor(
         nsClientSource.isEnabled() || preferences.get(BooleanKey.NsClientAcceptCgmData) || doFullSync
 
     /**
+     * Whether the user's settings take these carbs from Nightscout.
+     *
+     * Carbs from a document that also holds insulin are taken only when insulin is taken too. The
+     * document says the insulin was given for these carbs. A phone that stores the carbs without the
+     * insulin has carbs on board with no insulin on board for them, and the loop would dose for the
+     * meal a second time. Carbs from a document without insulin follow the carbs setting alone.
+     */
+    private fun acceptsCarbs(carbs: NSCarbs): Boolean =
+        preferences.get(BooleanKey.NsClientAcceptCarbs) &&
+            (!carbs.fromDocumentWithInsulin || preferences.get(BooleanKey.NsClientAcceptInsulin))
+
+    /**
      * Preprocess list of SGVs
      *
      * @param advanceInitialLoadCursor true only for the REST load that pages forward through history.
@@ -199,7 +211,7 @@ class NsIncomingDataProcessor(
                             storeDataForDb.addToBoluses(treatment.toBolus(fallbackICfg()))
 
                     is NSCarbs                  ->
-                        if (preferences.get(BooleanKey.NsClientAcceptCarbs) || config.AAPSCLIENT || doFullSync)
+                        if (acceptsCarbs(treatment) || config.AAPSCLIENT || doFullSync)
                             storeDataForDb.addToCarbs(treatment.toCarbs())
 
                     is NSTemporaryTarget        ->

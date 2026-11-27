@@ -3,6 +3,7 @@ package app.aaps.core.nssdk.localmodel.treatment
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 @SerialName("NSCarbs")
@@ -26,5 +27,11 @@ data class NSCarbs(
     override var app: String? = null,
     val carbs: Double,
     /** Duration in milliseconds */
-    val duration: Long?
+    val duration: Long?,
+    /**
+     * True when these carbs were read from a Nightscout document that also holds insulin, so an
+     * [NSBolus] with the same identifier was read with them. Set only when a document is read.
+     * It is never sent to Nightscout.
+     */
+    @Transient val fromDocumentWithInsulin: Boolean = false
 ) : NSTreatment
