@@ -6,6 +6,10 @@ import androidx.compose.runtime.Immutable
 data class ObjectivesUiState(
     val objectives: List<ObjectiveUiItem> = emptyList(),
     val isFakeMode: Boolean = false,
+    /**
+     * Shows the "fake time and progress" switch. A developer's tool, turned on only by hand in the code: no build type
+     * and no setting shows it (decided 2026-11-27). The screen before Compose had the same switch hidden in its layout.
+     */
     val showDebugControls: Boolean = false,
     val ntpVerification: NtpVerificationState? = null,
     val examSheet: ExamSheetState? = null,
