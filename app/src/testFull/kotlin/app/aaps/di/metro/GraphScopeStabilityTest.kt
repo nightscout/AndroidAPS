@@ -182,6 +182,7 @@ class GraphScopeStabilityTest {
             "pairingOfferFetcher",
             "pairingOfferPublisher",
             "passwordCheck",
+            "periodicMaintenance",
             "persistenceLayer",
             "pluginPermissions",
             "pluginStore",

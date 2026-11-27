@@ -1,14 +1,18 @@
 package app.aaps.ios.shell.di
 
+import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
+import app.aaps.core.interfaces.notifications.AlarmAction
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.logging.AAPSLoggerIos
 import app.aaps.implementation.notifications.IosSystemNotificationPlatform
 import app.aaps.ios.shell.config.IosClientConfig
@@ -66,10 +70,38 @@ object IosPlatformBindings {
     fun config(): Config = IosClientConfig()
 
 
-    /** Notifications through UNUserNotificationCenter, with the shared registry above it. */
+    /**
+     * Notifications through UNUserNotificationCenter, with the shared registry above it.
+     *
+     * [localAlertUtils] is a provider: `LocalAlertUtils` posts through the notification manager,
+     * which is built on this platform, so asking for it directly would be a cycle. It is resolved
+     * only when the user presses an alarm button.
+     */
     @Provides
     @SingleIn(AppScope::class)
-    fun systemNotificationPlatform(logger: AAPSLogger, alarmSoundPlayer: AlarmSoundPlayer, preferences: Preferences): SystemNotificationPlatform =
-        IosSystemNotificationPlatform(logger, alarmSoundPlayer) { preferences.get(BooleanKey.AlertOverrideDoNotDisturb) }
+    fun systemNotificationPlatform(
+        logger: AAPSLogger,
+        alarmSoundPlayer: AlarmSoundPlayer,
+        preferences: Preferences,
+        rh: TextResolver,
+        localAlertUtils: () -> LocalAlertUtils
+    ): SystemNotificationPlatform =
+        IosSystemNotificationPlatform(
+            logger,
+            alarmSoundPlayer,
+            alarmActionLabel = { action ->
+                when (action) {
+                    AlarmAction.HYPO_TREATED    -> rh.gs(CoreUiStrings.alert_hypo_treated)
+                    AlarmAction.CGM_ACKNOWLEDGE -> rh.gs(CoreUiStrings.cgm_alarm_acknowledge)
+                }
+            },
+            // "Hypo treated" and "Acknowledge" on the lock screen, same as the Android notification buttons.
+            onAlarmAction = { action ->
+                when (action) {
+                    AlarmAction.HYPO_TREATED    -> localAlertUtils().snoozeHypoAfterTreatment()
+                    AlarmAction.CGM_ACKNOWLEDGE -> localAlertUtils().acknowledgeCgmAlarms()
+                }
+            }
+        ) { preferences.get(BooleanKey.AlertOverrideDoNotDisturb) }
 
 }

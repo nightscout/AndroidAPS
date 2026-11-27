@@ -20,6 +20,8 @@ private val ADVANCED_FILTERING_SENSORS = setOf(
     SourceSensor.DEXCOM_UNKNOWN,
     SourceSensor.DEXCOM_G6,
     SourceSensor.DEXCOM_G7,
+    // Dexcom ONE+ / G7 read by the AAPS native plugin. The sensor filters internally, as above.
+    SourceSensor.DEXCOM_ONEPLUS_NATIVE,
     SourceSensor.LIBRE_2,
     SourceSensor.LIBRE_3,
     SourceSensor.SYAI_TAG,

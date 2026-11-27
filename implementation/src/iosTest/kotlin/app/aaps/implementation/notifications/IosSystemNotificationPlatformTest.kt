@@ -3,6 +3,7 @@ package app.aaps.implementation.notifications
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AapsNotification
+import app.aaps.core.interfaces.notifications.AlarmAction
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationAction
@@ -268,5 +269,51 @@ class IosSystemNotificationPlatformTest {
         platform.setAudibleAlarm(null, null)
 
         assertEquals(listOf("play:ERROR", "stop"), alarmPlayer.calls)
+    }
+
+    // "Hypo treated" and "Acknowledge" on the lock screen: the CGM alarms get a category with the button.
+
+    private val pressed = mutableListOf<AlarmAction>()
+    private val platformWithActions = IosSystemNotificationPlatform(
+        SilentLogger,
+        alarmPlayer,
+        alarmActionLabel = { it.name },
+        onAlarmAction = { pressed += it }
+    ) { overrideDnd }
+
+    @Test
+    fun `the low glucose alarm is posted with the hypo treated button`() {
+        val hypo = platformWithActions.categoryFor(NotificationId.BG_HYPO)
+        val plain = platformWithActions.categoryFor(NotificationId.PUMP_UNREACHABLE)
+
+        assertTrue(hypo != plain)
+        // The other CGM alarms get the Acknowledge button, a category of its own.
+        val acknowledge = platformWithActions.categoryFor(NotificationId.BG_HYPER)
+        assertTrue(acknowledge != plain)
+        assertTrue(acknowledge != hypo)
+        assertEquals(acknowledge, platformWithActions.categoryFor(NotificationId.CGM_URGENT_LOW))
+    }
+
+    /** A button that does nothing would make the user think the alarm was handled, so none is shown. */
+    @Test
+    fun `without a handler the alarms get no button`() {
+        assertEquals(platform.categoryFor(NotificationId.PUMP_UNREACHABLE), platform.categoryFor(NotificationId.BG_HYPO))
+        assertEquals(platform.categoryFor(NotificationId.PUMP_UNREACHABLE), platform.categoryFor(NotificationId.CGM_URGENT_LOW))
+    }
+
+    @Test
+    fun `pressing a button reaches the handler`() {
+        assertTrue(platformWithActions.handleAlarmAction(platformWithActions.alarmActionId(AlarmAction.HYPO_TREATED)))
+        assertTrue(platformWithActions.handleAlarmAction(platformWithActions.alarmActionId(AlarmAction.CGM_ACKNOWLEDGE)))
+
+        assertEquals(listOf(AlarmAction.HYPO_TREATED, AlarmAction.CGM_ACKNOWLEDGE), pressed)
+    }
+
+    @Test
+    fun `another action is not taken as an alarm button`() {
+        assertFalse(platformWithActions.handleAlarmAction("aaps-ignore-15"))
+        assertFalse(platform.handleAlarmAction(platform.alarmActionId(AlarmAction.HYPO_TREATED)))
+
+        assertTrue(pressed.isEmpty())
     }
 }

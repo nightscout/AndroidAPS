@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -50,6 +51,7 @@ internal class CalibrationViewModelTest {
     @Mock private lateinit var rxBus: RxBus
     @Mock private lateinit var config: Config
     @Mock private lateinit var batchExecutor: BatchExecutor
+    @Mock private lateinit var preferences: Preferences
 
     @BeforeEach
     fun setUp() {
@@ -68,7 +70,7 @@ internal class CalibrationViewModelTest {
     }
 
     private fun viewModel() =
-        CalibrationViewModel(persistenceLayer, profileUtil, dateUtil, rh, rxBus, config, batchExecutor)
+        CalibrationViewModel(persistenceLayer, profileUtil, dateUtil, rh, rxBus, config, batchExecutor, preferences)
 
     @Test
     fun uiState_hasEmptySessionDefaults() {

@@ -129,6 +129,7 @@ class UserEntryPresentationHelperImpl(
         Sources.DanaRv2             -> IcPluginDanaI
         Sources.Database            -> Icons.Default.Storage
         Sources.Dexcom              -> IcByoda
+        Sources.DexcomOnePlus       -> IcByoda
         Sources.DiaconnG8           -> IcPluginDiaconn
         Sources.EOPatch2            -> IcPluginEopatch
         Sources.Equil               -> IcPluginEquil
@@ -217,6 +218,7 @@ class UserEntryPresentationHelperImpl(
         Sources.DanaRv2             -> ElementType.PUMP.color()
         Sources.Database            -> ElementType.AAPS.color()
         Sources.Dexcom              -> ElementType.CGM_DEX.color()
+        Sources.DexcomOnePlus       -> ElementType.CGM_DEX.color()
         Sources.DiaconnG8           -> ElementType.PUMP.color()
         Sources.EOPatch2            -> ElementType.PUMP.color()
         Sources.Equil               -> ElementType.PUMP.color()

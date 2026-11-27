@@ -114,6 +114,15 @@ class RawPreferenceStoreScanTest {
         "pump/combov2/src/main/kotlin/info/nightscout/pump/combov2/Delegates.kt" to "ComboV2, same migration",
         "pump/insight/src/main/kotlin/app/aaps/pump/insight/utils/PairingDataStorage.kt" to
             "Insight pump pairing. Open question 6.2: moving it into registered keys would make 'restore pump configuration' work after a reinstall, but it would also put a pump secret in the export file. Needs an answer before it moves.",
+        // Added with the Dexcom ONE+ / G7 driver. This file stores the driver's own sensor state: the
+        // sensor identity and the pairing key, in one preference file per sensor slot. It is in this
+        // list and not in `allowed` because it fits none of the reasons there: registered composed
+        // keys (one argument per sensor slot) could hold it. It can move to registered keys later,
+        // with a migration that copies the values from the old file.
+        // The store itself is shared code and never touches the file. This small Android adapter is the
+        // only place that opens it.
+        "plugins/dexcom_oneplus/src/androidMain/kotlin/app/aaps/plugins/dexcomoneplus/identity/OnePlusSensorPrefsAndroid.kt" to
+            "Dexcom ONE+ / G7 sensor identity, including the pairing key. Live device state like the Insight pairing above, so it needs a migration, not a removal. 14 keys, in one file per sensor slot (production or pre-soak sensor), so the move needs registered per-slot keys plus a migration that copies from the old file and keeps it until the move is confirmed on a real sensor. Whether the keys are exportable (a sensor would then survive a change of phone, but the pairing key would be in the export file) needs an answer before it moves.",
     )
 
     @Test

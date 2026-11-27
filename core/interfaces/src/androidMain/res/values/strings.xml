@@ -39,6 +39,13 @@
     <string name="days">days</string>
     <string name="hours">hours</string>
     <string name="unit_minutes">minutes</string>
+    <!-- Used by the sensor age of the ONE+ and Libre 3 screens (formatSensorAge in :plugins:source). -->
+    <string name="unit_minute">minute</string>
+    <string name="unit_hour">hour</string>
+    <string name="unit_hours">hours</string>
+    <string name="unit_day">day</string>
+    <string name="unit_days">days</string>
+    <string name="time_value_with_unit" comment="%1$s=a number, %2$s=the time unit, like minutes or days. Example: 5 minutes">%1$s %2$s</string>
     <string name="shortminute">m</string>
     <string name="time_remaining_h_m">%1$dh %2$dm remaining</string>
     <string name="time_remaining_m">%1$dm remaining</string>

@@ -88,3 +88,40 @@ internal fun OverviewStatusSectionExpandedPreview() {
         )
     }
 }
+
+/** Expanded card with a sensor that still warms up and a second sensor that is ready to switch to. */
+@Preview(showBackground = true, widthDp = 400)
+@Composable
+internal fun OverviewStatusSectionCgmRowsPreview() {
+    MaterialTheme {
+        val (cannula, insulin, sensor) = previewStatusItems
+        OverviewStatusSection(
+            sensorStatus = sensor,
+            insulinStatus = insulin,
+            cannulaStatus = cannula,
+            batteryStatus = previewBatteryItem,
+            warmUpStatus = StatusItem(
+                label = "Warm-up",
+                age = "23 min",
+                agePercent = 0.24f,
+                icon = Icons.Default.Circle,
+                compactLevel = false
+            ),
+            secondSensorStatus = StatusItem(
+                label = "New sensor",
+                age = "Ready to switch",
+                ageStatus = StatusLevel.NORMAL,
+                level = "Readings: 72",
+                icon = Icons.Default.Circle,
+                compactLevel = false
+            ),
+            canPromoteSecondSensor = true,
+            showFill = true,
+            showPumpBatteryChange = true,
+            onNavigate = {},
+            statusLightsDef = previewStatusLightsDef,
+            expanded = true,
+            onExpandedChange = {}
+        )
+    }
+}

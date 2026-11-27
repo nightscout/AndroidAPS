@@ -83,6 +83,22 @@ enum class BooleanKey(
     ),
     AlertIncreaseVolume("gradually_increase_notification_volume", true, KeysStrings.pref_title_alert_increase_volume),
     AlertOverrideDoNotDisturb("alert_override_dnd", true, KeysStrings.pref_title_alert_override_dnd, KeysStrings.pref_summary_alert_override_dnd, defaultedBySM = true),
+    // CGM alarms (see CgmAlarmType). The glucose alarms are off by default: the user opts in.
+    AlertHypo("enable_hypo_alert", false, KeysStrings.pref_title_alert_hypo, KeysStrings.pref_summary_alert_hypo),
+    AlertHyper("enable_hyper_alert", false, KeysStrings.pref_title_alert_hyper, KeysStrings.pref_summary_alert_hyper),
+    AlertRapidFall("enable_rapid_fall_alert", false, KeysStrings.pref_title_alert_rapid_fall, KeysStrings.pref_summary_alert_rapid_fall),
+    AlertUrgentLow("enable_cgm_urgent_low_alert", false, KeysStrings.pref_title_alert_urgent_low, KeysStrings.pref_summary_alert_urgent_low),
+    AlertUrgentLowSoon("enable_cgm_urgent_low_soon_alert", false, KeysStrings.pref_title_alert_urgent_low_soon, KeysStrings.pref_summary_alert_urgent_low_soon),
+    AlertRapidRise("enable_cgm_rise_rate_alert", false, KeysStrings.pref_title_alert_rapid_rise, KeysStrings.pref_summary_alert_rapid_rise),
+    // Sensor state alarms. They are raised only for a BG source that reports its sensor state
+    // (CgmSensorAlertProvider); for every other source they do nothing, so they can default to on.
+    AlertCgmSensorFailed("enable_cgm_sensor_failed_alert", true, KeysStrings.pref_title_alert_cgm_sensor_failed, KeysStrings.pref_summary_alert_cgm_sensor_failed),
+    AlertCgmSensorExpired("enable_cgm_sensor_expired_alert", true, KeysStrings.pref_title_alert_cgm_sensor_expired, KeysStrings.pref_summary_alert_cgm_sensor_expired),
+    AlertCgmSensorExpiring("enable_cgm_sensor_expiring_alert", true, KeysStrings.pref_title_alert_cgm_sensor_expiring, KeysStrings.pref_summary_alert_cgm_sensor_expiring),
+    AlertCgmSignalLost("enable_cgm_signal_lost_alert", true, KeysStrings.pref_title_alert_cgm_signal_lost, KeysStrings.pref_summary_alert_cgm_signal_lost),
+    AlertCgmSensorIssue("enable_cgm_sensor_issue_alert", true, KeysStrings.pref_title_alert_cgm_sensor_issue, KeysStrings.pref_summary_alert_cgm_sensor_issue),
+    AlertCgmWarmupDone("enable_cgm_warmup_done_alert", true, KeysStrings.pref_title_alert_cgm_warmup_done, KeysStrings.pref_summary_alert_cgm_warmup_done),
+    AlertCgmSecondSensorReady("enable_cgm_second_sensor_ready_alert", true, KeysStrings.pref_title_alert_cgm_second_sensor_ready, KeysStrings.pref_summary_alert_cgm_second_sensor_ready),
 
     BgSourceUploadToNs("dexcomg5_nsupload", true, KeysStrings.pref_title_bg_source_upload_to_ns, defaultedBySM = true, hideParentScreenIfHidden = true, defaultedByHardenedMode = true),
     BgSourceCreateSensorChange("dexcom_lognssensorchange", true, KeysStrings.pref_title_bg_source_create_sensor_change, KeysStrings.pref_summary_bg_source_create_sensor_change, defaultedBySM = true),

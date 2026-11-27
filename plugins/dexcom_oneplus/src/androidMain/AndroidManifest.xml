@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- The app needs Android 12 or newer, so the old BLUETOOTH and BLUETOOTH_ADMIN permissions are
+         not needed. The scan never finds the phone's location, the same as in the app and the pumps. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+
+    <!-- Apps that connect to a G7 / ONE+ themselves (OnePlusCompetingApps.KNOWN). Declared so the
+         start screen can warn when one is installed: from Android 11 other packages are hidden. -->
+    <queries>
+        <package android:name="com.dexcom.g7" />
+        <package android:name="com.dexcom.dexcomone" />
+        <package android:name="com.dexcom.one" />
+        <package android:name="com.dexcom.stelo" />
+        <package android:name="com.eveningoutpost.dexdrip" />
+        <package android:name="tk.glucodata" />
+    </queries>
+</manifest>
