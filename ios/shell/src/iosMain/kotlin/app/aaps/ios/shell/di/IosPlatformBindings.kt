@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.implementation.lifecycle.IosCalculationWakeLock
@@ -80,9 +81,10 @@ object IosPlatformBindings {
     fun calculationExecutor(
         @ApplicationScope scope: CoroutineScope,
         aapsLogger: AAPSLogger,
+        fabricPrivacy: FabricPrivacy,
         prepare: () -> PrepareGraphDataRunner,
         post: () -> PostCalculationRunner
-    ): CalculationExecutor = LazyCalculationExecutor(scope, aapsLogger, { prepare() }, { post() }, IosCalculationWakeLock())
+    ): CalculationExecutor = LazyCalculationExecutor(scope, aapsLogger, fabricPrivacy, { prepare() }, { post() }, IosCalculationWakeLock())
 
     /** Dates through the iOS formatter, so this is the production class rather than a stand-in. */
     @Provides

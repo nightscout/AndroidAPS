@@ -2,6 +2,7 @@ package app.aaps.workflow
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationWakeLock
 import app.aaps.core.objects.workflow.WorkOutcome
 import kotlinx.coroutines.CancellationException
@@ -32,23 +33,27 @@ import kotlin.time.Duration.Companion.seconds
  * notices.
  *
  * Two things here copy what WorkManager did for the workers on Android, because the chain was built
- * on them: a phase that throws is a failed phase, logged and not passed on, and the post phase - the
- * one that runs the loop - only runs after a prepare phase that succeeded.
+ * on them: a phase that throws is a failed phase, logged and reported but not passed on, and the post
+ * phase - the one that runs the loop - only runs after a prepare phase that succeeded.
  *
  * One thing is not copied: a phase that reports [WorkOutcome.Retry] is not run again. Neither runner
  * reports it, and the next BG starts a new run anyway.
  *
+ * @param fabricPrivacy where a phase that throws is reported, see [runPhase]
  * @param wakeLock keeps the device awake for each run, or null when the platform has none
  */
 class CoroutineCalculationExecutor(
     private val scope: CoroutineScope,
     private val aapsLogger: AAPSLogger,
+    fabricPrivacy: FabricPrivacy,
     private val prepare: CalculationPhase,
     private val post: CalculationPhase,
     private val wakeLock: CalculationWakeLock?
 ) : CalculationExecutor {
 
     private val mutex = Mutex()
+
+    private val errorReports = CalculationErrorReports(fabricPrivacy)
 
     /** The run holding each job name, and the prepare half of it, which callers can wait for. */
     private val runs = mutableMapOf<String, Job>()
@@ -192,6 +197,10 @@ class CoroutineCalculationExecutor(
      * behind it did not run. Without it the throw would reach [scope], which has no handler on
      * Android, so one bad calculation would end the whole app, and the pump connection with it.
      * Throwable rather than Exception for the same reason: the worker caught everything.
+     *
+     * The throw also goes to Crashlytics, once for each kind, see [CalculationErrorReports]. A failed
+     * prepare phase means that the loop did not run for that glucose reading, and before this only the
+     * AAPS log showed it (#5662).
      */
     private suspend fun runPhase(phase: String, job: String, body: suspend () -> WorkOutcome): WorkOutcome =
         try {
@@ -199,7 +208,9 @@ class CoroutineCalculationExecutor(
         } catch (e: CancellationException) {
             throw e
         } catch (e: Throwable) {
-            aapsLogger.error(LTag.WORKER, "Calculation $job: $phase phase failed", e)
+            val message = "Calculation $job: $phase phase failed"
+            aapsLogger.error(LTag.WORKER, message, e)
+            errorReports.report(message, e)
             WorkOutcome.Failure("$phase phase threw $e")
         }
 

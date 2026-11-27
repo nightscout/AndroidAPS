@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.desktop.shell.appIconResource
 import app.aaps.desktop.shell.config.DesktopClientConfig
 import app.aaps.desktop.shell.loadAwtAppIcon
@@ -82,9 +83,10 @@ object DesktopPlatformBindings {
     fun calculationExecutor(
         @ApplicationScope scope: CoroutineScope,
         aapsLogger: AAPSLogger,
+        fabricPrivacy: FabricPrivacy,
         prepare: () -> PrepareGraphDataRunner,
         post: () -> PostCalculationRunner
-    ): CalculationExecutor = LazyCalculationExecutor(scope, aapsLogger, { prepare() }, { post() }, wakeLock = null)
+    ): CalculationExecutor = LazyCalculationExecutor(scope, aapsLogger, fabricPrivacy, { prepare() }, { post() }, wakeLock = null)
 
     /** The tray. The concrete class too, because the alert platform also shows a message and beeps through it. */
     @Provides

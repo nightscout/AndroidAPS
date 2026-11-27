@@ -64,7 +64,7 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
         PrepareGraphDataRunner(
             aapsLogger, workflowChainData, dateUtil, mockedRxBus, persistenceLayer,
             activePlugin, profileFunction, profileUtil, preferences, profiler, decimalFormatter,
-            TestScope(), autosensDataProvider
+            fabricPrivacy, TestScope(), autosensDataProvider
         )
 
     // The runner asks this between phases; nothing in these tests stops a run part way.
@@ -172,6 +172,55 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
         verify(signals).emitProgress(eq(ProgressData.DRAW_BG), any())
         verify(signals).emitProgress(eq(ProgressData.DRAW_IOB), any())
         verify(signals).emitProgress(eq(ProgressData.DRAW_FINAL), any())
+    }
+
+    /**
+     * #5662: the loop runs only after a prepare phase that succeeded, and it needs nothing the graph steps
+     * write. An error in a graph step must cost the graph, not the loop run for this glucose reading.
+     */
+    @Test
+    fun `an error in a graph step does not fail the phase`() = runTest {
+        stubSuspendCalls()
+        val error = IllegalStateException("broken readings")
+        whenever(persistenceLayer.getBgReadingsDataFromTimeToTime(any(), any(), any())).thenThrow(error)
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = true))
+
+        val result = run()
+
+        assertIs<WorkOutcome.Success>(result)
+        // The steps after it still ran
+        verify(cache).updateIobGraph(any())
+        verify(signals).emitProgress(eq(ProgressData.DRAW_FINAL), any())
+        verify(fabricPrivacy).logException(error)
+    }
+
+    @Test
+    fun `an error in the IOB graph step does not fail the phase`() = runTest {
+        stubSuspendCalls()
+        val error = IllegalStateException("broken prediction")
+        whenever(dataIobCob.calculateIobArrayForSMB(any(), any(), any(), any())).thenThrow(error)
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = true))
+
+        val result = run()
+
+        assertIs<WorkOutcome.Success>(result)
+        verify(signals).emitProgress(eq(ProgressData.DRAW_FINAL), any())
+        verify(fabricPrivacy).logException(error)
+    }
+
+    /** The loop needs the IOB and COB pass, so an error there must still fail the phase, and the loop must not run. */
+    @Test
+    fun `an error in the IOB and COB pass still fails the phase`() = runTest {
+        stubSuspendCalls()
+        val error = IllegalStateException("broken IOB")
+        whenever(profileFunction.isProfileValid(any())).thenThrow(error)
+        whenever(workflowChainData.prepareFor(any(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = true))
+
+        val thrown = runCatching { run() }.exceptionOrNull()
+
+        assertThat(thrown).isSameInstanceAs(error)
+        // Reported by the executor, which turns the throw into a failed phase
+        verify(fabricPrivacy, never()).logException(any())
     }
 
     /**

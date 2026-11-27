@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.PowerManager
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationWakeLock
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -28,10 +29,11 @@ import kotlinx.coroutines.CoroutineScope
 class AndroidCalculationExecutor(
     context: Context,
     aapsLogger: AAPSLogger,
+    fabricPrivacy: FabricPrivacy,
     @ApplicationScope scope: CoroutineScope,
     prepare: () -> PrepareGraphDataRunner,
     post: () -> PostCalculationRunner
-) : CalculationExecutor by LazyCalculationExecutor(scope, aapsLogger, prepare, post, AndroidCalculationWakeLock(context))
+) : CalculationExecutor by LazyCalculationExecutor(scope, aapsLogger, fabricPrivacy, prepare, post, AndroidCalculationWakeLock(context))
 
 /** [CalculationWakeLock] on Android: a partial wake lock, so a run finishes with the screen off. */
 internal class AndroidCalculationWakeLock(private val context: Context) : CalculationWakeLock {
