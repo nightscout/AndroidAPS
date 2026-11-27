@@ -23,6 +23,7 @@ import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
+import app.aaps.plugins.sync.nsclientV3.nsClientUrlWithoutSpaces
 import app.aaps.plugins.sync.nsclientV3.ws.NsConnectHandler
 import app.aaps.plugins.sync.nsclientV3.ws.NsFrameHandler
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocket
@@ -131,7 +132,8 @@ class NSClientV3Service : MetroService() {
             nsClientRepository.addLog("● WS", "already initialized, skip $reason")
             return
         }
-        val urlStorage = preferences.get(StringKey.NsClientUrl).lowercase().replace(Regex("/$"), "") + "/storage"
+        // The alarm socket went with the Nightscout alarms; a space in the address is dropped (it crashed Ktor)
+        val urlStorage = nsClientUrlWithoutSpaces(preferences.get(StringKey.NsClientUrl)).lowercase().replace(Regex("/$"), "") + "/storage"
         try {
             // Assign the field BEFORE attaching listeners / connecting: the socket is already in
             // socket.io's process-static, never-pruned Manager.nsps cache once it exists, so if

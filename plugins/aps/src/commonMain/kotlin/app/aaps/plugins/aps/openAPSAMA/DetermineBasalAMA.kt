@@ -255,8 +255,12 @@ class DetermineBasalAMA(
         //5m data points = g * (1U/10g) * (40mg/dL/1U) / (mg/dL/5m)
         cid = meal_data.mealCOB * (sens / profile.carb_ratio) / ci
         val acid: Double = meal_data.mealCOB * (sens / profile.carb_ratio) / aci
-        consoleError.add("Carb Impact: $ci mg/dL per 5m; CI Duration: ${(10 * cid / 6).roundToLong() / 10} hours")
-        consoleError.add("Accel. Carb Impact: $aci mg/dL per 5m; ACI Duration: ${(10 * acid / 6).roundToLong() / 10} hours")
+        // round(value, digits) as in the JS (Math.round(10 * cid / 6) / 10): one decimal, and NaN passes through. With no COB
+        // and a carb impact of 0, cid is 0 / 0 = NaN, and roundToLong() threw on it and crashed the app in the loop run
+        // (Crashlytics, 2026-11). The Long division also cut the hours to whole hours. The NaN goes no further: the COB
+        // predictions it reaches are used only with COB and a carb impact above 0.
+        consoleError.add("Carb Impact: $ci mg/dL per 5m; CI Duration: ${round(cid / 6, 1)} hours")
+        consoleError.add("Accel. Carb Impact: $aci mg/dL per 5m; ACI Duration: ${round(acid / 6, 1)} hours")
         var minPredBG = 999.0
         var maxPredBG = bg
         //var eventualPredBG = bg

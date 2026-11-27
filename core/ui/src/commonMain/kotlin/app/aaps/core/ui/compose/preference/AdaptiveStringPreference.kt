@@ -58,8 +58,8 @@ fun AdaptiveStringPreferenceItem(
         state = state,
         title = { Text(stringResource(effectiveTitle)) },
         textToValue = { text ->
-            val result = validator.validate(text)
-            if (result.isValid) text else null
+            val cleaned = validator.clean(text)
+            if (validator.validate(cleaned).isValid) cleaned else null
         },
         enabled = visibility.enabled,
         summary = when {
@@ -109,8 +109,9 @@ private fun ValidatedTextField(
     validator: StringValidator
 ) {
     // Only re-validate when the text actually changes, not on every recomposition
+    // Checked as it will be saved, so a space the save trims away is no error.
     val errorMessage = remember(value.text) {
-        val result = validator.validate(value.text)
+        val result = validator.validate(validator.clean(value.text))
         if (!result.isValid) result.errorMessage else null
     }
 

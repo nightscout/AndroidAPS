@@ -13,6 +13,13 @@ fun interface StringValidator {
      */
     fun validate(value: String): ValidationResult
 
+    /**
+     * The input as it is checked and saved. Unchanged by default; [httpsUrl] trims it, because a phone keyboard easily
+     * adds a space at the end that the user cannot see. A settings screen calls this before [validate] and saves the
+     * result.
+     */
+    fun clean(value: String): String = value
+
     data class ValidationResult(
         val isValid: Boolean,
         val errorMessage: String? = null
@@ -61,11 +68,15 @@ fun interface StringValidator {
             errorMessage = errorMessage
         )
 
-        /** Validates URL format (https only) */
-        fun httpsUrl(errorMessage: String = "Invalid HTTPS URL") = regex(
-            pattern = "^https://.*",
-            errorMessage = errorMessage
-        )
+        /**
+         * Validates URL format (https only). No spaces: an address never holds one. Spaces at the start and the end are
+         * trimmed on save ([clean]); a space inside stays an error the user can see.
+         */
+        fun httpsUrl(errorMessage: String = "Invalid HTTPS URL"): StringValidator = object : StringValidator {
+            private val format = regex(pattern = "^https://\\S+$", errorMessage = errorMessage)
+            override fun validate(value: String): ValidationResult = format.validate(value)
+            override fun clean(value: String): String = value.trim()
+        }
 
         /** Validates phone number (allows digits, spaces, dashes, plus) */
         fun phone(errorMessage: String = "Invalid phone number") = regex(
@@ -102,15 +113,6 @@ fun interface StringValidator {
             if (value.isEmpty()) return@StringValidator ValidationResult.VALID
             if (value.length < 6) return@StringValidator ValidationResult.invalid("PIN must be at least 6 digits")
             if (!Regex("^[0-9]+$").matches(value)) return@StringValidator ValidationResult.invalid("PIN must contain only digits")
-            ValidationResult.VALID
-        }
-
-        /** Combines multiple validators - all must pass */
-        fun all(vararg validators: StringValidator) = StringValidator { value ->
-            for (validator in validators) {
-                val result = validator.validate(value)
-                if (!result.isValid) return@StringValidator result
-            }
             ValidationResult.VALID
         }
     }

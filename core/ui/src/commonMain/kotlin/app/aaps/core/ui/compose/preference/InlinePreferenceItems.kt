@@ -44,8 +44,9 @@ fun InlineStringPreferenceItem(
 
     OutlinedTextField(
         value = text,
+        // Every change is saved at once here, so it is saved cleaned (a URL trimmed), as the settings dialog saves it.
         onValueChange = { newValue ->
-            state.value = newValue
+            state.value = validator.clean(newValue)
         },
         label = { Text(stringResource(effectiveTitle)) },
         isError = !validationResult.isValid,
