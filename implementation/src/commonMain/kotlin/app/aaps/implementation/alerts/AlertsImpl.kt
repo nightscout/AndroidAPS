@@ -411,15 +411,19 @@ class AlertsImpl(
             val existing = entries[id]
             // Published before the card, so the alarm screen the card may open finds the alert in [active].
             if (existing != null && existing.alert.raisedAt == alert.raisedAt) {
-                // The same occurrence again: new text or action perhaps, but it does not ring again.
+                // The same occurrence again: new text or action perhaps, but it does not ring again - unless it is worse
+                // now (a rule changed from Warning to Alarm while it is on). Then it rings as a new one would, the alarm
+                // screen included: the URGENT card played the alarm with no screen to answer it (iOS, 2026-11-27). Not
+                // over a silence or a pause, which the card keeps.
                 val changed = cardChanged(existing.alert, alert)
+                val worse = alert.severity < existing.alert.severity
                 existing.alert = alert
                 publish()
                 // Not posted again when nothing on the card changed: a raiser repeats itself (the BG alarms 5 times in
                 // 30 ms at a start), and on iOS the removal of each old card lost the race with the new one, so the
                 // old cards stayed in the tray after the alert ended (2026-11-25).
                 if (changed) {
-                    if (existing.card != null) showCard(existing, ring = false)
+                    if (existing.card != null) showCard(existing, ring = worse)
                     // A silenced alert rings again from a booking made with the text it had then (iOS showed a BG of
                     // the time of the silence, 2026-11-25): booked again, the booking replaces the old one. Also while
                     // its card is hidden: the re-ring brings the card back.
@@ -537,12 +541,18 @@ class AlertsImpl(
         schedulePauseEnd()
     }
 
-    /** Caller holds [lock]. The pause of [ids] is over: their active alerts ring, unless the user silenced one. */
+    /**
+     * Caller holds [lock]. The pause of [ids] is over: their active alerts ring, unless the user silenced one. That one
+     * is booked again at the end of its silence: the pause had moved its re-ring to the pause end, so after an early
+     * Resume it rang late when the app did not run - 16 minutes on iOS (2026-11-27). The new booking replaces the old.
+     */
     private fun ringAfterPause(ids: Set<String>) {
         val now = dateUtil.now()
         entries.values.filter { it.alert.kind.id in ids }.forEach { entry ->
-            if (entry.silencedUntil > now) showCard(entry, ring = false)
-            else {
+            if (entry.silencedUntil > now) {
+                if (choiceFor(entry.alert).rings) platform.snoozed(entry.alert, entry.silencedUntil)
+                showCard(entry, ring = false)
+            } else {
                 platform.withdrawn(entry.alert.source, entry.alert.key)
                 showCard(entry, ring = true)
             }

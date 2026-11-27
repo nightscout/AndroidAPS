@@ -637,6 +637,45 @@ class AlertsImplTest : TestBase() {
         assertThat(alertPlatform.screens).hasSize(1)
     }
 
+    /**
+     * Worse now - a rule changed from Warning to Alarm while its alert is on: it rings as a new occurrence would. Before,
+     * the URGENT card played the alarm with no alarm screen to answer it (iOS, 2026-11-27).
+     */
+    @Test
+    fun `the same occurrence raised as worse rings with its alarm screen`() {
+        sut.raise(alert(severity = AlertSeverity.WARNING))
+        assertThat(alertPlatform.screens).isEmpty()
+
+        sut.raise(alert(severity = AlertSeverity.CRITICAL))
+
+        assertThat(alertPlatform.screens).containsExactly("occlusion")
+        assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
+    }
+
+    /** Better now: the card changes, and it does not ring again. */
+    @Test
+    fun `the same occurrence raised as less bad does not ring again`() {
+        sut.raise(alert(severity = AlertSeverity.CRITICAL))
+
+        sut.raise(alert(severity = AlertSeverity.WARNING))
+
+        assertThat(alertPlatform.screens).containsExactly("occlusion")
+        assertThat(alertPlatform.chimes).isEmpty()
+        assertThat(card().level).isEqualTo(NotificationLevel.IMPORTANT)
+    }
+
+    /** Worse while silenced: the silence the user gave holds. */
+    @Test
+    fun `the same occurrence raised as worse while silenced stays silent`() {
+        sut.raise(alert(severity = AlertSeverity.WARNING))
+        sut.silence("pump", "occlusion", 30)
+
+        sut.raise(alert(severity = AlertSeverity.CRITICAL))
+
+        assertThat(alertPlatform.screens).isEmpty()
+        assertThat(card().sound).isNull()
+    }
+
     @Test
     fun `a new occurrence of the same key rings again`() {
         sut.raise(alert(raisedAt = 500L))
@@ -1367,6 +1406,26 @@ class AlertsImplTest : TestBase() {
 
         assertThat(alertPlatform.screens).containsExactly("occlusion")
         assertThat(sut.pauses.value).isEmpty()
+    }
+
+    /**
+     * The pause moved the silenced alert's booked re-ring to the pause end. Resumed early, it is booked at the end of the
+     * user's silence again; else it rang late when the app did not run (16 minutes on iOS, 2026-11-27).
+     */
+    @Test
+    fun `resume books a silenced alert again at the end of its silence`() {
+        val a = alert()
+        sut.raise(a)
+        sut.silence("pump", "occlusion", 15)
+        sut.pause(listOf(a.kind), now + 30 * 60_000L)
+        assertThat(alertPlatform.snoozes.last()).isEqualTo("occlusion" to now + 30 * 60_000L)
+
+        sut.resume(listOf(a.kind))
+
+        assertThat(alertPlatform.snoozes.last()).isEqualTo("occlusion" to now + 15 * 60_000L)
+        // Still silenced: no second alarm screen
+        assertThat(alertPlatform.screens).containsExactly("occlusion")
+        assertThat(card().sound).isNull()
     }
 
     /** A silence the user gave holds after the pause: the pause end does not ring over it. */
