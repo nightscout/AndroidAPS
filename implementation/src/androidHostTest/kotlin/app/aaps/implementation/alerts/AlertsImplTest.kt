@@ -236,10 +236,11 @@ class AlertsImplTest : TestBase() {
         origin: AlertOrigin = AlertOrigin.PUMP,
         action: AlertAction? = null,
         lifetime: AlertLifetime = AlertLifetime.CONDITION,
-        kind: AlertKind = TestKind(source, origin, key)
+        kind: AlertKind = TestKind(source, origin, key),
+        onAnswered: (() -> Unit)? = null
     ) = Alert(
         kind = kind, key = key, severity = severity, title = TextRef.Literal(key), raisedAt = raisedAt,
-        action = action, lifetime = lifetime
+        action = action, lifetime = lifetime, onAnswered = onAnswered
     )
 
     private fun verifyNoAppAnnouncement() = verifyBlocking(persistenceLayer, never()) {
@@ -1150,6 +1151,61 @@ class AlertsImplTest : TestBase() {
 
         assertThat(sut.active.value.map { it.key }).containsExactly("eat-reminder")
         assertThat(card().sound).isEqualTo(AlarmSound.ALARM)
+    }
+
+    /** Silence on the alarm screen is the user's answer: the raiser hears of it once, however often it is tapped. */
+    @Test
+    fun `silencing an event runs its answer once`() {
+        var answers = 0
+        sut.raise(alert(key = "eat-reminder", source = "aaps", lifetime = AlertLifetime.EVENT, onAnswered = { answers++ }))
+
+        sut.silence("aaps", "eat-reminder")
+        sut.silence("aaps", "eat-reminder")
+
+        assertThat(answers).isEqualTo(1)
+        assertThat(sut.active.value).isEmpty()
+    }
+
+    /** A swipe, or Mute on the watch or the notification, takes the card away: that is an answer too. */
+    @Test
+    fun `an event whose card is removed runs its answer`() {
+        var answers = 0
+        sut.raise(alert(key = "eat-reminder", source = "aaps", lifetime = AlertLifetime.EVENT, onAnswered = { answers++ }))
+
+        notificationManager.muteAllAlarms()
+        scope.runCurrent()
+
+        assertThat(answers).isEqualTo(1)
+    }
+
+    /** The raiser ending it is not the user's answer: the timer's own Stop and +5 min resolve its alarm this way. */
+    @Test
+    fun `an event its raiser resolves does not run its answer`() {
+        var answers = 0
+        sut.raise(alert(key = "eat-reminder", source = "aaps", lifetime = AlertLifetime.EVENT, onAnswered = { answers++ }))
+
+        sut.resolve("aaps", "eat-reminder")
+        scope.runCurrent()
+
+        assertThat(answers).isEqualTo(0)
+    }
+
+    /** "+5 min" moves the timer: the answer would stop the timer it has just moved. */
+    @Test
+    fun `an event its own action ends does not run its answer`() {
+        var answers = 0
+        sut.raise(
+            alert(
+                key = "eat-reminder", source = "aaps", lifetime = AlertLifetime.EVENT,
+                action = AlertAction(TextRef.Literal("+5 min")) { true }, onAnswered = { answers++ }
+            )
+        )
+
+        sut.act("aaps", "eat-reminder")
+        scope.runCurrent()
+
+        assertThat(sut.active.value).isEmpty()
+        assertThat(answers).isEqualTo(0)
     }
 
     /** A pump's alert is silenced while its step runs: the pump takes its time, and the driver resolves it. */

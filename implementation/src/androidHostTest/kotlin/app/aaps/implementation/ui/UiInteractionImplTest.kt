@@ -61,6 +61,7 @@ class UiInteractionImplTest : TestBase() {
         override fun applySharedSilence(silence: SharedSilence) {}
         override fun silencedUntil(source: String, key: String): Long = 0L
         val raised = mutableListOf<Alert>()
+        val resolved = mutableListOf<Pair<String, String>>()
         val silenced = mutableListOf<Pair<String, String>>()
         val snoozed = mutableListOf<Triple<String, String, Int>>()
 
@@ -70,6 +71,7 @@ class UiInteractionImplTest : TestBase() {
         }
 
         override fun resolve(source: String, key: String) {
+            resolved += source to key
             _active.value = _active.value.filterNot { it.source == source && it.key == key }
         }
 
@@ -248,12 +250,44 @@ class UiInteractionImplTest : TestBase() {
         assertThat(raised().tellWatch).isFalse()
     }
 
+    /**
+     * Resolved as the timer's own step, not silenced: a silence is the user's answer, and that ends the timer - which
+     * +5 min, ending this alarm right after it moved the timer, must not do.
+     */
     @Test
-    fun `stopping the eat alarm silences that alert and nothing else`() {
+    fun `stopping the eat alarm resolves that alert and nothing else`() {
         sut.stopEatReminderAlarm()
 
-        assertThat(alerts.silenced).containsExactly(UiInteraction.SOURCE to UiInteraction.KEY_EAT_REMINDER)
+        assertThat(alerts.resolved).containsExactly(UiInteraction.SOURCE to UiInteraction.KEY_EAT_REMINDER)
+        assertThat(alerts.silenced).isEmpty()
         verify(notificationManager, never()).muteAllAlarms()
+    }
+
+    /** Silence on its screen, a swipe or Mute end the timer too, so the overview stops showing "the time is up". */
+    @Test
+    fun `answering the eat alarm ends the timer`() {
+        sut.runEatReminderAlarm("Time to eat", "AAPS")
+
+        raised().onAnswered!!.invoke()
+
+        verify(eatReminder).stop()
+    }
+
+    @Test
+    fun `answering another alarm runs nothing more`() {
+        sut.runAlarm(UiInteraction.KEY_COMMAND_FAILED, "Bolus failed", "AAPS")
+
+        assertThat(raised().onAnswered).isNull()
+    }
+
+    /** The booking keeps the answer as it keeps +5 min, so a booked timer's alarm ends the timer too. */
+    @Test
+    fun `a booked eat reminder ends the timer when answered`() {
+        sut.scheduleEatReminderAlarm(at = 60_000L, status = "Time to eat", title = "AAPS")
+
+        alerts.booked.single().first.onAnswered!!.invoke()
+
+        verify(eatReminder).stop()
     }
 
     // ---------------------------------------------------------------------------------------------

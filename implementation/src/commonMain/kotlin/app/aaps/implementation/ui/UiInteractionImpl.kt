@@ -79,6 +79,9 @@ class UiInteractionImpl(
      * wants the reminder five minutes later, not the same reminder again. `extend()` silences this alarm itself and
      * starts the new one, and when it fails nothing has changed, so the alarm goes on ringing - which is why an
      * action that fails leaves an event alert exactly as it was.
+     *
+     * Answering it - Silence on its screen, a swipe, Mute - ends the timer, as Stop does. The answer used to end only
+     * the alarm, when it became a core alert, and the overview went on showing "the time is up" until Dismiss.
      */
     private fun eatReminderAlarm(status: String, title: String) =
         alert(
@@ -92,7 +95,8 @@ class UiInteractionImpl(
             // "+5 min" already is the delay, so a "Mute 5 min" beside it would be two buttons five minutes apart.
             canMute = false,
             // The watch rings this one itself (`EatReminderWatch`), so telling it as well would show two reminders.
-            tellWatch = false
+            tellWatch = false,
+            onAnswered = { eatReminder().stop() }
         )
 
     /** One of the app's own alarms, raised now or booked; a booked one gets the time of its booking. */
@@ -103,7 +107,8 @@ class UiInteractionImpl(
         sound: AlarmSound?,
         action: AlertAction?,
         canMute: Boolean,
-        tellWatch: Boolean
+        tellWatch: Boolean,
+        onAnswered: (() -> Unit)? = null
     ): Alert =
             Alert(
                 // The app's own kind for this alarm; it is filed as the app's, not under the pump
@@ -124,7 +129,8 @@ class UiInteractionImpl(
                 tellWatch = tellWatch,
                 // Null has always meant the default alarm sound here, not silence: the Android path resolved it to
                 // ERROR in the channel and in the player, and only a test ever passed null.
-                sound = sound ?: AlarmSound.ERROR
+                sound = sound ?: AlarmSound.ERROR,
+                onAnswered = onAnswered
             )
 
     /**
@@ -171,8 +177,12 @@ class UiInteractionImpl(
         alerts.snooze(alert.source, alert.key, minutes)
     }
 
+    /**
+     * Resolved as its raiser, not silenced as the user: a silence is the user's answer, which ends the timer, and +5 min
+     * ends this alarm right after it moved the timer.
+     */
     override fun stopEatReminderAlarm() {
         aapsLogger.debug(LTag.CORE, "stopEatReminderAlarm")
-        alerts.silence(UiInteraction.SOURCE, UiInteraction.KEY_EAT_REMINDER)
+        alerts.resolve(UiInteraction.SOURCE, UiInteraction.KEY_EAT_REMINDER)
     }
 }

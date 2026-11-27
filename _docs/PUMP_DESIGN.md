@@ -369,6 +369,8 @@ path, not two.
    `stopEatReminderAlarm` resolves the eat alert alone.
 3. **The eat reminder's `+5 min` becomes an alert action.** `AlertAction(label = "+5 min") { eatReminder.extend() }`
    - the model already carries exactly this, so the special case in `ErrorScreen` and in the notification goes away.
+   Answering the alarm (Silence on its screen, a swipe, Mute) ends the timer, through `Alert.onAnswered`
+   (2026-11-27: until then the answer ended only the alarm, and the overview went on showing "the time is up").
 4. **Restore Mute and swipe on the sounding card.** `AlarmNotificationManager.postSilentAlarmNotification`, which is
    what the registry posts for an URGENT card with a sound, has no Mute action and no delete intent;
    `postFullScreenAlarm` has both. They are added to the silent one, so #5338 is answered for **every** sounding card -

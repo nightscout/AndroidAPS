@@ -195,7 +195,17 @@ class Alert(
      */
     val silenceMinutes: Int = Alerts.SILENCE_MINUTES,
     /** Rings in Do Not Disturb and silent mode whatever the user's override setting says. Urgent low only. */
-    val breakThroughDnd: Boolean = false
+    val breakThroughDnd: Boolean = false,
+    /**
+     * For an [AlertLifetime.EVENT]: run once when the user answers it - Silence on its alarm screen, or its card taken
+     * away (a swipe, Mute on the watch or on the notification). Not when its raiser resolves it, and not when its own
+     * [action] ends it.
+     *
+     * Only the "time to eat" timer sets it: answering its alarm ends the timer, so the overview does not go on showing
+     * "the time is up" ([EatReminder.stop]). Not saved with a booking, like [action]: the timer books its alarm again at
+     * every app start.
+     */
+    val onAnswered: (() -> Unit)? = null
 ) {
 
     /** Who raised it: a driver ("carelevo", "eversense"), or "aaps" for the app's own alarms. */

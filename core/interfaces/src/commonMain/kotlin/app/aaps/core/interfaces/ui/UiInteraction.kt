@@ -79,7 +79,10 @@ interface UiInteraction {
      */
     fun muteAlarm(minutes: Int, reason: String) = stopAlarm(reason)
 
-    /** Stops the alarm of the "time to eat" timer and nothing else. Only the master's timer calls this. */
+    /**
+     * Ends the alarm of the "time to eat" timer and nothing else. Only the master's timer calls this. Not the user's
+     * answer, so the timer is not stopped by it ([app.aaps.core.interfaces.alerts.Alert.onAnswered]).
+     */
     fun stopEatReminderAlarm()
 
     companion object {

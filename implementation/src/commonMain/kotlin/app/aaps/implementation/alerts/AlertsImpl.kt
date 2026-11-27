@@ -473,9 +473,27 @@ class AlertsImpl(
                 null
             }
         } ?: return aapsLogger.info(LTag.NOTIFICATION, "Alert $source/$key is not active yet, its silence is kept for $PENDING_TAP_MINUTES min")
-        // Outside the lock: neither call may be made while holding it, it is not reentrant.
-        if (alert.lifetime == AlertLifetime.EVENT) resolve(source, key)
-        else snooze(source, key, minutes ?: alert.silenceMinutes)
+        // Outside the lock: an event's answer must not run while holding it (see answered())
+        if (alert.lifetime == AlertLifetime.EVENT) {
+            // Ended here, not with resolve(): its raiser hears of the answer only from the call that really ended it
+            val ended = lock.withLock { entries.remove(source to key)?.also { end(it); publish() } }
+            ended?.let { answered(it.alert) }
+        } else snooze(source, key, minutes ?: alert.silenceMinutes)
+    }
+
+    /**
+     * The user answered the event [alert]: its [Alert.onAnswered] runs. Never while holding [lock]: the "time to eat"
+     * timer takes its own lock and then this one, to take back its booking, so the other order could deadlock.
+     */
+    private fun answered(alert: Alert) {
+        val hook = alert.onAnswered ?: return
+        try {
+            hook()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.NOTIFICATION, "Answer of alert ${alert.source}/${alert.key} failed", e)
+        }
     }
 
     override fun snooze(source: String, key: String, minutes: Int) = lock.withLock {
@@ -661,7 +679,7 @@ class AlertsImpl(
     private fun Alert.raisedAt(at: Long) = Alert(
         kind = kind, key = key, severity = severity, title = title, text = text, raisedAt = at, action = action,
         lifetime = lifetime, notificationTitle = notificationTitle, canMute = canMute, tellWatch = tellWatch, sound = sound,
-        silenceMinutes = silenceMinutes, breakThroughDnd = breakThroughDnd
+        silenceMinutes = silenceMinutes, breakThroughDnd = breakThroughDnd, onAnswered = onAnswered
     )
 
     // ---- the cards ----------------------------------------------------------------------------
@@ -832,19 +850,27 @@ class AlertsImpl(
         val start = lock.withLock { if (observing) false else true.also { observing = true } }
         if (!start) return
         appScope.launch {
-            notificationManager.notifications.collect { lock.withLock { restoreRemovedCards() } }
+            notificationManager.notifications.collect {
+                val answered = lock.withLock { restoreRemovedCards() }
+                answered.forEach { answered(it) }
+            }
         }
         // Made now, not when the first alarm screen asks: the master learns from it whether it has a client, and the
         // screen should not miss "Silence everywhere" while that is still being read
         appScope.launch { sharedSilenceLink() }
     }
 
-    /** Caller holds [lock]. Reads the list as it is now, not as the flow sent it, so a card posted meanwhile counts. */
-    private fun restoreRemovedCards() {
+    /**
+     * Caller holds [lock]. Reads the list as it is now, not as the flow sent it, so a card posted meanwhile counts.
+     *
+     * @return the events this ended: the user answered them, so the caller runs their [Alert.onAnswered] once the lock
+     *   is released
+     */
+    private fun restoreRemovedCards(): List<Alert> {
         val shown = notificationManager.notifications.value.map { it.instanceKey }.toSet()
         // A copy, because an event's card going away removes it from `entries` inside the loop.
         val removed = entries.values.filter { entry -> entry.card?.let { it.instanceKey !in shown } == true }
-        var ended = false
+        val answered = mutableListOf<Alert>()
         removed.forEach { entry ->
             entry.card = null
             val alert = entry.alert
@@ -853,7 +879,7 @@ class AlertsImpl(
                 alert.lifetime == AlertLifetime.EVENT                      -> {
                     aapsLogger.debug(LTag.PUMP, "Alert card removed, and it was the answer: ${alert.source}/${alert.key}")
                     entries.remove(alert.source to alert.key)?.let { end(it) }
-                    ended = true
+                    answered += alert
                 }
                 // Read, and nothing to do about it.
                 alert.severity == AlertSeverity.INFO && alert.action == null -> Unit
@@ -874,7 +900,8 @@ class AlertsImpl(
                 }
             }
         }
-        if (ended) publish()
+        if (answered.isNotEmpty()) publish()
+        return answered
     }
 
     /**
