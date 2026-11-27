@@ -1,6 +1,7 @@
 package app.aaps.ui.widget.glance
 
 import android.content.Context
+import android.content.Intent
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -74,8 +75,9 @@ class AapsGlanceWidget : GlanceAppWidget() {
         }
         val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(id)
         val state = stateLoader.loadState(appWidgetId)
+        val launchIntent = widgetLaunchIntent(context)
         provideContent {
-            WidgetContent(state)
+            WidgetContent(state, launchIntent)
         }
     }
 
@@ -190,9 +192,8 @@ private fun measureSizes(state: WidgetRenderState, size: DpSize, fitter: WidgetT
 }
 
 @Composable
-private fun WidgetContent(state: WidgetRenderState) {
+private fun WidgetContent(state: WidgetRenderState, launchIntent: Intent?) {
     val context = LocalContext.current
-    val launchIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
     val sizes = measureSizes(state, LocalSize.current, WidgetTextFitter(context))
     val root = GlanceModifier
         .fillMaxSize()

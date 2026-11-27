@@ -1,6 +1,7 @@
 package app.aaps.ui.widget.glance
 
 import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
@@ -51,8 +52,9 @@ class BgGraphGlanceWidget : GlanceAppWidget() {
         }
         val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(id)
         val state = stateLoader.loadState(appWidgetId)
+        val launchIntent = widgetLaunchIntent(context)
         provideContent {
-            BgGraphContent(state)
+            BgGraphContent(state, launchIntent)
         }
     }
 
@@ -63,9 +65,8 @@ class BgGraphGlanceWidget : GlanceAppWidget() {
 }
 
 @Composable
-private fun BgGraphContent(state: BgGraphRenderState) {
+private fun BgGraphContent(state: BgGraphRenderState, launchIntent: Intent?) {
     val context = LocalContext.current
-    val launchIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
     val size = LocalSize.current
     val density = context.resources.displayMetrics.density
     val widthPx = (size.width.value * density).toInt().coerceAtLeast(1)

@@ -1,6 +1,7 @@
 package app.aaps.ui.widget.glance
 
 import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -10,7 +11,6 @@ import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
-import androidx.glance.LocalContext
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
@@ -55,7 +55,8 @@ class CompactBgGlanceWidget : GlanceAppWidget() {
         }
         val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(id)
         val state = stateLoader.loadState(appWidgetId)
-        provideContent { CompactContent(state) }
+        val launchIntent = widgetLaunchIntent(context)
+        provideContent { CompactContent(state, launchIntent) }
     }
 
     private companion object {
@@ -67,9 +68,7 @@ class CompactBgGlanceWidget : GlanceAppWidget() {
 private val TextMuted = Color(WidgetTextMuted)
 
 @Composable
-private fun CompactContent(state: WidgetRenderState) {
-    val context = LocalContext.current
-    val launchIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+private fun CompactContent(state: WidgetRenderState, launchIntent: Intent?) {
     val bgColor = Color(state.bgColor)
 
     val rootModifier = GlanceModifier
