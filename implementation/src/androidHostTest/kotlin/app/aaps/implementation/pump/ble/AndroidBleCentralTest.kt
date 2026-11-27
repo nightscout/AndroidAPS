@@ -14,6 +14,7 @@ import android.bluetooth.le.ScanRecord
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Looper
@@ -37,6 +38,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
@@ -55,6 +57,8 @@ import org.robolectric.annotation.Config
 import java.time.Duration as JavaDuration
 import java.util.UUID
 import java.util.concurrent.CopyOnWriteArrayList
+import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -211,6 +215,34 @@ class AndroidBleCentralTest {
         assertThat(found.single().rssi).isEqualTo(-60)
         collector.cancel()
         await("the scan stopped") { scanner.scanCallbacks.isEmpty() }
+    }
+
+    /**
+     * Android's startScan waits until the system has registered the scanner, which takes seconds on a busy Bluetooth
+     * stack, and a screen collects a scan on the main thread: the app did not answer (ANR, Crashlytics 2026-11, on the
+     * Eversense pairing screen). The scan checks its permission just before startScan, so that check shows the thread.
+     */
+    @Test
+    fun aScanStartsOffTheThreadThatCollectsIt() = runBlocking {
+        val scanCheckedOn = AtomicReference<Thread>()
+        val recording = object : ContextWrapper(context) {
+            override fun checkPermission(permission: String, pid: Int, uid: Int): Int {
+                if (permission == Manifest.permission.BLUETOOTH_SCAN) scanCheckedOn.set(Thread.currentThread())
+                return super.checkPermission(permission, pid, uid)
+            }
+        }
+        val collectorThread = Executors.newSingleThreadExecutor { Thread(it, COLLECTOR_THREAD) }.asCoroutineDispatcher()
+        try {
+            val collector = scope.launch(collectorThread) { AndroidBleCentral(recording, AAPSLoggerTest()).scan(ScanFilter(namePrefix = "PUMP")).collect { } }
+            await("the scan started") { shadowOf(adapter.bluetoothLeScanner).scanCallbacks.isNotEmpty() }
+
+            assertThat(scanCheckedOn.get()).isNotNull()
+            assertThat(scanCheckedOn.get().name).isNotEqualTo(COLLECTOR_THREAD)
+            collector.cancel()
+            await("the scan stopped") { shadowOf(adapter.bluetoothLeScanner).scanCallbacks.isEmpty() }
+        } finally {
+            collectorThread.close()
+        }
     }
 
     /** Medtrum finds its patch by the serial in its manufacturer data; Omnipod its pod by the service UUIDs. */
@@ -521,5 +553,6 @@ class AndroidBleCentralTest {
         val DEVICE = DeviceId(ADDRESS)
         const val MANUFACTURER = 0x4779
         val CCCD: UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
+        const val COLLECTOR_THREAD = "collector"
     }
 }

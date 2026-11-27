@@ -51,6 +51,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -61,6 +62,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -126,9 +128,14 @@ class AndroidBleCentral(
 
     private val scanning = Mutex()
 
+    /**
+     * Runs off the thread that collects it. Android's startScan waits until the system has registered the scanner, and
+     * on a busy Bluetooth stack that takes seconds. A screen collects a scan on the main thread, so it waited there and
+     * the app did not answer (ANR, Crashlytics 2026-11, on the Eversense pairing screen).
+     */
     override fun scan(filter: ScanFilter): Flow<Advertisement> = flow {
         scanning.withLock { emitAll(scanOnce(filter)) }
-    }
+    }.flowOn(Dispatchers.IO)
 
     private fun scanOnce(filter: ScanFilter): Flow<Advertisement> = callbackFlow {
         unavailable(scan = true)?.let { throw BleException(it) }
