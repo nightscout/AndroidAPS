@@ -35,7 +35,16 @@ class NotificationHolderImpl(
         set(value) {
             _notification = value
         }
-        get() = _notification ?: placeholderNotification()
+        get() = _notification ?: placeholder
+
+    /**
+     * Shown until PersistentNotificationPlugin has the real one. Each service that starts in the foreground reads it in
+     * Service.onCreate, on the main thread, while the app is starting, and some read it twice (a log line and
+     * startForeground). It was built anew at each read: the channel created again, the icon decoded again and the
+     * notification posted again, binder calls on the main thread, and the app did not answer (ANR, Crashlytics
+     * 2026-11). Now it is built once, and startForeground posts it.
+     */
+    private val placeholder: Notification by lazy { placeholderNotification() }
 
     /**
      * The same intent the launcher icon sends, so a tap brings a minimized AAPS back as it is.
@@ -66,9 +75,6 @@ class NotificationHolderImpl(
             .setContentTitle(rh.gs(app.aaps.core.ui.R.string.loading))
             .setContentIntent(openAppIntent())
             .build()
-            .also {
-                (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).notify(notificationID, it)
-            }
     }
 
     override fun createNotificationChannel() {

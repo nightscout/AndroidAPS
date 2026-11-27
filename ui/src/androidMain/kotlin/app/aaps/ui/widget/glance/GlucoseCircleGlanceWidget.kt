@@ -1,6 +1,7 @@
 package app.aaps.ui.widget.glance
 
 import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
@@ -39,7 +40,8 @@ class GlucoseCircleGlanceWidget : GlanceAppWidget() {
         }
         val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(id)
         val state = deps.widgetStateLoader.loadState(appWidgetId)
-        provideContent { GlucoseCircleContent(state) }
+        val launchIntent = widgetLaunchIntent(context)
+        provideContent { GlucoseCircleContent(state, launchIntent) }
     }
 
     private companion object {
@@ -49,9 +51,8 @@ class GlucoseCircleGlanceWidget : GlanceAppWidget() {
 }
 
 @Composable
-private fun GlucoseCircleContent(state: WidgetRenderState) {
+private fun GlucoseCircleContent(state: WidgetRenderState, launchIntent: Intent?) {
     val context = LocalContext.current
-    val launchIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
     val size = LocalSize.current
     val density = context.resources.displayMetrics.density
     val sidePx = (minOf(size.width.value, size.height.value) * density).toInt().coerceAtLeast(1)
