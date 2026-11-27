@@ -240,7 +240,8 @@ internal class WizardDialogViewModelTest {
         assertThat(sut.uiState.value.alarmChecked).isTrue()
     }
 
-    // #5327: eating later turns the "time to eat" alarm on, as in 3.x. A manual untick is kept while the minutes change.
+    // #5327: eating later turns the "time to eat" alarm on, as in 3.x. Once the user sets the switch, the time no longer
+    // changes it.
     @Test
     fun `eating later ticks the alarm, and an untick stays while the time changes`() {
         assertThat(sut.uiState.value.alarmChecked).isFalse()
@@ -252,10 +253,11 @@ internal class WizardDialogViewModelTest {
         sut.updateCarbTime(20)
         assertThat(sut.uiState.value.alarmChecked).isFalse()
 
-        // Back to now and later again: a new decision, so it is ticked again.
+        // Back to 0 and later again, with "-" or because an emptied field counts as 0: still off (#5666). It used to be
+        // ticked again, so deleting the minutes to type new ones brought back an alarm the user had turned off.
         sut.updateCarbTime(0)
         sut.updateCarbTime(10)
-        assertThat(sut.uiState.value.alarmChecked).isTrue()
+        assertThat(sut.uiState.value.alarmChecked).isFalse()
     }
 
     @Test

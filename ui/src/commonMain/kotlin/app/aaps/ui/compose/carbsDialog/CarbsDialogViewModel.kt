@@ -231,11 +231,13 @@ class CarbsDialogViewModel(
     }
 
     /**
-     * Carbs later turn the "time to eat" alarm on, as in the bolus wizard. Only when the offset first becomes
-     * positive, so an alarm the user turned off stays off while they change the time.
+     * Carbs later turn the "time to eat" alarm on, as in the bolus wizard: when the offset becomes positive, but only
+     * until the user sets the switch. An alarm the user turned off stays off for the rest of the dialog, also when the
+     * offset goes back to 0 or earlier and later again, with "-" or because an emptied field counts as 0 (#5666).
      */
     private fun alarmAfterOffsetChange(state: CarbsDialogUiState, newOffsetMinutes: Int): Boolean =
-        state.alarmChecked || (state.timeOffsetMinutes <= 0 && newOffsetMinutes > 0)
+        if (state.alarmSetByUser) state.alarmChecked
+        else state.alarmChecked || (state.timeOffsetMinutes <= 0 && newOffsetMinutes > 0)
 
     fun updateDuration(hours: Int) {
         val clamped = hours.coerceIn(0, uiState.value.maxCarbsDurationHours.toInt())
@@ -273,7 +275,7 @@ class CarbsDialogViewModel(
     }
 
     fun updateAlarm(checked: Boolean) {
-        _uiState.update { it.copy(alarmChecked = checked) }
+        _uiState.update { it.copy(alarmChecked = checked, alarmSetByUser = true) }
     }
 
     fun updateBolusReminder(checked: Boolean) {

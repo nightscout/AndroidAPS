@@ -216,7 +216,8 @@ internal class CarbsDialogViewModelTest {
         assertThat(state.bolusReminderChecked).isTrue()
     }
 
-    // #5327: carbs later turn the "time to eat" alarm on, as in the wizard. A manual untick is kept while the time changes.
+    // #5327: carbs later turn the "time to eat" alarm on, as in the wizard. Once the user sets the switch, the time no
+    // longer changes it.
     @Test
     fun `carbs later tick the alarm, and an untick stays while the time changes`() {
         sut.updateTimeOffset(30)
@@ -226,9 +227,10 @@ internal class CarbsDialogViewModelTest {
         sut.updateTimeOffset(45)
         assertThat(sut.uiState.value.alarmChecked).isFalse()
 
+        // Back to now or earlier and later again, with "-" or because an emptied field counts as 0: still off (#5666)
         sut.updateTimeOffset(-10)
         sut.updateTimeOffset(15)
-        assertThat(sut.uiState.value.alarmChecked).isTrue()
+        assertThat(sut.uiState.value.alarmChecked).isFalse()
     }
 
     @Test

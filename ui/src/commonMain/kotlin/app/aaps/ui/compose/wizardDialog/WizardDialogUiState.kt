@@ -29,6 +29,8 @@ data class WizardDialogUiState(
     val useIOB: Boolean = true,
     val useCOB: Boolean = false,
     val alarmChecked: Boolean = false,
+    /** The user has set the alarm switch, so the carb time no longer changes it. */
+    val alarmSetByUser: Boolean = false,
     val calculationExpanded: Boolean = false,
 
     // Config (set once in init)

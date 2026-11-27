@@ -18,6 +18,8 @@ data class CarbsDialogUiState(
      */
     val canSetTempTarget: Boolean = true,
     val alarmChecked: Boolean = false,
+    /** The user has set the alarm switch, so the time no longer changes it. */
+    val alarmSetByUser: Boolean = false,
     val bolusReminderChecked: Boolean = false,
     val notes: String = "",
     val eventTime: Long = 0L,
