@@ -54,7 +54,8 @@ import kotlin.math.roundToInt
  *
  * @param labelRef Display label
  * @param value Current numeric value
- * @param onValueChange Callback invoked when value changes, receives new value as Double
+ * @param onValueChange Callback invoked when value changes, receives new value as Double. An emptied
+ *   field is published as 0 at once when 0 is inside [valueRange].
  * @param valueRange The range of values the input can represent
  * @param step Step increment for +/- buttons
  * @param unitLabel Unit label shown after the value
@@ -213,9 +214,18 @@ fun NumberInputRow(
                     val cleaned = newValue.text.trim().replace(",", ".")
                     when {
                         cleaned.isEmpty()                 -> {
-                            // Defer publishing until focus loss — avoids a transient 0 while the
-                            // user is mid-deletion and about to retype.
                             isError = false
+                            // An empty field is 0, the same as validateAndCommit makes of it on focus
+                            // loss, so it is published at once. Waiting for focus loss left the last
+                            // published value in place: after deleting "20" the screen kept 2, the bolus
+                            // wizard calculated with 2 g, and +/- and the quick-add buttons counted from
+                            // it (#5666). The text stays empty, because the sync above treats an empty
+                            // field as 0.
+                            //
+                            // Not when 0 is outside the range: there an empty field is no value yet, and
+                            // publishing the lowest value would write it into the field while the user
+                            // is about to type again.
+                            if (0.0 in valueRange) onValueChange(0.0)
                         }
 
                         cleaned.toDoubleOrNull() == null  -> {
