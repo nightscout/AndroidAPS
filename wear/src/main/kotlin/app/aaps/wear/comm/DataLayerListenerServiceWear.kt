@@ -22,7 +22,7 @@ import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
 import app.aaps.wear.R
 import app.aaps.wear.events.EventWearPreferenceChange
 import app.aaps.wear.heartrate.HeartRateListener
-import app.aaps.wear.interaction.ConfigurationActivity
+import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.watchfaces.WatchFacePushHelper
 import app.aaps.wear.wearStepCount.StepCountListener
 import com.google.android.gms.tasks.Tasks
@@ -168,7 +168,10 @@ class DataLayerListenerServiceWear : WearableListenerService() {
 
     private fun startForegroundService() {
         createNotificationChannel()
-        val notificationIntent = Intent(this, ConfigurationActivity::class.java)
+        // A tap opens the main menu, the screen the launcher opens. It opened ConfigurationActivity, which is
+        // the system's watch face editor and needs the editor's intent: started without it, the watch app
+        // crashed with "name is null" (Crashlytics 2026-11).
+        val notificationIntent = Intent(this, MainMenuActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(getString(R.string.datalayer_notification_title))
