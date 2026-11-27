@@ -30,7 +30,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -42,6 +41,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import app.aaps.core.interfaces.alerts.AlertChoice
 import app.aaps.core.interfaces.alerts.AlertGroup
@@ -179,12 +180,21 @@ fun BgAlarmsScreen(
                 else                -> Unit
             }
         },
-        // Only where the rules may be changed, and when they are not the default ones already
+        // Where the rules may be changed, always, so it can be found (decided 2026-11-27: hidden while the rules were
+        // the default ones, nobody knew it was there); greyed when it would change nothing, and saying why
         footer = {
-            if (!readOnly && rules != BgAlarmRules.DEFAULT) item(key = "reset") {
-                TextButton(onClick = { resetting = true }, contentPadding = LinedUpButtonPadding) {
-                    Icon(Icons.Filled.Refresh, contentDescription = null)
-                    Text(stringResource(UiStrings.bg_alarms_reset))
+            if (!readOnly) item(key = "reset") {
+                val isDefault = rules == BgAlarmRules.DEFAULT
+                Column {
+                    TextButton(onClick = { resetting = true }, enabled = !isDefault, contentPadding = LinedUpButtonPadding) {
+                        Icon(Icons.Filled.Refresh, contentDescription = null)
+                        Text(stringResource(UiStrings.bg_alarms_reset))
+                    }
+                    if (isDefault) Text(
+                        stringResource(UiStrings.bg_alarms_reset_already),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
         }
@@ -290,7 +300,7 @@ private fun SharedValue(text: String, note: String?, onEdit: (() -> Unit)?) {
 }
 
 /**
- * The rules of one group, the same on every phone: each with its details and its switch, a tap opens it. Then "Add
+ * The rules of one group, the same on every phone: each with its checkbox, its details and a pencil, a tap opens it. Then "Add
  * rule" with the kinds of the group, and the line to how this phone rings them.
  */
 @Composable
@@ -436,18 +446,25 @@ private fun ruleTitle(rule: BgAlarmRule, units: BgUnits): String = when (kindOf(
     RuleKind.PREDICTED_LOW   -> stringResource(UiStrings.bg_alarm_rule_predicted_low, units.format(rule.thresholdMgdl))
 }
 
-/** One rule in its group's card: its title and details, and its switch. A tap opens it. */
+/**
+ * One rule in its group's card, as a rule of Automation and a scene: its checkbox to turn it on and off first, then its
+ * title and details, and the pencil that says a tap opens it, as the urgent low row above (decided 2026-11-27: with a
+ * switch only, it did not look as if it could be opened). Read only: no pencil, and the checkbox cannot be changed.
+ */
 @Composable
 private fun RuleRow(rule: BgAlarmRule, units: BgUnits, readOnly: Boolean, onClick: () -> Unit, onEnabled: (Boolean) -> Unit) {
+    val title = ruleTitle(rule, units)
     Row(
         modifier = Modifier.fillMaxWidth().clickable(enabled = !readOnly, onClick = onClick),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Named, or a screen reader says only "checkbox"
+        Checkbox(checked = rule.enabled, onCheckedChange = onEnabled, enabled = !readOnly, modifier = Modifier.semantics { contentDescription = title })
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall)) {
-            Text(ruleTitle(rule, units), style = MaterialTheme.typography.bodyLarge)
+            Text(title, style = MaterialTheme.typography.bodyLarge)
             RuleDetails(rule)
         }
-        Switch(checked = rule.enabled, onCheckedChange = onEnabled, enabled = !readOnly)
+        if (!readOnly) Icon(Icons.Filled.Edit, contentDescription = stringResource(CoreUiStrings.change))
     }
 }
 

@@ -206,7 +206,10 @@ that fails rings before the next try succeeds.
     **Default rules** (decided 2026-11-26): a phone that never stored rules has low below 70 mg/dl as an alarm, high
     above 250 mg/dl and predicted low below 70 within 20 minutes with one sound (`BgAlarmRules.DEFAULT`, fixed ids);
     also a phone updated from a version without rules. A list the user emptied stays empty. "Reset rules to default"
-    (asks first, hidden on a read-only client) stores them, so they sync as any change does.
+    (asks first, hidden on a read-only client) stores them, so they sync as any change does. It is always at the
+    bottom, greyed with "These are the default rules." when it would change nothing (decided 2026-11-27: hidden
+    then, nobody found it). A rule row is as in Automation and Scenes: a checkbox to turn it on and off first, a
+    pencil at the end, and a tap on the row opens it (it had a switch only, and did not look as if it could be opened).
   - **AAPS**: the app's other alerts, one row each (time to eat, automation alarm, carbs not saved, carbs required),
     and the Nightscout announcement. Hard limit is not an alert any more (decided 2026-11-26): it comes right after the
     user changed a setting (patient age, profile, profile switch, imported settings), so it is a card, not an alarm
