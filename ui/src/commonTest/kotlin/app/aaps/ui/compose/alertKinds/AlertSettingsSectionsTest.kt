@@ -122,17 +122,16 @@ class AlertSettingsSectionsTest {
         assertEquals(AlertChoice.RING, sections(mapOf(BgAlert.STALE.id to AlertChoice.RING)).of(AlertSection.BG).row(BgAlert.STALE).choice)
     }
 
-    /** The entry of each part counts what of it is silent or off, or paused, and nothing of the other parts. */
+    /** The entry of each part counts what of it is silent or off, and nothing of the other parts. */
     @Test
     fun eachPartCountsOnlyItsOwnSilentOrOff() {
         val choices = mapOf(AlertGroup.PUMP_ACTION.id to AlertChoice.SILENT, CoreAlert.CARBS_NOT_SAVED.id to AlertChoice.OFF, bgCheck.id to AlertChoice.OFF)
-        val pauses = mapOf(BgAlert.LOW.id to 1L)
         val sections = sections(choices)
 
-        assertEquals(2, sectionSilentOrOff(sections.of(AlertSection.PUMP), choices, pauses))
-        assertEquals(1, sectionSilentOrOff(sections.of(AlertSection.APP), choices, pauses))
-        assertEquals(1, sectionSilentOrOff(sections.of(AlertSection.BG), choices, pauses))
-        assertEquals(0, sectionSilentOrOff(sections.of(AlertSection.CGM), choices, pauses))
+        assertEquals(2, sectionSilentOrOff(sections.of(AlertSection.PUMP), choices))
+        assertEquals(1, sectionSilentOrOff(sections.of(AlertSection.APP), choices))
+        assertEquals(0, sectionSilentOrOff(sections.of(AlertSection.BG), choices))
+        assertEquals(0, sectionSilentOrOff(sections.of(AlertSection.CGM), choices))
     }
 
     /** A protected setting always rings, so a choice stored for it is not shown as if it were used. */
@@ -272,15 +271,22 @@ class AlertSettingsSectionsTest {
 
     /** The line that keeps a choice from being forgotten: an exception set to Ring silences nothing, nor does Vibrate. */
     @Test
-    fun silentOrOffCountsWhatIsNotRingAndThePauses() {
+    fun silentOrOffCountsWhatIsNotRing() {
         val choices = mapOf(
             AlertGroup.PUMP_INFO.id to AlertChoice.OFF, bgCheck.id to AlertChoice.RING, CoreAlert.CARBS_NOT_SAVED.id to AlertChoice.SILENT,
             AlertGroup.BG_LOWS.id to AlertChoice.VIBRATE
         )
 
-        assertEquals(2, silentOrOff(choices, emptyMap()))
-        assertEquals(3, silentOrOff(choices, mapOf(BgAlert.LOW.id to 1L)))
-        // A kind both silent and paused is one
-        assertEquals(2, silentOrOff(choices, mapOf(CoreAlert.CARBS_NOT_SAVED.id to 1L)))
+        assertEquals(2, silentOrOff(choices))
+    }
+
+    /**
+     * A pause is its own line, not in the count: the 7 paused BG kinds read as 7 changed settings (2026-11-27). The line
+     * says until when; with more than one pause, the last end.
+     */
+    @Test
+    fun aPauseIsNotCountedButSaysUntilWhen() {
+        assertNull(pausedUntil(emptyMap()))
+        assertEquals(7_000L, pausedUntil(mapOf(BgAlert.LOW.id to 5_000L, BgAlert.HIGH.id to 7_000L)))
     }
 }

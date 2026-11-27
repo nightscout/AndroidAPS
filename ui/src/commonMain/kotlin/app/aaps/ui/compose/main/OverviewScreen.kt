@@ -29,6 +29,7 @@ import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
+import app.aaps.ui.compose.alertKinds.pausedUntil
 import app.aaps.ui.compose.alertKinds.silentOrOff
 import app.aaps.ui.compose.loopSheet.LoopActionViewModel
 import app.aaps.ui.compose.maintenance.ImportSource
@@ -237,7 +238,8 @@ fun OverviewScreen(
         onNotificationActionClick = onNotificationActionClick,
         autoShowNotificationSheet = autoShowNotificationSheet,
         onAutoShowConsumed = onAutoShowConsumed,
-        silentAlertKinds = silentOrOff(alertKindChoices, alertKindPauses),
+        silentAlertKinds = silentOrOff(alertKindChoices),
+        bgAlarmsPausedUntil = pausedUntil(alertKindPauses),
         onOpenAlertKinds = onOpenAlertKinds.takeIf { builtInSearchables.alertKindsSettings.settingsItem != null },
         pumpSetupPlugin = pumpSetupPlugin,
         bgSetupPlugin = bgSetupPlugin,

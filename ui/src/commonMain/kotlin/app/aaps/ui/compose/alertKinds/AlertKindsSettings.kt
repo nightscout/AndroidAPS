@@ -101,9 +101,10 @@ class AlertKindsSettingsImpl(
             if (section == null) AlertKindsScreen(
                 sections = sections,
                 vibrates = alertPlatform.canVibrate,
-                // The same count as the line in the notification sheet
-                silentOrOff = silentOrOff(current, pauses),
-                sectionSilentOrOff = { sectionSilentOrOff(it, current, pauses) },
+                // The same count and pause as the lines in the notification sheet
+                silentOrOff = silentOrOff(current),
+                sectionSilentOrOff = { sectionSilentOrOff(it, current) },
+                pausedUntil = pausedUntil(pauses)?.let { dateUtil.timeString(it) },
                 onOpen = { open = it },
                 onBack = onBack,
                 listState = listState
@@ -179,10 +180,14 @@ class AlertKindsSettingsImpl(
 
 /**
  * How many settings are silent or off on this phone, for the line that keeps them from being forgotten: a group, a kind
- * or an exception that is Silent or Off, and a paused kind. One that rings, also by vibration, is not counted.
+ * or an exception that is Silent or Off. One that rings, also by vibration, is not counted, and neither is a pause: a
+ * pause of the BG alarms counted its 7 kinds, which read as 7 changed settings (2026-11-27). It has its own line
+ * ([pausedUntil]).
  */
-fun silentOrOff(choices: Map<String, AlertChoice>, pauses: Map<String, Long>): Int =
-    (choices.filterValues { !it.rings }.keys + pauses.keys).size
+fun silentOrOff(choices: Map<String, AlertChoice>): Int = choices.count { !it.value.rings }
+
+/** Until when (epoch ms) the BG alarms are paused on this phone, or null when nothing is paused. */
+fun pausedUntil(pauses: Map<String, Long>): Long? = pauses.values.maxOrNull()
 
 /**
  * One row of a section: a group of kinds, or a kind that is a row of its own. [choices] are what the user can pick;
@@ -213,8 +218,8 @@ data class AlertExceptionRow(val kind: AlertKind, val choice: AlertChoice, val c
 data class AlertSettingsSection(val section: AlertSection, val devices: List<TextRef>, val rows: List<AlertSettingRow>, val ids: Set<String>)
 
 /** As [silentOrOff], for the groups and kinds of [section] only: shown on its entry in the list of parts. */
-fun sectionSilentOrOff(section: AlertSettingsSection, choices: Map<String, AlertChoice>, pauses: Map<String, Long>): Int =
-    silentOrOff(choices.filterKeys { it in section.ids }, pauses.filterKeys { it in section.ids })
+fun sectionSilentOrOff(section: AlertSettingsSection, choices: Map<String, AlertChoice>): Int =
+    silentOrOff(choices.filterKeys { it in section.ids })
 
 /**
  * The sections that have kinds in use, in [AlertSection] order (decided 2026-11-26). In a section: its protected kinds

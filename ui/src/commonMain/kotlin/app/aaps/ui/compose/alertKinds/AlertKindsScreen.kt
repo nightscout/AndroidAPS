@@ -71,8 +71,8 @@ import app.aaps.ui.UiStrings
  * the BG alarms and the app's own alerts - each opening its own screen, as the settings of AAPS do (decided
  * 2026-11-26). Each part says the devices it is for and how many of its settings are silent or off here
  * ([sectionSilentOrOff]), so nothing is hidden by the extra step. On top a table says what each level (alarm, warning,
- * info) does with each choice ([LevelTable]), and the count of the whole phone ([silentOrOff]) is the same as the line
- * in the notification sheet.
+ * info) does with each choice ([LevelTable]), and the count of the whole phone ([silentOrOff]) and a pause of the BG
+ * alarms ([pausedUntil]) are the same as the lines in the notification sheet.
  */
 @Composable
 fun AlertKindsScreen(
@@ -84,9 +84,12 @@ fun AlertKindsScreen(
     onOpen: (AlertSection) -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
+    /** The time the pause of the BG alarms on this phone ends; null: not paused. Its own line, not in the count. */
+    pausedUntil: String? = null,
     /** Held by the caller, so the list is where it was when the user comes back from a part. */
     listState: LazyListState = rememberLazyListState()
 ) {
+    val pauseText = pausedUntil?.let { stringResource(UiStrings.bg_alarms_paused_until, it) }
     Scaffold(topBar = { BackTopBar(stringResource(UiStrings.alert_kinds_title), onBack) }) { paddingValues ->
         LazyColumn(
             state = listState,
@@ -102,9 +105,13 @@ fun AlertKindsScreen(
                     Text(stringResource(UiStrings.alert_kinds_table_note), style = MaterialTheme.typography.bodyMedium)
                     if (silentOrOff > 0)
                         Text(stringResource(UiStrings.alert_kinds_silent_or_off, silentOrOff), style = MaterialTheme.typography.bodyMedium)
+                    pauseText?.let { Text(it, style = MaterialTheme.typography.bodyMedium) }
                 }
             }
-            items(sections, key = { it.section.name }) { section -> SectionCard(section, sectionSilentOrOff(section)) { onOpen(section.section) } }
+            items(sections, key = { it.section.name }) { section ->
+                // A pause is of the BG alarms only
+                SectionCard(section, sectionSilentOrOff(section), pauseText.takeIf { section.section == AlertSection.BG }) { onOpen(section.section) }
+            }
         }
     }
 }
@@ -147,9 +154,9 @@ private fun LevelTableRow(label: TextRef?, cells: List<TextRef>, header: Boolean
     }
 }
 
-/** One part in the list: its name, the devices it is for or what it holds, and what is silent or off in it. */
+/** One part in the list: its name, the devices it is for or what it holds, what is silent or off in it, and a pause. */
 @Composable
-private fun SectionCard(section: AlertSettingsSection, silentOrOff: Int, onClick: () -> Unit) {
+private fun SectionCard(section: AlertSettingsSection, silentOrOff: Int, pauseText: String?, onClick: () -> Unit) {
     AapsCard(modifier = Modifier.fillMaxWidth(), onClick = onClick) {
         Row(modifier = Modifier.fillMaxWidth().padding(AapsSpacing.extraLarge), verticalAlignment = Alignment.CenterVertically) {
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
@@ -159,6 +166,7 @@ private fun SectionCard(section: AlertSettingsSection, silentOrOff: Int, onClick
                 section.devices.forEach { device -> Text(stringResource(device), style = detail, color = detailColor) }
                 section.section.summary()?.let { Text(stringResource(it), style = detail, color = detailColor) }
                 if (silentOrOff > 0) Text(stringResource(UiStrings.alert_kinds_section_silent_or_off, silentOrOff), style = detail)
+                pauseText?.let { Text(it, style = detail) }
             }
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null)
         }

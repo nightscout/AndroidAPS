@@ -86,6 +86,7 @@ fun OverviewScreen(
     onAutoShowConsumed: () -> Unit,
     activeSceneState: ActiveSceneState? = null,
     silentAlertKinds: Int = 0,
+    bgAlarmsPausedUntil: Long? = null,
     onOpenAlertKinds: (() -> Unit)? = null,
     sceneExpired: Boolean = false,
     activeSceneChainTargetName: String? = null,
@@ -360,6 +361,7 @@ fun OverviewScreen(
             onDismissNotification = onDismissNotification,
             onNotificationActionClick = onNotificationActionClick,
             silentAlertKinds = silentAlertKinds,
+            bgAlarmsPausedUntil = bgAlarmsPausedUntil,
             onOpenAlertKinds = onOpenAlertKinds
         )
     }

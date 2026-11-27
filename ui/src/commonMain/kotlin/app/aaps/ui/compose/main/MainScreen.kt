@@ -134,8 +134,10 @@ fun MainScreen(
     onNotificationActionClick: (AapsNotification) -> Unit,
     autoShowNotificationSheet: Boolean,
     onAutoShowConsumed: () -> Unit,
-    // Alert kinds silent or off on this phone, for the line in the notification sheet (none on the desktop)
+    // Alert kinds silent or off on this phone, and a pause of the BG alarms, for the lines in the notification sheet
+    // (none on the desktop)
     silentAlertKinds: Int = 0,
+    bgAlarmsPausedUntil: Long? = null,
     onOpenAlertKinds: (() -> Unit)? = null,
     // Pump setup
     pumpSetupPlugin: PluginBase? = null,
@@ -371,6 +373,7 @@ fun MainScreen(
                         autoShowNotificationSheet = autoShowNotificationSheet,
                         onAutoShowConsumed = onAutoShowConsumed,
                         silentAlertKinds = silentAlertKinds,
+                        bgAlarmsPausedUntil = bgAlarmsPausedUntil,
                         onOpenAlertKinds = onOpenAlertKinds,
                         activeSceneState = activeSceneState,
                         sceneExpired = sceneExpired,

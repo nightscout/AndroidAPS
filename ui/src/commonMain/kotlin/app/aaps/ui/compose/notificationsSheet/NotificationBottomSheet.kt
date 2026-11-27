@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.NotificationsOff
+import androidx.compose.material.icons.filled.NotificationsPaused
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -55,10 +56,15 @@ fun NotificationBottomSheet(
     onNotificationActionClick: (AapsNotification) -> Unit,
     /** How many kinds of alert are silent or off on this phone, so a choice is not forgotten (`_docs/ALARMS.md`). */
     silentAlertKinds: Int = 0,
-    /** Opens the list of alert kinds. Null where the platform has no alerts: then the line is not shown. */
+    /**
+     * Until when (epoch ms) the BG alarms are paused on this phone, or null. Its own line: counted with the silent ones,
+     * a pause of 7 kinds read as 7 changed settings (2026-11-27).
+     */
+    bgAlarmsPausedUntil: Long? = null,
+    /** Opens the list of alert kinds. Null where the platform has no alerts: then the lines are not shown. */
     onOpenAlertKinds: (() -> Unit)? = null
 ) {
-    LocalDateUtil.current
+    val dateUtil = LocalDateUtil.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     ModalBottomSheet(
@@ -81,6 +87,19 @@ fun NotificationBottomSheet(
                     ListItem(
                         headlineContent = { Text(stringResource(UiStrings.alert_kinds_silent_or_off, silentAlertKinds)) },
                         leadingContent = { Icon(Icons.Filled.NotificationsOff, contentDescription = null) },
+                        modifier = Modifier.clickable {
+                            onDismissSheet()
+                            onOpenAlertKinds()
+                        }
+                    )
+                }
+            }
+
+            if (bgAlarmsPausedUntil != null && onOpenAlertKinds != null) {
+                item(key = "bg_alarms_paused") {
+                    ListItem(
+                        headlineContent = { Text(stringResource(UiStrings.bg_alarms_paused_until, dateUtil.timeString(bgAlarmsPausedUntil))) },
+                        leadingContent = { Icon(Icons.Filled.NotificationsPaused, contentDescription = null) },
                         modifier = Modifier.clickable {
                             onDismissSheet()
                             onOpenAlertKinds()

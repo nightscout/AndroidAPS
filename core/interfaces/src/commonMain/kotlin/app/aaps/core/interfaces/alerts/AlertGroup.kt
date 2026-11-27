@@ -64,8 +64,12 @@ enum class AlertGroup(
     /** Dosing affected now, or soon unless the user acts. */
     PUMP_CRITICAL("pump_critical", AlertSection.PUMP, InterfacesStrings.alert_group_critical, InterfacesStrings.alert_group_critical_summary, isProtected = true),
 
-    /** The user has to do something, but dosing is not affected: a reminder, a failed command to check. */
-    PUMP_ACTION("pump_action", AlertSection.PUMP, InterfacesStrings.alert_group_action, InterfacesStrings.alert_group_action_summary, isProtected = false),
+    /**
+     * The user has to do something: a reminder, and what did not work on the pump - a failed command, the pump not
+     * reached, a profile not set. Those can affect insulin, but the user must be able to silence them (a Combo cannot
+     * take every profile), so they are not protected. Its summary says so, not "insulin is not affected" (2026-11-27).
+     */
+    PUMP_ACTION("pump_action", AlertSection.PUMP, InterfacesStrings.alert_group_action, InterfacesStrings.alert_group_action_pump_summary, isProtected = false),
 
     /** For information only. */
     PUMP_INFO("pump_info", AlertSection.PUMP, InterfacesStrings.alert_group_info, InterfacesStrings.alert_group_info_summary, isProtected = false, makesSound = false),

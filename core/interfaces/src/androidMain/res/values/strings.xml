@@ -187,6 +187,7 @@
     <string name="alert_group_critical_summary">Insulin or glucose is affected now, or soon unless you act</string>
     <string name="alert_group_action" comment="Group of the alerts of the pump or the CGM in the alert settings: reminders and things the user has to do or check">Needs action</string>
     <string name="alert_group_action_summary">Reminders and things to check. Insulin and glucose are not affected.</string>
+    <string name="alert_group_action_pump_summary" comment="Under the pump's group Needs action in the alert settings. It holds the pump's reminders and the problems AAPS had with the pump: a command that failed, the pump not reached, a profile not set">Reminders, and things that did not work on the pump. Check them.</string>
     <string name="alert_group_info" comment="Group of the alerts of the pump or the CGM in the alert settings: for information only">Info</string>
     <string name="alert_group_info_summary">For information only, never with sound</string>
     <string name="alert_group_lows" comment="Group of the glucose alarms in the alert settings: every alarm about low glucose except urgent low">Lows</string>

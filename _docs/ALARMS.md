@@ -254,8 +254,10 @@ that fails rings before the next try succeeds.
 - **Applied in one place**, the alert core. A driver or a rule does nothing for it.
 - **Off is not lost.** An alert that is off is still written to the log and the history; it is only not shown.
 - **Visible.** The alert settings and a line at the top of the notification sheet say how many kinds are silent or
-  off (since 2026-11-26: groups, kinds and exceptions that are not Ring, and paused kinds), so a choice is not forgotten (decided 2026-11-22: the sheet, not a new icon on the overview). The line leads to
-  the list. It shows only while the sheet has cards, because the sheet does not open without them.
+  off (since 2026-11-26: groups, kinds and exceptions that are not Ring), so a choice is not forgotten (decided 2026-11-22: the sheet, not a new icon on the overview). The line leads to
+  the list. It shows only while the sheet has cards, because the sheet does not open without them. A pause of the BG
+  alarms has its own line, "BG alarms paused until 19:32", in the sheet, on top of the settings and on the BG alarms
+  entry (2026-11-27: counted with the silent ones, a pause of 7 kinds read as 7 changed settings).
 - **Where the user chooses** (decided 2026-11-22): the list in the settings. Each module with kinds adds its group to
   the list (`AlertKindCatalogue`); a driver's group shows only while it is in use. The alarm screen also had "Silence
   this kind on this phone" until 2026-11-27; it was removed because it is a lasting change one tap away from the
@@ -269,8 +271,10 @@ that fails rings before the next try succeeds.
   warning" and lists them under "Its alerts": the pump's Needs action holds the app's failed commands (alarms) next to
   the patch's reminders (one sound). A BG rule shows its own level, as before. Carelevo's titles were made distinct at
   the same time: the patch's warning and alert of one cause had the same name ("Low Insulin" three times), now
-  "Low Insulin: Delivery Stopped", "Low Insulin: Change Patch Soon" and "Low Insulin Reminder" (string names kept, so
-  the kind ids and the user's choices stay).
+  "Low insulin: delivery stopped", "Low insulin: change patch soon" and "Low insulin reminder" (string names kept, so
+  the kind ids and the user's choices stay), and all its titles in sentence case, as the other alerts. The pump's
+  Needs action says "Reminders, and things that did not work on the pump": it holds the app's failed commands, which
+  can affect insulin, so "insulin is not affected" was not true there (the CGM's keeps that line).
 - **Set back to Ring**, a kind rings what is active of it as a new alert does, with the alarm screen: sound with
   nothing on the screen to answer it is worse than both. An alert the user has already answered stays quiet until
   its silence ends (found on the Pixel, 2026-11-22).

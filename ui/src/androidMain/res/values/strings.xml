@@ -422,7 +422,7 @@
     <string name="alert_cell_vibrates_once" comment="Cell of the table at the top of the alert settings: a warning on Vibrate vibrates once. Keep it short">Vibrates once</string>
     <string name="alert_cell_card" comment="Cell of the table at the top of the alert settings: only a card in the notification list, no sound. Keep it short">A card</string>
     <string name="alert_cell_not_shown" comment="Cell of the table at the top of the alert settings: the alert is not shown at all. Keep it short">Not shown</string>
-    <string name="alert_kinds_table_note" comment="Under the table at the top of the alert settings">For this phone only. An alarm also opens the alarm screen and rings on the watch. Off: still written in the history. A protected alert always rings. Each alert below says if it is an alarm, a warning or info.</string>
+    <string name="alert_kinds_table_note" comment="Under the table at the top of the alert settings">For this phone only. An alarm also opens the alarm screen, and rings on a watch if you have one. Off: still written in the history. A protected alert always rings. Each alert below says if it is an alarm, a warning or info.</string>
     <string name="alert_level_alarm_or_warning" comment="The level of an alert kind or group in the alert settings: some of its alerts are alarms (ring until answered), some are warnings (one sound)">Alarm or warning</string>
     <string name="alert_level_warning_or_info" comment="The level of an alert kind or group in the alert settings: some of its alerts are warnings (one sound), some are info (a card only)">Warning or info</string>
     <string name="alert_group_its_alerts" comment="Button in a group of the alert settings: shows or hides the list of the alerts in the group, each with its level. %1$d=how many alerts, for example: 12">Its alerts (%1$d)</string>
@@ -450,6 +450,7 @@
     <string name="bg_alarm_rule_add">Add rule</string>
     <string name="bg_alarm_pause_hint">While paused, these alarms come as a card with no sound. If one is still on when the pause ends, it rings then. Urgent low is never paused.</string>
     <string name="bg_alarms_pause_all" comment="Button at the bottom of the glucose alarms, and the title of its dialog with times (30 min, 1 h, 2 h, 4 h) to pause every glucose alarm but urgent low on this phone. No dots at the end: they looked like text that was cut">Pause all BG alarms</string>
+    <string name="bg_alarms_paused_until" comment="A line in the alert settings and in the notification list: the glucose alarms of this phone are paused. %1$s=the time the pause ends, as HH:MM">BG alarms paused until %1$s</string>
     <string name="bg_alarm_paused_until" comment="Heading of the paused glucose alarms. %1$s=the time the pause ends, as HH:MM">Paused until %1$s</string>
     <string name="bg_alarm_resume" comment="Button: end the pause of the glucose alarms now">Resume</string>
     <string name="bg_alarm_rule_persistent_high" comment="Title of a persistent high glucose alarm rule. %1$s=the threshold with its unit, for example: 10.0 mmol/l">Persistent high above %1$s</string>
