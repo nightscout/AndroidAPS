@@ -64,8 +64,8 @@ interface UiInteraction {
     fun stopAlarm(reason: String)
 
     /**
-     * "Silence and close" from somewhere else than the alarm screen (the watch): [stopAlarm], and the alarm screen
-     * closes as its own "Silence and close" would.
+     * Silence from somewhere else than the alarm screen (the watch): [stopAlarm], and the alarm screen closes as its
+     * own Silence would.
      */
     fun dismissAlarm(reason: String) = stopAlarm(reason)
 

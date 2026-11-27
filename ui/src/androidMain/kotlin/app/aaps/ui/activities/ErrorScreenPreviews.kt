@@ -26,8 +26,7 @@ internal fun ErrorScreenPreview() {
         ErrorScreen(
             title = "Pump unreachable",
             status = "Last successful communication 25 minutes ago. Check Bluetooth and pump status.",
-            onOk = {},
-            onMute = {},
+            onSilence = {},
             onMute5Min = {},
             badge = badge
         )
@@ -41,8 +40,7 @@ internal fun ErrorScreenShortPreview() {
         ErrorScreen(
             title = "Bolus error",
             status = "Delivery failed.",
-            onOk = {},
-            onMute = {},
+            onSilence = {},
             onMute5Min = {},
             badge = badge
         )
@@ -57,8 +55,7 @@ internal fun ErrorScreenAlertPreview() {
         ErrorScreen(
             title = "Occlusion",
             status = "Insulin delivery has stopped. Replace the patch.",
-            onOk = {},
-            onMute = {},
+            onSilence = {},
             onMute5Min = {},
             actionLabel = "Deactivate Patch",
             silenceLengths = listOf(15, 30),
@@ -75,8 +72,7 @@ internal fun ErrorScreenBgAlarmPreview() {
         ErrorScreen(
             title = "Low",
             status = "3.7 mmol/l",
-            onOk = {},
-            onMute = {},
+            onSilence = {},
             onMute5Min = {},
             silenceLengths = listOf(15, 30, 60),
             silenceEverywhere = false,

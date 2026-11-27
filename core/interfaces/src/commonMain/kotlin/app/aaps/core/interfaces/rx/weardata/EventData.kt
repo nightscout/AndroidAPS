@@ -631,7 +631,7 @@ sealed class EventData : Event() {
 
     /**
      * Wear -> Mobile: Silence on the watch's notification of the phone's alarm ([AlarmRinging]), or its swipe. The
-     * alarm is silenced and its screen on the phone closes, as "Silence and close" on that screen does.
+     * alarm is silenced and its screen on the phone closes, as Silence on that screen does.
      */
     @Serializable
     data class DismissAlert(val timeStamp: Long) : EventData()

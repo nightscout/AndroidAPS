@@ -360,7 +360,7 @@ path, not two.
 1. **Widen the core.** `Alert` gains a lifetime, which is the one real difference between the two kinds:
    - `CONDITION` - today's pump behaviour. The raiser resolves it; a card removed while it is still active counts as a
      30-minute silence and comes back.
-   - `EVENT` - the user's acknowledgement ends it. Silence-and-close, a swipe or Mute **resolves** it, and it does not
+   - `EVENT` - the user's acknowledgement ends it. Silence, a swipe or Mute **resolves** it, and it does not
      come back. A bolus error is an event: nobody will ever "resolve" it from the pump side.
 
    Everything else - severity, the card, the sound, the alarm screen, snooze, the announcement - is unchanged.
@@ -426,6 +426,6 @@ swipe; the watch events (`AlarmRinging` with `canMute`, `AlarmStopped`, `EventAl
 3. **The OK button silences only its own alarm.** A ringing pump alert keeps ringing, because the pump condition is
    still there. Not chosen: today's `muteAllAlarms()`, where OK on a bolus error also stops an occlusion alarm, so one
    alarm can hide another.
-4. **An EVENT alert ends when the user answers it.** A swipe, Mute or Silence-and-close resolves it and it does not
+4. **An EVENT alert ends when the user answers it.** A swipe, Mute or Silence resolves it and it does not
    come back. A CONDITION alert is unchanged: removing its card is a 30-minute silence, because the pump still holds
    it. This is what the lifetime is for.

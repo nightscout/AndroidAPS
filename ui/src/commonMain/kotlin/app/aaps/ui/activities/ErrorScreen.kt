@@ -41,8 +41,9 @@ import app.aaps.ui.UiStrings
  * Modal-style screen rendered over a scrim when an urgent alarm fires. Displays the alarm title/status and its
  * actions, each saying what it does. An alert that lasts until its cause is gone has one button per silence length,
  * each silencing and closing in one tap, and a BG alarm "On every phone" and "Silence all BG alarms" (decided
- * 2026-11-26). An alarm that ends when it is answered has mute for 5 minutes (+5 min for the "time to eat" timer),
- * silence, and silence and close.
+ * 2026-11-26). An alarm that ends when it is answered has Mute 5 min (+5 min for the "time to eat" timer) and Silence,
+ * and both close the screen (decided 2026-11-27: Silence and "Silence and close" had come to do the same, as silence
+ * ends such an alarm, and Mute 5 min left the screen open over an alarm that comes back with its screen anyway).
  *
  * Shared code, because iOS needs the same screen: `ErrorActivity` hosts it on Android, and the Compose host of the
  * iOS app shows it for a pump alert through [AlertScreen]. Nothing in here is platform specific any more; the one
@@ -59,8 +60,9 @@ import app.aaps.ui.UiStrings
 fun ErrorScreen(
     title: String,
     status: String,
-    onOk: () -> Unit,
-    onMute: () -> Unit,
+    /** Silence, of an alarm that ends when it is answered: it is over, and the screen closes. */
+    onSilence: () -> Unit,
+    /** Mute 5 min: quiet now, it rings again in five minutes, and the screen closes. */
     onMute5Min: () -> Unit,
     /**
      * Whether "Mute 5 min" is offered. False for an alarm whose own action is already the delay - the "time to eat"
@@ -219,7 +221,7 @@ fun ErrorScreen(
                         }
                     }
                 } else {
-                    // Mute 5 min: the alarm goes quiet and comes back in five minutes
+                    // Mute 5 min: the alarm goes quiet and comes back in five minutes, with this screen
                     if (showMute5Min) {
                         Button(
                             onClick = onMute5Min,
@@ -231,22 +233,12 @@ fun ErrorScreen(
                         Spacer(modifier = Modifier.height(12.dp))
                     }
 
-                    // Silence button: the sound stops, this screen stays open
+                    // Silence: the alarm is over
                     Button(
-                        onClick = onMute,
+                        onClick = onSilence,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(stringResource(CoreUiStrings.alarm_silence))
-                    }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    // Silence and close button
-                    Button(
-                        onClick = onOk,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(stringResource(CoreUiStrings.alarm_silence_and_close))
                     }
                 }
 

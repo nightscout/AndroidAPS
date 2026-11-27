@@ -74,18 +74,16 @@ fun AlertScreen(
     ErrorScreen(
         title = stringResource(alert.title),
         status = alert.text?.let { stringResource(it) } ?: "",
-        onOk = {
+        // Both close the screen (decided 2026-11-27): silence ends the alarm, and muted it comes back with its screen
+        onSilence = {
             uel.log(Action.ERROR_DIALOG_OK, Sources.Unknown)
             alerts.silence(source, key)
             onClose()
         },
-        onMute = {
-            uel.log(Action.ERROR_DIALOG_MUTE, Sources.Unknown)
-            alerts.silence(source, key)
-        },
         onMute5Min = {
             uel.log(Action.ERROR_DIALOG_MUTE_5MIN, Sources.Unknown)
             alerts.snooze(source, key, UiInteraction.MUTE_MINUTES)
+            onClose()
         },
         // Not offered when the alert's own action is already the delay, which is the "time to eat" timer.
         showMute5Min = alert.canMute,

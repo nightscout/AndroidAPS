@@ -39,7 +39,7 @@ enum class AlertLifetime {
     CONDITION,
 
     /**
-     * The user owns it: answering it ends it. A swipe, Mute, or Silence-and-close resolves it and it does not come
+     * The user owns it: answering it ends it. A swipe, Mute, or Silence resolves it and it does not come
      * back. A bolus error is one of these - nobody will ever resolve it from the pump side - and so is the "time to
      * eat" timer. [Alerts.silence] resolves it rather than quieting it; [Alerts.snooze] still delays it, which
      * is what "Mute 5 min" is.

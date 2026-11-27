@@ -94,8 +94,7 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Mute for 5 minutes</string>
     <string name="mute">Mute</string>
-    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Silence alarm</string>
-    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Silence and close</string>
+    <string name="alarm_silence" comment="Button on the alarm screen of an alarm that ends when it is answered. It stops the sound, the alarm is over, and the alarm screen closes.">Silence alarm</string>
     <string name="alarm_silence_for" comment="Button on the alarm screen of a pump alarm. It stops the sound for a time, and the screen stays open. %1$s=time, for example: 30 min">Silence for %1$s</string>
     <string name="alarm_silence_for_label" comment="Label on the alarm screen above a row of buttons with times (15 min, 30 min, 1 h). One tap stops the sound for that time and closes the screen.">Silence for</string>
     <string name="pump_alert_action_failed">The pump did not confirm. Try again.</string>

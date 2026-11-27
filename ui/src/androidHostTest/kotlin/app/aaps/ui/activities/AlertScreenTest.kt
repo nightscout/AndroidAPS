@@ -41,8 +41,8 @@ import app.aaps.core.ui.R as CoreUiR
 /**
  * Robolectric composable test for [AlertScreen] with [ErrorScreen]: what each button of the alarm screen does (decided
  * 2026-11-26). An alert that lasts is silenced in one tap per length, and the tap closes the screen; a BG alarm adds
- * "On every phone" and "Silence all BG alarms"; an alarm that ends when it is answered keeps Mute 5 min and Silence and
- * close. That the card then stays without sound is the core's, in `AlertsImplTest`.
+ * "On every phone" and "Silence all BG alarms"; an alarm that ends when it is answered has Mute 5 min and Silence, and
+ * both close the screen. That the card then stays without sound is the core's, in `AlertsImplTest`.
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -144,16 +144,27 @@ class AlertScreenTest {
         compose.onNodeWithText(ctx.getString(R.string.alarm_silence_on_every_phone)).assertDoesNotExist()
     }
 
-    /** An alarm that ends when it is answered has no length to promise: Mute 5 min, Silence, Silence and close. */
+    /** An alarm that ends when it is answered has no length to promise: Silence ends it, and the screen closes. */
     @Test
-    fun `an alarm that ends when it is answered keeps Mute 5 min and Silence and close`() {
+    fun `Silence ends an alarm that ends when it is answered and closes the screen`() {
         show(alert(CoreAlert.AUTOMATION_ALARM, lifetime = AlertLifetime.EVENT))
 
-        compose.onNodeWithText(ctx.getString(CoreUiR.string.mute5min)).assertIsDisplayed()
         compose.onNodeWithText(ctx.getString(CoreUiR.string.alarm_silence_for_label)).assertDoesNotExist()
-        compose.onNodeWithText(ctx.getString(CoreUiR.string.alarm_silence_and_close)).performClick()
+        compose.onNodeWithText(ctx.getString(CoreUiR.string.alarm_silence)).performClick()
 
         verify(alerts).silence(CoreAlert.AUTOMATION_ALARM.source, KEY, null)
+        assertThat(closed).isEqualTo(1)
+    }
+
+    /** Muted, it comes back in 5 minutes with its screen: the screen does not stay open meanwhile (2026-11-27). */
+    @Test
+    fun `Mute 5 min delays the alarm and closes the screen`() {
+        show(alert(CoreAlert.AUTOMATION_ALARM, lifetime = AlertLifetime.EVENT))
+
+        compose.onNodeWithText(ctx.getString(CoreUiR.string.mute5min)).performClick()
+
+        verify(alerts).snooze(CoreAlert.AUTOMATION_ALARM.source, KEY, 5)
+        verify(alerts, never()).silence(any(), any(), anyOrNull())
         assertThat(closed).isEqualTo(1)
     }
 

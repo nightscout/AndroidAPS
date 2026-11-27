@@ -58,7 +58,7 @@ How the core shows, rings and silences an alert is in `PUMP_DESIGN.md`, section 
   and the user's choice for each applies.
 - **A9** An alert that stays while the pump holds it is `AlertLifetime.CONDITION`, and the driver resolves it (A6). A
   message that only needs to be read is `AlertLifetime.EVENT`, and answering it ends it. The lifetime decides the
-  alarm screen: a button per silence length for a condition, Mute 5 min and Silence and close for an event.
+  alarm screen: a button per silence length for a condition, Mute 5 min and Silence for an event, all closing it.
 - **A10** The title and the text are `TextRef`s - string resources, with a pump value as an argument - never resolved
   text, so each phone shows them in its own language, iOS too.
 
