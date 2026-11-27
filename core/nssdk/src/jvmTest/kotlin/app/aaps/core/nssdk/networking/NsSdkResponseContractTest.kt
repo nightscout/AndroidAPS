@@ -5,6 +5,8 @@ import app.aaps.core.nssdk.exceptions.InvalidFormatNightscoutException
 import app.aaps.core.nssdk.localmodel.entry.Direction
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
+import app.aaps.core.nssdk.localmodel.treatment.NSBolus
+import app.aaps.core.nssdk.localmodel.treatment.NSCarbs
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
@@ -88,6 +90,32 @@ class NsSdkResponseContractTest {
             assertThat(response.unreadable).hasSize(1)
             assertThat(response.unreadable.single()).contains("\"bad\"")
         }
+    }
+
+    /**
+     * Current behaviour, pinned so the risk stays visible. A document with insulin and carbs gives
+     * two records with one identifier. When one of them is removed on the phone, the upload is a
+     * DELETE of the whole document, and the next read gives both records as not valid. So removing
+     * the carbs also removes the bolus (less insulin on board), and removing the bolus also removes
+     * the carbs. If a way is added to remove one half only, change this test on purpose.
+     */
+    @Test
+    fun `removing the carbs of a document with insulin deletes the whole document - current behaviour, pinned`() = runTest {
+        enqueuePage("""{"identifier":"meal-1","date":1000,"eventType":"Meal Bolus","insulin":3,"carbs":40,"isValid":true}""")
+        val carbs = client.getTreatmentsModifiedSince(0, 500).values.filterIsInstance<NSCarbs>().single()
+        server.takeRequest()
+
+        server.enqueue(MockResponse.Builder().code(200).body("{}").build())
+        client.updateTreatment(carbs.copy(isValid = false))
+
+        val upload = server.takeRequest()
+        assertThat(upload.method).isEqualTo("DELETE")
+        assertThat(upload.target).isEqualTo("/api/v3/treatments/meal-1")
+
+        enqueuePage("""{"identifier":"meal-1","date":1000,"eventType":"Meal Bolus","insulin":3,"carbs":40,"isValid":false}""")
+        val afterDelete = client.getTreatmentsModifiedSince(0, 500).values
+        assertThat(afterDelete.map { it::class }).containsExactly(NSBolus::class, NSCarbs::class).inOrder()
+        assertThat(afterDelete.map { it.isValid }).containsExactly(false, false)
     }
 
     /**

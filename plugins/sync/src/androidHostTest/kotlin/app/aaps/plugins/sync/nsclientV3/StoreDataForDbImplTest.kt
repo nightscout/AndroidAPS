@@ -777,6 +777,25 @@ class StoreDataForDbImplTest : TestBaseWithProfile() {
         assertTrue(storeDataForDb.deleteTreatment.isEmpty())
     }
 
+    /** A document with insulin and carbs gives a bolus and carbs with one Nightscout id. */
+    @Test
+    fun `updateDeletedTreatmentsInDb invalidates the bolus and the carbs of one document`() = runTest {
+        val nsId = "meal_bolus_document"
+        storeDataForDb.addToDeleteTreatment(nsId)
+
+        whenever(preferences.get(BooleanKey.NsClientAcceptInsulin)).thenReturn(true)
+        whenever(preferences.get(BooleanKey.NsClientAcceptCarbs)).thenReturn(true)
+        whenever(persistenceLayer.getBolusByNSId(nsId)).thenReturn(bs)
+        whenever(persistenceLayer.invalidateBolus(any(), any(), any(), anyOrNull(), anyList())).thenReturn(PersistenceLayer.TransactionResult())
+        whenever(persistenceLayer.getCarbsByNSId(nsId)).thenReturn(ca)
+        whenever(persistenceLayer.invalidateCarbs(any(), any(), any(), anyOrNull(), anyList())).thenReturn(PersistenceLayer.TransactionResult())
+
+        storeDataForDb.updateDeletedTreatmentsInDb()
+
+        verify(persistenceLayer).invalidateBolus(eq(bs.id), any(), any(), anyOrNull(), anyList())
+        verify(persistenceLayer).invalidateCarbs(eq(ca.id), any(), any(), anyOrNull(), anyList())
+    }
+
     @Test
     fun `scheduleNsIdUpdate schedule runnable`() {
         assertNull(storeDataForDb.scheduledEventPost)

@@ -27,6 +27,7 @@ import org.mockito.Mock
 import org.mockito.internal.verification.Times
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
@@ -1018,6 +1019,55 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         // Verify nsUpdate was called
         verify(nsClientV3Plugin, Times(1)).nsUpdate(eq("treatments"), any<DataSyncSelector.PairCarbs>(), any(), anyOrNull())
+    }
+
+    /**
+     * The carbs of a Nightscout document with insulin and carbs are stored as a new record that
+     * already has the Nightscout id of the document. They must not go back to Nightscout as a new
+     * document: that would count the carbs twice there.
+     */
+    @Test
+    fun `carbs that came from Nightscout are not uploaded`() = runTest {
+        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
+        whenever(persistenceLayer.getLastCarbsId()).thenReturn(10L)
+        whenever(preferences.get(NsclientLongKey.CarbsLastSyncedId)).thenReturn(5L, 5L, 6L)
+
+        val carbs = CA(id = 6, timestamp = 1000L, amount = 40.0, duration = 0L, ids = IDs(nightscoutId = "meal-1"))
+
+        whenever(persistenceLayer.getNextSyncElementCarbs(5L)).thenReturn(Pair(carbs, carbs))
+        whenever(persistenceLayer.getNextSyncElementCarbs(6L)).thenReturn(null)
+
+        sut.processChangedCarbs()
+
+        verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any<DataSyncSelector.PairCarbs>(), any(), anyOrNull())
+        verify(nsClientV3Plugin, Times(0)).nsUpdate(any(), any<DataSyncSelector.PairCarbs>(), any(), anyOrNull())
+    }
+
+    /**
+     * Current behaviour, pinned so the risk stays visible. Carbs that came from a Nightscout document
+     * and are removed on the phone go out as an update of a record that is not valid. The client
+     * turns that into a delete of the whole document, also when the document holds insulin too.
+     */
+    @Test
+    fun `removed carbs that came from Nightscout are sent as an update that is not valid - current behaviour, pinned`() = runTest {
+        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
+        whenever(persistenceLayer.getLastCarbsId()).thenReturn(10L)
+        whenever(preferences.get(NsclientLongKey.CarbsLastSyncedId)).thenReturn(5L, 5L, 5L)
+
+        val stored = CA(id = 5, timestamp = 1000L, amount = 40.0, duration = 0L, ids = IDs(nightscoutId = "meal-1"))
+        val removed = CA(id = 6, timestamp = 1000L, amount = 40.0, duration = 0L, isValid = false, ids = IDs(nightscoutId = "meal-1"))
+
+        whenever(persistenceLayer.getNextSyncElementCarbs(5L))
+            .thenReturn(Pair(removed, stored))
+            .thenReturn(null)
+        whenever(nsClientV3Plugin.nsUpdate(eq("treatments"), any<DataSyncSelector.PairCarbs>(), any(), anyOrNull())).thenReturn(true)
+
+        sut.processChangedCarbs()
+
+        val sent = argumentCaptor<DataSyncSelector.PairCarbs>()
+        verify(nsClientV3Plugin, Times(1)).nsUpdate(eq("treatments"), sent.capture(), any(), anyOrNull())
+        assertThat(sent.firstValue.value.isValid).isFalse()
+        assertThat(sent.firstValue.value.ids.nightscoutId).isEqualTo("meal-1")
     }
 
     @Test
