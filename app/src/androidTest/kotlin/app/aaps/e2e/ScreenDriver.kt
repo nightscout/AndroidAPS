@@ -12,6 +12,17 @@ import androidx.test.uiautomator.UiObject2
 import java.util.regex.Pattern
 
 /**
+ * Whether a modal bottom sheet is up, as the permissions sheet the app shows at start. Found by Material3's own
+ * descriptions: "Close sheet" of the scrim, the dim strip above the sheet, and "Drag handle" of the bar on its top. Not
+ * the scrim alone: a sheet as tall as the screen has no strip, so no "Close sheet" node. On the CI emulators' 320 x 640
+ * screen the permissions sheet grew that tall with one row more (2026-11-27), and nine UI tests waited for an overview
+ * behind it. Close a sheet with Back, which works at any height, never with a tap on the scrim; and only when this
+ * says one is up, so Back never walks a screen back.
+ */
+fun UiDevice.modalSheetIsUp(): Boolean =
+    findObject(By.desc(Pattern.compile("Close sheet|Drag handle", Pattern.CASE_INSENSITIVE))) != null
+
+/**
  * Taps through the app's Compose screens with uiautomator, for the UI tests of the pump drivers.
  *
  * Selectors match case-insensitively against text OR content description. A step waits for a **unique** text of the
@@ -135,9 +146,8 @@ class ScreenDriver(private val device: UiDevice) {
     fun waitForOverview(timeout: Long = INIT_TIMEOUT) {
         val end = SystemClock.uptimeMillis() + timeout
         while (SystemClock.uptimeMillis() < end) {
-            // Back, not a scrim tap: the tap goes to the scrim node centre, which is ON the sheet once it is
-            // tall enough (see AbstractDanaEmulatorUiTest). The find guards it, so Back needs a sheet to be up.
-            runCatching { if (device.findObject(byDesc("Close sheet")) != null) device.pressBack() }
+            // Back, guarded by the find, see modalSheetIsUp
+            runCatching { if (device.modalSheetIsUp()) device.pressBack() }
             if (device.findObject(byDesc("Open navigation")) != null) return
             device.waitForIdle(IDLE_MS)
         }

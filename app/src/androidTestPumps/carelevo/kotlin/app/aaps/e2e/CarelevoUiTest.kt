@@ -23,9 +23,11 @@ class CarelevoUiTest : AbstractPumpUiTest() {
     override fun screens(): PumpScreens = CarelevoScreens
 
     /**
-     * A patch alarm is a pump alert (`Alerts`): the alarm screen opens with the patch's own step, Silence takes the
-     * sound from the card but keeps the card, and the step - here the discard an occlusion asks for - ends the alarm,
-     * which closes the screen.
+     * A patch alarm is a pump alert (`Alerts`): the alarm screen opens with the patch's own step and a button per
+     * silence length, and the step - here the discard an occlusion asks for - silences it, ends the alarm with the
+     * patch, and that closes the screen. A tap on a length silences and closes the screen as well (decided
+     * 2026-11-26), so the two cannot both be tapped on one alarm: what that tap does is `AlertScreenTest`'s, and that
+     * the card then stays without sound is `AlertsImplTest`'s.
      */
     @Test
     fun aPatchAlarmOpensTheAlarmScreenThatSilencesAndActs() {
@@ -41,16 +43,15 @@ class CarelevoUiTest : AbstractPumpUiTest() {
             // AAPS learns of it at the latest at its next connection to the patch.
             scenario.readStatusOnNewLink()
 
-            // Only the alarm screen of a pump alert has this button.
-            screen.waitForVisibleOrThrow(SILENCE, COMMAND_TIMEOUT)
+            // Only the alarm screen of an alert that lasts has this line, over its silence buttons; an occlusion is
+            // critical, so they are 15 and 30 min.
+            screen.waitForExactOrThrow(SILENCE_FOR, COMMAND_TIMEOUT)
+            screen.waitForExactOrThrow(THIRTY_MIN, COMMAND_TIMEOUT)
             scenario.awaitTrue("the alarm card rings") { alertCards().any { it.sound != null } }
-
-            screen.clickButton(SILENCE)
-            scenario.awaitTrue("the card stays, without sound") { alertCards().isNotEmpty() && alertCards().none { it.sound != null } }
 
             screen.clickButton(DEACTIVATE)
             scenario.awaitTrue("the alarm ended with the patch", COMMAND_TIMEOUT) { alertCards().isEmpty() }
-            scenario.awaitTrue("the alarm screen closed") { device.findObject(By.text(SILENCE)) == null }
+            scenario.awaitTrue("the alarm screen closed") { device.findObject(By.text(SILENCE_FOR)) == null }
             // Not the overview: back in front, the main screen may first show its permissions sheet on a test emulator.
             scenario.awaitTrue("AAPS has no patch any more", COMMAND_TIMEOUT) { !testGraphs.activePlugin.activePumpInternal.isInitialized() }
         } catch (t: Throwable) {
@@ -68,7 +69,8 @@ class CarelevoUiTest : AbstractPumpUiTest() {
     private companion object {
 
         const val PUMP_MANAGEMENT = "Pump"
-        const val SILENCE = "Silence for 30 min"
+        const val SILENCE_FOR = "Silence for"
+        const val THIRTY_MIN = "30 min"
         const val DEACTIVATE = "Deactivate Patch"
     }
 }
