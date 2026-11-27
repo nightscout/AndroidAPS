@@ -62,7 +62,9 @@ import app.aaps.utils.configureLeakCanary
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue
 import com.google.firebase.remoteconfig.remoteConfig
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import io.reactivex.rxjava3.exceptions.UndeliverableException
@@ -917,6 +919,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         aapsLogger.debug("RemoteConfig received successfully")
+                        val remote = remoteVersionDefinitions(firebaseRemoteConfig.getValue("defs")) ?: return@addOnCompleteListener
                         @Suppress("UNCHECKED_CAST")
                         (versionCheckersUtils::class.declaredMemberProperties.find { it.name == "definition" } as KMutableProperty<Any>?)
                             ?.let {
@@ -926,12 +929,33 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                                 // fetch actually succeeded - which needs network and Play Services, so no test or
                                 // CI build ever reached it. Keep the two types here in step by hand.
                                 val current = it.getter.call(versionCheckersUtils) as JsonObject
-                                val remote = Json.parseToJsonElement(firebaseRemoteConfig.getString("defs")).jsonObject
                                 // Plus on the maps is a shallow merge with the remote keys winning.
                                 it.setter.call(versionCheckersUtils, JsonObject(current + remote))
                             }
                     } else aapsLogger.error("RemoteConfig fetch failed")
                 }
+        }
+    }
+
+    /**
+     * The version definitions from the remote config, or null to keep the ones built into the app.
+     *
+     * A fetch can succeed with no value for `defs`, and then `getString` gives "". Parsing that threw and crashed the app
+     * on every start (Crashlytics, 2026-11, an emulator build; why it got no value is not known, the template has a
+     * default value). A value that is no JSON object, after a typo in the console, would crash every app at once, so it
+     * is refused the same way.
+     */
+    private fun remoteVersionDefinitions(defs: FirebaseRemoteConfigValue): JsonObject? {
+        if (defs.source == FirebaseRemoteConfig.VALUE_SOURCE_STATIC) {
+            aapsLogger.error("RemoteConfig has no version definitions, keeping the built-in ones")
+            return null
+        }
+        return try {
+            Json.parseToJsonElement(defs.asString()).jsonObject
+        } catch (e: IllegalArgumentException) {
+            // Also SerializationException, which is an IllegalArgumentException.
+            aapsLogger.error("RemoteConfig version definitions are not a JSON object, keeping the built-in ones", e)
+            null
         }
     }
 
