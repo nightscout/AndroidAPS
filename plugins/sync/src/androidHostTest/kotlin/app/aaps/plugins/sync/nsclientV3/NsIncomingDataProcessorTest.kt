@@ -5,6 +5,7 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.InsulinType
+import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.source.NSClientSource
@@ -231,6 +232,96 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
         val result = processor.processSgvs(sgvList, doFullSync = false)
         assertFalse(result)
         verify(storeDataForDb, never()).addToGlucoseValues(any())
+    }
+
+    /**
+     * The "modified since" load is ordered by the time the server stored a record, not by the time
+     * of the reading. An uploader that fills a sensor gap writes the new reading first and the old
+     * ones after it, so a page can hold readings that go back in time. All of them must be kept.
+     */
+    @Test
+    fun `processSgvs keeps readings that are older than a reading before them`() {
+        val newest = now - T.mins(2).msecs()
+        val backfilled1 = now - T.mins(27).msecs()
+        val backfilled2 = now - T.mins(22).msecs()
+        val sgvList = listOf(sgvAt(newest), sgvAt(backfilled1), sgvAt(backfilled2))
+
+        val result = processor.processSgvs(sgvList, doFullSync = false)
+
+        assertTrue(result)
+        verify(storeDataForDb).addToGlucoseValues(argThat { map { it.timestamp } == listOf(newest, backfilled1, backfilled2) })
+    }
+
+    @Test
+    fun `processSgvs ignores only the future reading in a list`() {
+        val older = now - T.mins(7).msecs()
+        val future = now + T.mins(5).msecs()
+        val newer = now - T.mins(2).msecs()
+        val sgvList = listOf(sgvAt(older), sgvAt(future), sgvAt(newer))
+
+        val result = processor.processSgvs(sgvList, doFullSync = false, advanceInitialLoadCursor = true)
+
+        assertTrue(result)
+        verify(storeDataForDb).addToGlucoseValues(argThat { map { it.timestamp } == listOf(older, newer) })
+        // The refused reading must not move the cursor either
+        verify(nsClient).updateLatestBgReceivedIfNewer(newer)
+    }
+
+    @Test
+    fun `processSgvs accepts a reading less than one minute in the future`() {
+        val slightlyAhead = now + T.secs(30).msecs()
+
+        val result = processor.processSgvs(listOf(sgvAt(slightlyAhead)), doFullSync = false)
+
+        assertTrue(result)
+        verify(storeDataForDb).addToGlucoseValues(argThat { size == 1 && get(0).timestamp == slightlyAhead })
+    }
+
+    @Test
+    fun `processSgvs moves the cursor to the newest reading of an unordered list`() {
+        val newest = now - T.mins(2).msecs()
+        val sgvList = listOf(sgvAt(now - T.mins(30).msecs()), sgvAt(newest), sgvAt(now - T.mins(20).msecs()))
+
+        processor.processSgvs(sgvList, doFullSync = false, advanceInitialLoadCursor = true)
+
+        verify(nsClient).updateLatestBgReceivedIfNewer(newest)
+    }
+
+    @Test
+    fun `processSgvs dismisses the alarms when the newest reading of an unordered list is recent`() {
+        val sgvList = listOf(sgvAt(now - T.mins(2).msecs()), sgvAt(now - T.mins(30).msecs()))
+
+        processor.processSgvs(sgvList, doFullSync = false)
+
+        verify(notificationManager).dismiss(NotificationId.NS_ALARM)
+        verify(notificationManager).dismiss(NotificationId.NS_URGENT_ALARM)
+    }
+
+    @Test
+    fun `processSgvs keeps the alarms when all readings of an unordered list are old`() {
+        val sgvList = listOf(sgvAt(now - T.mins(10).msecs()), sgvAt(now - T.mins(30).msecs()), sgvAt(now - T.mins(20).msecs()))
+
+        processor.processSgvs(sgvList, doFullSync = false)
+
+        verify(notificationManager, never()).dismiss(NotificationId.NS_ALARM)
+        verify(notificationManager, never()).dismiss(NotificationId.NS_URGENT_ALARM)
+    }
+
+    /**
+     * Two readings with the same time are both passed on. The database decides: the insert looks
+     * the reading up by time and sensor, so the same reading twice ends as one row, and readings
+     * of two sensors stay two rows. That is also what happens when they come in two lists.
+     */
+    @Test
+    fun `processSgvs passes on two readings with the same timestamp`() {
+        val time = now - T.mins(2).msecs()
+        val sgvList = listOf(sgvAt(time), sgvAt(time))
+
+        val result = processor.processSgvs(sgvList, doFullSync = false, advanceInitialLoadCursor = true)
+
+        assertTrue(result)
+        verify(storeDataForDb).addToGlucoseValues(argThat { map { it.timestamp } == listOf(time, time) })
+        verify(nsClient).updateLatestBgReceivedIfNewer(time)
     }
 
     @Test
