@@ -12,6 +12,7 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.aps.autotune.data.ATProfile
+import app.aaps.plugins.aps.autotune.data.BGDatum
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -84,6 +85,37 @@ class AutotuneCoreTest : TestBaseWithProfile() {
         for (i in 0..23) {
             assertThat(outProfile.basal[i]).isEqualTo(oapsOutputProfile.basal[i])
         }
+    }
+
+    /**
+     * ISF points with no insulin acting (BGI 0) come from an hour with a basal of 0 and from the UAM and CSF data. Their
+     * ratio deviation / BGI is NaN or infinite, and the NaN crashed the app in Round.roundTo (Crashlytics, 2026-11).
+     * They say nothing about ISF, so the result is the same as without them.
+     */
+    @Suppress("SpellCheckingInspection")
+    @Test
+    fun `isf points with no insulin acting do not change the isf`() {
+        val prepJson = File("src/androidHostTest/res/autotune/test1/autotune.2022-05-21.json").readText()
+        val inputProfileJson = File("src/androidHostTest/res/autotune/test1/profile.pump.json").readText()
+        val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
+        val prep = PreppedGlucose(parseJsonObject(prepJson), dateUtil)
+        val noInsulinActing = listOf(0.0, 0.0, 4.0, -3.0).mapIndexed { i, deviation ->
+            BGDatum(dateUtil).also {
+                it.date = prep.from + i * T.mins(5).msecs()
+                it.deviation = deviation
+                it.bgi = 0.0
+            }
+        }
+        prep.isfGlucoseData = prep.isfGlucoseData + noInsulinActing
+
+        whenever(preferences.get(DoubleKey.AutosensMax)).thenReturn(autotuneMax)
+        whenever(preferences.get(DoubleKey.AutosensMin)).thenReturn(autotuneMin)
+        whenever(preferences.get(DoubleKey.ApsSmbMin5MinCarbsImpact)).thenReturn(min5mCarbImpact)
+        val oapsOutputProfileJson = File("src/androidHostTest/res/autotune/test1/aapsorefprofile.json").readText()
+        val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)!!
+        val outProfile = autotuneCore.tuneAllTheThings(prep, inputProfile, inputProfile)
+        assertThat(outProfile.isf).isEqualTo(oapsOutputProfile.isf)
+        assertThat(outProfile.ic).isEqualTo(oapsOutputProfile.ic)
     }
 
     /**

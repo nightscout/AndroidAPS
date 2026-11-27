@@ -412,6 +412,12 @@ class AutotuneCore(
             bGIs.add(bgi)
             val avgDelta = isfGlucose[i].avgDelta
             avgDeltas.add(avgDelta)
+            // A point with no insulin effect (BGI 0) says nothing about ISF, and deviation / 0 is NaN or infinite. Such
+            // points come from AutotunePrep: an hour with a basal of 0 and no insulin acting, and the UAM or CSF points it
+            // adds to the ISF data when too many points are meals. The JS divides anyway. Here the NaN made Round.roundTo
+            // throw and crashed the app (Crashlytics, 2026-11), and an infinite ratio moved the median. So only points
+            // with insulin acting give a ratio, and only they are counted.
+            if (bgi == 0.0) continue
             val ratio = 1 + deviation / bgi
             //log.debug("Deviation:",deviation,"BGI:",BGI,"avgDelta:",avgDelta,"ratio:",ratio);
             ratios.add(ratio)
@@ -427,7 +433,7 @@ class AutotuneCore(
         var fullNewISF = isf
         if (count < 10) {
             // leave isf unchanged if fewer than 5 isf data points
-            log("Only found " + isfGlucose.size + " ISF data points, leaving ISF unchanged at " + isf)
+            log("Only found $count ISF data points, leaving ISF unchanged at $isf")
         } else {
             // calculate what adjustments to isf would have been necessary to bring median deviation to zero
             fullNewISF = isf * p50ratios
