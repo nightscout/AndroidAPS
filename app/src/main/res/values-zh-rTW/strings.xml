@@ -18,6 +18,7 @@
     <string name="settings_unreadable_keystore_explanation">手機的金鑰儲存區沒有回應，因此 AAPS 無法開啟設定。</string>
     <string name="settings_unreadable_not_running">AAPS 未在執行，也不會控制幫浦。正在執行的臨時基礎率會在設定時間結束，之後幫浦會恢復使用自己的基礎率。</string>
     <string name="settings_unreadable_what_to_do">重試會關閉 AAPS 並重新啟動。如果沒有幫助，請重新啟動手機。只有在其他方法都無效時，才選擇「重新開始」：這會將無法讀取的設定移到一旁，並讓 AAPS 使用空白設定啟動。接著在設定嚮導中匯入最近一次匯出的設定。</string>
+    <string name="settings_unreadable_keystore_what_to_do">重試會關閉 AAPS 並重新啟動。如果這樣還是無法解決問題，請重新啟動手機。設定檔會保持原樣。</string>
     <string name="settings_unreadable_start_fresh">重新開始</string>
     <string name="settings_unreadable_confirm_title">要使用空白設定啟動嗎？</string>
     <string name="settings_unreadable_confirm_text">無法讀取的設定檔會重新命名並保留。所有設定都會恢復為預設值。接著重新設定 AAPS，或匯入已匯出的設定。</string>

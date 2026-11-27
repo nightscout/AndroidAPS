@@ -58,7 +58,9 @@
     <string name="carelevo_insulin_refill_step1">1. 撕下贴片吸塑包装上的背衬纸。</string>
     <string name="carelevo_insulin_refill_step2">2. 使用酒精棉片对胰岛素药瓶的橡胶盖进行消毒。</string>
     <string name="carelevo_insulin_refill_step3">3. 将胰岛素注射器的针头保护帽垂直拔出。</string>
+    <string name="carelevo_insulin_refill_step4">4. 向后拉动注射器活塞，使其吸入约 1 mL 空气。</string>
     <string name="carelevo_insulin_refill_step5">5. 将装有空气的注射器插入胰岛素药瓶，并将空气注入瓶中。</string>
+    <string name="carelevo_insulin_refill_step6">6. 保持注射器插入状态，将药瓶和注射器一起倒置，利用压力使注射器吸入约 1 mL 胰岛素。</string>
     <string name="carelevo_insulin_refill_step7">7. 将注射器针头垂直插入贴片的胰岛素加注口（①），直至到达底部。将活塞完全拉起，然后松开。从加注口取出注射器。</string>
     <string name="carelevo_insulin_refill_step8">8. 保持注射器竖直，轻敲其侧壁，使所有气泡聚集到顶部。</string>
     <string name="carelevo_insulin_refill_step9">9. 将针头重新插入胰岛素药瓶，将所有空气推入瓶中，然后抽取您在贴片使用期间所需的具体胰岛素量。</string>

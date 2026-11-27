@@ -1,6 +1,6 @@
 # libs.versions.toml
 [versions]
-gradlePlugin = "9.5.2"
+gradlePlugin = "9.5.3"
 kotlin = "2.4.21"
 room = "2.8.5"
 metro = "1.6.0"

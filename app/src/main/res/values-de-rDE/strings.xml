@@ -18,6 +18,7 @@
     <string name="settings_unreadable_keystore_explanation">Der Schlüsselspeicher des Telefons hat nicht geantwortet, so dass AAPS die Einstellungen nicht öffnen konnte.</string>
     <string name="settings_unreadable_not_running">AAPS läuft nicht und steuert die Pumpe nicht. Eine temporäre Basalrate, die gerade läuft, endet zu ihrer Zeit, und dann gibt die Pumpe ihre eigene Basalrate ab.</string>
     <string name="settings_unreadable_what_to_do">„Erneut versuchen“ beendet AAPS und startet es neu. Falls das nicht hilft, starte das Telefon neu. Wähle „Neu einrichten“ nur, wenn nichts anderes hilft: Die unlesbaren Einstellungen werden separat aufbewahrt und AAPS startet ohne bisherige Einstellungen. Importiere anschließend deinen letzten Einstellungsexport im Einrichtungsassistenten.</string>
+    <string name="settings_unreadable_keystore_what_to_do">Versuchen sie AAPS zu schließen und erneut zu starten. Wenn das nicht hilft, starten Sie das Telefon neu. Ihre Einstellungsdatei bleibt erhalten.</string>
     <string name="settings_unreadable_start_fresh">Neu einrichten</string>
     <string name="settings_unreadable_confirm_title">Mit leeren Einstellungen starten?</string>
     <string name="settings_unreadable_confirm_text">Die unlesbare Einstellungsdatei wird umbenannt und aufbewahrt. Alle Einstellungen werden auf ihre Standardwerte zurückgesetzt. Anschließend kannst du AAPS neu einrichten oder einen Einstellungsexport importieren.</string>

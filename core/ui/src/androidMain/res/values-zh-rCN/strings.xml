@@ -1062,6 +1062,8 @@
     <string name="wiki_search_offline">文档搜索需要互联网连接</string>
     <string name="no_search_results">未找到结果</string>
     <string name="search_plugin_disabled">插件 %1$s 已禁用</string>
+    <string name="search_recent">最近搜索</string>
+    <string name="search_history_remove">从最近搜索中移除</string>
     <!--    Food Management -->
     <string name="food_management">食物</string>
     <string name="food_deleted">食物已删除</string>
@@ -1139,7 +1141,6 @@
     <string name="graph_bg">血糖图表</string>
     <string name="graph_height">图表高度 [dp]</string>
     <string name="predictions_shortname" comment="Short label for Predictions graph series">预测</string>
-    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
     <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
     <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>

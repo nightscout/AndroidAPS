@@ -58,7 +58,9 @@
     <string name="carelevo_insulin_refill_step1">1. 패치 블리스터 뒷면의 포장지를 제거합니다.</string>
     <string name="carelevo_insulin_refill_step2">2. 알콜솜을 사용하여 인슐린 바이알의 고무캡을 소독합니다.</string>
     <string name="carelevo_insulin_refill_step3">3. 인슐린 주입용 주사기의 바늘 보호캡을 당겨 제거합니다.</string>
+    <string name="carelevo_insulin_refill_step4">4. 주사기의 플런저를 잡아당겨 공기 약 1 mL를 채웁니다.</string>
     <string name="carelevo_insulin_refill_step5">5. 공기를 채운 주사기를 인슐린 바이알에 꽂은 후 공기를 바이알 안으로 주입합니다.</string>
+    <string name="carelevo_insulin_refill_step6">6. 주사기를 꽂은 상태로, 인슐린 바이알과 주사기를 거꾸로 뒤집고 주사기의압력을 이용해 인슐린 약 1 mL를 채웁니다.</string>
     <string name="carelevo_insulin_refill_step7">7. 패치의 인슐린 주입구(①)에 주사기 바늘이 바닥에 닿을 때까지 수직으로 끝까지 삽입하고, 주사기 플런저를 위로 끝까지 당겼다가 그대로 놓습니다. 주사기를 인슐린 주입구에서 제거합니다.</string>
     <string name="carelevo_insulin_refill_step8">8. 패치에서 제거한 주사기를 똑바로 세운 후 측면을 가볍게 쳐서 공기를 위쪽으로 모두 모이게 합니다.</string>
     <string name="carelevo_insulin_refill_step9">9. 인슐린 바이알에 바늘을 삽입하고, 주사기 안에 공기가 모두 바이알 안으로 들어가게 한 후 패치 사용 기간 동안 사용할 인슐린 양만큼 주사기에 인슐린을 더 채웁니다.</string>
