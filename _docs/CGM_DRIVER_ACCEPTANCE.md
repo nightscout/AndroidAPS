@@ -57,12 +57,27 @@ How the core shows, rings and silences an alert is in `PUMP_DESIGN.md`, section 
   alarm: the core's BG alarms raise those for every source (`ALARMS.md`, section 6). Until the core BG alarms exist,
   the driver keeps its transmitter's glucose alarms ringing, so the user is never without one.
 - **A2** The driver plays no sound and has no notification channel, alarm screen or foreground check of its own.
-- **A3** The severity follows the transmitter. A fault after which no reading comes is CRITICAL.
+- **A3** The severity follows what the transmitter's event does to dosing (`DosingEffect`, decided 2026-11-24): no
+  reading, or one that cannot be trusted, is `NOW` (CRITICAL); affected soon unless the user acts (a battery nearly
+  empty, a calibration due) is `SOON` (WARNING); something to do that does not affect dosing is `ACTION` (WARNING);
+  the rest is `INFO`. A glucose alarm of the transmitter is `GLUCOSE`, and the driver raises none (A1b).
 - **A4** The start raises again what the transmitter still holds, with the same key and `raisedAt`. `raisedAt` comes
   from the transmitter or the driver's store, never from the time of the call.
 - **A5** The step on the transmitter (confirm the alarm), where there is one, is the alert's action.
 - **A6** The driver resolves an alert when the transmitter drops it, and all of them when it stops, is unpaired or
   another source is chosen.
+- **A7** Each alert has a kind of the driver's own (`AlertKind`): one kind per title the user sees, not one per alarm
+  code, with the `DosingEffect` of the codes shown under it. Its group follows from those (`AlertGroup.of`), and a
+  kind with a code that affects dosing is protected: the user cannot set it to Silent or Off. As `EversenseAlertKind`.
+- **A8** The kinds are in the driver's `AlertKindCatalogue`, bound in its DI registration (`@Provides @IntoSet`), with
+  `inUse()` true while the driver is the BG source. Then they are in Settings > Alerts > Alert kinds, under the CGM,
+  and the user's choice for each applies.
+- **A9** An alert that stays while the transmitter holds it is `AlertLifetime.CONDITION`, and the driver resolves it
+  (A6). One the transmitter never says has ended, or a message that only needs to be read, is `AlertLifetime.EVENT`,
+  and answering it ends it. The lifetime decides the alarm screen: a button per silence length for a condition, Mute
+  5 min and Silence and close for an event.
+- **A10** The title and the text are `TextRef`s - string resources, with a transmitter value as an argument - never
+  resolved text, so each phone shows them in its own language, iOS too.
 
 ## K. A driver in shared code (KMP)
 
@@ -121,6 +136,9 @@ A class `<Cgm>ScenarioTest : AbstractCgmScenarioTest()` runs all of these. A sce
 - **T2** Must: the driver talks through the shared `BleCentral`, and its emulator is an `EmulatedPeripheral` on
   `EmulatedBleCentral`. The driver has no Bluetooth code of its own.
 - **T3** Should: the driver against its emulator on the JVM, in virtual time, so the unit run covers the link rules.
+- **T4** Must, with A7: every alarm code of the transmitter has its kind or is a glucose alarm the driver does not
+  raise, a kind is protected exactly when one of its codes affects dosing, and it is in the CGM group of its effects
+  (as `EversenseAlertKindTest`).
 
 ## R. Real transmitter (a person runs these)
 
@@ -133,8 +151,9 @@ firmware.
 - **R3** The phone out of range for 30 minutes: the gap is filled from the history.
 - **R4** A calibration accepted, and one refused.
 - **R5** A new sensor: the sensor change recorded once, with its insertion time, and the sensor age right.
-- **R6** A transmitter alarm that can be raised without harm (Eversense: the transmitter off the sensor) rings in AAPS;
-  Silence stops the sound, and the alert ends when the transmitter drops it.
+- **R6** A transmitter alarm that can be raised without harm (Eversense: the transmitter off the sensor) rings in AAPS.
+  One tap on a length (15 min or 30 min, also 1 h when it is not critical) silences it and closes the screen, and
+  the alert ends when the transmitter drops it.
 - **R7** Bluetooth off and on, and the phone asleep for an hour: the readings go on.
 - **R8** The app restarted: the transmitter is kept, no reading is stored twice.
 - **R9** Unpair, then pair again, also with the vendor app after AAPS.
@@ -157,13 +176,11 @@ A requirement that a driver cannot meet stays visible:
 
 A requirement left out silently counts as not passed.
 
-Known exceptions on 2026-11-21:
+Known exceptions on 2026-11-21 (the Eversense alarm line went on 2026-11-27: it raises through `Alerts` with kinds of
+its own now, and its glucose alarms raise nothing, as the core BG alarms exist):
 
 - **Every receiver, B1 and B5:** only Glunovo and Intelligo refuse a reading from the future; storage checks neither
   time. Decided: one check in storage for every source (`CGM_DESIGN.md`, section 3), not built yet.
-- **Eversense, A1-A6:** one plain card per alarm, with the alarm sound for the critical ones; nothing removes a card
-  when the alarm ends. Waits for the alert core for CGM (`CGM_DESIGN.md`, section 5). A1b: its glucose alarms ring
-  until the core BG alarms exist, on purpose.
 - **Eversense, E1 and E4:** the emulator has no `CgmEmulatorControl` and no saved state. E2: it is built from the
   driver's code, so all of it is `UNVERIFIED`.
 - **Eversense, S1-S9 and C1:** there is no `AbstractCgmScenarioTest` yet. The host tests cover part of S2, S4, S6 and

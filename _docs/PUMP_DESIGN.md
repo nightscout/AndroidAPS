@@ -262,7 +262,7 @@ classes of its alarms (a grade, a tier) are an input to this, not a replacement 
 2. Carelevo, because it is shared code already and iOS needs it first. Real-patch test.
 3. The other drivers, one change each, each with a real-pump test (see the `pump-emulator-scenarios` skill). Not a
    task of its own (decided 2026-11-19): a driver moves to pump alerts, to Bluetooth version 2 and to shared code
-   when it is brought to the acceptance file's current requirements (A1-A6, T2, K1-K3).
+   when it is brought to the acceptance file's current requirements (A1-A10, T2, T4, K1-K3).
 4. The scenario check for an alarm (`PumpScenario.checkUrgentAlarmSince`) reads `Alerts.active` instead of any
    URGENT card.
 5. Add the requirements below to `PUMP_DRIVER_ACCEPTANCE.md`.
@@ -271,15 +271,20 @@ classes of its alarms (a grade, a tier) are an input to this, not a replacement 
 
 ## 6. Requirements in the acceptance file
 
-Added to `PUMP_DRIVER_ACCEPTANCE.md` on 2026-11-19 (sections A and K, and R14 for the real pump); kept here as the short
-form.
+Added to `PUMP_DRIVER_ACCEPTANCE.md` on 2026-11-19 (sections A and K, and R14 for the real pump), A7-A10 and T4 on
+2026-11-27; kept here as the short form. The acceptance file says them in full.
 
 - **A1** Every alert the pump reports, and every delivery problem the user must act on, goes through `Alerts`.
 - **A2** The driver plays no sound and has no notification channel, alarm screen or foreground check of its own.
-- **A3** The severity follows what the pump does: delivery stopped or not safe is CRITICAL.
+- **A3** The severity comes from the event's `DosingEffect`: insulin stopped or not as AAPS thinks is CRITICAL.
 - **A4** `onStart` raises again what the pump still holds, with the same key and `raisedAt`.
 - **A5** The pump-side step (clear, confirm, silence) is the alert's action and runs through the queue.
 - **A6** The driver resolves an alert when the pump drops it, and all of them when the pump is removed.
+- **A7** Each alert has a kind of the driver's own, one per title, protected when a cause affects dosing.
+- **A8** The kinds are in the driver's `AlertKindCatalogue`, so they are in the alert settings.
+- **A9** What the pump holds is a `CONDITION`, a message to read is an `EVENT`.
+- **A10** Title and text are `TextRef`s, never resolved text.
+- **T4** A test that every cause has its kind, protected exactly when it affects dosing.
 - **K1** The driver logic is in commonMain; platform work is behind ports.
 - **K2** A platform without the driver's ports has no such pump.
 - **K3** The driver's shared tests run on iOS (`.github/workflows/ios-ci.yml`).

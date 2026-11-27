@@ -166,7 +166,8 @@ class Alert(
      */
     val notificationTitle: String? = null,
     /**
-     * Whether this alarm can be delayed: the "Mute 5 min" button on the alarm screen, and Mute on the watch.
+     * Whether this alarm can be delayed: the "Mute 5 min" button on the alarm screen of an alarm that ends when it is
+     * answered ([AlertLifetime.EVENT]; one that lasts has a button per silence length instead), and Mute on the watch.
      *
      * False for an alarm whose own action is already the delay - the "time to eat" timer, where "+5 min" moves the
      * timer rather than ringing the same reminder again, and two buttons five minutes apart would only confuse.
@@ -188,8 +189,9 @@ class Alert(
      */
     val sound: AlarmSound? = null,
     /**
-     * How long Silence lasts when the user does not pick a length: the alarm screen starts from it, and a swipe, the
-     * watch and the card use it. A BG alarm takes it from its rule (an urgent low short, a high longer).
+     * How long a silence lasts where the user does not pick a length: a swipe, the watch and the card. The alarm screen
+     * has a button per length instead. A BG alarm takes it from its kind (`BgAlert.silenceMinutes`: an urgent low short,
+     * a high longer).
      */
     val silenceMinutes: Int = Alerts.SILENCE_MINUTES,
     /** Rings in Do Not Disturb and silent mode whatever the user's override setting says. Urgent low only. */

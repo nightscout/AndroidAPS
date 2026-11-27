@@ -368,7 +368,7 @@ rings because of it (decided 2026-11-21: acceptable).
 
 | Source | Raises | Lifetime | Severity |
 |---|---|---|---|
-| A pump driver (`"carelevo"`, ...) | Its pump's alerts (`PUMP_DRIVER_ACCEPTANCE.md`, A1-A6) | CONDITION | From the pump |
+| A pump driver (`"carelevo"`, ...) | Its pump's alerts (`PUMP_DRIVER_ACCEPTANCE.md`, A1-A10) | CONDITION, or EVENT for a message only to read | From the pump's `DosingEffect` |
 | A CGM driver (`"eversense"`, ...) | **Device and error states only**: sensor failed or expired, battery, calibration, transmitter off the sensor. **Never** a glucose or a missed-readings alarm | CONDITION, or EVENT when the transmitter never says an alarm ended | From the transmitter |
 | `"bg"`: AAPS's own BG alarms | Urgent low, low, high, urgent high, stale data, falling or rising fast, predictive low | CONDITION, with a margin so it does not flap | Urgent low always CRITICAL; the others as the user sets them; never INFO |
 | `"aaps"`: the core | Pump unreachable, the pump driver not responding, zero delivery not set | CONDITION | CRITICAL or WARNING |
