@@ -716,6 +716,8 @@ class OmnipodDashPumpPlugin(
                 LTag.PUMP,
                 "deliverTreatment: requestedBolusAmount=$requestedBolusAmount"
             )
+            // Read before the bolus starts: this keeps the earlier result of an error. "Success if cancelled" never applied to a cancel during delivery.
+            val canceledBeforeStart = bolusCanceled
             val ret = executeProgrammingCommand(
                 pre = observeDeliveryNotCanceled(),
                 historyEntry = history.createRecord(
@@ -761,7 +763,7 @@ class OmnipodDashPumpPlugin(
                 pumpEnactResultProvider().success(true).enacted(true).bolusDelivered(deliveredBolusAmount)
             }.onErrorReturn { throwable ->
                 // success if canceled. The reason of a failure goes into the comment, as in toPumpEnactResultImpl.
-                pumpEnactResultProvider().success(bolusCanceled).enacted(false).comment(throwable.message ?: "")
+                pumpEnactResultProvider().success(canceledBeforeStart).enacted(false).comment(throwable.message ?: "")
             }
                 .blockingGet()
             aapsLogger.info(

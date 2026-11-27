@@ -167,6 +167,25 @@ class OmnipodDashDeliverTreatmentTest {
         verifyBlocking(pumpSync, never()) { syncBolusWithPumpId(any(), any(), anyOrNull(), any(), any(), any()) }
     }
 
+    /**
+     * A guard: the user presses stop while the command is sent, and the bolus then ends in an error (here
+     * the pod never got it). On dev the error result was built before the bolus started, so it read
+     * "cancelled" as false and the answer was: failed, not enacted, 0 U. That must stay, because a success
+     * would let the command queue store the carbs and skip the bolus error.
+     */
+    @Test
+    fun `a bolus that fails after the user cancelled it is still reported as failed`() = runBlocking<Unit> {
+        givenPod(withEarlierBolus = false)
+        givenBolusCommandIsSentButNotAnswered(podGetsIt = false, userCancelsDuringSend = true)
+        givenCancelCommandIsSentAndAnswered(pulsesNotDelivered = 0)
+
+        val result = sut.deliverTreatment(DetailedBolusInfo().apply { insulin = REQUESTED_UNITS })
+
+        assertThat(result.success).isFalse()
+        assertThat(result.enacted).isFalse()
+        assertThat(result.bolusDelivered).isEqualTo(0.0)
+    }
+
     // endregion
 
     // region the pod got the bolus command
@@ -327,12 +346,14 @@ class OmnipodDashDeliverTreatmentTest {
      * The command leaves the phone, then the link drops and no answer comes.
      *
      * @param podGetsIt false: the pod never got the command. true: the pod got it and only its answer is lost.
+     * @param userCancelsDuringSend true: the user presses stop while the command is on its way.
      */
-    private fun givenBolusCommandIsSentButNotAnswered(podGetsIt: Boolean) {
+    private fun givenBolusCommandIsSentButNotAnswered(podGetsIt: Boolean, userCancelsDuringSend: Boolean = false) {
         whenever(omnipodManager.bolus(any(), any(), any())).thenReturn(
             Observable.defer {
                 markCommandSent()
                 if (podGetsIt) podGetsCommand()
+                if (userCancelsDuringSend) sut.stopBolusDelivering()
                 Observable.concat(
                     Observable.just<PodEvent>(PodEvent.CommandSent(mock<Command>())),
                     Observable.error(IOException("link lost"))
