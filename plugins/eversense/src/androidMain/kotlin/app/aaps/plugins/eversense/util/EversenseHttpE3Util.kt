@@ -69,6 +69,11 @@ class EversenseHttpE3Util {
 
         // -- Portal sync -------------------------------------------------------
 
+        fun putAppValues(preferences: EversenseStore, appVersion: String) {
+            val token = getOrRefreshToken(preferences) ?: return
+            DmsHttpClient.putAppValues(careBaseUrl, token, appVersion)
+        }
+
         /**
          * POST api/care/PutCurrentValues � updates Last Sync Date on portal and feeds AGP reports.
          */

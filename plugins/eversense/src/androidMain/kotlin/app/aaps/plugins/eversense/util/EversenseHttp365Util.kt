@@ -261,6 +261,11 @@ class EversenseHttp365Util {
             }
         }
 
+        fun putAppValues(preferences: EversenseStore, appVersion: String) {
+            val token = getOrRefreshToken(preferences) ?: return
+            DmsHttpClient.putAppValues(effectiveCareBaseUrl(getState(preferences)), token, appVersion)
+        }
+
         /**
          * Post current glucose state to the Eversense DMS portal (api/care/PutCurrentValues).
          * This updates "Last Sync Date" on the portal and feeds AGP reports.

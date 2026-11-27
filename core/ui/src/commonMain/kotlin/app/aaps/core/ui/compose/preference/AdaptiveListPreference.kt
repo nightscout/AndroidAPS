@@ -55,6 +55,7 @@ fun AdaptiveListIntPreferenceItem(
         enabled = visibility.enabled,
         summary = { Text(currentEntry) },
         dialogSummary = dialogSummary,
+        type = if (intKey.useDropdown) ListPreferenceType.DROPDOWN_MENU else ListPreferenceType.ALERT_DIALOG,
         valueToText = { value ->
             val index = entryValues.indexOf(value)
             AnnotatedString(entries.getOrElse(index) { value.toString() })

@@ -111,6 +111,8 @@
 <string name="eversense_status_title">Status &amp; Connection</string>
 
 <string name="eversense_cloud_upload_enabled">Enable cloud upload</string>
+<string name="eversense_cloud_upload_settings" tools:ignore="MissingTranslation">Cloud upload</string>
+<string name="eversense_cloud_upload_interval" tools:ignore="MissingTranslation">Upload interval</string>
 <string name="eversense_force_cloud_upload_title" tools:ignore="MissingTranslation">Upload data now</string>
 <string name="eversense_force_cloud_upload_summary" tools:ignore="MissingTranslation">Force immediate cloud upload to Eversense DMS</string>
 

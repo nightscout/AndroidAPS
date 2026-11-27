@@ -66,6 +66,7 @@ import app.aaps.plugins.source.activities.EversenseCalibrationActivity
 import app.aaps.plugins.source.activities.EversensePlacementActivity
 import app.aaps.plugins.source.keys.EversenseIntentKey
 import app.aaps.plugins.source.keys.EversenseStringKey
+import app.aaps.plugins.source.keys.EversenseUploadInterval
 import app.aaps.core.ui.compose.icons.IcPluginEversense
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import dev.zacsweers.metro.AppScope
@@ -110,7 +111,8 @@ class EversensePlugin(
         .pluginName(TextRef.AndroidRes(R.string.source_eversense))
         .preferencesVisibleInSimpleMode(false)
         .description(TextRef.AndroidRes(R.string.description_source_eversense)),
-    ownPreferences = EversenseStringKey.entries + EversenseBooleanKey.entries + EversenseIntentKey.entries + LegacyEversenseStringKey.entries + EversenseRuntimeKey.entries,
+    ownPreferences = EversenseStringKey.entries + EversenseBooleanKey.entries + EversenseIntentKey.entries +
+        LegacyEversenseStringKey.entries + EversenseRuntimeKey.entries + EversenseUploadInterval,
     aapsLogger, rh, preferences, config, notificationManager
 ), BgSource, EversenseWatcher, EversenseCalibrationSource {
 
@@ -188,7 +190,10 @@ class EversensePlugin(
         // so we must set username/password unconditionally for new phone first-boot
         checkCredentialsNotification()
         eversense.start()
-        preferences.observe(EversenseBooleanKey.EversenseCloudUploadEnabled)
+        combine(
+            preferences.observe(EversenseBooleanKey.EversenseCloudUploadEnabled),
+            preferences.observe(EversenseUploadInterval)
+        ) { enabled, _ -> enabled }
             .onEach { enabled -> if (enabled) cloudUploader.flush() }
             .launchIn(ioScope)
         combine(
@@ -320,7 +325,14 @@ class EversensePlugin(
         items = listOf(
             EversenseIntentKey.EversenseStatus.withClick { openActivity(EversenseStatusActivity::class.java) },
             EversenseBooleanKey.EversenseCloudUploadEnabled,
-            EversenseIntentKey.EversenseForceCloudUpload.withClick { triggerManualCloudUpload() },
+            PreferenceSubScreenDef(
+                key = "eversense_cloud_upload_settings",
+                title = TextRef.AndroidRes(R.string.eversense_cloud_upload_settings),
+                items = listOf(
+                    EversenseIntentKey.EversenseForceCloudUpload.withClick { triggerManualCloudUpload() },
+                    EversenseUploadInterval
+                )
+            ),
             EversenseBooleanKey.EversenseDiagnosticLogging,
             PreferenceSubScreenDef(
                 key = "eversense_credentials_screen",
@@ -630,6 +642,11 @@ class EversensePlugin(
             scope = { ioScope },
             store = { eversense.cloudStore() },
             enabled = ::cloudUploadEnabled,
+            intervalMs = {
+                val hours = preferences.get(EversenseUploadInterval)
+                val validHours = if (hours in EversenseUploadInterval.entries) hours else EversenseUploadInterval.defaultValue
+                validHours * app.aaps.plugins.source.eversense.EversenseCloudUploader.HOUR_MS
+            },
             online = { eversense.hasInternet() },
             now = System::currentTimeMillis,
             elapsed = android.os.SystemClock::elapsedRealtime,
@@ -699,6 +716,9 @@ class EversensePlugin(
             )
             aapsLogger.info(LTag.BGSOURCE, "Eversense batch upload (365 device events): success=${deviceEvents.success} sent=${deviceEvents.sentCount} status=${deviceEvents.httpStatus}")
 
+            if (deviceEvents.success && cloudUploadEnabled()) {
+                app.aaps.plugins.eversense.util.EversenseHttp365Util.putAppValues(prefs, config.VERSION_NAME)
+            }
             deviceEvents.success
         } else {
             val txId = state.transmitterName.ifEmpty { state.transmitterSerialNumber }
@@ -715,6 +735,9 @@ class EversensePlugin(
             val deviceEvents = app.aaps.plugins.eversense.util.EversenseHttpE3Util.putDeviceEvents(
                 prefs, dmsReadings, txId, calibrations, state.activeAlarms)
             aapsLogger.info(LTag.BGSOURCE, "Eversense batch upload (E3 device events): success=$deviceEvents")
+            if (deviceEvents && cloudUploadEnabled()) {
+                app.aaps.plugins.eversense.util.EversenseHttpE3Util.putAppValues(prefs, config.VERSION_NAME)
+            }
             deviceEvents
         }
     }

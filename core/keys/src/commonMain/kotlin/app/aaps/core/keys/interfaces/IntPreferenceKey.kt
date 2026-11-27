@@ -37,6 +37,10 @@ interface IntPreferenceKey : PreferenceKey, IntNonPreferenceKey {
     val entries: Map<Int, TextRef>
         get() = emptyMap()
 
+    /** Show LIST choices in an anchored menu. */
+    val useDropdown: Boolean
+        get() = false
+
 }
 
 /**

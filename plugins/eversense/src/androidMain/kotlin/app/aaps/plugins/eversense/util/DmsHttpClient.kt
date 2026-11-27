@@ -1,11 +1,16 @@
 package app.aaps.plugins.eversense.util
 
+import android.os.Build
 import app.aaps.plugins.eversense.protocol.PacketTime
 import app.aaps.plugins.eversense.storage.EversenseStore
 import app.aaps.plugins.eversense.storage.edit
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
+import java.util.Locale
+import java.util.TimeZone
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 /** One transport implementation for E3 and 365, with explicit response-reading policies. */
 internal object DmsHttpClient {
@@ -21,6 +26,30 @@ internal object DmsHttpClient {
     fun post(url: String, body: String, token: String? = null, form: Boolean = false,
              tolerantBody: Boolean = false, readBody: Boolean = true): Reply =
         exchange(url, "POST", body, token, if (form) "application/x-www-form-urlencoded" else "application/json", 30_000, tolerantBody, readBody)
+
+    fun putAppValues(careBaseUrl: String, token: String, appVersion: String) {
+        try {
+            val locale = Locale.getDefault().toLanguageTag()
+            val timeZone = TimeZone.getDefault()
+            val offsetMinutes = timeZone.getOffset(PacketTime.nowMillis()) / 60_000
+            val body = buildJsonObject {
+                put("Active", true)
+                put("AppOS", "Android")
+                put("AppOSVersion", Build.VERSION.RELEASE)
+                put("AppName", "AndroidAPS")
+                put("AppVersion", appVersion)
+                put("AppReserveField1", "$locale|${timeZone.id}|$offsetMinutes")
+                put("DeviceType", Build.MODEL)
+                put("AutoSync", 0)
+            }
+            val reply = post("${careBaseUrl}api/care/PutAppValues", body.toString(), token, readBody = false)
+            if (reply.status !in 200..299) {
+                EversenseLogger.error("DmsHttpClient", "PutAppValues failed: HTTP ${reply.status}")
+            }
+        } catch (error: Exception) {
+            EversenseLogger.error("DmsHttpClient", "PutAppValues failed: ${error.javaClass.simpleName}")
+        }
+    }
 
     fun get(url: String, token: String): Reply = exchange(url, "GET", null, token, null, 0, false, true)
 

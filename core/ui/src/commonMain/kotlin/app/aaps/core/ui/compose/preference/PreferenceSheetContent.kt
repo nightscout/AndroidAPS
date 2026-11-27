@@ -48,6 +48,7 @@ fun PreferenceSheetContent(
                 val looseKeys = settingsDef.items.filterNot { it is PreferenceSubScreenDef }
                 if (looseKeys.isNotEmpty()) AdaptivePreferenceList(items = looseKeys, visibilityContext = visibilityContext)
                 groups.forEach { group ->
+                    if (!shouldShowPreferenceSubScreen(group, visibilityContext)) return@forEach
                     var expanded by remember(group.key) { mutableStateOf(false) }
                     CollapsibleCardSectionContent(
                         title = group.title,

@@ -6,7 +6,6 @@ import app.aaps.plugins.eversense.models.EversenseState
 import app.aaps.plugins.eversense.storage.EversenseStore
 import app.aaps.plugins.eversense.storage.edit
 import app.aaps.plugins.eversense.util.StorageKeys
-import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -24,7 +23,8 @@ internal class EversenseCloudUploader(
     private val now: () -> Long,
     private val elapsed: () -> Long,
     private val upload: suspend (EversenseStore, PendingUpload) -> Boolean,
-    private val onError: (Exception) -> Unit
+    private val onError: (Exception) -> Unit,
+    private val intervalMs: () -> Long = { HOUR_MS }
 ) {
     @Serializable
     data class PendingUpload(
@@ -42,7 +42,7 @@ internal class EversenseCloudUploader(
 
     private val json = Json { ignoreUnknownKeys = true }
     private val mutex = Mutex()
-    private val busy = AtomicBoolean(false)
+    private val uploadMutex = Mutex()
     private var lastAttemptElapsed: Long? = null
 
     suspend fun enqueue(type: EversenseType, readings: List<EversenseCGMResult>, state: EversenseState) {
@@ -69,67 +69,70 @@ internal class EversenseCloudUploader(
     }
 
     fun flush(force: Boolean = false) {
-        if (!busy.compareAndSet(false, true)) return
-        val job = scope().launch {
-            try {
-                val reservation = mutex.withLock {
-                    if (!enabled() || !online()) return@launch
-                    val prefs = store() ?: return@launch
-                    val wall = now()
-                    val last = prefs.getLong(StorageKeys.CLOUD_LAST_ATTEMPT, 0)
-                    val previousElapsed = lastAttemptElapsed
-                    if (!force) {
-                        if (previousElapsed != null && elapsed() - previousElapsed < HOUR_MS) return@launch
-                        if (last > wall) {
-                            prefs.edit(commit = true) { putLong(StorageKeys.CLOUD_LAST_ATTEMPT, wall) }
-                            return@launch
-                        }
-                        if (prefs.contains(StorageKeys.CLOUD_LAST_ATTEMPT) && wall - last < HOUR_MS) return@launch
-                    }
-                    val pending = bounded(read(prefs))
-                    val sent = if (pending.any { it.type == EversenseType.EVERSENSE_365 }) readSentHistory(prefs) else emptyMap()
-                    val batches = pending.mapNotNull { batch ->
-                        val acknowledged = if (batch.type == EversenseType.EVERSENSE_365)
-                            sent[batch.state.transmitterSerialNumber]?.readings else null
-                        if (acknowledged.isNullOrEmpty()) batch else {
-                            val keys = acknowledged.mapTo(mutableSetOf()) { it.datetime to it.sensorId }
-                            val remaining = batch.readings.filterNot { (it.datetime to it.sensorId) in keys }
-                            if (remaining.isEmpty()) null else batch.copy(readings = remaining)
-                        }
-                    }
-                    if (batches != pending) save(prefs, batches)
-                    if (batches.isEmpty()) return@launch
-                    // Reserve before IO, including failed attempts, and retain across process restarts.
-                    prefs.edit(commit = true) { putLong(StorageKeys.CLOUD_LAST_ATTEMPT, wall) }
-                    lastAttemptElapsed = elapsed()
-                    prefs to batches
-                }
-                val (prefs, batches) = reservation
-                for (batch in batches) {
-                    if (!enabled() || !online()) break
-                    if (!upload(prefs, batch)) break
-                    mutex.withLock {
-                        val remaining = read(prefs).map { current ->
-                            if (current.type == batch.type && current.state.transmitterSerialNumber == batch.state.transmitterSerialNumber)
-                                current.copy(readings = current.readings.filterNot { it in batch.readings })
-                            else current
-                        }.filter { it.readings.isNotEmpty() }
-                        val history = if (batch.type == EversenseType.EVERSENSE_365 && batch.state.transmitterSerialNumber.isNotEmpty()) {
-                            updatedSentHistory(prefs, batch, now())
-                        } else null
-                        prefs.edit(commit = true) {
-                            putString(StorageKeys.CLOUD_QUEUE, json.encodeToString(remaining))
-                            if (history != null) putString(StorageKeys.CLOUD_REPLAY_HISTORY, json.encodeToString(history))
-                        }
-                    }
-                }
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                onError(e)
-            }
+        scope().launch {
+            uploadMutex.withLock { uploadPending(force) }
         }
-        job.invokeOnCompletion { busy.set(false) }
+    }
+
+    private suspend fun uploadPending(force: Boolean) {
+        try {
+            val reservation = mutex.withLock {
+                if (!enabled() || !online()) return
+                val prefs = store() ?: return
+                val wall = now()
+                val last = prefs.getLong(StorageKeys.CLOUD_LAST_ATTEMPT, 0)
+                val previousElapsed = lastAttemptElapsed
+                val interval = intervalMs()
+                if (!force && interval > 0) {
+                    if (previousElapsed != null && elapsed() - previousElapsed < interval) return
+                    if (last > wall) {
+                        prefs.edit(commit = true) { putLong(StorageKeys.CLOUD_LAST_ATTEMPT, wall) }
+                        return
+                    }
+                    if (prefs.contains(StorageKeys.CLOUD_LAST_ATTEMPT) && wall - last < interval) return
+                }
+                val pending = bounded(read(prefs))
+                val sent = if (pending.any { it.type == EversenseType.EVERSENSE_365 }) readSentHistory(prefs) else emptyMap()
+                val batches = pending.mapNotNull { batch ->
+                    val acknowledged = if (batch.type == EversenseType.EVERSENSE_365)
+                        sent[batch.state.transmitterSerialNumber]?.readings else null
+                    if (acknowledged.isNullOrEmpty()) batch else {
+                        val keys = acknowledged.mapTo(mutableSetOf()) { it.datetime to it.sensorId }
+                        val remaining = batch.readings.filterNot { (it.datetime to it.sensorId) in keys }
+                        if (remaining.isEmpty()) null else batch.copy(readings = remaining)
+                    }
+                }
+                if (batches != pending) save(prefs, batches)
+                if (batches.isEmpty()) return
+                // Reserve before IO, including failed attempts, and retain across process restarts.
+                prefs.edit(commit = true) { putLong(StorageKeys.CLOUD_LAST_ATTEMPT, wall) }
+                lastAttemptElapsed = elapsed()
+                prefs to batches
+            }
+            val (prefs, batches) = reservation
+            for (batch in batches) {
+                if (!enabled() || !online()) break
+                if (!upload(prefs, batch)) break
+                mutex.withLock {
+                    val remaining = read(prefs).map { current ->
+                        if (current.type == batch.type && current.state.transmitterSerialNumber == batch.state.transmitterSerialNumber)
+                            current.copy(readings = current.readings.filterNot { it in batch.readings })
+                        else current
+                    }.filter { it.readings.isNotEmpty() }
+                    val history = if (batch.type == EversenseType.EVERSENSE_365 && batch.state.transmitterSerialNumber.isNotEmpty()) {
+                        updatedSentHistory(prefs, batch, now())
+                    } else null
+                    prefs.edit(commit = true) {
+                        putString(StorageKeys.CLOUD_QUEUE, json.encodeToString(remaining))
+                        if (history != null) putString(StorageKeys.CLOUD_REPLAY_HISTORY, json.encodeToString(history))
+                    }
+                }
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            onError(e)
+        }
     }
 
     private fun read(prefs: EversenseStore): List<PendingUpload> =

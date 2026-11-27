@@ -100,7 +100,7 @@ private fun RenderPreferenceItems(
             }
 
             is PreferenceSubScreenDef -> {
-                val shouldShow = shouldShowSubScreenInline(
+                val shouldShow = shouldShowPreferenceSubScreen(
                     subScreen = item,
                     visibilityContext = visibilityContext
                 )
@@ -146,7 +146,7 @@ private fun RenderPreferenceItems(
  * Used in inline rendering context (AllPreferencesScreen).
  */
 @Composable
-private fun shouldShowSubScreenInline(
+internal fun shouldShowPreferenceSubScreen(
     subScreen: PreferenceSubScreenDef,
     visibilityContext: VisibilityContext?
 ): Boolean {
