@@ -376,6 +376,14 @@ class BolusWizard(
                     )
                 )
             }
+            // The bolus above holds 2 hours of basal, and the SUPER_BOLUS mode stops the basal for that time.
+            // Shown on the advisor lines too: the advisor gives the same dose.
+            if (useSuperBolus && insulinFromSuperBolus > 0) {
+                line(
+                    ConfirmationRole.INFO,
+                    rh.gs(InterfacesStrings.wizard_superbolus_included, rh.gs(InterfacesStrings.format_insulin_units, insulinFromSuperBolus))
+                )
+            }
             if (carbs > 0 && !advisor) {
                 val carbsText = rh.gs(InterfacesStrings.format_carbs, carbs)
                 val carbsWithTime = when {

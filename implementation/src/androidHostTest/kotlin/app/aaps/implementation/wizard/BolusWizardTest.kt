@@ -2,6 +2,7 @@ package app.aaps.implementation.wizard
 
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.IobTotal
@@ -12,6 +13,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.wizard.BolusWizard
@@ -86,8 +88,9 @@ class BolusWizardTest : TestBaseWithProfile() {
         return profile
     }
 
-    private fun createWizard() = BolusWizard(
-        aapsLogger, rh, preferences, profileFunction, profileUtil, constraintChecker, iobCobCalculator, dateUtil, config, uel, automation, eatReminder,
+    /** [text] is the mocked resolver by default; a test that reads the texts passes the real `baseText`. */
+    private fun createWizard(text: TextResolver = rh) = BolusWizard(
+        aapsLogger, text, preferences, profileFunction, profileUtil, constraintChecker, iobCobCalculator, dateUtil, config, uel, automation, eatReminder,
         glucoseStatusProvider, persistenceLayer, ch
     )
 
@@ -425,5 +428,35 @@ class BolusWizardTest : TestBaseWithProfile() {
         )
         assertThat(bw.insulinFromSuperBolus).isWithin(0.001).of(0.0)
         assertThat(bw.calculatedTotalInsulin).isWithin(0.001).of(5.0)
+    }
+
+    @Test
+    fun superBolusIsShownInTheConfirmation() = runBlocking {
+        // The dose is 2.0 U larger and the basal stops: the user must see both, on the advisor lines too
+        val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
+        setupBasal(profile)
+        val bw = createWizard(baseText).doCalc(
+            profile, "", null, carbs = 60, cob = 0.0, bg = 0.0, correction = 0.0, percentageCorrection = 100,
+            useBg = false, useCob = false, includeBolusIOB = false, includeBasalIOB = false,
+            useSuperBolus = true, useTT = false, useTrend = false, useAlarm = false
+        )
+        val superBolusLine = baseText.gs(InterfacesStrings.wizard_superbolus_included, baseText.gs(InterfacesStrings.format_insulin_units, 2.0))
+
+        assertThat(bw.buildConfirmationLines(advisor = false).map { it.text }).contains(superBolusLine)
+        assertThat(bw.buildConfirmationLines(advisor = true).map { it.text }).contains(superBolusLine)
+    }
+
+    @Test
+    fun noSuperBolusLineInTheConfirmationWithoutSuperBolus() = runBlocking {
+        val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
+        setupBasal(profile)
+        val bw = createWizard(baseText).doCalc(
+            profile, "", null, carbs = 60, cob = 0.0, bg = 0.0, correction = 0.0, percentageCorrection = 100,
+            useBg = false, useCob = false, includeBolusIOB = false, includeBasalIOB = false,
+            useSuperBolus = false, useTT = false, useTrend = false, useAlarm = false
+        )
+
+        // Only the bolus line and the carbs line
+        assertThat(bw.buildConfirmationLines(advisor = false)).hasSize(2)
     }
 }

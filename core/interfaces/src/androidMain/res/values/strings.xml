@@ -159,6 +159,7 @@
     <string name="bolus_recorded_only">Bolus will be recorded only (not delivered by pump)</string>
     <string name="advisoralarm">Run alarm when it is time to eat</string>
     <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eCarbs %1$d g / %2$d h (+%3$d min)</string>
+    <string name="wizard_superbolus_included" comment="Line of the bolus confirmation. %1$s=insulin of the superbolus with unit. It is part of the bolus shown above it. Example: Includes superbolus 2.00 U. Basal stops for 2 hours.">Includes superbolus %1$s. Basal stops for 2 hours.</string>
     <string name="format_insulin_units">%1$.2f U</string>
     <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
     <string name="carbs_with_time_later" comment="Carbs eaten later. %1$s=carbs with unit, %2$s=minutes from now, with unit. Example: 20 g (+15 min)">%1$s (+%2$s)</string>
