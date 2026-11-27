@@ -13,4 +13,17 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:node="remove" />
 
+    <application>
+        <!-- Crashlytics starts off in a debug build. The instrumented tests (CircleCI tests this build)
+             turn collection off in BaseTestApp, but Firebase applies "off" only from the next run of the
+             app, and a CI emulator is new each time: every CI run reported to the production dashboard,
+             a new "user" each time. This flag applies from the first run.
+             MainApp still turns collection on through FabricPrivacyImpl.start() for a user who allows it,
+             and "on" applies at once. Not in release builds: there it would lose the crashes at app start
+             that happen before the settings are read. -->
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false" />
+    </application>
+
 </manifest>
