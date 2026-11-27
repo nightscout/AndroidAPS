@@ -436,15 +436,13 @@
     <string name="bg_alarms_stale_minutes">Minutes without a reading</string>
     <string name="bg_alarms_allowed_range" comment="Under a number field: the values it takes. %1$s=the lowest, %2$s=the highest, each with its unit. Example: Allowed: 2.2 mmol/l – 4.4 mmol/l">Allowed: %1$s – %2$s</string>
     <string name="bg_alarms_reset" comment="Button and dialog title: replace the user's glucose alarm rules with the default rules of AAPS">Reset rules to default</string>
-    <string name="bg_alarms_reset_text">On every phone, all rules are replaced by these:</string>
-    <string name="bg_alarms_reset_already" comment="Under the greyed button Reset rules to default, when the glucose alarm rules are already the default ones">These are the default rules.</string>
-    <string name="bg_alarm_rule_low" comment="Title of a low glucose alarm rule. %1$s=the threshold with its unit, for example: 3.9 mmol/l">Low below %1$s</string>
+    <string name="bg_alarms_reset_text">On every phone, all rules are replaced by these:</string>    <string name="bg_alarm_rule_low" comment="Title of a low glucose alarm rule. %1$s=the threshold with its unit, for example: 3.9 mmol/l">Low below %1$s</string>
     <string name="bg_alarm_rule_high" comment="Title of a high glucose alarm rule. %1$s=the threshold with its unit, for example: 13.9 mmol/l">High above %1$s</string>
     <string name="bg_alarm_rule_low_title">Low alarm</string>
     <string name="bg_alarm_rule_high_title">High alarm</string>
     <string name="bg_alarm_rule_add">Add rule</string>
     <string name="bg_alarm_pause_hint">While paused, these alarms come as a card with no sound. If one is still on when the pause ends, it rings then. Urgent low is never paused.</string>
-    <string name="bg_alarms_pause_all_for" comment="Button on top of the glucose alarms: opens a list of times (30 min, 1 h, 2 h, 4 h) to pause every glucose alarm but urgent low on this phone">Pause all for…</string>
+    <string name="bg_alarms_pause_all_for" comment="Button at the bottom of the glucose alarms, and the title of its dialog with times (30 min, 1 h, 2 h, 4 h) to pause every glucose alarm but urgent low on this phone">Pause all for…</string>
     <string name="bg_alarm_paused_until" comment="Heading of the paused glucose alarms. %1$s=the time the pause ends, as HH:MM">Paused until %1$s</string>
     <string name="bg_alarm_resume" comment="Button: end the pause of the glucose alarms now">Resume</string>
     <string name="bg_alarm_rule_persistent_high" comment="Title of a persistent high glucose alarm rule. %1$s=the threshold with its unit, for example: 10.0 mmol/l">Persistent high above %1$s</string>

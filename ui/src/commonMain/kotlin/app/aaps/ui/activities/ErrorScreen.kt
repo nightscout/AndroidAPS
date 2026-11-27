@@ -194,7 +194,7 @@ fun ErrorScreen(
                     ) {
                         silenceLengths.forEach { minutes ->
                             Button(onClick = { onSilenceFor(minutes) }, modifier = Modifier.weight(1f)) {
-                                Text(silenceLength(minutes), maxLines = 1)
+                                Text(durationText(minutes), maxLines = 1)
                             }
                         }
                     }
@@ -215,7 +215,7 @@ fun ErrorScreen(
                     if (onSilenceAll != null) {
                         Spacer(modifier = Modifier.height(AapsSpacing.medium))
                         OutlinedButton(onClick = onSilenceAll, modifier = Modifier.fillMaxWidth()) {
-                            Text(stringResource(UiStrings.alarm_silence_all_bg, silenceLength(silenceAllMinutes)), textAlign = TextAlign.Center)
+                            Text(stringResource(UiStrings.alarm_silence_all_bg, durationText(silenceAllMinutes)), textAlign = TextAlign.Center)
                         }
                     }
                 } else {
@@ -265,8 +265,8 @@ fun ErrorScreen(
     }
 }
 
-/** A silence length as the user reads it: "15 min", or "2 h" from a full hour on. */
+/** A length of a silence or a pause as the user reads it: "15 min", or "2 h" from a full hour on. */
 @Composable
-private fun silenceLength(minutes: Int): String =
+internal fun durationText(minutes: Int): String =
     if (minutes >= 60 && minutes % 60 == 0) stringResource(CoreUiStrings.format_hours_only, minutes / 60)
     else stringResource(CoreUiStrings.format_mins, minutes)

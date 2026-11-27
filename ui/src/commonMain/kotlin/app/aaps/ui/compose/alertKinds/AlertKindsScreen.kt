@@ -57,6 +57,8 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.ActionButtons
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 
@@ -131,8 +133,9 @@ private fun SectionCard(section: AlertSettingsSection, silentOrOff: Int, onClick
  * plays it as an alarm for a few seconds, also in Do Not Disturb, or vibrates on a row set to Vibrate. [onTest] returns
  * false when nothing was played: an alarm is ringing.
  *
- * The BG alarms add what is set for every phone: [header] above the cards, [extra] in a row's card under its title, and
- * [footer] under the cards.
+ * The BG alarms add what is set for every phone: [header] above the cards and [extra] in a row's card under its title;
+ * and [actions], the screen's buttons, pinned at the bottom as on the pump and sync screens, with [actionsStatus] above
+ * them, pinned too: the state they change, as "Paused until 21:30" over Resume.
  */
 @Composable
 fun AlertSectionScreen(
@@ -147,30 +150,43 @@ fun AlertSectionScreen(
     listState: LazyListState = rememberLazyListState(),
     header: LazyListScope.() -> Unit = {},
     extra: @Composable ColumnScope.(AlertSettingRow) -> Unit = {},
-    footer: LazyListScope.() -> Unit = {}
+    actions: List<ScreenAction> = emptyList(),
+    actionsStatus: (@Composable () -> Unit)? = null
 ) {
     var addingTo by remember { mutableStateOf<AlertSettingRow?>(null) }
     Scaffold(topBar = { BackTopBar(stringResource(section.section.title()), onBack) }) { paddingValues ->
-        LazyColumn(
-            state = listState,
+        Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(paddingValues),
-            contentPadding = PaddingValues(horizontal = AapsSpacing.extraLarge, vertical = AapsSpacing.medium),
-            verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
+                .padding(paddingValues)
         ) {
-            if (section.devices.isNotEmpty()) item(key = "devices") {
-                Column {
-                    section.devices.forEach { device ->
-                        Text(stringResource(device), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            LazyColumn(
+                state = listState,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = AapsSpacing.extraLarge, vertical = AapsSpacing.medium),
+                verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
+            ) {
+                if (section.devices.isNotEmpty()) item(key = "devices") {
+                    Column {
+                        section.devices.forEach { device ->
+                            Text(stringResource(device), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
                     }
                 }
+                header()
+                items(section.rows, key = { it.setting.id }) { row ->
+                    SettingCard(row, sounds[row.setting.id], onChoice, onClear, onSound, onTest, onAddException = { addingTo = row }) { extra(row) }
+                }
             }
-            header()
-            items(section.rows, key = { it.setting.id }) { row ->
-                SettingCard(row, sounds[row.setting.id], onChoice, onClear, onSound, onTest, onAddException = { addingTo = row }) { extra(row) }
+            if (actionsStatus != null || actions.any { it.visible }) Column(
+                modifier = Modifier.padding(horizontal = AapsSpacing.extraLarge, vertical = AapsSpacing.medium),
+                verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
+            ) {
+                actionsStatus?.invoke()
+                ActionButtons(actions)
             }
-            footer()
         }
     }
     addingTo?.let { row ->

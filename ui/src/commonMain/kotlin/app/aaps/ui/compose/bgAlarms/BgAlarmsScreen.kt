@@ -6,10 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.toggleable
@@ -18,17 +16,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -59,9 +57,11 @@ import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.LocalDateUtil
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.TimeRangePicker
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
+import app.aaps.ui.activities.durationText
 import app.aaps.ui.compose.alertKinds.AlertSectionScreen
 import app.aaps.ui.compose.alertKinds.AlertSettingsSection
 import app.aaps.ui.compose.alertKinds.LinedUpButtonPadding
@@ -97,8 +97,9 @@ class BgUnits(
  * Every change is saved at once ([onSave] with the whole list of rules): there is no Save button.
  *
  * The pause of this phone (step 2d), also on a client: a pause is each phone's own, as its choice to ring. Only the one
- * planned ahead is here, "Pause all for…" on top, with "Paused until" and Resume while it lasts; a ringing alarm is
- * silenced from its own screen, one tap (decided 2026-11-26). [pauses] is kind id to the end of its pause; [timeText]
+ * planned ahead is here, "Pause all for…" at the bottom with Reset, as the actions of the pump and sync screens, and
+ * while it lasts "Paused until" over them, its button then Resume (decided 2026-11-27); a ringing alarm is silenced from
+ * its own screen, one tap (decided 2026-11-26). [pauses] is kind id to the end of its pause; [timeText]
  * shows such an end as a time of day. [onRuleTest] plays a rule's kind as it rings at the severity in its dialog, on
  * this phone; false: not played, an alarm is ringing.
  */
@@ -134,6 +135,8 @@ fun BgAlarmsScreen(
     var editingUrgentLow by remember { mutableStateOf(false) }
     var editingStale by remember { mutableStateOf(false) }
     var resetting by remember { mutableStateOf(false) }
+    var pausing by remember { mutableStateOf(false) }
+    val pausedUntil = BgAlert.PAUSABLE.mapNotNull { pauses[it.id] }.maxOrNull()
 
     AlertSectionScreen(
         section = section,
@@ -147,9 +150,6 @@ fun BgAlarmsScreen(
         listState = listState,
         header = {
             if (readOnly) item(key = "readOnly") { Text(stringResource(UiStrings.bg_alarms_read_only), style = MaterialTheme.typography.bodyMedium) }
-            item(key = "pauseAll") {
-                PauseAll(pauses = pauses, timeText = timeText, onPause = { minutes -> onPause(BgAlert.PAUSABLE, minutes) }, onResume = { onResume(BgAlert.PAUSABLE) })
-            }
         },
         extra = { row ->
             when (row.setting) {
@@ -180,24 +180,32 @@ fun BgAlarmsScreen(
                 else                -> Unit
             }
         },
-        // Where the rules may be changed, always, so it can be found (decided 2026-11-27: hidden while the rules were
-        // the default ones, nobody knew it was there); greyed when it would change nothing, and saying why
-        footer = {
-            if (!readOnly) item(key = "reset") {
-                val isDefault = rules == BgAlarmRules.DEFAULT
-                Column {
-                    TextButton(onClick = { resetting = true }, enabled = !isDefault, contentPadding = LinedUpButtonPadding) {
-                        Icon(Icons.Filled.Refresh, contentDescription = null)
-                        Text(stringResource(UiStrings.bg_alarms_reset))
-                    }
-                    if (isDefault) Text(
-                        stringResource(UiStrings.bg_alarms_reset_already),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        }
+        // The screen's actions, pinned at the bottom as on the pump and sync screens (decided 2026-11-27). The pause is
+        // this phone's own, also on a client. Reset only where the rules may be changed, always there so it can be
+        // found (hidden while the rules were the default ones, nobody knew it was there), greyed when it would change
+        // nothing.
+        actions = listOf(
+            if (pausedUntil == null) ScreenAction(label = stringResource(UiStrings.bg_alarms_pause_all_for), icon = Icons.Filled.Pause, onClick = { pausing = true })
+            else ScreenAction(label = stringResource(UiStrings.bg_alarm_resume), icon = Icons.Filled.PlayArrow, onClick = { onResume(BgAlert.PAUSABLE) }),
+            ScreenAction(
+                label = stringResource(UiStrings.bg_alarms_reset),
+                icon = Icons.Filled.Refresh,
+                enabled = rules != BgAlarmRules.DEFAULT,
+                visible = !readOnly,
+                onClick = { resetting = true }
+            )
+        ),
+        // While a pause lasts, also one given from a ringing alarm, it is said right over its Resume: seen wherever the
+        // list is scrolled to (on top of the list it was out of sight after pausing from the bottom)
+        actionsStatus = pausedUntil?.let { until -> { Paused(timeText(until)) } }
+    )
+
+    if (pausing) PauseDialog(
+        onPick = { minutes ->
+            pausing = false
+            onPause(BgAlert.PAUSABLE, minutes)
+        },
+        onDismiss = { pausing = false }
     )
 
     // It replaces every rule, on every phone: it says what comes instead and asks first
@@ -625,44 +633,40 @@ private fun RuleDialog(
 private val pauseLengths = listOf(30, 60, 120, 240)
 
 /**
- * The pause of this phone, planned ahead, as before sport: "Pause all for…" - the lows, the highs and missed readings
- * for a while, never urgent low; nothing is picked before the user picks it, so nothing looks paused that is not.
- * While a pause lasts, also one given from a ringing alarm ("Silence all BG alarms"), it says until when, with
- * Resume. Under it, once, how a pause works. Snoozing one alarm is done on the alarm itself (decided 2026-11-26).
+ * While a pause of this phone lasts, also one given from a ringing alarm ("Silence all BG alarms"): until when, over
+ * Resume. How a pause works is said in its dialog, where it is chosen.
  */
 @Composable
-private fun PauseAll(pauses: Map<String, Long>, timeText: (Long) -> String, onPause: (Int) -> Unit, onResume: () -> Unit) {
-    var choosing by remember { mutableStateOf(false) }
-    val until = BgAlert.PAUSABLE.mapNotNull { pauses[it.id] }.maxOrNull()
-    Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)) {
-        if (until != null) Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
-            Icon(Icons.Filled.Pause, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-            Text(stringResource(UiStrings.bg_alarm_paused_until, timeText(until)), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
-            TextButton(onClick = onResume) { Text(stringResource(UiStrings.bg_alarm_resume)) }
-        }
-        else Box(modifier = Modifier.fillMaxWidth()) {
-            OutlinedButton(onClick = { choosing = true }, modifier = Modifier.fillMaxWidth()) {
-                Icon(Icons.Filled.Pause, contentDescription = null)
-                Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
-                Text(stringResource(UiStrings.bg_alarms_pause_all_for))
-            }
-            PauseLengthMenu(expanded = choosing, onDismiss = { choosing = false }) { minutes ->
-                choosing = false
-                onPause(minutes)
-            }
-        }
-        Text(stringResource(UiStrings.bg_alarm_pause_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+private fun Paused(until: String) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+        Icon(Icons.Filled.Pause, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+        Text(stringResource(UiStrings.bg_alarm_paused_until, until), style = MaterialTheme.typography.bodyLarge)
     }
 }
 
+/**
+ * "Pause all for…", planned ahead, as before sport: the lows, the highs and missed readings for a while, never urgent
+ * low. How a pause works is said here, where it is chosen, and one tap on a length pauses, as on the alarm screen
+ * (decided 2026-11-27). Snoozing one alarm is done on the alarm itself.
+ */
 @Composable
-private fun PauseLengthMenu(expanded: Boolean, onDismiss: () -> Unit, onPick: (Int) -> Unit) {
-    DropdownMenu(expanded = expanded, onDismissRequest = onDismiss) {
-        pauseLengths.forEach { m ->
-            DropdownMenuItem(
-                text = { Text(if (m >= 60 && m % 60 == 0) stringResource(CoreUiStrings.format_hours_only, m / 60) else stringResource(CoreUiStrings.format_mins, m)) },
-                onClick = { onPick(m) }
-            )
-        }
-    }
+private fun PauseDialog(onPick: (Int) -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(UiStrings.bg_alarms_pause_all_for)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+                Text(stringResource(UiStrings.bg_alarm_pause_hint), style = MaterialTheme.typography.bodyMedium)
+                // Two in a row: four do not fit with a large font
+                pauseLengths.chunked(2).forEach { pair ->
+                    Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+                        pair.forEach { minutes ->
+                            FilledTonalButton(onClick = { onPick(minutes) }, modifier = Modifier.weight(1f)) { Text(durationText(minutes), maxLines = 1) }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.cancel)) } }
+    )
 }

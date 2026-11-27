@@ -140,7 +140,7 @@ Alerts keep their three severities: CRITICAL, WARNING, INFO. The list of cards h
   adds "On every phone", a checkbox for those buttons, and "Silence all BG alarms for 1 h", a pause of this phone
   that never takes urgent low (`AlertScreen`). A rule has no silence length any more: where there is no button (a
   swipe, the watch, Mute), the BG kind decides (`BgAlert.silenceMinutes`: urgent low 15 min, lows and missed
-  readings 30 min, highs 1 h). The pause planned ahead is only "Pause all for…" on top of the BG alarms.
+  readings 30 min, highs 1 h). The pause planned ahead is only "Pause all for…" on the BG alarms screen.
 - **Scheduled alerts: ring at a time, unless cancelled before.** The platform books it in advance (a local
   notification on iOS, `AlarmManager` on Android), so it rings also when the app cannot run. It replaces four
   mechanisms of their own: `IosMissedReadingAlarm`, the eat reminder alarms, the automation reminder
@@ -200,15 +200,18 @@ that fails rings before the next try succeeds.
     was in three places): urgent low its threshold, the lows and the highs their rules, missed readings its minutes.
     The rules and the urgent low threshold are the same on every phone, so the card says so and draws a line above
     "On this phone"; on a client without the Admin role they are read-only, how it rings is not. The pause planned
-    ahead is "Pause all for…" on top, "Paused until" with Resume while it lasts (decided 2026-11-26: a card of chips
-    picked in advance looked as if something was paused; a pause per card went again the same day, as a ringing
-    alarm is silenced from its own screen). The urgent low threshold and the missed readings left Local alerts, and the BG alarm rules screen is this one.
+    ahead is "Pause all for…", a dialog that says how a pause works, with one tap per length (decided 2026-11-26: a
+    card of chips picked in advance looked as if something was paused; a pause per card went again the same day, as
+    a ringing alarm is silenced from its own screen). It and "Reset rules to default" are the screen's actions,
+    pinned at the bottom with the shared `ActionButtons`, as on the pump and sync screens (decided 2026-11-27: they
+    were an outlined button on top and a text button at the end, neither like the rest of AAPS). While a pause
+    lasts, "Paused until 21:30" is over them, and the pause button is Resume. The urgent low threshold and the
+    missed readings left Local alerts, and the BG alarm rules screen is this one.
     **Default rules** (decided 2026-11-26): a phone that never stored rules has low below 70 mg/dl as an alarm, high
     above 250 mg/dl and predicted low below 70 within 20 minutes with one sound (`BgAlarmRules.DEFAULT`, fixed ids);
     also a phone updated from a version without rules. A list the user emptied stays empty. "Reset rules to default"
-    (asks first, hidden on a read-only client) stores them, so they sync as any change does. It is always at the
-    bottom, greyed with "These are the default rules." when it would change nothing (decided 2026-11-27: hidden
-    then, nobody found it). A rule row is as in Automation and Scenes: a checkbox to turn it on and off first, a
+    (asks first, hidden on a read-only client) stores them, so they sync as any change does. It is always there,
+    greyed when it would change nothing (decided 2026-11-27: hidden then, nobody found it). A rule row is as in Automation and Scenes: a checkbox to turn it on and off first, a
     pencil at the end, and a tap on the row opens it (it had a switch only, and did not look as if it could be opened).
   - **AAPS**: the app's other alerts, one row each (time to eat, automation alarm, carbs not saved, carbs required),
     and the Nightscout announcement. Hard limit is not an alert any more (decided 2026-11-26): it comes right after the
@@ -430,7 +433,7 @@ rings because of it (decided 2026-11-21: acceptable).
   Built (2d) as a timed Silent choice in the core (`Alerts.pause`, `resume`, `pauses`), per phone, not synced: the
   card is shown, nothing rings, and what is still on rings when the pause ends (booked, so also when the app does not
   run); a silence longer than the pause still holds. "Until switched on again" is the Silent choice in Alert kinds.
-  The pause before an alert rings is the same pause. It is on top of the BG alarms screen, also on a client: all
+  The pause before an alert rings is the same pause. It is at the bottom of the BG alarms screen, also on a client: all
   but urgent low, for 30 minutes to 4 hours. "Silence all BG alarms for 1 h" on a ringing BG alarm gives the same
   pause.
 - **Noisy readings** may be marked on the alert, but never hold back urgent low.
