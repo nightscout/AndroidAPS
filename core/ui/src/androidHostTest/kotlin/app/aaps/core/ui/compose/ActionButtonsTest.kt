@@ -101,6 +101,24 @@ class ActionButtonsTest {
         assertThat(bounds(longLabel).top).isGreaterThan(bounds("Pair").top)
     }
 
+    /** No half-empty row: "Pause all for…" sat alone on a half row over a full-width Reset (iOS, 2026-11-27). */
+    @Test
+    fun buttonLeftWithoutAPartner_takesTheWholeRow() {
+        show(300.dp, "OK", longLabel)
+
+        assertThat(bounds("OK").width.value).isWithin(1f).of(300f)
+        assertThat(bounds(longLabel).width.value).isWithin(1f).of(300f)
+    }
+
+    @Test
+    fun lastOfAnOddNumber_takesTheWholeRow() {
+        show(300.dp, "OK", "Pair", "Sync")
+
+        assertThat(bounds("OK").width.value).isLessThan(150f)
+        assertThat(bounds("Sync").width.value).isWithin(1f).of(300f)
+        assertThat(bounds("Sync").top).isGreaterThan(bounds("OK").top)
+    }
+
     @Test
     fun noLabelIsCut_issue5339() {
         // Medtrum in French: "Changer le patch" showed as "Changer le"

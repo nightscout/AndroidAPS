@@ -43,6 +43,8 @@ fun TimeRangePicker(
     modifier: Modifier = Modifier
 ) {
     val dateUtil = LocalDateUtil.current
+    // The clock as the phone shows time, as the times above it: a 24-hour dial under "10:00 PM" was wrong (2026-11-27)
+    val is24Hour = is24HourClock()
     var showStartPicker by remember { mutableStateOf(false) }
     var showEndPicker by remember { mutableStateOf(false) }
 
@@ -129,7 +131,7 @@ fun TimeRangePicker(
             onDismiss = { showStartPicker = false },
             initialHour = currentHour,
             initialMinute = currentMinute,
-            is24Hour = true
+            is24Hour = is24Hour
         )
     }
 
@@ -146,7 +148,7 @@ fun TimeRangePicker(
             onDismiss = { showEndPicker = false },
             initialHour = currentHour,
             initialMinute = currentMinute,
-            is24Hour = true
+            is24Hour = is24Hour
         )
     }
 }

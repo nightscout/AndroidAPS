@@ -43,6 +43,8 @@ data class ScreenAction(
  * - A button whose label fits in half the width shares a row with the next such button.
  * - A button whose label does not fit gets a full row of its own. A half-width button before it waits
  *   for the next one that fits, so a long label does not leave two half-empty rows.
+ * - A button that is left without a partner takes the whole row, so no row is half empty: "Pause all
+ *   for…" sat alone on a half row over a full-width "Reset rules to default" (iOS, 2026-11-27).
  * - If a label does not fit even in the full width (a very large font), it goes to a second line.
  *   Losing a part of the label is worse than wrapping it.
  *
@@ -87,7 +89,8 @@ fun ActionButtons(actions: List<ScreenAction>, modifier: Modifier = Modifier) {
         }
 
         val placeables: List<List<Placeable>> = rows.map { row ->
-            row.map { index -> measurables[index].measure(Constraints.fixedWidth(if (fitsHalf[index]) halfWidth else width)) }
+            // Half only beside a partner; alone, also a short one takes the row
+            row.map { index -> measurables[index].measure(Constraints.fixedWidth(if (row.size > 1) halfWidth else width)) }
         }
         val height = placeables.sumOf { row -> row.maxOf { it.height } }
         layout(width, height) {
