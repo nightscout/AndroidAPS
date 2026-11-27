@@ -59,7 +59,10 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.mockingDetails
@@ -67,6 +70,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.isNull
 import org.mockito.kotlin.mock
@@ -788,6 +792,36 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
         confirmIsRefusedBecauseTheModeCannotStart(executor, prepared.bolusId, asAdvisor = true)
 
         verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun confirm_twoSuperBolusDosesAtTheSameTime_onlyOneIsGiven() = runTest {
+        // Two doses with the 2 hours of basal are confirmed at the same moment, for example on the phone and on
+        // the watch. One SUPER_BOLUS mode holds back the basal only once, so the second dose must not be given.
+        val executor = create()
+        val first = preparedSuperBolusQuickWizard(executor, usedInCalculation = true)
+        whenever(dateUtil.now()).thenReturn(first.bolusId + 1)
+        val second = preparedSuperBolusQuickWizard(executor, usedInCalculation = true)
+        var modeStarted = false
+        whenever(loop.allowedNextModes()).doSuspendableAnswer {
+            val modes = if (modeStarted) listOf(RM.Mode.DISCONNECTED_PUMP, RM.Mode.RESUME) else listOf(RM.Mode.SUPER_BOLUS)
+            // The read of the database suspends, and the other confirm can run here
+            yield()
+            modes
+        }
+        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).doSuspendableAnswer {
+            modeStarted = true
+            true
+        }
+        val failures = mutableListOf<MasterActionExecutor.Failure>()
+
+        launch { executor.confirm(first.bolusId, Sources.QuickWizard, { failures.add(it) }) }
+        launch { executor.confirm(second.bolusId, Sources.QuickWizard, { failures.add(it) }) }
+        advanceUntilIdle()
+
+        verify(loop, times(1)).handleRunningModeChange(any(), any(), any(), any(), any(), any())
+        verify(commandQueue, times(1)).bolus(anyOrNull())
+        assertThat(failures.map { it.comment }).containsExactly(baseText.gs(ImplementationStrings.super_bolus_cannot_start))
     }
 
     // ---- manual wizard above the max bolus: capped with a warning, not refused (as the phone wizard did in v3) ----

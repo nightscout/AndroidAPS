@@ -69,6 +69,8 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlin.math.abs
 import kotlin.math.ceil
 
@@ -172,6 +174,11 @@ class MasterActionExecutorImpl(
     // commits of the same id can't both deliver — the loser gets null → NoPending (no double bolus).
     private val pending = PendingSlots()
     private val pendingTtlMs = 10 * 60_000L // a parked dose unconfirmed this long is abandoned; trimmed on the next prepare
+
+    // Two superbolus doses confirmed at the same moment (the phone and the watch) would both see that the
+    // SUPER_BOLUS mode can start, and both give 2 hours of basal that one mode holds back only once. The check
+    // and the start of the mode run under this lock, so the second confirm sees the running mode and refuses.
+    private val superBolusLock = Mutex()
 
     // bolusId is a timestamp, so a key older than the TTL is an abandoned prepare — drop it so the map can't grow.
     private fun evictStalePending() {
@@ -773,16 +780,18 @@ class MasterActionExecutorImpl(
         // bolus, so the mode starts only when the bolus really holds the 2 hours of basal.
         // This runs before the advisor branch too: the advisor gives the same parked dose, with the basal in it.
         if (p.entry?.useSuperBolus() == QuickWizardEntry.ALWAYS && p.bcr?.wasSuperbolusUsed == true) {
-            val profile = profileFunction.getProfile()
-            val modeStarted = profile != null &&
-                loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS) &&
-                loop.handleRunningModeChange(
-                    durationInMinutes = 2 * 60,
-                    profile = profile,
-                    newRM = RM.Mode.SUPER_BOLUS,
-                    action = Action.SUPERBOLUS_TBR,
-                    source = source
-                )
+            val modeStarted = superBolusLock.withLock {
+                val profile = profileFunction.getProfile()
+                profile != null &&
+                    loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS) &&
+                    loop.handleRunningModeChange(
+                        durationInMinutes = 2 * 60,
+                        profile = profile,
+                        newRM = RM.Mode.SUPER_BOLUS,
+                        action = Action.SUPERBOLUS_TBR,
+                        source = source
+                    )
+            }
             // The dose holds the 2 hours of basal. Without the mode that basal would be given twice, so
             // nothing is given: the user calculates again, and that dose fits the mode of that moment.
             if (!modeStarted) {
