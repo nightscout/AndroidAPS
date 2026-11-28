@@ -383,4 +383,119 @@
     <string name="cal_precheck_mark_sensor_change">Mark sensor change</string>
     <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
 
+    <!-- Food: Open Food Facts import and meal (proof of concept) -->
+    <string name="food_off_import">Import from Open Food Facts</string>
+    <string name="food_off_search_hint">Name or barcode</string>
+    <string name="food_off_scan">Scan a barcode</string>
+    <string name="food_off_camera_refused">The camera is needed to read a barcode.</string>
+    <string name="food_off_allow_camera">Allow the camera</string>
+    <string name="food_photo_take">Take a photo</string>
+    <string name="food_photo_remove">Remove the photo</string>
+    <string name="food_value_at_least" comment="A total of fat, protein or energy known for only part of the foods of a meal: the real value is at least this one. %1$s=the number. Example: >12 (shown as F: >12 g)">&gt;%1$s</string>
+    <string name="food_photo_camera_refused">The camera is needed to take a photo.</string>
+    <string name="food_off_not_found">No product found.</string>
+    <string name="food_off_prepared_too" comment="In the food editor after an import. %1$s = carbs of the prepared product with unit, %2$s = g or ml. Example: These values are for the product as sold. Open Food Facts also has the prepared product: 8.5 g of carbs per 100 ml. Change the values if you weigh it prepared.">These values are for the product as sold. Open Food Facts also has the prepared product: %1$s of carbs per 100 %2$s. Change the values if you weigh it prepared.</string>
+    <string name="food_barcode_make_food">Make the food with this barcode</string>
+    <string name="food_barcode_known_title">Already in your list</string>
+    <string name="food_barcode_known_text">This barcode is already in your list. Tap a food to open it, or make another food for the same product, for example for another portion.</string>
+    <string name="food_barcode_make_another">Make another food</string>
+    <string name="food_barcode_group" comment="Category and subcategory of a food. %1$s = category, %2$s = subcategory. Example: Breakfast / Cereals">%1$s / %2$s</string>
+    <string name="food_barcode_no_category">No category</string>
+    <string name="food_barcode_in_list" comment="On a product found on Open Food Facts whose barcode is already in the food list. %1$s = name of the food in the list. Example: In your list: Nutella">In your list: %1$s</string>
+    <string name="food_barcode_line" comment="At the bottom of the food editor. %1$s = barcode, digits only. Example: Barcode: 3017620422003">Barcode: %1$s</string>
+    <string name="food_filter_all" comment="Choice in the category or subcategory filter of the food list: no filter. Keep it short, the list is narrow.">All</string>
+    <string name="food_filter_none" comment="Choice in the category or subcategory filter of the food list: only the foods without a category (or subcategory). Keep it short, the list is narrow.">None</string>
+    <string name="food_sort_recent" comment="Sort button of the food list: the newest foods first. Keep it short.">Recent</string>
+    <string name="food_sort_name" comment="Sort button of the food list: sorted by name, from A to Z. Keep it short.">A–Z</string>
+    <string name="food_sort_description" comment="Read by a screen reader on the sort button of the food list. %1$s = the current order, Recent or A–Z">Sort order: %1$s</string>
+    <string name="food_off_offline">No internet connection. You need internet to import a food.</string>
+    <string name="food_off_failed">Open Food Facts did not answer. Try again in a minute.</string>
+    <string name="food_off_rate_limited">Too many searches in a short time. Wait one minute, then try again.</string>
+    <string name="food_off_warning_short">Data from volunteers, it can be wrong. Check it against the package.</string>
+    <string name="food_off_serving" comment="The serving written on the package, as Open Food Facts has it. %1$s = serving text. Example: Serving: 1 pot (125 g)">Serving: %1$s</string>
+    <string name="food_off_values_follow">Values follow the portion. A value you typed yourself is kept.</string>
+    <string name="food_off_warning">Volunteers enter the Open Food Facts data, and it can be wrong. Check every value against the package before you save. This is not medical advice.</string>
+    <string name="food_off_attribution">Data from Open Food Facts (openfoodfacts.org), under the Open Database License. Photos under the CC BY-SA license.</string>
+    <string name="food_off_unknown" comment="Shown in place of a nutrition value that Open Food Facts does not have">?</string>
+    <string name="food_off_carbs_per_100" comment="Carbs of a product per 100 g or 100 ml. %1$s = carbs with unit, %2$s = g or ml. Example: 12.5 g / 100 g">%1$s / 100 %2$s</string>
+    <string name="food_off_exact_values" comment="Exact values from Open Food Facts, shown above the rounded values in the food editor. %1$s = g or ml, %2$s = carbs, %3$s = sugars, %4$s = fiber, each with its unit or ?. Example: Per 100 g: carbs 4.7 g, sugars 4.7 g, fiber 0 g">Per 100 %1$s: carbs %2$s, sugars %3$s, fiber %4$s</string>
+    <string name="food_off_no_carbs">Open Food Facts has no carbs value for this product. Enter it from the package.</string>
+    <string name="food_meal_add">Add to meal</string>
+    <string name="food_meal_title">Meal</string>
+    <string name="food_meal_quantity_title" comment="Title of the dialog that asks how much of a food is eaten. %1$s = food name. Example: Quantity of Bread">Quantity of %1$s</string>
+    <string name="food_meal_quantity" comment="Label of the quantity field. %1$s = unit. Example: Quantity (g)">Quantity (%1$s)</string>
+    <string name="food_meal_portions" comment="Unit used when a food has no portion size, so the user counts portions">portions</string>
+    <string name="food_meal_bar" comment="Bar at the bottom of the food list. %1$d = number of foods in the meal, %2$s = total carbs with unit. Example: Meal (3): 64 g">Meal (%1$d): %2$s</string>
+    <string name="food_meal_total" comment="%1$s = total carbs with unit. Example: Total carbs: 64 g">Total carbs: %1$s</string>
+    <string name="food_meal_check">Check the total before you use it for a bolus.</string>
+    <string name="food_meal_add_by_hand" comment="Button: add to the meal a line that is not in the food list, with a name and estimated carbs">Add by hand</string>
+    <string name="food_meal_by_hand_title">Add something that is not in the list</string>
+    <string name="food_meal_by_hand_hint">These carbs are your own estimate. They are not checked, and they are marked as estimated in the history and in the export.</string>
+    <string name="food_meal_estimated" comment="Shown instead of a quantity for a meal line typed by hand, whose carbs the user estimated">estimated</string>
+    <string name="food_book_estimated_item" comment="A line typed by hand in a dish or a meal. %1$s = carbs with unit. Example: 40 g carbs, estimated">%1$s carbs, estimated</string>
+    <string name="food_meal_note_item" comment="One food in the note saved with the bolus. %1$s = food name, %2$s = quantity with unit, %3$s = carbs with unit. Example: Bread 80 g (40 g)">%1$s %2$s (%3$s)</string>
+    <string name="food_meal_note_join" comment="Joins the foods of a meal in the note saved with the bolus. %1$s = the foods so far, %2$s = the next food. Example: Bread 80 g (40 g), Milk 250 ml (12 g)">%1$s, %2$s</string>
+    <string name="food_book_tab_foods" comment="Tab of the food screen that lists single foods">Foods</string>
+    <string name="food_book_tab_dishes" comment="Tab of the food screen that lists dishes. A dish is several foods saved under one name, for example a yogurt with two sugars">Dishes</string>
+    <string name="food_book_tab_meals" comment="Tab of the food screen that lists standard meals, for example a usual breakfast">Meals</string>
+    <string name="food_book_item" comment="One line of a dish or a meal. %1$s = food name, %2$s = quantity with unit. Example: Bread 80 g">%1$s %2$s</string>
+    <string name="food_book_servings" comment="Unit of a dish in a meal: 1 serving is the whole dish. Example: 2 servings">servings</string>
+    <string name="food_book_missing">A food or a dish in it was deleted, or the unit of a food changed. Use its pencil to check it.</string>
+    <string name="food_book_unit_changed_total" comment="Shown instead of the total carbs of a dish or a meal when the unit of one of its foods changed (for example from g to biscuit)">Unit changed: check</string>
+    <string name="food_book_line_unit_changed" comment="Under a line of a dish or a meal whose food is now counted in another unit. %1$s = the old quantity with its unit. Example: Was 50 g: the unit changed, tap to set the quantity">Was %1$s: the unit changed, tap to set the quantity</string>
+    <string name="food_unit_changed_check" comment="After the unit of a food was changed. %1$d = number of dishes and standard meals that use this food">The unit changed: %1$d dishes and meals use this food. Open them to set the quantities again.</string>
+    <string name="food_editor_mode_portion" comment="Choice in the food editor: the values follow the portion">Change the portion</string>
+    <string name="food_editor_mode_values" comment="Choice in the food editor: every value is typed as on the package">Change the values</string>
+    <string name="food_editor_mode_portion_hint">The values follow the portion.</string>
+    <string name="food_editor_mode_values_hint">Every value is typed as on the package. A new unit (1 biscuit instead of 100 g) is set here.</string>
+    <string name="food_book_fold" comment="Button of a meal in the history: hide its lines">Hide the lines</string>
+    <string name="food_book_unfold" comment="Button of a meal in the history: show its lines">Show the lines</string>
+    <string name="food_book_line_deleted" comment="Shown under a line of a dish or a meal whose food was deleted">Deleted: remove or replace this line</string>
+    <string name="food_book_line_missing">This food or dish does not exist any more. Remove the line, and add another food if needed.</string>
+    <string name="food_book_remove_missing">Remove or correct the lines in red first.</string>
+    <string name="food_book_saved" comment="%1$s = name of the dish or meal">%1$s saved</string>
+    <string name="food_book_loop">A dish cannot contain itself.</string>
+    <string name="food_book_save_title">Save as a dish or a meal</string>
+    <string name="food_book_kind_dish" comment="Choice in the save dialog: save the foods as one dish">Dish</string>
+    <string name="food_book_kind_meal" comment="Choice in the save dialog: save the foods as a standard meal">Standard meal</string>
+    <string name="food_book_save_eaten_carbs" comment="In the dialog that saves a meal of the history as a dish. %1$s = carbs of the new dish with the food values of today, %2$s = carbs eaten then, both with unit. Example: With the values of today: 52 g (eaten: 50 g)">With the values of today: %1$s (eaten: %2$s)</string>
+    <string name="food_book_save_eaten_typed">Some lines are kept as lines typed by hand, with the carbs eaten: their food or dish is not in the list any more, or its unit changed.</string>
+    <string name="food_book_add_food">Add a food</string>
+    <string name="food_book_no_dishes">No dish yet. Tap foods to put them in the meal, then save the meal as a dish.</string>
+    <string name="food_book_no_meals">No standard meal yet. Put foods and dishes in the meal, then save it as a standard meal.</string>
+    <string name="food_book_no_history">No meal entered from this screen yet.</string>
+    <string name="food_book_unknown_total">Total not known</string>
+    <string name="food_book_bolus_link" comment="An eaten meal was matched with a bolus calculation. %1$s = time of the calculation, %2$s = insulin with unit, %3$s = carbs with unit. Example: Bolus wizard at 12:34: 3.20 U for 52 g">Bolus wizard at %1$s: %2$s for %3$s</string>
+    <string name="food_book_bolus_link_weak">Found by time and carbs only: the note was changed.</string>
+    <string name="food_book_treatment_gone">The treatment of this meal is not found.</string>
+    <string name="food_book_history_note">Only meals entered from this screen with the bolus wizard or the carbs dialog are listed. A cancelled meal is not listed. To remove a meal, delete its treatment in the treatments history.</string>
+    <string name="food_book_delete_used" comment="Warning before a food or a dish is deleted. %1$s = its name, %2$s = the dishes and meals that use it. Example: Bread is used in Toast, Breakfast. Their total will not be known until you change them.">%1$s is used in %2$s. Their total will not be known until you change them.</string>
+    <string name="food_book_carbs_link" comment="An eaten meal was matched with a carbs entry. %1$s = time of the entry, %2$s = carbs with unit. Example: Carbs at 12:34: 52 g">Carbs at %1$s: %2$s</string>
+    <string name="food_book_name_used" comment="%1$s = name typed for a dish or a meal">%1$s already exists. Use its pencil to change it.</string>
+    <string name="food_book_edit" comment="Button with a pencil icon: change a food, a dish or a meal">Change</string>
+    <string name="food_book_edit_title" comment="Title while a dish or a meal is changed. %1$s = its name. Example: Change Breakfast">Change %1$s</string>
+    <string name="food_book_edit_bar" comment="Bar at the bottom of the screen while a dish or a meal is changed. %1$s = its name, %2$s = total carbs with unit. Example: Changing Breakfast: 64 g">Changing %1$s: %2$s</string>
+    <string name="food_book_edit_hint">Tap a line to change its quantity. Tap a food, a dish or a meal in the lists to add it.</string>
+    <string name="food_csv_export">Export to a spreadsheet (csv)</string>
+    <string name="food_csv_exported">Meal history and food list saved in the exports folder of the AAPS directory.</string>
+    <string name="food_csv_period_title">Meals to export</string>
+    <string name="food_csv_last_days" comment="A period for the export of the meals. %1$d = number of days, always 7 or more. Example: Last 7 days">Last %1$d days</string>
+    <string name="food_csv_all">All meals</string>
+    <string name="food_csv_carbs_entered" comment="Column header in the exported meal history: the carbs saved with the treatment of the meal, in grams">Carbs entered (g)</string>
+    <string name="food_csv_insulin_given" comment="Column header in the exported meal history: the insulin really given by the pump for the meal (not the calculated amount), in units">Insulin given (U)</string>
+    <string name="food_export_no_folder">Choose the AAPS directory in Maintenance first.</string>
+    <string name="food_export_failed">It did not work. See the log for details.</string>
+    <string name="food_backup">Back up foods, dishes, meals, history and photos</string>
+    <string name="food_backup_saved">Backup saved in the exports folder of the AAPS directory.</string>
+    <string name="food_restore">Restore a backup</string>
+    <string name="food_restore_text">Adds what the backup has and this phone does not: foods, dishes, standard meals, eaten meals and photos. Nothing is deleted or changed.</string>
+    <string name="food_restore_none">No backup found in the exports folder of the AAPS directory.</string>
+    <string name="food_restore_invalid">This file is not a food backup that this version can read.</string>
+    <string name="food_restore_done" comment="After a restore. %1$d = foods added, %2$d = dishes and standard meals added, %3$d = eaten meals added. Example: Restored: 12 foods, 3 dishes and meals, 25 eaten meals.">Restored: %1$d foods, %2$d dishes and meals, %3$d eaten meals.</string>
+    <string name="food_csv_entered_with" comment="Column header in the exported meal history: the dialog the meal was entered with (Bolus wizard or Carbs)">Entered with</string>
+    <string name="food_csv_quantity" comment="Column header in the exported meal history: quantity eaten of a food">Quantity</string>
+    <string name="food_csv_type" comment="Column header in the exported food list: Food, Dish or Standard meal">Type</string>
+    <string name="food_csv_contents" comment="Column header in the exported food list: the foods a dish or a meal is made of">Contents</string>
+    <string name="food_csv_kind_food" comment="Value of the Type column in the exported food list, for a single food">Food</string>
+
 </resources>

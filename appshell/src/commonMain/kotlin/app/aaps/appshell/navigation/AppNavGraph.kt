@@ -317,8 +317,24 @@ fun NavGraphBuilder.appNavGraph(
         )
     }
 
-    composable(route = AppRoute.CarbsDialog.route) {
+    composable(
+        route = AppRoute.CarbsDialog.route,
+        arguments = listOf(
+            navArgument("carbs") {
+                type = NavType.StringType
+                nullable = true
+                defaultValue = null
+            },
+            navArgument("notes") {
+                type = NavType.StringType
+                nullable = true
+                defaultValue = null
+            }
+        )
+    ) { backStackEntry ->
         CarbsDialogScreen(
+            initialCarbs = backStackEntry.stringArg("carbs")?.toIntOrNull(),
+            initialNotes = backStackEntry.stringArg("notes"),
             carbsButtonsDef = builtInSearchables.carbsButtons,
             bgInfoState = graphViewModel.bgInfoState,
             iobUiState = chipsViewModel.iobUiState,
@@ -778,6 +794,11 @@ fun NavGraphBuilder.appNavGraph(
             onNavigateToWizard = { carbs, name ->
                 withProtection(ProtectionCheck.Protection.BOLUS) {
                     navController.navigate(AppRoute.WizardDialog.createRoute(carbs = carbs, notes = name))
+                }
+            },
+            onNavigateToCarbs = { carbs, name ->
+                withProtection(ProtectionCheck.Protection.BOLUS) {
+                    navController.navigate(AppRoute.CarbsDialog.createRoute(carbs = carbs, notes = name))
                 }
             }
         )

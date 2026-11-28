@@ -84,7 +84,9 @@ fun CarbsDialogScreen(
     iobUiState: StateFlow<IobUiState>,
     cobUiState: StateFlow<CobUiState>,
     onNavigateBack: () -> Unit,
-    onShowDeliveryError: (String) -> Unit
+    onShowDeliveryError: (String) -> Unit,
+    initialCarbs: Int? = null,
+    initialNotes: String? = null,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val bgInfo by bgInfoState.collectAsStateWithLifecycle()
@@ -98,6 +100,8 @@ fun CarbsDialogScreen(
     var showButtonSettings by rememberSaveable { mutableStateOf(false) }
     // The master's prepared confirmation (bolusId + its merged lines), set via the ShowConfirmation side effect.
     var confirmation by remember { mutableStateOf<Pair<Long, List<ConfirmationLine>>?>(null) }
+
+    LaunchedEffect(Unit) { viewModel.prefill(initialCarbs, initialNotes) }
 
     // Observe side effects
     LaunchedEffect(Unit) {

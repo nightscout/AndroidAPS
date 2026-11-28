@@ -201,6 +201,7 @@ export_settings_local_enabled|BooleanNonKey|true
 fill_button1|DoubleKey|true
 fill_button2|DoubleKey|true
 fill_button3|DoubleKey|true
+food_sort_by_name|BooleanNonKey|true
 g8_bolusspeed|DiaconnIntKey|true
 garmin_aaps_key|GarminStringKey|true
 google_drive_folder_id|StringNonKey|true

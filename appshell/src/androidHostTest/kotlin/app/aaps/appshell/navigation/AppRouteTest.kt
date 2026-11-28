@@ -22,7 +22,10 @@ class AppRouteTest {
         assertThat(AppRoute.Preferences.route).isEqualTo("preferences")
         assertThat(AppRoute.RunningMode.route).isEqualTo("running_mode")
         assertThat(AppRoute.CalibrationDialog.route).isEqualTo("calibration_dialog")
-        assertThat(AppRoute.CarbsDialog.route).isEqualTo("carbs_dialog")
+        assertThat(AppRoute.CarbsDialog.route).isEqualTo("carbs_dialog?carbs={carbs}&notes={notes}")
+        assertThat(AppRoute.CarbsDialog.createRoute()).isEqualTo("carbs_dialog")
+        assertThat(AppRoute.CarbsDialog.createRoute(carbs = 52, notes = "Pain 80 g (40 g), Café & lait"))
+            .isEqualTo("carbs_dialog?carbs=52&notes=Pain%2080%20g%20%2840%20g%29%2C%20Caf%C3%A9%20%26%20lait")
         assertThat(AppRoute.InsulinDialog.route).isEqualTo("insulin_dialog")
         assertThat(AppRoute.TreatmentDialog.route).isEqualTo("treatment_dialog")
         assertThat(AppRoute.TempBasalDialog.route).isEqualTo("temp_basal_dialog")
@@ -140,6 +143,13 @@ class AppRouteTest {
     }
 
     @Test
+    fun wizardDialog_notesWithReservedCharacters_areEncoded() {
+        // A meal note: spaces, brackets, a comma, "&" and an accent must not break the route.
+        assertThat(AppRoute.WizardDialog.createRoute(carbs = 52, notes = "Pain 80 g (40 g), Café & lait"))
+            .isEqualTo("wizard_dialog?carbs=52&notes=Pain%2080%20g%20%2840%20g%29%2C%20Caf%C3%A9%20%26%20lait")
+    }
+
+    @Test
     fun pluginContent_embedsIndex() {
         assertThat(AppRoute.PluginContent.createRoute(7)).isEqualTo("plugin_content/7")
     }
@@ -185,6 +195,7 @@ class AppRouteTest {
         assertThat(prefixOf(AppRoute.CareDialog.createRoute(0))).isEqualTo(prefixOf(AppRoute.CareDialog.route))
         assertThat(prefixOf(AppRoute.PluginContent.createRoute(0))).isEqualTo(prefixOf(AppRoute.PluginContent.route))
         assertThat(prefixOf(AppRoute.WizardDialog.createRoute())).isEqualTo(prefixOf(AppRoute.WizardDialog.route))
+        assertThat(prefixOf(AppRoute.CarbsDialog.createRoute())).isEqualTo(prefixOf(AppRoute.CarbsDialog.route))
         assertThat(prefixOf(AppRoute.SceneWizard.createRoute())).isEqualTo(prefixOf(AppRoute.SceneWizard.route))
         assertThat(prefixOf(AppRoute.SceneList.createRoute())).isEqualTo(prefixOf(AppRoute.SceneList.route))
         assertThat(prefixOf(AppRoute.PreferenceScreen.createRoute("k"))).isEqualTo(prefixOf(AppRoute.PreferenceScreen.route))

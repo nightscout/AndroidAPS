@@ -137,7 +137,7 @@ class ElementNavigator(
             ElementType.QUICK_LAUNCH_CONFIG     -> navController.navigate(AppRoute.QuickLaunchConfig.route)
 
             // Treatment dialogs
-            ElementType.CARBS                   -> navController.navigate(AppRoute.CarbsDialog.route)
+            ElementType.CARBS                   -> navController.navigate(AppRoute.CarbsDialog.createRoute())
             ElementType.INSULIN                 -> navController.navigate(AppRoute.InsulinDialog.route)
             ElementType.TREATMENT               -> navController.navigate(AppRoute.TreatmentDialog.route)
             ElementType.FILL                    -> navController.navigate(AppRoute.FillDialog.createRoute(FillPreselect.CARTRIDGE_CHANGE.ordinal))

@@ -1,12 +1,51 @@
 package app.aaps.ui.compose.foodManagement
 
+import app.aaps.core.data.model.BCR
+import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.FD
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.ui.UiStrings
+import app.aaps.ui.compose.foodManagement.book.EatenItem
+import app.aaps.ui.compose.foodManagement.book.EatenMeal
+import app.aaps.ui.compose.foodManagement.book.ExportFile
+import app.aaps.ui.compose.foodManagement.book.OffLink
+import app.aaps.ui.compose.foodManagement.book.FoodPhoto
+import app.aaps.ui.compose.foodManagement.book.FoodImageStore
+import app.aaps.ui.compose.foodManagement.book.FoodBackupMath
+import app.aaps.ui.compose.foodManagement.book.FoodBook
+import app.aaps.ui.compose.foodManagement.book.FoodBookRepository
+import app.aaps.ui.compose.foodManagement.book.FoodCsv
+import app.aaps.ui.compose.foodManagement.book.FoodImages
+import app.aaps.ui.compose.foodManagement.book.FoodNote
+import app.aaps.ui.compose.foodManagement.book.MealTarget
+import app.aaps.ui.compose.foodManagement.book.MemoryFoodBookStore
+import app.aaps.ui.compose.foodManagement.book.NoFoodExportFiles
+import app.aaps.ui.compose.foodManagement.book.NoFoodImageStore
+import app.aaps.ui.compose.foodManagement.book.Nutrient
+import app.aaps.ui.compose.foodManagement.book.Nutrition
+import app.aaps.ui.compose.foodManagement.book.Recipe
+import app.aaps.ui.compose.foodManagement.book.RecipeItem
+import app.aaps.ui.compose.foodManagement.book.RecipeKind
+import app.aaps.ui.compose.foodManagement.openfoodfacts.OffProduct
+import app.aaps.ui.compose.foodManagement.openfoodfacts.OffResult
+import app.aaps.ui.compose.foodManagement.openfoodfacts.OpenFoodFactsRepository
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -15,6 +54,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -22,8 +66,14 @@ internal class FoodManagementViewModelTest {
 
     @Mock private lateinit var persistenceLayer: PersistenceLayer
     @Mock private lateinit var aapsLogger: AAPSLogger
+    @Mock private lateinit var openFoodFacts: OpenFoodFactsRepository
+    @Mock private lateinit var rh: TextResolver
+    @Mock private lateinit var dateUtil: DateUtil
+    @Mock private lateinit var decimalFormatter: DecimalFormatter
+    @Mock private lateinit var preferences: Preferences
 
     private lateinit var sut: FoodManagementViewModel
+    private val dispatcher = StandardTestDispatcher()
 
     @BeforeEach
     fun setUp() {
@@ -31,9 +81,11 @@ internal class FoodManagementViewModelTest {
         // StandardTestDispatcher defers the init{} loadData() launch (no advanceUntilIdle), so construction
         // stays clean and we test the synchronous update methods against the default state. The observeChanges()
         // cold flow is still built synchronously during init, so it must be stubbed non-null.
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(dispatcher)
         whenever(persistenceLayer.observeChanges(FD::class)).thenReturn(emptyFlow())
-        sut = FoodManagementViewModel(persistenceLayer, aapsLogger)
+        whenever(persistenceLayer.observeChanges(BCR::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(CA::class)).thenReturn(emptyFlow())
+        sut = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(NoFoodImageStore(), openFoodFacts, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), aapsLogger), preferences)
     }
 
     @AfterEach
@@ -44,8 +96,9 @@ internal class FoodManagementViewModelTest {
         val state = sut.uiState.value
         assertThat(state.isLoading).isTrue()
         assertThat(state.searchQuery).isEmpty()
-        assertThat(state.filterCategory).isNull()
-        assertThat(state.filterSubCategory).isNull()
+        assertThat(state.filterCategory).isEqualTo(GroupFilter.All)
+        assertThat(state.filterSubCategory).isEqualTo(GroupFilter.All)
+        assertThat(state.sortFoodsByName).isFalse()
         assertThat(state.showEditor).isFalse()
     }
 
@@ -58,19 +111,19 @@ internal class FoodManagementViewModelTest {
 
     @Test
     fun `setFilterCategory sets category and clears subcategory`() {
-        sut.setFilterSubCategory("Sub")
-        sut.setFilterCategory("Fruit")
+        sut.setFilterSubCategory(GroupFilter.Named("Sub"))
+        sut.setFilterCategory(GroupFilter.Named("Fruit"))
 
         val state = sut.uiState.value
-        assertThat(state.filterCategory).isEqualTo("Fruit")
-        assertThat(state.filterSubCategory).isNull()
+        assertThat(state.filterCategory).isEqualTo(GroupFilter.Named("Fruit"))
+        assertThat(state.filterSubCategory).isEqualTo(GroupFilter.All)
     }
 
     @Test
     fun `setFilterSubCategory updates the state`() {
-        sut.setFilterSubCategory("Berries")
+        sut.setFilterSubCategory(GroupFilter.Named("Berries"))
 
-        assertThat(sut.uiState.value.filterSubCategory).isEqualTo("Berries")
+        assertThat(sut.uiState.value.filterSubCategory).isEqualTo(GroupFilter.Named("Berries"))
     }
 
     @Test
@@ -118,10 +171,1366 @@ internal class FoodManagementViewModelTest {
         assertThat(sut.uiState.value.showEditor).isFalse()
     }
 
-    @Test
-    fun `clearUndo clears the undo food`() {
-        sut.clearUndo()
+    // ---- Meal (proof of concept) ----
 
-        assertThat(sut.uiState.value.undoFood).isNull()
+    private val bread = FD(id = 1, name = "Bread", portion = 100.0, carbs = 50)
+
+    @Test
+    fun `askQuantity proposes the food portion`() {
+        sut.askQuantity(bread)
+
+        assertThat(sut.uiState.value.quantityFood).isEqualTo(bread)
+        assertThat(sut.uiState.value.quantityText).isEqualTo("100")
+    }
+
+    @Test
+    fun `confirmQuantity adds the food with carbs for that quantity`() {
+        sut.askQuantity(bread)
+        sut.updateQuantity("80")
+        sut.confirmQuantity()
+
+        val state = sut.uiState.value
+        assertThat(state.quantityFood).isNull()
+        val item = state.mealItems.single()
+        assertThat(item.name).isEqualTo("Bread")
+        assertThat(item.quantity).isEqualTo(80.0)
+        assertThat(item.unit).isEqualTo("g")
+        assertThat(item.carbs).isWithin(0.0001).of(40.0)
+    }
+
+    @Test
+    fun `an invalid quantity keeps the dialog open and adds nothing`() {
+        sut.askQuantity(bread)
+        sut.updateQuantity("0")
+        sut.confirmQuantity()
+
+        assertThat(sut.uiState.value.quantityFood).isEqualTo(bread)
+        assertThat(sut.uiState.value.mealItems).isEmpty()
+    }
+
+    @Test
+    fun `the same food can be added twice and removed one at a time`() {
+        repeat(2) { sut.askQuantity(bread); sut.confirmQuantity() }
+        val items = sut.uiState.value.mealItems
+        assertThat(items.map { it.key }.distinct()).hasSize(2)
+
+        sut.removeMealItem(items.first().key)
+
+        assertThat(sut.uiState.value.mealItems.map { it.key }).containsExactly(items.last().key)
+    }
+
+    @Test
+    fun `removing the last item closes the meal sheet`() {
+        sut.askQuantity(bread); sut.confirmQuantity()
+        sut.openMeal()
+        assertThat(sut.uiState.value.showMeal).isTrue()
+
+        sut.removeMealItem(sut.uiState.value.mealItems.single().key)
+
+        assertThat(sut.uiState.value.showMeal).isFalse()
+    }
+
+    @Test
+    fun `the meal can be saved as a dish, and a line keeps its food`() {
+        sut.askQuantity(bread); sut.confirmQuantity()
+        sut.openSave()
+        assertThat(sut.uiState.value.showSave).isTrue()
+        assertThat(sut.uiState.value.saveKind).isEqualTo(RecipeKind.MEAL) // the default
+
+        sut.updateSaveName(" Toast ")
+        sut.updateSaveKind(RecipeKind.DISH)
+        sut.confirmSave()
+
+        val state = sut.uiState.value
+        assertThat(state.showSave).isFalse()
+        val saved = state.mealSource!!
+        assertThat(saved.name).isEqualTo("Toast")
+        assertThat(saved.kind).isEqualTo(RecipeKind.DISH)
+        assertThat(saved.items.single().foodId).isEqualTo(1L)
+        assertThat(saved.items.single().quantity).isEqualTo(100.0)
+    }
+
+    @Test
+    fun `a meal without a name is not saved`() {
+        sut.askQuantity(bread); sut.confirmQuantity()
+        sut.openSave()
+        sut.updateSaveName("  ")
+        sut.confirmSave()
+
+        assertThat(sut.uiState.value.showSave).isTrue()
+        assertThat(sut.uiState.value.mealSource).isNull()
+    }
+
+    @Test
+    fun `clearing the meal forgets where it came from`() {
+        sut.askQuantity(bread); sut.confirmQuantity()
+        sut.openSave(); sut.updateSaveName("Toast"); sut.confirmSave()
+
+        sut.clearMeal()
+
+        assertThat(sut.uiState.value.mealSource).isNull()
+    }
+
+    @Test
+    fun `a meal line carries the food nutrition for its quantity`() {
+        val milk = FD(id = 2, name = "Milk", portion = 250.0, unit = "ml", carbs = 12, fat = 4, protein = 8, energy = 600)
+        sut.askQuantity(milk); sut.updateQuantity("125"); sut.confirmQuantity()
+
+        val item = sut.uiState.value.mealItems.single()
+        assertThat(item.foodId).isEqualTo(2L)
+        assertThat(item.fat!!).isWithin(0.0001).of(2.0)
+        assertThat(item.energyKj!!).isWithin(0.0001).of(300.0)
+    }
+
+    /** Loads [foods] into the screen, as the database would. */
+    private fun loadFoods(vararg foods: FD) {
+        runBlocking { whenever(persistenceLayer.getFoods()).thenReturn(foods.toList()) }
+        // Only loadData() runs here: the food book waits on the IO dispatcher, which is not advanced.
+        dispatcher.scheduler.runCurrent()
+    }
+
+    @Test
+    fun `tapping a meal line changes its quantity in place`() {
+        loadFoods(bread)
+        val milk = FD(id = 2, name = "Milk", portion = 250.0, unit = "ml", carbs = 12)
+        sut.askQuantity(bread); sut.updateQuantity("80"); sut.confirmQuantity()
+        sut.askQuantity(milk); sut.confirmQuantity()
+        val key = sut.uiState.value.mealItems.first().key
+
+        sut.editLine(key)
+        assertThat(sut.uiState.value.quantityFood).isEqualTo(bread)
+        assertThat(sut.uiState.value.quantityText).isEqualTo("80")
+        sut.updateQuantity("60")
+        sut.confirmQuantity()
+
+        val items = sut.uiState.value.mealItems
+        assertThat(items).hasSize(2)
+        assertThat(items.first().key).isEqualTo(key)
+        assertThat(items.first().quantity).isEqualTo(60.0)
+        assertThat(items.first().carbs).isWithin(0.0001).of(30.0)
+        assertThat(sut.uiState.value.quantityLineKey).isNull()
+    }
+
+    private val toast = Recipe(id = "toast", name = "Toast", kind = RecipeKind.DISH, items = listOf(RecipeItem("Bread", 30.0, "g", foodId = 1)))
+
+    @Test
+    fun `changing a dish puts the meal aside and cancel brings it back`() {
+        loadFoods(bread)
+        sut.askQuantity(bread); sut.updateQuantity("80"); sut.confirmQuantity()
+
+        sut.startEdit(toast)
+        var state = sut.uiState.value
+        assertThat(state.editing).isEqualTo(toast)
+        assertThat(state.showMeal).isTrue()
+        assertThat(state.mealItems.single().quantity).isEqualTo(30.0)
+
+        // Removing the last line is a step of the change: the sheet stays open.
+        sut.removeMealItem(state.mealItems.single().key)
+        assertThat(sut.uiState.value.showMeal).isTrue()
+
+        sut.cancelEdit()
+        state = sut.uiState.value
+        assertThat(state.editing).isNull()
+        assertThat(state.mealItems.single().quantity).isEqualTo(80.0)
+    }
+
+    @Test
+    fun `a dish with a deleted food still opens, and is saved only once the line is removed`() {
+        val milk = FD(id = 2, name = "Milk", portion = 250.0, unit = "ml", carbs = 12)
+        // Bread (food 1) was deleted: only milk is left.
+        loadFoods(milk)
+        val breakfast = Recipe(
+            id = "bf", name = "Breakfast", kind = RecipeKind.MEAL,
+            items = listOf(RecipeItem("Bread", 30.0, "g", foodId = 1), RecipeItem("Milk", 250.0, "ml", foodId = 2))
+        )
+
+        sut.startEdit(breakfast)
+        val lines = sut.uiState.value.mealItems
+        assertThat(sut.uiState.value.editing).isEqualTo(breakfast)
+        assertThat(lines.map { it.problem }).containsExactly(LineProblem.DELETED, null).inOrder()
+        assertThat(lines.first().name).isEqualTo("Bread")
+
+        // A deleted food has no known carbs: the dish cannot be saved with it.
+        sut.saveEdit()
+        assertThat(sut.uiState.value.editing).isEqualTo(breakfast)
+
+        sut.removeMealItem(lines.first().key)
+        sut.saveEdit()
+        assertThat(sut.uiState.value.editing).isNull()
+    }
+
+    @Test
+    fun `saving a changed dish keeps its id and kind and brings the meal back`() {
+        loadFoods(bread)
+        sut.askQuantity(bread); sut.updateQuantity("80"); sut.confirmQuantity()
+        sut.startEdit(toast)
+        sut.editLine(sut.uiState.value.mealItems.single().key); sut.updateQuantity("40"); sut.confirmQuantity()
+
+        sut.updateEditName(" ")
+        sut.saveEdit()
+        assertThat(sut.uiState.value.editing).isEqualTo(toast) // no name: not saved
+
+        sut.updateEditName("Big toast")
+        sut.saveEdit()
+        assertThat(sut.uiState.value.editing).isNull()
+        assertThat(sut.uiState.value.mealItems.single().quantity).isEqualTo(80.0)
+    }
+
+    @Test
+    fun `sending the meal waits for its treatment and keeps the meal`() {
+        sut.askQuantity(bread); sut.updateQuantity("80"); sut.confirmQuantity()
+        sut.openMeal()
+
+        val (carbs, _) = sut.send(MealTarget.CARBS)
+
+        val state = sut.uiState.value
+        assertThat(carbs).isEqualTo(40)
+        assertThat(state.pendingMealId).isNotNull()
+        assertThat(state.showMeal).isFalse()
+        assertThat(state.mealItems).hasSize(1) // cleared only when the treatment is found
+        assertThat(state.confirmedMeals).isEmpty()
+    }
+
+    // ---- A line typed by hand (home-made quiche) ----
+
+    @Test
+    fun `a line typed by hand is added to the meal total as estimated`() {
+        sut.askQuantity(bread); sut.updateQuantity("80"); sut.confirmQuantity()
+
+        sut.openHandLine()
+        assertThat(sut.uiState.value.showHandLine).isTrue()
+        sut.updateHandLineName(" Home-made quiche ")
+        sut.updateHandLineCarbs("35,5")
+        sut.confirmHandLine()
+
+        val state = sut.uiState.value
+        assertThat(state.showHandLine).isFalse()
+        val line = state.mealItems.last()
+        assertThat(line.name).isEqualTo("Home-made quiche")
+        assertThat(line.carbs).isEqualTo(35.5)
+        assertThat(line.estimated).isTrue()
+        assertThat(line.foodId).isNull()
+        assertThat(line.fat).isNull() // not known, so the meal fat is shown as not known
+        assertThat(MealMath.wizardCarbs(state.mealItems)).isEqualTo(76) // 40 + 35.5, rounded once
+    }
+
+    @Test
+    fun `a line typed by hand needs a name and carbs above zero`() {
+        sut.openHandLine()
+        sut.updateHandLineCarbs("30")
+        sut.confirmHandLine()
+        assertThat(sut.uiState.value.mealItems).isEmpty() // no name
+
+        sut.updateHandLineName("Quiche")
+        sut.updateHandLineCarbs("0")
+        sut.confirmHandLine()
+        assertThat(sut.uiState.value.mealItems).isEmpty()
+        assertThat(sut.uiState.value.showHandLine).isTrue()
+    }
+
+    @Test
+    fun `tapping a line typed by hand changes it in place`() {
+        sut.openHandLine(); sut.updateHandLineName("Quiche"); sut.updateHandLineCarbs("30"); sut.confirmHandLine()
+        sut.askQuantity(bread); sut.confirmQuantity()
+        val key = sut.uiState.value.mealItems.first().key
+
+        sut.editLine(key)
+        assertThat(sut.uiState.value.handLineName).isEqualTo("Quiche")
+        assertThat(sut.uiState.value.handLineCarbs).isEqualTo("30")
+        sut.updateHandLineCarbs("45")
+        sut.confirmHandLine()
+
+        val items = sut.uiState.value.mealItems
+        assertThat(items).hasSize(2)
+        assertThat(items.first().key).isEqualTo(key)
+        assertThat(items.first().carbs).isEqualTo(45.0)
+        assertThat(sut.uiState.value.handLineKey).isNull()
+    }
+
+    @Test
+    fun `a line typed by hand is kept in a saved meal and comes back from it`() {
+        sut.openHandLine(); sut.updateHandLineName("Quiche"); sut.updateHandLineCarbs("30"); sut.confirmHandLine()
+        sut.openSave(); sut.updateSaveName("Lunch"); sut.confirmSave()
+
+        val saved = sut.uiState.value.mealSource!!
+        assertThat(saved.items.single().estimatedCarbs).isEqualTo(30.0)
+        assertThat(sut.nutritionOf(saved)!!.carbs).isEqualTo(30.0)
+
+        sut.clearMeal()
+        sut.addRecipeLines(saved)
+        val line = sut.uiState.value.mealItems.single()
+        assertThat(line.estimated).isTrue()
+        assertThat(line.carbs).isEqualTo(30.0)
+    }
+
+    @Test
+    fun `a food now counted in biscuits marks the dish, until its quantity is set again`() {
+        // Toast was saved with 30 g of bread; bread is now counted per biscuit.
+        val biscuit = FD(id = 1, name = "Bread", portion = 1.0, unit = "biscuit", carbs = 7)
+        loadFoods(biscuit)
+
+        assertThat(sut.nutritionOf(toast)).isNull()
+        assertThat(sut.problemOf(toast)).isEqualTo(LineProblem.UNIT_CHANGED)
+
+        sut.startEdit(toast)
+        val line = sut.uiState.value.mealItems.single()
+        assertThat(line.problem).isEqualTo(LineProblem.UNIT_CHANGED)
+        sut.saveEdit()
+        assertThat(sut.uiState.value.editing).isEqualTo(toast) // not saved with a wrong quantity
+
+        // The old "30" means nothing now: the dialog starts empty.
+        sut.editLine(line.key)
+        assertThat(sut.uiState.value.quantityText).isEmpty()
+        sut.updateQuantity("2"); sut.confirmQuantity()
+        val fixed = sut.uiState.value.mealItems.single()
+        assertThat(fixed.problem).isNull()
+        assertThat(fixed.unit).isEqualTo("biscuit")
+        assertThat(fixed.carbs).isEqualTo(14.0)
+
+        sut.saveEdit()
+        assertThat(sut.uiState.value.editing).isNull()
+    }
+
+    @Test
+    fun `the same unit written another way is not a change`() {
+        loadFoods(FD(id = 1, name = "Bread", portion = 100.0, unit = " G ", carbs = 50))
+        runUntil { sut.uiState.value.foods.isNotEmpty() }
+        assertThat(sut.uiState.value.foods).hasSize(1)
+
+        assertThat(sut.problemOf(toast)).isNull()
+        assertThat(sut.nutritionOf(toast)!!.carbs).isEqualTo(15.0)
+    }
+
+    @Test
+    fun `in the portion mode the values follow the portion, in the values mode they do not`() {
+        val yogurt = FD(id = 3, name = "Yogurt", portion = 100.0, unit = "g", carbs = 12, fat = 3, protein = 4, energy = 300)
+        sut.openEditor(yogurt)
+        assertThat(sut.uiState.value.editorScaleMode).isFalse() // a food changed starts in the values mode
+
+        sut.updateEditorPortion("50")
+        assertThat(sut.uiState.value.editorCarbs).isEqualTo("12")
+
+        sut.updateEditorPortion("100")
+        sut.setScaleMode(true)
+        sut.updateEditorPortion("125")
+        val state = sut.uiState.value
+        assertThat(state.editorCarbs).isEqualTo("15")
+        assertThat(state.editorFat).isEqualTo("3.8")
+        assertThat(state.editorProtein).isEqualTo("5")
+        assertThat(state.editorEnergy).isEqualTo("375")
+
+        sut.setScaleMode(false)
+        sut.updateEditorPortion("1")
+        assertThat(sut.uiState.value.editorCarbs).isEqualTo("15")
+    }
+
+    @Test
+    fun `a saved meal sent as it is can be folded in the history, a changed one cannot`() {
+        val milk = FD(id = 2, name = "Milk", portion = 250.0, unit = "ml", carbs = 12)
+        loadFoods(bread, milk)
+        val breakfast = Recipe(
+            id = "bf", name = "Breakfast", kind = RecipeKind.MEAL,
+            items = listOf(RecipeItem("Bread", 30.0, "g", foodId = 1), RecipeItem("Milk", 250.0, "ml", foodId = 2))
+        )
+        whenever(dateUtil.now()).thenReturn(1_000_000)
+
+        sut.addRecipeLines(breakfast)
+        sut.send(MealTarget.CARBS)
+        runUntil { sut.uiState.value.eatenMeals.isNotEmpty() }
+        assertThat(sut.uiState.value.eatenMeals.first().changed).isFalse()
+        assertThat(sut.uiState.value.eatenMeals.first().items.map { it.foodId }).containsExactly(1L, 2L).inOrder()
+
+        sut.clearMeal()
+        sut.addRecipeLines(breakfast)
+        sut.removeMealItem(sut.uiState.value.mealItems.last().key)
+        sut.send(MealTarget.CARBS)
+        runUntil { sut.uiState.value.eatenMeals.size == 2 }
+        assertThat(sut.uiState.value.eatenMeals.first().changed).isTrue()
+    }
+
+    @Test
+    fun `a dish line of an eaten meal keeps its dish`() {
+        loadFoods(bread)
+        val toast = Recipe("toast", "Toast", RecipeKind.DISH, listOf(RecipeItem("Bread", 40.0, "g", foodId = 1)))
+        whenever(rh.gs(UiStrings.food_book_servings)).thenReturn("servings")
+        whenever(dateUtil.now()).thenReturn(1_000_000)
+
+        sut.send(toast, MealTarget.CARBS)
+        runUntil { sut.uiState.value.eatenMeals.isNotEmpty() }
+
+        assertThat(sut.uiState.value.eatenMeals.first().items.single().recipeId).isEqualTo("toast")
+    }
+
+    @Test
+    fun `a meal of the history is saved as a dish and then shows that name with its lines`() {
+        val milk = FD(id = 2, name = "Milk", portion = 250.0, unit = "ml", carbs = 12)
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        val vm = screenWith(book, bread, milk)
+        whenever(rh.gs(UiStrings.food_book_servings)).thenReturn("servings")
+        whenever(dateUtil.now()).thenReturn(1_000_000)
+        vm.askQuantity(bread)
+        vm.updateQuantity("80")
+        vm.confirmQuantity()
+        vm.askQuantity(milk)
+        vm.confirmQuantity()
+        vm.send(MealTarget.CARBS)
+        runUntil { book.book.value.eaten.isNotEmpty() }
+        val eaten = book.book.value.eaten.single()
+
+        vm.openSaveEaten(eaten)
+        val save = vm.uiState.value.saveEaten!!
+        assertThat(vm.uiState.value.showSave).isTrue()
+        assertThat(save.carbsNow).isEqualTo(eaten.wizardCarbs)
+        assertThat(save.keptAsTyped).isFalse()
+        vm.updateSaveName("Snack")
+        vm.updateSaveKind(RecipeKind.DISH)
+        vm.confirmSave()
+        runUntil { book.book.value.eaten.single().name == "Snack" }
+
+        val dish = book.book.value.recipes.single()
+        assertThat(dish.name).isEqualTo("Snack")
+        assertThat(dish.kind).isEqualTo(RecipeKind.DISH)
+        assertThat(dish.items).containsExactly(RecipeItem("Bread", 80.0, "g", foodId = 1), RecipeItem("Milk", 250.0, "ml", foodId = 2)).inOrder()
+        val named = book.book.value.eaten.single()
+        assertThat(named.savedLater).isTrue()
+        assertThat(named.note).isEqualTo(eaten.note) // the link to the treatment uses it
+        assertThat(named.items).isEqualTo(eaten.items)
+        assertThat(vm.uiState.value.showSave).isFalse()
+        assertThat(vm.uiState.value.saveEaten).isNull()
+    }
+
+    @Test
+    fun `a meal of the history is not saved under a name already used`() {
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        runBlocking { book.saveRecipe(Recipe("old", "Snack", RecipeKind.MEAL, emptyList())) }
+        val vm = screenWith(book, bread)
+        runUntil { vm.uiState.value.recipes.isNotEmpty() }
+        whenever(rh.gs(UiStrings.food_book_servings)).thenReturn("servings")
+        val eaten = EatenMeal("e", timestamp = 0, name = null, note = "n", wizardCarbs = 40, items = listOf(EatenItem("Bread", 80.0, "g", 40.0, fat = null, protein = null, energyKj = null, foodId = 1)))
+
+        vm.openSaveEaten(eaten)
+        vm.updateSaveName("snack")
+        vm.confirmSave()
+
+        assertThat(vm.uiState.value.showSave).isTrue()
+        assertThat(book.book.value.recipes.map { it.id }).containsExactly("old")
+    }
+
+    @Test
+    fun `saving the meal being put together is not mixed with a meal of the history`() {
+        whenever(rh.gs(UiStrings.food_book_servings)).thenReturn("servings")
+        val eaten = EatenMeal("e", timestamp = 0, name = null, note = "n", wizardCarbs = 40, items = emptyList())
+        sut.openSaveEaten(eaten)
+        sut.dismissSave()
+        assertThat(sut.uiState.value.saveEaten).isNull()
+
+        sut.openSaveEaten(eaten)
+        sut.openSave()
+
+        assertThat(sut.uiState.value.saveEaten).isNull()
+    }
+
+    // ---- Delete with a long press, categories, unit ----
+
+    /** A screen on [book], with [foods] in the database. Runs the start of the screen. */
+    private fun screenWith(book: FoodBookRepository, vararg foods: FD): FoodManagementViewModel {
+        runBlocking { whenever(persistenceLayer.getFoods()).thenReturn(foods.toList()) }
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(NoFoodImageStore(), openFoodFacts, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), aapsLogger), preferences)
+        dispatcher.scheduler.runCurrent()
+        return vm
+    }
+
+    /** Runs the screen until [done]: the food book writes its file on the real IO dispatcher. */
+    private fun runUntil(done: () -> Boolean) {
+        repeat(200) {
+            dispatcher.scheduler.runCurrent()
+            if (done()) return
+            Thread.sleep(10)
+        }
+    }
+
+    @Test
+    fun `a long press selects, a tap toggles, another tab ends the selection`() {
+        val milk = FD(id = 2, name = "Milk", portion = 250.0, unit = "ml", carbs = 12)
+
+        sut.startSelection(bread)
+        sut.toggleSelection(milk)
+        assertThat(sut.uiState.value.selecting).isTrue()
+        assertThat(sut.uiState.value.selectedFoodIds).containsExactly(1L, 2L)
+
+        sut.toggleSelection(bread)
+        assertThat(sut.uiState.value.selectedFoodIds).containsExactly(2L)
+
+        sut.selectTab(FoodTab.DISHES)
+        assertThat(sut.uiState.value.selecting).isFalse()
+        assertThat(sut.uiState.value.selectedFoodIds).isEmpty()
+    }
+
+    @Test
+    fun `no selection while a dish is changed`() {
+        loadFoods(bread)
+        sut.startEdit(toast)
+
+        sut.startSelection(bread)
+
+        assertThat(sut.uiState.value.selecting).isFalse()
+    }
+
+    @Test
+    fun `the delete dialog names the dishes that use a deleted food`() {
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        runBlocking { book.saveRecipe(toast) }
+        val vm = screenWith(book, bread)
+
+        vm.startSelection(bread)
+        vm.requestDelete()
+
+        assertThat(vm.uiState.value.showDeleteConfirm).isTrue()
+        val summary = vm.deleteSummary()
+        assertThat(summary.names).containsExactly("Bread")
+        assertThat(summary.usedIn).containsExactly("Bread" to listOf("Toast"))
+
+        // A dish deleted with the food it uses gives no warning: nothing that stays uses the food.
+        vm.toggleSelection(toast)
+        assertThat(vm.deleteSummary().usedIn).isEmpty()
+    }
+
+    @Test
+    fun `confirming deletes the selected foods and dishes`() {
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        runBlocking { book.saveRecipe(toast) }
+        val vm = screenWith(book, bread)
+        vm.startSelection(bread)
+        vm.toggleSelection(toast)
+
+        vm.confirmDelete()
+        runUntil { book.book.value.recipes.isEmpty() }
+
+        assertThat(book.book.value.recipes).isEmpty()
+        runBlocking { verify(persistenceLayer).invalidateFood(eq(1L), eq(Action.FOOD_REMOVED), eq(Sources.Food)) }
+        assertThat(vm.uiState.value.foods).isEmpty()
+        assertThat(vm.uiState.value.selecting).isFalse()
+    }
+
+    @Test
+    fun `nothing selected means no delete dialog`() {
+        sut.startSelection(bread)
+        sut.toggleSelection(bread)
+
+        sut.requestDelete()
+
+        assertThat(sut.uiState.value.showDeleteConfirm).isFalse()
+    }
+
+    @Test
+    fun `a category typed with other capitals is saved as the existing one`() {
+        val apple = FD(id = 3, name = "Apple", portion = 100.0, carbs = 12, category = "Fruits", subCategory = "Fresh")
+        loadFoods(apple)
+        sut.openEditor()
+        sut.updateEditorName("Pear")
+        sut.updateEditorCategory(" fruits ")
+        sut.updateEditorSubCategory("FRESH")
+        sut.updateEditorCarbs("10")
+
+        sut.saveFood()
+        dispatcher.scheduler.runCurrent()
+
+        val saved = argumentCaptor<FD>()
+        runBlocking { verify(persistenceLayer).insertOrUpdateFood(saved.capture()) }
+        assertThat(saved.firstValue.category).isEqualTo("Fruits")
+        assertThat(saved.firstValue.subCategory).isEqualTo("Fresh")
+    }
+
+    @Test
+    fun `decimal values typed from the package are saved rounded, not as zero`() {
+        loadFoods()
+        sut.openEditor()
+        sut.updateEditorName("Biscuit")
+        sut.updateEditorPortion("30")
+        sut.updateEditorCarbs("14.8")
+        sut.updateEditorFat("1,7")
+        sut.updateEditorProtein("0.4")
+        sut.updateEditorEnergy("520.6")
+
+        sut.saveFood()
+        dispatcher.scheduler.runCurrent()
+
+        val saved = argumentCaptor<FD>()
+        runBlocking { verify(persistenceLayer).insertOrUpdateFood(saved.capture()) }
+        assertThat(saved.firstValue.carbs).isEqualTo(15)
+        assertThat(saved.firstValue.fat).isEqualTo(2)
+        assertThat(saved.firstValue.protein).isEqualTo(0)
+        assertThat(saved.firstValue.energy).isEqualTo(521)
+    }
+
+    @Test
+    fun `only the subcategories of the chosen category are proposed`() {
+        loadFoods(
+            FD(id = 3, name = "Apple", portion = 100.0, carbs = 12, category = "Fruits", subCategory = "Fresh"),
+            FD(id = 4, name = "Raisins", portion = 100.0, carbs = 70, category = "fruits", subCategory = "Dried"),
+            FD(id = 5, name = "Bean", portion = 100.0, carbs = 5, category = "Vegetables", subCategory = "Green"),
+        )
+
+        assertThat(sut.subCategoriesOf("FRUITS")).containsExactly("Dried", "Fresh").inOrder()
+        assertThat(sut.subCategoriesOf("")).isEmpty()
+    }
+
+    @Test
+    fun `a long unit is cut`() {
+        sut.updateEditorUnit("x".repeat(MAX_UNIT_LENGTH + 5))
+
+        assertThat(sut.uiState.value.editorUnit).hasLength(MAX_UNIT_LENGTH)
+    }
+
+    // ---- The history follows the treatments ----
+
+    private fun eaten(id: String, target: MealTarget, treatmentId: Long?, validatedAt: Long?) =
+        EatenMeal(id = id, timestamp = 1_000_000, name = null, note = "Bread 80 g (40 g)", wizardCarbs = 40, items = emptyList(), target = target, validatedAt = validatedAt, treatmentId = treatmentId)
+
+    @Test
+    fun `a meal whose treatment was deleted is removed, the others stay`() {
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        runBlocking {
+            book.addEatenMeal(eaten("deleted", MealTarget.CARBS, treatmentId = 10, validatedAt = 1_000_000))
+            book.addEatenMeal(eaten("kept", MealTarget.CARBS, treatmentId = 11, validatedAt = 1_000_000))
+            book.addEatenMeal(eaten("not found", MealTarget.CARBS, treatmentId = 12, validatedAt = 1_000_000))
+            whenever(persistenceLayer.getCarbsById(10)).thenReturn(CA(id = 10, timestamp = 1_000_000, duration = 0, amount = 40.0, isValid = false))
+            whenever(persistenceLayer.getCarbsById(11)).thenReturn(CA(id = 11, timestamp = 1_000_000, duration = 0, amount = 40.0, notes = "Bread 80 g (40 g)"))
+        }
+        whenever(dateUtil.now()).thenReturn(2_000_000)
+
+        val vm = screenWith(book)
+        runUntil { book.book.value.eaten.size == 2 && vm.uiState.value.treatmentLinks.isNotEmpty() }
+
+        // Deleted in the treatments history: gone. Not found at all: kept, nothing is removed on a guess.
+        assertThat(book.book.value.eaten.map { it.id }).containsExactly("kept", "not found")
+        assertThat(vm.uiState.value.treatmentLinks.keys).containsExactly("kept")
+        assertThat(vm.uiState.value.treatmentLinks.getValue("kept").sameNote).isTrue()
+    }
+
+    @Test
+    fun `a meal keeps the id of the treatment found for it`() {
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        runBlocking {
+            book.addEatenMeal(eaten("waiting", MealTarget.CARBS, treatmentId = null, validatedAt = null))
+            whenever(persistenceLayer.getBolusCalculatorResultsFromTime(any(), eq(true))).thenReturn(emptyList())
+            whenever(persistenceLayer.getCarbsFromTime(any(), eq(true)))
+                .thenReturn(listOf(CA(id = 7, dateCreated = 1_010_000, timestamp = 900_000, duration = 0, amount = 40.0, notes = "Bread 80 g (40 g)")))
+        }
+        whenever(dateUtil.now()).thenReturn(1_020_000)
+
+        screenWith(book)
+        runUntil { book.book.value.eaten.single().treatmentId != null }
+
+        val meal = book.book.value.eaten.single()
+        assertThat(meal.treatmentId).isEqualTo(7L)
+        assertThat(meal.validatedAt).isEqualTo(900_000L)
+    }
+
+    // ---- Backup and restore (proof of concept, personal use) ----
+
+    @Test
+    fun `restore adds the missing food, points the dish to it and finds the treatments at their time`() {
+        val yogurt = FD(id = 30, name = "Yogurt", portion = 1.0, unit = "pot", carbs = 6)
+        val dish = Recipe("dish", "Sweet yogurt", RecipeKind.DISH, listOf(RecipeItem("Yogurt", 1.0, "pot", foodId = 30)))
+        // The file does not keep the treatment ids. "same" has a carbs entry at its time here;
+        // "other" has none (Nightscout has not sent it yet, for example).
+        val text = FoodBackupMath.encode(
+            listOf(bread, yogurt),
+            FoodBook(
+                recipes = listOf(dish),
+                eaten = listOf(eaten("same", MealTarget.CARBS, treatmentId = 70, validatedAt = 900_000), eaten("other", MealTarget.CARBS, treatmentId = 80, validatedAt = 950_000)),
+            ),
+            now = 0
+        )
+        // Only bread is in this database. A new food gets the next id.
+        val inDb = mutableListOf(bread)
+
+        val book = restore(text, inDb)
+
+        assertThat(inDb.map { it.name }).containsExactly("Bread", "Yogurt")
+        assertThat(book.book.value.recipes.single().items.single().foodId).isEqualTo(100L)
+        val meals = book.book.value.eaten.associateBy { it.id }
+        assertThat(meals.getValue("same").treatmentId).isEqualTo(7L)
+        assertThat(meals.getValue("other").treatmentId).isNull()
+        assertThat(meals.getValue("other").validatedAt).isEqualTo(950_000L)
+    }
+
+    @Test
+    fun `restore of a format 2 file keeps a treatment id only when the record has the time of the meal`() {
+        // "same" points to the same carbs entry here; "other" to a record of another meal.
+        val text = """
+            {
+              "format": 2, "exportedAt": 0, "foods": [], "recipes": [],
+              "eaten": [
+                { "id": "same", "timestamp": 1000000, "name": null, "note": "n", "wizardCarbs": 40, "items": [], "target": "CARBS", "validatedAt": 900000, "treatmentId": 7 },
+                { "id": "other", "timestamp": 1000000, "name": null, "note": "n", "wizardCarbs": 10, "items": [], "target": "CARBS", "validatedAt": 950000, "treatmentId": 8 }
+              ]
+            }
+        """.trimIndent()
+
+        val book = restore(text, mutableListOf(bread))
+
+        val meals = book.book.value.eaten.associateBy { it.id }
+        assertThat(meals.getValue("same").treatmentId).isEqualTo(7L)
+        assertThat(meals.getValue("other").treatmentId).isNull()
+        assertThat(meals.getValue("other").validatedAt).isEqualTo(950_000L)
+    }
+
+    /**
+     * Restores the backup [text] on a phone whose foods are [inDb], with a carbs entry 7 at 900 000
+     * and an entry 8 at another time. A new food gets the id 100.
+     */
+    private fun restore(text: String, inDb: MutableList<FD>): FoodBookRepository {
+        val files = object : NoFoodExportFiles() {
+            override val available = true
+            override fun read(file: ExportFile): String = text
+        }
+        val carbs7 = CA(id = 7, timestamp = 900_000, duration = 0, amount = 40.0)
+        val carbs8 = CA(id = 8, timestamp = 123, duration = 0, amount = 10.0)
+        runBlocking {
+            whenever(persistenceLayer.getFoods()).thenAnswer { inDb.toList() }
+            whenever(persistenceLayer.insertOrUpdateFood(any())).thenAnswer {
+                inDb += (it.arguments[0] as FD).copy(id = 100)
+                PersistenceLayer.TransactionResult<FD>()
+            }
+            whenever(persistenceLayer.getCarbsById(7)).thenReturn(carbs7)
+            whenever(persistenceLayer.getCarbsById(8)).thenReturn(carbs8)
+            whenever(persistenceLayer.getBolusCalculatorResultsFromTime(any(), eq(true))).thenReturn(emptyList())
+            whenever(persistenceLayer.getCarbsFromTime(any(), eq(true))).thenReturn(listOf(carbs8, carbs7))
+        }
+        whenever(dateUtil.now()).thenReturn(1_000_000)
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, files), files, FoodImages(NoFoodImageStore(), openFoodFacts, FoodBookRepository(MemoryFoodBookStore(), aapsLogger), aapsLogger), preferences)
+        dispatcher.scheduler.runCurrent()
+
+        vm.restore(ExportFile("backup", "ref"))
+        runUntil { book.book.value.eaten.size == 2 }
+        return book
+    }
+
+    /** Photo files in memory, for the photo tests. */
+    private class MemoryImageStore : FoodImageStore {
+
+        val files = mutableMapOf<String, ByteArray>()
+        override val available: Boolean = true
+        override fun read(key: String): ByteArray? = files[key]
+        override fun write(key: String, bytes: ByteArray) {
+            files[key] = bytes
+        }
+
+        override fun delete(key: String) {
+            files.remove(key)
+        }
+    }
+
+    @Test
+    fun `restore of an archive adds the photos, and keeps a photo already on the phone`() {
+        val yogurt = FD(id = 30, name = "Yogurt", portion = 1.0, unit = "pot", carbs = 6)
+        val text = FoodBackupMath.encode(
+            listOf(yogurt),
+            FoodBook(
+                offLinks = listOf(OffLink(foodId = 30, barcode = "3017620422003", hasImage = true)),
+                photos = listOf(FoodPhoto(foodId = 30, key = "user_aaa")),
+            ),
+            now = 0
+        )
+        val offInBackup = byteArrayOf(1)
+        val offOnPhone = byteArrayOf(2)
+        val userInBackup = byteArrayOf(3)
+        val files = object : NoFoodExportFiles() {
+            override val available = true
+            override fun readArchive(file: ExportFile): Map<String, ByteArray> = mapOf(
+                FoodBackupMath.FILE_NAME to text.encodeToByteArray(),
+                "images/3017620422003.jpg" to offInBackup,
+                "images/user_aaa.jpg" to userInBackup,
+                "images/../evil.jpg" to byteArrayOf(9),
+            )
+        }
+        val inDb = mutableListOf<FD>()
+        runBlocking {
+            whenever(persistenceLayer.getFoods()).thenAnswer { inDb.toList() }
+            whenever(persistenceLayer.insertOrUpdateFood(any())).thenAnswer {
+                inDb += (it.arguments[0] as FD).copy(id = 100)
+                PersistenceLayer.TransactionResult<FD>()
+            }
+        }
+        val store = MemoryImageStore().also { it.files["3017620422003"] = offOnPhone }
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, files), files, FoodImages(store, openFoodFacts, book, aapsLogger), preferences)
+        dispatcher.scheduler.runCurrent()
+
+        vm.restore(ExportFile("2026-11-12_100000_" + FoodBackupMath.ARCHIVE_NAME, "ref"))
+        runUntil { "user_aaa" in store.files }
+
+        assertThat(book.book.value.photos).containsExactly(FoodPhoto(foodId = 100, key = "user_aaa"))
+        assertThat(store.files["user_aaa"]).isEqualTo(userInBackup)
+        // The OFF photo already on the phone is not replaced, and a bad name is not written.
+        assertThat(store.files["3017620422003"]).isEqualTo(offOnPhone)
+        assertThat(store.files.keys).containsExactly("3017620422003", "user_aaa")
+    }
+
+    @Test
+    fun `a photo taken in the editor is saved with the food, and can be removed`() {
+        val yogurt = FD(id = 30, name = "Yogurt", portion = 1.0, unit = "pot", carbs = 6)
+        runBlocking {
+            whenever(persistenceLayer.getFoods()).thenReturn(listOf(yogurt))
+            whenever(persistenceLayer.insertOrUpdateFood(any())).thenReturn(PersistenceLayer.TransactionResult())
+        }
+        val store = MemoryImageStore()
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(store, openFoodFacts, book, aapsLogger), preferences)
+        dispatcher.scheduler.runCurrent()
+        val photo = byteArrayOf(1, 2, 3)
+
+        vm.openEditor(yogurt)
+        vm.openPhotoCamera()
+        vm.takePhoto(photo)
+        assertThat(vm.uiState.value.showPhotoCamera).isFalse()
+        assertThat(vm.uiState.value.editorUserPhoto).isEqualTo(photo)
+        vm.saveFood()
+        runUntil { vm.uiState.value.foodImages[30L] != null }
+
+        assertThat(book.book.value.photos.single().foodId).isEqualTo(30L)
+        assertThat(vm.uiState.value.foodImages[30L]).isEqualTo(photo)
+
+        vm.openEditor(yogurt)
+        runUntil { vm.uiState.value.editorUserPhoto != null }
+        vm.removePhoto()
+        vm.saveFood()
+        runUntil { 30L !in vm.uiState.value.foodImages }
+
+        assertThat(book.book.value.photos).isEmpty()
+        assertThat(store.files).isEmpty()
+    }
+
+    @Test
+    fun `a photo of a dish is saved with it, copied into the history, and its file kept while the history uses it`() {
+        val yogurt = FD(id = 30, name = "Yogurt", portion = 1.0, unit = "pot", carbs = 6)
+        val dish = Recipe(id = "d", name = "Sweet yogurt", kind = RecipeKind.DISH, items = listOf(RecipeItem("Yogurt", 1.0, "pot", foodId = 30)))
+        runBlocking { whenever(persistenceLayer.getFoods()).thenReturn(listOf(yogurt)) }
+        val store = MemoryImageStore()
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        runBlocking { book.saveRecipe(dish) }
+        whenever(rh.gs(UiStrings.food_book_servings)).thenReturn("servings")
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(store, openFoodFacts, book, aapsLogger), preferences)
+        runUntil { vm.uiState.value.recipes.isNotEmpty() }
+        val first = byteArrayOf(1)
+
+        vm.startEdit(vm.uiState.value.recipes.single())
+        vm.openEditCamera()
+        vm.takeEditPhoto(first)
+        assertThat(vm.uiState.value.showEditCamera).isFalse()
+        vm.saveEdit()
+        runUntil { book.book.value.recipes.single().photo != null }
+        val firstKey = book.book.value.recipes.single().photo!!
+        assertThat(store.files[firstKey]).isEqualTo(first)
+        runUntil { vm.uiState.value.recipePhotos[firstKey] != null }
+
+        // Sent: the history keeps the key of the photo of that time, for the card and for the dish line.
+        vm.send(vm.uiState.value.recipes.single(), MealTarget.CARBS)
+        runUntil { book.book.value.eaten.isNotEmpty() }
+        val meal = book.book.value.eaten.single()
+        assertThat(meal.photo).isEqualTo(firstKey)
+        assertThat(meal.items.single().photo).isEqualTo(firstKey)
+
+        // A new photo for the dish: the old file stays, the history still shows it.
+        vm.startEdit(vm.uiState.value.recipes.single())
+        assertThat(vm.uiState.value.editPhoto).isEqualTo(first)
+        vm.takeEditPhoto(byteArrayOf(2))
+        vm.saveEdit()
+        runUntil { book.book.value.recipes.single().photo != firstKey }
+        assertThat(store.files.keys).hasSize(2)
+        assertThat(store.files[firstKey]).isEqualTo(first)
+
+        // The dish deleted: its own photo goes, the one of the history stays.
+        val secondKey = book.book.value.recipes.single().photo!!
+        vm.startSelection(vm.uiState.value.recipes.single())
+        vm.confirmDelete()
+        runUntil { secondKey !in store.files }
+        assertThat(store.files.keys).containsExactly(firstKey)
+    }
+
+    @Test
+    fun `a dish without a photo change keeps its photo when it is saved`() {
+        val yogurt = FD(id = 30, name = "Yogurt", portion = 1.0, unit = "pot", carbs = 6)
+        val dish = Recipe(id = "d", name = "Sweet yogurt", kind = RecipeKind.DISH, items = listOf(RecipeItem("Yogurt", 1.0, "pot", foodId = 30)), photo = "user_aaa")
+        runBlocking { whenever(persistenceLayer.getFoods()).thenReturn(listOf(yogurt)) }
+        val store = MemoryImageStore().also { it.files["user_aaa"] = byteArrayOf(1) }
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        runBlocking { book.saveRecipe(dish) }
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(store, openFoodFacts, book, aapsLogger), preferences)
+        runUntil { vm.uiState.value.recipePhotos["user_aaa"] != null }
+
+        vm.startEdit(vm.uiState.value.recipes.single())
+        vm.updateEditName("Yogurt with sugar")
+        vm.saveEdit()
+        runUntil { book.book.value.recipes.single().name == "Yogurt with sugar" }
+
+        assertThat(book.book.value.recipes.single().photo).isEqualTo("user_aaa")
+        assertThat(store.files.keys).containsExactly("user_aaa")
+    }
+
+    @Test
+    fun `a category filter is removed when its last food moves to another category`() {
+        val changes = MutableSharedFlow<List<FD>>(extraBufferCapacity = 1)
+        whenever(persistenceLayer.observeChanges(FD::class)).thenReturn(changes)
+        val cake = FD(id = 40, name = "Cake", category = "Bakery", subCategory = "Sweet", portion = 100.0, unit = "g", carbs = 50)
+        val vm = screenWith(FoodBookRepository(MemoryFoodBookStore(), aapsLogger), cake, bread)
+        vm.setFilterCategory(GroupFilter.Named("Bakery"))
+        vm.setFilterSubCategory(GroupFilter.Named("Sweet"))
+
+        runBlocking { whenever(persistenceLayer.getFoods()).thenReturn(listOf(cake.copy(category = "Dessert"), bread)) }
+        changes.tryEmit(emptyList())
+        dispatcher.scheduler.advanceTimeBy(1_100)
+        dispatcher.scheduler.runCurrent()
+
+        assertThat(vm.uiState.value.filterCategory).isEqualTo(GroupFilter.All)
+        assertThat(vm.uiState.value.filterSubCategory).isEqualTo(GroupFilter.All)
+        assertThat(vm.uiState.value.foods.map { it.name }).containsExactly("Cake", "Bread")
+    }
+
+    @Test
+    fun `a category filter stays while it still has foods`() {
+        val changes = MutableSharedFlow<List<FD>>(extraBufferCapacity = 1)
+        whenever(persistenceLayer.observeChanges(FD::class)).thenReturn(changes)
+        val cake = FD(id = 40, name = "Cake", category = "Bakery", portion = 100.0, unit = "g", carbs = 50)
+        val bun = FD(id = 41, name = "Bun", category = "Bakery", portion = 100.0, unit = "g", carbs = 55)
+        val vm = screenWith(FoodBookRepository(MemoryFoodBookStore(), aapsLogger), cake, bun)
+        vm.setFilterCategory(GroupFilter.Named("Bakery"))
+
+        runBlocking { whenever(persistenceLayer.getFoods()).thenReturn(listOf(cake.copy(category = "Dessert"), bun)) }
+        changes.tryEmit(emptyList())
+        dispatcher.scheduler.advanceTimeBy(1_100)
+        dispatcher.scheduler.runCurrent()
+
+        assertThat(vm.uiState.value.filterCategory).isEqualTo(GroupFilter.Named("Bakery"))
+    }
+
+    // ---- Filters "All / None / a group" and the sort ----
+
+    /** Keeps [flow] collected, as the screen does: the derived lists are only computed while shown. */
+    private fun <T> shown(flow: StateFlow<T>): StateFlow<T> {
+        CoroutineScope(dispatcher).launch { flow.collect {} }
+        dispatcher.scheduler.runCurrent()
+        return flow
+    }
+
+    private val apple = FD(id = 50, name = "apple", category = "Fruit", subCategory = "Fresh", portion = 100.0, unit = "g", carbs = 12)
+    private val prune = FD(id = 51, name = "Prune", category = "Fruit", portion = 100.0, unit = "g", carbs = 60)
+    private val salt = FD(id = 52, name = "Écrou salé", portion = 100.0, unit = "g", carbs = 1)
+
+    @Test
+    fun `the None category shows only the foods without a category`() {
+        val vm = screenWith(FoodBookRepository(MemoryFoodBookStore(), aapsLogger), salt, prune, apple)
+        val foods = shown(vm.filteredFoods)
+
+        vm.setFilterCategory(GroupFilter.None)
+        dispatcher.scheduler.runCurrent()
+
+        assertThat(foods.value.map { it.name }).containsExactly("Écrou salé")
+        assertThat(shown(vm.foodCategoryChoices).value).isEqualTo(GroupChoices(listOf("Fruit"), hasNone = true))
+    }
+
+    @Test
+    fun `the None subcategory shows the foods of the category without a subcategory`() {
+        val vm = screenWith(FoodBookRepository(MemoryFoodBookStore(), aapsLogger), salt, prune, apple)
+        val foods = shown(vm.filteredFoods)
+        val subChoices = shown(vm.foodSubCategoryChoices)
+
+        vm.setFilterCategory(GroupFilter.Named("Fruit"))
+        dispatcher.scheduler.runCurrent()
+        assertThat(subChoices.value).isEqualTo(GroupChoices(listOf("Fresh"), hasNone = true))
+
+        vm.setFilterSubCategory(GroupFilter.None)
+        dispatcher.scheduler.runCurrent()
+        assertThat(foods.value.map { it.name }).containsExactly("Prune")
+    }
+
+    @Test
+    fun `the foods are newest first or A to Z, and the choice is kept`() {
+        // The database gives the newest first.
+        val vm = screenWith(FoodBookRepository(MemoryFoodBookStore(), aapsLogger), salt, prune, apple)
+        val foods = shown(vm.filteredFoods)
+        assertThat(foods.value.map { it.name }).containsExactly("Écrou salé", "Prune", "apple").inOrder()
+
+        vm.setSortFoodsByName(true)
+        dispatcher.scheduler.runCurrent()
+
+        assertThat(foods.value.map { it.name }).containsExactly("apple", "Écrou salé", "Prune").inOrder()
+        verify(preferences).put(BooleanNonKey.FoodSortByName, true)
+    }
+
+    @Test
+    fun `the sort chosen before is used when the screen opens`() {
+        whenever(preferences.get(BooleanNonKey.FoodSortByName)).thenReturn(true)
+
+        val vm = screenWith(FoodBookRepository(MemoryFoodBookStore(), aapsLogger), salt, prune, apple)
+
+        assertThat(vm.uiState.value.sortFoodsByName).isTrue()
+        assertThat(shown(vm.filteredFoods).value.map { it.name }).containsExactly("apple", "Écrou salé", "Prune").inOrder()
+    }
+
+    @Test
+    fun `a dish keeps its category and the dish list can be filtered on it`() {
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        val salad = Recipe(id = "s", name = "Fruit salad", kind = RecipeKind.DISH, items = listOf(RecipeItem("apple", 100.0, "g", foodId = 50)))
+        val soup = Recipe(id = "p", name = "Soup", kind = RecipeKind.DISH, items = listOf(RecipeItem("apple", 50.0, "g", foodId = 50)))
+        val lunch = Recipe(id = "m", name = "Lunch", kind = RecipeKind.MEAL, items = listOf(RecipeItem("apple", 50.0, "g", foodId = 50)))
+        runBlocking { book.saveRecipe(salad); book.saveRecipe(soup); book.saveRecipe(lunch) }
+        val vm = screenWith(book, apple)
+        runUntil { vm.uiState.value.recipes.size == 3 }
+
+        // The food category is proposed, so the dish can go with the foods it is close to.
+        vm.startEdit(vm.uiState.value.recipes.first { it.id == "s" })
+        assertThat(vm.dishCategorySuggestions()).containsExactly("Fruit")
+        vm.updateEditCategory("fruit")
+        vm.updateEditSubCategory("Home-made")
+        vm.saveEdit()
+        runUntil { book.book.value.recipes.first { it.id == "s" }.category != null }
+
+        val saved = book.book.value.recipes.first { it.id == "s" }
+        // Same letters as the food category: the group is not written twice in two ways.
+        assertThat(saved.category).isEqualTo("Fruit")
+        assertThat(saved.subCategory).isEqualTo("Home-made")
+
+        runUntil { vm.uiState.value.recipes.first { it.id == "s" }.category != null }
+        val recipes = shown(vm.filteredRecipes)
+        vm.setDishCategory(GroupFilter.None)
+        dispatcher.scheduler.runCurrent()
+        // The meals are never filtered.
+        assertThat(recipes.value.map { it.name }).containsExactly("Lunch", "Soup")
+        assertThat(shown(vm.dishCategoryChoices).value).isEqualTo(GroupChoices(listOf("Fruit"), hasNone = true))
+    }
+
+    @Test
+    fun `the sums of a meal keep the part known and say it is partial`() {
+        val yogurt = FD(id = 30, name = "Yogurt", portion = 1.0, unit = "pot", carbs = 6, fat = 4, protein = 4, energy = 300)
+        loadFoods(yogurt, bread)
+        sut.askQuantity(yogurt); sut.confirmQuantity()
+        sut.askQuantity(bread); sut.updateQuantity("80"); sut.confirmQuantity()
+
+        val total = MealMath.total(sut.uiState.value.mealItems)
+        assertThat(total.carbs).isWithin(0.0001).of(46.0)
+        assertThat(total.fat!!).isWithin(0.0001).of(4.0)
+        assertThat(total.partial).containsExactly(Nutrient.FAT, Nutrient.PROTEIN, Nutrient.ENERGY)
+
+        sut.send(MealTarget.CARBS)
+        runUntil { sut.uiState.value.eatenMeals.isNotEmpty() }
+        // The history gives the same sums.
+        assertThat(Nutrition.sum(sut.uiState.value.eatenMeals.single().items.map { it.nutrition })).isEqualTo(total)
+    }
+
+    @Test
+    fun `an empty meal cannot be opened`() {
+        sut.openMeal()
+
+        assertThat(sut.uiState.value.showMeal).isFalse()
+    }
+
+    // ---- Open Food Facts import (proof of concept) ----
+
+    @Test
+    fun `selecting an OFF product fills a new food in the editor without saving it`() {
+        val product = OffProduct(
+            barcode = "123", name = "Milk", brand = null, carbsPer100 = 4.7, sugarsPer100 = 4.7, fiberPer100 = 0.0,
+            fatPer100 = 1.6, proteinPer100 = 3.3, energyKjPer100 = 197.0, isLiquid = true
+        )
+        sut.openImport()
+
+        sut.selectOffProduct(product)
+
+        val state = sut.uiState.value
+        assertThat(state.showImport).isFalse()
+        assertThat(state.showEditor).isTrue()
+        assertThat(state.editorFood).isNull() // a new food, nothing saved yet
+        assertThat(state.editorName).isEqualTo("Milk")
+        assertThat(state.editorPortion).isEqualTo("100")
+        assertThat(state.editorUnit).isEqualTo("ml")
+        assertThat(state.editorCarbs).isEqualTo("5")
+        assertThat(state.editorCategory).isEqualTo(OFF_CATEGORY)
+        assertThat(state.editorOffProduct).isEqualTo(product)
+    }
+
+    @Test
+    fun `opening the editor by hand clears the OFF banner`() {
+        val product = OffProduct(
+            barcode = "123", name = "Milk", brand = null, carbsPer100 = null, sugarsPer100 = null, fiberPer100 = null,
+            fatPer100 = null, proteinPer100 = null, energyKjPer100 = null, isLiquid = false
+        )
+        sut.selectOffProduct(product)
+        assertThat(sut.uiState.value.editorCarbs).isEmpty() // missing carbs stay empty, not 0
+
+        sut.openEditor()
+
+        assertThat(sut.uiState.value.editorOffProduct).isNull()
+    }
+
+    private val yogurt = OffProduct(
+        barcode = "1", name = "Yaourt", brand = null, carbsPer100 = 8.8, sugarsPer100 = null, fiberPer100 = null,
+        fatPer100 = 3.2, proteinPer100 = 4.0, energyKjPer100 = 300.0, isLiquid = false,
+        servingSize = "1 pot (125 g)", servingQuantity = 125.0
+    )
+
+    @Test
+    fun `an OFF product with a serving opens on that serving`() {
+        sut.selectOffProduct(yogurt)
+
+        val state = sut.uiState.value
+        assertThat(state.editorPortion).isEqualTo("1")
+        assertThat(state.editorUnit).isEqualTo("pot (125 g)")
+        assertThat(state.editorCarbs).isEqualTo("11")
+        assertThat(state.editorOffPerServing).isTrue()
+    }
+
+    @Test
+    fun `the user can switch between the serving and 100 g`() {
+        sut.selectOffProduct(yogurt)
+        sut.setOffPerServing(false)
+        assertThat(sut.uiState.value.editorPortion).isEqualTo("100")
+        assertThat(sut.uiState.value.editorUnit).isEqualTo("g")
+        assertThat(sut.uiState.value.editorCarbs).isEqualTo("9")
+        assertThat(sut.uiState.value.editorOffPerServing).isFalse()
+
+        sut.setOffPerServing(true)
+        assertThat(sut.uiState.value.editorCarbs).isEqualTo("11")
+    }
+
+    @Test
+    fun `changing the portion of an OFF food recalculates the values`() {
+        sut.selectOffProduct(yogurt)
+        sut.setOffPerServing(false)
+
+        sut.updateEditorPortion("125")
+
+        assertThat(sut.uiState.value.editorCarbs).isEqualTo("11")
+        assertThat(sut.uiState.value.editorEnergy).isEqualTo("375")
+    }
+
+    @Test
+    fun `a value typed by the user is kept when the portion changes`() {
+        sut.selectOffProduct(yogurt)
+        sut.updateEditorCarbs("12")
+
+        sut.updateEditorPortion("2")
+
+        assertThat(sut.uiState.value.editorCarbs).isEqualTo("12") // typed, kept
+        assertThat(sut.uiState.value.editorFat).isEqualTo("8")    // computed, follows: 3.2 x 2.5
+    }
+
+    @Test
+    fun `clearing the portion and typing a new one still recalculates`() {
+        sut.selectOffProduct(yogurt)
+        sut.updateEditorPortion("")
+        sut.updateEditorPortion("2")
+
+        assertThat(sut.uiState.value.editorCarbs).isEqualTo("22")
+    }
+
+    @Test
+    fun `a food typed by hand is never recalculated`() {
+        sut.openEditor()
+        sut.updateEditorPortion("100")
+        sut.updateEditorCarbs("50")
+
+        sut.updateEditorPortion("200")
+
+        assertThat(sut.uiState.value.editorCarbs).isEqualTo("50")
+    }
+
+    // ---- Barcodes: already in the list, unknown to OFF, shown in the editor ----
+
+    private val nutella = FD(id = 5, name = "Nutella", category = "Breakfast", subCategory = "Spread", portion = 15.0, unit = "g", carbs = 9)
+    private val nutellaCode = "3017620422003"
+    private val unknownCode = "2000000000017"
+
+    /** A screen whose food book has [links], with [foods] in the database. A food saved here gets the id 100. OFF knows nothing. */
+    private fun barcodeScreen(links: List<OffLink>, vararg foods: FD): Pair<FoodManagementViewModel, FoodBookRepository> {
+        val inDb = foods.toMutableList()
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        runBlocking {
+            whenever(persistenceLayer.getFoods()).thenAnswer { inDb.toList() }
+            whenever(persistenceLayer.insertOrUpdateFood(any())).thenAnswer {
+                inDb += (it.arguments[0] as FD).copy(id = 100)
+                PersistenceLayer.TransactionResult<FD>()
+            }
+            whenever(openFoodFacts.lookup(any())).thenReturn(OffResult.NotFound)
+            links.forEach { book.saveOffLink(it) }
+        }
+        val vm = FoodManagementViewModel(persistenceLayer, aapsLogger, openFoodFacts, rh, book, dateUtil, decimalFormatter, FoodCsv(rh, dateUtil, decimalFormatter, NoFoodExportFiles()), NoFoodExportFiles(), FoodImages(NoFoodImageStore(), openFoodFacts, book, aapsLogger), preferences)
+        dispatcher.scheduler.runCurrent()
+        runUntil { !vm.uiState.value.isLoading && vm.uiState.value.foodBarcodes.size == links.size }
+        return vm to book
+    }
+
+    @Test
+    fun `a barcode already in the list is shown without asking OFF, and its food can be opened`() {
+        val (vm, _) = barcodeScreen(listOf(OffLink(foodId = 5, barcode = nutellaCode, hasImage = true)), nutella)
+        vm.openImport()
+        vm.updateImportQuery(nutellaCode)
+
+        vm.runImport()
+
+        assertThat(vm.uiState.value.barcodeOwners).containsExactly(nutella)
+        runBlocking { verify(openFoodFacts, never()).lookup(any()) }
+
+        vm.openBarcodeOwner(nutella)
+
+        val state = vm.uiState.value
+        assertThat(state.barcodeOwners).isEmpty()
+        assertThat(state.showImport).isFalse()
+        assertThat(state.showEditor).isTrue()
+        assertThat(state.editorFood).isEqualTo(nutella)
+        assertThat(state.editorBarcode).isEqualTo(nutellaCode)
+    }
+
+    @Test
+    fun `the same barcode with a zero in front is found`() {
+        val (vm, _) = barcodeScreen(listOf(OffLink(foodId = 5, barcode = nutellaCode, hasImage = true)), nutella)
+        vm.updateImportQuery("0$nutellaCode")
+
+        vm.runImport()
+
+        assertThat(vm.uiState.value.barcodeOwners).containsExactly(nutella)
+    }
+
+    @Test
+    fun `another food for a barcode in the list asks OFF`() {
+        val (vm, _) = barcodeScreen(listOf(OffLink(foodId = 5, barcode = nutellaCode, hasImage = true)), nutella)
+        vm.updateImportQuery(nutellaCode)
+        vm.runImport()
+
+        vm.importAnyway()
+        runUntil { vm.uiState.value.importResult != null }
+
+        assertThat(vm.uiState.value.barcodeOwners).isEmpty()
+        assertThat(vm.uiState.value.importResult).isEqualTo(OffResult.NotFound)
+        runBlocking { verify(openFoodFacts).lookup(nutellaCode) }
+    }
+
+    @Test
+    fun `the barcode of a deleted food does not count`() {
+        val (vm, _) = barcodeScreen(listOf(OffLink(foodId = 9, barcode = nutellaCode, hasImage = true)), nutella)
+        vm.updateImportQuery(nutellaCode)
+
+        vm.runImport()
+        runUntil { vm.uiState.value.importResult != null }
+
+        assertThat(vm.uiState.value.barcodeOwners).isEmpty()
+        runBlocking { verify(openFoodFacts).lookup(nutellaCode) }
+    }
+
+    @Test
+    fun `a barcode OFF does not know makes a food typed by hand that keeps it`() {
+        val (vm, book) = barcodeScreen(emptyList(), nutella)
+        vm.openImport()
+        vm.updateImportQuery(unknownCode)
+        vm.runImport()
+        runUntil { vm.uiState.value.importResult == OffResult.NotFound }
+
+        vm.makeFoodWithBarcode()
+
+        assertThat(vm.uiState.value.showImport).isFalse()
+        assertThat(vm.uiState.value.showEditor).isTrue()
+        assertThat(vm.uiState.value.editorFood).isNull()
+        assertThat(vm.uiState.value.editorScaleMode).isFalse()
+        assertThat(vm.uiState.value.editorBarcode).isEqualTo(unknownCode)
+        vm.updateEditorName("Home biscuits")
+        vm.updateEditorCarbs("12")
+        vm.saveFood()
+        runUntil { book.book.value.offLinks.isNotEmpty() }
+
+        assertThat(book.book.value.offLinks).containsExactly(OffLink(foodId = 100, barcode = unknownCode, hasImage = false, inOff = false))
+    }
+
+    @Test
+    fun `search words are never offered as a barcode for a new food`() {
+        val (vm, _) = barcodeScreen(emptyList(), nutella)
+        vm.openImport()
+        vm.updateImportQuery("biscuits")
+        vm.runImport()
+        runUntil { vm.uiState.value.importResult == OffResult.NotFound }
+
+        vm.makeFoodWithBarcode()
+
+        assertThat(vm.uiState.value.showEditor).isFalse()
+    }
+
+    @Test
+    fun `the editor shows the barcode of a food and of an OFF product, none for a food typed by hand`() {
+        val (vm, _) = barcodeScreen(listOf(OffLink(foodId = 5, barcode = nutellaCode, hasImage = true)), nutella)
+
+        vm.openEditor(nutella)
+        assertThat(vm.uiState.value.editorBarcode).isEqualTo(nutellaCode)
+
+        vm.openEditor()
+        assertThat(vm.uiState.value.editorBarcode).isNull()
+
+        vm.selectOffProduct(yogurt)
+        assertThat(vm.uiState.value.editorBarcode).isEqualTo(yogurt.barcode)
+    }
+
+    // ---- Comments ----
+
+    @Test
+    fun `the comment of a food is saved with it, shown again, and removed when cleared`() {
+        val (vm, book) = barcodeScreen(emptyList(), nutella)
+
+        vm.openEditor(nutella)
+        assertThat(vm.uiState.value.editorNote).isEmpty()
+        vm.updateEditorNote("  Only the small jar  ")
+        vm.saveFood()
+        runUntil { book.book.value.foodNotes.isNotEmpty() }
+        assertThat(book.book.value.foodNotes).containsExactly(FoodNote(foodId = 5, text = "Only the small jar"))
+
+        runUntil { vm.uiState.value.foodNotes.isNotEmpty() }
+        vm.openEditor(nutella)
+        assertThat(vm.uiState.value.editorNote).isEqualTo("Only the small jar")
+
+        vm.updateEditorNote(" ")
+        vm.saveFood()
+        runUntil { book.book.value.foodNotes.isEmpty() }
+        assertThat(book.book.value.foodNotes).isEmpty()
+    }
+
+    @Test
+    fun `a new food typed by hand keeps its comment`() {
+        val (vm, book) = barcodeScreen(emptyList(), nutella)
+        vm.openEditor()
+        vm.updateEditorName("Home cake")
+        vm.updateEditorCarbs("30")
+        vm.updateEditorNote("Recipe of grandma")
+
+        vm.saveFood()
+        runUntil { book.book.value.foodNotes.isNotEmpty() }
+
+        assertThat(book.book.value.foodNotes).containsExactly(FoodNote(foodId = 100, text = "Recipe of grandma"))
+    }
+
+    @Test
+    fun `a changed dish keeps its comment, which goes neither into the food nor into the history`() {
+        val book = FoodBookRepository(MemoryFoodBookStore(), aapsLogger)
+        val toast = Recipe("toast", "Toast", RecipeKind.DISH, listOf(RecipeItem("Bread", 40.0, "g", foodId = 1)))
+        runBlocking { book.saveRecipe(toast) }
+        val vm = screenWith(book, bread)
+        runUntil { vm.uiState.value.recipes.isNotEmpty() }
+
+        vm.startEdit(toast)
+        vm.updateEditNote("With salted butter")
+        vm.saveEdit()
+        runUntil { book.book.value.recipes.single().note != null }
+
+        assertThat(book.book.value.recipes.single().note).isEqualTo("With salted butter")
+        assertThat(book.book.value.foodNotes).isEmpty()
+        assertThat(vm.uiState.value.editNote).isEmpty()
+        vm.startEdit(book.book.value.recipes.single())
+        assertThat(vm.uiState.value.editNote).isEqualTo("With salted butter")
+    }
+
+    @Test
+    fun `a barcode read while the camera is closed is ignored`() {
+        sut.onBarcodeScanned("3017620422003")
+
+        assertThat(sut.uiState.value.importQuery).isEmpty()
     }
 }

@@ -74,7 +74,18 @@ sealed class AppRoute(val route: String) {
     }
 
     data object CalibrationDialog : AppRoute("calibration_dialog")
-    data object CarbsDialog : AppRoute("carbs_dialog")
+    data object CarbsDialog : AppRoute("carbs_dialog?carbs={carbs}&notes={notes}") {
+
+        /** [carbs] and [notes] fill the dialog, for example from a meal on the food screen. */
+        fun createRoute(carbs: Int? = null, notes: String? = null): String {
+            val params = buildList {
+                carbs?.let { add("carbs=$it") }
+                notes?.let { add("notes=${WizardDialog.encodeQueryValue(it)}") }
+            }
+            return if (params.isEmpty()) "carbs_dialog"
+            else "carbs_dialog?${params.joinToString("&")}"
+        }
+    }
     data object InsulinDialog : AppRoute("insulin_dialog")
     data object TreatmentDialog : AppRoute("treatment_dialog")
     data object TempBasalDialog : AppRoute("temp_basal_dialog")
@@ -84,11 +95,29 @@ sealed class AppRoute(val route: String) {
         fun createRoute(carbs: Int? = null, notes: String? = null): String {
             val params = buildList {
                 carbs?.let { add("carbs=$it") }
-                notes?.let { add("notes=$it") }
+                // Encoded: a food name or a meal note can hold "&", "?", "#", "%" or "/", which would
+                // otherwise cut the note or break the route.
+                notes?.let { add("notes=${encodeQueryValue(it)}") }
             }
             return if (params.isEmpty()) "wizard_dialog"
             else "wizard_dialog?${params.joinToString("&")}"
         }
+
+        /** Percent-encodes everything except the RFC 3986 unreserved characters, as UTF-8. */
+        internal fun encodeQueryValue(value: String): String = buildString {
+            for (byte in value.encodeToByteArray()) {
+                val c = (byte.toInt() and 0xFF)
+                val ch = c.toChar()
+                if (ch in 'A'..'Z' || ch in 'a'..'z' || ch in '0'..'9' || ch == '-' || ch == '.' || ch == '_' || ch == '~') append(ch)
+                else {
+                    append('%')
+                    append(HEX[c shr 4])
+                    append(HEX[c and 0x0F])
+                }
+            }
+        }
+
+        private const val HEX = "0123456789ABCDEF"
     }
 
     data object PluginContent : AppRoute("plugin_content/{pluginIndex}") {

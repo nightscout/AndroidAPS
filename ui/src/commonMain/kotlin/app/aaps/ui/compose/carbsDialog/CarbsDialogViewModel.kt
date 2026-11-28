@@ -94,8 +94,21 @@ class CarbsDialogViewModel(
     )
     val sideEffect: SharedFlow<SideEffect> = _sideEffect.asSharedFlow()
 
-    init {
-        viewModelScope.launch { initialize() }
+    private val initJob = viewModelScope.launch { initialize() }
+    private var prefilled = false
+
+    /**
+     * Fills the dialog once, for example with a meal from the food screen. The carbs go through the
+     * same limits as carbs typed by hand. Called again (a new composition) it does nothing.
+     */
+    fun prefill(carbs: Int?, notes: String?) {
+        if (prefilled || (carbs == null && notes == null)) return
+        prefilled = true
+        viewModelScope.launch {
+            initJob.join()
+            carbs?.let { updateCarbs(it) }
+            notes?.let { updateNotes(it) }
+        }
     }
 
     private suspend fun initialize() {
