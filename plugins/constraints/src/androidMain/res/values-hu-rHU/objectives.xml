@@ -1,2 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="objectives_button_start">Indítás</string>
+    <string name="objectives_button_verify">Ellenőrzés</string>
+    <string name="nth_objective">%1$d. célkitűzés</string>
+    <string name="objectivenotstarted">A(z) %1$d. célkitűzés nincs elindítva</string>
+    <string name="objectivenotfinished">A(z) %1$d. célkitűzés nincs befejezve</string>
+    <string name="objectives_0_objective">A megjelenítés és a megfigyelés beállítása, a bázisok és az arányok elemzése</string>
+    <string name="objectives_0_gate">Ellenőrizze, hogy a VC elérhető-e a Nightscoutban, és hogy a pumpa inzulinadatai feltöltődnek-e</string>
+    <string name="objectives_0_learned">Elvégezte az AAPS-rendszer alapbeállítását. A Nightscout nem szükséges az AAPS működéséhez, de nagyon hasznos jelentésekhez vagy más betegek megfigyeléséhez. Nem kell állandóan az NS-hez kapcsolódnia, ha az NS-t csak saját magának használja. Beállíthatja például, hogy csak otthoni WiFi-n töltsön fel, így akkumulátort takarít meg.</string>
+    <string name="objectives_openloop_objective">Kezdés nyílt hurokkal</string>
+    <string name="objectives_openloop_gate">Használja néhány napig a nyílt hurok módot, és kézzel hajtson végre sok átmeneti bázist. Állítson be és használjon átmeneti és alapértelmezett átmeneti célértékeket (pl. mozgáshoz vagy hipókezelési szénhidráthoz)</string>
+    <string name="objectives_openloop_learned">A nyílt hurok javaslatokra használható, ha nincs kompatibilis pumpája, vagy még nem áll készen a hurok zárására.</string>
+    <string name="objectives_maxbasal_objective">A nyílt hurok megértése, beleértve az átmeneti bázisra vonatkozó javaslatait</string>
+    <string name="objectives_maxbasal_gate">E tapasztalat alapján döntse el, mennyi legyen a max. bázis, és állítsa be a pumpán és a beállításokban. Egyszerű módban ez az érték a wiki ajánlása szerint számítódik, ezért nem kell beállítani.</string>
+    <string name="objectives_maxbasal">Hajtsa végre a műveletet az ajánlás teljesítéséhez</string>
+    <string name="objectives_maxbasal_learned">Figyeljen a biztonsági funkciókra, és szükség esetén módosítsa a biztonsági paramétereket.</string>
+    <string name="objectives_maxiobzero_objective">A hurok zárásának kezdete: felfüggesztés alacsony VC-nél (LGS)</string>
+    <string name="objectives_maxiobzero_gate">Használja néhány napig a zárt hurkot alacsony VC-nél felfüggesztő (LGS) módban (azaz automatikusan max. IOB = 0 van beállítva), túl sok LGS-esemény nélkül.</string>
+    <string name="objectives_maxiobzero_learned">Ha a MaxIOB nulla, az segít megelőzni a hipókat, és a Loop nem ad több inzulint a bázisütem felett (kivéve negatív IOB esetén)</string>
+    <string name="objectives_maxiob_objective">A zárt hurok finomhangolása, a max. IOB 0 fölé emelése és a VC-célértékek fokozatos csökkentése</string>
+    <string name="objectives_maxiob_gate">Futtassa néhány napig, és legalább egy éjszakán át alacsony VC riasztás nélkül, mielőtt csökkenti a VC-célértéket</string>
+    <string name="objectives_maxiob_learned">Növelje a MaxIOB értékét, ahogy a gyermek nő. Ne engedje, hogy a rendszer több inzulint adjon, mint amennyit étellel fedezni tud = a nagyon magas érték rossz ötlet. Egyszerű módban a max. IOB automatikusan számítódik</string>
+    <string name="maxiobset">A maximális IOB helyesen beállítva (egyszerű módban nem szükséges)</string>
+    <string name="objectives_autosens_objective">Szükség esetén módosítsa a bázisokat és az arányokat, majd engedélyezze az Autosenst</string>
+    <string name="objectives_autosens_gate">1 hét sikeres nappali Loop-használat rendszeres szénhidrát-bejegyzéssel. Egyszerű módban az Autosens alapértelmezetten engedélyezve van.</string>
+    <string name="objectives_autosens_learned">Ha az Autosens eredménye nem 100% körül ingadozik, a profilja valószínűleg hibás.</string>
+    <string name="objectives_smb_objective">További funkciók engedélyezése nappali használatra, például az SMB</string>
+    <string name="objectives_smb_gate">Olvassa el a wikit, és emelje meg a maxIOB értékét, hogy az SMB jól működjön! Jó kiindulás: maxIOB = átlagos étkezési bólus + 3 x a legnagyobb napi bázis. Egyszerű módban ez az érték a wiki ajánlása szerint számítódik, ezért nem kell beállítani.</string>
+    <string name="objectives_smb_learned">Az SMB használata a cél. Az Oref1 algoritmust arra is tervezték, hogy segítsen a bólusokban. Ne adja be a teljes bólust az ételre, csak egy részét, és hagyja, hogy szükség esetén az AAPS adja be a többit. Így több tartaléka marad a rosszul becsült szénhidrátra. Tudta, hogy beállíthatja a bóluskalkulátor eredményének egy százalékát, hogy csökkentse a bólus méretét?</string>
+    <string name="objectives_auto_objective">Az automatizálás engedélyezése</string>
+    <string name="objectives_auto_gate">Olvassa el a dokumentációt az automatizálás működéséről. Állítsa be az első egyszerű szabályait. Művelet helyett az AAPS először csak értesítést jelenítsen meg. Ha biztos benne, hogy az automatizálás a megfelelő időben indul, cserélje le az értesítést valódi műveletre. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
+    <string name="objectives_auto_learned">Az automatizálás jó szolga, de rossz úr. Ne használja túl sokat. Ne próbálja vele helyettesíteni az alap algoritmust. Használat előtt tesztelje a szabályt csak üzenettel. A sorrend számít.</string>
+    <string name="objectives_bgavailableinns">VC elérhető NS-ben vagy Tidepoolban</string>
+    <string name="objectives_pumpstatusavailableinns">Pumpaállapot elérhető NS-ben vagy Tidepoolban</string>
+    <string name="objectives_manualenacts">Kézi végrehajtások</string>
+    <string name="accomplished">Teljesítve: %1$s</string>
+    <string name="objectives_usage_objective">Ismerje meg az AAPS kezelését</string>
+    <string name="objectives_usage_gate">Hajtson végre különböző műveleteket az AAPS-ben</string>
+    <string name="objectives_usage_learned">Megismerte az AAPS alapjait. A legtöbb vezérlő az Áttekintés képernyőn található. További műveletek a képernyő alján lévő Kezelések és Kezelőpanel menüben, valamint az oldalsó menüben érhetők el.</string>
+    <string name="objectives_useprofileswitch">Állítson be 90%-os profilt 10 percre</string>
+    <string name="objectives_usedisconnectpump">Zuhanyzás szimulálása. Válassza le a pumpát 1 órára</string>
+    <string name="objectives_usereconnectpump">... és csatlakoztassa vissza ugyanígy</string>
+    <string name="objectives_usetemptarget">Hozzon létre egyéni átmeneti célértéket 10 perc időtartammal</string>
+    <string name="objectives_useloop">Jelenítse meg a Loop plugin tartalmát</string>
+    <string name="objectives_usescale">Görgessen vagy nagyítson a VC-grafikonon</string>
+    <string name="objectives_exam_objective">Bizonyítsa a tudását</string>
+    <string name="objectives_exam_gate">Tanulmányozza a kérdéseket. Minden kérdésnek több lehetséges válasza van, és több válasz is helyes lehet. Jelölje be az összes helyes választ, és válassza az Ellenőrzés gombot.</string>
+    <string name="objectives_exam_learned_prerequisites">Nem kell fejlesztőnek lennie. A célkitűzések teljesítéséhez Nightscoutra vagy Tidepoolra, kompatibilis pumpára, valamint az AAPS buildelésének egy módjára (webböngészőben vagy Android Studióval) van szüksége, az első telepítéshez és minden frissítéshez.</string>
+    <string name="objectives_exam_learned_prerequisites2">Az AAPS internetkapcsolat nélkül is működik.</string>
+    <string name="objectives_exam_learned_basaltest">A profilt át kell tekinteni és frissíteni kell. Jobb profil = jobb eredmények.</string>
+    <string name="objectives_exam_learned_dia">A DIA a Loop használatánál mást jelent (az idő, amíg az összes inzulin felszívódik), mint a hagyományos pumpaterápiában (az idő, amíg az inzulin nagy része felszívódik).</string>
+    <string name="objectives_exam_learned_isf">Megtanulta az ISF értékének jelentését, és hogy ez hogyan befolyásolja a VC korrekciójára használt inzulin mennyiségét.</string>
+    <string name="objectives_exam_learned_ic">Megtanulta az IC értékének jelentését, és hogy ez hogyan befolyásolja a szénhidrát fedezéséhez szükséges inzulin mennyiségét.</string>
+    <string name="objectives_exam_learned_hypott">A hipó átmeneti célértéket csak a hipó utáni túlkorrekció megelőzésére használjuk, amikor általában felhalmozott negatív IOB van. További lépéseket kell megfontolni, hogy ez a helyzet a jövőben ne ismétlődjön meg.</string>
+    <string name="objectives_exam_learned_profileswitch" formatted="false">A százalék használata nem változtatja meg a VC-célértékeket, de a bázist, az ISF-et és az IC-t úgy módosítja, hogy több inzulint (100% felett) vagy kevesebb inzulint (100% alatt) adjon.</string>
+    <string name="objectives_exam_learned_profileswitchtime">A profilváltás időeltolásával a napszakos profilt hozzáigazíthatja a rendszertelenségekhez, például a késői ébredéshez.</string>
+    <string name="objectives_exam_learned_profileswitch4">A profil szerkesztése önmagában nem elég a változáshoz. A változások aktiválásához profilváltást is kell végeznie.</string>
+    <string name="objectives_exam_learned_exercise">A testmozgás kezdete előtt legalább 1 órával csökkentse a szervezetében lévő inzulin mennyiségét egy 100% alatti profil kiválasztásával.</string>
+    <string name="objectives_exam_learned_exercise2">A testmozgás előtt legalább 1 órával beállított magasabb átmeneti célérték szintén segít csökkenteni a szervezetben lévő inzulin mennyiségét.</string>
+    <string name="objectives_exam_learned_noisycgm">Ha nem bízhat a CGM-értékekben, ne használja a Loopot felügyelet nélkül.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">Az AAPS-nek tudnia kell, hogy a pumpa nincs csatlakoztatva, hogy helyesen számolja az IOB-t.</string>
+    <string name="objectives_exam_learned_insulin">Az AAPS-nek tudnia kell, melyik inzulin van a pumpában, mert ez befolyásolja az IOB számítását.</string>
+    <string name="objectives_exam_learned_sensitivity">Az érzékenység észlelése az algoritmus része, amely lehetővé teszi, hogy az inzulinadagolás különböző helyzetekhez igazodjon.</string>
+    <string name="objectives_exam_learned_objectives">A célkitűzésekben elért haladás a többi beállítással együtt tárolódik, és biztonsági mentést kell készíteni róla.</string>
+    <string name="objectives_exam_learned_objectives2">Az exportált beállításokat és az elkészített APK-t mindig tartsa a telefonon kívül is. A telefon elveszhet, megsérülhet stb. Jó hely lehet bármilyen felhő, amely a telefonról elérhető. Így néhány perc alatt visszaállíthatja az AAPS-t egy másik eszközön. Jó gyakorlat a használt mesterjelszót is biztonságos helyen tárolni. Nélküle a biztonsági mentés használhatatlan. Ugyanez érvényes az aláírókulcsokra (.jks fájl) és az AAPS elkészítéséhez használt jelszavakra. A többi nem fontos – bármikor újra letölthető az internetről.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Ha rossz adatot adott meg az AAPS-ben, vagy az nem felel meg a valóságnak, javítsa ki minél előbb. Ez túladagoláshoz vezethet. Az AAPS-t mindig a lehető legpontosabban kell tájékoztatni a szénhidrátról, az inzulinról stb.</string>
+    <string name="objectives_exam_learned_iob">Ha ellenőrizni szeretné, hogy az AAPS jól működik-e, az IOB grafikon figyelése sok hasznos információt adhat.</string>
+    <string name="objectives_exam_learned_cob">A COB számítása az ISF és az IC arányától függ. Az ISF növelése vagy az IC csökkentése hosszabb felszívódási időhöz vezet. A százalékos profilváltás viszont mindkét értéket egyszerre módosítja, így a felszívódási idő nem változik.</string>
+    <string name="objectives_exam_learned_breadgrams">A szénhidrát megadásához csak gramm használható.</string>
+    <string name="objectives_exam_learned_ecarbs">Az elnyújtott szénhidrát (e-carbs) a pumpás világban használt kiterjesztett bólus helyettesítője.</string>
+    <string name="objectives_exam_learned_nsclient">Az AAPS-t távolról követheti az AAPSClienttel vagy a Nightscouttal. Ha az AAPSClient párosítva van a fő telefonnal, az AAPS-t távolról is vezérelheti.</string>
+    <string name="objectives_exam_learned_concentration1">Az U200 inzulin 50%-os profillal való használata állandó átváltást igényel: a tollal adott külső bólusoknál, és az AAPS vagy az NS összes szabványos jelentése hibás lesz, ezeket az egészségügyi csapat számára nemzetközi egységre (NE) kell átváltani.</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">Ha az 50%-os profillal használt U200 inzulinról átvált az inzulinkoncentráció funkcióval használt U200 inzulinra, új, erősebb profilt kell létrehoznia, egy hétre le kell tiltania a DynISF-et, és meg kell tanulnia nemzetközi egységekben gondolkodni.</string>
+    <string name="objectives_exam_learned_concentration3">Az inzulinkoncentráció csak az inzulin vagy a patch cseréjekor módosítható. De ami a legfontosabb, főleg csöves pumpáknál: soha ne használja a pumpa kezelőfelületét arra, hogy közvetlenül a pumpáról adjon be bólust.</string>
+    <string name="answerdisabledto">Válaszadás letiltva eddig: %1$s</string>
+    <string name="wronganswer">Rossz válasz!</string>
+    <string name="unfinshed_button">Következő befejezetlen</string>
+    <string name="requestcode">Kérési kód: %1$s</string>
+    <string name="objectives_hint">(jelölje be az összes helyes választ)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
+    <string name="notconnected">Nincs internetkapcsolat</string>
+    <string name="failedretrievetime">Nem sikerült lekérni az időt</string>
+    <string name="requirementnotmet">A célkitűzés követelményei nem teljesültek</string>
+    <string name="what_i_ve_learned">Amit megtanultam:</string>
+    <string name="verify_master_password">Igazolja, hogy ismeri a mesterjelszót</string>
+    <string name="objectives_collapse">Kevesebb</string>
+    <string name="objectives_expand">Több</string>
+    <string name="objectives_no_learned">Ehhez a célkitűzéshez nincs rögzített tanulság.</string>
+    <string name="objectives_open_exam">Vizsga megnyitása</string>
+    <string name="objectives_exam_question_progress">%1$d. kérdés (összesen %2$d)</string>
+    <string name="objectives_exam_reset">Visszaállítás</string>
+    <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Kész</string>
+    <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">Folyamatban</string>
+    <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">Nincs elindítva</string>
+    <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">Zárolva</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">helyes válasz</string>
+    <string name="objectives_exam_previous">Vissza</string>
+    <string name="objectives_exam_next">Tovább</string>
+    <string name="objectives_exam_next_unanswered">Következő megválaszolatlan</string>
+    <string name="objectives_show_hint">Tipp</string>
+</resources>
