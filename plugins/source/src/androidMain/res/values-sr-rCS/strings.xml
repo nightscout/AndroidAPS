@@ -1,14 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
+    <string name="ns_client_bg">NSClient GUK</string>
     <string name="description_source_ns_client">Preuzimajte podatke GUK sa Nightscout-a</string>
+    <string name="source_xdrip">xDrip+ GUK</string>
+    <string name="description_source_xdrip">Prima vrednosti GUK-a iz xDrip+ i kompatibilnih aplikacija (Juggluco itd.).</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="description_source_dexcom">Prima vrednosti GUK-a iz aplikacije „Build Your Own Dexcom App“.</string>
+    <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Preuzimajte vrednosti GUK od Glimp-a.</string>
+    <string name="mm640g">MM640g</string>
     <string name="description_source_mm640g">Preuzimajte vrednosti GUK od 600SeriesAndroidUploader-a.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Prima vrednosti GUK-a iz Poctech aplikacije</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Prima vrednosti iz Glunovo aplikacije</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Prima vrednosti iz Intelligo aplikacije</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="description_source_tomato">Prima vrednosti GUK-a iz Tomato aplikacije (MiaoMiao uređaj)</string>
+    <string name="random_bg">Nasumični GUK</string>
+    <string name="description_source_random_bg">Generiše nasumične podatke GUK-a (samo demo režim)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
+    <string name="description_source_patched_syai_tag_app">Prima podatke o glukozi iz Syai/Ottai aplikacije.</string>
     <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">Prima podatke o glukozi iz patchovane Sibionic SI aplikacije ili iz aplikacije Sibionics.</string>
     <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">Prima podatke o glukozi iz izmenjene (patched) Sino aplikacije.</string>
     <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Prima vrednosti GUK-a iz aplikacije Instara.</string>
     <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Instara: zahtev za istorijske podatke</string>
+    <string name="pref_summary_instara_history_request">U pozadini traži istorijske podatke koji možda nedostaju</string>
     <!-- Notification Reader -->
+    <string name="notification_reader">Čitač obaveštenja</string>
+    <string name="description_source_notification_reader">Čita vrednosti glukoze iz obaveštenja zvaničnih CGM aplikacija (Dexcom, Medtronic, Eversense itd.).</string>
     <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Aplikaciji je potrebna dozvola da prima CGM podatke iz aplikacije Dexcom</string>
+    <string name="permission_notification_listener_title">Pristup obaveštenjima</string>
+    <string name="permission_notification_listener_description">Potrebno za čitanje vrednosti glukoze iz obaveštenja CGM aplikacija</string>
+    <string name="aidex">MicroTech CGM aplikacija</string>
+    <string name="description_source_aidex">Prima CGM vrednosti iz LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 itd.</string>
+    <string name="aidex_sensor_expired">Senzor je istekao, zamenite ga novim senzorom</string>
+    <string name="aidex_sensor_error">Greška senzora, proverite stanje senzora</string>
+    <string name="aidex_sensor_stabilizing">Senzor se stabilizuje, sačekajte…</string>
+    <string name="aidex_sensor_replace">Potrebna je zamena senzora, zamenite ga novim senzorom što pre</string>
+    <string name="aidex_signal_lost">Signal senzora je izgubljen, proverite vezu</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">duplo očitavanje</string>
 </resources>
