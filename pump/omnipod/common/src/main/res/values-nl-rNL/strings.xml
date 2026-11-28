@@ -6,7 +6,7 @@
     <string name="omnipod_common_pod_management_button_discard_pod">Pod verwijderen</string>
     <string name="omnipod_common_pod_management_discard_pod_confirmation">Als de Pod wordt verwijderd uit AAPS, kan er geen communicatie meer mee plaatsvinden. Doe dit alleen als alle communicatie met de Pod blijvend mislukt. Als communicatie met de Pod nog wel mogelijk is, gebruik dan de optie <b>Pod deactiveren</b>.\n\nAls de Pod wordt verwijderd uit AAPS, moet deze ook van het lichaam worden verwijderd!</string>
     <string name="omnipod_common_pod_management_button_play_test_beep">Testpieptoon afspelen</string>
-    <string name="omnipod_common_pod_management_button_pod_history">Podgeschiedenis</string>
+    <string name="omnipod_common_pod_management_button_pod_history">Pod-geschiedenis</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_common_error_pod_not_attached">Geen actieve Pod</string>
     <string name="omnipod_common_error_set_basal_failed">Instellen van basaalprofiel mislukt.</string>
@@ -22,7 +22,7 @@
     <string name="omnipod_common_error_failed_to_resume_delivery">Hervatten van insulinetoediening is mislukt</string>
     <string name="omnipod_common_error_failed_to_initialize_pod">Het initialiseren van de Pod is mislukt</string>
     <string name="omnipod_common_error_failed_to_insert_cannula">Het inbrengen van de canule is mislukt</string>
-    <string name="omnipod_common_error_pod_fault_activation_time_exceeded">De activeringstijd van de pod is overschreden. Deze Pod kan niet meer geactiveerd worden.</string>
+    <string name="omnipod_common_error_pod_fault_activation_time_exceeded">De activeringstijd van de Pod is overschreden. Deze Pod kan niet meer geactiveerd worden.</string>
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Controleren van activatiestatus is mislukt. Probeer het opnieuw.</string>
     <string name="omnipod_common_error_pod_suspended">Pod onderbroken</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Testpiep afspelen mislukt</string>
@@ -36,7 +36,7 @@
     <string name="omnipod_common_overview_button_suspend_delivery">Onderbreken</string>
     <string name="omnipod_common_overview_button_resume_delivery">Toediening hervatten</string>
     <string name="omnipod_common_overview_button_silence_alerts">Alarmen dempen</string>
-    <string name="omnipod_common_overview_pod_status">Podstatus</string>
+    <string name="omnipod_common_overview_pod_status">Pod-status</string>
     <string name="omnipod_common_overview_total_delivered">Totaal toegediend</string>
     <string name="omnipod_common_overview_pod_unique_id">Uniek ID</string>
     <string name="omnipod_common_overview_lot_number">LOT-nummer</string>
@@ -46,7 +46,7 @@
     <string name="omnipod_common_overview_last_bolus">Laatste bolus</string>
     <string name="omnipod_common_overview_temp_basal_rate">Tijdelijke basaalstand</string>
     <string name="omnipod_common_overview_base_basal_rate">Basis basaalstand</string>
-    <string name="omnipod_common_overview_pod_active_alerts">Actieve podalarmen</string>
+    <string name="omnipod_common_overview_pod_active_alerts">Actieve Pod-alarmen</string>
     <string name="omnipod_common_overview_firmware_version">Firmwareversie</string>
     <string name="omnipod_common_overview_time_on_pod">Tijd op Pod</string>
     <string name="omnipod_common_uncertain">onzeker</string>
@@ -84,14 +84,14 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Knop ‘Toediening pauzeren’ weergeven in het pompvenster</string>
     <string name="omnipod_common_preferences_time_change_enabled">Zomertijd-/tijdzonedetectie ingeschakeld</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Herinnering vervaldatum ingeschakeld</string>
-    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Wanneer ingeschakeld zal de pod piepen wanneer de opgegeven tijd is bereikt</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Wanneer ingeschakeld zal de Pod piepen wanneer de opgegeven tijd is bereikt</string>
     <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Herinnering uren voor vervaldatum (72 uur)</string>
     <string name="omnipod_common_preferences_expiration_alarm_enabled">Alert vervaldatum ingeschakeld</string>
-    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Wanneer ingeschakeld zal de pod piepen als de opgegeven tijd is bereikt en 1 uur voor uitschakelen</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Wanneer ingeschakeld zal de Pod piepen als de opgegeven tijd is bereikt en 1 uur voor uitschakelen</string>
     <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Waarschuwing op uren voor uitschakelen (80 uur)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Pieptonen voor \"Reservoir bijna leeg\" ingeschakeld</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Aantal eenheden</string>
-    <string name="omnipod_common_preferences_automatically_silence_alerts">Podwaarschuwingen automatisch dempen</string>
+    <string name="omnipod_common_preferences_automatically_silence_alerts">Pod-waarschuwingen automatisch dempen</string>
     <string name="omnipod_common_preferences_category_other">Andere</string>
     <string name="omnipod_common_preferences_category_alerts">Waarschuwingen</string>
     <string name="omnipod_common_preferences_category_confirmation_beeps">Bevestigingspieptonen</string>
@@ -101,16 +101,16 @@
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Geluid voor melding onzekere bolus ingeschakeld</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Geluid voor melding onderbroken toediening ingeschakeld</string>
     <string name="omnipod_dash_use_bonding">Bluetooth bonding</string>
-    <string name="omnipod_dash_use_bonding_summary">Probeer dit alleen als de pod geen stabiele verbinding kan behouden. Accepteer het koppelingsverzoek op de telefoon. Schakel dit niet in als de pod goed verbinding maakt. Heeft geen effect bij versies ouder dan Android 15.</string>
+    <string name="omnipod_dash_use_bonding_summary">Probeer dit alleen als de Pod geen stabiele verbinding kan behouden. Accepteer het koppelingsverzoek op de telefoon. Schakel dit niet in als de Pod goed verbinding maakt. Heeft geen effect bij versies ouder dan Android 15.</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Geen actieve Pod</string>
-    <string name="omnipod_common_pod_status_waiting_for_activation">Instelling wordt uitgevoerd (in afwachting van podactivering)</string>
+    <string name="omnipod_common_pod_status_waiting_for_activation">Instelling wordt uitgevoerd (in afwachting van Pod-activering)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Setup wordt uitgevoerd (in afwachting van het inbrengen van de canule)</string>
     <string name="omnipod_common_pod_status_running">Actief</string>
     <string name="omnipod_common_pod_status_suspended">Onderbroken</string>
-    <string name="omnipod_common_pod_status_pod_fault">Podfout</string>
+    <string name="omnipod_common_pod_status_pod_fault">Pod-fout</string>
     <string name="omnipod_common_pod_status_inactive">Inactief</string>
-    <string name="omnipod_common_pod_status_pod_fault_description">Pod foutmelding: %1$03d %2$s</string>
+    <string name="omnipod_common_pod_status_pod_fault_description">Pod-foutmelding: %1$03d %2$s</string>
     <!-- Omnipod - PDM Notification -->
     <string name="omnipod_common_pdm_notification_label">PDM-melding</string>
     <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Ref: %1$s</string>
@@ -143,7 +143,7 @@
     <string name="omnipod_common_cmd_set_tbr">TBR instellen</string>
     <string name="omnipod_common_cmd_cancel_tbr_by_driver">Annuleer TBR</string>
     <string name="omnipod_common_cmd_discard_pod">Pod verwijderen</string>
-    <string name="omnipod_common_cmd_get_pod_status">Podstatus ophalen</string>
+    <string name="omnipod_common_cmd_get_pod_status">Pod-status ophalen</string>
     <string name="omnipod_common_cmd_set_time">Tijd instellen</string>
     <string name="omnipod_common_cmd_configure_alerts">Configureer alarmen</string>
     <string name="omnipod_common_cmd_silence_alerts">Alarmen dempen</string>
@@ -151,7 +151,7 @@
     <string name="omnipod_common_cmd_suspend_delivery">Onderbreek toediening</string>
     <string name="omnipod_common_cmd_resume_delivery">Toediening hervatten</string>
     <string name="omnipod_common_cmd_cancel_tbr">Annuleer TBR (gebruiker)</string>
-    <string name="omnipod_common_cmd_get_pod_info">Podinformatie ophalen</string>
+    <string name="omnipod_common_cmd_get_pod_info">Pod-informatie ophalen</string>
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Nep onderbroken TBR instellen</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Nep onderbroken TBR annuleren</string>
     <string name="omnipod_common_cmd_split_tbr">Splitsen TBR</string>
@@ -180,8 +180,8 @@
         <item quantity="other">%1$d dagen</item>
     </plurals>
     <plurals name="omnipod_common_pod_alerts">
-        <item quantity="one">Podalarm: %1$s</item>
-        <item quantity="other">Podalarmen: %1$s</item>
+        <item quantity="one">Pod-alarm: %1$s</item>
+        <item quantity="other">Pod-alarmen: %1$s</item>
     </plurals>
     <string name="omnipod_common_overview_pod_hard_end_date">Harde einddatum Pod</string>
     <string name="omnipod_common_overview_pod_hard_end_value" comment="%1$s=date and time when the pod stops delivering insulin, %2$s=time left until then. Example: 21.10.2026 18:34 (17m remaining)">%1$s (%2$s)</string>
@@ -195,6 +195,6 @@
     <string name="omnipod_common_history_total_delivered">Totaal toegediend: %1$.2f E</string>
     <string name="omnipod_common_failed_to_send">Het verzenden van de opdracht is mislukt</string>
     <string name="omnipod_common_command_not_sent">Opdracht niet verzonden</string>
-    <string name="omnipod_common_command_not_received_by_the_pod">Opdracht niet ontvangen door de pod</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">Opdracht niet ontvangen door de Pod</string>
     <string name="omnipod_common_unknown">Onbekende status voor de opdracht</string>
 </resources>
