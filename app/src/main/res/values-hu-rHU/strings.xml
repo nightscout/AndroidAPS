@@ -1,2 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="authorizationfailed">Hitelesítés sikertelen</string>
+    <string name="identification_not_set">Az azonosítás nincs beállítva fejlesztői módban</string>
+    <string name="select">Kiválasztás</string>
+    <string name="set">Beállítás</string>
+    <string name="migrating_preferences">Beállítások átalakítása…</string>
+    <string name="optimizing_database">Adatbázis optimalizálása…</string>
+    <string name="initializing_plugins">Pluginok indítása…</string>
+    <string name="initializing">Indítás…</string>
+    <string name="migrating_profile_switches">Profilváltások átalakítása…</string>
+    <string name="migrating_effective_profile_switches">Érvényes profilváltások átalakítása…</string>
+    <string name="migrating_boluses">Bólusok átalakítása…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">A régebbi bejegyzéseknek nem volt inzulinbeállítása, és nem volt aktív profil, ezért ezekhez a(z) %1$s inzulin lett használva. Ellenőrizze az inzulinbeállításokat — a már átalakított bejegyzések később nem frissülnek.</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">A régebbi bejegyzésekben nem volt inzulinhatás-időtartam, ezért %1$.1f óra lett használva ehhez: %2$s. Ellenőrizze az inzulinbeállításokat — a már átalakított bejegyzések később nem frissülnek.</string>
+    <string name="settings_unreadable_title">Az AAPS-beállítások nem olvashatók</string>
+    <string name="settings_unreadable_key_explanation">A beállításai ezen a telefonon egy olyan kulccsal vannak titkosítva, amelyet az Android az AAPS számára őriz, és ez a kulcs már nem nyitja meg őket. Ez akkor fordulhat elő, ha a telefon kulcstárát alaphelyzetbe állították.</string>
+    <string name="settings_unreadable_keystore_explanation">A telefon kulcstára nem válaszolt, ezért az AAPS nem tudta megnyitni a beállításait.</string>
+    <string name="settings_unreadable_not_running">Az AAPS nem fut, és nem vezérli a pumpát. A futó átmeneti bázis a beállított időben véget ér, majd a pumpa a saját bázisát adja.</string>
+    <string name="settings_unreadable_what_to_do">Az Újra gomb bezárja és újraindítja az AAPS-t. Ha ez nem segít, indítsa újra a telefont. Az Újrakezdés gombot csak akkor válassza, ha semmi más nem segít: félreteszi az olvashatatlan beállításokat, és az AAPS üres beállításokkal indul. Ezután importálja a legutóbbi beállítás-exportját a beállítási varázslóban.</string>
+    <string name="settings_unreadable_keystore_what_to_do">Az Újra gomb bezárja az AAPS-t, és újra elindítja. Ha ez nem segít, indítsa újra a telefont. A beállításfájl változatlan marad.</string>
+    <string name="settings_unreadable_start_fresh">Újrakezdés</string>
+    <string name="settings_unreadable_confirm_title">Indítás üres beállításokkal?</string>
+    <string name="settings_unreadable_confirm_text">Az olvashatatlan beállításfájl átnevezésre kerül és megmarad. Minden beállítás az alapértelmezett értékről indul. Ezután állítsa be újra az AAPS-t, vagy importáljon egy beállítás-exportot.</string>
+    <string name="settings_unreadable_notification">Az AAPS nem fut. Nyissa meg az AAPS-t, hogy lássa, mi a teendő.</string>
+</resources>
