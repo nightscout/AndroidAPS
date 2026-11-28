@@ -3,7 +3,9 @@ package app.aaps.implementation.androidNotification
 import android.app.Activity
 import android.app.Notification
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.AlarmIntent
@@ -44,6 +46,7 @@ class AlarmNotificationManagerFullScreenTest {
         whenever(uiInteraction.errorHelperActivity).thenReturn(Activity::class)
         whenever(uiInteraction.mainActivity).thenReturn(Activity::class)
         val iconsProvider: IconsProvider = mock()
+        whenever(iconsProvider.getIcon()).thenReturn(android.R.drawable.ic_dialog_alert)
         whenever(iconsProvider.getNotificationIcon()).thenReturn(android.R.drawable.ic_dialog_alert)
         val rh: ResourceHelper = mock()
         whenever(rh.gs(CoreUiR.string.mute)).thenReturn("Mute")
@@ -133,5 +136,18 @@ class AlarmNotificationManagerFullScreenTest {
         sut.cancelAlarm()
 
         assertThat(sut.unansweredAlarmIntent()).isNull()
+    }
+
+    @Test
+    fun silentAlarmAttachesDeleteIntentWhenProvided() {
+        val deleteIntent = PendingIntent.getBroadcast(context, 42, Intent("dismiss").setPackage(context.packageName), PendingIntent.FLAG_IMMUTABLE)
+
+        sut().postSilentAlarmNotification(notificationKey = 42, title = "Urgent", body = "Pump error", urgent = true, deleteIntent = deleteIntent)
+
+        val posted = checkNotNull(
+            shadowOf(context.getSystemService(NotificationManager::class.java))
+                .getNotification(AlarmNotificationManager.SOUND_ID_OFFSET + 42)
+        )
+        assertThat(posted.deleteIntent).isEqualTo(deleteIntent)
     }
 }

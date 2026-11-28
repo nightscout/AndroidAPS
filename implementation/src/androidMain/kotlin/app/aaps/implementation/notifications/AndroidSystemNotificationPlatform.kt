@@ -84,11 +84,15 @@ class AndroidSystemNotificationPlatform(
     override fun show(notification: AapsNotification, title: String) {
         ensureStarted()
         if (notification.level == NotificationLevel.URGENT && notification.sound != null) {
+            // Since Android 14 ongoing notifications can be swiped away from the shade.
+            // Dismissing on swipe stops AlarmSoundPlayer for actionless alarms; alarms carrying
+            // unanswered actions stay alive on swipe, matching IosSystemNotificationPlatform.
             alarmNotificationManager().postSilentAlarmNotification(
                 notificationKey = notification.instanceKey,
                 title = title,
                 body = notification.text,
-                urgent = true
+                urgent = true,
+                deleteIntent = if (notification.actions.isEmpty()) deleteIntent(notification.instanceKey) else null
             )
         } else if (preferences.get(BooleanKey.AlertUrgentAsAndroidNotification) && notification.actions.isEmpty()) {
             raiseSystemNotification(notification, title)
