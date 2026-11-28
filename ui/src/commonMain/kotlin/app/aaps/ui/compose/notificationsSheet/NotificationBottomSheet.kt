@@ -14,7 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.NotificationsOff
 import androidx.compose.material.icons.filled.NotificationsPaused
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -22,6 +21,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.NotificationCategory
 import app.aaps.core.interfaces.notifications.NotificationLevel
@@ -101,7 +102,9 @@ fun NotificationBottomSheet(
             if (bgAlarmsPausedUntil != null && onOpenAlertKinds != null) {
                 item(key = "bg_alarms_paused") {
                     ListItem(
-                        headlineContent = { Text(stringResource(UiStrings.bg_alarms_paused_until, dateUtil.timeString(bgAlarmsPausedUntil))) },
+                        // Two lines, so the time is never split next to Resume ("…until 10:04" / "PM" on a phone, 2026-11-27)
+                        overlineContent = { Text(stringResource(InterfacesStrings.alert_kinds_group_bg)) },
+                        headlineContent = { Text(stringResource(UiStrings.bg_alarm_paused_until, dateUtil.timeString(bgAlarmsPausedUntil))) },
                         leadingContent = { Icon(Icons.Filled.NotificationsPaused, contentDescription = null) },
                         trailingContent = onResumeBgAlarms?.let { resume ->
                             { TextButton(onClick = resume) { Text(stringResource(UiStrings.bg_alarm_resume)) } }
