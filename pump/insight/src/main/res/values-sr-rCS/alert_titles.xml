@@ -1,2 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r1_title">Isporučite bolus</string>
+    <string name="alert_r2_title">Propušten bolus</string>
+    <string name="alert_r3_title">Budilnik</string>
+    <string name="alert_r4_title">Promena seta za infuziju</string>
+    <string name="alert_r7_title">TBR završen</string>
+    <string name="alert_w31_title">Uložak skoro prazan</string>
+    <string name="alert_w32_title">Baterija skoro prazna</string>
+    <string name="alert_w33_title">Nevažeće vreme/datum</string>
+    <string name="alert_w34_title">Istek garancije</string>
+    <string name="alert_w36_title">TBR otkazan</string>
+    <string name="alert_w38_title">Bolus otkazan</string>
+    <string name="alert_w39_title">Upozorenje: period pozajmice pri kraju</string>
+    <string name="alert_m20_title">Uložak nije umetnut</string>
+    <string name="alert_m21_title">Uložak je prazan</string>
+    <string name="alert_m22_title">Baterija je prazna</string>
+    <string name="alert_m23_title">Automatsko isključivanje – pumpa zaustavljena</string>
+    <string name="alert_m24_title">Okluzija</string>
+    <string name="alert_m25_title">Istek perioda pozajmice – kraj rada</string>
+    <string name="alert_m26_title">Promena uloška nije završena</string>
+    <string name="alert_m27_title">Preuzimanje podataka nije uspelo</string>
+    <string name="alert_m28_title">Istek vremena u režimu pauze</string>
+    <string name="alert_m29_title">Tip baterije nije podešen</string>
+    <string name="alert_m30_title">Tip uloška nije podešen</string>
+    <string name="alert_e6_title">Mehanička greška</string>
+    <string name="alert_e10_title">Greška pri vraćanju (rewind)</string>
+    <string name="alert_e13_title">Greška jezika</string>
+</resources>
