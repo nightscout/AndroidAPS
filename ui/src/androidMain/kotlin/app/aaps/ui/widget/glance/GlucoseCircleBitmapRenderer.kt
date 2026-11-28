@@ -68,7 +68,7 @@ class GlucoseCircleBitmapRenderer {
         val triHalfBase = stroke * 1.6f
         val baseDist = radius + stroke * 0.2f
         val spacing = (triHalfBase * 1.6 / radius * 180.0 / PI).toFloat()
-        val n = indicator.triangleCount
+        val n = indicator.arrowCount
         for (i in 0 until n) {
             val angle = (indicator.centerAngle + (i - (n - 1) / 2f) * spacing) / 180.0 * PI
             val dirX = cos(angle).toFloat()
