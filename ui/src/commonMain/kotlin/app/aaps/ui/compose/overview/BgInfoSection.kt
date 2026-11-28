@@ -15,7 +15,10 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.platform.LocalDensity
@@ -34,10 +37,7 @@ import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalAapsScale
 import app.aaps.ui.compose.components.bgSpokenDescription
-import kotlin.math.PI
-import kotlin.math.cos
 import kotlin.math.roundToInt
-import kotlin.math.sin
 import kotlin.math.sqrt
 
 /**
@@ -73,9 +73,12 @@ fun BgInfoSection(
 ) {
     if (bgInfo == null) {
         // Show placeholder when no data
+        // Padding maintains width and prevents a horizontal jump vs. when we have data
         Box(
             contentAlignment = Alignment.Center,
-            modifier = modifier.size(size)
+            modifier = modifier
+                .padding(horizontal = AapsSpacing.small, vertical = AapsSpacing.medium)
+                .size(size)
         ) {
             Text(
                 text = "---",
@@ -88,7 +91,7 @@ fun BgInfoSection(
 
     val bgColor = bgInfo.bgRange.toColor()
     val ringColor = bgColor.copy(alpha = 0.3f)
-    val ringStrokeWidth = AapsSpacing.bgRingStrokeWidth * LocalAapsScale.current
+    val ringStrokeWidth = AapsSpacing.bgRingStrokeWidth * 0.875f * LocalAapsScale.current
     val progressStrokeWidth = UPDATE_RING_WIDTH * LocalAapsScale.current
     val progressGap = UPDATE_RING_GAP * LocalAapsScale.current
     val progressColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -106,7 +109,7 @@ fun BgInfoSection(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .padding(AapsSpacing.small)
+            .padding(horizontal = AapsSpacing.small, vertical = AapsSpacing.medium)
             // Merging, not a bare semantics block: a described node is reached by linear screen-reader
             // navigation only when it is a leaf or a merging parent. This one has the value, the delta
             // and the age as children, so unmerged the whole sentence was skipped and those three were
@@ -146,38 +149,37 @@ fun BgInfoSection(
                         style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
                     )
 
-                    // Triangles pointing outward, each placed on the circle at its own angle
-                    val ringCenterX = topLeft.x + arcSize.width / 2
-                    val ringCenterY = topLeft.y + arcSize.height / 2
                     val ringRadius = arcSize.width / 2
-                    val triHeight = strokeWidth * 1.2f
-                    val triHalfBase = strokeWidth * 1.6f
-                    val n = indicator.triangleCount
-                    val baseDist = ringRadius + strokeWidth * 0.2f
-                    // Same expressions the JDK's Math.toDegrees / Math.toRadians use, written out
-                    // so they work on every platform. Note the order: toRadians divides first.
-                    val angularSpacing = ((triHalfBase * 1.6 / ringRadius) * 180.0 / PI).toFloat()
-
-                    for (i in 0 until n) {
-                        val triAngle = indicator.centerAngle + (i - (n - 1) / 2f) * angularSpacing
-                        val triRad = triAngle.toDouble() / 180.0 * PI
-                        val dirX = cos(triRad).toFloat()
-                        val dirY = sin(triRad).toFloat()
-                        val perpX = -dirY
-                        val perpY = dirX
-                        val baseX = ringCenterX + baseDist * dirX
-                        val baseY = ringCenterY + baseDist * dirY
-                        val tipX = baseX + triHeight * dirX
-                        val tipY = baseY + triHeight * dirY
+                    val headBase = ringRadius + strokeWidth * 0.2f
+                    val headTip = ringRadius + strokeWidth
+                    val headHalfBase = strokeWidth * 1.6f
+                    val chevronStep = strokeWidth * 0.575f
+                    rotate(indicator.centerAngle) {
                         drawPath(
                             path = Path().apply {
-                                moveTo(tipX, tipY)
-                                lineTo(baseX + triHalfBase * perpX, baseY + triHalfBase * perpY)
-                                lineTo(baseX - triHalfBase * perpX, baseY - triHalfBase * perpY)
+                                moveTo(center.x + headTip, center.y)
+                                lineTo(center.x + headBase, center.y + headHalfBase)
+                                lineTo(center.x + headBase, center.y - headHalfBase)
                                 close()
                             },
                             color = bgColor
                         )
+                        val chevron = Path().apply {
+                            moveTo(center.x + ringRadius + strokeWidth * 0.6f, center.y - strokeWidth * 3f)
+                            lineTo(center.x + headTip, center.y - strokeWidth)
+                            lineTo(center.x + headTip + chevronStep, center.y)
+                            lineTo(center.x + headTip, center.y + strokeWidth)
+                            lineTo(center.x + ringRadius + strokeWidth * 0.6f, center.y + strokeWidth * 3f)
+                        }
+                        for (i in 1 until indicator.arrowCount) {
+                            translate(left = (i - 1) * chevronStep) {
+                                drawPath(
+                                    path = chevron,
+                                    color = bgColor.copy(alpha = 1f - i * 0.25f),
+                                    style = Stroke(width = strokeWidth * 0.33f, cap = StrokeCap.Round, join = StrokeJoin.Round)
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -336,12 +338,12 @@ private fun BgRange.toColor(): Color = when (this) {
  * Arc indicator describing position and triangle count. Internal: also used by the glucose circle widget.
  * @param centerAngle center of the arc in degrees (0° = right/3 o'clock, -90° = top, 90° = bottom)
  * @param sweepAngle arc length in degrees
- * @param triangleCount number of outward-pointing triangles (1-3)
+ * @param arrowCount how fast the trend is (1-3)
  */
 internal data class ArcIndicator(
     val centerAngle: Float,
     val sweepAngle: Float,
-    val triangleCount: Int
+    val arrowCount: Int
 )
 
 /**
@@ -355,15 +357,15 @@ internal fun TrendArrow.toArcIndicator(): ArcIndicator? {
     val sweepAngle = 40f
     return when (this) {
         TrendArrow.NONE            -> null
-        TrendArrow.FLAT            -> ArcIndicator(centerAngle = 0f, sweepAngle = sweepAngle, triangleCount = 1)
-        TrendArrow.FORTY_FIVE_UP   -> ArcIndicator(centerAngle = -45f, sweepAngle = sweepAngle, triangleCount = 1)
-        TrendArrow.FORTY_FIVE_DOWN -> ArcIndicator(centerAngle = 45f, sweepAngle = sweepAngle, triangleCount = 1)
-        TrendArrow.SINGLE_UP       -> ArcIndicator(centerAngle = -90f, sweepAngle = sweepAngle, triangleCount = 1)
-        TrendArrow.SINGLE_DOWN     -> ArcIndicator(centerAngle = 90f, sweepAngle = sweepAngle, triangleCount = 1)
-        TrendArrow.DOUBLE_UP       -> ArcIndicator(centerAngle = -90f, sweepAngle = sweepAngle, triangleCount = 2)
-        TrendArrow.DOUBLE_DOWN     -> ArcIndicator(centerAngle = 90f, sweepAngle = sweepAngle, triangleCount = 2)
-        TrendArrow.TRIPLE_UP       -> ArcIndicator(centerAngle = -90f, sweepAngle = sweepAngle, triangleCount = 3)
-        TrendArrow.TRIPLE_DOWN     -> ArcIndicator(centerAngle = 90f, sweepAngle = sweepAngle, triangleCount = 3)
+        TrendArrow.FLAT            -> ArcIndicator(centerAngle = 0f, sweepAngle = sweepAngle, arrowCount = 1)
+        TrendArrow.FORTY_FIVE_UP   -> ArcIndicator(centerAngle = -45f, sweepAngle = sweepAngle, arrowCount = 1)
+        TrendArrow.FORTY_FIVE_DOWN -> ArcIndicator(centerAngle = 45f, sweepAngle = sweepAngle, arrowCount = 1)
+        TrendArrow.SINGLE_UP       -> ArcIndicator(centerAngle = -90f, sweepAngle = sweepAngle, arrowCount = 1)
+        TrendArrow.SINGLE_DOWN     -> ArcIndicator(centerAngle = 90f, sweepAngle = sweepAngle, arrowCount = 1)
+        TrendArrow.DOUBLE_UP       -> ArcIndicator(centerAngle = -90f, sweepAngle = sweepAngle, arrowCount = 2)
+        TrendArrow.DOUBLE_DOWN     -> ArcIndicator(centerAngle = 90f, sweepAngle = sweepAngle, arrowCount = 2)
+        TrendArrow.TRIPLE_UP       -> ArcIndicator(centerAngle = -90f, sweepAngle = sweepAngle, arrowCount = 3)
+        TrendArrow.TRIPLE_DOWN     -> ArcIndicator(centerAngle = 90f, sweepAngle = sweepAngle, arrowCount = 3)
     }
 }
 

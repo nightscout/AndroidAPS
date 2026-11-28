@@ -23,7 +23,7 @@ import app.aaps.core.ui.compose.AapsSpacing.xxLarge
  * **Usage:**
  * ```kotlin
  * Modifier.padding(AapsSpacing.medium)  // 8.dp
- * Modifier.size(AapsSpacing.bgCircleSize)  // 126.dp
+ * Modifier.size(AapsSpacing.bgCircleSize)  // 118.dp
  * ```
  */
 object AapsSpacing {
@@ -37,7 +37,7 @@ object AapsSpacing {
     val xxLarge = 24.dp
 
     // BG circle dimensions
-    val bgCircleSize = 126.dp
+    val bgCircleSize = 118.dp
     val bgRingStrokeWidth = 8.dp
 
     // Trend arrow drawn next to a BG value
