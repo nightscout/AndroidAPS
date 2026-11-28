@@ -1,15 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="units">Jedinice</string>
+    <string name="setupwizard_units_prompt">Izaberite u kojim jedinicama želite da prikazujete vrednosti</string>
+    <string name="next_button">Dalje</string>
+    <string name="previous_button">Nazad</string>
+    <string name="setupwizard_finish">ZAVRŠI</string>
+    <string name="welcome">Dobrodošli</string>
+    <string name="welcometosetupwizard">Dobro došli u čarobnjak za podešavanje. On će vas voditi kroz postupak podešavanja.</string>
     <string name="end_user_license_agreement">Ugovor o licenci sa krajnjim korisnikom</string>
-    <string name="end_user_license_agreement_text">NE SME SE KORISTITI ZA DONOŠENJE MEDICINSKIH ODLUKA. NE POSTOJI GARANCIJA ZA PROGRAM, U MERI DOPUŠTENOJ PRIMJENJIVIM ZAKONOM. OSIM KADA JE DRUGAČE NAVEDENO U PISANJU NOSILACA AUTORSKOG PRAVA I/ILI DRUGE STRANE OBEZBEĐUJU PROGRAM „KAKAV JESTE“ BEZ BILO KOJE GARANCIJE, BILO IZRIČENE ILI PODRAZUMEVANE, UKLJUČUJUĆI, ALI NE OGRANIČAVAJUĆI SE NA, PODRAZUMEVANE GARANCIJE O PRODAJNOSTI I PRIKLADNOSTI ZA ODREĐENU NAMENU. CEO RIZIK PO KVALITETU I PERFORMANSE PROGRAMA JE NA VAMA. AKO SE POKAŽE NEISPRAVAN PROGRAM, VI PREUZIMATE TROŠKOVE SVIH NEOPHODNIH SERVISIRANJA, POPRAVKE ILI KOREKCIJE.</string>
+    <string name="end_user_license_agreement_text">NE SME SE KORISTITI ZA DONOŠENJE MEDICINSKIH ODLUKA. NE POSTOJI GARANCIJA ZA PROGRAM, U MERI DOPUŠTENOJ PRIMENLJIVIM ZAKONOM. OSIM KADA JE DRUGAČE NAVEDENO U PISANJU NOSILACA AUTORSKOG PRAVA I/ILI DRUGE STRANE OBEZBEĐUJU PROGRAM „KAKAV JESTE“ BEZ BILO KOJE GARANCIJE, BILO IZRIČITE ILI PODRAZUMEVANE, UKLJUČUJUĆI, ALI NE OGRANIČAVAJUĆI SE NA, PODRAZUMEVANE GARANCIJE O PRODAJNOSTI I PRIKLADNOSTI ZA ODREĐENU NAMENU. CEO RIZIK PO KVALITETU I PERFORMANSE PROGRAMA JE NA VAMA. AKO SE POKAŽE NEISPRAVAN PROGRAM, VI PREUZIMATE TROŠKOVE SVIH NEOPHODNIH SERVISIRANJA, POPRAVKE ILI KOREKCIJE.</string>
     <string name="end_user_license_agreement_i_understand">RAZUMEM I SLAŽEM SE</string>
+    <string name="display_settings">Podešavanja prikaza</string>
+    <string name="low_mark">Donja granica</string>
+    <string name="high_mark">Gornja granica</string>
+    <string name="low_mark_comment">Donja vrednost ciljanog opsega (samo prikaz)</string>
+    <string name="high_mark_comment">Gornja vrednost ciljanog opsega (samo prikaz)</string>
+    <string name="storedsettingsfound">Nađena su sačuvana podešavanja</string>
+    <string name="master_password_summary">Glavna lozinka se koristi za šifrovanje rezervnih kopija i za zaobilaženje zaštite u aplikaciji. Zapamtite je ili je sačuvajte na bezbednom mestu.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="common_values">Koristite vrednosti najveće porcije hrane koju obično jedete\n</string>
+    <string name="syncinfotext">Sinhronizujte podatke u cloud. Ovaj korak možete sada preskočiti, ali nećete moći da završite ciljeve dok ne podesite Nightscout ili Tidepool klijent.</string>
+    <string name="status_label">Status:</string>
+    <string name="diawarning">Zapamtite: novi profili insulina zahtevaju DIA od najmanje 5h. DIA 5–6h na novom profilu odgovara DIA 3h na starim profilima insulina.</string>
     <string name="profile">Profil</string>
+    <string name="doprofileswitch">Uradi promenu profila</string>
+    <string name="exitwizard">Preskoči čarobnjak za podešavanje</string>
+    <string name="setupwizard_sensitivity_description">Dodatak za osetljivost koristi se za otkrivanje osetljivosti i izračunavanje COB-a. Više informacija na:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Izaberite jedan od dostupnih algoritama. Poređani su od najstarijeg do najnovijeg. Noviji algoritam je obično jači. Ne zaboravite da pročitate OpenAPS dokumentaciju i podesite ga pre upotrebe.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Podesite RileyLink ispod. Kada izaberete RileyLink, moći ćete da nastavite podešavanje kada status RileyLink-a bude „Povezano“. Ovo može potrajati oko minut.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Napomena:</b> Možete nastaviti podešavanje kada pumpa bude podešena.\n</string>
+    <string name="startobjective">Započnite svoj prvi cilj</string>
+    <string name="open_objectives">Otvori ciljeve</string>
+    <string name="setupwizard_permissions">Dozvole</string>
+    <string name="setupwizard_profile_info">Napravite profil sa bazalnim stopama, IC, ISF i ciljnim vrednostima. Kasnije možete dodati više profila.</string>
+    <string name="setupwizard_permissions_info">AAPS-u su potrebni pristup skladištu i dozvole da bi ispravno radio. Odobrite potrebne dozvole ispod.</string>
+    <string name="setupwizard_pump_riley_link_status">Status RileyLink-a:</string>
+    <string name="setupwizard_client_control_title">Upravljanje sa klijenta</string>
+    <string name="setupwizard_client_control_info">Uparite klijentske uređaje da bi mogli da šalju potpisane komande ovom glavnom uređaju preko Nightscout-a. Ovo je novi preporučeni način za daljinsko upravljanje AAPS-om.</string>
+    <string name="setupwizard_ns_receive_info">Prihvatanje tretmana i podataka direktno sa Nightscout-a (manje bezbedan način) sada je podrazumevano isključeno. Otvorite podešavanja ispod samo ako vam je to još uvek potrebno. Potrebno je ako unosite podatke preko NS-a ili aplikacija drugih proizvođača.</string>
+    <string name="setupwizard_open_ns_receive_settings">Prihvatanje podataka sa Nightscout-a</string>
+    <string name="setupwizard_pair_with_master_info">Uparite ovaj klijent sa svojim glavnim AAPS uređajem da bi mogao da šalje komande preko bezbednog kanala. Posle uparivanja podešavanje je završeno.</string>
+    <string name="setupwizard_setup_from_master_title">Podesi sa glavnog uređaja</string>
+    <string name="setupwizard_setup_from_master_info">Na glavnom uređaju otvorite „Ovlašćeni klijenti“ i dodajte ovaj telefon pomoću QR koda. Skeniranje podešava Nightscout sa sopstvenim tokenom, a može i da upari telefon. Posle skeniranja podešavanje je završeno. Bez QR koda preskočite ovaj korak i sami podesite Nightscout.</string>
+    <string name="setupwizard_scan_master_qr">Skeniraj QR kod</string>
+    <string name="setupwizard_pairing_ws_warning">Za uparivanje je potrebna Nightscout WebSocket veza. Vratite se na prethodni korak i prvo je uključite.</string>
+    <string name="setupwizard_pairing_status_master">Upareni klijenti: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Još nema uparenih klijenata</string>
+    <string name="setupwizard_pairing_status_client_paired">Upareno sa glavnim uređajem</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Još nije upareno</string>
+    <string name="setupwizard_instance_name_title">Ko koristi ovaj telefon?</string>
+    <string name="readstatus">Pročitaj status</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Čini se da ovaj uređaj ne podržava stavljanje na belu listu za optimizaciju baterije – mogli biste imati problema s performansama.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Koju pumpu želite da koristite sa AAPS-om?</string>
     <string name="configbuilder_aps_description">Koji APS algoritam treba da izvrši prilagođavanja terapije?</string>
+    <string name="configbuilder_sync_description">Dodaci za otpremanje podataka, sinhronizaciju i komunikaciju.</string>
+    <string name="configbuilder_bgsource_description">Odakle AAPS treba da dobija podatke?</string>
+    <string name="configbuilder_sensitivity_description">Koji algoritam za osetljivost treba koristiti?</string>
+    <string name="allow_hardware_pump_text">Pažnja: Ako aktivirate i povežete hardversku pumpu, AAPS će kopirati bazalna podešavanja iz profila na pumpu i prepisati postojeću bazalnu stopu koja je sada sačuvana u pumpi. Uverite se da su bazalna podešavanja u AAPS-u tačna. Ako niste sigurni ili ne želite da prepišete bazalna podešavanja na vašoj pumpi, pritisnite „Otkaži“ i pokušajte da pređete na pumpu kasnije.</string>
+    <string name="nsclient_version_does_not_match">Verzija AAPSClient-a se ne poklapa sa verzijom AAPS-a. Ažurirajte aplikaciju.</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
@@ -20,6 +71,9 @@
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
+    <string name="loading">Učitavanje…</string>
+    <string name="warning_wrong_directory_selected">Izabran je pogrešan direktorijum</string>
+    <string name="warning_wrong_directory_message">Izabrali ste poddirektorijum „%1$s“ umesto glavnog AAPS direktorijuma. Izaberite nadređeni AAPS direktorijum. Aplikacija će sama napraviti poddirektorijume i upravljati njima.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <!-- Provider-agnostic cloud storage strings -->
     <!-- Authorization status strings -->
