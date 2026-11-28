@@ -1,22 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod - Pod Management -->
+    <string name="omnipod_common_pod_management_button_activate_pod">تفعيل المضخة اللاصقة</string>
+    <string name="omnipod_common_pod_management_button_deactivate_pod">إلغاء تفعيل المضخة اللاصقة</string>
+    <string name="omnipod_common_pod_management_button_discard_pod">التخلص من المضخة اللاصقة</string>
+    <string name="omnipod_common_pod_management_discard_pod_confirmation">إذا قمت بالتخلص من المضخة اللاصقة، فلن تتمكن من الاتصال بها بعد الآن. يجب ألا تقوم بذلك إلا عندما يفشل كل اتصال بالمضخة اللاصقة بشكل مستمر. إذا كان لا يزال بإمكانك الاتصال بالمضخة اللاصقة، فيرجى استخدام خيار <b>إلغاء تفعيل المضخة اللاصقة</b>.\n\nإذا كنت ترغب في المتابعة، فيرجى التأكد من إزالة المضخة اللاصقة من جسمك!</string>
+    <string name="omnipod_common_pod_management_button_play_test_beep">تشغيل صوت الاختبار</string>
+    <string name="omnipod_common_pod_management_button_pod_history">سجل المضخة اللاصقة</string>
     <!-- Omnipod - Error -->
+    <string name="omnipod_common_error_pod_not_attached">لا توجد مضخة لاصقة نشطة</string>
+    <string name="omnipod_common_error_set_basal_failed">فشل تعيين ملف الأنسولين القاعدي.</string>
+    <string name="omnipod_common_error_bolus_did_not_succeed">لم تنجح الجرعة.</string>
+    <string name="omnipod_common_error_failed_to_set_profile_empty_profile">فشل تعيين ملف الأنسولين القاعدي: تم تلقي ملف شخصي فارغ. تأكد من تفعيل ملف الأنسولين القاعدي الخاص بك.</string>
+    <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">لا يوجد ملف أنسولين قاعدي نشط. تأكد من تفعيل ملف الأنسولين القاعدي الخاص بك.</string>
+    <string name="omnipod_common_error_unsupported_custom_command">أمر مخصص غير مدعوم: %1$s</string>
+    <string name="omnipod_common_error_failed_to_refresh_status">فشل تحديث الحالة</string>
+    <string name="omnipod_common_error_failed_to_refresh_status_on_startup">فشل تحديث الحالة عند بدء التشغيل</string>
+    <string name="omnipod_common_error_failed_to_silence_alerts">فشل كتم صوت التنبيهات</string>
+    <string name="omnipod_common_error_failed_to_suspend_delivery">فشل تعليق الضخ</string>
+    <string name="omnipod_common_error_failed_to_set_time">فشل ضبط الوقت</string>
+    <string name="omnipod_common_error_failed_to_resume_delivery">فشل استئناف الضخ</string>
+    <string name="omnipod_common_error_failed_to_initialize_pod">فشل تهيئة المضخة اللاصقة</string>
+    <string name="omnipod_common_error_failed_to_insert_cannula">فشل إدخال القنية</string>
+    <string name="omnipod_common_error_pod_fault_activation_time_exceeded">تم تجاوز وقت تفعيل المضخة اللاصقة. لا يمكن تفعيل هذه المضخة اللاصقة بعد الآن.</string>
+    <string name="omnipod_common_error_failed_to_verify_activation_progress">فشل التحقق من تقدم التفعيل. يرجى إعادة المحاولة.</string>
+    <string name="omnipod_common_error_pod_suspended">المضخة اللاصقة معلقة</string>
+    <string name="omnipod_common_error_failed_to_play_test_beep">فشل تشغيل صوت الاختبار</string>
+    <string name="omnipod_common_error_time_out_of_sync">وقت المضخة اللاصقة غير متزامن. يرجى تحديث الوقت على شاشة المضخة.</string>
+    <string name="omnipod_common_error_unexpected_exception">حدث خطأ غير متوقع. يرجى الإبلاغ عنه! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
+    <string name="omnipod_common_confirmation_expiration_alerts_updated">تم تحديث تهيئة التنبيهات في المضخة اللاصقة.</string>
+    <string name="omnipod_common_confirmation_time_on_pod_updated">تم تحديث الوقت على المضخة اللاصقة.</string>
     <!-- Omnipod - Overview -->
+    <string name="omnipod_common_overview_button_set_time">ضبط الوقت</string>
+    <string name="omnipod_common_overview_button_suspend_delivery">تعليق</string>
+    <string name="omnipod_common_overview_button_resume_delivery">استئناف الضخ</string>
+    <string name="omnipod_common_overview_button_silence_alerts">كتم التنبيهات</string>
+    <string name="omnipod_common_overview_pod_status">حالة المضخة اللاصقة</string>
+    <string name="omnipod_common_overview_total_delivered">إجمالي ما تم ضخه</string>
+    <string name="omnipod_common_overview_pod_unique_id">المعرف الفريد</string>
+    <string name="omnipod_common_overview_lot_number">رقم الدفعة LOT</string>
+    <string name="omnipod_common_overview_pod_sequence_number">رقم التسلسل</string>
+    <string name="omnipod_common_overview_pod_expiry_date">انتهاء صلاحية المضخة اللاصقة</string>
+    <string name="omnipod_common_overview_last_connection">آخر اتصال</string>
+    <string name="omnipod_common_overview_last_bolus">آخر جرعة</string>
+    <string name="omnipod_common_overview_temp_basal_rate">معدل الأنسولين القاعدي المؤقت</string>
+    <string name="omnipod_common_overview_base_basal_rate">معدل الأنسولين القاعدي الأساسي</string>
+    <string name="omnipod_common_overview_pod_active_alerts">تنبيهات المضخة اللاصقة النشطة</string>
+    <string name="omnipod_common_overview_firmware_version">إصدار البرنامج الثابت</string>
+    <string name="omnipod_common_overview_time_on_pod">الوقت على المضخة اللاصقة</string>
+    <string name="omnipod_common_uncertain">غير مؤكد</string>
     <!-- Omnipod - Wizard Base -->
+    <string name="omnipod_common_wizard_button_deactivate_pod">إلغاء تفعيل المضخة اللاصقة</string>
+    <string name="omnipod_common_wizard_exit_confirmation_text">لم تقم بإكمال جميع الخطوات بعد. هل أنت متأكد من رغبتك في الخروج؟</string>
+    <string name="omnipod_common_wizard_exit_confirmation_title">خروج</string>
     <!-- Omnipod - Pod Activation Wizard -->
+    <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">تعبئة المضخة اللاصقة</string>
+    <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">تهيئة المضخة اللاصقة</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_title">تركيب المضخة اللاصقة</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">قم بتحضير موقع الحقن. انزع غطاء إبرة المضخة اللاصقة وشريط الحماية اللاصق ثم ثبت المضخة اللاصقة في موقع الحقن.\n\nإذا كانت القنية بارزة للخارج، فيرجى الضغط على <b>إلغاء</b> والتخلص من المضخة اللاصقة.\n\nاضغط على <b>التالي</b> لإدخال القنية وبدء ضخ الأنسولين القاعدي.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">عندما تضغط على <b>موافق</b>، سيتم إدخال القنية. تأكد من أنك قمت بتركيب المضخة اللاصقة على موقع الحقن.</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">إدخال القنية</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">جاري محاولة تعيين جدول الأنسولين القاعدي الأولي وإدخال القنية.\n\nعندما يتم إدخال القنية بنجاح، يمكنك الضغط على <b>التالي</b>.</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_title">تم تفعيل المضخة اللاصقة</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_text">المضخة اللاصقة الجديدة نشطة الآن.\n\nتمت برمجة جدول معدل الأنسولين القاعدي الخاص بك وتم إدخال القنية.\n\nيرجى التحقق من إدخال القنية بشكل صحيح وتغيير المضخة اللاصقة إذا كنت تعتقد خلاف ذلك.</string>
     <!-- Omnipod - Pod Deactivation Wizard -->
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">إلغاء تفعيل المضخة اللاصقة</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">اضغط على <b>التالي</b> لإلغاء تفعيل المضخة اللاصقة.\n\n<b>ملاحظة:</b> سيؤدي ذلك إلى تعليق جميع عمليات ضخ الأنسولين وإلغاء تفعيل المضخة اللاصقة.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">لا يمكن استخدام المضخة اللاصقة التي تم إلغاء تفعيلها مرة أخرى. هل تريد إلغاء تفعيل هذه المضخة اللاصقة الآن؟</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">جاري إلغاء تفعيل المضخة اللاصقة</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">جاري إلغاء تفعيل المضخة اللاصقة.\n\nعند اكتمال إلغاء التفعيل بنجاح، يمكنك الضغط على <b>التالي</b>.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">تم إلغاء تفعيل المضخة اللاصقة</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">تم إلغاء تفعيل المضخة اللاصقة الخاصة بك.\n\nيرجى إزالة المضخة اللاصقة من جسمك وإعادة تدويرها.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">تم التخلص من المضخة اللاصقة</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">تم حذف حالة المضخة اللاصقة. لم يتم تعليق ضخ الأنسولين لعدم إلغاء تفعيل المضخة اللاصقة بشكل صحيح!\n\nيرجى إزالة المضخة اللاصقة من جسمك وإعادة تدويرها.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">إذا قمت بالتخلص من المضخة اللاصقة، فلن تتمكن من الاتصال بها بعد الآن. يجب ألا تقوم بذلك إلا عندما يفشل كل اتصال بالمضخة اللاصقة بشكل مستمر. هل أنت متأكد من رغبتك في التخلص من المضخة اللاصقة؟</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod">التخلص من المضخة اللاصقة</string>
     <!-- Omnipod - Preferences -->
+    <string name="omnipod_common_preferences_bolus_beeps_enabled">تفعيل أصوات التنبيه للجرعة</string>
+    <string name="omnipod_common_preferences_basal_beeps_enabled">تفعيل أصوات التنبيه لمعدل الأنسولين القاعدي</string>
+    <string name="omnipod_common_preferences_smb_beeps_enabled">تفعيل أصوات التنبيه للجرعات التصحيحية الصغيرة SMB</string>
+    <string name="omnipod_common_preferences_tbr_beeps_enabled">تفعيل أصوات التنبيه لمعدل الأنسولين القاعدي المؤقت TBR</string>
+    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">إظهار زر تعليق الضخ على شاشة المضخة</string>
+    <string name="omnipod_common_preferences_time_change_enabled">تفعيل اكتشاف التوقيت الصيفي / المنطقة الزمنية</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled">تفعيل تذكير انتهاء الصلاحية</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">عند التفعيل، ستصدر المضخة اللاصقة صوتا عند الوصول إلى الوقت المحدد</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">التذكير قبل ساعات من انتهاء الصلاحية (72 ساعة)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">تفعيل تنبيه انتهاء الصلاحية</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">عند التفعيل، ستصدر المضخة اللاصقة صوتا عند الوصول إلى الوقت المحدد وقبل ساعة واحدة من الإيقاف</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">التنبيه قبل ساعات من الإيقاف (80 ساعة)</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_enabled">تفعيل تنبيه انخفاض الخزان</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_units">عدد الوحدات</string>
+    <string name="omnipod_common_preferences_automatically_silence_alerts">كتم تنبيهات المضخة اللاصقة تلقائيا</string>
+    <string name="omnipod_common_preferences_category_other">أخرى</string>
+    <string name="omnipod_common_preferences_category_alerts">التنبيهات</string>
+    <string name="omnipod_common_preferences_category_confirmation_beeps">أصوات التأكيد</string>
+    <string name="omnipod_common_preferences_category_notifications">الإشعارات</string>
+    <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">تفعيل الصوت لإشعارات معدل الأنسولين القاعدي المؤقت غير المؤكدة</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">تفعيل الصوت لإشعارات الجرعات التصحيحية الصغيرة SMB غير المؤكدة</string>
+    <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">تفعيل الصوت لإشعارات الجرعة غير المؤكدة</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">تفعيل الصوت عند إشعار تعليق الضخ</string>
+    <string name="omnipod_dash_use_bonding">ربط البلوتوث</string>
+    <string name="omnipod_dash_use_bonding_summary">جرب هذا فقط إذا كانت المضخة اللاصقة لا تحافظ على اتصال مستقر. سيعرض الهاتف طلبات اقتران يجب عليك قبولها. اتركه معطلا إذا كانت المضخة اللاصقة تتصل بشكل جيد. ليس له تأثير في إصدارات Android الأقدم من 15.</string>
     <!-- Omnipod - Pod Status -->
+    <string name="omnipod_common_pod_status_no_active_pod">لا توجد مضخة لاصقة نشطة</string>
+    <string name="omnipod_common_pod_status_waiting_for_activation">الإعداد قيد التنفيذ (في انتظار تفعيل المضخة اللاصقة)</string>
+    <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">الإعداد قيد التنفيذ (في انتظار إدخال القنية)</string>
+    <string name="omnipod_common_pod_status_running">قيد التشغيل</string>
+    <string name="omnipod_common_pod_status_suspended">معلق</string>
+    <string name="omnipod_common_pod_status_pod_fault">خطأ في المضخة اللاصقة</string>
+    <string name="omnipod_common_pod_status_inactive">غير نشط</string>
+    <string name="omnipod_common_pod_status_pod_fault_description">خطأ في المضخة اللاصقة: %1$03d %2$s</string>
     <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">إشعار جهاز PDM</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">المرجع: %1$s</string>
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">خزان فارغ</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">توقف ضخ الأنسولين. قم بتغيير المضخة اللاصقة الآن.</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">إيقاف تلقائي</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">توقف ضخ الأنسولين. لم يتواصل جهاز PDM والمضخة اللاصقة الخاصة بك خلال الـ 4 ساعات الماضية. لاستئناف ضخ الأنسولين، قم بتغيير المضخة اللاصقة الآن.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">انتهت صلاحية المضخة اللاصقة</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">توقف ضخ الأنسولين. قم بتغيير المضخة اللاصقة الآن.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">تم اكتشاف انسداد</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">توقف ضخ الأنسولين. قم بتغيير المضخة اللاصقة الآن. تحقق من مستوى سكر الدم لديك</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">خطأ في المضخة اللاصقة</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">توقف ضخ الأنسولين. قم بتغيير المضخة اللاصقة الآن.</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_expiration">ستنتهي صلاحية المضخة اللاصقة قريبا</string>
+    <string name="omnipod_common_alert_expiration_advisory">ستنتهي صلاحية المضخة اللاصقة قريبا</string>
+    <string name="omnipod_common_alert_shutdown_imminent">الإيقاف وشيك</string>
+    <string name="omnipod_common_alert_low_reservoir">خزان منخفض</string>
+    <string name="omnipod_common_alert_unknown_alert">تنبيه غير معروف</string>
     <!-- Omnipod - Commands -->
+    <string name="omnipod_common_cmd_initialize_pod">تهيئة المضخة اللاصقة</string>
+    <string name="omnipod_common_cmd_insert_cannula">إدخال القنية</string>
+    <string name="omnipod_common_cmd_deactivate_pod">إلغاء تفعيل المضخة اللاصقة</string>
+    <string name="omnipod_common_cmd_set_basal_schedule">تعيين جدول معدل الأنسولين القاعدي</string>
+    <string name="omnipod_common_cmd_set_bolus">تعيين الجرعة</string>
+    <string name="omnipod_common_cmd_cancel_bolus">إلغاء الجرعة</string>
+    <string name="omnipod_common_cmd_set_tbr">تعيين معدل الأنسولين القاعدي المؤقت</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">إلغاء معدل الأنسولين القاعدي المؤقت</string>
+    <string name="omnipod_common_cmd_discard_pod">التخلص من المضخة اللاصقة</string>
+    <string name="omnipod_common_cmd_get_pod_status">الحصول على حالة المضخة اللاصقة</string>
+    <string name="omnipod_common_cmd_set_time">ضبط الوقت</string>
+    <string name="omnipod_common_cmd_configure_alerts">تهيئة التنبيهات</string>
+    <string name="omnipod_common_cmd_silence_alerts">كتم التنبيهات</string>
+    <string name="omnipod_common_cmd_read_pulse_log">قراءة سجل النبضات</string>
+    <string name="omnipod_common_cmd_suspend_delivery">تعليق الضخ</string>
+    <string name="omnipod_common_cmd_resume_delivery">استئناف الضخ</string>
+    <string name="omnipod_common_cmd_cancel_tbr">إلغاء معدل الأنسولين القاعدي المؤقت (بواسطة المستخدم)</string>
+    <string name="omnipod_common_cmd_get_pod_info">الحصول على معلومات المضخة اللاصقة</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">تعيين معدل أنسولين قاعدي مؤقت معلق وهمي</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">إلغاء معدل الأنسولين القاعدي المؤقت المعلق الوهمي</string>
+    <string name="omnipod_common_cmd_split_tbr">تقسيم معدل الأنسولين القاعدي المؤقت</string>
+    <string name="omnipod_common_cmd_play_test_beep">تشغيل صوت الاختبار</string>
+    <string name="omnipod_common_cmd_unknown_entry">إدخال غير معروف</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">تعطيل تنبيهات التعليق</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">تذكير بإكمال الاقتران</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">تذكير بإكمال الإعداد</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
+    <string name="omnipod_common_moments_ago">منذ لحظات</string>
+    <string name="omnipod_common_less_than_a_minute_ago">قبل أقل من دقيقة</string>
+    <string name="omnipod_common_composite_time">%1$s و %2$s</string>
+    <string name="omnipod_common_time_ago">منذ %1$s</string>
+    <string name="omnipod_common_overview_pod_hard_end_date">الإيقاف النهائي للمضخة اللاصقة</string>
+    <string name="omnipod_common_overview_pod_hard_end_value" comment="%1$s=date and time when the pod stops delivering insulin, %2$s=time left until then. Example: 21.10.2026 18:34 (17m remaining)">%1$s (%2$s)</string>
     <!-- Omnipod - History -->
+    <string name="omnipod_common_history_tbr_value">%1$.2f وحدة/ساعة، %2$d دقيقة</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f وحدة</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">الجرعة التصحيحية الصغيرة SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">تصحيح الأنسولين القاعدي</string>
+    <string name="omnipod_common_bolus_type_priming">التجهيز</string>
+    <string name="omnipod_common_history_total_delivered">إجمالي ما تم ضخه: %1$.2f وحدة</string>
+    <string name="omnipod_common_failed_to_send">فشل إرسال الأمر</string>
+    <string name="omnipod_common_command_not_sent">لم يتم إرسال الأمر</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">لم يتم استلام الأمر بواسطة المضخة اللاصقة</string>
+    <string name="omnipod_common_unknown">حالة الأمر غير معروفة</string>
 </resources>
