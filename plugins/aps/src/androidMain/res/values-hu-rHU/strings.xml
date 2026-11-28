@@ -1,14 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Autotune-->
+    <string name="dyn_isf_adjust_title" formatted="false">Dinamikus ISF korrekciós tényező %</string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Dinamikus ISF</string>
+    <string name="openaps_auto_isf">Auto ISF</string>
+    <string name="openapsma_disabled">A plugin le van tiltva</string>
+    <string name="openapsma_no_glucose_data">Nincs elérhető glükózadat</string>
+    <string name="openaps_no_as_data">Nincs elérhető Autosens-adat</string>
+    <string name="dynisf_shortname">DYNISF</string>
     <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">%1$d elemű tömb.\nAktuális érték:</string>
+    <string name="description_ama">Az algoritmus 2017-es állapota</string>
+    <string name="description_smb">A legújabb algoritmus haladó felhasználóknak</string>
+    <string name="description_smb_dynamic_isf">A legújabb algoritmus haladó felhasználóknak, dinamikus/automatikus ISF-fel</string>
+    <string name="description_auto_isf">Kísérleti algoritmus haladó felhasználóknak, AutoISF-bővítményekkel</string>
+    <string name="openapsma_last_run_label">Legutóbbi futás</string>
+    <string name="openapsma_input_parameters_label">Bemeneti paraméterek</string>
+    <string name="openapsma_glucose_status_label">Glükózállapot</string>
+    <string name="openapsma_current_temp_label">Aktuális átmeneti bázis</string>
+    <string name="openapsma_iob_data_label">IOB-adatok</string>
     <string name="openapsma_profile_label">Profil</string>
+    <string name="openapsma_meal_data_label">Étkezési adatok</string>
+    <string name="openapsma_request_label">Kérés</string>
+    <string name="constraints">Korlátok</string>
     <string name="openapsma_autosensdata_label">Autosens adat</string>
+    <string name="openapsma_script_debug_data_label">Szkript-hibakeresés</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Figyelem!\nÁltalában nem kell módosítania az alábbi értékeket. KATTINTSON IDE, OLVASSA EL a szöveget, és győződjön meg róla, hogy MEGÉRTETTE, mielőtt bármelyik értéket módosítja.</string>
+    <string name="increasing_max_basal">A max. bázis értéke megemelve, mert a beállítás alacsonyabb, mint a profilban szereplő max. bázis</string>
+    <string name="max_basal_multiplier">max. bázisszorzó</string>
+    <string name="max_daily_basal_multiplier">max. napi bázisszorzó</string>
+    <string name="smb_disabled_in_preferences">SMB letiltva a beállításokban</string>
+    <string name="uam_disabled_in_preferences">UAM letiltva a beállításokban</string>
+    <string name="autosens_disabled_in_preferences">Autosens letiltva a beállításokban</string>
     <!--    Verify if needed in safety-->
+    <string name="limiting_iob">IOB korlátozva %1$.1f E értékre, oka: %2$s</string>
+    <string name="maxvalueinpreferences">max. érték a beállításokban</string>
+    <string name="hardlimit">szigorú korlát</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">Csúcs</string>
     <!--    Loop -->
+    <string name="smb_frequency_exceeded">Az elmúlt 3 percben bólus volt beadva, az SMB kimarad</string>
+    <string name="pump_not_initialized">A pumpa nincs inicializálva!</string>
+    <string name="zero_basal_not_set">A pumpa nem fogadta el a nulla átmeneti bázist. Lehet, hogy továbbra is ad bázisinzulint. Ellenőrizze a pumpát.</string>
+    <string name="description_loop">A Loopot indító megvalósítás be- vagy kikapcsolása.</string>
+    <string name="no_aps_selected">NINCS KIVÁLASZTOTT APS, VAGY NEM ADOTT EREDMÉNYT</string>
+    <string name="ignore5m">Kihagyás 5 percre</string>
+    <string name="ignore15m">Kihagyás 15 percre</string>
+    <string name="ignore30m">Kihagyás 30 percre</string>
+    <string name="carbs_suggestion">Szénhidrát-javaslat</string>
+    <string name="open_loop_new_suggestion">Új javaslat érhető el</string>
+    <string name="loop_notification_channel_name">Loop-javaslatok</string>
+    <string name="loop_notification_channel_silent_name">Loop-javaslatok Ne zavarjanak módban</string>
+    <string name="open_loop_suggestion_too_old">Ez a javaslat túl régi. Semmi sem lett elküldve a pumpára. Várja meg a következőt.</string>
+    <string name="basal_set_correctly">Bázis helyesen beállítva</string>
+    <string name="last_run_label">Utolsó futás</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">Kérés</string>
+    <string name="loop_constraints_processed_label">A korlátok alkalmazása után</string>
+    <string name="loop_tbr_request_time_label">Átmeneti bázis kérésének ideje</string>
+    <string name="loop_tbr_execution_time_label">Átmeneti bázis végrehajtásának ideje</string>
+    <string name="loop_tbr_set_by_pump_label">Pumpa által beállított átmeneti bázis</string>
+    <string name="loop_smb_request_time_label">SMB kérésének ideje</string>
+    <string name="loop_smb_execution_time_label">SMB végrehajtásának ideje</string>
+    <string name="loop_smb_set_by_pump_label">Pumpa által beadott SMB</string>
+    <string name="fallback_smb_no_tdd">Visszaállás SMB-re. Nincs elég TDD-adat.</string>
+    <string name="fallback_to_isf_no_tdd">Visszaállás a profil érzékenységére. Nincs elég adat. Ok: %1$s</string>
     <!-- Autotune -->
+    <string name="autotune_description">Segítség a profil lehetséges módosításaihoz (ISF, IC és bázisütemek)</string>
+    <string name="autotune_default_tune_days_title">Adatok napjainak száma</string>
+    <string name="autotune_tunedprofile_name">Hangolt</string>
+    <string name="autotune_profile">Profil :</string>
+    <string name="autotune_last_run">Utolsó futás :</string>
+    <string name="autotune_warning">Figyelmeztetés :</string>
+    <string name="autotune_ic_warning">A kiválasztott profilban %1$d IC-érték van. Az Autotune %2$.2f g/E értéket használ</string>
+    <string name="autotune_isf_warning">A kiválasztott profilban %1$d ISF-érték van. Az Autotune %2$.1f %3$s/E értéket használ</string>
+    <string name="autotune_error">Hiba a bemeneti adatokban. Futtassa újra az Autotune-t, vagy csökkentse a napok számát</string>
+    <string name="autotune_error_more_days">Hiba a bemeneti adatokban, növelje a napok számát</string>
+    <string name="autotune_warning_during_run">Az Autotune számítás elindult, kérjük, legyen türelemmel</string>
+    <string name="autotune_warning_after_run">Használat előtt gondosan ellenőrizze az eredményeket!</string>
+    <string name="autotune_partial_result">Részeredmény: %1$d / %2$d nap hangolva</string>
+    <string name="autotune_result">Eredmény: %1$s</string>
+    <string name="autotune_param">Paraméter</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Hiányzik</string>
+    <string name="autotune_run">Autotune futtatása</string>
+    <string name="autotune_check_input_profile_button">Bemeneti profil ellenőrzése</string>
     <string name="autotune_compare_profile">Profilok összehasonlítása</string>
+    <string name="autotune_copy_localprofile_button">Másolás helyi profilba</string>
+    <string name="autotune_update_input_profile_button">Bemeneti profil frissítése</string>
+    <string name="autotune_revert_input_profile_button">Bemeneti profil visszaállítása</string>
+    <string name="autotune_copy_local_profile_message">Létrehoz egy új helyi profilt ebből az Autotune-profilból?</string>
+    <string name="autotune_update_local_profile_message">Frissíti a(z) %1$s profilt az Autotune-profillal?</string>
+    <string name="autotune_revert_local_profile_message">Visszaállítja a(z) %1$s profilt a bemeneti profilra?</string>
+    <string name="autotune_profile_invalid">Érvénytelen profil</string>
+    <string name="pump_disconnected">Pumpa leválasztva</string>
     <!--    autoISF -->
+    <string name="autoISF_settings_title">AutoISF-beállítások</string>
+    <string name="smb_delivery_settings_title">SMB-beadási beállítások</string>
 </resources>
