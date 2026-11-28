@@ -57,7 +57,7 @@
     <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Диапазон: %1$d ~ %2$d Ед</string>
     <string name="carelevo_insulin_refill_step1">1. Отлепете хартията от пача.</string>
     <string name="carelevo_insulin_refill_step2">2. Почистете гумената част на флакона с инсулин с алкохол.</string>
-    <string name="carelevo_insulin_refill_step3">3. Свалете защитната капачка на флакона с инсулин, като я издърпате.</string>
+    <string name="carelevo_insulin_refill_step3">3. Свалете защитната капачка от иглата на спринцовката за инсулин, като я издърпате право.</string>
     <string name="carelevo_insulin_refill_step4">4. Издърпайте буталото на спринцовката назад, за да я напълните с около 1 мл въздух.</string>
     <string name="carelevo_insulin_refill_step5">5. Поставете пълната с въздух спринцовка във флакона с инсулин и натиснете буталото, за да вкарате въздуха във флакона.</string>
     <string name="carelevo_insulin_refill_step6">6. Без да изваждате спринцовката, обърнете флакона и спринцовката заедно с дъното нагоре и с помощта на налягането напълнете спринцовката с около 1 мл инсулин.</string>
