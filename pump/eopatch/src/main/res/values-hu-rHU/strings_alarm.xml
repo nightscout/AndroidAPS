@@ -1,2 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<resources></resources>
+<resources>
+    <string name="string_a002">Üres tartály\nA patch deaktiválva, az inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_a003">A patch lejárt\nA patch deaktiválva, az inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_a004">Elzáródás\nA patch deaktiválva, az inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_a005">Hiba a bekapcsoláskori önteszt során\nA patch deaktiválva. Cserélje ki most a patchet.</string>
+    <string name="string_a007">Nem megfelelő hőmérséklet\nAz inzulinbeadás vagy a \'Patch aktiválása\' folyamat leállt. Kerülje most a szélsőséges hőmérsékletet.</string>
+    <string name="string_a016">Tűbevezetési hiba\nEllenőrizze a forgatógomb helyzetét, és koppintson az \'Újra\' gombra.</string>
+    <string name="string_a018">Elemhiba a patchben\nA patch deaktiválva, és\naz inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_a019">Elemhiba a patchben\nA patch deaktiválva, az inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_a020">Hiba a patch aktiválásakor\nA \'Patch aktiválása\' folyamat ideje lejárt. Koppintson a \'Megerősítés\' gombra a jelenlegi patch deaktiválásához. Cserélje ki most a patchet.</string>
+    <string name="string_a022">Patchhiba\nA patch deaktiválva, az inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_a023">Patchhiba\nA patch deaktiválva, és\naz inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_a034">Patchhiba\nA patch deaktiválva, az inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_a041">Patchhiba\nA patch deaktiválva, az inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_a042">Patchhiba\nA patch deaktiválva, az inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_a043">Patchhiba\nA patch deaktiválva, az inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_a044">Patchhiba\nA patch deaktiválva, az inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_a106">Patchhiba\nA patch deaktiválva, az inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_a107">Patchhiba\nA patch deaktiválva, az inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_a108">Patchhiba\nA patch deaktiválva, az inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_a116">Patchhiba\nA patch deaktiválva, az inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_a117">Patchhiba\nA patch deaktiválva, az inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_a118">Patchhiba\nA patch deaktiválva, az inzulinbeadás leállt. Cserélje ki most a patchet.</string>
+    <string name="string_b000">A patch üzemideje lejár: %s. Készüljön fel a patch cseréjére.</string>
+    <string name="string_b001">Az inzulinfelfüggesztés vége\nKoppintson a \'Folytatás\' gombra az inzulinbeadás újraindításához.</string>
+    <string name="string_b003">Alacsony tartályszint\nHamarosan cserélje ki a patchet.</string>
+    <string name="string_b005">A patch üzemideje lejárt\nCserélje ki most a patchet.</string>
+    <string name="string_b006">A patch hamarosan lejár\nCserélje ki most a patchet.</string>
+    <string name="string_b012">A patch aktiválása nincs befejezve\nFejezze be a \'Patch aktiválása\' folyamatot.</string>
+    <string name="string_b018">A patch eleme lemerülőben\nKészüljön fel a patch cseréjére.</string>
+</resources>
