@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="sensitivity_oref1">حساسية Oref1</string>
+    <string name="sensitivity_aaps">حساسية AAPS</string>
+    <string name="sensitivity_weighted_average">حساسية المتوسط المرجح WeightedAverage</string>
+    <string name="description_sensitivity_aaps">يتم حساب الحساسية بنفس طريقة Oref0، ولكن يمكنك تحديد الإطار الزمني للماضي. يتم حساب الحد الأدنى لامتصاص الكربوهيدرات من وقت الحد الأقصى لامتصاص الكربوهيدرات من الإعدادات.</string>
+    <string name="description_sensitivity_oref1">يتم حساب الحساسية من بيانات 8 ساعات أو 24 ساعة في الماضي (باستخدام أيهما أكثر حساسية). يتم قطع الكربوهيدرات (إذا لم يتم امتصاصها) بعد الوقت المحدد في الإعدادات. تقوم الإضافة أيضا بحساب الوجبات غير المعلنة (UAM).</string>
+    <string name="description_sensitivity_weighted_average">يتم حساب الحساسية كمتوسط مرجح من الانحرافات. الانحرافات الأحدث لها وزن أعلى. يتم حساب الحد الأدنى لامتصاص الكربوهيدرات من وقت الحد الأقصى لامتصاص الكربوهيدرات من الإعدادات. هذه الخوارزمية هي الأسرع في تتبع تغيرات الحساسية.</string>
+    <string name="uam_disabled_oref1_not_selected">تم تعطيل الوجبات غير المعلنة (UAM) لأنها تعتمد على إضافة حساسية Oref1</string>
+    <string name="absorption_settings_title">إعدادات الامتصاص</string>
+</resources>
