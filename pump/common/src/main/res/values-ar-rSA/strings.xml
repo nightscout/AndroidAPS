@@ -1,9 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">العملية غير مدعومة من المضخة و/أو برنامج التشغيل.</string>
     <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">غير مهيأ</string>
+    <string name="pump_status_initialized">مهيأ</string>
+    <string name="pump_status_encrypt">جاري تشفير الاتصال</string>
+    <string name="pump_status_ready">جاهز</string>
+    <string name="pump_status_busy">مشغول</string>
+    <string name="pump_status_suspended">معلق</string>
+    <string name="pump_status_executing_command">جاري تنفيذ الأمر</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">الحصول على الإعدادات</string>
+    <string name="pump_cmd_desc_get_firmware">الحصول على البرنامج الثابت للمضخة</string>
+    <string name="pump_cmd_desc_get_basal_profile">الحصول على ملف الأنسولين القاعدي</string>
+    <string name="pump_cmd_desc_set_basal_profile">تعيين ملف الأنسولين القاعدي</string>
+    <string name="pump_cmd_desc_get_tbr">الحصول على معدل الأنسولين القاعدي المؤقت</string>
+    <string name="pump_cmd_desc_cancel_tbr">إلغاء معدل الأنسولين القاعدي المؤقت</string>
+    <string name="pump_cmd_desc_set_tbr">تعيين معدل الأنسولين القاعدي المؤقت</string>
+    <string name="pump_cmd_desc_set_bolus">تعيين الجرعة</string>
+    <string name="pump_cmd_desc_get_bolus">الحصول على الجرعة</string>
+    <string name="pump_cmd_desc_cancel_bolus">إلغاء الجرعة</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">الحصول على الأنسولين المتبقي</string>
+    <string name="pump_cmd_desc_get_battery_status">الحصول على حالة البطارية</string>
+    <string name="pump_cmd_desc_get_time">الحصول على الوقت</string>
+    <string name="pump_cmd_desc_set_time">تعيين الوقت</string>
+    <string name="pump_cmd_desc_get_pump_status">الحصول على حالة المضخة</string>
+    <string name="pump_cmd_desc_get_history">الحصول على السجل</string>
+    <string name="pump_cmd_desc_get_history_params">الحصول على السجل %s</string>
+    <string name="pump_cmd_desc_custom">أمر مخصص</string>
     <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">معدلات الأنسولين القاعدية</string>
+    <string name="history_group_configuration">التهيئة</string>
+    <string name="history_group_notification">الإشعارات</string>
+    <string name="history_group_statistic">الإحصائيات</string>
+    <string name="history_group_unknown">غير معروف</string>
+    <string name="history_group_all">الكل</string>
+    <string name="history_group_bolus">الجرعات</string>
+    <string name="history_group_prime">التجهيز</string>
+    <string name="history_group_alarm">الإنذارات</string>
+    <string name="history_group_glucose">الغلوكوز</string>
+    <string name="history_group_base">القاعدة</string>
+    <string name="history_group_other">أخرى</string>
+    <string name="history_group_events">جميع الأحداث</string>
+    <string name="history_group_events_no_stat">الأحداث (بدون إحصائيات)</string>
     <!-- Time -->
+    <string name="time_today">اليوم</string>
+    <string name="time_last_hour">الساعة الأخيرة</string>
+    <string name="time_last_3_hours">آخر 3 ساعات</string>
+    <string name="time_last_6_hours">آخر 6 ساعات</string>
+    <string name="time_last_12_hours">آخر 12 ساعة</string>
+    <string name="time_last_24_hours">آخر 24 ساعة</string>
+    <string name="time_last_2_days">آخر يومين</string>
+    <string name="time_last_4_days">آخر 4 أيام</string>
+    <string name="time_last_week">الأسبوع الماضي</string>
+    <string name="time_last_month">الشهر الماضي</string>
     <!-- Pump History -->
 </resources>
