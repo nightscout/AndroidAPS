@@ -445,12 +445,14 @@ class AlarmNotificationManager(
      * Tracked in [activeSoundKeys], so [cancelSoundAlarm] / [cancelAlarm] clear it.
      * @param notificationKey unique-per-AAPS-notification identifier (the `AapsNotification.instanceKey`)
      * @param urgent          true for URGENT-level alerts (stronger vibration)
+     * @param deleteIntent    broadcast fired when the user swipes the notification away (Android 14+ allows swiping ongoing notifications), or null to ignore swipes
      */
     fun postSilentAlarmNotification(
         notificationKey: Int,
         title: String,
         body: String,
-        urgent: Boolean
+        urgent: Boolean,
+        deleteIntent: PendingIntent? = null
     ) {
         channels // created on first post, see the field
         val builder = NotificationCompat.Builder(context, if (urgent) CHANNEL_SILENT_URGENT else CHANNEL_SILENT)
@@ -464,6 +466,7 @@ class AlarmNotificationManager(
             .setOngoing(true)
             .setAutoCancel(false)
             .setContentIntent(notificationHolderProvider().openAppIntent())
+            .setDeleteIntent(deleteIntent)
 
         val systemId = SOUND_ID_OFFSET + notificationKey
         try {

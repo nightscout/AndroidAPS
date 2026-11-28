@@ -1,6 +1,7 @@
 package app.aaps.implementation.notifications
 
 import android.app.NotificationManager as AndroidNotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
@@ -22,7 +23,10 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.isNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -84,12 +88,33 @@ class AndroidSystemNotificationPlatformTest {
     fun `an urgent alarm carrying a sound is posted silently`() {
         // The ramping audio belongs to AlarmSoundPlayer, so the tray entry must not make noise of its
         // own. It also must not consult the preference: this path is not the optional visual one.
+        var dismissed: Int? = null
+        sut.onDismissed { dismissed = it }
         sut.show(notification(NotificationLevel.URGENT, sound = AlarmSound.URGENT_ALARM), "Urgent")
 
+        val deleteIntentCaptor = argumentCaptor<PendingIntent>()
         verify(alarmNotificationManager).postSilentAlarmNotification(
-            notificationKey = eq(42), title = eq("Urgent"), body = eq("text"), urgent = eq(true)
+            notificationKey = eq(42),
+            title = eq("Urgent"),
+            body = eq("text"),
+            urgent = eq(true),
+            deleteIntent = deleteIntentCaptor.capture()
         )
         verify(preferences, never()).get(any<BooleanKey>())
+
+        // Swiping away an actionless urgent alarm reports its dismissal so the registry stops the sound.
+        context.sendBroadcast(shadowOf(deleteIntentCaptor.firstValue).savedIntent)
+        ShadowLooper.idleMainLooper()
+        assertThat(dismissed).isEqualTo(42)
+    }
+
+    @Test
+    fun `an urgent alarm carrying actions is posted without a delete intent`() {
+        sut.show(notification(NotificationLevel.URGENT, sound = AlarmSound.URGENT_ALARM, actions = listOf(mock())), "Urgent")
+
+        verify(alarmNotificationManager).postSilentAlarmNotification(
+            notificationKey = eq(42), title = eq("Urgent"), body = eq("text"), urgent = eq(true), deleteIntent = isNull()
+        )
     }
 
     @Test
@@ -98,7 +123,7 @@ class AndroidSystemNotificationPlatformTest {
 
         sut.show(notification(NotificationLevel.NORMAL), "Info")
 
-        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any())
+        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any(), anyOrNull())
     }
 
     @Test
@@ -108,7 +133,7 @@ class AndroidSystemNotificationPlatformTest {
 
         sut.show(notification(NotificationLevel.NORMAL, actions = listOf(mock())), "Info")
 
-        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any())
+        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any(), anyOrNull())
     }
 
     @Test
@@ -119,7 +144,7 @@ class AndroidSystemNotificationPlatformTest {
 
         sut.show(notification(NotificationLevel.URGENT), "Urgent")
 
-        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any())
+        verify(alarmNotificationManager, never()).postSilentAlarmNotification(any(), any(), any(), any(), anyOrNull())
     }
 
     @Test
