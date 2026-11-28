@@ -18,6 +18,7 @@
     <string name="settings_unreadable_keystore_explanation">Magazyn kluczy telefonu nie odpowiedział, więc AAPS nie mógł otworzyć swoich ustawień.</string>
     <string name="settings_unreadable_not_running">AAPS nie działa i nie steruje pompą. Trwająca tymczasowa bazowa (TBR) kończy się o swoim czasie, a potem pompa podaje własną dawkę bazową.</string>
     <string name="settings_unreadable_what_to_do">„Ponów” zamyka AAPS i uruchamia go ponownie. Jeśli to nie pomoże, uruchom ponownie telefon. Wybierz „Zacznij od nowa” tylko wtedy, gdy nic innego nie pomaga: to odłoży nieczytelne ustawienia na bok, a AAPS uruchomi się z pustymi ustawieniami. Następnie zaimportuj ostatni eksport ustawień w kreatorze konfiguracji.</string>
+    <string name="settings_unreadable_keystore_what_to_do">„Ponów” zamyka AAPS i uruchamia go ponownie. Jeśli to nie pomoże, uruchom ponownie telefon. Twój plik ustawień pozostaje bez zmian.</string>
     <string name="settings_unreadable_start_fresh">Zacznij od nowa</string>
     <string name="settings_unreadable_confirm_title">Rozpocząć od nowa z pustymi ustawieniami?</string>
     <string name="settings_unreadable_confirm_text">Nazwa nieczytelnego pliku ustawień zostanie zmieniona a plik zachowany. Wszystkie ustawienia zostaną przywrócone do wartości domyślnych. Gdy to nastąpi - skonfiguruj AAPS ponownie albo zaimportuj eksport ustawień.</string>
