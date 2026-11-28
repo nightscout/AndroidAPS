@@ -29,7 +29,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlarmType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodStatus
-import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
+import app.aaps.pump.omnipod.common.bledriver.pod.command.DeactivateCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.StopDeliveryCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.SuspendDeliveryCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.GetStatusCommand
@@ -50,6 +50,7 @@ import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandSuspendDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguration
 import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
+import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import app.aaps.pump.omnipod.omnipod5.history.O5History
 import app.aaps.pump.omnipod.omnipod5.history.database.O5HistoryDatabase
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -342,6 +343,104 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         verify(bleManager).sendCommand(any(), any())
         verify(bleManager).removeBond()
         verify(podStateManager).reset()
+    }
+
+    @Test
+    fun `deactivation cancels all delivery first for a running pod`() {
+        stubPodReadyForPreDeactivationCancel()
+        whenever(podStateManager.podId).thenReturn(12345L)
+        val sentCommands = mutableListOf<Command>()
+        whenever(bleManager.sendCommand(any(), any())).thenAnswer {
+            sentCommands += it.getArgument<Command>(0)
+            Observable.empty<PodEvent>()
+        }
+
+        val result = plugin.executeCustomCommand(CommandDeactivatePod())
+
+        assertThat(result!!.success).isTrue()
+        assertThat(sentCommands).hasSize(2)
+        val cancelAll = requireNotNull(sentCommands[0] as? StopDeliveryCommand)
+        assertThat(cancelAll.toString()).contains("deliveryType=ALL")
+        assertThat(cancelAll.toString()).contains("beepType=SILENT")
+        assertThat(sentCommands[1]).isInstanceOf(DeactivateCommand::class.java)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["dose outcome uncertain", "suspended", "AAPS suspended", "faulted", "not running", "activation incomplete"])
+    fun `deactivation skips cancel all unless the pod is ready`(condition: String) {
+        stubPodReadyForPreDeactivationCancel()
+        whenever(podStateManager.podId).thenReturn(12345L)
+        when (condition) {
+            "dose outcome uncertain" -> whenever(podStateManager.pendingDoseCommand).thenReturn(pendingBolus(4))
+            "suspended" -> whenever(podStateManager.isSuspended).thenReturn(true)
+            "AAPS suspended" -> whenever(podStateManager.deliverySuspended).thenReturn(true)
+            "faulted" -> {
+                whenever(podStateManager.alarmType).thenReturn(AlarmType.ALARM_OCCLUDED)
+                whenever(podStateManager.isPodKaput).thenReturn(true)
+            }
+            "not running" -> whenever(podStateManager.isPodRunning).thenReturn(false)
+            "activation incomplete" -> whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.PRIME_COMPLETED)
+            else -> error("Unknown deactivation condition: $condition")
+        }
+        val sentCommands = mutableListOf<Command>()
+        whenever(bleManager.sendCommand(any(), any())).thenAnswer {
+            sentCommands += it.getArgument<Command>(0)
+            Observable.empty<PodEvent>()
+        }
+
+        val result = plugin.executeCustomCommand(CommandDeactivatePod())
+
+        assertThat(result!!.success).isTrue()
+        assertThat(sentCommands).hasSize(1)
+        assertThat(sentCommands.single()).isInstanceOf(DeactivateCommand::class.java)
+    }
+
+    @Test
+    fun `deactivation does not continue when cancel all fails`() {
+        stubPodReadyForPreDeactivationCancel()
+        whenever(podStateManager.podId).thenReturn(12345L)
+        whenever(rh.gs(R.string.omnipod_common_error_failed_to_deactivate_pod)).thenReturn("Failed to deactivate pod")
+        whenever(bleManager.sendCommand(any(), any()))
+            .thenReturn(Observable.error(RuntimeException("cancel all failed")))
+
+        val result = plugin.executeCustomCommand(CommandDeactivatePod())
+
+        assertThat(result!!.success).isFalse()
+        verify(bleManager).sendCommand(argThat { this is StopDeliveryCommand }, any())
+        verify(bleManager, never()).sendCommand(argThat { this is DeactivateCommand }, any())
+        verify(bleManager, never()).removeBond()
+        verify(podStateManager, never()).reset()
+    }
+
+    @Test
+    fun `failed deactivation leaves a successfully stopped pod suspended`() = runBlocking {
+        stubPodReadyForPreDeactivationCancel()
+        whenever(podStateManager.podId).thenReturn(12345L)
+        whenever(pumpSync.expectedPumpState()).thenReturn(pumpState())
+        whenever(rh.gs(R.string.omnipod_common_error_failed_to_deactivate_pod)).thenReturn("Failed to deactivate pod")
+        whenever(bleManager.sendCommand(any(), any()))
+            .thenReturn(Observable.empty<PodEvent>())
+            .thenReturn(Observable.error(RuntimeException("deactivation failed")))
+
+        val result = plugin.executeCustomCommand(CommandDeactivatePod())
+
+        assertThat(result!!.success).isFalse()
+        verify(podStateManager).deliverySuspended = true
+        verify(pumpSync).syncTemporaryBasalWithPumpId(
+            any(), argThat { cU == 0.0 }, any(), eq(true), eq(PumpSync.TemporaryBasalType.PUMP_SUSPEND),
+            any(), eq(PumpType.OMNIPOD_5), eq("12345")
+        )
+        verify(bleManager, never()).removeBond()
+        verify(podStateManager, never()).reset()
+    }
+
+    private fun stubPodReadyForPreDeactivationCancel() {
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
+        whenever(podStateManager.isPodRunning).thenReturn(true)
+        whenever(podStateManager.isPodKaput).thenReturn(false)
+        whenever(podStateManager.isSuspended).thenReturn(false)
+        whenever(podStateManager.deliverySuspended).thenReturn(false)
+        whenever(podStateManager.pendingDoseCommand).thenReturn(null)
     }
 
     @Test
