@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- VirtualPump -->
-    <string name="description_pump_virtual">Integracija pumpe za pumpe koje još uvek nemaju upravljački program (Open Loop)</string>
+    <string name="virtual_pump_type">Tip virtuelne pumpe</string>
+    <string name="virtual_pump_definition">Definicija pumpe</string>
+    <string name="virtual_pump_pump_def">Bolus: Korak=%1$s\nProduženi bolus: [Korak=%2$s, Trajanje=%3$smin-%4$sh]\nBazal: Korak=%5$s\nTBR: %6$s (prema %7$s), Trajanje=%8$smin-%9$sh\n%10$s</string>
+    <string name="description_pump_virtual">Integracija pumpe za pumpe koje još nemaju drajver (otvorena petlja)</string>
+    <string name="virtualpump_settings">Podešavanja virtuelne pumpe</string>
     <!--    PumpType-->
+    <string name="def_extended_note">* Samo diskretne vrednosti, bez opsega, podržane su kao granularnost za bazal/bolus u virtuelnoj pumpi.</string>
 </resources>
