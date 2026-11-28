@@ -18,10 +18,20 @@ class EversenseStateStoreTest {
     private val preferences: Preferences = mock()
     private var stored: String? = null
 
-    /** The old SharedPreferences "EversenseCGMManager", and how often the store read it. */
+    /** The old SharedPreferences "EversenseCGMManager", how often the store read it, and whether it was deleted. */
     private var legacyValues: Map<String, Any?> = emptyMap()
     private var legacyReads = 0
-    private val legacy = EversenseLegacyStore { legacyReads++; legacyValues }
+    private var legacyDeletes = 0
+    private val legacy = object : EversenseLegacyStore {
+        override fun read(): Map<String, Any?> {
+            legacyReads++
+            return legacyValues
+        }
+
+        override fun delete() {
+            legacyDeletes++
+        }
+    }
 
     @BeforeEach fun setup() {
         whenever(preferences.getIfExists(EversenseRuntimeKey.DeviceState)).thenAnswer { stored }
@@ -39,6 +49,21 @@ class EversenseStateStoreTest {
         EversenseStateStore(legacy, preferences)
         assertThat(legacyReads).isEqualTo(1)
         assertThat(EversenseRuntimeKey.DeviceState.exportable).isFalse()
+    }
+
+    /**
+     * The old store holds the password and the private key in plain text: it is deleted, but only at a start after the
+     * import, when the import is saved - a crash right after the import must not lose the pairing (2026-11-27).
+     */
+    @Test fun theLegacyStoreIsDeletedAtTheStartAfterTheImport() {
+        legacyValues = mapOf("state" to "{\"serial\":\"test\"}")
+        EversenseStateStore(legacy, preferences)
+        assertThat(legacyDeletes).isEqualTo(0)
+
+        val store = EversenseStateStore(legacy, preferences)
+
+        assertThat(legacyDeletes).isEqualTo(1)
+        assertThat(store.getString("state", null)).isEqualTo("{\"serial\":\"test\"}")
     }
 
     /** Where no old store exists (iOS, a new install), the import stores an empty state and reads nothing more. */

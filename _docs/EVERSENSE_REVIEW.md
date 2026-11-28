@@ -47,6 +47,8 @@ no reason given in the PR. It decides which SMB options Eversense users get.
 
 Fixed: only the English `strings.xml` is edited, unused strings are gone, no fully qualified names or
 `System.currentTimeMillis()`, the help link is gone, and the extra dependencies (BouncyCastle, logback, slf4j) are gone.
+The 61 machine-translated `eversense_*` strings the PR added to seven languages of `:plugins:source` (with no English
+source left there) were found still in place and removed on 2026-11-27.
 `:plugins:source` does not depend on the driver.
 
 ### Architecture

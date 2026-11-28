@@ -23,16 +23,23 @@ import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 /**
  * The store of the first Eversense driver, before it moved into the AAPS preferences: the Android SharedPreferences
- * "EversenseCGMManager". Read once, to import it. Empty where it never existed (iOS).
+ * "EversenseCGMManager". Read once, to import it, and deleted after. Empty where it never existed (iOS).
  */
-fun interface EversenseLegacyStore {
+interface EversenseLegacyStore {
 
     fun read(): Map<String, Any?>
+
+    /**
+     * Removes it. It holds the password and the transmitter's private key in plain text, and after the import it was
+     * only a second copy of them (2026-11-27: it was kept for good). Harmless when there is none.
+     */
+    fun delete()
 }
 
 /**
  * The driver's state as one JSON object in a registered AAPS preference, and the cloud queue in its own preference.
- * Imports the whole legacy driver store once.
+ * Imports the whole legacy driver store once, and deletes it at a later start: by then the import is saved, so a crash
+ * right after the import cannot lose the pairing.
  *
  * The driver, the cloud upload and the pairing write from different threads; a write is a read, a change and a write
  * of the whole object, so the store lets one through at a time.
@@ -69,6 +76,8 @@ class EversenseStateStore(legacy: EversenseLegacyStore, private val preferences:
             }
             preferences.put(EversenseRuntimeKey.DeviceState, JsonObject(imported).toString())
         }
+        // Imported at an earlier start: the old copy of the password and the private key goes
+        else legacy.delete()
     }
 
     private fun read(): JsonObject = Json.parseToJsonElement(preferences.get(EversenseRuntimeKey.DeviceState)).jsonObject

@@ -12,5 +12,10 @@ import dev.zacsweers.metro.Provides
 object EversenseIosRegistration {
 
     @Provides
-    fun legacyStore(): EversenseLegacyStore = EversenseLegacyStore { emptyMap() }
+    fun legacyStore(): EversenseLegacyStore = object : EversenseLegacyStore {
+        override fun read(): Map<String, Any?> = emptyMap()
+
+        // Nothing was ever stored there on iOS
+        override fun delete() = Unit
+    }
 }

@@ -234,14 +234,16 @@ The queue is one JSON text in the AAPS preferences (`eversense_cloud_queue_json`
 | Cloud upload on/off | AAPS setting | Yes |
 | Glucose | AAPS database | As AAPS data |
 
-`EversenseStateStore` imports the store of older builds (`EversenseCGMManager`) once. The password is stored so the
-driver can log in again; it is not hashed.
+`EversenseStateStore` imports the store of older builds (`EversenseCGMManager`) once, and deletes it at the next start,
+when the import is saved: it held the password and the private key in plain text a second time (kept until 2026-11-27).
+The password is stored so the driver can log in again; it is not hashed.
 
 ## Logging
 
 Everything logs through `AAPSLogger` with `LTag.BGSOURCE` into the AAPS log, so it is in the log export and is
 switched with the other tags in the AAPS log settings. Packet details are debug lines. No session key and no decrypted
-frame is logged; logs can still hold glucose and device data.
+frame is logged; logs can still hold glucose and device data. (Two debug lines broke this until 2026-11-27: the 365
+data answer in hex after decryption, and the hex of an error answer. Both log only the length now.)
 
 ## Tests
 

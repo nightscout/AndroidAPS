@@ -305,7 +305,8 @@ internal class EversenseSession(
         // 0x80 is an error only when it is not the expected answer: ReadSingleByteSerialFlashRegister answers 0xAA
         if (EversenseE3Packets.isErrorPacket(data[0]) && spec.responseId != data[0]) {
             aapsLogger.error(LTag.BGSOURCE, "Transmitter returned an error response")
-            aapsLogger.debug(LTag.BGSOURCE) { "Error response data: ${data.toHexString()}" }
+            // The type and the length only: on a 365 this is the decrypted frame, which is never logged
+            aapsLogger.debug(LTag.BGSOURCE) { "Error response: type ${data[0].toHexString()}, ${data.size} bytes" }
             packet.isErrorResponse = true
             exchange.done.complete(Unit)
             return

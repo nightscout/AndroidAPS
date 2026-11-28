@@ -334,9 +334,8 @@ class GetSignalStrengthPacket : EversenseBasePacket(PacketSpec.v2(Eversense365Pa
 
     override fun parseResponse(): Response? {
         if (receivedData.isEmpty()) return null
-        log?.debug(LTag.BGSOURCE) {
-            "Raw response: " + receivedData.joinToString(" ") { it.toString(16).padStart(2, '0') }
-        }
+        // The length only: this is the decrypted frame, which is never logged (TECHNICAL.md, Logging)
+        log?.debug(LTag.BGSOURCE) { "Response: ${receivedData.size} bytes" }
         // Byte [3] = sensor ID length
         val sensorIdLength = receivedData[3].toInt() and 0xFF
         // Signal coupling float starts at byte 14 + sensorIdLength
