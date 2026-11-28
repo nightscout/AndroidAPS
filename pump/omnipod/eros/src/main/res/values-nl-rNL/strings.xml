@@ -6,8 +6,8 @@
     <!-- Omnipod Eros - Errors -->
     <string name="omnipod_eros_error_riley_link_address_invalid">RileyLink-adres ongeldig.</string>
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Knop voor het uitlezen van het pulslog weergeven in het podbeheermenu</string>
-    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Knop voor RileyLink-statistieken weergeven in het podbeheermenu</string>
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Knop voor het uitlezen van het pulslog weergeven in het Pod-beheermenu</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Knop voor RileyLink-statistieken weergeven in het Pod-beheermenu</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Loggen van batterijwissel in Acties inschakelen</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f E</string>
@@ -24,7 +24,7 @@
     <string name="omnipod_eros_error_nonce_resync_failed">Communicatie mislukt: nonce resync is mislukt</string>
     <string name="omnipod_eros_error_nonce_out_of_sync">Communicatie mislukt: nonce out of sync</string>
     <string name="omnipod_eros_error_not_enough_data">Communicatie mislukt: onvoldoende gegevens ontvangen van de Pod</string>
-    <string name="omnipod_eros_error_pod_fault">Een Podfout (%1$03d %2$s) is gedetecteerd. Deactiveer de Pod en activeer een nieuwe</string>
+    <string name="omnipod_eros_error_pod_fault">Een Pod-fout (%1$03d %2$s) is gedetecteerd. Deactiveer de Pod en activeer een nieuwe</string>
     <string name="omnipod_eros_error_pod_returned_error_response">Communicatie mislukt: de Pod heeft een foutmelding gegeven</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Geen reactie van RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink onderbroken</string>
