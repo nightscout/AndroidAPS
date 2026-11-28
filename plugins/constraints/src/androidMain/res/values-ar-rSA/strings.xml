@@ -1,10 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">تغيير التوقيت الصيفي خلال 24 ساعة أو أقل</string>
+    <string name="dst_loop_disabled_warning">تغيير التوقيت الصيفي حدث قبل أقل من 3 ساعات - تم تعطيل الحلقة المغلقة</string>
     <!-- Storage constraint -->
+    <string name="disk_full">قم بتفريغ مساحة لا تقل عن %1$d ميغابايت من التخزين الداخلي! تم تعطيل الحلقة!</string>
     <!-- Version Checker -->
+    <string name="application_expired">انتهت صلاحية التطبيق</string>
+    <string name="running_invalid_version">لقد اكتشفنا أنك تستخدم إصدارًا غير صالح. تم تعطيل الحلقة!</string>
+    <string name="versionavailable">الإصدار %1$s متاح</string>
+    <string name="version_expire">ينتهي الإصدار %1$s في %2$s وسيتحول إلى وضع إيقاف الضخ عند انخفاض السكر (LGS)</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">تم استخدام البيانات المعاد حسابها</string>
+    <string name="bg_too_close">قراءات سكر الدم متقاربة جدًا:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">معاد حسابها</string>
+    <string name="a11y_bg_quality_doubles">مدخلات مزدوجة</string>
+    <string name="a11y_bg_quality_flat">بيانات مسطحة. تعتبر خاطئة</string>
     <!-- Safety -->
+    <string name="limitingextendedbolus">جاري تقييد الجرعة الممتدة إلى %1$.1f وحدة بسبب %2$s</string>
+    <string name="limitingcarbs">جاري تقييد الكربوهيدرات إلى %1$d غرام بسبب %2$s</string>
+    <string name="safety">الأمان</string>
+    <string name="pumpisnottempbasalcapable">المضخة لا تدعم معدل الأنسولين القاعدي المؤقت</string>
+    <string name="closed_loop_disabled_on_dev_branch">أنت تستخدم نسخة المطورين. تم تعطيل الحلقة المغلقة.</string>
+    <string name="closed_loop_disabled_with_eb">تم تعطيل الحلقة المغلقة بسبب وجود جرعة ممتدة قيد التنفيذ</string>
+    <string name="smbalwaysdisabled">تم تعطيل الجرعات التصحيحية الصغيرة SMB الدائمة وبعد الكربوهيدرات لأن مصدر سكر الدم النشط لا يدعم التصفية المتقدمة</string>
+    <string name="smbnotallowedinopenloopmode">غير مسموح بالجرعات التصحيحية الصغيرة SMB في وضع الحلقة المفتوحة</string>
+    <string name="maxvalueinpreferences">القيمة القصوى في الإعدادات</string>
+    <string name="hardlimit">حد ثابت</string>
     <!-- Objectives -->
+    <string name="completed_well_done">اكتمل، أحسنت!</string>
+    <string name="not_completed_yet">لم يكتمل بعد</string>
+    <string name="time_elapsed">الوقت المنقضي</string>
+    <string name="hasbgdata">قراءات سكر الدم متاحة من المصدر المحدد</string>
+    <string name="synchaswritepermission">خدمة المزامنة تملك إذن الكتابة</string>
+    <string name="loopenabled">الحلقة مفعلة</string>
+    <string name="apsselected">تم اختيار APS</string>
+    <string name="closedmodeenabled">الوضع المغلق مفعل</string>
+    <string name="description_objectives">برنامج التعلم</string>
+    <string name="doyouwantresetstart">هل تريد إعادة تعيين بداية الهدف؟ قد تفقد تقدمك.</string>
+    <string name="objectives_button_unfinish">إعادة تعيين حالة الإكمال</string>
+    <string name="objectives_button_unstart">إعادة تعيين حالة البدء</string>
+    <string name="bg_doubled_lgs">وضع إيقاف الضخ عند انخفاض السكر (LGS) بسبب تكرار القيم في مصدر سكر الدم</string>
 </resources>
