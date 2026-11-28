@@ -392,8 +392,10 @@ class ImportExportPrefsImpl(
             for ((key, value) in sp.getAll()) {
                 if (preferences.isExportableKey(key))
                     entries[key] = value.toString()
+                // The name only: a key is kept out of the export because it is a secret (a password, a token, a
+                // device's private key), and its value in the log would be sent with every log the user shares
                 else
-                    aapsLogger.warn(LTag.CORE, "Not exportable key: $key $value")
+                    aapsLogger.warn(LTag.CORE, "Not exportable key: $key")
             }
             val prefs = Prefs(entries, prepareMetadata(context))
             encryptedPrefsFormat.savePreferences(newFile, prefs, password)
