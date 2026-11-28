@@ -1,154 +1,1009 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="error_field_must_not_be_empty">Ez a mező nem lehet üres</string>
+    <string name="error_mustbe4hexadidits">4 karakternek kell lennie, érvényes karakterek: ABCDEF0123456789</string>
+    <string name="authorized_clients_manage_label">Engedélyezett kliensek</string>
+    <string name="authorized_clients_manage_desc">Az ezt a fő eszközt vezérlő párosított kliens eszközök kezelése.</string>
+    <string name="pair_with_master_manage_label">Párosítás a fő eszközzel</string>
+    <string name="pair_with_master_manage_desc">Adja meg a fő eszköz párosítási PIN-kódját, hogy ez a kliens aláírt parancsokat küldhessen.</string>
     <!--    General-->
+    <string name="treatments">Kezelések</string>
+    <string name="treatments_history">Kezelési előzmények</string>
+    <string name="treatments_desc">Kezelési előzmények megtekintése és kezelése</string>
+    <string name="nav_configuration">Konfiguráció</string>
+    <string name="nav_configuration_desc">A konfiguráció beállítása (CGM, pumpa, ...) és funkciók engedélyezése</string>
     <string name="count_selected">%1$d kiválasztva</string>
+    <string name="delete">Törlés</string>
+    <string name="show_invalidated">Érvénytelenek megjelenítése</string>
+    <string name="hide_invalidated">Érvénytelenek elrejtése</string>
+    <string name="more_options">További lehetőségek</string>
     <string name="refresh">Frissítés</string>
+    <string name="no_history_records">Nem található bejegyzés</string>
     <string name="error">Hiba</string>
+    <string name="navigation_error_screen_not_found">A képernyő nem nyitható meg (ebben a konfigurációban nem érhető el)</string>
+    <string name="profile_set_ok">A pumpa bázisprofilja frissítve</string>
+    <string name="invalid_input">Érvénytelen bevitt adat</string>
+    <string name="invalid_number">Érvénytelen szám</string>
+    <string name="constraint_applied">Korlát alkalmazva!</string>
     <string name="tt_label">ÁC</string>
     <string name="pump_unreachable">Pumpa nem elérhető</string>
-    <string name="insulin_unit_shortname">Е</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">A pumpameghajtó nem válaszol. A(z) \"%1$s\" parancs %2$d perce fut, és más parancs nem érheti el a pumpát. Ellenőrizze a pumpát, majd indítsa újra az AAPS-t.</string>
+    <string name="insulin_unit_shortname">E</string>
+    <string name="pump_base_basal_rate">%1$.2f E/ó</string>
+    <string name="pump_base_basal_rate_dynamic">%1$s E/ó</string>
+    <string name="pump_not_initialized_profile_not_set">Pumpa nincs inicializálva, profil nincs beállítva!</string>
+    <string name="failed_update_basal_profile">Bázisprofil frissítése sikertelen</string>
+    <string name="no_valid_basal_rate">Nem sikerült érvényes bázisütemet kiolvasni a pumpából</string>
+    <string name="limiting_iob">Az IOB korlátozva %1$.1f E értékre, oka: %2$s</string>
+    <string name="loop_disabled_by_user">A Loopot a felhasználó letiltotta</string>
+    <string name="event_type">Esemény típusa</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="bg_mgdl">%1$d mg/dl</string>
+    <string name="bg_mmol">%1$.1f mmol/l</string>
+    <string name="save">Mentés</string>
+    <string name="skip">Kihagyás</string>
+    <string name="switch_to_edit">Szerkesztés</string>
     <string name="snooze">Szundi</string>
+    <string name="snooze_15m">Szundi 15 perc</string>
+    <string name="snooze_30m">Szundi 30 perc</string>
+    <string name="snooze_60m">Szundi 60 perc</string>
+    <string name="virtual_pump">Virtuális pumpa</string>
+    <string name="constraints">Korlátok</string>
     <string name="superbolus">Szuperbólus</string>
+    <string name="pump_paused">Pumpa felfüggesztve</string>
     <string name="and">És</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Felhasználó</string>
+    <string name="result">Eredmény</string>
     <string name="settings">Beállítások</string>
+    <string name="open_plugin">Plugin megnyitása</string>
+    <string name="configbuilder_pick_one_hint">Válasszon egyet. Egyszerre csak egy lehet aktív.</string>
+    <string name="configbuilder_pick_many_hint">Válassza ki az összes megfelelőt.</string>
+    <string name="configbuilder_no_selection_warning">Ebben a kategóriában nincs kiválasztott plugin.</string>
+    <string name="configbuilder_switch_confirmation_title">Plugin váltása?</string>
+    <string name="configbuilder_switch_confirmation">A(z) %1$s le lesz tiltva, a(z) %2$s engedélyezve lesz.</string>
+    <string name="expand">Kibontás</string>
+    <string name="collapse">Összecsukás</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Befejezve</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Kibontva</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Összecsukva</string>
+    <string name="no_compose_preferences">Ehhez a pluginhoz nincsenek beállítások</string>
+    <string name="confirm_password_hint">Jelszó megerősítése</string>
+    <string name="confirm_pin_hint">PIN megerősítése</string>
+    <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
+    <string name="statuslights">Állapotjelzők</string>
     <string name="configbuilder_insulin">Inzulin</string>
+    <string name="configbuilder_bgsource">VC-forrás</string>
+    <string name="configbuilder_smoothing">Simítás</string>
+    <string name="configbuilder_calibration">Kalibrálás</string>
     <string name="configbuilder_pump">Pumpa</string>
+    <string name="configbuilder_sensitivity">Érzékenység észlelése</string>
+    <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_sync">Kommunikáció</string>
+    <string name="configbuilder_general">Általános</string>
+    <string name="protection">Védelem</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
+    <string name="ue_export_to_csv">Egyéni bejegyzések exportálása Excelbe (csv)</string>
+    <string name="confirm">Megerősítés</string>
     <string name="pump">Pumpa</string>
+    <string name="pump_management">Pumpa</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader">Feltöltő</string>
     <string name="uploader_short">FELT</string>
-    <string name="mute">Némít</string>
+    <string name="missed_bg_readings">Hiányzó VC-adatok</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="mute5min">Némítás 5 percre</string>
+    <string name="mute">Némítás</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Riasztás némítása</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Némítás és bezárás</string>
+    <string name="success">Sikeres</string>
+    <string name="advanced_settings_title">Speciális beállítások</string>
+    <string name="extended_bolus">Kiterjesztett bólus</string>
+    <string name="paused">Felfüggesztve</string>
+    <string name="running">Fut</string>
+    <string name="tdd_total">Összes TDD</string>
+    <string name="tdd_old_data">Régi adatok</string>
+    <string name="goingtodeliver">%1$.2f E beadása következik</string>
+    <string name="carbs_not_saved_after_bolus">A bólus beadva, de a szénhidrátot nem sikerült menteni. Kérjük, adja meg újra a szénhidrátot.</string>
+    <string name="androidaps_start">AAPS elindult</string>
+    <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
+    <string name="format_hours">%1$.2f ó</string>
+    <string name="format_mins">%1$d perc</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
+    <string name="value_question" comment="Asks if this should be done. %1$s=what will be done. Example: Send logs?">%1$s?</string>
+    <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
+    <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
+    <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
+    <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
+    <string name="objectives">Célkitűzések</string>
     <string name="please_wait">Kérem várjon…</string>
-    <string name="stop">Leállít</string>
+    <string name="stop">Leállítás</string>
+    <string name="stop_pressed">STOP MEGNYOMVA</string>
+    <string name="invalid_profile">Érvénytelen profil!</string>
+    <string name="no_profile_set">NINCS PROFIL BEÁLLÍTVA</string>
+    <string name="profile_switch_no_insulin">A profil nem váltható: nincs használatban inzulin, és nem lett kiválasztva.</string>
+    <string name="scene_no_profile_before">A jelenet indulása előtt nem volt használatban profil.</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">A jelenet (%1$s) véget ért, de a profilja még használatban van. %2$s Aktiváljon egy profilt kézzel.</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Ennek az átmeneti váltásnak az inzulinja %1$s, de az alatta lévő állandó profilé %2$s. Először aktiválja a pumpában lévő inzulint az Inzulinbeállításokban.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">A profilváltás időpontja legfeljebb %1$d órával térhet el a mostanitól.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Az átmeneti célérték kezdete legfeljebb %1$d órával térhet el a mostanitól.</string>
+    <string name="profile_switch_select_insulin_hint">Még nincs használatban inzulin. Válassza ki a használt inzulint, hogy ez a profilváltás rögzíthesse.</string>
+    <string name="insulin_activation_failed">Az inzulin nem lett váltva. Továbbra is a korábbi inzulin van használatban.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Az inzulin nem lett átváltva: %1$s Továbbra is az előző inzulin van használatban.</string>
+    <string name="insulin_activation_unconfirmed">Az inzulinváltást nem sikerült megerősíteni. Adagolás előtt ellenőrizze, melyik inzulin aktív a profiljában.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Az inzulin nem lett átváltva. A korábbi inzulin van továbbra is használatban.\n\n%1$s</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nAz inzulin sem lett átváltva. Ha az új inzulin már a pumpában van, ne csatlakoztassa a pumpát, és futtassa újra az inzulincserét.</string>
+    <string name="active"><![CDATA[<Aktív>]]></string>
+    <string name="date">Dátum</string>
+    <string name="insulin_nickname_label">Inzulin beceneve</string>
+    <string name="concentration_label">Koncentráció</string>
+    <string name="peak_label">Csúcs</string>
     <string name="dia_label">DIA</string>
+    <string name="ic_label">IC</string>
+    <string name="isf_label">ISF</string>
     <string name="basal_label">Bázis</string>
     <string name="target_label">Cél</string>
+    <string name="dia_long_label">Inzulinhatás időtartama</string>
+    <string name="ic_long_label">Inzulin-szénhidrát arány</string>
+    <string name="isf_long_label">Inzulinérzékenységi faktor</string>
     <string name="basal_long_label">Bázisütem</string>
+    <string name="target_long_label">Vércukor-célérték</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Pumpa idő frissítve</string>
-    <string name="exit">Kilép</string>
+    <string name="exit">Kilépés</string>
+    <string name="removerecord">Bejegyzés eltávolítása</string>
+    <string name="loopisdisabled">A Loop le van tiltva</string>
     <string name="alarm">Riasztás</string>
+    <string name="exportsettings">Beállítások exportálása</string>
+    <string name="disableloop">Loop letiltása</string>
+    <string name="disabled_loop">Loop letiltva</string>
+    <string name="resumeloop">Loop folytatása</string>
+    <string name="suspendloop">Loop felfüggesztése</string>
     <string name="notification">Értesítés</string>
+    <string name="noprofile">Még nem töltődött be profil az NS-ből</string>
     <string name="exists">létezik</string>
+    <string name="notexists">nem létezik</string>
     <string name="glucose">Glükóz</string>
+    <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="name_short">Név:</string>
     <string name="time">Idő</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="loading">Betöltés…</string>
+    <string name="waiting_for_pump">Várakozás a pumpára…</string>
+    <string name="initialization_failed">Az inicializálás sikertelen</string>
+    <string name="notes_label">Jegyzetek</string>
+    <string name="wrong_pump_data">Az adatok egy másik pumpától érkeznek. A pumpaállapot alaphelyzetbe állításához váltson pumpameghajtót.</string>
     <string name="bg_label">VC</string>
     <string name="calibration">Kalibrálás</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">A kalibrálás nincs mentve: a VC túl gyorsan változik (Δ %1$s %3$s / 5 perc, korlát %2$s). Próbálja újra, ha a glükóz stabil.</string>
+    <string name="cal_reject_no_pair">A kalibrálás nincs mentve: nincs CGM-érték az elmúlt 10 percben.</string>
+    <string name="cal_reject_warmup">A kalibrálás nincs mentve: a szenzor még a 2 órás bemelegedési időben van.</string>
+    <string name="cal_reject_no_session">A kalibrálás nincs mentve: nincs aktív szenzormenet. Először jelöljön meg egy szenzorcserét.</string>
     <string name="cgm">CGM</string>
+    <string name="treatmentdeliveryerror">A bólus hibát jelzett. Ellenőrizze kézzel a ténylegesen beadott inzulin és szénhidrát mennyiségét</string>
+    <string name="bolus_reminder">Bólusemlékeztető, amikor a VC helyreáll</string>
     <string name="duration_label">Időtartam</string>
     <string name="shortgramm">g</string>
+    <string name="pump_running">A pumpa működik</string>
     <string name="notconfigured">Nincs beállítva</string>
-    <string name="a11y_arrow_none">semmi</string>
+    <string name="loop_suspended_by_dst">Loop felfüggesztve az óraátállítás miatt</string>
+    <string name="required">kötelező</string>
+    <string name="a11y_arrow_triple_down">nagyon gyorsan csökken</string>
+    <string name="a11y_arrow_double_down">gyorsan csökken</string>
+    <string name="a11y_arrow_single_down">csökken</string>
+    <string name="a11y_arrow_forty_five_down">lassan csökken</string>
+    <string name="a11y_arrow_flat">stabil</string>
+    <string name="a11y_arrow_forty_five_up">lassan emelkedik</string>
+    <string name="a11y_arrow_single_up">emelkedik</string>
+    <string name="a11y_arrow_double_up">gyorsan emelkedik</string>
+    <string name="a11y_arrow_triple_up">nagyon gyorsan emelkedik</string>
+    <string name="a11y_arrow_none">nincs</string>
     <string name="a11y_arrow_unknown">ismeretlen</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">%1$s csökkentése ennyivel: %2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">%1$s növelése ennyivel: %2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">%1$s megnyitása gépeléshez</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">%1$s bezárása</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Mozgatás felfelé</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Mozgatás lefelé</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">%1$d. lépés, összesen %2$d</string>
+    <string name="decrement">csökkentés</string>
+    <string name="increment">növelés</string>
     <string name="a11y_high">magas</string>
+    <string name="a11y_inrange">tartományban</string>
     <string name="a11y_low">alacsony</string>
+    <string name="remove_label">Eltávolítás</string>
+    <string name="activate_profile">Profil aktiválása</string>
+    <string name="activate_insulin">Inzulin aktiválása</string>
+    <string name="pump_wizard_profile_gate_title">Profil szükséges</string>
+    <string name="pump_wizard_profile_gate_pick">Válassza ki az aktiváláskor alkalmazandó profilt.</string>
+    <string name="pump_wizard_profile_gate_no_store">Nincs megadott profil. Nyissa meg a Profilkezelést, hozzon létre egyet, majd indítsa újra az aktiválást.</string>
+    <string name="reset">Visszaállítás</string>
+    <string name="profileswitch_ismissing">Hiányzik a profilváltás. Végezzen profilváltást, vagy nyomja meg a \"Profil aktiválása\" gombot a helyi profilban.</string>
     <string name="profile">Profil</string>
+    <string name="percentage_label">Százalék</string>
+    <string name="timeshift_label">Időeltolás</string>
+    <string name="confirm_remove_multiple_items">Biztosan eltávolít %1$d elemet?</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">A fő eszközön ezek közül %1$d bejegyzés nincs meg. Ezek nem lesznek eltávolítva.</string>
+    <string name="overview_treatment_label">Kezelés</string>
+    <string name="copytolocalprofile">Új profil létrehozása ebből a profilból?</string>
+    <string name="wear_wizard_settings">Bóluskalkulátor beállításai az órán</string>
+    <string name="bolus_iob_label">Bólus IOB</string>
     <string name="treatments_wizard_basaliob_label">Bázis IOB</string>
+    <string name="invalid">ÉRVÉNYTELEN</string>
+    <string name="login">Bejelentkezés</string>
     <string name="logout">Kijelentkezés</string>
+    <string name="prime_fill">Légtelenítés/Feltöltés</string>
+    <string name="prime_not_available">Ez a pumpa az aktiválás során saját magát tölti fel és légteleníti. A Légtelenítés/Feltöltés az AAPS-ből nem érhető el.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Csere</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Feltöltés</string>
+    <string name="site_rotation">Szúrási helyek váltogatása</string>
+    <string name="edit_site">Szerkesztés</string>
+    <string name="select_arrow">Nyíl kiválasztása</string>
+    <string name="site_filter_info">Válassza ki, melyik terápiás eseménytípust szeretné látni: kanülcsere és/vagy szenzorcsere</string>
+    <string name="selected_location">Kiválasztva: %1$s</string>
+    <string name="last_site_location">Utolsó szúrási hely: %1$s</string>
+    <string name="pick_site">Hely kiválasztása</string>
+    <string name="select_site_location">Szúrási hely kiválasztása</string>
+    <string name="site_location">Szúrási hely</string>
     <string name="overview_insulin_label">Inzulin</string>
-    <string name="lowglucosesuspend">Alacsony SZG felfüggesztés</string>
+    <string name="stoptemptarget">Átmeneti célérték leállítása</string>
+    <string name="closedloop">Zárt hurok</string>
+    <string name="openloop">Nyílt hurok</string>
+    <string name="lowglucosesuspend">Felfüggesztés alacsony VC-nél</string>
+    <string name="pump_suspended">Pumpa felfüggesztve</string>
+    <string name="pump_suspend">Pumpa felfüggesztése</string>
+    <string name="pump_resume">Pumpa folytatása</string>
+    <string name="mode_reverted">Mód visszaállítva</string>
+    <string name="select_insulin">Inzulin kiválasztása</string>
     <string name="dia">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="canceling_tbr_failed">Átmeneti bázis leállítása sikertelen</string>
+    <string name="canceling_eb_failed">Kiterjesztett bólus leállítása sikertelen</string>
+    <string name="virtualpump_uploadstatus_title">Pumpaállapot feltöltése NS-be vagy Tidepoolba</string>
+    <string name="iob_label">Aktív inzulin (IOB)</string>
+    <string name="loopstatus_targets">CÉLÉRTÉKEK:</string>
+    <string name="loopstatus_OAPS_result">OAPS EREDMÉNY:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f E ( %2$.2f E/ó )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f E/ó (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f E/ó @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">K %1$.2f E/ó @%2$s %3$s/%4$s perc</string>
+    <string name="extended_bolus_medium">%1$.2f E/ó %2$s/%3$s\'</string>
     <string name="nav_export">Beállítások exportálása</string>
+    <string name="location_permission_not_granted">A helyhozzáférési engedély nincs megadva. Engedélyezze az Android beállításaiban.</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout verzió:</string>
+    <string name="not_available_full">Nem érhető el</string>
+    <string name="not_implemented_yet">Ez a funkció ezen a platformon még nincs kész</string>
+    <string name="not_available_on_platform">Ez a funkció ezen a platformon nem érhető el</string>
+    <string name="engineering_mode_enabled">Mérnöki mód engedélyezve</string>
+    <string name="back">Vissza</string>
     <string name="next">Tovább</string>
+    <string name="pref_syncs_with_main_phone">Szinkronizál a fő telefonnal</string>
+    <string name="show_hide_records">Loop-bejegyzések elrejtése</string>
     <!--    Protection-->
     <string name="wrongpassword">Hibás jelszó</string>
+    <string name="wrongpin">Helytelen PIN</string>
     <string name="passwords_dont_match">Jelszavak nem egyeznek</string>
+    <string name="pin_dont_match">PIN kódok nem egyeznek</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Profil %1$d%% indítása %2$d percre</string>
     <!--    APSResult-->
+    <string name="cancel_temp">Átmeneti bázis leállítása</string>
+    <string name="let_temp_basal_run">Az átmeneti bázis fusson tovább</string>
+    <string name="rate">Ütem</string>
     <string name="duration">Időtartam</string>
+    <string name="reason">Indok</string>
+    <string name="nochangerequested">Nincs kért változtatás</string>
     <!--    Insulin / Concentration-->
+    <string name="ins_concentration_confirmed">Inzulin megerősítve: %1$s</string>
+    <string name="current_insulin">Jelenleg aktív</string>
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Aktiválva lesz</string>
+    <string name="change_insulin">Váltás</string>
+    <string name="select_insulin_description">Válassza ki az inzulint, amellyel a pumpát tölti. Az aktiválás/légtelenítés után profilváltás történik.</string>
+    <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
+    <string name="selected_insulin">Kiválasztott inzulin: %1$s</string>
+    <string name="record_insulin_hint">Ha pennel beadott inzulint rögzít, válassza ki alább a megfelelő inzulintípust. Az adag mindig nemzetközi egységben értendő.</string>
     <!--       Stats -->
     <string name="average">Átlag</string>
+    <string name="tir">Tartományban töltött idő</string>
+    <string name="below" comment="below &quot;in range&quot;">Alatt</string>
+    <string name="in_range">Tartományban</string>
+    <string name="veryLow" comment="below 3.1">Nagyon alacsony</string>
     <string name="low" comment="3.1-3.9">Alacsony</string>
     <string name="high" comment="10.0-13.9">Magas</string>
+    <string name="veryHigh" comment="above 13.9">Nagyon magas</string>
+    <string name="above" comment="above &quot;in range&quot;">Felett</string>
+    <string name="detailed_14_days">Részletes 14 nap</string>
+    <string name="day_tir">Nappali TIR</string>
+    <string name="night_tir">Éjjeli TIR</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="seven_days_short">7 n</string>
+    <string name="thirty_days_short">30 n</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">Careportal</string>
+    <string name="careportal_bgcheck">Ujjbegyes mérés</string>
+    <string name="careportal_mbg">Kézi VC vagy kalibrálás</string>
     <string name="careportal_announcement">Közlemény</string>
+    <string name="careportal_settings_export">Beállítások exportálása</string>
+    <string name="careportal_note">Jegyzet</string>
     <string name="careportal_question">Kérdés</string>
+    <string name="careportal_exercise">Testmozgás</string>
+    <string name="careportal_announcement_message">Közlemény: %1$s</string>
+    <string name="careportal_note_message">Jegyzet: %1$s</string>
+    <string name="careportal_question_message">Kérdés: %1$s</string>
+    <string name="careportal_exercise_message">Testmozgás: %1$s</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Kanülcsere: %1$s</string>
+    <string name="careportal_pump_site_change">Kanülcsere</string>
+    <string name="cgm_sensor_insert">Szenzor behelyezése</string>
+    <string name="careportal_pump_site_management">Pumpa szúrási helyei</string>
+    <string name="careportal_cgm_site_management">CGM szúrási helyei</string>
+    <string name="careportal_cgmsensorstart">Szenzor indítása</string>
+    <string name="careportal_cgm_sensor_stop">Szenzor leállítása</string>
+    <string name="careportal_dad_alert">D.A.D. riasztás</string>
+    <string name="careportal_insulin_cartridge_change">Inzulintartály-csere</string>
+    <string name="careportal_profileswitch">Profilváltás</string>
+    <string name="profile_management">Profil</string>
+    <string name="careportal_snackbolus">Snackbólus</string>
+    <string name="careportal_mealbolus">Étkezési bólus</string>
+    <string name="careportal_correctionbolus">Korrekciós bólus</string>
+    <string name="careportal_combobolus">Kombinált bólus</string>
+    <string name="careportal_tempbasalstart">Átmeneti bázis kezdete</string>
+    <string name="careportal_tempbasalend">Átmeneti bázis vége</string>
+    <string name="careportal_carbscorrection">Szénhidrát-korrekció</string>
+    <string name="careportal_openapsoffline">OpenAPS offline</string>
+    <string name="pump_battery_change">Pumpa elemcseréje</string>
+    <string name="temporary_target">Átmeneti célérték</string>
+    <string name="temporary_targets">Átmeneti célértékek</string>
+    <string name="running_mode">Működési mód</string>
+    <string name="running_mode_desc">A hurok zárása vagy nyitása, felfüggesztése vagy a pumpa leválasztása</string>
+    <string name="running_mode_change_not_allowed">A működési mód nem módosítható</string>
+    <string name="pump_reconnect">Pumpa újracsatlakoztatása</string>
+    <string name="scene">Jelenet</string>
+    <string name="scenes">Jelenetek</string>
+    <string name="scene_desc">Helyzet-előbeállítások — több művelet aktiválása egyszerre</string>
+    <string name="scene_activate">Aktiválás</string>
+    <string name="scene_deactivate">Jelenet befejezése</string>
+    <string name="scene_active">Aktív</string>
+    <string name="scene_ended">Jelenet befejezve</string>
+    <string name="scene_end_active">Aktív jelenet befejezése</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Ugrás erre</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">A következő jelenet (%1$s) nem indul el</string>
+    <string name="scene_confirm_activate">Aktiválja a(z) \"%1$s\" jelenetet?</string>
+    <string name="scene_confirm_deactivate">Befejezi a(z) \"%1$s\" jelenetet, és visszavonja a változtatásokat?</string>
+    <string name="scene_conflict_active_tt">Az aktív átmeneti célérték le lesz cserélve</string>
+    <string name="scene_conflict_active_profile">Az aktív profilváltás le lesz cserélve</string>
+    <string name="scene_conflict_active_running_mode">Az aktív működési mód le lesz cserélve</string>
+    <string name="scene_conflict_active_scene">A(z) \"%1$s\" aktív jelenet előbb befejeződik</string>
+    <string name="scene_action_tt">Átmeneti célérték: %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profil: %1$s %2$d%%</string>
+    <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profil: %1$d%%</string>
+    <string name="scene_action_smb_on">SMB engedélyezése</string>
+    <string name="scene_action_smb_off">SMB letiltása</string>
+    <string name="scene_action_running_mode">Működési mód: %1$s</string>
+    <string name="scene_action_careportal">Bejegyzés: %1$s</string>
+    <string name="scene_management">Jelenetek</string>
+    <string name="scene_management_desc">Jelenetek létrehozása, szerkesztése és kezelése</string>
+    <string name="scene_start_from_template">Indítás sablonból</string>
+    <string name="scene_editor_target">Célérték</string>
+    <string name="scene_editor_tt_preset">ÁC-előbeállítás</string>
+    <string name="scene_editor_no_tt_presets">Nincs beállított ÁC-előbeállítás</string>
+    <string name="scene_editor_select_tt_preset">Válasszon előbeállítást</string>
+    <string name="scene_editor_percentage">Százalék</string>
+    <string name="scene_editor_profile">Profil</string>
+    <string name="scene_editor_keep_current_profile">-- Jelenlegi megtartása --</string>
+    <string name="scene_editor_mode">Mód</string>
+    <string name="scene_editor_event_type">Esemény típusa</string>
+    <string name="scene_editor_note">Jegyzet</string>
+    <string name="scene_icon">Ikon</string>
+    <string name="scene_editor_enabled">Engedélyezve</string>
+    <string name="scene_editor_disabled">Letiltva</string>
+    <string name="scene_summary">%1$d művelet, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
+    <string name="scene_duration_indefinite">Határozatlan (kézi befejezés)</string>
+    <string name="scene_some_actions_failed">Néhány művelet sikertelen</string>
+    <string name="scene_no_active">Nincs aktív jelenet</string>
+    <string name="scene_some_reverts_failed">Néhány visszaállító művelet sikertelen</string>
+    <string name="scene_no_profile_store">Nincs elérhető profiltár</string>
+    <string name="scene_no_actions">A jelenetnek nincsenek műveletei</string>
+    <string name="scene_profile_not_found">A(z) \"%1$s\" profil nem található</string>
+    <string name="scene_lock_banner_master_offline">A fő eszköz nem érhető el. A jelenetvezérlők a kapcsolat helyreállása után újra működnek.</string>
+    <string name="scene_lock_banner_control_disabled">A fő eszköz letiltotta a távvezérlést. A jelenetvezérlők akkor működnek újra, amikor a fő eszközön újra engedélyezik.</string>
+    <string name="master_offline_banner">A fő eszköz nem érhető el. A szerkesztés a kapcsolat helyreállásáig le van tiltva.</string>
+    <string name="master_control_disabled_banner">A fő eszköz letiltotta a távvezérlést. A szerkesztés le van tiltva, amíg a fő eszközön újra nem engedélyezik.</string>
+    <string name="hardened_mode_on">Szigorított mód bekapcsolva</string>
+    <string name="hardened_mode_title">Szigorított mód</string>
+    <string name="hardened_mode_info_open">A szigorított módról</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Csak olvasható</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Étkezések</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Gondozó</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Admin</string>
+    <string name="client_role_title">Szerepkör</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Szerepkör: %1$s</string>
+    <string name="client_roles_info_open">A szerepkörökről</string>
+    <string name="client_roles_info">Minden párosított telefonnak van egy szerepköre. A fő telefon minden parancsnál ellenőrzi, és a telefon csak azt mutatja, amit a szerepköre megenged. Az új szerepkör azonnal érvényes, újrapárosítás nélkül.\n\nCsak olvasható: a telefon párosítva marad, de csak adatokat mutat.\n\nÉtkezések: bólus, bóluskalkulátor, Gyorskalkulátor és szénhidrát. Egy futó bólust is leállíthat. Az itt beírt szénhidrát miatt a Loop több inzulint adhat.\n\nGondozó: minden, amit egy felhasználó az AAPS-ben tesz, például átmeneti célértékek, profil- és inzulinváltás, Loop-mód, átmeneti bázis, kiterjesztett bólus, jelenetek, Careportal-események, kalibrálások és bejegyzések eltávolítása. Beállításokat és előbeállításokat nem módosíthat.\n\nAdmin: minden, a beállításokkal és előbeállításokkal együtt (Gyorskalkulátor, átmeneti célérték előbeállítások, jelenetek, profilok, automatizálás, inzulin).</string>
+    <string name="client_read_only_banner">Ez a telefon csak olvasható módban van a fő telefonon.</string>
+    <string name="hardened_mode_info">A fő telefon csak a párosított kliensektől fogad el változtatásokat. Nem fogad el kezeléseket, átmeneti célértékeket, profilváltásokat, működésimód-váltásokat vagy törléseket, amelyeket közvetlenül a Nightscoutban végeztek, például a weboldalon vagy más alkalmazásokban. A Nightscoutból érkező adatok elfogadásának beállításai rejtve vannak, amíg a szigorított mód be van kapcsolva. Az SMS-parancsokra ez nem vonatkozik.\n\nA fő telefon továbbra is minden adatot feltölt a Nightscoutba, a VC-t is. Ha a VC-t a Nightscoutból kapja, továbbra is onnan veszi.\n\nAz előzmények új fő telefonra töltéséhez használja a Teljes szinkronizálást az NSClientben. A teljes szinkronizálás mindent átvesz, ami a Nightscoutban van, a profilokat is.\n\nA kliensekről való távvezérléshez működő WebSocket-kapcsolat kell a Nightscouttal, a fő telefonon és a párosított klienseken is. Az egyszerű mód mindig bekapcsolja a szigorított módot. A kikapcsolásához lépjen ki az egyszerű módból, és kapcsolja ki a kliensvezérlést a fő telefonon.</string>
+    <string name="scene_lock_reason_master_offline">A fő eszköz kapcsolata megszakadt</string>
+    <string name="scene_lock_reason_control_disabled">Távvezérlés letiltva</string>
+    <string name="scene_lock_reason_scene_active">Előbb állítsa le a futó jelenetet</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">Átmeneti célérték beállítása</string>
+    <string name="clientcontrol_action_cancel_temp_target">Átmeneti célérték leállítása</string>
+    <string name="clientcontrol_action_activate_scene">%1$s jelenet aktiválása</string>
+    <string name="clientcontrol_action_deactivate_scene">Jelenet befejezése</string>
+    <string name="clientcontrol_action_update_settings">Beállítások frissítése</string>
+    <string name="clientcontrol_action_deliver_bolus">Bólus beadása</string>
+    <string name="clientcontrol_action_eat_reminder">Étkezési emlékeztető módosítása</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">Ez az eszköz nincs párosítva fő eszközzel.</string>
+    <string name="clientcontrol_fail_not_reachable">A fő eszköz offline.</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">A pumpakonfiguráció nincs szinkronban a fő eszközzel. Kérjük, próbálja újra.</string>
+    <string name="clientcontrol_fail_no_reply">A fő eszköz nem válaszolt időben.</string>
+    <string name="clientcontrol_fail_expired">A parancs lejárt, mielőtt a fő eszköz végrehajtotta volna.</string>
+    <string name="clientcontrol_fail_busy">Egy másik művelet már folyamatban van.</string>
+    <string name="clientcontrol_fail_send_failed">A Nightscout nem érhető el.</string>
+    <string name="clientcontrol_fail_no_active_profile">A fő eszközön nincs aktív profil, amelyre alkalmazni lehetne.</string>
+    <string name="clientcontrol_fail_scene_not_found">A jelenet már nem létezik.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">A szúrási hely bejegyzése már nem létezik.</string>
+    <string name="clientcontrol_fail_scene_disabled">A jelenet le van tiltva.</string>
+    <string name="clientcontrol_fail_partial">Néhány műveletet nem sikerült alkalmazni.</string>
+    <string name="clientcontrol_fail_execution">A fő eszköz nem tudta végrehajtani.</string>
+    <string name="clientcontrol_fail_cancelled">A parancs a végrehajtása előtt megszakadt. Semmi sem lett elküldve a pumpára.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bólus megszakítva. Nem történt inzulinbeadás.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Megszakítva</string>
+    <string name="smb_paused_for_bolus" comment="Loop status: why no SMB was given. The user is confirming a bolus that was calculated without this SMB.">Nincs SMB, amíg egy bólus megerősítésre vár</string>
+    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">SMB beadása folyik. A befejezése után megerősítheti.</string>
+    <string name="clientcontrol_fail_control_disabled">A távvezérlés ki van kapcsolva a fő eszközön.</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">Ennek a telefonnak a szerepköre a fő eszközön ezt nem engedi.</string>
+    <string name="clientcontrol_fail_other_token">A fő eszköz elutasította: ez a telefon nem a saját tokenjével, hanem egy másikkal ír a Nightscoutba. A fő eszközön távolítsa el ezt a telefont, és adja hozzá újra.</string>
+    <string name="clientcontrol_fail_no_pending_bolus">Az előkészített bólus lejárt, vagy egy újabb váltotta fel. Koppintson újra a gombra.</string>
+    <string name="clientcontrol_fail_bolus_compute">A fő eszköz nem tudta kiszámolni a bólust (hiányzó glükóz/profil, vagy a pumpa nem kész).</string>
+    <string name="clientcontrol_fail_internal">Valami hiba történt.</string>
+    <string name="clientcontrol_fail_unknown">A parancs sikertelen.</string>
+    <string name="clientcontrol_unconfirmed_wear">Ismeretlen állapot — újabb bólus előtt ellenőrizze a telefont/Nightscoutot.</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">A kapcsolat megszakadt — a beadás állapota ismeretlen</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Ez a telefon nem kap több frissítést a fő eszköztől. A bólus beadása még tarthat, vagy már befejeződhetett. Ennek bezárása csak itt rejti el — nem állítja le a pumpát. A ténylegesen beadott mennyiséget a fő telefonon ellenőrizze.</string>
+    <string name="scene_revert_tt">Átmeneti célérték leállítása</string>
+    <string name="scene_revert_profile">Profilváltás visszavonása</string>
+    <string name="scene_revert_smb_on">SMB újbóli engedélyezése</string>
+    <string name="scene_revert_smb_off">SMB letiltása</string>
+    <string name="scene_revert_loop_mode">A működési mód felülbírálásának megszüntetése</string>
+    <string name="scene_careportal_no_revert">A Careportal-bejegyzések nem lesznek visszavonva</string>
+    <string name="careportal_sickness">Betegség</string>
+    <string name="careportal_stress">Stressz</string>
+    <string name="careportal_pre_period">Menstruáció előtt</string>
+    <string name="careportal_alcohol">Alkohol</string>
+    <string name="careportal_cortisone">Kortizon</string>
+    <string name="careportal_feeling_low">Alacsony vércukor érzése</string>
+    <string name="careportal_feeling_high">Magas vércukor érzése</string>
+    <string name="careportal_falling_asleep">Elalvás</string>
+    <string name="careportal_waking_up">Ébredés</string>
+    <string name="careportal_temporarytargetvalue">Átmeneti célérték értéke</string>
+    <string name="careportal_temporarytargetcancel">Átmeneti célérték leállítása</string>
+    <string name="boluswizard">Bóluskalkulátor</string>
+    <string name="treatment_desc">Inzulin és szénhidrát rögzítése együtt</string>
+    <string name="treatment_insulin_desc">Bólus beadása kézzel</string>
+    <string name="treatment_carbs_desc">Szénhidrát rögzítése inzulin nélkül</string>
+    <string name="treatment_calculator_desc">Bólus kiszámítása</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Inzulinbeállítások</string>
+    <string name="manage_insulin_desc">Inzulinkonfigurációk kezelése és aktiválása</string>
+    <string name="concentration_disable_blocked">A koncentrációtámogatás nem tiltható le, amíg nem U100 inzulinok vannak. Előbb távolítson el minden nem U100 inzulinkonfigurációt, és váltson U100 profilra.</string>
+    <string name="simple_mode_blocked_by_concentration">Az egyszerű mód nem engedélyezhető nem U100 inzulin használata közben. Előbb váltson U100 inzulinra.</string>
+    <string name="manage_profile_desc">Profilok kezelése és aktiválása</string>
+    <string name="manage_temp_target_desc">Átmeneti célértékek kezelése és beállítása</string>
+    <string name="manage_temp_basal_desc">Átmeneti bázis indítása</string>
+    <string name="manage_extended_bolus_desc">Kiterjesztett bólus beadásának indítása</string>
+    <string name="manage_site_rotation_desc">Szúrási helyek követése és váltogatása</string>
+    <string name="manage_quickwizard_desc">Gyorskalkulátor-előbeállítások kezelése</string>
+    <string name="treatment_note_desc">Jegyzet hozzáadása a bejegyzésekhez</string>
+    <string name="treatment_question_desc">Kérdés rögzítése a kezelőcsapat számára</string>
+    <string name="treatment_cgm_desc">CGM-alkalmazás megnyitása</string>
+    <string name="treatment_calibration_desc">CGM-szenzor kalibrálása</string>
+    <string name="treatment_bg_check_desc">Vércukormérés rögzítése</string>
+    <string name="treatment_exercise_desc">Testmozgás rögzítése</string>
+    <string name="treatment_announcement_desc">Közlemény közzététele</string>
+    <string name="treatment_sensor_insert_desc">CGM-szenzor behelyezésének rögzítése</string>
+    <string name="treatment_battery_change_desc">Pumpa elemcseréjének rögzítése</string>
+    <string name="treatment_cannula_change_desc">Kanül/szerelék cseréjének rögzítése</string>
+    <string name="treatment_fill_desc">Kanül légtelenítése és feltöltése</string>
+    <string name="temp_basal">Átmeneti bázis</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">A profil felett</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">A profil alatt</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Nincs</string>
+    <string name="user_entry">Egyéni bejegyzés</string>
+    <string name="aaps">AAPS</string>
+    <string name="glucosetype_finger">Ujjbegy</string>
     <string name="glucosetype_sensor">Szenzor</string>
+    <string name="manual">Kézi</string>
+    <string name="unknown">Ismeretlen</string>
+    <string name="eatingsoon">Közeli étkezés</string>
+    <string name="hypo">Hipó</string>
+    <string name="activity">Mozgás</string>
     <string name="wear">Wear</string>
     <string name="automation">Automatizálás</string>
+    <string name="automation_management_desc">Szabályok létrehozása, amelyek kiváltó események alapján automatikusan műveleteket futtatnak</string>
+    <string name="settingsexport">Beállítások exportálása</string>
     <string name="custom">Egyéni</string>
+    <string name="preset_settings">Előbeállítások beállításai</string>
+    <string name="activation">Aktiválás</string>
+    <string name="temp_target_management">Átmeneti célérték</string>
+    <string name="revert_to_defaults">Alapértelmezett értékek visszaállítása</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
+    <string name="location_front_right_upper_chest">Jobb mellkas</string>
+    <string name="location_front_left_upper_chest">Bal mellkas</string>
+    <string name="location_side_right_upper_arm">Jobb felkar, oldalt</string>
+    <string name="location_side_left_upper_arm">Bal felkar, oldalt</string>
+    <string name="location_back_right_upper_arm">Jobb felkar, hátul</string>
+    <string name="location_back_left_upper_arm">Bal felkar, hátul</string>
+    <string name="location_side_right_upper_abdomen">Has jobb felső része, oldalt</string>
+    <string name="location_side_left_upper_abdomen">Has bal felső része, oldalt</string>
+    <string name="location_side_right_lower_abdomen">Has jobb alsó része, oldalt</string>
+    <string name="location_side_left_lower_abdomen">Has bal alsó része, oldalt</string>
+    <string name="location_front_right_upper_abdomen">Has jobb felső része, elöl</string>
+    <string name="location_front_left_upper_abdomen">Has bal felső része, elöl</string>
+    <string name="location_front_right_lower_abdomen">Has jobb alsó része, elöl</string>
+    <string name="location_front_left_lower_abdomen">Has bal alsó része, elöl</string>
+    <string name="location_back_right_buttock">Jobb farizom</string>
+    <string name="location_back_left_buttock">Bal farizom</string>
+    <string name="location_back_right_lower_back">Derék jobb oldala</string>
+    <string name="location_back_left_lower_back">Derék bal oldala</string>
+    <string name="location_side_right_upper_thigh">Jobb comb felső része, oldalt</string>
+    <string name="location_side_left_upper_thigh">Bal comb felső része, oldalt</string>
+    <string name="location_side_right_lower_thigh">Jobb comb alsó része, oldalt</string>
+    <string name="location_side_left_lower_thigh">Bal comb alsó része, oldalt</string>
+    <string name="location_front_right_upper_thigh">Jobb comb felső része, elöl</string>
+    <string name="location_front_left_upper_thigh">Bal comb felső része, elöl</string>
+    <string name="location_front_right_lower_thigh">Jobb comb alsó része, elöl</string>
+    <string name="location_front_left_lower_thigh">Bal comb alsó része, elöl</string>
+    <string name="arrow_up">Fel</string>
+    <string name="arrow_up_right">Jobbra fel</string>
+    <string name="arrow_right">Jobbra</string>
+    <string name="arrow_down_right">Jobbra le</string>
+    <string name="arrow_down">Le</string>
+    <string name="arrow_down_left">Balra le</string>
+    <string name="arrow_left">Balra</string>
+    <string name="arrow_up_left">Balra fel</string>
+    <string name="arrow_center">Közép</string>
     <!--    Command-->
+    <string name="connectiontimedout">Kapcsolat időtúllépés</string>
+    <string name="command_replaced">Újabb parancs váltotta fel</string>
+    <string name="pump_not_configured">A pumpa nincs beállítva</string>
     <!--    PumpEnactResult-->
+    <string name="enacted">Végrehajtva</string>
+    <string name="comment">Megjegyzés</string>
+    <string name="percent">Százalék</string>
+    <string name="absolute">Abszolút</string>
+    <string name="waitingforpumpresult">Várakozás az eredményre</string>
+    <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">További %1$d g szénhidrát szükséges %2$d percen belül</string>
     <string name="basalrate">Bázis</string>
+    <string name="tdd_short">TDD</string>
+    <string name="tdd">Napi összinzulin</string>
     <!--    Ntp-->
+    <string name="timedetection">Időészlelés</string>
     <!-- User Entry -->
-    <string name="uel_cancel_bolus">BÓLUS MEGSZAKÍT</string>
+    <string name="uel_bolus">BÓLUS</string>
+    <string name="uel_bolus_calculator">BÓLUSKALKULÁTOR</string>
+    <string name="uel_bolus_advisor">BÓLUSTANÁCSADÓ</string>
+    <string name="uel_extended_bolus">KITERJESZTETT BÓLUS</string>
+    <string name="uel_superbolus_tbr">SZUPERBÓLUS ÁB</string>
+    <string name="uel_carbs">SZÉNHIDRÁT</string>
+    <string name="uel_temp_basal">ÁTMENETI BÁZIS</string>
+    <string name="uel_tt">ÁTMENETI CÉLÉRTÉK</string>
+    <string name="uel_new_profile">ÚJ PROFIL</string>
+    <string name="uel_clone_profile">PROFIL KLÓNOZÁSA</string>
+    <string name="uel_store_profile">PROFIL MENTÉSE</string>
+    <string name="uel_profile_switch">PROFILVÁLTÁS</string>
+    <string name="uel_profile_switch_cloned">PROFILVÁLTÁS KLÓNOZVA</string>
+    <string name="uel_closed_loop_mode">ZÁRT HUROK MÓD</string>
+    <string name="uel_lgs_loop_mode">LGS LOOP MÓD</string>
+    <string name="uel_open_loop_mode">NYÍLT HUROK MÓD</string>
+    <string name="uel_loop_disabled">LOOP LETILTVA</string>
+    <string name="uel_loop_resumed">LOOP FOLYTATVA</string>
+    <string name="uel_pump_running">PUMPA FUT</string>
+    <string name="uel_reconnect">ÚJRACSATLAKOZÁS</string>
+    <string name="uel_disconnect">LEVÁLASZTÁS</string>
+    <string name="uel_resume">FOLYTATÁS</string>
+    <string name="uel_suspend">FELFÜGGESZTÉS</string>
+    <string name="uel_hw_pump_allowed">HW PUMPA ENGEDÉLYEZVE</string>
+    <string name="uel_clear_pairing_keys">PÁROSÍTÁSI KULCSOK TÖRLÉSE</string>
+    <string name="uel_accepts_temp_basal">ÁTMENETI BÁZIS ELFOGADVA</string>
+    <string name="uel_cancel_temp_basal">ÁTMENETI BÁZIS LEÁLLÍTÁSA</string>
+    <string name="uel_cancel_bolus">BÓLUS MEGSZAKÍTÁSA</string>
+    <string name="uel_cancel_extended_bolus">KITERJESZTETT BÓLUS MEGSZAKÍTÁSA</string>
+    <string name="uel_cancel_tt">ÁTMENETI CÉLÉRTÉK LEÁLLÍTÁSA</string>
+    <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_sensor_location">SZENZOR HELYE</string>
+    <string name="uel_site_change">KANÜLCSERE</string>
+    <string name="uel_site_location">SZÚRÁSI HELY</string>
+    <string name="uel_reservoir_change">TARTÁLYCSERE</string>
+    <string name="uel_calibration">KALIBRÁLÁS</string>
+    <string name="uel_prime_bolus">LÉGTELENÍTŐ BÓLUS</string>
+    <string name="uel_treatment">KEZELÉS</string>
+    <string name="uel_careportal_ns_refresh">CAREPORTAL NS FRISSÍTÉS</string>
+    <string name="uel_profile_switch_ns_refresh">PROFILVÁLTÁS NS FRISSÍTÉS</string>
+    <string name="uel_treatments_ns_refresh">KEZELÉSEK NS FRISSÍTÉS</string>
+    <string name="uel_tt_ns_refresh">ÁTMENETI CÉLÉRTÉK NS FRISSÍTÉS</string>
+    <string name="uel_automation_removed">AUTOMATIZÁLÁS ELTÁVOLÍTVA</string>
+    <string name="uel_bg_removed">VC ELTÁVOLÍTVA</string>
+    <string name="uel_calibration_removed">KALIBRÁLÁS ELTÁVOLÍTVA</string>
+    <string name="uel_careportal_removed">CAREPORTAL ELTÁVOLÍTVA</string>
+    <string name="uel_bolus_removed">BÓLUS ELTÁVOLÍTVA</string>
+    <string name="uel_carbs_removed">SZÉNHIDRÁT ELTÁVOLÍTVA</string>
+    <string name="uel_temp_basal_removed">ÁTMENETI BÁZIS ELTÁVOLÍTVA</string>
+    <string name="uel_extended_bolus_removed">KITERJESZTETT BÓLUS ELTÁVOLÍTVA</string>
+    <string name="uel_food">ÉTEL</string>
+    <string name="uel_food_removed">ÉTEL ELTÁVOLÍTVA</string>
+    <string name="uel_profile_removed">PROFIL ELTÁVOLÍTVA</string>
+    <string name="uel_profile_switch_removed">PROFILVÁLTÁS ELTÁVOLÍTVA</string>
+    <string name="uel_restart_events_removed">ÚJRAINDÍTÁSI ESEMÉNYEK ELTÁVOLÍTVA</string>
+    <string name="uel_treatment_removed">KEZELÉS ELTÁVOLÍTVA</string>
+    <string name="uel_tt_removed">ÁTMENETI CÉLÉRTÉK ELTÁVOLÍTVA</string>
+    <string name="uel_ns_paused">NS FELFÜGGESZTVE</string>
+    <string name="uel_ns_resume">NS FOLYTATVA</string>
+    <string name="uel_ns_queue_cleared">NS SOR TÖRÖLVE</string>
+    <string name="uel_ns_settings_copied">NS BEÁLLÍTÁSOK MÁSOLVA</string>
+    <string name="uel_error_dialog_ok">HIBAABLAK OK</string>
+    <string name="uel_error_dialog_mute">HIBAABLAK NÉMÍTÁSA</string>
+    <string name="uel_error_dialog_mute_5min">HIBAABLAK NÉMÍTÁSA 5 PERCRE</string>
+    <string name="uel_objective_started">CÉLKITŰZÉS ELINDÍTVA</string>
+    <string name="uel_objective_unstarted">CÉLKITŰZÉS INDÍTÁSA VISSZAVONVA</string>
+    <string name="uel_objectives_skipped">CÉLKITŰZÉSEK KIHAGYVA</string>
+    <string name="uel_stat_reset">STATISZTIKA NULLÁZVA</string>
+    <string name="uel_delete_logs">NAPLÓK TÖRLÉSE</string>
+    <string name="uel_delete_future_treatments">JÖVŐBELI KEZELÉSEK TÖRLÉSE</string>
+    <string name="uel_export_settings">BEÁLLÍTÁSOK EXPORTÁLÁSA</string>
+    <string name="uel_import_settings">BEÁLLÍTÁSOK IMPORTÁLÁSA</string>
+    <string name="uel_select_directory">MAPPA KIVÁLASZTÁSA</string>
+    <string name="uel_reset_databases">ADATBÁZISOK ALAPHELYZETBE ÁLLÍTÁSA</string>
+    <string name="uel_reset_aps_results">APS-EREDMÉNYEK ALAPHELYZETBE ÁLLÍTÁSA</string>
+    <string name="uel_cleanup_databases">ADATBÁZISOK TISZTÍTÁSA</string>
+    <string name="uel_export_databases">ADATBÁZISOK EXPORTÁLÁSA</string>
+    <string name="uel_import_databases">ADATBÁZISOK IMPORTÁLÁSA</string>
+    <string name="uel_otp_export">OTP EXPORTÁLÁS</string>
+    <string name="uel_otp_reset">OTP ALAPHELYZETBE ÁLLÍTÁSA</string>
+    <string name="uel_stop_sms">SMS LEÁLLÍTÁSA</string>
+    <string name="uel_export_csv">EGYÉNI BEJEGYZÉSEK EXPORTÁLÁSA</string>
+    <string name="uel_start_aaps">AAPS INDÍTÁSA</string>
+    <string name="uel_exit_aaps">KILÉPÉS AZ AAPS-BŐL</string>
+    <string name="uel_plugin_enabled">PLUGIN ENGEDÉLYEZVE</string>
+    <string name="uel_plugin_disabled">PLUGIN LETILTVA</string>
+    <string name="ue_string">Szöveg</string>
+    <string name="ue_source">Forrás</string>
+    <string name="ue_utc_offset">UTC-eltolás</string>
+    <string name="ue_action">Művelet</string>
+    <string name="ue_timestamp">Időbélyeg</string>
+    <string name="ue_none">Nincs mértékegység</string>
+    <string name="uel_loop_change">LOOP MÓDOSÍTVA</string>
+    <string name="uel_loop_removed">LOOP ELTÁVOLÍTVA</string>
+    <string name="uel_new_insulin">ÚJ INZULIN</string>
+    <string name="uel_change_pump_insulin">PUMPA INZULINJÁNAK CSERÉJE</string>
+    <string name="uel_store_insulin">INZULIN MENTÉSE</string>
+    <string name="uel_change_insulin_concentration">INZULINKONCENTRÁCIÓ MÓDOSÍTÁSA</string>
+    <string name="uel_insulin_removed">INZULIN ELTÁVOLÍTVA</string>
+    <string name="uel_running_mode">MŰKÖDÉSI MÓD</string>
+    <string name="uel_running_mode_removed">MŰKÖDÉSI MÓD ELTÁVOLÍTVA</string>
+    <string name="uel_running_mode_updarted">MŰKÖDÉSI MÓD FRISSÍTVE</string>
+    <string name="uel_scene_activated">JELENET AKTIVÁLVA</string>
+    <string name="uel_scene_deactivated">JELENET DEAKTIVÁLVA</string>
+    <string name="uel_remote_config_changed">TÁVOLI KONFIGURÁCIÓ MÓDOSÍTVA</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">Átmeneti célérték alsó értéke</string>
+    <string name="temp_target_high_target">Átmeneti célérték felső értéke</string>
+    <string name="temp_target_value">Átmeneti célérték értéke</string>
+    <string name="insulin_dia">Inzulin DIA-értéke</string>
+    <string name="insulin_peak">Inzulin csúcsidő-értéke</string>
+    <string name="profile_max_daily_basal_value">Profil maximális bázisértéke</string>
+    <string name="current_basal_value">Jelenlegi bázisérték</string>
+    <string name="valuelimitedto">%1$.2f korlátozva erre: %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« kívül esik a szigorú korlátokon</string>
     <!-- Profile validation -->
+    <string name="no_profile_selected">Nincs profil kiválasztva</string>
     <string name="missing_profile_name">Profilnév hiányzik</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">%1$s másolata</string>
+    <string name="profile_not_saved_activate">A profil nincs mentve. Aktiválás előtt mentse a profilt.</string>
+    <string name="profile_basal_not_compatible_with_pump">A bázisütem nem kompatibilis a jelenlegi pumpával, ezért nem aktiválható. Csökkentse a százalékot, vagy módosítsa a bázisütemet.</string>
+    <string name="profile_basal_below_pump_minimum">A bázisütem az aktuális pumpa minimuma alatt van, és nem aktiválható. Növelje a százalékot, vagy módosítsa a bázisütemet.</string>
+    <string name="profile_pump_incompatible_label">Pumpakorlát</string>
+    <string name="error_in_ic_values">Hiba az IC-értékekben</string>
+    <string name="error_in_isf_values">Hiba az ISF-értékekben</string>
     <string name="error_in_basal_values">Hiba bázisértékekben</string>
     <string name="error_in_target_values">Hiba célértékekben</string>
+    <string name="profile_name_contains_dot">Néhány profilnév pontot tartalmaz.\nEzt az NS nem támogatja.\nA profilok nem lesznek feltöltve az NS-be.</string>
+    <string name="invalid_profile_not_accepted">Az NS-ből érkező érvénytelen profil (%1$s) nincs elfogadva</string>
     <string name="errors">Hibák</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">BÓLUS %1$.2f E</string>
+    <string name="carbs_g">SZÉNHIDRÁT %1$d g</string>
+    <string name="extended_bolus_u_min">KITERJESZTETT BÓLUS %1$.2f E %2$d perc</string>
+    <string name="load_events">ESEMÉNYEK BETÖLTÉSE</string>
+    <string name="clear_alarms">RIASZTÁSOK TÖRLÉSE</string>
+    <string name="deactivate">DEAKTIVÁLÁS</string>
+    <string name="update_time">IDŐ FRISSÍTÉSE</string>
+    <string name="load_history">ELŐZMÉNYEK BETÖLTÉSE %1$d</string>
+    <string name="load_tdds">TDD-K BETÖLTÉSE</string>
+    <string name="set_profile">PROFIL BEÁLLÍTÁSA</string>
+    <string name="set_user_settings">FELHASZNÁLÓI BEÁLLÍTÁSOK MEGADÁSA</string>
+    <string name="smb_bolus_u">SMB BÓLUS %1$.2f E</string>
+    <string name="start_pump">Pumpa indítása</string>
+    <string name="stop_pump">Pumpa leállítása</string>
+    <string name="temp_basal_absolute">ÁTMENETI BÁZIS %1$.2f E/ó %2$d perc</string>
+    <string name="temp_basal_percent">ÁTMENETI BÁZIS %1$d%% %2$d perc</string>
+    <string name="insight_set_tbr_over_notification">INSIGHT ÁB VÉGE ÉRTESÍTÉS BEÁLLÍTÁSA</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">ÁLLAPOT %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Állapot régi.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Bázis régi.</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Bázis</string>
     <string name="basalpct">Bázis %</string>
+    <string name="sensitivity">Érzékenység</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens kikapcsolva</string>
+    <string name="isf_for_carbs">Átlagos ISF a kalkulátorhoz és a szénhidrát-felszívódáshoz: %1$.1f</string>
+    <string name="isf_profile">Profil ISF: %1$.1f</string>
+    <string name="isf_variable">Változó ISF: %1$.1f</string>
+    <string name="isf_effective">Tényleges ISF: %1$.1f</string>
+    <string name="autosens_long">Autosens érték: %.0f%%</string>
+    <string name="autosens_short">%.0f%%</string>
+    <string name="algorithm_long">Autosens az algoritmusban: %.0f%%</string>
     <!-- Autotune -->
+    <string name="autotune">Autotune</string>
+    <string name="autotune_tune_days">Hangolási napok:</string>
+    <string name="autotune_select_profile">Hangolandó profil kiválasztása</string>
     <!-- Alerts -->
+    <string name="urgent_alarm">Sürgős riasztás</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Bólustanácsadó</string>
+    <string name="bolus_advisor_message">Magas a vércukra. Most evés helyett ajánlott megvárni, amíg a vércukor javul. Szeretne most korrekciós bólust beadni, és emlékeztetőt kérni, amikor ideje enni? Ebben az esetben nem kerül rögzítésre szénhidrát, és az emlékeztető után újra a bóluskalkulátort kell használnia.</string>
+    <string name="wizard_bg_label">VC</string>
+    <string name="wizard_correction">Korrekció</string>
+    <string name="wizard_subtotal">Részösszeg</string>
+    <string name="carbs_type_bread">Kenyér, sós pékáru, joghurt, gyümölcs (alma, banán, körte), burgonya, rizs, hajdina, zabpehely, lassú és alacsony szénhidráttartalmú ételek, zöldségek</string>
+    <string name="carbs_type_cake">Gombóc, tészta, szénhidrátban és zsírban gazdag ázsiai ételek, édes és élesztős pékáru, gabonapelyhek, gabonakása, méz, lekvár</string>
+    <string name="carbs_type_pizza">Lasagne, pizza, hamburger, hasábburgonya, héjában sült burgonya, chips és hasonló rágcsálnivalók</string>
+    <string name="wizard_total">Összesen</string>
+    <string name="wizard_carb_time">Szénhidrát ideje</string>
+    <string name="carb_time_now">Most</string>
+    <string name="change">Módosítás</string>
+    <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
+    <string name="grant">Engedélyezés</string>
+    <string name="set">Beállítás</string>
+    <string name="wizard_set_alarm">Riasztás beállítása</string>
+    <string name="eat_reminder_title">Ideje enni</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Csörög ekkor: %1$s</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Teljes várakozás: %1$s</string>
+    <string name="eat_reminder_rung">Lejárt az idő</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d perc</string>
+    <string name="eat_reminder_not_set">Az étkezési emlékeztető nem állítható be. Engedélyezze az Android beállításaiban, hogy az AAPS ébresztőket és emlékeztetőket állíthasson be.</string>
+    <string name="wizard_use_percentage">Százalék használata</string>
+    <string name="wizard_include_bg">VC figyelembevétele</string>
+    <string name="wizard_include_tt">Átmeneti célérték figyelembevétele</string>
+    <string name="wizard_include_trend">Trend figyelembevétele</string>
+    <string name="wizard_include_iob">IOB figyelembevétele</string>
+    <string name="wizard_include_cob">COB figyelembevétele</string>
+    <string name="wizard_calculation">Számítás</string>
+    <string name="no_action_selected">Nincs kiválasztva művelet, nem történik semmi.</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Max. eltávolítás: %1$d g (aktív szénhidrát)</string>
+    <string name="wizard_no_insulin_required">Nincs szükség inzulinra</string>
+    <string name="wizard_no_actual_bg">Nincs friss VC-érték a számításhoz!</string>
+    <string name="wizard_no_active_profile">Nincs aktív profil beállítva!</string>
+    <string name="wizard_carbs_constraint">Szénhidrátkorlát megsértése!</string>
+    <string name="wizard_trend_detail">15 perces trend (%1$s %2$s)</string>
+    <string name="wizard_constraint_bolus_size">Inzulinkorlát megsértése!\nNem adható be %1$.2f E</string>
+    <string name="wizard_pump_not_available">Nincs elérhető pumpa!</string>
+    <string name="quick_wizard_not_available">A kiválasztott gyorskalkulátor már nem elérhető, frissítse a csempét</string>
+    <string name="quickwizard_managemnt">Gyorskalkulátor</string>
     <!--    Preferences-->
+    <string name="child">Gyermek</string>
     <string name="teenage">Tinédzser</string>
     <string name="adult">Felnőtt</string>
+    <string name="resistant_adult">Inzulinrezisztens felnőtt</string>
     <string name="pregnant">Várandós</string>
+    <string name="patient_age_summary">Válassza ki a beteg típusát a biztonsági korlátok beállításához</string>
+    <string name="max_bolus_title">Max. engedélyezett bólus [E]</string>
+    <string name="max_carbs_title">Max. engedélyezett szénhidrát [g]</string>
+    <string name="patient_type">Beteg típusa</string>
     <!--    Protection-->
     <!--    Pumps -->
+    <string name="battery_label">Elem</string>
+    <string name="reservoir_label">Tartály</string>
+    <string name="last_connection_label">Utolsó kapcsolat</string>
+    <string name="last_bolus_label">Utolsó bólus</string>
+    <string name="base_basal_rate_label">Alap bázisütem</string>
+    <string name="tempbasal_label">Átmeneti bázis</string>
+    <string name="extended_bolus_label">Kiterjesztett bólus</string>
     <string name="serial_number">Sorozatszám</string>
+    <string name="disconnected">Leválasztva</string>
+    <string name="connecting">Kapcsolódás</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Pumpacsatlakozás kérve</string>
+    <string name="daily_units">Napi egységek</string>
+    <string name="max_daily_units">Max. napi egység</string>
+    <string name="pump_history">Pumpaelőzmények</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Pumpameghajtó módosítva.</string>
+    <string name="device_changed" comment="26 characters max for translation">Eszköz megváltozott</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bólus OK</string>
+    <string name="temp_basal_delivery_error">Átmeneti bázis beadási hiba</string>
+    <string name="ebstopsloop">A kiterjesztett bólus használata a kiterjesztett bólus idejére leállítja a zárt hurok módot. Biztosan ezt szeretné?</string>
+    <string name="pump_busy">A pumpa foglalt</string>
+    <string name="connection_error">Pumpa kapcsolódási hiba</string>
     <string name="reading_pump_history">Pumpa előzmények lekérése</string>
+    <string name="password_cleared">Jelszó törölve!</string>
     <string name="pairing">Párosítás</string>
+    <string name="initializing">Inicializálás…</string>
+    <string name="secs" comment="second short">%1$d mp</string>
+    <string name="warning" comment="Generic warning dialog title">Figyelmeztetés</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Kritikus</string>
+    <string name="alert" comment="Generic alert dialog title">Riasztás</string>
+    <string name="retry" comment="Button label to retry a failed operation">Újra</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">Befejezés</string>
+    <string name="firmware" comment="Pump firmware version label">Firmware</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">Bólussebesség</string>
+    <string name="history" comment="Tab/screen title for viewing past events">Előzmények</string>
+    <string name="overview_reservoir_concentration_value_over">Több mint %1$s maradt</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">A max. bázisütem korlátozva %1$.2f E/ó értékre, oka: %2$s</string>
+    <string name="pumplimit">pumpakorlát</string>
+    <string name="limitingpercentrate">A max. százalékos ütem korlátozva %1$d%% értékre, oka: %2$s</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Százalékos ütem (%1$d%%) átszámítva: %2$s E/ó, az aktuális bázis %3$s E/ó</string>
+    <string name="itmustbepositivevalue">pozitív értéknek kell lennie</string>
+    <string name="limitingbolus">A bólus korlátozva %1$.1f E értékre, oka: %2$s</string>
     <!--    Dialogs-->
+    <string name="confirmation">Megerősítés</string>
+    <string name="message">Üzenet</string>
     <string name="ok">OK</string>
     <string name="cancel">Mégse</string>
+    <string name="dismiss">Elvetés</string>
     <string name="yes">Igen</string>
     <string name="no">Nem</string>
-    <string name="close">Bezár</string>
+    <string name="close">Bezárás</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Figyelmeztetés</string>
+    <string name="export_expired">Lejárt</string>
+    <string name="export_disabled">Letiltva</string>
+    <string name="export_failed">Sikertelen</string>
+    <string name="export_alert">RIASZTÁS</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">Nincs mesterjelszó beállítva!\n\nElőször állítson be mesterjelszót, majd próbálja újra.</string>
+    <string name="export_to">Beállítások exportálása ide</string>
+    <string name="password_preferences_encrypt_prompt">A rendszer kérni fogja a mesterjelszót, amellyel az exportált beállítások titkosítva lesznek.</string>
+    <string name="preferences_export_canceled">Exportálás megszakítva! A beállítások NEM lettek exportálva!</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Beállítások exportálva</string>
+    <string name="export_result_message_failed">A beállítások exportálása SIKERTELEN!</string>
+    <string name="export_result_message_about_to_expire">Beállítások exportálva: a jelszó hamarosan lejár. Exportáljon kézzel, és adja meg (újra) a jelszót.</string>
+    <string name="export_result_message_expired">A beállítások exportálása megszakítva: a jelszó lejárt. Exportáljon kézzel, és adja meg újra a jelszót!</string>
+    <string name="export_result_message_disabled">Figyelmeztetés (automatizálás): a beállítások exportálása nincs engedélyezve!</string>
     <!-- Cloud export -->
+    <string name="export_cloud_success">Felhőbe exportálás sikeres</string>
+    <string name="export_cloud_failed">Felhőbe exportálás SIKERTELEN!</string>
+    <string name="csv_exported">Egyéni bejegyzések exportálva</string>
+    <string name="csv_export_failed">Egyéni bejegyzések exportálása SIKERTELEN!</string>
+    <string name="logs_sent">Naplók elküldve e-mailben</string>
+    <string name="logs_send_failed">A naplók küldése sikertelen</string>
+    <string name="cloud_directory">Felhőmappa</string>
+    <string name="cloud_token_expired_or_invalid">A felhőtárhely engedélye lejárt vagy érvénytelen. Engedélyezze újra.</string>
     <!-- Export destination chip labels -->
+    <string name="chip_local">Helyi</string>
+    <string name="chip_cloud">Felhő</string>
+    <string name="chip_email">E-mail</string>
+    <string name="send_logs">Naplók küldése</string>
+    <string name="file_management">Fájlkezelés</string>
+    <string name="database_management">Adatbáziskezelés</string>
+    <string name="data_choices">Adatmegosztás</string>
+    <string name="unattended_settings_export">Beállítások automatikus exportálása</string>
     <!-- Maintenance bottom sheet descriptions -->
+    <string name="maintenance_log_settings_desc">Naplózási szintek beállítása</string>
+    <string name="maintenance_send_logs_desc">Naplófájlok megosztása hibakereséshez</string>
+    <string name="maintenance_delete_logs_desc">Régi naplófájlok eltávolítása</string>
+    <string name="maintenance_aaps_directory_desc">Helyi tárolómappa kiválasztása</string>
+    <string name="maintenance_cloud_directory_desc">Felhőtárhely beállítása (Google Drive)</string>
+    <string name="maintenance_export_desc">Titkosított biztonsági mentés a beállításokról</string>
+    <string name="maintenance_import_desc">Beállítások visszaállítása biztonsági mentésből</string>
+    <string name="maintenance_export_csv_desc">Kezelési előzmények exportálása táblázatként</string>
+    <string name="maintenance_cleanup_db_desc">Régi bejegyzések eltávolítása az adatbázisból</string>
+    <string name="maintenance_reset_aps_results_desc">Tárolt algoritmuseredmények törlése</string>
+    <string name="maintenance_reset_db_desc">Minden adatbázis törlése és újratöltés</string>
     <!-- Cloud directory dialog (Compose) -->
+    <string name="select_storage_type">Tárolás típusának kiválasztása</string>
+    <string name="clear_cloud_action">Beállítások törlése</string>
+    <string name="clear_cloud_settings">Felhőbeállítások törlése</string>
+    <string name="clear_cloud_settings_message">Ez átvált helyi tárolásra, és törli a hitelesítést. Folytatja?</string>
+    <string name="cloud_revoke_incomplete">A felhőbeállítások ezen az eszközön törölve, de a fiók nem volt elérhető, így a hozzáférést nem sikerült teljesen visszavonni. Érdemes kézzel eltávolítani a fiókja beállításaiban.</string>
+    <string name="cloud_connection_failed">Nem sikerült csatlakozni a felhőtárhelyhez</string>
+    <string name="cloud_reauthorize_message">Nem sikerült csatlakozni a felhőtárhelyhez. Szeretné újra elvégezni a hitelesítést?</string>
+    <string name="reauthorize">Újrahitelesítés</string>
+    <string name="cloud_auth_success">A felhőtárhely hitelesítése sikeres</string>
+    <string name="authorization_status">Hitelesítés állapota</string>
+    <string name="format_hour_minute" comment="%1$d=hours, %2$d=minutes. Example: 1 h 23 min">%1$d ó %2$d perc</string>
+    <string name="format_hours_only" comment="%1$d=hours, when minutes are zero. Example: 4 h">%1$d ó</string>
     <!-- datetime layout -->
+    <string name="event_time_label">Esemény időpontja</string>
     <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">Az alkalmazásnak Bluetooth-engedély szükséges</string>
     <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">Felhasználói kérés</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">Párosítás</string>
+    <string name="pump_unpair">Párosítás törlése</string>
+    <string name="pump_unpair_confirm_title">Törli a pumpa párosítását?</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pumpa párosítva</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">A Bluetooth Low Energy nem támogatott.</string>
+    <string name="ble_not_enabled">A Bluetooth nincs bekapcsolva.</string>
+    <string name="ble_permissions_missing">A Bluetooth-engedélyek nincsenek megadva. Adja meg őket az alkalmazás beállításaiban.</string>
     <!--    Preferences -->
+    <string name="nav_plugin_preferences">Plugin-beállítások</string>
     <!-- Navigation -->
-    <string name="nav_exit">Kilép</string>
+    <string name="nav_about">Névjegy</string>
+    <string name="nav_about_desc">Az alkalmazás verziója és egyéb információk</string>
+    <string name="nav_exit">Kilépés</string>
     <string name="open_navigation">Navigáció megnyitása</string>
+    <string name="nav_history_browser">Előzményböngésző</string>
+    <string name="nav_history_browser_desc">Korábbi grafikonok böngészése</string>
+    <string name="appearance">Megjelenés</string>
+    <string name="manage">Kezelőpanel</string>
+    <string name="localprofile">Profil</string>
+    <string name="nav_setupwizard">Beállítási varázsló</string>
+    <string name="nav_setupwizard_desc">Az AAPS beállítása lépésről lépésre</string>
     <string name="statistics">Statisztikák</string>
+    <string name="statistics_desc">Statisztikák és jelentések megtekintése</string>
+    <string name="tdd_cycle_pattern">TDD ciklusminta</string>
+    <string name="tdd_cycle_pattern_desc">A napi inzulinösszegek 28 napos ciklusokban egymásra rajzolva, az ismétlődő minták felismeréséhez</string>
     <string name="nav_profile_helper">Profilsegéd</string>
+    <string name="nav_profile_helper_desc">Profil készítése testsúly vagy TDD alapján</string>
+    <string name="quick_launch_configure">Gyorsindítás beállítása</string>
+    <string name="quick_launch_configure_desc">A gyorsművelet-gombok testreszabása az Áttekintés képernyőn</string>
     <!-- Alerts -->
+    <string name="localalertsettings_title">Helyi riasztások</string>
     <!-- Actions Screen -->
+    <string name="add">Hozzáadás</string>
+    <string name="remove">Eltávolítás</string>
+    <string name="reorder">Átrendezés</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Áthelyezés előrébb</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Áthelyezés hátrébb</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Részletek megjelenítése</string>
+    <string name="presets_changed_reorder_aborted">Az előbeállításokat máshol módosították. Az új sorrend nincs mentve.</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Helyzet: %1$d, összesen: %2$d</string>
+    <string name="status">Állapot</string>
+    <string name="pump_actions">Pumpaműveletek</string>
+    <string name="tempbasal_button">Átmeneti bázis</string>
+    <string name="extended_bolus_button">Kiterjesztett bólus</string>
+    <string name="device_maintenance">Eszközkarbantartás</string>
+    <string name="from_label">Ettől</string>
+    <string name="to_label">Eddig</string>
     <string name="sensor_label">Szenzor</string>
     <string name="insulin_label">Inzulin</string>
+    <string name="pb_label">Pumpaelem</string>
     <string name="cannula">Kanül</string>
+    <string name="patch_pump">Tapaszpumpa</string>
     <!-- Site Rotation -->
+    <string name="select_location">Koppintson alább a szúrási hely kiválasztásához</string>
     <!-- About -->
+    <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
+    <string name="fabric_upload_disabled">Az összeomlási naplók feltöltése letiltva!</string>
+    <string name="about_link_urls">\n\nDokumentáció:\nhttps://wiki.aaps.app\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
         <item quantity="one">%1$d nap</item>
         <item quantity="other">%1$d nap</item>
@@ -157,8 +1012,18 @@
         <item quantity="one">%1$d óra</item>
         <item quantity="other">%1$d óra</item>
     </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d perc</item>
+        <item quantity="other">%1$d perc</item>
+    </plurals>
     <!--    Maintenance-->
+    <string name="cleanup_db_confirm">Szeretné megtisztítani az adatbázist?\nEz eltávolítja a 3 hónapnál régebbi követett változásokat és előzményadatokat.</string>
+    <string name="cleanup_db_confirm_sync">Szeretné megtisztítani az adatbázist?\nEz eltávolítja a 3 hónapnál régebbi követett változásokat és előzményadatokat.\nEz nagyon felgyorsítja a teljes szinkronizálást.</string>
+    <string name="cleared_entries">Törölt bejegyzések</string>
+    <string name="reset_db_confirm">Biztosan alaphelyzetbe állítja az adatbázisokat?</string>
+    <string name="reset_aps_results_confirm">Biztosan alaphelyzetbe állítja a tárolt APS-eredményeket?</string>
     <!--    Weekday-->
+    <string name="weekday_sunday_short">Va</string>
     <string name="weekday_saturday_short">Szo</string>
     <string name="weekday_friday_short">Pé</string>
     <string name="weekday_thursday_short">Csü</string>
@@ -166,21 +1031,184 @@
     <string name="weekday_tuesday_short">Ke</string>
     <string name="weekday_monday_short">Hé</string>
     <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f E</string>
+    <string name="format_insulin_units_signed">%1$+.2f E</string>
+    <string name="percent_rate_duration">Ütem: %1$.2f%% (%2$.2f E/ó) Időtartam: %3$d perc</string>
+    <string name="rate_percent_duration">Ütem: %1$.2f E/ó (%2$.2f%%) Időtartam: %3$d perc</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>Ütem</b>: %1$.2f%% (%2$.2f E/ó)<br><b>Időtartam</b>: %3$d perc<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>Ütem</b>: %1$.2f E/ó (%2$.2f%%) <br><b>Időtartam</b>: %3$d perc<br>]]></string>
     <!--    Playback-->
+    <string name="audio_playback_attribution">"Az AAPS hangot játszik le"</string>
     <!-- ProfileEditor -->
+    <string name="basal_short">BÁZ</string>
+    <string name="target_short">CÉL</string>
+    <string name="profile_name">Profilnév:</string>
+    <string name="edit_profile_name">Profilnév szerkesztése</string>
+    <string name="units_colon">Mértékegység:</string>
+    <string name="unsaved_changes">Nem mentett módosítások</string>
+    <string name="unsaved_changes_message">Vannak nem mentett módosítások. Mit szeretne tenni?</string>
+    <string name="discard">Elvetés</string>
+    <string name="ic_dynamic_label_warning">Az algoritmusa képes dinamikusan számolni az IC-t. Az alábbi értékek csak tartalékként használhatók hiányzó adatok esetén, vagy csak referenciaértékként</string>
+    <string name="isf_dynamic_label_warning">Az algoritmus képes az ISF dinamikus kiszámítására. Az alábbi értékek csak tartalékként használhatók, ha hiányoznak az adatok, vagy csak referenciaértékként</string>
+    <string name="add_time_block">Időszak hozzáadása</string>
+    <string name="remove_entry">Bejegyzés eltávolítása</string>
+    <string name="target_low_label">Alsó</string>
+    <string name="target_high_label">Felső</string>
     <!--    Search-->
+    <string name="search">Keresés</string>
+    <string name="clear">Törlés</string>
+    <string name="search_category_categories">Beállításkategóriák</string>
+    <string name="search_category_preferences">Beállítások</string>
+    <string name="search_category_dialogs">Párbeszédablakok</string>
+    <string name="search_category_plugins">Pluginok</string>
+    <string name="search_category_wiki">Dokumentáció</string>
+    <string name="wiki_search_offline">A dokumentáció kereséséhez internetkapcsolat szükséges</string>
+    <string name="no_search_results">Nincs találat</string>
+    <string name="search_plugin_disabled">%1$s plugin letiltva</string>
+    <string name="search_recent">Legutóbbi keresések</string>
+    <string name="search_history_remove">Eltávolítás a legutóbbi keresések közül</string>
     <!--    Food Management -->
+    <string name="food_management">Ételek</string>
+    <string name="food_deleted">Étel törölve</string>
+    <string name="edit_food">Étel szerkesztése</string>
+    <string name="add_food">Étel hozzáadása</string>
+    <string name="name">Név</string>
+    <string name="category">Kategória</string>
+    <string name="subcategory">Alkategória</string>
+    <string name="portion">Adag</string>
+    <string name="unit_label">Mértékegység</string>
+    <string name="undo">Visszavonás</string>
+    <string name="no_data">Nincs adat</string>
+    <string name="manage_food_desc">Az ételadatbázis bejegyzéseinek kezelése</string>
+    <string name="label_carbs_g">Szénhidrát (g)</string>
+    <string name="label_fat_g">Zsír (g)</string>
+    <string name="label_protein_g">Fehérje (g)</string>
+    <string name="label_energy_kj">Energia (kJ)</string>
     <!--    Log Settings-->
+    <string name="nav_logsettings">Naplózási beállítások</string>
+    <string name="resettodefaults">Alapértelmezett értékek visszaállítása</string>
     <!--    Maintenance-->
+    <string name="maintenance">Karbantartás</string>
+    <string name="description_maintenance">Több karbantartási funkciót biztosít (pl. naplók küldése, naplók törlése).</string>
+    <string name="log_files">Naplófájlok</string>
+    <string name="delete_logs">Naplók törlése</string>
+    <string name="logs_deleted">Naplók törölve</string>
+    <string name="aaps_directory">AAPS-mappa</string>
     <string name="import_setting">Beállítások importálása</string>
     <!-- Import settings screen -->
+    <string name="import_decrypt_review">Visszafejtés és ellenőrzés</string>
+    <string name="import_decrypt">Visszafejtés</string>
+    <string name="import_master_password">Mesterjelszó</string>
+    <string name="import_decryption_password">Visszafejtési jelszó</string>
+    <string name="import_different_password_hint">A fájlt más jelszóval titkosították</string>
+    <string name="import_wrong_password">Hibás jelszó</string>
+    <string name="import_btn">Importálás</string>
+    <string name="import_anyway_btn">Importálás mindenképp</string>
+    <string name="import_apply_title">Alkalmazza az importált beállításokat?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Módosuló beállítások: %1$d. A megváltozott pluginok újraindulnak.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Módosuló beállítások: %1$d. Megtartott pumpabeállítások: %2$d, így a pumpa tovább működik.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Az importált beállítások nem választottak ki olyan pumpát, amely ezen a telefonon van. Most a(z) %1$s aktív — ellenőrizze a pumpabeállításokat.</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">A mentésből hozzáadva az inzulinlistájához: %1$s. Még nincs használatban: válassza ki a megfelelőt, amikor aktiválja a profilját, és ezt tegye meg, mielőtt a Nightscout letölti a régebbi kezeléseit.</string>
+    <string name="import_applying">Beállítások alkalmazása…</string>
+    <string name="import_replace_pump_settings">A pumpabeállítások cseréje is</string>
+    <string name="import_replace_pump_settings_summary">Hagyja kikapcsolva, ha meg akarja tartani a telefonnal párosított pumpát. Kapcsolja be, ha új telefonra állít vissza ugyanazzal a pumpával.</string>
+    <string name="import_apply_waiting">Várakozás a pumpára…</string>
+    <string name="import_apply_pump_busy">A pumpa még foglalt, ezért a beállítások nincsenek alkalmazva.</string>
+    <string name="import_apply_retry_question">Újrapróbálja most?</string>
+    <string name="import_applied_title">Beállítások alkalmazva</string>
+    <string name="import_applied_message">Az importált beállítások most már használatban vannak.</string>
+    <string name="import_apply_pump_changed">Megszakítva: a beállítások importálása megváltoztatta a pumpát</string>
+    <string name="import_source_local">Helyi</string>
+    <string name="import_source_cloud">Felhő</string>
+    <string name="import_load_more">Továbbiak betöltése</string>
+    <string name="import_no_files">Nem található beállításfájl</string>
+    <string name="import_decrypt_ok">Sikeres visszafejtés. Importálásra kész.</string>
+    <string name="import_decrypt_warn">Sikeres visszafejtés, de vannak figyelmeztetések.</string>
+    <string name="import_decrypt_error">Sikeres visszafejtés, de az importálás nem lehetséges.</string>
+    <string name="reset_aps_results">APS-eredmények alaphelyzetbe állítása</string>
+    <string name="database_cleanup">Adatbázis-tisztítás</string>
+    <string name="nav_resetdb">Adatbázisok alaphelyzetbe állítása</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Pumpa keresése</string>
+    <string name="ble_scan_select_pump">Válassza ki a pumpáját az alábbi listából</string>
+    <string name="ble_scan_scanning">Eszközök keresése…</string>
     <!-- Graph configuration -->
+    <string name="graph_add">Grafikon hozzáadása</string>
+    <string name="graph_new">Új grafikon</string>
+    <string name="graph_number">%1$d. grafikon</string>
+    <string name="graph_bg">VC-grafikon</string>
+    <string name="graph_height">Grafikon magassága [dp]</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">HR</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Aktív inzulin</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Abszolút inzulin</string>
+    <string name="graph_series_cob">Aktív szénhidrát</string>
+    <string name="graph_series_bgi">Vércukorhatás</string>
+    <string name="graph_series_deviations">Eltérések</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Érzékenységváltozás</string>
+    <string name="graph_series_variable_sens">Változó érzékenység</string>
+    <string name="graph_series_deviation_slope">Eltérés meredeksége</string>
+    <string name="graph_series_heart_rate">Pulzus</string>
+    <string name="graph_series_steps">Lépések</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Inzulinaktivitás</string>
+    <string name="graph_series_predictions">Előrejelzések</string>
+    <string name="units_days">nap</string>
+    <string name="units_format_days">%1$d nap</string>
+    <string name="units_format_days_range">%1$d nap (%2$d - %3$d)</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="units_format_double_3">%1$.3f</string>
+    <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
+    <string name="units_format_hours">%1$d ó</string>
+    <string name="units_format_hours_double">%1$.1f ó</string>
+    <string name="units_format_hours_double_range">%1$.1f ó (%2$.1f - %3$.1f)</string>
+    <string name="units_format_hours_range">%1$d ó (%2$d - %3$d)</string>
+    <string name="units_format_insulin">%1$.1f E</string>
+    <string name="units_format_insulin_int">%1$d E</string>
+    <string name="units_format_insulin_int_range">%1$d E (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f E (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate">%1$.1f E/ó</string>
+    <string name="units_format_insulin_rate_range">%1$.1f E/ó (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl">%1$s mg/dl</string>
+    <string name="units_format_mgdl_range">%1$s mg/dl (%2$s - %3$s)</string>
+    <string name="units_format_min">%1$d perc</string>
+    <string name="units_format_min_range">%1$d perc (%2$d - %3$d)</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_value" comment="A percentage. %1$s=the number, already formatted, can have decimals. Example: 52.3%">%1$s%%</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_sec">%1$d mp</string>
+    <string name="units_format_sec_range">%1$d mp (%2$d - %3$d)</string>
+    <string name="units_grams">g</string>
+    <string name="units_hours">ó</string>
+    <string name="units_insulin">E</string>
+    <string name="units_insulin_rate">E/ó</string>
+    <string name="units_kg">kg</string>
+    <string name="units_mgdl">mg/dl</string>
+    <string name="units_min">perc</string>
+    <string name="units_mmol">mmol/l</string>
+    <string name="units_percent">%</string>
+    <string name="units_sec">mp</string>
+    <string name="units_years">év</string>
+    <string name="prefs_range_title">Megjelenítési tartomány</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">A pumpa %1$s beadása után leállította a bólust. A következő bólus előtt ellenőrizze a pumpát.</string>
+    <string name="secrets_not_protected">Ezen a számítógépen nem található rendszerkulcstár. A beállításait és a fő eszközzel való párosítást védő kulcsok az adatok mellett, fájlokban vannak tárolva, így aki másolatot kap a fájljairól, azokat is megkapja. Linuxon telepítsen és indítson el egy kulcstartót (például GNOME Keyring vagy KWallet), majd indítsa újra az AAPS-t.</string>
 </resources>

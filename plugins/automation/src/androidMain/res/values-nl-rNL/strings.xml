@@ -106,7 +106,7 @@
     <string name="triggerSensorAgeDesc">Sensorleeftijd %1$s %2$.1f uur</string>
     <string name="triggerCannulaAgeLabel">Canuleleeftijd</string>
     <string name="triggerCannulaAgeDesc">Canuleleeftijd %1$s %2$.1f uur</string>
-    <string name="triggerPodChangeLabel">Podactivering</string>
+    <string name="triggerPodChangeLabel">Pod-activering</string>
     <string name="triggerPodChangeDesc">Pod geactiveerd</string>
     <string name="triggerUnknownLabel">Onbekende trigger</string>
     <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Onbekende trigger %1$s – nooit waar</string>

@@ -1,10 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Eros - Description -->
+    <string name="omnipod_eros_pump_description">Integracija pumpe za Omnipod Eros (stariji model sa providnim poklopcem igle). Zahteva RileyLink uređaj sa firmware verzijom najmanje 2.0.</string>
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Errors -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">RileyLink adresa nije važeća.</string>
     <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Prikaži dugme Pulse Log u meniju Upravljanje Pod-om</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Prikaži dugme RileyLink Stats u meniju Upravljanje Pod-om</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Uključi beleženje promene baterije u meniju Actions</string>
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2f J</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f J, UH=%2$.1f g</string>
+    <string name="omnipod_eros_history_tbr_value">Stopa: %1$.2f J/h, trajanje: %2$d minuta</string>
     <!-- Omnipod Eros - Error -->
+    <string name="omnipod_eros_error_crc_mismatch">Komunikacija nije uspela: provera integriteta poruke nije prošla</string>
+    <string name="omnipod_eros_error_invalid_packet_type">Komunikacija nije uspela: primljen je nevažeći paket od Pod-a</string>
+    <string name="omnipod_eros_error_invalid_progress_state">Komunikacija nije uspela: Pod je u pogrešnom stanju</string>
+    <string name="omnipod_eros_error_invalid_response">Komunikacija nije uspela: primljen je nevažeći odgovor od Pod-a</string>
+    <string name="omnipod_eros_error_invalid_message_sequence_number">Komunikacija nije uspela: primljena je poruka sa nevažećim rednim brojem od Pod-a</string>
+    <string name="omnipod_eros_error_invalid_message_address">Komunikacija nije uspela: primljena je poruka sa nevažećom adresom od Pod-a</string>
+    <string name="omnipod_eros_error_message_decoding_failed">Komunikacija nije uspela: dekodiranje poruke sa Pod-a nije uspelo</string>
+    <string name="omnipod_eros_error_nonce_resync_failed">Komunikacija nije uspela: neuspešna ponovna sinhronizacija nonce vrednosti</string>
+    <string name="omnipod_eros_error_nonce_out_of_sync">Komunikacija nije uspela: nonce nije sinhronizovan</string>
+    <string name="omnipod_eros_error_not_enough_data">Komunikacija nije uspela: nije primljeno dovoljno podataka od Pod-a</string>
+    <string name="omnipod_eros_error_pod_fault">Otkrivena je greška Pod-a (%1$03d %2$s). Deaktivirajte svoj Pod i aktivirajte novi</string>
+    <string name="omnipod_eros_error_pod_returned_error_response">Komunikacija nije uspela: Pod je vratio odgovor sa greškom</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Nema odgovora od RileyLink-a</string>
+    <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">Veza sa RileyLink-om je prekinuta</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Nema odgovora od Pod-a</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Podešavanje bazalnog profila nije uspelo. Isporuka je možda pauzirana! Ručno osvežite status Pod-a na ekranu pumpe i po potrebi nastavite isporuku.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Podešavanje bazalnog profila možda nije uspelo. Isporuka je možda pauzirana! Ručno osvežite status Pod-a na ekranu pumpe i po potrebi nastavite isporuku.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Podešavanje bazalnog profila nije uspelo. Isporuka je pauzirana! Ručno nastavite isporuku na ekranu pumpe.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Otkazivanje privremenog bazala možda nije uspelo. Ručno osvežite status Pod-a na ekranu pumpe.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Podešavanje privremenog bazala nije uspelo. Ako je pre toga radio privremeni bazal, možda je otkazan. Ručno osvežite status Pod-a na ekranu pumpe.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Podešavanje privremenog bazala možda nije uspelo. Ako je pre toga radio privremeni bazal, on je otkazan. Ručno osvežite status Pod-a na ekranu pumpe.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_validation">Trajanje TBR-a mora biti veće od nule i višekratnik od %1$s minuta.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Podešavanje vremena možda nije uspelo. Isporuka je možda pauzirana! Ručno osvežite status Pod-a na ekranu pumpe i po potrebi nastavite isporuku.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Podešavanje vremena nije uspelo. Isporuka je pauzirana! Ručno nastavite isporuku na ekranu pumpe.</string>
+    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Automatska promena vremena na Pod-u nije uspela. Ručno uskladite vreme na ekranu pumpe.</string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain">Nije moguće proveriti da li je bolus uspeo. Ručno proverite da li vaš Pod zapravo daje bolus slušanjem „klikova“. <b>Ako ste sigurni da bolus NIJE uspeo, ručno obrišite unos bolusa iz Tretmana, čak i ako sada pritisnete „Otkaži bolus“!</b></string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Nije moguće proveriti da li je SMB bolus (%1$.2f J) uspeo. <b>Ako ste sigurni da bolus NIJE uspeo, ručno obrišite SMB unos iz Tretmana.</b></string>
+    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Na Pod-u je aktivan privremeni bazal, ali AAPS nije svestan ovog privremenog bazala. Ručno otkažite privremeni bazal.</string>
     <!-- Omnipod Eros - Pod Management -->
+    <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink Stats</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Resetuj RileyLink</string>
+    <string name="omnipod_eros_pod_management_pulse_log">Pulse Log</string>
+    <string name="omnipod_eros_pod_management_pulse_log_value">Pulse Log (kopirano u privremenu memoriju)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Napunite novi Pod dovoljnom količinom insulina za 3 dana.\n\nSlušajte dva zvučna signala iz Pod-a tokom punjenja. Oni znače da je uneta minimalna količina od 80 J. Obavezno potpuno ispraznite špric za punjenje, čak i nakon što čujete dva zvučna signala.\n\nNakon punjenja Pod-a, pritisnite <b>Dalje</b>.\n\n<b>Napomena:</b> nemojte sada skidati poklopac igle sa Pod-a.\n<b>Napomena:</b> postavite RileyLink uspravno i Pod nekoliko centimetara od njega.</string>
+    <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Pokušava se uparivanje sa novim Pod-om i njegovo punjenje.\n\nKada se proces inicijalizacije uspešno završi, možete pritisnuti <b>Dalje</b>.\n\n<b>Napomena:</b> postavite RileyLink uspravno i Pod nekoliko centimetara od njega.</string>
 </resources>

@@ -1,6 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="equil_name">Equil</string>
+    <string name="equil_pump_description">Equil 5.3 vagy újabb tapaszpumpa</string>
     <!--  start  -->
+    <string name="equil_basal_speed">Alap bázisütem</string>
+    <string name="equil_dressing">Tartálycsere</string>
+    <string name="equil_dressing_onkey_msg">A dugattyú automatikus mozgatása a tartály aljára. Az aljára érve automatikusan megáll. Ha szükséges, a megszakításhoz kattintson a \'Leállítás\' gombra.</string>
+    <string name="equil_hint_dressing">Ez a művelet leállítja az inzulinbeadást, és a pumpa dugattyúja visszahúzódik az aljára!</string>
+    <string name="equil_insulin_reservoir">Inzulintartály</string>
+    <string name="equil_mode">Működési mód</string>
+    <string name="equil_mode_running">Fut</string>
+    <string name="equil_mode_stopped">Leállítva</string>
+    <string name="equil_mode_suspended">Felfüggesztve</string>
+    <string name="equil_serialnumber">Eszközszám</string>
+    <string name="equil_stop">Leállítás</string>
+    <string name="equil_success">Sikeres</string>
+    <string name="equil_title_dressing">Tartálycsere</string>
+    <string name="equil_title_assemble">Pumpa összeszerelése</string>
+    <string name="equil_title_serial">Eszköz párosítása</string>
+    <string name="equil_title_fill">Légtelenítés/Feltöltés</string>
+    <string name="equil_title_attach">Pumpa felhelyezése</string>
+    <string name="equil_title_air">Kanül légtelenítése</string>
+    <string name="equil_title_unpair_detach">Pumpa levétele</string>
+    <string name="equil_title_history_events">Események előzményei</string>
+    <string name="equil_tone">Riasztási hang</string>
+    <string name="equil_bolus_speed">Bólussebesség</string>
+    <string name="equil_bolus_speed_summary">A gyorsabb bólus több elzáródási riasztást okozhat.</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1,5 E/perc (normál)</string>
+    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 E/perc</string>
+    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 E/perc</string>
+    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 E/perc</string>
+    <string name="equil_tone_mode_mute">Néma</string>
+    <string name="equil_tone_mode_shake">Csak rezgés</string>
+    <string name="equil_tone_mode_tone">Csak hang</string>
+    <string name="equil_tone_mode_tone_and_shake">Rezgés és hang</string>
+    <string name="equil_unbind_content">Ez a művelet leállítja az inzulinbeadást, és a pumpa dugattyúját visszahúzza az aljáig! A párosítási állapotot is törli!</string>
+    <string name="equil_ble_config_confirmation_title">Equil tapaszpumpa párosítása</string>
+    <string name="equil_error">Kapcsolódási hiba</string>
+    <string name="equil_change">Pumpacsere</string>
+    <string name="equil_change_content">Kérjük, válassza le a pumpát a talplemezről.</string>
+    <string name="equil_new_infusion_set_question">Új szereléket (alaplemezt és kanült) is felhelyez?</string>
+    <string name="equil_new_infusion_set_yes">Igen, új szerelék</string>
+    <string name="equil_new_infusion_set_no">Nem, csak tartály vagy elem</string>
+    <string name="equil_same_infusion_set_hint">A kanül nem lesz légtelenítve, és kanülcsere nem lesz rögzítve.</string>
+    <string name="equil_unpair_alert">Biztosan lemond a következő eszköz irányításáról: %1$s?</string>
+    <string name="equil_record_basal">Bázisütem %1$s E/ó</string>
+    <string name="equil_record_basal_temp">Átmeneti bázisütem %1$s E/ó</string>
+    <string name="equil_record_bolus">Bólus %1$s E</string>
+    <string name="equil_error_set_temp_basal_failed_validation">Az átmeneti bázis időtartamának nullánál nagyobbnak és %1$s perc többszörösének kell lennie.</string>
+    <string name="equil_basal_exceeds_max">A profil %1$s E/ó bázisüteme nagyobb, mint a pumpa %2$s E/ó max. bázisa. Növelje a max. bázis beállítást, és csatlakoztassa újra a pumpát.</string>
+    <string name="equil_not_enough_insulin">Nincs elég inzulin a tartályban</string>
+    <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Alacsony elemszint: %1$d%%</string>
+    <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Nincs elég inzulin a tartályban: %1$s</string>
+    <string name="equil_reservoir_empty">A tartály üres. A pumpa már nem ad be inzulint.</string>
+    <string name="equil_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">A bólusparancs elérte a pumpát, de a pumpa nem válaszolt. Lehet, hogy még beadja ezt: %1$s. Ne adjon újabb bólust. Az AAPS a teljes mennyiséggel számol.</string>
+    <string name="equil_stop_not_answered" comment="%1$s=insulin amount with unit. Example: 2.00 U, or for U200 insulin 2.00 U (1.00 CU)">A leállítás nem érte el a pumpát, vagy a válasza elveszett. Az AAPS a teljes %1$s bólussal számol, amíg a pumpanapló meg nem mutatja, mennyi lett beadva.</string>
+    <string name="equil_bolus_not_given" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">A pumpanapló szerint a(z) %1$s bólus nem lett beadva. Az AAPS nem számol vele.</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">A pumpa leállt a bólus közben. Beadva: %1$s / %2$s</string>
+    <string name="equil_pump_not_run">A pumpa nem működik</string>
+    <string name="equil_pair">Párosítás</string>
+    <string name="equil_pair_error">Párosítási hiba</string>
+    <string name="equil_fill">Légtelenítés/Feltöltés</string>
+    <string name="equil_air">Levegő eltávolítása</string>
+    <string name="equil_temp_basal_rate">Átmeneti bázis</string>
+    <string name="equil_total_delivered">Összesen beadva</string>
+    <string name="equil_firmware_version">Firmware verzió</string>
+    <string name="equil_shutdown_be">Az Equil automatikusan kikapcsol</string>
+    <string name="equil_shutdown">Equil automatikus kikapcsolás</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Ütem: %1$.2f E/ó, időtartam: %2$d perc</string>
+    <string name="equil_common_history_bolus_value">%1$.2f E</string>
     <!-- equil - Commands -->
+    <string name="equil_common_cmd_set_bolus">Bólus beállítása</string>
+    <string name="equil_common_cmd_cancel_bolus">Bólus megszakítása</string>
+    <string name="equil_common_cmd_set_tbr">Átmeneti bázis beállítása</string>
+    <string name="equil_common_cmd_cancel_tbr">Átmeneti bázis leállítása</string>
+    <string name="equil_common_cmd_set_basal_schedule">Bázisprofil beállítása</string>
+    <string name="equil_common_cmd_set_time">Idő beállítása</string>
+    <string name="equil_common_cmd_suspend_delivery">Beadás felfüggesztése</string>
+    <string name="equil_common_cmd_resume_delivery">Beadás folytatása</string>
+    <string name="equil_common_cmd_pair">Equil párosítása</string>
+    <string name="equil_common_cmd_insert_cannula">Kanül behelyezése</string>
+    <string name="equil_common_cmd_unpair">Equil párosításának törlése</string>
+    <string name="equil_common_cmd_set_extended_bolus">Kiterjesztett bólus beállítása</string>
+    <string name="equil_common_cmd_cancel_extended_bolus">Kiterjesztett bólus megszakítása</string>
     <!--    推杆回退-->
+    <string name="equil_common_change_insulin">Tolórúd visszahúzása</string>
+    <string name="equil_common_set_alarm_tone">Beállítás csak értesítési hangra</string>
+    <string name="equil_common_set_alarm_shake">Beállítás csak rezgésre</string>
+    <string name="equil_common_set_alarm_mute">Beállítás némára</string>
+    <string name="equil_common_set_alarm_tone_and_shake">Beállítás értesítési hangra és rezgésre</string>
+    <string name="equil_common_read_devices">Eszközadatok olvasása</string>
+    <string name="equil_common_cmd_fill">Feltöltés</string>
+    <string name="history_manual_confirm">Kézi megerősítés</string>
+    <string name="equil_command_not_found">Nem található eszköz</string>
+    <string name="equil_command_connect_error">Sikertelen kapcsolódás a pumpához</string>
+    <string name="equil_command_connect_no_response">Nincs válasz a pumpától</string>
+    <string name="equil_command__unknown">A parancs állapota ismeretlen</string>
+    <string name="equil_install">Rögzítse a pumpát a testére</string>
+    <string name="equil_settings_alarm_battery">Alacsony elemszint riasztás</string>
+    <string name="equil_settings_alarm_insulin">Riasztás alacsony tartályszintnél</string>
+    <string name="equil_init_insulin_error">A tartály inicializálása nem fejeződött be</string>
+    <string name="equil_history_group_all">Összes</string>
+    <string name="equil_history_group_pair">Párosítás</string>
+    <string name="equil_history_group_bolus">Bólusok</string>
+    <string name="equil_history_group_basal">Bázisok</string>
+    <string name="equil_history_group_configuration">Konfigurációk</string>
+    <string name="equil_tab_action">Műveletek előzményei</string>
+    <string name="equil_tab_equil">Equil előzmények</string>
+    <string name="equil_password_error">Az Equil párosítási jelszava hibás</string>
+    <string name="equil_none">nincs</string>
+    <string name="equil_history_item1">Tartály - alacsony inzulinszint</string>
+    <string name="equil_history_item2">Tartály - kiürült</string>
+    <string name="equil_history_item3">Elzáródás észlelve</string>
+    <string name="equil_history_item4">A motor visszafelé forgása észlelve</string>
+    <string name="equil_history_item5">Motorhiba észlelve</string>
+    <string name="equil_history_item6">Beadási szünet elindítva</string>
+    <string name="equil_history_item7">A beadás már szünetel</string>
+    <string name="equil_history_item8">Hamarosan automatikus kikapcsolás</string>
+    <string name="equil_history_item9">Automatikus kikapcsolás!</string>
+    <string name="equil_history_item10">Tartály légtelenítése</string>
+    <string name="equil_history_item11">Pumpa visszatekerése</string>
+    <string name="equil_history_item12">Gyorsbólus elindítva</string>
+    <string name="equil_history_item13">Átmeneti bázis elindítva</string>
+    <string name="equil_history_item14">Átmeneti bázis befejeződött</string>
+    <string name="equil_history_item15">Alacsony elemszint</string>
+    <string name="equil_history_item16">Lemerült elem!</string>
+    <string name="equil_history_item17">Újraindítás bekapcsoláskor</string>
+    <string name="equil_history_item18">Rendellenes beadás leállítva</string>
+    <string name="equil_common_overview_button_suspend_delivery">Felfüggesztés</string>
+    <string name="equil_common_overview_button_resume_delivery">Beadás folytatása</string>
+    <string name="equil_common_wizard_exit_confirmation_text">Még nem végzett el minden lépést. Biztosan kilép?</string>
+    <string name="equil_common_wizard_exit_confirmation_title">Kilépés</string>
+    <string name="equil_support_error">Túl régi firmware verzió. Nem támogatott</string>
+    <string name="equil_password_tips">Ha akarja, beállíthat jelszót az Equil v5.3 pumpa párosításához. Ezt a jelszót a párosítás későbbi törléséhez is használni kell, ezért feltétlenül jegyezze meg. Jelszószabály: 4 karakter hosszú legyen, ezekből: ABCDEF0123456789.</string>
+    <string name="equil_set_pair_password">Párosítási jelszó beállítása</string>
+    <string name="equil_hint1">Miután a pumpát felhelyezte a talplemezre, válassza ki, hogy eltávolítja-e a levegőt a bent maradó tűből.</string>
+    <string name="equil_unbind">Eszköz párosításának törlése</string>
+    <string name="equil_device_unpaired">Eszköz párosítása törölve</string>
+    <string name="equil_assemble">Kérjük, szerelje össze a pumpát, a feltöltött tartályt és a töltött elemet</string>
+    <string name="equil_pair_password_title">Jelszó megadása: %1$s</string>
+    <string name="equil_insert">Kérjük, légtelenítse a tartályt, amíg egy csepp inzulin meg nem jelenik a tű hegyén</string>
+    <string name="equil_insert2">A pumpa nem lehet a talplemezen.</string>
+    <string name="equil_attach">Kérjük, helyezze a pumpát a talplemezre</string>
+    <string name="equil_hint2">Kanül légtelenítése</string>
+    <string name="equil_pump_updated">Pumpa frissítve</string>
+    <string name="equil_replace_reservoir">A tartály üres. Kérjük, cserélje ki a tartályt</string>
+    <string name="equil_removed_anyway">A párosítás törlése sikertelen. A pumpa ettől függetlenül el lesz távolítva. A párosításkor megadott jelszó nem törlődik a pumpáról.</string>
 </resources>

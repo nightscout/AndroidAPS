@@ -1,6 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="equil_name">Equil</string>
+    <string name="equil_pump_description">المضخة اللاصقة Equil 5.3 أو أحدث</string>
     <!--  start  -->
+    <string name="equil_basal_speed">الأنسولين القاعدي الأساسي</string>
+    <string name="equil_dressing">تغيير الخزان</string>
+    <string name="equil_dressing_onkey_msg">جاري تحريك المكبس تلقائياً إلى قاع الخزان. سيتوقف تلقائياً عند الوصول إلى القاع. انقر فوق \'إيقاف\' للمقاطعة إذا لزم الأمر.</string>
+    <string name="equil_hint_dressing">ستؤدي هذه العملية إلى إيقاف ضخ الأنسولين وتراجع مكبس المضخة إلى القاع!</string>
+    <string name="equil_insulin_reservoir">خزان الأنسولين</string>
+    <string name="equil_mode">وضع التشغيل</string>
+    <string name="equil_mode_running">قيد التشغيل</string>
+    <string name="equil_mode_stopped">متوقف</string>
+    <string name="equil_mode_suspended">معلق</string>
+    <string name="equil_serialnumber">رقم الجهاز</string>
+    <string name="equil_stop">إيقاف</string>
+    <string name="equil_success">نجاح</string>
+    <string name="equil_title_dressing">تغيير الخرطوشة</string>
+    <string name="equil_title_assemble">تجميع المضخة</string>
+    <string name="equil_title_serial">إقران الجهاز</string>
+    <string name="equil_title_fill">تجهيز / تعبئة</string>
+    <string name="equil_title_attach">تركيب المضخة</string>
+    <string name="equil_title_air">تجهيز القنية</string>
+    <string name="equil_title_unpair_detach">فصل المضخة</string>
+    <string name="equil_title_history_events">أحداث السجل</string>
+    <string name="equil_tone">نغمة التنبيه</string>
+    <string name="equil_bolus_speed">سرعة ضخ الجرعة</string>
+    <string name="equil_bolus_speed_summary">قد تؤدي الجرعة الأسرع إلى المزيد من إنذارات الانسداد.</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1.5 وحدة/دقيقة (قياسي)</string>
+    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 وحدة/دقيقة</string>
+    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 وحدة/دقيقة</string>
+    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 وحدة/دقيقة</string>
+    <string name="equil_tone_mode_mute">صامت</string>
+    <string name="equil_tone_mode_shake">اهتزاز فقط</string>
+    <string name="equil_tone_mode_tone">نغمة فقط</string>
+    <string name="equil_tone_mode_tone_and_shake">اهتزاز ونغمة</string>
+    <string name="equil_unbind_content">ستؤدي هذه العملية إلى إيقاف ضخ الأنسولين وتراجع مكبس المضخة إلى القاع! كما ستؤدي إلى حذف حالة الاقتران!</string>
+    <string name="equil_ble_config_confirmation_title">إقران المضخة اللاصقة Equil</string>
+    <string name="equil_error">خطأ في الاتصال</string>
+    <string name="equil_change">تغيير المضخة</string>
+    <string name="equil_change_content">يرجى فصل المضخة عن لوحة القاعدة.</string>
+    <string name="equil_new_infusion_set_question">هل ستقوم بتثبيت مجموعة تسريب جديدة (لوحة القاعدة والقنية) أيضا؟</string>
+    <string name="equil_new_infusion_set_yes">نعم، مجموعة تسريب جديدة</string>
+    <string name="equil_new_infusion_set_no">لا، الخزان أو البطارية فقط</string>
+    <string name="equil_same_infusion_set_hint">لن يتم تجهيز القنية ولن يتم تسجيل أي تغيير للقنية.</string>
+    <string name="equil_unpair_alert">هل أنت متأكد من رغبتك في التخلي عن التحكم في %1$s؟</string>
+    <string name="equil_record_basal">معدل الأنسولين القاعدي %1$s وحدة/ساعة</string>
+    <string name="equil_record_basal_temp">معدل الأنسولين القاعدي المؤقت %1$s وحدة/ساعة</string>
+    <string name="equil_record_bolus">الجرعة %1$s وحدة</string>
+    <string name="equil_error_set_temp_basal_failed_validation">يجب أن تكون مدة معدل الأنسولين القاعدي المؤقت أكبر من الصفر ومضاعفاً لـ %1$s دقيقة.</string>
+    <string name="equil_basal_exceeds_max">معدل الأنسولين القاعدي في الملف الشخصي %1$s وحدة/ساعة يتجاوز الحد الأقصى للأنسولين القاعدي في المضخة %2$s وحدة/ساعة. قم بزيادة إعداد الحد الأقصى للأنسولين القاعدي وأعد توصيل المضخة.</string>
+    <string name="equil_not_enough_insulin">لا يوجد أنسولين كافٍ متبقٍ في الخزان</string>
+    <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">بطارية منخفضة: %1$d%%</string>
+    <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">لا يوجد ما يكفي من الأنسولين في الخزان: %1$s</string>
+    <string name="equil_reservoir_empty">الخزان فارغ. لم تعد المضخة تضخ الأنسولين.</string>
+    <string name="equil_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">وصل أمر الجرعة إلى المضخة، لكن المضخة لم تستجب. قد تستمر في إعطاء %1$s. لا تعط جرعة أخرى. يحتسب AAPS الكمية كاملة.</string>
+    <string name="equil_stop_not_answered" comment="%1$s=insulin amount with unit. Example: 2.00 U, or for U200 insulin 2.00 U (1.00 CU)">لم يصل أمر الإيقاف إلى المضخة، أو فقد ردها. يحتسب AAPS الجرعة الكاملة البالغة %1$s حتى يظهر سجل المضخة ما تم إعطاؤه.</string>
+    <string name="equil_bolus_not_given" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">يظهر سجل المضخة أنه لم يتم إعطاء الجرعة البالغة %1$s. لا يحتسبها AAPS.</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">توقفت المضخة أثناء ضخ الجرعة. تم إعطاء: %1$s من %2$s</string>
+    <string name="equil_pump_not_run">المضخة لا تعمل</string>
+    <string name="equil_pair">إقران</string>
+    <string name="equil_pair_error">خطأ في الاقتران</string>
+    <string name="equil_fill">تجهيز/تعبئة</string>
+    <string name="equil_air">تفريغ الهواء</string>
+    <string name="equil_temp_basal_rate">معدل الأنسولين القاعدي المؤقت</string>
+    <string name="equil_total_delivered">إجمالي ما تم ضخه</string>
+    <string name="equil_firmware_version">إصدار البرنامج الثابت</string>
+    <string name="equil_shutdown_be">سيتم إيقاف تشغيل Equil تلقائياً</string>
+    <string name="equil_shutdown">إيقاف تشغيل Equil تلقائياً</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">المعدل: %1$.2f وحدة/ساعة، المدة: %2$d دقيقة</string>
+    <string name="equil_common_history_bolus_value">%1$.2f وحدة</string>
     <!-- equil - Commands -->
+    <string name="equil_common_cmd_set_bolus">تعيين الجرعة</string>
+    <string name="equil_common_cmd_cancel_bolus">إلغاء الجرعة</string>
+    <string name="equil_common_cmd_set_tbr">تعيين معدل الأنسولين القاعدي المؤقت</string>
+    <string name="equil_common_cmd_cancel_tbr">إلغاء معدل الأنسولين القاعدي المؤقت</string>
+    <string name="equil_common_cmd_set_basal_schedule">تعيين جدول ضخ الأنسولين القاعدي</string>
+    <string name="equil_common_cmd_set_time">ضبط الوقت</string>
+    <string name="equil_common_cmd_suspend_delivery">تعليق الضخ</string>
+    <string name="equil_common_cmd_resume_delivery">استئناف الضخ</string>
+    <string name="equil_common_cmd_pair">إقران Equil</string>
+    <string name="equil_common_cmd_insert_cannula">إدخال القنية</string>
+    <string name="equil_common_cmd_unpair">إلغاء إقران Equil</string>
+    <string name="equil_common_cmd_set_extended_bolus">تعيين الجرعة الممتدة</string>
+    <string name="equil_common_cmd_cancel_extended_bolus">إلغاء الجرعة الممتدة</string>
     <!--    推杆回退-->
+    <string name="equil_common_change_insulin">تراجع قضيب الدفع</string>
+    <string name="equil_common_set_alarm_tone">الضبط على صوت الإشعار فقط</string>
+    <string name="equil_common_set_alarm_shake">الضبط على الاهتزاز فقط</string>
+    <string name="equil_common_set_alarm_mute">الضبط على الوضع الصامت</string>
+    <string name="equil_common_set_alarm_tone_and_shake">الضبط على صوت الإشعار والاهتزاز</string>
+    <string name="equil_common_read_devices">قراءة معلومات الجهاز</string>
+    <string name="equil_common_cmd_fill">تعبئة</string>
+    <string name="history_manual_confirm">تأكيد يدوي</string>
+    <string name="equil_command_not_found">لم يتم العثور على الأجهزة</string>
+    <string name="equil_command_connect_error">فشل الاتصال بالمضخة</string>
+    <string name="equil_command_connect_no_response">لا توجد استجابة من المضخة</string>
+    <string name="equil_command__unknown">حالة الأمر غير معروفة</string>
+    <string name="equil_install">تركيب المضخة على جسمك</string>
+    <string name="equil_settings_alarm_battery">إنذار انخفاض البطارية</string>
+    <string name="equil_settings_alarm_insulin">إنذار انخفاض الخزان</string>
+    <string name="equil_init_insulin_error">تهيئة الخزان لم تكتمل</string>
+    <string name="equil_history_group_all">الكل</string>
+    <string name="equil_history_group_pair">إقران</string>
+    <string name="equil_history_group_bolus">الجرعات</string>
+    <string name="equil_history_group_basal">معدلات الأنسولين القاعدية</string>
+    <string name="equil_history_group_configuration">التهيئة</string>
+    <string name="equil_tab_action">إجراء السجل</string>
+    <string name="equil_tab_equil">سجل Equil</string>
+    <string name="equil_password_error">كلمة مرور إقران Equil غير صحيحة</string>
+    <string name="equil_none">بدون</string>
+    <string name="equil_history_item1">الخزان - مستوى الأنسولين منخفض</string>
+    <string name="equil_history_item2">الخزان - فارغ من الأنسولين</string>
+    <string name="equil_history_item3">تم اكتشاف انسداد في الضخ</string>
+    <string name="equil_history_item4">تم اكتشاف انعكاس المحرك</string>
+    <string name="equil_history_item5">تم اكتشاف عطل في المحرك</string>
+    <string name="equil_history_item6">بدء تعليق الحقن</string>
+    <string name="equil_history_item7">الحقن معلق بالفعل</string>
+    <string name="equil_history_item8">الإيقاف التلقائي وشيك</string>
+    <string name="equil_history_item9">إيقاف تلقائي!</string>
+    <string name="equil_history_item10">تجهيز الخزان</string>
+    <string name="equil_history_item11">إرجاع المضخة</string>
+    <string name="equil_history_item12">بدء جرعة سريعة</string>
+    <string name="equil_history_item13">بدء معدل الأنسولين القاعدي المؤقت</string>
+    <string name="equil_history_item14">انتهاء معدل الأنسولين القاعدي المؤقت</string>
+    <string name="equil_history_item15">مستوى البطارية منخفض</string>
+    <string name="equil_history_item16">البطارية فارغة!</string>
+    <string name="equil_history_item17">إعادة ضبط التشغيل</string>
+    <string name="equil_history_item18">توقف الضخ بسبب خلل</string>
+    <string name="equil_common_overview_button_suspend_delivery">تعليق</string>
+    <string name="equil_common_overview_button_resume_delivery">استئناف الضخ</string>
+    <string name="equil_common_wizard_exit_confirmation_text">لم تقم بإكمال جميع الخطوات بعد. هل أنت متأكد من رغبتك في الخروج؟</string>
+    <string name="equil_common_wizard_exit_confirmation_title">خروج</string>
+    <string name="equil_support_error">إصدار البرنامج الثابت قديم جدا. غير مدعوم</string>
+    <string name="equil_password_tips">اختياريا، قم بتعيين كلمة مرور للاقتران مع مضخة Equil v5.3. ستستخدم كلمة المرور هذه أيضا لإلغاء الاقتران في المستقبل، لذا يرجى التأكد من حفظها. قاعدة كلمة المرور: يجب أن تتكون من 4 أحرف، يتم اختيارها من ABCDEF0123456789.</string>
+    <string name="equil_set_pair_password">تعيين كلمة مرور الاقتران</string>
+    <string name="equil_hint1">بعد تثبيت المضخة على لوحة القاعدة، حدد ما إذا كنت تريد تفريغ الهواء من الإبرة الغارزة.</string>
+    <string name="equil_unbind">إلغاء إقران الجهاز</string>
+    <string name="equil_device_unpaired">تم إلغاء إقران الجهاز</string>
+    <string name="equil_assemble">يرجى تجميع المضخة، الخزان المعبأ والبطارية المشحونة</string>
+    <string name="equil_pair_password_title">أدخل كلمة المرور لـ %1$s</string>
+    <string name="equil_insert">يرجى تجهيز الخزان حتى تظهر قطرة أنسولين على طرف الإبرة</string>
+    <string name="equil_insert2">يجب ألا تكون المضخة على قاعدة المضخة.</string>
+    <string name="equil_attach">يرجى تركيب المضخة على القاعدة</string>
+    <string name="equil_hint2">تجهيز القنية</string>
+    <string name="equil_pump_updated">تم تحديث المضخة</string>
+    <string name="equil_replace_reservoir">الخزان فارغ. يرجى استبدال الخزان</string>
+    <string name="equil_removed_anyway">فشل أمر إلغاء الاقتران. سيتم إزالة المضخة على أي حال. لم تتم إزالة كلمة المرور المعينة أثناء الاقتران من المضخة.</string>
 </resources>

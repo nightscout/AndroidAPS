@@ -1,2 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r1_code">تذكير R1</string>
+    <string name="alert_r2_code">تذكير R2</string>
+    <string name="alert_r3_code">تذكير R3</string>
+    <string name="alert_r4_code">تذكير R4</string>
+    <string name="alert_r7_code">تذكير R7</string>
+    <string name="alert_w31_code">تحذير W31</string>
+    <string name="alert_w32_code">تحذير W32</string>
+    <string name="alert_w33_code">تحذير W33</string>
+    <string name="alert_w34_code">تحذير W34</string>
+    <string name="alert_w36_code">تحذير W36</string>
+    <string name="alert_w38_code">تحذير W38</string>
+    <string name="alert_w39_code">تحذير W39</string>
+    <string name="alert_m20_code">صيانة M20</string>
+    <string name="alert_m21_code">صيانة M21</string>
+    <string name="alert_m22_code">صيانة M22</string>
+    <string name="alert_m23_code">صيانة M23</string>
+    <string name="alert_m24_code">صيانة M24</string>
+    <string name="alert_m25_code">صيانة M25</string>
+    <string name="alert_m26_code">صيانة M26</string>
+    <string name="alert_m27_code">صيانة M27</string>
+    <string name="alert_m28_code">صيانة M28</string>
+    <string name="alert_m29_code">صيانة M29</string>
+    <string name="alert_m30_code">صيانة M30</string>
+    <string name="alert_e6_code">خطأ E6</string>
+    <string name="alert_e10_code">خطأ E10</string>
+    <string name="alert_e13_code">خطأ E13</string>
+</resources>

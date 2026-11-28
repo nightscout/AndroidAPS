@@ -1,2 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="objectives_button_start">Započni</string>
+    <string name="objectives_button_verify">Proveri</string>
+    <string name="nth_objective">%1$d. cilj</string>
+    <string name="objectivenotstarted">Cilj %1$d nije započet</string>
+    <string name="objectivenotfinished">Cilj %1$d nije završen</string>
+    <string name="objectives_0_objective">Podešavanje vizuelizacije i nadzora, analiza bazala i odnosa</string>
+    <string name="objectives_0_gate">Proverite da li je GUK dostupan u Nightscout-u i da li se podaci o insulinu iz pumpe otpremaju</string>
+    <string name="objectives_0_learned">Napravili ste osnovno podešavanje AAPS ekosistema. Nightscout nije neophodan da bi AAPS radio, ali je veoma koristan za izveštavanje i nadzor drugih pacijenata. Nije potrebno da stalno budete povezani na NS ako ga koristite samo za sebe. Možete podesiti otpremanje, na primer, samo preko kućnog Wi-Fi-ja i tako štedeti bateriju.</string>
+    <string name="objectives_openloop_objective">Početak rada sa otvorenom petljom</string>
+    <string name="objectives_openloop_gate">Radite nekoliko dana u režimu otvorene petlje i ručno primenjujte mnogo privremenih bazala. Podesite i koristite privremene i podrazumevane privremene ciljeve (npr. za aktivnost ili za ugljene hidrate za lečenje hipoglikemije).</string>
+    <string name="objectives_openloop_learned">Otvorena petlja se može koristiti za preporuke ako nemate kompatibilnu pumpu ili još niste spremni da zatvorite petlju.</string>
+    <string name="objectives_maxbasal_objective">Razumevanje otvorene petlje, uključujući njene preporuke za privremene bazale</string>
+    <string name="objectives_maxbasal_gate">Na osnovu tog iskustva odlučite koliki bi trebalo da bude maksimalni bazal i podesite ga u pumpi i u podešavanjima. U jednostavnom režimu ova vrednost se računa prema preporuci u wiki-ju i nije potrebno podešavati je.</string>
+    <string name="objectives_maxbasal">Izvršite radnju da biste ispunili preporuku</string>
+    <string name="objectives_maxbasal_learned">Vodite računa o bezbednosnim funkcijama i prilagodite bezbednosne parametre kada je potrebno.</string>
+    <string name="objectives_maxiobzero_objective">Početak zatvaranja petlje sa obustavom pri niskoj glukozi (LGS)</string>
+    <string name="objectives_maxiobzero_gate">Radite nekoliko dana u zatvorenoj petlji u režimu obustave pri niskoj glukozi (LGS) (tj. max IOB = 0 se postavlja automatski) bez previše LGS događaja.</string>
+    <string name="objectives_maxiobzero_learned">Postavljanje MaxIOB na nulu pomaže da se spreče hipoglikemije i neće dodati insulin iznad bazalne stope (osim kada je IOB negativan)</string>
+    <string name="objectives_maxiob_objective">Fino podešavanje zatvorene petlje: podizanje MaxIOB iznad 0 i postepeno spuštanje ciljeva GUK-a</string>
+    <string name="objectives_maxiob_gate">Radite tako nekoliko dana, i bar jednu noć bez alarma za nizak GUK, pre nego što snizite ciljni GUK</string>
+    <string name="objectives_maxiob_learned">Ažurirajte MaxIOB kako dete raste. Ne dozvolite sistemu da vam da više insulina nego što možete da pokrijete hranom = previsoka vrednost je loša ideja. U jednostavnom režimu MaxIOB se računa automatski</string>
+    <string name="maxiobset">Maksimalni IOB je pravilno podešen (nije potrebno u jednostavnom režimu)</string>
+    <string name="objectives_autosens_objective">Po potrebi prilagodite bazale i odnose, zatim uključite Autosens</string>
+    <string name="objectives_autosens_gate">Jedna nedelja uspešnog dnevnog rada petlje sa redovnim unosom ugljenih hidrata. U jednostavnom režimu Autosens je podrazumevano uključen.</string>
+    <string name="objectives_autosens_learned">Ako vaš Autosens rezultat ne osciluje oko 100%, vaš profil je verovatno pogrešan.</string>
+    <string name="objectives_smb_objective">Uključivanje dodatnih funkcija za dnevnu upotrebu, kao što je SMB</string>
+    <string name="objectives_smb_gate">Morate pročitati wiki i podići MaxIOB da bi SMB radio dobro! Dobar početak je MaxIOB = prosečni bolus za obrok + 3 × maksimalni dnevni bazal. U jednostavnom režimu ova vrednost se računa prema preporuci u wiki-ju i nije potrebno podešavati je.</string>
+    <string name="objectives_smb_learned">Cilj je da koristite SMB. Oref1 algoritam je napravljen da pomogne i sa bolusima. Ne treba da dajete pun bolus za hranu, već samo deo, a AAPS će po potrebi dati ostatak. Tako imate više „prostora“ za pogrešno procenjene ugljene hidrate. Da li ste znali da u kalkulatoru bolusa možete podesiti procenat rezultata da biste smanjili bolus?</string>
+    <string name="objectives_auto_objective">Uključivanje automatizacije</string>
+    <string name="objectives_auto_gate">Pročitajte dokumentaciju o radu automatizacije. Podesite prvo jednostavna pravila. Umesto odmah da izvršava radnju, neka AAPS najpre prikazuje samo obaveštenje. Kada budete sigurni da se automatizacija pokreće u pravo vreme, zamenite obaveštenje stvarnom radnjom. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
+    <string name="objectives_auto_learned">Automatizacija može biti dobar sluga, ali loš gospodar. Ne preterujte sa njom. Ne pokušavajte da njome zamenite osnovni algoritam. Uvek prvo testirajte pravilo samo sa porukama pre nego što ga pustite da radi radnju. Redosled je važan.</string>
+    <string name="objectives_bgavailableinns">GUK dostupan u NS-u ili Tidepool-u</string>
+    <string name="objectives_pumpstatusavailableinns">Status pumpe dostupan u NS-u ili Tidepool-u</string>
+    <string name="objectives_manualenacts">Ručno izvršene radnje</string>
+    <string name="accomplished">Završeno: %1$s</string>
+    <string name="objectives_usage_objective">Naučite kako da upravljate AAPS-om</string>
+    <string name="objectives_usage_gate">Izvršite različite radnje u AAPS-u</string>
+    <string name="objectives_usage_learned">Naučili ste osnove AAPS-a. Većina kontrola je na ekranu Pregled. Više radnji je u menijima Tretmani i Upravljanje na dnu ekrana, kao i u bočnom meniju.</string>
+    <string name="objectives_useprofileswitch">Postavite profil na 90% na 10 min</string>
+    <string name="objectives_usedisconnectpump">Simulirajte tuširanje. Isključite pumpu na 1 h</string>
+    <string name="objectives_usereconnectpump">... i zatim je ponovo priključite na isti način.</string>
+    <string name="objectives_usetemptarget">Napravite prilagođeni privremeni cilj u trajanju od 10 min</string>
+    <string name="objectives_useloop">Prikažite sadržaj dodatka Loop</string>
+    <string name="objectives_usescale">Koristite pomeranje ili zumiranje na grafikonu GUK-a</string>
+    <string name="objectives_exam_objective">Pokažite svoje znanje</string>
+    <string name="objectives_exam_gate">Proučite pitanja. Svako pitanje ima nekoliko mogućih odgovora i više od jednog odgovora može biti tačno. Označite sve tačne odgovore i izaberite PROVERI.</string>
+    <string name="objectives_exam_learned_prerequisites">Ne morate biti programer. Potrebni su vam Nightscout ili Tidepool za prolazak kroz Ciljeve, kompatibilna pumpa i način da izradite AAPS (u veb pregledaču ili u Android Studio-u) za prvu instalaciju i za svako ažuriranje.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS može raditi i bez interneta.</string>
+    <string name="objectives_exam_learned_basaltest">Profil treba periodično pregledati i ažurirati. Bolji profil = bolji rezultati.</string>
+    <string name="objectives_exam_learned_dia">DIA u radu sa petljom ima drugačije značenje (vreme dok se sav insulin ne apsorbuje) nego u klasičnoj terapiji pumpom (vreme dok se većina insulina apsorbuje).</string>
+    <string name="objectives_exam_learned_isf">Naučili ste značenje ISF vrednosti i kako utiče na količinu insulina za korekciju GUK-a.</string>
+    <string name="objectives_exam_learned_ic">Naučili ste značenje I:C vrednosti i kako utiče na količinu insulina potrebnu za pokrivanje ugljenih hidrata.</string>
+    <string name="objectives_exam_learned_hypott">Privremeni cilj Hipo se koristi samo da spreči prekomernu korekciju posle hipoglikemije, kada je obično prisutan nagomilani negativni IOB. Treba razmotriti dodatne mere da se ovakva situacija ubuduće spreči.</string>
+    <string name="objectives_exam_learned_profileswitch" formatted="false">Korišćenje procenta ne menja ciljni GUK, ali se bazal, ISF i IC podešavaju tako da daju više insulina (iznad 100%) ili manje insulina (ispod 100%).</string>
+    <string name="objectives_exam_learned_profileswitchtime">Upotrebom pomeranja vremena u promeni profila možete prilagoditi cirkadijalni profil nepravilnostima, kao što je kasno ustajanje.</string>
+    <string name="objectives_exam_learned_profileswitch4">Samo uređivanje profila nije dovoljno da bi promene važile. I dalje morate uraditi promenu profila da biste aktivirali promene.</string>
+    <string name="objectives_exam_learned_exercise">Treba da smanjite količinu insulina u telu bar 1 sat pre početka vežbanja tako što ćete izabrati profil ispod 100%.</string>
+    <string name="objectives_exam_learned_exercise2">Podešavanje višeg privremenog cilja bar 1 sat pre vežbanja takođe pomaže da se smanji količina insulina u telu.</string>
+    <string name="objectives_exam_learned_noisycgm">Kada ne možete da se oslonite na CGM vrednosti, ne treba koristiti petlju bez nadzora.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS mora da zna da pumpa nije povezana kako bi ispravno računao IOB.</string>
+    <string name="objectives_exam_learned_insulin">AAPS mora znati koji je insulin u pumpi, jer to utiče na izračunavanje IOB.</string>
+    <string name="objectives_exam_learned_sensitivity">Detekcija osetljivosti je deo algoritma koji omogućava prilagođavanje doze insulina različitim situacijama.</string>
+    <string name="objectives_exam_learned_objectives">Vaš napredak u Ciljevima se čuva zajedno sa ostalim podešavanjima i treba da napravite njegovu rezervnu kopiju.</string>
+    <string name="objectives_exam_learned_objectives2">Uvek čuvajte izvezena podešavanja i napravljeni APK i van telefona. Telefon može biti izgubljen, oštećen itd. Dobro mesto je bilo koji cloud do koga telefon ima pristup. Tako možete vratiti AAPS na drugi uređaj za nekoliko minuta. Dobra praksa je i da glavnu lozinku sačuvate na bezbednom mestu. Bez nje je rezervna kopija beskorisna. Isto važi i za ključeve za potpisivanje (.jks datoteka) i lozinke korišćene za pravljenje AAPS-a. Ostalo nije važno – uvek se može ponovo preuzeti sa interneta.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Ako ste napravili pogrešan unos u AAPS ili on ne odgovara stvarnosti, ispravite ga što pre. To može da dovede do predoziranja. AAPS uvek treba da bude što bolje obavešten o ugljenim hidratima, insulinu itd.</string>
+    <string name="objectives_exam_learned_iob">Ako želite da proverite da li AAPS dobro radi za vas, praćenje IOB grafikona može da vam da mnogo korisnih informacija.</string>
+    <string name="objectives_exam_learned_cob">Izračunavanje COB-a zavisi od odnosa između ISF-a i IC-a. Povećanje ISF-a ili smanjenje IC-a dovodi do dužeg vremena apsorpcije. Ali promena profila sa procentom menja obe vrednosti u isto vreme, pa vreme apsorpcije ostaje isto.</string>
+    <string name="objectives_exam_learned_breadgrams">Samo grami su dozvoljeni za unos ugljenih hidrata.</string>
+    <string name="objectives_exam_learned_ecarbs">eUH su zamena za produženi bolus iz „sveta pumpi“.</string>
+    <string name="objectives_exam_learned_nsclient">AAPS možete daljinski pratiti pomoću AAPSClient-a ili Nightscout-a. Kada je AAPSClient uparen sa glavnim telefonom, možete i daljinski upravljati AAPS-om.</string>
+    <string name="objectives_exam_learned_concentration1">Korišćenje U200 insulina sa profilom od 50% zahteva stalno preračunavanje: za spoljne boluse penovima, a svi standardni izveštaji iz AAPS-a ili NS-a biće pogrešni i moraće da se preračunaju u IJ za zdravstveni tim.</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">Prelazak sa U200 sa profilom od 50% na U200 sa funkcijom koncentracije insulina zahtevaće pravljenje novog, jačeg profila, isključivanje DynISF-a na nedelju dana i navikavanje da razmišljate u internacionalnim jedinicama.</string>
+    <string name="objectives_exam_learned_concentration3">Koncentracija insulina može da se promeni samo kada se promeni insulin ili Patch. Ali najvažnije je, posebno kod pumpi sa cevi, da nikada ne koristite korisnički interfejs pumpe da biste davali boluse direktno sa pumpe.</string>
+    <string name="answerdisabledto">Odgovaranje onemogućeno do: %1$s</string>
+    <string name="wronganswer">Pogrešan odgovor!</string>
+    <string name="unfinshed_button">Sledeći nezavršeni</string>
+    <string name="requestcode">Kod zahteva: %1$s</string>
+    <string name="objectives_hint">(obeležite sve tačne odgovore)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
+    <string name="notconnected">Nema internet veze</string>
+    <string name="failedretrievetime">Preuzimanje vremena nije uspelo</string>
+    <string name="requirementnotmet">Nisu ispunjeni uslovi za ovaj cilj</string>
+    <string name="what_i_ve_learned">Šta sam naučio:</string>
+    <string name="verify_master_password">Potvrdite da znate glavnu lozinku</string>
+    <string name="objectives_collapse">Manje</string>
+    <string name="objectives_expand">Više</string>
+    <string name="objectives_no_learned">Za ovaj cilj nema zabeleženih lekcija.</string>
+    <string name="objectives_open_exam">Otvori ispit</string>
+    <string name="objectives_exam_question_progress">Pitanje %1$d od %2$d</string>
+    <string name="objectives_exam_reset">Resetuj</string>
+    <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Gotovo</string>
+    <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">U toku</string>
+    <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">Nije započet</string>
+    <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">Zaključan</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">tačan odgovor</string>
+    <string name="objectives_exam_previous">Prethodno</string>
+    <string name="objectives_exam_next">Dalje</string>
+    <string name="objectives_exam_next_unanswered">Sledeće neodgovoreno</string>
+    <string name="objectives_show_hint">Savet</string>
+</resources>

@@ -1,54 +1,358 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">Jednostavni režim</string>
+    <string name="pref_title_insulin_concentration">Podrška za koncentraciju insulina</string>
+    <string name="pref_summary_insulin_concentration">Uključite podršku za različite koncentracije insulina (U50, U200 itd.)</string>
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Drži ekran uključen</string>
+    <string name="pref_summary_keep_screen_on">Ne dozvoli Android-u da isključi ekran. To troši mnogo energije kada telefon nije priključen na punjač.</string>
+    <string name="pref_title_show_treatment_button">Prikaži dugme za tretman</string>
+    <string name="pref_title_show_wizard_button">Prikaži dugme kalkulatora</string>
+    <string name="pref_title_show_insulin_button">Prikaži dugme za insulin</string>
+    <string name="pref_title_show_carbs_button">Prikaži dugme za ugljene hidrate</string>
+    <string name="pref_title_show_cgm_button">Prikaži dugme za CGM</string>
+    <string name="pref_summary_show_cgm_button">Otvara xDrip+ ili Dexcom aplikaciju (dugmetom Nazad se vraćate u AAPS).</string>
+    <string name="pref_title_show_calibration_button">Prikaži dugme za kalibraciju</string>
+    <string name="pref_summary_show_calibration_button">Šalje kalibraciju u xDrip+ (proverite da je u xDrip+ uključeno „Accept Calibrations“ u Inter-App settings).</string>
+    <string name="pref_title_show_notes_in_dialogs">Prikaži beleške u dijalozima</string>
+    <string name="pref_title_use_bolus_advisor">Koristi savetnika za bolus</string>
+    <string name="pref_summary_use_bolus_advisor">Uključite savetnika za bolus koji pomaže u proračunu bolusa kod viših glikemija.</string>
+    <string name="pref_title_use_bolus_reminder">Koristi podsetnik za bolus</string>
+    <string name="pref_summary_use_bolus_reminder">Uključite obaveštenja podsetnika za bolus koja pomažu u praćenju davanja insulina.</string>
+    <string name="pref_title_use_super_bolus">Koristi superbolus</string>
+    <string name="pref_summary_use_super_bolus">Uključite funkciju superbolusa koja pozajmljuje insulin iz bazala za trenutnu isporuku.</string>
     <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">BT Watchdog</string>
+    <string name="pref_summary_bt_watchdog">Isključuje Bluetooth na telefonu na jednu sekundu ako veza sa pumpom nije moguća. Ovo može pomoći na nekim telefonima na kojima se Bluetooth zablokira.</string>
     <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">Upozori ako ne stižu podaci o GUK-u</string>
+    <string name="pref_title_alert_pump_unreachable">Upozori ako je pumpa nedostupna</string>
+    <string name="pref_title_alert_carbs_required">Upozori kada su potrebni ugljeni hidrati</string>
+    <string name="pref_title_alert_urgent_as_android_notification">Prikaži hitne alarme kao Android obaveštenja</string>
+    <string name="pref_title_alert_increase_volume">Postepeno pojačavaj jačinu obaveštenja</string>
+    <string name="pref_title_alert_override_dnd">Zaobiđi režim Ne uznemiravaj</string>
+    <string name="pref_summary_alert_override_dnd">Uključeno: alarmi zvone i kada je telefon utišan ili u režimu „Ne uznemiravaj“. Isključeno: alarmi tada ne zvone. U režimu „Ne uznemiravaj“ samo vibriraju.</string>
     <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">Otpremi podatke o GUK-u u NS</string>
+    <string name="pref_title_bg_source_create_sensor_change">Beleži promenu senzora</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Kreira događaj „Promena senzora“ kada se senzor postavi.</string>
     <!-- APS preferences -->
+    <string name="pref_title_aps_use_dynamic_sensitivity">Koristi dinamičku osetljivost</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">Koristi DynamicISF za prilagođavanje osetljivosti umesto Autosens-a.</string>
+    <string name="pref_title_aps_use_autosens">Koristi Autosens</string>
+    <string name="pref_title_aps_use_smb">Uključi SMB</string>
+    <string name="pref_summary_aps_use_smb">Uključite Super Micro Bolus. SMB odmah isporučuje insulin kao odgovor na rast glukoze u krvi.</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">Uključi SMB sa visokim privremenim ciljem</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">Dozvoli SMB kada je aktivan visok privremeni cilj.</string>
+    <string name="pref_title_aps_use_smb_always">Uvek uključi SMB</string>
+    <string name="pref_summary_aps_use_smb_always">Uključi SMB u svim uslovima, bez obzira na bolus ili COB.</string>
+    <string name="pref_title_aps_use_smb_with_cob">Uključi SMB sa COB</string>
+    <string name="pref_summary_aps_use_smb_with_cob">Dozvoli SMB kada postoje aktivni ugljeni hidrati (COB).</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">Uključi SMB pri niskom privremenom cilju</string>
+    <string name="pref_summary_aps_use_smb_with_low_tt">Dozvoli SMB kada je aktivan nizak privremeni cilj.</string>
+    <string name="pref_title_aps_use_smb_after_carbs">Uključi SMB posle ugljenih hidrata</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">Dozvoli SMB neko vreme posle unosa ugljenih hidrata.</string>
+    <string name="pref_title_aps_use_uam">Uključi UAM</string>
+    <string name="pref_summary_aps_use_uam">Uključi otkrivanje i lečenje nenajavljenih obroka (UAM).</string>
+    <string name="pref_title_aps_sensitivity_raises_target">Osetljivost podiže cilj</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">Kada se otkrije osetljivost, podigni ciljnu glukozu.</string>
+    <string name="pref_title_aps_resistance_lowers_target">Rezistencija spušta cilj</string>
+    <string name="pref_summary_aps_resistance_lowers_target">Kada se otkrije rezistencija, spusti ciljnu glukozu.</string>
+    <string name="pref_title_aps_always_use_short_deltas">Uvek koristi kratku prosečnu deltu</string>
+    <string name="pref_summary_aps_always_use_short_deltas">Uvek koristi kratku prosečnu deltu umesto obične delte za izračunavanje promene GUK-a.</string>
+    <string name="pref_title_aps_dynisf_adjust_sensitivity">Dinamički ISF prilagođava osetljivost</string>
+    <string name="pref_summary_aps_dynisf_adjust_sensitivity">Prilagodi izračunavanje osetljivosti kada se koristi Dinamički ISF.</string>
+    <string name="pref_title_aps_autosens_adjust_targets">Autosens prilagođava ciljeve</string>
+    <string name="pref_summary_aps_autosens_adjust_targets">Dozvoli da Autosens prilagođava ciljnu glukozu, pored bazala i ISF-a.</string>
+    <string name="pref_title_aps_high_tt_raises_sensitivity">Visok privremeni cilj povećava osetljivost</string>
+    <string name="pref_summary_aps_high_tt_raises_sensitivity">Visoki privremeni ciljevi će povećati osetljivost na insulin.</string>
+    <string name="pref_title_aps_low_tt_lowers_sensitivity">Nizak privremeni cilj smanjuje osetljivost</string>
+    <string name="pref_summary_aps_low_tt_lowers_sensitivity">Niski privremeni ciljevi će smanjiti osetljivost na insulin.</string>
+    <string name="pref_title_aps_use_autoisf_weights">Uključi AutoISF</string>
+    <string name="pref_summary_aps_use_autoisf_weights">Uključi AutoISF prilagođavanje ISF-a na osnovu težinskih faktora.</string>
+    <string name="pref_title_aps_smb_on_even_target">Uključi SMB pri parnom cilju</string>
+    <string name="pref_summary_aps_smb_on_even_target">Drugi način da se SMB uvek uključi, na osnovu vrednosti ciljne glukoze.</string>
     <!-- Maintenance preferences -->
+    <string name="pref_title_maintenance_enable_fabric">Uključi Fabric izveštaje o padu aplikacije</string>
+    <string name="pref_title_maintenance_enable_export_automation">Uključi automatski izvoz podešavanja</string>
     <!-- Autotune preferences -->
+    <string name="pref_title_autotune_auto_switch_profile">Automatska promena profila</string>
+    <string name="pref_summary_autotune_auto_switch_profile">Posle izračunavanja automatski pređi na profil koji je napravio Autotune.</string>
+    <string name="pref_title_autotune_categorize_uam_as_basal">Računaj UAM kao bazal</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">U Autotune izračunavanjima tretiraj nenajavljene obroke kao potrebu za bazalnim insulinom.</string>
+    <string name="pref_title_autotune_tune_insulin_curve">Podesi krivu insulina</string>
+    <string name="pref_title_autotune_circadian_ic_isf">Koristi cirkadijalni IC/ISF</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">Primeni cirkadijalne promene na IC i ISF u Autotune izračunavanjima.</string>
+    <string name="pref_title_autotune_additional_log">Dodatno beleženje u log</string>
     <!-- SMS preferences -->
+    <string name="pref_title_sms_allow_remote_commands">Dozvoli daljinske komande preko SMS-a</string>
+    <string name="pref_title_sms_report_pump_unreachable">Javi preko SMS-a da je pumpa nedostupna</string>
+    <string name="pref_summary_sms_report_pump_unreachable">Pošalji SMS obaveštenje kada pumpa postane nedostupna.</string>
     <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">Otpremi status pumpe na NS</string>
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_upload_data">Otpremi podatke na NS</string>
+    <string name="pref_summary_ns_upload_data">Otpremi tretmane, privremene bazale i druge podatke na Nightscout.</string>
+    <string name="pref_title_ns_receive_cgm">Primaj CGM podatke sa NS-a</string>
+    <string name="pref_summary_ns_receive_cgm">Prihvati CGM očitavanja sa Nightscout-a.</string>
+    <string name="pref_title_ns_receive_profile_store">Primaj skup profila sa NS-a</string>
+    <string name="pref_summary_ns_receive_profile_store">Prihvati izmene skupa profila sa Nightscout-a.</string>
+    <string name="pref_title_ns_receive_temp_target">Primaj privremene ciljeve sa NS-a</string>
+    <string name="pref_summary_ns_receive_temp_target">Prihvati promene privremenog cilja sa Nightscout-a.</string>
+    <string name="pref_title_ns_receive_profile_switch">Primaj promene profila sa NS-a</string>
+    <string name="pref_summary_ns_receive_profile_switch">Prihvati događaje promene profila sa Nightscout-a.</string>
+    <string name="pref_title_ns_receive_insulin">Primaj insulin sa NS-a</string>
+    <string name="pref_summary_ns_receive_insulin">Prihvati tretmane insulinom sa Nightscout-a.</string>
+    <string name="pref_title_ns_receive_carbs">Primaj ugljene hidrate sa NS-a</string>
+    <string name="pref_summary_ns_receive_carbs">Prihvati unose ugljenih hidrata sa Nightscout-a.</string>
+    <string name="pref_title_ns_receive_therapy_event">Primaj događaje terapije sa NS-a</string>
+    <string name="pref_summary_ns_receive_therapy_event">Prihvati događaje terapije sa Nightscout-a.</string>
+    <string name="pref_title_ns_receive_running_mode">Primaj režim rada sa NS-a</string>
+    <string name="pref_summary_ns_receive_running_mode">Prihvati promene režima rada sa Nightscout-a.</string>
+    <string name="pref_title_ns_receive_tbr_eb">Primaj TBR/EB sa NS-a</string>
+    <string name="pref_summary_ns_receive_tbr_eb">Prihvati privremene bazale i produžene boluse sa Nightscout-a.</string>
+    <string name="pref_title_ns_notifications_from_alarms">NS alarmi</string>
+    <string name="pref_title_ns_notifications_from_announcements">NS objave</string>
+    <string name="pref_title_ns_use_cellular">Koristi mobilne podatke</string>
+    <string name="pref_title_ns_use_roaming">Koristi roming</string>
+    <string name="pref_title_ns_use_wifi">Koristi WiFi</string>
+    <string name="pref_title_ns_use_on_battery">Sinhronizuj na bateriji</string>
+    <string name="pref_title_ns_use_on_charging">Sinhronizuj tokom punjenja</string>
+    <string name="pref_title_ns_log_app_start">Beleži pokretanje aplikacije</string>
+    <string name="pref_title_ns_create_announcements_from_errors">Napravi objave od grešaka</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">Napravi objave kada su potrebni ugljeni hidrati</string>
+    <string name="pref_title_ns_slow_sync">Koristi sporu sinhronizaciju</string>
+    <string name="pref_title_ns_use_ws">Koristi websockets</string>
+    <string name="pref_summary_ns_use_ws">Koristi websockets za komunikaciju sa Nightscout-om u realnom vremenu.</string>
+    <string name="pref_title_ns_allow_client_control">Dozvoli upravljanje sa klijenta</string>
+    <string name="pref_summary_ns_allow_client_control">Dozvoljava uparenim klijentskim uređajima da šalju potpisane komande (npr. pokretanje/zaustavljanje scena) preko Nightscout-a. Ovo uključuje i režim pojačane zaštite: promene napravljene direktno u Nightscout-u se više ne prihvataju.</string>
     <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">Samo preko WiFi-ja</string>
+    <string name="pref_title_openhumans_charging_only">Samo tokom punjenja</string>
     <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_status">Šalji status u xDrip+</string>
+    <string name="pref_title_xdrip_send_detailed_iob">Šalji detaljan IOB</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">Šalji detaljne podatke o IOB-u u xDrip+ za prikaz na watchface-u.</string>
+    <string name="pref_title_xdrip_send_bgi">Prikaži BGI</string>
+    <string name="pref_summary_xdrip_send_bgi">Prikaži uticaj na glukozu u krvi (BGI) u statusnoj liniji xDrip+.</string>
     <!-- Wear preferences -->
+    <string name="pref_title_wear_control">Upravljanje sa sata</string>
+    <string name="pref_summary_wear_control">Upravljajte AAPS-om sa Android Wear sata.</string>
+    <string name="pref_title_wear_wizard_bg">Uključi GUK u kalkulator</string>
+    <string name="pref_title_wear_wizard_tt">Uključi privremeni cilj u kalkulator</string>
+    <string name="pref_title_wear_wizard_trend">Uključi trend u kalkulator</string>
+    <string name="pref_title_wear_wizard_cob">Uključi COB u kalkulator</string>
+    <string name="pref_title_wear_wizard_iob">Uključi IOB u kalkulator</string>
+    <string name="pref_title_wear_custom_watchface_authorization">Dozvoli prilagođene watchface-ove</string>
+    <string name="pref_title_wear_pushed_watchface">Watchface instaliran na satu</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Watchface sa komplikacijama</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Prilagođeni watchface</string>
+    <string name="pref_title_wear_notify_on_smb">Obaveštenje o SMB-u</string>
+    <string name="pref_summary_wear_notify_on_smb">Šalji obaveštenja na sat kada se isporuči SMB.</string>
+    <string name="pref_title_wear_broadcast_data">Šalji podatke na sat (broadcast)</string>
+    <string name="pref_summary_wear_broadcast_data">Šalji AAPS podatke aplikacijama za sat drugih proizvođača preko intent-a.</string>
     <!-- Site rotation preferences -->
+    <string name="pref_title_site_rotation_manage_pump">Upravljaj rotacijom mesta za pumpu</string>
+    <string name="pref_title_site_rotation_manage_cgm">Upravljaj rotacijom mesta za CGM</string>
     <!-- IntKey: Overview preferences -->
+    <string name="pref_title_carbs_button_increment_1">Korak dugmeta za ugljene hidrate 1</string>
+    <string name="pref_title_carbs_button_increment_2">Korak dugmeta za ugljene hidrate 2</string>
+    <string name="pref_title_carbs_button_increment_3">Korak dugmeta za ugljene hidrate 3</string>
+    <string name="carb_increment_button_message">Koliko grama ugljenih hidrata se dodaje kada pritisnete dugme</string>
+    <string name="pref_title_cage_warning">Prag upozorenja za starost kanile</string>
+    <string name="pref_title_cage_critical">Kritični prag za starost kanile</string>
+    <string name="pref_title_iage_warning">Prag upozorenja za starost insulina</string>
+    <string name="pref_title_iage_critical">Kritični prag za starost insulina</string>
+    <string name="pref_title_sage_warning">Prag upozorenja za starost senzora</string>
+    <string name="pref_title_sage_critical">Kritični prag za starost senzora</string>
+    <string name="pref_title_sbat_warning">Prag upozorenja za nivo baterije senzora</string>
+    <string name="pref_title_sbat_critical">Kritični prag za nivo baterije senzora</string>
+    <string name="pref_title_bage_warning">Prag upozorenja za starost baterije pumpe</string>
+    <string name="pref_title_bage_critical">Kritični prag za starost baterije pumpe</string>
+    <string name="pref_title_res_warning">Prag upozorenja za nivo rezervoara</string>
+    <string name="pref_title_res_critical">Kritični prag za nivo rezervoara</string>
+    <string name="pref_title_batt_warning">Prag upozorenja za nivo baterije pumpe</string>
+    <string name="pref_title_batt_critical">Kritični prag za nivo baterije pumpe</string>
+    <string name="pref_title_bolus_percentage">Procenat bolusa</string>
+    <string name="deliverpartofboluswizard">Primeni ovu vrednost na korekciju za GUK i ugljene hidrate u rezultatu kalkulatora bolusa</string>
+    <string name="pref_title_reset_bolus_percentage_time">Vreme za vraćanje procenta bolusa</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Isporuči ceo bolus (100%) ako je očitavanje GUK-a starije od</string>
     <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">Vreme važenja zaštite</string>
+    <string name="pref_title_protection_type_application">Nivo 0: Zaštita aplikacije</string>
+    <string name="pref_summary_protection_type_application">Pokretanje aplikacije i povratak u aplikaciju. Ne zavisi od drugih nivoa</string>
+    <string name="pref_title_protection_type_bolus">Nivo 1: Zaštita bolusa</string>
+    <string name="pref_summary_protection_type_bolus">Tretmani, aktiviranje profila. Zahteva nivo 2</string>
+    <string name="pref_title_protection_type_settings">Nivo 2: Zaštita podešavanja</string>
+    <string name="pref_summary_protection_type_settings">Izmena profila, podešavanja</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">Bez zaštite</string>
+    <string name="biometric">Biometrija</string>
+    <string name="master_password">Glavna lozinka</string>
+    <string name="custom_password">Prilagođena lozinka</string>
+    <string name="custom_pin">Prilagođeni PIN</string>
     <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">Najviše dozvoljenih ugljenih hidrata</string>
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">Najmanja promena u otvorenoj petlji</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Otvorena petlja će prikazati novi zahtev za promenu samo ako je promena veća od ove vrednosti u %. Podrazumevana vrednost je 20%</string>
     <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">Interval SMB-a</string>
+    <string name="pref_title_smb_max_minutes">Maks. minuta bazala za ograničenje SMB-a</string>
+    <string name="pref_title_uam_smb_max_minutes">UAM maks. minuta bazala za ograničenje SMB-a</string>
+    <string name="uam_smb_max_minutes">UAM SMB max minuta</string>
+    <string name="pref_title_carbs_request_threshold">Prag za potrebne ugljene hidrate</string>
+    <string name="carbs_req_threshold_summary">Minimalna količina ugljenih hidrata (g) da bi se prikazao predlog unosa UH. Manje vrednosti od ovoga neće pokrenuti obaveštenje.</string>
+    <string name="pref_title_half_basal_exercise_target">Cilj za vežbanje sa pola bazala</string>
+    <string name="half_basal_exercise_target_summary">Unesite vrednost, npr. 160. Kada je privremeni cilj 160 mg/dL i opcija „Visok privremeni cilj povećava osetljivost“ uključena, bazal će biti 50%% na ovom nivou (120 = 75%%; 140 = 60%%).</string>
+    <string name="pref_title_iob_threshold_percent">Prag IOB-a u procentima</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Procenat MaxIOB iznad kog se SMB onemogućava.\nPodrazumevano: 100%.\nSa 100% ova funkcija je praktično isključena.</string>
+    <string name="pref_title_dynisf_adjustment_factor">Faktor prilagođavanja za Dinamički ISF</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Faktor prilagođavanja za Dinamički ISF. Podesite više od 100% za agresivnije korekcione doze, a manje od 100% za blaže korekcije.</string>
+    <string name="pref_title_autosens_period">Period za Autosens</string>
+    <string name="openapsama_autosens_period_summary">Broj sati unazad koji se koristi za detekciju osetljivosti (vreme apsorpcije ugljenih hidrata je isključeno)</string>
     <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">Broj logova za slanje</string>
     <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">Prag za zastarele podatke</string>
+    <string name="pref_title_pump_unreachable_threshold">Prag za nedostupnu pumpu</string>
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">Podrazumevani broj dana za podešavanje</string>
+    <string name="autotune_default_tune_days_summary">Podrazumevani broj dana koji Autotune obrađuje (maksimalno 30).</string>
     <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">Najmanji razmak između daljinskih bolusa</string>
     <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">Interval nasumičnog GUK-a</string>
+    <string name="pref_title_random_bg_randomize">Nasumični GUK podaci</string>
+    <string name="pref_summary_random_bg_randomize">Dodaj šum, pomeraj vremena očitavanja, nasumične strelice trenda i povremeno nasumične ugljene hidrate. Isključi za čistu, predvidljivu sinusoidu sa strelicom trenda izvedenom iz nagiba sinusoide.</string>
     <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">Prag alarma za zastarele podatke</string>
+    <string name="pref_title_urgent_alarm_stale_data">Prag hitnog alarma za zastarele podatke</string>
     <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">Korisnički profil za rotaciju mesta</string>
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
+    <string name="site_rotation_profile_man">Muškarac</string>
+    <string name="site_rotation_profile_woman">Žena</string>
+    <string name="site_rotation_profile_child">Dete</string>
     <!-- StringKey: General preferences -->
+    <string name="pref_title_units">Jedinice</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="lang_default">Podrazumevano u sistemu</string>
+    <string name="pref_title_patient_name">Naziv instance</string>
+    <string name="pref_summary_patient_name">Ime osobe koja koristi ovaj telefon. Razlikuje ovu AAPS instancu u izveštajima i sinhronizaciji.</string>
     <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">AAPS direktorijum</string>
     <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">Glavna lozinka</string>
+    <string name="pref_title_settings_password">Lozinka za podešavanja</string>
+    <string name="pref_title_settings_pin">PIN za podešavanja</string>
+    <string name="pref_title_application_password">Lozinka za aplikaciju</string>
+    <string name="pref_title_application_pin">PIN za aplikaciju</string>
+    <string name="pref_title_bolus_password">Lozinka za bolus</string>
+    <string name="pref_title_bolus_pin">PIN za bolus</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="pref_summary_theme_switcher">Izaberite tamnu ili svetlu temu, ili temu sistema</string>
+    <string name="pref_title_app_color_scheme">Šema boja aplikacije</string>
+    <string name="pref_dark_theme">Tamna tema</string>
+    <string name="pref_light_theme">Svetla tema</string>
+    <string name="pref_follow_system_theme">Koristi temu uređaja</string>
     <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">Starost pacijenta</string>
     <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">Primalac e-pošte</string>
+    <string name="pref_title_identification">Identifikacija za izveštaje o padu aplikacije</string>
     <!-- StringKey: Automation preferences -->
+    <string name="pref_title_automation_location">Usluga lokacije</string>
+    <string name="automation_location_passive">Koristi pasivnu lokaciju</string>
+    <string name="automation_location_network">Koristi lokaciju preko mreže</string>
+    <string name="automation_location_gps">Koristi GPS lokaciju</string>
     <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers">Dozvoljeni brojevi telefona</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_otp_pin">Dodatni obavezni PIN na kraju koda</string>
+    <string name="smscommunicator_otp_pin_summary">Dodatne cifre koje treba zapamtiti i dodati na kraj svake generisane jednokratne lozinke</string>
     <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">Tip pumpe</string>
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">Nightscout URL</string>
+    <string name="ns_client_url_summary">Unesite URL vašeg Nightscout-a (npr. https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_secret_title">Nightscout API secret</string>
+    <string name="ns_client_secret_summary">Unesite vaš Nightscout API secret (najmanje 12 znakova)</string>
+    <string name="nsclient_token_title">Nightscout pristupni token</string>
+    <string name="nsclient_token_summary">Unesite vaš Nightscout pristupni token (najmanje 17 znakova)</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_wifi_ssids_summary">Dozvoljeni SSID-ovi (odvojeni tačkom i zarezom)</string>
     <!-- DoubleKey: Overview preferences -->
+    <string name="pref_title_insulin_button_increment_1">Korak dugmeta za insulin 1</string>
+    <string name="pref_title_insulin_button_increment_2">Korak dugmeta za insulin 2</string>
+    <string name="pref_title_insulin_button_increment_3">Korak dugmeta za insulin 3</string>
+    <string name="insulin_increment_button_message">Koliko insulina se dodaje kada pritisnete dugme</string>
     <!-- DoubleKey: Actions preferences -->
+    <string name="pref_title_fill_button_1">Dugme za punjenje 1</string>
+    <string name="pref_title_fill_button_2">Dugme za punjenje 2</string>
+    <string name="pref_title_fill_button_3">Dugme za punjenje 3</string>
     <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">Maksimalni bolus</string>
+    <string name="treatmentssafety_maxbolus_summary">Izabrani tip pacijenta ograničava ovu vrednost. Veća vrednost ovde nema efekta.</string>
     <!-- DoubleKey: APS preferences -->
+    <string name="pref_title_max_basal">Maksimalna bazalna stopa</string>
+    <string name="openapsma_max_basal_summary">Ova vrednost se u OpenAPS-u zove max basal\nIzabrani tip pacijenta ograničava ovu vrednost. Veća vrednost ovde nema efekta.</string>
+    <string name="pref_title_smb_max_iob">MaxIOB za SMB</string>
+    <string name="openapssmb_max_iob_summary">Ova vrednost se u OpenAPS-u zove Max IOB\nOpenAPS neće dodati insulin ako je trenutni IOB veći od ove vrednosti.\nIzabrani tip pacijenta ograničava ovu vrednost. Veća vrednost ovde nema efekta.</string>
+    <string name="pref_title_ama_max_iob">MaxIOB za AMA</string>
+    <string name="openapsma_max_iob_summary">Ova vrednost se u OpenAPS-u zove Max IOB\nOvo je najveća količina insulina u [J] koju APS može da isporuči odjednom.\nIzabrani tip pacijenta ograničava ovu vrednost. Veća vrednost ovde nema efekta.</string>
+    <string name="pref_title_max_daily_multiplier">Maks. dnevni bezbednosni množilac</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Podrazumevana vrednost: 3. Ovo je važno bezbednosno ograničenje OpenAPS-a. Ono ograničava vaš bazal na 3 puta vašu najveću bazalnu stopu. Verovatno nećete morati da ga menjate, ali treba da znate da se na to odnosi „3× najveći dnevni; 4× trenutni“ kod bezbednosnih ograničenja.</string>
+    <string name="pref_title_current_basal_multiplier">Bezbednosni množilac trenutnog bazala</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Podrazumevana vrednost: 4. Ovo je druga polovina ključnih OpenAPS bezbednosnih limita, i druga polovina pravila „3× najveći dnevni; 4× trenutni“. To znači da vaš bazal, bez obzira na maksimalni bazal podešen na pumpi, ne može biti veći od ovog broja puta trenutni bazal. Ovo sprečava da ljudi dođu u opasnu situaciju ako postave previsok maksimalni bazal pre nego što razumeju kako algoritam radi. Ponovo, podrazumevana vrednost je 4×; većini ljudi nikada neće trebati da je menjaju, i verovatnije će morati da promene druga podešavanja ako osećaju da „udaraju“ u ovaj bezbednosni limit.</string>
+    <string name="pref_title_bolus_snooze_divisor">DIA delilac za odlaganje posle bolusa</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Podrazumevana vrednost: 2\n„Bolus snooze“ se primenjuje posle bolusa za obrok, da petlja ne bi odgovorila niskim privremenim bazalima odmah posle jela. Primer i podrazumevana vrednost je 2; tako DIA od 3 sata znači da će se „bolus snooze“ postepeno ukidati tokom 1,5 sata (3 DIA/2).</string>
+    <string name="pref_title_ama_min_5m_carbs_impact">AMA min. uticaj UH za 5 min</string>
+    <string name="pref_title_smb_min_5m_carbs_impact">SMB min. uticaj UH za 5 min</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Podrazumevana vrednost: 3,0 (AMA) ili 8,0 (SMB). Ovo je podrazumevani uticaj apsorpcije ugljenih hidrata na svakih 5 minuta. Podrazumevano se očekuje 3 mg/dl/5 min. Ovo utiče na to koliko brzo COB opada i koliko apsorpcije ugljenih hidrata se pretpostavlja pri računanju budućeg GUK-a, kada GUK pada više nego što se očekuje ili ne raste koliko se očekuje.</string>
+    <string name="pref_title_absorption_cutoff">Granica apsorpcije</string>
+    <string name="absorption_cutoff_summary">Vreme posle kog se smatra da je svaki obrok potpuno apsorbovan. Preostali ugljeni hidrati se odbacuju.</string>
+    <string name="pref_title_absorption_maxtime">Maks. vreme apsorpcije</string>
+    <string name="absorption_max_time_summary">Vreme u satima do kog se očekuje da se apsorbuju svi ugljeni hidrati iz obroka</string>
+    <string name="pref_title_autosens_min">Autosens min.</string>
+    <string name="openapsama_autosens_min_summary">Podrazumevana vrednost: 0,7\nDruga strana Autosens bezbednosnih limita: ograničava koliko nisko Autosens može da podesi bazale i koliko visoko može da podesi ISF i ciljeve GUK-a.</string>
+    <string name="pref_title_autosens_max">Autosens maks.</string>
+    <string name="openapsama_autosens_max_summary">Podrazumevana vrednost: 1,2\nOvo je gornje ograničenje množioca za Autosens (a uskoro i za Autotune) koje postavlja najviše 20%% za to koliko velik Autosens odnos može da bude. To zatim određuje koliko Autosens može da poveća bazale, koliko može da smanji ISF i koliko nisko može da postavi cilj GUK-a.</string>
+    <string name="pref_title_autoisf_min">AutoISF min.</string>
+    <string name="openapsama_autoISF_min_summary">Slično autosens_min podešavanju, određuje koliko slab ISF može da postane.\n\nPodrazumevana vrednost 1,0 praktično isključuje ovaj efekat.</string>
+    <string name="pref_title_autoisf_max">AutoISF maks.</string>
+    <string name="openapsama_autoISF_max_summary">Slično autosens_max podešavanju, određuje koliko jak ISF može da postane.\n\nPodrazumevana vrednost 1,0 praktično isključuje ovaj efekat.\n\nUPOZORENJE: Budite veoma oprezni sa vrednostima iznad 2,5</string>
+    <string name="pref_title_bg_accel_weight">Težina ISF-a za ubrzanje GUK-a</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Težina koja se primenjuje kada se rast glukoze ubrzava; time se ISF pojačava i potencijalno povećava isporuka insulina.\n\nPodrazumevana vrednost 0,0 praktično isključuje ovaj efekat.</string>
+    <string name="pref_title_bg_brake_weight">Težina ISF-a za usporavanje GUK-a</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Težina koja se primenjuje kada se promena glukoze usporava; time se ISF slabi i potencijalno smanjuje isporuka insulina.\n\nPodrazumevana vrednost 0,0 praktično isključuje ovaj efekat.</string>
+    <string name="pref_title_low_bg_weight">Težina za nizak opseg GUK-a</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Težina koja se primenjuje kada je glukoza ispod cilja; time se ISF slabi i potencijalno smanjuje isporuka insulina.\n\nPodrazumevana vrednost 0,0 praktično isključuje ovaj efekat.</string>
+    <string name="pref_title_high_bg_weight">Težina za visok opseg GUK-a</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Težina koja se primenjuje kada je glukoza iznad cilja; time se ISF pojačava i potencijalno povećava isporuka insulina.\n\nPodrazumevana vrednost 0,0 praktično isključuje ovaj efekat.</string>
+    <string name="pref_title_smb_delivery_ratio_bg_range">Opseg GUK-a za odnos isporuke SMB-a</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Podrazumevana vrednost: 0. Linearno rastući SMB odnos se mapira na opseg glukoze [target_bg, target_bg+bg_range].\nNa target_bg SMB odnos je smb_delivery_ratio_min, a na target_bg+bg_range je smb_delivery_ratio_max\nSa 0 je linearno rastući SMB odnos isključen i koristi se fiksni smb_delivery_ratio.</string>
+    <string name="pref_title_pp_weight">Težina ISF-a posle obroka</string>
+    <string name="openapsama_pp_ISF_weight_summary">Težina koja se primenjuje kada glukoza raste; time se ISF pojačava i potencijalno povećava isporuka insulina.\n\nPodrazumevana vrednost 0,0 praktično isključuje ovaj efekat.</string>
+    <string name="pref_title_dura_weight">Težina ISF-a za trajanje</string>
+    <string name="openapsama_dura_ISF_weight_summary">Težina koja se primenjuje tokom dužih, povišenih „platoa“ glukoze; time se ISF pojačava i potencijalno povećava isporuka insulina.\n\nPodrazumevana vrednost 0,0 praktično isključuje ovaj efekat.</string>
+    <string name="pref_title_smb_delivery_ratio">Odnos isporuke SMB-a</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Podrazumevana vrednost: 0,5. Ovo je još jedno važno bezbednosno ograničenje OpenAPS-a. Određuje koji deo ukupno potrebnog insulina može da se isporuči kao SMB. Ovo sprečava opasne situacije kada se SMB zahtevi šalju u isto vreme i sa telefona negovatelja. Ovu eksperimentalnu vrednost povećavajte polako i oprezno.</string>
+    <string name="pref_title_smb_delivery_ratio_min">Odnos isporuke SMB-a min.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Podrazumevana vrednost: 0,5. Ovo je donja granica odnosa koji raste linearno, umesto fiksne vrednosti iznad.</string>
+    <string name="pref_title_smb_delivery_ratio_max">Odnos isporuke SMB-a maks.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Podrazumevana vrednost: 0,5. Ovo je gornja granica odnosa koji raste linearno, umesto fiksne vrednosti iznad.</string>
+    <string name="pref_title_smb_max_range_extension">SMB maks. proširenje opsega</string>
+    <string name="openapsama_smb_max_range_extension_summary">Podrazumevano: 1. Ovo je još jedan ključni OpenAPS bezbednosni limit – određuje koliko puta možete prekoračiti standardnih 120 minuta maxSMB/maxUAM. Povećavajte ovu eksperimentalnu vrednost sporo i oprezno.</string>
     <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_low_mark">Granica za nizak GUK</string>
+    <string name="pref_title_high_mark">Granica za visok GUK</string>
     <!-- UnitDoubleKey: APS preferences -->
+    <string name="pref_title_lgs_threshold">LGS prag</string>
+    <string name="lgs_threshold_summary">Vrednost GUK-a ispod koje se insulin pauzira. Podrazumevana vrednost koristi standardni model cilja. Korisnik može zadati vrednost između 60 mg/dl (3,3 mmol/l) i 100 mg/dl (5,5 mmol/l). Vrednosti ispod 65/3,6 dovode do korišćenja podrazumevanog modela.</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
 </resources>

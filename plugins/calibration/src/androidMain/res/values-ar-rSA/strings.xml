@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_calibration_name">بدون معايرة</string>
+    <string name="description_no_calibration">"لم يتم تطبيق تجاوز معايرة. يتم استخدام قيم المستشعر كما هي. استخدم هذا الخيار عندما يكون المستشعر معايرًا من المصنع ودقيقًا."</string>
+    <string name="linear_calibration_name">معايرة خطية</string>
+    <string name="description_linear_calibration">"تجاوز معايرة خطية لكل مستشعر على حدة (الميل والإزاحة) محسوب من إدخالات قياس الدم بالإصبع. تعطى الإدخالات الأحدث وزنًا أعلى. يتم تطبيق التجاوز بعد بدء جلسة المستشعر الحالية؛ ويتم تخطي أول ساعتين كفترة إحماء."</string>
+    <string name="sensor_change_detected_text">تم اكتشاف تغيير محتمل للمستشعر في %1$s. هل تريد تعيينه كمستشعر جديد؟</string>
+    <string name="sensor_change_detected_action">تسجيل تغيير المستشعر</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">قم بتسجيل تغيير المستشعر لتفعيل المعايرة.</string>
+    <string name="cal_status_warmup">إحماء المستشعر — تصبح المعايرة نشطة بعد %1$s.</string>
+    <string name="cal_status_need_more_entries">يلزم وجود إدخالين لقياس الدم بالإصبع على الأقل (الحالي %1$d).</string>
+    <string name="cal_status_unsafe_fit">التطابق خارج النطاق الآمن — لم يتم تطبيق المعايرة.</string>
+    <string name="cal_status_applied">تم تطبيق المعايرة.</string>
+    <string name="cal_status_applied_offset_only">تم تطبيق معايرة الإزاحة فقط — نطاق المستشعر ضيق جداً لحساب الميل.</string>
+    <string name="cal_status_applied_slope_clamped">تم تطبيق المعايرة — تم تقييد الميل ضمن النطاق الآمن. أضف المزيد من الإدخالات لتخفيف التقييد.</string>
+    <string name="cal_slope_offset">الميل %1$.2f، تصحيح النطاق المتوسط %2$s</string>
+    <string name="cal_session_started">بدأت الجلسة: %1$s</string>
+    <string name="cal_mark_sensor_change_now">تسجيل تغيير المستشعر</string>
+    <string name="cal_add_calibration">إضافة معايرة</string>
+    <string name="cal_entries_header">إدخالات قياس الإصبع (%1$d)</string>
+    <string name="cal_no_entries">لا توجد إدخالات قياس إصبع حتى الآن.</string>
+    <string name="cal_entry_pair">قياس الإصبع %1$s ← المستشعر %2$s (الفرق Δ %3$s)</string>
+    <string name="cal_chart_entry_readout">الإدخال %1$d/%2$d · %3$s · المستشعر %4$s ← سكر الدم %5$s</string>
 </resources>

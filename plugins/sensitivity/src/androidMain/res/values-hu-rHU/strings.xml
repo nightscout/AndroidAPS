@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="sensitivity_oref1">Oref1 érzékenység</string>
+    <string name="sensitivity_aaps">AAPS érzékenység</string>
+    <string name="sensitivity_weighted_average">Súlyozott átlagú érzékenység</string>
+    <string name="description_sensitivity_aaps">Az érzékenység számítása ugyanúgy történik, mint az Oref0-nál, de megadhatja, mekkora múltbeli időszakot vegyen figyelembe. A minimális szénhidrát-felszívódás a beállításokban megadott maximális szénhidrát-felszívódási időből számolódik.</string>
+    <string name="description_sensitivity_oref1">Az érzékenység a múltbeli 8 vagy 24 órás adatokból számolódik (amelyik érzékenyebb, azt használja). A fel nem szívódott szénhidrátot a beállításokban megadott idő után törli. A plugin az UAM-ot is kiszámítja.</string>
+    <string name="description_sensitivity_weighted_average">Az érzékenység az eltérések súlyozott átlagaként számolódik. Az újabb eltérések nagyobb súlyt kapnak. A minimális szénhidrát-felszívódást a beállításokban megadott maximális szénhidrát-felszívódási időből számolja. Ez az algoritmus követi a leggyorsabban az érzékenység változásait.</string>
+    <string name="uam_disabled_oref1_not_selected">Az UAM le van tiltva, mert az Oref1 érzékenység pluginra épül</string>
+    <string name="absorption_settings_title">Felszívódási beállítások</string>
+</resources>

@@ -1,2 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="connection_failed">Povezivanje nije uspelo</string>
+    <string name="connection_lost">Veza je prekinuta</string>
+    <string name="pairing_rejected">Uparivanje je odbijeno</string>
+    <string name="socket_creation_failed">Kreiranje soketa nije uspelo</string>
+    <string name="timeout">Istek vremena</string>
+    <string name="maximum_number_of_bolus_type_already_running">Maksimalan broj bolusa ovog tipa je već aktivan</string>
+    <string name="no_active_tbr_to_cancel">Nema aktivnog TBR-a za otkazivanje</string>
+    <string name="no_active_tbr_to_change">Nema aktivnog TBR-a za izmenu</string>
+    <string name="no_such_bolus_to_cancel">Nema takvog bolusa za otkazivanje</string>
+    <string name="pump_already_in_that_state_exception">Pumpa je već u tom stanju</string>
+    <string name="run_mode_not_allowed">Režim rada nije dozvoljen</string>
+</resources>

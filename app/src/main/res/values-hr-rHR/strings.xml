@@ -18,6 +18,7 @@
     <string name="settings_unreadable_keystore_explanation">Spremište ključeva na telefonu nije odgovorilo, stoga AAPS nije mogao otvoriti svoje postavke.</string>
     <string name="settings_unreadable_not_running">AAPS ne radi i ne upravlja pumpom. Privremeni bazal koji je u tijeku završava u svoje vrijeme, a zatim pumpa daje svoj vlastiti bazal.</string>
     <string name="settings_unreadable_what_to_do">„Pokušaj ponovno“ zatvara AAPS i ponovno ga pokreće. Ako to ne pomogne, ponovno pokrenite telefon. „Počni ispočetka“ odaberite samo kada ništa drugo ne pomaže: nečitljive postavke spremaju se sa strane, a AAPS se pokreće s praznim postavkama. Zatim u čarobnjaku za postavljanje uvezite svoj zadnji izvoz postavki.</string>
+    <string name="settings_unreadable_keystore_what_to_do">„Pokušaj ponovno“ zatvara AAPS i ponovno ga pokreće. Ako to ne pomogne, ponovno pokrenite telefon. Vaša datoteka s postavkama ostaje nepromijenjena.</string>
     <string name="settings_unreadable_start_fresh">Počni ispočetka</string>
     <string name="settings_unreadable_confirm_title">Pokrenuti s praznim postavkama?</string>
     <string name="settings_unreadable_confirm_text">Datoteka s nečitljivim postavkama preimenuje se i čuva. Sve postavke vraćaju se na zadane vrijednosti. Zatim ponovno postavite AAPS ili uvezite izvezene postavke.</string>

@@ -18,6 +18,7 @@
     <string name="settings_unreadable_keystore_explanation">Kho khóa của điện thoại không phản hồi nên AAPS không thể mở cài đặt.</string>
     <string name="settings_unreadable_not_running">AAPS hiện không chạy và không điều khiển bơm. Liều nền tạm thời đang hoạt động sẽ kết thúc khi hết thời gian đã đặt, sau đó bơm sẽ tự phân phối liều nền theo cài đặt của bơm.</string>
     <string name="settings_unreadable_what_to_do">Thử lại sẽ đóng AAPS rồi khởi động lại ứng dụng. Nếu cách này không hiệu quả, hãy khởi động lại điện thoại. Chỉ chọn Bắt đầu mới khi không còn cách nào khác: tùy chọn này sẽ lưu riêng các cài đặt không thể đọc được, sau đó AAPS khởi động với bộ cài đặt trống. Tiếp theo, hãy nhập bản xuất cài đặt gần nhất trong trình hướng dẫn thiết lập.</string>
+    <string name="settings_unreadable_keystore_what_to_do">Thử lại sẽ đóng AAPS và khởi động lại ứng dụng. Nếu vẫn không khắc phục được, hãy khởi động lại điện thoại. Tệp cài đặt của bạn vẫn được giữ nguyên, không bị thay đổi.</string>
     <string name="settings_unreadable_start_fresh">Bắt đầu lại từ đầu</string>
     <string name="settings_unreadable_confirm_title">Bắt đầu với cài đặt trống?</string>
     <string name="settings_unreadable_confirm_text">Tệp cài đặt không thể đọc được sẽ được đổi tên và giữ lại. Tất cả cài đặt sẽ trở về giá trị mặc định. Sau đó, bạn có thể thiết lập lại AAPS hoặc nhập tệp xuất cài đặt.</string>

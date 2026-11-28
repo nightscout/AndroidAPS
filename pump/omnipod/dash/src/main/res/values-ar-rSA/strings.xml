@@ -1,7 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">دمج مضخة Omnipod Dash (الطراز الجديد المزود بالبلوتوث وغطاء إبرة أزرق).</string>
     <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_bluetooth_address">عنوان البلوتوث</string>
+    <string name="omnipod_dash_overview_firmware_version_value">البرنامج الثابت %1$s / البلوتوث %2$s</string>
+    <string name="omnipod_dash_overview_bluetooth_connection_quality">جودة الاتصال</string>
+    <string name="omnipod_dash_overview_delivery_status">حالة الضخ</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">املأ المضخة اللاصقة الجديدة
+        بكمية كافية من الأنسولين لمدة 3 أيام.\n\nاستمع إلى صوتي تنبيه صادرين من المضخة اللاصقة أثناء عملية التعبئة. يشير ذلك إلى أنه تم إدخال الحد الأدنى من الكمية البالغ 80 وحدة. احرص على إفراغ محقنة التعبئة تماما، حتى بعد سماع صوتي التنبيه.\n\nبعد تعبئة المضخة اللاصقة، يرجى الضغط على <b>التالي</b>.\n\n<b>ملاحظة:</b> لا تقم بإزالة غطاء إبرة المضخة اللاصقة في هذا الوقت.</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">جاري محاولة الاقتران بالمضخة اللاصقة الجديدة وتجهيزها.\n\nعندما تكتمل عملية التهيئة بنجاح، يمكنك الضغط على <b>التالي</b>.</string>
     <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">فشل الاتصال</string>
+    <string name="omnipod_dash_found_too_many_pods">تم العثور على عدد كبير جدا من المضخات اللاصقة</string>
+    <string name="omnipod_dash_scan_failed">فشل البحث</string>
+    <string name="omnipod_dash_generic_error">خطأ عام: %1$s</string>
+    <string name="omnipod_dash_connection_lost">انقطع الاتصال</string>
+    <string name="omnipod_common_alert_delivery_suspended">ضخ الأنسولين معلق</string>
+    <string name="omnipod_dash_bolus_already_in_progress">هناك جرعة أخرى قيد الضخ</string>
+    <string name="omnipod_dash_not_enough_insulin">لا يوجد ما يكفي من الأنسولين في الخزان</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">أمر غير مؤكد</string>
+    <string name="requested_by_user" comment="26 characters max for translation">بطلب من المستخدم</string>
+    <string name="suspend_delivery_is_unconfirmed">أمر تعليق الضخ غير مؤكد! يرجى تحديث حالة المضخة اللاصقة يدويا على شاشة المضخة واستئناف الضخ إذا لزم الأمر.</string>
+    <string name="insulin_delivery_suspended">تم تعليق ضخ الأنسولين</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">المنطقة الزمنية على المضخة اللاصقة تختلف عن المنطقة الزمنية على الهاتف. معدل الأنسولين القاعدي غير صحيح. قم بتبديل الملف الشخصي لإصلاح ذلك</string>
+    <string name="failed_to_set_the_new_basal_profile">فشل تعيين ملف الأنسولين القاعدي الجديد. تم تعليق الضخ</string>
+    <string name="setting_basal_profile_might_have_failed">قد يكون تعيين ملف الأنسولين القاعدي قد فشل. قد يكون الضخ معلقا! يرجى تحديث حالة المضخة اللاصقة يدويا على شاشة المضخة واستئناف الضخ إذا لزم الأمر.</string>
+    <string name="bolus_delivery_status_uncertain">حالة ضخ الجرعة غير مؤكدة. قم بتحديث حالة المضخة اللاصقة للتأكيد أو النفي.</string>
+    <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">تعذر التحقق مما إذا كانت الجرعة التصحيحية الصغيرة SMB (%1$s) قد نجحت. قم بتحديث حالة المضخة اللاصقة للتأكيد أو النفي لهذا الأمر.</string>
+    <string name="temp_basal_out_of_sync">حالة معدل الأنسولين القاعدي المؤقت ليست كما هو متوقع! إذا كان معدل الأنسولين القاعدي المؤقت قيد التشغيل مسبقا، فقد تم إلغاؤه. يرجى التحقق من الأنسولين الذي تم ضخه وسجل المضخة اللاصقة</string>
+    <string name="checking_delivery_status">جاري التحقق من حالة الضخ</string>
+    <string name="setting_temp_basal_might_have_basal_failed">قد يكون تعيين معدل الأنسولين القاعدي المؤقت قد فشل. إذا كان معدل الأنسولين القاعدي المؤقت قيد التشغيل مسبقا، فقد تم إلغاؤه. يرجى تحديث حالة المضخة اللاصقة يدويا على شاشة المضخة.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">نتيجة إلغاء معدل الأنسولين القاعدي المؤقت غير مؤكدة</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">أمر استئناف الضخ غير مؤكد. يرجى تحديث حالة المضخة اللاصقة</string>
+    <string name="cancelling_temp_basal_might_have_failed">قد يكون إلغاء معدل الأنسولين القاعدي المؤقت قد فشل. إذا كان معدل الأنسولين القاعدي المؤقت قيد التشغيل مسبقا، فربما يكون قد تم إلغاؤه. يرجى تحديث حالة المضخة اللاصقة يدويا على شاشة المضخة.</string>
 </resources>

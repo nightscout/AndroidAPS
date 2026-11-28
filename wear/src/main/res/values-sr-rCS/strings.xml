@@ -3,6 +3,12 @@
     <string name="label_watchface_circle">AAPS (Krug)</string>
     <string name="label_watchface_digital_style">AAPS (Digitalni stil)</string>
     <string name="label_watchface_custom">AAPS (Prilagođeno)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (Prilagođeno) uvek uključeno</string>
+    <string name="label_actions_tile">Radnje</string>
+    <string name="label_temp_target_tile">Privremeni cilj</string>
+    <string name="label_quick_wizard_tile">Brzi čarobnjak</string>
+    <string name="label_user_action_tile">Korisnička radnja</string>
+    <string name="label_scene_tile">Scena</string>
     <string name="msg_warning_sync">Nema primljenih podataka od %1$s! Proverite da li AAPS na telefonu šalje podatke na sat.</string>
     <string name="msg_warning_old">AAPS podaci su stari %1$s! Proverite senzor, xDrip+, NS, AAPS podešavanja ili drugi izvor!</string>
     <string name="pref_vibrate_on_bolus">Vibracija tokom bolusa</string>
@@ -10,6 +16,7 @@
     <string name="pref_display_settings">Prikaz</string>
     <string name="pref_graph_settings">Grafikon</string>
     <string name="pref_interface_settings">Interfejs</string>
+    <string name="pref_tile_settings">Pločice</string>
     <string name="pref_others_settings">Ostalo</string>
     <string name="pref_complication_settings">Komplikacije</string>
     <string name="pref_show_date">Prikaži datum</string>
@@ -36,6 +43,7 @@
     <string name="pref_highlight_basals">Istakni bazale</string>
     <string name="pref_prediction_lines">Prikaži linije predviđanja</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Razdelnik kao pozadina</string>
+    <string name="pref_chart_timeframe">Vremenski okvir grafikona</string>
     <string name="pref_1_hour">1 sat</string>
     <string name="pref_2_hours">2 sata</string>
     <string name="pref_3_hours">3 sata</string>
@@ -45,34 +53,90 @@
     <string name="pref_5_min">5 min</string>
     <string name="pref_10_min">10 min</string>
     <string name="pref_15_min">15 min</string>
-    <string name="pref_big_numbers">Veliki Brojevi</string>
+    <string name="pref_big_numbers">Veliki brojevi</string>
     <string name="pref_ring_history">Istorija u krugu</string>
     <string name="pref_light_ring_history">Svetla istorija u krugu</string>
     <string name="pref_animations">Animacije</string>
+    <string name="pref_wizard_in_menu">Kalkulator u meniju</string>
+    <string name="pref_prime_in_menu">Punjenje u meniju</string>
+    <string name="pref_single_target">Jedan cilj</string>
+    <string name="pref_wizard_percentage">Kalkulator (procenat)</string>
+    <string name="pref_wizard_carbs_type">Tip obroka u kalkulatoru</string>
+    <string name="pref_wizard_carb_time">Vreme UH u kalkulatoru</string>
+    <string name="pref_complication_tap_action">Radnja na dodir komplikacije</string>
+    <string name="pref_complication_bg_graph_hours">Vremenski opseg grafikona GUK-a</string>
+    <string name="duration_1_hour">1 sat</string>
+    <string name="duration_3_hours">3 sata</string>
+    <string name="duration_6_hours">6 sati</string>
     <string name="pref_unicode_in_complications">Unicode u komplikacijama</string>
     <string name="pref_version">Verzija:</string>
     <string name="pref_moreWatchfaceSettings">Još podešavanja watchface-a</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Proverite podešavanja watchface-a.</string>
+    <string name="menu_tempt">Privremeni cilj</string>
+    <string name="menu_tempt_long">Privremeni cilj</string>
     <string name="menu_wizard">Kalkulator</string>
+    <string name="menu_wizard_short">Kalkul.</string>
     <string name="menu_treatment">Tretman</string>
+    <string name="menu_treatment_short">Tretman</string>
     <string name="menu_bolus">Bolus</string>
     <string name="menu_carb">Uglj. hidrati</string>
+    <string name="menu_ecarb">eUH</string>
     <string name="menu_settings">Podešavanja</string>
     <string name="menu_status">Status</string>
+    <string name="menu_bg_graph">Grafikon GUK-a</string>
     <string name="menu_resync">Ponovo sinhronizuj</string>
+    <string name="menu_prime_fill">Punjenje</string>
+    <string name="menu_install_watchface">Instaliraj watchface</string>
+    <string name="menu_installing_watchface">Instaliranje watchface-a…</string>
+    <string name="watchface_installed_active">Watchface je instaliran i postavljen kao aktivan</string>
+    <string name="watchface_installed_select">Watchface je instaliran, izaberite ga u listi watchface-ova na satu</string>
+    <string name="watchface_install_failed">Instaliranje watchface-a nije uspelo</string>
+    <string name="menu_none">Ništa</string>
+    <string name="menu_default">Podrazumevano</string>
     <string name="menu_menu">Meni</string>
+    <string name="action_tempt_confirmation">Potvrdi privremeni cilj</string>
+    <string name="action_quick_wizard_confirmation">Potvrdi brzi čarobnjak</string>
+    <string name="action_user_action_confirmation">Potvrdi korisničku radnju</string>
+    <string name="action_scene_confirmation">Scena zatražena</string>
+    <string name="scene_end">Završi</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Preskoči</string>
+    <string name="action_treatment_confirmation">Potvrdi tretman</string>
+    <string name="action_bolus_confirmation">Potvrdi bolus</string>
+    <string name="action_wizard_confirmation">Potvrdi kalkulaciju</string>
+    <string name="action_fill_confirmation">Potvrdi punjenje</string>
+    <string name="action_ecarb_confirmation">Potvrdi unos UH</string>
+    <string name="action_profile_switch_confirmation">Potvrdi promenu profila</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Cilj [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Nisko [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Visoko [%s]</string>
     <string name="action_carbs">Uglj. hidrati</string>
+    <string name="action_carbs_gram">UH [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Maks. uklanjanje: %1$d g (COB)</string>
+    <string name="action_ecarbs">eUH</string>
+    <string name="action_percentage">Procenat\n[%]</string>
+    <string name="action_start_minutes">Početak\n[minuta]</string>
+    <string name="action_duration_hours">Trajanje\n[sati]</string>
+    <string name="action_duration_hours_format">%1$d h</string>
+    <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
+    <string name="action_minutes_format">%1$d min</string>
+    <string name="ecarbs_start_format">%1$d min</string>
+    <string name="action_confirm_timeshift">Pomeraj vremena: %1$s</string>
     <string name="action_insulin">Insulin</string>
-    <string name="action_preset_1">Podešavanje 1</string>
-    <string name="action_preset_2">Podešavanje 2</string>
-    <string name="action_preset_3">Podešavanje 3</string>
+    <string name="action_insulin_units">Insulin [J]</string>
+    <string name="action_preset_1">Šablon 1</string>
+    <string name="action_preset_2">Šablon 2</string>
+    <string name="action_preset_3">Šablon 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Slobodna količina</string>
     <string name="action_confirm">POTVRDI</string>
+    <string name="action_timeshift_hours">Pomeraj vremena\n[sati]</string>
     <string name="bolus_progress">Napredak bolusa</string>
     <string name="press_to_cancel">pritisnite za otkazivanje</string>
     <string name="cancel_bolus">OTKAŽI BOLUS</string>
     <string name="status_pump">Pumpa</string>
     <string name="status_loop">Loop</string>
+    <string name="status_profile_switch">Promena profila</string>
+    <string name="status_tdd">TDD</string>
+    <string name="activity_carb">UH</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">nema statusa</string>
     <string name="color_name_red">Crvena</string>
@@ -97,4 +161,220 @@
     <string name="color_name_white">Bela</string>
     <string name="color_name_multicolor">Višebojna</string>
     <string name="pref_simplify_ui">Pojednostavi interfejs</string>
+    <string name="pref_vibrate_hourly">Vibriraj na svaki sat</string>
+    <string name="pref_show_weeknumber">Prikaži broj nedelje</string>
+    <string name="pref_complication_1">Komplikacija 1</string>
+    <string name="pref_complication_2">Komplikacija 2</string>
+    <string name="pref_complication_3">Komplikacija 3</string>
+    <string name="pref_complication_4">Komplikacija 4</string>
+    <string name="pref_complication_5">Komplikacija 5</string>
+    <string name="complication_summary_none">Dodirnite da izaberete izvor podataka</string>
+    <string name="pref_complication_type_priority">Prioritet tipa komplikacije</string>
+    <string name="pref_complication_type_priority_all">Podrazumevano za sva mesta</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Izmena ovde važi tek kada sledeći put izaberete izvor podataka. Nije dovoljno da ponovo izaberete isti: prvo izaberite drugi izvor podataka, a zatim onaj koji želite.</string>
+    <string name="complication_type_priority_value">Vrednost ili merač</string>
+    <string name="complication_type_priority_text">Tekst</string>
+    <string name="complication_type_priority_icon">Ikonica</string>
+    <string name="complication_type_priority_use_default">Koristi podrazumevano</string>
+    <string name="cwf_complication_layout">Raspored komplikacija</string>
+    <string name="cwf_complication_layout_description">Položaj i veličina komplikacija, preuzeti iz učitanog prilagođenog watchface-a.</string>
+    <string name="pref_include_external">Uključi spoljne prikaze u šablon</string>
+    <string name="pref_switch_external">Prebaci spoljne podatke na Watchface-u</string>
+    <string name="custom_pref_show_seconds">Prikaži sekunde</string>
+    <string name="digitalstyle_pref_your_style">Vaš stil</string>
+    <string name="digitalstyle_style_none">Bez stila</string>
+    <string name="digitalstyle_style_minimal">Minimalni stil</string>
+    <string name="digitalstyle_style_shape">Stil sa oblicima</string>
+    <string name="digitalstyle_style_full">Puni stil</string>
+    <string name="digitalstyle_pref_your_color">Vaša boja</string>
+    <string name="digitalstyle_pref_your_color_saturation">Zasićenje boje</string>
+    <string name="digitalstyle_pref_your_color_opacity">Providnost boje</string>
+    <string name="bolus_progress_channel_name">AAPS – napredak bolusa</string>
+    <string name="bolus_progress_silent_channel_name">AAPS – napredak bolusa (tiho)</string>
+    <string name="bolus_progress_channel_description">Obaveštenje o toku bolusa i mogućnosti otkazivanja</string>
+    <string name="bolus_progress_silent_channel_description">Obaveštenje o toku bolusa i otkazivanju sa manje vibracija</string>
+    <string name="open_loop_channel_name">AAPS otvorena petlja</string>
+    <string name="open_loop_channel_description">Obaveštenje o zahtevu otvorene petlje</string>
+    <string name="simple_ui_off">Isključeno</string>
+    <string name="simple_ui_charging">Tokom punjenja</string>
+    <string name="simple_ui_always_on">Uvek uključeno</string>
+    <string name="simple_ui_always_on_charging">Uvek uključeno + punjenje</string>
+    <string name="temp_target_eating_soon">Jelo</string>
+    <string name="temp_target_hypo">Hipo</string>
+    <string name="temp_target_activity">Aktivnost</string>
+    <string name="temp_target_manual">Ručno</string>
+    <string name="temp_target_cancel">Otkaži</string>
+    <string name="tile_none">Ništa</string>
+    <string name="tile_no_config">Nema dostupne konfiguracije</string>
+    <string name="wear_control_not_enabled">Kontrole sa sata su isključene</string>
+    <string name="wear_control_no_data">Nema dostupnih podataka</string>
+    <string name="abbreviation_average">prosek</string>
+    <string name="no_iob_u">--J</string>
+    <string name="no_cob_g">--g</string>
+    <string name="no_tmp_basal_u_h">-.--J/h</string>
+    <string name="cob_000g">000g</string>
+    <string name="svg_00_0" comment="use , or . only">00,0</string>
+    <string name="iob_0_00u">0,00J</string>
+    <string name="snooze_alert">AAPS – odlaganje alarma</string>
+    <string name="sending_snooze">Šaljem odlaganje alarma ka AAPS-u</string>
+    <string name="week_short">n</string>
+    <string name="day_short">d</string>
+    <string name="hour_short">h</string>
+    <string name="minute_short">m</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
+    <string name="error">Greška</string>
+    <string name="pref_heartRateSampling">Puls</string>
+    <string name="pref_heartRateSmoothing">Uglađivanje pulsa</string>
+    <string name="pref_stepsSampling">Uključi brojanje koraka</string>
+    <string name="tile_tempt_1">Privremeni cilj 1</string>
+    <string name="tile_tempt_2">Privremeni cilj 2</string>
+    <string name="tile_tempt_3">Privremeni cilj 3</string>
+    <string name="tile_tempt_4">Privremeni cilj 4</string>
+    <string name="tile_action_1">Radnja 1</string>
+    <string name="tile_action_2">Radnja 2</string>
+    <string name="tile_action_3">Radnja 3</string>
+    <string name="tile_action_4">Radnja 4</string>
+    <string name="tile_scene_1">Scena 1</string>
+    <string name="tile_scene_2">Scena 2</string>
+    <string name="tile_scene_3">Scena 3</string>
+    <string name="tile_scene_4">Scena 4</string>
+    <string name="tile_scene_auto">Automatski</string>
+    <string name="tile_scene_unavailable">Nedostupno</string>
+    <string name="datalayer_notification_title">Servis Data Layer-a u prvom planu</string>
+    <string name="datalayer_notification_text">AAPS radi u prvom planu. Da sakrijete ovo obaveštenje, idite u Developer options → App notifications → Allowed watch apps, izaberite AAPS i isključite obaveštenja za kanal „Data Layer Foreground Service“.</string>
+    <string name="on">UKLJ.</string>
+    <string name="off">ISKLJ.</string>
+    <string name="complication_full_status">Puni status</string>
+    <string name="complication_full_status_flipped">Puni status (obrnuto)</string>
+    <string name="complication_blood_glucose">Glukoza u krvi</string>
+    <string name="complication_blood_glucose_large">Glukoza u krvi (veliko)</string>
+    <string name="complication_blood_glucose_ext1">Glukoza u krvi Ext1</string>
+    <string name="complication_blood_glucose_ext2">Glukoza u krvi Ext2</string>
+    <string name="complication_bg_graph">Grafikon GUK-a</string>
+    <string name="complication_cwf_image">Prilagođeni watchface</string>
+    <string name="complication_cwf_ambient_bg">Prilagođeni watchface, glukoza (ambijentalni režim)</string>
+    <string name="complication_cwf_ambient_status">Prilagođeni watchface, status (ambijentalni režim)</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Prilagođeni watchface, pozadina</string>
+    <string name="complication_cwf_upper">Prilagođeni watchface, sat</string>
+    <string name="complication_br_cob_iob">BR, CoB i IoB</string>
+    <string name="complication_br_cob_iob_ext1">BR, CoB i IoB Ext1</string>
+    <string name="complication_br_cob_iob_ext2">BR, CoB i IoB Ext2</string>
+    <string name="complication_br_iob">BR i IoB</string>
+    <string name="complication_br">Bazalna stopa</string>
+    <string name="complication_br_tt">Bazal i cilj</string>
+    <string name="complication_target">Cilj</string>
+    <string name="complication_cob_iob">CoB i IoB</string>
+    <string name="complication_cob_icon">CoB ikonica</string>
+    <string name="complication_cob_detailed">CoB detaljno</string>
+    <string name="complication_iob_icon">IoB ikonica</string>
+    <string name="complication_iob_detailed">IoB detaljno</string>
+    <string name="complication_uploader_phone_battery">Baterija uploader-a / telefona</string>
+    <string name="running_mode_resume">Nastavi petlju</string>
+    <string name="running_mode_reconnect">Ponovo poveži pumpu</string>
+    <string name="label_running_mode_title">Režim rada</string>
+    <string name="label_bg_graph_tile">Grafikon GUK-a</string>
+    <string name="tile_tap_action">Radnja na dodir</string>
+    <string name="tile_graph_time_range">Vremenski opseg</string>
+    <string name="tile_tap_bg_graph">Grafikon GUK-a</string>
+    <string name="tile_tap_main_menu">Glavni meni</string>
+    <string name="tile_tap_loop_status">Status petlje</string>
+    <string name="action_running_mode_selected">Režim rada zatražen</string>
+    <string name="title_activity_disconnect_pump">Isključi pumpu</string>
+    <string name="title_activity_suspend_loop">Pauziraj petlju</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="wizard_carbs_type">Tip obroka</string>
+    <string name="wizard_carbs_type_bread">Hleb</string>
+    <string name="wizard_carbs_type_cake">Kolač</string>
+    <string name="wizard_carbs_type_pizza">Pica</string>
+    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">Vreme UH\n[min]</string>
+    <string name="wizard_carb_time_now">Sada</string>
+    <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
+    <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d min</string>
+    <string name="wizard_set_alarm">Postavi alarm</string>
+    <string name="eat_reminder_title">Vreme je za jelo</string>
+    <string name="eat_reminder_silence">Utišaj</string>
+    <string name="eat_reminder_stop">Zaustavi</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Zvoni u %1$s</string>
+    <string name="eat_reminder_countdown_channel">Vreme je za jelo, u toku</string>
+    <string name="eat_reminder_channel_silent">Vreme je za jelo tokom režima „Ne uznemiravaj“</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="phone_alarm_channel">Alarmi sa telefona</string>
+    <string name="phone_alarm_channel_silent">Alarmi sa telefona tokom režima „Ne uznemiravaj“</string>
+    <string name="phone_alarm_silence">Utišaj</string>
+    <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">Utišaj %1$d min</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
+    <string name="insulin_unit_short">J</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f J</string>
+    <string name="wizard_confirmation_sent">Poslato</string>
+    <string name="contacting_master">Povezivanje sa glavnim uređajem…</string>
+    <string name="contacting_master_unknown">Stanje nepoznato — proverite telefon</string>
+    <string name="tile_settings">Podešavanja pločice</string>
+    <string name="loop_status_error">Učitavanje statusa nije uspelo</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
+    <string name="loop_status_tbr_rate">%1$.2f J/h (%2$d%%)</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">Preostalo: %1$s</string>
+    <string name="loop_status_tbr_continues">Privremeni bazal se nastavlja</string>
+    <string name="loop_status_tbr_cancel">Postavljanje redovnog bazala</string>
+    <string name="loop_status_smb">%1$.2f J</string>
+    <string name="loop_status_no_last_run">N/D</string>
+    <string name="loop_status_closed">Zatvorena petlja</string>
+    <string name="loop_status_open">Otvorena petlja</string>
+    <string name="loop_status_lgs">Obustava pri niskoj glukozi</string>
+    <string name="loop_status_disabled">Petlja isključena</string>
+    <string name="loop_status_suspended">Petlja pauzirana</string>
+    <string name="loop_status_pump_suspended">Pumpa pauzirana</string>
+    <string name="loop_status_dst_suspended">Pauzirano zbog letnjeg računanja vremena</string>
+    <string name="loop_status_disconnected">Pumpa isključena</string>
+    <string name="loop_status_superbolus">Superbolus</string>
+    <string name="loop_status_unknown">Nepoznato</string>
+    <string name="loop_status_result">Rezultat petlje</string>
+    <string name="loop_status_last_run_enact">Poslednje pokretanje i primena</string>
+    <string name="loop_status_last_run">Poslednje pokretanje</string>
+    <string name="loop_status_last_enact">Poslednja primena</string>
+    <string name="loop_status_smb_text">SMB</string>
+    <string name="loop_status_basal_rate">Stopa</string>
+    <string name="loop_status_duration">Trajanje</string>
+    <string name="loop_status_oaps_reason">OpenAPS razlog</string>
+    <string name="loop_status_targets">Ciljevi</string>
+    <string name="loop_status_temp_target">Privremeni cilj</string>
+    <string name="loop_status_target_range">Opseg</string>
+    <string name="loop_status_target">Cilj</string>
+    <string name="loop_status_adjusted_target">Prilagođeni cilj</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Dok se ne završi</string>
+    <string name="loop_status_scene_ended">Završeno</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Nastavak</string>
+    <string name="loop_status_profile">Profil</string>
+    <string name="loop_status_no_profile">Profil nije postavljen</string>
+    <string name="loop_status_profile_percentage">Procenat</string>
+    <string name="loop_status_profile_timeshift">Pomeraj vremena</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Vraća se na</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dh</string>
+    <string name="loop_status_sensitivity">Osetljivost</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Postavila aktivna scena</string>
+    <string name="loop_status">Status petlje</string>
+    <string name="loop_status_refresh">Osveži</string>
+    <string name="confirm">Potvrdi</string>
+    <string name="request">Zahtev</string>
+    <string name="constraint_applied">Ograničenje primenjeno!</string>
+    <string name="wizard_total_insulin">Ukupno insulina</string>
+    <string name="wizard_calculation">Proračun</string>
+    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
+    <string name="wizard_result_bg">GUK</string>
+    <string name="wizard_result_bg_tt">GUK (TT: %1$s)</string>
+    <string name="wizard_result_trend">Trend 15\'</string>
+    <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">Novi IOB: %1$s J</string>
+    <string name="wizard_result_cob">COB (%1$.1f g)</string>
+    <string name="wizard_result_carbs">Uglj. hidrati (%1$d g)</string>
+    <string name="wizard_result_subtotal">Međuzbir</string>
+    <string name="wizard_result_correction">Korekcija</string>
+    <string name="wizard_result_total">Ukupno</string>
+    <string name="wizard_insulin_format">%1$s J</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
 </resources>

@@ -1,42 +1,359 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
+    <string name="no_temp_basal_running">Nincs futó átmeneti bázis</string>
+    <string name="start_activity_tt">Mozgás ÁC indítása</string>
+    <string name="start_eating_soon_tt">Közeli étkezés ÁC indítása</string>
+    <string name="start_hypo_tt">Hipó ÁC indítása</string>
+    <string name="time_offset">Időeltolás</string>
+    <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
+    <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dn%2$dó</string>
+    <string name="status_age_short_hours" comment="Age of a sensor, cannula or battery, short, used on the first day when there are no full days yet. h=hours. %1$d=hours. Example: 5h">%1$dó</string>
     <!--    Widget-->
+    <string name="configure">Átlátszóság beállítása</string>
+    <string name="widget_description">AAPS widget</string>
+    <string name="widget_bg_graph_description">AAPS VC-grafikon</string>
+    <string name="widget_glucose_circle_description">AAPS glükózkör</string>
+    <string name="widget_compact_bg_description">AAPS VC + IOB + COB (kompakt)</string>
+    <string name="widget_small_description">AAPS kicsi</string>
     <!--     Activities-->
+    <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="agp" comment="Section title: Ambulatory Glucose Profile">AGP</string>
+    <string name="agp_title">Ambuláns glükózprofil</string>
+    <string name="agp_glycemic_overview">Glikémiás áttekintés</string>
+    <string name="agp_today">Ma</string>
+    <string name="agp_hours" comment="%1$d=number of hours. Example: 24h">%1$dó</string>
+    <string name="agp_days" comment="%1$d=number of days. Example: 7d">%1$dn</string>
+    <string name="agp_no_data">Ehhez az időszakhoz nincs glükózadat.</string>
+    <string name="agp_load_failed">Az AGP-statisztika nem tölthető be. Próbálja újra.</string>
+    <string name="agp_chart_description">Glükóz percentilis diagram</string>
+    <string name="agp_tir_chart">Tartományban töltött idő diagram</string>
+    <string name="agp_percentile_10_90" comment="Glucose percentile band from the 10th to the 90th percentile">10–90%</string>
+    <string name="agp_percentile_25_75" comment="Glucose percentile band from the 25th to the 75th percentile">25–75%</string>
+    <string name="agp_percent" comment="%1$.1f=percentage value. Example: 72.4%">%1$.1f%%</string>
+    <string name="agp_range" comment="%1$s=lower glucose value, %2$s=upper glucose value. Example: 3.9–10.0">%1$s–%2$s</string>
+    <string name="agp_above" comment="%1$s=upper glucose limit. Example: &gt; 10.0">&gt; %1$s</string>
+    <string name="agp_below" comment="%1$s=lower glucose limit. Example: &lt; 3.9">&lt; %1$s</string>
+    <string name="agp_average">Átlag</string>
+    <string name="agp_median">Medián</string>
+    <string name="agp_ea1c" comment="Estimated HbA1c">eA1c</string>
+    <string name="agp_gmi" comment="Glucose management indicator">GMI</string>
+    <string name="agp_standard_deviation" comment="Standard deviation of glucose values">SD</string>
+    <string name="agp_cv" comment="Coefficient of variation of glucose values">CV</string>
+    <string name="agp_available_days">Napok</string>
+    <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as days of glucose data. Example: 13.8">%1$.1f</string>
+    <string name="hba1c_mmol_mol" comment="%1$d=HbA1c (or eA1c, GMI) in the IFCC unit mmol/mol, a whole number. Shown under the same value in percent. Example: 48 mmol/mol">%1$d mmol/mol</string>
+    <string name="cgp_title">Glükózpentagon (CGP) — 14 nap</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hipó</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Hiper</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Átlag</string>
+    <string name="cgp_reference">Egészséges személy</string>
+    <string name="cgp_patient">Beteg</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">Nagyon alacsony kockázat</string>
+    <string name="cgp_pgr_low">Alacsony kockázat</string>
+    <string name="cgp_pgr_moderate">Mérsékelt kockázat</string>
+    <string name="cgp_pgr_high">Magas kockázat</string>
+    <string name="cgp_pgr_extremely_high">Rendkívül magas kockázat</string>
+    <string name="do_you_want_recalculate_tdd_stats">Újraszámolja a TDD-statisztikákat?</string>
     <string name="calculation_in_progress">Számítás folyamatban</string>
     <string name="age">Kor</string>
     <string name="weight_label">Súly</string>
+    <string name="glucose_type">Glükóz típusa</string>
     <string name="bg_other">Egyéb</string>
     <string name="bg_meter">Mérő</string>
     <string name="bg_sensor">Szenzor</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
+    <string name="edit_site">Szerkesztés</string>
+    <string name="record_site_location">Szúrási hely: %1$s</string>
+    <string name="record_site_arrow">Nyíl iránya: %1$s</string>
+    <string name="record_site_note">Jegyzet: %1$s</string>
+    <string name="delete_site_note">Jegyzet törölve</string>
     <!-- FillDialog -->
+    <string name="fill_warning">Kérjük, győződjön meg arról, hogy a mennyiség megfelel a szerelék előírásainak!</string>
+    <string name="record_pump_site_change">Kanülcsere feljegyzése</string>
+    <string name="record_insulin_cartridge_change">Inzulintartály-csere feljegyzése</string>
+    <string name="fill_prime_amount">Légtelenítési mennyiség</string>
+    <string name="fill_pump_units_note">A légtelenítési mennyiség pumpaegységben van megadva</string>
+    <string name="fill_insulin_change">Inzulin váltása erre: %1$s (profilváltás történik)</string>
     <!-- Scene -->
+    <string name="scene_cat_aaps">AAPS</string>
+    <string name="scene_cat_activity">Mozgás</string>
+    <string name="scene_cat_health">Egészség</string>
+    <string name="scene_cat_food">Étel</string>
+    <string name="scene_cat_sleep">Alvás</string>
+    <string name="scene_cat_dailylife">Mindennapok</string>
+    <string name="scene_cat_wellness">Jóllét</string>
+    <string name="scene_cat_general">Általános</string>
+    <string name="aaps_tt_high_icon_label">Átmeneti célérték</string>
+    <string name="aaps_tt_activity_icon_label">ÁC Mozgás</string>
+    <string name="aaps_tt_eating_icon_label">ÁC Közeli étkezés</string>
+    <string name="aaps_tt_hypo_icon_label">ÁC Hipó</string>
+    <string name="aaps_tt_manual_icon_label">ÁC Kézi</string>
+    <string name="aaps_profile_icon_label">Profil</string>
+    <string name="aaps_loop_icon_label">Loop</string>
+    <string name="aaps_smb_icon_label">SMB</string>
+    <string name="aaps_bolus_icon_label">Bólus</string>
+    <string name="aaps_carbs_icon_label">Szénhidrát</string>
+    <string name="aaps_tbr_icon_label">Átmeneti bázis</string>
+    <string name="aaps_note_icon_label">Jegyzet</string>
+    <string name="aaps_automation_icon_label">Automatizálás</string>
+    <string name="aaps_calibration_icon_label">Kalibrálás</string>
+    <string name="exercise_icon_label">Futás</string>
+    <string name="fitness_icon_label">Fitnesz</string>
+    <string name="swim_icon_label">Úszás</string>
+    <string name="hiking_icon_label">Túrázás</string>
+    <string name="bike_icon_label">Kerékpár</string>
+    <string name="skateboard_icon_label">Gördeszka</string>
+    <string name="tennis_icon_label">Tenisz</string>
+    <string name="soccer_icon_label">Labdarúgás</string>
+    <string name="baseball_icon_label">Rögbi</string>
+    <string name="basketball_icon_label">Kézilabda</string>
+    <string name="volleyball_icon_label">Torna</string>
+    <string name="golf_icon_label">Golf</string>
+    <string name="scubadiving_icon_label">Búvárkodás</string>
+    <string name="rowing_icon_label">Evezés</string>
+    <string name="surfing_icon_label">Szörfözés</string>
+    <string name="hospital_icon_label">Kórház</string>
+    <string name="medication_icon_label">Gyógyszer</string>
+    <string name="monitor_heart_icon_label">Monitor</string>
+    <string name="thermostat_icon_label">Termosztát</string>
+    <string name="blood_type_icon_label">Vér</string>
+    <string name="health_safety_icon_label">Egészség</string>
+    <string name="healing_icon_label">Gyógyulás</string>
+    <string name="meal_icon_label">Étterem</string>
+    <string name="cafe_icon_label">Kávé</string>
+    <string name="lunch_icon_label">Ebéd</string>
+    <string name="bakery_icon_label">Pékség</string>
+    <string name="sleep_icon_label">Alvás</string>
+    <string name="night_icon_label">Éjszaka</string>
+    <string name="nights_stay_icon_label">Éjszakai pihenés</string>
+    <string name="hotel_icon_label">Szálloda</string>
+    <string name="seat_flat_icon_label">Pihenés</string>
+    <string name="work_icon_label">Munka</string>
+    <string name="school_icon_label">Iskola</string>
+    <string name="home_icon_label">Otthon</string>
+    <string name="car_icon_label">Vezetés</string>
+    <string name="flight_icon_label">Repülés</string>
+    <string name="shopping_icon_label">Vásárlás</string>
+    <string name="relax_icon_label">Meditáció</string>
+    <string name="spa_icon_label">Spa</string>
+    <string name="heart_icon_label">Szív</string>
+    <string name="psychology_icon_label">Elme</string>
+    <string name="star_icon_label">Csillag</string>
+    <string name="speed_icon_label">Sebesség</string>
+    <string name="alarm_icon_label">Riasztás</string>
+    <string name="event_icon_label">Esemény</string>
+    <string name="flag_icon_label">Zászló</string>
+    <string name="bookmark_icon_label">Könyvjelző</string>
+    <string name="label_icon_label">Címke</string>
     <!-- Insulin Management -->
+    <string name="missing_insulin_name">Hiányzó inzulinnév</string>
+    <string name="insulin_name_exists">Az inzulinnév (%1$s) már létezik, válasszon új nevet</string>
+    <string name="insulin_external_update_title">Az inzulinkonfiguráció megváltozott</string>
+    <string name="insulin_external_update_message">Egy párosított kliens módosította az inzulinkonfigurációt. Koppintson az OK gombra a módosítások betöltéséhez és a nem mentett szerkesztések elvetéséhez, vagy a Mégse gombra a szerkesztés folytatásához (a következő mentés felülírja a kliens módosításait).</string>
+    <string name="insulin_edit_target_gone">Ezt az inzulint máshol eltávolították, ezért a szerkesztés nem menthető. A lista újratöltődött.</string>
+    <string name="insulin_activation_applied">Inzulin aktiválása végrehajtva</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">Végrehajtás…</string>
+    <string name="clientcontrol_pending_working_text">Várakozás a fő eszköz megerősítésére…</string>
+    <string name="clientcontrol_pending_rejected_title">Nincs végrehajtva</string>
+    <string name="clientcontrol_pending_failed_format">%1$s: nem sikerült végrehajtani.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Részben végrehajtva</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s: végrehajtva, de néhány művelet nem sikerült.\nEllenőrizze az aktív állapotot.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">Nem sikerült megerősíteni</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s: elküldve, de nem jött megerősítés.\n%2$s\nItt fog megjelenni, ha a fő eszköz végrehajtja.</string>
+    <string name="clientcontrol_pending_stop_waiting">Várakozás leállítása</string>
+    <string name="a11y_add_new_insulin">Új inzulin hozzáadása</string>
+    <string name="a11y_delete_current_insulin">Aktuális inzulin törlése</string>
+    <string name="load_peak_from">Csúcsidő betöltése innen</string>
+    <string name="cannot_delete_last_insulin">Az utolsó inzulin nem törölhető</string>
+    <string name="cannot_delete_active_insulin">Az aktív inzulin nem törölhető</string>
+    <string name="reuse_profile_pct_hours">Újra: %1$d%% %2$d ó</string>
+    <string name="percentage_label">Százalék</string>
     <!-- LoopDialog -->
+    <string name="disconnectpump">Pumpa leválasztása</string>
     <string name="resume">Folytatás</string>
+    <string name="reconnect">Pumpa újracsatlakoztatása</string>
+    <string name="duration15m">15 perc</string>
+    <string name="duration30m">30 perc</string>
     <string name="duration1h">1 óra</string>
     <string name="duration2h">2 óra</string>
     <string name="duration3h">3 óra</string>
     <string name="duration10h">10 óra</string>
     <!-- WizardDialog -->
     <string name="missing_carbs">Hiányzik %1$d g</string>
+    <string name="wizard_percentage_and_correction" comment="Bolus wizard result, shown after the amounts when both are changed. %1$s=percentage, %2$s=correction with its sign and unit. Example: 71% +1.00 U">%1$s %2$s</string>
+    <string name="wizard_calc_with_isf" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin sensitivity factor used. Example: BG (ISF: 3.0)">%1$s (ISF: %2$s)</string>
+    <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
+    <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IC: %3$s)</string>
+    <string name="wizard_carbs_type_bread_desc">100% azonnali szénhidrát, nincs elnyújtott szénhidrát</string>
+    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Szénhidrát csökkentve %1$d%%-kal, hozzáadva %2$d%% eCarbs %3$d perc késleltetéssel, %4$d órán át</string>
+    <string name="wizard_include_info">Koppintson egy elemre, hogy beszámítsa a számításba, vagy kihagyja belőle:\n• VC — vércukor (indításkor BE)\n• ÁC — átmeneti célérték (indításkor BE)\n• Trend — VC-trend (az utolsó állapot megmarad)\n• IOB — aktív inzulin (indításkor BE)\n• COB — aktív szénhidrát (az utolsó állapot megmarad)</string>
     <!-- Treatments -->
+    <string name="no_records_available">Nincs rendelkezésre álló adat</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="carbs_and_bolus">Szénhidrát és bólus</string>
+    <string name="show_invalidated">Érvénytelenek megjelenítése</string>
+    <string name="hide_invalidated">Érvénytelenek elrejtése</string>
+    <string name="careportal_remove_started_events">AAPS-indítási bejegyzések eltávolítása</string>
+    <string name="user_entry">Egyéni bejegyzés</string>
+    <string name="clone_label">Klónozás</string>
+    <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Glükózgrafikon. Legutóbbi értékek: %1$s. %2$s. %3$s</string>
+    <string name="a11y_show_controls" comment="Screen-reader action of the overview that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">Vezérlők megjelenítése</string>
+    <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Értesítések: %1$d</string>
+    <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">nincs átmeneti célérték, profil célértéke</string>
+    <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">a Loop módosította</string>
+    <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s, %2$s-kor</string>
+    <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">különbség %1$s</string>
+    <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">régi érték</string>
+    <string name="a11y_bg_age_old" comment="Screen-reader text for the age of a glucose reading that is too old to trust. %1$s=the age, %2$s=a11y_bg_old_reading. Example: (12 min), old reading">%1$s, %2$s</string>
+    <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Glükózgrafikon. Legutóbbi értékek: %1$s</string>
+    <string name="a11y_predictions" comment="Screen-reader description of the predicted glucose curves, which are drawn on the graph and cannot be read otherwise. %1$s=one sentence per prediction, already joined. Example: Predictions. COB prediction rises to 11.2 mmol/l. IOB prediction falls to 4.8 mmol/l.">Előrejelzések. %1$s</string>
+    <string name="a11y_prediction_rises" comment="One predicted curve that ends higher than the current glucose. %1$s=the name of the prediction, %2$s=the highest value it reaches, with its unit. Example: COB prediction rises to 11.2 mmol/l">%1$s %2$s értékig emelkedik.</string>
+    <string name="a11y_prediction_falls" comment="One predicted curve that ends lower than the current glucose. %1$s=the name of the prediction, %2$s=the lowest value it reaches, with its unit. Example: IOB prediction falls to 4.8 mmol/l">%1$s %2$s értékig csökken.</string>
+    <string name="a11y_prediction_flat" comment="One predicted curve that stays level. %1$s=the name of the prediction, %2$s=the value it holds, with its unit. Example: Zero temp prediction stays at 6.1 mmol/l">%1$s %2$s értéken marad.</string>
+    <string name="a11y_prediction_name_iob" comment="Spoken name of the prediction from insulin on board. IOB is the term AAPS users know.">IOB-előrejelzés</string>
+    <string name="a11y_prediction_name_cob" comment="Spoken name of the prediction from carbs on board. COB is the term AAPS users know.">COB-előrejelzés</string>
+    <string name="a11y_prediction_name_acob" comment="Spoken name of the prediction from already absorbed carbs, shown by the AMA algorithm only.">Felszívódott COB-előrejelzés</string>
+    <string name="a11y_prediction_name_uam" comment="Spoken name of the prediction for a meal the user did not enter. UAM is the term AAPS users know.">UAM-előrejelzés</string>
+    <string name="a11y_prediction_name_zt" comment="Spoken name of the prediction for what happens with no insulin at all, the zero-temp curve.">Nulla átmeneti bázis előrejelzés</string>
+    <string name="a11y_badge_attention" comment="Screen-reader state of a navigation button that carries a warning badge. On screen the badge is a dot or an exclamation mark, which a screen reader cannot see at all.">beavatkozás szükséges</string>
+    <string name="a11y_objectives_progress" comment="Screen-reader state of the Objectives navigation button, whose badge shows progress. %1$d=objectives finished, %2$d=objectives in total. Example: 9 of 10 done">%1$d / %2$d kész</string>
+    <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Végrehajtás</string>
+    <string name="add_new_profile">Új profil hozzáadása</string>
+    <string name="edit_label">Szerkesztés</string>
+    <string name="activate_label">Aktiválás</string>
+    <string name="activate_profile">Profil aktiválása</string>
+    <string name="remove_label">Eltávolítás</string>
+    <string name="active_profile_indicator">AKTÍV</string>
+    <string name="confirm_remove_profile">Eltávolítja a(z) \"%1$s\" profilt?</string>
+    <string name="confirm_clone_profile">Klónozza a(z) \"%1$s\" profilt?</string>
+    <string name="profile_no_longer_exists">A profillista közben megváltozott – próbálja újra</string>
+    <string name="tbr_type_flag_extended">K</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Profil típusa</string>
+    <string name="profile_parameters">Profilparaméterek</string>
+    <string name="active_profile">Aktív profil</string>
+    <string name="available_profiles">Elérhető profilok</string>
+    <string name="profile_switches">Profilváltások</string>
+    <string name="basal_pct_from_tdd_label">A bázis %-a</string>
     <string name="selected_profile">Kiválasztott:</string>
+    <string name="comparation">Összehasonlítás</string>
+    <string name="profile_tab_1">1. profil</string>
+    <string name="profile_tab_2">2. profil</string>
     <string name="motol_default_profile">Alapértelmezett profil</string>
+    <string name="current_profile">Jelenlegi profil</string>
+    <string name="available_profile">Elérhető profil</string>
+    <string name="format_with_tdd">Kor: %1$d TDD: %2$.0f E</string>
+    <string name="format_with_tdd_and_pct">Kor: %1$d TDD: %2$.0f E %3$d%%</string>
+    <string name="format_with_weight">Kor: %1$d Súly: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV alapértelmezett profil</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
+    <string name="overview_edit_quickwizard_button_text">Gomb szövege</string>
+    <string name="quick_wizard_mode_wizard">Kalkulátor</string>
+    <string name="quick_wizard_mode_insulin">Inzulin</string>
+    <string name="quick_wizard_mode_carbs">Szénhidrát</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Csak pozitív IOB</string>
+    <string name="overview_edit_quickwizard_superbolus">Szuperbólus</string>
     <!--    History browser-->
+    <string name="history_now">Most</string>
+    <string name="a11y_history_previous_window">Előző időablak</string>
+    <string name="a11y_history_next_window">Következő időablak</string>
+    <string name="additional_ecarbs">Elnyújtott szénhidrát hozzáadása</string>
+    <string name="calculator_options">Kalkulátor beállításai</string>
+    <string name="use_bg">VC használata</string>
+    <string name="use_cob">COB használata</string>
+    <string name="use_iob">IOB használata</string>
+    <string name="use_trend">Trend használata</string>
+    <string name="trend_all">Mind</string>
+    <string name="trend_positive_only">Csak pozitív</string>
+    <string name="trend_negative_only">Csak negatív</string>
+    <string name="use_temp_target">Átmeneti célérték használata</string>
+    <string name="use_alarm">Riasztás használata</string>
+    <string name="device_selection">Eszköz kiválasztása</string>
+    <string name="show_on_phone">Megjelenítés a telefonon</string>
+    <string name="show_on_watch">Megjelenítés az órán</string>
+    <string name="ecarbs_additional">További szénhidrát</string>
+    <string name="valid_from_to">Érvényességi időtartomány</string>
+    <string name="carb_time">Szénhidrát ideje</string>
+    <string name="save_changes_question">Menti a bejegyzés módosításait?</string>
+    <string name="wizard_no_insulin_required">Nincs szükség inzulinra</string>
+    <string name="carbs_constraint_violation">Szénhidrát a korlátok miatt csökkentve</string>
+    <string name="insulin_constraint_violation">Inzulin a korlátok miatt csökkentve</string>
+    <string name="confirm_treatment">Erősítse meg a kezelést</string>
+    <string name="recalculate">Újraszámítás</string>
     <!--    Widget-->
+    <string name="use_black_color">Fekete szín használata</string>
+    <string name="widget_configuration">Widget beállítása</string>
+    <string name="until_changed">Visszavonásig</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">Szükséges engedélyek</string>
+    <string name="permission_sheet_subtitle">Néhány engedélyre szükség van az alkalmazás helyes működéséhez</string>
+    <string name="permission_grant">Engedélyezés</string>
+    <string name="permission_change">Módosítás</string>
+    <string name="permission_denied_go_to_settings">Az engedélyt véglegesen megtagadták. Engedélyezze az alkalmazás beállításaiban.</string>
+    <string name="permission_open_settings">Beállítások</string>
+    <string name="permission_directory_picker_error">Nem sikerült megnyitni a mappaválasztót. Ez általában Android- vagy Family Link-probléma.</string>
+    <string name="permission_nav_label">Engedélyek</string>
     <!--    TDD Cycle Pattern -->
+    <string name="stats_tab_cycle" comment="Short tab label on the Statistics screen. The tab shows daily insulin totals laid over 28-day cycles (TDD Cycle Pattern).">Ciklus</string>
+    <string name="cycle_offset">Ciklus-eltolás</string>
+    <string name="raw_tdd">Nyers TDD</string>
+    <string name="cleaned_tdd">Tisztított TDD</string>
+    <string name="cleaned_tdd_explanation">TDD a szénhidrátra adott inzulin nélkül.</string>
+    <string name="cycle_lines_legend">Egyes ciklusok</string>
+    <string name="cycles_found">%1$d ciklus (%2$d nap)</string>
+    <string name="cycle_day1_date">1. nap = %1$s</string>
+    <string name="calculation_in_progress_percent">Számítás… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">Nincs elég adat (2 ciklushoz legalább 56 nap kell)</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Mindkettő</item>
+        <item>Csak pozitív</item>
+        <item>Csak negatív</item>
+    </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Kiválasztott műveletek</string>
+    <string name="a11y_quick_launch_add" comment="Screen-reader label of the button that adds an action to the QuickLaunch bar. %1$s=the action name. Example: Add Bolus wizard">%1$s hozzáadása</string>
+    <string name="a11y_quick_launch_remove" comment="Screen-reader label of the button that removes an action from the QuickLaunch bar. %1$s=the action name. Example: Remove Bolus wizard">%1$s eltávolítása</string>
+    <string name="quick_launch_no_dynamic_items">Nincs elérhető elem</string>
+    <string name="quick_launch_category_treatment">Kezelés</string>
+    <string name="quick_launch_category_care">Careportal</string>
+    <string name="quick_launch_category_profile">Profil</string>
+    <string name="quick_launch_category_temp_target">Átmeneti célérték-előbeállítások</string>
+    <string name="quick_launch_category_quick_wizard">Gyorskalkulátor</string>
+    <string name="quick_launch_category_automation">Automatizálás</string>
+    <string name="quick_launch_all_selected">Minden elem kiválasztva</string>
+    <string name="quick_launch_no_quick_wizard">Adjon hozzá gyorskalkulátor-bejegyzéseket, hogy itt használhassa őket</string>
+    <string name="quick_launch_no_automation">Hozzon létre felhasználói automatizálási műveleteket, hogy itt használhassa őket</string>
+    <string name="quick_launch_no_tt_presets">Adjon hozzá átmeneti célérték-előbeállításokat, hogy itt használhassa őket</string>
+    <string name="quick_launch_no_profiles">Hozzon létre profilokat a helyi profilban, hogy itt használhassa őket</string>
+    <string name="quick_launch_edit_profile_preset">Profil-előbeállítás szerkesztése</string>
+    <string name="quick_launch_profile_permanent">Állandó</string>
+    <string name="select_arrow">Nyíl kiválasztása</string>
+    <string name="loop_accept_nav_label">Loop</string>
+    <string name="loop_accept_set_basal_question">Új átmeneti bázis elfogadása:</string>
+    <string name="loop_accept_perform">Végrehajtás</string>
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">Letiltva</string>
+    <string name="widget_rm_suspended">Felfüggesztve</string>
+    <string name="widget_rm_resume">Folytatás</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">A szenzor még bemelegszik. Kalibrálás ekkortól lehetséges: %1$s.</string>
+    <string name="cal_precheck_no_session">Nincs aktív szenzormenet.</string>
+    <string name="cal_precheck_no_pair">Nincs CGM-érték az utolsó 10 percben. Ellenőrizze a szenzor kapcsolatát.</string>
+    <string name="cal_precheck_delta_too_high">A glükózszint túl gyorsan változik (Δ %1$s %3$s / 5 perc, korlát: %2$s). Várja meg, amíg stabil lesz.</string>
+    <string name="cal_precheck_mark_sensor_change">Szenzorcsere rögzítése</string>
+    <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
 </resources>

@@ -1,7 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Integracija pumpe za Omnipod Dash (novi model sa Bluetooth-om i plavim poklopcem igle).</string>
     <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_bluetooth_address">Bluetooth adresa</string>
+    <string name="omnipod_dash_overview_firmware_version_value">Firmware %1$s / Bluetooth %2$s</string>
+    <string name="omnipod_dash_overview_bluetooth_connection_quality">Kvalitet veze</string>
+    <string name="omnipod_dash_overview_delivery_status">Status isporuke</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Napunite novi Pod
+        dovoljnom količinom insulina za 3 dana.\n\nSlušajte dva zvučna signala iz Pod-a tokom punjenja. Oni znače da je uneta minimalno potrebna količina od 80 J. Obavezno potpuno ispraznite špric za punjenje, čak i posle ta dva zvučna signala.\n\nNakon punjenja Pod-a, pritisnite <b>Dalje</b>.\n\n<b>Napomena:</b> nemojte još skidati poklopac igle sa Pod-a.</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Pokušava se uparivanje sa novim Pod-om i njegovo punjenje.\n\nKada se proces inicijalizacije uspešno završi, možete pritisnuti <b>Dalje</b>.</string>
     <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">Povezivanje nije uspelo</string>
+    <string name="omnipod_dash_found_too_many_pods">Pronađeno je previše Pod-ova</string>
+    <string name="omnipod_dash_scan_failed">Skeniranje nije uspelo</string>
+    <string name="omnipod_dash_generic_error">Opšta greška: %1$s</string>
+    <string name="omnipod_dash_connection_lost">Veza je izgubljena</string>
+    <string name="omnipod_common_alert_delivery_suspended">Isporuka insulina je pauzirana</string>
+    <string name="omnipod_dash_bolus_already_in_progress">Drugi bolus je već u toku</string>
+    <string name="omnipod_dash_not_enough_insulin">Nema dovoljno insulina u rezervoaru</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Nepotvrđena komanda</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Zahtev korisnika</string>
+    <string name="suspend_delivery_is_unconfirmed">Pauziranje isporuke nije potvrđeno! Ručno osvežite status Pod-a na ekranu pumpe i po potrebi nastavite isporuku.</string>
+    <string name="insulin_delivery_suspended">Isporuka insulina pauzirana</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Vremenska zona na Pod-u se razlikuje od vremenske zone na telefonu. Bazalna stopa je netačna. Promenite profil da biste ispravili stanje.</string>
+    <string name="failed_to_set_the_new_basal_profile">Podešavanje novog bazalnog profila nije uspelo. Isporuka je pauzirana.</string>
+    <string name="setting_basal_profile_might_have_failed">Podešavanje bazalnog profila možda nije uspelo. Isporuka je možda pauzirana! Ručno osvežite status Pod-a na ekranu pumpe i po potrebi nastavite isporuku.</string>
+    <string name="bolus_delivery_status_uncertain">Status isporuke bolusa je nesiguran. Osvežite status Pod-a da potvrdite ili odbijete.</string>
+    <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Nije moguće proveriti da li je SMB (%1$s) uspeo. Osvežite status Pod-a da potvrdite ili odbacite ovu komandu.</string>
+    <string name="temp_basal_out_of_sync">Status privremenog bazala nije onakav kakav se očekuje! Ako je prethodno bio aktivan privremeni bazal, on je otkazan. Proverite isporučeni insulin i istoriju Pod-a.</string>
+    <string name="checking_delivery_status">Provera statusa isporuke</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Podešavanje privremenog bazala možda nije uspelo. Ako je pre toga radio privremeni bazal, on je otkazan. Ručno osvežite status Pod-a na ekranu pumpe.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Rezultat otkazivanja privremenog bazala je nesiguran</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Komanda za nastavak isporuke nije potvrđena. Osvežite status Pod-a.</string>
+    <string name="cancelling_temp_basal_might_have_failed">Otkazivanje privremenog bazala možda nije uspelo. Ako je pre toga radio privremeni bazal, možda je otkazan. Ručno osvežite status Pod-a na ekranu pumpe.</string>
 </resources>

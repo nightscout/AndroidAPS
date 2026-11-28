@@ -1,72 +1,1202 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="error_field_must_not_be_empty">يجب ألا يكون هذا الحقل فارغًا</string>
+    <string name="error_mustbe4hexadidits">يجب أن يكون 4 خانات من ABCDEF0123456789</string>
+    <string name="authorized_clients_manage_label">الأجهزة المصرح لها</string>
+    <string name="authorized_clients_manage_desc">إدارة الأجهزة العميلة المقترنة التي تتحكم بهذا الجهاز الرئيسي.</string>
+    <string name="pair_with_master_manage_label">الاقتران بالجهاز الرئيسي</string>
+    <string name="pair_with_master_manage_desc">أدخل رمز PIN لاقتران الجهاز الرئيسي للسماح لهذا الجهاز العميل بإرسال أوامر موقّعة.</string>
     <!--    General-->
+    <string name="treatments">العلاجات</string>
+    <string name="treatments_history">سجل العلاجات</string>
+    <string name="treatments_desc">عرض وإدارة سجل العلاجات</string>
+    <string name="nav_configuration">التهيئة</string>
+    <string name="nav_configuration_desc">قم بضبط التهيئة الخاصة بك (المراقبة المستمرة للغلوكوز CGM، المضخة، ...) وتفعيل الميزات</string>
     <string name="count_selected">%1$d محدد</string>
+    <string name="delete">حذف</string>
+    <string name="show_invalidated">إظهار العناصر الملغاة</string>
+    <string name="hide_invalidated">إخفاء العناصر الملغاة</string>
+    <string name="more_options">المزيد من الخيارات</string>
+    <string name="refresh">تحديث</string>
+    <string name="no_history_records">لا توجد سجلات</string>
+    <string name="error">خطأ</string>
+    <string name="navigation_error_screen_not_found">تعذر فتح الشاشة (غير متاحة في هذه التهيئة)</string>
+    <string name="profile_set_ok">تم تحديث ملف الأنسولين القاعدي في المضخة</string>
+    <string name="invalid_input">بيانات مدخلة خاطئة</string>
+    <string name="invalid_number">رقم غير صالح</string>
+    <string name="constraint_applied">تم تطبيق القيد!</string>
+    <string name="tt_label">الهدف المؤقت</string>
+    <string name="pump_unreachable">لا يمكن الوصول للمضخة</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">برنامج تشغيل المضخة لا يستجيب. \"%1$s\" يعمل منذ %2$d دقيقة ولا يمكن لأي أمر آخر أن يصل إلى المضخة. تحقق من المضخة، ثم أعد تشغيل AAPS.</string>
+    <string name="insulin_unit_shortname">وحدة</string>
+    <string name="pump_base_basal_rate">%1$.2f وحدة/ساعة</string>
+    <string name="pump_base_basal_rate_dynamic">%1$s وحدة/ساعة</string>
+    <string name="pump_not_initialized_profile_not_set">لم تتم تهيئة المضخة، لم يتم تعيين الملف الشخصي!</string>
+    <string name="failed_update_basal_profile">فشل تحديث ملف الأنسولين القاعدي</string>
+    <string name="no_valid_basal_rate">لم تتم قراءة معدل أنسولين قاعدي صالح من المضخة</string>
+    <string name="limiting_iob">جار تقييد الأنسولين النشط IOB إلى %1$.1f وحدة بسبب %2$s</string>
+    <string name="loop_disabled_by_user">تم تعطيل الحلقة بواسطة المستخدم</string>
+    <string name="event_type">نوع الحدث</string>
+    <string name="mgdl">ملليغرام/ديسيلتر</string>
+    <string name="mmol">مليمول/لتر</string>
+    <string name="bg_mgdl">%1$d ملليغرام/ديسيلتر</string>
+    <string name="bg_mmol">%1$.1f مليمول/لتر</string>
+    <string name="save">حفظ</string>
+    <string name="skip">تخطي</string>
+    <string name="switch_to_edit">تعديل</string>
+    <string name="snooze">غفوة</string>
+    <string name="snooze_15m">غفوة 15 دقيقة</string>
+    <string name="snooze_30m">غفوة 30 دقيقة</string>
+    <string name="snooze_60m">غفوة 60 دقيقة</string>
+    <string name="virtual_pump">مضخة افتراضية</string>
+    <string name="constraints">القيود</string>
+    <string name="superbolus">الجرعة الفائقة</string>
+    <string name="pump_paused">المضخة متوقفة مؤقتاً</string>
+    <string name="and">و</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">المستخدم</string>
+    <string name="result">النتيجة</string>
+    <string name="settings">الإعدادات</string>
+    <string name="open_plugin">فتح الإضافة</string>
+    <string name="configbuilder_pick_one_hint">اختر واحدًا. يمكن أن يكون واحد فقط نشطًا في كل مرة.</string>
+    <string name="configbuilder_pick_many_hint">اختر كل ما ينطبق.</string>
+    <string name="configbuilder_no_selection_warning">لم يتم تحديد أي إضافة في هذه الفئة.</string>
+    <string name="configbuilder_switch_confirmation_title">تبديل الإضافة؟</string>
+    <string name="configbuilder_switch_confirmation">سيؤدي هذا إلى تعطيل %1$s وتفعيل %2$s.</string>
+    <string name="expand">توسيع</string>
+    <string name="collapse">طي</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">مكتمل</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">موسع</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">مطوي</string>
+    <string name="no_compose_preferences">لا توجد إعدادات متاحة لهذه الإضافة</string>
+    <string name="confirm_password_hint">تأكيد كلمة المرور</string>
+    <string name="confirm_pin_hint">تأكيد رمز PIN</string>
+    <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
+    <string name="statuslights">مؤشرات الحالة</string>
+    <string name="configbuilder_insulin">الأنسولين</string>
+    <string name="configbuilder_bgsource">مصدر سكر الدم</string>
+    <string name="configbuilder_smoothing">تنعيم البيانات</string>
+    <string name="configbuilder_calibration">معايرة</string>
+    <string name="configbuilder_pump">المضخة</string>
+    <string name="configbuilder_sensitivity">اكتشاف الحساسية</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_loop">الحلقة</string>
+    <string name="configbuilder_sync">التواصل</string>
+    <string name="configbuilder_general">عام</string>
+    <string name="protection">الحماية</string>
+    <string name="value_unavailable_short">غير متاح</string>
     <!-- master_password moved to core/keys/strings.xml -->
+    <string name="ue_export_to_csv">تصدير مدخلات المستخدم إلى Excel (csv)</string>
+    <string name="confirm">تأكيد</string>
+    <string name="pump">مضخة</string>
+    <string name="pump_management">المضخة</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader">جهاز الرفع</string>
+    <string name="uploader_short">رفع</string>
+    <string name="missed_bg_readings">قراءات سكر الدم المفقودة</string>
+    <string name="treatments_iob_label_string">أنسولين نشط:</string>
+    <string name="mute5min">كتم لمدة 5 دقائق</string>
+    <string name="mute">كتم</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">كتم الإنذار</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">كتم وإغلاق</string>
+    <string name="success">تم بنجاح</string>
+    <string name="advanced_settings_title">الإعدادات المتقدمة</string>
+    <string name="extended_bolus">الجرعة الممتدة</string>
+    <string name="paused">متوقف مؤقتا</string>
+    <string name="running">قيد التشغيل</string>
+    <string name="tdd_total">إجمالي الجرعة اليومية</string>
+    <string name="tdd_old_data">بيانات قديمة</string>
+    <string name="goingtodeliver">جار ضخ %1$.2f وحدة</string>
+    <string name="carbs_not_saved_after_bolus">تم إعطاء الجرعة، ولكن تعذر حفظ الكربوهيدرات. يرجى إدخال الكربوهيدرات مرة أخرى.</string>
+    <string name="androidaps_start">تم تشغيل AAPS</string>
+    <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d غ</string>
+    <string name="format_hours">%1$.2f س</string>
+    <string name="format_mins">%1$d دقيقة</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
+    <string name="value_question" comment="Asks if this should be done. %1$s=what will be done. Example: Send logs?">%1$s؟</string>
+    <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
+    <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
+    <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
+    <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
+    <string name="objectives">الأهداف</string>
+    <string name="please_wait">الرجاء الانتظار…</string>
+    <string name="stop">إيقاف</string>
+    <string name="stop_pressed">تم ضغط زر الإيقاف</string>
+    <string name="invalid_profile">الملف الشخصي غير صالح!</string>
+    <string name="no_profile_set">لم يتم تعيين ملف شخصي</string>
+    <string name="profile_switch_no_insulin">لا يمكن تبديل الملف الشخصي: لا يوجد أنسولين قيد الاستخدام ولم يتم تحديد أي أنسولين.</string>
+    <string name="scene_no_profile_before">لم يكن أي ملف شخصي قيد الاستخدام قبل بدء المشهد.</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">انتهى المشهد %1$s، ولكن ملفه الشخصي لا يزال قيد الاستخدام. %2$s يرجى تفعيل ملف شخصي يدويًا.</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">هذا التبديل المؤقت يشتمل على %1$s، بينما يحتوي الملف الشخصي الدائم تحته على %2$s. يرجى تفعيل الأنسولين الموجود في المضخة من إعدادات الأنسولين أولاً.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">يجب أن يكون وقت تبديل الملف الشخصي ضمن %1$d ساعة من الآن.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">يجب أن يبدأ الهدف المؤقت خلال %1$d ساعة من الآن.</string>
+    <string name="profile_switch_select_insulin_hint">لم يتم استخدام أي أنسولين بعد. يرجى اختيار الأنسولين الذي تستخدمه، حتى يتمكن تبديل الملف الشخصي هذا من تسجيله.</string>
+    <string name="insulin_activation_failed">لم يتم تبديل الأنسولين. لا يزال الأنسولين السابق الخاص بك قيد الاستخدام.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">لم يتم تبديل الأنسولين: %1$s لا يزال الأنسولين السابق الخاص بك قيد الاستخدام.</string>
+    <string name="insulin_activation_unconfirmed">تعذر تأكيد تبديل الأنسولين. تحقق من الأنسولين النشط في ملفك الشخصي قبل إعطاء الجرعة.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">لم يتم تبديل الأنسولين. لا يزال الأنسولين السابق الخاص بك قيد الاستخدام.\n\n%1$s</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nلم يتم تبديل الأنسولين أيضًا. إذا كان الأنسولين الجديد في المضخة بالفعل، فلا تقم بتوصيل المضخة، وقم بإجراء تغيير الأنسولين مرة أخرى.</string>
+    <string name="active"><![CDATA[<نشط>]]></string>
+    <string name="date">التاريخ</string>
+    <string name="insulin_nickname_label">الاسم المستعار للأنسولين</string>
+    <string name="concentration_label">التركيز</string>
+    <string name="peak_label">الذروة</string>
+    <string name="dia_label">مدة عمل الأنسولين</string>
+    <string name="ic_label">معامل الكربوهيدرات</string>
+    <string name="isf_label">معامل الحساسية</string>
+    <string name="basal_label">الأنسولين القاعدي</string>
+    <string name="target_label">الهدف</string>
+    <string name="dia_long_label">مدة عمل الأنسولين</string>
+    <string name="ic_long_label">نسبة الأنسولين إلى الكربوهيدرات</string>
+    <string name="isf_long_label">معامل حساسية الأنسولين</string>
+    <string name="basal_long_label">معدل الأنسولين القاعدي</string>
+    <string name="target_long_label">هدف سكر الدم</string>
+    <string name="shortgram">غ</string>
+    <string name="shortpercent">%</string>
+    <string name="virtualpump_resultok">تم</string>
+    <string name="pump_time_updated">تم تحديث وقت المضخة</string>
+    <string name="exit">خروج</string>
+    <string name="removerecord">إزالة السجل</string>
+    <string name="loopisdisabled">الحلقة معطلة</string>
+    <string name="alarm">إنذار</string>
+    <string name="exportsettings">تصدير الإعدادات</string>
+    <string name="disableloop">تعطيل الحلقة</string>
+    <string name="disabled_loop">الحلقة معطلة</string>
+    <string name="resumeloop">استئناف الحلقة</string>
+    <string name="suspendloop">تعليق الحلقة</string>
+    <string name="notification">إشعار</string>
+    <string name="noprofile">لم يتم تحميل أي ملف شخصي من NS بعد</string>
+    <string name="exists">موجود</string>
+    <string name="notexists">غير موجود</string>
+    <string name="glucose">الغلوكوز</string>
+    <string name="iob">أنسولين نشط</string>
+    <string name="cob">الكربوهيدرات المتبقية</string>
+    <string name="name_short">الاسم:</string>
+    <string name="time">الوقت</string>
+    <string name="ns_wifi_ssids">معرف شبكة WiFi (SSID)</string>
+    <string name="loading">جاري التحميل…</string>
+    <string name="waiting_for_pump">في انتظار المضخة…</string>
+    <string name="initialization_failed">فشلت التهيئة</string>
+    <string name="notes_label">ملاحظات</string>
+    <string name="wrong_pump_data">البيانات واردة من مضخة مختلفة. قم بتغيير برنامج تشغيل المضخة لإعادة تعيين حالة المضخة.</string>
+    <string name="bg_label">سكر الدم</string>
+    <string name="calibration">معايرة</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">لم يتم حفظ المعايرة: يتغير سكر الدم بسرعة كبيرة (Δ %1$s %3$s لكل 5 دقائق، الحد الأقصى %2$s). حاول مرة أخرى عندما يكون مستوى الغلوكوز مستقراً.</string>
+    <string name="cal_reject_no_pair">لم يتم حفظ المعايرة: لم يتم العثور على قراءة من جهاز المراقبة المستمرة للغلوكوز (CGM) خلال الدقائق العشر الماضية.</string>
+    <string name="cal_reject_warmup">لم يتم حفظ المعايرة: ما زال المستشعر في فترة الإحماء البالغة ساعتين.</string>
+    <string name="cal_reject_no_session">لم يتم حفظ المعايرة: لا توجد جلسة مستشعر نشطة. قم بتسجيل تغيير المستشعر أولاً.</string>
+    <string name="cgm">المراقبة المستمرة للغلوكوز (CGM)</string>
+    <string name="treatmentdeliveryerror">حدث خطأ أثناء إعطاء الجرعة. تحقق يدوياً من كمية الأنسولين والكربوهيدرات الفعلية المعطاة.</string>
+    <string name="bolus_reminder">التذكير بالجرعة عند تعافي سكر الدم</string>
+    <string name="duration_label">المدة</string>
+    <string name="shortgramm">غ</string>
+    <string name="pump_running">المضخة قيد التشغيل</string>
+    <string name="notconfigured">لم يتم الإعداد</string>
+    <string name="loop_suspended_by_dst">تم تعليق الحلقة بسبب التوقيت الصيفي (DST)</string>
+    <string name="required">مطلوب</string>
+    <string name="a11y_arrow_triple_down">ينخفض بسرعة كبيرة</string>
+    <string name="a11y_arrow_double_down">ينخفض بسرعة</string>
+    <string name="a11y_arrow_single_down">ينخفض</string>
+    <string name="a11y_arrow_forty_five_down">ينخفض ببطء</string>
+    <string name="a11y_arrow_flat">مستقر</string>
+    <string name="a11y_arrow_forty_five_up">يرتفع ببطء</string>
+    <string name="a11y_arrow_single_up">يرتفع</string>
+    <string name="a11y_arrow_double_up">يرتفع بسرعة</string>
+    <string name="a11y_arrow_triple_up">يرتفع بسرعة كبيرة</string>
+    <string name="a11y_arrow_none">لا يوجد</string>
+    <string name="a11y_arrow_unknown">مجهول</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">إنقاص %1$s بمقدار %2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">زيادة %1$s بمقدار %2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">فتح %1$s للكتابة</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">إغلاق %1$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">نقل للأعلى</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">نقل للأسفل</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">خطوة %1$d من %2$d</string>
+    <string name="decrement">إنقاص</string>
+    <string name="increment">زيادة</string>
+    <string name="a11y_high">مرتفع</string>
+    <string name="a11y_inrange">ضمن النطاق</string>
+    <string name="a11y_low">منخفض</string>
+    <string name="remove_label">حذف</string>
+    <string name="activate_profile">تفعيل الملف الشخصي</string>
+    <string name="activate_insulin">تفعيل الأنسولين</string>
+    <string name="pump_wizard_profile_gate_title">الملف الشخصي مطلوب</string>
+    <string name="pump_wizard_profile_gate_pick">حدد الملف الشخصي المراد تطبيقه عند التفعيل.</string>
+    <string name="pump_wizard_profile_gate_no_store">لم يتم تعريف الملف الشخصي. افتح إدارة الملف الشخصي لإنشاء واحد، ثم ابدأ التفعيل مرة أخرى.</string>
+    <string name="reset">إعادة تعيين</string>
+    <string name="profileswitch_ismissing">تبديل الملف الشخصي مفقود. يرجى إجراء تبديل للملف الشخصي أو الضغط على \"تفعيل الملف الشخصي\" في LocalProfile.</string>
+    <string name="profile">الملف الشخصي</string>
+    <string name="percentage_label">النسبة المئوية</string>
+    <string name="timeshift_label">إزاحة الوقت</string>
+    <string name="confirm_remove_multiple_items">هل أنت متأكد من أنك تريد إزالة %1$d من العناصر؟</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">لا يحتوي الجهاز الرئيسي على %1$d من هذه الإدخالات. لم يتم حذفها.</string>
+    <string name="overview_treatment_label">العلاج</string>
+    <string name="copytolocalprofile">إنشاء ملف شخصي جديد من هذا الملف الشخصي؟</string>
+    <string name="wear_wizard_settings">إعدادات حاسبة الساعة</string>
+    <string name="bolus_iob_label">الأنسولين النشط من الجرعات (Bolus IOB)</string>
+    <string name="treatments_wizard_basaliob_label">الأنسولين النشط القاعدي (Basal IOB)</string>
+    <string name="invalid">غير صالح</string>
+    <string name="login">دخول</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="prime_fill">تجهيز/تعبئة</string>
+    <string name="prime_not_available">تقوم هذه المضخة بالتعبئة والتجهيز تلقائياً أثناء التفعيل. خيار التجهيز/التعبئة من AAPS غير متاح.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">تغيير</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">تعبئة</string>
+    <string name="site_rotation">تدوير مواضع التركيب</string>
+    <string name="edit_site">تعديل</string>
+    <string name="select_arrow">تحديد سهم الاتجاه</string>
+    <string name="site_filter_info">حدد نوع حدث العلاج الذي تريد عرضه: تغيير القنية و/أو تغيير المستشعر</string>
+    <string name="selected_location">المحدد: %1$s</string>
+    <string name="last_site_location">الموقع الأخير: %1$s</string>
+    <string name="pick_site">اختيار الموقع</string>
+    <string name="select_site_location">حدد موقع التركيب</string>
+    <string name="site_location">موقع التركيب</string>
+    <string name="overview_insulin_label">الأنسولين</string>
+    <string name="stoptemptarget">إيقاف الهدف المؤقت</string>
+    <string name="closedloop">حلقة مغلقة</string>
+    <string name="openloop">حلقة مفتوحة</string>
+    <string name="lowglucosesuspend">إيقاف الضخ عند انخفاض السكر</string>
+    <string name="pump_suspended">المضخة معلقة</string>
+    <string name="pump_suspend">تعليق المضخة</string>
+    <string name="pump_resume">استئناف المضخة</string>
+    <string name="mode_reverted">تم الرجوع عن الوضع</string>
+    <string name="select_insulin">اختر الأنسولين</string>
+    <string name="dia">مدة عمل الأنسولين (DIA)</string>
+    <string name="ic_short">IC (معامل الكربوهيدرات)</string>
+    <string name="isf_short">معامل حساسية الأنسولين (ISF)</string>
+    <string name="canceling_tbr_failed">فشل إلغاء المعدل القاعدي المؤقت</string>
+    <string name="canceling_eb_failed">فشل إلغاء الجرعة الممتدة</string>
+    <string name="virtualpump_uploadstatus_title">رفع حالة المضخة إلى NS أو Tidepool</string>
+    <string name="iob_label">الأنسولين النشط (IOB)</string>
+    <string name="loopstatus_targets">الأهداف:</string>
+    <string name="loopstatus_OAPS_result">نتيجة OAPS:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f وحدة ( %2$.2f وحدة/ساعة )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f وحدة/ساعة (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f وحدة/ساعة @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">E %1$.2f وحدة/ساعة @%2$s %3$s/%4$s دقيقة</string>
+    <string name="extended_bolus_medium">%1$.2f وحدة/ساعة %2$s/%3$s\'</string>
+    <string name="nav_export">تصدير الإعدادات</string>
+    <string name="location_permission_not_granted">إذن الموقع غير ممنوح. يرجى السماح به من إعدادات أندرويد.</string>
+    <string name="configbuilder_nightscoutversion_label">إصدار Nightscout:</string>
+    <string name="not_available_full">غير متاح</string>
+    <string name="not_implemented_yet">هذه الوظيفة ليست جاهزة بعد على هذا النظام</string>
+    <string name="not_available_on_platform">هذه الوظيفة غير متاحة على هذا النظام</string>
+    <string name="engineering_mode_enabled">تم تفعيل الوضع الهندسي</string>
+    <string name="back">رجوع</string>
+    <string name="next">التالي</string>
+    <string name="pref_syncs_with_main_phone">تتم المزامنة مع الهاتف الرئيسي</string>
+    <string name="show_hide_records">إخفاء سجلات الحلقة</string>
     <!--    Protection-->
+    <string name="wrongpassword">كلمة المرور غير صحيحة</string>
+    <string name="wrongpin">رمز PIN غير صحيح</string>
+    <string name="passwords_dont_match">كلمتا المرور غير متطابقتين</string>
+    <string name="pin_dont_match">رمزا PIN غير متطابقين</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">بدء الملف الشخصي %1$d%% لمدة %2$d دقيقة</string>
     <!--    APSResult-->
+    <string name="cancel_temp">إلغاء المعدل القاعدي المؤقت</string>
+    <string name="let_temp_basal_run">السماح باستمرار المعدل القاعدي المؤقت</string>
+    <string name="rate">المعدل</string>
+    <string name="duration">المدة</string>
+    <string name="reason">السبب</string>
+    <string name="nochangerequested">لم يتم طلب أي تغيير</string>
     <!--    Insulin / Concentration-->
+    <string name="ins_concentration_confirmed">تم تأكيد الأنسولين %1$s</string>
+    <string name="current_insulin">نشط حالياً</string>
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">سيتم تفعيله</string>
+    <string name="change_insulin">تغيير</string>
+    <string name="select_insulin_description">اختر الأنسولين الذي تملأ به المضخة. سيتم تطبيق تبديل الملف الشخصي بعد التفعيل/التجهيز.</string>
+    <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
+    <string name="selected_insulin">الأنسولين المحدد: %1$s</string>
+    <string name="record_insulin_hint">إذا كنت تسجل أنسولين تم إعطاؤه بقلم الحقن، حدد نوع الأنسولين الصحيح أدناه. تكون الجرعة دائماً بالوحدات الدولية.</string>
     <!--       Stats -->
+    <string name="average">المتوسط</string>
+    <string name="tir">الوقت في النطاق المستهدف</string>
+    <string name="below" comment="below &quot;in range&quot;">أدنى من</string>
+    <string name="in_range">ضمن النطاق</string>
+    <string name="veryLow" comment="below 3.1">منخفض جداً</string>
+    <string name="low" comment="3.1-3.9">منخفض</string>
+    <string name="high" comment="10.0-13.9">مرتفع</string>
+    <string name="veryHigh" comment="above 13.9">مرتفع جدا</string>
+    <string name="above" comment="above &quot;in range&quot;">أعلى من</string>
+    <string name="detailed_14_days">تفاصيل 14 يومًا</string>
+    <string name="day_tir">الوقت في النطاق نهارًا</string>
+    <string name="night_tir">الوقت في النطاق ليلًا</string>
+    <string name="hba1c">السكر التراكمي (HbA1c): </string>
+    <string name="std_deviation">الانحراف المعياري SD: %1$s</string>
+    <string name="seven_days_short">7 أيام</string>
+    <string name="thirty_days_short">30 يومًا</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">بوابة الرعاية</string>
+    <string name="careportal_bgcheck">فحص سكر الدم</string>
+    <string name="careportal_mbg">قراءة سكر الدم اليدوية أو المعايرة</string>
+    <string name="careportal_announcement">إعلان</string>
+    <string name="careportal_settings_export">تصدير الإعدادات</string>
+    <string name="careportal_note">ملاحظة</string>
+    <string name="careportal_question">سؤال</string>
+    <string name="careportal_exercise">رياضة</string>
+    <string name="careportal_announcement_message">إعلان: %1$s</string>
+    <string name="careportal_note_message">ملاحظة: %1$s</string>
+    <string name="careportal_question_message">سؤال: %1$s</string>
+    <string name="careportal_exercise_message">رياضة: %1$s</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">تغيير موضع تركيب المضخة: %1$s</string>
+    <string name="careportal_pump_site_change">تغيير موضع تركيب المضخة</string>
+    <string name="cgm_sensor_insert">تركيب المستشعر</string>
+    <string name="careportal_pump_site_management">مواضع تركيب المضخة</string>
+    <string name="careportal_cgm_site_management">مواضع تركيب المستشعر (CGM)</string>
+    <string name="careportal_cgmsensorstart">بدء المستشعر</string>
+    <string name="careportal_cgm_sensor_stop">إيقاف المستشعر</string>
+    <string name="careportal_dad_alert">تنبيه D.A.D.</string>
+    <string name="careportal_insulin_cartridge_change">تغيير خرطوشة الأنسولين</string>
+    <string name="careportal_profileswitch">تبديل الملف الشخصي</string>
+    <string name="profile_management">إدارة الملف الشخصي</string>
+    <string name="careportal_snackbolus">جرعة وجبة خفيفة</string>
+    <string name="careportal_mealbolus">جرعة الوجبة</string>
+    <string name="careportal_correctionbolus">جرعة تصحيحية</string>
+    <string name="careportal_combobolus">جرعة مركبة</string>
+    <string name="careportal_tempbasalstart">بدء المعدل القاعدي المؤقت</string>
+    <string name="careportal_tempbasalend">نهاية المعدل القاعدي المؤقت</string>
+    <string name="careportal_carbscorrection">تصحيح الكربوهيدرات</string>
+    <string name="careportal_openapsoffline">OpenAPS غير متصل</string>
+    <string name="pump_battery_change">تغيير بطارية المضخة</string>
+    <string name="temporary_target">هدف مؤقت</string>
+    <string name="temporary_targets">الأهداف المؤقتة</string>
+    <string name="running_mode">وضع التشغيل</string>
+    <string name="running_mode_desc">إغلاق أو فتح الحلقة، تعليقها، أو فصل المضخة</string>
+    <string name="running_mode_change_not_allowed">تغيير وضع التشغيل غير متاح</string>
+    <string name="pump_reconnect">إعادة توصيل المضخة</string>
+    <string name="scene">المشهد</string>
+    <string name="scenes">المشاهد</string>
+    <string name="scene_desc">إعدادات المواقف المسبقة — تفعيل عدة إجراءات في وقت واحد</string>
+    <string name="scene_activate">تفعيل</string>
+    <string name="scene_deactivate">إنهاء المشهد</string>
+    <string name="scene_active">مفعّل</string>
+    <string name="scene_ended">انتهى المشهد</string>
+    <string name="scene_end_active">إنهاء المشهد المفعّل</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">التخطي إلى</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">لن يبدأ المشهد التالي %1$s</string>
+    <string name="scene_confirm_activate">تفعيل المشهد \"%1$s\"؟</string>
+    <string name="scene_confirm_deactivate">إنهاء المشهد \"%1$s\" والتراجع عن التغييرات؟</string>
+    <string name="scene_conflict_active_tt">سيتم استبدال الهدف المؤقت المفعّل</string>
+    <string name="scene_conflict_active_profile">سيتم استبدال تبديل الملف الشخصي المفعّل</string>
+    <string name="scene_conflict_active_running_mode">سيتم استبدال وضع التشغيل المفعّل</string>
+    <string name="scene_conflict_active_scene">سيتم إنهاء المشهد المفعّل \"%1$s\" أولاً</string>
+    <string name="scene_action_tt">هدف مؤقت: %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">الملف الشخصي: %1$s %2$d%%</string>
+    <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">الملف الشخصي: %1$d%%</string>
+    <string name="scene_action_smb_on">تفعيل SMB</string>
+    <string name="scene_action_smb_off">تعطيل SMB</string>
+    <string name="scene_action_running_mode">وضع التشغيل: %1$s</string>
+    <string name="scene_action_careportal">السجل: %1$s</string>
+    <string name="scene_management">المشاهد</string>
+    <string name="scene_management_desc">إنشاء وتعديل وإدارة المشاهد</string>
+    <string name="scene_start_from_template">البدء من قالب</string>
+    <string name="scene_editor_target">الهدف</string>
+    <string name="scene_editor_tt_preset">الهدف المؤقت المسبق</string>
+    <string name="scene_editor_no_tt_presets">لم يتم إعداد أهداف مؤقتة مسبقة</string>
+    <string name="scene_editor_select_tt_preset">اختر إعداداً مسبقاً</string>
+    <string name="scene_editor_percentage">النسبة المئوية</string>
+    <string name="scene_editor_profile">الملف الشخصي</string>
+    <string name="scene_editor_keep_current_profile">-- الإبقاء على الحالي --</string>
+    <string name="scene_editor_mode">الوضع</string>
+    <string name="scene_editor_event_type">نوع الحدث</string>
+    <string name="scene_editor_note">ملاحظة</string>
+    <string name="scene_icon">الأيقونة</string>
+    <string name="scene_editor_enabled">مفعّل</string>
+    <string name="scene_editor_disabled">معطّل</string>
+    <string name="scene_summary">%1$d إجراءات، %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s ← %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s، %2$s</string>
+    <string name="scene_duration_indefinite">غير محدد (إنهاء يدوي)</string>
+    <string name="scene_some_actions_failed">فشلت بعض الإجراءات</string>
+    <string name="scene_no_active">لا يوجد مشهد مفعّل</string>
+    <string name="scene_some_reverts_failed">فشل التراجع عن بعض الإجراءات</string>
+    <string name="scene_no_profile_store">مخزن الملفات الشخصية غير متاح</string>
+    <string name="scene_no_actions">المشهد لا يحتوي على إجراءات</string>
+    <string name="scene_profile_not_found">الملف الشخصي \"%1$s\" غير موجود</string>
+    <string name="scene_lock_banner_master_offline">تعذر الوصول للجهاز الرئيسي. ستستأنف عناصر التحكم بالمشهد عند إعادة الاتصال.</string>
+    <string name="scene_lock_banner_control_disabled">قام الجهاز الرئيسي بتعطيل التحكم عن بعد. ستستأنف عناصر التحكم بالمشهد عند تفعيلها من الجهاز الرئيسي.</string>
+    <string name="master_offline_banner">تعذر الوصول للجهاز الرئيسي. التعديل معطل حتى استعادة الاتصال.</string>
+    <string name="master_control_disabled_banner">قام الجهاز الرئيسي بتعطيل التحكم عن بعد. التعديل معطل حتى يتم تفعيله من جديد في الجهاز الرئيسي.</string>
+    <string name="hardened_mode_on">وضع الحماية المشددة مفعّل</string>
+    <string name="hardened_mode_title">وضع الحماية المشددة</string>
+    <string name="hardened_mode_info_open">حول وضع الحماية المشددة</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">قراءة فقط</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">الوجبات</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">مقدم الرعاية</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">مسؤول</string>
+    <string name="client_role_title">الدور</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">الدور: %1$s</string>
+    <string name="client_roles_info_open">حول الأدوار</string>
+    <string name="client_roles_info">لكل هاتف مقترن دور. يتحقق الهاتف الرئيسي من الدور مع كل أمر، ولا يعرض الهاتف إلا ما يسمح به دوره. يسري الدور الجديد فوراً، دون اقتران مرة أخرى.\n\nقراءة فقط: يبقى الهاتف مقترناً، لكنه يعرض البيانات فقط.\n\nالوجبات: الجرعة، حاسبة الجرعة، المعالج السريع والكربوهيدرات. يمكنه أيضاً إيقاف جرعة قيد الضخ. الكربوهيدرات المدخلة هنا قد تجعل الحلقة تعطي المزيد من الأنسولين.\n\nمقدم الرعاية: كل ما يفعله المستخدم في AAPS، مثل الأهداف المؤقتة، وتبديل الملف الشخصي والأنسولين، ووضع الحلقة، والمعدل القاعدي المؤقت، والجرعة الممتدة، والمشاهد، وأحداث بوابة الرعاية، والمعايرات، وحذف الإدخالات. لا يمكنه تغيير الإعدادات أو الإعدادات المسبقة.\n\nالمسؤول: كل شيء، بما في ذلك الإعدادات والإعدادات المسبقة (المعالج السريع، الإعدادات المسبقة للأهداف المؤقتة، المشاهد، الملفات الشخصية، الأتمتة، الأنسولين).</string>
+    <string name="client_read_only_banner">هذا الهاتف في وضع القراءة فقط على الهاتف الرئيسي.</string>
+    <string name="hardened_mode_info">يستقبل الهاتف الرئيسي التغييرات فقط من الأجهزة العميلة المقترنة. ولا يقبل العلاجات، أو الأهداف المؤقتة، أو تغييرات الملف الشخصي، أو تغييرات وضع التشغيل، أو عمليات الحذف التي تتم مباشرةً في Nightscout على سبيل المثال عبر الموقع الإلكتروني أو التطبيقات الأخرى. وتكون إعدادات قبول البيانات من Nightscout مخفية أثناء تفعيل وضع الحماية المشددة. ولا تتأثر أوامر الرسائل القصيرة.\n\nلا يزال الهاتف الرئيسي يقوم برفع كافة البيانات إلى Nightscout، بما في ذلك قراءات سكر الدم. وإذا كان يحصل على قراءات سكر الدم من Nightscout، فسيواصل تلقيها من هناك.\n\nلتحميل السجل على هاتف رئيسي جديد، استخدم \"المزامنة الكاملة\" في NSClient. تأخذ المزامنة الكاملة كل ما يوجد في Nightscout، بما في ذلك الملفات الشخصية.\n\nيتطلب التحكم عن بعد من الأجهزة العميلة اتصال WebSocket فعالاً بـ Nightscout، سواء على الهاتف الرئيسي أو على الأجهزة العميلة المقترنة. يؤدي الوضع المبسط دائمًا إلى تفعيل وضع الحماية المشددة. ولإيقافه، قم بمغادرة الوضع المبسط وقم بإيقاف التحكم من الأجهزة العميلة على الهاتف الرئيسي.</string>
+    <string name="scene_lock_reason_master_offline">الجهاز الرئيسي غير متصل</string>
+    <string name="scene_lock_reason_control_disabled">التحكم عن بعد معطل</string>
+    <string name="scene_lock_reason_scene_active">قم بإنهاء المشهد الحالي أولاً</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">تعيين هدف مؤقت</string>
+    <string name="clientcontrol_action_cancel_temp_target">إلغاء الهدف المؤقت</string>
+    <string name="clientcontrol_action_activate_scene">تفعيل المشهد %1$s</string>
+    <string name="clientcontrol_action_deactivate_scene">إنهاء المشهد</string>
+    <string name="clientcontrol_action_update_settings">تحديث الإعدادات</string>
+    <string name="clientcontrol_action_deliver_bolus">ضخ الجرعة</string>
+    <string name="clientcontrol_action_eat_reminder">تغيير تذكير الأكل</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">هذا الجهاز غير مقترن بجهاز رئيسي.</string>
+    <string name="clientcontrol_fail_not_reachable">الجهاز الرئيسي غير متصل.</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">إعدادات المضخة غير متزامنة مع الجهاز الرئيسي. يرجى المحاولة مرة أخرى.</string>
+    <string name="clientcontrol_fail_no_reply">لم يصل رد من الجهاز الرئيسي في الوقت المحدد.</string>
+    <string name="clientcontrol_fail_expired">انتهت صلاحية الأمر قبل أن يطبقه الجهاز الرئيسي.</string>
+    <string name="clientcontrol_fail_busy">هناك إجراء آخر قيد التنفيذ بالفعل.</string>
+    <string name="clientcontrol_fail_send_failed">تعذر الوصول إلى Nightscout.</string>
+    <string name="clientcontrol_fail_no_active_profile">لا يوجد ملف شخصي نشط على الجهاز الرئيسي للتطبيق عليه.</string>
+    <string name="clientcontrol_fail_scene_not_found">المشهد لم يعد موجوداً.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">سجل الموقع لم يعد موجوداً.</string>
+    <string name="clientcontrol_fail_scene_disabled">المشهد معطل.</string>
+    <string name="clientcontrol_fail_partial">تعذر تطبيق بعض الإجراءات.</string>
+    <string name="clientcontrol_fail_execution">تعذر على الجهاز الرئيسي تطبيق الأمر.</string>
+    <string name="clientcontrol_fail_cancelled">تم إلغاء الأمر قبل تشغيله. لم يتم إرسال أي شيء للمضخة.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">تم إلغاء الجرعة. لم يتم إعطاء أنسولين.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">ملغى</string>
+    <string name="smb_paused_for_bolus" comment="Loop status: why no SMB was given. The user is confirming a bolus that was calculated without this SMB.">لا يتم إعطاء جرعات تصحيحية صغيرة SMB في أثناء انتظار تأكيد الجرعة</string>
+    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">جارٍ ضخ جرعة تصحيحية صغيرة SMB. يمكنك التأكيد بعد الانتهاء.</string>
+    <string name="clientcontrol_fail_control_disabled">التحكم عن بعد معطل على الجهاز الرئيسي.</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">دور هذا الهاتف على الجهاز الرئيسي لا يسمح بهذا الإجراء.</string>
+    <string name="clientcontrol_fail_other_token">رفض الجهاز الرئيسي الأمر: يكتب هذا الهاتف إلى Nightscout برمز مميز (token) غير رمزه الخاص. على الجهاز الرئيسي، احذف هذا الهاتف ثم أضفه مرة أخرى.</string>
+    <string name="clientcontrol_fail_no_pending_bolus">انتهت صلاحية الجرعة المحضرة أو تم استبدالها. اضغط على الزر مجدداً.</string>
+    <string name="clientcontrol_fail_bolus_compute">تعذر على الجهاز الرئيسي حساب الجرعة (نقص بيانات الغلوكوز/الملف الشخصي، أو المضخة غير جاهزة).</string>
+    <string name="clientcontrol_fail_internal">حدث خطأ ما.</string>
+    <string name="clientcontrol_fail_unknown">فشل الأمر.</string>
+    <string name="clientcontrol_unconfirmed_wear">الحالة غير معروفة — تحقق من الهاتف/Nightscout قبل إعادة إعطاء الجرعة.</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">فقدان الاتصال — حالة الضخ غير معروفة</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">توقف هذا الهاتف عن تلقي التحديثات من الهاتف الرئيسي. قد تكون الجرعة مستمرة في الضخ أو اكتملت. إغلاق هذا التنبيه يخفيه هنا فقط، ولا يوقف المضخة. تحقق من الهاتف الرئيسي لمعرفة الكمية الفعلية المعطاة.</string>
+    <string name="scene_revert_tt">إلغاء الهدف المؤقت</string>
+    <string name="scene_revert_profile">التراجع عن تغيير الملف الشخصي</string>
+    <string name="scene_revert_smb_on">إعادة تفعيل الجرعات التصحيحية الصغيرة SMB</string>
+    <string name="scene_revert_smb_off">تعطيل الجرعات التصحيحية الصغيرة SMB</string>
+    <string name="scene_revert_loop_mode">إلغاء تجاوز وضع التشغيل</string>
+    <string name="scene_careportal_no_revert">لن يتم التراجع عن إدخالات بوابة الرعاية</string>
+    <string name="careportal_sickness">مرض</string>
+    <string name="careportal_stress">توتر / إجهاد</string>
+    <string name="careportal_pre_period">قبل الدورة الشهرية</string>
+    <string name="careportal_alcohol">كحول</string>
+    <string name="careportal_cortisone">كورتيزون</string>
+    <string name="careportal_feeling_low">شعور بانخفاض السكر</string>
+    <string name="careportal_feeling_high">شعور بارتفاع السكر</string>
+    <string name="careportal_falling_asleep">الخلود إلى النوم</string>
+    <string name="careportal_waking_up">الاستيقاظ</string>
+    <string name="careportal_temporarytargetvalue">قيمة الهدف المؤقت</string>
+    <string name="careportal_temporarytargetcancel">إلغاء الهدف المؤقت</string>
+    <string name="boluswizard">حاسبة الجرعة</string>
+    <string name="treatment_desc">تسجيل الأنسولين والكربوهيدرات معا</string>
+    <string name="treatment_insulin_desc">إعطاء الجرعة يدوياً</string>
+    <string name="treatment_carbs_desc">تسجيل الكربوهيدرات بدون أنسولين</string>
+    <string name="treatment_calculator_desc">حساب الجرعة</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">إعدادات الأنسولين</string>
+    <string name="manage_insulin_desc">إدارة وتفعيل إعدادات الأنسولين</string>
+    <string name="concentration_disable_blocked">لا يمكن تعطيل دعم التركيز أثناء وجود أنسولين بتركيز غير U100. قم بحذف جميع إعدادات الأنسولين غير U100 والتبديل إلى ملف شخصي U100 أولاً.</string>
+    <string name="simple_mode_blocked_by_concentration">لا يمكن تفعيل الوضع المبسط عند استخدام أنسولين بتركيز غير U100. قم بالتبديل إلى أنسولين U100 أولاً.</string>
+    <string name="manage_profile_desc">إدارة وتفعيل الملفات الشخصية</string>
+    <string name="manage_temp_target_desc">إدارة وتحديد الأهداف المؤقتة</string>
+    <string name="manage_temp_basal_desc">بدء المعدل القاعدي المؤقت</string>
+    <string name="manage_extended_bolus_desc">بدء ضخ الجرعة الممتدة</string>
+    <string name="manage_site_rotation_desc">متابعة وتدوير مواضع التركيب</string>
+    <string name="manage_quickwizard_desc">إدارة الإعدادات المسبقة للمعالج السريع</string>
+    <string name="treatment_note_desc">إضافة ملاحظة لسجلاتك</string>
+    <string name="treatment_question_desc">تسجيل سؤال لفريق الرعاية الطبية</string>
+    <string name="treatment_cgm_desc">فتح تطبيق CGM</string>
+    <string name="treatment_calibration_desc">معايرة مستشعر CGM</string>
+    <string name="treatment_bg_check_desc">تسجيل فحص سكر الدم</string>
+    <string name="treatment_exercise_desc">تسجيل نشاط رياضي</string>
+    <string name="treatment_announcement_desc">نشر إعلان</string>
+    <string name="treatment_sensor_insert_desc">تسجيل تركيب مستشعر CGM</string>
+    <string name="treatment_battery_change_desc">تسجيل تغيير بطارية المضخة</string>
+    <string name="treatment_cannula_change_desc">تسجيل تغيير القنية/مجموعة التسريب</string>
+    <string name="treatment_fill_desc">تجهيز وتعبئة القنية</string>
+    <string name="temp_basal">المعدل القاعدي المؤقت</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">أعلى من الملف الشخصي</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">أقل من الملف الشخصي</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">لا يوجد</string>
+    <string name="user_entry">إدخال المستخدم</string>
+    <string name="aaps">AAPS</string>
+    <string name="glucosetype_finger">إصبع</string>
+    <string name="glucosetype_sensor">المستشعر</string>
+    <string name="manual">يدوي</string>
+    <string name="unknown">غير معروف</string>
+    <string name="eatingsoon">قبل الأكل</string>
+    <string name="hypo">انخفاض</string>
+    <string name="activity">نشاط</string>
+    <string name="wear">الساعة الذكية</string>
+    <string name="automation">الأتمتة</string>
+    <string name="automation_management_desc">إنشاء قواعد لتنفيذ إجراءات تلقائياً بناءً على المشغلات</string>
+    <string name="settingsexport">تصدير الإعدادات</string>
+    <string name="custom">مخصص</string>
+    <string name="preset_settings">إعدادات مسبقة</string>
+    <string name="activation">التفعيل</string>
+    <string name="temp_target_management">الهدف المؤقت</string>
+    <string name="revert_to_defaults">استعادة الإعدادات الافتراضية</string>
+    <string name="loop">الحلقة</string>
+    <string name="ns">NS</string>
+    <string name="location_front_right_upper_chest">يمين أعلى الصدر</string>
+    <string name="location_front_left_upper_chest">يسار أعلى الصدر</string>
+    <string name="location_side_right_upper_arm">يمين أعلى الذراع الخارجي</string>
+    <string name="location_side_left_upper_arm">يسار أعلى الذراع الخارجي</string>
+    <string name="location_back_right_upper_arm">يمين خلف الذراع العلوي</string>
+    <string name="location_back_left_upper_arm">يسار خلف الذراع العلوي</string>
+    <string name="location_side_right_upper_abdomen">يمين أعلى البطن الخارجي</string>
+    <string name="location_side_left_upper_abdomen">يسار أعلى البطن الخارجي</string>
+    <string name="location_side_right_lower_abdomen">يمين أسفل البطن الخارجي</string>
+    <string name="location_side_left_lower_abdomen">يسار أسفل البطن الخارجي</string>
+    <string name="location_front_right_upper_abdomen">يمين أعلى مقدمة البطن</string>
+    <string name="location_front_left_upper_abdomen">يسار أعلى مقدمة البطن</string>
+    <string name="location_front_right_lower_abdomen">يمين أسفل مقدمة البطن</string>
+    <string name="location_front_left_lower_abdomen">يسار أسفل مقدمة البطن</string>
+    <string name="location_back_right_buttock">الجهة اليمنى من الأرداف</string>
+    <string name="location_back_left_buttock">الجهة اليسرى من الأرداف</string>
+    <string name="location_back_right_lower_back">يمين أسفل الظهر</string>
+    <string name="location_back_left_lower_back">يسار أسفل الظهر</string>
+    <string name="location_side_right_upper_thigh">يمين أعلى الفخذ الخارجي</string>
+    <string name="location_side_left_upper_thigh">يسار أعلى الفخذ الخارجي</string>
+    <string name="location_side_right_lower_thigh">يمين أسفل الفخذ الخارجي</string>
+    <string name="location_side_left_lower_thigh">يسار أسفل الفخذ الخارجي</string>
+    <string name="location_front_right_upper_thigh">يمين أعلى مقدمة الفخذ</string>
+    <string name="location_front_left_upper_thigh">يسار أعلى مقدمة الفخذ</string>
+    <string name="location_front_right_lower_thigh">يمين أسفل مقدمة الفخذ</string>
+    <string name="location_front_left_lower_thigh">يسار أسفل مقدمة الفخذ</string>
+    <string name="arrow_up">للأعلى</string>
+    <string name="arrow_up_right">أعلى اليمين</string>
+    <string name="arrow_right">يميناً</string>
+    <string name="arrow_down_right">أسفل اليمين</string>
+    <string name="arrow_down">للأسفل</string>
+    <string name="arrow_down_left">أسفل اليسار</string>
+    <string name="arrow_left">يساراً</string>
+    <string name="arrow_up_left">أعلى اليسار</string>
+    <string name="arrow_center">منتصف</string>
     <!--    Command-->
+    <string name="connectiontimedout">انتهت مهلة الاتصال</string>
+    <string name="command_replaced">تم استبداله بأمر أحدث</string>
+    <string name="pump_not_configured">لم يتم إعداد المضخة</string>
     <!--    PumpEnactResult-->
+    <string name="enacted">تم التنفيذ</string>
+    <string name="comment">تعليق</string>
+    <string name="percent">نسبة مئوية</string>
+    <string name="absolute">مطلق</string>
+    <string name="waitingforpumpresult">في انتظار النتيجة</string>
+    <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">يتطلب %1$d غرام كربوهيدرات إضافية خلال %2$d دقيقة</string>
+    <string name="basalrate">الأنسولين القاعدي</string>
+    <string name="tdd_short">TDD</string>
+    <string name="tdd">إجمالي الجرعة اليومية</string>
     <!--    Ntp-->
+    <string name="timedetection">كشف الوقت</string>
     <!-- User Entry -->
+    <string name="uel_bolus">جرعة أنسولين</string>
+    <string name="uel_bolus_calculator">حاسبة الجرعة</string>
+    <string name="uel_bolus_advisor">مستشار الجرعة</string>
+    <string name="uel_extended_bolus">الجرعة الممتدة</string>
+    <string name="uel_superbolus_tbr">المعدل القاعدي المؤقت للجرعة الفائقة</string>
+    <string name="uel_carbs">كربوهيدرات</string>
+    <string name="uel_temp_basal">المعدل القاعدي المؤقت</string>
+    <string name="uel_tt">هدف مؤقت</string>
+    <string name="uel_new_profile">ملف شخصي جديد</string>
+    <string name="uel_clone_profile">نسخ الملف الشخصي</string>
+    <string name="uel_store_profile">حفظ الملف الشخصي</string>
+    <string name="uel_profile_switch">تبديل الملف الشخصي</string>
+    <string name="uel_profile_switch_cloned">تبديل ملف شخصي منسوخ</string>
+    <string name="uel_closed_loop_mode">وضع الحلقة المغلقة</string>
+    <string name="uel_lgs_loop_mode">وضع الحلقة: إيقاف الضخ عند انخفاض السكر (LGS)</string>
+    <string name="uel_open_loop_mode">وضع الحلقة المفتوحة</string>
+    <string name="uel_loop_disabled">تم تعطيل الحلقة</string>
+    <string name="uel_loop_resumed">تم استئناف الحلقة</string>
+    <string name="uel_pump_running">المضخة تعمل</string>
+    <string name="uel_reconnect">إعادة توصيل</string>
+    <string name="uel_disconnect">فصل</string>
+    <string name="uel_resume">استئناف</string>
+    <string name="uel_suspend">تعليق</string>
+    <string name="uel_hw_pump_allowed">المضخة المادية مسموحة</string>
+    <string name="uel_clear_pairing_keys">مسح مفاتيح الاقتران</string>
+    <string name="uel_accepts_temp_basal">يقبل المعدل القاعدي المؤقت</string>
+    <string name="uel_cancel_temp_basal">إلغاء المعدل القاعدي المؤقت</string>
+    <string name="uel_cancel_bolus">إلغاء الجرعة</string>
+    <string name="uel_cancel_extended_bolus">إلغاء الجرعة الممتدة</string>
+    <string name="uel_cancel_tt">إلغاء الهدف المؤقت</string>
+    <string name="uel_careportal">بوابة الرعاية</string>
+    <string name="uel_sensor_location">موقع المستشعر</string>
+    <string name="uel_site_change">تغيير موضع القنية</string>
+    <string name="uel_site_location">موقع التركيب</string>
+    <string name="uel_reservoir_change">تغيير خزان الأنسولين</string>
+    <string name="uel_calibration">معايرة</string>
+    <string name="uel_prime_bolus">جرعة التجهيز</string>
+    <string name="uel_treatment">علاج</string>
+    <string name="uel_careportal_ns_refresh">تحديث بوابة الرعاية من NS</string>
+    <string name="uel_profile_switch_ns_refresh">تحديث تبديل الملف الشخصي من NS</string>
+    <string name="uel_treatments_ns_refresh">تحديث العلاجات من NS</string>
+    <string name="uel_tt_ns_refresh">تحديث الهدف المؤقت من NS</string>
+    <string name="uel_automation_removed">تمت إزالة الأتمتة</string>
+    <string name="uel_bg_removed">تمت إزالة قراءة سكر الدم</string>
+    <string name="uel_calibration_removed">تمت إزالة المعايرة</string>
+    <string name="uel_careportal_removed">تمت إزالة إدخال بوابة الرعاية</string>
+    <string name="uel_bolus_removed">تمت إزالة الجرعة</string>
+    <string name="uel_carbs_removed">تمت إزالة الكربوهيدرات</string>
+    <string name="uel_temp_basal_removed">تمت إزالة المعدل القاعدي المؤقت</string>
+    <string name="uel_extended_bolus_removed">تمت إزالة الجرعة الممتدة</string>
+    <string name="uel_food">طعام</string>
+    <string name="uel_food_removed">تمت إزالة الطعام</string>
+    <string name="uel_profile_removed">تمت إزالة الملف الشخصي</string>
+    <string name="uel_profile_switch_removed">تمت إزالة تبديل الملف الشخصي</string>
+    <string name="uel_restart_events_removed">تمت إزالة أحداث إعادة التشغيل</string>
+    <string name="uel_treatment_removed">تمت إزالة العلاج</string>
+    <string name="uel_tt_removed">تمت إزالة الهدف المؤقت</string>
+    <string name="uel_ns_paused">إيقاف مؤقت لـ NS</string>
+    <string name="uel_ns_resume">استئناف NS</string>
+    <string name="uel_ns_queue_cleared">تم تفريغ قائمة انتظار NS</string>
+    <string name="uel_ns_settings_copied">تم نسخ إعدادات NS</string>
+    <string name="uel_error_dialog_ok">موافق على نافذة الخطأ</string>
+    <string name="uel_error_dialog_mute">كتم نافذة الخطأ</string>
+    <string name="uel_error_dialog_mute_5min">كتم نافذة الخطأ 5 دقائق</string>
+    <string name="uel_objective_started">بدأ الهدف</string>
+    <string name="uel_objective_unstarted">إلغاء بدء الهدف</string>
+    <string name="uel_objectives_skipped">تم تخطي الأهداف</string>
+    <string name="uel_stat_reset">إعادة تعيين الإحصائيات</string>
+    <string name="uel_delete_logs">حذف السجلات</string>
+    <string name="uel_delete_future_treatments">حذف العلاجات المستقبلية</string>
+    <string name="uel_export_settings">تصدير الإعدادات</string>
+    <string name="uel_import_settings">استيراد الإعدادات</string>
+    <string name="uel_select_directory">تحديد المجلد</string>
+    <string name="uel_reset_databases">إعادة تعيين قواعد البيانات</string>
+    <string name="uel_reset_aps_results">إعادة تعيين نتائج APS</string>
+    <string name="uel_cleanup_databases">تنظيف قواعد البيانات</string>
+    <string name="uel_export_databases">تصدير قواعد البيانات</string>
+    <string name="uel_import_databases">استيراد قواعد البيانات</string>
+    <string name="uel_otp_export">تصدير OTP</string>
+    <string name="uel_otp_reset">إعادة تعيين OTP</string>
+    <string name="uel_stop_sms">إيقاف الرسائل القصيرة SMS</string>
+    <string name="uel_export_csv">تصدير إدخالات المستخدم</string>
+    <string name="uel_start_aaps">بدء تشغيل AAPS</string>
+    <string name="uel_exit_aaps">الخروج من AAPS</string>
+    <string name="uel_plugin_enabled">تم تفعيل الإضافة</string>
+    <string name="uel_plugin_disabled">تم تعطيل الإضافة</string>
+    <string name="ue_string">سلسلة نصية</string>
+    <string name="ue_source">المصدر</string>
+    <string name="ue_utc_offset">فارق التوقيت UTC</string>
+    <string name="ue_action">الإجراء</string>
+    <string name="ue_timestamp">الطابع الزمني</string>
+    <string name="ue_none">بدون وحدة</string>
+    <string name="uel_loop_change">تم تغيير الحلقة</string>
+    <string name="uel_loop_removed">تمت إزالة الحلقة</string>
+    <string name="uel_new_insulin">أنسولين جديد</string>
+    <string name="uel_change_pump_insulin">تغيير أنسولين المضخة</string>
+    <string name="uel_store_insulin">حفظ الأنسولين</string>
+    <string name="uel_change_insulin_concentration">تغيير تركيز الأنسولين</string>
+    <string name="uel_insulin_removed">تمت إزالة الأنسولين</string>
+    <string name="uel_running_mode">وضع التشغيل</string>
+    <string name="uel_running_mode_removed">تمت إزالة وضع التشغيل</string>
+    <string name="uel_running_mode_updarted">تم تحديث وضع التشغيل</string>
+    <string name="uel_scene_activated">تم تفعيل المشهد</string>
+    <string name="uel_scene_deactivated">تم إنهاء المشهد</string>
+    <string name="uel_remote_config_changed">تم تغيير التهيئة عن بعد</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">الحد الأدنى للهدف المؤقت</string>
+    <string name="temp_target_high_target">الحد الأعلى للهدف المؤقت</string>
+    <string name="temp_target_value">قيمة الهدف المؤقت</string>
+    <string name="insulin_dia">قيمة مدة عمل الأنسولين DIA</string>
+    <string name="insulin_peak">قيمة ذروة الأنسولين</string>
+    <string name="profile_max_daily_basal_value">الحد الأقصى لقيمة الأنسولين القاعدي في الملف الشخصي</string>
+    <string name="current_basal_value">قيمة المعدل القاعدي الحالي</string>
+    <string name="valuelimitedto">تم تقييد %1$.2f إلى %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« خارج الحدود المطلقة المسموحة</string>
     <!-- Profile validation -->
+    <string name="no_profile_selected">لم يتم تحديد ملف شخصي</string>
+    <string name="missing_profile_name">اسم الملف الشخصي مفقود</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">نسخة من %1$s</string>
+    <string name="profile_not_saved_activate">لم يتم حفظ الملف الشخصي. يرجى حفظ الملف الشخصي قبل التفعيل.</string>
+    <string name="profile_basal_not_compatible_with_pump">معدل الأنسولين القاعدي غير متوافق مع المضخة الحالية ولا يمكن تفعيله. قم بتقليل النسبة المئوية أو تعديل المعدل القاعدي.</string>
+    <string name="profile_basal_below_pump_minimum">المعدل القاعدي أدنى من الحد الأدنى للمضخة الحالية ولا يمكن تفعيله. ارفع النسبة المئوية أو عدّل المعدل القاعدي.</string>
+    <string name="profile_pump_incompatible_label">حد المضخة</string>
+    <string name="error_in_ic_values">خطأ في قيم معامل الكربوهيدرات IC</string>
+    <string name="error_in_isf_values">خطأ في قيم معامل الحساسية ISF</string>
+    <string name="error_in_basal_values">خطأ في قيم معدل الأنسولين القاعدي</string>
+    <string name="error_in_target_values">خطأ في قيم الهدف</string>
+    <string name="profile_name_contains_dot">تحتوي بعض أسماء الملفات الشخصية على نقاط.\nهذا غير مدعوم من NS.\nلن يتم رفع الملفات الشخصية إلى NS.</string>
+    <string name="invalid_profile_not_accepted">الملف الشخصي غير الصالح %1$s لم يتم قبوله من NS</string>
+    <string name="errors">أخطاء</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">جرعة %1$.2f وحدة</string>
+    <string name="carbs_g">كربوهيدرات %1$d غ</string>
+    <string name="extended_bolus_u_min">جرعة ممتدة %1$.2f وحدة %2$d دقيقة</string>
+    <string name="load_events">تحميل الأحداث</string>
+    <string name="clear_alarms">مسح الإنذارات</string>
+    <string name="deactivate">إلغاء التفعيل</string>
+    <string name="update_time">تحديث الوقت</string>
+    <string name="load_history">تحميل السجل %1$d</string>
+    <string name="load_tdds">تحميل إجمالي الجرعات اليومية</string>
+    <string name="set_profile">تعيين الملف الشخصي</string>
+    <string name="set_user_settings">تعيين إعدادات المستخدم</string>
+    <string name="smb_bolus_u">جرعة تصحيحية صغيرة %1$.2f وحدة</string>
+    <string name="start_pump">تشغيل المضخة</string>
+    <string name="stop_pump">إيقاف المضخة</string>
+    <string name="temp_basal_absolute">معدل قاعدي مؤقت %1$.2f وحدة/ساعة %2$d دقيقة</string>
+    <string name="temp_basal_percent">معدل قاعدي مؤقت %1$d%% %2$d دقيقة</string>
+    <string name="insight_set_tbr_over_notification">إشعار انتهاء ضبط المعدل القاعدي المؤقت بمضخة Insight</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">قراءة الحالة %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive: الحالة قديمة.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive: القاعدي قديم.</string>
+    <string name="sms" comment="26 characters max for translation">رسالة قصيرة SMS</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">الأنسولين القاعدي</string>
+    <string name="basalpct">الأنسولين القاعدي %</string>
+    <string name="sensitivity">الحساسية</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens معطّل</string>
+    <string name="isf_for_carbs">متوسط معامل حساسية الأنسولين ISF للحاسبة وامتصاص الكربوهيدرات: %1$.1f</string>
+    <string name="isf_profile">معامل حساسية الأنسولين ISF في الملف الشخصي: %1$.1f</string>
+    <string name="isf_variable">معامل حساسية متغير: %1$.1f</string>
+    <string name="isf_effective">معامل الحساسية الفعال: %1$.1f</string>
+    <string name="autosens_long">قيمة Autosens (الحساسية التلقائية): %.0f%%</string>
+    <string name="autosens_short">%.0f%%</string>
+    <string name="algorithm_long">Autosens في الخوارزمية: %.0f%%</string>
     <!-- Autotune -->
+    <string name="autotune">الضبط الآلي</string>
+    <string name="autotune_tune_days">أيام الضبط:</string>
+    <string name="autotune_select_profile">اختر الملف الشخصي للضبط</string>
     <!-- Alerts -->
+    <string name="urgent_alarm">إنذار عاجل</string>
+    <string name="info">معلومات</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">مستشار الجرعة</string>
+    <string name="bolus_advisor_message">مستوى السكر لديك مرتفع. بدلاً من تناول الطعام الآن، ينصح بالانتظار حتى يتحسن مستوى السكر. هل تريد إعطاء جرعة تصحيحية الآن وتذكيرك عندما يحين وقت الأكل؟ في هذه الحالة لن يتم تسجيل كربوهيدرات ويجب استخدام الحاسبة مجدداً عندما نذكرك.</string>
+    <string name="wizard_bg_label">سكر الدم</string>
+    <string name="wizard_correction">التصحيح</string>
+    <string name="wizard_subtotal">المجموع الفرعي</string>
+    <string name="carbs_type_bread">الخبز، المعجنات المالحة، الزبادي، الفواكه (تفاح، موز، إجاص)، البطاطس، الأرز، الحنطة السوداء، الشوفان، الأطعمة البطيئة وقليلة الكربوهيدرات، الخضراوات</string>
+    <string name="carbs_type_cake">الزلابية، المعكرونة، المطبخ الآسيوي الغني بالكربوهيدرات والدهون، المعجنات الحلوة والمخمرة، حبوب الإفطار، عصيدة الحبوب، العسل، المربى</string>
+    <string name="carbs_type_pizza">لازانيا، بيتزا، برجر، بطاطس مقلية، بطاطس مخبوزة، رقائق البطاطس والوجبات الخفيفة المشابهة</string>
+    <string name="wizard_total">الإجمالي</string>
+    <string name="wizard_carb_time">وقت الكربوهيدرات</string>
+    <string name="carb_time_now">الآن</string>
+    <string name="change">تغيير</string>
+    <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
+    <string name="grant">منح الإذن</string>
+    <string name="set">ضبط</string>
+    <string name="wizard_set_alarm">ضبط المنبه</string>
+    <string name="eat_reminder_title">حان وقت الأكل</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">يرن في تمام الساعة %1$s</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">إجمالي الانتظار: %1$s</string>
+    <string name="eat_reminder_rung">انتهى الوقت</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d دقيقة</string>
+    <string name="eat_reminder_not_set">تعذر ضبط تذكير الأكل. اسمح لـ AAPS بضبط المنبهات والتذكيرات في إعدادات الأندرويد.</string>
+    <string name="wizard_use_percentage">استخدام نسبة مئوية</string>
+    <string name="wizard_include_bg">تضمين سكر الدم</string>
+    <string name="wizard_include_tt">تضمين الهدف المؤقت</string>
+    <string name="wizard_include_trend">تضمين اتجاه السكر</string>
+    <string name="wizard_include_iob">تضمين الأنسولين النشط (IOB)</string>
+    <string name="wizard_include_cob">تضمين الكربوهيدرات المتبقية (COB)</string>
+    <string name="wizard_calculation">الحساب</string>
+    <string name="no_action_selected">لم يتم تحديد أي إجراء، لن يحدث شيء.</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">الحد الأقصى للإزالة: %1$d غ (الكربوهيدرات المتبقية)</string>
+    <string name="wizard_no_insulin_required">لا يتطلب أنسولين</string>
+    <string name="wizard_no_actual_bg">لا توجد قراءة سكر دم حديثة لبناء الحساب عليها!</string>
+    <string name="wizard_no_active_profile">لم يتم تعيين ملف شخصي نشط!</string>
+    <string name="wizard_carbs_constraint">انتهاك قيد الكربوهيدرات!</string>
+    <string name="wizard_trend_detail">اتجاه 15 دقيقة (%1$s %2$s)</string>
+    <string name="wizard_constraint_bolus_size">انتهاك قيد الأنسولين!\nلا يمكن ضخ %1$.2f وحدة</string>
+    <string name="wizard_pump_not_available">لا توجد مضخة متاحة!</string>
+    <string name="quick_wizard_not_available">المعالج السريع المحدد لم يعد متاحاً، يرجى تحديث البطاقة</string>
+    <string name="quickwizard_managemnt">المعالج السريع QuickWizard</string>
     <!--    Preferences-->
+    <string name="child">طفل</string>
+    <string name="teenage">مراهق</string>
+    <string name="adult">بالغ</string>
+    <string name="resistant_adult">بالغ مقاوم للأنسولين</string>
+    <string name="pregnant">الحمل</string>
+    <string name="patient_age_summary">يرجى تحديد فئة المريض لإعداد حدود الأمان</string>
+    <string name="max_bolus_title">أقصى جرعة مسموحة [وحدة]</string>
+    <string name="max_carbs_title">أقصى كربوهيدرات مسموحة [غ]</string>
+    <string name="patient_type">نوع المريض</string>
     <!--    Protection-->
     <!--    Pumps -->
+    <string name="battery_label">البطارية</string>
+    <string name="reservoir_label">الخزان</string>
+    <string name="last_connection_label">آخر اتصال</string>
+    <string name="last_bolus_label">آخر جرعة</string>
+    <string name="base_basal_rate_label">المعدل القاعدي الأساسي</string>
+    <string name="tempbasal_label">المعدل القاعدي المؤقت</string>
+    <string name="extended_bolus_label">الجرعة الممتدة</string>
+    <string name="serial_number">الرقم التسلسلي</string>
+    <string name="disconnected">غير متصل</string>
+    <string name="connecting">جارٍ الاتصال</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">تم النقر للاتصال بالمضخة</string>
+    <string name="daily_units">الوحدات اليومية</string>
+    <string name="max_daily_units">أقصى وحدات يومية</string>
+    <string name="pump_history">سجل المضخة</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">تغيير برنامج تشغيل المضخة.</string>
+    <string name="device_changed" comment="26 characters max for translation">تم تغيير الجهاز</string>
+    <string name="bolus_ok" comment="26 characters max for translation">تمت الجرعة بنجاح</string>
+    <string name="temp_basal_delivery_error">خطأ في ضخ المعدل القاعدي المؤقت</string>
+    <string name="ebstopsloop">استخدام ميزة الجرعة الممتدة يوقف وضع الحلقة المغلقة طوال مدة الجرعة الممتدة. هل تريد ذلك حقاً؟</string>
+    <string name="pump_busy">المضخة مشغولة</string>
+    <string name="connection_error">خطأ في الاتصال بالمضخة</string>
+    <string name="reading_pump_history">قراءة سجل المضخة</string>
+    <string name="password_cleared">تم مسح كلمة المرور!</string>
+    <string name="pairing">جارٍ الاقتران</string>
+    <string name="initializing">جارٍ التهيئة…</string>
+    <string name="secs" comment="second short">%1$d ث</string>
+    <string name="warning" comment="Generic warning dialog title">تحذير</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">حرج</string>
+    <string name="alert" comment="Generic alert dialog title">تنبيه</string>
+    <string name="retry" comment="Button label to retry a failed operation">إعادة المحاولة</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">إنهاء</string>
+    <string name="firmware" comment="Pump firmware version label">البرنامج الثابت</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">سرعة ضخ الجرعة</string>
+    <string name="history" comment="Tab/screen title for viewing past events">السجل</string>
+    <string name="overview_reservoir_concentration_value_over">متبقي أكثر من %1$s</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">تقييد أقصى معدل قاعدي إلى %1$.2f وحدة/ساعة بسبب %2$s</string>
+    <string name="pumplimit">حد المضخة</string>
+    <string name="limitingpercentrate">تقييد أقصى نسبة مئوية إلى %1$d%% بسبب %2$s</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">إعادة حساب النسبة %1$d%% إلى %2$s وحدة/ساعة بناءً على المعدل القاعدي الحالي %3$s وحدة/ساعة</string>
+    <string name="itmustbepositivevalue">يجب أن تكون قيمة موجبة</string>
+    <string name="limitingbolus">تقييد الجرعة إلى %1$.1f وحدة بسبب %2$s</string>
     <!--    Dialogs-->
+    <string name="confirmation">تأكيد</string>
+    <string name="message">رسالة</string>
+    <string name="ok">موافق</string>
+    <string name="cancel">إلغاء</string>
+    <string name="dismiss">تجاهل</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="close">إغلاق</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <string name="export_ok">موافق</string>
+    <string name="export_warning">تحذير</string>
+    <string name="export_expired">منتهي الصلاحية</string>
+    <string name="export_disabled">معطّل</string>
+    <string name="export_failed">فشل</string>
+    <string name="export_alert">تنبيه</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">لم يتم تعيين كلمة المرور الرئيسية!\n\nيرجى تعيين كلمة مرور رئيسية أولاً ثم المحاولة مجدداً.</string>
+    <string name="export_to">تصدير الإعدادات إلى</string>
+    <string name="password_preferences_encrypt_prompt">سيطلب منك إدخال كلمة المرور الرئيسية لتشفير الإعدادات المصدرة.</string>
+    <string name="preferences_export_canceled">تم إلغاء التصدير! لم يتم تصدير الإعدادات!</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">تم تصدير الإعدادات</string>
+    <string name="export_result_message_failed">فشل تصدير الإعدادات!</string>
+    <string name="export_result_message_about_to_expire">تم تصدير الإعدادات: كلمة المرور على وشك الانتهاء. قم بالتصدير يدويًا و(إعادة) إدخال كلمة المرور.</string>
+    <string name="export_result_message_expired">تم إلغاء تصدير الإعدادات: انتهت صلاحية كلمة المرور. قم بالتصدير يدويًا وأدخل كلمة المرور مرة أخرى!</string>
+    <string name="export_result_message_disabled">تحذير (الأتمتة): تصدير الإعدادات غير مفعّل!</string>
     <!-- Cloud export -->
+    <string name="export_cloud_success">نجح التصدير إلى التخزين السحابي</string>
+    <string name="export_cloud_failed">فشل التصدير إلى التخزين السحابي!</string>
+    <string name="csv_exported">تم تصدير مدخلات المستخدم</string>
+    <string name="csv_export_failed">فشل تصدير مدخلات المستخدم!</string>
+    <string name="logs_sent">تم إرسال السجلات عبر البريد الإلكتروني</string>
+    <string name="logs_send_failed">فشل إرسال السجلات</string>
+    <string name="cloud_directory">مجلد التخزين السحابي</string>
+    <string name="cloud_token_expired_or_invalid">انتهت صلاحية إذن التخزين السحابي أو أنه غير صالح. يرجى إعادة إعطاء الإذن.</string>
     <!-- Export destination chip labels -->
+    <string name="chip_local">محلي</string>
+    <string name="chip_cloud">سحابي</string>
+    <string name="chip_email">البريد الإلكتروني</string>
+    <string name="send_logs">إرسال السجلات</string>
+    <string name="file_management">إدارة الملفات</string>
+    <string name="database_management">إدارة قاعدة البيانات</string>
+    <string name="data_choices">خيارات البيانات</string>
+    <string name="unattended_settings_export">تصدير الإعدادات دون تدخل المستخدم</string>
     <!-- Maintenance bottom sheet descriptions -->
+    <string name="maintenance_log_settings_desc">تكوين مستويات تفاصيل السجل</string>
+    <string name="maintenance_send_logs_desc">مشاركة ملفات السجل لاستكشاف الأخطاء وإصلاحها</string>
+    <string name="maintenance_delete_logs_desc">إزالة ملفات السجل القديمة</string>
+    <string name="maintenance_aaps_directory_desc">تحديد مجلد التخزين المحلي</string>
+    <string name="maintenance_cloud_directory_desc">إعداد التخزين السحابي (Google Drive)</string>
+    <string name="maintenance_export_desc">حفظ نسخة احتياطية مشفرة للإعدادات</string>
+    <string name="maintenance_import_desc">استعادة الإعدادات من النسخة الاحتياطية</string>
+    <string name="maintenance_export_csv_desc">تصدير سجل العلاجات كجدول بيانات</string>
+    <string name="maintenance_cleanup_db_desc">إزالة المدخلات القديمة من قاعدة البيانات</string>
+    <string name="maintenance_reset_aps_results_desc">مسح نتائج الخوارزمية المخزنة</string>
+    <string name="maintenance_reset_db_desc">مسح جميع قواعد البيانات وإعادة التحميل</string>
     <!-- Cloud directory dialog (Compose) -->
+    <string name="select_storage_type">اختر نوع التخزين</string>
+    <string name="clear_cloud_action">مسح الإعدادات</string>
+    <string name="clear_cloud_settings">مسح إعدادات السحابة</string>
+    <string name="clear_cloud_settings_message">سيتم التحويل للتخزين المحلي ومسح الإذن. الاستمرار؟</string>
+    <string name="cloud_revoke_incomplete">تم مسح إعدادات السحابة على هذا الجهاز، لكن تعذر الوصول إلى الحساب لإلغاء الوصول بالكامل. قد ترغب في إزالته يدويًا من إعدادات حسابك.</string>
+    <string name="cloud_connection_failed">فشل الاتصال بالتخزين السحابي</string>
+    <string name="cloud_reauthorize_message">فشل الاتصال بالتخزين السحابي. هل ترغب في إعادة المصادقة؟</string>
+    <string name="reauthorize">إعادة المصادقة</string>
+    <string name="cloud_auth_success">نجحت مصادقة التخزين السحابي</string>
+    <string name="authorization_status">حالة الإذن</string>
+    <string name="format_hour_minute" comment="%1$d=hours, %2$d=minutes. Example: 1 h 23 min">%1$d س %2$d دقيقة</string>
+    <string name="format_hours_only" comment="%1$d=hours, when minutes are zero. Example: 4 h">%1$d س</string>
     <!-- datetime layout -->
+    <string name="event_time_label">وقت الحدث</string>
     <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">التطبيق يتطلب إذن البلوتوث</string>
     <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">طلب المستخدم</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">اقتران</string>
+    <string name="pump_unpair">إلغاء الاقتران</string>
+    <string name="pump_unpair_confirm_title">إلغاء اقتران المضخة؟</string>
+    <string name="pump_paired" comment="26 characters max for translation">المضخة مقترنة</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">البلوتوث منخفض الطاقة BLE غير مدعوم.</string>
+    <string name="ble_not_enabled">البلوتوث غير مفعّل.</string>
+    <string name="ble_permissions_missing">أذونات البلوتوث غير ممنوحة. يرجى منحها في إعدادات التطبيق.</string>
     <!--    Preferences -->
+    <string name="nav_plugin_preferences">إعدادات الإضافة</string>
     <!-- Navigation -->
+    <string name="nav_about">حول التطبيق</string>
+    <string name="nav_about_desc">عرض إصدار التطبيق والمعلومات</string>
+    <string name="nav_exit">خروج</string>
+    <string name="open_navigation">فتح قائمة التنقل</string>
+    <string name="nav_history_browser">متصفح السجل</string>
+    <string name="nav_history_browser_desc">استعراض المخططات البيانية السابقة</string>
+    <string name="appearance">المظهر</string>
+    <string name="manage">إدارة</string>
+    <string name="localprofile">الملف الشخصي</string>
+    <string name="nav_setupwizard">معالج الإعداد</string>
+    <string name="nav_setupwizard_desc">إعداد AAPS خطوة بخطوة</string>
+    <string name="statistics">الإحصائيات</string>
+    <string name="statistics_desc">عرض الإحصائيات والتقارير</string>
+    <string name="tdd_cycle_pattern">نمط دورة TDD</string>
+    <string name="tdd_cycle_pattern_desc">تراكب إجمالي الأنسولين اليومي في دورات من 28 يومًا لاكتشاف الأنماط المتكررة</string>
+    <string name="nav_profile_helper">مساعد الملف الشخصي</string>
+    <string name="nav_profile_helper_desc">إنشاء ملفك الشخصي بناءً على الوزن أو إجمالي الجرعة اليومية TDD</string>
+    <string name="quick_launch_configure">تكوين التشغيل السريع</string>
+    <string name="quick_launch_configure_desc">تخصيص أزرار الإجراءات السريعة في نظرة عامة</string>
     <!-- Alerts -->
+    <string name="localalertsettings_title">التنبيهات المحلية</string>
     <!-- Actions Screen -->
+    <string name="add">إضافة</string>
+    <string name="remove">إزالة</string>
+    <string name="reorder">إعادة الترتيب</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">تحريك للأمام</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">تحريك للخلف</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">عرض التفاصيل</string>
+    <string name="presets_changed_reorder_aborted">تغيرت الإعدادات المسبقة في مكان آخر. لم يتم حفظ الترتيب الجديد.</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">الموقع %1$d من %2$d</string>
+    <string name="status">الحالة</string>
+    <string name="pump_actions">إجراءات المضخة</string>
+    <string name="tempbasal_button">معدل قاعدي مؤقت</string>
+    <string name="extended_bolus_button">جرعة ممتدة</string>
+    <string name="device_maintenance">صيانة الجهاز</string>
+    <string name="from_label">من</string>
+    <string name="to_label">إلى</string>
+    <string name="sensor_label">المستشعر</string>
+    <string name="insulin_label">الأنسولين</string>
+    <string name="pb_label">بطارية المضخة</string>
+    <string name="cannula">القنية</string>
+    <string name="patch_pump">مضخة لاصقة</string>
     <!-- Site Rotation -->
+    <string name="select_location">اضغط أدناه لتحديد موضع التركيب</string>
     <!-- About -->
+    <string name="cta_dont_kill_my_app_info">منع إيقاف التطبيق؟</string>
+    <string name="fabric_upload_disabled">تم تعطيل رفع سجلات الأعطال!</string>
+    <string name="about_link_urls">\n\nالتوثيق:\nhttps://wiki.aaps.app\n\nفيسبوك:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <!--    Maintenance-->
+    <string name="cleanup_db_confirm">هل ترغب في تنظيف قاعدة البيانات؟\nسيؤدي ذلك إلى إزالة التغييرات المتتبعة والبيانات التاريخية التي يعود تاريخها لأكثر من 3 أشهر.</string>
+    <string name="cleanup_db_confirm_sync">هل ترغب في تنظيف قاعدة البيانات؟\nسيؤدي ذلك إلى إزالة التغييرات المتتبعة والبيانات التاريخية التي يعود تاريخها لأكثر من 3 أشهر.\nسيؤدي ذلك إلى تسريع المزامنة الكاملة بشكل كبير.</string>
+    <string name="cleared_entries">تم مسح المدخلات</string>
+    <string name="reset_db_confirm">هل ترغب حقاً في إعادة تعيين قواعد البيانات؟</string>
+    <string name="reset_aps_results_confirm">هل ترغب حقاً في إعادة تعيين نتائج APS المخزنة؟</string>
     <!--    Weekday-->
+    <string name="weekday_sunday_short">الأحد</string>
+    <string name="weekday_saturday_short">السبت</string>
+    <string name="weekday_friday_short">الجمعة</string>
+    <string name="weekday_thursday_short">الخميس</string>
+    <string name="weekday_wednesday_short">الأربعاء</string>
+    <string name="weekday_tuesday_short">الثلاثاء</string>
+    <string name="weekday_monday_short">الإثنين</string>
     <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f وحدة</string>
+    <string name="format_insulin_units_signed">%1$+.2f وحدة</string>
+    <string name="percent_rate_duration">المعدل: %1$.2f%% (%2$.2f وحدة/ساعة) المدة: %3$d دقيقة</string>
+    <string name="rate_percent_duration">المعدل: %1$.2f وحدة/ساعة (%2$.2f%%) المدة: %3$d دقيقة</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>المعدل</b>: %1$.2f%% (%2$.2f وحدة/ساعة)<br><b>المدة</b>: %3$d دقيقة<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>المعدل</b>: %1$.2f وحدة/ساعة (%2$.2f%%) <br><b>المدة</b>: %3$d دقيقة<br>]]></string>
     <!--    Playback-->
+    <string name="audio_playback_attribution">"يقوم AAPS بتشغيل الصوت"</string>
     <!-- ProfileEditor -->
+    <string name="basal_short">قاعدي</string>
+    <string name="target_short">هدف</string>
+    <string name="profile_name">اسم الملف الشخصي:</string>
+    <string name="edit_profile_name">تعديل اسم الملف الشخصي</string>
+    <string name="units_colon">الوحدات:</string>
+    <string name="unsaved_changes">تغييرات غير محفوظة</string>
+    <string name="unsaved_changes_message">لديك تغييرات غير محفوظة. ماذا تريد أن تفعل؟</string>
+    <string name="discard">تجاهل</string>
+    <string name="ic_dynamic_label_warning">يمكن للخوارزمية تقديم حساب ديناميكي لنسبة الأنسولين إلى الكربوهيدرات (IC). يمكن استخدام القيم أدناه فقط كبديل عند نقص البيانات أو كقيمة مرجعية فقط</string>
+    <string name="isf_dynamic_label_warning">يمكن للخوارزمية تقديم حساب ديناميكي لـ ISF. يمكن استخدام القيم أدناه فقط كبديل عند فقدان البيانات أو كقيمة مرجعية فقط</string>
+    <string name="add_time_block">إضافة فترة زمنية</string>
+    <string name="remove_entry">إزالة المدخل</string>
+    <string name="target_low_label">منخفض</string>
+    <string name="target_high_label">مرتفع</string>
     <!--    Search-->
+    <string name="search">بحث</string>
+    <string name="clear">مسح</string>
+    <string name="search_category_categories">فئات التفضيلات</string>
+    <string name="search_category_preferences">التفضيلات</string>
+    <string name="search_category_dialogs">النوافذ التفاعلية</string>
+    <string name="search_category_plugins">الإضافات</string>
+    <string name="search_category_wiki">التوثيق</string>
+    <string name="wiki_search_offline">البحث في التوثيق يتطلب اتصالاً بالإنترنت</string>
+    <string name="no_search_results">لم يتم العثور على نتائج</string>
+    <string name="search_plugin_disabled">الإضافة %1$s معطّلة</string>
+    <string name="search_recent">عمليات البحث الأخيرة</string>
+    <string name="search_history_remove">إزالة من عمليات البحث الأخيرة</string>
     <!--    Food Management -->
+    <string name="food_management">الطعام</string>
+    <string name="food_deleted">تم حذف الطعام</string>
+    <string name="edit_food">تعديل الطعام</string>
+    <string name="add_food">إضافة طعام</string>
+    <string name="name">الاسم</string>
+    <string name="category">تصنيف</string>
+    <string name="subcategory">فئة فرعية</string>
+    <string name="portion">الحصة الغذائية</string>
+    <string name="unit_label">الوحدة</string>
+    <string name="undo">تراجع</string>
+    <string name="no_data">لا توجد بيانات</string>
+    <string name="manage_food_desc">إدارة مدخلات قاعدة بيانات الطعام</string>
+    <string name="label_carbs_g">كربوهيدرات (غ)</string>
+    <string name="label_fat_g">دهون (غ)</string>
+    <string name="label_protein_g">بروتين (غ)</string>
+    <string name="label_energy_kj">الطاقة (كيلو جول)</string>
     <!--    Log Settings-->
+    <string name="nav_logsettings">إعدادات السجل</string>
+    <string name="resettodefaults">إعادة تعيين إلى الافتراضي</string>
     <!--    Maintenance-->
+    <string name="maintenance">الصيانة</string>
+    <string name="description_maintenance">يوفر وظائف متعددة للصيانة (مثل إرسال أو حذف السجلات).</string>
+    <string name="log_files">ملفات السجل</string>
+    <string name="delete_logs">حذف السجلات</string>
+    <string name="logs_deleted">تم حذف السجلات</string>
+    <string name="aaps_directory">مجلد AAPS</string>
+    <string name="import_setting">استيراد الإعدادات</string>
     <!-- Import settings screen -->
+    <string name="import_decrypt_review">فك التشفير &amp; المراجعة</string>
+    <string name="import_decrypt">فك التشفير</string>
+    <string name="import_master_password">كلمة المرور الرئيسية</string>
+    <string name="import_decryption_password">كلمة مرور فك التشفير</string>
+    <string name="import_different_password_hint">تم تشفير الملف بكلمة مرور مختلفة</string>
+    <string name="import_wrong_password">كلمة المرور غير صحيحة</string>
+    <string name="import_btn">استيراد</string>
+    <string name="import_anyway_btn">استيراد على أي حال</string>
+    <string name="import_apply_title">تطبيق الإعدادات المستوردة؟</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">الإعدادات المراد تغييرها: %1$d. سيتم إعادة تشغيل الإضافات المعدلة.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">الإعدادات المراد تغييرها: %1$d. إعدادات المضخة التي تم الحفاظ عليها: %2$d، لذا تستمر مضختك في العمل.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">الإعدادات المستوردة لم تحدد أي مضخة موجودة على هذا الهاتف. %1$s نشط الآن — تحقق من إعدادات المضخة.</string>
+    <string name="import_insulin_added" comment="%1$s=insulin name(s) from the old backup, e.g. Free-Peak Oref 38m 6h U100. Shown after importing a backup from AAPS 3.x.">تمت الإضافة إلى قائمة الأنسولين من النسخة الاحتياطية: %1$s. ليس قيد الاستخدام بعد: اختر الأنسولين المناسب عند تفعيل ملفك الشخصي، وقم بذلك قبل أن يقوم Nightscout بتنزيل علاجاتك الأقدم.</string>
+    <string name="import_applying">جارٍ تطبيق الإعدادات…</string>
+    <string name="import_replace_pump_settings">استبدال إعدادات المضخة أيضاً</string>
+    <string name="import_replace_pump_settings_summary">اتركه معطّلًا للحفاظ على المضخة المقترنة بهذا الهاتف. فعّله عند الاستعادة على هاتف جديد مع المضخة نفسها.</string>
+    <string name="import_apply_waiting">في انتظار المضخة…</string>
+    <string name="import_apply_pump_busy">المضخة لا تزال مشغولة، لذا لم يتم تطبيق الإعدادات.</string>
+    <string name="import_apply_retry_question">المحاولة مرة أخرى الآن؟</string>
+    <string name="import_applied_title">تم تطبيق الإعدادات</string>
+    <string name="import_applied_message">الإعدادات المستوردة قيد الاستخدام الآن.</string>
+    <string name="import_apply_pump_changed">ملغى: تم تغيير المضخة من خلال استيراد الإعدادات</string>
+    <string name="import_source_local">محلي</string>
+    <string name="import_source_cloud">سحابي</string>
+    <string name="import_load_more">تحميل المزيد</string>
+    <string name="import_no_files">لم يتم العثور على ملفات إعدادات</string>
+    <string name="import_decrypt_ok">تم فك التشفير بنجاح. جاهز للاستيراد.</string>
+    <string name="import_decrypt_warn">تم فك التشفير بنجاح ولكن توجد تحذيرات.</string>
+    <string name="import_decrypt_error">نجح فك التشفير ولكن الاستيراد غير ممكن.</string>
+    <string name="reset_aps_results">إعادة تعيين نتائج APS</string>
+    <string name="database_cleanup">تنظيف قاعدة البيانات</string>
+    <string name="nav_resetdb">إعادة تعيين قواعد البيانات</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">البحث عن المضخة</string>
+    <string name="ble_scan_select_pump">حدد مضختك من القائمة أدناه</string>
+    <string name="ble_scan_scanning">جارٍ البحث عن الأجهزة…</string>
     <!-- Graph configuration -->
+    <string name="graph_add">إضافة رسم بياني</string>
+    <string name="graph_new">رسم بياني جديد</string>
+    <string name="graph_number">رسم بياني %1$d</string>
+    <string name="graph_bg">رسم بياني لسكر الدم</string>
+    <string name="graph_height">ارتفاع الرسم البياني [dp]</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">التنبؤ</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">انحراف</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">فعالية</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">أنسولين مطلق</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">ميل الانحراف</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">نبض القلب</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">حساسية%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">حساسية متغيرة</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">الخطوات</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">الأنسولين النشط</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">الأنسولين المطلق</string>
+    <string name="graph_series_cob">الكربوهيدرات المتبقية</string>
+    <string name="graph_series_bgi">تأثير سكر الدم</string>
+    <string name="graph_series_deviations">الانحرافات</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">تغيير الحساسية</string>
+    <string name="graph_series_variable_sens">الحساسية المتغيرة</string>
+    <string name="graph_series_deviation_slope">ميل الانحراف</string>
+    <string name="graph_series_heart_rate">معدل ضربات القلب</string>
+    <string name="graph_series_steps">عدد الخطوات</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">فعالية الأنسولين</string>
+    <string name="graph_series_predictions">التنبؤات</string>
+    <string name="units_days">أيام</string>
+    <string name="units_format_days">%1$d يوم</string>
+    <string name="units_format_days_range">%1$d يوم (%2$d - %3$d)</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="units_format_double_3">%1$.3f</string>
+    <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d غ</string>
+    <string name="units_format_grams_range">%1$d غ (%2$d - %3$d)</string>
+    <string name="units_format_hours">%1$d س</string>
+    <string name="units_format_hours_double">%1$.1f س</string>
+    <string name="units_format_hours_double_range">%1$.1f س (%2$.1f - %3$.1f)</string>
+    <string name="units_format_hours_range">%1$d س (%2$d - %3$d)</string>
+    <string name="units_format_insulin">%1$.1f وحدة</string>
+    <string name="units_format_insulin_int">%1$d وحدة</string>
+    <string name="units_format_insulin_int_range">%1$d وحدة (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f وحدة (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate">%1$.1f وحدة/ساعة</string>
+    <string name="units_format_insulin_rate_range">%1$.1f وحدة/ساعة (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl">%1$s ملليغرام/ديسيلتر</string>
+    <string name="units_format_mgdl_range">%1$s ملليغرام/ديسيلتر (%2$s - %3$s)</string>
+    <string name="units_format_min">%1$d دقيقة</string>
+    <string name="units_format_min_range">%1$d دقيقة (%2$d - %3$d)</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_value" comment="A percentage. %1$s=the number, already formatted, can have decimals. Example: 52.3%">%1$s%%</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_sec">%1$d ثانية</string>
+    <string name="units_format_sec_range">%1$d ثانية (%2$d - %3$d)</string>
+    <string name="units_grams">غ</string>
+    <string name="units_hours">س</string>
+    <string name="units_insulin">وحدة</string>
+    <string name="units_insulin_rate">وحدة/ساعة</string>
+    <string name="units_kg">كغ</string>
+    <string name="units_mgdl">ملليغرام/ديسيلتر</string>
+    <string name="units_min">دقيقة</string>
+    <string name="units_mmol">مليمول/لتر</string>
+    <string name="units_percent">%</string>
+    <string name="units_sec">ثانية</string>
+    <string name="units_years">سنة</string>
+    <string name="prefs_range_title">نطاق العرض البياني</string>
+    <string name="pump_stopped_bolus" comment="%1$s=insulin given, with unit. Example: 0.30 U">أوقفت المضخة الجرعة بعد %1$s. تحقق من المضخة قبل الجرعة التالية.</string>
+    <string name="secrets_not_protected">لم يتم العثور على مخزن مفاتيح للنظام على هذا الكمبيوتر. المفاتيح التي تحمي إعداداتك واقترانك بالجهاز الرئيسي محفوظة في ملفات بجانب البيانات، لذا فإن أي شخص يحصل على نسخة من ملفاتك يحصل عليها أيضًا. في نظام Linux، قم بتثبيت وتشغيل مدير مفاتيح keyring (مثل GNOME Keyring أو KWallet)، ثم شغّل AAPS مرة أخرى.</string>
 </resources>

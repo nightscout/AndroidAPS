@@ -1,11 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Medtronic (MDT) - Base -->
+    <string name="description_pump_medtronic">تكامل المضخة لـ Medtronic، يتطلب جهاز RileyLink وطراز مضخة محدد</string>
     <!-- MDT Configuration -->
+    <string name="medtronic_serial_number">الرقم التسلسلي للمضخة</string>
+    <string name="medtronic_pump_type">نوع المضخة</string>
+    <string name="medtronic_pump_frequency">تردد المضخة</string>
+    <string name="medtronic_pump_bolus_delay">التأخير قبل بدء الجرعة (ث)</string>
+    <string name="medtronic_pump_max_bolus">الحد الأقصى للجرعة في المضخة (وحدة)</string>
+    <string name="medtronic_pump_max_basal">الحد الأقصى للأنسولين القاعدي في المضخة (وحدة/ساعة)</string>
+    <string name="medtronic_custom_action_wake_and_tune">إيقاظ المضخة وضبط التردد</string>
+    <string name="medtronic_custom_action_clear_bolus_block">إزالة حظر الجرعة</string>
+    <string name="medtronic_custom_action_reset_rileylink">إعادة ضبط RileyLink</string>
+    <string name="medtronic_pump_battery_select">نوع البطارية (عرض الطاقة)</string>
+    <string name="medtronic_pump_battery_no">غير محدد (عرض بسيط)</string>
+    <string name="medtronic_pump_battery_alkaline">قلوية (عرض موسع)</string>
+    <string name="medtronic_pump_battery_lithium">ليثيوم (عرض موسع)</string>
+    <string name="medtronic_pump_battery_nizn">نيكل-زنك NiZn (عرض موسع)</string>
+    <string name="medtronic_pump_battery_nimh">هيدريد معدن النيكل NiMH (عرض موسع)</string>
     <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">أخرى (غير مدعومة)</string>
+    <string name="medtronic_pump_type_512">512</string>
+    <string name="medtronic_pump_type_712">712</string>
+    <string name="medtronic_pump_type_515">515</string>
+    <string name="medtronic_pump_type_715">715</string>
+    <string name="medtronic_pump_type_522">522</string>
+    <string name="medtronic_pump_type_722">722</string>
+    <string name="medtronic_pump_type_523_24a">523 (البرنامج الثابت 2.4A أو أقل)</string>
+    <string name="medtronic_pump_type_723_24a">723 (البرنامج الثابت 2.4A أو أقل)</string>
+    <string name="medtronic_pump_type_554_eu">554 (البرنامج الثابت للاتحاد الأوروبي &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_eu">754 (البرنامج الثابت للاتحاد الأوروبي &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_554_ca">554 (البرنامج الثابت لكندا &lt;= 2.7A)</string>
+    <string name="medtronic_pump_type_754_ca">754 (البرنامج الثابت لكندا &lt;= 2.7A)</string>
     <!-- Bolus delay entries -->
+    <string name="medtronic_bolus_delay_5s">5 ث</string>
+    <string name="medtronic_bolus_delay_10s">10 ث</string>
+    <string name="medtronic_bolus_delay_15s">15 ث</string>
     <!-- MDT Fragment -->
+    <string name="rl_battery_label">بطارية RileyLink</string>
     <!-- MDT Errors -->
+    <string name="medtronic_error_serial_invalid">الرقم التسلسلي غير صحيح.</string>
+    <string name="medtronic_error_pump_type_not_set">لم يتم تعيين نوع المضخة.</string>
+    <string name="medtronic_error_pump_type_invalid">نوع المضخة غير مدعوم.</string>
+    <string name="medtronic_error_rileylink_address_invalid">عنوان RileyLink غير صالح.</string>
+    <string name="medtronic_error_pump_type_set_differs_from_detected">نوع المضخة المكتشفة يختلف عن نوع المضخة المبرمجة.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">إعداد ملفات/أنماط الأنسولين القاعدي غير مفعّل في المضخة. قم بتفعيله في المضخة.</string>
+    <string name="medtronic_error_pump_incorrect_basal_profile_selected">ملف الأنسولين القاعدي المحدد في المضخة غير صحيح (يجب أن يكون STD).</string>
+    <string name="medtronic_error_pump_wrong_tbr_type_set">تم تعيين نوع خاطئ للمعدل القاعدي المؤقت في المضخة (يجب أن يكون مطلق Absolute).</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">إعداد الحد الأقصى للجرعة في المضخة خاطئ (يجب أن يكون %1$.2f).</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">إعداد الحد الأقصى للأنسولين القاعدي في المضخة خاطئ (يجب أن يكون %1$.2f).</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">العملية غير ممكنة.\n\nعليك إعداد مضخة Medtronic أولاً، قبل أن تتمكن من استخدام هذه العملية.</string>
+    <string name="medtronic_error_pump_24h_time_change_requested">تم طلب تغيير الوقت بأكثر من 24 ساعة.</string>
     <!-- MDT History -->
     <!--    <string name="medtronic_history_group_basal">Basals</string>-->
     <!--    <string name="medtronic_history_group_configuration">Configurations</string>-->
@@ -14,5 +59,37 @@
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <string name="medtronic_cmd_cancel_bolus_not_supported">لقد ألغيت الجرعة بعد أن تم تعيينها في المضخة. بما أن مضخة Medtronic لا تدعم الإلغاء، يجب عليك إلغاؤها يدوياً. ضع المضخة في وضع التعليق (Suspend) ثم قم بالاستئناف (Resume) (إذا كنت لا تزال تريد الإلغاء). سيلتقط التطبيق التغييرات في التحديث التالي (في أقل من 5 دقائق).</string>
+    <string name="medtronic_cmd_cant_read_tbr">تعذرت قراءة المعدل القاعدي المؤقت الحالي.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">تعذر إلغاء المعدل القاعدي المؤقت الحالي. يتم إيقاف العملية.</string>
+    <string name="medtronic_cmd_set_profile_pattern_overflow">فشل تعيين الملف الشخصي، لأن الأنماط التالية لديها معدل قاعدي كبير جداً: %1$s</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered">تعذر ضخ الجرعة.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">تعذر ضخ الجرعة، لأن كمية الأنسولين المتوفرة (%1$.2f) أقل من الجرعة المطلوبة (%2$.2f).</string>
+    <string name="medtronic_cmd_tbr_could_not_be_delivered">تعذر تعيين المعدل القاعدي المؤقت.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr">تعذر إلغاء المعدل القاعدي المؤقت الحالي.</string>
+    <string name="medtronic_cmd_basal_profile_could_not_be_set">تعذر تعيين ملف الأنسولين القاعدي.</string>
+    <string name="medtronic_cmd_basal_profile_not_set_is_same">ملف الأنسولين القاعدي هو نفسه، لذلك لن يتم تعيينه مرة أخرى.</string>
+    <string name="medtronic_cmd_desc_get_history">الحصول على السجل - الصفحة %1$d (%2$d/16)</string>
+    <string name="medtronic_cmd_desc_get_history_request">الحصول على السجل - الصفحة %1$d</string>
+    <string name="medtronic_cmd_desc_get_time">الحصول على وقت المضخة</string>
+    <string name="medtronic_cmd_desc_set_time">تعيين وقت المضخة</string>
+    <string name="medtronic_cmd_desc_get_battery_status">الحصول على حالة البطارية</string>
+    <string name="medtronic_cmd_desc_get_settings">الحصول على الإعدادات</string>
+    <string name="medtronic_cmd_desc_get_model">الحصول على موديل المضخة</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">الحصول على ملف الأنسولين القاعدي</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">تعيين ملف الأنسولين القاعدي</string>
+    <string name="medtronic_cmd_desc_get_tbr">الحصول على المعدل القاعدي المؤقت</string>
+    <string name="medtronic_cmd_desc_set_tbr">تعيين المعدل القاعدي المؤقت</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">إلغاء المعدل القاعدي المؤقت</string>
+    <string name="medtronic_cmd_desc_set_bolus">تعيين الجرعة</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">الحصول على الأنسولين المتبقي</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">الآن</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">منذ</string>
+    <string name="medtronic_notification_check_time_date">مطلوب تحديث الوقت في المضخة</string>
     <!-- combo_notification_check_time_date -->
+    <string name="set_neutral_temps_title">تعيين معدلات قاعدية مؤقتة محايدة</string>
+    <string name="set_neutral_temps_summary">إذا تم التفعيل، سيتم إلغاء معدل الأنسولين القاعدي المؤقت قبل نهاية كل ساعة. يمكن أن تساعد هذه الطريقة في إيقاف بعض المضخات عن إصدار أصوات تنبيه/اهتزاز عند رأس الساعة.</string>
+    <string name="invalid_history_data">تم اكتشاف بيانات في سجل المضخة غير صالحة. قم بفتح مشكلة جديدة وقدم السجلات.</string>
+    <string name="riley_statistics">إحصائيات RileyLink</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">تم النقر على التحديث</string>
 </resources>

@@ -1,2 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="connection_failed">Sikertelen kapcsolódás</string>
+    <string name="connection_lost">Kapcsolat megszakadt</string>
+    <string name="pairing_rejected">Párosítás elutasítva</string>
+    <string name="socket_creation_failed">Socket létrehozása sikertelen</string>
+    <string name="timeout">Időtúllépés</string>
+    <string name="maximum_number_of_bolus_type_already_running">Ebből a bólustípusból már a megengedett legtöbb fut</string>
+    <string name="no_active_tbr_to_cancel">Nincs leállítható aktív átmeneti bázis</string>
+    <string name="no_active_tbr_to_change">Nincs módosítható aktív átmeneti bázis</string>
+    <string name="no_such_bolus_to_cancel">Nincs ilyen megszakítható bólus</string>
+    <string name="pump_already_in_that_state_exception">A pumpa már ebben az állapotban van</string>
+    <string name="run_mode_not_allowed">Az üzemmód nem engedélyezett</string>
+</resources>

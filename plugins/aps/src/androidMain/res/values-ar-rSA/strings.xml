@@ -1,9 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Autotune-->
+    <string name="dyn_isf_adjust_title" formatted="false">عامل تعديل معامل الحساسية الديناميكي %</string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">معامل الحساسية الديناميكي (Dynamic ISF)</string>
+    <string name="openaps_auto_isf">معامل الحساسية التلقائي (Auto ISF)</string>
+    <string name="openapsma_disabled">الإضافة معطلة</string>
+    <string name="openapsma_no_glucose_data">لا توجد بيانات سكر دم متاحة</string>
+    <string name="openaps_no_as_data">لا توجد بيانات Autosens متاحة</string>
+    <string name="dynisf_shortname">DYNISF</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">مصفوفة من %1$d عناصر.\nالقيمة الفعلية:</string>
+    <string name="description_ama">حالة الخوارزمية في عام 2017</string>
+    <string name="description_smb">أحدث خوارزمية للمستخدمين المتقدمين</string>
+    <string name="description_smb_dynamic_isf">أحدث خوارزمية للمستخدمين المتقدمين مع معامل حساسية ديناميكي/تلقائي ISF</string>
+    <string name="description_auto_isf">خوارزمية تجريبية للمستخدمين المتقدمين مع إضافات AutoISF</string>
+    <string name="openapsma_last_run_label">آخر تشغيل</string>
+    <string name="openapsma_input_parameters_label">معلمات الإدخال</string>
+    <string name="openapsma_glucose_status_label">حالة سكر الدم</string>
+    <string name="openapsma_current_temp_label">المعدل المؤقت الحالي</string>
+    <string name="openapsma_iob_data_label">بيانات الأنسولين النشط</string>
+    <string name="openapsma_profile_label">الملف الشخصي</string>
+    <string name="openapsma_meal_data_label">بيانات الوجبة</string>
+    <string name="openapsma_request_label">طلب</string>
+    <string name="constraints">القيود</string>
+    <string name="openapsma_autosensdata_label">بيانات Autosens</string>
+    <string name="openapsma_script_debug_data_label">تصحيح أخطاء البرنامج النصي</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">انتباه!\nعادةً لا تحتاج إلى تغيير هذه القيم أدناه. يرجى النقر هنا وقراءة النص والتأكد من فهمه تماماً قبل تغيير أي من هذه القيم.</string>
+    <string name="increasing_max_basal">جاري زيادة الحد الأقصى للأنسولين القاعدي لأن الإعداد أقل من الحد الأقصى للأنسولين القاعدي في الملف الشخصي</string>
+    <string name="max_basal_multiplier">مضاعف الحد الأقصى للأنسولين القاعدي</string>
+    <string name="max_daily_basal_multiplier">مضاعف الحد الأقصى اليومي للأنسولين القاعدي</string>
+    <string name="smb_disabled_in_preferences">الجرعات التصحيحية الصغيرة SMB معطلة في الإعدادات</string>
+    <string name="uam_disabled_in_preferences">الوجبات غير المعلنة (UAM) معطلة في الإعدادات</string>
+    <string name="autosens_disabled_in_preferences">الحساسية التلقائية معطلة في الإعدادات</string>
     <!--    Verify if needed in safety-->
+    <string name="limiting_iob">جاري تقييد الأنسولين النشط IOB إلى %1$.1f وحدة بسبب %2$s</string>
+    <string name="maxvalueinpreferences">القيمة القصوى في الإعدادات</string>
+    <string name="hardlimit">حد ثابت</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">ذروة</string>
     <!--    Loop -->
+    <string name="smb_frequency_exceeded">تم إعطاء جرعة خلال آخر 3 دقائق، سيتم تخطي الجرعة التصحيحية الصغيرة SMB</string>
+    <string name="pump_not_initialized">لم يتم تهيئة مضخة الأنسولين!</string>
+    <string name="zero_basal_not_set">لم تقبل المضخة المعدل القاعدي المؤقت الصفري. قد تظل تضخ الأنسولين القاعدي. تحقق من المضخة.</string>
+    <string name="description_loop">تفعيل أو تعطيل الآلية المشغّلة للحلقة.</string>
+    <string name="no_aps_selected">لم يتم تحديد APS أو لم يقدم أي نتيجة</string>
+    <string name="ignore5m">تجاهل 5 دقائق</string>
+    <string name="ignore15m">تجاهل 15 دقيقة</string>
+    <string name="ignore30m">تجاهل 30 دقيقة</string>
+    <string name="carbs_suggestion">اقتراح الكربوهيدرات</string>
+    <string name="open_loop_new_suggestion">يوجد اقتراح جديد متاح</string>
+    <string name="loop_notification_channel_name">اقتراحات الحلقة</string>
+    <string name="loop_notification_channel_silent_name">اقتراحات الحلقة خلال وضع عدم الإزعاج</string>
+    <string name="open_loop_suggestion_too_old">هذا الاقتراح قديم جداً. لم يتم إرسال أي شيء إلى المضخة. انتظر الاقتراح التالي.</string>
+    <string name="basal_set_correctly">تم ضبط المعدل القاعدي بشكل صحيح</string>
+    <string name="last_run_label">آخر تشغيل</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">طلب</string>
+    <string name="loop_constraints_processed_label">بعد معالجة القيود</string>
+    <string name="loop_tbr_request_time_label">وقت طلب المعدل القاعدي المؤقت</string>
+    <string name="loop_tbr_execution_time_label">وقت تنفيذ المعدل القاعدي المؤقت</string>
+    <string name="loop_tbr_set_by_pump_label">المعدل القاعدي المؤقت المضبوط بواسطة المضخة</string>
+    <string name="loop_smb_request_time_label">وقت طلب الجرعات التصحيحية الصغيرة SMB</string>
+    <string name="loop_smb_execution_time_label">وقت تنفيذ الجرعات التصحيحية الصغيرة SMB</string>
+    <string name="loop_smb_set_by_pump_label">تم ضبط الجرعات التصحيحية الصغيرة SMB بواسطة المضخة</string>
+    <string name="fallback_smb_no_tdd">الرجوع إلى الجرعات التصحيحية الصغيرة SMB. لا توجد بيانات كافية لإجمالي الجرعة اليومية TDD.</string>
+    <string name="fallback_to_isf_no_tdd">الرجوع إلى حساسية الملف الشخصي. لا توجد بيانات كافية. السبب: %1$s</string>
     <!-- Autotune -->
+    <string name="autotune_description">مساعدة في التعديلات المحتملة للملف الشخصي (معامل الحساسية ISF، ونسبة الكربوهيدرات، ومعدلات الأنسولين القاعدي)</string>
+    <string name="autotune_default_tune_days_title">عدد أيام البيانات</string>
+    <string name="autotune_tunedprofile_name">مضبوط</string>
+    <string name="autotune_profile">الملف الشخصي:</string>
+    <string name="autotune_last_run">آخر تشغيل:</string>
+    <string name="autotune_warning">تحذير:</string>
+    <string name="autotune_ic_warning">الملف الشخصي المحدد يحتوي على %1$d قيم لنسبة الكربوهيدرات IC. سيستخدم Autotune القيمة %2$.2f غرام/وحدة</string>
+    <string name="autotune_isf_warning">الملف الشخصي المحدد يحتوي على %1$d قيم لمعامل الحساسية ISF. سيستخدم Autotune القيمة %2$.1f %3$s/وحدة</string>
+    <string name="autotune_error">خطأ في بيانات الإدخال، حاول تشغيل الضبط التلقائي Autotune مرة أخرى أو تقليل عدد الأيام</string>
+    <string name="autotune_error_more_days">خطأ في بيانات الإدخال، قم بزيادة عدد الأيام</string>
+    <string name="autotune_warning_during_run">بدء حسابات الضبط التلقائي Autotune، يرجى التحلي بالصبر</string>
+    <string name="autotune_warning_after_run">تحقق من النتائج بعناية قبل استخدامها!</string>
+    <string name="autotune_partial_result">نتيجة جزئية: تم ضبط اليوم %1$d / %2$d</string>
+    <string name="autotune_result">النتيجة: %1$s</string>
+    <string name="autotune_param">معلمة</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">مفقود</string>
+    <string name="autotune_run">تشغيل الضبط التلقائي Autotune</string>
+    <string name="autotune_check_input_profile_button">فحص ملف الإدخال الشخصي</string>
+    <string name="autotune_compare_profile">مقارنة الملفات الشخصية</string>
+    <string name="autotune_copy_localprofile_button">نسخ إلى الملف الشخصي المحلي</string>
+    <string name="autotune_update_input_profile_button">تحديث ملف الإدخال الشخصي</string>
+    <string name="autotune_revert_input_profile_button">استعادة ملف الإدخال الشخصي</string>
+    <string name="autotune_copy_local_profile_message">إنشاء ملف شخصي محلي جديد من ملف الضبط التلقائي Autotune هذا؟</string>
+    <string name="autotune_update_local_profile_message">تحديث الملف الشخصي %1$s باستخدام ملف الضبط التلقائي Autotune؟</string>
+    <string name="autotune_revert_local_profile_message">استعادة الملف الشخصي %1$s باستخدام ملف الإدخال؟</string>
+    <string name="autotune_profile_invalid">الملف الشخصي غير صالح</string>
+    <string name="pump_disconnected">مضخة الأنسولين غير متصلة</string>
     <!--    autoISF -->
+    <string name="autoISF_settings_title">إعدادات معامل الحساسية التلقائي AutoISF</string>
+    <string name="smb_delivery_settings_title">إعدادات ضخ الجرعات التصحيحية الصغيرة SMB</string>
 </resources>

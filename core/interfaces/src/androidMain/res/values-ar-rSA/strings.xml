@@ -1,12 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Dialogs-->
+    <string name="confirmation">تأكيد</string>
     <!--    Events-->
+    <string name="bolus_delivering">جاري ضخ %1$.2f وحدة</string>
+    <string name="bolus_delivered_so_far">تم ضخ %1$.2f وحدة / %2$.2f وحدة</string>
+    <string name="bolus_delivered_successfully">تم ضخ الجرعة %1$.2f وحدة بنجاح</string>
     <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">تم تغيير برنامج تشغيل المضخة.</string>
     <!--    DateUtil-->
+    <string name="minago">قبل %1$d د</string>
+    <string name="secago">قبل %1$d ث</string>
+    <string name="min_plus">(+%1$d د)</string>
+    <string name="sec_plus">(+%1$d ث)</string>
+    <string name="minago_long">منذ %1$d دقيقة</string>
+    <string name="hoursago">قبل %1$.1f س</string>
+    <string name="days_ago">منذ %1$.1f يوم</string>
+    <string name="days_ago_round">قبل %1$.0f يوم</string>
+    <string name="seconds_ago">منذ ثوان</string>
+    <string name="in_days">خلال %1$.0f يوم</string>
+    <string name="in_days_round">خلال %1$.0f يوم</string>
+    <string name="shorthour">س</string>
+    <string name="days">أيام</string>
+    <string name="hours">ساعات</string>
+    <string name="unit_minutes">دقائق</string>
+    <string name="shortminute">د</string>
+    <string name="time_remaining_h_m">يتبقى %1$dس %2$dد</string>
+    <string name="time_remaining_m">يتبقى %1$dد</string>
+    <string name="later_today">في وقت لاحق اليوم</string>
+    <string name="tomorrow">غدا</string>
+    <string name="today">اليوم</string>
+    <string name="yesterday">أمس</string>
+    <string name="values_with_dash" comment="Two values with a dash between them, for a range or a day and its date. Example: 6:00 - 10:00, or Today - 10/23/2026">%1$s - %2$s</string>
+    <string name="values_with_comma" comment="Two parts of one text with a comma between them. Example: BG: 7.5, Delta: +0.3">%1$s، %2$s</string>
+    <string name="values_with_slash" comment="Two values with a slash between them. Example: 0.01 / 0.05">%1$s / %2$s</string>
+    <string name="value_with_detail" comment="A value and a detail about it in brackets. Example: 0.85 U/h (STD), or 20 g (-15 min)">%1$s (%2$s)</string>
+    <string name="time_frame_hours_minutes" comment="A duration, short. h=hours, the mark after the minutes means minutes. %1$d=hours, %2$d=minutes. Example: 1h 30'">%1$dس %2$d\'</string>
+    <string name="time_frame_minutes" comment="A duration in minutes, short. The mark after the number means minutes. %1$d=minutes. Example: 30'">%1$d\'</string>
+    <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
     <!-- Rx -->
+    <string name="connecting_for">جار الاتصال منذ %1$d ث</string>
+    <string name="handshaking">مصافحة</string>
+    <string name="connected">متصل</string>
+    <string name="authorized">مصرح</string>
+    <string name="disconnecting">جار قطع الاتصال</string>
+    <string name="waiting_for_disconnection">في انتظار قطع الاتصال</string>
     <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">تم الإنشاء في %1$s</string>
+    <string name="metadata_label_watchface_author">المؤلف: %1$s</string>
+    <string name="metadata_label_watchface_name">الاسم: %1$s</string>
+    <string name="metadata_wear_import_filename">اسم الملف: %1$s</string>
+    <string name="metadata_label_plugin_version">إصدار الإضافة: %1$s</string>
+    <string name="metadata_label_watchface_name_version">الاسم: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">معلومات: %1$s</string>
+    <string name="pref_show_iob">عرض الأنسولين النشط</string>
+    <string name="pref_show_detailed_iob">عرض تفاصيل الأنسولين النشط</string>
+    <string name="pref_show_cob">عرض الكربوهيدرات المتبقية</string>
+    <string name="pref_show_delta">عرض التغير</string>
+    <string name="pref_show_detailed_delta">عرض تفاصيل التغير</string>
+    <string name="pref_show_avgdelta">عرض متوسط التغير</string>
+    <string name="pref_show_tempTarget">عرض الهدف المؤقت</string>
+    <string name="pref_show_reservoir_level">إظهار مستوى الخزان</string>
+    <string name="pref_show_phone_battery">إظهار بطارية الهاتف</string>
+    <string name="pref_show_rig_battery">عرض بطارية جهاز الربط</string>
+    <string name="pref_show_basal_rate">إظهار معدل الأنسولين القاعدي</string>
+    <string name="pref_show_loop_status">عرض حالة الحلقة</string>
+    <string name="pref_show_bg">عرض سكر الدم</string>
+    <string name="pref_show_bgi">عرض تأثير سكر الدم (BGI)</string>
+    <string name="pref_show_direction_arrow">عرض سهم الاتجاه</string>
+    <string name="pref_show_ago">عرض الوقت المنقضي</string>
+    <string name="pref_show_week_number">إظهار رقم الأسبوع</string>
+    <string name="pref_show_date">إظهار التاريخ</string>
+    <string name="pref_show_seconds">عرض الثواني</string>
+    <string name="pref_show_complication1">عرض عنصر واجهة الساعة 1</string>
+    <string name="pref_show_complication2">عرض عنصر واجهة الساعة 2</string>
+    <string name="pref_show_complication3">عرض عنصر واجهة الساعة 3</string>
+    <string name="pref_show_complication4">عرض عنصر واجهة الساعة 4</string>
+    <string name="pref_show_complication5">عرض عنصر واجهة الساعة 5</string>
+    <string name="default_custom_watchface_comment">واجهة الساعة الافتراضية، يمكنك النقر على زر تصدير واجهة الساعة لإنشاء قالب</string>
+    <string name="default_custom_watchface_external_comment">واجهة الساعة الافتراضية بما في ذلك العروض الخارجية للمتابعين، يمكنك النقر على زر تصدير واجهة الساعة لإنشاء قالب</string>
+    <string name="wear_default_watchface">واجهة الساعة الافتراضية</string>
+    <string name="wear_more_watchfaces">المزيد من واجهات الساعة</string>
+    <string name="temp_basal_absolute_rate">%1$.2f وحدة/ساعة @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f وحدة/ساعة @%2$s %3$d/%4$d دقيقة</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">البلوتوث</string>
+    <string name="permission_bluetooth_description">يحتاج التطبيق إلى إذن البلوتوث للتواصل مع المضخة</string>
     <!-- Insulin -->
+    <string name="unknown">غير معروف</string>
+    <string name="rapid_acting_oref">نوفورابيد</string>
+    <string name="lyumjev">ليومجيف</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="ultra_rapid_oref">فياسب</string>
+    <string name="fast_acting_insulin_comment">نوفورابيد، نوفولوج، هيومالوج</string>
+    <string name="ultra_fast_acting_insulin_comment">فياسب</string>
+    <string name="insulin_peak_time">وقت الذروة [دقيقة]</string>
     <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u20">U20</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">ملليغرام/ديسيلتر/وحدة</string>
+    <string name="profile_isf_units_mmol">مليمول/لتر/وحدة</string>
+    <string name="formatsignedinsulinunits">%1$+.2f وحدة</string>
+    <string name="format_carbs">%1$d غ</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="carbs">كربوهيدرات</string>
+    <string name="alarminxmin">تشغيل الإنذار خلال %1$d دقيقة</string>
+    <string name="pumpsuspended">المضخة معلّقة</string>
+    <string name="loopsuspended">الحلقة معلّقة</string>
+    <string name="pump_disconnected">المضخة مفصولة</string>
+    <string name="basalprofilenotaligned">قيم الأنسولين القاعدي لا تبدأ عند ساعات كاملة: %1$s</string>
+    <string name="minimalbasalvaluereplaced">استبدلت قيمة الأنسولين القاعدي بالحد الأدنى المدعوم: %1$s</string>
+    <string name="maximumbasalvaluereplaced">استبدلت قيمة الأنسولين القاعدي بالحد الأقصى المدعوم: %1$s</string>
+    <string name="profile_ins_units_per_hour">وحدة/ساعة</string>
+    <string name="profile_carbs_per_unit">غ/وحدة</string>
+    <string name="mins">%1$d دقيقة</string>
+    <string name="record">سجل</string>
+    <string name="bolus">جرعة</string>
+    <string name="uel_extended_carbs">الكربوهيدرات الممتدة</string>
+    <string name="profile_low_target">الهدف الأدنى للملف الشخصي</string>
+    <string name="profile_high_target">الهدف الأعلى للملف الشخصي</string>
+    <string name="profile_dia">مدة عمل الأنسولين (DIA) في الملف الشخصي</string>
+    <string name="profile_sensitivity_value">قيمة الحساسية في الملف الشخصي</string>
+    <string name="profile_carbs_ratio_value">نسبة الكربوهيدرات في الملف الشخصي</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f خارج الحدود الصارمة</string>
+    <string name="basal_value">قيمة الأنسولين القاعدي</string>
+    <string name="cobvsiob">الكربوهيدرات المتبقية مقابل الأنسولين النشط</string>
+    <string name="slowabsorptiondetected_plain">!!!!! تم اكتشاف امتصاص بطيء للكربوهيدرات: %1$d%% من الوقت. تحقق من حساباتك بدقة. قد تكون الكربوهيدرات المتبقية (COB) مبالغا في تقديرها، مما قد يؤدي إلى إعطاء المزيد من الأنسولين !!!!!</string>
+    <string name="bolus_constraint_applied_warn">تم تطبيق قيد الجرعة: %1$.2f وحدة إلى %2$.2f وحدة</string>
+    <string name="bolus_recorded_only">سيتم تسجيل الجرعة فقط (ولن يتم ضخها عبر المضخة)</string>
+    <string name="advisoralarm">تشغيل إنذار عندما يحين وقت الأكل</string>
+    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">الكربوهيدرات الممتدة %1$d غ / %2$d س (+%3$d دقيقة)</string>
+    <string name="format_insulin_units">%1$.2f وحدة</string>
+    <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
+    <string name="carbs_with_time_later" comment="Carbs eaten later. %1$s=carbs with unit, %2$s=minutes from now, with unit. Example: 20 g (+15 min)">%1$s (+%2$s)</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">فشل تشغيل الإضافة %1$s وقد لا تعمل بشكل صحيح. يرجى إعادة تشغيل AAPS.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">واجهت الإضافة %1$s خطأ وتوقف جزء منها. يرجى إعادة تشغيل AAPS.</string>
 </resources>

@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Még nem volt kapcsolat</string>
+    <string name="pump_status_sleeping">Alvó állapot</string>
+    <string name="pump_status_waking_up">Ébresztés</string>
+    <string name="pump_status_active">Aktív</string>
+    <string name="pump_status_error_comm">Kommunikációs hiba</string>
+    <string name="pump_status_timeout_comm">Kommunikációs időtúllépés</string>
+    <string name="pump_status_invalid_config">Érvénytelen konfiguráció</string>
+    <string name="medtronic_pump_encoding_title">Medtronic kódolás</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Szoftveres 4b6b kódolás</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Hardveres 4b6b kódolás</string>
+    <string name="medtronic_pump_frequency_us_ca">USA és Kanada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Világszerte (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Keresés</string>
     <string name="riley_link_ble_config_connected_never">Soha</string>
     <!-- RL Status Page -->
     <string name="rileylink_status">RileyLink állapot</string>
-    <string name="medtronic_pump_status">Pumpa állapot</string>
+    <string name="medtronic_pump_status">Pumpaállapot</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Cím:</string>
     <string name="rileylink_name">Név:</string>
@@ -16,8 +28,8 @@
     <string name="rileylink_connection_error">Kapcsolódási hiba:</string>
     <string name="rileylink_device">Eszköz</string>
     <string name="rileylink_device_type">Eszköz típusa:</string>
-    <string name="rileylink_configured_device_model">Beállított eszköz model:</string>
-    <string name="rileylink_connected_device_model">Kapcsolódott eszköz model:</string>
+    <string name="rileylink_configured_device_model">Beállított eszközmodell:</string>
+    <string name="rileylink_connected_device_model">Csatlakoztatott eszközmodell:</string>
     <string name="rileylink_last_used_frequency">Utoljára használt frekvencia:</string>
     <string name="rileylink_last_device_contact">Utoljára kapcsolódott eszköz:</string>
     <string name="rileylink_firmware_version">Firmware verzió:</string>
@@ -48,7 +60,7 @@
     <string name="rileylink_target_device_medtronic">Medtronic pumpa</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">OrangeLink/EmaLink töltöttségének megjelenítése</string>
+    <string name="riley_link_show_battery_level">Az OrangeLink/EmaLink/DiaLink által jelzett töltöttségi szint megjelenítése</string>
     <string name="riley_link_show_battery_level_summary">NEM MŰKÖDIK az eredeti RileyLink-el. Lehet nem működik bizonyos RileyLink alternatívákkal.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d nap</item>
@@ -60,4 +72,7 @@
     </plurals>
     <string name="orange_use_scanning_level">Keresés használata</string>
     <string name="orange_use_scanning_level_summary">Keresés indítása OrangeLink-hez kapcsolódás előtt, ez segíthet a kapcsolódásban (RileyLink alternatívákkal is használható, ha szükséges)</string>
+    <string name="rileylink_pair">RileyLink párosítása</string>
+    <string name="rileylink_pair_success">RileyLink sikeresen párosítva</string>
+    <string name="rileylink_config_reset">RileyLink beállításai alaphelyzetbe állítva</string>
 </resources>

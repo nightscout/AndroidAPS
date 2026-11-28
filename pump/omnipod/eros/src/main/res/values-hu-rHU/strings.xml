@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Eros - Description -->
+    <string name="omnipod_eros_pump_description">Pumpa-integráció az Omnipod Eroshoz (a régebbi modell átlátszó tűvédő kupakkal). Legalább 2.0-s firmware-verziójú RileyLink eszközt igényel.</string>
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Errors -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">Érvénytelen RileyLink-cím.</string>
     <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Impulzusnapló gomb megjelenítése a Pod-kezelés menüben</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">RileyLink-statisztika gomb megjelenítése a Pod-kezelés menüben</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Elemcsere naplózásának engedélyezése a Műveletek között</string>
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f E</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f E, SZH=%2$.1f g</string>
+    <string name="omnipod_eros_history_tbr_value">Ütem: %1$.2f E/ó, időtartam: %2$d perc</string>
     <!-- Omnipod Eros - Error -->
+    <string name="omnipod_eros_error_crc_mismatch">A kommunikáció sikertelen: az üzenet sértetlenségének ellenőrzése nem sikerült</string>
+    <string name="omnipod_eros_error_invalid_packet_type">A kommunikáció sikertelen: érvénytelen csomag érkezett a Pod-tól</string>
+    <string name="omnipod_eros_error_invalid_progress_state">A kommunikáció sikertelen: a Pod hibás állapotban van</string>
+    <string name="omnipod_eros_error_invalid_response">A kommunikáció sikertelen: érvénytelen válasz érkezett a Pod-tól</string>
+    <string name="omnipod_eros_error_invalid_message_sequence_number">A kommunikáció sikertelen: érvénytelen sorszámú üzenet érkezett a Pod-tól</string>
+    <string name="omnipod_eros_error_invalid_message_address">A kommunikáció sikertelen: érvénytelen című üzenet érkezett a Pod-tól</string>
+    <string name="omnipod_eros_error_message_decoding_failed">A kommunikáció sikertelen: a Pod üzenetének dekódolása nem sikerült</string>
+    <string name="omnipod_eros_error_nonce_resync_failed">A kommunikáció sikertelen: a nonce újraszinkronizálása nem sikerült</string>
+    <string name="omnipod_eros_error_nonce_out_of_sync">A kommunikáció sikertelen: a nonce nincs szinkronban</string>
+    <string name="omnipod_eros_error_not_enough_data">A kommunikáció sikertelen: nem érkezett elég adat a Pod-tól</string>
+    <string name="omnipod_eros_error_pod_fault">Pod-hiba (%1$03d %2$s) észlelve. Deaktiválja a Pod-ot, és aktiváljon egy újat</string>
+    <string name="omnipod_eros_error_pod_returned_error_response">A kommunikáció sikertelen: a Pod hibaválaszt küldött</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Nincs válasz a RileyLinktől</string>
+    <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink megszakítva</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Nincs válasz a Pod-tól</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">A bázisprofil beállítása sikertelen. Lehet, hogy a beadás fel van függesztve! Frissítse kézzel a Pod állapotát a pumpa képernyőn, és szükség esetén folytassa a beadást.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Lehet, hogy a bázisprofil beállítása sikertelen volt. Lehet, hogy a beadás fel van függesztve! Frissítse kézzel a Pod állapotát a pumpa képernyőn, és szükség esetén folytassa a beadást.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">A bázisprofil beállítása sikertelen. A beadás fel van függesztve! Folytassa kézzel a beadást a pumpa képernyőn.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Lehet, hogy az átmeneti bázis leállítása sikertelen volt. Frissítse kézzel a Pod állapotát a pumpa képernyőn.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Az átmeneti bázis beállítása sikertelen. Ha korábban futott átmeneti bázis, lehet, hogy le lett állítva. Frissítse kézzel a Pod állapotát a pumpa képernyőn.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Lehet, hogy az átmeneti bázis beállítása sikertelen volt. Ha korábban futott átmeneti bázis, az le lett állítva. Frissítse kézzel a Pod állapotát a pumpa képernyőn.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_validation">Az átmeneti bázis időtartamának nullánál nagyobbnak és %1$s perc többszörösének kell lennie.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Lehet, hogy az idő beállítása sikertelen volt. Lehet, hogy a beadás fel van függesztve! Frissítse kézzel a Pod állapotát a pumpa képernyőn, és szükség esetén folytassa a beadást.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Az idő beállítása sikertelen. A beadás fel van függesztve! Folytassa kézzel a beadást a pumpa képernyőn.</string>
+    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Nem sikerült automatikusan módosítani az időt a Pod-on. Szinkronizálja kézzel az időt a pumpa képernyőn.</string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain">Nem ellenőrizhető, hogy a bólus sikerült-e. Ellenőrizze kézzel a kattanások hallgatásával, hogy a Pod adja-e a bólust. <b>Ha biztos benne, hogy a bólus nem sikerült, törölje kézzel a bólusbejegyzést a Kezelések közül, akkor is, ha most a \'Bólus megszakítása\' gombra kattint!</b></string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Nem ellenőrizhető, hogy az SMB bólus (%1$.2f E) sikerült-e. <b>Ha biztos benne, hogy a bólus nem sikerült, törölje kézzel az SMB-bejegyzést a Kezelések közül.</b></string>
+    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">A Pod-on átmeneti bázis fut, de az AAPS nem tud erről az átmeneti bázisról. Állítsa le kézzel az átmeneti bázist.</string>
     <!-- Omnipod Eros - Pod Management -->
+    <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink-statisztika</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">RileyLink alaphelyzetbe állítása</string>
+    <string name="omnipod_eros_pod_management_pulse_log">Impulzusnapló</string>
+    <string name="omnipod_eros_pod_management_pulse_log_value">Impulzusnapló (vágólapra másolva)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Töltsön fel egy új Pod-ot 3 napra elegendő inzulinnal.\n\nFigyeljen a Pod két sípolására a feltöltés közben. Ezek jelzik, hogy a legalább 80 E inzulin bekerült. A két sípolás után is teljesen ürítse ki a töltőfecskendőt.\n\nA Pod feltöltése után nyomja meg a <b>Tovább</b> gombot.\n\n<b>Megjegyzés:</b> most még ne vegye le a Pod tűvédő kupakját.\n<b>Megjegyzés:</b> állítsa a RileyLinket függőleges helyzetbe, és tegye a Pod-ot néhány centiméterre tőle.</string>
+    <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Párosítás az új Pod-dal és a Pod légtelenítése folyamatban.\n\nHa az inicializálás sikeresen befejeződött, nyomja meg a <b>Tovább</b> gombot.\n\n<b>Megjegyzés:</b> állítsa a RileyLinket függőleges helyzetbe, és tegye a Pod-ot néhány centiméterre tőle.</string>
 </resources>

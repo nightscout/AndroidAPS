@@ -1,2 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r1_title">ضخ الجرعة</string>
+    <string name="alert_r2_title">جرعة فائتة</string>
+    <string name="alert_r3_title">منبه الساعة</string>
+    <string name="alert_r4_title">تغيير مجموعة التسريب</string>
+    <string name="alert_r7_title">اكتمل المعدل القاعدي المؤقت (TBR)</string>
+    <string name="alert_w31_title">الخرطوشة منخفضة</string>
+    <string name="alert_w32_title">البطارية منخفضة</string>
+    <string name="alert_w33_title">الوقت/التاريخ غير صالح</string>
+    <string name="alert_w34_title">انتهاء الضمان</string>
+    <string name="alert_w36_title">تم إلغاء المعدل القاعدي المؤقت (TBR)</string>
+    <string name="alert_w38_title">تم إلغاء الجرعة</string>
+    <string name="alert_w39_title">تحذير وقت الإعارة</string>
+    <string name="alert_m20_title">الخرطوشة غير مركبة</string>
+    <string name="alert_m21_title">الخرطوشة فارغة</string>
+    <string name="alert_m22_title">البطارية فارغة</string>
+    <string name="alert_m23_title">إيقاف تلقائي - توقفت المضخة</string>
+    <string name="alert_m24_title">انسداد</string>
+    <string name="alert_m25_title">انتهى وقت الإعارة - نهاية التشغيل</string>
+    <string name="alert_m26_title">لم تكتمل عملية تغيير الخرطوشة</string>
+    <string name="alert_m27_title">فشل تنزيل البيانات</string>
+    <string name="alert_m28_title">انتهت مهلة وضع الإيقاف المؤقت</string>
+    <string name="alert_m29_title">لم يتم تعيين نوع البطارية</string>
+    <string name="alert_m30_title">لم يتم تعيين نوع الخرطوشة</string>
+    <string name="alert_e6_title">خطأ ميكانيكي</string>
+    <string name="alert_e10_title">خطأ في إعادة لف المحرك</string>
+    <string name="alert_e13_title">خطأ في اللغة</string>
+</resources>

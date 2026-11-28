@@ -1,14 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="units">Egység</string>
+    <string name="setupwizard_units_prompt">Válassza ki, milyen mértékegységben jelenjenek meg az értékek</string>
     <string name="next_button">Tovább</string>
     <string name="previous_button">Vissza</string>
-    <string name="setupwizard_finish">BEFEJEZ</string>
+    <string name="setupwizard_finish">BEFEJEZÉS</string>
+    <string name="welcome">Üdvözöljük</string>
+    <string name="welcometosetupwizard">Üdvözli a beállítási varázsló. Végigvezeti a beállítás lépésein.</string>
+    <string name="end_user_license_agreement">Végfelhasználói licencszerződés</string>
+    <string name="end_user_license_agreement_text">NEM HASZNÁLHATÓ ORVOSI DÖNTÉSEK MEGHOZATALÁRA. A PROGRAMRA NEM VONATKOZIK SEMMILYEN GARANCIA, AMENNYIRE AZT A VONATKOZÓ JOGSZABÁLYOK MEGENGEDIK. HACSAK ÍRÁSBAN MÁSKÉNT NEM SZEREPEL, A SZERZŐI JOG TULAJDONOSAI ÉS/VAGY MÁS FELEK A PROGRAMOT „ADOTT ÁLLAPOTÁBAN” BIZTOSÍTJÁK, BÁRMIFÉLE KIFEJEZETT VAGY VÉLELMEZETT GARANCIA NÉLKÜL, BELEÉRTVE, DE NEM KIZÁRÓLAG AZ ELADHATÓSÁGRA ÉS AZ ADOTT CÉLRA VALÓ ALKALMASSÁGRA VONATKOZÓ VÉLELMEZETT GARANCIÁKAT. A PROGRAM MINŐSÉGÉVEL ÉS MŰKÖDÉSÉVEL KAPCSOLATOS TELJES KOCKÁZAT A FELHASZNÁLÓT TERHELI. HA A PROGRAM HIBÁSNAK BIZONYUL, A FELHASZNÁLÓ VISELI AZ ÖSSZES SZÜKSÉGES KARBANTARTÁS, JAVÍTÁS VAGY HELYESBÍTÉS KÖLTSÉGÉT.</string>
+    <string name="end_user_license_agreement_i_understand">MEGÉRTETTEM ÉS ELFOGADOM</string>
     <string name="display_settings">Megjelenítési beállítások</string>
+    <string name="low_mark">ALSÓ határ</string>
+    <string name="high_mark">FELSŐ határ</string>
+    <string name="low_mark_comment">A céltartomány alsó értéke (csak megjelenítéshez)</string>
+    <string name="high_mark_comment">A céltartomány felső értéke (csak megjelenítéshez)</string>
+    <string name="storedsettingsfound">Mentett beállítások találhatók</string>
+    <string name="master_password_summary">A mesterjelszó a biztonsági mentés titkosítására és az alkalmazás védelmének feloldására szolgál. Jegyezze meg, vagy tárolja biztonságos helyen.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="common_values">A szokásos legnagyobb étkezésének értékeit használja\n</string>
+    <string name="syncinfotext">Adatok szinkronizálása a felhőbe. Ezt a részt most kihagyhatja, de addig nem teljesítheti a célkitűzéseket, amíg be nem állítja a Nightscout vagy a Tidepool klienst.</string>
+    <string name="status_label">Állapot:</string>
+    <string name="diawarning">Ne feledje: az új inzulinprofilokhoz legalább 5 órás DIA szükséges. Az új profilon az 5–6 órás DIA megfelel a régi inzulinprofilok 3 órás DIA-jának.</string>
     <string name="profile">Profil</string>
+    <string name="doprofileswitch">Profilváltás végrehajtása</string>
+    <string name="exitwizard">Beállítási varázsló kihagyása</string>
+    <string name="setupwizard_sensitivity_description">Az érzékenység plugin az érzékenység észlelésére és a COB kiszámítására szolgál. További információ:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Válasszon egyet az elérhető algoritmusok közül. A legrégebbitől a legújabbig vannak sorba rendezve. Egy újabb algoritmus általában hatékonyabb. Használat előtt ne felejtse el elolvasni az OpenAPS dokumentációt, és beállítani az algoritmust.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Állítsa be alább a RileyLinket. A RileyLink kiválasztása után a beállítás akkor folytatható, amikor a RileyLink állapota \"Kapcsolódva\". Ez egy percig is eltarthat.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Megjegyzés:</b> A beállítás a pumpa beállítása után folytatható.\n</string>
+    <string name="startobjective">Kezdje el az első célkitűzést</string>
+    <string name="open_objectives">Célkitűzések megnyitása</string>
+    <string name="setupwizard_permissions">Engedélyek</string>
+    <string name="setupwizard_profile_info">Hozzon létre egy profilt a bázisütemekkel, IC-, ISF- és célértékekkel. Később több profilt is hozzáadhat.</string>
+    <string name="setupwizard_permissions_info">Az AAPS megfelelő működéséhez tárhely-hozzáférés és engedélyek szükségesek. Adja meg alább a szükséges engedélyeket.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink állapot:</string>
+    <string name="setupwizard_client_control_title">Kliensvezérlés</string>
+    <string name="setupwizard_client_control_info">Párosítsa a kliens eszközöket, hogy aláírt parancsokat küldhessenek ennek a fő eszköznek a Nightscouton keresztül. Ez az AAPS távvezérlésének új, ajánlott módja.</string>
+    <string name="setupwizard_ns_receive_info">A kezelések és adatok közvetlen fogadása a Nightscoutból (kevésbé biztonságos mód) mostantól alapértelmezetten ki van kapcsolva. Csak akkor nyissa meg az alábbi beállításokat, ha még szüksége van rá. Akkor szükséges, ha NS-en vagy más gyártó alkalmazásán keresztül visz be adatokat.</string>
+    <string name="setupwizard_open_ns_receive_settings">Nightscout-adatok fogadása</string>
+    <string name="setupwizard_pair_with_master_info">Párosítsa ezt a klienst a fő AAPS-szel, hogy biztonságos csatornán parancsokat küldhessen. A párosítás után a beállítás befejeződik.</string>
+    <string name="setupwizard_setup_from_master_title">Beállítás a fő eszközről</string>
+    <string name="setupwizard_setup_from_master_info">A fő eszközön nyissa meg az Engedélyezett kliensek menüt, és adja hozzá ezt a telefont QR-kóddal. A beolvasás saját tokennel beállítja a Nightscoutot, és párosíthatja is a telefont. A beolvasás után a beállítás befejeződik. QR-kód nélkül hagyja ki ezt a lépést, és állítsa be a Nightscoutot saját maga.</string>
+    <string name="setupwizard_scan_master_qr">QR-kód beolvasása</string>
+    <string name="setupwizard_pairing_ws_warning">A párosításhoz Nightscout WebSocket-kapcsolat szükséges. Lépjen vissza az előző lépésre, és először engedélyezze azt.</string>
+    <string name="setupwizard_pairing_status_master">Párosított kliensek: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Még nincs párosított kliens</string>
+    <string name="setupwizard_pairing_status_client_paired">Párosítva egy fő eszközzel</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Még nincs párosítva</string>
+    <string name="setupwizard_instance_name_title">Ki használja ezt a telefont?</string>
+    <string name="readstatus">Állapot lekérése</string>
     <!-- Provider-agnostic cloud export/import strings -->
+    <string name="alert_dialog_permission_battery_optimization_failed">Úgy tűnik, ez az eszköz nem támogatja az akkumulátor-optimalizálás alóli kivételt - teljesítményproblémák léphetnek fel.</string>
     <!--    ConfigBuilder-->
+    <string name="configbuilder_pump_description">Melyik pumpát szeretné használni az AAPS-szel?</string>
+    <string name="configbuilder_aps_description">Melyik APS algoritmus módosítsa a terápiát?</string>
+    <string name="configbuilder_sync_description">Adatfeltöltési, szinkronizálási és kommunikációs pluginek.</string>
+    <string name="configbuilder_bgsource_description">Honnan kapja az AAPS az adatait?</string>
+    <string name="configbuilder_sensitivity_description">Melyik érzékenységi algoritmust használja?</string>
+    <string name="allow_hardware_pump_text">Figyelem: Ha aktivál egy valódi pumpát, és csatlakozik hozzá, az AAPS átmásolja a bázisbeállításokat a profilból a pumpára, és felülírja a pumpán tárolt bázisütemet. Győződjön meg róla, hogy az AAPS-ben helyes a bázisbeállítás. Ha nem biztos benne, vagy nem szeretné felülírni a pumpa bázisbeállításait, nyomja meg a Mégse gombot, és váltson a pumpára később.</string>
+    <string name="nsclient_version_does_not_match">Az AAPSClient verziója nem egyezik az AAPS verziójával. Frissítsen.</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
@@ -19,6 +71,9 @@
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
+    <string name="loading">Betöltés…</string>
+    <string name="warning_wrong_directory_selected">Rossz mappa kiválasztva</string>
+    <string name="warning_wrong_directory_message">A(z) \"%1$s\" almappát választotta a fő AAPS mappa helyett. Válassza ki a szülő AAPS mappát. Az alkalmazás automatikusan létrehozza és kezeli az almappákat.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <!-- Provider-agnostic cloud storage strings -->
     <!-- Authorization status strings -->

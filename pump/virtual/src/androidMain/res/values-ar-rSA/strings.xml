@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">نوع المضخة الافتراضية</string>
+    <string name="virtual_pump_definition">تعريف المضخة</string>
+    <string name="virtual_pump_pump_def">الجرعة: الخطوة=%1$s\nالجرعة الممتدة: [الخطوة=%2$s، المدة=%3$sدقيقة-%4$sساعة]\nالأنسولين القاعدي: الخطوة=%5$s\nالمعدل القاعدي المؤقت: %6$s (بمقدار %7$s)، المدة=%8$sدقيقة-%9$sساعة\n%10$s</string>
+    <string name="description_pump_virtual">دمج المضخة للمضخات التي ليس لها أي برنامج تشغيل بعد (حلقة مفتوحة)</string>
+    <string name="virtualpump_settings">إعدادات المضخة الافتراضية</string>
     <!--    PumpType-->
+    <string name="def_extended_note">* في المضخة الافتراضية، يتم دعم القيم المنفصلة فقط كدقة للأنسولين القاعدي/الجرعة، ولا يتم دعم النطاقات.</string>
 </resources>

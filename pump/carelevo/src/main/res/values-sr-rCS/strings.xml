@@ -1,16 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_description">Integracija pumpe Carelevo</string>
+    <string name="carelevo_alarm_channel_name">Carelevo alarmi</string>
+    <string name="carelevo_alarm_channel_description">Obaveštenja za alarme Carelevo Patch-a</string>
+    <string name="common_btn_ok">OK</string>
+    <string name="carelevo_bluetooth_state_key">Status Bluetooth-a</string>
+    <string name="carelevo_serial_number_key">Serijski br.</string>
+    <string name="carelevo_boot_date_time_key">Vreme aktivacije</string>
+    <string name="carelevo_expiration_key">Ističe</string>
+    <string name="carelevo_basal_rate_key">Bazalna stopa</string>
+    <string name="carelevo_temp_basal_rate_key">Stopa privremenog bazala</string>
+    <string name="carelevo_insulin_remain_key">Preostali insulin</string>
+    <string name="carelevo_running_remain_time">Preostalo vreme Patch-a</string>
+    <string name="carelevo_total_insulin_key">Ukupno isporučen insulin</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%1$d h %2$d min</string>
+    <string name="common_label_unit_value_minute">%d min</string>
+    <string name="common_label_unit_value_duration_hour">%d h</string>
+    <string name="common_label_unit_value_dose_with_space">%s J</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f J/h</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">Da li želite da nastavite infuziju?</string>
+    <string name="carelevo_pump_resume_description">Infuzija će se nastaviti kada pritisnete Potvrdi.</string>
+    <string name="carelevo_pump_stop_duration_title">Podesite vreme pauze infuzije.</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 minuta</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 sat</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 sat 30 minuta</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 sata</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 sata 30 minuta</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 sata</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 sata 30 minuta</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 sata</string>
+    <string name="common_unit_value_day_hour_min">%1$d d %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">Preostalo %1$d min %2$02d s</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">Vodič za insulin</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">Deaktiviraj Patch</string>
+    <string name="carelevo_btn_input_search_patch">Pronađi Patch</string>
+    <string name="carelevo_btn_retry">Pokušaj ponovo</string>
+    <string name="carelevo_btn_next">Dalje</string>
+    <string name="carelevo_btn_safety_check">Bezbednosna provera</string>
+    <string name="carelevo_btn_cancel">Otkaži</string>
+    <string name="carelevo_btn_confirm">Potvrdi</string>
+    <string name="carelevo_btn_research">Skeniraj ponovo</string>
+    <string name="carelevo_btn_needle_insert_check">Potvrdi ubacivanje</string>
+    <string name="carelevo_state_none_value">Nema aktivnog Patch-a</string>
+    <string name="carelevo_state_disconnected_value">Nije povezano</string>
+    <string name="carelevo_state_connected_value">Povezano</string>
+    <string name="carelevo_overview_connect_btn_label">Aktiviraj Patch</string>
+    <string name="carelevo_overview_pump_discard_btn_label">Odbaci Patch</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">Pauziraj infuziju</string>
+    <string name="carelevo_overview_pump_resume_btn_label">Nastavi infuziju</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">Izaberite napunjenu količinu.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Opseg: %1$d ~ %2$d J</string>
+    <string name="carelevo_insulin_refill_step1">1. Skinite zaštitni papir sa blistera Patch-a.</string>
+    <string name="carelevo_insulin_refill_step2">2. Dezinfikujte gumeni čep bočice insulina tupferom sa alkoholom.</string>
+    <string name="carelevo_insulin_refill_step3">3. Skinite zaštitnu kapicu igle sa šprica za insulin tako što ćete je povući pravo.</string>
+    <string name="carelevo_insulin_refill_step4">4. Povucite klip šprica unazad da ga napunite sa oko 1 mL vazduha.</string>
+    <string name="carelevo_insulin_refill_step5">5. Ubodite špric napunjen vazduhom u bočicu insulina i ubrizgajte vazduh u bočicu.</string>
+    <string name="carelevo_insulin_refill_step6">6. Dok je špric još uboden, okrenite i bočicu i špric naopako i pomoću pritiska napunite špric sa oko 1 mL insulina.</string>
+    <string name="carelevo_insulin_refill_step7">7. Ubodite iglu šprica uspravno u otvor za punjenje insulina na Patch-u (①) dok ne dođe do dna. Povucite klip skroz gore, pa ga pustite. Izvadite špric iz otvora za punjenje.</string>
+    <string name="carelevo_insulin_refill_step8">8. Držite špric uspravno i lagano kucnite po boku da se svi mehurići vazduha skupe na vrhu.</string>
+    <string name="carelevo_insulin_refill_step9">9. Ponovo ubodite iglu u bočicu insulina, potisnite sav vazduh u bočicu, a zatim izvucite tačnu količinu insulina koju ćete koristiti dok traje Patch.</string>
+    <string name="carelevo_insulin_refill_step10">10. Izvadite špric iz bočice. Ako ima mehurića vazduha, držite špric uspravno, kucnite po boku da se mehurići pomere na vrh i istisnite sav vazduh iz šprica.</string>
+    <string name="carelevo_insulin_refill_step11">11. Poravnajte vrh klipa sa oznakom na skali da tačno podesite dozu insulina.</string>
+    <string name="carelevo_insulin_refill_step12">12. Ubodite iglu uspravno u otvor za punjenje insulina na Patch-u (①) dok ne dođe do dna i polako potiskujte klip da ubrizgate sav insulin u Patch.</string>
+    <string name="carelevo_connect_prepare_title">Patch je pokrenut</string>
+    <string name="carelevo_connect_patch_title">Povezivanje Patch-a</string>
+    <string name="carelevo_connect_safety_check_title">Bezbednosna provera</string>
+    <string name="carelevo_connect_patch_attach_title">Lepljenje Patch-a</string>
+    <string name="carelevo_connect_needle_check_title">Ubacivanje igle</string>
+    <string name="carelevo_patch_buzzer_alarm_title">Informativni alarm Patch-a</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">Podešavanje obaveštenja o niskom nivou insulina</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">Podešavanje obaveštenja o korišćenju Patch-a</string>
+    <string name="carelevo_title_fill_insulin">Punjenje Patch-a insulinom</string>
+    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Napunite Patch insulinom (%1$d–%2$d J), u skladu sa periodom korišćenja (do 168 sati). Dodirnite [Količina punjenja] da unesete napunjeni insulin.</string>
+    <string name="carelevo_patch_step_1">KORAK 1.</string>
+    <string name="carelevo_patch_step_2">KORAK 2.</string>
+    <string name="carelevo_patch_step_3">KORAK 3.</string>
+    <string name="carelevo_patch_connect_step_1_title">Skinite kapicu igle</string>
+    <string name="carelevo_patch_connect_step_1_desc">Izvadite Patch iz blistera i skinite kapicu igle.</string>
+    <string name="carelevo_patch_connect_step_2_title">Uključite i povežite</string>
+    <string name="carelevo_patch_connect_step_2_desc">Pritisnite taster za uključivanje duže od 1 sekunde. Posle zvučnog signala dodirnite dugme [Pretraži Patch] ispod.</string>
+    <string name="carelevo_patch_safety_check_start_title">Bezbednosna provera</string>
+    <string name="carelevo_patch_safety_check_end_title">Bezbednosna provera je završena</string>
+    <string name="carelevo_patch_safety_check_start_desc">Patch je uspešno povezan.\nPritisnite dugme [Bezbednosna provera].</string>
+    <string name="carelevo_patch_safety_check_progress_desc">Bezbednosna provera je u toku.</string>
+    <string name="carelevo_patch_safety_check_end_desc">Bezbednosna provera je završena.\nPritisnite dugme Dalje.</string>
+    <string name="carelevo_patch_safety_check_desc_warning">Proverite da li se na vrhu igle pojavila kap insulina.</string>
+    <string name="carelevo_patch_safety_check_retry_desc">Ako se kap insulina ne vidi, pritisnite dugme [Pokušaj ponovo].</string>
+    <string name="carelevo_patch_attach_step1_title">Dezinfikujte mesto za Patch</string>
+    <string name="carelevo_patch_attach_step1_desc">Dobro očistite kožu tupferom sa alkoholom.</string>
+    <string name="carelevo_patch_attach_step2_title">Skinite zaštitnu traku</string>
+    <string name="carelevo_patch_attach_step2_desc">Izvadite Patch iz blistera i skinite kapicu igle.</string>
+    <string name="carelevo_patch_attach_step3_title">Zalepite Patch</string>
+    <string name="carelevo_patch_attach_step3_desc">Zalepite Patch na kožu tako da označena tačka bude okrenuta nagore.</string>
+    <string name="carelevo_patch_attach_step4_desc">Kada zalepite Patch, pritisnite Dalje.</string>
+    <string name="carelevo_patch_needle_insertion_step1_title">Skinite zaštitnu kapicu</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">Okrenite zaštitnu kapicu u smeru strelice i skinite je.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">Ubacite iglu</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">Pritisnite dugme na aplikatoru skroz do dna. Kada se igla uspešno ubaci, čuće se zvučni signal.</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">Pritisnite i držite 10 sekundi.</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">Preostalo pokušaja za ubacivanje igle: %d.</string>
+    <string name="carelevo_dialog_patch_discard_message_title">Da li želite da deaktivirate Patch i pokrenete novi?</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">Ako pritisnete dugme [OK], isporuka insulina će se zaustaviti.</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">Da li želite da završite bez pokretanja isporuke?</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">Ako pritisnete dugme [OK], ovaj Patch više neće moći da se koristi.</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">Da li želite da otkažete aktivaciju Patch-a?</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">Ako pritisnete dugme [OK], ono što ste uneli biće odbačeno.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">Ako je Patch prikazan ispod pravi, dodirnite dugme Potvrdi.</string>
+    <string name="carelevo_dialog_patch_connect_needle_injected">Igla je ubačena i aplikator je skinut</string>
+    <string name="carelevo_dialog_connect_detached">Aplikator je skinut</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">Pritisnite hvataljke sa obe strane aplikatora da ga odvojite od Patch-a,\na zatim pritisnite dugme `Aplikator uklonjen`. Isporuka insulina će početi.</string>
     <!-- Connection -->
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth nije uključen. Proverite.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">Nijedan Patch nije povezan.</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">Patch još nije povezan. Pokušajte ponovo za trenutak.</string>
+    <string name="carelevo_toast_msg_scan_failed">Skeniranje nije uspelo. Pokušajte ponovo.</string>
+    <string name="carelevo_toast_msg_patch_not_found">Patch nije pronađen. Pokušajte ponovo.</string>
+    <string name="carelevo_toast_msg_connect_failed">Povezivanje Patch-a nije uspelo. Pokušajte ponovo.</string>
     <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">Profil nije podešen.</string>
     <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_check_failed">Provera igle nije uspela.</string>
     <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_failed">Odbacivanje Patch-a nije uspelo. Pokušajte ponovo.</string>
+    <string name="carelevo_discarded_not_reached">Patch nije bio dostupan. Uklonjen je iz AAPS-a, ali nije zaustavljen i možda još daje insulin. Skinite ga.</string>
     <!-- Basal Delivery -->
+    <string name="carelevo_toast_msg_set_basal_failed">Zahtev za isporuku bazala nije uspeo. Pokušajte ponovo.</string>
     <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_fail">Nastavak isporuke nije uspeo. Pokušajte ponovo.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">Pauziranje isporuke nije uspelo. Pokušajte ponovo.</string>
     <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_failed">Bezbednosna provera nije uspela.</string>
     <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">Nizak nivo insulina</string>
+    <string name="alarm_feat_title_warning_expired_patch">Patch je istekao</string>
+    <string name="alarm_feat_title_warning_low_battery">Slaba baterija</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">Visoka/niska temperatura</string>
+    <string name="alarm_feat_title_warning_not_used_app">Automatsko isključivanje</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">BLE nije povezan</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">Isteklo vreme za postavljanje Patch-a</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">Samodijagnostika nije uspela</string>
+    <string name="alarm_feat_title_warning_patch_error">Greška Patch-a</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">Okluzija</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">Greška pri ubacivanju igle</string>
     <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">Nizak nivo insulina</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase2">Istekao je radni vek Patch-a</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase1">Patch uskoro ističe</string>
+    <string name="alarm_feat_title_alert_low_battery">Slaba baterija</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">Visoka/niska temperatura</string>
+    <string name="alarm_feat_title_alert_not_used_app">Automatsko isključivanje</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">BLE nije povezan</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">Aktivacija Patch-a nije završena</string>
+    <string name="alarm_feat_title_alert_resume_infusion">Pokreni insulin</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">Uključi Bluetooth</string>
     <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_low_insulin">Nizak nivo insulina</string>
+    <string name="alarm_feat_title_notice_expired_patch">Obaveštenje o vremenu korišćenja Patch-a</string>
+    <string name="alarm_feat_title_notice_check_patch">Obaveštenje o proveri Patch-a</string>
+    <string name="alarm_feat_title_notice_change_time_zone">Promena vremenske zone</string>
+    <string name="alarm_feat_title_notice_check_bg">Proverite glukozu u krvi</string>
+    <string name="alarm_feat_title_notice_lgs_started">LGS je pokrenut</string>
+    <string name="alarm_feat_title_notice_lgs_ended">LGS je završen</string>
+    <string name="alarm_feat_title_notice_lgs_error">LGS nije dostupan</string>
+    <string name="alarm_feat_title_notice_unknown">Greška Patch-a</string>
+    <string name="alarm_feat_desc_unknown">Neočekivana greška Patch-a.</string>
     <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">Deaktiviraj Patch</string>
+    <string name="alarm_feat_btn_patch_force_discard">Odbaci Patch</string>
+    <string name="alarm_feat_btn_resume_infusion">Pokreni insulin</string>
     <!-- General Messages -->
+    <string name="alarm_feat_msg_check_patch_connect">Proverite vezu sa Patch-om.</string>
+    <string name="carelevo_bolus_rejected_exceed_limit" comment="%1$s=bolus the patch can still deliver now, with unit (e.g. 2.80 U)">Bolus ne može da se isporuči. Dostupan bolus: %1$s</string>
+    <string name="carelevo_bolus_rejected_exceed_limit_none">Bolus ne može da se isporuči. Nije ostalo dovoljno insulina.</string>
     <!--    notification -->
+    <string name="alarm_notification_desc_warning_low_insulin">Preostalo je manje od 10 J insulina; isporuka insulina je zaustavljena. Dodirnite dugme [Deaktiviraj Patch] i odmah promenite Patch.</string>
+    <string name="alarm_notification_desc_warning_expired_patch">Patch je istekao; isporuka insulina je zaustavljena. Dodirnite dugme [Deaktiviraj Patch] i odmah promenite Patch.</string>
+    <string name="alarm_notification_desc_warning_low_battery">Baterija je slaba; isporuka insulina je zaustavljena. Dodirnite dugme [Odbaci Patch] i odmah promenite Patch.</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">Isporuka insulina je zaustavljena. Odmah pređite na odgovarajuću temperaturu (40℉–99℉).</string>
+    <string name="alarm_notification_desc_warning_not_used_app">Isporuka insulina je zaustavljena. Dodirnite dugme [Pokreni insulin] i ponovo pokrenite isporuku bazala.</string>
+    <string name="alarm_notification_desc_warning_incomplete_patch_setting">Isteklo je vreme za postavljanje Patch-a. Dodirnite dugme [Deaktiviraj Patch] i odmah promenite Patch.</string>
+    <string name="alarm_notification_desc_warning_failed_safety_check">Samodijagnostika nije uspela. Dodirnite dugme [Deaktiviraj Patch] i odmah promenite Patch.</string>
+    <string name="alarm_notification_desc_warning_patch_error">Isporuka insulina je zaustavljena zbog neočekivane greške. Dodirnite dugme [Deaktiviraj Patch] i odmah promenite Patch.</string>
+    <string name="alarm_notification_desc_warning_infusion_clogged">Isporuka insulina je zaustavljena zbog okluzije. Dodirnite dugme [Deaktiviraj Patch] i odmah promenite Patch.</string>
+    <string name="alarm_notification_desc_warning_needle_injection_error">Ubacivanje igle nije uspelo. Dodirnite dugme [Deaktiviraj Patch] i odmah promenite Patch.</string>
+    <string name="alarm_notification_desc_alert_low_insulin">Preostalo je manje od %s J insulina. Pripremite se za promenu Patch-a.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase2">Patch je istekao. Odmah promenite Patch.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase1">Patch uskoro ističe. Promenite Patch sada.</string>
+    <string name="alarm_notification_desc_alert_low_battery">Baterija je slaba. Pripremite se za promenu Patch-a.</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">Isporuka insulina je pauzirana zbog ekstremne temperature. Pređite na mesto sa 40℉–99℉ da bi se isporuka nastavila.</string>
+    <string name="alarm_notification_desc_alert_not_used_app">Dodirnite [OK]. Ako ovo zanemarite, prelazi u kritični alarm i isporuka insulina će biti zaustavljena.</string>
+    <string name="alarm_notification_desc_alert_incomplete_patch_setting">Dodirnite dugme [OK] da završite aktivaciju Patch-a.</string>
+    <string name="alarm_notification_desc_alert_resume_infusion">Pauza insulina je završena. Dodirnite [Pokreni insulin] da pokrenete insulin.</string>
+    <string name="alarm_notification_desc_alert_off_bluetooth">Za korišćenje Patch-a potreban je Bluetooth. Dodirnite [OK] i uključite Bluetooth.</string>
+    <string name="alarm_notification_desc_notice_low_insulin">Preostalo je manje od %s J insulina. Pripremite se za promenu Patch-a.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">Patch se koristi %1$s dana %2$s sati. Imajte to na umu tokom korišćenja.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">Vremenska zona je promenjena sa %1$s(UTC %2$s) na %3$s(UTC %4$s).</string>
+    <string name="alarm_notification_desc_notice_check_bg">Od vašeg bolusa je prošlo %s. Proverite glukozu u krvi.</string>
+    <string name="alarm_notification_desc_notice_lgs_started">LGS je pokrenut.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS je završen zbog prekida veze sa Patch-om/CGM-om.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS je završen zbog pauze LGS-a.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_time_over">LGS je završen jer je isteklo zakazano vreme.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">LGS je završen jer je LGS isključen.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">LGS je završen jer je vrednost CGM-a prešla podešeni prag.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS je završen iz nepoznatog razloga.</string>
+    <string name="alarm_notification_desc_notice_lgs_error">Proverite vezu sa Patch-om i CGM-om.</string>
+    <string name="carelevo_profile_update_skip_comment">Preskočeno: ažuriranje je prerano.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">Patch nije potvrdio zaustavljanje. Čeka se kraj bolusa…</string>
+    <string name="carelevo_bolus_rejected_missed_bolus_recorded">Bolus koji nije bio zabeležen sada je dodat. Proverite IOB, a zatim pokušajte ponovo.</string>
+    <string name="carelevo_bolus_outcome_unknown">Patch nije odgovorio na bolus. Računa se ceo bolus dok Patch ne javi koliko je dao.</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Patch nije potvrdio zaustavljanje. Zabeležen je ceo bolus od %1$s.</string>
+    <string name="carelevo_bolus_stopped_by_patch" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The patch stopped the bolus. Given: 0.50 U of 2.00 U">Patch je zaustavio bolus. Dato: %1$s od %2$s</string>
 </resources>

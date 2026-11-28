@@ -1,2 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r1_code">Emlékeztető R1</string>
+    <string name="alert_r2_code">Emlékeztető R2</string>
+    <string name="alert_r3_code">Emlékeztető R3</string>
+    <string name="alert_r4_code">Emlékeztető R4</string>
+    <string name="alert_r7_code">Emlékeztető R7</string>
+    <string name="alert_w31_code">Figyelmeztetés W31</string>
+    <string name="alert_w32_code">Figyelmeztetés W32</string>
+    <string name="alert_w33_code">Figyelmeztetés W33</string>
+    <string name="alert_w34_code">Figyelmeztetés W34</string>
+    <string name="alert_w36_code">Figyelmeztetés W36</string>
+    <string name="alert_w38_code">Figyelmeztetés W38</string>
+    <string name="alert_w39_code">Figyelmeztetés W39</string>
+    <string name="alert_m20_code">Karbantartás M20</string>
+    <string name="alert_m21_code">Karbantartás M21</string>
+    <string name="alert_m22_code">Karbantartás M22</string>
+    <string name="alert_m23_code">Karbantartás M23</string>
+    <string name="alert_m24_code">Karbantartás M24</string>
+    <string name="alert_m25_code">Karbantartás M25</string>
+    <string name="alert_m26_code">Karbantartás M26</string>
+    <string name="alert_m27_code">Karbantartás M27</string>
+    <string name="alert_m28_code">Karbantartás M28</string>
+    <string name="alert_m29_code">Karbantartás M29</string>
+    <string name="alert_m30_code">Karbantartás M30</string>
+    <string name="alert_e6_code">Hiba E6</string>
+    <string name="alert_e10_code">Hiba E10</string>
+    <string name="alert_e13_code">Hiba E13</string>
+</resources>

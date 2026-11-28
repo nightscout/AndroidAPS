@@ -1,8 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="units">الوحدات</string>
+    <string name="setupwizard_units_prompt">حدد الوحدات التي تريد عرض القيم بها</string>
+    <string name="next_button">التالي</string>
+    <string name="previous_button">السابق</string>
+    <string name="setupwizard_finish">إنهاء</string>
+    <string name="welcome">مرحبًا</string>
+    <string name="welcometosetupwizard">مرحبًا بك في معالج الإعداد. سيوجهك هذا المعالج خلال عملية الإعداد.</string>
+    <string name="end_user_license_agreement">اتفاقية ترخيص المستخدم النهائي</string>
+    <string name="end_user_license_agreement_text">يجب عدم استخدام البرنامج لاتخاذ قرارات طبية. لا توجد أي ضمانات لهذا البرنامج، بالقدر الذي يبيحه القانون المعمول به. ما لم ينص على خلاف ذلك كتابة، يقدم حاملو حقوق النشر و/أو الأطراف الأخرى البرنامج \"كما هو\" دون أي ضمان من أي نوع، صريحًا كان أم ضمنيًا، بما في ذلك، على سبيل المثال لا الحصر، الضمانات الضمنية الخاصة بالرواج التجاري والملاءمة لغرض معين. تقع مسؤولية جودة وأداء البرنامج بالكامل على عاتقك. إذا ثبت أن البرنامج معيب، فأنت تتحمل تكلفة جميع أعمال الصيانة أو الإصلاح أو التصحيح اللازمة.</string>
+    <string name="end_user_license_agreement_i_understand">أنا أفهم وأوافق</string>
+    <string name="display_settings">إعدادات العرض</string>
+    <string name="low_mark">علامة الانخفاض</string>
+    <string name="high_mark">علامة الارتفاع</string>
+    <string name="low_mark_comment">أدنى قيمة لمنطقة النطاق المستهدف (للعرض فقط)</string>
+    <string name="high_mark_comment">أعلى قيمة لمنطقة النطاق المستهدف (للعرض فقط)</string>
+    <string name="storedsettingsfound">تم العثور على الإعدادات المخزنة</string>
+    <string name="master_password_summary">تستخدم كلمة المرور الرئيسية لتشفير النسخ الاحتياطية ولتجاوز الحماية في التطبيق. تذكرها أو احفظها في مكان آمن.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="common_values">استخدم قيم وجبتك الأكبر التي تتناولها عادةً\n</string>
+    <string name="syncinfotext">مزامنة البيانات مع السحابة. يمكنك تخطي هذا الجزء الآن، ولكن لن تتمكن من اجتياز الأهداف حتى تقوم بإعداد عميل Nightscout أو Tidepool.</string>
+    <string name="status_label">الحالة:</string>
+    <string name="diawarning">يرجى التذكر: تتطلب ملفات الأنسولين الجديدة مدة عمل أنسولين DIA لا تقل عن 5 ساعات. مدة عمل الأنسولين 5-6 ساعات على الملف الشخصي الجديد تعادل 3 ساعات على ملفات الأنسولين القديمة.</string>
+    <string name="profile">الملف الشخصي</string>
+    <string name="doprofileswitch">تبديل الملف الشخصي</string>
+    <string name="exitwizard">تخطي معالج الإعداد</string>
+    <string name="setupwizard_sensitivity_description">تستخدم إضافة الحساسية للكشف عن الحساسية وحساب الكربوهيدرات المتبقية COB. لمزيد من المعلومات، قم بزيارة:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">حدد إحدى الخوارزميات المتاحة. يتم فرزها من الأقدم إلى الأحدث. تكون الخوارزمية الأحدث عادةً أكثر قوة. لا تنس قراءة وثائق OpenAPS وتكوينها قبل الاستخدام.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">يرجى تهيئة جهاز RileyLink أدناه. بعد تحديد جهاز RileyLink، سيكون من الممكن متابعة الإعداد بمجرد أن تصبح حالة RileyLink \"متصل\". قد يستغرق هذا دقيقة واحدة.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>ملاحظة:</b> يمكنك متابعة الإعداد بمجرد تهيئة المضخة.\n</string>
+    <string name="startobjective">ابدأ هدفك الأول</string>
+    <string name="open_objectives">فتح الأهداف</string>
+    <string name="setupwizard_permissions">الصلاحيات</string>
+    <string name="setupwizard_profile_info">أنشئ ملفًا شخصيًا يحتوي على معدلات الأنسولين القاعدي، ونسبة الأنسولين إلى الكربوهيدرات IC، ومعامل حساسية الأنسولين ISF، والقيم المستهدفة. يمكنك إضافة ملفات شخصية متعددة لاحقًا.</string>
+    <string name="setupwizard_permissions_info">يحتاج تطبيق AAPS إلى إذن الوصول إلى التخزين وصلاحيات أخرى ليعمل بشكل صحيح. يرجى منح الصلاحيات المطلوبة أدناه.</string>
+    <string name="setupwizard_pump_riley_link_status">حالة RileyLink:</string>
+    <string name="setupwizard_client_control_title">التحكم من العميل</string>
+    <string name="setupwizard_client_control_info">قم بإقران أجهزة العميل حتى تتمكن من إرسال أوامر موقعة إلى هذا الجهاز الرئيسي عبر Nightscout. هذه هي الطريقة الجديدة الموصى بها للتحكم في AAPS عن بعد.</string>
+    <string name="setupwizard_ns_receive_info">قبول العلاجات والبيانات مباشرة من Nightscout (طريقة أقل أمانًا) أصبح معطلاً افتراضيًا. افتح الإعدادات أدناه فقط إذا كنت لا تزال بحاجة إليها. ضروري إذا كنت بحاجة إلى إدخال البيانات من خلال Nightscout أو تطبيقات الطرف الثالث.</string>
+    <string name="setupwizard_open_ns_receive_settings">قبول بيانات Nightscout</string>
+    <string name="setupwizard_pair_with_master_info">قم بإقران هذا العميل بجهاز AAPS الرئيسي الخاص بك حتى يتمكن من إرسال الأوامر عبر قناة آمنة. بعد الاقتران، يكتمل الإعداد.</string>
+    <string name="setupwizard_setup_from_master_title">الإعداد من الجهاز الرئيسي</string>
+    <string name="setupwizard_setup_from_master_info">على الجهاز الرئيسي، افتح العملاء المصرح لهم وأضف هذا الهاتف باستخدام رمز الاستجابة السريعة QR. يؤدي مسح الرمز إلى إعداد Nightscout برمز مميز خاص به، ويمكنه إقران الهاتف أيضًا. بعد المسح، يكتمل الإعداد. بدون رمز الاستجابة السريعة QR، تخط هذه الخطوة وقم بإعداد Nightscout بنفسك.</string>
+    <string name="setupwizard_scan_master_qr">مسح رمز الاستجابة السريعة QR</string>
+    <string name="setupwizard_pairing_ws_warning">اتصال WebSocket الخاص بـ Nightscout مطلوب للاقتران. ارجع إلى الخطوة السابقة وقم بتفعيله أولاً.</string>
+    <string name="setupwizard_pairing_status_master">العملاء المقترنون: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">لم يتم اقتران أي عملاء بعد</string>
+    <string name="setupwizard_pairing_status_client_paired">مقترن بالجهاز الرئيسي</string>
+    <string name="setupwizard_pairing_status_client_not_paired">غير مقترن بعد</string>
+    <string name="setupwizard_instance_name_title">من يستخدم هذا الهاتف؟</string>
+    <string name="readstatus">قراءة الحالة</string>
     <!-- Provider-agnostic cloud export/import strings -->
+    <string name="alert_dialog_permission_battery_optimization_failed">لا يبدو أن هذا الجهاز يدعم استثناء تحسين البطارية - فقد تواجه مشكلات في الأداء.</string>
     <!--    ConfigBuilder-->
+    <string name="configbuilder_pump_description">ما هي مضخة الأنسولين التي ترغب في استخدامها مع AAPS؟</string>
+    <string name="configbuilder_aps_description">أي خوارزمية للتحكم المغلق APS يجب أن تقوم بتعديلات العلاج؟</string>
+    <string name="configbuilder_sync_description">إضافات رفع البيانات والمزامنة والاتصال.</string>
+    <string name="configbuilder_bgsource_description">من أين يجب أن يحصل AAPS على بياناته؟</string>
+    <string name="configbuilder_sensitivity_description">أي خوارزمية للحساسية يجب استخدامها؟</string>
+    <string name="allow_hardware_pump_text">انتباه: إذا قمت بتفعيل مضخة أنسولين حقيقية والاتصال بها، فسوف يقوم AAPS بنسخ إعدادات الأنسولين القاعدي من الملف الشخصي إلى المضخة، مما يؤدي إلى الكتابة فوق معدل الأنسولين القاعدي الحالي المخزن على المضخة. تأكد من أن لديك إعداد الأنسولين القاعدي الصحيح في AAPS. إذا لم تكن متأكدًا أو لا تريد الكتابة فوق إعدادات الأنسولين القاعدي على مضختك، فاضغط على إلغاء وكرر التبديل إلى المضخة في وقت لاحق.</string>
+    <string name="nsclient_version_does_not_match">إصدار AAPSClient لا يتطابق مع إصدار AAPS. يرجى التحديث.</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
@@ -13,6 +71,9 @@
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
+    <string name="loading">جاري التحميل…</string>
+    <string name="warning_wrong_directory_selected">تم تحديد مجلد خاطئ</string>
+    <string name="warning_wrong_directory_message">لقد حددت المجلد الفرعي \"%1$s\" بدلاً من مجلد AAPS الرئيسي. يرجى تحديد مجلد AAPS الأصل. سيقوم التطبيق تلقائيًا بإنشاء وإدارة المجلدات الفرعية.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <!-- Provider-agnostic cloud storage strings -->
     <!-- Authorization status strings -->

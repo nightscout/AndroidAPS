@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_calibration_name">Bez kalibracije</string>
+    <string name="description_no_calibration">"Kalibracija se ne primenjuje. Vrednosti senzora se koriste takve kakve jesu. Koristite ovo kada je senzor već fabrički kalibrisan i tačan."</string>
+    <string name="linear_calibration_name">Linearna kalibracija</string>
+    <string name="description_linear_calibration">"Linearna kalibracija posebno za svaki senzor (nagib i pomak), izračunata iz vaših merenja iz prsta. Novija merenja imaju veću težinu. Kalibracija se primenjuje posle početka trenutne sesije senzora; prva 2 sata se preskaču kao zagrevanje."</string>
+    <string name="sensor_change_detected_text">Moguća promena senzora otkrivena u %1$s. Označiti kao novi senzor?</string>
+    <string name="sensor_change_detected_action">Označi promenu senzora</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Zabeležite promenu senzora da biste uključili kalibraciju.</string>
+    <string name="cal_status_warmup">Zagrevanje senzora — kalibracija je aktivna posle %1$s.</string>
+    <string name="cal_status_need_more_entries">Potrebna su najmanje 2 merenja iz prsta (trenutno %1$d).</string>
+    <string name="cal_status_unsafe_fit">Uklapanje je van bezbednog opsega — kalibracija nije primenjena.</string>
+    <string name="cal_status_applied">Kalibracija je primenjena.</string>
+    <string name="cal_status_applied_offset_only">Primenjena je kalibracija samo pomaka — opseg senzora je previše uzak za nagib.</string>
+    <string name="cal_status_applied_slope_clamped">Kalibracija je primenjena — nagib je ograničen na bezbedan opseg. Dodajte još merenja da biste ublažili ograničenje.</string>
+    <string name="cal_slope_offset">Nagib %1$.2f, korekcija sredine opsega %2$s</string>
+    <string name="cal_session_started">Sesija je započela: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Zabeleži promenu senzora</string>
+    <string name="cal_add_calibration">Dodaj kalibraciju</string>
+    <string name="cal_entries_header">Merenja iz prsta (%1$d)</string>
+    <string name="cal_no_entries">Još nema merenja iz prsta.</string>
+    <string name="cal_entry_pair">Iz prsta %1$s → senzor %2$s (Δ %3$s)</string>
+    <string name="cal_chart_entry_readout">Unos %1$d/%2$d · %3$s · senzor %4$s → GUK %5$s</string>
 </resources>

@@ -18,6 +18,7 @@
     <string name="settings_unreadable_keystore_explanation">Telefonens nøglelager svarede ikke, så AAPS kunne ikke åbne sine indstillinger.</string>
     <string name="settings_unreadable_not_running">AAPS kører ikke og styrer ikke pumpen. En midlertidig basal, der kører, slutter til sin tid, og derefter giver pumpen sin egen basal.</string>
     <string name="settings_unreadable_what_to_do">Prøv igen lukker AAPS og starter den igen. Hvis det ikke hjælper, så genstart telefonen. Vælg kun Start forfra, når intet andet hjælper: det lægger de ulæselige indstillinger til side, og AAPS starter med tomme indstillinger. Importer derefter din seneste indstillingseksport i opsætningsguiden.</string>
+    <string name="settings_unreadable_keystore_what_to_do">Prøv igen lukker AAPS og starter den igen. Hvis det ikke hjælper, så genstart telefonen. Din indstillingsfil bevares, som den er.</string>
     <string name="settings_unreadable_start_fresh">Start forfra</string>
     <string name="settings_unreadable_confirm_title">Start med tomme indstillinger?</string>
     <string name="settings_unreadable_confirm_text">Den ulæselige indstillingsfil bliver omdøbt og gemt. Alle indstillinger starter fra deres standardværdier. Derefter sætter du AAPS op igen eller importerer en indstillingseksport.</string>

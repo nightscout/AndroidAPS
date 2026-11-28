@@ -18,6 +18,7 @@
     <string name="settings_unreadable_keystore_explanation">מאגר המפתחות של הטלפון לא הגיב, ולכן AAPS לא הצליח לפתוח את ההגדרות שלו.</string>
     <string name="settings_unreadable_not_running">AAPS לא פועל ואינו שולט במשאבה. בזאלי זמני שפועל כעת יסתיים בזמנו, ולאחר מכן המשאבה תיתן את הבזאלי שלה עצמה.</string>
     <string name="settings_unreadable_what_to_do">ניסיון חוזר סוגר את AAPS ומפעיל אותו שוב. אם זה לא עוזר, יש להפעיל מחדש את הטלפון. יש לבחור התחלה מחדש רק כאשר שום דבר אחר לא עוזר: הפעולה מעבירה הצידה את ההגדרות שלא ניתן לקרוא, ו-AAPS מתחיל עם הגדרות ריקות. לאחר מכן יש לייבא את ייצוא ההגדרות האחרון באשף ההתקנה.</string>
+    <string name="settings_unreadable_keystore_what_to_do">ניסיון חוזר סוגר את AAPS ומפעיל אותו שוב. אם זה לא עוזר, יש להפעיל מחדש את הטלפון. קובץ ההגדרות נשמר ללא שינוי.</string>
     <string name="settings_unreadable_start_fresh">התחלה מחדש</string>
     <string name="settings_unreadable_confirm_title">להתחיל עם הגדרות ריקות?</string>
     <string name="settings_unreadable_confirm_text">קובץ ההגדרות שלא ניתן לקרוא יקבל שם חדש ויישמר. כל ההגדרות יחזרו לערכי ברירת המחדל. לאחר מכן יש להגדיר את AAPS מחדש או לייבא ייצוא הגדרות.</string>

@@ -1,27 +1,359 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
+    <string name="no_temp_basal_running">لا يوجد معدل أنسولين قاعدي مؤقت قيد التشغيل</string>
+    <string name="start_activity_tt">بدء الهدف المؤقت للنشاط</string>
+    <string name="start_eating_soon_tt">بدء الهدف المؤقت قبل الأكل</string>
+    <string name="start_hypo_tt">بدء الهدف المؤقت لانخفاض السكر</string>
+    <string name="time_offset">إزاحة الوقت</string>
+    <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
+    <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dي%2$dس</string>
+    <string name="status_age_short_hours" comment="Age of a sensor, cannula or battery, short, used on the first day when there are no full days yet. h=hours. %1$d=hours. Example: 5h">%1$dس</string>
     <!--    Widget-->
+    <string name="configure">ضبط الشفافية</string>
+    <string name="widget_description">أداة AAPS</string>
+    <string name="widget_bg_graph_description">رسم بياني لسكر الدم لـ AAPS</string>
+    <string name="widget_glucose_circle_description">دائرة سكر الدم لـ AAPS</string>
+    <string name="widget_compact_bg_description">سكر الدم + الأنسولين النشط + الكربوهيدرات المتبقية لـ AAPS (مدمج)</string>
+    <string name="widget_small_description">AAPS صغير</string>
     <!--     Activities-->
+    <string name="dexcom_tir">الوقت في النطاق TIR لـ Dexcom</string>
+    <string name="agp" comment="Section title: Ambulatory Glucose Profile">AGP</string>
+    <string name="agp_title">ملف سكر الدم المتنقل</string>
+    <string name="agp_glycemic_overview">نظرة عامة على سكر الدم</string>
+    <string name="agp_today">اليوم</string>
+    <string name="agp_hours" comment="%1$d=number of hours. Example: 24h">%1$dس</string>
+    <string name="agp_days" comment="%1$d=number of days. Example: 7d">%1$dي</string>
+    <string name="agp_no_data">لا توجد بيانات سكر دم متاحة لهذا النطاق.</string>
+    <string name="agp_load_failed">تعذر تحميل إحصائيات ملف سكر الدم المتنقل AGP. يرجى المحاولة مرة أخرى.</string>
+    <string name="agp_chart_description">مخطط النسبة المئوية لسكر الدم</string>
+    <string name="agp_tir_chart">مخطط الوقت في النطاق</string>
+    <string name="agp_percentile_10_90" comment="Glucose percentile band from the 10th to the 90th percentile">10–90%</string>
+    <string name="agp_percentile_25_75" comment="Glucose percentile band from the 25th to the 75th percentile">25–75%</string>
+    <string name="agp_percent" comment="%1$.1f=percentage value. Example: 72.4%">%1$.1f%%</string>
+    <string name="agp_range" comment="%1$s=lower glucose value, %2$s=upper glucose value. Example: 3.9–10.0">%1$s–%2$s</string>
+    <string name="agp_above" comment="%1$s=upper glucose limit. Example: &gt; 10.0">&gt; %1$s</string>
+    <string name="agp_below" comment="%1$s=lower glucose limit. Example: &lt; 3.9">&lt; %1$s</string>
+    <string name="agp_average">المتوسط</string>
+    <string name="agp_median">الوسيط</string>
+    <string name="agp_ea1c" comment="Estimated HbA1c">السكر التراكمي المقدر (eA1c)</string>
+    <string name="agp_gmi" comment="Glucose management indicator">GMI</string>
+    <string name="agp_standard_deviation" comment="Standard deviation of glucose values">الانحراف المعياري</string>
+    <string name="agp_cv" comment="Coefficient of variation of glucose values">معامل الاختلاف</string>
+    <string name="agp_available_days">الأيام</string>
+    <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as days of glucose data. Example: 13.8">%1$.1f</string>
+    <string name="hba1c_mmol_mol" comment="%1$d=HbA1c (or eA1c, GMI) in the IFCC unit mmol/mol, a whole number. Shown under the same value in percent. Example: 48 mmol/mol">%1$d مليمول/مول</string>
+    <string name="cgp_title">خماسية الغلوكوز (CGP) — 14 يوما</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">الوقت خارج النطاق</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">هبوط السكر</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">ارتفاع السكر</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">المتوسط</string>
+    <string name="cgp_reference">شخص سليم</string>
+    <string name="cgp_patient">المريض</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">خطر منخفض جدا</string>
+    <string name="cgp_pgr_low">خطر منخفض</string>
+    <string name="cgp_pgr_moderate">خطر متوسط</string>
+    <string name="cgp_pgr_high">خطر مرتفع</string>
+    <string name="cgp_pgr_extremely_high">خطر مرتفع للغاية</string>
+    <string name="do_you_want_recalculate_tdd_stats">هل تريد إعادة حساب إحصائيات إجمالي الجرعة اليومية (TDD)؟</string>
+    <string name="calculation_in_progress">جاري الحساب</string>
+    <string name="age">العمر</string>
+    <string name="weight_label">الوزن</string>
+    <string name="glucose_type">نوع قراءة السكر</string>
+    <string name="bg_other">أخرى</string>
+    <string name="bg_meter">جهاز قياس السكر</string>
+    <string name="bg_sensor">المستشعر</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
+    <string name="edit_site">تعديل</string>
+    <string name="record_site_location">موضع التركيب: %1$s</string>
+    <string name="record_site_arrow">سهم موضع التركيب: %1$s</string>
+    <string name="record_site_note">ملاحظة: %1$s</string>
+    <string name="delete_site_note">تم حذف الملاحظة</string>
     <!-- FillDialog -->
+    <string name="fill_warning">يرجى التأكد من أن الكمية تتطابق مع مواصفات مجموعة التسريب الخاصة بك!</string>
+    <string name="record_pump_site_change">تسجيل تغيير موضع تركيب المضخة</string>
+    <string name="record_insulin_cartridge_change">تسجيل تغيير خرطوشة الأنسولين</string>
+    <string name="fill_prime_amount">كمية التجهيز</string>
+    <string name="fill_pump_units_note">كمية التجهيز بوحدات المضخة</string>
+    <string name="fill_insulin_change">تبديل الأنسولين إلى: %1$s (سيتم تطبيق تبديل الملف الشخصي)</string>
     <!-- Scene -->
+    <string name="scene_cat_aaps">AAPS</string>
+    <string name="scene_cat_activity">النشاط</string>
+    <string name="scene_cat_health">الصحة</string>
+    <string name="scene_cat_food">الطعام</string>
+    <string name="scene_cat_sleep">النوم</string>
+    <string name="scene_cat_dailylife">الحياة اليومية</string>
+    <string name="scene_cat_wellness">العافية</string>
+    <string name="scene_cat_general">عام</string>
+    <string name="aaps_tt_high_icon_label">الهدف المؤقت</string>
+    <string name="aaps_tt_activity_icon_label">هدف مؤقت للنشاط</string>
+    <string name="aaps_tt_eating_icon_label">هدف مؤقت قبل الأكل</string>
+    <string name="aaps_tt_hypo_icon_label">هدف مؤقت لانخفاض السكر</string>
+    <string name="aaps_tt_manual_icon_label">هدف مؤقت يدوي</string>
+    <string name="aaps_profile_icon_label">الملف الشخصي</string>
+    <string name="aaps_loop_icon_label">الحلقة</string>
+    <string name="aaps_smb_icon_label">الجرعات التصحيحية الصغيرة SMB</string>
+    <string name="aaps_bolus_icon_label">جرعة</string>
+    <string name="aaps_carbs_icon_label">الكربوهيدرات</string>
+    <string name="aaps_tbr_icon_label">المعدل القاعدي المؤقت</string>
+    <string name="aaps_note_icon_label">ملاحظة</string>
+    <string name="aaps_automation_icon_label">الأتمتة</string>
+    <string name="aaps_calibration_icon_label">المعايرة</string>
+    <string name="exercise_icon_label">جري</string>
+    <string name="fitness_icon_label">لياقة</string>
+    <string name="swim_icon_label">سباحة</string>
+    <string name="hiking_icon_label">المشي لمسافات طويلة</string>
+    <string name="bike_icon_label">دراجة</string>
+    <string name="skateboard_icon_label">لوح التزلج</string>
+    <string name="tennis_icon_label">تنس</string>
+    <string name="soccer_icon_label">كرة القدم</string>
+    <string name="baseball_icon_label">الرجبي</string>
+    <string name="basketball_icon_label">كرة اليد</string>
+    <string name="volleyball_icon_label">جمباز</string>
+    <string name="golf_icon_label">جولف</string>
+    <string name="scubadiving_icon_label">الغوص</string>
+    <string name="rowing_icon_label">التجديف</string>
+    <string name="surfing_icon_label">ركوب الأمواج</string>
+    <string name="hospital_icon_label">مستشفى</string>
+    <string name="medication_icon_label">دواء</string>
+    <string name="monitor_heart_icon_label">مراقبة</string>
+    <string name="thermostat_icon_label">منظم الحرارة</string>
+    <string name="blood_type_icon_label">الدم</string>
+    <string name="health_safety_icon_label">الصحة</string>
+    <string name="healing_icon_label">شفاء</string>
+    <string name="meal_icon_label">مطعم</string>
+    <string name="cafe_icon_label">قهوة</string>
+    <string name="lunch_icon_label">غداء</string>
+    <string name="bakery_icon_label">مخبز</string>
+    <string name="sleep_icon_label">نوم</string>
+    <string name="night_icon_label">ليل</string>
+    <string name="nights_stay_icon_label">إقامة ليلية</string>
+    <string name="hotel_icon_label">فندق</string>
+    <string name="seat_flat_icon_label">استراحة</string>
+    <string name="work_icon_label">عمل</string>
+    <string name="school_icon_label">مدرسة</string>
+    <string name="home_icon_label">المنزل</string>
+    <string name="car_icon_label">قيادة</string>
+    <string name="flight_icon_label">رحلة جوية</string>
+    <string name="shopping_icon_label">تسوق</string>
+    <string name="relax_icon_label">تأمل</string>
+    <string name="spa_icon_label">منتجع صحي</string>
+    <string name="heart_icon_label">قلب</string>
+    <string name="psychology_icon_label">عقل</string>
+    <string name="star_icon_label">نجمة</string>
+    <string name="speed_icon_label">السرعة</string>
+    <string name="alarm_icon_label">إنذار</string>
+    <string name="event_icon_label">حدث</string>
+    <string name="flag_icon_label">علم</string>
+    <string name="bookmark_icon_label">علامة مرجعية</string>
+    <string name="label_icon_label">تسمية</string>
     <!-- Insulin Management -->
+    <string name="missing_insulin_name">اسم الأنسولين مفقود</string>
+    <string name="insulin_name_exists">اسم الأنسولين %1$s موجود بالفعل، اختر اسما جديدا</string>
+    <string name="insulin_external_update_title">تم تغيير إعدادات الأنسولين</string>
+    <string name="insulin_external_update_message">قام عميل مقترن بتغيير إعدادات الأنسولين. انقر فوق \"موافق\" لتحميل تغييراته وتجاهل تعديلاتك غير المحفوظة، أو \"إلغاء\" لمواصلة التعديل (سيؤدي حفظك التالي إلى الكتابة فوق تغييراته).</string>
+    <string name="insulin_edit_target_gone">تمت إزالة هذا الأنسولين من مكان آخر، لذا تعذر حفظ تعديلك. تمت إعادة تحميل القائمة.</string>
+    <string name="insulin_activation_applied">تم تطبيق تفعيل الأنسولين</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">جاري التطبيق…</string>
+    <string name="clientcontrol_pending_working_text">في انتظار تأكيد الجهاز الرئيسي…</string>
+    <string name="clientcontrol_pending_rejected_title">لم يتم التطبيق</string>
+    <string name="clientcontrol_pending_failed_format">تعذر إتمام %1$s.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">تم التطبيق جزئيا</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">تم تطبيق %1$s، ولكن تعذر تطبيق بعض الإجراءات.\nتحقق من الحالة النشطة.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">تعذر التأكيد</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">تم إرسال %1$s، ولكن لم يصل أي تأكيد.\n%2$s\nسيظهر هنا إذا/عندما يقوم الجهاز الرئيسي بتطبيقه.</string>
+    <string name="clientcontrol_pending_stop_waiting">إيقاف الانتظار</string>
+    <string name="a11y_add_new_insulin">إضافة أنسولين جديد</string>
+    <string name="a11y_delete_current_insulin">حذف الأنسولين الحالي</string>
+    <string name="load_peak_from">تحميل الذروة من</string>
+    <string name="cannot_delete_last_insulin">لا يمكن حذف الأنسولين الأخير</string>
+    <string name="cannot_delete_active_insulin">لا يمكن حذف الأنسولين النشط</string>
+    <string name="reuse_profile_pct_hours">إعادة استخدام %1$d%% لمدة %2$dس</string>
+    <string name="percentage_label">النسبة المئوية</string>
     <!-- LoopDialog -->
+    <string name="disconnectpump">فصل المضخة</string>
+    <string name="resume">استئناف</string>
+    <string name="reconnect">إعادة توصيل المضخة</string>
+    <string name="duration15m">15 دقيقة</string>
+    <string name="duration30m">30 دقيقة</string>
+    <string name="duration1h">ساعة واحدة</string>
+    <string name="duration2h">ساعتان</string>
+    <string name="duration3h">3 ساعات</string>
+    <string name="duration10h">10 ساعات</string>
     <!-- WizardDialog -->
+    <string name="missing_carbs">ينقص %1$d غرام</string>
+    <string name="wizard_percentage_and_correction" comment="Bolus wizard result, shown after the amounts when both are changed. %1$s=percentage, %2$s=correction with its sign and unit. Example: 71% +1.00 U">%1$s %2$s</string>
+    <string name="wizard_calc_with_isf" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin sensitivity factor used. Example: BG (ISF: 3.0)">%1$s (معامل الحساسية ISF: %2$s)</string>
+    <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (معامل الكربوهيدرات IC: %2$s)</string>
+    <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (معامل الكربوهيدرات IC: %3$s)</string>
+    <string name="wizard_carbs_type_bread_desc">كربوهيدرات فورية 100%، بدون كربوهيدرات ممتدة</string>
+    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">تم تخفيض الكربوهيدرات بنسبة %1$d%%، وإضافة كربوهيدرات ممتدة بنسبة %2$d%% مؤجلة %3$d دقيقة وموزعة على %4$d ساعة</string>
+    <string name="wizard_include_info">انقر للتضمين/الاستبعاد من الحساب:\n• سكر الدم — قراءة سكر الدم (مفعل عند البداية)\n• الهدف المؤقت — الهدف المؤقت (مفعل عند البداية)\n• الاتجاه — اتجاه سكر الدم (يتم تذكر الحالة الأخيرة)\n• الأنسولين النشط — الأنسولين الموجود في الجسم (مفعل عند البداية)\n• الكربوهيدرات المتبقية — الكربوهيدرات الموجودة في الجسم (يتم تذكر الحالة الأخيرة)</string>
     <!-- Treatments -->
+    <string name="no_records_available">لا توجد سجلات متاحة</string>
+    <string name="treatments_iob_label_string">الأنسولين النشط IOB:</string>
+    <string name="carbs_and_bolus">الكربوهيدرات والجرعة</string>
+    <string name="show_invalidated">إظهار الملغاة</string>
+    <string name="hide_invalidated">إخفاء الملغاة</string>
+    <string name="careportal_remove_started_events">إزالة الإدخالات التي بدأها AAPS</string>
+    <string name="user_entry">إدخال المستخدم</string>
+    <string name="clone_label">نسخ</string>
+    <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">رسم بياني لسكر الدم. القيم الأخيرة %1$s. %2$s. %3$s</string>
+    <string name="a11y_show_controls" comment="Screen-reader action of the overview that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">إظهار عناصر التحكم</string>
+    <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">الإشعارات: %1$d</string>
+    <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">لا يوجد هدف مؤقت، يتم استخدام هدف الملف الشخصي</string>
+    <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">تم التعديل بواسطة الحلقة</string>
+    <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s عند الساعة %2$s</string>
+    <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">التغير %1$s</string>
+    <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">قراءة قديمة</string>
+    <string name="a11y_bg_age_old" comment="Screen-reader text for the age of a glucose reading that is too old to trust. %1$s=the age, %2$s=a11y_bg_old_reading. Example: (12 min), old reading">%1$s، %2$s</string>
+    <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">رسم بياني لسكر الدم. القيم الأخيرة %1$s</string>
+    <string name="a11y_predictions" comment="Screen-reader description of the predicted glucose curves, which are drawn on the graph and cannot be read otherwise. %1$s=one sentence per prediction, already joined. Example: Predictions. COB prediction rises to 11.2 mmol/l. IOB prediction falls to 4.8 mmol/l.">التنبؤات. %1$s</string>
+    <string name="a11y_prediction_rises" comment="One predicted curve that ends higher than the current glucose. %1$s=the name of the prediction, %2$s=the highest value it reaches, with its unit. Example: COB prediction rises to 11.2 mmol/l">ترتفع %1$s إلى %2$s.</string>
+    <string name="a11y_prediction_falls" comment="One predicted curve that ends lower than the current glucose. %1$s=the name of the prediction, %2$s=the lowest value it reaches, with its unit. Example: IOB prediction falls to 4.8 mmol/l">تنخفض %1$s إلى %2$s.</string>
+    <string name="a11y_prediction_flat" comment="One predicted curve that stays level. %1$s=the name of the prediction, %2$s=the value it holds, with its unit. Example: Zero temp prediction stays at 6.1 mmol/l">تبقى %1$s عند %2$s.</string>
+    <string name="a11y_prediction_name_iob" comment="Spoken name of the prediction from insulin on board. IOB is the term AAPS users know.">تنبؤ الأنسولين النشط IOB</string>
+    <string name="a11y_prediction_name_cob" comment="Spoken name of the prediction from carbs on board. COB is the term AAPS users know.">تنبؤ الكربوهيدرات المتبقية COB</string>
+    <string name="a11y_prediction_name_acob" comment="Spoken name of the prediction from already absorbed carbs, shown by the AMA algorithm only.">تنبؤ الكربوهيدرات الممتصة</string>
+    <string name="a11y_prediction_name_uam" comment="Spoken name of the prediction for a meal the user did not enter. UAM is the term AAPS users know.">تنبؤ الوجبات غير المعلنة UAM</string>
+    <string name="a11y_prediction_name_zt" comment="Spoken name of the prediction for what happens with no insulin at all, the zero-temp curve.">تنبؤ المعدل المؤقت الصفري</string>
+    <string name="a11y_badge_attention" comment="Screen-reader state of a navigation button that carries a warning badge. On screen the badge is a dot or an exclamation mark, which a screen reader cannot see at all.">إجراء مطلوب</string>
+    <string name="a11y_objectives_progress" comment="Screen-reader state of the Objectives navigation button, whose badge shows progress. %1$d=objectives finished, %2$d=objectives in total. Example: 9 of 10 done">تم إنجاز %1$d من %2$d</string>
+    <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">تنفيذ</string>
+    <string name="add_new_profile">إضافة ملف شخصي جديد</string>
+    <string name="edit_label">تعديل</string>
+    <string name="activate_label">تفعيل</string>
+    <string name="activate_profile">تفعيل الملف الشخصي</string>
+    <string name="remove_label">إزالة</string>
+    <string name="active_profile_indicator">نشط</string>
+    <string name="confirm_remove_profile">إزالة الملف الشخصي \"%1$s\"؟</string>
+    <string name="confirm_clone_profile">استنساخ الملف الشخصي \"%1$s\"؟</string>
+    <string name="profile_no_longer_exists">تغيرت قائمة الملفات الشخصية في هذه الأثناء — يرجى المحاولة مرة أخرى</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile_type">نوع الملف الشخصي</string>
+    <string name="profile_parameters">معلمات الملف الشخصي</string>
+    <string name="active_profile">الملف الشخصي النشط</string>
+    <string name="available_profiles">الملفات الشخصية المتاحة</string>
+    <string name="profile_switches">تبديلات الملف الشخصي</string>
+    <string name="basal_pct_from_tdd_label">نسبة الأنسولين القاعدي من إجمالي الجرعة اليومية %</string>
+    <string name="selected_profile">المحدد:</string>
+    <string name="comparation">مقارنة</string>
+    <string name="profile_tab_1">الملف الشخصي 1</string>
+    <string name="profile_tab_2">الملف الشخصي 2</string>
+    <string name="motol_default_profile">الملف الشخصي الافتراضي</string>
+    <string name="current_profile">الملف الشخصي الحالي</string>
+    <string name="available_profile">الملف الشخصي المتاح</string>
+    <string name="format_with_tdd">العمر: %1$d إجمالي الجرعة اليومية: %2$.0f وحدة</string>
+    <string name="format_with_tdd_and_pct">العمر: %1$d إجمالي الجرعة اليومية: %2$.0f وحدة %3$d%%</string>
+    <string name="format_with_weight">العمر: %1$d الوزن: %2$.0f كجم</string>
+    <string name="dpv_default_profile">الملف الشخصي الافتراضي DPV</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
+    <string name="overview_edit_quickwizard_button_text">نص الزر</string>
+    <string name="quick_wizard_mode_wizard">المعالج</string>
+    <string name="quick_wizard_mode_insulin">الأنسولين</string>
+    <string name="quick_wizard_mode_carbs">الكربوهيدرات</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">الأنسولين النشط الموجب فقط</string>
+    <string name="overview_edit_quickwizard_superbolus">جرعة فائقة</string>
     <!--    History browser-->
+    <string name="history_now">الآن</string>
+    <string name="a11y_history_previous_window">النافذة السابقة</string>
+    <string name="a11y_history_next_window">النافذة التالية</string>
+    <string name="additional_ecarbs">إضافة كربوهيدرات ممتدة</string>
+    <string name="calculator_options">خيارات الحاسبة</string>
+    <string name="use_bg">استخدام سكر الدم</string>
+    <string name="use_cob">استخدام الكربوهيدرات المتبقية COB</string>
+    <string name="use_iob">استخدام الأنسولين النشط IOB</string>
+    <string name="use_trend">استخدام الاتجاه</string>
+    <string name="trend_all">الكل</string>
+    <string name="trend_positive_only">الموجب فقط</string>
+    <string name="trend_negative_only">السالب فقط</string>
+    <string name="use_temp_target">استخدام الهدف المؤقت</string>
+    <string name="use_alarm">استخدام الإنذار</string>
+    <string name="device_selection">تحديد الجهاز</string>
+    <string name="show_on_phone">العرض على الهاتف</string>
+    <string name="show_on_watch">العرض على الساعة</string>
+    <string name="ecarbs_additional">كربوهيدرات إضافية</string>
+    <string name="valid_from_to">النطاق الزمني الصالح</string>
+    <string name="carb_time">وقت الكربوهيدرات</string>
+    <string name="save_changes_question">حفظ التغييرات على هذا الإدخال؟</string>
+    <string name="wizard_no_insulin_required">لا يلزم أنسولين</string>
+    <string name="carbs_constraint_violation">الكربوهيدرات محدودة بواسطة القيود</string>
+    <string name="insulin_constraint_violation">الأنسولين محدود بواسطة القيود</string>
+    <string name="confirm_treatment">يرجى تأكيد العلاج</string>
+    <string name="recalculate">إعادة الحساب</string>
     <!--    Widget-->
+    <string name="use_black_color">استخدام اللون الأسود</string>
+    <string name="widget_configuration">تهيئة الأداة</string>
+    <string name="until_changed">حتى يتم التغيير</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">الصلاحيات مطلوبة</string>
+    <string name="permission_sheet_subtitle">بعض الصلاحيات مطلوبة لكي يعمل التطبيق بشكل صحيح</string>
+    <string name="permission_grant">منح</string>
+    <string name="permission_change">تغيير</string>
+    <string name="permission_denied_go_to_settings">تم رفض الإذن بشكل دائم. يرجى تفعيله في إعدادات التطبيق.</string>
+    <string name="permission_open_settings">الإعدادات</string>
+    <string name="permission_directory_picker_error">تعذر تشغيل منتقي المجلدات. عادة ما تكون مشكلة في أندرويد أو Family Link.</string>
+    <string name="permission_nav_label">الصلاحيات</string>
     <!--    TDD Cycle Pattern -->
+    <string name="stats_tab_cycle" comment="Short tab label on the Statistics screen. The tab shows daily insulin totals laid over 28-day cycles (TDD Cycle Pattern).">الدورة</string>
+    <string name="cycle_offset">إزاحة الدورة</string>
+    <string name="raw_tdd">إجمالي الجرعة اليومية الخام</string>
+    <string name="cleaned_tdd">إجمالي الجرعة اليومية المنظفة</string>
+    <string name="cleaned_tdd_explanation">إجمالي الجرعة اليومية مطروحا منها أنسولين الكربوهيدرات.</string>
+    <string name="cycle_lines_legend">الدورات الفردية</string>
+    <string name="cycles_found">%1$d دورة (%2$d يوم)</string>
+    <string name="cycle_day1_date">اليوم الأول = %1$s</string>
+    <string name="calculation_in_progress_percent">جاري الحساب… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">بيانات غير كافية (يلزم ما لا يقل عن 56 يوما لدورتين)</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>كلاهما</item>
+        <item>موجب فقط</item>
+        <item>سالب فقط</item>
+    </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">الإجراءات المحددة</string>
+    <string name="a11y_quick_launch_add" comment="Screen-reader label of the button that adds an action to the QuickLaunch bar. %1$s=the action name. Example: Add Bolus wizard">إضافة %1$s</string>
+    <string name="a11y_quick_launch_remove" comment="Screen-reader label of the button that removes an action from the QuickLaunch bar. %1$s=the action name. Example: Remove Bolus wizard">إزالة %1$s</string>
+    <string name="quick_launch_no_dynamic_items">لا توجد عناصر متاحة</string>
+    <string name="quick_launch_category_treatment">العلاج</string>
+    <string name="quick_launch_category_care">بوابة الرعاية</string>
+    <string name="quick_launch_category_profile">الملف الشخصي</string>
+    <string name="quick_launch_category_temp_target">إعدادات الهدف المؤقت المسبقة</string>
+    <string name="quick_launch_category_quick_wizard">المعالج السريع</string>
+    <string name="quick_launch_category_automation">الأتمتة</string>
+    <string name="quick_launch_all_selected">تم تحديد جميع العناصر</string>
+    <string name="quick_launch_no_quick_wizard">أضف مدخلات المعالج السريع لاستخدامها هنا</string>
+    <string name="quick_launch_no_automation">أنشئ إجراءات أتمتة المستخدم لاستخدامها هنا</string>
+    <string name="quick_launch_no_tt_presets">أضف إعدادات الهدف المؤقت المسبقة لاستخدامها هنا</string>
+    <string name="quick_launch_no_profiles">أنشئ ملفات شخصية في الملف الشخصي المحلي لاستخدامها هنا</string>
+    <string name="quick_launch_edit_profile_preset">تعديل إعداد الملف الشخصي المسبق</string>
+    <string name="quick_launch_profile_permanent">دائم</string>
+    <string name="select_arrow">تحديد السهم</string>
+    <string name="loop_accept_nav_label">الحلقة</string>
+    <string name="loop_accept_set_basal_question">قبول معدل أنسولين قاعدي مؤقت جديد:</string>
+    <string name="loop_accept_perform">تنفيذ</string>
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">معطل</string>
+    <string name="widget_rm_suspended">معلق</string>
+    <string name="widget_rm_resume">استئناف</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">المستشعر لا يزال في مرحلة الإحماء. المعايرة متاحة في %1$s.</string>
+    <string name="cal_precheck_no_session">لا توجد جلسة مستشعر نشطة.</string>
+    <string name="cal_precheck_no_pair">لا توجد قراءة من جهاز المراقبة المستمرة للغلوكوز (CGM) في آخر 10 دقائق. تحقق من اتصال المستشعر.</string>
+    <string name="cal_precheck_delta_too_high">يتغير سكر الدم بسرعة كبيرة (Δ %1$s %3$s لكل 5 دقائق، الحد %2$s). انتظر حتى يستقر.</string>
+    <string name="cal_precheck_mark_sensor_change">تسجيل تغيير المستشعر</string>
+    <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s، %2$s</string>
 </resources>

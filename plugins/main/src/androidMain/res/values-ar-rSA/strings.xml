@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="nav_history_browser">متصفح السجل</string>
+    <string name="sensor_label">المستشعر</string>
+    <string name="insulin_label">الأنسولين</string>
+    <string name="pb_label">بطارية المضخة</string>
+    <string name="cannula">القنية</string>
+    <string name="patch_pump">المضخة اللاصقة</string>
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
+    <string name="basal_shortname">القاعدي</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
+    <string name="description_persistent_notification">يعرض إشعارا مستمرا مع نظرة عامة مختصرة لما تفعله الحلقة</string>
+    <string name="old_data">بيانات قديمة</string>
+    <string name="notification_iob_short">%1$.1f وحدة</string>
 </resources>

@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
+    <string name="description_source_ns_client">تنزيل بيانات سكر الدم من Nightscout</string>
+    <string name="source_xdrip">xDrip+ BG</string>
+    <string name="description_source_xdrip">تلقي قراءات سكر الدم من تطبيق xDrip+ والتطبيقات المتوافقة (مثل Juggluco وغيرها).</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="description_source_dexcom">تلقي قراءات سكر الدم من تطبيق \"بناء تطبيق Dexcom الخاص بك\".</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">تلقي قراءات سكر الدم من تطبيق Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">تلقي قراءات سكر الدم من برنامج 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">تلقي قراءات سكر الدم من تطبيق Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">تلقي القراءات من تطبيق Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">تلقي القراءات من تطبيق Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="description_source_tomato">تلقي قراءات سكر الدم من تطبيق Tomato (جهاز MiaoMiao)</string>
+    <string name="random_bg">سكر دم عشوائي</string>
+    <string name="description_source_random_bg">إنشاء بيانات سكر دم عشوائية (وضع العرض التجريبي فقط)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
+    <string name="description_source_patched_syai_tag_app">تلقي بيانات سكر الدم من تطبيق Syai/Ottai.</string>
     <!-- Patched SI App -->
+    <string name="patched_si_app">تطبيق SI</string>
+    <string name="description_source_patched_si_app">تلقي بيانات سكر الدم من تطبيق Sibionic SI المعدل أو من تطبيق Sibionics.</string>
     <!-- Patched Sino App -->
+    <string name="patched_sino_app">تطبيق Sino</string>
+    <string name="description_source_patched_sino_app">تلقي بيانات سكر الدم من تطبيق Sino المعدل.</string>
     <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">تلقي قراءات سكر الدم من تطبيق Instara.</string>
     <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">طلب البيانات التاريخية لتطبيق Instara</string>
+    <string name="pref_summary_instara_history_request">طلب البيانات التاريخية التي قد تكون مفقودة في الخلفية</string>
     <!-- Notification Reader -->
+    <string name="notification_reader">قارئ الإشعارات</string>
+    <string name="description_source_notification_reader">قراءة قيم سكر الدم من الإشعارات الواردة من تطبيقات المراقبة المستمرة للغلوكوز (CGM) الرسمية (Dexcom، Medtronic، Eversense، إلخ).</string>
     <!-- Permission rationales -->
+    <string name="permission_dexcom_title">جهاز المراقبة المستمرة للغلوكوز Dexcom</string>
+    <string name="permission_dexcom_description">يحتاج التطبيق إلى إذن لتلقي بيانات المراقبة المستمرة للغلوكوز (CGM) من تطبيق Dexcom</string>
+    <string name="permission_notification_listener_title">الوصول إلى الإشعارات</string>
+    <string name="permission_notification_listener_description">مطلوب لقراءة قيم سكر الدم من إشعارات تطبيق المراقبة المستمرة للغلوكوز (CGM)</string>
+    <string name="aidex">تطبيق MicroTech للمراقبة المستمرة للغلوكوز (CGM)</string>
+    <string name="description_source_aidex">تلقي قراءات المراقبة المستمرة للغلوكوز (CGM) من LinX، LinX vista، Equil G. Smart 2، Diaexpert 2 وغيرها.</string>
+    <string name="aidex_sensor_expired">انتهت صلاحية المستشعر، يرجى استبداله بمستشعر جديد</string>
+    <string name="aidex_sensor_error">خطأ في المستشعر، يرجى التحقق من حالة المستشعر</string>
+    <string name="aidex_sensor_stabilizing">المستشعر قيد الاستقرار، يرجى الانتظار…</string>
+    <string name="aidex_sensor_replace">يلزم استبدال المستشعر، يرجى استبداله بمستشعر جديد في أقرب وقت ممكن</string>
+    <string name="aidex_signal_lost">فقدت إشارة المستشعر، يرجى التحقق من الاتصال</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">قراءة مكررة</string>
 </resources>

@@ -1,2 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="unsupported_action_in_pump">إجراء غير مدعوم في المضخة. استخدم واجهة المستخدم الخاصة بـ AAPS فقط!</string>
+    <string name="waiting_1_minute">في انتظار %1$d/%2$d ثانية قبل محاولة الاتصال الجديدة</string>
+</resources>

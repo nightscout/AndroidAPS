@@ -12,7 +12,7 @@
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Попытка выполнить сопряжение с новым Pod и заполнить его.\n\nКогда процесс инициализации успешно завершится, нажмите <b>Далее</b>.</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_failed_to_connect">Не удалось подключиться</string>
-    <string name="omnipod_dash_found_too_many_pods">Найдено слишком много подов</string>
+    <string name="omnipod_dash_found_too_many_pods">Найдено слишком много Pod</string>
     <string name="omnipod_dash_scan_failed">Ошибка сканирования</string>
     <string name="omnipod_dash_generic_error">Общая ошибка: %1$s</string>
     <string name="omnipod_dash_connection_lost">Соединение потеряно</string>

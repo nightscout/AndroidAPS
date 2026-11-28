@@ -1,12 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Dialogs-->
+    <string name="confirmation">Megerősítés</string>
     <!--    Events-->
+    <string name="bolus_delivering">%1$.2f E beadása</string>
+    <string name="bolus_delivered_so_far">%1$.2f E / %2$.2f E beadva</string>
+    <string name="bolus_delivered_successfully">%1$.2f E bólus sikeresen beadva</string>
     <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">A pumpameghajtó megváltozott.</string>
     <!--    DateUtil-->
+    <string name="minago">%1$d perce</string>
+    <string name="secago">%1$d mp-e</string>
+    <string name="min_plus">(+%1$d p)</string>
+    <string name="sec_plus">(+%1$d mp)</string>
     <string name="minago_long">%1$d perccel ezelőtt</string>
+    <string name="hoursago">%1$.1f órája</string>
     <string name="days_ago">%1$.1f napja</string>
     <string name="days_ago_round">%1$.0f napja</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">%1$s nap %2$s órája</item>
+        <item quantity="other">%1$s nap %2$s órája</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">%1$s órája</item>
+        <item quantity="other">%1$s órája</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">az imént</item>
+        <item quantity="other">%1$s perce</item>
+    </plurals>
+    <string name="seconds_ago">néhány másodperce</string>
     <string name="in_days">%1$.0f napon belül</string>
     <string name="in_days_round">%1$.0f napon belül</string>
     <string name="shorthour">ó</string>
@@ -14,44 +37,121 @@
     <string name="hours">óra</string>
     <string name="unit_minutes">perc</string>
     <string name="shortminute">p</string>
+    <string name="time_remaining_h_m">még %1$d ó %2$d p</string>
+    <string name="time_remaining_m">még %1$d p</string>
     <string name="later_today">Később még ma</string>
     <string name="tomorrow">Holnap</string>
     <string name="today">Ma</string>
     <string name="yesterday">Tegnap</string>
+    <string name="values_with_dash" comment="Two values with a dash between them, for a range or a day and its date. Example: 6:00 - 10:00, or Today - 10/23/2026">%1$s - %2$s</string>
+    <string name="values_with_comma" comment="Two parts of one text with a comma between them. Example: BG: 7.5, Delta: +0.3">%1$s, %2$s</string>
+    <string name="values_with_slash" comment="Two values with a slash between them. Example: 0.01 / 0.05">%1$s / %2$s</string>
+    <string name="value_with_detail" comment="A value and a detail about it in brackets. Example: 0.85 U/h (STD), or 20 g (-15 min)">%1$s (%2$s)</string>
+    <string name="time_frame_hours_minutes" comment="A duration, short. h=hours, the mark after the minutes means minutes. %1$d=hours, %2$d=minutes. Example: 1h 30'">%1$dó %2$d\'</string>
+    <string name="time_frame_minutes" comment="A duration in minutes, short. The mark after the number means minutes. %1$d=minutes. Example: 30'">%1$d\'</string>
+    <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
     <!-- Rx -->
     <string name="connecting_for">Csatlakozás %1$d másodpercig</string>
     <string name="handshaking">Összekapcsolódás</string>
     <string name="connected">Kapcsolódva</string>
+    <string name="authorized">Hitelesítve</string>
     <string name="disconnecting">Kapcsolat bontása</string>
     <string name="waiting_for_disconnection">Várakozás a kapcsolat bontására</string>
     <!-- Custom Watchface -->
     <string name="metadata_label_watchface_created_at">Létrehozva ekkor: %1$s</string>
     <string name="metadata_label_watchface_author">Szerző: %1$s</string>
     <string name="metadata_label_watchface_name">Név: %1$s</string>
-    <string name="metadata_wear_import_filename">Fájl név: %1$s</string>
+    <string name="metadata_wear_import_filename">Fájlnév: %1$s</string>
     <string name="metadata_label_plugin_version">Plugin verzió: %1$s</string>
     <string name="metadata_label_watchface_name_version">Név: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Infó: %1$s</string>
     <string name="pref_show_iob">IOB megjelenítése</string>
     <string name="pref_show_detailed_iob">Részletes IOB mutatása</string>
     <string name="pref_show_cob">COB megjelenítése</string>
     <string name="pref_show_delta">Különbség megjelenítése</string>
     <string name="pref_show_detailed_delta">Részletes különbség megjelenítése</string>
     <string name="pref_show_avgdelta">Átlagos különbség megjelenítése</string>
+    <string name="pref_show_tempTarget">Átmeneti célérték megjelenítése</string>
+    <string name="pref_show_reservoir_level">Tartályszint megjelenítése</string>
     <string name="pref_show_phone_battery">Telefon akkumulátor állapot megjelenítése</string>
     <string name="pref_show_rig_battery">Rig akkumulátor állapot megjelenítése</string>
     <string name="pref_show_basal_rate">Bázisütem megjelenítése</string>
     <string name="pref_show_loop_status">Loop állapot megjelenítése</string>
     <string name="pref_show_bg">VC megjelenítése</string>
     <string name="pref_show_bgi">BGI megjelenítése</string>
-    <string name="pref_show_direction_arrow">Trend nyíl megjelenítése</string>
+    <string name="pref_show_direction_arrow">Trendnyíl megjelenítése</string>
+    <string name="pref_show_ago">Eltelt idő megjelenítése</string>
+    <string name="pref_show_week_number">Hét számának megjelenítése</string>
     <string name="pref_show_date">Dátum megjelenítése</string>
+    <string name="pref_show_seconds">Másodpercek megjelenítése</string>
+    <string name="pref_show_complication1">Komplikáció 1 megjelenítése</string>
+    <string name="pref_show_complication2">Komplikáció 2 megjelenítése</string>
+    <string name="pref_show_complication3">Komplikáció 3 megjelenítése</string>
+    <string name="pref_show_complication4">Komplikáció 4 megjelenítése</string>
+    <string name="pref_show_complication5">Komplikáció 5 megjelenítése</string>
+    <string name="default_custom_watchface_comment">Alapértelmezett számlap, az EXPORT WATCHFACE gombbal sablont készíthet</string>
+    <string name="default_custom_watchface_external_comment">Alapértelmezett számlap külső nézetekkel követőknek, az EXPORT WATCHFACE gombbal sablont készíthet</string>
+    <string name="wear_default_watchface">Alapértelmezett számlap</string>
+    <string name="wear_more_watchfaces">További számlapok</string>
+    <string name="temp_basal_absolute_rate">%1$.2f E/ó @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">K %1$.2f E/ó @%2$s %3$d/%4$d perc</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">Az alkalmazásnak Bluetooth-engedély kell a pumpával való kommunikációhoz</string>
     <!-- Insulin -->
+    <string name="unknown">Ismeretlen</string>
+    <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="ultra_rapid_oref">Fiasp</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Csúcsidő [perc]</string>
     <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u20">U20</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">mg/dl/E</string>
+    <string name="profile_isf_units_mmol">mmol/l/E</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
     <string name="format_carbs">%1$d g</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="carbs">Szénhidrát</string>
+    <string name="alarminxmin">Riasztás %1$d perc múlva</string>
+    <string name="pumpsuspended">Pumpa felfüggesztve</string>
+    <string name="loopsuspended">Loop felfüggesztve</string>
+    <string name="pump_disconnected">Pumpa leválasztva</string>
+    <string name="basalprofilenotaligned">A bázisértékek nem egész órához igazodnak: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Bázisérték a legkisebb támogatott értékre cserélve: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Bázisérték a legnagyobb támogatott értékre cserélve: %1$s</string>
     <string name="profile_ins_units_per_hour">E/ó</string>
     <string name="profile_carbs_per_unit">g/E</string>
+    <string name="mins">%1$d perc</string>
+    <string name="record">Rögzítés</string>
     <string name="bolus">Bólus</string>
+    <string name="uel_extended_carbs">ELNYÚJTOTT SZÉNHIDRÁT</string>
+    <string name="profile_low_target">Profil alsó célértéke</string>
+    <string name="profile_high_target">Profil felső célértéke</string>
+    <string name="profile_dia">Profil DIA értéke</string>
+    <string name="profile_sensitivity_value">Profil érzékenységi értéke</string>
+    <string name="profile_carbs_ratio_value">Profil szénhidrátarány-értéke</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f kívül esik a szigorú korlátokon</string>
+    <string name="basal_value">Bázisérték</string>
+    <string name="cobvsiob">COB és IOB</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Lassú szénhidrát-felszívódás észlelve: az idő %1$d%%-ában. Ellenőrizze újra a számítást. A COB túlbecsült lehet, így több inzulin adható be !!!!!</string>
+    <string name="bolus_constraint_applied_warn">Bólus korlát alkalmazva: %1$.2f E helyett %2$.2f E</string>
+    <string name="bolus_recorded_only">A bólus csak rögzítve lesz (a pumpa nem adja be)</string>
+    <string name="advisoralarm">Riasztás, amikor ideje enni</string>
+    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eCarbs %1$d g / %2$d ó (+%3$d perc)</string>
     <string name="format_insulin_units">%1$.2f E</string>
+    <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
+    <string name="carbs_with_time_later" comment="Carbs eaten later. %1$s=carbs with unit, %2$s=minutes from now, with unit. Example: 20 g (+15 min)">%1$s (+%2$s)</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">A(z) %1$s plugin nem indult el, és lehet, hogy nem működik. Indítsa újra az AAPS-t.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">A(z) %1$s plugin hibába ütközött, és egy része leállt. Indítsa újra az AAPS-t.</string>
 </resources>

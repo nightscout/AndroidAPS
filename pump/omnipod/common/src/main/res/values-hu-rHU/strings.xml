@@ -1,27 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod - Pod Management -->
+    <string name="omnipod_common_pod_management_button_activate_pod">Pod aktiválása</string>
+    <string name="omnipod_common_pod_management_button_deactivate_pod">Pod deaktiválása</string>
+    <string name="omnipod_common_pod_management_button_discard_pod">Pod elvetése</string>
+    <string name="omnipod_common_pod_management_discard_pod_confirmation">Ha elveti a Pod-ot, többé nem tud vele kommunikálni. Ezt csak akkor tegye, ha a Pod-dal minden kommunikáció tartósan sikertelen. Ha még tud kommunikálni a Pod-dal, használja a <b>Pod deaktiválása</b> lehetőséget.\n\nHa folytatni szeretné, feltétlenül vegye le a Pod-ot a testéről!</string>
+    <string name="omnipod_common_pod_management_button_play_test_beep">Tesztsípolás lejátszása</string>
+    <string name="omnipod_common_pod_management_button_pod_history">Pod-előzmények</string>
     <!-- Omnipod - Error -->
+    <string name="omnipod_common_error_pod_not_attached">Nincs aktív Pod</string>
+    <string name="omnipod_common_error_set_basal_failed">A bázisprofil beállítása sikertelen.</string>
+    <string name="omnipod_common_error_bolus_did_not_succeed">A bólus nem sikerült.</string>
+    <string name="omnipod_common_error_failed_to_set_profile_empty_profile">A bázisprofil beállítása sikertelen: üres profil érkezett. Aktiválja a bázisprofilját.</string>
+    <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Nincs aktív bázisprofil. Aktiválja a bázisprofilját.</string>
+    <string name="omnipod_common_error_unsupported_custom_command">Nem támogatott egyéni parancs: %1$s</string>
+    <string name="omnipod_common_error_failed_to_refresh_status">Az állapot frissítése sikertelen</string>
+    <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Az állapot frissítése sikertelen indításkor</string>
+    <string name="omnipod_common_error_failed_to_silence_alerts">A riasztások némítása sikertelen</string>
+    <string name="omnipod_common_error_failed_to_suspend_delivery">A beadás felfüggesztése sikertelen</string>
+    <string name="omnipod_common_error_failed_to_set_time">Az idő beállítása sikertelen</string>
+    <string name="omnipod_common_error_failed_to_resume_delivery">A beadás folytatása sikertelen</string>
+    <string name="omnipod_common_error_failed_to_initialize_pod">A Pod inicializálása sikertelen</string>
+    <string name="omnipod_common_error_failed_to_insert_cannula">A kanül behelyezése sikertelen</string>
+    <string name="omnipod_common_error_pod_fault_activation_time_exceeded">A Pod aktiválási ideje lejárt. Ez a Pod már nem aktiválható.</string>
+    <string name="omnipod_common_error_failed_to_verify_activation_progress">Az aktiválás előrehaladása nem ellenőrizhető. Próbálja újra.</string>
+    <string name="omnipod_common_error_pod_suspended">Pod felfüggesztve</string>
+    <string name="omnipod_common_error_failed_to_play_test_beep">A tesztsípolás lejátszása sikertelen</string>
+    <string name="omnipod_common_error_time_out_of_sync">A Pod ideje nincs szinkronban. Frissítse az időt a pumpa képernyőn.</string>
+    <string name="omnipod_common_error_unexpected_exception">Váratlan hiba történt. Kérjük, jelentse! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
+    <string name="omnipod_common_confirmation_expiration_alerts_updated">A riasztások beállítása frissítve a Pod-ban.</string>
+    <string name="omnipod_common_confirmation_time_on_pod_updated">A Pod ideje frissítve.</string>
     <!-- Omnipod - Overview -->
+    <string name="omnipod_common_overview_button_set_time">Idő beállítása</string>
+    <string name="omnipod_common_overview_button_suspend_delivery">Felfüggesztés</string>
+    <string name="omnipod_common_overview_button_resume_delivery">Beadás folytatása</string>
+    <string name="omnipod_common_overview_button_silence_alerts">Riasztások némítása</string>
+    <string name="omnipod_common_overview_pod_status">Pod-állapot</string>
+    <string name="omnipod_common_overview_total_delivered">Összesen beadva</string>
+    <string name="omnipod_common_overview_pod_unique_id">Egyedi azonosító</string>
+    <string name="omnipod_common_overview_lot_number">LOT-szám</string>
+    <string name="omnipod_common_overview_pod_sequence_number">Sorszám</string>
+    <string name="omnipod_common_overview_pod_expiry_date">Pod lejárata</string>
+    <string name="omnipod_common_overview_last_connection">Utolsó kapcsolat</string>
+    <string name="omnipod_common_overview_last_bolus">Utolsó bólus</string>
+    <string name="omnipod_common_overview_temp_basal_rate">Átmeneti bázisütem</string>
+    <string name="omnipod_common_overview_base_basal_rate">Alap bázisütem</string>
+    <string name="omnipod_common_overview_pod_active_alerts">Aktív Pod-riasztások</string>
     <string name="omnipod_common_overview_firmware_version">Firmware verzió</string>
+    <string name="omnipod_common_overview_time_on_pod">Idő a Pod-on</string>
+    <string name="omnipod_common_uncertain">bizonytalan</string>
     <!-- Omnipod - Wizard Base -->
-    <string name="omnipod_common_wizard_exit_confirmation_title">Kilép</string>
+    <string name="omnipod_common_wizard_button_deactivate_pod">Pod deaktiválása</string>
+    <string name="omnipod_common_wizard_exit_confirmation_text">Még nem végzett el minden lépést. Biztosan kilép?</string>
+    <string name="omnipod_common_wizard_exit_confirmation_title">Kilépés</string>
     <!-- Omnipod - Pod Activation Wizard -->
+    <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Pod feltöltése</string>
+    <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Pod inicializálása</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Pod felhelyezése</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Készítse elő a szúrási helyet. Vegye le a Pod tűvédő kupakját és a ragasztó védőfóliáját, majd helyezze fel a Pod-ot a szúrási helyre.\n\nHa a kanül kilóg, nyomja meg a <b>Mégse</b> gombot, és dobja ki a Pod-ot.\n\nNyomja meg a <b>Tovább</b> gombot a kanül behelyezéséhez és a bázisbeadás indításához.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Ha megnyomja az <b>OK</b> gombot, a kanül behelyezése megtörténik. Győződjön meg róla, hogy a Pod-ot felhelyezte a szúrási helyre.</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Kanül behelyezése</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">A kezdeti bázisprofil beállítása és a kanül behelyezése folyamatban.\n\nHa a kanül behelyezése sikerült, nyomja meg a <b>Tovább</b> gombot.</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pod aktiválva</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Az új Pod most aktív.\n\nA bázisprofil be van programozva, és a kanül be van helyezve.\n\nEllenőrizze, hogy a kanül megfelelően van-e behelyezve, és cserélje le a Pod-ot, ha úgy gondolja, hogy nem.</string>
     <!-- Omnipod - Pod Deactivation Wizard -->
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Pod deaktiválása</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Nyomja meg a <b>Tovább</b> gombot a Pod deaktiválásához.\n\n<b>Megjegyzés:</b> ez minden inzulinbeadást felfüggeszt, és deaktiválja a Pod-ot.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">A deaktivált Pod nem használható újra. Deaktiválja most ezt a Pod-ot?</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Pod deaktiválása folyamatban</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">A Pod deaktiválása folyamatban.\n\nHa a deaktiválás sikeresen befejeződött, nyomja meg a <b>Tovább</b> gombot.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod deaktiválva</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">A Pod deaktiválva.\n\nVegye le a Pod-ot a testéről, és adja le újrahasznosításra.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Pod elvetve</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">A Pod állapota elvetve. Az inzulinbeadás nincs felfüggesztve, mert a Pod nem lett megfelelően deaktiválva!\n\nVegye le a Pod-ot a testéről, és adja le újrahasznosításra.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Ha elveti a Pod-ot, többé nem tud vele kommunikálni. Ezt csak akkor tegye, ha a Pod-dal minden kommunikáció tartósan sikertelen. Biztosan elveti a Pod-ot?</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Pod elvetése</string>
     <!-- Omnipod - Preferences -->
+    <string name="omnipod_common_preferences_bolus_beeps_enabled">Sípolás bólusnál engedélyezve</string>
+    <string name="omnipod_common_preferences_basal_beeps_enabled">Sípolás bázisnál engedélyezve</string>
+    <string name="omnipod_common_preferences_smb_beeps_enabled">Sípolás SMB-nél engedélyezve</string>
+    <string name="omnipod_common_preferences_tbr_beeps_enabled">Sípolás átmeneti bázisnál engedélyezve</string>
+    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Beadás felfüggesztése gomb megjelenítése a pumpa képernyőn</string>
+    <string name="omnipod_common_preferences_time_change_enabled">Nyári idő/időzóna észlelése engedélyezve</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled">Lejárati emlékeztető engedélyezve</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Ha engedélyezve van, a Pod sípol, amikor eléri a megadott időt</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Emlékeztető ennyi órával a lejárat előtt (72 óra)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Lejárati riasztás engedélyezve</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Ha engedélyezve van, a Pod sípol, amikor eléri a megadott időt, és 1 órával a leállás előtt</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Riasztás ennyi órával a leállás előtt (80 óra)</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Riasztás alacsony tartályszintnél engedélyezve</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_units">Egységek száma</string>
+    <string name="omnipod_common_preferences_automatically_silence_alerts">Pod-riasztások automatikus némítása</string>
     <string name="omnipod_common_preferences_category_other">Egyéb</string>
+    <string name="omnipod_common_preferences_category_alerts">Riasztások</string>
+    <string name="omnipod_common_preferences_category_confirmation_beeps">Megerősítő sípolások</string>
+    <string name="omnipod_common_preferences_category_notifications">Értesítések</string>
+    <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Hang bizonytalan átmeneti bázis értesítésnél engedélyezve</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Hang bizonytalan SMB-értesítésnél engedélyezve</string>
+    <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Hang bizonytalan bólusértesítésnél engedélyezve</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Hang a felfüggesztett beadás értesítésénél engedélyezve</string>
+    <string name="omnipod_dash_use_bonding">Bluetooth-kötés</string>
+    <string name="omnipod_dash_use_bonding_summary">Csak akkor próbálja ki, ha a Pod nem tud stabil kapcsolatot tartani. A telefon párosítási kéréseket fog mutatni, amelyeket el kell fogadnia. Hagyja kikapcsolva, ha a Pod jól csatlakozik. Android 15 alatt nincs hatása.</string>
     <!-- Omnipod - Pod Status -->
+    <string name="omnipod_common_pod_status_no_active_pod">Nincs aktív Pod</string>
+    <string name="omnipod_common_pod_status_waiting_for_activation">Beállítás folyamatban (Pod aktiválására vár)</string>
+    <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Beállítás folyamatban (kanül behelyezésére vár)</string>
+    <string name="omnipod_common_pod_status_running">Működik</string>
+    <string name="omnipod_common_pod_status_suspended">Felfüggesztve</string>
+    <string name="omnipod_common_pod_status_pod_fault">Pod-hiba</string>
+    <string name="omnipod_common_pod_status_inactive">Inaktív</string>
+    <string name="omnipod_common_pod_status_pod_fault_description">Pod-hiba: %1$03d %2$s</string>
     <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">PDM-értesítés</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Ref: %1$s</string>
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Üres tartály</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">Az inzulinbeadás leállt. Most cserélje le a Podot.</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">Automatikus kikapcsolás</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">Az inzulinbeadás leállt. A PDM és a Pod az elmúlt 4 órában nem kommunikált egymással. Az inzulinbeadás folytatásához most cserélje le a Podot.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">A Pod lejárt</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">Az inzulinbeadás leállt. Most cserélje le a Podot.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Elzáródás észlelve</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">Az inzulinbeadás leállt. Most cserélje le a Podot. Ellenőrizze a vércukrát</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Pod-hiba</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">Az inzulinbeadás leállt. Most cserélje le a Podot.</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_expiration">A Pod hamarosan lejár</string>
+    <string name="omnipod_common_alert_expiration_advisory">A Pod hamarosan lejár</string>
+    <string name="omnipod_common_alert_shutdown_imminent">A leállás nagyon közel van</string>
+    <string name="omnipod_common_alert_low_reservoir">Alacsony tartályszint</string>
+    <string name="omnipod_common_alert_unknown_alert">Ismeretlen riasztás</string>
     <!-- Omnipod - Commands -->
+    <string name="omnipod_common_cmd_initialize_pod">Pod inicializálása</string>
+    <string name="omnipod_common_cmd_insert_cannula">Kanül behelyezése</string>
+    <string name="omnipod_common_cmd_deactivate_pod">Pod deaktiválása</string>
+    <string name="omnipod_common_cmd_set_basal_schedule">Bázisprofil beállítása</string>
     <string name="omnipod_common_cmd_set_bolus">Bólus beállítása</string>
+    <string name="omnipod_common_cmd_cancel_bolus">Bólus megszakítása</string>
+    <string name="omnipod_common_cmd_set_tbr">Átmeneti bázis beállítása</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Átmeneti bázis leállítása</string>
+    <string name="omnipod_common_cmd_discard_pod">Pod elvetése</string>
+    <string name="omnipod_common_cmd_get_pod_status">Pod-állapot lekérése</string>
+    <string name="omnipod_common_cmd_set_time">Idő beállítása</string>
+    <string name="omnipod_common_cmd_configure_alerts">Riasztások beállítása</string>
+    <string name="omnipod_common_cmd_silence_alerts">Riasztások némítása</string>
+    <string name="omnipod_common_cmd_read_pulse_log">Impulzusnapló olvasása</string>
+    <string name="omnipod_common_cmd_suspend_delivery">Beadás felfüggesztése</string>
+    <string name="omnipod_common_cmd_resume_delivery">Beadás folytatása</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Átmeneti bázis leállítása (felhasználó által)</string>
+    <string name="omnipod_common_cmd_get_pod_info">Pod-adatok lekérése</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Látszólagos felfüggesztő átmeneti bázis beállítása</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Látszólagos felfüggesztő átmeneti bázis leállítása</string>
+    <string name="omnipod_common_cmd_split_tbr">Átmeneti bázis felosztása</string>
+    <string name="omnipod_common_cmd_play_test_beep">Tesztsípolás lejátszása</string>
+    <string name="omnipod_common_cmd_unknown_entry">Ismeretlen bejegyzés</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Felfüggesztési riasztások letiltása</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Emlékeztető: párosítás befejezése</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Emlékeztető: beállítás befejezése</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
+    <string name="omnipod_common_moments_ago">Az imént</string>
+    <string name="omnipod_common_less_than_a_minute_ago">Kevesebb mint egy perce</string>
+    <string name="omnipod_common_composite_time">%1$s és %2$s</string>
+    <string name="omnipod_common_time_ago">%1$s ezelőtt</string>
+    <plurals name="omnipod_common_minutes">
+        <item quantity="one">%1$d perc</item>
+        <item quantity="other">%1$d perc</item>
+    </plurals>
     <plurals name="omnipod_common_hours">
         <item quantity="one">%1$d óra</item>
         <item quantity="other">%1$d óra</item>
@@ -30,6 +179,22 @@
         <item quantity="one">%1$d nap</item>
         <item quantity="other">%1$d nap</item>
     </plurals>
+    <plurals name="omnipod_common_pod_alerts">
+        <item quantity="one">Pod-riasztás: %1$s</item>
+        <item quantity="other">Pod-riasztások: %1$s</item>
+    </plurals>
+    <string name="omnipod_common_overview_pod_hard_end_date">Pod végső lejárata</string>
+    <string name="omnipod_common_overview_pod_hard_end_value" comment="%1$s=date and time when the pod stops delivering insulin, %2$s=time left until then. Example: 21.10.2026 18:34 (17m remaining)">%1$s (%2$s)</string>
     <!-- Omnipod - History -->
+    <string name="omnipod_common_history_tbr_value">%1$.2f E/ó, %2$d perc</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f E</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Báziskorrekció</string>
+    <string name="omnipod_common_bolus_type_priming">Légtelenítés</string>
+    <string name="omnipod_common_history_total_delivered">Összesen beadva: %1$.2f E</string>
+    <string name="omnipod_common_failed_to_send">A parancs elküldése sikertelen</string>
+    <string name="omnipod_common_command_not_sent">A parancs nincs elküldve</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">A Pod nem kapta meg a parancsot</string>
+    <string name="omnipod_common_unknown">A parancs állapota ismeretlen</string>
 </resources>

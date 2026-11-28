@@ -1,9 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="executing_right_now">جارٍ التنفيذ الآن</string>
+    <string name="smb_being_delivered">يتم حالياً إعطاء جرعة تصحيحية صغيرة SMB. يرجى المحاولة مجدداً بعد الانتهاء من ذلك.</string>
+    <string name="basal_value_below_minimum">قيمة المعدل القاعدي أقل من الحد الأدنى. لم يتم ضبط الملف الشخصي!</string>
+    <string name="concentration_change_failed_title">فشل تغيير الأنسولين</string>
+    <string name="concentration_change_failed">يوجد الأنسولين الجديد في المضخة، لكن AAPS لم يتمكن من كتابة الملف الشخصي عليها. تقوم المضخة حالياً بإعطاء كمية غير صحيحة من الأنسولين. افصل المضخة أو أزلها فوراً، وتحقق من مستوى سكر الدم لديك، واستخدم وسيلة أخرى لإعطاء الأنسولين إذا لزم الأمر. لا تقم بإعادة توصيل المضخة إلا بعد إتمام كتابة الملف الشخصي عليها بنجاح.</string>
+    <string name="concentration_change_pending">لم تتم كتابة الملف الشخصي مع الأنسولين الجديد إلى المضخة بعد. لا يمكن إعطاء الأنسولين حتى تتم كتابته.</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">تم تحديث الملف الشخصي للمعدل القاعدي في المضخة. تقوم المضخة بتقريب المعدل وفقًا لخطوتها الخاصة؛ لذا تضخ %1$s يوميًا بدلًا من %2$s.</string>
+    <string name="basal_reported_far_from_profile">تشير المضخة إلى معدل قاعدي يختلف كثيرًا عن الملف الشخصي. يحتفظ AAPS بالمعدل القاعدي للملف الشخصي. يرجى التحقق من معدلات الأنسولين القاعدي في المضخة.</string>
     <!--       Stats -->
+    <string name="carbs_short" comment="max 6 characters">كربوهيدرات</string>
     <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">آخر اتصال: قبل %1$d د</string>
+    <string name="short_status_last_bolus">آخر جرعة: %1$s وحدة عند %2$s</string>
+    <string name="short_status_temp_basal">مؤقت: %1$s</string>
+    <string name="short_status_battery">البطارية: %1$d%%</string>
+    <string name="short_status_not_initialized">لم تتم تهيئة المضخة</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">تحسين استخدام البطارية</string>
+    <string name="permission_battery_description">يجب استثناء التطبيق من تحسين استخدام البطارية ليعمل بشكل موثوق في الخلفية</string>
+    <string name="permission_directory_title">مجلد AAPS</string>
+    <string name="permission_directory_description">حدد مجلدًا لإعدادات التطبيق وملفات السجل</string>
+    <string name="permission_notifications_title">الإشعارات</string>
+    <string name="permission_notifications_description">يلزم هذا الإذن لعرض التنبيهات والإنذارات وتحديثات حالة المضخة</string>
+    <string name="permission_schedule_exact_alarm_title">الإنذارات والتذكيرات</string>
+    <string name="permission_schedule_exact_alarm_description">يلزم هذا الإذن حتى تتمكن الإنذارات من تشغيل الشاشة عندما يكون AAPS في الخلفية، ولكي تصدر التذكيرات في موعدها</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">إنذارات AAPS</string>
+    <string name="alarm_channel_standard">إنذار عادي</string>
+    <string name="alarm_channel_bolus_error">خطأ في الجرعة</string>
+    <string name="alarm_channel_error">خطأ عام</string>
+    <string name="alarm_channel_urgent">إنذار عاجل</string>
+    <string name="alarm_channel_eat_reminder">حان وقت تناول الطعام</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (تجاوز وضع عدم الإزعاج)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (مع احترام وضع عدم الإزعاج)</string>
+    <string name="alarm_channel_silent_urgent">إنذار عاجل (وضع رفع مستوى الصوت تدريجيًا)</string>
+    <string name="alarm_channel_silent">إنذار (وضع رفع مستوى الصوت تدريجيًا)</string>
+    <string name="alarm_channel_silent_description">يستخدم عند تفعيل خيار «زيادة مستوى صوت الإشعارات تدريجيًا». تصدر شاشة الإنذار الصوت.</string>
+    <string name="ongoing_channel_name">الحالة المستمرة</string>
+    <string name="eat_reminder_channel">العد التنازلي لتذكير تناول الطعام</string>
+    <string name="eat_reminder_channel_description">يعرض الوقت المتبقي حتى موعد تناول الطعام. لا يصدر هذا الإشعار صوتًا؛ لكن الإنذار عند انتهاء الوقت يصدر صوتًا.</string>
+    <string name="notifications_channel_name">إشعارات AAPS</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0وحدة (%2$.1f\u00a0ميكرولتر)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">تم تصدير الإعدادات بنجاح إلى التخزين السحابي</string>
+    <string name="export_to_cloud_failed">تعذر تصدير الإعدادات إلى التخزين السحابي</string>
+    <string name="csv_uploaded_to_cloud">تم رفع ملف CSV لإدخالات المستخدم بنجاح إلى التخزين السحابي</string>
+    <string name="exported">تم تصدير الإعدادات</string>
+    <string name="exported_failed">فشل تصدير الإعدادات!</string>
+    <string name="filenotfound">لم يتم العثور على الملف</string>
+    <string name="ue_exported">تم تصدير إدخالات المستخدم</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">تم التصدير قبل %1$s</string>
+    <string name="exported_at" comment="at placeholder we add export date">تم التصدير في %1$s</string>
+    <string name="exported_less_than_hour_ago">تم التصدير قبل أقل من ساعة</string>
+    <string name="metadata_warning_different_flavour">تم إنشاء الإعدادات باستخدام إصدار مختلف من AAPS (%1$s)، بينما الإصدار لديك هو: %2$s.\n\nقد تكون بعض الإعدادات مفقودة أو غير صالحة. بعد الاستيراد، يرجى مراجعة إعداداتك وتحديثها.</string>
+    <string name="metadata_warning_different_device">تم إنشاء الإعدادات على جهاز آخر. لا مشكلة في استيرادها من هاتف أقدم أو مختلف، ولكن تأكد من صحة الإعدادات المستوردة!</string>
+    <string name="metadata_warning_old_export">عمر الإعدادات المستوردة %1$s يومًا بالفعل! ربما لديك إعدادات أحدث، أو اخترت ملفًا غير صحيح؟ تذكّر تصدير الإعدادات بانتظام!</string>
+    <string name="metadata_warning_date_format">تنسيق التاريخ والوقت غير صالح!</string>
+    <string name="metadata_warning_different_version">الإعدادات من إصدار فرعي مختلف للتطبيق. لا مشكلة في استيرادها بعد الترقية، ولكن تحقق بعد الاستيراد من أن الإعدادات لا تزال صحيحة!</string>
+    <string name="metadata_urgent_different_version">الإعدادات من إصدار رئيسي مختلف للتطبيق. تختلف الإصدارات الرئيسية اختلافًا كبيرًا وقد تكون الإعدادات غير متوافقة! تأكد بعد الاستيراد من أن الإعدادات لا تزال صحيحة!</string>
+    <string name="prefdecrypt_settings_tampered">تم العبث بملف الإعدادات.</string>
+    <string name="prefdecrypt_settings_secure">ملف الإعدادات آمن.</string>
+    <string name="prefdecrypt_settings_unencrypted">يتم استخدام تنسيق إعدادات غير آمن وغير مشفر.</string>
+    <string name="prefdecrypt_wrong_json">خطأ في تنسيق JSON: حقل مطلوب مفقود (format أو content أو metadata أو security).</string>
+    <string name="prefdecrypt_wrong_password">خطأ في فك التشفير: كلمة المرور المدخلة لا تسمح بفك تشفير الملف.</string>
+    <string name="prefdecrypt_issue_missing_file_hash">المجموع الاختباري للملف (التجزئة) مفقود؛ لا يمكن التحقق من صحة الإعدادات!</string>
+    <string name="prefdecrypt_issue_modified">تم تعديل الملف بعد تصديره!</string>
+    <string name="prefdecrypt_issue_parsing">خطأ في فك التشفير: فشل تحليل الإعدادات!</string>
+    <string name="prefdecrypt_issue_wrong_pass">خطأ في فك التشفير: كلمة المرور المدخلة غير صحيحة أو تم تعديل ملف الإعدادات! قد يحدث ذلك إذا تم تصدير الملف المستورد باستخدام كلمة مرور رئيسية مختلفة.</string>
+    <string name="prefdecrypt_issue_wrong_format">إعدادات التشفير مفقودة؛ تنسيق ملف الإعدادات غير صالح!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">خوارزمية التشفير غير مدعومة أو لم يتم تحديدها!</string>
+    <string name="metadata_label_format">تنسيق الملف</string>
+    <string name="metadata_label_created_at">تاريخ الإنشاء</string>
+    <string name="metadata_label_aaps_version">إصدار AAPS</string>
+    <string name="metadata_label_aaps_flavour">نوع الإصدار</string>
+    <string name="metadata_label_device_name">اسم المريض على جهاز التصدير</string>
+    <string name="metadata_label_device_model">طراز جهاز التصدير</string>
+    <string name="metadata_label_encryption">تشفير الملف</string>
+    <string name="metadata_format_new">تنسيق جديد مشفر</string>
+    <string name="metadata_format_other">تنسيق تصدير غير معروف</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">حدث خطأ أثناء الوصول إلى نظام الملفات. يرجى تحديد مجلد AAPS بشكل صحيح.</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">نسخ احتياطي إلى Google Drive</string>
+    <string name="csv_upload_failed">فشل رفع ملف CSV لإدخالات المستخدم إلى التخزين السحابي.</string>
+    <string name="csv_upload_error">حدث خطأ أثناء رفع ملف CSV إلى السحابة.</string>
+    <string name="uploading_to_cloud">جارٍ الرفع إلى السحابة...</string>
+    <string name="cloud_directory_path">مجلد السحابة: %1$s</string>
+    <string name="google_drive_token_refresh_failed">تعذر تحديث رمز الوصول إلى Google Drive.</string>
+    <string name="google_drive_token_refresh_error">تعذر تحديث رمز الوصول إلى Google Drive: %1$s</string>
+    <string name="google_drive_connection_test_failed">فشل اختبار الاتصال بـ Google Drive.</string>
+    <string name="google_drive_connect_error">تعذر الاتصال بـ Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">فشل عرض قائمة مجلدات Google Drive.</string>
+    <string name="google_drive_list_folders_error">حدث خطأ أثناء عرض المجلدات: %1$s</string>
+    <string name="google_drive_upload_no_id">نجح الرفع، ولكن لم يتم إرجاع أي معرّف.</string>
+    <string name="google_drive_upload_verify_failed">فشل التحقق من عملية الرفع.</string>
+    <string name="google_drive_upload_failed">فشل الرفع: %1$s</string>
+    <string name="google_drive_upload_error">حدث خطأ أثناء رفع الملف: %1$s</string>
+    <string name="google_drive_folder_access_error">تعذر إنشاء مجلد الوجهة أو الوصول إليه: %1$s</string>
+    <string name="google_drive_list_settings_failed">فشل عرض قائمة ملفات الإعدادات.</string>
+    <string name="google_drive_list_settings_error">حدث خطأ أثناء عرض ملفات الإعدادات: %1$s</string>
+    <string name="google_drive_download_failed">فشل تنزيل الملف.</string>
+    <string name="google_drive_download_error">حدث خطأ أثناء تنزيل الملف: %1$s</string>
+    <string name="google_drive_authorized">تم التصريح باستخدام Google Drive.</string>
+    <string name="google_drive_reauth_required">يرجى مسح الإعدادات وإعادة التصريح باستخدام Google Drive.</string>
 </resources>
