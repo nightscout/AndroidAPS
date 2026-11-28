@@ -18,6 +18,7 @@
     <string name="settings_unreadable_keystore_explanation">Le stockage de clés du téléphone n\'a pas répondu, AAPS n\'a donc pas pu ouvrir ses paramètres.</string>
     <string name="settings_unreadable_not_running">AAPS ne fonctionne pas et ne contrôle pas la pompe. Un basal temporaire qui fonctionne se termine à son heure prévue, puis la pompe revient à son propre basal.</string>
     <string name="settings_unreadable_what_to_do">Réessayer ferme AAPS et le redémarre. Si cela n\'aide pas, redémarrez le téléphone. Choisissez Redémarrer uniquement lorsque rien d\'autre n\'aide : il met de côté les paramètres illisibles et AAPS commence avec des paramètres vides. Importez ensuite votre dernier export de paramètres dans l\'assistant d\'installation.</string>
+    <string name="settings_unreadable_keystore_what_to_do">Réessayer ferme AAPS et le redémarre. Si cela n\'aide pas, redémarrez le téléphone. Votre fichier de paramètres est conservé tel quel.</string>
     <string name="settings_unreadable_start_fresh">Redémarrer</string>
     <string name="settings_unreadable_confirm_title">Démarrer avec des paramètres vides ?</string>
     <string name="settings_unreadable_confirm_text">Le fichier de configuration illisible est renommé et conservé. Tous les paramètres démarrent à partir de leurs valeurs par défaut. Ensuite, vous configurez AAPS à nouveau ou importez un export de paramètres.</string>
