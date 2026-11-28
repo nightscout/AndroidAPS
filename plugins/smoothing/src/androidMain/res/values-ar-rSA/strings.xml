@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="exponential_smoothing_name">التنعيم الأسي</string>
+    <string name="description_exponential_smoothing">"خوارزمية التنعيم الأسي من الدرجة الثانية"</string>
+    <string name="avg_smoothing_name">تنعيم المتوسط</string>
+    <string name="description_avg_smoothing">"خوارزمية تنعيم المتوسط، لا تتأثر القيمة الأحدث"</string>
+    <string name="no_smoothing_name">بدون تنعيم</string>
+    <string name="description_no_smoothing">"استخدم هذا الخيار عندما تكون لديك بيانات مصفاة مسبقا، مثل بيانات تطبيق BYODA G6."</string>
+    <string name="UKF_name">مرشح كالمان غير الخطي</string>
+    <string name="description_UKF">"خوارزمية متقدمة مع ضبط تلقائي للتشويش وتنعيم RTS."</string>
+</resources>
