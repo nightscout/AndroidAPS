@@ -108,6 +108,9 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import org.joda.time.LocalDateTime
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -1079,6 +1082,10 @@ class MedtronicPumpPlugin(
 
     override fun serialNumber(): String {
         return medtronicPumpStatus.serialNumber
+    }
+
+    override fun extendedStatus(): JsonObject = buildJsonObject {
+        rileyLinkServiceData.orangeBatteryMillivolts?.let { put("RileyLinkBatteryVoltage", it / 1000.0) }
     }
 
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {

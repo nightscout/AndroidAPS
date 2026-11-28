@@ -42,8 +42,9 @@ class OrangeLinkImpl(
             val hv = data[5].toString() + "." + data[6]
             rileyLinkServiceData.versionOrangeFirmware = fv
             rileyLinkServiceData.versionOrangeHardware = hv
+            batteryMillivolts(data)?.let { rileyLinkServiceData.orangeBatteryMillivolts = it }
 
-            aapsLogger.info(LTag.PUMPBTCOMM, "OrangeLink: Firmware: ${fv}, Hardware: $hv")
+            aapsLogger.info(LTag.PUMPBTCOMM, "OrangeLink: Firmware: ${fv}, Hardware: $hv, Battery: ${rileyLinkServiceData.orangeBatteryMillivolts} mV")
         }
     }
 
@@ -51,6 +52,7 @@ class OrangeLinkImpl(
         rileyLinkServiceData.isOrange = false
         rileyLinkServiceData.versionOrangeFirmware = null
         rileyLinkServiceData.versionOrangeHardware = null
+        rileyLinkServiceData.orangeBatteryMillivolts = null
     }
 
     /**
@@ -158,5 +160,15 @@ class OrangeLinkImpl(
 
         const val TIME_OUT = 90 * 1000
         const val TIME_OUT_WHAT = 0x12
+
+        /**
+         * The battery voltage in an OrangeLink status notification, in millivolts:
+         * `DD FE AA <fw major> <fw minor> <hw major> <hw minor> <mV high> <mV low> <percent> ...`.
+         * Null for any other packet.
+         */
+        fun batteryMillivolts(data: ByteArray): Int? =
+            if (data.size >= 9 && data[0] == 0xDD.toByte() && data[1] == 0xFE.toByte() && data[2] == 0xAA.toByte())
+                ((data[7].toInt() and 0xff) shl 8) or (data[8].toInt() and 0xff)
+            else null
     }
 }

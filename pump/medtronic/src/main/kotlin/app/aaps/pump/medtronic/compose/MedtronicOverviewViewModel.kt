@@ -159,6 +159,11 @@ class MedtronicOverviewViewModel(
             add(PumpInfoRow(label = rh.gs(R.string.rl_battery_label), value = batteryText))
         }
 
+        // OrangeLink battery voltage, from its status notifications
+        rileyLinkServiceData.orangeBatteryMillivolts?.let {
+            add(PumpInfoRow(label = rh.gs(R.string.rl_battery_voltage_label), value = rh.gs(R.string.rl_battery_voltage_value, it / 1000.0)))
+        }
+
         // Pump status
         val pumpStatusText = buildPumpStatusText()
         add(PumpInfoRow(label = rh.gs(RileyLinkR.string.medtronic_pump_status), value = pumpStatusText))

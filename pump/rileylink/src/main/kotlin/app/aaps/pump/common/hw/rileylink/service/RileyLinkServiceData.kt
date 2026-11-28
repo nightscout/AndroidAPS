@@ -54,6 +54,9 @@ class RileyLinkServiceData(
     var isOrange = false
     var versionOrangeFirmware: String? = null
     var versionOrangeHardware: String? = null
+
+    /** The battery voltage from the OrangeLink's status notification, in millivolts. */
+    var orangeBatteryMillivolts: Int? = null
     lateinit var targetDevice: RileyLinkTargetDevice
 
     // Medtronic Pump
