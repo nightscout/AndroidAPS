@@ -1,2 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="authorizationfailed">فشل المصادقة</string>
+    <string name="identification_not_set">التعريف غير محدد في وضع المطورين</string>
+    <string name="select">اختر</string>
+    <string name="set">ضبط</string>
+    <string name="migrating_preferences">جار ترحيل التفضيلات…</string>
+    <string name="optimizing_database">جار تحسين قاعدة البيانات…</string>
+    <string name="initializing_plugins">جار تهيئة الإضافات…</string>
+    <string name="initializing">جار التهيئة…</string>
+    <string name="migrating_profile_switches">جار نقل تبديلات الملف الشخصي…</string>
+    <string name="migrating_effective_profile_switches">جار نقل تبديلات الملف الشخصي الفعالة…</string>
+    <string name="migrating_boluses">جار نقل الجرعات…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">لم تحتو السجلات القديمة على إعدادات الأنسولين ولم يكن أي ملف شخصي مفعّلا، لذا تم استخدام %1$s لها. يرجى التحقق من إعدادات الأنسولين — السجلات التي تم نقلها لن يتم تحديثها بعد ذلك.</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">لم تحتو السجلات القديمة على مدة عمل الأنسولين، لذا تم استخدام %1$.1f ساعة لـ %2$s. يرجى التحقق من إعدادات الأنسولين — السجلات التي تم نقلها لن يتم تحديثها بعد ذلك.</string>
+    <string name="settings_unreadable_title">إعدادات AAPS لا يمكن قراءتها</string>
+    <string name="settings_unreadable_key_explanation">إعداداتك على هذا الهاتف مشفرة بمفتاح يحفظه نظام أندرويد لتطبيق AAPS، وهذا المفتاح لم يعد يفتحها. قد يحدث ذلك بعد إعادة تعيين مخزن المفاتيح في الهاتف.</string>
+    <string name="settings_unreadable_keystore_explanation">تعذر على مخزن المفاتيح في الهاتف الاستجابة، لذا لم يتمكن تطبيق AAPS من فتح إعداداته.</string>
+    <string name="settings_unreadable_not_running">تطبيق AAPS لا يعمل ولا يتحكم في المضخة. المعدل القاعدي المؤقت الذي يعمل الآن ينتهي في وقته، ثم تعطي المضخة معدلها القاعدي الخاص.</string>
+    <string name="settings_unreadable_what_to_do">إعادة المحاولة تغلق AAPS ثم تشغله من جديد. إذا لم يساعد ذلك، أعد تشغيل الهاتف. اختر \"البدء من جديد\" فقط عندما لا يساعد أي شيء آخر: فهو يضع الإعدادات غير المقروءة جانبا، ويبدأ AAPS بإعدادات فارغة. ثم استورد آخر ملف تصدير لإعداداتك في معالج الإعداد.</string>
+    <string name="settings_unreadable_keystore_what_to_do">زر \'إعادة المحاولة\' يغلق AAPS ويشغله مرة أخرى. إذا لم يساعد ذلك، أعد تشغيل الهاتف. يبقى ملف إعداداتك كما هو.</string>
+    <string name="settings_unreadable_start_fresh">البدء من جديد</string>
+    <string name="settings_unreadable_confirm_title">البدء بإعدادات فارغة؟</string>
+    <string name="settings_unreadable_confirm_text">تتم إعادة تسمية ملف الإعدادات غير المقروء والاحتفاظ به. تبدأ جميع الإعدادات من قيمها الافتراضية. بعد ذلك تقوم بإعداد AAPS من جديد أو تستورد ملف تصدير الإعدادات.</string>
+    <string name="settings_unreadable_notification">تطبيق AAPS لا يعمل. افتح AAPS لمعرفة ما يجب القيام به.</string>
+</resources>
