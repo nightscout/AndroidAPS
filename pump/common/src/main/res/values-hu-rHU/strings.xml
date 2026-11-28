@@ -1,13 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">A műveletet a pumpa és/vagy a meghajtó nem támogatja.</string>
     <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">Nincs inicializálva</string>
+    <string name="pump_status_initialized">Inicializálva</string>
+    <string name="pump_status_encrypt">Kommunikáció titkosítása</string>
+    <string name="pump_status_ready">Üzemkész</string>
+    <string name="pump_status_busy">Foglalt</string>
+    <string name="pump_status_suspended">Felfüggesztve</string>
+    <string name="pump_status_executing_command">Parancs végrehajtása</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Beállítások lekérése</string>
+    <string name="pump_cmd_desc_get_firmware">Pumpa-firmware lekérése</string>
+    <string name="pump_cmd_desc_get_basal_profile">Bázisprofil lekérése</string>
+    <string name="pump_cmd_desc_set_basal_profile">Bázisprofil beállítása</string>
+    <string name="pump_cmd_desc_get_tbr">Átmeneti bázis lekérése</string>
+    <string name="pump_cmd_desc_cancel_tbr">Átmeneti bázis leállítása</string>
+    <string name="pump_cmd_desc_set_tbr">Átmeneti bázis beállítása</string>
+    <string name="pump_cmd_desc_set_bolus">Bólus beállítása</string>
+    <string name="pump_cmd_desc_get_bolus">Bólus lekérése</string>
+    <string name="pump_cmd_desc_cancel_bolus">Bólus megszakítása</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Maradék inzulin lekérése</string>
+    <string name="pump_cmd_desc_get_battery_status">Elem állapotának lekérése</string>
+    <string name="pump_cmd_desc_get_time">Idő lekérése</string>
+    <string name="pump_cmd_desc_set_time">Idő beállítása</string>
+    <string name="pump_cmd_desc_get_pump_status">Pumpaállapot lekérése</string>
+    <string name="pump_cmd_desc_get_history">Előzmények lekérése</string>
+    <string name="pump_cmd_desc_get_history_params">Előzmények lekérése: %s</string>
+    <string name="pump_cmd_desc_custom">Egyéni parancs</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Bázis</string>
+    <string name="history_group_configuration">Konfigurációk</string>
+    <string name="history_group_notification">Értesítések</string>
     <string name="history_group_statistic">Statisztikák</string>
+    <string name="history_group_unknown">Ismeretlenek</string>
+    <string name="history_group_all">Összes</string>
+    <string name="history_group_bolus">Bólusok</string>
+    <string name="history_group_prime">Légtelenítés</string>
+    <string name="history_group_alarm">Riasztások</string>
     <string name="history_group_glucose">Glükóz</string>
+    <string name="history_group_base">Alap</string>
     <string name="history_group_other">Egyéb</string>
+    <string name="history_group_events">Összes esemény</string>
+    <string name="history_group_events_no_stat">Események (statisztika nélkül)</string>
     <!-- Time -->
+    <string name="time_today">Ma</string>
+    <string name="time_last_hour">Elmúlt óra</string>
+    <string name="time_last_3_hours">Elmúlt 3 óra</string>
+    <string name="time_last_6_hours">Elmúlt 6 óra</string>
+    <string name="time_last_12_hours">Elmúlt 12 óra</string>
+    <string name="time_last_24_hours">Utolsó 24 óra</string>
+    <string name="time_last_2_days">Elmúlt 2 nap</string>
+    <string name="time_last_4_days">Elmúlt 4 nap</string>
+    <string name="time_last_week">Elmúlt hét</string>
+    <string name="time_last_month">Elmúlt hónap</string>
     <!-- Pump History -->
 </resources>
