@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_calibration_name">Nincs kalibrálás</string>
+    <string name="description_no_calibration">"Nincs kalibrációs felülbírálás. Az AAPS a szenzorértékeket változatlanul használja. Akkor válassza, ha a szenzor gyárilag kalibrált és pontos."</string>
+    <string name="linear_calibration_name">Lineáris kalibrálás</string>
+    <string name="description_linear_calibration">"Szenzoronkénti lineáris kalibrációs felülbírálás (meredekség és eltolás), amelyet az ujjbegyes méréseiből számol. A friss mérések nagyobb súlyt kapnak. A felülbírálás az aktuális szenzor indítása után érvényes; az első 2 óra bemelegedési idő, ezt kihagyja."</string>
+    <string name="sensor_change_detected_text">Lehetséges szenzorcsere észlelve: %1$s. Megjelöli új szenzorként?</string>
+    <string name="sensor_change_detected_action">Szenzorcsere megjelölése</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">A kalibrálás engedélyezéséhez rögzítsen egy szenzorcserét.</string>
+    <string name="cal_status_warmup">Szenzor bemelegedése — a kalibrálás %1$s után lesz aktív.</string>
+    <string name="cal_status_need_more_entries">Legalább 2 ujjbegyes mérés szükséges (jelenleg %1$d).</string>
+    <string name="cal_status_unsafe_fit">Az illesztés a biztonságos tartományon kívül esik — a kalibrálás nincs alkalmazva.</string>
+    <string name="cal_status_applied">Kalibrálás alkalmazva.</string>
+    <string name="cal_status_applied_offset_only">Csak eltolásos kalibrálás alkalmazva — a szenzorértékek tartománya túl szűk a meredekséghez.</string>
+    <string name="cal_status_applied_slope_clamped">Kalibrálás alkalmazva — a meredekség a biztonságos tartományra korlátozva. Több méréssel ez a korlát enyhül.</string>
+    <string name="cal_slope_offset">Meredekség %1$.2f, korrekció a tartomány közepén %2$s</string>
+    <string name="cal_session_started">Szenzor indítva: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Szenzorcsere rögzítése</string>
+    <string name="cal_add_calibration">Kalibrálás hozzáadása</string>
+    <string name="cal_entries_header">Ujjbegyes mérések (%1$d)</string>
+    <string name="cal_no_entries">Még nincs ujjbegyes mérés.</string>
+    <string name="cal_entry_pair">Ujjbegyes mérés %1$s → szenzor %2$s (Δ %3$s)</string>
+    <string name="cal_chart_entry_readout">Mérés %1$d/%2$d · %3$s · szenzor %4$s → VC %5$s</string>
 </resources>
