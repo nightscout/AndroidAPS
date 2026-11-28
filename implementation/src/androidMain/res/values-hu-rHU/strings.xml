@@ -1,18 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="executing_right_now">A parancs végrehajtása folyamatban</string>
+    <string name="smb_being_delivered">Éppen SMB beadása folyik. Próbálja újra, ha befejeződött.</string>
+    <string name="basal_value_below_minimum">Bázisérték a minimum alatt. A profil nincs beállítva!</string>
+    <string name="concentration_change_failed_title">Az inzulincsere sikertelen</string>
+    <string name="concentration_change_failed">Az új inzulin a pumpában van, de az AAPS nem tudta a profilt a pumpába írni. A pumpa rossz mennyiségű inzulint ad. Most válassza le vagy vegye le a pumpát, ellenőrizze a vércukrát, és ha szükséges, adjon inzulint más módon. Csak akkor csatlakoztassa újra a pumpát, ha a profil már be van írva.</string>
+    <string name="concentration_change_pending">Az új inzulinhoz tartozó profil még nincs a pumpába írva. Amíg nincs beírva, inzulin nem adható be.</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">A pumpa bázisprofilja frissítve. A pumpa a bázist a saját lépésközére kerekíti: napi %2$s helyett napi %1$s mennyiséget ad.</string>
+    <string name="basal_reported_far_from_profile">A pumpa a profiltól nagyon eltérő bázist jelez. Az AAPS megtartja a profil bázisát. Ellenőrizze a bázisütemeket a pumpában.</string>
     <!--       Stats -->
+    <string name="carbs_short" comment="max 6 characters">Szénh.</string>
     <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">Utolsó kapcs.: %1$d perce</string>
+    <string name="short_status_last_bolus">Utolsó bólus: %1$sE @ %2$s</string>
+    <string name="short_status_temp_basal">ÁB: %1$s</string>
+    <string name="short_status_battery">Elem: %1$d%%</string>
+    <string name="short_status_not_initialized">A pumpa nincs inicializálva</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">Akkumulátor-optimalizálás</string>
+    <string name="permission_battery_description">Az alkalmazást ki kell venni az akkumulátor-optimalizálás alól, hogy megbízhatóan fusson a háttérben</string>
+    <string name="permission_directory_title">AAPS-mappa</string>
+    <string name="permission_directory_description">Válasszon mappát az alkalmazás beállításainak és naplófájljainak</string>
+    <string name="permission_notifications_title">Értesítések</string>
+    <string name="permission_notifications_description">Szükséges a figyelmeztetések, riasztások és a pumpaállapot-frissítések megjelenítéséhez</string>
+    <string name="permission_schedule_exact_alarm_title">Ébresztések és emlékeztetők</string>
+    <string name="permission_schedule_exact_alarm_description">Szükséges ahhoz, hogy a riasztások felébreszthessék a képernyőt, amíg az AAPS a háttérben fut, és hogy az emlékeztetők időben szóljanak</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">AAPS-riasztások</string>
+    <string name="alarm_channel_standard">Normál riasztás</string>
+    <string name="alarm_channel_bolus_error">Bólushiba</string>
+    <string name="alarm_channel_error">Általános hiba</string>
+    <string name="alarm_channel_urgent">Sürgős riasztás</string>
+    <string name="alarm_channel_eat_reminder">Ideje enni</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (felülírja a Ne zavarjanak módot)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (figyelembe veszi a Ne zavarjanak módot)</string>
+    <string name="alarm_channel_silent_urgent">Sürgős riasztás (fokozódó hangerő mód)</string>
+    <string name="alarm_channel_silent">Riasztás (fokozódó hangerő mód)</string>
+    <string name="alarm_channel_silent_description">Akkor használatos, ha az \'Értesítés hangerejének fokozatos növelése\' be van kapcsolva. A hangot a riasztási képernyő játssza le.</string>
+    <string name="ongoing_channel_name">Folyamatos állapot</string>
+    <string name="eat_reminder_channel">Étkezési emlékeztető visszaszámlálása</string>
+    <string name="eat_reminder_channel_description">Megmutatja, mennyi idő van még az étkezésig. Nem ad hangot; a végén lévő riasztás igen.</string>
+    <string name="notifications_channel_name">AAPS-értesítések</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0E (%2$.1f\u00a0µl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/ó</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">A beállítások sikeresen exportálva a felhőtárhelyre</string>
+    <string name="export_to_cloud_failed">Nem sikerült exportálni a felhőtárhelyre</string>
+    <string name="csv_uploaded_to_cloud">Az egyéni bejegyzések CSV-fájlja sikeresen feltöltve a felhőtárhelyre</string>
+    <string name="exported">Beállítások exportálva</string>
+    <string name="exported_failed">A beállítások exportálása sikertelen!</string>
     <string name="filenotfound">Fájl nem található</string>
+    <string name="ue_exported">Egyéni bejegyzések exportálva</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportálva %1$s ezelőtt</string>
+    <string name="exported_at" comment="at placeholder we add export date">exportálva: %1$s</string>
+    <string name="exported_less_than_hour_ago">kevesebb mint egy órája exportálva</string>
+    <string name="metadata_warning_different_flavour">A beállítások az AAPS egy másik változatával (%1$s) készültek, a telepített változat pedig: %2$s.\n\nNéhány beállítás hiányozhat vagy érvénytelen lehet - importálás után ellenőrizze és frissítse a beállításokat.</string>
+    <string name="metadata_warning_different_device">A beállítások egy másik eszközön készültek. Ez rendben van, ha régebbi vagy másik telefonról importál, de győződjön meg róla, hogy az importált beállítások helyesek!</string>
+    <string name="metadata_warning_old_export">Az importált beállítások már %1$s naposak! Lehet, hogy vannak frissebb beállításai, vagy rossz fájlt választott? Ne felejtse el rendszeresen exportálni a beállításokat!</string>
+    <string name="metadata_warning_date_format">Érvénytelen dátum- és időformátum!</string>
+    <string name="metadata_warning_different_version">A beállítások az alkalmazás egy másik alverziójából származnak. Ez rendben van, ha frissítés után importál, de importálás után ellenőrizze, hogy a beállítások továbbra is helyesek-e!</string>
+    <string name="metadata_urgent_different_version">A beállítások az alkalmazás egy másik főverziójából származnak. A főverziók nagyon eltérnek egymástól, és a beállítások nem kompatibilisek lehetnek! Importálás után győződjön meg róla, hogy a beállítások továbbra is helyesek!</string>
+    <string name="prefdecrypt_settings_tampered">A beállításfájlt illetéktelenül módosították</string>
+    <string name="prefdecrypt_settings_secure">A beállításfájl biztonságos</string>
+    <string name="prefdecrypt_settings_unencrypted">Nem biztonságos, titkosítatlan beállításformátum használatban</string>
+    <string name="prefdecrypt_wrong_json">JSON-formátumhiba, hiányzik egy kötelező mező (format, content, metadata vagy security)</string>
+    <string name="prefdecrypt_wrong_password">Visszafejtési hiba, a megadott jelszóval a fájl nem fejthető vissza</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Hiányzik a fájl ellenőrzőösszege (hash), a beállítások hitelessége nem ellenőrizhető!</string>
+    <string name="prefdecrypt_issue_modified">A fájlt az exportálás után módosították!</string>
+    <string name="prefdecrypt_issue_parsing">Visszafejtési hiba, a beállítások feldolgozása sikertelen!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Visszafejtési hiba, a megadott jelszó érvénytelen, vagy a beállításfájlt módosították! Előfordulhat, hogy az importált fájlt egy másik mesterjelszóval exportálták.</string>
+    <string name="prefdecrypt_issue_wrong_format">Hiányzik a titkosítási konfiguráció, a beállítások formátuma érvénytelen!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Nem támogatott vagy nem megadott titkosítási algoritmus!</string>
+    <string name="metadata_label_format">Fájlformátum</string>
     <string name="metadata_label_created_at">Létrehozva</string>
     <string name="metadata_label_aaps_version">AAPS verzió</string>
     <string name="metadata_label_aaps_flavour">Build variant</string>
-    <string name="metadata_label_device_name">Eszköz páciensnevének exportálása</string>
+    <string name="metadata_label_device_name">Az exportáló eszköz betegneve</string>
     <string name="metadata_label_device_model">Készülékmodell exportálása</string>
     <string name="metadata_label_encryption">Fájltitkosítás</string>
-    <string name="metadata_format_new">Új titkosított formátom</string>
+    <string name="metadata_format_new">Új titkosított formátum</string>
     <string name="metadata_format_other">Ismeretlen export formátum</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Hiba a fájlrendszer elérésekor. Válassza ki helyesen az AAPS-mappát.</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">Biztonsági mentés a Google Drive-ra</string>
+    <string name="csv_upload_failed">Nem sikerült feltölteni az egyéni bejegyzések CSV-fájlját a felhőtárhelyre</string>
+    <string name="csv_upload_error">Hiba történt a CSV-fájl felhőbe való feltöltése közben</string>
+    <string name="uploading_to_cloud">Feltöltés a felhőbe...</string>
+    <string name="cloud_directory_path">Felhőmappa: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Nem sikerült frissíteni a Google Drive hozzáférési tokenjét</string>
+    <string name="google_drive_token_refresh_error">Nem sikerült frissíteni a Google Drive hozzáférési tokenjét: %1$s</string>
+    <string name="google_drive_connection_test_failed">A Google Drive kapcsolatteszt sikertelen</string>
+    <string name="google_drive_connect_error">Nem sikerült csatlakozni a Google Drive-hoz: %1$s</string>
+    <string name="google_drive_list_folders_failed">Nem sikerült listázni a Google Drive mappáit</string>
+    <string name="google_drive_list_folders_error">Hiba a mappák listázásakor: %1$s</string>
+    <string name="google_drive_upload_no_id">A feltöltés sikerült, de nem érkezett azonosító</string>
+    <string name="google_drive_upload_verify_failed">A feltöltés ellenőrzése sikertelen</string>
+    <string name="google_drive_upload_failed">A feltöltés sikertelen: %1$s</string>
+    <string name="google_drive_upload_error">Hiba a fájl feltöltésekor: %1$s</string>
+    <string name="google_drive_folder_access_error">A célmappa nem hozható létre vagy nem érhető el: %1$s</string>
+    <string name="google_drive_list_settings_failed">Nem sikerült listázni a beállításfájlokat</string>
+    <string name="google_drive_list_settings_error">Hiba a beállításfájlok listázásakor: %1$s</string>
+    <string name="google_drive_download_failed">Nem sikerült letölteni a fájlt</string>
+    <string name="google_drive_download_error">Hiba a fájl letöltésekor: %1$s</string>
+    <string name="google_drive_authorized">Google Drive hitelesítve</string>
+    <string name="google_drive_reauth_required">Törölje a beállításokat, és hitelesítse újra a Google Drive-ot</string>
 </resources>
