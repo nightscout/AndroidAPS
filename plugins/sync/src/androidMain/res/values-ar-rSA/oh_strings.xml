@@ -1,2 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="open_humans">Open Humans</string>
+    <string name="open_humans_description">تتيح لك منصة Open Humans رفع بيانات مرض السكري الخاصة بك والتبرع بها للمشاريع العلمية.</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="setup">إعداد</string>
+    <string name="setup_completed_info">تم إعداد Open Humans. في حال كنت تريد إيقاف الرفع، انقر على \'تسجيل الخروج\'.</string>
+    <string name="not_setup_info">منصة Open Humans غير نشطة حاليا. لبدء رفع البيانات، انقر على \'إعداد\'.</string>
+    <string name="project_member_id">معرف عضو المشروع: %1$s</string>
+    <string name="open_humans_uploading">جاري الرفع إلى Open Humans…</string>
+    <string name="open_humans_notifications">إشعارات Open Humans</string>
+    <string name="uploading_to_open_humans">يقوم AAPS بالرفع إلى Open Humans. قد يستغرق هذا بعض الوقت.</string>
+    <string name="you_have_been_signed_out_of_open_humans">تم تسجيل خروجك من Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">انقر هنا لتسجيل الدخول مرة أخرى إذا لم يكن ذلك مقصودا.</string>
+    <string name="next">التالي</string>
+    <string name="welcome_to_open_humans">مرحبا بك في Open Humans</string>
+    <string name="setup_data_upload">لإعداد رفع البيانات، انقر على \'التالي\'.</string>
+    <string name="consent">الموافقة</string>
+    <string name="terms_of_use">شروط الاستخدام</string>
+    <string name="please_read__information">يرجى قراءة المعلومات التالية بعناية وقبول شروط الاستخدام للمتابعة.</string>
+    <string name="info_openhumans">هذه أداة مفتوحة المصدر تقوم بنسخ بياناتك إلى Open Humans. نحن لا نحتفظ بأي حقوق لمشاركة بياناتك مع أطراف ثالثة دون إذن صريح منك. يتم تعريف البيانات التي يتلقاها المشروع والتطبيق عبر معرف مستخدم عشوائي، وسيتم إرسالها بشكل آمن فقط إلى حساب Open Humans بعد موافقتك على هذه العملية. يمكنك إيقاف الرفع وحذف بياناتك المرفوعة في أي وقت عبر موقع www.openhumans.org.</string>
+    <string name="data_uploaded">تم رفع البيانات</string>
+    <string name="glucose_values">قراءات سكر الدم</string>
+    <string name="boluses">الجرعات</string>
+    <string name="extended_boluses">الجرعات الممتدة</string>
+    <string name="carbohydrates">الكربوهيدرات</string>
+    <string name="careportal_events">أحداث بوابة الرعاية Careportal (باستثناء الملاحظات)</string>
+    <string name="profile_switches">تبديلات الملف الشخصي</string>
+    <string name="total_daily_doses">إجمالي الجرعات اليومية</string>
+    <string name="temporary_basal_rates">معدلات الأنسولين القاعدية المؤقتة</string>
+    <string name="temporary_targets">الأهداف المؤقتة</string>
+    <string name="settings">الإعدادات</string>
+    <string name="application_version">إصدار التطبيق</string>
+    <string name="device_model">طراز الجهاز</string>
+    <string name="screen_dimensions">أبعاد الشاشة</string>
+    <string name="algorithm_debug_data">بيانات تصحيح أخطاء الخوارزمية</string>
+    <string name="data_not_uploaded">لم يتم رفع البيانات</string>
+    <string name="passwords">كلمات المرور</string>
+    <string name="nightscout_url">رابط Nightscout</string>
+    <string name="nightscout_api_secret">المفتاح السري لواجهة API في Nightscout</string>
+    <string name="free_text_fields">حقول النصوص الحرة</string>
+    <string name="agree">أنا أفهم وأوافق.</string>
+    <string name="login_open_humans">تسجيل الدخول إلى Open Humans</string>
+    <string name="final_touches">اللمسات الأخيرة</string>
+    <string name="uploading_proceed">أنت على بعد خطوة واحدة من رفع بياناتك إلى Open Humans. هل تريد المتابعة؟</string>
+    <string name="cancel">إلغاء</string>
+    <string name="proceed">متابعة</string>
+    <string name="finishing">جاري الإنهاء...</string>
+    <string name="this_may_take_a_few_seconds">قد يستغرق هذا عدة ثوان.</string>
+    <string name="we_re_done">انتهينا!</string>
+    <string name="silently_upload_date_note">من الآن فصاعدا، سيقوم هاتفك برفع البيانات في الخلفية بهدوء من وقت لآخر.</string>
+    <string name="close">إغلاق</string>
+</resources>
