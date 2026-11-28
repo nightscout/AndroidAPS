@@ -1,10 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Eros - Description -->
+    <string name="omnipod_eros_pump_description">دمج مضخة Omnipod Eros (الطراز الأقدم المزود بغطاء إبرة شفاف). يتطلب جهاز RileyLink بإصدار برنامج ثابت 2.0 على الأقل.</string>
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Errors -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">عنوان RileyLink غير صالح.</string>
     <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">إظهار زر سجل النبضات في قائمة إدارة المضخة اللاصقة</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">إظهار زر إحصائيات RileyLink في قائمة إدارة المضخة اللاصقة</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">تفعيل تسجيل تغيير البطارية في الإجراءات</string>
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2f وحدة</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f وحدة، الكربوهيدرات = %2$.1f غ</string>
+    <string name="omnipod_eros_history_tbr_value">المعدل: %1$.2f وحدة/ساعة، المدة: %2$d دقيقة</string>
     <!-- Omnipod Eros - Error -->
+    <string name="omnipod_eros_error_crc_mismatch">فشل الاتصال: فشل التحقق من سلامة الرسالة</string>
+    <string name="omnipod_eros_error_invalid_packet_type">فشل الاتصال: تم استلام حزمة غير صالحة من المضخة اللاصقة</string>
+    <string name="omnipod_eros_error_invalid_progress_state">فشل الاتصال: المضخة اللاصقة في حالة خاطئة</string>
+    <string name="omnipod_eros_error_invalid_response">فشل الاتصال: تم استلام استجابة غير صالحة من المضخة اللاصقة</string>
+    <string name="omnipod_eros_error_invalid_message_sequence_number">فشل الاتصال: تم استلام رسالة برقم تسلسل غير صالح من المضخة اللاصقة</string>
+    <string name="omnipod_eros_error_invalid_message_address">فشل الاتصال: تم استلام رسالة بعنوان غير صالح من المضخة اللاصقة</string>
+    <string name="omnipod_eros_error_message_decoding_failed">فشل الاتصال: فشل فك تشفير الرسالة من المضخة اللاصقة</string>
+    <string name="omnipod_eros_error_nonce_resync_failed">فشل الاتصال: فشلت إعادة مزامنة الرمز العشوائي Nonce</string>
+    <string name="omnipod_eros_error_nonce_out_of_sync">فشل الاتصال: الرمز العشوائي Nonce غير متزامن</string>
+    <string name="omnipod_eros_error_not_enough_data">فشل الاتصال: لم يتم استلام بيانات كافية من المضخة اللاصقة</string>
+    <string name="omnipod_eros_error_pod_fault">تم اكتشاف خطأ في المضخة اللاصقة (%1$03d %2$s). يرجى إلغاء تفعيل المضخة اللاصقة الخاصة بك وتفعيل مضخة لاصقة جديدة</string>
+    <string name="omnipod_eros_error_pod_returned_error_response">فشل الاتصال: أعادت المضخة اللاصقة استجابة خطأ</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">لا توجد استجابة من RileyLink</string>
+    <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">تم مقاطعة اتصال RileyLink</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_pod">لا توجد استجابة من المضخة اللاصقة</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">فشل تعيين ملف الأنسولين القاعدي. قد يكون الضخ معلقا! يرجى تحديث حالة المضخة اللاصقة يدويا على شاشة المضخة واستئناف الضخ إذا لزم الأمر.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">قد يكون تعيين ملف الأنسولين القاعدي قد فشل. قد يكون الضخ معلقا! يرجى تحديث حالة المضخة اللاصقة يدويا على شاشة المضخة واستئناف الضخ إذا لزم الأمر.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">فشل تعيين ملف الأنسولين القاعدي. الضخ معلق! يرجى استئناف الضخ يدويا على شاشة المضخة.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">قد يكون إلغاء معدل الأنسولين القاعدي المؤقت قد فشل. يرجى تحديث حالة المضخة اللاصقة يدويا على شاشة المضخة.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">فشل تعيين معدل الأنسولين القاعدي المؤقت. إذا كان معدل الأنسولين القاعدي المؤقت قيد التشغيل مسبقا، فربما يكون قد تم إلغاؤه. يرجى تحديث حالة المضخة اللاصقة يدويا على شاشة المضخة.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">قد يكون تعيين معدل الأنسولين القاعدي المؤقت قد فشل. إذا كان معدل الأنسولين القاعدي المؤقت قيد التشغيل مسبقا، فقد تم إلغاؤه. يرجى تحديث حالة المضخة اللاصقة يدويا على شاشة المضخة.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_validation">يجب أن تكون مدة معدل الأنسولين القاعدي المؤقت أكبر من الصفر ومضاعفا لـ %1$s دقيقة.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">قد يكون ضبط الوقت قد فشل. قد يكون الضخ معلقا! يرجى تحديث حالة المضخة اللاصقة يدويا على شاشة المضخة واستئناف الضخ إذا لزم الأمر.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">فشل ضبط الوقت. الضخ معلق! يرجى استئناف الضخ يدويا على شاشة المضخة.</string>
+    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">فشل تغيير الوقت على المضخة اللاصقة تلقائيا. يجب عليك مزامنة الوقت يدويا على شاشة المضخة.</string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain">تعذر التحقق مما إذا كانت الجرعة قد نجحت. يرجى التحقق يدويا من أن المضخة اللاصقة تقوم بضخ الجرعة عن طريق الاستماع إلى النقرات. <b>إذا كنت متأكدا من أن الجرعة لم تنجح، فيجب عليك حذف إدخال الجرعة يدويا من العلاجات، حتى إذا قمت بالنقر فوق \'إلغاء الجرعة\' الآن!</b></string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">تعذر التحقق مما إذا كانت الجرعة التصحيحية الصغيرة SMB (%1$.2f وحدة) قد نجحت. <b>إذا كنت متأكدا من أن الجرعة لم تنجح، فيجب عليك حذف إدخال SMB يدويا من العلاجات.</b></string>
+    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">معدل الأنسولين القاعدي المؤقت قيد التشغيل على المضخة اللاصقة، ولكن AAPS ليس على علم بهذا المعدل المؤقت. يرجى إلغاء معدل الأنسولين القاعدي المؤقت يدويا.</string>
     <!-- Omnipod Eros - Pod Management -->
+    <string name="omnipod_eros_pod_management_button_riley_link_stats">إحصائيات RileyLink</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">إعادة ضبط RileyLink</string>
+    <string name="omnipod_eros_pod_management_pulse_log">سجل النبضات</string>
+    <string name="omnipod_eros_pod_management_pulse_log_value">سجل النبضات (تم نسخه إلى الحافظة)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">املأ مضخة لاصقة جديدة بكمية كافية من الأنسولين لمدة 3 أيام.\n\nاستمع إلى صوتي تنبيه صادرين من المضخة اللاصقة أثناء عملية التعبئة. يشير ذلك إلى أنه تم إدخال الحد الأدنى من الكمية البالغ 80 وحدة. احرص على إفراغ محقنة التعبئة تماما، حتى بعد سماع صوتي التنبيه.\n\nبعد تعبئة المضخة اللاصقة، يرجى الضغط على <b>التالي</b>.\n\n<b>ملاحظة:</b> لا تقم بإزالة غطاء إبرة المضخة اللاصقة في هذا الوقت.\n<b>ملاحظة:</b> يرجى وضع جهاز RileyLink في وضع مستقيم ووضع المضخة اللاصقة على بعد بضع بوصات منه.</string>
+    <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">جاري محاولة الاقتران بالمضخة اللاصقة الجديدة وتجهيزها.\n\nعندما تكتمل عملية التهيئة بنجاح، يمكنك الضغط على <b>التالي</b>.\n\n<b>ملاحظة:</b> يرجى وضع جهاز RileyLink في وضع مستقيم ووضع المضخة اللاصقة على بعد بضع بوصات منه.</string>
 </resources>
