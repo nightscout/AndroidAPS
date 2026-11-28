@@ -18,6 +18,7 @@
     <string name="settings_unreadable_keystore_explanation">El magatzem de claus del telèfon no ha respost, i AAPS no ha pogut obrir la seva configuració.</string>
     <string name="settings_unreadable_not_running">AAPS no s\'està executant i no controla la bomba. Una basal temporal activa acaba a la seva hora, i després la bomba fa servir la seva pròpia basal.</string>
     <string name="settings_unreadable_what_to_do">Reintentar tanca AAPS i el torna a iniciar. Si això no ajuda, reinicieu el telèfon. Trieu Començar de nou només quan res més no ajudi: aparta la configuració il·legible, i AAPS s\'inicia amb la configuració buida. Després importeu la vostra última exportació de configuració a l\'assistent de configuració.</string>
+    <string name="settings_unreadable_keystore_what_to_do">Reintentar tanca AAPS i el torna a iniciar. Si això no ajuda, reinicieu el telèfon. El vostre arxiu de configuració es conserva tal com està.</string>
     <string name="settings_unreadable_start_fresh">Començar de nou</string>
     <string name="settings_unreadable_confirm_title">Començar amb la configuració buida?</string>
     <string name="settings_unreadable_confirm_text">L\'arxiu de configuració il·legible es canvia de nom i es conserva. Tota la configuració torna als valors per defecte. Després torneu a configurar AAPS o importeu una exportació de configuració.</string>
