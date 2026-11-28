@@ -1,12 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Óraátállítás (nyári időszámítás) 24 órán belül</string>
+    <string name="dst_loop_disabled_warning">Óraátállítás (nyári időszámítás) kevesebb mint 3 órája – zárt hurok letiltva</string>
     <!-- Storage constraint -->
+    <string name="disk_full">Szabadítson fel legalább %1$d MB-ot a belső tárhelyen! Loop letiltva!</string>
     <!-- Version Checker -->
+    <string name="application_expired">Alkalmazás lejárt</string>
+    <string name="running_invalid_version">Érvénytelen verzió futását észleltük. Loop letiltva!</string>
+    <string name="versionavailable">Új verzió érhető el: %1$s</string>
+    <string name="version_expire">A(z) %1$s verzió lejár ekkor: %2$s, és LGS módra vált</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Újraszámított adatok használatban</string>
+    <string name="bg_too_close">Túl közeli VC-értékek:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">újraszámítva</string>
+    <string name="a11y_bg_quality_doubles">dupla bejegyzések</string>
+    <string name="a11y_bg_quality_flat">Lapos adatok. Hibásnak tekintve</string>
     <!-- Safety -->
+    <string name="limitingextendedbolus">Kiterjesztett bólus korlátozása %1$.1f E-re, ok: %2$s</string>
+    <string name="limitingcarbs">Szénhidrát korlátozása %1$d g-ra, ok: %2$s</string>
+    <string name="safety">Biztonság</string>
+    <string name="pumpisnottempbasalcapable">A pumpa nem támogatja az átmeneti bázist</string>
+    <string name="closed_loop_disabled_on_dev_branch">Fejlesztői (dev) verzió fut. A zárt hurok le van tiltva.</string>
+    <string name="closed_loop_disabled_with_eb">A zárt hurok letiltva, mert kiterjesztett bólus fut</string>
+    <string name="smbalwaysdisabled">Az SMB mindig és szénhidrát után letiltva, mert az aktív VC-forrás nem támogatja a fejlett szűrést</string>
+    <string name="smbnotallowedinopenloopmode">Az SMB nem engedélyezett nyílt hurok módban</string>
+    <string name="maxvalueinpreferences">max. érték a beállításokban</string>
+    <string name="hardlimit">szigorú korlát</string>
     <!-- Objectives -->
+    <string name="completed_well_done">Teljesítve, gratulálunk!</string>
+    <string name="not_completed_yet">Még nincs teljesítve</string>
     <string name="time_elapsed">Eltelt idő</string>
+    <string name="hasbgdata">VC elérhető a kiválasztott forrásból</string>
+    <string name="synchaswritepermission">A szinkronizálási szolgáltatásnak van írási jogosultsága</string>
+    <string name="loopenabled">Loop engedélyezve</string>
     <string name="apsselected">APS kiválasztva</string>
+    <string name="closedmodeenabled">Zárt mód engedélyezve</string>
+    <string name="description_objectives">Tanulási program</string>
+    <string name="doyouwantresetstart">Vissza szeretné állítani a célkitűzés kezdetét? Elveszítheti az eddigi haladását.</string>
+    <string name="objectives_button_unfinish">Befejezett állapot visszaállítása</string>
+    <string name="objectives_button_unstart">Elindított állapot visszaállítása</string>
+    <string name="bg_doubled_lgs">LGS mód a VC-forrás dupla értékei miatt</string>
 </resources>
