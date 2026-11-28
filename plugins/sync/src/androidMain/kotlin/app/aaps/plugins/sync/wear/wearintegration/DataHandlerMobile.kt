@@ -44,6 +44,7 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
+import app.aaps.core.interfaces.notifications.NotificationManager as AapsNotificationManager
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.SensitivityOverview
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -187,6 +188,8 @@ class DataHandlerMobile(
     @Inject lateinit var sensitivityOverview: SensitivityOverview
     @Inject lateinit var eatReminder: EatReminder
     @Inject lateinit var clientControlDispatcher: ClientControlActionDispatcher
+    // Named apart from android.app.NotificationManager, which this class also uses
+    @Inject lateinit var aapsNotificationManager: AapsNotificationManager
 
     // App lifetime: this is a @Singleton that subscribes in init and
     // never tears down. Dispatchers.IO because that is what the io scheduler gave these handlers, and
@@ -405,6 +408,11 @@ class DataHandlerMobile(
         // Not gated by the wear control switch, like the mute above: they only answer an alarm
         onEventSync<EventData.DismissAlert> { uiInteraction.dismissAlarm("Dismissed from wear") }
         onEventSync<EventData.MuteAlert> { uiInteraction.muteAlarm(it.minutes, "Muted from wear for ${it.minutes} min") }
+        // A button of the alarm notification, as a Nightscout snooze. Not gated either: it only answers an alarm
+        onEventSync<EventData.AlarmAction> {
+            val done = aapsNotificationManager.runAction(it.alarmKey, it.index)
+            aapsLogger.debug(LTag.WEAR, "Alarm button ${it.index} of ${it.alarmKey} from wear: ${if (done) "done" else "alarm gone"}")
+        }
         // Not gated by the wear control switch, like the mute above: it only ends or moves a reminder
         onEvent<EventData.ActionEatReminder> { handleEatReminder(it) }
         onEventSync<EventData.WearException> { fabricPrivacy.logWearException(it) }

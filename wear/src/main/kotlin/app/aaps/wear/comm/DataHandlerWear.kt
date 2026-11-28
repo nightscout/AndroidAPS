@@ -76,6 +76,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
@@ -173,8 +174,26 @@ class DataHandlerWear(
         onEvent<EventData.CancelNotification> {
             (context.getSystemService(WearableListenerService.NOTIFICATION_SERVICE) as NotificationManager).cancel(DataLayerListenerServiceWear.CHANGE_NOTIF_ID)
         }
-        onEvent<EventData.AlarmRinging>(detail = { " ${it.title}: ${it.status}" }) { phoneAlarmWatch.show(it) }
-        onEvent<EventData.AlarmStopped> { phoneAlarmWatch.clear() }
+        // One collector for both, so the phone's send order holds on the watch. With one coroutine per type, a
+        // stop and a new ringing that arrive together ran in either order, and the stop then cleared the alarm
+        // that came after it.
+        rxBus.toFlow(EventData::class)
+            .filter { it is EventData.AlarmRinging || it is EventData.AlarmStopped }
+            .collectResilient(dataStoreScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { event ->
+                when (event) {
+                    is EventData.AlarmRinging -> {
+                        aapsLogger.debug(LTag.WEAR, "AlarmRinging received from ${event.sourceNodeId} ${event.title}: ${event.status}")
+                        phoneAlarmWatch.show(event)
+                    }
+
+                    is EventData.AlarmStopped -> {
+                        aapsLogger.debug(LTag.WEAR, "AlarmStopped received from ${event.sourceNodeId}")
+                        phoneAlarmWatch.stop(event)
+                    }
+
+                    else                      -> Unit
+                }
+            }
         onEvent<EventData.OpenLoopRequest> { handleOpenLoopRequest(it) }
         onEvent<EventData.OpenSettings> {
             // The Display screen holds the settings of the code-based faces. With the complications

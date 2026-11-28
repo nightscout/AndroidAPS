@@ -28,6 +28,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.timeout
+import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
@@ -57,13 +58,18 @@ internal class DataHandlerWearTest : WearTestBase() {
     }
 
     @Test
-    fun `an alarm ringing on the phone is shown on the watch, and its stop takes it away`() {
+    fun `an alarm ringing on the phone is shown on the watch, and its stop takes it away, in the phone's order`() {
         val alarm = EventData.AlarmRinging(0L, title = "AAPS", status = "Pump unreachable", canMute = true)
+        val stopped = EventData.AlarmStopped(0L)
         rxBus.send(alarm)
-        verify(phoneAlarmWatch, timeout(HANDLER_TIMEOUT_MS)).show(alarm)
+        rxBus.send(stopped)
 
-        rxBus.send(EventData.AlarmStopped(0L))
-        verify(phoneAlarmWatch, timeout(HANDLER_TIMEOUT_MS)).clear()
+        verify(phoneAlarmWatch, timeout(HANDLER_TIMEOUT_MS)).show(alarm)
+        verify(phoneAlarmWatch, timeout(HANDLER_TIMEOUT_MS)).stop(stopped)
+        // Both go through one collector, so the order they were sent in is the order they ran in
+        val order = inOrder(phoneAlarmWatch)
+        order.verify(phoneAlarmWatch).show(alarm)
+        order.verify(phoneAlarmWatch).stop(stopped)
     }
 
     @Test

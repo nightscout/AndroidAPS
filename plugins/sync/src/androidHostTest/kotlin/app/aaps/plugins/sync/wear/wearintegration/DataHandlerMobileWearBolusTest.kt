@@ -107,6 +107,7 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
             ch, runningModeGuard, masterActionExecutor, batchExecutor, wizardExecutor
         )
         sut.automation = automation
+        sut.aapsNotificationManager = notificationManager
         // Confirm-title + error-title + client-reject string all go through the single-arg gs().
         doAnswer { "CONFIRM" }.whenever(rh).gs(any<TextRef>())
         whenever(rh.gs(any<TextRef>())).thenReturn("CONFIRM")
@@ -497,6 +498,11 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
     @Test fun `onEventSync dispatches a posted MuteAlert to its handler`() {
         rxBus.send(EventData.MuteAlert(0L, minutes = 5))
         verify(uiInteraction, timeout(2000)).muteAlarm(5, "Muted from wear for 5 min")
+    }
+    @Test fun `onEventSync runs the pressed button of the phone alarm`() {
+        // A snooze button of a Nightscout alarm, pressed on the watch: the same button runs on the phone
+        rxBus.send(EventData.AlarmAction(0L, alarmKey = 69, index = 2))
+        verify(notificationManager, timeout(2000)).runAction(69, 2)
     }
     @Test fun `onEvent dispatches a posted ActionBolusPreCheck to the suspend handler`() {
         // onEvent wraps the handler in rxCompletable, which runs the coroutine off the posting thread —
