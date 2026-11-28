@@ -1667,15 +1667,44 @@ class O5PumpPlugin @Inject constructor(
             handleCommandFailure(R.string.omnipod_common_error_failed_to_initialize_pod)
         }
 
+    private fun shouldCancelDeliveryBeforeDeactivation(): Boolean =
+        podStateManager.activationProgress == ActivationProgress.COMPLETED &&
+            podStateManager.isPodRunning &&
+            podStateManager.alarmType == null &&
+            !podStateManager.isPodKaput &&
+            !podStateManager.isSuspended &&
+            !podStateManager.deliverySuspended &&
+            podStateManager.pendingDoseCommand == null
+
     private fun deactivatePod(): PumpEnactResult =
         try {
+            // The queue opens the link only for a fully activated pod, so a pod that is not is connected here.
+            ensureConnected().blockingAwait()
+
+            if (shouldCancelDeliveryBeforeDeactivation()) {
+                val cancelAll = StopDeliveryCommand.Builder()
+                    .setUniqueId(requirePodId())
+                    .setSequenceNumber(podStateManager.msgSequenceNumber.toShort())
+                    .setNonce(FIXED_NONCE)
+                    .setDeliveryType(StopDeliveryCommand.DeliveryType.ALL)
+                    .setBeepType(BeepType.SILENT)
+                    .build()
+                bleManager.sendCommand(cancelAll, DefaultStatusResponse::class).ignoreElements().blockingAwait()
+                podStateManager.deliverySuspended = true
+                try {
+                    runBlocking { recordNoDelivery(pumpSync.expectedPumpState(), serialNumber()) }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    aapsLogger.warn(LTag.PUMP, "O5 could not record zero delivery after cancel all: $e")
+                }
+            }
+
             val cmd = DeactivateCommand.Builder()
                 .setUniqueId(requirePodId())
                 .setSequenceNumber(podStateManager.msgSequenceNumber.toShort())
                 .setNonce(FIXED_NONCE)
                 .build()
-            // The queue opens the link only for a fully activated pod, so a pod that is not is connected here.
-            ensureConnected().blockingAwait()
             bleManager.sendCommand(cmd, DefaultStatusResponse::class).ignoreElements().blockingAwait()
             val podSerial = serialNumber()
             reportPodFault()
@@ -1685,10 +1714,14 @@ class O5PumpPlugin @Inject constructor(
             notificationManager.dismiss(NotificationId.OMNIPOD_POD_FAULT)
             try {
                 runBlocking { recordNoDelivery(pumpSync.expectedPumpState(), podSerial) }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 aapsLogger.warn(LTag.PUMP, "O5 could not record zero delivery after deactivation: $e")
             }
             pumpEnactResultProvider.get().success(true).enacted(true)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             aapsLogger.error(LTag.PUMP, "Error deactivating O5 pod", e)
             handleCommandFailure(R.string.omnipod_common_error_failed_to_deactivate_pod)
