@@ -1,6 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="equil_name">Equil</string>
+    <string name="equil_pump_description">Equil 5.3 ili novija patch pumpa</string>
     <!--  start  -->
+    <string name="equil_basal_speed">Osnovni bazal</string>
+    <string name="equil_dressing">Promena rezervoara</string>
+    <string name="equil_dressing_onkey_msg">Klip se automatski pomera na dno rezervoara. Sam će se zaustaviti kada stigne do dna. Pritisnite „Zaustavi“ da prekinete ako je potrebno.</string>
+    <string name="equil_hint_dressing">Ova operacija će zaustaviti isporuku insulina i povući klip pumpe na dno!</string>
+    <string name="equil_insulin_reservoir">Rezervoar insulina</string>
+    <string name="equil_mode">Režim rada</string>
+    <string name="equil_mode_running">U radu</string>
+    <string name="equil_mode_stopped">Zaustavljeno</string>
+    <string name="equil_mode_suspended">Pauzirano</string>
+    <string name="equil_serialnumber">Broj uređaja</string>
+    <string name="equil_stop">Zaustavi</string>
+    <string name="equil_success">Uspešno</string>
+    <string name="equil_title_dressing">Promeni uložak</string>
+    <string name="equil_title_assemble">Sastavi pumpu</string>
+    <string name="equil_title_serial">Upari uređaj</string>
+    <string name="equil_title_fill">Punjenje</string>
+    <string name="equil_title_attach">Pričvrsti pumpu</string>
+    <string name="equil_title_air">Punjenje kanile</string>
+    <string name="equil_title_unpair_detach">Odvoji pumpu</string>
+    <string name="equil_title_history_events">Događaji u istoriji</string>
+    <string name="equil_tone">Ton alarma</string>
+    <string name="equil_bolus_speed">Brzina bolusa</string>
+    <string name="equil_bolus_speed_summary">Brži bolus može dati više alarma za okluziju.</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1,5 J/min (standardno)</string>
+    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 J/min</string>
+    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 J/min</string>
+    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 J/min</string>
+    <string name="equil_tone_mode_mute">Bez zvuka</string>
+    <string name="equil_tone_mode_shake">Samo vibracija</string>
+    <string name="equil_tone_mode_tone">Samo ton</string>
+    <string name="equil_tone_mode_tone_and_shake">Ton i vibracija</string>
+    <string name="equil_unbind_content">Ova radnja će zaustaviti infuziju insulina i vratiti klip pumpe skroz nazad! Takođe će obrisati status uparivanja!</string>
+    <string name="equil_ble_config_confirmation_title">Upari Equil patch pumpu</string>
+    <string name="equil_error">Greška pri povezivanju</string>
+    <string name="equil_change">Promeni pumpu</string>
+    <string name="equil_change_content">Odvojite pumpu od osnovne ploče.</string>
+    <string name="equil_new_infusion_set_question">Da li ćete postaviti i novi set za infuziju (osnovnu pločicu i kanilu)?</string>
+    <string name="equil_new_infusion_set_yes">Da, novi set za infuziju</string>
+    <string name="equil_new_infusion_set_no">Ne, samo rezervoar ili bateriju</string>
+    <string name="equil_same_infusion_set_hint">Kanila neće biti napunjena i promena kanile neće biti zabeležena.</string>
+    <string name="equil_unpair_alert">Da li ste sigurni da želite da se odreknete kontrole nad %1$s?</string>
+    <string name="equil_record_basal">Bazalna stopa %1$s J/h</string>
+    <string name="equil_record_basal_temp">Privremena bazalna stopa %1$s J/h</string>
+    <string name="equil_record_bolus">Bolus %1$s J</string>
+    <string name="equil_error_set_temp_basal_failed_validation">Trajanje TBR-a mora biti veće od nule i višekratnik od %1$s minuta.</string>
+    <string name="equil_basal_exceeds_max">Bazalna stopa profila %1$s J/h prelazi maksimalni bazal pumpe %2$s J/h. Povećajte podešavanje maksimalnog bazala i ponovo povežite pumpu.</string>
+    <string name="equil_not_enough_insulin">Nema dovoljno insulina u rezervoaru</string>
+    <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Niska baterija: %1$d%%</string>
+    <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">U rezervoaru nije ostalo dovoljno insulina: %1$s</string>
+    <string name="equil_reservoir_empty">Rezervoar je prazan. Pumpa više ne isporučuje insulin.</string>
+    <string name="equil_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Komanda za bolus je stigla do pumpe, ali pumpa nije odgovorila. Možda će još dati %1$s. Nemojte ponovo davati bolus. AAPS računa celu količinu.</string>
+    <string name="equil_stop_not_answered" comment="%1$s=insulin amount with unit. Example: 2.00 U, or for U200 insulin 2.00 U (1.00 CU)">Komanda za zaustavljanje nije stigla do pumpe ili je njen odgovor izgubljen. AAPS računa ceo bolus od %1$s dok log pumpe ne pokaže šta je dato.</string>
+    <string name="equil_bolus_not_given" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Log pumpe pokazuje da bolus od %1$s nije dat. AAPS ga ne računa.</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Pumpa se zaustavila tokom bolusa. Dato: %1$s od %2$s</string>
+    <string name="equil_pump_not_run">Pumpa ne radi</string>
+    <string name="equil_pair">Upari</string>
+    <string name="equil_pair_error">Greška pri uparivanju</string>
+    <string name="equil_fill">Punjenje</string>
+    <string name="equil_air">Izbaci vazduh</string>
+    <string name="equil_temp_basal_rate">Privremeni bazal</string>
+    <string name="equil_total_delivered">Ukupno isporučeno</string>
+    <string name="equil_firmware_version">Verzija firmware-a</string>
+    <string name="equil_shutdown_be">Equil će se automatski isključiti</string>
+    <string name="equil_shutdown">Automatsko isključivanje Equil pumpe</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Stopa: %1$.2f J/h, trajanje: %2$d minuta</string>
+    <string name="equil_common_history_bolus_value">%1$.2f J</string>
     <!-- equil - Commands -->
+    <string name="equil_common_cmd_set_bolus">Postavi bolus</string>
+    <string name="equil_common_cmd_cancel_bolus">Otkaži bolus</string>
+    <string name="equil_common_cmd_set_tbr">Postavi privremeni bazal</string>
+    <string name="equil_common_cmd_cancel_tbr">Otkaži privremeni bazal</string>
+    <string name="equil_common_cmd_set_basal_schedule">Postavi raspored bazala</string>
+    <string name="equil_common_cmd_set_time">Podesi vreme</string>
+    <string name="equil_common_cmd_suspend_delivery">Pauziraj isporuku</string>
+    <string name="equil_common_cmd_resume_delivery">Nastavi isporuku</string>
+    <string name="equil_common_cmd_pair">Upari Equil</string>
+    <string name="equil_common_cmd_insert_cannula">Ubaci kanilu</string>
+    <string name="equil_common_cmd_unpair">Prekini uparivanje sa Equil</string>
+    <string name="equil_common_cmd_set_extended_bolus">Postavi produženi bolus</string>
+    <string name="equil_common_cmd_cancel_extended_bolus">Otkaži produženi bolus</string>
     <!--    推杆回退-->
+    <string name="equil_common_change_insulin">Povlačenje klipa</string>
+    <string name="equil_common_set_alarm_tone">Podesi samo zvuk obaveštenja</string>
+    <string name="equil_common_set_alarm_shake">Podesi samo vibraciju</string>
+    <string name="equil_common_set_alarm_mute">Podesi bez zvuka</string>
+    <string name="equil_common_set_alarm_tone_and_shake">Podesi zvuk i vibraciju obaveštenja</string>
+    <string name="equil_common_read_devices">Pročitaj informacije o uređaju</string>
+    <string name="equil_common_cmd_fill">Punjenje</string>
+    <string name="history_manual_confirm">Ručno potvrdi</string>
+    <string name="equil_command_not_found">Uređaji nisu pronađeni</string>
+    <string name="equil_command_connect_error">Neuspešno povezivanje sa pumpom</string>
+    <string name="equil_command_connect_no_response">Nema odgovora od pumpe</string>
+    <string name="equil_command__unknown">Nepoznat status komande</string>
+    <string name="equil_install">Zalepite pumpu na telo</string>
+    <string name="equil_settings_alarm_battery">Alarm za nisku bateriju</string>
+    <string name="equil_settings_alarm_insulin">Alarm za nizak nivo rezervoara</string>
+    <string name="equil_init_insulin_error">Inicijalizacija rezervoara nije završena</string>
+    <string name="equil_history_group_all">Sve</string>
+    <string name="equil_history_group_pair">Uparivanje</string>
+    <string name="equil_history_group_bolus">Bolusi</string>
+    <string name="equil_history_group_basal">Bazali</string>
+    <string name="equil_history_group_configuration">Podešavanja</string>
+    <string name="equil_tab_action">Istorija radnji</string>
+    <string name="equil_tab_equil">Equil istorija</string>
+    <string name="equil_password_error">Lozinka za uparivanje sa Equil pumpom je netačna</string>
+    <string name="equil_none">nema</string>
+    <string name="equil_history_item1">Rezervoar – nizak nivo insulina</string>
+    <string name="equil_history_item2">Rezervoar – prazan</string>
+    <string name="equil_history_item3">Otkrivena blokada infuzije</string>
+    <string name="equil_history_item4">Otkriveno obrnuto kretanje motora</string>
+    <string name="equil_history_item5">Otkriven kvar motora</string>
+    <string name="equil_history_item6">Započeta pauza injektiranja</string>
+    <string name="equil_history_item7">Injekcija je već pauzirana</string>
+    <string name="equil_history_item8">Uskoro automatsko isključivanje</string>
+    <string name="equil_history_item9">Automatsko isključivanje!</string>
+    <string name="equil_history_item10">Punjenje rezervoara</string>
+    <string name="equil_history_item11">Vraćanje pumpe (rewind)</string>
+    <string name="equil_history_item12">Brzi bolus započet</string>
+    <string name="equil_history_item13">Privremeni bazal započet</string>
+    <string name="equil_history_item14">Privremeni bazal završen</string>
+    <string name="equil_history_item15">Nizak nivo baterije</string>
+    <string name="equil_history_item16">Baterija prazna!</string>
+    <string name="equil_history_item17">Resetovanje posle uključivanja</string>
+    <string name="equil_history_item18">Abnormalna isporuka zaustavljena</string>
+    <string name="equil_common_overview_button_suspend_delivery">Pauziraj</string>
+    <string name="equil_common_overview_button_resume_delivery">Nastavi isporuku</string>
+    <string name="equil_common_wizard_exit_confirmation_text">Niste završili sve korake. Da li ste sigurni da želite da izađete?</string>
+    <string name="equil_common_wizard_exit_confirmation_title">Izlaz</string>
+    <string name="equil_support_error">Verzija firmware-a je preniska. Nije podržano.</string>
+    <string name="equil_password_tips">Po želji postavite lozinku za uparivanje sa pumpom Equil v5.3. Ova lozinka će se koristiti i za prekid uparivanja u budućnosti, zato je obavezno zapamtite. Pravilo za lozinku: mora imati 4 znaka, izabrana od ABCDEF0123456789.</string>
+    <string name="equil_set_pair_password">Postavi lozinku za uparivanje</string>
+    <string name="equil_hint1">Nakon postavljanja pumpe na osnovnu ploču izaberite da li želite da izbacite vazduh iz kanile.</string>
+    <string name="equil_unbind">Prekini uparivanje uređaja</string>
+    <string name="equil_device_unpaired">Uparivanje uređaja je prekinuto</string>
+    <string name="equil_assemble">Sastavite pumpu, napunjen rezervoar i napunjenu bateriju</string>
+    <string name="equil_pair_password_title">Unesite lozinku za %1$s</string>
+    <string name="equil_insert">Punite rezervoar dok se na vrhu igle ne pojavi kap insulina</string>
+    <string name="equil_insert2">Pumpa ne sme biti na osnovi pumpe.</string>
+    <string name="equil_attach">Postavite pumpu na osnovu</string>
+    <string name="equil_hint2">Punjenje kanile</string>
+    <string name="equil_pump_updated">Pumpa je ažurirana</string>
+    <string name="equil_replace_reservoir">Rezervoar je prazan. Zamenite rezervoar</string>
+    <string name="equil_removed_anyway">Komanda za prekid uparivanja nije uspela. Pumpa će ipak biti uklonjena. Lozinka podešena tokom uparivanja neće biti uklonjena sa pumpe.</string>
 </resources>
