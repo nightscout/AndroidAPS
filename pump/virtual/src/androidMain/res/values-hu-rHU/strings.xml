@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">Virtuális pumpa típusa</string>
+    <string name="virtual_pump_definition">Pumpa definíció</string>
+    <string name="virtual_pump_pump_def">Bólus: Lépés=%1$s\nKiterjesztett bólus: [Lépés=%2$s, Időtartam=%3$s perc-%4$s ó]\nBázis: Lépés=%5$s\nÁtmeneti bázis: %6$s (lépés: %7$s), Időtartam=%8$s perc-%9$s ó\n%10$s</string>
+    <string name="description_pump_virtual">Pumpaintegráció olyan pumpákhoz, amelyekhez még nincs meghajtó (nyílt hurok)</string>
+    <string name="virtualpump_settings">Virtuális pumpa beállításai</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Csak diszkrét értékek, tartományok nem támogatottak a virtuális pumpa bázis/bólus felbontásaként.</string>
 </resources>
