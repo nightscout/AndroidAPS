@@ -1,2 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="objectives_button_start">بدء</string>
+    <string name="objectives_button_verify">تحقق</string>
+    <string name="nth_objective">الهدف %1$d</string>
+    <string name="objectivenotstarted">الهدف %1$d لم يبدأ</string>
+    <string name="objectivenotfinished">الهدف %1$d لم ينته</string>
+    <string name="objectives_0_objective">إعداد العرض والمراقبة، وتحليل معدلات الأنسولين القاعدي والنسب</string>
+    <string name="objectives_0_gate">تحقق من توفر قراءات سكر الدم في Nightscout، وأن بيانات أنسولين المضخة يتم رفعها</string>
+    <string name="objectives_0_learned">لقد قمت بالإعداد الأساسي لنظام AAPS. Nightscout ليس ضروريًا لعمل AAPS ولكنه مفيد جدًا للتقارير أو لمراقبة مرضى آخرين. ليس من الضروري الاتصال بـ Nightscout طوال الوقت إذا كنت تستخدمه لنفسك فقط. يمكنك مثلًا إعداد الرفع ليتم فقط عبر شبكة Wi-Fi المنزلية لتوفير البطارية.</string>
+    <string name="objectives_openloop_objective">البدء في وضع الحلقة المفتوحة</string>
+    <string name="objectives_openloop_gate">اعمل في وضع الحلقة المفتوحة لعدة أيام وقم يدويًا بتنفيذ العديد من المعدلات القاعدية المؤقتة. قم بإعداد واستخدام الأهداف المؤقتة والأهداف المؤقتة الافتراضية (مثل النشاط أو كربوهيدرات علاج انخفاض السكر)</string>
+    <string name="objectives_openloop_learned">يمكن استخدام الحلقة المفتوحة للتوصيات إذا لم يكن لديك مضخة متوافقة أو لم تكن مستعدًا لإغلاق الحلقة.</string>
+    <string name="objectives_maxbasal_objective">فهم حلقتك المفتوحة، بما في ذلك توصيات معدل الأنسولين القاعدي المؤقت</string>
+    <string name="objectives_maxbasal_gate">بناءً على تلك التجربة، حدد ما يجب أن يكون عليه الحد الأقصى لمعدل الأنسولين القاعدي، واضبطه على المضخة وفي الإعدادات. في الوضع المبسط، يتم حساب هذه القيمة وفقًا للتوصية الموجودة في موقع التعليمات وليس من الضروري تعيينها.</string>
+    <string name="objectives_maxbasal">تنفيذ الإجراء لتلبية التوصية</string>
+    <string name="objectives_maxbasal_learned">انتبه لميزات الأمان واضبط معاملات الأمان عند الضرورة.</string>
+    <string name="objectives_maxiobzero_objective">البدء في إغلاق الحلقة باستخدام إيقاف الضخ عند انخفاض السكر (LGS)</string>
+    <string name="objectives_maxiobzero_gate">العمل في الحلقة المغلقة في وضع إيقاف الضخ عند انخفاض السكر (LGS) (أي يتم ضبط الحد الأقصى للأنسولين النشط IOB = 0 تلقائيًا) لعدة أيام دون حدوث الكثير من أحداث LGS.</string>
+    <string name="objectives_maxiobzero_learned">يساعد تعيين الحد الأقصى للأنسولين النشط MaxIOB على الصفر في منع انخفاض السكر ولن يضيف أنسولينًا إضافيًا فوق المعدل القاعدي (باستثناء حالات الأنسولين النشط السالب)</string>
+    <string name="objectives_maxiob_objective">ضبط الحلقة المغلقة، ورفع الحد الأقصى للأنسولين النشط IOB فوق 0، وخفض أهداف سكر الدم تدريجيًا</string>
+    <string name="objectives_maxiob_gate">قم بتشغيله لعدة أيام، ولمدة ليلة واحدة على الأقل بدون إنذارات انخفاض سكر الدم، قبل خفض هدف سكر الدم</string>
+    <string name="objectives_maxiob_learned">قم بتحديث الحد الأقصى للأنسولين النشط MaxIOB مع نمو الطفل. لا تسمح للنظام بمنحك أنسولين أكثر مما يمكنك تغطيته بالطعام = القيمة العالية جدًا هي فكرة سيئة. يتم حساب الحد الأقصى للأنسولين النشط تلقائيًا في الوضع المبسط</string>
+    <string name="maxiobset">تم تعيين الحد الأقصى للأنسولين النشط IOB بشكل صحيح (غير مطلوب في الوضع المبسط)</string>
+    <string name="objectives_autosens_objective">قم بتعديل معدلات الأنسولين القاعدي والنسب إذا لزم الأمر، ثم قم بتفعيل Autosens (الحساسية التلقائية)</string>
+    <string name="objectives_autosens_gate">أسبوع واحد من العمل الناجح للحلقة نهارًا مع إدخال الكربوهيدرات بانتظام. في الوضع المبسط، يتم تفعيل الحساسية التلقائية افتراضيًا.</string>
+    <string name="objectives_autosens_learned">إذا كانت نتيجة الحساسية التلقائية لديك لا تتذبذب حول 100%، فملفك الشخصي خاطئ على الأرجح.</string>
+    <string name="objectives_smb_objective">تفعيل ميزات إضافية للاستخدام خلال النهار، مثل الجرعات التصحيحية الصغيرة SMB</string>
+    <string name="objectives_smb_gate">يجب عليك قراءة موقع التعليمات ورفع الحد الأقصى للأنسولين النشط maxIOB لكي تعمل الجرعات التصحيحية الصغيرة SMB بشكل جيد! بداية جيدة هي maxIOB = متوسط جرعة الوجبة + 3 × الحد الأقصى للمعدل القاعدي اليومي. في الوضع المبسط، يتم حساب هذه القيمة وفقًا للتوصية في موقع التعليمات وليس من الضروري تعيينها.</string>
+    <string name="objectives_smb_learned">استخدام الجرعات التصحيحية الصغيرة SMB هو هدفك. صممت خوارزمية Oref1 لمساعدتك في جرعاتك أيضًا. يجب ألا تعطي الجرعة الكاملة لطعامك بل جزءًا منها فقط، ودع AAPS يعطيك الباقي إذا لزم الأمر. بهذه الطريقة يكون لديك هامش أكبر للكربوهيدرات المحسوبة بشكل خاطئ. هل تعلم أنه يمكنك ضبط نسبة مئوية من نتيجة حاسبة الجرعة لتقليل حجم الجرعة؟</string>
+    <string name="objectives_auto_objective">تفعيل الأتمتة</string>
+    <string name="objectives_auto_gate">اقرأ المستندات حول كيفية عمل الأتمتة. قم بتعيين قواعدك البسيطة الأولى. بدلاً من الإجراء، دع AAPS يعرض إشعارًا فقط. عندما تتأكد من تشغيل الأتمتة في الوقت المناسب، استبدل الإشعار بإجراء حقيقي. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
+    <string name="objectives_auto_learned">الأتمتة خادم جيد لكنها سيد سيء. لا تبالغ في استخدامها. لا تحاول استبدال الخوارزمية الأساسية. اختبر القاعدة برسالة فقط قبل الاستخدام. الأمر يعتمد على الترتيب.</string>
+    <string name="objectives_bgavailableinns">سكر الدم متاح في Nightscout أو Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">حالة المضخة متاحة في Nightscout أو Tidepool</string>
+    <string name="objectives_manualenacts">التنفيذ اليدوي</string>
+    <string name="accomplished">تم إنجازه: %1$s</string>
+    <string name="objectives_usage_objective">تعلم كيفية التحكم في AAPS</string>
+    <string name="objectives_usage_gate">تنفيذ إجراءات مختلفة في AAPS</string>
+    <string name="objectives_usage_learned">لقد تعلمت أساسيات AAPS. معظم أدوات التحكم موجودة على شاشة النظرة العامة Overview. المزيد من الإجراءات موجودة في قائمتي العلاجات والإدارة أسفل الشاشة، وفي القائمة الجانبية.</string>
+    <string name="objectives_useprofileswitch">تعيين الملف الشخصي بنسبة 90% لمدة 10 دقائق</string>
+    <string name="objectives_usedisconnectpump">محاكاة الاستحمام. افصل المضخة لمدة ساعة واحدة</string>
+    <string name="objectives_usereconnectpump">... وأعد توصيلها بنفس الطريقة</string>
+    <string name="objectives_usetemptarget">إنشاء هدف مؤقت مخصص لمدة 10 دقائق</string>
+    <string name="objectives_useloop">عرض محتوى إضافة الحلقة</string>
+    <string name="objectives_usescale">استخدام التمرير أو التكبير على الرسم البياني لسكر الدم</string>
+    <string name="objectives_exam_objective">أثبت معرفتك</string>
+    <string name="objectives_exam_gate">ادرس الأسئلة. كل سؤال له عدة إجابات محتملة، ويمكن أن تكون أكثر من إجابة صحيحة. حدد جميع الإجابات الصحيحة واضغط على \"تحقق\".</string>
+    <string name="objectives_exam_learned_prerequisites">لست بحاجة إلى أن تكون مطورًا. تحتاج إلى Nightscout أو Tidepool لتجتاز الأهداف، ومضخة متوافقة، وطريقة لبناء AAPS (في متصفح الويب أو باستخدام Android Studio) للتثبيت الأول ولكل تحديث.</string>
+    <string name="objectives_exam_learned_prerequisites2">يمكن تشغيل AAPS دون اتصال بالإنترنت.</string>
+    <string name="objectives_exam_learned_basaltest">يجب مراجعة الملف الشخصي وتحديثه. ملف شخصي أفضل = نتائج أفضل.</string>
+    <string name="objectives_exam_learned_dia">مدة عمل الأنسولين DIA في الحلقة المغلقة لها معنى مختلف (الوقت حتى يتم امتصاص كل الأنسولين) عنه في علاج المضخة الكلاسيكي (الوقت حتى يتم امتصاص معظم الأنسولين).</string>
+    <string name="objectives_exam_learned_isf">لقد تعلمت معنى قيمة معامل حساسية الأنسولين ISF وكيف تؤثر على كمية الأنسولين المستخدمة لتصحيح سكر الدم.</string>
+    <string name="objectives_exam_learned_ic">لقد تعلمت معنى قيمة نسبة الأنسولين إلى الكربوهيدرات IC وكيف تؤثر على كمية الأنسولين اللازمة لتغطية الكربوهيدرات.</string>
+    <string name="objectives_exam_learned_hypott">يستخدم الهدف المؤقت لانخفاض السكر فقط لمنع التصحيح المفرط بعد انخفاض السكر، عندما يكون هناك عادةً أنسولين نشط سالب متراكم. يجب تقييم إجراءات إضافية لمنع تكرار هذا الموقف في المستقبل.</string>
+    <string name="objectives_exam_learned_profileswitch" formatted="false">استخدام النسبة المئوية لا يؤثر على أهداف سكر الدم، ولكن يتم ضبط المعدل القاعدي ومعامل حساسية الأنسولين ISF ونسبة الأنسولين إلى الكربوهيدرات IC لإعطاء المزيد من الأنسولين (أكبر من 100%) أو كمية أقل من الأنسولين (أقل من 100%).</string>
+    <string name="objectives_exam_learned_profileswitchtime">باستخدام إزاحة الوقت (timeshift) في تبديل الملف الشخصي، يمكنك تكييف الملف الشخصي اليومي مع الحالات غير المعتادة مثل الاستيقاظ المتأخر.</string>
+    <string name="objectives_exam_learned_profileswitch4">تعديل الملف الشخصي نفسه ليس كافياً لإحداث تغيير. لا تزال بحاجة إلى إجراء تبديل للملف الشخصي لتفعيل التغييرات.</string>
+    <string name="objectives_exam_learned_exercise">يجب عليك تقليل كمية الأنسولين في الجسم قبل ساعة واحدة على الأقل من بدء التمرين عن طريق اختيار ملف شخصي أقل من 100%.</string>
+    <string name="objectives_exam_learned_exercise2">يساعد تعيين هدف مؤقت أعلى قبل ساعة واحدة على الأقل من التمرين في تقليل كمية الأنسولين في الجسم أيضًا.</string>
+    <string name="objectives_exam_learned_noisycgm">عندما لا يمكنك الوثوق بقيم المراقبة المستمرة للغلوكوز CGM، يجب ألا تستخدم الحلقة دون مراقبة.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">يجب أن يعرف AAPS أن المضخة غير متصلة لحساب الأنسولين النشط IOB بشكل صحيح.</string>
+    <string name="objectives_exam_learned_insulin">يجب أن يعرف AAPS نوع الأنسولين الموجود في المضخة، لأنه يؤثر على حساب الأنسولين النشط IOB.</string>
+    <string name="objectives_exam_learned_sensitivity">اكتشاف الحساسية هو جزء من الخوارزمية التي تسمح بتكييف جرعة الأنسولين مع المواقف المختلفة.</string>
+    <string name="objectives_exam_learned_objectives">تقدمك في الأهداف يتم تخزينه جنبًا إلى جنب مع الإعدادات الأخرى ويجب عمل نسخة احتياطية منه.</string>
+    <string name="objectives_exam_learned_objectives2">احرص دائمًا على الاحتفاظ بالإعدادات المصدرة وملف APK الذي أنشأته خارج الهاتف أيضًا. فقد يضيع الهاتف أو يتلف وما إلى ذلك. مكان جيد يمكن أن يكون أي سحابة يمكن الوصول إليها من الهاتف. في هذه الحالة، يمكنك استعادة AAPS على جهاز آخر في غضون بضع دقائق. من الممارسات الجيدة تخزين كلمة المرور الرئيسية المستخدمة في مكان آمن أيضًا. بدونها تكون نسختك الاحتياطية عديمة الفائدة. وينطبق الشيء نفسه على مفاتيح التوقيع (ملف .jks) وكلمات المرور المستخدمة لبناء AAPS. الباقي ليس مهمًا - يمكن تنزيله من الإنترنت مرة أخرى في أي وقت.</string>
+    <string name="objectives_exam_learned_wrongcarbs">إذا قمت بإدخال خاطئ لـ AAPS أو لم يكن مطابقًا للواقع، قم بتصحيحه في أقرب وقت ممكن. قد يؤدي ذلك إلى إعطاء جرعة زائدة. يجب إعلام AAPS دائما بأفضل طريقة ممكنة حول الكربوهيدرات والأنسولين وما إلى ذلك.</string>
+    <string name="objectives_exam_learned_iob">إذا كنت تريد التحقق مما إذا كان AAPS يعمل بشكل جيد بالنسبة لك، فإن مراقبة الرسم البياني للأنسولين النشط IOB يمكن أن تمنحك الكثير من المعلومات المفيدة.</string>
+    <string name="objectives_exam_learned_cob">يعتمد حساب الكربوهيدرات المتبقية COB على العلاقة بين معامل حساسية الأنسولين ISF ونسبة الأنسولين إلى الكربوهيدرات IC. تؤدي زيادة معامل حساسية الأنسولين ISF أو تقليل نسبة الأنسولين إلى الكربوهيدرات IC إلى أوقات امتصاص أطول. لكن تبديل الملف الشخصي بنسبة مئوية يغير كلتا القيمتين في نفس الوقت ولا يتأثر وقت الامتصاص.</string>
+    <string name="objectives_exam_learned_breadgrams">يسمح بالغرامات فقط لإدخال الكربوهيدرات.</string>
+    <string name="objectives_exam_learned_ecarbs">الكربوهيدرات الممتدة E-carbs هي بديل للجرعة الممتدة في عالم المضخات.</string>
+    <string name="objectives_exam_learned_nsclient">يمكنك متابعة AAPS عن بعد باستخدام AAPSClient أو Nightscout. عندما يتم اقتران AAPSClient بالهاتف الرئيسي، يمكنك أيضًا التحكم في AAPS عن بعد.</string>
+    <string name="objectives_exam_learned_concentration1">استخدام أنسولين U200 مع ملف شخصي بنسبة 50% سيتطلب تحويلًا دائمًا: للجرعات الخارجية باستخدام الأقلام، وستصبح جميع التقارير القياسية المقدمة من AAPS أو Nightscout خاطئة ويجب تحويلها إلى وحدات دولية لفريق الرعاية الصحية.</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">التحول من U200 مع ملف شخصي 50% إلى U200 مع ميزة تركيز الأنسولين سيتطلب إنشاء ملف شخصي أقوى جديد، وتعطيل عامل حساسية الأنسولين الديناميكي DynISF لمدة أسبوع واحد، وتدريب الدماغ على التفكير بالوحدات الدولية.</string>
+    <string name="objectives_exam_learned_concentration3">لا يمكن تغيير تركيز الأنسولين إلا عند تغيير الأنسولين أو المضخة اللاصقة. والأهم من ذلك، وخاصة بالنسبة للمضخات الأنبوبية، لا تستخدم أبدًا واجهة مستخدم المضخة لإعطاء الجرعات مباشرة من المضخة.</string>
+    <string name="answerdisabledto">الإجابة معطلة حتى: %1$s</string>
+    <string name="wronganswer">إجابة خاطئة!</string>
+    <string name="unfinshed_button">التالي غير المكتمل</string>
+    <string name="requestcode">رمز الطلب: %1$s</string>
+    <string name="objectives_hint">(حدد جميع الإجابات الصحيحة)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
+    <string name="notconnected">غير متصل بالإنترنت</string>
+    <string name="failedretrievetime">فشل استرداد الوقت</string>
+    <string name="requirementnotmet">لم يتم استيفاء متطلبات الهدف</string>
+    <string name="what_i_ve_learned">ما تعلمته:</string>
+    <string name="verify_master_password">تحقق من معرفتك لكلمة المرور الرئيسية</string>
+    <string name="objectives_collapse">أقل</string>
+    <string name="objectives_expand">المزيد</string>
+    <string name="objectives_no_learned">لا توجد دروس مسجلة لهذا الهدف.</string>
+    <string name="objectives_open_exam">فتح الاختبار</string>
+    <string name="objectives_exam_question_progress">السؤال %1$d من %2$d</string>
+    <string name="objectives_exam_reset">إعادة تعيين</string>
+    <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">تم</string>
+    <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">قيد التنفيذ</string>
+    <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">لم يبدأ</string>
+    <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">مقفل</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">إجابة صحيحة</string>
+    <string name="objectives_exam_previous">السابق</string>
+    <string name="objectives_exam_next">التالي</string>
+    <string name="objectives_exam_next_unanswered">التالي الذي لم يتم الإجابة عليه</string>
+    <string name="objectives_show_hint">تلميح</string>
+</resources>
