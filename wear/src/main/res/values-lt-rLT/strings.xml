@@ -282,7 +282,7 @@
     <string name="tile_tap_loop_status">Ciklo būsena</string>
     <string name="action_running_mode_selected">Veikimo režimo užklausa išsiųsta</string>
     <string name="title_activity_disconnect_pump">Atjungti pompą</string>
-    <string name="title_activity_suspend_loop">Pristabdyti ciklą</string>
+    <string name="title_activity_suspend_loop">Sustabdyti ciklą</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
     <string name="wizard_carbs_type">Maisto tipas</string>
     <string name="wizard_carbs_type_bread">Duona</string>
