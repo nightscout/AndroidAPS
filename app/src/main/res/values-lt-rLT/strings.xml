@@ -18,6 +18,7 @@
     <string name="settings_unreadable_keystore_explanation">Telefono raktų saugykla neatsako, todėl AAPS nepavyko atidaryti nustatymų.</string>
     <string name="settings_unreadable_not_running">AAPS neveikia ir pompos nevaldo. Jei šiuo metu veikia laikina bazė, ji tęsis iki nustatyto laiko pabaigos, o tada pompa grįš prie savo bazinio insulino tiekimo.</string>
     <string name="settings_unreadable_what_to_do">Paspaudus \'Bandyti dar kartą\' AAPS bus uždaryta ir paleista iš naujo. Jei tai nepadeda, perkraukite telefoną. \'Pradėti iš naujo\' rinkitės tik tada, kai niekas kitas nepadeda: neperskaitomi nustatymai bus atidėti, o AAPS paleista su tuščiais nustatymais. Tada sąrankos vedlyje importuokite paskutinę eksportuotą nustatymų kopiją.</string>
+    <string name="settings_unreadable_keystore_what_to_do">Paspaudus \'Bandyti dar kartą\' AAPS bus uždaryta ir paleista iš naujo. Jei tai nepadeda, perkraukite telefoną. Jūsų nustatymų failas lieka nepakeistas.</string>
     <string name="settings_unreadable_start_fresh">Pradėti iš naujo</string>
     <string name="settings_unreadable_confirm_title">Pradėti su tuščiais nustatymais?</string>
     <string name="settings_unreadable_confirm_text">Neperskaitomas nustatymų failas bus pervadintas ir išsaugotas. Visi nustatymai bus atkurti į numatytąsias reikšmes. Tada AAPS reikės nustatyti iš naujo arba importuoti anksčiau eksportuotus nustatymus.</string>
