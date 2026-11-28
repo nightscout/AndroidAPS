@@ -1,55 +1,358 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">Egyszerű mód</string>
+    <string name="pref_title_insulin_concentration">Inzulinkoncentráció támogatása</string>
+    <string name="pref_summary_insulin_concentration">Különböző inzulinkoncentrációk támogatásának engedélyezése (U50, U200 stb.)</string>
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Képernyő bekapcsolva tartása</string>
+    <string name="pref_summary_keep_screen_on">Megakadályozza, hogy az Android kikapcsolja a képernyőt. Sok energiát fogyaszt, ha a telefon nincs töltőre csatlakoztatva.</string>
+    <string name="pref_title_show_treatment_button">Kezelés gomb megjelenítése</string>
+    <string name="pref_title_show_wizard_button">Kalkulátor gomb megjelenítése</string>
+    <string name="pref_title_show_insulin_button">Inzulin gomb megjelenítése</string>
+    <string name="pref_title_show_carbs_button">Szénhidrát gomb megjelenítése</string>
+    <string name="pref_title_show_cgm_button">CGM gomb megjelenítése</string>
+    <string name="pref_summary_show_cgm_button">Megnyitja az xDrip+ vagy a Dexcom alkalmazást (a vissza gombbal visszatérhet az AAPS-be).</string>
+    <string name="pref_title_show_calibration_button">Kalibrálás gomb megjelenítése</string>
+    <string name="pref_summary_show_calibration_button">Kalibrálást küld az xDrip+-ba (ellenőrizze, hogy az xDrip+ Inter-App beállításaiban az \'Accept Calibrations\' engedélyezve van-e).</string>
+    <string name="pref_title_show_notes_in_dialogs">Jegyzetek megjelenítése a párbeszédablakokban</string>
+    <string name="pref_title_use_bolus_advisor">Bólustanácsadó használata</string>
+    <string name="pref_summary_use_bolus_advisor">Bólustanácsadó engedélyezése, amely magasabb vércukornál segít a bólus kiszámításában.</string>
+    <string name="pref_title_use_bolus_reminder">Bólusemlékeztető használata</string>
+    <string name="pref_summary_use_bolus_reminder">Bólusemlékeztető értesítések engedélyezése, amelyek segítenek követni az inzulin beadását.</string>
+    <string name="pref_title_use_super_bolus">Szuperbólus használata</string>
+    <string name="pref_summary_use_super_bolus">Szuperbólus funkció engedélyezése, amely a bázisból vesz kölcsön inzulint azonnali beadásra.</string>
     <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">BT watchdog</string>
+    <string name="pref_summary_bt_watchdog">Egy másodpercre kikapcsolja a telefon Bluetooth-át, ha nem lehet kapcsolatot létesíteni a pumpával. Ez segíthet olyan telefonokon, ahol a Bluetooth-rendszer lefagy.</string>
     <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">Riasztás, ha nem érkezik VC-adat</string>
+    <string name="pref_title_alert_pump_unreachable">Riasztás, ha a pumpa nem elérhető</string>
+    <string name="pref_title_alert_carbs_required">Riasztás, ha szénhidrát szükséges</string>
+    <string name="pref_title_alert_urgent_as_android_notification">Sürgős riasztások megjelenítése Android-értesítésként</string>
+    <string name="pref_title_alert_increase_volume">Értesítés hangerejének fokozatos növelése</string>
+    <string name="pref_title_alert_override_dnd">Ne zavarjanak mód felülbírálása</string>
+    <string name="pref_summary_alert_override_dnd">Be: a riasztások akkor is megszólalnak, ha a telefon néma vagy Ne zavarjanak módban van. Ki: ilyenkor a riasztások nem szólalnak meg. Ne zavarjanak módban csak rezegnek.</string>
     <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">VC-adatok feltöltése NS-be</string>
+    <string name="pref_title_bg_source_create_sensor_change">Szenzorcsere naplózása</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Szenzorcsere esemény létrehozása a szenzor behelyezésekor.</string>
     <!-- APS preferences -->
+    <string name="pref_title_aps_use_dynamic_sensitivity">Dinamikus érzékenység használata</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">DynISF használata az érzékenység igazításához az Autosens helyett.</string>
+    <string name="pref_title_aps_use_autosens">Autosens használata</string>
+    <string name="pref_title_aps_use_smb">SMB engedélyezése</string>
+    <string name="pref_summary_aps_use_smb">Super Micro Bolus (SMB) engedélyezése. Az SMB azonnal inzulint ad be, hogy reagáljon az emelkedő vércukorra.</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">SMB engedélyezése magas átmeneti célértéknél</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">SMB engedélyezése, ha magas átmeneti célérték aktív.</string>
+    <string name="pref_title_aps_use_smb_always">SMB mindig engedélyezve</string>
+    <string name="pref_summary_aps_use_smb_always">Az SMB engedélyezése minden helyzetben, bólustól és COB-tól függetlenül.</string>
+    <string name="pref_title_aps_use_smb_with_cob">SMB engedélyezése COB esetén</string>
+    <string name="pref_summary_aps_use_smb_with_cob">SMB engedélyezése, ha van aktív szénhidrát (COB).</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">SMB engedélyezése alacsony átmeneti célértéknél</string>
+    <string name="pref_summary_aps_use_smb_with_low_tt">SMB engedélyezése, ha alacsony átmeneti célérték aktív.</string>
+    <string name="pref_title_aps_use_smb_after_carbs">SMB engedélyezése szénhidrát után</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">SMB engedélyezése egy ideig a szénhidrát megadása után.</string>
+    <string name="pref_title_aps_use_uam">UAM engedélyezése</string>
+    <string name="pref_summary_aps_use_uam">A be nem jelentett étkezések (UAM) észlelésének és kezelésének engedélyezése.</string>
+    <string name="pref_title_aps_sensitivity_raises_target">Az érzékenység emeli a célértéket</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">Ha érzékenység észlelhető, a glükóz célértéke megemelkedik.</string>
+    <string name="pref_title_aps_resistance_lowers_target">A rezisztencia csökkenti a célértéket</string>
+    <string name="pref_summary_aps_resistance_lowers_target">Ha rezisztencia észlelhető, a glükóz célértéke csökken.</string>
+    <string name="pref_title_aps_always_use_short_deltas">Mindig a rövid átlagos különbség használata</string>
+    <string name="pref_summary_aps_always_use_short_deltas">A VC-változás számításához mindig a rövid átlagos különbség használata az egyszerű különbség helyett.</string>
+    <string name="pref_title_aps_dynisf_adjust_sensitivity">DynamicISF: érzékenység módosítása</string>
+    <string name="pref_summary_aps_dynisf_adjust_sensitivity">Az érzékenységszámítás módosítása DynamicISF használatakor.</string>
+    <string name="pref_title_aps_autosens_adjust_targets">Autosens: célértékek módosítása</string>
+    <string name="pref_summary_aps_autosens_adjust_targets">Az Autosens a bázis és az ISF mellett a glükóz célértékét is módosíthatja.</string>
+    <string name="pref_title_aps_high_tt_raises_sensitivity">Magas átmeneti célérték növeli az érzékenységet</string>
+    <string name="pref_summary_aps_high_tt_raises_sensitivity">A magas átmeneti célértékek növelik az inzulinérzékenységet.</string>
+    <string name="pref_title_aps_low_tt_lowers_sensitivity">Alacsony átmeneti célérték csökkenti az érzékenységet</string>
+    <string name="pref_summary_aps_low_tt_lowers_sensitivity">Az alacsony átmeneti célértékek csökkentik az inzulinérzékenységet.</string>
+    <string name="pref_title_aps_use_autoisf_weights">AutoISF engedélyezése</string>
+    <string name="pref_summary_aps_use_autoisf_weights">Az AutoISF súlyalapú ISF-módosításainak engedélyezése.</string>
+    <string name="pref_title_aps_smb_on_even_target">SMB engedélyezése páros célértéknél</string>
+    <string name="pref_summary_aps_smb_on_even_target">Az SMB mindig bekapcsolásának másik módja, a glükóz célértéke alapján.</string>
     <!-- Maintenance preferences -->
+    <string name="pref_title_maintenance_enable_fabric">Fabric hibajelentés engedélyezése</string>
+    <string name="pref_title_maintenance_enable_export_automation">Automatikus beállításexportálás engedélyezése</string>
     <!-- Autotune preferences -->
+    <string name="pref_title_autotune_auto_switch_profile">Automatikus profilváltás</string>
+    <string name="pref_summary_autotune_auto_switch_profile">A számítás után automatikus váltás az Autotune által készített profilra.</string>
+    <string name="pref_title_autotune_categorize_uam_as_basal">UAM bázisként kezelése</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">A be nem jelentett étkezések bázisinzulin-igényként kezelése az Autotune számításaiban.</string>
+    <string name="pref_title_autotune_tune_insulin_curve">Inzulingörbe hangolása</string>
+    <string name="pref_title_autotune_circadian_ic_isf">Napszakos IC/ISF használata</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">Az IC és az ISF napszakos változásának alkalmazása az Autotune számításaiban.</string>
+    <string name="pref_title_autotune_additional_log">További naplózás</string>
     <!-- SMS preferences -->
+    <string name="pref_title_sms_allow_remote_commands">Távoli parancsok engedélyezése SMS-ben</string>
+    <string name="pref_title_sms_report_pump_unreachable">Nem elérhető pumpa jelzése SMS-ben</string>
+    <string name="pref_summary_sms_report_pump_unreachable">SMS-értesítés küldése, ha a pumpa nem érhető el.</string>
     <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">Pumpaállapot feltöltése NS-be</string>
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_upload_data">Adatok feltöltése NS-be</string>
+    <string name="pref_summary_ns_upload_data">Kezelések, átmeneti bázisok és más adatok feltöltése Nightscoutba.</string>
+    <string name="pref_title_ns_receive_cgm">CGM-adatok fogadása NS-ből</string>
+    <string name="pref_summary_ns_receive_cgm">CGM-értékek elfogadása Nightscoutból.</string>
+    <string name="pref_title_ns_receive_profile_store">Profiltár fogadása NS-ből</string>
+    <string name="pref_summary_ns_receive_profile_store">Profiltár-frissítések elfogadása Nightscoutból.</string>
+    <string name="pref_title_ns_receive_temp_target">Átmeneti célértékek fogadása NS-ből</string>
+    <string name="pref_summary_ns_receive_temp_target">Átmeneti célérték-változások elfogadása Nightscoutból.</string>
+    <string name="pref_title_ns_receive_profile_switch">Profilváltások fogadása NS-ből</string>
+    <string name="pref_summary_ns_receive_profile_switch">Profilváltási események elfogadása Nightscoutból.</string>
+    <string name="pref_title_ns_receive_insulin">Inzulin fogadása NS-ből</string>
+    <string name="pref_summary_ns_receive_insulin">Inzulinkezelések elfogadása Nightscoutból.</string>
+    <string name="pref_title_ns_receive_carbs">Szénhidrát fogadása NS-ből</string>
+    <string name="pref_summary_ns_receive_carbs">Szénhidrát-bejegyzések elfogadása Nightscoutból.</string>
+    <string name="pref_title_ns_receive_therapy_event">Terápiás események fogadása NS-ből</string>
+    <string name="pref_summary_ns_receive_therapy_event">Terápiás események elfogadása Nightscoutból.</string>
+    <string name="pref_title_ns_receive_running_mode">Működési mód fogadása NS-ből</string>
+    <string name="pref_summary_ns_receive_running_mode">Működésimód-változások elfogadása Nightscoutból.</string>
+    <string name="pref_title_ns_receive_tbr_eb">Átmeneti bázis és kiterjesztett bólus fogadása NS-ből</string>
+    <string name="pref_summary_ns_receive_tbr_eb">Átmeneti bázisok és kiterjesztett bólusok elfogadása Nightscoutból.</string>
+    <string name="pref_title_ns_notifications_from_alarms">NS-riasztások</string>
+    <string name="pref_title_ns_notifications_from_announcements">NS-közlemények</string>
+    <string name="pref_title_ns_use_cellular">Mobiladat használata</string>
+    <string name="pref_title_ns_use_roaming">Roaming használata</string>
+    <string name="pref_title_ns_use_wifi">WiFi használata</string>
+    <string name="pref_title_ns_use_on_battery">Szinkronizálás akkumulátorról</string>
+    <string name="pref_title_ns_use_on_charging">Szinkronizálás töltés közben</string>
+    <string name="pref_title_ns_log_app_start">Alkalmazásindítás naplózása</string>
+    <string name="pref_title_ns_create_announcements_from_errors">Közlemények létrehozása hibákból</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">Közlemények létrehozása szükséges szénhidrátból</string>
+    <string name="pref_title_ns_slow_sync">Lassú szinkronizálás használata</string>
+    <string name="pref_title_ns_use_ws">Websocketek használata</string>
+    <string name="pref_summary_ns_use_ws">Websocketek használata a valós idejű kommunikációhoz a Nightscouttal.</string>
+    <string name="pref_title_ns_allow_client_control">Kliens általi vezérlés engedélyezése</string>
+    <string name="pref_summary_ns_allow_client_control">A párosított kliens eszközök aláírt parancsokat küldhetnek (pl. jelenetek indítása/leállítása) a Nightscouton keresztül. Ez a szigorított módot is bekapcsolja: a közvetlenül a Nightscoutban végzett változtatások többé nem lesznek elfogadva.</string>
     <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">Csak WiFi-n</string>
+    <string name="pref_title_openhumans_charging_only">Csak töltés közben</string>
     <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_status">Állapot küldése xDrip+-ba</string>
+    <string name="pref_title_xdrip_send_detailed_iob">Részletes IOB küldése</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">Részletes IOB-adatok küldése xDrip+-ba, hogy megjelenjenek a számlapokon.</string>
+    <string name="pref_title_xdrip_send_bgi">BGI megjelenítése</string>
+    <string name="pref_summary_xdrip_send_bgi">A vércukorhatás (BGI) megjelenítése az xDrip+ állapotsorában.</string>
     <!-- Wear preferences -->
+    <string name="pref_title_wear_control">Vezérlés órával</string>
+    <string name="pref_summary_wear_control">Az AAPS vezérlése Android Wear órával.</string>
+    <string name="pref_title_wear_wizard_bg">VC figyelembevétele a bóluskalkulátorban</string>
+    <string name="pref_title_wear_wizard_tt">Átmeneti célérték figyelembevétele a bóluskalkulátorban</string>
+    <string name="pref_title_wear_wizard_trend">Trend figyelembevétele a bóluskalkulátorban</string>
+    <string name="pref_title_wear_wizard_cob">COB figyelembevétele a bóluskalkulátorban</string>
+    <string name="pref_title_wear_wizard_iob">IOB figyelembevétele a bóluskalkulátorban</string>
+    <string name="pref_title_wear_custom_watchface_authorization">Egyéni számlapok engedélyezése</string>
+    <string name="pref_title_wear_pushed_watchface">Az órára telepített számlap</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Komplikációs számlap</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Egyéni számlap</string>
+    <string name="pref_title_wear_notify_on_smb">Értesítés SMB-nél</string>
+    <string name="pref_summary_wear_notify_on_smb">Értesítés küldése az órára, amikor SMB beadása történik.</string>
+    <string name="pref_title_wear_broadcast_data">Adatok továbbítása az órára</string>
+    <string name="pref_summary_wear_broadcast_data">AAPS-adatok továbbítása külső óraalkalmazásoknak intenten keresztül.</string>
     <!-- Site rotation preferences -->
+    <string name="pref_title_site_rotation_manage_pump">Pumpa szúrási helyeinek váltogatása</string>
+    <string name="pref_title_site_rotation_manage_cgm">CGM szúrási helyeinek váltogatása</string>
     <!-- IntKey: Overview preferences -->
+    <string name="pref_title_carbs_button_increment_1">1. szénhidrátgomb értéke</string>
+    <string name="pref_title_carbs_button_increment_2">2. szénhidrátgomb értéke</string>
+    <string name="pref_title_carbs_button_increment_3">3. szénhidrátgomb értéke</string>
+    <string name="carb_increment_button_message">A gomb megnyomásakor hozzáadott szénhidrát mennyisége</string>
+    <string name="pref_title_cage_warning">Kanül korának figyelmeztetési küszöbe</string>
+    <string name="pref_title_cage_critical">Kanül korának kritikus küszöbe</string>
+    <string name="pref_title_iage_warning">Inzulin korának figyelmeztetési küszöbe</string>
+    <string name="pref_title_iage_critical">Inzulin korának kritikus küszöbe</string>
+    <string name="pref_title_sage_warning">Szenzor korának figyelmeztetési küszöbe</string>
+    <string name="pref_title_sage_critical">Szenzor korának kritikus küszöbe</string>
+    <string name="pref_title_sbat_warning">Szenzorelem töltöttségi szintjének figyelmeztetési küszöbe</string>
+    <string name="pref_title_sbat_critical">Szenzorelem töltöttségi szintjének kritikus küszöbe</string>
+    <string name="pref_title_bage_warning">Pumpaelem korának figyelmeztetési küszöbe</string>
+    <string name="pref_title_bage_critical">Pumpaelem korának kritikus küszöbe</string>
+    <string name="pref_title_res_warning">Tartályszint figyelmeztetési küszöbe</string>
+    <string name="pref_title_res_critical">Tartályszint kritikus küszöbe</string>
+    <string name="pref_title_batt_warning">Pumpaelem töltöttségi szintjének figyelmeztetési küszöbe</string>
+    <string name="pref_title_batt_critical">Pumpaelem töltöttségi szintjének kritikus küszöbe</string>
+    <string name="pref_title_bolus_percentage">Bólus százaléka</string>
+    <string name="deliverpartofboluswizard">Ez az érték érvényes a bóluskalkulátor eredményében a VC- és szénhidrát-korrekcióra</string>
+    <string name="pref_title_reset_bolus_percentage_time">Bólus százalékának visszaállítási ideje</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Teljes bólus (100%) beadása, ha a VC-érték régebbi, mint</string>
     <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">Védelem időkorlátja</string>
+    <string name="pref_title_protection_type_application">0. szint: Alkalmazásvédelem</string>
+    <string name="pref_summary_protection_type_application">Az alkalmazás indításakor és az alkalmazásba való visszatéréskor. Független a többi szinttől</string>
+    <string name="pref_title_protection_type_bolus">1. szint: Bólusvédelem</string>
+    <string name="pref_summary_protection_type_bolus">Kezelések, profil aktiválása. A 2. szint is szükséges hozzá</string>
+    <string name="pref_title_protection_type_settings">2. szint: Beállításvédelem</string>
+    <string name="pref_summary_protection_type_settings">Profilok és beállítások szerkesztése</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">Nincs védelem</string>
+    <string name="biometric">Biometrikus</string>
+    <string name="master_password">Mesterjelszó</string>
+    <string name="custom_password">Egyéni jelszó</string>
+    <string name="custom_pin">Egyéni PIN</string>
     <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">Megengedett maximális szénhidrát</string>
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">Nyílt hurok minimális változása</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">A nyílt hurok csak akkor kér új módosítást, ha a változás nagyobb ennél az értéknél (%). Alapértelmezett érték: 20%</string>
     <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">SMB időköze</string>
+    <string name="pref_title_smb_max_minutes">Az SMB-t korlátozó bázis max. perce</string>
+    <string name="pref_title_uam_smb_max_minutes">Az SMB-t korlátozó bázis max. perce UAM esetén</string>
+    <string name="uam_smb_max_minutes">UAM SMB max. perc</string>
+    <string name="pref_title_carbs_request_threshold">Szükséges szénhidrát küszöbe</string>
+    <string name="carbs_req_threshold_summary">A szénhidrátjavaslat-riasztás megjelenítéséhez szükséges legkisebb szénhidrátmennyiség grammban. Az ennél kisebb szénhidrátjavaslatok nem küldenek értesítést.</string>
+    <string name="pref_title_half_basal_exercise_target">Fél bázisú mozgás célértéke</string>
+    <string name="half_basal_exercise_target_summary">Adjon meg egy számot, pl. 160. Ez azt jelenti, hogy ha az átmeneti célérték 160 mg/dl, és a „Magas átmeneti célérték növeli az érzékenységet” be van kapcsolva, akkor ezen a szinten 50%% bázis fut (120 = 75%%; 140 = 60%%).</string>
+    <string name="pref_title_iob_threshold_percent">IOB küszöbszázaléka</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">A maxIOB azon százaléka, amely felett az SMB-k le vannak tiltva.\nAlapértelmezett érték: 100%\n100% esetén ez a funkció gyakorlatilag ki van kapcsolva.</string>
+    <string name="pref_title_dynisf_adjustment_factor">DynamicISF módosító tényező</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">A DynamicISF módosító tényezője. 100% feletti érték agresszívabb korrekciós adagokat ad, 100% alatti érték kevésbé agresszív korrekciókat.</string>
+    <string name="pref_title_autosens_period">Autosens időszak</string>
+    <string name="openapsama_autosens_period_summary">Az érzékenység észleléséhez figyelembe vett elmúlt órák száma (a szénhidrát-felszívódás ideje nem számít bele)</string>
     <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">Elküldendő naplófájlok száma</string>
     <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">Elavult adatok küszöbe</string>
+    <string name="pref_title_pump_unreachable_threshold">Nem elérhető pumpa küszöbe</string>
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">Hangolási napok alapértelmezett száma</string>
+    <string name="autotune_default_tune_days_summary">Az Autotune által feldolgozott napok alapértelmezett száma (legfeljebb 30)</string>
     <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">Távoli bólusok közötti min. idő</string>
     <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">Véletlen VC időköze</string>
+    <string name="pref_title_random_bg_randomize">VC-adatok véletlenszerűsítése</string>
+    <string name="pref_summary_random_bg_randomize">Zaj hozzáadása, időbélyegek eltolása, véletlenszerű trendnyilak és alkalmanként véletlen szénhidrát. Kikapcsolva tiszta, mindig azonos szinuszgörbe, a trendnyíl a szinusz meredekségéből jön.</string>
     <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">Elavult adatok riasztási küszöbe</string>
+    <string name="pref_title_urgent_alarm_stale_data">Elavult adatok sürgős riasztási küszöbe</string>
     <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">Felhasználói profil a szúrási helyek váltogatásához</string>
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
+    <string name="site_rotation_profile_man">Férfi</string>
+    <string name="site_rotation_profile_woman">Nő</string>
+    <string name="site_rotation_profile_child">Gyermek</string>
     <!-- StringKey: General preferences -->
+    <string name="pref_title_units">Mértékegység</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="lang_default">Rendszer alapértelmezése</string>
+    <string name="pref_title_patient_name">Példány neve</string>
+    <string name="pref_summary_patient_name">A telefont használó személy neve. Ez különbözteti meg ezt az AAPS-példányt a jelentésekben és a szinkronizálásban.</string>
     <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">AAPS-mappa</string>
     <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">Mesterjelszó</string>
+    <string name="pref_title_settings_password">Beállítások jelszava</string>
+    <string name="pref_title_settings_pin">Beállítások PIN-kódja</string>
+    <string name="pref_title_application_password">Alkalmazás jelszava</string>
+    <string name="pref_title_application_pin">Alkalmazás PIN-kódja</string>
+    <string name="pref_title_bolus_password">Bólus jelszava</string>
+    <string name="pref_title_bolus_pin">Bólus PIN-kódja</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="pref_summary_theme_switcher">Válasszon sötét vagy világos témát, vagy kövesse a rendszer témáját</string>
+    <string name="pref_title_app_color_scheme">Alkalmazás színsémája</string>
+    <string name="pref_dark_theme">Sötét téma</string>
+    <string name="pref_light_theme">Világos téma</string>
+    <string name="pref_follow_system_theme">Eszköz témájának használata</string>
     <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">Beteg életkora</string>
     <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">E-mail címzettje</string>
+    <string name="pref_title_identification">Azonosító a hibajelentésekhez</string>
     <!-- StringKey: Automation preferences -->
+    <string name="pref_title_automation_location">Helymeghatározás</string>
+    <string name="automation_location_passive">Passzív helymeghatározás használata</string>
+    <string name="automation_location_network">Hálózati helymeghatározás használata</string>
+    <string name="automation_location_gps">GPS-helymeghatározás használata</string>
     <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers">Engedélyezett telefonszámok</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_otp_pin">Kötelező kiegészítő PIN a token végén</string>
+    <string name="smscommunicator_otp_pin_summary">További számjegyek, amelyeket meg kell jegyezni, és minden generált egyszer használatos jelszó végére kell írni</string>
     <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">Pumpa típusa</string>
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">Nightscout URL</string>
+    <string name="ns_client_url_summary">Adja meg a Nightscout URL-jét (pl. https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_secret_title">Nightscout API secret</string>
+    <string name="ns_client_secret_summary">Adja meg a Nightscout API secretet (min. 12 karakter)</string>
+    <string name="nsclient_token_title">Nightscout hozzáférési token</string>
+    <string name="nsclient_token_summary">Adja meg a Nightscout hozzáférési tokenjét (min. 17 karakter)</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_wifi_ssids_summary">Engedélyezett SSID-k (pontosvesszővel elválasztva)</string>
     <!-- DoubleKey: Overview preferences -->
+    <string name="pref_title_insulin_button_increment_1">1. inzulingomb értéke</string>
+    <string name="pref_title_insulin_button_increment_2">2. inzulingomb értéke</string>
+    <string name="pref_title_insulin_button_increment_3">3. inzulingomb értéke</string>
+    <string name="insulin_increment_button_message">A gomb megnyomásakor hozzáadott inzulin mennyisége</string>
     <!-- DoubleKey: Actions preferences -->
+    <string name="pref_title_fill_button_1">1. feltöltés gomb</string>
+    <string name="pref_title_fill_button_2">2. feltöltés gomb</string>
+    <string name="pref_title_fill_button_3">3. feltöltés gomb</string>
     <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">Maximális bólus</string>
+    <string name="treatmentssafety_maxbolus_summary">A beteg kiválasztott életkora korlátozza ezt az értéket. Az itt megadott magasabb értéknek nincs hatása.</string>
     <!-- DoubleKey: APS preferences -->
-    <string name="openapsama_min_5m_carb_impact_summary">Alapértelmezett érték: 3.0 (AMA) vagy 8.0 (SMB). Ez az alapértelmezett szénhidrát-felszívódás hatás 5 percenkénti beállítása. Az alapértelmezett érték 3 mg/dl/5 perc. Ez befolyásolja, hogy milyen gyorsan csökken a COB, és mekkora szénhidrát-felszívódást feltételezünk a jövőbeni előre jelzett vércukorszint kiszámításakor, amikor a BG a vártnál jobban esik, vagy nem úgy emelkedik, ahogy vártuk.</string>
+    <string name="pref_title_max_basal">Maximális bázisütem</string>
+    <string name="openapsma_max_basal_summary">Az OpenAPS ezt az értéket max basal néven ismeri\nA beteg kiválasztott életkora korlátozza ezt az értéket. Az itt megadott magasabb értéknek nincs hatása.</string>
+    <string name="pref_title_smb_max_iob">Max. IOB SMB esetén</string>
+    <string name="openapssmb_max_iob_summary">Az OpenAPS ezt az értéket Max IOB néven ismeri\nAz OpenAPS nem ad több inzulint, ha a jelenlegi IOB nagyobb ennél az értéknél.\nA beteg kiválasztott életkora korlátozza ezt az értéket. Az itt megadott magasabb értéknek nincs hatása.</string>
+    <string name="pref_title_ama_max_iob">Max. IOB AMA esetén</string>
+    <string name="openapsma_max_iob_summary">Az OpenAPS ezt az értéket Max IOB néven ismeri\nEz az a legnagyobb inzulinmennyiség [E], amelyet az APS egyszerre beadhat.\nA beteg kiválasztott életkora korlátozza ezt az értéket. Az itt megadott magasabb értéknek nincs hatása.</string>
+    <string name="pref_title_max_daily_multiplier">Max. napi biztonsági szorzó</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Alapértelmezett érték: 3. Ez az OpenAPS egyik fő biztonsági korlátja. A bázist a legnagyobb bázisütem 3-szorosára korlátozza. Valószínűleg nem kell módosítania, de tudnia kell, hogy a biztonsági korlátoknál emlegetett „3x max daily; 4x current” szabály erről szól.</string>
+    <string name="pref_title_current_basal_multiplier">Aktuális bázis biztonsági szorzója</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Alapértelmezett érték: 4 Ez az OpenAPS fő biztonsági korlátainak másik fele, a „3x max. napi; 4x aktuális” biztonsági korlát másik része. Ez azt jelenti, hogy a bázis – a pumpán beállított max. bázistól függetlenül – nem lehet nagyobb, mint ez a szám szorozva az aktuális bázisszinttel. Így senki sem kerülhet veszélyes helyzetbe azzal, hogy túl magas max. bázist állít be, mielőtt megértené az algoritmus működését. Az alapértelmezett érték ismét 4x; a legtöbb felhasználónak ezt soha nem kell módosítania, inkább más beállításokat kell módosítania, ha úgy érzi, hogy „beleütközik” ebbe a biztonsági korlátba.</string>
+    <string name="pref_title_bolus_snooze_divisor">Bólusszundi DIA-osztója</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Alapértelmezett érték: 2\nA bólusszundi étkezési bólus után lép életbe, hogy a Loop ne ellensúlyozza alacsony átmeneti bázisokkal, amikor éppen evett. A példa és az alapértelmezett érték is 2; így 3 órás DIA esetén a bólusszundi fokozatosan, 1,5 óra alatt szűnik meg (3DIA/2).</string>
+    <string name="pref_title_ama_min_5m_carbs_impact">AMA min. 5 perces szénhidráthatás</string>
+    <string name="pref_title_smb_min_5m_carbs_impact">SMB min. 5 perces szénhidráthatás</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Alapértelmezett érték: 3,0 (AMA) vagy 8,0 (SMB). Ez az alapértelmezett szénhidrát-felszívódás hatás 5 percenkénti beállítása. Az alapértelmezett érték 3 mg/dl/5 perc. Ez befolyásolja, hogy milyen gyorsan csökken a COB, és mekkora szénhidrát-felszívódást feltételezünk a jövőbeni előre jelzett vércukorszint kiszámításakor, amikor a VC a vártnál jobban esik, vagy nem úgy emelkedik, ahogy vártuk.</string>
+    <string name="pref_title_absorption_cutoff">Felszívódás határideje</string>
+    <string name="absorption_cutoff_summary">Az az idő, amely után minden étkezés felszívódottnak számít. A maradék szénhidrát törlődik.</string>
+    <string name="pref_title_absorption_maxtime">Felszívódás max. ideje</string>
+    <string name="absorption_max_time_summary">Az idő órában, amely alatt egy étkezés teljes szénhidrátja várhatóan felszívódik</string>
+    <string name="pref_title_autosens_min">Autosens min.</string>
+    <string name="openapsama_autosens_min_summary">Alapértelmezett érték: 0,7\nAz Autosens biztonsági korlátainak másik oldala: korlátozza, hogy az Autosens mennyire csökkentheti a bázist, és mennyire növelheti az ISF-et és a VC-célértékeket.</string>
+    <string name="pref_title_autosens_max">Autosens max.</string>
+    <string name="openapsama_autosens_max_summary">Alapértelmezett érték: 1,2\nEz az Autosens (és hamarosan az Autotune) szorzójának felső korlátja, amely 20%%-os maximumot állít be az Autosens arányára. Ez határozza meg, hogy az Autosens mennyire növelheti a bázist, mennyire csökkentheti az ISF-et, és mennyire csökkentheti a VC-célértéket.</string>
+    <string name="pref_title_autoisf_min">AutoISF min.</string>
+    <string name="openapsama_autoISF_min_summary">Az autosens_min-hez hasonlóan ez határozza meg, mennyire gyengülhet az ISF.\n\nAz 1,0 alapértelmezett érték gyakorlatilag kikapcsolja ezt a hatást.</string>
+    <string name="pref_title_autoisf_max">AutoISF max.</string>
+    <string name="openapsama_autoISF_max_summary">Az autosens_max-hoz hasonlóan ez határozza meg, mennyire erősödhet az ISF.\n\nAz 1,0 alapértelmezett érték gyakorlatilag kikapcsolja ezt a hatást.\n\nFIGYELEM: 2,5 feletti értékeknél legyen nagyon óvatos</string>
+    <string name="pref_title_bg_accel_weight">VC-gyorsulás ISF-súlya</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Ez a súly akkor érvényes, amikor a glükóz változása gyorsul. Erősíti az ISF-et, így növelheti az inzulinbeadást.\n\nA 0,0 alapértelmezett érték gyakorlatilag kikapcsolja ezt a hatást.</string>
+    <string name="pref_title_bg_brake_weight">VC-fékezés ISF-súlya</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Ez a súly akkor érvényes, amikor a glükóz változása lassul. Gyengíti az ISF-et, így csökkentheti az inzulinbeadást.\n\nA 0,0 alapértelmezett érték gyakorlatilag kikapcsolja ezt a hatást.</string>
+    <string name="pref_title_low_bg_weight">Alacsony VC-tartomány súlya</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Ez a súly akkor érvényes, amikor a glükóz a célérték alatt van. Gyengíti az ISF-et, így csökkentheti az inzulinbeadást.\n\nA 0,0 alapértelmezett érték gyakorlatilag kikapcsolja ezt a hatást.</string>
+    <string name="pref_title_high_bg_weight">Magas VC-tartomány súlya</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Ez a súly akkor érvényes, amikor a glükóz a célérték felett van. Erősíti az ISF-et, így növelheti az inzulinbeadást.\n\nA 0,0 alapértelmezett érték gyakorlatilag kikapcsolja ezt a hatást.</string>
+    <string name="pref_title_smb_delivery_ratio_bg_range">SMB-beadási arány VC-tartománya</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Alapértelmezett érték: 0. A lineárisan növekvő SMB-beadási arány a [target_bg, target_bg+bg_range] glükóztartományhoz tartozik.\ntarget_bg értéknél az SMB-arány smb_delivery_ratio_min, target_bg+bg_range értéknél smb_delivery_ratio_max\n0 esetén a lineárisan növekvő SMB-arány ki van kapcsolva, és a rögzített smb_delivery_ratio érvényes.</string>
+    <string name="pref_title_pp_weight">Étkezés utáni ISF-súly</string>
+    <string name="openapsama_pp_ISF_weight_summary">Ez a súly akkor érvényes, amikor a glükóz emelkedik. Erősíti az ISF-et, így növelheti az inzulinbeadást.\n\nA 0,0 alapértelmezett érték gyakorlatilag kikapcsolja ezt a hatást.</string>
+    <string name="pref_title_dura_weight">Időtartam ISF-súlya</string>
+    <string name="openapsama_dura_ISF_weight_summary">Ez a súly hosszabb ideig tartó, magas glükózszintű platók alatt érvényes. Erősíti az ISF-et, így növelheti az inzulinbeadást.\n\nA 0,0 alapértelmezett érték gyakorlatilag kikapcsolja ezt a hatást.</string>
+    <string name="pref_title_smb_delivery_ratio">SMB-beadási arány</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Alapértelmezett érték: 0,5. Ez az OpenAPS egy másik fő biztonsági korlátja: megadja, hogy a szükséges teljes inzulin mekkora része adható be SMB-ként. Ez megakadályozza a veszélyes helyzetet, ha a gondozó telefonjáról egyszerre adnak SMB-kéréseket. Ezt a kísérleti értéket lassan és óvatosan növelje.</string>
+    <string name="pref_title_smb_delivery_ratio_min">SMB-beadási arány min.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Alapértelmezett érték: 0,5. Ez egy lineárisan növekvő arány alsó határa, a fenti fix érték helyett.</string>
+    <string name="pref_title_smb_delivery_ratio_max">SMB-beadási arány max.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Alapértelmezett érték: 0,5. Ez egy lineárisan növekvő arány felső határa, a fenti fix érték helyett.</string>
+    <string name="pref_title_smb_max_range_extension">SMB max. tartománybővítés</string>
+    <string name="openapsama_smb_max_range_extension_summary">Alapértelmezett érték: 1 Ez egy másik fontos OpenAPS biztonsági korlát. Megadja, hányszorosan lépheti túl a szokásos 120 maxSMB/maxUAM percet. Ezt a kísérleti értéket lassan és óvatosan növelje.</string>
     <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_low_mark">Alacsony VC határa</string>
+    <string name="pref_title_high_mark">Magas VC határa</string>
     <!-- UnitDoubleKey: APS preferences -->
+    <string name="pref_title_lgs_threshold">LGS-küszöb</string>
+    <string name="lgs_threshold_summary">Az a VC-érték, amely alatt az inzulinbeadás felfüggesztésre kerül. Az alapértelmezett érték a szokásos célérték-modellt használja. A felhasználó 60 mg/dl (3,3 mmol/l) és 100 mg/dl (5,5 mmol/l) közötti értéket állíthat be. 65/3,6 alatti értéknél az alapértelmezett modell érvényes</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
 </resources>
