@@ -4,8 +4,6 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -29,13 +28,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarResult
@@ -45,6 +42,9 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -63,7 +63,7 @@ import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.icons.IcCalculator
 import app.aaps.core.ui.compose.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoodManagementScreen(
     viewModel: FoodManagementViewModel,
@@ -72,8 +72,22 @@ fun FoodManagementScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val filteredFoods by viewModel.filteredFoods.collectAsStateWithLifecycle()
-    val filteredSubCategories by viewModel.filteredSubCategories.collectAsStateWithLifecycle()
+    val categoryChoices by viewModel.categoryChoices.collectAsStateWithLifecycle()
+    val subCategoryChoices by viewModel.subCategoryChoices.collectAsStateWithLifecycle()
     val snackbarHostState = LocalSnackbarHostState.current
+    val listState = rememberLazyListState()
+    // The list goes back to the top when the filters, the sort or the search change. Without this
+    // the list keeps the food that was at the top before, and the foods above it are out of view:
+    // after "None" then "All" in A to Z order, the list starts at "C" and looks badly sorted.
+    // The new list comes a moment after the new filter, so the scroll waits for it.
+    val listQuery = listOf(state.filterCategory, state.filterSubCategory, state.sortFoodsByName, state.searchQuery)
+    var shownQuery by remember { mutableStateOf(listQuery) }
+    LaunchedEffect(filteredFoods) {
+        if (listQuery != shownQuery) {
+            shownQuery = listQuery
+            listState.scrollToItem(0)
+        }
+    }
     val undoLabel = stringResource(CoreUiStrings.undo)
     val deletedLabel = stringResource(CoreUiStrings.food_deleted)
 
@@ -120,43 +134,18 @@ fun FoodManagementScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            // Filter chips
-            if (state.allCategories.isNotEmpty()) {
-                FlowRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = AapsSpacing.extraLarge),
-                    horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
-                ) {
-                    state.allCategories.forEach { cat ->
-                        FilterChip(
-                            selected = state.filterCategory == cat,
-                            onClick = {
-                                viewModel.setFilterCategory(if (state.filterCategory == cat) null else cat)
-                            },
-                            label = { Text(cat) }
-                        )
-                    }
-                }
-                if (filteredSubCategories.isNotEmpty() && state.filterCategory != null) {
-                    FlowRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = AapsSpacing.extraLarge),
-                        horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
-                    ) {
-                        filteredSubCategories.forEach { sub ->
-                            FilterChip(
-                                selected = state.filterSubCategory == sub,
-                                onClick = {
-                                    viewModel.setFilterSubCategory(if (state.filterSubCategory == sub) null else sub)
-                                },
-                                label = { Text(sub) }
-                            )
-                        }
-                    }
-                }
-            }
+            // Category and subcategory filters, and the sort: one row of fixed height, whatever the
+            // number of groups.
+            GroupFilterRow(
+                categories = categoryChoices,
+                subCategories = subCategoryChoices,
+                category = state.filterCategory,
+                subCategory = state.filterSubCategory,
+                onCategory = viewModel::setFilterCategory,
+                onSubCategory = viewModel::setFilterSubCategory,
+                sortByName = state.sortFoodsByName,
+                onSortByName = viewModel::setSortFoodsByName,
+            )
 
             // Food list
             if (state.isLoading) {
@@ -173,6 +162,7 @@ fun FoodManagementScreen(
                 }
             } else {
                 LazyColumn(
+                    state = listState,
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(bottom = AapsSpacing.fabClearance),
                     verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)
@@ -212,7 +202,9 @@ fun FoodManagementScreen(
                     onDelete = if (state.editorFood != null) {
                         { focusManager.clearFocus(); viewModel.deleteAndCloseEditor() }
                     } else null,
-                    isEditing = state.editorFood != null
+                    isEditing = state.editorFood != null,
+                    categories = viewModel.categorySuggestions(),
+                    subCategories = viewModel.subCategoriesOf(state.editorCategory),
                 )
             }
         }
@@ -321,6 +313,8 @@ internal fun FoodEditorContent(
     onCancel: () -> Unit,
     onDelete: (() -> Unit)?,
     isEditing: Boolean,
+    categories: List<String> = emptyList(),
+    subCategories: List<String> = emptyList(),
 ) {
     Column(
         modifier = Modifier
@@ -329,7 +323,7 @@ internal fun FoodEditorContent(
             .imePadding()
             .consumeOverscroll()
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = AapsSpacing.xxLarge)
+            .padding(horizontal = AapsSpacing.extraLarge)
             .padding(bottom = AapsSpacing.xxLarge),
         verticalArrangement = Arrangement.spacedBy(AapsSpacing.large)
     ) {
@@ -338,82 +332,77 @@ internal fun FoodEditorContent(
             style = MaterialTheme.typography.titleLarge
         )
 
-        OutlinedTextField(
+        CompactTextField(
             value = state.editorName,
             onValueChange = onNameChange,
-            label = { Text(stringResource(CoreUiStrings.name)) },
+            label = stringResource(CoreUiStrings.name),
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
             isError = state.editorSaveAttempted && state.editorName.isBlank()
         )
 
-        Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.large)) {
-            OutlinedTextField(
+        // The values already used are proposed, so "Fruits" is not typed again as "fruit".
+        // Only the subcategories of the chosen category are proposed.
+        Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+            SuggestionField(
                 value = state.editorCategory,
                 onValueChange = onCategoryChange,
-                label = { Text(stringResource(CoreUiStrings.category)) },
-                modifier = Modifier.weight(1f),
-                singleLine = true
+                label = stringResource(CoreUiStrings.category),
+                suggestions = categories,
+                modifier = Modifier.weight(1f)
             )
-            OutlinedTextField(
+            SuggestionField(
                 value = state.editorSubCategory,
                 onValueChange = onSubCategoryChange,
-                label = { Text(stringResource(CoreUiStrings.subcategory)) },
-                modifier = Modifier.weight(1f),
-                singleLine = true
+                label = stringResource(CoreUiStrings.subcategory),
+                suggestions = subCategories,
+                modifier = Modifier.weight(1f)
             )
         }
 
-        Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.large)) {
-            OutlinedTextField(
+        // Portion, unit and carbs on one row, like fat, protein and energy below.
+        Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+            CompactTextField(
                 value = state.editorPortion,
                 onValueChange = onPortionChange,
-                label = { Text(stringResource(CoreUiStrings.portion)) },
+                label = stringResource(CoreUiStrings.portion),
                 modifier = Modifier.weight(1f),
-                singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
-            OutlinedTextField(
+            CompactTextField(
                 value = state.editorUnit,
                 onValueChange = onUnitChange,
-                label = { Text(stringResource(CoreUiStrings.unit_label)) },
+                label = stringResource(CoreUiStrings.unit_label),
+                modifier = Modifier.weight(1f)
+            )
+            CompactTextField(
+                value = state.editorCarbs,
+                onValueChange = onCarbsChange,
+                label = stringResource(CoreUiStrings.label_carbs_g),
                 modifier = Modifier.weight(1f),
-                singleLine = true
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
         }
 
-        OutlinedTextField(
-            value = state.editorCarbs,
-            onValueChange = onCarbsChange,
-            label = { Text(stringResource(CoreUiStrings.label_carbs_g)) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-
-        Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.large)) {
-            OutlinedTextField(
+        Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+            CompactTextField(
                 value = state.editorFat,
                 onValueChange = onFatChange,
-                label = { Text(stringResource(CoreUiStrings.label_fat_g)) },
+                label = stringResource(CoreUiStrings.label_fat_g),
                 modifier = Modifier.weight(1f),
-                singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
-            OutlinedTextField(
+            CompactTextField(
                 value = state.editorProtein,
                 onValueChange = onProteinChange,
-                label = { Text(stringResource(CoreUiStrings.label_protein_g)) },
+                label = stringResource(CoreUiStrings.label_protein_g),
                 modifier = Modifier.weight(1f),
-                singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
-            OutlinedTextField(
+            CompactTextField(
                 value = state.editorEnergy,
                 onValueChange = onEnergyChange,
-                label = { Text(stringResource(CoreUiStrings.label_energy_kj)) },
+                label = stringResource(CoreUiStrings.label_energy_kj),
                 modifier = Modifier.weight(1f),
-                singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
         }

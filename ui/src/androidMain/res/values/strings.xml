@@ -383,4 +383,10 @@
     <string name="cal_precheck_mark_sensor_change">Mark sensor change</string>
     <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
 
+    <string name="food_filter_all" comment="Choice in the category or subcategory filter of the food list: no filter. Keep it short, the list is narrow.">All</string>
+    <string name="food_filter_none" comment="Choice in the category or subcategory filter of the food list: only the foods without a category (or subcategory). Keep it short, the list is narrow.">None</string>
+    <string name="food_sort_recent" comment="Sort button of the food list: the newest foods first. Keep it short.">Recent</string>
+    <string name="food_sort_name" comment="Sort button of the food list: sorted by name, from A to Z. Keep it short.">A–Z</string>
+    <string name="food_sort_description" comment="Read by a screen reader on the sort button of the food list. %1$s = the current order, Recent or A–Z">Sort order: %1$s</string>
+
 </resources>
