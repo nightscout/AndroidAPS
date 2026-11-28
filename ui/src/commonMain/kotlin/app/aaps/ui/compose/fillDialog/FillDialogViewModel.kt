@@ -56,6 +56,7 @@ import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactoryKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -66,7 +67,10 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.math.abs
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 @Stable
 @AssistedInject
@@ -93,6 +97,13 @@ class FillDialogViewModel(
     private val appScope: CoroutineScope,
     commandQueue: CommandQueue
 ) : ViewModel() {
+
+    private companion object {
+
+        // A profile write took about 50 s on a Medtronic. To be checked pump by pump.
+        val WRITE_WAIT = 3.minutes
+        val WRITE_POLL = 1.seconds
+    }
 
     private val _uiState = MutableStateFlow(FillDialogUiState())
     val uiState: StateFlow<FillDialogUiState> = _uiState.asStateFlow()
@@ -361,30 +372,31 @@ class FillDialogViewModel(
         // independently so the site/insulin change logging below is never gated behind the
         // (potentially long) prime completing — previously a prime would drop those records.
         if (hasPrimeBolus) {
-            // Prime now rides the shared executor (one audited path): it logs the user entry, sets the
-            // PRIMING treatment + notes, and the profile switch is sequenced on prime success.
+            // The switch comes first (#5486). The user is usually still disconnected now, so a pump that cannot write
+            // the profile is found out while it is safe, and a prime that fails later cannot leave the new insulin in
+            // the pump with the old concentration in use. The prime is in pump units, so the switch does not change it.
             appScope.launch {
+                if (doProfileSwitch) {
+                    if (!record(listOf(BatchAction.InsulinActivate(state.selectedInsulin!!)))) return@launch
+                    if (!awaitConcentrationWritten()) {
+                        reportAfterClose(CoreUiStrings.activate_insulin, rh.gs(CoreUiStrings.fill_prime_not_started_insulin_not_written))
+                        return@launch
+                    }
+                }
+                // Prime now rides the shared executor (one audited path): it logs the user entry, sets the
+                // PRIMING treatment + notes.
                 masterActionExecutor.deliverFillBolus(
                     amount = state.insulinAfterConstraints,
                     notes = notes,
                     source = Sources.FillDialog,
                     onError = { failure ->
-                        // The switch is chained to onSuccess, so a prime that did not happen silently skips it — but
-                        // the confirmation already promised it. Say so in the SAME message rather than two dialogs.
                         // A prime dropped from the queue on purpose did not fail, so it must not carry the error title.
                         reportAfterClose(
                             if (failure.cancelled) CoreUiStrings.command_cancelled_title else CoreUiStrings.treatmentdeliveryerror,
-                            if (doProfileSwitch) rh.gs(CoreUiStrings.fill_prime_failed_insulin_not_switched, failure.comment) else failure.comment
+                            failure.comment
                         )
                     },
-                    onSuccess = {
-                        // After successful prime, do profile switch if insulin changed
-                        if (doProfileSwitch) {
-                            appScope.launch {
-                                record(listOf(BatchAction.InsulinActivate(state.selectedInsulin!!)))
-                            }
-                        }
-                    }
+                    onSuccess = {}
                 )
             }
         }
@@ -409,7 +421,7 @@ class FillDialogViewModel(
                     source = Sources.FillDialog
                 )
             )
-            // With a prime the switch waits for it (above). A client has no prime, so there it is always here.
+            // With a prime the switch runs before it (above). A client has no prime, so there it is always here.
             if (doProfileSwitch && !hasPrimeBolus) add(BatchAction.InsulinActivate(state.selectedInsulin!!))
         }
         if (actions.isNotEmpty()) appScope.launch { record(actions) }
@@ -418,24 +430,40 @@ class FillDialogViewModel(
     /**
      * Records [actions] through the master-controlled batch channel, with no confirmation UI of its own: prepare
      * then commit back-to-back. Master → local; client → signed round-trip.
+     *
+     * @return true when the actions were applied
      */
-    private suspend fun record(actions: List<BatchAction>) {
+    private suspend fun record(actions: List<BatchAction>): Boolean {
         val switchesInsulin = actions.any { it is BatchAction.InsulinActivate }
         val label = rh.gs(if (switchesInsulin) CoreUiStrings.activate_insulin else CoreUiStrings.careportal)
         val outcome = when (val prepared = batchExecutor.prepare(actions, Sources.FillDialog, label)) {
             is ActionProgress.Prepared -> batchExecutor.commit(prepared.id, Sources.FillDialog, label)
             else                       -> prepared
         }
-        if (outcome is ActionProgress.Applied) return
+        if (outcome is ActionProgress.Applied) return true
         aapsLogger.warn(LTag.UI, "Fill records not applied: $outcome")
         // A client's round-trip modal has shown the master's answer already, and the screens do not repeat it. Only
         // what comes before anything is sent (not reachable, control disabled, cancelled) has no modal.
         val shownByModal = outcome is ActionProgress.Unconfirmed || (outcome is ActionProgress.Rejected && !outcome.reason.isNotDeliveryError())
-        if (config.AAPSCLIENT && shownByModal) return
+        if (config.AAPSCLIENT && shownByModal) return false
         // The events alone are only logged, as in the Care dialog. The switch must be reported: the confirmation
         // promised it, and every later IOB depends on the insulin in use.
         if (switchesInsulin) reportInsulinActivation(outcome)
+        return false
     }
+
+    /**
+     * Waits until the pump has written the profile of a new insulin concentration. With the same concentration there
+     * is nothing to wait for. The wait is limited on purpose: KeepAlive retries a failed write later, and a prime that
+     * starts by itself minutes after the user was told it failed could go into a pump that is connected by then.
+     *
+     * @return false when the profile is not written after [WRITE_WAIT]
+     */
+    private suspend fun awaitConcentrationWritten(): Boolean =
+        withTimeoutOrNull(WRITE_WAIT) {
+            while (profileFunction.isConcentrationChangePending()) delay(WRITE_POLL)
+            true
+        } ?: false
 
     /**
      * Turn the terminal [outcome] of the promised insulin switch into user-visible feedback.

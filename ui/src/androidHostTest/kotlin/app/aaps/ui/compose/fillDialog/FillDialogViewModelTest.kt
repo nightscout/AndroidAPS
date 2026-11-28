@@ -38,8 +38,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -52,11 +54,15 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeast
+import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.mockito.verification.VerificationMode
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class FillDialogViewModelTest {
@@ -108,13 +114,15 @@ internal class FillDialogViewModelTest {
         whenever(preferences.observe(BooleanKey.GeneralInsulinConcentration)).thenReturn(MutableStateFlow(false))
         whenever(dateUtil.now()).thenReturn(NOW)
         whenever(commandQueue.smbBeingDelivered).thenReturn(MutableStateFlow(false))
+        // A suspend function on a mock answers null, even for Boolean.
+        runBlocking { whenever(profileFunction.isConcentrationChangePending()).thenReturn(false) }
         sut = buildSut()
     }
 
-    private fun buildSut() = FillDialogViewModel(
+    private fun buildSut(appScope: CoroutineScope = CoroutineScope(UnconfinedTestDispatcher())) = FillDialogViewModel(
         SavedStateHandle(), constraintChecker, activePlugin, persistenceLayer, preferences, config,
         decimalFormatter, rh, dateUtil, translator, aapsLogger, ch, insulinManager, profileFunction,
-        masterActionExecutor, batchExecutor, rxBus, CoroutineScope(UnconfinedTestDispatcher()), commandQueue
+        masterActionExecutor, batchExecutor, rxBus, appScope, commandQueue
     )
 
     @AfterEach
@@ -236,12 +244,12 @@ internal class FillDialogViewModelTest {
     }
 
     /**
-     * Drive a prime bolus that fails. The insulin switch is chained to the prime's `onSuccess`, so a failed prime
-     * skips it entirely — and the confirmation has already promised it. [changeInsulin] selects a different insulin
-     * (there is no active one) to make that promise, or leaves it alone so no switch was ever promised.
+     * Drive a prime bolus that fails. [changeInsulin] selects a different insulin (there is no active one), or
+     * leaves it alone so no switch was ever promised.
      */
     private suspend fun runFailingPrime(changeInsulin: Boolean, cancelled: Boolean = false): List<String> {
-        // A non-zero constrained amount makes hasPrimeBolus true, so the switch is chained to the prime.
+        whenever(batchExecutor.prepare(any(), any(), any())).thenReturn(ActionProgress.Applied)
+        // A non-zero constrained amount makes hasPrimeBolus true, so the switch runs before the prime.
         whenever(masterActionExecutor.deliverFillBolus(any(), anyOrNull(), any(), any(), any())).thenAnswer { inv ->
             inv.getArgument<(MasterActionExecutor.Failure) -> Unit>(3).invoke(MasterActionExecutor.Failure("pump error", cancelled))
         }
@@ -265,22 +273,94 @@ internal class FillDialogViewModelTest {
         assertThat(reportedTitles()).doesNotContain("Bolus reported an error. Manually check real delivered insulin and carb amount")
     }
 
+    /** #5486: the insulin is switched before the prime, so a failed prime cannot leave the old concentration in use. */
     @Test
-    fun `a failed prime says the promised insulin switch did not happen either`() = runTest {
+    fun `a failed prime still leaves the insulin switched`() = runTest {
         val seen = runFailingPrime(changeInsulin = true)
 
-        // One combined message, not two dialogs stacked on the user.
-        assertThat(seen).contains("pump error\n\nThe insulin was also not switched. If the new insulin is already in the pump, do not connect the pump, and run the insulin change again.")
-        assertThat(seen).doesNotContain("pump error")
+        assertThat(seen).containsExactly("pump error")
+        val batches = argumentCaptor<List<BatchAction>>()
+        verify(batchExecutor, atLeast(1)).prepare(batches.capture(), any(), any())
+        assertThat(batches.allValues.flatten().filterIsInstance<BatchAction.InsulinActivate>()).hasSize(1)
     }
 
     @Test
     fun `a failed prime with no insulin change reports only the delivery error`() = runTest {
         val seen = runFailingPrime(changeInsulin = false)
 
-        // Nothing was promised, so the message must not claim an insulin switch was skipped.
-        assertThat(seen).contains("pump error")
-        assertThat(seen).doesNotContain("PRIME_FAILED_AND_NOT_SWITCHED")
+        assertThat(seen).containsExactly("pump error")
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // #5486: the insulin switch comes before the prime
+    // ---------------------------------------------------------------------------------------------
+
+    private val u200 = ICfg(insulinLabel = "U200", insulinEndTime = 480, insulinPeakTime = 55, concentration = 2.0)
+
+    /** A prime with an insulin change. No cartridge change, so the only batch is the switch itself. */
+    private fun confirmPrimeWithInsulinChange(sut: FillDialogViewModel) {
+        sut.selectInsulin(u200)
+        sut.updateInsulin(0.3)
+        sut.buildConfirmationSummary()
+        sut.confirmAndSave()
+    }
+
+    private suspend fun verifyPrimeStarted(mode: VerificationMode) =
+        verify(masterActionExecutor, mode).deliverFillBolus(any(), anyOrNull(), any(), any(), any())
+
+    private val notWrittenText = "The profile with the new insulin is not written to the pump yet, so the prime was not started. Do not connect the pump. When the profile is written, open this dialog again to prime."
+
+    @Test
+    fun `the insulin is switched before the prime starts`() = runTest {
+        whenever(batchExecutor.prepare(any(), any(), any())).thenReturn(ActionProgress.Applied)
+
+        confirmPrimeWithInsulinChange(sut)
+
+        val order = inOrder(batchExecutor, masterActionExecutor)
+        order.verify(batchExecutor).prepare(any(), any(), any())
+        order.verify(masterActionExecutor).deliverFillBolus(any(), anyOrNull(), any(), any(), any())
+    }
+
+    @Test
+    fun `no prime starts when the switch is rejected`() = runTest {
+        whenever(batchExecutor.prepare(any(), any(), any())).thenReturn(ActionProgress.Rejected(FailureReason.NotReachable, "offline"))
+
+        confirmPrimeWithInsulinChange(sut)
+
+        verifyPrimeStarted(never())
+        assertThat(reportedMessages()).contains("The insulin was not switched: The master is offline. Your previous insulin is still in use.")
+    }
+
+    @Test
+    fun `the prime waits for the pump to write the new concentration`() = runTest {
+        val sut = buildSut(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
+        whenever(batchExecutor.prepare(any(), any(), any())).thenReturn(ActionProgress.Applied)
+        whenever(profileFunction.isConcentrationChangePending()).thenReturn(true)
+
+        confirmPrimeWithInsulinChange(sut)
+        advanceTimeBy(60.seconds)
+        verifyPrimeStarted(never())
+
+        whenever(profileFunction.isConcentrationChangePending()).thenReturn(false)
+        advanceTimeBy(2.seconds)
+        verifyPrimeStarted(times(1))
+    }
+
+    /** KeepAlive may write it later. A prime starting by itself then could go into a connected pump. */
+    @Test
+    fun `no prime starts when the new concentration is not written in time, not even later`() = runTest {
+        val sut = buildSut(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
+        whenever(batchExecutor.prepare(any(), any(), any())).thenReturn(ActionProgress.Applied)
+        whenever(profileFunction.isConcentrationChangePending()).thenReturn(true)
+
+        confirmPrimeWithInsulinChange(sut)
+        advanceTimeBy(3.minutes + 2.seconds)
+
+        assertThat(reportedMessages()).contains(notWrittenText)
+
+        whenever(profileFunction.isConcentrationChangePending()).thenReturn(false)
+        advanceTimeBy(10.minutes)
+        verifyPrimeStarted(never())
     }
 
     // ---------------------------------------------------------------------------------------------
