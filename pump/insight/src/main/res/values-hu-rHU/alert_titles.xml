@@ -1,2 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r1_title">Bólus beadása</string>
+    <string name="alert_r2_title">Kihagyott bólus</string>
+    <string name="alert_r3_title">Ébresztőóra</string>
+    <string name="alert_r4_title">Szerelékcsere</string>
+    <string name="alert_r7_title">Átmeneti bázis befejeződött</string>
+    <string name="alert_w31_title">Alacsony tartályszint</string>
+    <string name="alert_w32_title">Alacsony elemszint</string>
+    <string name="alert_w33_title">Érvénytelen idő/dátum</string>
+    <string name="alert_w34_title">Garancia vége</string>
+    <string name="alert_w36_title">Átmeneti bázis megszakítva</string>
+    <string name="alert_w38_title">Bólus megszakítva</string>
+    <string name="alert_w39_title">Kölcsönzési idő figyelmeztetés</string>
+    <string name="alert_m20_title">Nincs behelyezve tartály</string>
+    <string name="alert_m21_title">Üres tartály</string>
+    <string name="alert_m22_title">Lemerült elem</string>
+    <string name="alert_m23_title">Automatikus kikapcsolás - pumpa leállítva</string>
+    <string name="alert_m24_title">Elzáródás</string>
+    <string name="alert_m25_title">Kölcsönzési idő lejárt - működés vége</string>
+    <string name="alert_m26_title">A tartálycsere nincs befejezve</string>
+    <string name="alert_m27_title">Sikertelen adatletöltés</string>
+    <string name="alert_m28_title">Szünet mód időtúllépés</string>
+    <string name="alert_m29_title">Elemtípus nincs beállítva</string>
+    <string name="alert_m30_title">Tartálytípus nincs beállítva</string>
+    <string name="alert_e6_title">Mechanikai hiba</string>
+    <string name="alert_e10_title">Visszatekerési hiba</string>
+    <string name="alert_e13_title">Nyelvi hiba</string>
+</resources>
