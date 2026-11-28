@@ -1,9 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="biometric_title">Azonosítás szükséges</string>
+    <string name="biometric_description">Helyezze az ujját az ujjlenyomat-olvasóra a személyazonossága igazolásához</string>
+    <string name="settings_protection">Beállításvédelem</string>
+    <string name="application_protection">Alkalmazásvédelem</string>
+    <string name="bolus_protection">Bólusvédelem</string>
     <string name="protection_timeout_title">Jelszó és PIN megőrzése [mp]</string>
     <string name="protection_timeout_summary">Jelszó vagy a PIN-kód megadása előtti idő</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Nem biztonságos visszalépés</string>
     <string name="unsecure_fallback_descriotion_biometric">A hatályba lépéshez a biometrikus védelemhez tartalék jelszót kell beállítani.\n\nKérjük, állítson be egy fő jelszót!</string>
+    <string name="password_set">Jelszó beállítva!</string>
+    <string name="datastore_password_cleared">A tárolt exportjelszó törölve!</string>
+    <string name="pin_set">PIN beállítva!</string>
+    <string name="password_not_set">Jelszó nincs beállítva</string>
+    <string name="pin_not_set">PIN nincs beállítva</string>
+    <string name="password_not_changed">Jelszó nem változott</string>
+    <string name="pin_not_changed">PIN nem változott</string>
+    <string name="pin_cleared">PIN törölve!</string>
+    <string name="protection_password_hint">Adja meg itt a jelszót</string>
+    <string name="protection_pin_hint">Adja meg itt a PIN-kódot</string>
+    <string name="auth_hint_master_password">Adja meg a mesterjelszót</string>
+    <string name="auth_hint_master_or_pin">Adja meg a mesterjelszót vagy a PIN-kódot</string>
+    <string name="auth_hint_master_or_password">Adja meg a mesterjelszót vagy az egyéni jelszót</string>
+    <string name="use_pin_password">PIN/jelszó használata</string>
     <string name="current_master_password">Jelenlegi mesterjelszó</string>
+    <string name="master_password_not_set">A mesterjelszó nincs beállítva</string>
+    <string name="aaps_directory_not_selected">Az AAPS-mappa nincs kiválasztva</string>
+    <string name="aaps_directory_access_lost">Az AAPS-mappához való hozzáférés megszűnt, ezért a beállítások már nem mentődnek a telefonra. Válassza ki újra a mappát.</string>
 </resources>
