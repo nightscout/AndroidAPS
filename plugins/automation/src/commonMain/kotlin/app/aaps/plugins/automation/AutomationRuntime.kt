@@ -731,6 +731,7 @@ class AutomationRuntime(
             actionFactory.actionSMBChange(),
             actionFactory.actionSmoothingChange(),
             actionFactory.actionRunScene(),
+            actionFactory.actionStopScene(),
             actionFactory.actionEnableScene(),
             actionFactory.actionDisableScene()
         )

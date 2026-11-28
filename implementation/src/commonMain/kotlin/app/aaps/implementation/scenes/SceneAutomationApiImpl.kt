@@ -36,6 +36,18 @@ class SceneAutomationApiImpl(
     // "a scene is in force" are different questions. isActive() answers the first one.
     override fun isAnySceneActive(): Boolean = activeSceneManager.isActive() && !activeSceneManager.isExpired()
 
+    override fun isSceneActive(id: String): Boolean =
+        isAnySceneActive() && activeSceneManager.getActiveState()?.scene?.id == id
+
+    override suspend fun stopScene(id: String): SceneAutomationResult {
+        // Checked here and not only by the caller: the scene can end, or another one can start,
+        // between the caller's check and this call.
+        if (!isSceneActive(id)) return SceneAutomationResult.Success
+        val result = sceneExecutor.deactivate()
+        return if (result.success) SceneAutomationResult.Success
+        else SceneAutomationResult.Failed(result.errorMessage)
+    }
+
     override fun hasSceneToStop(): Boolean = activeSceneManager.isActive()
 
     override val activeFlow: Flow<Boolean> =

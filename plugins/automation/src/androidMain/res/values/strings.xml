@@ -25,6 +25,11 @@
     <string name="automation_category_scenes">Scenes</string>
     <string name="action_run_scene">Run scene</string>
     <string name="action_run_scene_short">Run scene: %1$s</string>
+    <string name="action_stop_scene">Stop scene</string>
+    <string name="action_stop_scene_short">Stop scene: %1$s</string>
+    <string name="action_scene_not_running">Scene is not running</string>
+    <string name="precondition_scene_running_name">Scene running</string>
+    <string name="precondition_scene_running" comment="%1$s=name of the scene. Shown as a precondition. Example: Scene Driving is running">Scene %1$s is running</string>
     <string name="action_enable_scene">Enable scene</string>
     <string name="action_enable_scene_short">Enable scene: %1$s</string>
     <string name="action_disable_scene">Disable scene</string>

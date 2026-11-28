@@ -30,6 +30,7 @@ import app.aaps.plugins.automation.actions.ActionSendSMS
 import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionSmoothingChange
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
+import app.aaps.plugins.automation.actions.ActionStopScene
 import app.aaps.plugins.automation.compose.elements.AutomationDropdown
 import app.aaps.plugins.automation.compose.elements.InputDropdownOnOffEditor
 import app.aaps.plugins.automation.compose.elements.InputStringEditor
@@ -74,6 +75,7 @@ fun ActionEditor(
             is ActionRunAutotune          -> ActionRunAutotuneEditor(action, profileNames, tick, onChange)
             is ActionStartTempTarget      -> ActionStartTempTargetEditor(action, tick, onChange)
             is ActionRunScene             -> ActionRunSceneEditor(action, sceneOptions, tick, onChange)
+            is ActionStopScene            -> ActionStopSceneEditor(action, sceneOptions, tick, onChange)
             is ActionEnableScene          -> ActionEnableSceneEditor(action, sceneOptions, tick, onChange)
             is ActionDisableScene         -> ActionDisableSceneEditor(action, sceneOptions, tick, onChange)
             else                          -> Text(action::class.simpleName.orEmpty())
@@ -299,6 +301,16 @@ private fun ScenePicker(
 
 @Composable
 fun ActionRunSceneEditor(a: ActionRunScene, sceneOptions: List<Scene>, tick: Int = 0, onChange: () -> Unit) {
+    @Suppress("UNUSED_EXPRESSION") tick
+    ScenePicker(
+        selectedId = a.scene.value,
+        sceneOptions = sceneOptions,
+        onPicked = { a.scene.value = it; onChange() }
+    )
+}
+
+@Composable
+fun ActionStopSceneEditor(a: ActionStopScene, sceneOptions: List<Scene>, tick: Int = 0, onChange: () -> Unit) {
     @Suppress("UNUSED_EXPRESSION") tick
     ScenePicker(
         selectedId = a.scene.value,
