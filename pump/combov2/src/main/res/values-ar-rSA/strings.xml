@@ -1,2 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">دمج أصلي لمضخات Accu-Chek Combo</string>
+    <string name="combov2_could_not_connect">تعذر الاتصال بالمضخة</string>
+    <string name="combov2_not_paired">غير مقترن بمضخة</string>
+    <string name="combov2_warning">تحذير Combo</string>
+    <string name="combov2_error">خطأ Combo</string>
+    <string name="combov2_warning_4">اتصل بخط الدعم للتحديث</string>
+    <string name="combov2_warning_10">خلل في البلوتوث؛ أعد الاقتران</string>
+    <string name="combov2_error_1">خزان الأنسولين فارغ</string>
+    <string name="combov2_error_2">البطارية فارغة</string>
+    <string name="combov2_error_4">انسداد</string>
+    <string name="combov2_error_5">انتهاء فترة تشغيل المضخة الاحتياطية</string>
+    <string name="combov2_error_6">خطأ ميكانيكي</string>
+    <string name="combov2_error_7">خطأ إلكتروني</string>
+    <string name="combov2_error_8">انقطاع الطاقة</string>
+    <string name="combov2_error_9">انتهاء تشغيل المضخة المعارة</string>
+    <string name="combov2_error_10">خطأ في خزان الأنسولين</string>
+    <string name="combov2_error_11">مجموعة التسريب غير مجهزة</string>
+    <string name="combov2_extended_bolus_not_supported">الجرعة الممتدة غير مدعومة</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
+    <string name="combov2_pair_with_pump_title">الاقتران مع مضخة</string>
+    <string name="combov2_unpair_pump_title">إلغاء اقتران المضخة</string>
+    <string name="combov2_driver_state_label">حالة برنامج التشغيل</string>
+    <string name="bluetooth_address">عنوان البلوتوث</string>
+    <string name="combov2_start_pairing">بدء الاقتران</string>
+    <string name="combov2_pairing_in_progress">اقتران Combo قيد التنفيذ</string>
+    <string name="combov2_pairing_start_steps">خطوات تنفيذ الاقتران مع مضخة Combo:\n\n
+1. في مضختك، انتقل إلى إعدادات البلوتوث\n
+2. تحقق مما إذا كان هناك جهاز معروض على أنه مقترن بالفعل؛ إذا كان الأمر كذلك، انتقل إلى شاشة \"حذف جهاز\" في المضخة لحذف/إلغاء اقتران هذا الجهاز\n
+3. انتقل إلى شاشة \"إضافة جهاز\" في المضخة، وابدأ الاقتران من المضخة\n
+4. انقر فوق زر \"بدء الاقتران\" أدناه لبدء الاقتران في تطبيق AndroidAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">بعد فترة، يظهر اسم الهاتف على شاشة المضخة؛ اضغط على زر التحديد (CHECK) للتأكيد.\n\n
+عند اكتمال الاقتران بنجاح، أكد الاقتران المنتهي في مضختك ثم عد إلى شاشة المضخة الرئيسية بالضغط على زر التحديد (CHECK) مرتين.\n\n
+إذا لم يتم إنشاء اتصال بعد أكثر من ~5 دقائق:\n\n
+1. اضغط على زر الرجوع أو زر \"إلغاء الاقتران\"\n
+2. ألغ الاقتران من مضخة Combo (اضغط على زري لأعلى والقائمة في نفس الوقت لإلغاء الاقتران)\n
+3. حاول الاقتران مرة أخرى</string>
+    <string name="combov2_enter_pin">أدخل رمز PIN</string>
+    <string name="combov2_cancel_pairing">إلغاء الاقتران</string>
+    <string name="combov2_confirm_cancel_pairing_message">هل تريد حقًا إلغاء الاقتران؟</string>
+    <string name="combov2_confirm_unpair_message">هل تريد حقًا إلغاء اقتران المضخة؟</string>
+    <string name="combov2_pin_hint">رمز PIN مكون من 10 أرقام</string>
+    <string name="combov2_pairing_finished_successfully">تم الاقتران بنجاح مع Combo</string>
+    <string name="combov2_pairing_cancelled">تم إلغاء الاقتران مع Combo بواسطة المستخدم</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">انتهت مهلة البحث عن Combo</string>
+    <string name="combov2_pairing_failed_due_to_error">فشل الاقتران بسبب خطأ: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">تم إيقاف الاقتران لأسباب غير معروفة</string>
+    <string name="combov2_scanning_for_pump">جاري البحث عن المضخة</string>
+    <string name="combov2_establishing_bt_connection">جاري إنشاء اتصال البلوتوث (المحاولة رقم %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">جاري المصافحة مع المضخة</string>
+    <string name="combov2_pairing_pump_requests_pin">تطلب المضخة رمز PIN مكون من 10 أرقام</string>
+    <string name="combov2_pairing_finishing">جاري إنهاء الاقتران</string>
+    <string name="combov2_no_connection_for_n_mins">لا يوجد اتصال منذ %1$d دقيقة</string>
+    <string name="combov2_less_than_one_minute_ago">قبل أقل من دقيقة</string>
+    <string name="combov2_setting_current_pump_time">جاري ضبط وقت المضخة الحالي</string>
+    <string name="combov2_setting_current_pump_date">جاري ضبط تاريخ المضخة الحالي</string>
+    <string name="combov2_not_initialized">لم تتم التهيئة</string>
+    <string name="combov2_checking_pump">جاري التحقق من المضخة</string>
+    <string name="combov2_ready">جاهز</string>
+    <string name="combov2_suspended">معلّق</string>
+    <string name="combov2_pump_is_suspended">المضخة معلقة</string>
+    <string name="combov2_executing_command">تنفيذ الأمر</string>
+    <string name="combov2_getting_basal_profile_cmddesc">جلب ملف الأنسولين القاعدي الشخصي</string>
+    <string name="combov2_setting_basal_profile_cmddesc">تعيين ملف الأنسولين القاعدي الشخصي</string>
+    <string name="combov2_setting_tbr_cmddesc">ضبط المعدل القاعدي المؤقت (TBR) بنسبة %1$d%% لمدة %2$d دقيقة</string>
+    <string name="combov2_cancelling_tbr">إلغاء معدل الأنسولين القاعدي المؤقت المستمر</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">جلب سجل إجمالي الجرعة اليومية (TDD)</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">تحديث تاريخ ووقت المضخة</string>
+    <string name="combov2_updating_pump_status_cmddesc">تحديث حالة المضخة</string>
+    <string name="combov2_pairing_pin_failure">رمز الـ PIN غير صحيح. تحقق مما إذا كان هناك خطأ إملائي. إذا استمر هذا في الحدوث، ألغ العملية وأعد محاولة الاقتران.</string>
+    <string name="combov2_discovery_duration">مدة الاكتشاف (بالثواني)</string>
+    <string name="combov2_verbose_logging">تفعيل التسجيل التفصيلي لـ Combo</string>
+    <string name="combov2_getting_basal_profile">جاري جلب ملف الأنسولين القاعدي الشخصي؛ تم قراءة %1$d معامل (معاملات)</string>
+    <string name="combov2_setting_basal_profile">جاري تعيين ملف الأنسولين القاعدي الشخصي؛ تم كتابة %1$d معامل (معاملات)</string>
+    <string name="combov2_delivering_bolus">جاري إعطاء الجرعة (تم إعطاء %1$.1f من %2$.1f وحدة)</string>
+    <string name="combov2_cannot_deliver_pump_suspended">تعذر إعطاء العلاج - المضخة معلقة</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">أنسولين غير كافٍ في الخزان</string>
+    <string name="combov2_bolus_cancelled">تم إلغاء الجرعة</string>
+    <string name="combov2_bolus_delivery_failed">فشل إعطاء الجرعة. يبدو أنه لم يتم إعطاء أي جرعة. للتأكد، يرجى التحقق من المضخة لتجنب الجرعة المزدوجة ثم إعطاء الجرعة مرة أخرى. للحماية من الأخطاء البرمجية، لا تتم إعادة محاولة الجرعات تلقائيًا.</string>
+    <string name="combov2_bolus_not_delivered">لم يتم إعطاء الجرعة</string>
+    <string name="combov2_cannot_access_pump_data">تعذر الوصول إلى بيانات المضخة؛ يجب إقران المضخة مرة أخرى</string>
+    <string name="combov2_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">انقطع الاتصال بالمضخة أثناء إعطاء الجرعة. كانت المضخة قد أعطت %1$s بحلول ذلك الوقت، وقد تستمر في إعطاء الباقي. لا تأخذ جرعة أخرى. يقرأ AAPS الكمية الحقيقية من المضخة عند الاتصال التالي.</string>
+    <string name="combov2_bolus_stopped_history_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">أوقفت المضخة الجرعة بعد %1$s. ثم انقطع الاتصال، لذا لم يتمكن AAPS من قراءة سجل المضخة. يقرأ AAPS الكمية الحقيقية عند الاتصال التالي. تحقق من المضخة قبل الجرعة التالية.</string>
+    <string name="combov2_bolus_stopped_after_error" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">تم إيقاف الجرعة بسبب خطأ بعد %1$s. تحقق من المضخة قبل الجرعة التالية.</string>
+    <string name="combov2_bolus_request_outcome_unknown">انقطع الاتصال بالمضخة أثناء إرسال AAPS للجرعة، لذا من غير المعروف ما إذا كانت المضخة قد استلمتها. تحقق من سجل الجرعات على المضخة قبل الجرعة التالية. يقرأ AAPS الكمية الحقيقية من المضخة عند الاتصال التالي.</string>
+    <string name="combov2_unknown_bolus_in_history">يحتوي سجل المضخة على جرعة لم يكن AAPS يعلم بها. لم يتم إعطاء الجرعة المطلوبة لأنها حسبت بدون ذلك الأنسولين. تحقق من سجل الجرعات على المضخة والأنسولين النشط (IOB) في AAPS. إذا كانت لا تزال هناك حاجة لجرعة، احسبها مرة أخرى.</string>
+    <string name="combov2_bolus_given_other_boluses_found">تم إعطاء الجرعة، ولكن سجل المضخة احتوى أيضًا على جرعات أخرى لم يكن AAPS يعلم بها. تم تسجيلها الآن. تحقق من الأنسولين النشط (IOB) قبل الجرعة التالية.</string>
+    <string name="combov2_incorrect_active_basal_profile">ملف الأنسولين القاعدي النشط غير صحيح؛ يجب أن يكون الملف الشخصي 1 هو الملف النشط، وليس الملف الشخصي %1$d</string>
+    <string name="combov2_unrecognized_alert">تنبيه Combo غير معروف</string>
+    <string name="combov2_combo_alert">تنبيه Combo</string>
+    <string name="combov2_current_tbr">%1$d%% (متبقي %2$d دقيقة)</string>
+    <string name="combov2_current_tbr_less_than_1min">%1$d%% (متبقي أقل من دقيقة واحدة)</string>
+    <string name="combov2_load_tdds_cancelled">تم إلغاء تحميل إجمالي الجرعة اليومية (TDD)</string>
+    <string name="combov2_retrieving_tdds_failed">فشل استرداد إجمالي الجرعة اليومية (TDD)</string>
+    <string name="combov2_battery_empty">فارغة</string>
+    <string name="combov2_battery_low">منخفضة</string>
+    <string name="combov2_battery_full">ممتلئة</string>
+    <string name="combov2_battery_low_warning">بطارية المضخة منخفضة</string>
+    <string name="combov2_reservoir_low_warning">مستوى خزان الأنسولين بالمضخة منخفض</string>
+    <string name="combov2_setting_tbr_succeeded">نجح ضبط معدل الأنسولين القاعدي المؤقت</string>
+    <string name="combov2_setting_tbr_failed">فشل ضبط معدل الأنسولين القاعدي المؤقت</string>
+    <string name="combov2_set_emulated_100_tbr">تعيين معدل قاعدي مؤقت محاكى بنسبة 100%</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">السماح بتنفيذ وإنهاء معدل الأنسولين القاعدي المؤقت المحاكى بنسبة 100%</string>
+    <string name="combov2_ignoring_redundant_100_tbr">تجاهل طلب معدل الأنسولين القاعدي المؤقت المكرر بنسبة 100%</string>
+    <string name="combov2_hit_unexpected_tbr_limit">تم الوصول إلى حد غير متوقع أثناء ضبط معدل الأنسولين القاعدي المؤقت: كانت النسبة المستهدفة %1$d%%، وتم الوصول إلى الحد عند %2$d%%</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">لا يمكن تعيين معدل قاعدي مؤقت مطلق إذا كان معدل الأنسولين القاعدي صفرًا</string>
+    <string name="combov2_unpair_pump_summary">إلغاء اقتران AAPS وأندرويد من مضخة Accu-Chek Combo المقترنة حاليًا</string>
+    <string name="combov2_unknown_tbr_detected">تم اكتشاف معدل أنسولين قاعدي مؤقت غير معروف وإيقافه؛ النسبة: %1$d%%؛ المدة المتبقية: %2$s</string>
+    <string name="combov2_connection_error">خطأ في الاتصال: %1$s</string>
+    <string name="combov2_short_status_alert">تنبيه: %s</string>
+    <string name="combov2_automatic_reservoir_entry">الكشف التلقائي وإدخال تغيير خزان الأنسولين تلقائيًا</string>
+    <string name="combov2_automatic_battery_entry">الكشف التلقائي وإدخال تغيير البطارية تلقائيًا</string>
+    <string name="combov2_timezone_changed">تغيرت المنطقة الزمنية</string>
+    <string name="combov2_datetime_changed">تغير التاريخ و/أو الوقت</string>
+    <string name="combov2_dst_started">بدأ التوقيت الصيفي (DST)</string>
+    <string name="combov2_dst_ended">انتهى التوقيت الصيفي (DST)</string>
+    <string name="combov2_cannot_connect_pump_error_observed">تعذر الاتصال بالمضخة لأن المضخة أبلغت عن خطأ. يجب على المستخدم معالجة الخطأ ثم إما الانتظار لمدة 5 دقائق أو الضغط على زر التحديث في علامة تبويب برنامج التشغيل.</string>
+    <string name="combov2_refresh_pump_status_after_error">تحديث حالة المضخة بعد إبلاغ المضخة عن خطأ</string>
+    <string name="combov2_go_back">رجوع</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">تعذر تنفيذ الاقتران لأن برنامج التشغيل لم يتم تهيئته. يحدث هذا عادةً بسبب عدم منح أذونات البلوتوث اللازمة. ارجع للخلف، وامنح صلاحيات البلوتوث، ثم حاول الاقتران مرة أخرى.</string>
+    <string name="combov2_bluetooth_disabled">تعذر بدء برنامج التشغيل - البلوتوث معطل</string>
+    <string name="combov2_bluetooth_not_supported">تعذر تشغيل برنامج التشغيل - هذا الجهاز لا يدعم البلوتوث</string>
+</resources>
