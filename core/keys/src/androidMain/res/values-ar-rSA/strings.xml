@@ -1,53 +1,358 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">الوضع المبسط</string>
+    <string name="pref_title_insulin_concentration">دعم تركيز الأنسولين</string>
+    <string name="pref_summary_insulin_concentration">تفعيل دعم تراكيز الأنسولين المختلفة (U50، U200 وغيرها)</string>
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">إبقاء الشاشة قيد التشغيل</string>
+    <string name="pref_summary_keep_screen_on">منع أندرويد من إيقاف تشغيل الشاشة. سيؤدي ذلك إلى استهلاك الكثير من الطاقة عند عدم توصيل الهاتف بمقبس الكهرباء.</string>
+    <string name="pref_title_show_treatment_button">إظهار زر العلاج</string>
+    <string name="pref_title_show_wizard_button">إظهار زر الحاسبة</string>
+    <string name="pref_title_show_insulin_button">إظهار زر الأنسولين</string>
+    <string name="pref_title_show_carbs_button">إظهار زر الكربوهيدرات</string>
+    <string name="pref_title_show_cgm_button">إظهار زر المراقبة المستمرة للغلوكوز CGM</string>
+    <string name="pref_summary_show_cgm_button">يفتح تطبيق xDrip+ أو Dexcom (يمكنك استخدام زر الرجوع للعودة إلى AAPS).</string>
+    <string name="pref_title_show_calibration_button">إظهار زر المعايرة</string>
+    <string name="pref_summary_show_calibration_button">يرسل معايرة إلى xDrip+ (تأكد من تفعيل \'Accept Calibrations\' ضمن إعدادات Inter-App في xDrip+).</string>
+    <string name="pref_title_show_notes_in_dialogs">إظهار الملاحظات في مربعات الحوار</string>
+    <string name="pref_title_use_bolus_advisor">استخدام مساعد الجرعة</string>
+    <string name="pref_summary_use_bolus_advisor">تفعيل مساعد الجرعة الذي يساعد في حساب الجرعات عند ارتفاع سكر الدم.</string>
+    <string name="pref_title_use_bolus_reminder">استخدام تذكير الجرعة</string>
+    <string name="pref_summary_use_bolus_reminder">تفعيل إشعارات التذكير بالجرعة للمساعدة في تتبع إعطاء الأنسولين.</string>
+    <string name="pref_title_use_super_bolus">استخدام الجرعة الفائقة</string>
+    <string name="pref_summary_use_super_bolus">تفعيل ميزة الجرعة الفائقة التي تستعير الأنسولين من الأنسولين القاعدي لإعطائه فورا.</string>
     <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">مراقب البلوتوث (BT Watchdog)</string>
+    <string name="pref_summary_bt_watchdog">يوقف البلوتوث في الهاتف لمدة ثانية واحدة إذا تعذر الاتصال بالمضخة. قد يساعد ذلك في بعض الهواتف التي يتجمد فيها البلوتوث.</string>
     <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">تنبيه عند عدم استلام بيانات سكر الدم</string>
+    <string name="pref_title_alert_pump_unreachable">تنبيه عند تعذر الوصول إلى المضخة</string>
+    <string name="pref_title_alert_carbs_required">تنبيه عند الحاجة إلى الكربوهيدرات</string>
+    <string name="pref_title_alert_urgent_as_android_notification">عرض الإنذارات العاجلة كإشعارات أندرويد</string>
+    <string name="pref_title_alert_increase_volume">زيادة مستوى صوت الإشعارات تدريجيًا</string>
+    <string name="pref_title_alert_override_dnd">تجاوز وضع عدم الإزعاج</string>
+    <string name="pref_summary_alert_override_dnd">عند التفعيل: تصدر الإنذارات صوتًا حتى عندما يكون الهاتف صامتًا أو في وضع عدم الإزعاج. عند التعطيل: لا تصدر الإنذارات صوتًا. وفي وضع عدم الإزعاج، تهتز فقط.</string>
     <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">رفع بيانات سكر الدم إلى NS</string>
+    <string name="pref_title_bg_source_create_sensor_change">تسجيل تغيير المستشعر</string>
+    <string name="pref_summary_bg_source_create_sensor_change">إنشاء حدث علاجي لتغيير المستشعر عند تركيبه.</string>
     <!-- APS preferences -->
+    <string name="pref_title_aps_use_dynamic_sensitivity">استخدام الحساسية الديناميكية</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">استخدام DynamicISF لضبط الحساسية بدلًا من Autosens.</string>
+    <string name="pref_title_aps_use_autosens">استخدام Autosens</string>
+    <string name="pref_title_aps_use_smb">تفعيل الجرعات التصحيحية الصغيرة SMB</string>
+    <string name="pref_summary_aps_use_smb">تفعيل الجرعات التصحيحية الصغيرة SMB. تعطي SMB الأنسولين فورا للاستجابة لارتفاع سكر الدم.</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">تفعيل الجرعات التصحيحية الصغيرة SMB مع هدف مؤقت مرتفع</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">السماح باستخدام الجرعات التصحيحية الصغيرة SMB عند تفعيل هدف مؤقت مرتفع.</string>
+    <string name="pref_title_aps_use_smb_always">تفعيل الجرعات التصحيحية الصغيرة SMB دائمًا</string>
+    <string name="pref_summary_aps_use_smb_always">تفعيل الجرعات التصحيحية الصغيرة SMB في جميع الظروف، بغض النظر عن الجرعات أو الكربوهيدرات المتبقية (COB).</string>
+    <string name="pref_title_aps_use_smb_with_cob">تفعيل الجرعات التصحيحية الصغيرة SMB مع الكربوهيدرات المتبقية (COB)</string>
+    <string name="pref_summary_aps_use_smb_with_cob">السماح باستخدام الجرعات التصحيحية الصغيرة SMB عند وجود كربوهيدرات متبقية (COB).</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">تفعيل الجرعات التصحيحية الصغيرة SMB مع هدف مؤقت منخفض</string>
+    <string name="pref_summary_aps_use_smb_with_low_tt">السماح باستخدام الجرعات التصحيحية الصغيرة SMB عند تفعيل هدف مؤقت منخفض.</string>
+    <string name="pref_title_aps_use_smb_after_carbs">تفعيل الجرعات التصحيحية الصغيرة SMB بعد إدخال الكربوهيدرات</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">السماح باستخدام الجرعات التصحيحية الصغيرة SMB لفترة بعد إدخال الكربوهيدرات.</string>
+    <string name="pref_title_aps_use_uam">تفعيل الوجبات غير المعلنة (UAM)</string>
+    <string name="pref_summary_aps_use_uam">تفعيل اكتشاف الوجبات غير المعلنة والتعامل معها.</string>
+    <string name="pref_title_aps_sensitivity_raises_target">الحساسية ترفع الهدف</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">عند اكتشاف زيادة الحساسية، يتم رفع مستوى الغلوكوز المستهدف.</string>
+    <string name="pref_title_aps_resistance_lowers_target">مقاومة الأنسولين تخفض الهدف</string>
+    <string name="pref_summary_aps_resistance_lowers_target">عند اكتشاف مقاومة الأنسولين، يتم خفض مستوى الغلوكوز المستهدف.</string>
+    <string name="pref_title_aps_always_use_short_deltas">استخدم متوسط التغير القصير دائمًا</string>
+    <string name="pref_summary_aps_always_use_short_deltas">استخدم متوسط التغير القصير دائما بدلا من التغير البسيط عند حساب تغير سكر الدم.</string>
+    <string name="pref_title_aps_dynisf_adjust_sensitivity">ضبط الحساسية باستخدام DynamicISF</string>
+    <string name="pref_summary_aps_dynisf_adjust_sensitivity">ضبط حسابات الحساسية عند استخدام DynamicISF.</string>
+    <string name="pref_title_aps_autosens_adjust_targets">السماح لـ Autosens بضبط الأهداف</string>
+    <string name="pref_summary_aps_autosens_adjust_targets">السماح لـ Autosens بضبط مستوى الغلوكوز المستهدف، بالإضافة إلى الأنسولين القاعدي ومعامل حساسية الأنسولين (ISF).</string>
+    <string name="pref_title_aps_high_tt_raises_sensitivity">الهدف المؤقت المرتفع يزيد الحساسية</string>
+    <string name="pref_summary_aps_high_tt_raises_sensitivity">تؤدي الأهداف المؤقتة المرتفعة إلى زيادة حساسية الأنسولين.</string>
+    <string name="pref_title_aps_low_tt_lowers_sensitivity">الهدف المؤقت المنخفض يقلل الحساسية</string>
+    <string name="pref_summary_aps_low_tt_lowers_sensitivity">تؤدي الأهداف المؤقتة المنخفضة إلى تقليل حساسية الأنسولين.</string>
+    <string name="pref_title_aps_use_autoisf_weights">تفعيل AutoISF</string>
+    <string name="pref_summary_aps_use_autoisf_weights">تفعيل تعديلات معامل حساسية الأنسولين ISF المعتمدة على الأوزان في AutoISF.</string>
+    <string name="pref_title_aps_smb_on_even_target">تفعيل الجرعات التصحيحية الصغيرة SMB عند الهدف الزوجي</string>
+    <string name="pref_summary_aps_smb_on_even_target">طريقة بديلة لتفعيل الجرعات التصحيحية الصغيرة SMB دائمًا استنادًا إلى قيمة الغلوكوز المستهدفة.</string>
     <!-- Maintenance preferences -->
+    <string name="pref_title_maintenance_enable_fabric">تفعيل تقارير الأعطال من Fabric</string>
+    <string name="pref_title_maintenance_enable_export_automation">تفعيل التصدير التلقائي للإعدادات</string>
     <!-- Autotune preferences -->
+    <string name="pref_title_autotune_auto_switch_profile">التبديل التلقائي للملف الشخصي</string>
+    <string name="pref_summary_autotune_auto_switch_profile">التبديل تلقائيا إلى الملف الشخصي الذي أنشأه Autotune بعد إتمام الحساب.</string>
+    <string name="pref_title_autotune_categorize_uam_as_basal">تصنيف الوجبات غير المعلنة (UAM) كأنسولين قاعدي</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">اعتبار الوجبات غير المعلنة احتياجات أنسولين قاعدية في حسابات Autotune.</string>
+    <string name="pref_title_autotune_tune_insulin_curve">ضبط منحنى الأنسولين</string>
+    <string name="pref_title_autotune_circadian_ic_isf">استخدام نسبة الأنسولين إلى الكربوهيدرات / معامل حساسية الأنسولين (IC/ISF) وفق الإيقاع اليومي</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">تطبيق التغيرات المرتبطة بالإيقاع اليومي على نسبة الأنسولين إلى الكربوهيدرات (IC) ومعامل حساسية الأنسولين (ISF) في حسابات Autotune.</string>
+    <string name="pref_title_autotune_additional_log">تسجيل إضافي</string>
     <!-- SMS preferences -->
+    <string name="pref_title_sms_allow_remote_commands">السماح بالأوامر عن بعد عبر الرسائل القصيرة (SMS)</string>
+    <string name="pref_title_sms_report_pump_unreachable">الإبلاغ عن تعذر الوصول إلى المضخة عبر رسالة قصيرة SMS</string>
+    <string name="pref_summary_sms_report_pump_unreachable">إرسال إشعار رسالة قصيرة SMS عند تعذر الوصول إلى المضخة.</string>
     <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">رفع حالة المضخة إلى NS</string>
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_upload_data">رفع البيانات إلى NS</string>
+    <string name="pref_summary_ns_upload_data">رفع العلاجات ومعدلات الأنسولين القاعدية المؤقتة والبيانات الأخرى إلى Nightscout.</string>
+    <string name="pref_title_ns_receive_cgm">استلام بيانات المراقبة المستمرة للغلوكوز CGM من NS</string>
+    <string name="pref_summary_ns_receive_cgm">قبول قراءات المراقبة المستمرة للغلوكوز (CGM) من Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_store">استلام مخزن الملفات الشخصية من NS</string>
+    <string name="pref_summary_ns_receive_profile_store">قبول تحديثات مخزن الملفات الشخصية من Nightscout.</string>
+    <string name="pref_title_ns_receive_temp_target">استلام الأهداف المؤقتة من NS</string>
+    <string name="pref_summary_ns_receive_temp_target">قبول تغييرات الأهداف المؤقتة من Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_switch">استلام عمليات تبديل الملف الشخصي من NS</string>
+    <string name="pref_summary_ns_receive_profile_switch">قبول أحداث تبديل الملف الشخصي من Nightscout.</string>
+    <string name="pref_title_ns_receive_insulin">استلام بيانات الأنسولين من NS</string>
+    <string name="pref_summary_ns_receive_insulin">قبول علاجات الأنسولين من Nightscout.</string>
+    <string name="pref_title_ns_receive_carbs">استلام بيانات الكربوهيدرات من NS</string>
+    <string name="pref_summary_ns_receive_carbs">قبول إدخالات الكربوهيدرات من Nightscout.</string>
+    <string name="pref_title_ns_receive_therapy_event">استلام الأحداث العلاجية من NS</string>
+    <string name="pref_summary_ns_receive_therapy_event">قبول الأحداث العلاجية من Nightscout.</string>
+    <string name="pref_title_ns_receive_running_mode">استلام وضع التشغيل من NS</string>
+    <string name="pref_summary_ns_receive_running_mode">قبول تغييرات وضع التشغيل من Nightscout.</string>
+    <string name="pref_title_ns_receive_tbr_eb">استلام المعدل القاعدي المؤقت/الجرعة الممتدة (TBR/EB) من NS</string>
+    <string name="pref_summary_ns_receive_tbr_eb">قبول المعدلات القاعدية المؤقتة والجرعات الممتدة من Nightscout.</string>
+    <string name="pref_title_ns_notifications_from_alarms">إنذارات NS</string>
+    <string name="pref_title_ns_notifications_from_announcements">إعلانات NS</string>
+    <string name="pref_title_ns_use_cellular">استخدام بيانات الهاتف المحمول</string>
+    <string name="pref_title_ns_use_roaming">استخدام التجوال</string>
+    <string name="pref_title_ns_use_wifi">استخدام الواي فاي</string>
+    <string name="pref_title_ns_use_on_battery">المزامنة أثناء استخدام البطارية</string>
+    <string name="pref_title_ns_use_on_charging">المزامنة أثناء الشحن</string>
+    <string name="pref_title_ns_log_app_start">تسجيل حدث بدء التطبيق</string>
+    <string name="pref_title_ns_create_announcements_from_errors">إنشاء إعلانات عند حدوث أخطاء</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">إنشاء إعلانات عند الحاجة إلى الكربوهيدرات</string>
+    <string name="pref_title_ns_slow_sync">استخدام المزامنة البطيئة</string>
+    <string name="pref_title_ns_use_ws">استخدام WebSockets</string>
+    <string name="pref_summary_ns_use_ws">استخدام WebSockets للتواصل الفوري مع Nightscout.</string>
+    <string name="pref_title_ns_allow_client_control">السماح بالتحكم من العميل</string>
+    <string name="pref_summary_ns_allow_client_control">السماح للأجهزة العميلة المقترنة بإرسال أوامر موقّعة (مثل بدء المشاهد أو إيقافها) عبر Nightscout. يؤدي ذلك أيضًا إلى تفعيل وضع الحماية المشددة: لن يتم اعتماد التغييرات التي تجرى مباشرة في Nightscout بعد الآن.</string>
     <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">واي فاي فقط</string>
+    <string name="pref_title_openhumans_charging_only">أثناء الشحن فقط</string>
     <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_status">إرسال الحالة إلى xDrip+</string>
+    <string name="pref_title_xdrip_send_detailed_iob">إرسال تفاصيل الأنسولين النشط (IOB)</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">إرسال معلومات الأنسولين النشط (IOB) التفصيلية إلى xDrip+ لعرضها على واجهات الساعة.</string>
+    <string name="pref_title_xdrip_send_bgi">إظهار تأثير سكر الدم (BGI)</string>
+    <string name="pref_summary_xdrip_send_bgi">إظهار تأثير سكر الدم (BGI) في شريط الحالة في xDrip+.</string>
     <!-- Wear preferences -->
+    <string name="pref_title_wear_control">التحكم عبر الساعات الذكية</string>
+    <string name="pref_summary_wear_control">التحكم في AAPS من ساعة Android Wear.</string>
+    <string name="pref_title_wear_wizard_bg">تضمين سكر الدم في الحاسبة</string>
+    <string name="pref_title_wear_wizard_tt">تضمين الهدف المؤقت في الحاسبة</string>
+    <string name="pref_title_wear_wizard_trend">تضمين الاتجاه في الحاسبة</string>
+    <string name="pref_title_wear_wizard_cob">تضمين الكربوهيدرات المتبقية (COB) في الحاسبة</string>
+    <string name="pref_title_wear_wizard_iob">تضمين الأنسولين النشط (IOB) في الحاسبة</string>
+    <string name="pref_title_wear_custom_watchface_authorization">السماح بواجهات الساعة المخصصة</string>
+    <string name="pref_title_wear_pushed_watchface">واجهة الساعة المثبتة على الساعة</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">واجهة ساعة بعناصر (Complications)</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">واجهة ساعة مخصصة</string>
+    <string name="pref_title_wear_notify_on_smb">الإشعار عند إعطاء الجرعات التصحيحية الصغيرة SMB</string>
+    <string name="pref_summary_wear_notify_on_smb">إرسال إشعارات إلى الساعة عند إعطاء الجرعات التصحيحية الصغيرة SMB.</string>
+    <string name="pref_title_wear_broadcast_data">بث البيانات إلى الساعة</string>
+    <string name="pref_summary_wear_broadcast_data">بث بيانات AAPS إلى تطبيقات الساعة التابعة لجهات خارجية عبر Intent.</string>
     <!-- Site rotation preferences -->
+    <string name="pref_title_site_rotation_manage_pump">إدارة تدوير مواضع المضخة</string>
+    <string name="pref_title_site_rotation_manage_cgm">إدارة تدوير مواضع مستشعر المراقبة المستمرة للغلوكوز CGM</string>
     <!-- IntKey: Overview preferences -->
+    <string name="pref_title_carbs_button_increment_1">مقدار زيادة زر الكربوهيدرات 1</string>
+    <string name="pref_title_carbs_button_increment_2">مقدار زيادة زر الكربوهيدرات 2</string>
+    <string name="pref_title_carbs_button_increment_3">مقدار زيادة زر الكربوهيدرات 3</string>
+    <string name="carb_increment_button_message">كمية الكربوهيدرات التي ستضاف عند الضغط على الزر</string>
+    <string name="pref_title_cage_warning">حد التحذير لعمر القنية</string>
+    <string name="pref_title_cage_critical">حد الخطر لعمر القنية</string>
+    <string name="pref_title_iage_warning">حد التحذير لعمر الأنسولين</string>
+    <string name="pref_title_iage_critical">حد الخطر لعمر الأنسولين</string>
+    <string name="pref_title_sage_warning">حد التحذير لعمر المستشعر</string>
+    <string name="pref_title_sage_critical">حد الخطر لعمر المستشعر</string>
+    <string name="pref_title_sbat_warning">حد التحذير لمستوى بطارية المستشعر</string>
+    <string name="pref_title_sbat_critical">حد الخطر لمستوى بطارية المستشعر</string>
+    <string name="pref_title_bage_warning">حد التحذير لعمر بطارية المضخة</string>
+    <string name="pref_title_bage_critical">حد الخطر لعمر بطارية المضخة</string>
+    <string name="pref_title_res_warning">حد التحذير لمستوى خزان الأنسولين</string>
+    <string name="pref_title_res_critical">حد الخطر لمستوى خزان الأنسولين</string>
+    <string name="pref_title_batt_warning">حد التحذير لمستوى بطارية المضخة</string>
+    <string name="pref_title_batt_critical">حد الخطر لمستوى بطارية المضخة</string>
+    <string name="pref_title_bolus_percentage">النسبة المئوية للجرعة</string>
+    <string name="deliverpartofboluswizard">تطبيق هذه القيمة على تصحيح سكر الدم والكربوهيدرات في نتيجة حاسبة الجرعة</string>
+    <string name="pref_title_reset_bolus_percentage_time">وقت إعادة ضبط النسبة المئوية للجرعة</string>
+    <string name="deliver_part_of_boluswizard_reset_time">إعطاء الجرعة كاملة (100%) إذا كانت قراءة سكر الدم أقدم من</string>
     <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">مهلة الحماية</string>
+    <string name="pref_title_protection_type_application">المستوى 0: حماية التطبيق</string>
+    <string name="pref_summary_protection_type_application">عند تشغيل التطبيق وعند العودة إليه. مستقل عن المستويات الأخرى</string>
+    <string name="pref_title_protection_type_bolus">المستوى 1: حماية الجرعة</string>
+    <string name="pref_summary_protection_type_bolus">العلاجات وتفعيل الملف الشخصي. يتطلب المستوى 2</string>
+    <string name="pref_title_protection_type_settings">المستوى 2: حماية الإعدادات</string>
+    <string name="pref_summary_protection_type_settings">تعديل الملفات الشخصية والإعدادات</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">بلا حماية</string>
+    <string name="biometric">المصادقة الحيوية</string>
+    <string name="master_password">كلمة المرور الرئيسية</string>
+    <string name="custom_password">كلمة مرور مخصصة</string>
+    <string name="custom_pin">رمز PIN مخصص</string>
     <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">الحد الأقصى المسموح به من الكربوهيدرات</string>
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">الحد الأدنى للتغيير في الوضع المفتوح</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">الحلقة المفتوحة ستعرض طلب تغيير جديدا فقط إذا كان التغيير أكبر من هذه القيمة بالنسبة المئوية %. القيمة الافتراضية هي 20%</string>
     <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">الفاصل الزمني بين الجرعات التصحيحية الصغيرة SMB</string>
+    <string name="pref_title_smb_max_minutes">الحد الأقصى لدقائق الأنسولين القاعدي لتقييد الجرعات التصحيحية الصغيرة SMB</string>
+    <string name="pref_title_uam_smb_max_minutes">الحد الأقصى لدقائق الأنسولين القاعدي في الوجبات غير المعلنة (UAM) لتقييد الجرعات التصحيحية الصغيرة SMB</string>
+    <string name="uam_smb_max_minutes">الحد الأقصى لدقائق الجرعات التصحيحية الصغيرة SMB في الوجبات غير المعلنة (UAM)</string>
+    <string name="pref_title_carbs_request_threshold">عتبة الحاجة إلى الكربوهيدرات</string>
+    <string name="carbs_req_threshold_summary">الحد الأدنى لغرامات الكربوهيدرات اللازمة لعرض تنبيه اقتراح الكربوهيدرات. لن تؤدي الاقتراحات الأقل من هذا الرقم إلى إرسال إشعار.</string>
+    <string name="pref_title_half_basal_exercise_target">هدف الرياضة لنصف المعدل القاعدي</string>
+    <string name="half_basal_exercise_target_summary">اضبط قيمة رقمية، مثل 160، وهذا يعني أنه عندما يكون الهدف المؤقت 160 ملليغرام/ديسيلتر ويكون خيار «الهدف المؤقت المرتفع يزيد الحساسية» مفعّلا، يعمل الأنسولين القاعدي بنسبة 50%% عند هذا المستوى (120 = 75%%؛ 140 = 60%%).</string>
+    <string name="pref_title_iob_threshold_percent">النسبة المئوية لعتبة الأنسولين النشط (IOB)</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">النسبة المئوية من الحد الأقصى للأنسولين النشط (maxIOB) التي يتم فوقها تعطيل الجرعات التصحيحية الصغيرة SMB.\nالقيمة الافتراضية: 100%\nعند 100% تكون هذه الميزة معطلة فعليا.</string>
+    <string name="pref_title_dynisf_adjustment_factor">معامل ضبط DynamicISF</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">معامل ضبط DynamicISF. اضبطه على أكثر من 100% للحصول على جرعات تصحيح أقوى، وعلى أقل من 100% لتصحيحات أقل قوة.</string>
+    <string name="pref_title_autosens_period">الفترة الزمنية لـ Autosens</string>
+    <string name="openapsama_autosens_period_summary">عدد الساعات السابقة المستخدمة لاكتشاف الحساسية (لا يشمل وقت امتصاص الكربوهيدرات)</string>
     <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">عدد السجلات المراد إرسالها</string>
     <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">عتبة البيانات القديمة</string>
+    <string name="pref_title_pump_unreachable_threshold">عتبة تعذر الوصول إلى المضخة</string>
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">عدد أيام الضبط الافتراضي</string>
+    <string name="autotune_default_tune_days_summary">العدد الافتراضي لأيام البيانات التي سيعالجها Autotune (حتى 30 يومًا)</string>
     <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">الحد الأدنى للفاصل الزمني بين الجرعات عن بعد</string>
     <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">الفاصل الزمني لبيانات سكر الدم العشوائية</string>
+    <string name="pref_title_random_bg_randomize">جعل بيانات سكر الدم عشوائية</string>
+    <string name="pref_summary_random_bg_randomize">إضافة تشويش، وتغيير طفيف عشوائي للطوابع الزمنية، وجعل أسهم الاتجاه عشوائية، وإصدار كميات عشوائية من الكربوهيدرات أحيانًا. عطّل هذا الخيار للحصول على موجة جيبية منتظمة وحتمية، مع اشتقاق سهم الاتجاه من ميل الموجة.</string>
     <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">عتبة إنذار البيانات القديمة</string>
+    <string name="pref_title_urgent_alarm_stale_data">عتبة الإنذار العاجل للبيانات القديمة</string>
     <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">ملف المستخدم لتدوير مواضع التركيب</string>
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
+    <string name="site_rotation_profile_man">رجل</string>
+    <string name="site_rotation_profile_woman">امرأة</string>
+    <string name="site_rotation_profile_child">طفل</string>
     <!-- StringKey: General preferences -->
+    <string name="pref_title_units">الوحدات</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="lang_default">لغة النظام الافتراضية</string>
+    <string name="pref_title_patient_name">اسم النسخة</string>
+    <string name="pref_summary_patient_name">اسم الشخص الذي يستخدم هذا الهاتف. يساعد هذا الاسم على تمييز نسخة AAPS هذه في التقارير والمزامنة.</string>
     <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">مجلد AAPS</string>
     <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">كلمة المرور الرئيسية</string>
+    <string name="pref_title_settings_password">كلمة مرور الإعدادات</string>
+    <string name="pref_title_settings_pin">رمز PIN للإعدادات</string>
+    <string name="pref_title_application_password">كلمة مرور التطبيق</string>
+    <string name="pref_title_application_pin">رمز PIN للتطبيق</string>
+    <string name="pref_title_bolus_password">كلمة مرور الجرعة</string>
+    <string name="pref_title_bolus_pin">رمز PIN للجرعة</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="pref_summary_theme_switcher">اختر المظهر الداكن أو الفاتح أو اتباع مظهر النظام</string>
+    <string name="pref_title_app_color_scheme">نظام ألوان التطبيق</string>
+    <string name="pref_dark_theme">المظهر الداكن</string>
+    <string name="pref_light_theme">المظهر الفاتح</string>
+    <string name="pref_follow_system_theme">استخدام مظهر الجهاز</string>
     <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">عمر المريض</string>
     <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">مستلم البريد الإلكتروني</string>
+    <string name="pref_title_identification">معرّف تقارير الأعطال</string>
     <!-- StringKey: Automation preferences -->
+    <string name="pref_title_automation_location">خدمة الموقع</string>
+    <string name="automation_location_passive">استخدام الموقع السلبي</string>
+    <string name="automation_location_network">استخدام موقع الشبكة</string>
+    <string name="automation_location_gps">استخدام نظام تحديد الموقع GPS</string>
     <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers">أرقام الهواتف المسموح بها</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_otp_pin">رمز PIN إضافي إلزامي في نهاية الرمز</string>
+    <string name="smscommunicator_otp_pin_summary">أرقام إضافية يجب حفظها وإضافتها في نهاية كل كلمة مرور لمرة واحدة يتم إنشاؤها</string>
     <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">نوع المضخة</string>
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">عنوان URL لـ Nightscout</string>
+    <string name="ns_client_url_summary">أدخل عنوان URL الخاص بـ Nightscout (مثل https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_secret_title">المفتاح السري لواجهة Nightscout API</string>
+    <string name="ns_client_secret_summary">أدخل المفتاح السري لواجهة Nightscout API (12 حرفًا على الأقل)</string>
+    <string name="nsclient_token_title">رمز الوصول إلى Nightscout</string>
+    <string name="nsclient_token_summary">أدخل رمز الوصول إلى Nightscout (17 حرفًا على الأقل)</string>
+    <string name="ns_wifi_ssids">معرّف شبكة الواي فاي (WiFi SSID)</string>
+    <string name="ns_wifi_ssids_summary">أسماء الشبكات المسموح بها (افصل بينها بفواصل منقوطة)</string>
     <!-- DoubleKey: Overview preferences -->
+    <string name="pref_title_insulin_button_increment_1">مقدار زيادة زر الأنسولين 1</string>
+    <string name="pref_title_insulin_button_increment_2">مقدار زيادة زر الأنسولين 2</string>
+    <string name="pref_title_insulin_button_increment_3">مقدار زيادة زر الأنسولين 3</string>
+    <string name="insulin_increment_button_message">كمية الأنسولين التي ستضاف عند الضغط على الزر</string>
     <!-- DoubleKey: Actions preferences -->
+    <string name="pref_title_fill_button_1">زر التعبئة 1</string>
+    <string name="pref_title_fill_button_2">زر التعبئة 2</string>
+    <string name="pref_title_fill_button_3">زر التعبئة 3</string>
     <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">الحد الأقصى للجرعة</string>
+    <string name="treatmentssafety_maxbolus_summary">يحدد عمر المريض المختار الحد الأقصى لهذه القيمة. القيمة الأعلى هنا ليس لها أي تأثير.</string>
     <!-- DoubleKey: APS preferences -->
+    <string name="pref_title_max_basal">الحد الأقصى لمعدل الأنسولين القاعدي</string>
+    <string name="openapsma_max_basal_summary">تسمى هذه القيمة max basal في سياق OpenAPS\nيحدد عمر المريض المختار الحد الأقصى لهذه القيمة. القيمة الأعلى هنا ليس لها أي تأثير.</string>
+    <string name="pref_title_smb_max_iob">الحد الأقصى للأنسولين النشط (IOB) للجرعات التصحيحية الصغيرة SMB</string>
+    <string name="openapssmb_max_iob_summary">تسمى هذه القيمة Max IOB في سياق OpenAPS\nلن يضيف OpenAPS المزيد من الأنسولين إذا كان الأنسولين النشط (IOB) الحالي أكبر من هذه القيمة.\nيحدد عمر المريض المختار الحد الأقصى لهذه القيمة. القيمة الأعلى هنا ليس لها أي تأثير.</string>
+    <string name="pref_title_ama_max_iob">الحد الأقصى للأنسولين النشط (IOB) للمساعدة المتقدمة للوجبات (AMA)</string>
+    <string name="openapsma_max_iob_summary">تسمى هذه القيمة Max IOB في سياق OpenAPS\nهذه هي أكبر كمية من الأنسولين بالوحدات [U] يمكن أن يضخها APS دفعة واحدة.\nيحدد عمر المريض المختار الحد الأقصى لهذه القيمة. القيمة الأعلى هنا ليس لها أي تأثير.</string>
+    <string name="pref_title_max_daily_multiplier">مضاعف الأمان اليومي الأقصى</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">القيمة الافتراضية: 3. هذا حد أمان رئيسي في نظام OpenAPS. ما يقوم به هو تحديد معدلات الأنسولين القاعدي لديك لتكون 3 أضعاف أكبر معدل أنسولين قاعدي لديك. من المحتمل أنك لن تحتاج إلى تغيير هذا، ولكن يجب أن تكون على دراية بأن هذا هو ما يتم مناقشته حول \"3 أضعاف الحد الأقصى اليومي؛ 4 أضعاف الحالي\" لحدود الأمان.</string>
+    <string name="pref_title_current_basal_multiplier">مضاعف أمان المعدل القاعدي الحالي</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">القيمة الافتراضية: 4. هذا هو الجزء الآخر من حدود الأمان الأساسية في OpenAPS، ويكمل قاعدة «3 أضعاف الحد اليومي الأقصى؛ و4 أضعاف المعدل الحالي». وهذا يعني أن معدل الأنسولين القاعدي لن يتجاوز، بصرف النظر عن الحد الأقصى المضبوط في المضخة، أربعة أضعاف معدله الحالي. يهدف ذلك إلى منع الوصول إلى مستويات خطرة بسبب ضبط حد أقصى مرتفع جدًا قبل فهم آلية عمل الخوارزمية. القيمة الافتراضية هي 4 أضعاف؛ ولن يحتاج معظم المستخدمين إلى تعديلها، وقد يحتاجون بدلًا من ذلك إلى ضبط إعدادات أخرى إذا واجهوا حد الأمان هذا.</string>
+    <string name="pref_title_bolus_snooze_divisor">قاسم مدة عمل الأنسولين (DIA) لفترة التهدئة بعد الجرعة</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">القيمة الافتراضية: 2\nتبدأ فترة التهدئة بعد الجرعة عندما تعطي جرعة الوجبة، حتى لا تعاكس الحلقة ذلك بمعدلات قاعدية مؤقتة منخفضة بعد الأكل مباشرة. المثال هنا والقيمة الافتراضية هو 2؛ فإذا كانت مدة عمل الأنسولين DIA 3 ساعات، فستنتهي فترة التهدئة بعد الجرعة تدريجيا خلال 1.5 ساعة (3DIA/2).</string>
+    <string name="pref_title_ama_min_5m_carbs_impact">الحد الأدنى لتأثير الكربوهيدرات خلال 5 دقائق في المساعدة المتقدمة للوجبات (AMA)</string>
+    <string name="pref_title_smb_min_5m_carbs_impact">الحد الأدنى لتأثير الكربوهيدرات خلال 5 دقائق في الجرعات التصحيحية الصغيرة SMB</string>
+    <string name="openapsama_min_5m_carb_impact_summary">القيمة الافتراضية: 3.0 (AMA) أو 8.0 (SMB). يحدد هذا الإعداد التأثير الافتراضي لامتصاص الكربوهيدرات خلال كل 5 دقائق. القيمة الافتراضية المتوقعة هي 3 ملليغرام/ديسيلتر لكل 5 دقائق. يؤثر ذلك في سرعة تناقص الكربوهيدرات المتبقية (COB) وكمية امتصاص الكربوهيدرات المفترضة عند حساب سكر الدم المتوقع، عندما ينخفض سكر الدم أكثر من المتوقع أو لا يرتفع بالقدر المتوقع.</string>
+    <string name="pref_title_absorption_cutoff">الحد الزمني لامتصاص الكربوهيدرات</string>
+    <string name="absorption_cutoff_summary">الوقت الذي تعتبر عنده أي وجبة ممتصة بالكامل. سيتم استبعاد الكربوهيدرات المتبقية.</string>
+    <string name="pref_title_absorption_maxtime">الحد الأقصى لوقت الامتصاص</string>
+    <string name="absorption_max_time_summary">الوقت بالساعات المتوقع خلاله امتصاص جميع الكربوهيدرات من الوجبة</string>
+    <string name="pref_title_autosens_min">الحد الأدنى لـ Autosens</string>
+    <string name="openapsama_autosens_min_summary">القيمة الافتراضية: 0.7\nيمثل هذا الجانب الآخر من حدود أمان Autosens؛ إذ يضع حدًا أدنى لمدى خفض Autosens لمعدلات الأنسولين القاعدي، وحدًا أقصى لمدى رفع معامل حساسية الأنسولين ISF وأهداف سكر الدم.</string>
+    <string name="pref_title_autosens_max">الحد الأقصى لـ Autosens</string>
+    <string name="openapsama_autosens_max_summary">القيمة الافتراضية: 1.2\nهذا حد أقصى لمعامل Autosens (ولـ Autotune مستقبلًا)، ويضع حدًا أقصى قدره 20%% لارتفاع نسبة Autosens. وتحدد هذه النسبة بدورها مقدار رفع Autosens لمعدلات الأنسولين القاعدي، ومقدار خفض معامل حساسية الأنسولين ISF، ومدى خفض هدف سكر الدم.</string>
+    <string name="pref_title_autoisf_min">الحد الأدنى لـ AutoISF</string>
+    <string name="openapsama_autoISF_min_summary">على غرار autosens_min، تحدد هذه القيمة مدى انخفاض قوة معامل حساسية الأنسولين ISF.\n\nالقيمة الافتراضية 1.0 تعطل هذا التأثير عمليًا.</string>
+    <string name="pref_title_autoisf_max">الحد الأقصى لـ AutoISF</string>
+    <string name="openapsama_autoISF_max_summary">على غرار autosens_max، تحدد هذه القيمة مدى ارتفاع قوة ISF.\n\nالقيمة الافتراضية 1.0 تعطل هذا التأثير عمليا.\n\nتحذير: كن حذرا جدا عند استخدام قيم أعلى من 2.5</string>
+    <string name="pref_title_bg_accel_weight">وزن معامل حساسية الأنسولين ISF لتسارع سكر الدم</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">هذا هو الوزن المطبق عند تسارع تغير الغلوكوز، ويؤدي إلى تقوية معامل حساسية الأنسولين ISF، ما قد يزيد كمية الأنسولين المعطاة.\n\nالقيمة الافتراضية 0.0 تعطل هذا التأثير عمليا.</string>
+    <string name="pref_title_bg_brake_weight">وزن معامل حساسية الأنسولين ISF لتباطؤ سكر الدم</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">هذا هو الوزن المطبق عند تباطؤ تغير الغلوكوز، ويؤدي إلى إضعاف ISF، ما قد يقلل كمية الأنسولين المعطاة.\n\nالقيمة الافتراضية 0.0 تعطل هذا التأثير عمليًا.</string>
+    <string name="pref_title_low_bg_weight">وزن نطاق سكر الدم المنخفض</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">هذا هو الوزن المطبق عندما يكون الغلوكوز أقل من الهدف، ويؤدي إلى إضعاف معامل حساسية الأنسولين ISF، ما قد يقلل كمية الأنسولين المعطاة.\n\nالقيمة الافتراضية 0.0 تعطل هذا التأثير عمليا.</string>
+    <string name="pref_title_high_bg_weight">وزن نطاق سكر الدم المرتفع</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">هذا هو الوزن المطبق عندما يكون الغلوكوز أعلى من الهدف، ويؤدي إلى تقوية معامل حساسية الأنسولين ISF، ما قد يزيد كمية الأنسولين المعطاة.\n\nالقيمة الافتراضية 0.0 تعطل هذا التأثير عمليا.</string>
+    <string name="pref_title_smb_delivery_ratio_bg_range">نطاق سكر الدم لنسبة إعطاء الجرعات التصحيحية الصغيرة SMB</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">القيمة الافتراضية: 0. تربط نسبة إعطاء الجرعات التصحيحية الصغيرة SMB المتزايدة خطيًا بنطاق الغلوكوز [target_bg, target_bg+bg_range].\nعند target_bg تكون نسبة الجرعات التصحيحية الصغيرة SMB هي smb_delivery_ratio_min، وعند target_bg+bg_range تكون smb_delivery_ratio_max.\nعند ضبط القيمة على 0، يتم تعطيل الزيادة الخطية في نسبة الجرعات التصحيحية الصغيرة SMB وتستخدم قيمة smb_delivery_ratio الثابتة.</string>
+    <string name="pref_title_pp_weight">وزن معامل حساسية الأنسولين ISF بعد الوجبة</string>
+    <string name="openapsama_pp_ISF_weight_summary">هذا هو الوزن المطبق في أثناء ارتفاع الغلوكوز، ويؤدي إلى تقوية معامل حساسية الأنسولين ISF، ما قد يزيد كمية الأنسولين المعطاة.\n\nالقيمة الافتراضية 0.0 تعطل هذا التأثير عمليا.</string>
+    <string name="pref_title_dura_weight">وزن مدة معامل حساسية الأنسولين ISF</string>
+    <string name="openapsama_dura_ISF_weight_summary">هذا هو الوزن المطبق خلال فترات استقرار الغلوكوز عند مستويات مرتفعة لفترة طويلة، ويؤدي إلى تقوية معامل حساسية الأنسولين ISF، ما قد يزيد كمية الأنسولين المعطاة.\n\nالقيمة الافتراضية 0.0 تعطل هذا التأثير عمليا.</string>
+    <string name="pref_title_smb_delivery_ratio">نسبة إعطاء الجرعات التصحيحية الصغيرة SMB</string>
+    <string name="openapsama_smb_delivery_ratio_summary">القيمة الافتراضية: 0.5. هذا حد أمان رئيسي آخر في نظام OpenAPS، ويحدد حصة إجمالي الأنسولين المطلوب التي يمكن إعطاؤها كجرعات تصحيحية صغيرة (SMB). ويهدف ذلك إلى منع الأشخاص من الدخول في منطقة خطيرة عن طريق إرسال طلبات جرعات تصحيحية صغيرة من هاتف مقدم الرعاية في نفس الوقت. قم بزيادة هذه القيمة التجريبية ببطء وبحذر.</string>
+    <string name="pref_title_smb_delivery_ratio_min">الحد الأدنى لنسبة إعطاء الجرعات التصحيحية الصغيرة SMB</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">القيمة الافتراضية: 0.5. هذا هو الطرف الأدنى من نسبة تزايد خطي بدلاً من القيمة الثابتة أعلاه.</string>
+    <string name="pref_title_smb_delivery_ratio_max">الحد الأقصى لنسبة إعطاء الجرعات التصحيحية الصغيرة SMB</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">القيمة الافتراضية: 0.5. هذا هو الطرف الأقصى من نسبة تزايد خطي بدلاً من القيمة الثابتة أعلاه.</string>
+    <string name="pref_title_smb_max_range_extension">الحد الأقصى لتمديد نطاق الجرعات التصحيحية الصغيرة SMB</string>
+    <string name="openapsama_smb_max_range_extension_summary">القيمة الافتراضية: 1. هذا حد أمان أساسي آخر في OpenAPS، ويحدد العامل الذي يمكن به تجاوز الحد المعتاد البالغ 120 دقيقة لـ maxSMB/maxUAM. زد هذه القيمة التجريبية ببطء وحذر.</string>
     <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_low_mark">علامة سكر الدم المنخفض</string>
+    <string name="pref_title_high_mark">علامة سكر الدم المرتفع</string>
     <!-- UnitDoubleKey: APS preferences -->
+    <string name="pref_title_lgs_threshold">عتبة إيقاف الضخ عند انخفاض السكر (LGS)</string>
+    <string name="lgs_threshold_summary">قيمة سكر الدم التي يتم دونها تعليق ضخ الأنسولين. تستخدم القيمة الافتراضية نموذج الهدف القياسي. يمكن للمستخدم ضبط قيمة بين 60 ملليغرام/ديسيلتر (3.3 مليمول/لتر) و100 ملليغرام/ديسيلتر (5.5 مليمول/لتر). تؤدي القيم الأقل من 65/3.6 إلى استخدام النموذج الافتراضي</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
 </resources>
