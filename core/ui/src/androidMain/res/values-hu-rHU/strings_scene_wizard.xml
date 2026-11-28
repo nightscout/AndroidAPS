@@ -1,22 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">Válasszon kiindulópontot. A sablonok gyakori helyzetekhez ajánlott műveleteket töltenek ki előre – a következő lépésekben mindent módosíthat.</string>
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">Testmozgás</string>
+    <string name="scene_wizard_exercise_desc">Magasabb célérték, 70%-os profil és kikapcsolt SMB a mozgás közbeni alacsony VC ellen.</string>
+    <string name="scene_wizard_info_exercise">Testmozgás közben az izmok gyorsabban használják fel a glükózt, és nő az inzulinérzékenység. Ha előre megemeli az átmeneti célértéket, az algoritmus előnyt kap: korán elkezdi csökkenteni az inzulinbeadást, így tartalékot képez a mozgás okozta alacsony VC ellen. Az SMB kikapcsolása is ajánlott, mert a mozgás közbeni korrekciós bólusok gyors esést okozhatnak. A legjobb eredményért aktiválja ezt a jelenetet 1–2 órával a mozgás előtt, hogy az algoritmusnak legyen ideje csökkenteni az aktív inzulint (IOB).</string>
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <string name="scene_template_sick_day">Betegség</string>
+    <string name="scene_wizard_sick_day_desc">Erősebb profil (150%) a betegség alatti nagyobb inzulinrezisztencia kezelésére.</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">A betegség, a láz és a stresszhormonok nagyon megnövelhetik az inzulinrezisztenciát – néha 50%-kal vagy még jobban. Az erősebb profil (pl. 150%) azt jelzi az algoritmusnak, hogy minden számításban több inzulint adjon be – bázisütemek, bólusjavaslatok és korrekciós faktorok. A következő lépésekben átmeneti célértéket is hozzáadhat, vagy módosíthatja a működési módot. Figyelje szorosan az értékeket, és módosítson, ahogy a szervezete gyógyul.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_template_sick_day_vomiting">Betegség – hányás</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">Csökkentett profil LGS-sel – a szokásos betegségjelenet ellentéte, amikor a szervezete nem tudja felszívni az ételt.</string>
+    <string name="scene_wizard_info_sick_day_vomiting">Ha nem tudja bent tartani az ételt, a betegségnél szokásos inzulinemelés veszélyes lehet. Hányáskor a szénhidrát nem szívódik fel, ezért a vércukor emelkedés helyett csökkenhet. A csökkentett profil (60%) kevesebb inzulint ad be, az LGS mód pedig további biztonságot ad, mert felfüggeszti az inzulint, ha a glükóz esik. Az SMB kikapcsolása megakadályozza a további bólusokat. Gyakran ellenőrizzen – a vércukrot 1–2 óránként, a ketonokat 2–4 óránként. Kérjen orvosi segítséget, ha a hányás néhány óránál tovább tart, vagy a keton 1,5 mmol/l fölé emelkedik.</string>
     <!-- Sleep: no default actions — 8h -->
+    <string name="scene_template_sleep">Alvás</string>
+    <string name="scene_wizard_sleep_desc">Szűkebb célérték a jobb éjszakai szabályozásért.</string>
+    <string name="scene_wizard_info_sleep">Éjszaka sokaknál fordul elő észrevétlen magas vagy alacsony VC. Alvás közben egy kissé szűkebb célérték lehetővé teszi, hogy az algoritmus egész éjjel finomabb korrekciókat végezzen. A legjobb eredményért használja ezt egy olyan profillal, amely az éjszakai bázisigényét követi.</string>
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <string name="scene_template_post_exercise_night">Éjszaka mozgás után</string>
+    <string name="scene_wizard_post_exercise_night_desc">Csökkentett profil, magasabb célérték, kikapcsolt SMB – véd a mozgás után késve jelentkező éjszakai alacsony VC ellen.</string>
+    <string name="scene_wizard_info_post_exercise_night">Testmozgás után az izmok még sok órán át töltik vissza a glikogénraktárakat – az inzulinérzékenység 24–48 órán át magasabb maradhat, és az éjszakai hipoglikémia kockázata a mozgás után 6–12 órával a legnagyobb. A csökkentett profil egész éjjel kevesebb bázist ad be, a magasabb átmeneti célérték biztonsági tartalékot ad az algoritmusnak, az SMB kikapcsolása pedig megakadályozza, hogy az algoritmus túlkorrigálja a rövid emelkedéseket. Aktiválja ezt a jelenetet lefekvéskor azokon a napokon, amikor mozgott, főleg hosszabb edzés vagy új tevékenység után. Tartson gyors szénhidrátot az ágya mellett, és fontolja meg egy éjszakai ellenőrzésre szóló ébresztő beállítását.</string>
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
+    <string name="scene_template_pre_meal">Étkezés előtt</string>
+    <string name="scene_wizard_pre_meal_desc">Alacsonyabb célérték, hogy megelőzze az étkezés utáni kiugrást.</string>
+    <string name="scene_wizard_info_pre_meal">Ha 30–60 perccel evés előtt alacsonyabb célértéket állít be, az algoritmus már a szénhidrát érkezése előtt elkezdi növelni az aktív inzulint (IOB). Ez segít csökkenteni az étkezés utáni kiugrást, amely akkor jelentkezik, amikor az étel gyorsabban jut a véráramba, mint ahogy az inzulin hatni tud. Akkor a leghasznosabb, ha tudja, hogy hamarosan étkezni fog.</string>
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_template_alcohol">Alkohol</string>
+    <string name="scene_wizard_alcohol_desc">LGS mód, csökkentett profil, kikapcsolt SMB – véd az alkohol miatt késve jelentkező hipó ellen.</string>
+    <string name="scene_wizard_info_alcohol">Az alkohol az egyik legveszélyesebb helyzet az 1-es típusú cukorbetegek számára. A máj először az alkoholt bontja le, és közben kevesebb glükózt ad le, ami 6–24 órával később késleltetett hipoglikémiát okozhat – gyakran éjszaka, alvás közben. Az LGS mód megakadályozza az inzulin felhalmozódását, mert csak akkor csökkenti a beadást, ha a glükóz esik. A csökkentett profil és a kikapcsolt SMB tovább korlátozza az aktív inzulint (IOB). Lefekvés előtt mindig ellenőrizze a vércukrát, és fontolja meg egy éjszakai ellenőrzésre szóló ébresztő beállítását.</string>
     <!-- Driving: TT 108 (Hypo) — 1h -->
+    <string name="scene_template_driving">Vezetés</string>
+    <string name="scene_wizard_driving_desc">Kissé magasabb célérték a biztonságos vezetéshez.</string>
+    <string name="scene_wizard_info_driving">A biztonságos vezetéshez stabil, 5,0 mmol/l (90 mg/dl) feletti vércukor szükséges. Egyes országokban a hosszú utak előtti és alatti ellenőrzés törvényi előírás. A kissé magasabb célérték biztonsági tartalékot ad az algoritmusnak – azon dolgozik, hogy a vércukra azon szint felett maradjon, ahol a figyelem és a reakcióidő romlani kezd. Ha vezetés közben alacsony lesz a vércukra, azonnal álljon félre, kezelje a hipót, és várjon legalább 45 percet a glükóz normalizálódása után, mielőtt továbbmegy.</string>
     <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <string name="scene_template_bathing">Fürdés</string>
+    <string name="scene_wizard_bathing_desc">A pumpa leválasztása zuhanyzáshoz, úszáshoz, fürdéshez vagy bármilyen vizes tevékenységhez.</string>
+    <string name="scene_wizard_info_bathing">Ha leválasztja a pumpát, az inzulinbeadás teljesen leáll – nincs bázis, nincs bólus, nincs korrekció. Az algoritmus leválasztott módba vált, és nem végez módosításokat. Ez rövid időre, például zuhanyzáshoz, fürdéshez vagy úszáshoz normális. Amikor a jelenet véget ér, a pumpa újracsatlakozik, és az algoritmus automatikusan folytatja a működést. A leválasztás legyen rövid – bázisinzulin nélkül a vércukor 1–2 órán belül emelkedni kezd.</string>
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
+    <string name="scene_template_luteal_phase">Luteális fázis</string>
+    <string name="scene_wizard_luteal_phase_desc">Erősebb profil a menstruáció előtti inzulinrezisztencia kezelésére.</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">Sok nőnél nő az inzulinrezisztencia a luteális fázisban (nagyjából 1–2 héttel a menstruáció előtt). Ennek oka az emelkedő progeszteronszint, amely csökkenti az inzulinérzékenységet. A hatás személyenként nagyon eltérő – van, akinél 10–30%-kal nő az inzulinigény, másoknál alig változik. Kezdje óvatos emeléssel (115%), és több ciklus alatt a saját tapasztalatai alapján módosítson. Ha ezt a Careportalban rögzíti, könnyebben felismeri a saját ritmusát.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
+    <string name="scene_template_hot_weather">Meleg idő</string>
+    <string name="scene_wizard_hot_weather_desc">Csökkentett profil – a hőség gyorsítja az inzulin felszívódását.</string>
+    <string name="scene_wizard_info_hot_weather">Magas hőmérsékleten az erek kitágulnak, ami gyorsítja az inzulin felszívódását – ugyanaz az adag gyorsabban és erősebben hat. Ez váratlan alacsony VC-hez vezethet, főleg szabadtéri tevékenység közben. A kisebb profilcsökkentés (85%) ellensúlyozza a gyorsabb felszívódást. Igyon eleget, ellenőrizze gyakrabban a vércukrát, és ne feledje, hogy a meleg pumpában vagy tollban tárolt inzulin megromolhat. Ha a melegben sportol is, fontolja meg, hogy ezt a testmozgás jelenettel együtt használja a nagyobb védelemért.</string>
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_template_medical_procedure">Orvosi beavatkozás</string>
+    <string name="scene_wizard_medical_procedure_desc">Nyílt hurok kikapcsolt SMB-vel műtéthez vagy orvosi beavatkozáshoz.</string>
+    <string name="scene_wizard_info_medical_procedure">Műtét vagy orvosi beavatkozás alatt az altatás és a stresszhormonok miatt a vércukor kiszámíthatatlan. A nyílt hurok ajánlott, mert az algoritmus ilyen körülmények között nem tudja megbízhatóan előre jelezni, mit fog tenni a szervezete. A magasabb célérték (150 mg/dl) biztonsági tartalékot ad a műtét közbeni hipoglikémia ellen. Az SMB kikapcsolása megakadályozza a váratlan inzulinbeadást a beavatkozás alatt. Mindig mondja el az egészségügyi személyzetnek, hogy inzulinpumpát és CGM-et visel. 3 óránál hosszabb beavatkozásnál az orvosi csapat átválthat intravénás inzulinra.</string>
     <!-- Blank: no actions — 1h -->
+    <string name="scene_template_blank">Üres</string>
+    <string name="scene_wizard_blank_desc">Kezdés az elejéről, előre kiválasztott műveletek nélkül.</string>
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info" formatted="false">A profilváltás egyszerre módosítja a bázisütemeket, az inzulinérzékenységi faktort (ISF) és az inzulin-szénhidrát arányt (IC). Mindent százalékosan is skálázhat — például a 110% körülbelül 10%-kal növeli a bázisinzulin beadását, a bólusszámításokat és a szénhidrát-felszívódás ütemét. Teljesen másik profilra is válthat, ha van ilyen beállítva különleges helyzetekre.</string>
+    <string name="scene_wizard_tt_info">Az átmeneti célérték azt jelzi az algoritmusnak, hogy egy adott ideig más vércukorszintet célozzon meg. Magasabb célértéknél az algoritmus lassabban reagál az emelkedő glükózra, és összességében magasabb értéket céloz meg – ez csökkenti az inzulinbeadást, és segít megelőzni a mozgás közbeni alacsony VC-t. Alacsonyabb célértéknél az algoritmus hamarabb reagál, és több inzulint ad be – ez hasznos, ha meg akarja előzni egy étkezés hatását. Válasszon az alábbi előbeállítások közül – a célérték és az ok ott már be van állítva.</string>
+    <string name="scene_wizard_smb_info">A szupermikrobólusok (SMB) lehetővé teszik, hogy az algoritmus előre, kis bólusokban adjon be inzulint, és ezt ellensúlyozva ideiglenesen leállítsa a bázisbeadást – gyakorlatilag a jövőből vesz kölcsön inzulint a gyorsabb reakcióért. Az SMB kikapcsolása ezt megakadályozza, és az algoritmus csak a bázisütemet módosíthatja. A reakció lassabb és fokozatosabb lesz, amit testmozgás vagy alvás közben gyakran jobbnak tartanak.</string>
+    <string name="scene_wizard_loop_mode_info">A működési mód határozza meg, mennyire önállóan működik az algoritmus. Zárt hurokban automatikusan módosítja az inzulinbeadást. Az LGS (Felfüggesztés alacsony VC-nél) csak akkor csökkenti vagy állítja le az inzulint, ha a glükóz alacsony érték felé esik – a beadást soha nem növeli. A nyílt hurok javaslatokat számol, de mindegyiket Önnek kell jóváhagynia.</string>
+    <string name="scene_wizard_careportal_info">A Careportal esemény egy naplóbejegyzés – nem változtatja meg az inzulinbeadást és az algoritmus működését. Tevékenységek, helyzetek vagy jegyzetek jelölésére használhatja a kezelési idővonalon. Ezeket a bejegyzéseket a Kezelések - Careportal menüben és a Nightscoutban nézheti meg, így orvosával együtt könnyebben felismerheti a mintázatokat az adataiban.</string>
+    <string name="scene_wizard_duration_info">Az időtartam határozza meg, meddig aktív a jelenet. Amikor az idő lejár, az időtartamhoz kötött műveletek (átmeneti célérték, profilváltás, működési mód) maguktól lejárnak, a tartós változások (például az SMB kapcsoló) pedig automatikusan visszaállnak a korábbi értékükre. Ha az időtartam 0, a jelenetnek nincs vége – minden művelet aktív marad, amíg kézzel be nem fejezi a jelenetet.</string>
+    <string name="scene_wizard_name_info">Válasszon olyan nevet és ikont, amelyről a jelenet első pillantásra felismerhető. Ezeket az aktiváló gombon és az Áttekintés képernyőn, az aktív jelenet sávjában fogja látni.</string>
     <!-- Scene wizard: UI labels -->
+    <string name="scene_wizard_include_action">%1$s hozzáadása a jelenethez</string>
+    <string name="scene_wizard_finish">Befejezés</string>
     <!-- Scene wizard: chain step -->
+    <string name="scene_wizard_chain_title">Következő jelenet</string>
+    <string name="scene_wizard_chain_info">Igény szerint egy másik jelenet is hozzáfűzhető, amely ennek lejártakor automatikusan aktiválódik. Korai befejezéskor is átugorhat rá. A következő jelenet csak akkor indul, ha a cél jelenet engedélyezve van és a pumpa elérhető; különben a véget ért jelenet szalagja jelzi, miért nem indult.</string>
+    <string name="scene_chain_none">Nincs</string>
+    <string name="scene_skip_to_format">Ugrás ide: %1$s</string>
     <!-- Scene list: chain indicator -->
+    <string name="scene_chain_indicator">→ %1$s</string>
+    <string name="scene_chain_target_missing">A következő jelenet törölve lett</string>
     <!-- Scene expiry: what the banner says, and the chain error notification -->
+    <string name="scene_chain_skipped_line" comment="Shown on the banner of a scene that has ended. %1$s=why the next scene did not start. Example: Follow-up did not start: target scene was deleted">A következő jelenet nem indult el: %1$s</string>
+    <string name="scene_chain_skipped_deleted">a céljelenet törölve lett</string>
+    <string name="scene_chain_skipped_disabled">\"%1$s\" le van tiltva</string>
+    <string name="scene_chain_error_summary">%1$s → %2$s: %4$d műveletből %3$d sikertelen</string>
 </resources>
