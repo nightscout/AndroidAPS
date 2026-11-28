@@ -1,2 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="open_humans">Open Humans</string>
+    <string name="open_humans_description">Open Humans vam omogućava da otpremite svoje podatke o dijabetesu i donirate ih naučnim projektima.</string>
+    <string name="logout">Odjava</string>
+    <string name="setup">Podešavanje</string>
+    <string name="setup_completed_info">Open Humans je podešen. Ako želite da prekinete otpremanje, pritisnite „Odjava“.</string>
+    <string name="not_setup_info">Open Humans je trenutno neaktivan. Da biste započeli otpremanje podataka, pritisnite „Podešavanje“.</string>
+    <string name="project_member_id">ID člana projekta: %1$s</string>
+    <string name="open_humans_uploading">Otpremanje u Open Humans…</string>
+    <string name="open_humans_notifications">Open Humans obaveštenja</string>
+    <string name="uploading_to_open_humans">AAPS otprema podatke u Open Humans. Ovo može potrajati.</string>
+    <string name="you_have_been_signed_out_of_open_humans">Odjavljeni ste iz Open Humans-a</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Pritisnite ovde da se ponovo prijavite ako ovo nije bilo namerno.</string>
+    <string name="next">Dalje</string>
+    <string name="welcome_to_open_humans">Dobrodošli u Open Humans</string>
+    <string name="setup_data_upload">Da biste podesili otpremanje podataka, pritisnite „Dalje“.</string>
+    <string name="consent">Saglasnost</string>
+    <string name="terms_of_use">Uslovi korišćenja</string>
+    <string name="please_read__information">Pažljivo pročitajte sledeće informacije i prihvatite uslove korišćenja da biste nastavili.</string>
+    <string name="info_openhumans">Ovo je open-source alat koji će kopirati vaše podatke u Open Humans. Mi nemamo nikakvo pravo da delimo vaše podatke sa trećim stranama bez vaše izričite dozvole. Podaci koje projekat i aplikacija dobijaju obeleženi su nasumičnim korisničkim ID-jem i biće bezbedno prosleđeni samo na Open Humans nalog uz vašu autorizaciju tog procesa. Možete u svakom trenutku zaustaviti otpremanje i obrisati svoje otpremljene podatke putem www.openhumans.org.</string>
+    <string name="data_uploaded">Otpremljeni podaci</string>
+    <string name="glucose_values">Vrednosti glukoze</string>
+    <string name="boluses">Bolusi</string>
+    <string name="extended_boluses">Produženi bolusi</string>
+    <string name="carbohydrates">Ugljeni hidrati</string>
+    <string name="careportal_events">Careportal događaji (osim beleški)</string>
+    <string name="profile_switches">Promene profila</string>
+    <string name="total_daily_doses">Ukupne dnevne doze</string>
+    <string name="temporary_basal_rates">Privremene bazalne stope</string>
+    <string name="temporary_targets">Privremeni ciljevi</string>
+    <string name="settings">Podešavanja</string>
+    <string name="application_version">Verzija aplikacije</string>
+    <string name="device_model">Model uređaja</string>
+    <string name="screen_dimensions">Dimenzije ekrana</string>
+    <string name="algorithm_debug_data">Podaci za otklanjanje grešaka algoritma</string>
+    <string name="data_not_uploaded">Podaci koji NISU otpremljeni</string>
+    <string name="passwords">Lozinke</string>
+    <string name="nightscout_url">Nightscout URL</string>
+    <string name="nightscout_api_secret">Nightscout API Secret</string>
+    <string name="free_text_fields">Polja za slobodan unos teksta</string>
+    <string name="agree">Razumem i slažem se.</string>
+    <string name="login_open_humans">Prijavite se na Open Humans</string>
+    <string name="final_touches">Završna podešavanja</string>
+    <string name="uploading_proceed">Samo ste jedan korak udaljeni od otpremanja svojih podataka u Open Humans. Da li želite da nastavite?</string>
+    <string name="cancel">Otkaži</string>
+    <string name="proceed">Nastavi</string>
+    <string name="finishing">Završavam…</string>
+    <string name="this_may_take_a_few_seconds">Ovo može potrajati nekoliko sekundi.</string>
+    <string name="we_re_done">Završili smo!</string>
+    <string name="silently_upload_date_note">Od sada će vaš telefon s vremena na vreme tiho otpremati podatke u pozadini.</string>
+    <string name="close">Zatvori</string>
+</resources>
