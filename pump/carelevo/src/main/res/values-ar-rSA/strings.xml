@@ -1,16 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_description">دمج المضخة لـ Carelevo</string>
+    <string name="carelevo_alarm_channel_name">تنبيهات Carelevo</string>
+    <string name="carelevo_alarm_channel_description">إشعارات تنبيهات المضخة اللاصقة Carelevo</string>
+    <string name="common_btn_ok">موافق</string>
+    <string name="carelevo_bluetooth_state_key">حالة البلوتوث</string>
+    <string name="carelevo_serial_number_key">الرقم التسلسلي</string>
+    <string name="carelevo_boot_date_time_key">وقت التفعيل</string>
+    <string name="carelevo_expiration_key">تاريخ الانتهاء</string>
+    <string name="carelevo_basal_rate_key">معدل الأنسولين القاعدي</string>
+    <string name="carelevo_temp_basal_rate_key">معدل الأنسولين القاعدي المؤقت</string>
+    <string name="carelevo_insulin_remain_key">الأنسولين المتبقي</string>
+    <string name="carelevo_running_remain_time">الوقت المتبقي للمضخة اللاصقة</string>
+    <string name="carelevo_total_insulin_key">إجمالي الأنسولين الذي تم ضخه</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%1$d ساعة %2$d دقيقة</string>
+    <string name="common_label_unit_value_minute">%d دقيقة</string>
+    <string name="common_label_unit_value_duration_hour">%d ساعة</string>
+    <string name="common_label_unit_value_dose_with_space">%s وحدة</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f وحدة/ساعة</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">هل تريد استئناف ضخ الأنسولين؟</string>
+    <string name="carelevo_pump_resume_description">سيتم استئناف الضخ عند النقر فوق \"تأكيد\".</string>
+    <string name="carelevo_pump_stop_duration_title">يرجى تعيين وقت إيقاف الضخ مؤقتاً.</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 دقيقة</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 ساعة</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 ساعة و 30 دقيقة</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">ساعتان</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">ساعتان و30 دقيقة</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 ساعات</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 ساعات و 30 دقيقة</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 ساعات</string>
+    <string name="common_unit_value_day_hour_min">%1$d يوم %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">متبقي %1$d دقيقة %2$02d ثانية</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">دليل الأنسولين</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">إلغاء تفعيل المضخة اللاصقة</string>
+    <string name="carelevo_btn_input_search_patch">البحث عن المضخة اللاصقة</string>
+    <string name="carelevo_btn_retry">إعادة المحاولة</string>
+    <string name="carelevo_btn_next">التالي</string>
+    <string name="carelevo_btn_safety_check">فحص الأمان</string>
+    <string name="carelevo_btn_cancel">إلغاء</string>
+    <string name="carelevo_btn_confirm">تأكيد</string>
+    <string name="carelevo_btn_research">إعادة البحث</string>
+    <string name="carelevo_btn_needle_insert_check">تأكيد الإدخال</string>
+    <string name="carelevo_state_none_value">لا توجد مضخة لاصقة نشطة</string>
+    <string name="carelevo_state_disconnected_value">غير متصل</string>
+    <string name="carelevo_state_connected_value">متصل</string>
+    <string name="carelevo_overview_connect_btn_label">تفعيل المضخة اللاصقة</string>
+    <string name="carelevo_overview_pump_discard_btn_label">التخلص من المضخة اللاصقة</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">تعليق ضخ الأنسولين</string>
+    <string name="carelevo_overview_pump_resume_btn_label">استئناف ضخ الأنسولين</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">حدد الكمية المعبأة.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">النطاق: %1$d ~ %2$d وحدة</string>
+    <string name="carelevo_insulin_refill_step1">1. انزع ورق الحماية من غلاف المضخة اللاصقة.</string>
+    <string name="carelevo_insulin_refill_step2">2. قم بتطهير الغطاء المطاطي لعبوة الأنسولين باستخدام مسحة كحولية.</string>
+    <string name="carelevo_insulin_refill_step3">3. قم بإزالة غطاء حماية إبرة محقنة الأنسولين عن طريق سحبه بشكل مستقيم.</string>
+    <string name="carelevo_insulin_refill_step4">4. اسحب مكبس المحقنة للخلف لملئها بحوالي 1 مل من الهواء.</string>
+    <string name="carelevo_insulin_refill_step5">5. أدخل المحقنة الممتلئة بالهواء في عبوة الأنسولين واحقن الهواء داخل العبوة.</string>
+    <string name="carelevo_insulin_refill_step6">6. مع بقاء المحقنة في العبوة، اقلب عبوة الأنسولين والمحقنة معًا رأسًا على عقب، واستخدم الضغط لملء المحقنة بحوالي 1 مل من الأنسولين.</string>
+    <string name="carelevo_insulin_refill_step7">7. أدخل إبرة المحقنة عمودياً في منفذ تعبئة الأنسولين بالمضخة اللاصقة (①) حتى تصل إلى القاع. اسحب المكبس بالكامل لأعلى، ثم حرره. أخرج المحقنة من منفذ التعبئة.</string>
+    <string name="carelevo_insulin_refill_step8">8. امسك المحقنة بشكل عمودي وانقر على جانبها برفق لتجميع كل فقاعات الهواء في الأعلى.</string>
+    <string name="carelevo_insulin_refill_step9">9. أدخل الإبرة مرة أخرى في عبوة الأنسولين، واحقن كل الهواء داخل العبوة، ثم اسحب الكمية المحددة من الأنسولين التي ستستخدمها طوال فترة عمل المضخة اللاصقة.</string>
+    <string name="carelevo_insulin_refill_step10">10. أخرج المحقنة من العبوة. إذا كانت هناك فقاعات هواء، فامسك المحقنة عمودياً، وانقر على جانبها لتحريك الفقاعات إلى الأعلى، ثم أخرج كل الهواء من المحقنة.</string>
+    <string name="carelevo_insulin_refill_step11">11. قم بمحاذاة أعلى المكبس مع علامة التدريج لضبط جرعة الأنسولين بدقة.</string>
+    <string name="carelevo_insulin_refill_step12">12. أدخل الإبرة عمودياً في منفذ تعبئة الأنسولين بالمضخة اللاصقة (①) حتى تصل إلى القاع، واضغط ببطء على المكبس لحقن كل الأنسولين في المضخة.</string>
+    <string name="carelevo_connect_prepare_title">تم بدء المضخة اللاصقة</string>
+    <string name="carelevo_connect_patch_title">توصيل المضخة اللاصقة</string>
+    <string name="carelevo_connect_safety_check_title">فحص الأمان</string>
+    <string name="carelevo_connect_patch_attach_title">تركيب المضخة اللاصقة</string>
+    <string name="carelevo_connect_needle_check_title">إدخال الإبرة</string>
+    <string name="carelevo_patch_buzzer_alarm_title">تنبيه معلومات المضخة اللاصقة</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">إعداد إشعار انخفاض الأنسولين</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">إعداد إشعار استخدام المضخة اللاصقة</string>
+    <string name="carelevo_title_fill_insulin">تعبئة المضخة اللاصقة بالأنسولين</string>
+    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">املأ المضخة اللاصقة بالأنسولين (%1$d–%2$d وحدة)، مع مراعاة فترة الاستخدام (تصل إلى 168 ساعة). انقر فوق [كمية الملء] للأنسولين المعبأ.</string>
+    <string name="carelevo_patch_step_1">الخطوة 1.</string>
+    <string name="carelevo_patch_step_2">الخطوة 2.</string>
+    <string name="carelevo_patch_step_3">الخطوة 3.</string>
+    <string name="carelevo_patch_connect_step_1_title">إزالة غطاء الإبرة</string>
+    <string name="carelevo_patch_connect_step_1_desc">أخرج المضخة اللاصقة من الغلاف وقم بإزالة غطاء الإبرة.</string>
+    <string name="carelevo_patch_connect_step_2_title">تشغيل الطاقة والاتصال</string>
+    <string name="carelevo_patch_connect_step_2_desc">اضغط على زر الطاقة لمدة تزيد عن ثانية واحدة. بعد سماع صوت تنبيه، انقر فوق زر [البحث عن المضخة اللاصقة] أدناه.</string>
+    <string name="carelevo_patch_safety_check_start_title">فحص الأمان</string>
+    <string name="carelevo_patch_safety_check_end_title">اكتمل فحص الأمان</string>
+    <string name="carelevo_patch_safety_check_start_desc">تم توصيل المضخة اللاصقة بنجاح.\nيرجى الضغط على زر [فحص الأمان].</string>
+    <string name="carelevo_patch_safety_check_progress_desc">فحص الأمان قيد التنفيذ.</string>
+    <string name="carelevo_patch_safety_check_end_desc">اكتمل فحص الأمان.\nيرجى الضغط على زر التالي.</string>
+    <string name="carelevo_patch_safety_check_desc_warning">يرجى التحقق مما إذا كانت قطرة أنسولين قد تكونت عند طرف الإبرة.</string>
+    <string name="carelevo_patch_safety_check_retry_desc">إذا لم تكن قطرة الأنسولين مرئية، يرجى الضغط على زر [إعادة المحاولة].</string>
+    <string name="carelevo_patch_attach_step1_title">تطهير موقع تركيب المضخة اللاصقة</string>
+    <string name="carelevo_patch_attach_step1_desc">قم بالتنظيف جيداً باستخدام مسحة كحولية.</string>
+    <string name="carelevo_patch_attach_step2_title">إزالة شريط الحماية الخلفي</string>
+    <string name="carelevo_patch_attach_step2_desc">أخرج المضخة اللاصقة من الغلاف وقم بإزالة غطاء الإبرة.</string>
+    <string name="carelevo_patch_attach_step3_title">تركيب المضخة اللاصقة</string>
+    <string name="carelevo_patch_attach_step3_desc">الصق المضخة اللاصقة على بشرتك مع جعل النقطة المحددة متجهة لأعلى.</string>
+    <string name="carelevo_patch_attach_step4_desc">بعد لصق المضخة اللاصقة، اضغط على التالي.</string>
+    <string name="carelevo_patch_needle_insertion_step1_title">إزالة غطاء الأمان</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">أدر غطاء الأمان في اتجاه السهم ثم قم بإزالته.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">إدخال الإبرة</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">اضغط على زر الدفع الخاص بأداة التركيب حتى النهاية. سيصدر صوت تنبيه عند إتمام الإدخال بنجاح.</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">اضغط مع الاستمرار لمدة 10 ثوانٍ.</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">متبقي %d محاولة (محاولات) لإعادة إدخال الإبرة.</string>
+    <string name="carelevo_dialog_patch_discard_message_title">إلغاء تفعيل المضخة اللاصقة وبدء مضخة لاصقة جديدة؟</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">الضغط على زر [موافق] سيؤدي إلى إيقاف ضخ الأنسولين.</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">الإنهاء دون بدء ضخ الأنسولين؟</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">الضغط على زر [موافق] سيجعل هذه المضخة اللاصقة غير صالحة للاستخدام.</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">إلغاء عملية تفعيل المضخة اللاصقة؟</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">الضغط على زر [موافق] سيؤدي إلى تجاهل ما قمت بإدخاله.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">إذا كانت المضخة اللاصقة المكتشفة أدناه صحيحة، يرجى النقر فوق زر \"تأكيد\".</string>
+    <string name="carelevo_dialog_patch_connect_needle_injected">اكتمل إدخال الإبرة وإزالة أداة التركيب</string>
+    <string name="carelevo_dialog_connect_detached">تمت إزالة أداة التركيب</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">اضغط على المقابض الموجودة على جانبي أداة التركيب لفصلها عن المضخة اللاصقة،\nثم اضغط على زر `تمت إزالة أداة التركيب`. سيبدأ ضخ الأنسولين.</string>
     <!-- Connection -->
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">البلوتوث غير مفعل. يرجى التحقق من ذلك.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">لا توجد مضخة لاصقة متصلة.</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">المضخة اللاصقة غير متصلة بعد. يرجى المحاولة مرة أخرى بعد قليل.</string>
+    <string name="carelevo_toast_msg_scan_failed">فشل البحث. يرجى المحاولة مرة أخرى.</string>
+    <string name="carelevo_toast_msg_patch_not_found">لم يتم العثور على أي مضخة لاصقة. يرجى المحاولة مرة أخرى.</string>
+    <string name="carelevo_toast_msg_connect_failed">فشل الاتصال بالمضخة اللاصقة. يرجى المحاولة مرة أخرى.</string>
     <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">الملف الشخصي غير معين.</string>
     <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_check_failed">فشل التحقق من الإبرة.</string>
     <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_failed">فشل التخلص من المضخة اللاصقة. يرجى المحاولة مرة أخرى.</string>
+    <string name="carelevo_discarded_not_reached">تعذر الوصول إلى المضخة اللاصقة. تمت إزالتها من AAPS لكن لم يتم إيقافها، وقد تستمر في إعطاء الأنسولين. قم بإزالتها عن جسمك.</string>
     <!-- Basal Delivery -->
+    <string name="carelevo_toast_msg_set_basal_failed">فشل طلب ضخ الأنسولين القاعدي. يرجى المحاولة مرة أخرى.</string>
     <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_fail">فشل استئناف الضخ. يرجى المحاولة مرة أخرى.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">فشل تعليق الضخ. يرجى المحاولة مرة أخرى.</string>
     <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_failed">فشل فحص الأمان.</string>
     <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">انخفاض الأنسولين</string>
+    <string name="alarm_feat_title_warning_expired_patch">انتهت صلاحية المضخة اللاصقة</string>
+    <string name="alarm_feat_title_warning_low_battery">بطارية منخفضة</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">درجة حرارة مرتفعة/منخفضة</string>
+    <string name="alarm_feat_title_warning_not_used_app">إيقاف تلقائي</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">البلوتوث غير متصل</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">انتهت مهلة تركيب المضخة اللاصقة</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">فشل التشخيص الذاتي</string>
+    <string name="alarm_feat_title_warning_patch_error">خطأ في المضخة اللاصقة</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">انسداد في الأنابيب/القنية</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">خطأ في إدخال الإبرة</string>
     <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">انخفاض الأنسولين</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase2">انتهى عمر تشغيل المضخة اللاصقة</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase1">ستنتهي صلاحية المضخة اللاصقة قريباً</string>
+    <string name="alarm_feat_title_alert_low_battery">بطارية منخفضة</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">درجة حرارة مرتفعة/منخفضة</string>
+    <string name="alarm_feat_title_alert_not_used_app">إيقاف تلقائي</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">البلوتوث غير متصل</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">تفعيل المضخة اللاصقة غير مكتمل</string>
+    <string name="alarm_feat_title_alert_resume_infusion">بدء ضخ الأنسولين</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">تشغيل البلوتوث</string>
     <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_low_insulin">انخفاض الأنسولين</string>
+    <string name="alarm_feat_title_notice_expired_patch">إشعار وقت استخدام المضخة اللاصقة</string>
+    <string name="alarm_feat_title_notice_check_patch">إشعار فحص المضخة اللاصقة</string>
+    <string name="alarm_feat_title_notice_change_time_zone">تغيير المنطقة الزمنية</string>
+    <string name="alarm_feat_title_notice_check_bg">فحص مستوى سكر الدم</string>
+    <string name="alarm_feat_title_notice_lgs_started">بدء إيقاف الضخ عند انخفاض السكر (LGS)</string>
+    <string name="alarm_feat_title_notice_lgs_ended">انتهى إيقاف الضخ عند انخفاض السكر (LGS)</string>
+    <string name="alarm_feat_title_notice_lgs_error">إيقاف الضخ عند انخفاض السكر (LGS) غير متوفر</string>
+    <string name="alarm_feat_title_notice_unknown">خطأ في المضخة اللاصقة</string>
+    <string name="alarm_feat_desc_unknown">خطأ غير متوقع في المضخة اللاصقة.</string>
     <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">إلغاء تفعيل المضخة اللاصقة</string>
+    <string name="alarm_feat_btn_patch_force_discard">التخلص من المضخة اللاصقة</string>
+    <string name="alarm_feat_btn_resume_infusion">بدء ضخ الأنسولين</string>
     <!-- General Messages -->
+    <string name="alarm_feat_msg_check_patch_connect">يرجى التحقق من اتصال المضخة اللاصقة.</string>
+    <string name="carelevo_bolus_rejected_exceed_limit" comment="%1$s=bolus the patch can still deliver now, with unit (e.g. 2.80 U)">تعذر إعطاء الجرعة. الجرعة المتاحة: %1$s</string>
+    <string name="carelevo_bolus_rejected_exceed_limit_none">تعذر إعطاء الجرعة. لا توجد كمية كافية من الأنسولين متبقية.</string>
     <!--    notification -->
+    <string name="alarm_notification_desc_warning_low_insulin">متبقي أقل من 10 وحدات من الأنسولين؛ توقف ضخ الأنسولين. انقر فوق زر [إلغاء تفعيل المضخة اللاصقة] وقم بتغيير المضخة اللاصقة الآن.</string>
+    <string name="alarm_notification_desc_warning_expired_patch">انتهت صلاحية المضخة اللاصقة؛ توقف ضخ الأنسولين. انقر فوق زر [إلغاء تفعيل المضخة اللاصقة] وقم بتغيير المضخة اللاصقة الآن.</string>
+    <string name="alarm_notification_desc_warning_low_battery">البطارية منخفضة؛ توقف ضخ الأنسولين. انقر فوق زر [التخلص من المضخة اللاصقة] وقم بتغيير المضخة اللاصقة الآن.</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">توقف ضخ الأنسولين. انتقل إلى بيئة ذات درجة حرارة مناسبة (40 إلى 99 فهرنهايت).</string>
+    <string name="alarm_notification_desc_warning_not_used_app">توقف ضخ الأنسولين. انقر فوق زر [بدء ضخ الأنسولين] وأعد تشغيل ضخ الأنسولين القاعدي.</string>
+    <string name="alarm_notification_desc_warning_incomplete_patch_setting">انتهت مهلة تركيب المضخة اللاصقة. انقر فوق زر [إلغاء تفعيل المضخة اللاصقة] وقم بتغيير المضخة اللاصقة الآن.</string>
+    <string name="alarm_notification_desc_warning_failed_safety_check">فشل التشخيص الذاتي. انقر فوق زر [إلغاء تفعيل المضخة اللاصقة] وقم بتغيير المضخة اللاصقة الآن.</string>
+    <string name="alarm_notification_desc_warning_patch_error">توقف ضخ الأنسولين بسبب خطأ غير متوقع. انقر فوق زر [إلغاء تفعيل المضخة اللاصقة] وقم بتغيير المضخة اللاصقة الآن.</string>
+    <string name="alarm_notification_desc_warning_infusion_clogged">توقف ضخ الأنسولين بسبب حدوث انسداد. انقر فوق زر [إلغاء تفعيل المضخة اللاصقة] وقم بتغيير المضخة اللاصقة الآن.</string>
+    <string name="alarm_notification_desc_warning_needle_injection_error">فشل إدخال الإبرة. انقر فوق زر [إلغاء تفعيل المضخة اللاصقة] وقم بتغيير المضخة اللاصقة الآن.</string>
+    <string name="alarm_notification_desc_alert_low_insulin">متبقي أقل من %s وحدة من الأنسولين. استعد لتغيير المضخة اللاصقة.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase2">انتهت صلاحية المضخة اللاصقة. قم بتغيير المضخة اللاصقة الآن.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase1">ستنتهي صلاحية المضخة اللاصقة قريباً. قم بتغيير المضخة اللاصقة الآن.</string>
+    <string name="alarm_notification_desc_alert_low_battery">البطارية منخفضة. استعد لتغيير المضخة اللاصقة.</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">تم إيقاف ضخ الأنسولين مؤقتاً بسبب درجة حرارة شديدة. انتقل إلى درجة حرارة بين 40 و99 فهرنهايت للاستئناف.</string>
+    <string name="alarm_notification_desc_alert_not_used_app">يرجى النقر فوق [موافق]. إذا تم تجاهل ذلك، فسيتحول إلى إنذار حرج وسيتم إيقاف ضخ الأنسولين.</string>
+    <string name="alarm_notification_desc_alert_incomplete_patch_setting">انقر فوق زر [موافق] لإكمال تفعيل المضخة اللاصقة.</string>
+    <string name="alarm_notification_desc_alert_resume_infusion">انتهى إيقاف ضخ الأنسولين مؤقتاً. انقر فوق [بدء ضخ الأنسولين] للبدء.</string>
+    <string name="alarm_notification_desc_alert_off_bluetooth">البلوتوث مطلوب لاستخدام المضخة اللاصقة. انقر فوق [موافق] وقم بتشغيل البلوتوث.</string>
+    <string name="alarm_notification_desc_notice_low_insulin">متبقي أقل من %s وحدة من الأنسولين. استعد لتغيير المضخة اللاصقة.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">وقت استخدام المضخة اللاصقة هو %1$s يوم %2$s ساعة. ضع ذلك في اعتبارك أثناء الاستخدام.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">تم تغيير المنطقة الزمنية من %1$s (توقيت عالمي منسق %2$s) إلى %3$s (توقيت عالمي منسق %4$s).</string>
+    <string name="alarm_notification_desc_notice_check_bg">مضت %s منذ إعطائك الجرعة. يرجى التحقق من سكر الدم.</string>
+    <string name="alarm_notification_desc_notice_lgs_started">بدأ إيقاف الضخ عند انخفاض السكر (LGS).</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">انتهى إيقاف الضخ عند انخفاض السكر (LGS) بسبب انقطاع اتصال المضخة اللاصقة/جهاز المراقبة المستمرة للغلوكوز (CGM).</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">انتهى إيقاف الضخ عند انخفاض السكر (LGS) بسبب إيقافه مؤقتاً.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_time_over">انتهى إيقاف الضخ عند انخفاض السكر (LGS) لأن الوقت المجدول قد انقضى.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">انتهى إيقاف الضخ عند انخفاض السكر (LGS) لأنه تم إيقاف تشغيله.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">انتهى إيقاف الضخ عند انخفاض السكر (LGS) لأن قراءة جهاز المراقبة المستمرة للغلوكوز (CGM) تجاوزت الحد المحدد.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_unknown">انتهى إيقاف الضخ عند انخفاض السكر (LGS) لسبب غير معروف.</string>
+    <string name="alarm_notification_desc_notice_lgs_error">يرجى التحقق من اتصال المضخة اللاصقة وجهاز المراقبة المستمرة للغلوكوز (CGM).</string>
+    <string name="carelevo_profile_update_skip_comment">تم التخطي: التحديث مبكر جداً.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">لم تؤكد المضخة اللاصقة الإيقاف. في انتظار انتهاء الجرعة…</string>
+    <string name="carelevo_bolus_rejected_missed_bolus_recorded">تمت الآن إضافة جرعة لم تكن مسجلة. تحقق من الأنسولين النشط (IOB)، ثم حاول مرة أخرى.</string>
+    <string name="carelevo_bolus_outcome_unknown">لم ترد المضخة اللاصقة على طلب الجرعة. تحتسب الجرعة كاملة حتى تحدد المضخة اللاصقة الكمية التي أعطتها فعلياً.</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">لم تؤكد المضخة اللاصقة الإيقاف. تم تسجيل الجرعة الكاملة البالغة %1$s.</string>
+    <string name="carelevo_bolus_stopped_by_patch" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The patch stopped the bolus. Given: 0.50 U of 2.00 U">أوقفت المضخة اللاصقة الجرعة. تم إعطاء: %1$s من %2$s</string>
 </resources>
