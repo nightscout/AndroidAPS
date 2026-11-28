@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="nav_history_browser">Előzményböngésző</string>
     <string name="sensor_label">Szenzor</string>
     <string name="insulin_label">Inzulin</string>
+    <string name="pb_label">Pumpaelem</string>
     <string name="cannula">Kanül</string>
+    <string name="patch_pump">Tapaszpumpa</string>
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
     <string name="basal_shortname">BÁZ</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Állandó értesítést jelenít meg, amely röviden összefoglalja, mit csinál a Loop</string>
     <string name="old_data">RÉGI ADAT</string>
+    <string name="notification_iob_short">%1$.1f E</string>
 </resources>
