@@ -1,10 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Nikad nije kontaktirana</string>
+    <string name="pump_status_sleeping">U stanju mirovanja</string>
+    <string name="pump_status_waking_up">Buđenje</string>
+    <string name="pump_status_active">Aktivna</string>
+    <string name="pump_status_error_comm">Greška u komunikaciji</string>
+    <string name="pump_status_timeout_comm">Istek vremena komunikacije</string>
+    <string name="pump_status_invalid_config">Nevažeća konfiguracija</string>
+    <string name="medtronic_pump_encoding_title">Medtronic kodiranje</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Softversko 4b6b kodiranje</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Hardversko 4b6b kodiranje</string>
+    <string name="medtronic_pump_frequency_us_ca">SAD i Kanada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Ceo svet (868 MHz)</string>
     <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_scan_scanning">Skeniranje</string>
+    <string name="riley_link_ble_config_connected_never">Nikada</string>
     <!-- RL Status Page -->
+    <string name="rileylink_status">RileyLink status</string>
+    <string name="medtronic_pump_status">Status pumpe</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_address">Adresa:</string>
+    <string name="rileylink_name">Ime:</string>
+    <string name="rileylink_battery_level">Nivo baterije:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
+    <string name="rileylink_connection_status">Status veze:</string>
+    <string name="rileylink_connection_error">Greška pri povezivanju:</string>
+    <string name="rileylink_device">Uređaj</string>
+    <string name="rileylink_device_type">Tip uređaja:</string>
+    <string name="rileylink_configured_device_model">Podešeni model uređaja:</string>
+    <string name="rileylink_connected_device_model">Povezani model uređaja:</string>
+    <string name="rileylink_last_used_frequency">Poslednja korišćena frekvencija:</string>
+    <string name="rileylink_last_device_contact">Poslednji kontakt sa uređajem:</string>
+    <string name="rileylink_firmware_version">Firmware verzija:</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
+    <string name="rileylink_pump_serial_number">Serijski broj pumpe:</string>
+    <string name="rileylink_pump_frequency">Frekvencija pumpe:</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
     <!-- RL State -->
+    <string name="rileylink_state_bt_init">Bluetooth se inicijalizuje…</string>
+    <string name="rileylink_state_bt_error">Bluetooth greška</string>
+    <string name="rileylink_state_bt_ready">Bluetooth spreman</string>
+    <string name="rileylink_state_not_started">Nije pokrenuto</string>
+    <string name="rileylink_state_rl_init">Inicijalizacija RileyLink-a…</string>
+    <string name="rileylink_state_rl_error">RileyLink greška</string>
+    <string name="rileylink_state_pc_tune_up">Podešavanje RileyLink-a i pumpe</string>
+    <string name="rileylink_state_pc_error">Problem pri povezivanju sa pumpom</string>
+    <string name="rileylink_state_connected">Povezano</string>
+    <string name="rileylink_state_rl_ready">RileyLink spreman</string>
     <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">Uređaj nije RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink nedostupan</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth je isključen</string>
+    <string name="rileylink_error_no_bt_adapter">Nema Bluetooth adaptera</string>
+    <string name="rileylink_error_tuneup_failed">Podešavanje nije uspelo</string>
+    <string name="rileylink_error_pod_unreachable">Pod nedostupan</string>
     <!-- RileyLink - Common -->
+    <string name="rileylink_target_device_medtronic">Medtronic pumpa</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">Prikaži nivo baterije koji prijavljuju OrangeLink/EmaLink/DiaLink</string>
+    <string name="riley_link_show_battery_level_summary">NE RADI sa originalnim RileyLink-om. Možda neće raditi ni sa drugim RileyLink alternativama.</string>
+    <string name="orange_use_scanning_level">Koristi skeniranje</string>
+    <string name="orange_use_scanning_level_summary">Skeniranje pre povezivanja sa OrangeLink-om trebalo bi da poboljša vezu (može se koristiti i sa drugim RileyLink klonovima, ako je potrebno)</string>
+    <string name="rileylink_pair">Upari RileyLink</string>
+    <string name="rileylink_pair_success">RileyLink je uspešno uparen</string>
+    <string name="rileylink_config_reset">Konfiguracija RileyLink-a je resetovana</string>
 </resources>
