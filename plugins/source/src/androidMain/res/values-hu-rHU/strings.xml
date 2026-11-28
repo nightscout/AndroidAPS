@@ -1,13 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
+    <string name="ns_client_bg">NSClient VC</string>
+    <string name="description_source_ns_client">VC-adatok letöltése a Nightscoutból</string>
+    <string name="source_xdrip">xDrip+ VC</string>
+    <string name="description_source_xdrip">VC-értékek fogadása az xDrip+-ból és kompatibilis alkalmazásokból (Juggluco stb.).</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="description_source_dexcom">VC-értékek fogadása a \'Build Your Own Dexcom App\' alkalmazásból.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">VC-értékek fogadása a Glimpből.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">VC-értékek fogadása a 600SeriesAndroidUploaderből.</string>
     <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">VC-értékek fogadása a Poctech alkalmazásból</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Értékek fogadása a Glunovo alkalmazásból</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Értékek fogadása az Intelligo alkalmazásból</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="description_source_tomato">VC-értékek fogadása a Tomato alkalmazásból (MiaoMiao eszköz)</string>
+    <string name="random_bg">Véletlenszerű VC</string>
+    <string name="description_source_random_bg">Véletlenszerű VC-adatok generálása (csak bemutató módban)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
+    <string name="description_source_patched_syai_tag_app">Glükózadatok fogadása a Syai/Ottai alkalmazásból.</string>
     <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">Glükózadatok fogadása a módosított (patched) Sibionic SI alkalmazásból vagy a Sibionics alkalmazásból.</string>
     <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">Glükózadatok fogadása a módosított (patched) Sino alkalmazásból.</string>
     <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">VC-értékek fogadása az Instara alkalmazásból.</string>
     <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Instara előzményadatok lekérése</string>
+    <string name="pref_summary_instara_history_request">Az esetleg hiányzó előzményadatok lekérése a háttérben</string>
     <!-- Notification Reader -->
+    <string name="notification_reader">Értesítésolvasó</string>
+    <string name="description_source_notification_reader">Glükózértékek olvasása a hivatalos CGM-alkalmazások értesítéseiből (Dexcom, Medtronic, Eversense stb.).</string>
     <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Az alkalmazásnak engedélyre van szüksége, hogy CGM-adatokat fogadjon a Dexcom alkalmazásból</string>
+    <string name="permission_notification_listener_title">Értesítési hozzáférés</string>
+    <string name="permission_notification_listener_description">Szükséges ahhoz, hogy a glükózértékeket a CGM-alkalmazások értesítéseiből olvassa</string>
+    <string name="aidex">MicroTech CGM alkalmazás</string>
+    <string name="description_source_aidex">CGM-értékek fogadása a LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 stb. alkalmazásból.</string>
+    <string name="aidex_sensor_expired">A szenzor lejárt, cserélje új szenzorra</string>
+    <string name="aidex_sensor_error">Szenzorhiba, ellenőrizze a szenzor állapotát</string>
+    <string name="aidex_sensor_stabilizing">A szenzor stabilizálódik, kérjük, várjon…</string>
+    <string name="aidex_sensor_replace">Szenzorcsere szükséges, minél előbb cserélje új szenzorra</string>
+    <string name="aidex_signal_lost">Megszakadt a szenzor jele, ellenőrizze a kapcsolatot</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">ismétlődő mérés</string>
 </resources>
