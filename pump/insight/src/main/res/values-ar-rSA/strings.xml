@@ -1,2 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="enable_tbr_over_notification">تفعيل إشعار انتهاء معدل الأنسولين القاعدي المؤقت\n(إعداد المضخة)</string>
+    <string name="disable_tbr_over_notification">تعطيل إشعار انتهاء معدل الأنسولين القاعدي المؤقت\n(إعداد المضخة)</string>
+    <string name="not_paired">غير مقترن</string>
+    <string name="recovering">جاري الاستعادة</string>
+    <string name="insight_status">الحالة</string>
+    <string name="recovery_duration">مدة الاستعادة</string>
+    <string name="last_connected">آخر اتصال</string>
+    <string name="start_pump">تشغيل المضخة</string>
+    <string name="stop_pump">إيقاف المضخة</string>
+    <string name="started">قيد التشغيل</string>
+    <string name="stopped">متوقف</string>
+    <string name="operating_mode">وضع التشغيل</string>
+    <string name="description_pump_insight_local">تكامل المضخة لمضخات Accu-Chek Insight</string>
+    <string name="not_inserted">غير مركب</string>
+    <string name="tdd_bolus">إجمالي الجرعات اليومي (TDD)</string>
+    <string name="tdd_basal">إجمالي الأنسولين القاعدي اليومي (TDD)</string>
+    <string name="multiwave_bolus">جرعة متعددة الموجات</string>
+    <string name="searching_for_devices">جاري البحث عن الأجهزة…</string>
+    <string name="pairing_completed">اكتمل الاقتران</string>
+    <string name="code_compare">هل الرموز المعروضة على هذا الجهاز وعلى مضختك متطابقة؟</string>
+    <string name="insight_pairing">اقتران Insight</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
+    <string name="tube_changed">تم تغيير الأنبوب</string>
+    <string name="insight_alert_notification_channel">تنبيهات مضخة Insight</string>
+    <string name="disable_vibration">تعطيل الاهتزازات عند إعطاء جرعة يدوية</string>
+    <string name="disable_vibration_summary">للجرعات والجرعات الممتدة (متاح فقط مع إصدار البرنامج الثابت 3.x لـ Insight)</string>
+    <string name="disable_vibration_auto">تعطيل الاهتزازات عند إعطاء جرعة تلقائية</string>
+    <string name="disable_vibration_auto_summary">للجرعات التصحيحية الصغيرة (SMB) والمعدل القاعدي المؤقت مع محاكاة TBR (متاح فقط مع إصدار البرنامج الثابت 3.x لـ Insight)</string>
+    <string name="timeout_during_handshake">انتهت المهلة أثناء المصافحة - إعادة تعيين البلوتوث</string>
+    <string name="pump_stopped">تم إيقاف المضخة</string>
+    <string name="pump_started">تم تشغيل المضخة</string>
+    <string name="release_software_version">إصدار البرنامج (Release)</string>
+    <string name="bluetooth_address">عنوان البلوتوث</string>
+    <string name="manufacturing_date">تاريخ التصنيع</string>
+    <string name="log_site_changes">تسجيل تغييرات موضع القنية</string>
+    <string name="log_reservoir_changes">تسجيل تغييرات الخزان</string>
+    <string name="log_tube_changes">تسجيل تغييرات الأنبوب</string>
+    <string name="log_battery_changes">تسجيل تغييرات البطارية</string>
+    <string name="log_operating_mode_changes">تسجيل تغييرات وضع التشغيل</string>
+    <string name="log_alerts">تسجيل التنبيهات</string>
+    <string name="enable_tbr_emulation">تفعيل محاكاة معدل الأنسولين القاعدي المؤقت TBR</string>
+    <string name="enable_tbr_emulation_summary">استخدام الجرعات الممتدة بدلاً من المعدلات القاعدية المؤقتة لتجاوز حد 250%%</string>
+    <string name="disconnect_delay">مهلة قطع الاتصال [ثانية]</string>
+    <string name="max_recovery_duration">الحد الأقصى لمدة الاستعادة [ثانية]</string>
+    <string name="min_recovery_duration">الحد الأدنى لمدة الاستعادة [ثانية]</string>
+    <string name="pump_alert">تنبيه المضخة</string>
+    <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">إلغاء الاقتران</string>
+    <string name="reset_pairing">إعادة تعيين معلومات الاقتران؟</string>
+    <string name="reservoir_level">مستوى الخزان</string>
+</resources>
