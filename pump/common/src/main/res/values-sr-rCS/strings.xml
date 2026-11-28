@@ -1,10 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Operacija nije podržana od strane pumpe i/ili drajvera.</string>
     <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">Nije inicijalizovana</string>
+    <string name="pump_status_initialized">Inicijalizovana</string>
+    <string name="pump_status_encrypt">Šifrovanje komunikacije</string>
+    <string name="pump_status_ready">Spremna</string>
+    <string name="pump_status_busy">Zauzeta</string>
+    <string name="pump_status_suspended">Pauzirana</string>
+    <string name="pump_status_executing_command">Izvršavanje komande</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Čitanje podešavanja</string>
+    <string name="pump_cmd_desc_get_firmware">Čitanje firmware-a pumpe</string>
+    <string name="pump_cmd_desc_get_basal_profile">Čitanje bazalnog profila</string>
+    <string name="pump_cmd_desc_set_basal_profile">Postavljanje bazalnog profila</string>
+    <string name="pump_cmd_desc_get_tbr">Čitanje privremenog bazala</string>
+    <string name="pump_cmd_desc_cancel_tbr">Otkazivanje privremenog bazala</string>
+    <string name="pump_cmd_desc_set_tbr">Postavljanje privremenog bazala</string>
+    <string name="pump_cmd_desc_set_bolus">Postavljanje bolusa</string>
+    <string name="pump_cmd_desc_get_bolus">Čitanje bolusa</string>
+    <string name="pump_cmd_desc_cancel_bolus">Otkazivanje bolusa</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Čitanje preostalog insulina</string>
+    <string name="pump_cmd_desc_get_battery_status">Čitanje statusa baterije</string>
+    <string name="pump_cmd_desc_get_time">Čitanje vremena</string>
+    <string name="pump_cmd_desc_set_time">Postavljanje vremena</string>
+    <string name="pump_cmd_desc_get_pump_status">Čitanje statusa pumpe</string>
+    <string name="pump_cmd_desc_get_history">Čitanje istorije</string>
+    <string name="pump_cmd_desc_get_history_params">Čitanje istorije %s</string>
+    <string name="pump_cmd_desc_custom">Prilagođena komanda</string>
     <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Bazali</string>
+    <string name="history_group_configuration">Podešavanja</string>
+    <string name="history_group_notification">Obaveštenja</string>
+    <string name="history_group_statistic">Statistika</string>
+    <string name="history_group_unknown">Nepoznato</string>
+    <string name="history_group_all">Sve</string>
+    <string name="history_group_bolus">Bolusi</string>
+    <string name="history_group_prime">Punjenje</string>
+    <string name="history_group_alarm">Alarmi</string>
+    <string name="history_group_glucose">Glukoza</string>
+    <string name="history_group_base">Osnovno</string>
     <string name="history_group_other">Ostalo</string>
+    <string name="history_group_events">Svi događaji</string>
+    <string name="history_group_events_no_stat">Događaji (bez statistike)</string>
     <!-- Time -->
+    <string name="time_today">Danas</string>
+    <string name="time_last_hour">Poslednji sat</string>
+    <string name="time_last_3_hours">Poslednja 3 sata</string>
+    <string name="time_last_6_hours">Poslednjih 6 sati</string>
+    <string name="time_last_12_hours">Poslednjih 12 sati</string>
+    <string name="time_last_24_hours">Poslednja 24 sata</string>
+    <string name="time_last_2_days">Poslednja 2 dana</string>
+    <string name="time_last_4_days">Poslednja 4 dana</string>
+    <string name="time_last_week">Poslednja nedelja</string>
+    <string name="time_last_month">Poslednji mesec</string>
     <!-- Pump History -->
 </resources>
